@@ -1,0 +1,71 @@
+{
+  "id": "22-string-concat-null",
+  "description": "String concatenation with || operator and NULL propagation; COALESCE function",
+  "level": 1,
+  "steps": [
+    {
+      "op": "query",
+      "sql": "SELECT 'hello' || ' ' || 'world' AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [["hello world"]],
+      "note": "|| concatenates strings"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT 'hello' || NULL AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [[null]],
+      "note": "SQL standard: concatenation with NULL yields NULL"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT NULL || 'world' AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [[null]],
+      "note": "NULL on the left side also yields NULL"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COALESCE(NULL, 'default') AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [["default"]],
+      "note": "COALESCE returns first non-NULL argument"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COALESCE('first', 'second') AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [["first"]],
+      "note": "COALESCE returns 'first' because it is not NULL"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COALESCE(NULL, NULL, 42) AS r",
+      "expected_columns": ["r"],
+      "expected_rows": [[42]],
+      "note": "COALESCE skips all NULLs and returns first non-NULL"
+    },
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE names (first TEXT, last TEXT)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO names VALUES ('John', 'Doe')"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO names VALUES ('Jane', NULL)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT first || ' ' || COALESCE(last, 'Unknown') AS full_name FROM names ORDER BY first",
+      "expected_columns": ["full_name"],
+      "expected_rows": [
+        ["Jane Unknown"],
+        ["John Doe"]
+      ],
+      "note": "Combine concat and COALESCE to handle NULL last names"
+    }
+  ]
+}

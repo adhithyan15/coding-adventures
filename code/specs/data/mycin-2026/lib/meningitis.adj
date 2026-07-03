@@ -1,0 +1,28 @@
+% ============================================================================
+% meningitis — the composed bacterial-vs-viral rulebook, as an IMPORTABLE LIBRARY.
+% ============================================================================
+% MYCIN-2026 M4. The top-level reasoning library: it `import`s the two grounded
+% arms (each of which imports the shared vocabulary) and declares the competing
+% hypotheses as `?` queries — so the program is a DIFFERENTIAL. Importing this one
+% file pulls in the whole dependency graph:
+%
+%     meningitis.adj
+%       ├── bacterial-arm.adj ──┐
+%       └── viral-arm.adj ──────┴── meningitis-vocab.adj   (imported once, deduped)
+%
+% A case file uses the rulebook by:
+%     import "meningitis.adj"
+%     observe csf_gram_stain(positive)   % ...the decomposed findings...
+%     % the ? queries below make it a differential; the case adds no queries.
+%
+% This file is the unit the CAS content-addresses (M5): its sha256 names the
+% object, and its manifest records the grounding + gate verdict of every clause
+% reachable through the import graph.
+
+import "bacterial-arm.adj"
+import "viral-arm.adj"
+
+% The differential: rank these competing hypotheses by posterior. A multi-`?`
+% program is read as the set of competing hypotheses (adj-lang differential).
+? bacterial_meningitis
+? viral_meningitis

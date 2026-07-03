@@ -149,6 +149,7 @@ pub fn profile() -> BackendProfile {
         // (5_000 vs ~10 measured) — the planner uses this as a
         // floor, not a ceiling.
         gflops_f32: 10_000,
+        gflops_f64: 0, // no CUDA f64 kernel in V1 → planner keeps f64 on CPU
         gflops_u8: 0,
         gflops_i32: 0,
 

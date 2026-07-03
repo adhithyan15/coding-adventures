@@ -1,5 +1,11 @@
 # Changelog — brainfuck-clr-compiler
 
+## [0.1.1] - 2026-06-10
+
+- Test-only: updated a `clr-simulator` assertion to the new `Value::Int(n)` stack
+  model (clr-simulator 0.2.0 gained an object/reference value type). No behaviour change.
+
+
 ## [0.1.0] — 2026-04-28
 
 ### Added

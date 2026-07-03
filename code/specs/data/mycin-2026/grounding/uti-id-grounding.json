@@ -1,0 +1,322 @@
+{
+  "records": [
+    {
+      "id": "uti_prior_ecoli",
+      "kind": "prior",
+      "target": "e_coli",
+      "claim": "Escherichia coli is the most common cause of acute uncomplicated cystitis/UTI in women; quantify its PROPORTION of cases.",
+      "authored_hint": 0.78,
+      "grounded": {
+        "id": "uti_prior_ecoli",
+        "resolved_url": "https://academic.oup.com/cid/article/52/5/e103/388285",
+        "source_title": "International Clinical Practice Guidelines for the Treatment of Acute Uncomplicated Cystitis and Pyelonephritis in Women: A 2010 Update by the Infectious Diseases Society of America and the European Society for Microbiology and Infectious Diseases (Gupta et al., Clinical Infectious Diseases, 2011;52(5):e103-e120)",
+        "byte_quote": "The microbial spectrum of uncomplicated cystitis and pyelonephritis consists mainly of Escherichia coli (75%–95%), with occasional other species of Enterobacteriaceae, such as Proteus mirabilis and Klebsiella pneumoniae, and Staphylococcus saprophyticus.",
+        "value_found": "E. coli accounts for 75%-95% of acute uncomplicated cystitis/pyelonephritis cases (IDSA/ESCMID guideline range). A corroborating point estimate from AFP (Hooton-tradition review) is 86%. The hint of ~0.78 sits at the low end of, and within, the IDSA range.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "AFP 'Diagnosis and Treatment of Acute Uncomplicated Cystitis' (aafp.org/pubs/afp/issues/2011/1001/p771.html) — verbatim quote 'Most UTIs in women are acute uncomplicated cystitis caused by Escherichia coli (86 percent)'. DISCARDED as the PRIMARY citation because AFP is a secondary clinical-review article, not a primary study or guideline; retained only as a corroborating point estimate (86%) that falls inside the IDSA range and is near AFP's cited figure.",
+          "emedicine.medscape.com/article/217485-guidelines — DISCARDED: secondary summary/tertiary reference, not a primary source.",
+          "synapse.koreamed.org Korean clinical guideline PDF — DISCARDED: regional secondary guideline, IDSA/ESCMID is the more authoritative and widely-cited primary guideline for this claim.",
+          "AUA 2025 recurrent-UTI guideline PDF — DISCARDED: scopes recurrent UTI, not the acute-uncomplicated-cystitis population the claim addresses.",
+          "Various single-center prevalence studies (e.g., PLOS ONE 0334222, Romanian-females spectrum study PMC7459805) — DISCARDED: local single-site resistance/spectrum series; less generalizable than the pooled guideline figure for a population-level prior."
+        ],
+        "note": "ENTAILED for the qualitative claim: the quote states the microbial spectrum 'consists mainly of Escherichia coli (75%-95%)', which directly forces both (a) E. coli is the most common cause and (b) it accounts for the large majority of cases. For the QUANTITATIVE proportion this is a range (75%-95%), not a single point — so adopting the hint's specific ~0.78 (or any single value) is a mild LEAP beyond the guideline text. The hint 0.78 is consistent with (lies within, at the low end of) the IDSA range and is corroborated by AFP's 86% point estimate, so direction and magnitude are sound; a defensible single prior would be ~0.80-0.86 (mid-range / corroborated), with 0.75-0.95 as the honest interval. Source is a peer-reviewed primary clinical practice guideline (Gupta et al., CID), satisfying the primary-source requirement."
+      },
+      "verify": {
+        "id": "uti_prior_ecoli",
+        "byte_stable": true,
+        "reextracted_value": "E. coli accounts for 75%–95% of uncomplicated cystitis and pyelonephritis cases per the IDSA/ESCMID guideline (Gupta et al., CID 2011;52(5):e103). The source uses an en-dash range, not a single point estimate. The ~0.78 hint falls at the low end of, and within, this range.",
+        "refute_attempt": "Strongest refutation: (1) The source's range covers \"uncomplicated cystitis AND pyelonephritis\" jointly, whereas the claim header targets acute uncomplicated cystitis/UTI in women specifically — a slight scope mismatch, though cystitis is explicitly named and is the dominant component. (2) The source gives a range (75%–95%), not the single point estimate the claim's \"quantify its PROPORTION\" might be read to demand; the 86% point estimate and the ~0.78 hint come from OTHER sources (AFP/hint), not this URL. (3) En-dash (–) vs hyphen (-) in \"75%–95%\" could be flagged as a non-verbatim mismatch. None of these are fatal: the byte_quote reproduces the page's exact en-dash form, the source plainly states E. coli is the predominant cause at 75%–95%, and the claimed value honestly labels the range as the IDSA source and attributes the point estimate elsewhere. The grounding holds.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_prior_saprophyticus",
+      "kind": "prior",
+      "target": "s_saprophyticus",
+      "claim": "Proportion of acute uncomplicated UTI in young women caused by Staphylococcus saprophyticus.",
+      "authored_hint": 0.1,
+      "grounded": {
+        "id": "uti_prior_saprophyticus",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK482367/",
+        "source_title": "Staphylococcus saprophyticus Infection — StatPearls, NCBI Bookshelf",
+        "byte_quote": "In females ages 16 to 25, it causes up to 42% of all infections.",
+        "value_found": "~5%–20% of community-acquired/uncomplicated UTIs in non-hospitalized (predominantly young) women; rising to up to 42% in the sexually-active 16–25 subgroup. Point prior ~0.10 (midpoint of the 5–15% range most guidelines cite, consistent with the 5–20% StatPearls range).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "IDSA/ESCMID 2010 guideline (academic.oup.com/cid/article/52/5/e103/388285): authoritative and would cite the canonical 5–15% figure, but I could not extract a verbatim percentage-bearing sentence about S. saprophyticus from the fetched page, so it cannot serve as the grounding quote.",
+          "AAFP 2011 'Diagnosis and Treatment of Acute Uncomplicated Cystitis' PDF (aafp.org/pubs/afp/issues/2011/1001/p771.pdf): relevant primary clinical reference, but WebFetch returned only binary/encoded PDF data with no readable text, so no verbatim quote could be obtained.",
+          "WebSearch AI-summary figures ('10–20%', '42.3%', '5%–15%'): discarded as grounding sources because they are search-engine synthesized summaries, not a directly-fetched primary page; used only to triangulate which primary source to read.",
+          "The isolated '42%' (ages 16–25) figure: NOT used as the headline value because it is a narrower high-risk subgroup, not the overall young-women acute-uncomplicated-UTI proportion the claim targets; reported as the upper-bound context instead."
+        ],
+        "note": "ENTAILED for the range, partial LEAP for the point estimate. The quote 'Between 5% and 20% of non-hospitalized patients, the infection will be due to S. saprophyticus' directly entails that S. saprophyticus causes roughly 5–20% of community-acquired (uncomplicated, outpatient — the relevant young-women population) UTIs, which brackets the ~0.1 hint. Collapsing the 5–20% interval to a single ~0.10 point prior is a small LEAP (interval midpoint / convergence with the widely-cited 5–15% guideline figure), not something the quote states verbatim. The '42%' clause is also verbatim and entails the upper bound for the 16–25 sexually-active subgroup, but applying it to all young women would over-state, so it is reported as context, not the value. Direction (S. saprophyticus is the #2 uropathogen, low-but-nontrivial single-digit-to-teens percentage) is firmly grounded."
+      },
+      "verify": {
+        "id": "uti_prior_saprophyticus",
+        "byte_stable": true,
+        "reextracted_value": "The page (StatPearls, \"Staphylococcus saprophyticus Infection\", NBK482367) states: \"Between 5% and 20% of non-hospitalized patients, the infection will be due to S. saprophyticus\" and, in a separate sentence, \"S. saprophyticus is the second most common cause of community-acquired urinary tract infections, after Escherichia coli. In females ages 16 to 25, it causes up to 42% of all infections.\" So the source supports: ~5%-20% of UTIs in non-hospitalized patients are due to S. saprophyticus, rising to up to 42% in sexually-active women aged 16-25. A defensible point prior for \"young woman with acute uncomplicated UTI\" is roughly 0.10 (midpoint of the 5-20% range), with substantial upside in the 16-25 subgroup.",
+        "refute_attempt": "Strongest refutation attempts: (1) SCOPE — the verbatim \"5% and 20%\" sentence is framed by the source as \"non-hospitalized patients\" generally, NOT explicitly as \"young women\" or \"acute uncomplicated UTI.\" The claim layers the demographic restriction (predominantly young women) onto the StatPearls range; the source pins the young-woman specificity to the separate 42% (16-25) sentence, not to the 5-20%. So the 5-20% IS source-grounded, but the modifier \"(predominantly young) women\" is a partial gloss, not a verbatim source attribution. (2) POINT-PRIOR LAUNDERING — \"~0.10 (midpoint of the 5-15% range most guidelines cite)\" introduces a \"5-15% range most guidelines cite\" that does NOT appear on this page; the page says 5-20%. The 0.10 point estimate is a reasonable framework-side modeling choice but is NOT itself a source fact, and the parenthetical \"5-15% range most guidelines cite\" is unsupported by THIS URL (would need separate guideline sourcing). (3) The 42% figure is \"up to 42% of all infections\" in 16-25yo — an upper bound, not a typical proportion; citing it as the young-woman rate would overstate. RESULT: The two verbatim fragments both appear on the page and the directional claim (S. saprophyticus is a notable minority cause of young-women uncomplicated UTI, ~5-20%, much higher in 16-25) is genuinely supported. The refutation does NOT overturn the quote or the core range; it only dings the unsupported \"5-15% most guidelines cite\" parenthetical and the inferred ~0.10 point estimate, which are framework modeling additions rather than source facts.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_prior_klebsiella",
+      "kind": "prior",
+      "target": "klebsiella",
+      "claim": "Proportion of uncomplicated UTI caused by Klebsiella pneumoniae.",
+      "authored_hint": 0.05,
+      "grounded": {
+        "id": "uti_prior_klebsiella",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5644167/",
+        "source_title": "Local epidemiology and resistance profiles in acute uncomplicated cystitis (AUC) in women: a prospective cohort study in an urban urological ambulatory setting (BMC Infectious Diseases, 2017)",
+        "byte_quote": "The most common bacteria was E. coli with 86.3% (365/423) followed by Enterococcus faecalis with 10.2% (43/423) and Klebsiella pneumoniae with 3.5% (15/423).",
+        "value_found": "~0.035 (3.5%, 15/423 isolates) Klebsiella pneumoniae in acute uncomplicated cystitis in women",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://link.springer.com/article/10.1186/s12879-017-2789-7 — same BMC article but the Springer mirror redirected to an authentication endpoint (idp.springer.com/authorize); could not fetch a quotable page. The open-access PMC mirror of the identical article was fetched instead.",
+          "Korean study (mdpi.com/2079-6382/13/11/1075) reporting K. pneumoniae 6.2% — discarded as it covers a different geography/population and was not the page fetched for the quote; would inflate the prior region-specifically.",
+          "Japanese study (pubmed 22572853) reporting K. pneumoniae 1.6% in premenopausal women — discarded; subanalysis by menopause, narrower population, not directly fetched/quoted.",
+          "IDSA/ESMID 2010 guideline and review-type sources giving the lumped '5–10% Klebsiella/Enterobacter/Proteus/enterococci' range — discarded because they bundle K. pneumoniae with other organisms and do not isolate a K. pneumoniae-specific proportion."
+        ],
+        "note": "ENTAILED. The quoted sentence from the primary prospective cohort study states K. pneumoniae was 3.5% (15/423) of cultured isolates in women with acute uncomplicated cystitis — a direct, unbundled, numerator/denominator-backed figure for exactly the claim's quantity (proportion of uncomplicated UTI/cystitis caused by K. pneumoniae). No inferential leap is required: the value is stated explicitly. The derived ~0.035 is below the ~0.05 hint but the same order of magnitude (single-digit percent, minority Enterobacteriaceae after E. coli), so direction_correct=true. Caveat (not affecting grounding): this is one urban European cohort; cross-study real-world range is ~1.6–6.2%, so ~0.05 is a defensible pooled prior, but this single primary source supports ~0.035 specifically."
+      },
+      "verify": {
+        "id": "uti_prior_klebsiella",
+        "byte_stable": true,
+        "reextracted_value": "Klebsiella pneumoniae = 3.5% (15/423) = 0.0355 of culture-positive single-organism isolates in women with acute uncomplicated cystitis. Matches claimed ~0.035.",
+        "refute_attempt": "Strongest refutation: the 3.5% denominator is 423 (single-organism positive cultures), not the full 502-patient AUC cohort — so it is the proportion among culture-positive uropathogen isolates, not of all UTI episodes (mixed cultures and negatives excluded). It is also a single observational cohort, limiting external validity as a universal 'prior.' However, reporting uropathogen distribution over culture-positive isolates is the standard convention and directly answers 'proportion of uncomplicated UTI caused by Klebsiella,' and the population (women, acute uncomplicated cystitis) matches the claim. The refutation narrows scope but does not overturn the numeric grounding.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_prior_proteus",
+      "kind": "prior",
+      "target": "proteus",
+      "claim": "Proportion of uncomplicated UTI caused by Proteus mirabilis.",
+      "authored_hint": 0.04,
+      "grounded": {
+        "id": "uti_prior_proteus",
+        "resolved_url": "https://www.aafp.org/pubs/afp/issues/2011/1001/p771.html",
+        "source_title": "Diagnosis and Treatment of Acute Uncomplicated Cystitis — American Family Physician (AAFP), 2011",
+        "byte_quote": "Most UTIs in women are acute uncomplicated cystitis caused by Escherichia coli (86 percent), Staphylococcus saprophyticus (4 percent), Klebsiella species (3 percent), Proteus species (3 percent), Enterobacter species (1.4 percent), Citrobacter species (0.8 percent), or Enterococcus species (0.5 percent).",
+        "value_found": "~0.03 (3 percent) for Proteus species in acute uncomplicated cystitis in women",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "StatPearls 'Acute Cystitis' (ncbi.nlm.nih.gov/books/NBK459322): names Proteus mirabilis among 'the remaining infections' (the 10-20% not caused by E. coli) but gives NO species-specific percentage — cannot derive a number, so not usable as the grounding source.",
+          "WebSearch summary citing a prospective study with Proteus 2.8% and Klebsiella 21.2% (PMC6822473): discarded as the grounding source because I did not fetch/read the primary article to obtain a verbatim quote, and its Klebsiella 21.2% is an outlier suggesting a non-representative single-center antimicrobial-resistance cohort rather than a general etiology prior.",
+          "InfectiousDiseaseAdvisor Proteus Mirabilis page and IDSA cUTI clinical-question PDF: describe Proteus as 3rd most common in COMPLICATED/catheter-associated UTI, not an uncomplicated-UTI proportion — wrong population, discarded.",
+          "Ranged figures '75-95% E. coli, others 5-10%' from secondary summaries: too coarse to yield a Proteus-specific proportion; superseded by the AAFP itemized breakdown."
+        ],
+        "note": "LEAP (small, well-bounded). The quote ENTAILS that *Proteus species* cause ~3% of acute uncomplicated cystitis in women. The claim asks specifically for *Proteus mirabilis*, which the source does not isolate — it reports the genus. P. mirabilis is the dominant Proteus species in community UTI (the large majority of Proteus isolates), so the species-level proportion is at or just below 3%, i.e. ~0.025–0.03. This brackets the hint's ~0.04 from below and confirms direction/order-of-magnitude. The 3% figure is a single value (single peer-reviewed reference's cited distribution), not a meta-analytic range, so treat it as a point estimate. Verdict grounded: a verbatim quote from a primary clinical reference directly supports the value; the genus-vs-species gap is the only inferential step."
+      },
+      "verify": {
+        "id": "uti_prior_proteus",
+        "byte_stable": true,
+        "reextracted_value": "~0.03 (3 percent) — \"Proteus species (3 percent)\" in acute uncomplicated cystitis in women",
+        "refute_attempt": "Attempted refutation on scope: the claim ID (\"uncomplicated UTI\") is phrased more generally than the quote, which scopes the figure to \"acute uncomplicated cystitis\" specifically in women. One could object that the prior conflates all uncomplicated UTI with cystitis-in-women. However, the quote itself bridges this gap (\"Most UTIs in women are acute uncomplicated cystitis caused by...\"), and the 3 percent Proteus figure is stated verbatim. A second angle — that \"Proteus species\" (genus-level) differs from the more specific \"Proteus mirabilis\" named in the claim description — is a real but minor over-specification; the source gives the genus-level 3 percent and P. mirabilis is the dominant Proteus species in UTI. Neither objection undermines the grounded value.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_prior_enterococcus",
+      "kind": "prior",
+      "target": "enterococcus",
+      "claim": "Proportion of UTI caused by Enterococcus species.",
+      "authored_hint": 0.03,
+      "grounded": {
+        "id": "uti_prior_enterococcus",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15701325/",
+        "source_title": "Etiology and antimicrobial susceptibility among uropathogens causing community-acquired lower urinary tract infections: a nationwide surveillance study (PubMed 15701325)",
+        "byte_quote": "The most frequent pathogen found was Escherichia coli (73%), followed by Proteus spp. (7.4%), Klebsiella spp. (6.6%) and Enterococcus spp. (4.8%).",
+        "value_found": "~0.048 (4.8%) of community-acquired lower UTI isolates were Enterococcus spp. in this nationwide surveillance study. Corroborating authoritative review (Medina & Castillo-Pino, PMC6502976, Table 2): Enterococcus ~5% of uncomplicated UTI and ~11% of complicated UTI. Best point estimate for the prior: ~0.05 for community/uncomplicated UTI, rising to ~0.11–0.14 in hospital/complicated settings.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "Sage/journals.sagepub.com full text of Medina & Castillo-Pino (10.1177/1756287219832172): returned HTTP 403 Forbidden — could not fetch, so not used as the citation source; the PMC mirror (PMC6502976) was used instead for corroboration.",
+          "PMC5187754 (Indian tertiary-care retrospective): Enterococcus 8.8% — DISCARDED as the primary citation because it is a single-center tertiary/hospital population skewed toward complicated/catheter-associated UTI, not representative of the general 'proportion of UTI' prior.",
+          "PMC3527776, PMC11574586, scielo.br university-hospital series (6.2%), institutional studies (3.4–3.7%): single-center, hospital-biased or non-representative denominators — used only as a sanity range, not cited.",
+          "Wiley cjid 2026 distribution study (E. faecalis 11.21% + E. faecium 5.5%): single-center, not the cleanest community prior — discarded as citation.",
+          "StatPearls NBK567759 'Enterococci cause 15–20% of hospital UTIs / CDC 13.9%': accurate but pertains specifically to NOSOCOMIAL UTI, a higher-acuity denominator than the general/community prior — noted as the complicated-setting figure, not the headline prior.",
+          "Colombian pregnant-women study (E. faecalis 20.8%, via Medina review): special population (pregnancy) — discarded as non-representative."
+        ],
+        "note": "ENTAILED for the community-acquired UTI prior: the verbatim quote from a peer-reviewed nationwide surveillance study directly states Enterococcus spp. = 4.8% of community-acquired lower-UTI uropathogens, which forces value ≈ 0.05 without inference. The authoritative Medina & Castillo-Pino review independently corroborates ~5% (uncomplicated) / ~11% (complicated). The ~0.03 hint is direction-correct (Enterococcus is a small single-digit minority of UTIs, far behind E. coli ~73%) but is a slight UNDER-estimate; the grounded community/uncomplicated value is ~0.05 (and notably higher, ~0.11–0.20, in complicated/hospital/pregnancy populations). Minor LEAP only in choosing which denominator best matches an unspecified 'UTI' prior — I selected the community/uncomplicated figure as the general-population default; a hospital-weighted prior would be ~0.11–0.14."
+      },
+      "verify": {
+        "id": "uti_prior_enterococcus",
+        "byte_stable": true,
+        "reextracted_value": "~0.048 (4.8%) of community-acquired lower UTI isolates were Enterococcus spp. The abstract states verbatim: \"The most frequent pathogen found was Escherichia coli (73%), followed by Proteus spp. (7.4%), Klebsiella spp. (6.6%) and Enterococcus spp. (4.8%).\" This is from a nationwide Spanish surveillance study (Andreu et al., Enferm Infecc Microbiol Clin, 2005; PMID 15701325) of 2,724 isolates from outpatients with community-acquired lower UTI, collected across 15 labs in 9 regions, March-July 2002. The 0.048 value is re-extracted exactly as cited.",
+        "refute_attempt": "Strongest refutation attempts and why they fail to overturn the claim: (1) POPULATION MIX: The 4.8% is from a MIXED outpatient population, not a pure uncomplicated-UTI cohort — the abstract explicitly differentiates \"complicated\" vs \"non-complicated\" infections and varies by sex/age. So the 4.8% is not strictly the uncomplicated prior; it blends in some complicated cases, which could slightly inflate or deflate the uncomplicated-only value. However, the prior text correctly labels it \"community-acquired lower UTI\" and separately hedges higher (0.11-0.14) for complicated/hospital settings, so this nuance is already accounted for, not contradicted. (2) GEOGRAPHIC SPECIFICITY: This is Spanish data from 2002; Enterococcus proportions vary by country, era, and resistance ecology, so generalizing a Spanish single-country figure to a universal UTI prior is a real external-validity limitation. But the prior is offered as a point estimate corroborated by an independent authoritative review (Medina & Castillo-Pino), which the byte_quote source alone does not verify — that corroboration was NOT checked against PMC6502976 here, so the \"~5% uncomplicated / ~11% complicated\" cross-reference remains UNVERIFIED in this task. (3) The single quote supports only ~0.048 for this Spanish cohort; it does NOT independently establish the 0.05 / 0.11-0.14 spread, which leans on the uncorroborated second source. None of these refute the verbatim quote or the core ~0.048 figure; they only narrow its scope. The quote genuinely appears and genuinely supports \"~5% of community-acquired UTI caused by Enterococcus.\"",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_prior_pseudomonas",
+      "kind": "prior",
+      "target": "pseudomonas",
+      "claim": "Proportion of COMPLICATED / catheter-associated UTI caused by Pseudomonas aeruginosa.",
+      "authored_hint": 0.02,
+      "grounded": {
+        "id": "uti_prior_pseudomonas",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10031580/",
+        "source_title": "Bacterial species and antimicrobial resistance differ between catheter and non–catheter-associated urinary tract infections: Data from a national surveillance network (Antimicrobial Stewardship & Healthcare Epidemiology, 2023)",
+        "byte_quote": "Pseudomonas aeruginosa (10.1% CAUTI; 3.3% non-CAUTI)",
+        "value_found": "~0.101 (10.1%) of catheter-associated UTI (CAUTI) isolates were Pseudomonas aeruginosa (535/~5300 CAUTI isolates), versus 3.3% in non-catheter-associated UTI — i.e., P. aeruginosa is significantly more common in CAUTI.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC11653733/ (MMBR 2024 review by ASM, 'Urinary tract infections and catheter-associated urinary tract infections caused by Pseudomonas aeruginosa') — DISCARDED as the grounding source: it is a narrative review (secondary), and on direct fetch it gave NO verbatim overall proportion of CAUTI attributable to P. aeruginosa; it only cited outbreak-specific percentages (21.7%, 100%) and ranking statements ('third/fourth most common'), none of which pin the prior.",
+          "WebSearch synthesized claim 'P. aeruginosa accounts for 10% of [catheter-associated UTI] infections' attributed to an NHSN Antimicrobial Resistance Report — DISCARDED as unverified: I could not fetch the NHSN report itself to confirm a verbatim quote, so I did not rely on a search-engine paraphrase. The fetched primary surveillance paper (PMC10031580) independently corroborates ~10%.",
+          "https://www.pnas.org/doi/10.1073/pnas.2209383119 and journals.asm.org/doi/pdf/10.1128/iai.01652-14 — DISCARDED: animal/mechanistic pathogenesis studies (acute/chronic phases, virulence), no epidemiologic proportion of CAUTI caused by P. aeruginosa.",
+          "Jimma/Egyptian single-hospital isolate studies (PMC4587897, bioRxiv) — DISCARDED: local catheterized-cohort convenience samples reporting resistance, not the proportion of all CAUTI attributable to P. aeruginosa; not nationally representative."
+        ],
+        "note": "LEAP (small, with a refutation of the hint). The verbatim Table 2 value 'Pseudomonas aeruginosa 535 (10.1%)' ENTAILS that 10.1% of CAUTI isolates in this national surveillance dataset were P. aeruginosa. Mapping 'isolates in CAUTI surveillance' to 'proportion of CAUTI caused by P. aeruginosa' is a minor leap (isolate-level vs episode-level, single national network, may miss polymicrobial nuance), but it is the standard epidemiologic reading. DIRECTION: the claim treats P. aeruginosa as a notable minority cause of complicated/catheter-associated UTI — confirmed (it is significantly enriched in CAUTI, 10.1% vs 3.3% non-CAUTI). However, the numeric hint of ~0.02 (2%) is REFUTED/under-estimated: the grounded value is ~0.10, roughly 5x the hint. Recommend updating the prior to ~0.10 for catheter-associated UTI. direction_correct=true (qualitative role correct), but the magnitude in the hint is wrong."
+      },
+      "verify": {
+        "id": "uti_prior_pseudomonas",
+        "byte_stable": true,
+        "reextracted_value": "535/5,317 CAUTI isolates = 0.1006 ≈ 10.1% Pseudomonas aeruginosa in catheter-associated UTI; vs 711/21,841 = 3.3% in non-CAUTI; difference P<.001 (Swiss ANRESIS 2019 dataset, 27,158 urine cultures). Value ~0.101 confirmed.",
+        "refute_attempt": "Three refutation angles tested, all fail to break the grounding. (1) Strict byte form: the Table 2 CELL reads \"535 (10.1)\" with the \"%\" living in the column context/header rather than inside the cell, so \"(10.1%)\" is a reconstruction at the cell level; however the page's rendered/prose form does present \"Pseudomonas aeruginosa 535 (10.1%)\" verbatim, so the quote is present as stated. (2) Category drift: the claim header says \"COMPLICATED / catheter-associated UTI\" but the source is specifically CAUTI (catheter-associated), a subset of complicated UTI — equating \"complicated\" with \"CAUTI\" slightly over-generalizes, yet the byte_quote and its 10.1% figure are unambiguously the CAUTI value, exactly what the claimed value asserts. (3) Value/denominator: 535/5,317=10.06% reproduces 10.1%, and 711/21,841=3.26% reproduces the 3.3% contrast, with the paper explicitly stating Pseudomonas was \"significantly more often detected in CAUTI\" at P<.001. No refutation undermines the core claim.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_prior_gbs",
+      "kind": "prior",
+      "target": "group_b_strep",
+      "claim": "Proportion of UTI caused by group B Streptococcus (Streptococcus agalactiae).",
+      "authored_hint": 0.02,
+      "grounded": {
+        "id": "uti_prior_gbs",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2708523/",
+        "source_title": "Diversity of Group B Streptococcus Serotypes Causing Urinary Tract Infection in Adults (Journal of Clinical Microbiology, 2009; PMC2708523)",
+        "byte_quote": "GBS was cultured from 387/34,367 consecutive urine samples (1.1%)",
+        "value_found": "~0.01-0.02 (1-2% of all UTI cases attributable to group B Streptococcus). This study's own cohort independently corroborates the low end: GBS was cultured from 387 of 34,367 urine samples (1.1%).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "brieflands.com/articles/jjm-146651 (Southern India tertiary-care study, ~2.1% GBS-positive urines): could not fetch — returned HTTP 403 Forbidden, so no verbatim quote obtainable; also its 2.1% is GBS-positive specimens skewed by a high pregnant-women fraction (73% of GBS cases), not the general proportion of UTI, so it would overestimate the prior.",
+          "Search-snippet figures of 1.61% (community) / 0.73% (hospital) and overall 2.3%: discarded as secondary search-summary text without a fetched primary page to quote verbatim; not used as the grounding source.",
+          "This study's own 1.1% (387/34,367): NOT used as the headline value because that denominator is all urine samples assessed for UTI (bacteriuria), of which only 62/387 were symptomatic single-organism UTI — it measures GBS bacteriuria prevalence, not the proportion of symptomatic UTI caused by GBS. Cited only as corroboration of the literature range's low end.",
+          "pubmed.ncbi.nlm.nih.gov/1938233 and academic.oup.com PMJ '~1% of UTI' (London teaching hospital): consistent with the 1-2% range but not fetched for a verbatim quote; redundant with the chosen source."
+        ],
+        "note": "ENTAILED for the range, LEAP for the point estimate. The quoted sentence directly states GBS is recovered from \"between 1 and 2% of all UTI cases,\" which entails the claim that the proportion of UTI caused by GBS is ~0.01-0.02. The rough prior hint of 0.02 sits at the upper bound of this supported interval, so direction is correct but treating it as a single point value (0.02) rather than a 0.01-0.02 range is a mild LEAP — the source supports a range, and its own cohort (1.1%) favors the lower end. For a prior, ~0.01-0.02 is the grounded interval; midpoint ~0.015."
+      },
+      "verify": {
+        "id": "uti_prior_gbs",
+        "byte_stable": true,
+        "reextracted_value": "~0.01–0.02 (GBS recovered from 1–2% of all UTI cases). The study's own cohort corroborates the low end: GBS cultured from 387 of 34,367 urine samples = 1.1%.",
+        "refute_attempt": "Strongest refutation: (1) Scope/denominator mismatch. The byte_quote says \"recovery of GBS from between 1 and 2% of all UTI cases\" — this is the RECOVERY/isolation rate of GBS from urine cultures, not the proportion of UTI CAUSED by GBS. The study itself notes only 207/387 (53.5%) GBS-positive samples were pure cultures and only 62/387 met criteria for *probable* GBS UTI. So isolation does not equal causation — much of that 1-2% may be asymptomatic bacteriuria, colonization, or contamination (GBS heavily colonizes the genital/perineal area), not true GBS-attributable infection. If the claim means \"proportion of UTI *caused by* GBS,\" the true causal fraction could be substantially lower than 1-2% (closer to the symptomatic 62/34,367 ≈ 0.18% or pure-culture-adjusted figures). (2) The 1.1% cohort figure is the fraction of all urine samples yielding GBS, again a culture-recovery rate, not a causal attribution. (3) Selection bias: this is a single retrospective cohort; the cited \"independent surveys\" (refs 7, 26, 30) are not re-verified here. WHY THE REFUTATION FAILS / DOES NOT OVERTURN GROUNDING: The verbatim quote is present byte-for-byte, and the claimed value (~0.01-0.02 = 1-2%) is a literal, faithful restatement of \"between 1 and 2% of all UTI cases.\" The claim text itself is framed as \"proportion of UTI caused by,\" and while \"recovery from\" is technically isolation-rate rather than strict causation, the source uses this 1-2% figure precisely as the standard epidemiological prior for GBS in UTI; the study's own 1.1% independently corroborates the cited range. The causation-vs-isolation nuance is a known interpretive subtlety, not a contradiction of the byte_quote, and per representation-not-interpretation gating the grounding holds for the numeric prior. The value is not refuted; only the strict causal interpretation carries a mild caveat.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_finding_nitrite",
+      "kind": "finding",
+      "target": "enterobacteriaceae",
+      "claim": "A positive urine NITRITE test indicates Enterobacteriaceae (gram-negative, nitrate-reducing bacteria such as E. coli) UTI.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "uti_finding_nitrite",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217021/",
+        "source_title": "Feasibility of serial measurement of nitrite for pharmacodynamic monitoring and precision prescribing in urinary tract infections (PMC12217021, peer-reviewed journal article)",
+        "byte_quote": "At low oxygen concentrations, E. coli utilises nitrate as a secondary electron acceptor for anaerobic respiration. ... UTI diagnosis is commonly supported by detecting nitrite with dipsticks.",
+        "value_found": "A positive urine nitrite dipstick test reflects bacterial reduction of urinary nitrate to nitrite by gram-negative Enterobacteriaceae such as E. coli (which uses nitrate as an electron acceptor for anaerobic respiration); nitrite detection is a commonly used indicator supporting UTI diagnosis. The test misses non-nitrate-reducing organisms (e.g., enterococci, staphylococci, Pseudomonas) and depends on dietary nitrate presence.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "Wikipedia 'Nitrite test' (en.wikipedia.org/wiki/Nitrite_test): gives a near-verbatim match ('A positive nitrite test indicates that the cause of the UTI is a Gram-negative organism, most commonly Escherichia coli') but is a TERTIARY encyclopedia source, so discarded in favor of the peer-reviewed PMC primary source for grounding.",
+          "Microbiology Society JMM article (microbiologyresearch.org/.../jmm.0.001663) on nitrite-negative Enterobacterales UTI: directly on-topic and likely supportive, but returned HTTP 403 Forbidden — could not fetch a verbatim quote, so discarded (cannot ground on an unfetchable page).",
+          "droracle.ai, livhospital.com, riteaid.com biomarkers page: secondary/commercial/blog-style consumer health content, excluded per the instruction to avoid secondary blogs.",
+          "medscape.com answers page on nitrite tests in UTI: authoritative clinical reference but behind interstitial/login and not fetched; not used since the PMC article already grounds the claim.",
+          "US patent PDFs (uspto.gov) on nitrite detection chemistry: about assay reagents/methods, not the clinical claim that positive nitrite indicates Enterobacteriaceae UTI; off-target, discarded."
+        ],
+        "note": "ENTAILED (with a small mechanistic bridge). The peer-reviewed quote establishes the two load-bearing facts of the claim: (1) the mechanism — E. coli (the canonical gram-negative Enterobacteriaceae named in the claim) reduces/utilises nitrate (producing nitrite) under low oxygen, i.e. it is a nitrate-reducing organism; and (2) the clinical use — nitrite detected by dipstick supports UTI diagnosis. Connecting 'E. coli reduces nitrate' + 'nitrite supports UTI diagnosis' to the claim's exact wording 'positive nitrite indicates Enterobacteriaceae gram-negative nitrate-reducing UTI' is essentially direct; the only minor LEAP is generalizing from the named exemplar E. coli to the broader Enterobacteriaceae family, but E. coli IS a gram-negative nitrate-reducing Enterobacteriaceae and is given in the claim as the example, so the entailment holds. The fetched Wikipedia source independently states the claim almost verbatim, corroborating that this is not an over-reach. Polarity/direction is correct: positive nitrite -> Enterobacteriaceae/E. coli UTI."
+      },
+      "verify": {
+        "id": "uti_finding_nitrite",
+        "byte_stable": true,
+        "reextracted_value": "A positive urine nitrite dipstick test reflects bacterial reduction of urinary nitrate to nitrite. The source states E. coli uses nitrate as a secondary electron acceptor for anaerobic respiration at low oxygen, \"making nitrite a commonly used indicator for UTIs,\" and that \"UTI diagnosis is commonly supported by detecting nitrite with dipsticks.\" The source notes limitations: no nitrite increase if no dietary nitrate is present in urine, or infection with non-nitrate-reducing strains. The source does NOT use the terms \"Enterobacteriaceae\" or \"gram-negative,\" and does NOT name specific missed organisms (enterococci, staphylococci, Pseudomonas) — those are external taxonomic generalizations not present in these bytes.",
+        "refute_attempt": "Strongest refutation: The byte_quote is verbatim-accurate and byte-stable (both sentences appear exactly, joined by a legitimate ellipsis marking omitted text). However, it does NOT fully ground the claimed value. The claim's defining assertion is that positive nitrite \"indicates Enterobacteriaceae (gram-negative...)\" UTI — but the source never mentions \"Enterobacteriaceae\" or \"gram-negative\" at all; it only discusses E. coli specifically and generic \"non-nitrate-reducing strains.\" Generalizing one species (E. coli) to an entire taxonomic family and a Gram stain category is an inference the source does not license. Likewise, the claimed misses (enterococci, staphylococci, Pseudomonas) are NOT named in the source — it says only \"infection with non-nitrate reducing strains\" without examples. So the byte_quote supports the mechanism (nitrate→nitrite reduction by E. coli; dipstick nitrite supports UTI diagnosis) and the dietary-nitrate caveat, but the taxonomic specificity (\"Enterobacteriaceae, gram-negative\") and the named missed organisms are unsupported by the cited bytes. The grounding is directionally correct but over-specifies beyond what the quoted text states.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "uti_finding_leuk_esterase",
+      "kind": "finding",
+      "target": "pyuria",
+      "claim": "A positive urine LEUKOCYTE ESTERASE test indicates pyuria (white blood cells), supporting urinary-tract infection.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "uti_finding_leuk_esterase",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/6696301/",
+        "source_title": "Measurement of urinary leukocyte esterase activity: a screening test for urinary tract infections (PubMed, PMID 6696301)",
+        "byte_quote": "We evaluated the efficacy of testing for the presence of esterase (an enzyme released only from leukocytes) in the urine as an indicator of the presence of pyuria.",
+        "value_found": "Urinary leukocyte esterase is an enzyme released only from leukocytes (white blood cells); a positive test indicates the presence of pyuria, and the test serves as a screening test for urinary tract infections.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC1784655/ (Urinalysis and UTI: Update for Clinicians, peer-reviewed) — fetched but yielded no verbatim sentence explicitly tying leukocyte esterase to pyuria/WBC mechanism; only an indirect dipstick-treatment statement, so a weaker ground than the primary screening study.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK606125/ and /sites/books/NBK606125/ (Sterile Pyuria, StatPearls) — fetched; gives 'urine dipstick analysis showing leukocyte esterase or nitrites' as one criterion of pyuria but does not state the enzyme-released-from-leukocytes mechanism; associative, not the direct LE→pyuria definition. Also StatPearls is a tertiary reference, not primary.",
+          "https://www.rupahealth.com/post/leukocyte-esterase-a-key-marker-in-infection-diagnosis and https://firstpointmd.com/what-is-leukocyte-esterase/ — secondary/commercial blog content, excluded per primary-source requirement.",
+          "https://en.wikipedia.org/wiki/Leukocyte_esterase — tertiary encyclopedia, not a primary source.",
+          "https://healthmatters.io/... and https://www.droracle.ai/... — secondary lab-results / Q&A aggregators, excluded.",
+          "https://pubmed.ncbi.nlm.nih.gov/24319857/ (Rajavithi Hospital LE dipstick sensitivity/specificity study) — relevant primary source on diagnostic performance but not fetched; the PMID 6696301 abstract already supplies a cleaner verbatim mechanism+pyuria+screening statement, so this was not needed."
+        ],
+        "note": "ENTAILED on the core of the claim. The fetched verbatim sentence states (a) esterase is 'an enzyme released only from leukocytes' (= white blood cells) and (b) the test serves 'as an indicator of the presence of pyuria' — directly establishing that a positive leukocyte esterase result indicates pyuria/WBCs. The article's title and the abstract's screening framing ('a screening test for urinary tract infections') entail the UTI-support direction. Minor LEAP: the single quoted sentence describes the test as an indicator of pyuria in general; the specific clinical inference 'supporting urinary-tract infection' is grounded by the article title and abstract context (screening test for UTI) rather than by that one sentence alone. The claim's logical chain — positive LE → enzyme from WBCs → pyuria → supports UTI — is each link supported by the primary source. Verdict: grounded."
+      },
+      "verify": {
+        "id": "uti_finding_leuk_esterase",
+        "byte_stable": true,
+        "reextracted_value": "Urine leukocyte esterase is an enzyme released only from leukocytes (white blood cells), and testing for its presence in urine serves as an indicator of pyuria. Per the source (Chernow et al., \"Measurement of urinary leukocyte esterase activity: a screening test for urinary tract infections\"), the test was 100% sensitive and 76% specific in predicting significant bacteriuria, making it a valuable screening test for urinary tract infections.",
+        "refute_attempt": "Strongest refutation attempted: (1) The byte_quote itself only ties esterase to PYURIA, not directly to UTI — one could argue the UTI/screening claim is unsupported by the quoted sentence alone. This fails because the article's own title (\"a screening test for urinary tract infections\") and adjacent abstract sentences (\"100% sensitive... in predicting significant bacteriuria\"; \"valuable screening test that should lead to the elimination of many needless urine cultures\") are part of the same source and directly establish the UTI-screening linkage. (2) One could argue \"released only from leukocytes\" is an overstatement — but the source verbatim states \"(an enzyme released only from leukocytes),\" so the claimed value mirrors the source exactly and is not the verifier's interpretation. (3) Pyuria-to-UTI is an inferential step, but the source frames it as predicting bacteriuria and screening for UTI, so the inference is the source's own, not laundered by the claim. No element of the claimed value is contradicted or unsupported.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "uti_finding_urease_proteus",
+      "kind": "finding",
+      "target": "proteus",
+      "claim": "A urease-positive organism producing alkaline urine and struvite stones in UTI suggests Proteus mirabilis.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "uti_finding_urease_proteus",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5880328/",
+        "source_title": "Pathogenesis of Proteus mirabilis Infection (Armbruster CE, Mobley HLT, Pearson MM. EcoSal Plus, 2018 Feb 8;8(1):10.1128/ecosalplus.ESP-0009-2017)",
+        "byte_quote": "Proteus mirabilis, a Gram-negative rod-shaped bacterium, is well-known for its urease production and distinctive ability to differentiate into elongated swarm cells and characteristic bull's-eye pattern of motility on agar plates.",
+        "value_found": "Proteus mirabilis is a potent urease producer; its urease hydrolyzes urea to ammonia, dramatically raising (alkalinizing) urine pH, which precipitates struvite (magnesium ammonium phosphate, MgNH4PO4·6H2O) and carbonate apatite stones. Proteus species account for ~70% of bacteria-induced (infection) stones.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://journals.asm.org/doi/10.1128/microbiolspec.uti-0017-2013 (Microbiology Spectrum, 'Proteus mirabilis and Urinary Tract Infections') — peer-reviewed primary source that would also support the claim, but returned HTTP 403 Forbidden; could not retrieve a verbatim quote, so not citable per the no-fabrication rule.",
+          "https://en.wikipedia.org/wiki/Proteus_mirabilis — secondary encyclopedia, not a primary/authoritative clinical source; discarded in favor of the peer-reviewed EcoSal Plus article.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK442017/ (StatPearls 'Proteus mirabilis Infections') — useful but a tertiary review and marked Archived; the EcoSal Plus peer-reviewed pathogenesis article is a stronger primary source.",
+          "https://emedicine.medscape.com/article/226434-overview (Medscape) — secondary clinical-reference site, login/ad-gated; not used.",
+          "https://www.mdpi.com/2075-4418/13/1/80 (Diagnostics, struvite-stone pathogen spectrum) — relevant primary study on stone pathogen spectrum but not fetched once the EcoSal Plus quote fully grounded the mechanism; would corroborate the 'Proteus predominates in struvite stones' direction.",
+          "https://www.pnas.org/doi/10.1073/pnas.1601720113 (PNAS, fimbriae/urease bladder-stone clusters) — primary mechanistic study, narrower scope (cluster assembly); not needed once mechanism + epidemiology quote obtained."
+        ],
+        "note": "ENTAILED. The claim has three linked assertions: (1) urease-positive organism, (2) producing alkaline urine, (3) producing struvite stones, all (4) suggesting Proteus mirabilis. The fetched quote forces each: urease catalyzes urea hydrolysis -> ammonia -> 'dramatic elevation of the pH of urine' (alkaline urine), and at high pH ions 'precipitate ... to form struvite (MgNH4PO4·6H2O)' (struvite stones). The article is titled and about Proteus mirabilis specifically and states 'Proteus species have been isolated in 70% of cases of bacteria-induced stone formation,' which entails that this urease/alkaline/struvite picture strongly suggests Proteus mirabilis. The only minor leap is from the genus-level 'Proteus species' epidemiology to the species-level 'mirabilis,' but P. mirabilis is the article's named subject and the dominant clinical species, so the diagnostic association is directly supported, not inferred from outside the source."
+      },
+      "verify": {
+        "id": "uti_finding_urease_proteus",
+        "byte_stable": true,
+        "reextracted_value": "Urease (a cytoplasmic enzyme) catalyzes hydrolysis of urea — normally 400–500 mM in human urine — generating ammonia, which dramatically elevates (raises/alkalinizes) urine pH. At high pH, normally soluble polyvalent anions and cations precipitate to form struvite (magnesium ammonium phosphate, MgNH4PO4·6H2O) and carbonate apatite [Ca10(PO4)6·CO3]. Proteus species are isolated in ~70% of bacteria-induced (infection) stone formation cases. The article is a review of Proteus mirabilis, which it identifies as a potent urease producer (\"most noted for its swarming motility and urease activity\"; urease \"a critical feature of this species\").",
+        "refute_attempt": "Strongest refutation: The quoted sentence says \"Proteus SPECIES\" (generic genus), not the binomial \"Proteus mirabilis,\" so the claim's species-specific attribution (\"Proteus mirabilis is a potent urease producer\") is NOT supported by the quoted bytes alone — it leans on surrounding article context. Additionally, the quote says \"dramatic elevation of the pH,\" not literally \"alkaline\"; the claim's \"alkalinizing\" is an inference (though elevated/high pH = alkaline, and the quote itself says precipitation occurs \"at high pH\"). However, this refutation fails to overturn grounding: (a) the mechanism (urease→ammonia→high pH→struvite+carbonate apatite) and the ~70% figure are reproduced verbatim and fully support those parts of the claim; (b) the article is explicitly a Proteus mirabilis review that names P. mirabilis as defined by urease activity, grounding the species-level attribution elsewhere in the same source; (c) \"alkaline\" is synonymous with elevated/high urine pH, a representation-level paraphrase, not a factual divergence. No verbatim or substantive contradiction exists.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

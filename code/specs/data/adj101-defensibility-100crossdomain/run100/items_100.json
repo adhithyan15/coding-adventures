@@ -1,0 +1,1004 @@
+{
+ "items": [
+  {
+   "id": "MED-1",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "policy": "A patient may be discharged from the post-anesthesia care unit (PACU) only when their Aldrete score is 9 or higher. A score below 9 requires continued monitoring.",
+   "scenario": "Mr. Halloran is recovering in the PACU after a knee arthroscopy. His current Aldrete score is documented as 8: activity 2, respiration 2, circulation 2, consciousness 2, oxygen saturation 0.",
+   "question": "May Mr. Halloran be discharged from the PACU now?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "may not be discharged"
+  },
+  {
+   "id": "MED-2",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "policy": "Acetaminophen dosing for children is 15 mg per kilogram of body weight per dose, not to exceed 1000 mg per dose. Doses are given no more frequently than every 4 hours.",
+   "scenario": "A nurse is preparing an acetaminophen dose for a child weighing 20 kg who has not received any acetaminophen in the last 12 hours. The provider has ordered weight-based dosing per protocol.",
+   "question": "What is the correct single dose of acetaminophen for this child?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "300 mg"
+  },
+  {
+   "id": "MED-3",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "policy": "A blood transfusion requires two qualified staff members to independently verify the patient identification and the blood unit label at the bedside. If either verification step is not completed, the transfusion must not begin.",
+   "scenario": "At the bedside, Nurse Okafor verified the patient's wristband against the blood unit label. The second checker, Nurse Lindqvist, was paged away and never independently verified the unit before the infusion line was opened.",
+   "question": "Was it permissible to begin this transfusion?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not permissible"
+  },
+  {
+   "id": "MED-4",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "policy": "Metformin must be temporarily withheld at the time of, or prior to, an imaging procedure using iodinated contrast in any patient whose estimated glomerular filtration rate (eGFR) is below 30 mL/min/1.73m2. Patients at or above 30 may continue metformin.",
+   "scenario": "Mrs. Adeyemi, a type 2 diabetic on metformin, is scheduled for a contrast-enhanced CT scan this afternoon. Her chart notes long-standing hypertension and stage 3 chronic kidney disease, and her most recent labs were drawn this morning.",
+   "question": "Must metformin be withheld for Mrs. Adeyemi's CT scan?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "eGFR value not stated"
+  },
+  {
+   "id": "MED-5",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "policy": "A drug order written with a trailing zero after a decimal point (e.g., '5.0 mg') must be returned to the prescriber for clarification, because the trailing zero is a recognized error-prone notation. Orders without a trailing zero are processed normally.",
+   "scenario": "The pharmacy receives a handwritten order for warfarin for Mr. Castellano. The pharmacist notes the dose is written in the prescriber's usual hurried script and that the indication and frequency are clearly documented as 'daily, for atrial fibrillation.'",
+   "question": "Must this warfarin order be returned to the prescriber for clarification?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the dose was written with a trailing zero not stated"
+  },
+  {
+   "id": "MED-6",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "policy": "Live attenuated vaccines (such as MMR) are contraindicated in pregnant patients. Inactivated vaccines (such as the inactivated influenza vaccine) may be given during pregnancy.",
+   "scenario": "Ms. Brevik, who is 16 weeks pregnant, presents to the clinic for a vaccination during flu season. The intake nurse confirms she has no egg allergy and no prior adverse vaccine reaction, and the order simply reads 'administer influenza vaccine today.'",
+   "question": "Is the ordered influenza vaccine permitted for Ms. Brevik?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the influenza vaccine is the live attenuated or inactivated formulation not stated"
+  },
+  {
+   "id": "MED-7",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "policy": "Patients are normally seen in order of triage acuity, with higher-acuity patients seen before lower-acuity ones. However, a patient meeting STEMI (ST-elevation myocardial infarction) criteria must be taken to the catheterization lab immediately, ahead of all other patients regardless of their assigned acuity level.",
+   "scenario": "In the emergency department, three patients are waiting. Mr. Yi has the highest standard triage acuity (a level 1 trauma). Ms. Faraday has a lower triage acuity but her ECG shows confirmed ST-elevation meeting STEMI criteria. A third patient is stable.",
+   "question": "Which patient should be taken for definitive intervention first?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "Ms. Faraday"
+  },
+  {
+   "id": "MED-8",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "policy": "Patient health information may not be disclosed without the patient's written authorization. Notwithstanding this, when a clinician reasonably believes a patient poses an imminent, serious threat to an identifiable third person, the clinician must warn that third person, and such disclosure does not require the patient's authorization.",
+   "scenario": "During a session, Mr. Doyle, a competent adult outpatient, tells his psychiatrist Dr. Marsh in clear and credible terms that he intends to seriously harm his named coworker within the week. Mr. Doyle refuses to sign any release of his records and demands confidentiality.",
+   "question": "May Dr. Marsh warn the coworker despite Mr. Doyle's refusal to authorize disclosure?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "may warn"
+  },
+  {
+   "id": "MED-9",
+   "domain": "medicine",
+   "stratum": "exception-encoding",
+   "policy": "A competent adult patient's refusal of a recommended treatment must be honored, and the treatment must not be administered, except where the refusal is made during a period in which the patient lacks decision-making capacity, in which case the refusal does not bind the care team.",
+   "scenario": "Mr. Ferreira, admitted for sepsis, refuses IV antibiotics. At the moment he voiced the refusal he was febrile, disoriented to time and place, and unable to explain the consequences of declining treatment; a capacity assessment documented that he lacked decision-making capacity at that time.",
+   "question": "Is the care team bound to withhold the antibiotics based on Mr. Ferreira's refusal?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not bound"
+  },
+  {
+   "id": "MED-10",
+   "domain": "medicine",
+   "stratum": "exception-encoding",
+   "policy": "A surgical consent form must be signed by the patient before any operative procedure may proceed, except in a life-threatening emergency where the patient is unable to consent and no authorized surrogate is available, in which case the procedure may proceed under implied (emergency) consent.",
+   "scenario": "Ms. Nakagawa arrives unconscious after a car crash with a rapidly expanding intracranial hematoma that will be fatal within minutes without immediate surgery. She cannot consent, and despite attempts no family member or authorized surrogate can be reached in time. No signed consent form exists.",
+   "question": "May the surgeons proceed with the emergency operation?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "may proceed"
+  },
+  {
+   "id": "STA-1",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "policy": "A dog owner is strictly liable for any injury caused when their dog bites a person, and owes the full amount of the victim's medical costs.",
+   "scenario": "A leashed dog lunged and bit a passerby on a public sidewalk, causing a wound that required $1,400 in stitches and treatment. The dog's owner was holding the leash at the time.",
+   "question": "What amount is the owner liable to pay the victim?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$1,400"
+  },
+  {
+   "id": "STA-2",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "policy": "An operator of a commercial drone that crashes onto private property is liable for the resulting property damage. Liability is capped at $5,000 per incident.",
+   "scenario": "A commercial delivery drone malfunctioned and crashed through a homeowner's greenhouse roof, causing $7,200 in documented damage.",
+   "question": "How much is the drone operator liable to pay?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$5,000"
+  },
+  {
+   "id": "STA-3",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "policy": "A restaurant is liable for a slip-and-fall injury only if a hazardous condition existed and an employee had actual knowledge of it for at least 15 minutes before the fall without remedying it.",
+   "scenario": "A customer slipped on a spilled drink. A waiter saw the spill and reported it to the manager 25 minutes before the fall, but no one cleaned it up before the customer slipped.",
+   "question": "Is the restaurant liable for the injury?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "liable"
+  },
+  {
+   "id": "STA-4",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "policy": "A bar is liable for harm caused by a patron's drunk driving only if the bar served alcohol to that patron while the patron was already visibly intoxicated.",
+   "scenario": "After leaving a bar where he had four drinks, a patron caused a car crash and was found to be over the legal blood-alcohol limit. The bar's staff served him all four drinks over the course of the evening.",
+   "question": "Is the bar liable for the harm caused by the crash?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "visible intoxication at time of service not stated"
+  },
+  {
+   "id": "STA-5",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "policy": "A product manufacturer is liable for injury from a defective product only if the product was being used for its intended purpose at the time of injury.",
+   "scenario": "A consumer was injured when a folding ladder collapsed beneath him, and an inspection confirmed the ladder had a manufacturing defect in its hinge. He was standing on the ladder when it gave way.",
+   "question": "Is the manufacturer liable for the injury?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the ladder was used for its intended purpose not stated"
+  },
+  {
+   "id": "STA-6",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "policy": "An employer is vicariously liable for a tort committed by an employee only if the tort was committed within the scope of employment. Acts committed during a personal errand fall outside the scope of employment.",
+   "scenario": "A delivery-company driver, while behind the wheel of the company van during his shift, rear-ended another car and injured its driver.",
+   "question": "Is the employer vicariously liable for the injury?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the driver was on a personal errand not stated"
+  },
+  {
+   "id": "STA-7",
+   "domain": "statutory-liability",
+   "stratum": "override-precedence",
+   "policy": "A property owner is liable for injuries to trespassers caused by hazards on the property only in narrow circumstances. Override: where the hazard is an artificial condition likely to attract children (an attractive nuisance) and a child trespasser is injured by it, the owner is liable.",
+   "scenario": "A six-year-old child wandered onto an owner's land, was drawn to an unfenced backyard swimming pool, and was injured falling into it. The child was a trespasser.",
+   "question": "Is the property owner liable for the child's injury?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "liable"
+  },
+  {
+   "id": "STA-8",
+   "domain": "statutory-liability",
+   "stratum": "override-precedence",
+   "policy": "A volunteer who renders emergency aid at the scene of an accident is shielded from liability for ordinary negligence under the Good Samaritan rule. Override: the shield does not apply, and the volunteer remains liable, where the volunteer's conduct constitutes gross negligence or willful misconduct.",
+   "scenario": "At a roadside crash, a bystander volunteer pulled an injured passenger from a car. Acting with gross negligence, he dragged the passenger by the neck despite an obvious spinal injury, worsening the harm.",
+   "question": "Is the volunteer liable for the additional harm?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "liable"
+  },
+  {
+   "id": "STA-9",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "policy": "A common carrier is liable for loss of a passenger's checked baggage, except where the loss results from an act of war or government seizure, in which case the carrier bears no liability.",
+   "scenario": "A passenger's checked suitcase was confiscated and never returned after customs authorities seized it during a lawful government inspection at the destination airport.",
+   "question": "Is the carrier liable for the lost suitcase?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not liable"
+  },
+  {
+   "id": "STA-10",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "policy": "The owner of a domestic animal is liable for property damage the animal causes to a neighbor's land, except where the damage occurs because the neighbor failed to maintain a boundary fence that the neighbor was legally obligated to keep in repair.",
+   "scenario": "A farmer's cattle wandered onto a neighbor's field and destroyed a vegetable crop. The cattle entered through a gap in the boundary fence that the neighbor was legally obligated to maintain but had left in disrepair.",
+   "question": "Is the cattle owner liable for the crop damage?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not liable"
+  },
+  {
+   "id": "TAX-1",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "policy": "An individual must file a federal income tax return for the year if their gross income equals or exceeds the filing threshold of $14,600. If gross income is below the threshold, no return is required.",
+   "scenario": "Dana earned $9,200 in wages during the tax year and had no other income. The filing threshold for the year is $14,600.",
+   "question": "Is Dana required to file a federal income tax return for the year?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not required"
+  },
+  {
+   "id": "TAX-2",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "policy": "Imported goods are subject to a customs duty of 5% of the declared customs value. The duty owed is computed as 5% multiplied by the declared customs value.",
+   "scenario": "A shipment of ceramic tiles arrives at the border with a declared customs value of $2,000.",
+   "question": "How much customs duty is owed on the shipment?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$100"
+  },
+  {
+   "id": "TAX-3",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "policy": "A taxpayer may claim the residential energy credit only if the qualifying solar equipment was placed in service during the tax year for which the credit is claimed. Equipment placed in service in a different year does not qualify for that year's credit.",
+   "scenario": "Marcus purchased and installed qualifying rooftop solar panels, and the system was placed in service on August 3 of the current tax year. He is claiming the residential energy credit on his current-year return.",
+   "question": "Does Marcus's solar equipment qualify for the residential energy credit on his current-year return?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "qualifies"
+  },
+  {
+   "id": "TAX-4",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "policy": "A business may deduct an expense in the current tax year only if the expense is an ordinary and necessary business expense AND it was paid or incurred during the current tax year. Both conditions must hold.",
+   "scenario": "Reyna's consulting firm signed a contract in November for a $4,000 marketing campaign that is plainly an ordinary and necessary business expense. The invoice was issued in November of the current tax year.",
+   "question": "May Reyna deduct the $4,000 marketing expense on her current-year return?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the expense was paid or incurred in the current tax year not stated"
+  },
+  {
+   "id": "TAX-5",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "policy": "Goods qualify for duty-free treatment under the trade agreement only if they both (a) are listed on the eligible-goods schedule and (b) originate in a member country, as evidenced by a valid certificate of origin. Both requirements must be met.",
+   "scenario": "An importer brings in a batch of woven cotton scarves, which appear on the eligible-goods schedule. The scarves were shipped to the importer's warehouse from a distribution hub located in a member country.",
+   "question": "Do the scarves qualify for duty-free treatment under the trade agreement?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "country of origin not stated"
+  },
+  {
+   "id": "TAX-6",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "policy": "A dependent's unearned income is taxed at the parent's marginal rate (the 'kiddie tax') only if the dependent is under age 19 at year-end, or under age 24 at year-end and a full-time student. Otherwise, the dependent's unearned income is taxed at the dependent's own rate.",
+   "scenario": "Theo is claimed as a dependent on his parents' return and had $3,000 of unearned income from dividends this year. He is enrolled at a university and turned 21 during the year.",
+   "question": "Is Theo's unearned income taxed at his parents' marginal rate under the kiddie tax?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "full-time student status not stated"
+  },
+  {
+   "id": "TAX-7",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "policy": "Sales of tangible goods are subject to the standard 8% sales tax. However, notwithstanding the standard rate, sales of unprepared grocery food are exempt from sales tax and are taxed at 0%.",
+   "scenario": "A customer buys $50 worth of unprepared grocery food (raw vegetables and dried beans) at a supermarket.",
+   "question": "How much sales tax is owed on this purchase?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$0"
+  },
+  {
+   "id": "TAX-8",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "policy": "Late filing of a tax return incurs a penalty of $200. However, if the taxpayer was on active military deployment in a combat zone during the filing deadline, this penalty provision is overridden and no late-filing penalty applies, regardless of the standard rule.",
+   "scenario": "Sergeant Ortiz filed her return six weeks after the deadline. She was on active military deployment in a designated combat zone throughout the period that included the filing deadline.",
+   "question": "Does Sergeant Ortiz owe the $200 late-filing penalty?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "no late-filing penalty"
+  },
+  {
+   "id": "TAX-9",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "policy": "Gains from the sale of a personal residence are taxable as capital gains, except that a taxpayer who owned and used the home as their principal residence for at least two of the last five years may exclude up to $250,000 of gain, in which case the excluded gain is not taxable.",
+   "scenario": "Priya sold her home for a gain of $180,000. She had owned and lived in it as her principal residence continuously for the four years prior to the sale, and she is claiming the exclusion.",
+   "question": "Is Priya's $180,000 gain taxable?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not taxable"
+  },
+  {
+   "id": "TAX-10",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "policy": "Imported alcohol is subject to an excise duty of $3 per liter, except that alcohol imported solely for personal use in a quantity not exceeding 1 liter per traveler is exempt from the excise duty.",
+   "scenario": "A returning traveler declares a single 0.75-liter bottle of wine brought in solely for their own personal use.",
+   "question": "Is excise duty owed on the traveler's bottle of wine?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "exempt"
+  },
+  {
+   "id": "BEN-1",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "policy": "A household qualifies for the Winter Heating Subsidy if its monthly gross income is at or below $2,000 AND at least one resident is over the age of 65. Both conditions must be met.",
+   "scenario": "The Okafor household has a monthly gross income of $1,750. Its two residents are aged 68 and 70. They apply for the Winter Heating Subsidy.",
+   "question": "Does the Okafor household qualify for the Winter Heating Subsidy?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "qualifies"
+  },
+  {
+   "id": "BEN-2",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "policy": "Childcare Assistance pays $50 per child per week, for up to a maximum of 3 children. Payment is made only for children under the age of 13.",
+   "scenario": "Maria applies for Childcare Assistance for her four children, aged 2, 5, 9, and 15. All are in her care.",
+   "question": "What is Maria's weekly Childcare Assistance payment?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$150"
+  },
+  {
+   "id": "BEN-3",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "policy": "An applicant is eligible for Unemployment Insurance only if they have worked at least 26 weeks in the preceding 52-week period. Weeks worked while self-employed do not count toward the 26-week requirement.",
+   "scenario": "Devon worked 30 weeks as a salaried employee during the last 52 weeks, then was laid off. None of those weeks were self-employed work. He applies for Unemployment Insurance.",
+   "question": "Is Devon eligible for Unemployment Insurance?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "eligible"
+  },
+  {
+   "id": "BEN-4",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "policy": "The Disability Living Allowance is granted only if the applicant's disability is expected to last at least 12 months AND the applicant is a legal resident of the state. Both conditions are required.",
+   "scenario": "Priya was diagnosed with a chronic condition that her physician confirms will persist for several years. She submits a complete application including her medical certification. The caseworker notes her file contains a residency questionnaire that has not yet been processed.",
+   "question": "Is Priya eligible for the Disability Living Allowance?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "residency status not stated"
+  },
+  {
+   "id": "BEN-5",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "policy": "A student qualifies for the Full Tuition Grant if their family's annual income is below $40,000 AND they are enrolled full-time (defined as 12 or more credit hours per term).",
+   "scenario": "Andre's family reports an annual income of $31,000. He is excited to start university and has registered for several courses this term, including a demanding lab sequence he describes as a full plate.",
+   "question": "Does Andre qualify for the Full Tuition Grant?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "credit hours not stated"
+  },
+  {
+   "id": "BEN-6",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "policy": "The Veterans Housing Benefit is available to any honorably discharged veteran whose period of active service was 90 days or longer. Discharges under other-than-honorable conditions disqualify the applicant.",
+   "scenario": "Sgt. Coleman served on active duty for 14 months and left the military two years ago. He has framed his service medals on the wall and applies for the Veterans Housing Benefit, attaching his service-length records.",
+   "question": "Is Sgt. Coleman eligible for the Veterans Housing Benefit?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "discharge characterization not stated"
+  },
+  {
+   "id": "BEN-7",
+   "domain": "benefits-eligibility",
+   "stratum": "override-precedence",
+   "policy": "The standard Food Assistance benefit is $200 per month for a household of four. However, notwithstanding the standard amount, any household in which a member is a verified full-time caregiver for a disabled dependent receives a flat enhanced benefit of $320 per month, which replaces the standard amount.",
+   "scenario": "The Nguyen household has four members. One adult member is a verified full-time caregiver for the household's disabled child. They apply for Food Assistance.",
+   "question": "What is the Nguyen household's monthly Food Assistance benefit?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$320"
+  },
+  {
+   "id": "BEN-8",
+   "domain": "benefits-eligibility",
+   "stratum": "override-precedence",
+   "policy": "Applicants with assets exceeding $5,000 are generally ineligible for Emergency Cash Aid. However, this asset limit does not apply, and the applicant is eligible regardless of assets, when the application is filed within 30 days of a declared natural disaster in the applicant's county.",
+   "scenario": "Theresa has $18,000 in savings. Her county was placed under a declared natural disaster 10 days ago after severe flooding destroyed her home. She files for Emergency Cash Aid today.",
+   "question": "Is Theresa eligible for Emergency Cash Aid?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "eligible"
+  },
+  {
+   "id": "BEN-9",
+   "domain": "benefits-eligibility",
+   "stratum": "exception-encoding",
+   "policy": "All applicants for the Public Transit Pass must pay a $25 annual administration fee, except applicants who are registered as legally blind, who receive the pass at no charge.",
+   "scenario": "Walter is registered as legally blind with the state registry. He applies for the Public Transit Pass.",
+   "question": "What administration fee must Walter pay for the Public Transit Pass?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "no charge"
+  },
+  {
+   "id": "BEN-10",
+   "domain": "benefits-eligibility",
+   "stratum": "exception-encoding",
+   "policy": "Recipients of the Job Training Stipend must attend at least 80% of scheduled sessions to receive their monthly payment, except where a recipient's absence is due to a documented hospitalization, in which case the attendance requirement is waived and the payment is issued in full.",
+   "scenario": "Lena attended only 40% of her scheduled Job Training sessions last month because she was hospitalized for three weeks, which she documented with hospital records. She requests her monthly stipend.",
+   "question": "Does Lena receive her monthly Job Training Stipend payment?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "issued in full"
+  },
+  {
+   "id": "INS-1",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "policy": "Under the auto collision policy, the insurer pays the cost of repair minus a $500 deductible, but total payout for any single collision is capped at the vehicle's actual cash value of $12,000.",
+   "scenario": "A policyholder's car was damaged in a collision. The repair shop's itemized estimate is $4,200. The policy is active and the collision is a covered peril.",
+   "question": "How much will the insurer pay for this repair?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$3,700"
+  },
+  {
+   "id": "INS-2",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "policy": "A travel insurance policy reimburses trip-cancellation costs only when cancellation is due to a covered reason: the traveler's documented illness, the death of an immediate family member, or a government-issued travel advisory for the destination. Cancellation for any other reason is not reimbursable.",
+   "scenario": "A traveler cancelled a booked trip because she found a cheaper flight to the same destination on a different airline and wanted to rebook. She submitted a claim for the original non-refundable booking.",
+   "question": "Is the trip-cancellation claim reimbursable?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not reimbursable"
+  },
+  {
+   "id": "INS-3",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "policy": "Under the homeowner's wind policy, roof damage from a windstorm is covered. The insurer applies a 2% windstorm deductible calculated on the dwelling's insured value of $300,000, then pays the remainder of the covered loss.",
+   "scenario": "A windstorm tore shingles off an insured home, and the assessed covered roof loss is $15,000. The policy is in force and windstorm is a covered peril.",
+   "question": "How much will the insurer pay on this windstorm roof claim?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$9,000"
+  },
+  {
+   "id": "INS-4",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "policy": "A life insurance policy pays the full death benefit for any covered death. However, if the insured dies during the first two years of the policy (the contestability period) and the death is by suicide, the insurer pays only a refund of premiums rather than the death benefit.",
+   "scenario": "An insured died by suicide. The claim file confirms the cause of death and that the policy was active and premiums fully paid at the time of death.",
+   "question": "Does the insurer pay the full death benefit or only a refund of premiums?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "policy duration / date of policy inception not stated"
+  },
+  {
+   "id": "INS-5",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "policy": "Under the renter's theft coverage, stolen personal property is reimbursed at replacement cost. Jewelry, however, is subject to a special sub-limit of $1,500 per item; property that is not jewelry is reimbursed up to the full $25,000 contents limit.",
+   "scenario": "A renter's apartment was burglarized and a covered item with a documented replacement cost of $4,000 was taken. The theft is confirmed by a police report and the claim is otherwise valid.",
+   "question": "How much will the insurer reimburse for this item?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the item is jewelry not stated"
+  },
+  {
+   "id": "INS-6",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "policy": "A commercial property policy covers fire loss to insured inventory. Coverage applies only if the business maintained its contractually required functioning sprinkler system at the time of loss; if the sprinkler system was inoperative at the time of loss, the fire loss is excluded.",
+   "scenario": "A warehouse fire destroyed insured inventory worth $80,000. The policy was active, premiums were current, and fire is a listed covered peril. An inspection after the fire confirmed a sprinkler system was installed throughout the building.",
+   "question": "Is the fire loss to inventory covered?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the sprinkler system was operative at the time of loss not stated"
+  },
+  {
+   "id": "INS-7",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "policy": "Under the auto policy, damage occurring while the insured vehicle is used to carry passengers for hire (e.g., ridesharing) is excluded. Override: if the policyholder has purchased the rideshare endorsement, damage during for-hire passenger use is covered.",
+   "scenario": "A policyholder crashed while driving a passenger for a paid rideshare trip. The policy file shows the policyholder had purchased and paid for the optional rideshare endorsement, which was active on the date of the crash.",
+   "question": "Is the collision damage covered?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "covered"
+  },
+  {
+   "id": "INS-8",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "policy": "A health plan denies coverage for any treatment that has not received prior authorization. Override: emergency services required to treat an acute condition that a prudent layperson would consider life-threatening are covered without prior authorization.",
+   "scenario": "A member went to the emergency room with sudden crushing chest pain and shortness of breath and was treated for a suspected heart attack. No prior authorization had been obtained before the visit.",
+   "question": "Is the emergency treatment covered?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "covered"
+  },
+  {
+   "id": "INS-9",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "policy": "Under the homeowner's liability coverage, the insurer must pay for bodily injury to a guest caused by the insured's negligence on the premises, except where the injury was intentionally caused by the insured, in which case the insurer has no duty to pay.",
+   "scenario": "During an argument at a party, the insured deliberately shoved a guest down the stairs, causing the guest to break an arm. The guest filed a bodily-injury claim against the insured's homeowner's liability coverage.",
+   "question": "Does the insurer have a duty to pay this bodily-injury claim?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "no duty to pay"
+  },
+  {
+   "id": "INS-10",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "policy": "A pet insurance policy reimburses 80% of eligible veterinary treatment costs, except for conditions that are pre-existing as of the policy start date, which are not reimbursable at any rate.",
+   "scenario": "A dog was treated for chronic hip dysplasia. The medical records establish that the dog was diagnosed with hip dysplasia by a veterinarian eight months before the policy's start date, making it pre-existing. The owner submitted a $2,000 treatment bill.",
+   "question": "How much is reimbursable under the policy?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not reimbursable"
+  },
+  {
+   "id": "BUI-1",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "policy": "Habitable rooms must have a ceiling height of at least 7 feet 6 inches (90 inches) over at least 50% of the required floor area. Any portion of the room with a sloped ceiling measuring less than 5 feet (60 inches) in height is not counted toward the required floor area.",
+   "scenario": "A finished attic bedroom has a required floor area of 120 square feet. 70 square feet of that area sits under a flat ceiling measuring 96 inches high. The remaining 50 square feet is under a sloped ceiling that ranges from 48 inches to 72 inches high; of that, 30 square feet is below 60 inches.",
+   "question": "Does the room satisfy the ceiling-height requirement for a habitable room?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "satisfies"
+  },
+  {
+   "id": "BUI-2",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "policy": "Every sleeping room below the fourth story must have at least one emergency escape and rescue opening with a minimum net clear opening of 5.7 square feet, a minimum net clear opening height of 24 inches, and a minimum net clear opening width of 20 inches. All three minimums must be met simultaneously by the same opening.",
+   "scenario": "A second-story bedroom has a single window used as its emergency escape opening. When fully opened, the window provides a net clear opening that is 22 inches wide and 34 inches high, for a net clear opening area of 5.19 square feet.",
+   "question": "Does this window satisfy the emergency escape and rescue opening requirement?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "does not satisfy"
+  },
+  {
+   "id": "BUI-3",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "policy": "A stairway handrail must be mounted at a height of not less than 34 inches and not more than 38 inches, measured vertically from the sloped plane adjoining the tread nosing. Handrails are required on at least one side of any stairway having four or more risers.",
+   "scenario": "An interior stairway has six risers. A continuous handrail runs the full length of the stair on one side. The handrail is mounted at a uniform height of 36 inches measured vertically from the sloped plane adjoining the tread nosings.",
+   "question": "Does the handrail installation comply with the height and presence requirements?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "complies"
+  },
+  {
+   "id": "BUI-4",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "policy": "A building permit is required for any structure with a roofed floor area exceeding 200 square feet. A detached accessory structure is exempt from the permit requirement only if its roofed floor area is 200 square feet or less AND it is not served by any electrical, plumbing, or mechanical system.",
+   "scenario": "A homeowner builds a detached backyard shed with a roofed floor area of 160 square feet on a concrete slab. The shed has a single door and two windows, sits 8 feet from the property line, and is used only for garden tool storage.",
+   "question": "Is the shed exempt from the building permit requirement?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the shed is served by electrical, plumbing, or mechanical systems"
+  },
+  {
+   "id": "BUI-5",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "policy": "Smoke alarms must be installed inside each sleeping room, outside each separate sleeping area in the immediate vicinity of the bedrooms, and on each additional story of the dwelling. Where more than one smoke alarm is required, the alarms must be interconnected so that activation of one alarm activates all of them.",
+   "scenario": "A two-story dwelling has three bedrooms, all on the second floor clustered around a single hallway. There is a working smoke alarm inside each of the three bedrooms, one in the second-floor hallway outside the bedrooms, and one on the first floor.",
+   "question": "Does the dwelling's smoke alarm installation comply with the policy?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the smoke alarms are interconnected"
+  },
+  {
+   "id": "BUI-6",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "policy": "A guard is required along any walking surface that is located more than 30 inches above the floor or grade below, measured within 36 inches horizontally to the edge of the open side. A required guard must be at least 36 inches in height and must not have openings that allow passage of a sphere 4 inches in diameter.",
+   "scenario": "A raised interior walkway sits 44 inches above the floor below. Its open side is protected by a guard that measures 38 inches in height, constructed of horizontal rails.",
+   "question": "Does the guard comply with the policy?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "spacing of the guard's rail openings (4-inch sphere)"
+  },
+  {
+   "id": "BUI-7",
+   "domain": "building-code",
+   "stratum": "override-precedence",
+   "policy": "General rule: Every habitable room must have an aggregate glazing (window) area of not less than 8% of the room's floor area to provide natural light. Override: Natural light is not required, and the 8% glazing rule does not apply, where artificial light is provided capable of producing an average illumination of 6 footcandles over the area of the room at a height of 30 inches above the floor.",
+   "scenario": "A 150-square-foot habitable den has only 6 square feet of window glazing (4% of floor area). The den is equipped with a permanently installed lighting system that produces an average illumination of 8 footcandles measured 30 inches above the floor across the entire room.",
+   "question": "Does the den comply with the natural-light requirement?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "complies"
+  },
+  {
+   "id": "BUI-8",
+   "domain": "building-code",
+   "stratum": "override-precedence",
+   "policy": "General rule: The maximum allowed height for a single-family residential structure in the zone is 35 feet. Override: For lots within a designated Hillside Overlay District, the maximum height is reduced to 28 feet and this reduced limit supersedes the base zone height for any conflicting measurement.",
+   "scenario": "A proposed single-family home measures 32 feet in height. The lot lies entirely within a mapped Hillside Overlay District.",
+   "question": "Does the proposed structure's height comply with the applicable height limit?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "does not comply"
+  },
+  {
+   "id": "BUI-9",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "policy": "All exterior wood framing within 18 inches of exposed earth must be of naturally durable or preservative-treated wood to resist decay, except where the wood is separated from the earth by a continuous, impervious moisture barrier and is at least 8 inches above the finished grade.",
+   "scenario": "An exterior wood sill plate sits 10 inches above finished grade and 14 inches from exposed earth. The wood is untreated, ordinary framing lumber, but it rests on a continuous impervious moisture barrier that fully separates it from the earth.",
+   "question": "Does the untreated sill plate violate the decay-resistance requirement?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "does not violate"
+  },
+  {
+   "id": "BUI-10",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "policy": "A means of egress door must be side-hinged and swinging, except that the door from an individual dwelling unit's interior bathroom may be of any type, including pocket or sliding, provided the bathroom is not the only room providing access to a required exit.",
+   "scenario": "A dwelling unit has a bathroom fitted with a sliding pocket door. The bathroom opens off a central hallway; the hallway, not the bathroom, provides access to the unit's required exit, and the bathroom is a dead-end room.",
+   "question": "Does the bathroom's sliding pocket door violate the egress door requirement?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "does not violate"
+  },
+  {
+   "id": "EMP-1",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "policy": "An employee qualifies for overtime pay at 1.5x their hourly rate for every hour worked beyond 40 hours in a single workweek. Hours worked is the sum of all clocked time, excluding unpaid meal breaks.",
+   "scenario": "Maria's hourly rate is $20. During the workweek she clocked a total of 47 hours of work, which excludes her unpaid meal breaks. Compute her overtime pay for the week (the overtime portion only).",
+   "question": "How much overtime pay is Maria owed for the week?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$210"
+  },
+  {
+   "id": "EMP-2",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "policy": "An employee is eligible to enroll in the company retirement plan once they have completed at least 12 months of continuous service AND are at least 21 years old. Both conditions must be met.",
+   "scenario": "Devon started working at the company on March 1, 2024 and has worked continuously since. As of today, March 1, 2026, he has completed 24 months of continuous service. Devon is 19 years old.",
+   "question": "Is Devon eligible to enroll in the company retirement plan?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not eligible"
+  },
+  {
+   "id": "EMP-3",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "policy": "A non-exempt employee who works a shift of 6 or more consecutive hours must be provided at least one 30-minute unpaid meal break. Shifts shorter than 6 hours require no meal break.",
+   "scenario": "Priya, a non-exempt employee, was scheduled for and worked a single continuous shift of 5 hours and 45 minutes with no break.",
+   "question": "Was the employer required to provide Priya a meal break for this shift?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not required"
+  },
+  {
+   "id": "EMP-4",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "policy": "An employee accrues paid vacation at a rate of 1.25 days per full month of completed employment. Accrued but unused vacation is paid out upon termination ONLY if the employee was classified as full-time; part-time employees forfeit unused vacation on termination.",
+   "scenario": "Aaron was employed for exactly 8 full months and accrued 10 vacation days, none of which he used. He was terminated last week. His offer letter and HR records describe his role and his 32-hour standard week, and he was paid hourly.",
+   "question": "Is Aaron owed a payout for his 10 unused vacation days?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "full-time vs part-time classification not stated"
+  },
+  {
+   "id": "EMP-5",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "policy": "An employee on approved medical leave is entitled to job-protected reinstatement to their same position upon return, provided the leave does not exceed 12 weeks. Leave exceeding 12 weeks forfeits the reinstatement guarantee.",
+   "scenario": "Lin took approved medical leave beginning January 6. She notified HR of her intended return and submitted a fitness-for-duty certificate. Her manager has asked whether her old position must be held for her.",
+   "question": "Is Lin entitled to job-protected reinstatement to her same position?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "length/duration of the leave not stated"
+  },
+  {
+   "id": "EMP-6",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "policy": "Reimbursement of a business travel expense requires that the expense be (a) incurred while on company-authorized travel and (b) supported by an itemized receipt. Both conditions must be satisfied for reimbursement.",
+   "scenario": "Sofia submitted a $140 dinner expense from her trip to the regional conference. The conference travel was pre-approved by her director in writing. She attached a clear photo of her credit card statement showing the $140 charge at the restaurant.",
+   "question": "Must the company reimburse Sofia's $140 dinner expense?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "itemized receipt not stated (only a card statement was provided)"
+  },
+  {
+   "id": "EMP-7",
+   "domain": "employment-rules",
+   "stratum": "override-precedence",
+   "policy": "General rule: employees must provide at least two weeks' written notice before resignation to remain eligible for rehire. Override: notwithstanding the notice requirement, any employee who resigns due to a documented relocation of their household more than 100 miles away remains rehire-eligible regardless of notice given.",
+   "scenario": "Carlos resigned with only 3 days' notice. He provided documentation that his household relocated 250 miles away for his spouse's job, which is why he could not give two weeks' notice.",
+   "question": "Is Carlos eligible for rehire?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "eligible for rehire"
+  },
+  {
+   "id": "EMP-8",
+   "domain": "employment-rules",
+   "stratum": "override-precedence",
+   "policy": "General rule: remote-work requests are granted only to employees with at least 1 year of tenure. Override: this tenure requirement does not apply to employees whose role is designated 'remote-first' in the job requisition, who may work remotely from their first day.",
+   "scenario": "Nadia has been employed for 2 months. Her job requisition designates her role as 'remote-first.' She has requested to work remotely.",
+   "question": "Should Nadia's remote-work request be granted?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "granted"
+  },
+  {
+   "id": "EMP-9",
+   "domain": "employment-rules",
+   "stratum": "exception-encoding",
+   "policy": "An employee who fails to clock in for three or more scheduled shifts within a rolling 30-day period is subject to automatic termination, except where the missed shifts were covered by an approved leave request on file before the shift.",
+   "scenario": "Tomas missed four scheduled shifts in the last 30 days by not clocking in. For all four shifts, an approved leave request was on file in the HR system before each shift began.",
+   "question": "Is Tomas subject to automatic termination?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not subject to automatic termination"
+  },
+  {
+   "id": "EMP-10",
+   "domain": "employment-rules",
+   "stratum": "exception-encoding",
+   "policy": "Employees who work on a designated public holiday earn holiday premium pay at double their regular rate, except for employees in the 'essential operations' classification, who instead receive a flat $300 holiday stipend and no premium multiplier.",
+   "scenario": "Grace worked 8 hours on a designated public holiday. Her regular rate is $25/hour. Grace is classified as 'essential operations.'",
+   "question": "What holiday compensation is Grace entitled to for that day?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$300"
+  },
+  {
+   "id": "IMM-1",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "policy": "An applicant qualifies for naturalization only if they have been a lawful permanent resident (green card holder) for at least 5 continuous years immediately preceding the application. Spouses of citizens require only 3 continuous years.",
+   "scenario": "Maria has held a green card for 6 years and 2 months with no gaps in her permanent residence. She is not married to a U.S. citizen and applies for naturalization today.",
+   "question": "Does Maria meet the continuous-residence requirement for naturalization?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "qualifies"
+  },
+  {
+   "id": "IMM-2",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "policy": "A visitor on a B-2 tourist visa may remain in the country for a maximum of 180 days per admission. Remaining beyond 180 days constitutes an overstay.",
+   "scenario": "Kenji was admitted on a B-2 visa on January 1 and departed on July 15 of the same (non-leap) year, having remained continuously in the country the entire time.",
+   "question": "Did Kenji overstay his authorized period of admission?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "overstay"
+  },
+  {
+   "id": "IMM-3",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "policy": "An employment-based EB-2 immigrant petition requires that the offered position demand an advanced degree (master's or higher) OR a bachelor's degree plus at least 5 years of progressive post-baccalaureate experience.",
+   "scenario": "Priya holds only a bachelor's degree and has 6 years of progressive professional experience after earning it. Her job offer requires exactly this profile.",
+   "question": "Does Priya satisfy the EB-2 educational/experience threshold?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "qualifies"
+  },
+  {
+   "id": "IMM-4",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "policy": "An applicant for naturalization must demonstrate good moral character during the statutory period. A conviction for an aggravated felony at any time permanently bars a finding of good moral character; a single conviction for simple possession of 30g or less of marijuana does NOT bar good moral character.",
+   "scenario": "Tomas applied for naturalization. During the statutory period he was convicted once for a drug offense involving marijuana. He has no other criminal history and meets all residence requirements.",
+   "question": "Is Tomas barred from establishing good moral character based on this conviction?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "quantity of marijuana not stated"
+  },
+  {
+   "id": "IMM-5",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "policy": "To sponsor a relative, the petitioning U.S. citizen sponsor must have a household income of at least 125% of the Federal Poverty Guidelines for their household size. Active-duty military sponsors petitioning for a spouse or child need only meet 100% of the guidelines.",
+   "scenario": "Sergeant Alvarez, a U.S. citizen, is petitioning to sponsor his spouse. His household income equals 110% of the Federal Poverty Guidelines for his household size.",
+   "question": "Does Alvarez's income meet the financial requirement to sponsor his spouse?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "active-duty status not stated"
+  },
+  {
+   "id": "IMM-6",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "policy": "An asylum application must be filed within 1 year of the applicant's last arrival in the country, unless an exception applies. The 1-year deadline is measured from the date of last arrival.",
+   "scenario": "Fatima entered the country and filed her asylum application 14 months later. She states there were significant changes affecting her case, but no exception details are provided.",
+   "question": "Is Fatima's asylum application time-barred under the 1-year filing rule?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether a changed-circumstances exception applies not stated"
+  },
+  {
+   "id": "IMM-7",
+   "domain": "immigration-eligibility",
+   "stratum": "override-precedence",
+   "policy": "General rule: A noncitizen convicted of a crime involving moral turpitude is inadmissible. Override: Notwithstanding the general rule, the petty-offense exception applies and the noncitizen is NOT inadmissible if they have committed only one such crime, the maximum possible penalty did not exceed one year, and the actual sentence imposed was 6 months or less.",
+   "scenario": "Lin has exactly one conviction for a crime involving moral turpitude. The offense carried a maximum possible penalty of 364 days, and Lin was actually sentenced to 90 days.",
+   "question": "Is Lin inadmissible based on this conviction?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not inadmissible"
+  },
+  {
+   "id": "IMM-8",
+   "domain": "immigration-eligibility",
+   "stratum": "override-precedence",
+   "policy": "General rule: An applicant who has been unlawfully present for more than 180 days and then departs triggers a 3-year bar to readmission. Override: Notwithstanding the general rule, time spent unlawfully present while under the age of 18 does not count toward the 180 days.",
+   "scenario": "Diego accrued 200 days of unlawful presence in total. Of those, 150 days occurred while he was 17 years old, and the remaining 50 days occurred after he turned 18. He then departed.",
+   "question": "Is Diego subject to the 3-year bar to readmission?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "not subject"
+  },
+  {
+   "id": "IMM-9",
+   "domain": "immigration-eligibility",
+   "stratum": "exception-encoding",
+   "policy": "Every applicant for naturalization must pass an English language and U.S. civics examination, except an applicant who is over 50 years of age at the time of filing AND has lived as a lawful permanent resident in the country for at least 20 years, who is exempt from the English requirement.",
+   "scenario": "Rosa is 58 years old at the time she files for naturalization and has been a lawful permanent resident for 22 years.",
+   "question": "Is Rosa required to take the English language examination?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "exempt"
+  },
+  {
+   "id": "IMM-10",
+   "domain": "immigration-eligibility",
+   "stratum": "exception-encoding",
+   "policy": "A conditional permanent resident who obtained status through marriage must file a joint petition with their spouse to remove conditions within the 90-day window before the 2-year anniversary, except where the marriage was terminated by divorce, in which case the joint-filing requirement is waived and the resident may file alone with a waiver request.",
+   "scenario": "Omar received conditional permanent residence through marriage. Before the petition to remove conditions was due, his marriage was legally terminated by divorce. He now seeks to remove conditions.",
+   "question": "Must Omar file the petition jointly with his former spouse?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "waived"
+  },
+  {
+   "id": "CON-1",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "policy": "The provider guarantees 99.9% monthly uptime. If measured uptime falls below 99.9% in a calendar month, the customer is entitled to a service credit equal to 10% of that month's fees. Service credits are the customer's sole remedy and must be requested within 30 days of the affected month.",
+   "scenario": "In March, the provider's measured uptime was 99.5%. The monthly fee was $4,000. The customer submitted a credit request on April 10, 18 days after the end of March.",
+   "question": "What service credit is the customer entitled to?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$400"
+  },
+  {
+   "id": "CON-2",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "policy": "A Severity-1 incident is defined as a complete production outage. For Severity-1 incidents, the provider must acknowledge the ticket within 15 minutes and provide a first substantive response within 1 hour. Failure to meet the acknowledgment target triggers a $500 penalty.",
+   "scenario": "A complete production outage began at 09:00. The customer opened a ticket at 09:02. The provider sent an acknowledgment at 09:25 and a first substantive response at 09:40.",
+   "question": "Is the provider liable for the acknowledgment penalty?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "liable"
+  },
+  {
+   "id": "CON-3",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "policy": "Support requests submitted during business hours (Monday-Friday, 09:00-17:00 in the customer's stated timezone) carry a 4-hour response SLA. Requests submitted outside business hours are deemed received at the start of the next business day.",
+   "scenario": "The customer's stated timezone is US Eastern. A standard support request was submitted on Wednesday at 11:00 Eastern. The provider responded at 14:30 Eastern the same day.",
+   "question": "Did the provider meet the response SLA?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "met"
+  },
+  {
+   "id": "CON-4",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "policy": "Service credits are calculated as a percentage of the monthly recurring fee for the affected service. Credits do not apply to one-time setup charges, professional-services fees, or usage-based overage charges.",
+   "scenario": "The customer's invoice for the affected month totaled $9,000. Uptime fell below the guaranteed threshold, entitling the customer to a 15% credit. The invoice bundled charges into a single line item labeled 'Services - April'.",
+   "question": "What is the dollar amount of the service credit?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "monthly recurring fee portion not stated"
+  },
+  {
+   "id": "CON-5",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "policy": "Downtime caused by a Force Majeure event is excluded from uptime calculations. Force Majeure includes natural disasters, war, and government action, but expressly excludes failures of the provider's own equipment or software.",
+   "scenario": "The service was down for 6 hours during a regional power grid failure. The provider's datacenter lost utility power, and its on-site backup generator did not start, extending the outage. The provider attributes the entire outage to the grid failure and claims a Force Majeure exclusion.",
+   "question": "Is the full 6-hour outage excluded from the uptime calculation as Force Majeure?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "cause of generator failure not stated"
+  },
+  {
+   "id": "CON-6",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "policy": "A customer forfeits SLA credit eligibility for any month in which the customer's account is past due on the credit request date. An account is 'past due' if any undisputed invoice remains unpaid more than 15 days after its due date.",
+   "scenario": "The customer experienced qualifying downtime in June and submitted a credit request on July 20. The customer had one outstanding invoice with a due date of July 1, which remained unpaid as of July 20. The customer had emailed the provider on July 3 stating it was withholding payment.",
+   "question": "Has the customer forfeited credit eligibility for June?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "whether the invoice is disputed not stated"
+  },
+  {
+   "id": "CON-7",
+   "domain": "contract-sla",
+   "stratum": "override-precedence",
+   "policy": "The standard SLA caps total monthly service credits at 30% of the monthly fee. Notwithstanding the standard cap, customers on the Enterprise Plus tier are subject to a 50% monthly credit cap.",
+   "scenario": "An Enterprise Plus customer accumulated qualifying credits totaling 45% of its $20,000 monthly fee in a single month.",
+   "question": "What total service credit is payable for that month?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$9,000"
+  },
+  {
+   "id": "CON-8",
+   "domain": "contract-sla",
+   "stratum": "override-precedence",
+   "policy": "Planned maintenance windows are excluded from downtime provided the provider gives at least 48 hours' advance notice. However, any maintenance that exceeds its announced window by more than 30 minutes is counted as downtime in full, regardless of notice given.",
+   "scenario": "The provider gave 5 days' notice of a maintenance window announced to run from 02:00 to 03:00. The maintenance actually ran from 02:00 to 03:50, a 50-minute overrun.",
+   "question": "Is this maintenance counted as downtime?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "counted as downtime"
+  },
+  {
+   "id": "CON-9",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "policy": "The provider must escalate any unresolved Severity-1 incident to a senior engineer after 2 hours, except where the incident's root cause has been positively identified as a third-party network provider outside the provider's control, in which case no escalation obligation applies.",
+   "scenario": "A Severity-1 incident remained unresolved after 3 hours. Within the first hour, the provider confirmed and documented that the root cause was an outage at an upstream third-party network provider outside its control. The provider did not escalate to a senior engineer.",
+   "question": "Did the provider breach its escalation obligation?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "no escalation obligation"
+  },
+  {
+   "id": "CON-10",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "policy": "A customer who misses the 30-day window to request a service credit forfeits that credit, except that the window is tolled (paused) for any period during which the provider has failed to deliver the monthly uptime report that the contract requires it to publish within 5 days of month-end.",
+   "scenario": "Qualifying downtime occurred in August. The provider never published the required August uptime report. The customer requested the credit on October 15, 76 days after the end of August.",
+   "question": "Is the customer's credit request timely?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "timely"
+  },
+  {
+   "id": "ACA-1",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "policy": "Under the Henley Research Foundation grant, indirect (overhead) costs are reimbursed at a flat rate of 15% of the total direct costs charged to the award. No other overhead rate applies.",
+   "scenario": "A grantee's approved budget for the year lists $80,000 in total direct costs and requests indirect cost recovery on top of that.",
+   "question": "What dollar amount of indirect costs may the grantee recover for the year?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "$12,000"
+  },
+  {
+   "id": "ACA-2",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "policy": "A Principal Investigator (PI) may carry forward unspent funds into the next budget period only if the unspent balance is 25% or less of the period's total awarded amount; balances above 25% require prior written approval from the program officer.",
+   "scenario": "A PI was awarded $200,000 for the budget period and ended the period with $40,000 unspent. The PI wishes to carry the balance forward and has obtained no approvals.",
+   "question": "May the PI carry the $40,000 forward without prior written approval?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "may carry forward"
+  },
+  {
+   "id": "ACA-3",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "policy": "An annual progress report is due no later than 90 days before the end of the current budget period. A report submitted after that date is considered late.",
+   "scenario": "A grant's current budget period ends on December 31. The PI submitted the annual progress report on October 15 of the same year.",
+   "question": "Is the progress report on time or late?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "on time"
+  },
+  {
+   "id": "ACA-4",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "policy": "Conference travel is an allowable charge to the grant only if the conference is directly related to the funded project's scope of work; travel to conferences outside that scope is unallowable.",
+   "scenario": "A postdoc funded under a marine-microbiology grant charged $1,800 in registration and airfare to attend an international scientific conference, and submitted receipts and a completed travel authorization form on time.",
+   "question": "Is the $1,800 conference travel charge allowable on the grant?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "relation of conference to project scope not stated"
+  },
+  {
+   "id": "ACA-5",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "policy": "A no-cost extension of up to 12 months may be granted once, but only if at least some unobligated funds remain on the award at the time of the request. If no unobligated funds remain, no extension may be granted.",
+   "scenario": "A PI nearing the project end date submits a first-time request for a 6-month no-cost extension to finish data analysis, citing delays caused by an equipment failure earlier in the year.",
+   "question": "May the no-cost extension be granted?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "remaining unobligated funds not stated"
+  },
+  {
+   "id": "ACA-6",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "policy": "Equipment purchased with grant funds is defined as a tangible item with a useful life of more than one year AND a per-unit acquisition cost of $5,000 or more; such purchases require the funder's prior approval. Items below that threshold are supplies and need no prior approval.",
+   "scenario": "A lab used grant funds to buy a specialized centrifuge with a useful life of several years. The PI did not seek prior approval before the purchase.",
+   "question": "Did this purchase require the funder's prior approval?",
+   "gold_verdict": "INDETERMINATE",
+   "gold_answer_substring": "per-unit acquisition cost not stated"
+  },
+  {
+   "id": "ACA-7",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "policy": "Salary may be charged to a grant only for personnel listed in the approved budget. Override: a replacement hired into a vacated, already-budgeted position may be charged to the grant without a budget amendment, provided the position's role and salary line are unchanged.",
+   "scenario": "A budgeted research-technician position became vacant when the original technician resigned. The PI hired a replacement into the same role at the same budgeted salary line and charged the new hire's salary to the grant. The replacement's name does not appear in the originally approved budget.",
+   "question": "May the replacement technician's salary be charged to the grant?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "may be charged"
+  },
+  {
+   "id": "ACA-8",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "policy": "Funds in one budget category may be rebudgeted into another category without funder approval as long as the moved amount is under 10% of the total award. Override: any rebudgeting that creates a new foreign subaward requires prior funder approval regardless of the amount.",
+   "scenario": "On a $500,000 award, a PI moved $20,000 (4% of the award) from the supplies category to establish a new subaward with a collaborating laboratory located in another country. The PI obtained no funder approval.",
+   "question": "Did this rebudgeting require prior funder approval?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "required prior funder approval"
+  },
+  {
+   "id": "ACA-9",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "policy": "A PI must disclose to the institution any financial interest in an entity that sponsors or could benefit from the research, except for income received from a federal, state, or local government agency or from a U.S. accredited institution of higher education, which need not be disclosed.",
+   "scenario": "A PI received $9,000 in lecture honoraria during the year from a state university (a U.S. accredited institution of higher education) whose work overlaps with the PI's research area.",
+   "question": "Must the PI disclose this $9,000 to the institution as a financial interest?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "need not disclose"
+  },
+  {
+   "id": "ACA-10",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "policy": "Costs incurred before the grant's official start date are unallowable and may not be charged to the award, except for pre-award costs incurred within the 90 days immediately preceding the start date, which are allowable if they are necessary to the project.",
+   "scenario": "A grant's official start date is June 1. The PI charged $3,000 in necessary project supply costs that were incurred on May 5 of the same year, 27 days before the start date.",
+   "question": "May the $3,000 in pre-start-date supply costs be charged to the award?",
+   "gold_verdict": "DETERMINATE",
+   "gold_answer_substring": "may be charged"
+  }
+ ]
+}

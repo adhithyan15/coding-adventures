@@ -1,0 +1,139 @@
+{
+  "hash": "a36d52927de1e970",
+  "source_id": "https://www.cdc.gov/std/treatment-guidelines/penicillin-allergy.htm",
+  "title": "Managing Persons Who Have a History of Penicillin Allergy — STI Treatment Guidelines (CDC)",
+  "resolved_url": "https://www.cdc.gov/std/treatment-guidelines/penicillin-allergy.htm",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Reported penicillin allergy prevalence is about 10% of the US population and higher among hospital inpatients and long-term-care residents.",
+      "byte_quote": "Prevalence of reported allergy to penicillin is approximately 10% among the U.S. population and higher among hospital inpatients and residents in health care–related facilities"
+    },
+    {
+      "id": "c2",
+      "text": "In one STI clinic, 8.3% of patients reported a penicillin or other beta-lactam allergy.",
+      "byte_quote": "One large study in an STI clinic revealed that 8.3% of patients reported penicillin or another ß-lactam antibiotic allergy"
+    },
+    {
+      "id": "c3",
+      "text": "Most patients who report a penicillin allergy can actually tolerate the drug; allergy is overreported.",
+      "byte_quote": "Penicillin allergy is often overreported, with the majority of patients who report penicillin allergy able to tolerate the medication"
+    },
+    {
+      "id": "c4",
+      "text": "About 80% of patients with a true IgE-mediated penicillin allergy lose sensitivity after 10 years, so remote reactions are less likely to still be allergic.",
+      "byte_quote": "Approximately 80% of patients with a true IgE-mediated allergic reaction to penicillin have lost the sensitivity after 10 years"
+    },
+    {
+      "id": "c5",
+      "text": "In a Baltimore STI clinic, only 7.1% of patients reporting penicillin/beta-lactam allergy had an objective positive allergy test.",
+      "byte_quote": "only 7.1% of the patients who reported allergy to penicillin or to another ß-lactam antibiotic had an objective positive test for penicillin allergy"
+    },
+    {
+      "id": "c6",
+      "text": "With skin testing and graded oral challenge, true penicillin-allergy rates are low, 1.5%–6.1%.",
+      "byte_quote": "the true rates of allergy are low, ranging from 1.5% to 6.1%"
+    },
+    {
+      "id": "c7",
+      "text": "In hospitalized/comorbid populations reporting penicillin allergy, validated allergy rates are 2.5%–9.0%.",
+      "byte_quote": "the typical rates of validated penicillin allergy among patients who report a history of penicillin allergy are 2.5%–9.0%"
+    },
+    {
+      "id": "c8",
+      "text": "Penicillin and cephalosporins share a beta-lactam ring, the basis of cross-reactivity concern.",
+      "byte_quote": "Penicillin and cephalosporins both contain a ß-lactam ring."
+    },
+    {
+      "id": "c9",
+      "text": "Third-generation cephalosporins (ceftriaxone, cefixime) have <1% cross-reactivity in IgE-mediated penicillin-allergic patients, vs 1%–8% for first/second-generation cephalosporins.",
+      "byte_quote": "Third-generation cephalosporins (e.g., ceftriaxone and cefixime) have lower cross-reactivity with IgE-mediated penicillin-allergic patients (<1%) compared with first- and second-generation cephalosporins (range: 1%–8%)."
+    },
+    {
+      "id": "c10",
+      "text": "Cephalosporin anaphylaxis in persons reporting penicillin allergy is extremely rare, about one per 52,000 persons.",
+      "byte_quote": "anaphylaxis secondary to cephalosporins is extremely rare among persons who report a penicillin allergy and is estimated to occur at a rate of one per 52,000 persons"
+    },
+    {
+      "id": "c11",
+      "text": "Third/fourth-generation cephalosporins and carbapenems are safe for patients without IgE-mediated penicillin symptoms (anaphylaxis/urticaria) in the prior 10 years.",
+      "byte_quote": "Use of third- and fourth-generation cephalosporins and carbapenems is safe for patients without a history of any IgE-mediated symptoms (e.g., anaphylaxis or urticaria) from penicillin during the preceding 10 years."
+    },
+    {
+      "id": "c11b",
+      "text": "For gonorrhea patients with reported penicillin allergy, ceftriaxone is often avoided despite low cross-reactivity with third-generation cephalosporins.",
+      "byte_quote": "For patients with a diagnosis of gonorrhea and a concomitant reported allergy to penicillin, ceftriaxone is often avoided, even though the cross-reactivity between penicillin allergy and third-generation cephalosporins is low"
+    },
+    {
+      "id": "c12",
+      "text": "Allergy validation has three steps: history, penicillin major/minor determinant skin test, then observed oral challenge with 250 mg amoxicillin if skin test is negative.",
+      "byte_quote": "performing an observed oral challenge with 250 mg amoxicillin before proceeding directly to treatment with the indicated ß-lactam therapy"
+    },
+    {
+      "id": "c13",
+      "text": "Standard practice after a negative penicillin skin test is an observed oral challenge of amoxicillin 250 mg with 1 hour of observation.",
+      "byte_quote": "the standard practice is to follow skin testing with an observed oral challenge of amoxicillin 250 mg with 1 hour of observation"
+    },
+    {
+      "id": "c14",
+      "text": "Major-determinant (Pre-Pen) plus penicillin G skin testing identifies about 90%–99% of IgE-mediated penicillin-allergic patients.",
+      "byte_quote": "This test identifies approximately 90%–99% of the IgE-mediated penicillin-allergic patients."
+    },
+    {
+      "id": "c15",
+      "text": "Penicillin skin testing during pregnancy is considered safe.",
+      "byte_quote": "Penicillin skin testing during pregnancy is considered safe."
+    },
+    {
+      "id": "c16",
+      "text": "Penicillin is recommended for all clinical stages of syphilis, with no proven alternatives for neurosyphilis, congenital syphilis, or syphilis in pregnancy.",
+      "byte_quote": "Penicillin is recommended for all clinical stages of syphilis, and no proven alternatives exist for treating neurosyphilis, congenital syphilis, or syphilis during pregnancy."
+    },
+    {
+      "id": "c17",
+      "text": "Ceftriaxone, a third-generation cephalosporin, is recommended for gonorrhea treatment.",
+      "byte_quote": "Ceftriaxone, a third-generation cephalosporin, is recommended for gonorrhea treatment."
+    },
+    {
+      "id": "c18",
+      "text": "Desensitization (induction of tolerance) is required when penicillin is the only option (neurosyphilis, syphilis in pregnancy) and the skin test is positive; it must be done by allergists in a monitored inpatient setting.",
+      "byte_quote": "Desensitization is required for persons who have a documented penicillin allergy and for whom no therapeutic alternatives exist (e.g., syphilis during pregnancy and persons with neurosyphilis)."
+    },
+    {
+      "id": "c19",
+      "text": "Patients with severe non-IgE reactions (Stevens-Johnson, toxic epidermal necrolysis, interstitial nephritis, hemolytic anemia) should avoid penicillin/beta-lactams indefinitely and not undergo skin testing or challenge.",
+      "byte_quote": "Persons with a history of severe adverse cutaneous reaction (e.g., Stevens-Johnson syndrome or toxic epidermal necrolysis) and other severe non-IgE-mediated reactions (e.g., interstitial nephritis, and hemolytic anemia) are not candidates for penicillin skin testing or challenge."
+    },
+    {
+      "id": "c20",
+      "text": "High-risk histories include anaphylaxis within 6 hours, severe cutaneous reactions (DRESS/eosinophilia, SJS, TEN, AGEP), and severe non-IgE reactions (kidney or hepatic injury, hemolytic anemia, thrombocytopenia).",
+      "byte_quote": "anaphylaxis within 6 hours or severe adverse cutaneous reaction (e.g., eosinophilia and systemic symptoms, Stevens-Johnson syndrome, toxic epidermal necrolysis, or acute generalized exanthematous pustulosis), and other severe non-IgE-mediated reactions (e.g., kidney or hepatic injury, hemolytic anemia, or thrombocytopenia)"
+    },
+    {
+      "id": "c21",
+      "text": "Low-risk history is one nonspecific symptom (GI intolerance, headache, fatigue, nonurticarial rash); a family history of beta-lactam allergy alone is not a contraindication.",
+      "byte_quote": "Low-risk history includes one nonspecific symptom (e.g., gastrointestinal intolerance, headache, fatigue, or nonurticarial rash) (Box 2). In addition, a family history of penicillin or ß-lactam allergy alone is not a contraindication for treatment with ß-lactam antibiotics."
+    },
+    {
+      "id": "c22",
+      "text": "Penicillin skin testing should not be done in patients who have taken antihistamines within the past 7 days.",
+      "byte_quote": "Penicillin skin testing should not be performed for patients who have taken antihistamines within the past 7 days."
+    },
+    {
+      "id": "c23",
+      "text": "Penicillin G for skin-test minor-determinant precursor is dosed at 10^-2 M, 3.3 mg/mL, 10,000 units/mL.",
+      "byte_quote": "Benzylpenicillin G (10 -2 M, 3.3 mg/mL, 10,000 units/mL)"
+    },
+    {
+      "id": "c24",
+      "text": "Patients reporting penicillin allergy have higher rates of surgical-site infections and MRSA infections and greater medical-care usage.",
+      "byte_quote": "persons with reported penicillin or another ß-lactam antibiotic allergy have higher rates of surgical-site infections, methicillin-resistant Staphylococcus aureus infections, and higher medical care usage"
+    }
+  ],
+  "cites": [
+    "Saxon et al. 1987 (skin test reagents)",
+    "Kaiser health care system data (3,313 patients with self-reported cephalosporin allergy)",
+    "Pre-Pen Package Insert — https://penallergytest.com/wp-content/uploads/PRE-PEN-Package-Insert.pdf",
+    "CDC STI Treatment Guidelines references 652-690 (e.g., 652 cephalosporin cross-reactivity/anaphylaxis rate; 659 Baltimore STI clinic study; 677 revised skin-test kit n=455; 684 UK 1972-2007 amoxicillin anaphylaxis fatality)"
+  ]
+}

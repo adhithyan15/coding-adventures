@@ -1,0 +1,20 @@
+{
+  "name": "PMC11999957 \u2014 55yo man, chest pain, ST-elevation mimicking ACS, Wells 0 [PRETEST only]",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11999957/",
+  "ground_truth": "PE confirmed by CTPA, DVT present, ACS excluded, pretest scores were low but PE was real",
+  "pe_confirmed": "pe_present",
+  "observations": [
+    "d_dimer(elevated)"
+  ],
+  "observations_pretest": [
+    "d_dimer(elevated)"
+  ],
+  "findings_not_in_vocab": [
+    "echo RV strain with PASP 56",
+    "ECG mimics ACS",
+    "high NT-proBNP",
+    "angiography excluded ACS",
+    "DVT found on ultrasound but Wells clinical-DVT exam sign absent",
+    "pretest scores low despite true PE"
+  ]
+}

@@ -2,6 +2,110 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] — 2026-05-29
+
+### Added
+
+- **Track L1 — Lie point-symmetry handler for first-order ODEs**
+  - New module `cas_ode.lie_symmetry` with public entry
+    `try_lie_symmetry(expr, y, x, vm)`.  Detects three textbook
+    point-symmetry groups by numerical invariance testing and reduces
+    via quadrature when possible:
+    1. **Translation in y** — `y' = f(x)`.  Reduce by direct integration
+       `y = ∫ f(x) dx + C`.
+    2. **Translation in x** — autonomous `y' = g(y)`.  Reduce via the
+       inverse quadrature `x = ∫ 1/g(y) dy + C`.  This catches the
+       logistic ODE `y' = y(1-y)` (and other nonlinear autonomous
+       cases) that the separable handler cannot invert.
+    3. **Scaling** `(x, y) → (λx, λ^k y)` for integer `k ∈ [-3, 3]`.
+       Detected by testing `f(λx, λ^k y) = λ^(k-1) f(x, y)` at three
+       sample λ ∈ {2, 3, 1/2} × three sample (x, y) — 63 evaluations
+       maximum.  Reduction is delegated to the existing
+       homogeneous-type solver which catches `k = ±1` upstream; the
+       Lie scaling branch is detection-only in Python and will gain a
+       full IR substitution path in Track L2.
+  - **Dispatcher integration**: hooked into `solve_ode` in `ode.py`
+    *after* every existing first-order family (linear, separable,
+    Bernoulli, homogeneous-type, exact).  Regression tests verify that
+    `y' + y = x`, `y' = x·y`, and Bernoulli forms still route to their
+    dedicated handlers.
+  - **Bounds**: scaling-exponent search is hard-bounded to seven
+    candidates (`k ∈ {-3, -2, -1, 1, 2, 3}`).  No recursion.  No user
+    string evaluation.
+  - Test coverage: 4 acceptance cases (scaling closes, translation-in-y
+    closes, logistic closes via Lie, `sin(xy)` falls through unevaluated)
+    plus autonomy unit tests, scaling-detection unit tests, and a
+    regression battery confirming the linear/separable paths still win.
+  - Version bump: 0.7.0 → 0.8.0.
+
+## [0.7.0] — 2026-05-28
+
+### Added
+
+- **Track C1 — Frobenius / power-series method for regular singular points**
+  - New module `cas_ode.frobenius` with public helper
+    `try_frobenius_series(expr, y, x, N=10)` that solves 2nd-order linear
+    ODEs of the form `y'' + p(x)y' + q(x)y = 0` admitting a regular
+    singular point at `x = 0`.
+  - **Algorithm**:
+    1. Extract `(P(x), Q(x), R(x))` from the ODE `P·y'' + Q·y' + R·y = 0`
+       (reuses the Phase 21 `_collect_var2_coeffs` pattern, inlined to
+       avoid an import cycle).
+    2. Pull rational polynomial coefficients of P, Q, R up to degree N
+       (new general-degree helper `_poly_coeffs`; the existing
+       `_try_polynomial_forcing` only goes up to degree 2).
+    3. Verify `x = 0` is a regular singular point by checking the
+       vanishing order of P (must be ≤ 2) and inverting P as a power
+       series to form `tildeP(x) = x·p(x) = Σpₖxᵏ` and
+       `tildeQ(x) = x²·q(x) = Σqₖxᵏ`.
+    4. Solve the indicial equation `r(r-1) + p₀r + q₀ = 0` exactly using
+       Fraction arithmetic; reject irrational or complex roots
+       (out of scope).
+    5. Apply the Frobenius recurrence
+       `aₙ · F(n+r) = -Σ_{k=1..n} a_{n-k}(pₖ(n-k+r) + qₖ)` with `a₀ = 1`
+       for the larger root `r₁`, in exact Fraction arithmetic.
+    6. Return `Equal(y, x^{r₁}·(a₀ + a₁x + ... + a_N x^N))` truncated at
+       N terms.
+  - **Scope** (deliberately tight):
+    - Singular point at `x = 0` only (not at general `x₀`).
+    - Non-integer-difference indicial roots only.  Equal-root and
+      integer-difference (logarithmic) cases bail to `None` so the
+      dispatcher returns the unevaluated ODE.
+  - **Dispatcher integration**: hooked into `solve_ode` in `ode.py` right
+    after Phase 21 (named-ODE recognition) and before Bernoulli.  Per the
+    spec lesson check, this is **the** generic Frobenius helper, not a
+    grid of per-family helpers — Bessel/Legendre/Hermite/Chebyshev are
+    already recognised structurally by Phase 21, so Frobenius only fires
+    on ODEs those recognisers reject.
+  - **Acceptance case**: `ode2(x²y'' + xy' + (x²-1/4)y, y, x)` (BesselJ
+    half-integer) is routed by the dispatcher to Phase 21 first and
+    answered as `%c1·BesselJ(1/2, x) + %c2·BesselY(1/2, x)`.  The
+    Frobenius helper itself bails on this ODE because the indicial roots
+    (±1/2) differ by 1 — an integer — confirming the out-of-scope guard.
+  - **17 new tests** in `tests/test_frobenius.py`:
+    - polynomial extraction unit tests (constant, `x² − 1/4`, non-polynomial reject);
+    - indicial-equation tests (rational, complex, irrational);
+    - integer-difference detection;
+    - regular-singular-point verification (Bessel form, regular-point reject);
+    - acceptance: Bessel ν=1/2 via `solve_ode` produces `BesselJ`/`BesselY`;
+    - integer-difference roots bail (`x²y'' − xy' = 0`);
+    - equal roots bail (`x²y'' + xy' = 0`);
+    - irregular singular point bails (`x³y'' + y = 0`);
+    - regular point bails (`y'' + y = 0`, falls through to const-coeff);
+    - non-named ODE `2x²y'' + 3xy' − (1+x)y = 0` produces verified
+      series `x^(1/2)(1 + x/5 + x²/70 + ...)` with exact rational coefficients
+      (verified by hand: a₁=1/5, a₂=1/70);
+    - dispatcher end-to-end routing test.
+  - **Coverage**: 87% overall (87% in `frobenius.py`); the uncovered lines
+    are the build-IR cases for non-positive coefficients, the `IRSymbol`
+    foreign-symbol reject path, and a few defensive `None` returns that
+    are unreachable under the indicial-root guard.
+
+### Notes
+
+- This is the Python side of Track C1.  The TS+Rust port is Track C2
+  (separate PR).
+
 ## [0.6.0] — 2026-05-16
 
 ### Added

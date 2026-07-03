@@ -148,6 +148,9 @@ from symbolic_ir import (
 )
 from symbolic_ir.nodes import C1, C2, C_CONST, ODE2, D
 
+from cas_ode.frobenius import try_frobenius_series
+from cas_ode.lie_symmetry import try_lie_symmetry
+
 if TYPE_CHECKING:
     from symbolic_vm.vm import VM
 
@@ -3456,6 +3459,18 @@ def solve_ode(
     if named is not None:
         return named
 
+    # ---- Track C1: Frobenius / power-series fallback -----------------------
+    # For 2nd-order linear ODEs with a regular singular point at x=0 that
+    # do NOT belong to a recognised named family, produce a truncated
+    # power-series solution.  This catches the textbook "solve by Frobenius"
+    # exercises without expanding the named-ODE grid.
+    #
+    # Scope (Track C1): singular point at x=0 only; non-integer-difference
+    # indicial roots only.  Logarithmic / merged-root cases fall through.
+    frob = try_frobenius_series(expr, y, x)
+    if frob is not None:
+        return frob
+
     # ---- Phase 18: Bernoulli ------------------------------------------------
     bern = _try_bernoulli(expr, y, x, vm)
     if bern is not None:
@@ -3499,5 +3514,13 @@ def solve_ode(
     exact = _try_exact(expr, y, x, vm)
     if exact is not None:
         return exact
+
+    # ---- Track L1: Lie point-symmetry (autonomous & scaling) ---------------
+    # Runs AFTER every existing first-order family.  Catches autonomous
+    # nonlinear y' = g(y) (e.g. logistic y' = y(1-y)) that separable cannot
+    # invert, and any future symmetry-reducible case not covered above.
+    lie = try_lie_symmetry(expr, y, x, vm)
+    if lie is not None:
+        return lie
 
     return None

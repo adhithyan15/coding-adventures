@@ -8,6 +8,11 @@ existing [`python-parser`](../packages/rust/python-parser/) crate and
 produces a `semantic_ir::Module`.  Implemented as the Rust crate
 `python-to-semantic-ir`.
 
+Milestones implemented: **M1** (literals), **M2** (variables /
+assignment / operators), **M3** (control flow), **M4** (functions,
+calls, closures), **M5** (collections / maps), and **P8** (positional
+default parameters — `def f(a=1)`).
+
 ## Pipeline
 
 ```text
@@ -60,7 +65,7 @@ versions of this frontend may accept a version parameter.
 | `None`                                 | `NilLit`                                                    |
 | `"hello"`, `'world'`                   | `StrLit { value }`                                          |
 | `name` (reference)                     | `VarRef { name, scope }` with resolved scope                |
-| `x = 1`                                | `LetBinding` (first time) or `Assign` (subsequent)          |
+| `x = 1`                                | `LetStarBinding` (first time) or `Assign` (subsequent)      |
 | `x + y`, `x - y`, `x * y`, `x / y`     | `BuiltinCall("+" / "-" / "*" / "/", [...])`                 |
 | `x % y`                                | `BuiltinCall("%", [x, y])`                                  |
 | `-x`                                   | `BuiltinCall("neg", [x])`                                   |
@@ -85,6 +90,82 @@ versions of this frontend may accept a version parameter.
 | `{"a": 1, "b": 2}`                     | `MapLit { entries }`                                        |
 | `d[k]`                                 | `MapGet { map: d, key: k }`                                 |
 | `d[k] = v`                             | `MapSet { map: d, key: k, value: v }`                       |
+
+**Implementation note (M3 — `range` in `for` headers):** the
+`for x in range(...)` rows above are realised in M3 by recognising a
+literal `range(...)` call *structurally inside the `for` header* and
+lowering it directly to `ForRange` (with arity 1/2/3 mapped to
+`start`/`stop`/`step`, and a `range` call of wrong arity rejected).  A
+non-`range` iterable lowers to `ForEach`.
+
+**Implementation note (M4 — functions, calls, closures):** the
+`def` / `lambda` / `return` / call / builtin rows above are realised in
+M4.  As of M4, `range` (alongside `print` / `len`) **is** a general
+expression-position `BuiltinCall` — a bare `range(n)` outside a `for`
+header now lowers, in addition to the M3 `for`-header form.  `def`
+lowering is **two-pass** (collect all function names first, then lower
+bodies) so forward references and mutual recursion resolve to
+`DirectCall`.  Nested `def`s and `lambda`s are lifted to top-level
+synthesised functions with computed captures; the `Function { name: f,
+params, body }` row for `def` carries `captures: []` for a top-level
+`def` and a non-empty capture list for a lifted nested `def`/`lambda`.
+A bare reference to a function name yields a `MakeClosure` (re-threading
+the function's captures from the currently visible enclosing values).
+`MutualRecursion` is declared when two top-level functions transitively
+call each other (a self-recursive 1-cycle does not count).
+
+**Implementation note (M5 — collections):** the `[...]` / `xs[i]` /
+`xs[i] = v` / `{k: v}` / `d[k]` / `d[k] = v` rows above are realised in
+M5, and `len(x)` is **refined**: it lowers to the dedicated `SeqLen` node
+(not `BuiltinCall("len")`) so backends can emit native length access, per
+the `SeqLen` node's own documentation (`len` arity must be exactly 1, and
+a local/param named `len` shadows the builtin → an indirect call).  The
+parser models a list display as `atom → list_expr`, a dict display as
+`atom → dict_or_set_expr → dict_or_set_body → dict_body` (a set display
+has *no* `dict_body` and is rejected), and a subscript as a trailing
+`suffix` on a `primary` (`primary → atom suffix*`); chained suffixes
+(`xs[i][j]`, `g()[0]`) fold left-to-right.
+
+*Subscript disambiguation.*  Python overloads `[]` for list indexing and
+dict lookup and the frontend has no type information, so this spec's
+`xs[i] → SeqIndex` / `d[k] → MapGet` rows are realised by a purely
+**syntactic** heuristic (matching the JS sibling): a **string-literal**
+index lowers to `MapGet` / `MapSet` (a map key); **any other** index
+lowers to `SeqIndex` / `SeqSet` (a sequence index).  This makes the
+canonical idioms (`xs[0]`, `d["name"]`) correct; a dict keyed by a
+variable / integer (`d[k]`, `counts[n]`) lowers as a sequence index,
+which the SIR runtime's duck-typed `[]` still executes correctly (both
+route through `__getitem__` / `__setitem__`).  The choice affects only the
+manifest feature (`Sequences` vs `Maps`), never runtime behaviour.
+Comprehensions, slicing (`xs[a:b]`), tuple / set literals, list/dict
+methods, and unpacking remain deferred (positioned errors).
+
+**Implementation note (P8 — positional default parameters):** a
+`def f(a, b=10)` parameter is represented by the parser as a
+`param_with_default` node; a *defaulted* one carries `[NAME, EQUALS,
+expression]`, a *plain* one just `[NAME]`.  M4 originally **rejected** the
+defaulted form (`"unsupported: default parameter value (deferred)"`); P8
+removes that rejection and lowers the default `expression` — **in the
+enclosing scope** — into the IR's `Param.default = Some(Box::new(expr))`
+via the existing `MAX_EXPR_DEPTH`-bounded expression walk.  A function with
+any defaulted parameter declares `Feature::DefaultParams`.  A call that
+omits a defaulted argument (`f(5)`) lowers to a *partial* `DirectCall`
+carrying only the arguments present — the frontend never pads in defaults;
+the validator accepts the shortfall because the omitted parameters have
+defaults.
+
+*Def-time vs. call-time semantics.*  Python evaluates a default **once, at
+`def` time, in the enclosing scope**, and a default **cannot** reference
+another parameter (`def f(a, b=a)` is a `NameError`) — so we never need to
+resolve a default against the param scope, and that unsupported form is
+forbidden by Python anyway.  The IR's `Param.default` is a *call-time*,
+param-scope model (a strict superset).  For the constant / enclosing-
+reference defaults Python permits, the two coincide and the lowering is
+faithful.  The single observable divergence is a **mutable default**
+(`def f(x=[])`): Python shares one list object across calls; under the IR
+the default is re-evaluated per call.  This is a deliberate, documented v0
+choice.  Keyword-only parameters, `*args` / `**kwargs`, and keyword
+arguments at call sites remain deferred.
 
 ## Return statement
 
@@ -117,8 +198,30 @@ Same model as Twig (SIR11):
 Python lacks an explicit declaration syntax for locals — `x = 1`
 creates a local if `x` isn't already defined elsewhere in scope.
 The frontend implements first-occurrence detection: the first
-`assign(x, value)` in a function emits `LetBinding`, subsequent ones
-emit `Assign`.  The same rule applies inside loops.
+`assign(x, value)` in a function declares it, subsequent ones emit
+`Assign`.  The same rule applies inside loops.
+
+**Implementation note (M3 — block scoping):** as of M3 the frontend's
+declared-name table is a **stack** (mark/rewind) mirroring the SIR
+validator's `LocalEnv`, not a flat per-function set.  A loop variable
+(`for i in …` / `for x in …`) and any name first bound inside a loop or
+`if`-branch suite are scoped to that block only and do **not** leak past
+it — exactly how the validator's `check_block` scopes them.  This keeps
+the names the lowerer resolves and the names the validator accepts in
+lock-step, so every lowered module round-trips through `validate`.  (A
+future milestone may relax this to Python's looser "loop var survives the
+loop" rule once the validator models it.)
+
+**Implementation note (M2):** the first-occurrence *declaration* emits
+a `LetStarBinding` (sequential `let*`), **not** a `LetBinding`.  The
+SIR validator treats a run of consecutive `LetBinding`s as a *parallel*
+group whose right-hand sides are all evaluated in the scope *before*
+the group, so a later binding cannot reference an earlier one
+(`x = 1` then `y = x + 1` would fail to resolve `x`).  `let*` has the
+sequential semantics Python's top-to-bottom execution requires.  The
+RHS is lowered before the name is added to the declared set, so a
+self-referential first binding (`x = x`) correctly reports `x` as
+unresolved.
 
 `global x` and `nonlocal x` declarations are **out of scope** in v0
 — the frontend rejects them.
@@ -132,18 +235,12 @@ variables not in scope at the call site become `Capture`s.
 ## Top-level
 
 Top-level Python is a sequence of statements at module scope.  The
-frontend synthesises:
-
-- A `_init` function for top-level value assignments (`x = 1`,
-  `def f(): ...` — function defs at module scope also become entries
-  here).
-- A `main` function for the synthetic entry point.  In v0, Python
-  doesn't have a `main()` convention, so the SIR's `main` is just
-  "run all top-level expressions sequentially after `_init`".
-
-Actually for cleanliness, we use a different approach: all top-level
-statements run inline as part of `main`.  This matches Python's
-actual execution model.
+frontend runs **all top-level statements inline as part of `main`**
+(matching Python's actual execution model — there is no separate
+`_init` function and no `globals` table in v0; a top-level `x = 1`
+becomes a `LetStarBinding` local of `main`).  A module-level `def`
+becomes a top-level `Function` entry (lifted out of `main`'s body);
+`main` holds the remaining top-level statements.
 
 ```text
 SIR Module {
@@ -221,7 +318,8 @@ Coverage target ≥ 90%.
 - Decorators
 - Multi-target assignment / unpacking
 - Slicing
-- Default + keyword arguments
+- Keyword arguments, keyword-only parameters, `*args` / `**kwargs`
+  (positional default parameters `def f(a=1)` ARE supported — P8)
 - String methods
 - `with` / context managers
 - Module-level `import`

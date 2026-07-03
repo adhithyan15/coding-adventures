@@ -1,0 +1,14 @@
+[package]
+name = "riscv-backend"
+version = "0.1.0"
+edition = "2021"
+description = "RV32I backend for jit-core / aot-core.  Lowers Vec<CIRInstr> to RV32I machine code via riscv-encoder.  Phase 7 (the FINAL lane) of the historical-arch backend migration — the RV32I lane was the ORIGINAL mistake from A1+ that started the entire IIR-level pattern this migration corrects."
+
+[lib]
+name = "riscv_backend"
+path = "src/lib.rs"
+
+[dependencies]
+riscv-encoder = { path = "../riscv-encoder" }
+jit-core      = { path = "../jit-core" }
+vm-core       = { path = "../vm-core" }

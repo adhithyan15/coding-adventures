@@ -1,0 +1,8 @@
+{
+ "check_id": 149,
+ "idx": 57,
+ "slot": "caused_by_landlord_failure_to_maintain_structure",
+ "claimed_value": true,
+ "scenario": "Water stains and warped flooring appeared in Carla's living room. An inspector determined the cause was a leak in the building's main roof, which the landlord had neglected to maintain. The landlord wants to bill Carla for the floor replacement.",
+ "cited_span": "the cause was a leak in the building's main roof, which the landlord had neglected to maintain"
+}

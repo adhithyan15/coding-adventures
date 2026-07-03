@@ -37,6 +37,21 @@ NIB
     );
 };
 
+subtest 'infers the type of multi-operand arithmetic (mul_expr cascade)' => sub {
+    # Regression: `1 +% 2` parses as an add_expr whose operands are mul_expr
+    # nodes (LANG-FULL N1 precedence level). If mul_expr is filtered out of the
+    # operand walk the expression infers undef, and an invalid bool initializer
+    # slips through unchecked. It must be rejected as a u4-vs-bool mismatch.
+    my $result = check_source('fn main() { let x: bool = 1 +% 2; }');
+
+    ok(!$result->{ok}, 'type check failed');
+    like(
+        $result->{errors}[0]{message},
+        qr/type 'u4'/,
+        'arithmetic operand inferred as u4, not undef',
+    );
+};
+
 subtest 'reports parse failures through the protocol result' => sub {
     my $result = check_source('fn main(');
 

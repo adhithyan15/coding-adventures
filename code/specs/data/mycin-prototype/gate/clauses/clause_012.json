@@ -1,0 +1,7 @@
+{
+ "idx": 12,
+ "key": "viral_meningitis::csf_lymphocytic_pleocytosis(high)",
+ "lr": 5.0,
+ "computed": "not byte-grounded — clinical-knowledge estimate",
+ "byte_quote": null
+}

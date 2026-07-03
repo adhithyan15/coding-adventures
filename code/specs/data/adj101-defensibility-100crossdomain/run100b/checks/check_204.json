@@ -1,0 +1,8 @@
+{
+ "check_id": 204,
+ "idx": 79,
+ "slot": "documented_outage_on_due_date",
+ "claimed_value": true,
+ "scenario": "Sterling Goods owed $12,000 in customs duty due on June 2. The customs electronic payment system suffered a documented nationwide outage all day on June 2, preventing any payments. Sterling paid the full $12,000 on June 3, the next business day.",
+ "cited_span": "The customs electronic payment system suffered a documented nationwide outage all day on June 2, preventing any payments."
+}

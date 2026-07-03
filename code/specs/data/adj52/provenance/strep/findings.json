@@ -1,0 +1,11 @@
+[
+ {"id":"f0","finding":"prior","state":"base_rate"},
+ {"id":"f1","finding":"tonsillar_exudate","state":"present"},
+ {"id":"f2","finding":"tender_anterior_cervical_nodes","state":"present"},
+ {"id":"f3","finding":"history_of_fever","state":"present"},
+ {"id":"f4","finding":"cough","state":"absent"},
+ {"id":"f5","finding":"age","state":"under_15"},
+ {"id":"f6","finding":"rapid_antigen_test","state":"positive"},
+ {"id":"f7","finding":"rapid_antigen_test","state":"negative"},
+ {"id":"f8","finding":"throat_culture","state":"positive"}
+]

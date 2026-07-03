@@ -1,0 +1,17 @@
+[package]
+name = "javascript-to-semantic-ir"
+version = "0.7.0"
+edition = "2021"
+description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M5 (collections) + default parameters + member-method dispatch (C3)."
+
+[dependencies]
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+semantic-ir = { path = "../semantic-ir" }
+
+[dev-dependencies]
+# End-to-end round-trip tests lower JS → SIR here, then emit JavaScript
+# with the merged backend and execute it with `node` to confirm runtime
+# behaviour matches the source.  Backend-only, so it stays a dev-dep.
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }

@@ -96,9 +96,9 @@ All five modules are converted once the import propagation is in place:
 | `code/packages/rust/twig-type-checker/src/lib.rs` | Add `extract_module_exports`, `check_program_with_globals`, `tw05p2_tests` |
 | `code/packages/rust/twig-type-checker/Cargo.toml` | 0.8.0 → 0.9.0 |
 | `code/packages/rust/twig-type-checker/CHANGELOG.md` | prepend [0.9.0] |
-| `code/twig/compiler/lexer.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/cst-parser.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/parser.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/emit.tw` | `(typed lenient)` → `(typed strict)` |
-| `code/twig/compiler/main.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/lexer.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/cst-parser.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/parser.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/emit.tw` | `(typed lenient)` → `(typed strict)` |
+| `code/packages/twig/compiler/main.tw` | `(typed lenient)` → `(typed strict)` |
 | `code/specs/LANG71-tw05p2-import-propagation.md` | new (this file) |

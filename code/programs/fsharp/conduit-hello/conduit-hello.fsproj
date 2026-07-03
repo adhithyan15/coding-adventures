@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>conduit-hello</AssemblyName>
+    <RootNamespace>ConduitHello</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../packages/fsharp/conduit/CodingAdventures.Conduit.fsproj" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+</Project>

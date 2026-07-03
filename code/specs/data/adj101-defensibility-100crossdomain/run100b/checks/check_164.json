@@ -1,0 +1,8 @@
+{
+ "check_id": 164,
+ "idx": 62,
+ "slot": "cumulative_active_salesperson_months_within_preceding_five_years",
+ "claimed_value": 25,
+ "scenario": "An applicant for a broker license held an active salesperson license for 14 months in 2022 and another 11 months in 2024, with no other licensure, and applies in 2026.",
+ "cited_span": "held an active salesperson license for 14 months in 2022 and another 11 months in 2024, with no other licensure, and applies in 2026"
+}

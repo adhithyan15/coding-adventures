@@ -1,0 +1,8 @@
+{
+ "check_id": 158,
+ "idx": 63,
+ "slot": "terminated",
+ "claimed_value": true,
+ "scenario": "Aaron was employed for exactly 8 full months and accrued 10 vacation days, none of which he used. He was terminated last week. His offer letter and HR records describe his role and his 32-hour standard week, and he was paid hourly.",
+ "cited_span": "He was terminated last week."
+}

@@ -1,5 +1,55 @@
 # Changelog — `aarch64-encoder`
 
+## 0.6.0 — 2026-06-28 (AL8-sqrt — `FSQRT Dd, Dn`)
+
+### Added — `fsqrt`
+
+`fsqrt(dd, dn)` emits `FSQRT Dd, Dn` — IEEE-754 double-precision square root.
+Encoding: FP data-processing (1 source), `type=01` (double), `opcode=000011`
+(FSQRT): `0001_1110_0110_0001_1100_00nn_nnnd_dddd` (`0x1E61C000`).  Single
+hardware instruction, no libm call; NaN propagates, negative → NaN.
+
+## 0.5.0 — 2026-06-23 (int ⇄ real conversions — LANG-FULL E8)
+
+### Added — `scvtf` / `fcvtzs` / `frintm`
+
+Three scalar conversion encoders for the E8 numeric-conversion ops:
+
+| Method | Instruction | Encoding | Purpose |
+|--------|-------------|----------|---------|
+| `scvtf(dd, xn)` | `SCVTF Dd, Xn` | `0x9E620000 \| (Xn<<5) \| Dd` | signed i64 → double (widen, exact ≤2⁵³) |
+| `fcvtzs(xd, dn)` | `FCVTZS Xd, Dn` | `0x9E780000 \| (Dn<<5) \| Xd` | double → signed i64, round toward zero |
+| `frintm(dd, dn)` | `FRINTM Dd, Dn` | `0x1E654000 \| (Dn<<5) \| Dd` | round double toward −∞ (floor) |
+
+`int_to_real` lowers to `scvtf`; `real_to_int_trunc` to `fcvtzs`;
+`real_to_int_floor` to `frintm` then `fcvtzs`. As with `ldr_d`/`str_d`, the
+register-file (`Xn` GPR vs `Dn` FP) is selected by the opcode, so callers pass
+`Reg::Xk` to name either `Xk` or `Dk`. Unit tests assert the exact bytes for
+both base (all-zero) and non-zero register placements.
+
+`fcvtzs` *saturates* on NaN/±∞/out-of-range (ARM never traps) — a documented
+divergence from the VM's fail-closed trap, shared with the JVM backend.
+
+## 0.4.0 — 2026-06-20 (scalar double-precision FP — LANG-FULL E3)
+
+### Added — `ldr_d`/`str_d`/`fadd`/`fsub`/`fmul`/`fdiv`/`fcmp` (double)
+
+Seven scalar double-precision floating-point instructions, for ALGOL `real`
+(enabler E3) on the native-AOT backend:
+
+- `ldr_d Dt, [Xn, #imm]` / `str_d Dt, [Xn, #imm]` — load/store a 64-bit double
+  (`0xFD400000`/`0xFD000000`, scaled-by-8 offset like the `Xt` forms). A
+  `float64` value rides its 8-byte stack slot as raw bits.
+- `fadd`/`fsub`/`fmul`/`fdiv Dd, Dn, Dm` — double arithmetic
+  (`0x1E602800`/`0x1E603800`/`0x1E600800`/`0x1E601800`).
+- `fcmp Dn, Dm` — compare two doubles, set NZCV (`0x1E602000`); read with a
+  following `cset Xd, <cond>`.
+
+The register number reuses `Reg::idx()` (0–31) — the *opcode* (not the register
+field) selects the FP/SIMD register file. **Every encoding was verified
+byte-for-byte against the system assembler** (`clang -c` of the same mnemonics)
+plus exact-encoding unit tests.
+
 ## 0.3.0 — 2026-05-20 (LANG76 — byte memory primitives)
 
 Adds the unsigned-offset byte load/store instructions used by

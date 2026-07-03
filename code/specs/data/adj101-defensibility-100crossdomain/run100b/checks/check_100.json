@@ -1,0 +1,8 @@
+{
+ "check_id": 100,
+ "idx": 40,
+ "slot": "below_135",
+ "claimed_value": true,
+ "scenario": "A diner's steam table holds cooked rice. A health inspector measures the rice at 122 degrees F. The manager's logs and the unit's continuous time-stamp recorder confirm the rice has been below 135 degrees F for 5 hours and 10 minutes.",
+ "cited_span": "the rice has been below 135 degrees F"
+}

@@ -12,17 +12,32 @@ import {
   currentSourceWithAc,
   currentSourceWithWaveform,
   diode,
+  acSweep,
   dcOp,
+  dcSweep,
   inductorWithInitialCurrent,
+  jfet,
   mosfet,
+  mutualInductor,
   resistor,
+  transmissionLine,
   vccs,
   vcvs,
   voltageSource,
   voltageSourceWithAc,
   voltageSourceWithWaveform,
+  transient,
+  type AdaptiveTransientOptions,
+  type AcPoint,
+  type Complex,
+  type DcOpOptions,
+  type DcResult,
+  type DcSweepPoint,
   type Element,
+  type JfetPolarity,
   type MosfetLevel1Params,
+  type TransientPoint,
+  type TransientMethod,
   type Waveform,
 } from "@coding-adventures/spice-engine";
 
@@ -41,6 +56,7 @@ export interface TranAnalysis {
   readonly kind: "tran";
   readonly timeStep: number;
   readonly stopTime: number;
+  readonly method?: TransientMethod;
 }
 
 export interface DcAnalysis {
@@ -85,6 +101,75 @@ export interface NoiseAnalysis {
   readonly inputSource: string;
   readonly frequenciesHz: readonly number[];
   readonly temperature: number;
+  readonly temperatureIsExplicit?: boolean;
+}
+
+export interface TempAnalysis {
+  readonly kind: "temp";
+  readonly temperaturesCelsius: readonly number[];
+}
+
+export interface OutputProbe {
+  readonly kind: "voltage" | "current";
+  readonly target: string;
+}
+
+export interface PrintAnalysis {
+  readonly kind: "print";
+  readonly analysis: string;
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface PlotAnalysis {
+  readonly kind: "plot";
+  readonly analysis: string;
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface SaveAnalysis {
+  readonly kind: "save";
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface ProbeAnalysis {
+  readonly kind: "probe";
+  readonly analysis?: string;
+  readonly probes: readonly OutputProbe[];
+}
+
+export type MeasureOperation = "find" | "max" | "min" | "avg" | "rms";
+
+export interface MeasureAnalysis {
+  readonly kind: "measure";
+  readonly analysis: string;
+  readonly name: string;
+  readonly operation: MeasureOperation;
+  readonly probe: OutputProbe;
+  readonly at?: number;
+  readonly start?: number;
+  readonly stop?: number;
+}
+
+export interface FourAnalysis {
+  readonly kind: "four";
+  readonly frequencyHz: number;
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface DistortionAnalysis {
+  readonly kind: "disto";
+  readonly mode: string;
+  readonly points: number;
+  readonly startHz: number;
+  readonly stopHz: number;
+  readonly probes: readonly OutputProbe[];
+}
+
+export interface PoleZeroAnalysis {
+  readonly kind: "pz";
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly poleZeroKind: "pole" | "zero" | "pz";
 }
 
 export type OptionValue = number | string | boolean;
@@ -103,7 +188,61 @@ export type Analysis =
   | SensAnalysis
   | McAnalysis
   | NoiseAnalysis
+  | TempAnalysis
+  | PrintAnalysis
+  | PlotAnalysis
+  | SaveAnalysis
+  | ProbeAnalysis
+  | MeasureAnalysis
+  | FourAnalysis
+  | DistortionAnalysis
+  | PoleZeroAnalysis
   | OptionsAnalysis;
+
+export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis;
+export type AnalysisKind = RunnableAnalysis["kind"];
+export type AnalysisResult =
+  | DcResult
+  | readonly DcSweepPoint[]
+  | readonly AcPoint[]
+  | readonly TransientPoint[];
+export type SelectedOutputValue = number | Complex;
+
+export interface AnalysisPlanStep {
+  readonly index: number;
+  readonly kind: AnalysisKind;
+  readonly analysis: RunnableAnalysis;
+}
+
+export interface AnalysisExecutionResult {
+  readonly index: number;
+  readonly kind: AnalysisKind;
+  readonly analysis: RunnableAnalysis;
+  readonly result: AnalysisResult;
+}
+
+export interface SelectedOutputRow {
+  readonly index: number;
+  readonly axisName?: string;
+  readonly axisValue?: number;
+  readonly values: ReadonlyMap<string, SelectedOutputValue>;
+}
+
+export interface SelectedAnalysisOutput {
+  readonly index: number;
+  readonly kind: AnalysisKind;
+  readonly probes: readonly OutputProbe[];
+  readonly rows: readonly SelectedOutputRow[];
+}
+
+export interface MeasureResult {
+  readonly analysisIndex: number;
+  readonly analysis: string;
+  readonly name: string;
+  readonly operation: MeasureOperation;
+  readonly probe: OutputProbe;
+  readonly value: number;
+}
 
 export interface ModelCard {
   readonly name: string;
@@ -156,6 +295,194 @@ export class ParsedNetlist {
   optionsCards(): OptionsAnalysis[] {
     return this.analyses.filter((analysis): analysis is OptionsAnalysis => analysis.kind === "options");
   }
+
+  tempCards(): TempAnalysis[] {
+    return this.analyses.filter((analysis): analysis is TempAnalysis => analysis.kind === "temp");
+  }
+
+  printCards(): PrintAnalysis[] {
+    return this.analyses.filter((analysis): analysis is PrintAnalysis => analysis.kind === "print");
+  }
+
+  plotCards(): PlotAnalysis[] {
+    return this.analyses.filter((analysis): analysis is PlotAnalysis => analysis.kind === "plot");
+  }
+
+  saveCards(): SaveAnalysis[] {
+    return this.analyses.filter((analysis): analysis is SaveAnalysis => analysis.kind === "save");
+  }
+
+  probeCards(): ProbeAnalysis[] {
+    return this.analyses.filter((analysis): analysis is ProbeAnalysis => analysis.kind === "probe");
+  }
+
+  measureCards(): MeasureAnalysis[] {
+    return this.analyses.filter(
+      (analysis): analysis is MeasureAnalysis => analysis.kind === "measure",
+    );
+  }
+
+  fourCards(): FourAnalysis[] {
+    return this.analyses.filter((analysis): analysis is FourAnalysis => analysis.kind === "four");
+  }
+
+  distortionCards(): DistortionAnalysis[] {
+    return this.analyses.filter(
+      (analysis): analysis is DistortionAnalysis => analysis.kind === "disto",
+    );
+  }
+
+  poleZeroCards(): PoleZeroAnalysis[] {
+    return this.analyses.filter((analysis): analysis is PoleZeroAnalysis => analysis.kind === "pz");
+  }
+
+  analysisPlan(): AnalysisPlanStep[] {
+    return buildAnalysisPlan(this);
+  }
+
+  runAnalysisPlan(plan?: readonly AnalysisPlanStep[]): AnalysisExecutionResult[] {
+    return runAnalysisPlan(this, plan);
+  }
+
+  selectOutputs(results?: readonly AnalysisExecutionResult[]): SelectedAnalysisOutput[] {
+    return selectOutputs(this, results);
+  }
+
+  measureResults(results?: readonly AnalysisExecutionResult[]): MeasureResult[] {
+    return measureResults(this, results);
+  }
+
+  transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
+    if (tran?.method !== undefined) {
+      return tran.method;
+    }
+    for (const options of this.optionsCards()) {
+      const value = options.values.get("method");
+      if (typeof value === "string") {
+        return parseTransientMethod(value, ".options method");
+      }
+    }
+    return undefined;
+  }
+
+  dcOpOptions(): DcOpOptions {
+    const values = this.mergedOptions();
+    const options: {
+      maxIterations?: number;
+      tolerance?: number;
+      pseudoTransientConductance?: number;
+      pseudoTransientSteps?: number;
+      pseudoTransientMaxIterations?: number;
+    } = {};
+    const tolerance = optionNumber(values, ["reltol", "tol"]);
+    if (tolerance !== undefined) {
+      options.tolerance = tolerance;
+    }
+    const maxIterations = optionInteger(values, ["itl1", "maxiter", "maxiters", "maxiterations"]);
+    if (maxIterations !== undefined) {
+      options.maxIterations = maxIterations;
+    }
+    const gmin = optionNumber(values, ["gmin"]);
+    if (gmin !== undefined) {
+      options.pseudoTransientConductance = gmin;
+    }
+    const pseudoSteps = optionInteger(values, ["srcsteps", "pseudotransientsteps"]);
+    if (pseudoSteps !== undefined) {
+      options.pseudoTransientSteps = pseudoSteps;
+    }
+    const pseudoIterations = optionInteger(values, ["itl6", "pseudotransientmaxiterations"]);
+    if (pseudoIterations !== undefined) {
+      options.pseudoTransientMaxIterations = pseudoIterations;
+    }
+    return options;
+  }
+
+  adaptiveTransientOptions(tran?: TranAnalysis): AdaptiveTransientOptions {
+    const values = this.mergedOptions();
+    const options: {
+      method?: TransientMethod;
+      tolerance?: number;
+      minStep?: number;
+      maxStep?: number;
+    } = {};
+    const method = this.transientMethod(tran);
+    if (method !== undefined) {
+      options.method = method;
+    }
+    const tolerance = optionNumber(values, ["trtol", "lte", "tollte"]);
+    if (tolerance !== undefined) {
+      options.tolerance = tolerance;
+    }
+    const minStep = optionNumber(values, ["minstep", "tmin"]);
+    if (minStep !== undefined) {
+      options.minStep = minStep;
+    }
+    const maxStep = optionNumber(values, ["maxstep", "tmax"]);
+    if (maxStep !== undefined) {
+      options.maxStep = maxStep;
+    }
+    return options;
+  }
+
+  operatingTemperatureKelvin(
+    temperatureIndex = 0,
+    defaultTemperatureKelvin = 300.0,
+  ): number {
+    if (!Number.isInteger(temperatureIndex) || temperatureIndex < 0) {
+      throw new NetlistParseError("temperature index must be non-negative");
+    }
+    const temperaturesCelsius = this.tempCards().flatMap((card) => card.temperaturesCelsius);
+    if (temperaturesCelsius.length === 0) {
+      return defaultTemperatureKelvin;
+    }
+    const temperature = temperaturesCelsius[temperatureIndex];
+    if (temperature === undefined) {
+      throw new NetlistParseError(`temperature index ${temperatureIndex} exceeds .temp entries`);
+    }
+    return temperature + 273.15;
+  }
+
+  noiseTemperatureKelvin(
+    noise?: NoiseAnalysis,
+    temperatureIndex = 0,
+    defaultTemperatureKelvin = 300.0,
+  ): number {
+    if (noise?.temperatureIsExplicit === true) {
+      return noise.temperature;
+    }
+    return this.operatingTemperatureKelvin(temperatureIndex, defaultTemperatureKelvin);
+  }
+
+  private mergedOptions(): Map<string, OptionValue> {
+    const values = new Map<string, OptionValue>();
+    for (const options of this.optionsCards()) {
+      for (const [key, value] of options.values) {
+        values.set(key, value);
+      }
+    }
+    return values;
+  }
+}
+
+function optionNumber(
+  values: ReadonlyMap<string, OptionValue>,
+  keys: readonly string[],
+): number | undefined {
+  for (const key of keys) {
+    const value = values.get(key);
+    if (typeof value === "number") {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+function optionInteger(
+  values: ReadonlyMap<string, OptionValue>,
+  keys: readonly string[],
+): number | undefined {
+  const value = optionNumber(values, keys);
+  return value === undefined ? undefined : Math.trunc(value);
 }
 
 interface Statement {
@@ -302,11 +629,73 @@ export function parseNetlist(text: string): ParsedNetlist {
       throw lineError(statement.lineNumber, error);
     }
   }
+  validateMutualInductors(circuit);
+  validateTransmissionLines(circuit);
 
   return new ParsedNetlist(circuit, analyses, models, title);
 }
 
 export const parse = parseNetlist;
+
+export function buildAnalysisPlan(parsed: ParsedNetlist): AnalysisPlanStep[] {
+  return parsed.analyses.flatMap((analysis, index): AnalysisPlanStep[] => {
+    const step = analysisPlanStep(index, analysis);
+    return step === undefined ? [] : [step];
+  });
+}
+
+export function runAnalysisPlan(
+  parsed: ParsedNetlist,
+  plan: readonly AnalysisPlanStep[] = buildAnalysisPlan(parsed),
+): AnalysisExecutionResult[] {
+  return plan.map((step) => ({
+    index: step.index,
+    kind: step.kind,
+    analysis: step.analysis,
+    result: executeAnalysisStep(parsed, step),
+  }));
+}
+
+export function runNetlist(text: string): AnalysisExecutionResult[] {
+  return runAnalysisPlan(parseNetlist(text));
+}
+
+export function selectOutputs(
+  parsed: ParsedNetlist,
+  results: readonly AnalysisExecutionResult[] = runAnalysisPlan(parsed),
+): SelectedAnalysisOutput[] {
+  const selected: SelectedAnalysisOutput[] = [];
+  for (const result of results) {
+    const probes = selectedOutputProbes(parsed, result.kind);
+    if (probes.length === 0) {
+      continue;
+    }
+    selected.push({
+      index: result.index,
+      kind: result.kind,
+      probes,
+      rows: selectedOutputRows(result, probes),
+    });
+  }
+  return selected;
+}
+
+export function measureResults(
+  parsed: ParsedNetlist,
+  results: readonly AnalysisExecutionResult[] = runAnalysisPlan(parsed),
+): MeasureResult[] {
+  return parsed.measureCards().map((card) => {
+    const execution = findMeasureExecutionResult(card, results);
+    return {
+      analysisIndex: execution.index,
+      analysis: card.analysis,
+      name: card.name,
+      operation: card.operation,
+      probe: card.probe,
+      value: evaluateMeasure(card, execution),
+    };
+  });
+}
 
 export function parseValue(token: string): number {
   const match = VALUE_RE.exec(token);
@@ -319,6 +708,430 @@ export function parseValue(token: string): number {
     throw new NetlistParseError(`unsupported numeric suffix ${JSON.stringify(match[2])}`);
   }
   return Number.parseFloat(match[1]) * multiplier;
+}
+
+function analysisPlanStep(index: number, analysis: Analysis): AnalysisPlanStep | undefined {
+  if (
+    analysis.kind === "op" ||
+    analysis.kind === "tran" ||
+    analysis.kind === "dc" ||
+    analysis.kind === "ac"
+  ) {
+    return { index, kind: analysis.kind, analysis };
+  }
+  return undefined;
+}
+
+function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): AnalysisResult {
+  const analysis = step.analysis;
+  if (analysis.kind === "op") {
+    return dcOp(parsed.circuit, parsed.dcOpOptions());
+  }
+  if (analysis.kind === "dc") {
+    return dcSweep(
+      parsed.circuit,
+      analysis.sourceName,
+      analysis.start,
+      analysis.stop,
+      analysis.step,
+    );
+  }
+  if (analysis.kind === "ac") {
+    return acSweep(
+      parsed.circuit,
+      analysis.startHz,
+      analysis.stopHz,
+      executableAcPointsPerDecade(analysis),
+    );
+  }
+  if (analysis.kind === "tran") {
+    return transient(
+      parsed.circuit,
+      analysis.timeStep,
+      analysis.stopTime,
+      parsed.transientMethod(analysis) ?? "euler",
+    );
+  }
+  throw new NetlistParseError(`analysis card at index ${step.index} is not executable`);
+}
+
+function executableAcPointsPerDecade(analysis: AcAnalysis): number {
+  if (analysis.mode === "dec" || analysis.mode === "log") {
+    return analysis.points;
+  }
+  throw new NetlistParseError(
+    `.ac mode ${JSON.stringify(analysis.mode)} is not executable; supported modes are "dec" and "log"`,
+  );
+}
+
+function selectedOutputProbes(parsed: ParsedNetlist, kind: AnalysisKind): OutputProbe[] {
+  const probes: OutputProbe[] = [];
+  const seen = new Set<string>();
+  const add = (newProbes: readonly OutputProbe[]) => {
+    for (const probe of newProbes) {
+      const key = `${probe.kind}:${probe.target.toLowerCase()}`;
+      if (!seen.has(key)) {
+        probes.push(probe);
+        seen.add(key);
+      }
+    }
+  };
+
+  for (const card of parsed.analyses) {
+    if (card.kind === "save") {
+      add(card.probes);
+    } else if (card.kind === "probe") {
+      if (card.analysis === undefined || analysisNameMatches(card.analysis, kind)) {
+        add(card.probes);
+      }
+    } else if (card.kind === "print" || card.kind === "plot") {
+      if (analysisNameMatches(card.analysis, kind)) {
+        add(card.probes);
+      }
+    }
+  }
+  return probes;
+}
+
+function analysisNameMatches(requested: string, kind: AnalysisKind): boolean {
+  const aliases = new Map<string, AnalysisKind>([
+    ["op", "op"],
+    ["dcop", "op"],
+    ["dc", "dc"],
+    ["ac", "ac"],
+    ["tran", "tran"],
+    ["transient", "tran"],
+  ]);
+  return (aliases.get(requested.toLowerCase()) ?? requested.toLowerCase()) === kind;
+}
+
+function selectedOutputRows(
+  execution: AnalysisExecutionResult,
+  probes: readonly OutputProbe[],
+): SelectedOutputRow[] {
+  if (execution.kind === "op") {
+    const result = execution.result as DcResult;
+    return [
+      {
+        index: 0,
+        values: selectedOutputValues(
+          result.nodeVoltages,
+          result.branchCurrents,
+          probes,
+          ".op output selection",
+        ),
+      },
+    ];
+  }
+  if (execution.kind === "dc") {
+    return (execution.result as readonly DcSweepPoint[]).map((point, index) => ({
+      index,
+      axisName: "source",
+      axisValue: point.value,
+      values: selectedOutputValues(
+        point.result.nodeVoltages,
+        point.result.branchCurrents,
+        probes,
+        ".dc output selection",
+      ),
+    }));
+  }
+  if (execution.kind === "ac") {
+    return (execution.result as readonly AcPoint[]).map((point, index) => ({
+      index,
+      axisName: "frequency",
+      axisValue: point.frequencyHz,
+      values: selectedOutputValues(
+        point.nodeVoltages,
+        point.branchCurrents,
+        probes,
+        ".ac output selection",
+      ),
+    }));
+  }
+  return (execution.result as readonly TransientPoint[]).map((point, index) => ({
+    index,
+    axisName: "time",
+    axisValue: point.time,
+    values: selectedOutputValues(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probes,
+      ".tran output selection",
+    ),
+  }));
+}
+
+function selectedOutputValues(
+  nodeVoltages: ReadonlyMap<string, SelectedOutputValue>,
+  branchCurrents: ReadonlyMap<string, SelectedOutputValue>,
+  probes: readonly OutputProbe[],
+  context: string,
+): ReadonlyMap<string, SelectedOutputValue> {
+  const values = new Map<string, SelectedOutputValue>();
+  for (const probe of probes) {
+    values.set(probeLabel(probe), probeValue(probe, nodeVoltages, branchCurrents, context));
+  }
+  return values;
+}
+
+function findMeasureExecutionResult(
+  card: MeasureAnalysis,
+  results: readonly AnalysisExecutionResult[],
+): AnalysisExecutionResult {
+  const result = results.find((candidate) => analysisNameMatches(card.analysis, candidate.kind));
+  if (result === undefined) {
+    throw new NetlistParseError(
+      `.measure ${JSON.stringify(card.name)} references missing ${card.analysis} analysis`,
+    );
+  }
+  return result;
+}
+
+function evaluateMeasure(card: MeasureAnalysis, execution: AnalysisExecutionResult): number {
+  const samples = measureSamples(card, execution);
+  if (samples.length === 0) {
+    throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} has no samples`);
+  }
+  if (card.operation === "find") {
+    if (execution.kind === "op" && card.at === undefined) {
+      return measureNumericValue(samples[0][1]);
+    }
+    if (card.at === undefined) {
+      throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} FIND requires AT=<value>`);
+    }
+    return measureNumericValue(interpolateMeasureValue(samples, card.at, card));
+  }
+
+  const ranged = rangeMeasureSamples(samples, card);
+  const values = ranged.map((sample) => measureNumericValue(sample[1]));
+  if (values.length === 0) {
+    throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} range has no samples`);
+  }
+  if (card.operation === "max") {
+    return Math.max(...values);
+  }
+  if (card.operation === "min") {
+    return Math.min(...values);
+  }
+  if (card.operation === "avg") {
+    return averageMeasureValue(ranged);
+  }
+  return rmsMeasureValue(ranged);
+}
+
+type MeasureSample = readonly [number | undefined, SelectedOutputValue];
+
+function measureSamples(card: MeasureAnalysis, execution: AnalysisExecutionResult): MeasureSample[] {
+  if (execution.kind === "op") {
+    const result = execution.result as DcResult;
+    return [[
+      undefined,
+      probeValue(card.probe, result.nodeVoltages, result.branchCurrents, `.measure ${card.name}`),
+    ]];
+  }
+  if (execution.kind === "dc") {
+    return (execution.result as readonly DcSweepPoint[]).map((point) => [
+      point.value,
+      probeValue(
+        card.probe,
+        point.result.nodeVoltages,
+        point.result.branchCurrents,
+        `.measure ${card.name}`,
+      ),
+    ]);
+  }
+  if (execution.kind === "ac") {
+    return (execution.result as readonly AcPoint[]).map((point) => [
+      point.frequencyHz,
+      probeValue(card.probe, point.nodeVoltages, point.branchCurrents, `.measure ${card.name}`),
+    ]);
+  }
+  return (execution.result as readonly TransientPoint[]).map((point) => [
+    point.time,
+    probeValue(card.probe, point.nodeVoltages, point.branchCurrents, `.measure ${card.name}`),
+  ]);
+}
+
+function rangeMeasureSamples(samples: readonly MeasureSample[], card: MeasureAnalysis): MeasureSample[] {
+  if (samples.some((sample) => sample[0] === undefined)) {
+    if (card.start !== undefined || card.stop !== undefined) {
+      throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} range requires swept samples`);
+    }
+    return [...samples];
+  }
+  const axisSamples = [...samples]
+    .filter((sample): sample is readonly [number, SelectedOutputValue] => sample[0] !== undefined)
+    .sort((left, right) => left[0] - right[0]);
+  const lower = card.start ?? axisSamples[0][0];
+  const upper = card.stop ?? axisSamples.at(-1)![0];
+  if (lower > upper) {
+    throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} FROM must be <= TO`);
+  }
+  const ranged: MeasureSample[] = [];
+  if (card.start !== undefined) {
+    ranged.push([lower, interpolateMeasureValue(samples, lower, card)]);
+  }
+  for (const sample of axisSamples) {
+    if (sample[0] >= lower && sample[0] <= upper && !axisAlreadyPresent(ranged, sample[0])) {
+      ranged.push(sample);
+    }
+  }
+  if (card.stop !== undefined && !axisAlreadyPresent(ranged, upper)) {
+    ranged.push([upper, interpolateMeasureValue(samples, upper, card)]);
+  }
+  return ranged.sort((left, right) => (left[0] ?? Number.NEGATIVE_INFINITY) - (right[0] ?? Number.NEGATIVE_INFINITY));
+}
+
+function axisAlreadyPresent(samples: readonly MeasureSample[], axis: number): boolean {
+  return samples.some((sample) => sample[0] !== undefined && Math.abs(sample[0] - axis) <= 1.0e-12);
+}
+
+function interpolateMeasureValue(
+  samples: readonly MeasureSample[],
+  target: number,
+  card: MeasureAnalysis,
+): SelectedOutputValue {
+  const axisSamples = [...samples]
+    .filter((sample): sample is readonly [number, SelectedOutputValue] => sample[0] !== undefined)
+    .sort((left, right) => left[0] - right[0]);
+  if (axisSamples.length === 0) {
+    throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} AT requires swept samples`);
+  }
+  if (target < axisSamples[0][0] || target > axisSamples.at(-1)![0]) {
+    throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} AT is outside the analysis range`);
+  }
+  for (const [axis, value] of axisSamples) {
+    if (Math.abs(axis - target) <= 1.0e-12) {
+      return value;
+    }
+  }
+  for (let index = 0; index < axisSamples.length - 1; index += 1) {
+    const [leftAxis, leftValue] = axisSamples[index];
+    const [rightAxis, rightValue] = axisSamples[index + 1];
+    if (leftAxis <= target && target <= rightAxis) {
+      const fraction = (target - leftAxis) / (rightAxis - leftAxis);
+      return interpolateOutputValues(leftValue, rightValue, fraction);
+    }
+  }
+  return axisSamples.at(-1)![1];
+}
+
+function interpolateOutputValues(
+  left: SelectedOutputValue,
+  right: SelectedOutputValue,
+  fraction: number,
+): SelectedOutputValue {
+  if (isComplex(left) || isComplex(right)) {
+    const leftComplex = toComplex(left);
+    const rightComplex = toComplex(right);
+    return {
+      real: leftComplex.real + (rightComplex.real - leftComplex.real) * fraction,
+      imag: leftComplex.imag + (rightComplex.imag - leftComplex.imag) * fraction,
+    };
+  }
+  return left + (right - left) * fraction;
+}
+
+function averageMeasureValue(samples: readonly MeasureSample[]): number {
+  const numeric = samples.map((sample) => [sample[0], measureNumericValue(sample[1])] as const);
+  if (numeric.length < 2 || numeric.some((sample) => sample[0] === undefined)) {
+    return numeric.reduce((sum, sample) => sum + sample[1], 0.0) / numeric.length;
+  }
+  const span = numeric.at(-1)![0]! - numeric[0][0]!;
+  if (span <= 0.0) {
+    return numeric.reduce((sum, sample) => sum + sample[1], 0.0) / numeric.length;
+  }
+  let area = 0.0;
+  for (let index = 0; index < numeric.length - 1; index += 1) {
+    const [leftAxis, leftValue] = numeric[index];
+    const [rightAxis, rightValue] = numeric[index + 1];
+    area += 0.5 * (leftValue + rightValue) * (rightAxis! - leftAxis!);
+  }
+  return area / span;
+}
+
+function rmsMeasureValue(samples: readonly MeasureSample[]): number {
+  const numeric = samples.map((sample) => [sample[0], measureNumericValue(sample[1])] as const);
+  if (numeric.length < 2 || numeric.some((sample) => sample[0] === undefined)) {
+    return Math.sqrt(
+      numeric.reduce((sum, sample) => sum + sample[1] * sample[1], 0.0) / numeric.length,
+    );
+  }
+  const span = numeric.at(-1)![0]! - numeric[0][0]!;
+  if (span <= 0.0) {
+    return Math.sqrt(
+      numeric.reduce((sum, sample) => sum + sample[1] * sample[1], 0.0) / numeric.length,
+    );
+  }
+  let area = 0.0;
+  for (let index = 0; index < numeric.length - 1; index += 1) {
+    const [leftAxis, leftValue] = numeric[index];
+    const [rightAxis, rightValue] = numeric[index + 1];
+    area += 0.5 * (leftValue * leftValue + rightValue * rightValue) * (rightAxis! - leftAxis!);
+  }
+  return Math.sqrt(area / span);
+}
+
+function measureNumericValue(value: SelectedOutputValue): number {
+  return isComplex(value) ? Math.hypot(value.real, value.imag) : value;
+}
+
+function probeValue(
+  probe: OutputProbe,
+  nodeVoltages: ReadonlyMap<string, SelectedOutputValue>,
+  branchCurrents: ReadonlyMap<string, SelectedOutputValue>,
+  context: string,
+): SelectedOutputValue {
+  if (probe.kind === "voltage") {
+    if (probe.target.toLowerCase() === "0" || probe.target.toLowerCase() === "gnd") {
+      return containsComplexValues(nodeVoltages) ? { real: 0.0, imag: 0.0 } : 0.0;
+    }
+    const value = caseInsensitiveGet(nodeVoltages, probe.target);
+    if (value === undefined) {
+      throw new NetlistParseError(`${context}: missing voltage probe V(${probe.target})`);
+    }
+    return value;
+  }
+  const key = probe.target.toLowerCase().startsWith("i(") ? probe.target : `I(${probe.target})`;
+  const value = caseInsensitiveGet(branchCurrents, key);
+  if (value === undefined) {
+    throw new NetlistParseError(`${context}: missing branch current probe I(${probe.target})`);
+  }
+  return value;
+}
+
+function containsComplexValues(values: ReadonlyMap<string, SelectedOutputValue>): boolean {
+  return Array.from(values.values()).some(isComplex);
+}
+
+function caseInsensitiveGet(
+  values: ReadonlyMap<string, SelectedOutputValue>,
+  key: string,
+): SelectedOutputValue | undefined {
+  const exact = values.get(key);
+  if (exact !== undefined) {
+    return exact;
+  }
+  const lowerKey = key.toLowerCase();
+  for (const [candidate, value] of values) {
+    if (candidate.toLowerCase() === lowerKey) {
+      return value;
+    }
+  }
+  return undefined;
+}
+
+function probeLabel(probe: OutputProbe): string {
+  return probe.kind === "voltage" ? `V(${probe.target})` : `I(${probe.target})`;
+}
+
+function isComplex(value: SelectedOutputValue): value is Complex {
+  return typeof value === "object";
+}
+
+function toComplex(value: SelectedOutputValue): Complex {
+  return isComplex(value) ? value : { real: value, imag: 0.0 };
 }
 
 function parseModelCard(fields: readonly string[]): ModelCard {
@@ -403,6 +1216,11 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "IS",
     "N_SUB",
     "T_NOM",
+    "CGSO",
+    "CGDO",
+    "CGBO",
+    "CBS",
+    "CBD",
   ].includes(name);
 }
 
@@ -447,6 +1265,38 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[2],
       parseValue(fields[3]),
       params.get("IC") ?? 0.0,
+    );
+  }
+  if (prefix === "K") {
+    requireFields(fields, 4, "mutual inductor");
+    return mutualInductor(name, fields[1], fields[2], parseValue(fields[3]));
+  }
+  if (prefix === "T") {
+    requireMinFields(fields, 6, "transmission line");
+    const params = parseElementParams(fields.slice(5), "transmission line");
+    for (const paramName of params.keys()) {
+      if (paramName !== "Z0" && paramName !== "TD") {
+        throw new NetlistParseError(
+          `unsupported transmission line parameter ${JSON.stringify(paramName)}`,
+        );
+      }
+    }
+    const characteristicImpedance = params.get("Z0");
+    if (characteristicImpedance === undefined) {
+      throw new NetlistParseError(`${name}: transmission line requires Z0`);
+    }
+    const delay = params.get("TD");
+    if (delay === undefined) {
+      throw new NetlistParseError(`${name}: transmission line requires TD`);
+    }
+    return transmissionLine(
+      name,
+      fields[1],
+      fields[2],
+      fields[3],
+      fields[4],
+      characteristicImpedance,
+      delay,
     );
   }
   if (prefix === "V") {
@@ -514,6 +1364,11 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[2],
       model.params.get("IS") ?? 1.0e-15,
       model.params.get("VT") ?? 0.02585,
+      model.params.get("N") ?? 1.0,
+      model.params.get("BV"),
+      model.params.get("IBV") ?? 1.0e-3,
+      model.params.get("CJO") ?? model.params.get("CJ0") ?? 0.0,
+      model.params.get("TT") ?? 0.0,
     );
   }
   if (prefix === "Q") {
@@ -538,6 +1393,35 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("IS") ?? 1.0e-14,
       model.params.get("BF") ?? model.params.get("BETA_F") ?? 100.0,
       model.params.get("VT") ?? 0.02585,
+      model.params.get("CJE") ?? model.params.get("CBE") ?? 0.0,
+      model.params.get("CJC") ?? model.params.get("CBC") ?? 0.0,
+      model.params.get("TF") ?? 0.0,
+      model.params.get("TR") ?? 0.0,
+    );
+  }
+  if (prefix === "J") {
+    requireFields(fields, 5, "JFET");
+    const model = models.get(fields[4].toLowerCase());
+    if (model === undefined) {
+      throw new NetlistParseError(
+        `unknown model ${JSON.stringify(fields[4])} for JFET ${JSON.stringify(name)}`,
+      );
+    }
+    if (model.kind !== "NJF" && model.kind !== "PJF") {
+      throw new NetlistParseError(
+        `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NJF" or "PJF"`,
+      );
+    }
+    const polarity = model.kind as JfetPolarity;
+    return jfet(
+      name,
+      fields[1],
+      fields[2],
+      fields[3],
+      polarity,
+      model.params.get("BETA") ?? model.params.get("B") ?? 1.0e-4,
+      model.params.get("VTO") ?? (polarity === "NJF" ? -2.0 : 2.0),
+      model.params.get("LAMBDA") ?? 0.0,
     );
   }
   if (prefix === "M") {
@@ -580,6 +1464,55 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
     return ccvs(name, fields[1], fields[2], fields[3], parseValue(fields[4]));
   }
   throw new NetlistParseError(`unsupported element ${JSON.stringify(name)}`);
+}
+
+function validateMutualInductors(circuit: Circuit): void {
+  const inductors = new Set<string>();
+  for (const element of circuit.elements()) {
+    if (element.kind === "inductor") {
+      inductors.add(element.name);
+    }
+  }
+  for (const element of circuit.elements()) {
+    if (element.kind !== "mutual-inductor") {
+      continue;
+    }
+    if (!Number.isFinite(element.coupling)) {
+      throw new NetlistParseError(`${element.name}: coupling must be finite`);
+    }
+    if (Math.abs(element.coupling) >= 1.0) {
+      throw new NetlistParseError(`${element.name}: coupling magnitude must be less than one`);
+    }
+    if (element.primary === element.secondary) {
+      throw new NetlistParseError(`${element.name}: coupled inductors must be distinct`);
+    }
+    if (!inductors.has(element.primary)) {
+      throw new NetlistParseError(`${element.name}: referenced inductor ${JSON.stringify(element.primary)} was not found`);
+    }
+    if (!inductors.has(element.secondary)) {
+      throw new NetlistParseError(`${element.name}: referenced inductor ${JSON.stringify(element.secondary)} was not found`);
+    }
+  }
+}
+
+function validateTransmissionLines(circuit: Circuit): void {
+  for (const element of circuit.elements()) {
+    if (element.kind !== "transmission-line") {
+      continue;
+    }
+    if (!Number.isFinite(element.characteristicImpedanceOhms)) {
+      throw new NetlistParseError(`${element.name}: characteristic impedance must be finite`);
+    }
+    if (element.characteristicImpedanceOhms <= 0.0) {
+      throw new NetlistParseError(`${element.name}: characteristic impedance must be positive`);
+    }
+    if (!Number.isFinite(element.delaySeconds)) {
+      throw new NetlistParseError(`${element.name}: delay must be finite`);
+    }
+    if (element.delaySeconds <= 0.0) {
+      throw new NetlistParseError(`${element.name}: delay must be positive`);
+    }
+  }
 }
 
 function startSubckt(
@@ -666,8 +1599,8 @@ function mapSubcktFields(
     requireMinFields(fields, 3, "subcircuit element");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
-  } else if (prefix === "Q") {
-    requireMinFields(fields, 4, "subcircuit BJT");
+  } else if (prefix === "Q" || prefix === "J") {
+    requireMinFields(fields, 4, prefix === "Q" ? "subcircuit BJT" : "subcircuit JFET");
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
     mapped[3] = mapSubcktNode(fields[3], instanceName, nodeMap);
@@ -686,6 +1619,15 @@ function mapSubcktFields(
     mapped[1] = mapSubcktNode(fields[1], instanceName, nodeMap);
     mapped[2] = mapSubcktNode(fields[2], instanceName, nodeMap);
     mapped[3] = mapSubcktSourceRef(fields[3], instanceName);
+  } else if (prefix === "K") {
+    requireFields(fields, 4, "subcircuit mutual inductor");
+    mapped[1] = mapSubcktSourceRef(fields[1], instanceName);
+    mapped[2] = mapSubcktSourceRef(fields[2], instanceName);
+  } else if (prefix === "T") {
+    requireMinFields(fields, 6, "subcircuit transmission line");
+    for (let index = 1; index < 5; index++) {
+      mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
+    }
   } else if (prefix === "X") {
     for (let index = 1; index < fields.length - 1; index++) {
       mapped[index] = mapSubcktNode(fields[index], instanceName, nodeMap);
@@ -834,8 +1776,14 @@ function parseDirective(fields: readonly string[]): Analysis {
     return { kind: "op" };
   }
   if (directive === ".tran") {
-    requireFields(fields, 3, ".tran");
-    return { kind: "tran", timeStep: parseValue(fields[1]), stopTime: parseValue(fields[2]) };
+    requireMinFields(fields, 3, ".tran");
+    const method = parseTranMethodOptions(fields.slice(3));
+    const card: TranAnalysis = {
+      kind: "tran",
+      timeStep: parseValue(fields[1]),
+      stopTime: parseValue(fields[2]),
+    };
+    return method === undefined ? card : { ...card, method };
   }
   if (directive === ".dc") {
     requireFields(fields, 5, ".dc");
@@ -894,6 +1842,7 @@ function parseDirective(fields: readonly string[]): Analysis {
     requireMinFields(fields, 3, ".noise");
     const frequenciesHz: number[] = [];
     let temperature = 300.0;
+    let temperatureIsExplicit = false;
     let tailIndex = 3;
     while (tailIndex < fields.length) {
       const token = fields[tailIndex];
@@ -903,9 +1852,11 @@ function parseDirective(fields: readonly string[]): Analysis {
           throw new NetlistParseError(".noise temp requires a temperature value");
         }
         temperature = parseValue(fields[tailIndex + 1]);
+        temperatureIsExplicit = true;
         tailIndex += 2;
       } else if (lowerToken.startsWith("temp=")) {
         temperature = parseValue(token.split("=", 2)[1]);
+        temperatureIsExplicit = true;
         tailIndex += 1;
       } else {
         frequenciesHz.push(parseValue(token));
@@ -918,6 +1869,78 @@ function parseDirective(fields: readonly string[]): Analysis {
       inputSource: fields[2],
       frequenciesHz,
       temperature,
+      ...(temperatureIsExplicit ? { temperatureIsExplicit: true } : {}),
+    };
+  }
+  if (directive === ".temp") {
+    requireMinFields(fields, 2, ".temp");
+    return {
+      kind: "temp",
+      temperaturesCelsius: fields.slice(1).map(parseValue),
+    };
+  }
+  if (directive === ".print") {
+    requireMinFields(fields, 3, ".print");
+    return {
+      kind: "print",
+      analysis: fields[1].toLowerCase(),
+      probes: fields.slice(2).map((token) => parseOutputProbe(token, ".print")),
+    };
+  }
+  if (directive === ".plot") {
+    requireMinFields(fields, 3, ".plot");
+    return {
+      kind: "plot",
+      analysis: fields[1].toLowerCase(),
+      probes: fields.slice(2).map((token) => parseOutputProbe(token, ".plot")),
+    };
+  }
+  if (directive === ".save") {
+    requireMinFields(fields, 2, ".save");
+    return {
+      kind: "save",
+      probes: fields.slice(1).map((token) => parseOutputProbe(token, ".save")),
+    };
+  }
+  if (directive === ".probe") {
+    return parseProbeCard(fields);
+  }
+  if (directive === ".measure" || directive === ".meas") {
+    return parseMeasureCard(fields);
+  }
+  if (directive === ".four") {
+    requireMinFields(fields, 3, ".four");
+    return {
+      kind: "four",
+      frequencyHz: parseValue(fields[1]),
+      probes: fields.slice(2).map((token) => parseOutputProbe(token, ".four")),
+    };
+  }
+  if (directive === ".disto") {
+    requireMinFields(fields, 6, ".disto");
+    return {
+      kind: "disto",
+      mode: fields[1].toLowerCase(),
+      points: Math.trunc(parseValue(fields[2])),
+      startHz: parseValue(fields[3]),
+      stopHz: parseValue(fields[4]),
+      probes: fields.slice(5).map((token) => parseOutputProbe(token, ".disto")),
+    };
+  }
+  if (directive === ".pz") {
+    requireMinFields(fields, 3, ".pz");
+    requireMaxFields(fields, 4, ".pz");
+    const poleZeroKind = fields.length >= 4 ? fields[3].toLowerCase() : "pz";
+    if (poleZeroKind !== "pole" && poleZeroKind !== "zero" && poleZeroKind !== "pz") {
+      throw new NetlistParseError(
+        `.pz kind must be "pole", "zero", or "pz", got ${JSON.stringify(fields[3])}`,
+      );
+    }
+    return {
+      kind: "pz",
+      outputNode: parseVoltageProbe(fields[1], ".pz"),
+      inputSource: fields[2],
+      poleZeroKind,
     };
   }
   if (directive === ".options") {
@@ -925,6 +1948,87 @@ function parseDirective(fields: readonly string[]): Analysis {
     return { kind: "options", values: parseOptions(fields.slice(1)) };
   }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
+}
+
+function parseProbeCard(fields: readonly string[]): ProbeAnalysis {
+  requireMinFields(fields, 2, ".probe");
+  let analysis: string | undefined;
+  let probeTokens = fields.slice(1);
+  if (fields.length >= 3 && isAnalysisSelector(fields[1])) {
+    analysis = fields[1].toLowerCase();
+    probeTokens = fields.slice(2);
+  }
+  return {
+    kind: "probe",
+    ...(analysis === undefined ? {} : { analysis }),
+    probes: probeTokens.map((token) => parseOutputProbe(token, ".probe")),
+  };
+}
+
+function parseMeasureCard(fields: readonly string[]): MeasureAnalysis {
+  const directive = fields[0].toLowerCase();
+  requireMinFields(fields, 5, directive);
+  const operation = parseMeasureOperation(fields[3], directive);
+  const options = parseMeasureOptions(fields.slice(5), directive);
+  if (operation === "find" && !options.has("at") && fields[1].toLowerCase() !== "op" && fields[1].toLowerCase() !== "dcop") {
+    throw new NetlistParseError(`${directive} FIND requires AT=<value>`);
+  }
+  if (operation !== "find" && options.has("at")) {
+    throw new NetlistParseError(`${directive} ${operation.toUpperCase()} does not support AT=<value>`);
+  }
+  return {
+    kind: "measure",
+    analysis: fields[1].toLowerCase(),
+    name: fields[2],
+    operation,
+    probe: parseOutputProbe(fields[4], directive),
+    ...(options.has("at") ? { at: options.get("at")! } : {}),
+    ...(options.has("from") ? { start: options.get("from")! } : {}),
+    ...(options.has("to") ? { stop: options.get("to")! } : {}),
+  };
+}
+
+function parseMeasureOperation(token: string, directive: string): MeasureOperation {
+  const operation = token.toLowerCase();
+  if (
+    operation !== "find" &&
+    operation !== "max" &&
+    operation !== "min" &&
+    operation !== "avg" &&
+    operation !== "rms"
+  ) {
+    throw new NetlistParseError(
+      `${directive} operation must be FIND, MAX, MIN, AVG, or RMS, got ${JSON.stringify(token)}`,
+    );
+  }
+  return operation;
+}
+
+function parseMeasureOptions(tokens: readonly string[], directive: string): ReadonlyMap<string, number> {
+  const options = new Map<string, number>();
+  for (const token of tokens) {
+    if (!token.includes("=")) {
+      throw new NetlistParseError(`${directive} option must be KEY=value, got ${JSON.stringify(token)}`);
+    }
+    const equalsIndex = token.indexOf("=");
+    const key = token.slice(0, equalsIndex).trim().toLowerCase();
+    const rawValue = token.slice(equalsIndex + 1);
+    if (key !== "at" && key !== "from" && key !== "to") {
+      throw new NetlistParseError(`${directive} unsupported option ${JSON.stringify(key)}`);
+    }
+    if (options.has(key)) {
+      throw new NetlistParseError(`${directive} duplicate option ${JSON.stringify(key)}`);
+    }
+    if (rawValue === "") {
+      throw new NetlistParseError(`${directive} option ${JSON.stringify(key)} requires a value`);
+    }
+    options.set(key, parseValue(rawValue));
+  }
+  return options;
+}
+
+function isAnalysisSelector(token: string): boolean {
+  return ["op", "dcop", "dc", "ac", "tran", "transient"].includes(token.toLowerCase());
 }
 
 function parseOptions(tokens: readonly string[]): ReadonlyMap<string, OptionValue> {
@@ -941,7 +2045,10 @@ function parseOptions(tokens: readonly string[]): ReadonlyMap<string, OptionValu
       if (rawValue === "") {
         throw new NetlistParseError(`.options ${JSON.stringify(key)} requires a value`);
       }
-      values.set(key, parseOptionValue(rawValue));
+      values.set(
+        key,
+        key === "method" ? parseTransientMethod(rawValue, ".options method") : parseOptionValue(rawValue),
+      );
     } else {
       const key = token.trim().toLowerCase();
       if (key.length === 0) {
@@ -951,6 +2058,38 @@ function parseOptions(tokens: readonly string[]): ReadonlyMap<string, OptionValu
     }
   }
   return values;
+}
+
+function parseTranMethodOptions(tokens: readonly string[]): TransientMethod | undefined {
+  let method: TransientMethod | undefined;
+  for (const token of tokens) {
+    if (!token.includes("=")) {
+      throw new NetlistParseError(
+        `.tran unsupported trailing option ${JSON.stringify(token)}; use method=<euler|trap|gear2>`,
+      );
+    }
+    const equalsIndex = token.indexOf("=");
+    const key = token.slice(0, equalsIndex).trim().toLowerCase();
+    const rawValue = token.slice(equalsIndex + 1);
+    if (key !== "method") {
+      throw new NetlistParseError(`.tran unsupported option ${JSON.stringify(key)}`);
+    }
+    if (rawValue === "") {
+      throw new NetlistParseError(".tran method requires a value");
+    }
+    method = parseTransientMethod(rawValue, ".tran method");
+  }
+  return method;
+}
+
+function parseTransientMethod(rawValue: string, context: string): TransientMethod {
+  const method = rawValue.trim().toLowerCase();
+  if (method === "euler" || method === "trap" || method === "gear2") {
+    return method;
+  }
+  throw new NetlistParseError(
+    `${context} must be euler, trap, or gear2, got ${JSON.stringify(rawValue)}`,
+  );
 }
 
 function parseOptionValue(rawValue: string): OptionValue {
@@ -969,6 +2108,19 @@ function parseVoltageProbe(token: string, directive: string): string {
     );
   }
   return match[1];
+}
+
+function parseOutputProbe(token: string, directive: string): OutputProbe {
+  const match = /^([vi])\(([^()\s]+)\)$/i.exec(token);
+  if (match === null) {
+    throw new NetlistParseError(
+      `${directive} probe must be V(node) or I(source), got ${JSON.stringify(token)}`,
+    );
+  }
+  return {
+    kind: match[1].toLowerCase() === "v" ? "voltage" : "current",
+    target: match[2],
+  };
 }
 
 function splitFields(line: string): string[] {

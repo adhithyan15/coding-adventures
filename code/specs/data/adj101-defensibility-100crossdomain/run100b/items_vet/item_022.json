@@ -1,0 +1,8 @@
+{
+ "idx": 22,
+ "policy": "An extended service plan covers parts and labor for mechanical failures. The plan carries a $75 deductible per repair visit, payable by the customer. The plan does not cover cosmetic damage.",
+ "scenario": "Priya's dishwasher suffered a mechanical pump failure covered by her extended service plan. The technician's invoice listed $220 for the part and $130 for labor. There was no cosmetic damage involved.",
+ "question": "How much must Priya pay out of pocket for this repair visit?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "$75"
+}

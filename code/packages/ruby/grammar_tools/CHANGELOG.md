@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.7.0] - 2026-06-13
+
+### Added
+- **F10 declarative lexer mode transitions** (Ruby port of the Rust
+  grammar-tools core, #5662, and the Python port, #5668). A `.tokens` grammar
+  may now declare a `start_mode:` directive and a `transitions:` section; the
+  generic `GrammarLexer` (separate PR) interprets the table to switch lexer
+  modes after each token, enabling context-sensitive lexing (JavaScript
+  regex-vs-division, template substitutions) without a hand-written callback.
+  - New `TransitionAction` Data (`kind` is one of set_mode/push/pop/
+    enable_skip/disable_skip, with optional `target`) and `ModeTransition`
+    Data (`on_tokens`, `on_value`, `in_mode`, `actions`, `line_number`).
+  - `TokenGrammar` gains `start_mode` (accessor) and `transitions` (reader);
+    both default to "unset" so existing grammars are unchanged.
+  - Parser: `start_mode:` directive + `transitions:` section header +
+    `parse_transition`/`split_in_guard` (rule form
+    `on TOKENS [in MODE] -> ACTION [, ACTION ...]`, with `(A | B)` alternation
+    and `KEYWORD="value"` guards). `transitions`/`modes`/`start_mode` are now
+    reserved group names.
+  - Validator: rejects a `start_mode` / `in MODE` guard / `set-mode`/`push`
+    target that is not `"default"` or a declared group, and caps the rule
+    count at `MAX_TRANSITIONS` (4096).
+  - +20 unit tests. Fully backward compatible.
+
 ## [0.6.0] - 2026-04-05
 
 ### Added

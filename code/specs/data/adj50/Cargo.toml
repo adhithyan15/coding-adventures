@@ -1,0 +1,15 @@
+[package]
+name = "adj50-nejm-stress-test"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ50 — stress-test the ADJ48 ACS rulebook against a real published case (PMC12750962). Runs the case twice: once against the as-shipped rulebook (which gets it wrong) and once against an extended rulebook (which gets it right). Prints both audit documents side by side."
+publish = false
+
+[dependencies]
+adj-lang = { path = "../../../packages/rust/adj-lang" }
+logic-core = { path = "../../../packages/rust/logic-core" }
+logic-engine = { path = "../../../packages/rust/logic-engine" }
+
+[[bin]]
+name = "adj50"
+path = "src/main.rs"

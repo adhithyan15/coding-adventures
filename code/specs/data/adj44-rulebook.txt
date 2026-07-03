@@ -1,0 +1,39 @@
+RULEBOOK FOR ADULT COMMUNITY-ACQUIRED BACTERIAL MENINGITIS (differential vs. viral meningitis)
+
+Base rates and demographics: In the United States, bacterial meningitis incidence in adults is roughly 1.4-2.0 per 100,000 person-years; viral meningitis is more common (Thigpen MC et al. "Bacterial Meningitis in the United States, 1998-2007." NEJM 2011;364(21):2016-2025). For an ED patient presenting with suspected meningitis based on clinical features, the prior probability of bacterial etiology in the adult immunocompetent population is approximately 30-40% per Tunkel AR et al. "Practice Guidelines for the Management of Bacterial Meningitis." Clin Infect Dis 2004;39(9):1267-1284.
+
+Clinical signs and symptoms:
+
+Fever: documented in approximately 95% of bacterial meningitis cases per van de Beek D et al. "Community-acquired bacterial meningitis in adults." NEJM 2006;354(1):44-53 (n=696 cohort). LR+ approximately 1.3 for bacterial vs. viral. [MEDIUM confidence on LR value; HIGH on prevalence]
+
+Neck stiffness: present in ~70% of bacterial cases per Brouwer MC, Tunkel AR, van de Beek D. "Epidemiology, diagnosis, and antimicrobial treatment of acute bacterial meningitis." Clin Microbiol Rev 2010;23(3):467-92. LR+ approximately 1.5 for bacterial. [MEDIUM]
+
+Altered mental status (GCS < 14): present in ~70% of bacterial cases per van de Beek 2006. LR+ approximately 2.0 for bacterial vs. viral. [MEDIUM]
+
+Classic triad (fever + neck stiffness + AMS together): present in only 41-44% of bacterial meningitis cases per van de Beek 2006. LR+ approximately 3.0 when all three are present. [HIGH confidence on prevalence; MEDIUM on LR]
+
+Photophobia: LR+ approximately 1.3 for bacterial. [LOW confidence on specific LR value]
+
+Petechial rash: highly suggestive of meningococcal etiology; LR+ approximately 5.0 for bacterial (specifically meningococcal) per Thigpen 2011. [LOW-MEDIUM; specific LR depends on prior probability of meningococcus in the patient population]
+
+Time course: acute presentation (hours) LR+ ~1.0 (both bacterial and viral can present acutely); subacute presentation (days) LR+ ~0.7 for bacterial. [empirical, no specific source]
+
+CSF findings (the load-bearing differentiators):
+
+Elevated CSF WBC > 1000 cells/uL: LR+ approximately 5.0 for bacterial vs. viral. Source: Spanos A et al. "Differential diagnosis of acute meningitis: an analysis of the predictive value of initial observations." JAMA 1989;262(19):2700-2707 (n=422 meta-analysis). [MEDIUM]
+
+Neutrophil predominance (>80% PMNs in CSF differential): LR+ approximately 4.0 for bacterial per Spanos 1989. [MEDIUM]
+
+CSF glucose < 40 mg/dL (hypoglycorrhachia): LR+ approximately 6.0 for bacterial per Spanos 1989. [MEDIUM]
+
+CSF/serum glucose ratio < 0.4: LR+ approximately 5.0 for bacterial. [MEDIUM]
+
+CSF protein > 200 mg/dL: LR+ approximately 3.0 for bacterial. [MEDIUM]
+
+CSF lactate > 3.5 mmol/L: LR+ approximately 4.0 for bacterial per Sakushima K et al. "Diagnostic accuracy of cerebrospinal fluid lactate for differentiating bacterial meningitis from aseptic meningitis: a meta-analysis." J Infect 2011;62(4):255-262. [MEDIUM]
+
+Positive CSF Gram stain: LR+ approximately 20.0+ for bacterial; sensitivity 60-80% per Tunkel 2004. [HIGH directionally; specific LR is wide-range]
+
+Joint contribution: classic triad + elevated CSF WBC + low CSF glucose: LR_extra approximately 1.5 beyond the multiplicative product. [LOW confidence; empirical]
+
+Empiric treatment recommendation: ceftriaxone 2g IV q12h + vancomycin 15-20 mg/kg IV q8-12h + dexamethasone 0.15 mg/kg IV q6h (start before/with first antibiotic dose); add ampicillin if Listeria coverage indicated (age > 50 or immunocompromised). Source: Tunkel 2004 IDSA Guidelines + de Gans J, van de Beek D. "Dexamethasone in adults with bacterial meningitis." NEJM 2002;347(20):1549-1556 (European Dexamethasone Study).

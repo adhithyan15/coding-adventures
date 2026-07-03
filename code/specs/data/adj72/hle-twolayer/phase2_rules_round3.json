@@ -1,0 +1,44 @@
+[
+  {
+    "applies_to": ["t1"],
+    "gloss": "Regina (a feminine personal name, the deceased)",
+    "justification": "RGYNᵓ is the Aramaic transliteration of the Latin name Regina ('queen'), rendered with a final aleph (ᵓ) representing the Aramaic determinate/emphatic ending commonly used to adapt foreign nominal endings (Latin -a). In Palmyrene funerary inscriptions the first name is the subject/deceased commemorated. The g-y-n core matches Latin Regina; this exact name (a freedwoman/woman of Palmyra) is attested in Palmyrene epigraphy. As the leading name before BT ('daughter of') it must be feminine, consistent with Regina.",
+    "exists": true,
+    "confidence": 0.78
+  },
+  {
+    "applies_to": ["t2"],
+    "gloss": "daughter of",
+    "justification": "BT is the Aramaic noun bat/bart ('daughter'), here in the construct state introducing a filiation. The historical form is *bint > Aramaic bratt/bat, conventionally written BT in Palmyrene and other Northwest Semitic scripts (the unwritten medial r/assimilation). It is the feminine counterpart of BR ('son of') and links the deceased Regina to her father's name. Standard genealogical connector in Palmyrene tomb formulae.",
+    "exists": true,
+    "confidence": 0.92
+  },
+  {
+    "applies_to": ["t3"],
+    "gloss": "Ḥairan / Ḥari (a personal name, the father)",
+    "justification": "ḤRY (ḥet-resh-yod) is a Palmyrene personal name. The very common Palmyrene male name is ḤYRN (Ḥairan); ḤRY here is best read as a hypocoristic/variant of the same Ḥ-(Y)-R name stock (root ḥ-w-r/ḥ-y-r), with final -y as a hypocoristic suffix. Positioned immediately after BT ('daughter of'), it occupies the father's-name slot and so denotes Regina's father.",
+    "exists": true,
+    "confidence": 0.62
+  },
+  {
+    "applies_to": ["t4"],
+    "gloss": "son of",
+    "justification": "BR is the Aramaic noun bar ('son'), in the construct state forming a filiation: '(Ḥry) son of (ᶜtᵓ)'. From Proto-Semitic *bn (Hebrew ben), Aramaic shows the regular n>r shift giving bar, written BR. It is the masculine counterpart of BT and is the standard Palmyrene/Aramaic genealogical connective, here giving the grandfather's name relative to the deceased.",
+    "exists": true,
+    "confidence": 0.95
+  },
+  {
+    "applies_to": ["t5"],
+    "gloss": "ʿAttaʾ / ʿAteʾ (a personal name, the grandfather)",
+    "justification": "ᶜTᵓ (ʿayin-tav-aleph) is a well-attested Palmyrene/Aramaic personal name, theophoric or hypocoristic in the ʿT- stock (often connected to the goddess ʿtʿ / ʿAtē, i.e. Atargatis-related names), with the final aleph an emphatic/hypocoristic ending. Standing after BR ('son of') it occupies the next ancestor slot, naming the father of ḤRY (the deceased's grandfather).",
+    "exists": true,
+    "confidence": 0.6
+  },
+  {
+    "applies_to": ["t6"],
+    "gloss": "Alas! (woe / lament for the dead)",
+    "justification": "ḤBL is the standard Palmyrene Aramaic funerary lamentation word, conventionally translated 'Alas!' or 'Woe!'. It derives from the root ḥ-b-l ('to harm, destroy; loss, grief'); the noun ḥěbāl means 'loss/grief'. In Palmyrene tomb inscriptions ḤBL is a formulaic exclamation appended after the name(s) of the deceased to express mourning, exactly as it appears here at the end of the genealogy. It is one of the most diagnostic markers of a Palmyrene funerary text.",
+    "exists": true,
+    "confidence": 0.9
+  }
+]

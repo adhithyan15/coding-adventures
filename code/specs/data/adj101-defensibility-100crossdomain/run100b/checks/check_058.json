@@ -1,0 +1,8 @@
+{
+ "check_id": 58,
+ "idx": 26,
+ "slot": "failure_cause",
+ "claimed_value": "water ingress",
+ "scenario": "Nina's fitness watch is labeled and certified IP67 waterproof. It stopped working after she wore it while swimming in a pool at a depth of about 0.5 meters during normal use. The failure was caused by water ingress.",
+ "cited_span": "The failure was caused by water ingress."
+}

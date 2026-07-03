@@ -1,0 +1,8 @@
+{
+ "check_id": 209,
+ "idx": 86,
+ "slot": "accumulated_credit_pct",
+ "claimed_value": 45,
+ "scenario": "An Enterprise Plus customer accumulated qualifying credits totaling 45% of its $20,000 monthly fee in a single month.",
+ "cited_span": "accumulated qualifying credits totaling 45% of its $20,000 monthly fee"
+}

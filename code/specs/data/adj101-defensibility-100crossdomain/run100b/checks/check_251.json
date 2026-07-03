@@ -1,0 +1,8 @@
+{
+ "check_id": 251,
+ "idx": 99,
+ "slot": "is_emergency_treatment_to_prevent_death_or_serious_impairment",
+ "claimed_value": true,
+ "scenario": "After a beam crushed Owen's leg at the job site, paramedics rushed him to the ER, where surgeons performed emergency surgery that night to stop life-threatening blood loss and save the limb. No one obtained the insurer's pre-authorization before the surgery. The insurer later argued the surgery was unauthorized.",
+ "cited_span": "surgeons performed emergency surgery that night to stop life-threatening blood loss and save the limb"
+}

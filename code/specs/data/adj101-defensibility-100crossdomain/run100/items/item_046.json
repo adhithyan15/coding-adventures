@@ -1,0 +1,7 @@
+{
+ "idx": 46,
+ "id": "INS-7",
+ "scenario": "A policyholder crashed while driving a passenger for a paid rideshare trip. The policy file shows the policyholder had purchased and paid for the optional rideshare endorsement, which was active on the date of the crash.",
+ "policy": "Under the auto policy, damage occurring while the insured vehicle is used to carry passengers for hire (e.g., ridesharing) is excluded. Override: if the policyholder has purchased the rideshare endorsement, damage during for-hire passenger use is covered.",
+ "question": "Is the collision damage covered?"
+}

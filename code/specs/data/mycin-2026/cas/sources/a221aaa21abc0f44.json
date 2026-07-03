@@ -1,0 +1,105 @@
+{
+  "hash": "a221aaa21abc0f44",
+  "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK482367/",
+  "title": "Staphylococcus saprophyticus Infection - StatPearls - NCBI Bookshelf",
+  "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK482367/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "S. saprophyticus is the second most common cause of community-acquired UTIs, after E. coli.",
+      "byte_quote": "saprophyticus is the second most common cause of community-acquired urinary tract infections, after Escherichia coli"
+    },
+    {
+      "id": "c2",
+      "text": "In females ages 16 to 25, S. saprophyticus causes up to 42% of all UTIs.",
+      "byte_quote": "In females ages 16 to 25, it causes up to 42% of all infections."
+    },
+    {
+      "id": "c3",
+      "text": "Nearly half of women will have a UTI in their lifetime; in 5%-20% of non-hospitalized patients the infection is due to S. saprophyticus.",
+      "byte_quote": "Nearly half of all women will experience a UTI in their lifetime, and between 5% and 20% of non-hospitalized patients, the infection will be due to S."
+    },
+    {
+      "id": "c4",
+      "text": "Over 40% of young, sexually active women carry S. saprophyticus as part of normal genitourinary flora.",
+      "byte_quote": "Over 40% of all young, sexually active women contain S. saprophyticus as part of their normal genitourinary flora."
+    },
+    {
+      "id": "c5",
+      "text": "S. saprophyticus is a Gram-positive, coagulase-negative, non-hemolytic coccus causing uncomplicated UTIs, particularly in young sexually active females.",
+      "byte_quote": "Staphylococcus saprophyticus is a Gram-positive, coagulase-negative, non-hemolytic coccus that is a common cause of uncomplicated urinary tract infections (UTIs), particularly in young sexually active females."
+    },
+    {
+      "id": "c6",
+      "text": "General UTI risk factors: recurrent UTI history, female sex, recent intercourse, pregnancy, neurogenic bladder, indwelling catheter, benign prostatic hypertrophy.",
+      "byte_quote": "General risk factors for UTIs include the history of recurrent UTIs, female sex, recent sexual intercourse, pregnancy, neurogenic bladder, indwelling catheter, and benign prostatic hypertrophy."
+    },
+    {
+      "id": "c7",
+      "text": "Men have a lower incidence of S. saprophyticus infections.",
+      "byte_quote": "Men have a lower incidence of S. saprophyticus infections."
+    },
+    {
+      "id": "c8",
+      "text": "A complicated UTI typically involves a patient who is immunocompromised, elderly, male, pregnant, diabetic, and/or has urologic abnormalities such as indwelling catheters or kidney disease.",
+      "byte_quote": "A complicated infection typically involves a patient that is immunocompromised, elderly, male, pregnant, diabetic, and/or with urologic abnormalities such as indwelling catheters or kidney disease."
+    },
+    {
+      "id": "c9",
+      "text": "Polymicrobial infections are more likely in patients who are immunocompromised, elderly, diabetic, have indwelling catheters, HIV, and/or malignancies.",
+      "byte_quote": "Polymicrobial infections are more likely to occur in patients that are immunocompromised, elderly, those who have diabetes, have indwelling catheters, HIV, and/or malignancies."
+    },
+    {
+      "id": "c10",
+      "text": "S. saprophyticus can be differentiated from another coagulase-negative staphylococcus by its resistance to Novobiocin.",
+      "byte_quote": "saprophyticus can be differentiated from another coagulase-negative staphylococcus by its resistance to Novobiocin."
+    },
+    {
+      "id": "c11",
+      "text": "Like most gram-positive uropathogens, S. saprophyticus does not reduce nitrate to nitrite (negative urine nitrite).",
+      "byte_quote": "saprophyticus does not reduce nitrate to nitrite."
+    },
+    {
+      "id": "c12",
+      "text": "First-line for uncomplicated S. saprophyticus UTI is nitrofurantoin 100 mg orally twice daily for 5 days (7 days if complicated).",
+      "byte_quote": "saprophyticus UTIs is nitrofurantoin 100 mg orally twice daily for five days, or for seven days in complicated cases."
+    },
+    {
+      "id": "c13",
+      "text": "Alternative for uncomplicated cases: TMP-SMX 160 mg/800 mg by mouth twice daily for 3 days.",
+      "byte_quote": "Trimethoprim-sulfamethoxazole (TMP-SMX) 160 mg/800 mg by mouth twice daily for three days may be given alternatively in uncomplicated cases."
+    },
+    {
+      "id": "c14",
+      "text": "Pyridium may be given to alleviate associated dysuria.",
+      "byte_quote": "Pyridium may also be given to alleviate associated dysuria."
+    },
+    {
+      "id": "c15",
+      "text": "S. saprophyticus is resistant to antibiotic regimens commonly used and effective for E. coli UTIs, including ampicillin, ceftriaxone, cephalexin, and ciprofloxacin.",
+      "byte_quote": "saprophyticus has resistance to antibiotic regimes commonly prescribed and effective for E. coli induced UTIs, including ampicillin, ceftriaxone, cephalexin, and ciprofloxacin."
+    },
+    {
+      "id": "c16",
+      "text": "Some strains form biofilms (increasing virulence, especially with catheters); once biofilms form, antibiotic resistance is exacerbated and the organism may be vancomycin-resistant, treatable only via linezolid.",
+      "byte_quote": "Once biofilms have been produced, antibiotic resistance is exacerbated. In these cases, S. Saprophyticus may be resistant to vancomycin and only effectively treated via linezolid."
+    },
+    {
+      "id": "c17",
+      "text": "Patients with nosocomial catheterization have an increased incidence of S. saprophyticus colonization.",
+      "byte_quote": "catheterization have an increased incidence of S. saprophyticus colonization."
+    }
+  ],
+  "cites": [
+    "Argemi X, Hansmann Y, Prola K, Prévost G. Coagulase-Negative Staphylococci Pathogenomics. Int J Mol Sci. 2019;20(5)",
+    "Pinault L, Chabrière E, Raoult D, Fenollar F. Direct Identification of Pathogens in Urine by Use of a Specific MALDI-TOF Spectrum Database. J Clin Microbiol. 2019;57(4)",
+    "Natsis NE, Cohen PR. Coagulase-Negative Staphylococcus Skin and Soft Tissue Infections. Am J Clin Dermatol. 2018;19(5):671-677",
+    "Gill R, Leslie SW, Minter DA. Acute Cystitis. StatPearls. 2025",
+    "Hur J, Lee A, Hong J, Jo WY, Cho OH, Kim S, Bae IG. Staphylococcus saprophyticus Bacteremia originating from Urinary Tract Infections: A Case Report and Literature Review. Infect Chemother. 2016;48(2):136-9",
+    "Flores-Mireles AL, Walker JN, Caparon M, Hultgren SJ. Urinary tract infections: epidemiology, mechanisms of infection and treatment options. Nat Rev Microbiol. 2015;13(5):269-84",
+    "Becker K, Heilmann C, Peters G. Coagulase-negative staphylococci. Clin Microbiol Rev. 2014;27(4):870-926",
+    "Stock I. Nitrofurantoin--clinical relevance in uncomplicated urinary tract infections. Med Monatsschr Pharm. 2014;37(7):242-8",
+    "Mirone V, Franco M. Clinical aspects of antimicrobial prophylaxis for invasive urological procedures. J Chemother. 2014;26 Suppl 1:S1-S13",
+    "Stuart JI, John MA, Milburn S, Diagre D, Wilson B, Hussain Z. Susceptibility patterns of coagulase-negative staphylococci to several newer antimicrobial agents in comparison with vancomycin and oxacillin. Int J Antimicrob Agents. 2011;37(3):248-52"
+  ]
+}

@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-s-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL for the historical Bell Labs S statistical language"
+
+[dependencies]
+coding-adventures-s-runtime = { path = "../s-runtime" }
+coding-adventures-s-parser = { path = "../s-parser" }
+
+[[bin]]
+name = "s"
+path = "src/main.rs"

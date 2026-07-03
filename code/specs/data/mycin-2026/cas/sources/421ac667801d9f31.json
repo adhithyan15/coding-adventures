@@ -1,0 +1,59 @@
+{
+  "hash": "421ac667801d9f31",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349422/",
+  "title": "Neisseria meningitidis: Biology, Microbiology, and Epidemiology (Rouphael & Stephens)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349422/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Neisseria meningitidis (the meningococcus) remains a leading cause worldwide of bacterial meningitis.",
+      "byte_quote": "the meningococcus remains a leading cause worldwide of bacterial meningitis"
+    },
+    {
+      "id": "c2",
+      "text": "Overall mortality in invasive meningococcal disease today is 10-15% (was 70-85% fatal in the pre-antibiotic era).",
+      "byte_quote": "In the pre-serum therapy and pre-antibiotic eras, 70–85% of meningococcal disease cases were fatal; today, the overall mortality rate in invasive meningococcal disease still remains high, at between 10 and 15%"
+    },
+    {
+      "id": "c3",
+      "text": "There are an estimated 1.2 million cases of meningococcal infection per year worldwide, with ~135,000 deaths.",
+      "byte_quote": "There are an estimated 1.2 million cases of meningococcal infection per year, with a death toll of ~135,000 worldwide"
+    },
+    {
+      "id": "c4",
+      "text": "In the USA the meningococcal attack rate is now less than one case per 100,000 per year.",
+      "byte_quote": "In the USA, the attack rate is now less than one case per 100,000 per year"
+    },
+    {
+      "id": "c5",
+      "text": "Infants under 1 year have the highest incidence of meningococcal disease, 5.38 cases per 100,000.",
+      "byte_quote": "Infants aged <1 year have the highest incidence of meningococcal disease (5.38 cases per 100,000)"
+    },
+    {
+      "id": "c6",
+      "text": "The meningococcus is a common cause of bacterial meningitis in children and young adults in the USA, now mostly affecting children less than 2 years of age.",
+      "byte_quote": "a common cause of bacterial meningitis in children and young adults in the USA ( 132 ), now mostly affecting children less than 2 years of age"
+    },
+    {
+      "id": "c7",
+      "text": "Two-thirds of US meningococcal disease in the first year of life occurs in infants under 6 months of age.",
+      "byte_quote": "Two-thirds of meningococcal disease in the first year of life in the US occurs in infants less than 6 months of age"
+    },
+    {
+      "id": "c8",
+      "text": "N. meningitidis is a fastidious, encapsulated, aerobic gram-negative diplococcus.",
+      "byte_quote": "N. meningitidis is a fastidious, encapsulated, aerobic gram-negative diplococcus"
+    },
+    {
+      "id": "c9",
+      "text": "N. meningitidis is an encapsulated or unencapsulated aerobic diplococcus with a 'kidney' or 'coffee-bean' shape.",
+      "byte_quote": "is either an encapsulated or unencapsulated, aerobic diplococcus with a “kidney” or “coffee-bean” shape"
+    },
+    {
+      "id": "c10",
+      "text": "On CSF Gram stain, meningococcal meningitis shows intracellular gram-negative diplococci and leukocytes.",
+      "byte_quote": "Intracellular gram-negative diplococci and leukocytes in the CSF from a patient with meningococcal meningitis"
+    }
+  ],
+  "cites": []
+}

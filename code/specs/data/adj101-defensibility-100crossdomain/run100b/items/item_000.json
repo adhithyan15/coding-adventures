@@ -1,0 +1,7 @@
+{
+ "idx": 0,
+ "id": "HEA-1",
+ "scenario": "Maria has a closed HMO with no out-of-network benefits. She electively visited Dr. Lee, an out-of-network dermatologist, for a routine mole check. The visit was billed at $220. The visit was not an emergency.",
+ "policy": "A patient is financially responsible for the full charge of any service rendered by an out-of-network provider when the plan is a closed HMO that provides no out-of-network benefits, unless the service was a verified emergency.",
+ "question": "What amount is Maria financially responsible for?"
+}

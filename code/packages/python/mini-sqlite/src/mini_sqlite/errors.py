@@ -57,6 +57,12 @@ class OperationalError(DatabaseError):
     """Errors related to the database's operation — runtime failures."""
 
 
+# Reused as the exact wording is constant across SQLite versions and is
+# what callers (and our oracle tests) match on.  Centralised so a future
+# message-text drift surfaces in exactly one place.
+READONLY_ERROR_MESSAGE = "attempt to write a readonly database"
+
+
 class IntegrityError(DatabaseError):
     """Constraint violations (unique, not-null, foreign key)."""
 
@@ -107,6 +113,7 @@ def translate(exc: BaseException) -> Exception:
     try:
         from sql_planner.errors import (
             AmbiguousColumn,
+            IndexNotFound,
             InvalidAggregate,
             UnknownColumn,
             UnknownTable,
@@ -115,7 +122,7 @@ def translate(exc: BaseException) -> Exception:
 
         if isinstance(exc, AmbiguousColumn | InvalidAggregate):
             return ProgrammingError(str(exc))
-        if isinstance(exc, UnknownTable | UnknownColumn):
+        if isinstance(exc, UnknownTable | UnknownColumn | IndexNotFound):
             return OperationalError(str(exc))
         if isinstance(exc, UnsupportedStatement):
             return NotSupportedError(str(exc))

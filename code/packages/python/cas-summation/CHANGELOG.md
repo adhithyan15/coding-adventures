@@ -1,5 +1,848 @@
 # Changelog
 
+## 2.28.0 - 2026-05-29
+
+### Added
+
+- **Track I1 of `macsyma-truly-finish-plan.md`** — closed-form
+  recogniser for canonical infinite series in the new module
+  `cas_summation/series_closed_forms.py`.  Pattern-matches the
+  summand against the classical zeta / eta / factorial Taylor
+  shapes and emits the closed form when `hi = %inf`:
+  - `sum(1/k^(2m), k, 1, %inf)` → `ζ(2m) · π^(2m)` for `m = 1..6`
+    (Basel through `ζ(12) = 691·π¹²/638512875`).
+  - `sum((-1)^(k-1)/k, k, 1, %inf)` → `log(2)` (Mercator).
+  - `sum((-1)^(k-1)/k^(2m), k, 1, %inf)` → `η(2m) · π^(2m)` for
+    `m = 1..3` (Dirichlet eta).
+  - `sum(1/k!, k, 0, %inf)` → `%e`.
+  - `sum(x^k/k!, k, 0, %inf)` → `exp(x)` (symbolic `x ≠ k`).
+  - `sum((-1)^k · x^(2k)/(2k)!, k, 0, %inf)` → `cos(x)`.
+  - `sum((-1)^k · x^(2k+1)/(2k+1)!, k, 0, %inf)` → `sin(x)`.
+  - `sum(x^(2k)/(2k)!, k, 0, %inf)` → `cosh(x)`.
+  - `sum(x^(2k+1)/(2k+1)!, k, 0, %inf)` → `sinh(x)`.
+- New handler wired into the dispatcher between the existing
+  `try_special_infinite` (Basel + Leibniz) and the Gosper /
+  numeric-small-range paths; pre-existing tests stay on their
+  original code paths.
+- **One generic Bernoulli helper** computes `B_n` via the textbook
+  recurrence `B_0 = 1; Σ_{j=0}^{n} C(n+1, j) · B_j = 0`.  Six
+  even-zeta exponents (m = 1..6) and three even-eta exponents
+  (m = 1..3) share the same code — no per-degree tables.  The
+  recurrence depth is bounded by `n ≤ 12`, so the helper is
+  provably terminating.
+- All numeric work is exact (`fractions.Fraction`); the closed
+  forms emerge as `π^(2m) / denom` IR shapes that match the
+  parser-emitted forms verified by the test suite.
+
+### Notes
+
+- Falls through (returns `None`) for: odd zeta `ζ(2m+1)`, indices
+  past `m > 6`, wrong lower bound (zeta requires `lo=1`, Taylor
+  requires `lo=0`), finite upper bound, and any non-table summand
+  (`sin(k)`, `log(k)`, etc.).
+
+## 2.27.0 - 2026-05-29
+
+### Added
+
+- **Track H1 of `macsyma-truly-finish-plan.md`** — Gosper's algorithm
+  for indefinite hypergeometric summation in the new module
+  `cas_summation/gosper.py`.  Closes the spec's polynomial × `c^k` and
+  polynomial × factorial families in symbolic-parameter form:
+  - `sum(k*2^k, k, 1, N)` → `(N-1)*2^(N+1) + 2`
+  - `sum(k*k!, k, 0, N)`  → `(N+1)! - 1`
+- The new handler is wired into the dispatcher as a fallback *after*
+  the existing constant / geometric / Faulhaber / telescope / classic-
+  infinite paths and *before* the numeric small-range path, so all
+  earlier tests remain on their original code paths.
+- New helpers (all pure rational arithmetic via `fractions.Fraction`):
+  - Univariate polynomial GCD via Euclid's algorithm.
+  - Petkovšek shift-coprime normalisation of the ratio `a(k+1)/a(k)`.
+  - Gosper degree bound for the polynomial `x(k)` in the key
+    equation `A(k)·x(k+1) − B(k−1)·x(k) = C(k)`.
+  - Gaussian elimination over `Fraction` for the linear coefficient
+    system.
+- The transcendental factors (`c^k`, `GammaFunc(k+s)`) are reconstructed
+  symbolically and the polynomial part of the answer is GCD-cancelled
+  against `C(k)` so removable singularities at the boundary (e.g. the
+  `k!` cancellation at `k = 0`) don't surface as `0/0`.
+
+### Notes
+
+- Sums that are *not* hypergeometric (e.g. `sin(k)`, `log(k)`) cleanly
+  fall through to the unevaluated `Sum` IR — no false positives.
+- Coverage of `gosper.py` is 81%; the uncovered lines are
+  defensive branches (e.g. negative-exponent guards in the IR-to-Poly
+  bridge, the inconsistent-system path in the Gaussian solver).
+
+## 2.26.0 - 2026-06-06
+
+### Added
+
+- Infinite telescope limits now recognise direct decaying exponential terms:
+  ``exp(-k)`` and ``b^(-k)`` with ``|b| > 1`` are treated as vanishing at
+  infinity. This closes structurally telescoping sums such as
+  ``sum(exp(-(k+1)) - exp(-k), k, 1, inf)`` without requiring a rational
+  denominator wrapper.
+- The recogniser is conservative: growing exponentials, ambiguous exponent
+  signs, and unrecognised transcendental factors still fall through to the
+  unevaluated ``Sum`` form.
+
+## 2.24.0 — 2026-05-28
+
+**Track A2 cleanup — delete 27 grid helpers superseded by Phase 86 generic.**
+
+Pure deletion: removes the 27 hand-written ``N-Sqrt × M-Log × polynomial``
+helpers (Phases 59–85) and their dispatcher calls + tests, now that the
+Phase 86 generic recogniser (``_log_sqrt_poly_effective_x2_generic``)
+preempts the entire grid in every case the grid covers.  No behavior change.
+
+- ``src/cas_summation/summation.py``: removed all Phase 59–85 dispatcher
+  branches inside ``g_vanishes_at_infinity`` and the helper functions
+  ``_bounded_sqrt_poly_effective_x2`` through ``_two_sqrt_six_log_poly_effective_x2``.
+  The Phase 86 generic branch (which previously preempted them all) is
+  unchanged.
+- ``tests/test_summation.py``: removed all ``TestEvaluateSumPhase{59..67}``
+  and ``TestPhase{68..85}`` classes (117 tests).  Phase 56–58 and Phase 86
+  test classes remain.
+- Net source diff: ~2,227 lines deleted from ``summation.py``;
+  ~2,618 lines deleted from the test module.  pytest count drops from
+  ~268 to 151; no test fails or regresses.
+
+## 2.23.0 — 2026-05-28
+
+**Phase 86 — Cleanup: generic log × sqrt × polynomial recogniser.**
+
+Closes a long-running design problem.  Phases 59-85 accumulated a
+hand-written grid of ``N-Sqrt × M-Log × polynomial`` helpers — one
+function per ``(N, M)`` combination, all with the same body modulo
+the hardcoded counts.  This PR replaces the entire grid with a
+single generic helper.
+
+### Motivation
+
+The convergence math is identical for every non-negative ``(N, M)``:
+
+- The product of ``N`` ``Log(diverging)`` factors is still
+  sub-polynomial — ``log^N(k) = o(k^ε)`` for any ``ε > 0`` — so ``N``
+  contributes ``0`` to the effective growth degree.
+- Each ``Sqrt(P_i)`` contributes ``deg(P_i)/2`` (recorded ×2 to stay
+  in integer arithmetic).
+- Each polynomial factor contributes its own degree (also ×2 here).
+- Bounded factors (constants in ``k``, ``Sin``, ``Cos``, closures)
+  contribute ``0``.
+
+Effective growth ×2: ``Σ sqrt_inner_deg_x2 + 2 · Σ poly_deg``.
+Vanishes when ``2·den_deg > effective_x2`` (polynomial denominator)
+or non-polynomial diverging denominator.
+
+The grid hardcoded ``(N, M)`` for ``N ∈ {0..5}`` and ``M ∈ {0..6}``
+— **42 helpers, all redundant**.  Cases beyond that grid
+(``M ≥ 7``, ``N ≥ 6``) silently failed.
+
+### Added
+
+- **``_log_sqrt_poly_effective_x2_generic(node, k) -> int | None``** —
+  one function that handles every ``(N, M, K)`` combination.  Returns
+  ``effective_x2`` (= ``Σ sqrt_deg_x2 + 2·Σ poly_deg``) when the ``Mul``
+  splits cleanly into Log / Sqrt / polynomial / bounded factors;
+  ``None`` for unrecognised factors (e.g. ``Exp(k)``,
+  ``Sqrt(negative)``).
+
+- **Phase 86 branch in ``_g_vanishes_at_infinity``** — inserted between
+  Phase 58 (bounded × Log × polynomial) and Phase 59 (bounded × Sqrt
+  × polynomial).  Catches every case the hand-written grid catches,
+  *plus* cases beyond the grid that previously failed.
+
+- **6 new tests** in ``TestPhase86GenericLogSqrtPoly`` proving the
+  generic handles cases the grid doesn't:
+
+  * 7-Log / k² closes (grid stops at 6 Log).
+  * 6-Sqrt / k⁴ closes (grid stops at 5 Sqrt).
+  * Mixed 3-Sqrt × 7-Log × poly closes.
+  * Regression: ``Exp(k)`` factor refused (would falsely close).
+  * Regression: ``Sqrt(-k)`` refused (complex-valued for large k).
+  * Regression: pure-bounded numerator falls through to Phase 49.
+
+### Status of the existing grid (Phases 59-85)
+
+The 42 hardcoded helpers remain in place for backward compatibility
+and are still wired into the dispatcher.  They are now redundant —
+the new Phase 86 branch catches every input they handle.  A
+follow-up PR can delete them in a single sweep without behavioral
+change.
+
+### Tests
+
+Full suite: **268 passed** (was 262; +6 net new — all from the
+generic).
+
+### Why this was needed
+
+74 open PRs (#4471-#4544) had queued up adding more ``(N, M)`` grid
+points up to ``N=64`` Log factors and beyond, each bumping the
+package version by ``0.006``.  Those PRs are now closed — the
+generic supersedes all of them.
+
+### Still deferred (genuine future work)
+
+- Deleting the redundant grid helpers (Phases 59-85) — pure
+  refactor, no behavior change.
+- Generalising further to ``Exp(non-positive)`` and other vanishing
+  transcendentals.
+- Two-Log-of-Sqrt patterns and similar nested compositions.
+
+## 2.22.0 — 2026-05-26
+
+### Added
+
+- **Phase 85 — Two-Sqrt × Six-Log × polynomial numerator** (`_two_sqrt_six_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt factors and exactly 6 Log factors required.  `log⁶(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase85TwoSqrtSixLogPoly`.
+
+## 2.21.0 — 2026-05-25
+
+### Added
+
+- **Phase 81 — Four-Sqrt × Five-Log × polynomial numerator** (`_four_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 4 Sqrt factors and exactly 5 Log factors required.  `log⁵(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase81FourSqrtFiveLogPoly`.
+
+## 2.20.0 — 2026-05-25
+
+### Added
+
+- **Phase 80 — Three-Sqrt × Five-Log × polynomial numerator** (`_three_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1(k)), ..., Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 5 Log factors required.
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase80ThreeSqrtFiveLogPoly`.
+
+## 2.19.0 — 2026-05-25
+
+### Added
+
+- **Phase 84 — One-Sqrt × Six-Log × polynomial numerator** (`_one_sqrt_six_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 6 Log factors required.  `log⁶(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase84OneSqrtSixLogPoly`.
+
+## 2.18.0 — 2026-05-25
+
+### Added
+
+- **Phase 82 — Five-Sqrt × Five-Log × polynomial numerator** (`_five_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Sqrt(P4), Sqrt(P5), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 5 Sqrt factors and exactly 5 Log factors required.  `log⁵(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + sqrt4_deg_x2 + sqrt5_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase82FiveSqrtFiveLogPoly`.
+- **Phase 83 — Six-Log × polynomial numerator** (`_six_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), Log(h6(k)), polynomial..., bounded...)`.
+  Exactly 6 Log factors and zero Sqrt factors required.  `log⁶(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase83SixLogPoly`.
+
+## 2.17.0 — 2026-05-25
+
+### Added
+
+- **Phase 79 — Two-Sqrt × Five-Log × polynomial numerator** (`_two_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt factors and exactly 5 Log factors required.  `log⁵(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase79TwoSqrtFiveLogPoly`.
+
+## 2.16.0 — 2026-05-25
+
+### Added
+
+- **Phase 78 — One-Sqrt × Five-Log × polynomial numerator** (`_one_sqrt_five_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 5 Log factors required.  `log⁵(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = sqrt_inner_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase78OneSqrtFiveLogPoly`.
+
+## 2.15.0 — 2026-05-25
+
+### Added
+
+- **Phase 77 — Five-Log × polynomial numerator** (`_five_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), Log(h5(k)), polynomial..., bounded...)`.
+  Exactly 5 Log factors required; Sqrt factors explicitly refused so this phase does not shadow
+  the Sqrt-bearing phases (73–76, 78+).  `log⁵(k)` is sub-polynomial (`o(k^ε)`),
+  contributing 0 to effective degree;
+  `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase77FiveLogPoly`.
+
+## 2.14.0 — 2026-05-25
+
+### Added
+
+- **Phase 76 — Three-Sqrt × Four-Log × polynomial numerator** (`_three_sqrt_four_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 4 Log factors required.  `log⁴(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + sqrt3_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 3 new unit tests in `TestPhase76ThreeSqrtFourLogPoly`.
+
+## 2.13.0 — 2026-05-25
+
+### Added
+
+- **Phase 75 — Two-Sqrt × Four-Log × polynomial numerator** (`_two_sqrt_four_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt factors and exactly 4 Log factors required.  `log⁴(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree;
+  `effective_x2 = sqrt1_deg_x2 + sqrt2_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 4 new unit tests in `TestPhase75TwoSqrtFourLogPoly`.
+
+## 2.12.0 — 2026-05-25
+
+### Added
+
+- **Phase 74 — One-Sqrt × Four-Log × polynomial numerator** (`_one_sqrt_four_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 4 Log factors required.  `log⁴(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = sqrt_inner_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 4 new unit tests in `TestPhase74OneSqrtFourLogPoly`.
+
+## 2.11.0 — 2026-05-25
+
+### Added
+
+- **Phase 73 — Four-Log × polynomial numerator** (`_four_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), Log(h4(k)), polynomial..., bounded...)`.
+  Exactly 4 Log factors required; Sqrt factors are refused.  `log⁴(k)` is sub-polynomial
+  (`o(k^ε)`), contributing 0 to effective degree; `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestPhase73FourLogPoly`.
+
+## 2.10.0 — 2026-05-25
+
+### Added
+
+- **Phase 72 — Three-Sqrt × Three-Log × polynomial numerator** (`_three_sqrt_three_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 3 Log factors required; log³ sub-polynomial contributes 0
+  to effective degree; `effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestPhase72ThreeSqrtThreeLogPoly`.
+
+## 2.9.0 — 2026-05-25
+
+### Added
+
+- **Phase 71 — Two-Sqrt × Three-Log × polynomial numerator** (`_two_sqrt_three_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Exactly 2 Sqrt factors and exactly 3 Log factors required; log³ sub-polynomial contributes 0
+  to effective degree; `effective_x2 = deg(P1) + deg(P2) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestPhase71TwoSqrtThreeLogPoly`.
+
+## 2.8.0 — 2026-05-25
+
+### Added
+
+- **Phase 70 — Three-Sqrt × Two-Log × polynomial numerator** (`_three_sqrt_two_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(h1(k)), Log(h2(k)), polynomial..., bounded...)`.
+  Exactly 3 Sqrt factors and exactly 2 Log factors required; log² sub-polynomial contributes 0
+  to effective degree; `effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestPhase70ThreeSqrtTwoLogPoly`.
+
+## 2.7.0 — 2026-05-25
+
+### Added
+
+- **Phase 69 — One-Sqrt × Three-Log × polynomial numerator** (`_one_sqrt_three_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P), Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Exactly 1 Sqrt factor and exactly 3 Log factors required; log³ sub-polynomial contributes 0
+  to effective degree; `effective_x2 = sqrt_inner_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestPhase69OneSqrtThreeLogPoly`.
+
+## 2.6.0 — 2026-05-25
+
+### Added
+
+- **Phase 68 — Three-Sqrt × Log × polynomial numerator** (`_three_sqrt_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), Log(diverging), polynomial..., bounded...)`.
+  Log is sub-polynomial; `effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestPhase68ThreeSqrtLogPoly`.
+
+## 2.5.0 — 2026-05-25
+
+### Added
+
+- **Phase 67 — Three-Log × polynomial numerator** (`_three_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Log(h3(k)), polynomial..., bounded...)`.
+  Sqrt factors refused; log³ sub-polynomial; `effective_x2 = 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestEvaluateSumPhase67ThreeLogPolyNumerator`.
+
+## 2.4.0 — 2026-05-25
+
+### Added
+
+- **Phase 66 — Three-Sqrt × polynomial numerator** (`_three_sqrt_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Sqrt(P3), polynomial..., bounded...)`.
+  Log factors refused (use Phase 63/64/65 for sqrt+log combos);
+  `effective_x2 = deg(P1) + deg(P2) + deg(P3) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestEvaluateSumPhase66ThreeSqrtPolyNumerator`.
+
+## 2.3.0 — 2026-05-25
+
+### Added
+
+- **Phase 65 — Two-Sqrt × Two-Log × polynomial numerator** (`_two_sqrt_two_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h1(k)), Log(h2(k)), polynomial..., bounded...)`.
+  log² sub-polynomial; `effective_x2 = deg(P1) + deg(P2) + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestEvaluateSumPhase65TwoSqrtTwoLogPolyNumerator`.
+
+## 2.2.0 — 2026-05-25
+
+### Added
+
+- **Phase 64 — Two-Log × Sqrt × polynomial numerator** (`_two_log_sqrt_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), Sqrt(P), polynomial..., bounded...)`.
+  `log²(k)` is sub-polynomial; `effective_x2 = sqrt_inner_deg_x2 + 2·poly_deg`.
+  Closes when `2·den_deg > effective_x2` or non-polynomial diverging denominator.
+  - 5 new unit tests in `TestEvaluateSumPhase64TwoLogSqrtPolyNumerator`.
+
+## 2.1.0 — 2026-05-25
+
+### Added
+
+- **Phase 63 — Two-Sqrt × Log × polynomial numerator** (`_two_sqrt_log_poly_effective_x2`):
+  recognises `Mul(Sqrt(P1), Sqrt(P2), Log(h(k)), polynomial..., bounded...)` as a
+  numerator that vanishes at infinity.  Log is sub-polynomial; `effective_x2 =
+  deg(P1) + deg(P2) + 2·poly_deg`.  Closes when `2·den_deg > effective_x2` or
+  non-polynomial diverging denominator.
+  - 5 new unit tests in `TestEvaluateSumPhase63TwoSqrtLogPolyNumerator`.
+
+## 2.0.0 — 2026-05-25
+
+### Added
+
+- **Phase 62 — Two-Log × polynomial numerator** (`_two_log_poly_effective_x2`):
+  recognises `Mul(Log(h1(k)), Log(h2(k)), polynomial..., bounded...)` as a
+  numerator that vanishes at infinity.  `log²(k)` grows sub-polynomially
+  (`log²(k) = o(k^ε)` for any ε > 0), so the effective polynomial degree is
+  unchanged by the two log factors.  `effective_x2 = 2·poly_deg`; closes when
+  `2·den_deg > effective_x2` (polynomial denominator) or the denominator is
+  non-polynomial diverging.  Sqrt factors are refused (belong to two-Sqrt /
+  log-Sqrt family).
+  - 6 new unit tests in `TestEvaluateSumPhase62TwoLogPolyNumerator`.
+
+## 1.9.0 — 2026-05-25
+
+**Phase 61 — Two-Sqrt × polynomial numerator (Python).**
+
+Closes the gap where all existing Sqrt phases (51, 53, 56, 59, 60) require
+exactly one Sqrt and hard-reject a second.  Handles numerators of the form
+``Mul(Sqrt(P1), Sqrt(P2), polynomial_factors..., bounded_factors...)``.
+
+Effective growth: ``k^{deg(P1)/2 + deg(P2)/2 + m}``.
+Using the ×2 integer trick: ``effective_x2 = deg(P1) + deg(P2) + 2·m``.
+Vanishes when ``2·den_deg > effective_x2`` (polynomial denominator) or
+when the denominator is non-polynomial diverging.
+
+``Log`` factors are refused (belong to future Log×two-Sqrt phases).
+
+### Added
+
+- **``_two_sqrt_poly_effective_x2``** — returns
+  ``deg(P1) + deg(P2) + 2·poly_deg`` for
+  ``Mul(Sqrt(P1), Sqrt(P2), polynomial_factors..., bounded_factors...)``.
+  Refuses three-or-more Sqrt, any Log factor, or unrecognised factors.
+- **Phase 61 branch** in ``_g_vanishes_at_infinity`` — checks
+  ``2·den_deg > tsp_x2`` for polynomial denominators; falls back to
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **6 new tests** in ``TestEvaluateSumPhase61TwoSqrtPolyNumerator``.
+
+### Changed
+
+- Renamed ``test_two_sqrt_factors_refused`` → ``test_two_sqrt_factors_now_closed_by_phase61``
+  in Phase 56 tests: Phase 61 now correctly closes what Phase 56 conservatively refused.
+
+## 1.8.0 — 2026-05-24
+
+**Phase 60 — Bounded × Log(diverging) × Sqrt(positive-poly) × polynomial numerator (Python).**
+
+Closes the gap left by Phase 57 (bounded × Log × Sqrt, refuses polynomial
+factors).  Allows any number of bounded factors, exactly one
+``Log(diverging)`` factor, exactly one ``Sqrt(positive-leading polynomial P)``,
+and any polynomial factors (total degree ``m``).
+
+Effective growth: ``k^{1/2·deg(P) + m}`` (log is sub-polynomial).
+Using the ×2 integer trick: ``effective_x2 = deg(P) + 2·m``.
+Vanishes when ``2·den_deg > effective_x2`` (polynomial denominator) or
+when the denominator is non-polynomial diverging.
+
+### Added
+
+- **``_bounded_log_sqrt_poly_effective_x2``** — returns ``deg(P) + 2·poly_deg``
+  for ``Mul(bounded..., Log(diverging), Sqrt(positive-poly), polynomial_factors...)``.
+  Requires exactly one Log and exactly one Sqrt; refuses two of either.
+- **Phase 60 branch** in ``_g_vanishes_at_infinity`` — checks
+  ``2·den_deg > blsp_x2`` for polynomial denominators; falls back to
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **6 new tests** in ``TestEvaluateSumPhase60BoundedLogSqrtPolyNumerator``.
+
+## 1.7.0 — 2026-05-25
+
+**Phase 59 — Bounded × Sqrt(positive-poly) × polynomial numerator (Python).**
+
+Closes the three-way gap between Phase 53 (Sqrt × polynomial, refuses
+bounded factors), Phase 56 (bounded × Sqrt, refuses polynomial factors),
+and Phase 57 (bounded × Log × Sqrt, the Log specialisation).
+
+A numerator with one ``Sqrt(positive-leading polynomial P)`` factor, any
+polynomial factors (total degree ``m``), and any bounded factors has
+effective growth ``k^{deg(P)/2 + m}``.  Using the ×2 integer trick:
+``effective_x2 = deg(P) + 2·m``.  Vanishes when ``2·den_deg > effective_x2``
+(polynomial denominator) or when the denominator is non-polynomial diverging.
+
+### Added
+
+- **``_bounded_sqrt_poly_effective_x2``** — returns ``deg(P) + 2·poly_deg``
+  for ``Mul(bounded..., Sqrt(positive-poly), polynomial_factors...)``.
+  Refuses two-Sqrt, any Log (→ Phase 57), or unrecognised factors.
+- **Phase 59 branch** in ``_g_vanishes_at_infinity`` — checks
+  ``2·den_deg > bsp_x2`` for polynomial denominators; falls back to
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+- **6 new tests** in ``TestEvaluateSumPhase59BoundedSqrtPolyNumerator``.
+
+## 1.6.0 — 2026-05-25
+
+**Phase 58 — Bounded × Log(diverging) × polynomial numerator (Python).**
+
+Closes the three-way gap between Phase 54 (Log × polynomial, refuses
+bounded factors), Phase 55 (bounded × Log, refuses polynomial factors),
+and Phase 57 (bounded × Log × Sqrt, the Sqrt specialisation).
+
+A numerator with one ``Log(diverging)`` factor, any polynomial factors
+(total degree ``m``), and any bounded factors has effective growth
+``log(k)·k^m = o(k^{m+ε})`` and vanishes when the denominator grows
+strictly faster than ``k^m``.
+
+### Added
+
+- **``_bounded_log_poly_degree``** — returns total polynomial degree for
+  ``Mul(bounded..., Log(diverging), polynomial_factors...)``.  Refuses
+  two-Log, any Sqrt (→ Phase 57), or unrecognised factors.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds Phase 58 branch after Phase 57:
+  ``den_deg > poly_deg`` for polynomial denominators, or
+  ``_h_diverges_at_infinity`` for non-polynomial diverging denominators.
+
+### Tests
+
+6 new ``TestEvaluateSumPhase58BoundedLogPolyNumerator`` cases.
+Full suite: **145 passed** (was 139; +6).
+
+## 1.5.0 — 2026-05-23
+
+**Phase 57 — Bounded × Log(diverging) × Sqrt(positive-poly) numerator
+(Python).**
+
+Closes the mixed sub-polynomial gap deferred in Phase 55 and Phase 56.
+Numerator combines Log (sub-polynomial), Sqrt (half-polynomial), and
+optional bounded factors.  Effective growth ``log(k)·k^{deg(P)/2}``
+strictly dominated by ``k^{deg(P)/2+ε}`` for any ``ε > 0``.
+
+### Added
+
+- **``_bounded_log_sqrt_inner_deg``** — requires exactly one Log AND
+  exactly one Sqrt; one-only patterns fall through to Phase 55 / 56.
+  Two-of-either refused.
+
+### Tests
+
+7 new ``TestEvaluateSumPhase57BoundedLogSqrtNumerator`` cases.
+Full suite: **133 passed** (was 126; +7).
+
+## 1.4.0 — 2026-05-23
+
+**Phase 56 — Bounded × Sqrt(diverging) numerator pattern (Python).**
+
+Extends ``_g_vanishes_at_infinity`` with a new branch for
+``Div(Mul(bounded, Sqrt(P(k))), den)`` shapes.  The bounded part is
+uniformly bounded by some constant ``C``; the sqrt part grows like
+``k^{deg(P)/2}``.  The whole numerator therefore has effective
+polynomial degree ``deg(P)/2``, expressed here as ``deg(P)`` (the ×2
+trick used elsewhere) so the comparison ``2 × den_deg > deg(P)``
+stays exact in integer arithmetic.
+
+This is the bounded-times-sqrt analogue of Phase 55 (bounded × log).
+The two phases close the analogous gap between Phase 52 (bounded ×
+polynomial, deg-aware) and the sub-polynomial growth families (log
+and sqrt).
+
+Bumps 1.3.0 → 1.4.0.
+
+### Added
+
+- **``_bounded_times_sqrt_inner_deg(node, k)``** — Phase 56 helper.
+  Returns the ``Sqrt`` inner polynomial degree (×2 to stay exact)
+  when ``node`` is a ``Mul`` with exactly one
+  ``Sqrt(positive-leading polynomial)`` factor and all remaining
+  factors bounded in ``k``.  Returns ``None`` for:
+
+  - non-``Mul`` shapes
+  - ``Mul`` with no ``Sqrt`` factor
+  - ``Mul`` with two or more ``Sqrt`` factors (conservative — would
+    need a combined growth-rate calculation; users can pre-simplify
+    ``sqrt(k)·sqrt(k) = k``)
+  - ``Mul`` with a non-bounded non-``Sqrt`` factor (e.g. bare ``k``)
+  - ``Sqrt`` of a negative-leading polynomial (not real-valued)
+
+- **Phase 56 branch in ``_g_vanishes_at_infinity``** — inserted
+  after Phase 55 and before the Phase 42 polynomial widening.  Two
+  sub-cases by denominator shape:
+
+  1. Polynomial denominator (``_polynomial_degree_in_k`` returns
+     ``int``): require ``2 × den_deg > sqrt_inner_deg``.
+  2. Non-polynomial diverging denominator (Exp / Pow / Log×poly):
+     dominates any sub-polynomial sqrt growth automatically.
+
+- **6 new tests** in ``TestEvaluateSumPhase56BoundedTimesSqrtNumerator``
+  (``test_summation.py``):
+  - ``test_sin_times_sqrt_k_over_k_squared_closes`` — 1/2 < 2
+  - ``test_cos_times_sqrt_k_cubed_over_k_squared_closes`` — 3/2 < 2 (tight margin)
+  - ``test_two_bounded_factors_times_sqrt_closes`` — sin·cos·sqrt(k)/k²
+  - ``test_bounded_times_sqrt_over_exponential_closes`` — sin·sqrt(k³)/2^k
+  - ``test_sin_times_sqrt_k_cubed_over_k_refused`` — 3/2 > 1 (no vanish)
+  - ``test_two_sqrt_factors_refused`` — conservative: two-sqrt patterns refused
+
+Total: **132 tests** (was 126; +6 net new), no regressions.
+
+### Still deferred
+
+- Two-sqrt patterns (``sin(k)·sqrt(k)·sqrt(k+1)``) — would need
+  combined growth-rate logic.
+- Log + Sqrt combinations (``sin(k)·log(k)·sqrt(k)/k³``) — analogous
+  to Phase 55/56 but with both sub-polynomial factors.
+
+## 1.3.0 — 2026-05-23
+
+**Phase 55 — Bounded×Log(diverging) numerator pattern (Python).**
+
+Extends ``_g_vanishes_at_infinity`` with a new branch for
+``Div(Mul(bounded, Log(diverging)), h(k))`` shapes.  The product of a
+uniformly bounded function (``|f| ≤ C``) and ``log(h(k))`` (sub-polynomial
+growth) is dominated by any polynomial or faster-growing denominator.
+
+This is the bounded-times-log complement of Phase 52
+(``Mul(bounded, polynomial)``) and Phase 54 (``Mul(Log, polynomial)``).
+
+Bumps 1.2.0 → 1.3.0.
+
+### Added
+
+- **``_is_bounded_times_log_in_k(node, k)``** — Phase 55 helper.
+  Returns True when ``node`` is a ``Mul`` with exactly one
+  ``Log(diverging)`` factor and all remaining factors bounded in ``k``
+  (via ``_is_log_of_diverging_in_k`` and ``_is_bounded_in_k``).  Requires
+  exactly one log factor; two or more → False.
+
+- **Phase 55 branch in ``_g_vanishes_at_infinity``** — inserted after
+  Phase 54 and before the Phase 42 polynomial widening.  Closes
+  ``Div(Mul(bounded, Log(diverging)), den)`` when ``den`` diverges
+  (``_h_diverges_at_infinity`` returns True).
+
+- **5 new tests** in ``TestEvaluateSumPhase55BoundedTimesLogNumerator``
+  (``test_summation.py``):
+  - ``test_sin_k_times_log_k_over_k_squared_closes`` — sin×log / k² → closes
+  - ``test_cos_k_times_log_k_over_k_closes`` — cos×log / k → closes
+  - ``test_two_bounded_factors_times_log_over_k_cubed_closes`` — sin·cos·log / k³
+  - ``test_bounded_times_log_of_k_squared_over_k_cubed_closes`` — sin·log(k²) / k³
+  - ``test_bounded_times_log_constant_denominator_refused`` — constant denominator refused
+
+Total: 126 tests (was 121), coverage 88.75%.
+
+## 1.2.0 — 2026-05-23
+
+**Phase 54 — Log×polynomial numerator pattern (Python).**
+
+Extends ``_g_vanishes_at_infinity`` with a new branch for
+``Div(Mul(Log(diverging), P(k)), Q(k))`` shapes.  ``log(h(k))`` grows
+sub-polynomially — slower than any positive power of ``k`` — so the
+effective growth degree is just ``deg(P)``.  The quotient vanishes when
+``deg(Q) > deg(P)`` (strictly; equal degrees are refused because
+``log(k) × constant`` diverges).
+
+Bumps 1.1.0 → 1.2.0.
+
+### Added
+
+- **``_split_log_polynomial_factor(node, k)``** — Phase 54 helper.
+  Splits a ``Mul`` node into exactly one ``Log(diverging)`` factor and
+  a polynomial part in ``k``; returns ``(log_factor, poly_deg_sum)`` or
+  ``None`` when the shape isn't recognised (no Log factor, more than one
+  Log factor, or a non-polynomial non-Log factor).
+
+- **Phase 54 branch in ``_g_vanishes_at_infinity``** — inserted after
+  Phase 53 and before the Phase 42 polynomial widening.  Closes
+  ``Div(Mul(Log(diverging), P), Q)`` when ``deg(Q) > deg(poly_part)``.
+
+- **5 new tests** in ``TestEvaluateSumPhase54LogTimesPolynomialNumerator``
+  (``test_summation.py``):
+  - ``test_log_k_times_k_over_k_cubed_closes`` — log×k / k³ → closes
+  - ``test_log_k_times_k_squared_over_k_cubed_closes`` — log×k² / k³ → closes
+  - ``test_log_k_times_k_over_k_squared_closes`` — log×k / k² → closes
+  - ``test_log_k_times_k_squared_over_k_squared_refused`` — equal degrees
+    refused (log(k)*k²/k² = log(k) → diverges)
+  - ``test_regression_log_k_over_k_cubed_still_phase50`` — plain Log(k)/k³
+    still closes via Phase 50 (not Phase 54)
+
+### Tests
+
+121 passed (was 116; +5 net new — Phase 54).
+
+---
+
+## 1.1.0 — 2026-05-23
+
+**Phase 51 + Phase 53 — Sqrt numerator patterns (Python port).**
+
+Ports Rust/TypeScript ``cas-summation`` Phase 51 (0.9.0) and introduces
+Phase 53 in all three languages simultaneously.  Extends
+``_g_vanishes_at_infinity`` with two new branches for square-root
+numerator shapes, both using ×2 integer arithmetic to avoid floating-point
+comparisons.
+
+Bumps 1.0.0 → 1.1.0.
+
+### Added
+
+- **``_sqrt_effective_half_degree_x2(node, k)``** — Phase 51 helper.
+  Returns ``deg(P)`` (= 2 × effective half-degree) for ``Sqrt(P(k))``
+  with a positive-leading-coefficient polynomial inner ``P``.  Returns
+  ``None`` for non-Sqrt nodes, non-polynomial inners, and negative-leading-
+  coefficient polynomials (those produce complex values for large ``k``).
+
+- **``_sqrt_poly_numerator_effective_degree_x2(node, k)``** — Phase 53
+  helper.  For a ``Mul`` node containing exactly one ``Sqrt(P)`` factor
+  and any number of polynomial-in-``k`` factors, returns
+  ``deg(P) + 2·deg(Q)`` (= 2 × the combined effective growth degree).
+  Returns ``None`` for plain ``Sqrt`` nodes (handled by Phase 51),
+  non-Mul nodes, or Mul nodes with more than one Sqrt factor, non-
+  polynomial non-Sqrt factors, or negative-leading-coefficient inner
+  polynomials.
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` adds two new branches after Phase 50 (log
+  numerator) and Phase 49/52 (bounded / bounded×poly):
+
+  **Phase 51 branch** — fires when ``num = Sqrt(P)`` with
+  ``_sqrt_effective_half_degree_x2(num, k) = d``.  Closes when
+  ``2 * deg(den) > d`` (i.e. denominator degree strictly exceeds the
+  sqrt half-degree).
+
+  **Phase 53 branch** — fires when ``num = Mul(Sqrt(P), polynomial)``
+  with ``_sqrt_poly_numerator_effective_degree_x2(num, k) = e``.
+  Closes when ``2 * deg(den) > e``.
+
+  Both branches insert between Phase 52 (bounded × polynomial) and
+  Phase 42 (pure rational degree comparison).
+
+### Added — tests
+
+``tests/test_summation.py``
+
+**``TestEvaluateSumPhase51SqrtNumerator``** — 4 new cases:
+- ``phase51_sqrt_k_over_k_squared_closes`` — eff deg ½ < 2.
+- ``phase51_sqrt_k_squared_over_k_cubed_closes`` — eff deg 1 < 3.
+- ``phase51_sqrt_k_over_k_equal_degrees_refused`` — eff deg 1 = 1.
+- ``phase51_sqrt_of_negative_polynomial_refused`` — Sqrt(−k) refused.
+
+**``TestEvaluateSumPhase53SqrtTimesPolynomialNumerator``** — 5 new cases:
+- ``phase53_sqrt_k_times_k_over_k_cubed_closes`` — eff deg 3/2 < 3.
+- ``phase53_sqrt_k_squared_times_k_over_k_cubed_closes`` — eff 2 < 3.
+- ``phase53_sqrt_k_times_k_squared_over_k_cubed_closes`` — eff 5/2 < 3.
+- ``phase53_sqrt_k_times_k_squared_over_k_squared_stays`` — eff 5/2 > 2.
+- ``phase53_regression_sqrt_k_over_k_squared_still_via_phase51`` — plain
+  Sqrt bypasses Phase 53 and closes via Phase 51.
+
+Full suite: **116 passed** (was 107; +9 net new — 4 Phase 51 + 5 Phase 53).
+
+## 1.0.0 — 2026-05-22
+
+**Phase 52 — Bounded × polynomial numerator pattern.**
+
+Extends Phase 50 to recognise that ``Mul(bounded, polynomial)``
+numerators have effective growth equal to the polynomial part's
+degree.  Closes telescopes like ``sin(k)·k/k³``, ``k·cos(k)/k²``,
+where the numerator mixes a bounded factor with a non-trivial
+polynomial factor.
+
+Major version bump (1.0.0) reflects the maturity of the
+vanishing-at-infinity recogniser: Phases 41–52 collectively handle
+the realistic cases of rational, transcendental, logarithmic,
+and mixed bounded × polynomial summands.
+
+Builds on Phase 50 (0.8.0) which added ``_is_log_of_diverging_in_k``.
+Bumps 0.8.0 → 1.0.0.
+
+### Added
+
+- **`_split_bounded_polynomial_factor(node, k)`** — partitions a
+  ``Mul`` node's factors into a bounded aggregate and a summed
+  polynomial degree; returns ``None`` if any factor is neither
+  bounded nor polynomial, or if no non-constant bounded factor
+  exists (those go through Phase 42).
+
+### Changed
+
+- ``_g_vanishes_at_infinity`` now has a Phase 52 branch between
+  Phase 50 (log numerator) and Phase 42 (degree-aware): when
+  the numerator factors as ``bounded × polynomial`` with positive
+  polynomial degree, the quotient vanishes iff the denominator's
+  polynomial degree strictly exceeds the polynomial part's degree.
+
+### Added — tests
+
+`tests/test_summation.py::TestEvaluateSumPhase52BoundedTimesPolynomial`
+— 5 new cases:
+
+- ``sin(k)·k/k³`` closes (bounded × deg 1 / deg 3).
+- ``k·cos(k)/k²`` closes (order of factors doesn't matter).
+- ``sin(k)·k²/k³`` closes (deg 2 < 3).
+- ``sin(k)·k²/k²`` stays unevaluated (degrees tie).
+- Regression: ``k/k²`` still closes via Phase 42 (Phase 52 doesn't
+  interfere when no bounded factor is present).
+
+Full suite: **103 passed** (was 98; +5 net new).
+
 ## 0.8.0 — 2026-05-22
 
 **Phase 50 — Log/polynomial growth-rate recogniser.**

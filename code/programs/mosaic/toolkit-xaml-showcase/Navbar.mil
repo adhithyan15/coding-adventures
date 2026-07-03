@@ -1,0 +1,32 @@
+// Navbar.mil — interface for the toolkit's Navbar (v0.10).
+//
+// Top-of-page navigation bar with a brand label on the left and a
+// row of nav links on the right. Bootstrap's `<nav class="navbar">`
+// distilled to brand + items + active-index + onSelect.
+//
+// Why a separate component from `Nav`?
+// ------------------------------------
+// Nav is just the link row. Navbar adds the brand-on-left + visual
+// chrome (background, height, dividers) that distinguishes a top-
+// of-page bar from an inline nav. Bootstrap ships both as separate
+// classes for the same reason — composing them in the host is
+// awkward when the .msl needs to know "this is a navbar, not just
+// a row of links" for the background-and-spacing styling.
+
+component Navbar {
+  // Brand text shown on the leading edge (e.g. the app name).
+  slot brand : text ;
+
+  // Nav link labels in order, displayed after the brand.
+  slot items : list<text> ;
+
+  // Index of the currently-active link (or -1 for none). Drives
+  // active-state styling once the variant sub-part syntax lands.
+  slot active-index : number ;
+
+  // Fired when the user activates a link. Payload is the link's
+  // index. (The brand is non-clickable in v0.10 — Bootstrap usually
+  // links it home, but giving it an onBrandClick emit is easy to
+  // add in a follow-up if hosts ask for it.)
+  emit onSelect ( index : number ) ;
+}

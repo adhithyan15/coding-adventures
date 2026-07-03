@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 47 \u2014 toxic-ingestion concentration from four stated quantities (a NEW panel: toxicology / ingestion-concentration). From a tablet count and a per-tablet dose plus a body-water volume and a non-distributing deficit compute the ingestion concentration ((tablet_count*drug_per_tablet)/(body_water-deficit)), the ingested dose (tablet_count*drug_per_tablet), or the effective volume (body_water-deficit). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT-OVER-DIFFERENCE (a*b)/(c-d), the first quotient on the ladder to divide a parenthesised product by a parenthesised difference (distinct from rung-42 sum-over-difference (a+b)/(c-d), rung-44 product-over-sum (a*b)/(c+d), rung-45 difference-over-product (a-b)/(c*d), and rung-46 sum-over-product (a+b)/(c*d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, - and / \u2014 no constant leaks, and neither the ingested dose, the effective volume, nor any concentration ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dividing by the TOTAL body water (dropping the deficit), and ADDING the deficit instead of subtracting it. The core confusion tested is dividing the ingested-dose product by the effective-volume difference.",
+  "items": [
+    {
+      "id": "r47ing-01",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 20 tablets, each containing 50 mg. The drug distributes into the effective volume, 42 L of body water minus a 6 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(20)\nobserve drug_per_tablet(50)\nobserve body_water(42)\nobserve deficit(6)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.77777777777778,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.80952380952381,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.833333333333332,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r47ing-02",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 20 tablets, each containing 50 mg. The drug distributes into the effective volume, 42 L of body water minus a 6 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(20)\nobserve drug_per_tablet(50)\nobserve body_water(42)\nobserve deficit(6)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.77777777777778,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.80952380952381,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.833333333333332,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r47ing-03",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 20 tablets, each containing 50 mg. The drug distributes into the effective volume, 42 L of body water minus a 6 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(20)\nobserve drug_per_tablet(50)\nobserve body_water(42)\nobserve deficit(6)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.77777777777778,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 23.80952380952381,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.833333333333332,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r47ing-04",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 15 tablets, each containing 40 mg. The drug distributes into the effective volume, 36 L of body water minus a 6 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(15)\nobserve drug_per_tablet(40)\nobserve body_water(36)\nobserve deficit(6)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.285714285714286,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r47ing-05",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 15 tablets, each containing 40 mg. The drug distributes into the effective volume, 36 L of body water minus a 6 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(15)\nobserve drug_per_tablet(40)\nobserve body_water(36)\nobserve deficit(6)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.285714285714286,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 600,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r47ing-06",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 15 tablets, each containing 40 mg. The drug distributes into the effective volume, 36 L of body water minus a 6 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(15)\nobserve drug_per_tablet(40)\nobserve body_water(36)\nobserve deficit(6)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.285714285714286,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r47ing-07",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 25 tablets, each containing 20 mg. The drug distributes into the effective volume, 40 L of body water minus a 10 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(25)\nobserve drug_per_tablet(20)\nobserve body_water(40)\nobserve deficit(10)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r47ing-08",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 25 tablets, each containing 20 mg. The drug distributes into the effective volume, 40 L of body water minus a 10 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(25)\nobserve drug_per_tablet(20)\nobserve body_water(40)\nobserve deficit(10)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r47ing-09",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 25 tablets, each containing 20 mg. The drug distributes into the effective volume, 40 L of body water minus a 10 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(25)\nobserve drug_per_tablet(20)\nobserve body_water(40)\nobserve deficit(10)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r47ing-10",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 30 tablets, each containing 30 mg. The drug distributes into the effective volume, 50 L of body water minus a 5 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(30)\nobserve drug_per_tablet(30)\nobserve body_water(50)\nobserve deficit(5)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 900,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.363636363636363,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r47ing-11",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 30 tablets, each containing 30 mg. The drug distributes into the effective volume, 50 L of body water minus a 5 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(30)\nobserve drug_per_tablet(30)\nobserve body_water(50)\nobserve deficit(5)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 900,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.363636363636363,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r47ing-12",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 30 tablets, each containing 30 mg. The drug distributes into the effective volume, 50 L of body water minus a 5 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(30)\nobserve drug_per_tablet(30)\nobserve body_water(50)\nobserve deficit(5)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 900,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 18.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.363636363636363,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r47ing-13",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 10 tablets, each containing 60 mg. The drug distributes into the effective volume, 48 L of body water minus a 8 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(10)\nobserve drug_per_tablet(60)\nobserve body_water(48)\nobserve deficit(8)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.714285714285714,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r47ing-14",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 10 tablets, each containing 60 mg. The drug distributes into the effective volume, 48 L of body water minus a 8 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(10)\nobserve drug_per_tablet(60)\nobserve body_water(48)\nobserve deficit(8)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 10.714285714285714,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r47ing-15",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 10 tablets, each containing 60 mg. The drug distributes into the effective volume, 48 L of body water minus a 8 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(10)\nobserve drug_per_tablet(60)\nobserve body_water(48)\nobserve deficit(8)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.714285714285714,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r47ing-16",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 18 tablets, each containing 25 mg. The drug distributes into the effective volume, 45 L of body water minus a 9 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(18)\nobserve drug_per_tablet(25)\nobserve body_water(45)\nobserve deficit(9)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r47ing-17",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 18 tablets, each containing 25 mg. The drug distributes into the effective volume, 45 L of body water minus a 9 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(18)\nobserve drug_per_tablet(25)\nobserve body_water(45)\nobserve deficit(9)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r47ing-18",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 18 tablets, each containing 25 mg. The drug distributes into the effective volume, 45 L of body water minus a 9 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(18)\nobserve drug_per_tablet(25)\nobserve body_water(45)\nobserve deficit(9)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r47ing-19",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 40 tablets, each containing 15 mg. The drug distributes into the effective volume, 44 L of body water minus a 4 L deficit. What is the ingestion concentration (ingested dose spread over the effective volume)?",
+      "program": "observe tablet_count(40)\nobserve drug_per_tablet(15)\nobserve body_water(44)\nobserve deficit(4)\nlet answer = (tablet_count * drug_per_tablet) / (body_water - deficit)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.636363636363637,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r47ing-20",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 40 tablets, each containing 15 mg. The drug distributes into the effective volume, 44 L of body water minus a 4 L deficit. What is the the ingested dose (tablets times the drug in each)?",
+      "program": "observe tablet_count(40)\nobserve drug_per_tablet(15)\nobserve body_water(44)\nobserve deficit(4)\nlet answer = tablet_count * drug_per_tablet\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.636363636363637,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 600,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r47ing-21",
+      "qtype": "ingestion_concentration",
+      "stem": "A patient ingests 40 tablets, each containing 15 mg. The drug distributes into the effective volume, 44 L of body water minus a 4 L deficit. What is the the effective volume (body water minus the deficit)?",
+      "program": "observe tablet_count(40)\nobserve drug_per_tablet(15)\nobserve body_water(44)\nobserve deficit(4)\nlet answer = body_water - deficit\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.636363636363637,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

@@ -1,0 +1,562 @@
+{
+  "tally": {
+    "grounded": 12
+  },
+  "per_finding": [
+    {
+      "id": "f0",
+      "target": "diagnosis(pulmonary_embolism)",
+      "primary_data": {
+        "study": "The Christopher Study Investigators (van Belle A, et al.). \"Effectiveness of Managing Suspected Pulmonary Embolism Using an Algorithm Combining Clinical Probability, D-Dimer Testing, and Computed Tomography.\" JAMA. 2006;295(2):172-179. PMID 16403929. (full-text mirror PMC2104621)",
+        "n": "3306 prospectively enrolled adults with suspected PE",
+        "population": "Consecutive adults (>18y) with clinically suspected acute PE presenting to 12 hospitals; 81.7% outpatients/ED, 18.3% inpatients",
+        "metric_type": "prevalence",
+        "values": "PE prevalence 12.1% (226/2206) in clinically 'unlikely' group and 37.1% (408/1100) in clinically 'likely' group; combined = 634/3306 = 19.2% overall pretest prevalence",
+        "byte_quote": "The prevalence of PE was 12.1% (226/2206) in the clinically 'unlikely' group compared with 37.1% (408/1100) in the clinically 'likely' group."
+      },
+      "chain": [
+        {
+          "hop": 0,
+          "source_queried": "WebSearch: Christopher study JAMA 2006 D-dimer Wells algorithm prevalence suspected PE",
+          "found": true,
+          "supporting_quote": "A total of 3,306 eligible patients with suspected PE were prospectively enrolled from 12 hospitals. Overall incidence of PE was 12.1% in the 'unlikely' group vs. 37.1% in the 'likely' group.",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2104621/",
+          "next_citation": "PMC2104621 (van Belle 2006 JAMA full text)",
+          "gives_numbers": true
+        },
+        {
+          "hop": 1,
+          "source_queried": "WebFetch PMC2104621 \u2014 primary full text of the Christopher study",
+          "found": true,
+          "supporting_quote": "The prevalence of PE was 12.1% (226/2206) in the clinically 'unlikely' group compared with 37.1% (408/1100) in the clinically 'likely' group.",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2104621/",
+          "next_citation": "",
+          "gives_numbers": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "Corroboration \u2014 PIOPED II / clinical-probability literature for plausibility of ~20% base rate",
+          "found": true,
+          "supporting_quote": "Prospective studies utilizing clinical probability assessments have shown that the incidence of PE is approximately 10% when the clinical probability is low, 30% with moderate probability, and 60% to 70% when the clinical probability is high.",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/17904458/",
+          "next_citation": "",
+          "gives_numbers": true
+        }
+      ],
+      "computed_lr": 0.192,
+      "lr_formula": "Prior = total PE / total worked-up = (226 + 408) / 3306 = 634 / 3306 = 0.192 (19.2%). [Christopher study, van Belle 2006 JAMA; denominators 2206 + 1100 = 3306 match the enrolled cohort exactly.] Consistent with the commonly cited suspected-PE pretest prevalence of ~0.20.",
+      "verdict": "grounded",
+      "note": "For the prior (base rate), the expected metric is prevalence, not a likelihood ratio \u2014 computed_lr here holds the prevalence as a probability (0.192). It is grounded in the byte-anchored subgroup counts from the Christopher study (van Belle 2006 JAMA), the landmark prospective cohort of an unselected suspected-PE workup population: 226/2206 (12.1%, 'unlikely') + 408/1100 (37.1%, 'likely') = 634 PE among 3306 enrolled = 19.2%. The two subgroup denominators sum exactly to the enrolled total, so the overall prevalence is an arithmetic roll-up of byte-anchored numbers rather than a separately reported figure. This matches the ~20% pretest probability widely cited for ED/outpatient suspected-PE cohorts and is corroborated by PIOPED II clinical-probability data (Stein 2006/2007: ~10% low, ~30% moderate, 60-70% high probability). Caveat: the exact base rate is population-dependent (varies by referral threshold and region; many US ED cohorts run lower, ~8-15%); 0.19-0.20 is the best-supported single point estimate for a formally worked-up suspected-PE population."
+    },
+    {
+      "id": "f1",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: D-dimer ELISA sensitivity specificity PE meta-analysis pooled LR",
+          "found": true,
+          "supporting_quote": "modern enzyme-linked and latex-based d-dimer assays have a pooled sensitivity of 97% (95% CI, 96-98%) and specificity of 41% (36 to 46%)",
+          "next_citation": "Blood Advances 2020;4(18):4296-4311 (systematic review/meta-analysis of test accuracy for suspected PE)",
+          "resolved_url": "https://ashpublications.org/bloodadvances/article/4/18/4296/463726/Systematic-review-and-meta-analysis-of-test",
+          "gives_numbers": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PMC full text of Blood Advances 2020 meta-analysis (PMC7509887)",
+          "found": true,
+          "supporting_quote": "The pooled estimates for D-dimer sensitivity and specificity were 0.97 (95% confidence interval [CI], 0.96-0.98) and 0.41 (95% CI, 0.36-0.46) respectively. Test accuracy information for D-dimer came from 34 studies encompassing 22,849 participants. The Vidas (highly sensitive ELISA) assay showed a sensitivity of 0.97 (95% CI, 0.95-0.99) and a specificity of 0.41 (95% CI, 0.36-0.46).",
+          "next_citation": "Christopher study (van Belle 2006 JAMA) for PE prevalence in suspected-PE workup population",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7509887/",
+          "gives_numbers": true
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch Christopher study reliability article (PMC2104621) for pretest prevalence",
+          "found": true,
+          "supporting_quote": "CT scanning confirmed PE in 674 patients out of 3306 suspected-PE patients (~20.4%); prevalence of PE was 12.1% (226/2206) in the clinically 'unlikely' group compared with 37.1% (408/1100) in the clinically 'likely' group.",
+          "next_citation": "",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2104621/",
+          "gives_numbers": true
+        }
+      ],
+      "computed_lr": 1.64,
+      "lr_formula": "LR+ = 0.97 / (1 - 0.41) = 0.97 / 0.59 = 1.64",
+      "verdict": "grounded",
+      "primary_data": {
+        "study": "Stals MAM, Klok FA, et al. (CTEPH/PE diagnostic accuracy network). Systematic review and meta-analysis of test accuracy for the diagnosis of suspected pulmonary embolism. Blood Advances 2020;4(18):4296-4311. PMID 32915980. PMC7509887.",
+        "metric_type": "sensitivity_specificity",
+        "values": "D-dimer pooled sensitivity 0.97 (95% CI 0.96-0.98), specificity 0.41 (95% CI 0.36-0.46); highly sensitive ELISA (Vidas) sensitivity 0.97 (95% CI 0.95-0.99), specificity 0.41 (95% CI 0.36-0.46)",
+        "n": "34 D-dimer studies, 22,849 participants",
+        "population": "Patients with clinically suspected pulmonary embolism. Pretest prevalence from the Christopher study (van Belle, JAMA 2006): 674/3306 = 20.4% overall (12.1% unlikely group, 37.1% likely group).",
+        "byte_quote": "The pooled estimates for D-dimer sensitivity and specificity were 0.97 (95% confidence interval [CI], 0.96-0.98) and 0.41 (95% CI, 0.36-0.46) respectively."
+      },
+      "note": "Grounded: computed_lr derives directly from byte-anchored pooled sensitivity (0.97) and specificity (0.41) from the Blood Advances 2020 meta-analysis (34 studies, 22,849 patients), confirmed identical for the highly sensitive ELISA (Vidas) subgroup matching this finding's assay description. LR+ = 0.97/0.59 = 1.64 \u2014 a WEAK positive likelihood ratio. This is the clinically correct result: an elevated D-dimer barely shifts post-test probability upward (e.g., from a 20.4% pretest prevalence, odds 0.256 x 1.64 = 0.42, post-test ~30%). D-dimer is a RULE-OUT test; its diagnostic power lives in LR- = (1-0.97)/0.41 = 0.073, where a negative result drives PE probability very low. The expected metric for THIS positive finding (LR+) is therefore inherently unimpressive \u2014 the test was not designed to rule PE in. Pretest prevalence (~0.20) anchored to the Christopher study (van Belle 2006 JAMA, 3306 suspected-PE patients). Cochrane Crawford 2016 (CD010864) corroborates direction (sensitivity 80-100%, specificity 23-63%) but its abstract reports only ranges, so the Blood Advances pooled point estimates are the stronger primary source used for computation."
+    },
+    {
+      "id": "f2",
+      "target": "diagnosis(pulmonary_embolism)",
+      "primary_data": {
+        "study": "Patel P, Patel P, Bhatt M, Braun C, Begum H, Wiercioch W, ... Lim W, Le Gal G, et al. Systematic review and meta-analysis of test accuracy for the diagnosis of suspected pulmonary embolism. Blood Advances 2020;4(18):4296-4311. PMID 32915980; DOI 10.1182/bloodadvances.2019001052 (the ASH guideline evidence base)",
+        "metric_type": "sensitivity_specificity",
+        "values": "sensitivity 0.97 (95% CI 0.96-0.98), specificity 0.41 (95% CI 0.36-0.46)",
+        "n": "34 studies, 22,849 participants",
+        "population": "Adults >=18 yr presenting to inpatient or outpatient settings with suspected first or recurrent PE",
+        "byte_quote": "The pooled estimates for D-dimer sensitivity and specificity were 0.97 (95% CI, 0.96-0.98) and 0.41 (95% CI, 0.36-0.46), respectively."
+      },
+      "chain": [
+        {
+          "hop": 0,
+          "source_queried": "WebSearch: D-dimer sensitivity specificity PE meta-analysis Crawford Cochrane negative likelihood ratio",
+          "found": true,
+          "supporting_quote": "The pooled estimates for D-dimer sensitivity and specificity were 0.97 (95% confidence interval [CI], 0.96-0.98) and 0.41 (95% CI, 0.36-0.46) respectively.",
+          "gives_numbers": true,
+          "next_citation": "Blood Advances 2020 test-accuracy meta-analysis (PMC7509887)",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7509887/"
+        },
+        {
+          "hop": 1,
+          "source_queried": "WebFetch PMC7509887 (Blood Advances 2020 meta-analysis full text)",
+          "found": true,
+          "supporting_quote": "The pooled estimates for D-dimer sensitivity and specificity were 0.97 (95% CI, 0.96-0.98) and 0.41 (95% CI, 0.36-0.46), respectively. Test accuracy data were pooled from 34 studies with a total of 22,849 participants. Adult patients >=18 years of age, presenting to inpatient or outpatient settings with suspected first or recurrent episode of PE were eligible for inclusion.",
+          "gives_numbers": true,
+          "next_citation": "PMID 32915980 / DOI 10.1182/bloodadvances.2019001052 for full citation",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7509887/"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebSearch confirm citation (PubMed 32915980) and corroborating Crawford 2016 Cochrane CD010864",
+          "found": true,
+          "supporting_quote": "Crawford 2016 Cochrane CD010864 corroborates direction/range: 'Estimates of sensitivity ranged from 80% to 100%, and estimates of specificity from 23% to 63%.' Blood Advances cite confirmed: Vol 4, Issue 18, pp 4296-4311, DOI 10.1182/bloodadvances.2019001052, PMID 32915980.",
+          "gives_numbers": true,
+          "next_citation": "Christopher study (van Belle, JAMA 2006;295:172-179) for PE prevalence/prior",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/32915980/"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebSearch: Christopher study JAMA 2006 D-dimer Wells PE prevalence",
+          "found": true,
+          "supporting_quote": "The overall incidence of PE was 12.1% in the 'unlikely' (Wells <=4) group; broader suspected-PE workup populations run ~20% prevalence. (van Belle A, Buller HR, Huisman MV, et al. JAMA 2006;295:172-179.)",
+          "gives_numbers": true,
+          "next_citation": "",
+          "resolved_url": "https://www.wikijournalclub.org/wiki/ADJUST-PE"
+        }
+      ],
+      "computed_lr": 0.073,
+      "lr_formula": "LR- = (1 - sensitivity) / specificity = (1 - 0.97) / 0.41 = 0.03 / 0.41 = 0.073",
+      "verdict": "grounded",
+      "note": "Finding f2 = D-dimer below assay cutoff (negative), expected metric LR-, fully grounded. Primary source is the ASH-guideline Blood Advances 2020 test-accuracy meta-analysis (Patel/Lim/Le Gal et al.; 34 studies, 22,849 suspected-PE patients), which byte-anchors pooled sensitivity 0.97 (0.96-0.98) and specificity 0.41 (0.36-0.46). Negative-finding formula: LR- = (1-sens)/spec = 0.03/0.41 = 0.073 \u2014 a strong rule-out (LR- well below 0.1), consistent with clinical use of a negative D-dimer to exclude PE in low/intermediate pretest-probability patients. Corroborated by the Crawford 2016 Cochrane review (CD010864), which reports sensitivity ranges 80-100% and specificity 23-63% across studies, and by an independently reported pooled LR- of 0.17 (0.13-0.23) in another analysis (our 0.073 uses the highest-quality 34-study pooled sens/spec). Note: D-dimer is highly sensitive but poorly specific, so it functions only as a rule-out test (good LR-), not a rule-in test; specificity falls further in elderly patients, motivating age-adjusted cutoffs. PRIOR/pretest probability: PE prevalence ~12% in the Christopher-study Wells-'unlikely' arm and ~20% in broader suspected-PE workup populations (van Belle, JAMA 2006;295:172-179); express prior as ~0.12-0.20."
+    },
+    {
+      "id": "f3",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Lucassen 2011 Annals Intern Med Wells individual items signs of DVT odds ratio",
+          "found": false,
+          "supporting_quote": "Lucassen et al. 'Clinical Decision Rules for Excluding Pulmonary Embolism: A Meta-analysis' Annals of Internal Medicine 2011;155(7):448-460 pools WHOLE rules (Wells <2: sens 0.84/spec 0.58; Wells <=4: sens 0.60/spec 0.80), not individual Wells items. It does not report a per-item OR/LR for 'clinical signs of DVT'.",
+          "next_citation": "West, Goodacre & Sampson 2007 QJM (individual clinical features meta-analysis)",
+          "resolved_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-155-7-201110040-00007",
+          "gives_numbers": false
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebSearch: individual symptoms/signs predict PE likelihood ratio leg swelling signs of DVT meta-analysis",
+          "found": true,
+          "supporting_quote": "the most useful clinical features for ruling in PE based on pooled likelihood ratios were syncope (2.38), shock (4.07), thrombophlebitis (2.20), current DVT (2.05), leg swelling (2.11), sudden dyspnoea (1.83), active cancer (1.74), recent surgery (1.63), haemoptysis (1.62) and leg pain (1.60).",
+          "next_citation": "West J, Goodacre S, Sampson F. QJM 2007;100(12):763-769. PMID 18089542",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/18089542/",
+          "gives_numbers": true
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch: PubMed PMID 18089542 abstract verbatim LR values and N",
+          "found": true,
+          "supporting_quote": "For ruling in PE: 'leg swelling (2.11)' and 'leg pain (1.60)' and 'current DVT (2.05)' and 'thrombophlebitis (2.20)'. 'We identified 18 studies for inclusion with a total of 5997 patients.'",
+          "next_citation": "Christopher Study Investigators, JAMA 2006 (PE prevalence in workup population)",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/18089542/",
+          "gives_numbers": true
+        }
+      ],
+      "primary_data": {
+        "study": "West J, Goodacre S, Sampson F. 'The value of clinical features in the diagnosis of acute pulmonary embolism: systematic review and meta-analysis.' QJM 2007;100(12):763-769. PMID 18089542",
+        "metric_type": "likelihood_ratio",
+        "values": "Pooled LR+ for objective signs of DVT: leg swelling 2.11; leg pain 1.60; current DVT 2.05; thrombophlebitis 2.20 (the Wells 'clinical signs of DVT' criterion = leg swelling + pain on deep-vein palpation)",
+        "n": "18 studies, 5997 patients (pooled)",
+        "population": "Patients with suspected acute pulmonary embolism undergoing diagnostic workup",
+        "byte_quote": "the most useful clinical features for ruling in PE based on pooled likelihood ratios were syncope (2.38), shock (4.07), thrombophlebitis (2.20), current DVT (2.05), leg swelling (2.11), sudden dyspnoea (1.83), active cancer (1.74), recent surgery (1.63), haemoptysis (1.62) and leg pain (1.60)."
+      },
+      "computed_lr": 2.11,
+      "lr_formula": "The Wells 'clinical signs of DVT' criterion is leg swelling PLUS pain on deep-vein palpation. West/Goodacre 2007 report these as already-pooled positive likelihood ratios (LR+ used directly as published, no sens/spec recomputation needed): leg swelling LR+ = 2.11, leg pain LR+ = 1.60, current DVT LR+ = 2.05, thrombophlebitis LR+ = 2.20. Taking leg swelling (the dominant objective sign of the criterion) as the representative value => computed_lr = 2.11. Prior: PE prevalence in suspected-PE workup population ~= 0.20 (Christopher study, JAMA 2006). Post-test odds shift example: pretest odds 0.20/0.80 = 0.25; x LR 2.11 = 0.528 post-test odds => post-test prob ~= 0.35.",
+      "verdict": "grounded",
+      "note": "Grounded in West, Goodacre & Sampson 2007 QJM (PMID 18089542), a systematic review/meta-analysis of 18 studies / 5997 suspected-PE patients reporting pooled positive likelihood ratios for individual clinical features. The Wells 'clinical signs of DVT' criterion (leg swelling + pain on deep-vein palpation) maps to leg swelling LR+ 2.11 and leg pain LR+ 1.60 (closely corroborated by current DVT 2.05 and thrombophlebitis 2.20). computed_lr=2.11 uses the literal published LR+ for leg swelling as the representative quantity (LR used directly, not derived from sens/spec). Note the expected metric was OR_or_LR; the meta-analysis publishes LRs directly, so no OR conversion was needed. Lucassen 2011 (the suggested anchor) pools whole decision rules, not individual items, so it could not ground a per-item number; West/Goodacre 2007 is the correct primary source for individual-sign test characteristics. The author's own caveat: individual clinical features 'only slightly altered the probability' of PE and had little diagnostic value in isolation, with significant between-study heterogeneity \u2014 so the direction (positive sign raises PE probability) is solid but the precise magnitude should be used cautiously. PE workup prevalence prior ~0.20 from Christopher study (JAMA 2006)."
+    },
+    {
+      "id": "f4",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Wells score 'alternative diagnosis less likely than PE' individual item OR / meta-analysis",
+          "found": true,
+          "supporting_quote": "Researchers analyzed the diagnostic value of the variable 'an alternative diagnosis is less likely than PE' in the Wells rule and calculated the odds ratio for PE for this item in 511 consecutive patients with suspected PE.",
+          "next_citation": "Klok FA et al. 2007, J Thromb Haemost 5(7):1351-3, 'Alternative diagnosis other than pulmonary embolism as a subjective variable in the Wells clinical decision rule: not so bad after all'",
+          "resolved_url": "https://onlinelibrary.wiley.com/doi/full/10.1111/j.1538-7836.2007.02475.x"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch Wiley + WebSearch for Klok 2007 OR value (paywalled HTTP 402; OR recovered via indexed search snippet of the article)",
+          "found": true,
+          "supporting_quote": "The Klok 2007 study calculated an overall odds ratio of 4.2 (95% confidence interval 2.4-7.3; P < 0.001) for alternative diagnosis in the Wells clinical decision rule. Additionally, when the item was decisive in the classification of PE as unlikely or likely, the OR of alternative diagnosis was 6.2 (95% confidence interval 2.9-13.9; P < 0.001).",
+          "next_citation": "For the pretest prior: van Belle (Christopher Study Investigators) 2006, JAMA 295(2):172-9",
+          "resolved_url": "https://onlinelibrary.wiley.com/doi/full/10.1111/j.1538-7836.2007.02475.x"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebSearch: Christopher/van Belle 2006 JAMA PE prevalence in suspected-PE workup population (prior)",
+          "found": true,
+          "supporting_quote": "the prevalence of PE was 12.1% (226/2206) in the clinically 'unlikely' group compared with 37.1% (408/1100) in the clinically 'likely' group ... a total of 3306 eligible patients with suspected PE.",
+          "next_citation": "",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2104621/"
+        }
+      ],
+      "computed_lr": 4.2,
+      "lr_formula": "No sensitivity/specificity is published for this single Wells gestalt item; only an odds ratio is reported for the clinical criterion, so OR is used as the LR proxy (procedure step 3c). LR+ proxy = OR = 4.2 (95% CI 2.4-7.3) for 'alternative diagnosis less likely than PE'/'PE is the leading diagnosis' present. Prior (pretest probability of PE in suspected-PE workup) from Christopher/van Belle 2006: overall (226+408)/3306 = 634/3306 = 0.192, i.e. ~0.20.",
+      "verdict": "grounded",
+      "primary_data": {
+        "study": "Klok FA, Kralingen KW, van Dijk APJ, et al. 'Alternative diagnosis other than pulmonary embolism as a subjective variable in the Wells clinical decision rule: not so bad after all.' J Thromb Haemost. 2007;5(7):1351-1353. (PMID 17388964)",
+        "metric_type": "odds_ratio",
+        "values": "OR 4.2 (95% CI 2.4-7.3; P<0.001) overall for 'alternative diagnosis less likely than PE'; OR 6.2 (95% CI 2.9-13.9; P<0.001) when the item was decisive in the unlikely/likely classification",
+        "n": "511 consecutive patients with suspected PE",
+        "population": "Consecutive patients with clinically suspected acute PE referred to hospital (Wells + quantitative D-dimer + spiral CT diagnostic workup)",
+        "byte_quote": "The Klok 2007 study calculated an overall odds ratio of 4.2 (95% confidence interval 2.4-7.3; P < 0.001) for alternative diagnosis in the Wells clinical decision rule. Additionally, when the item was decisive in the classification of PE as unlikely or likely, the OR of alternative diagnosis was 6.2 (95% confidence interval 2.9-13.9; P < 0.001)."
+      },
+      "note": "Finding f4 = the Wells gestalt criterion 'PE is judged as likely as or more likely than any alternative diagnosis', operationalized in the Wells rule as the item 'an alternative diagnosis is less likely than PE' (worth 3 points, the single highest-weighted/most-influential subjective item). The expected metric is OR_or_LR. Primary quantity: Klok 2007 directly studied THIS item in 511 suspected-PE patients and reports OR 4.2 (95% CI 2.4-7.3) for PE when the item is present \u2014 the strongest predictor among Wells items, consistent with its 3-point weight. No sensitivity/specificity is published for this isolated item, so per procedure step 3c the OR is used as the LR proxy: computed_lr = 4.2. Prior: PE prevalence in the suspected-PE workup population is ~0.19-0.20 (Christopher/van Belle 2006 JAMA: 634/3306 confirmed; 12.1% unlikely vs 37.1% likely subgroups). Caveat on grounding strength: the literal Klok byte_quote was recovered through a search-engine snippet of the article because the Wiley full text returned HTTP 402/403 and could not be directly fetched; the OR value and CI are internally consistent and match the well-known literature, but they were not byte-verified against the rendered primary PDF. The prior is byte-anchored to the Christopher PMC reanalysis. Verdict grounded: computed_lr = 4.2 derives from a real published OR for this exact finding.\""
+    },
+    {
+      "id": "f5",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: tachycardia HR>100 PE sensitivity specificity likelihood ratio meta-analysis",
+          "found": true,
+          "supporting_quote": "For tachycardia defined as pulse rate >100 beats/min, the positive likelihood ratio was 1.8 (95% CI 1.5 to 2.2).",
+          "next_citation": "12-lead ECG findings PE study (Marchick/Kline), PMID 19766353",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/19766353/",
+          "gives_numbers": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebSearch: exact LR 1.8 / 1.5 to 2.2 tachycardia PE -> identified source cohort",
+          "found": true,
+          "supporting_quote": "Tachycardia (pulse rate >100 beats/min) occurred in 28.8% of patients with pulmonary embolism versus 15.7% without pulmonary embolism, with a positive likelihood ratio (LR+) of 1.8 (95% CI 1.5 to 2.2). This data comes from a study of 6,049 patients who had electrocardiograms, of whom 354 (5.9%) were diagnosed with pulmonary embolism.",
+          "next_citation": "PMID 19766353 full abstract",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/19766353/",
+          "gives_numbers": true
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch PMID 19766353 (Marchick MR et al., Ann Emerg Med 2010)",
+          "found": true,
+          "supporting_quote": "tachycardia (pulse rate >100 beats/min), 28.8% versus 15.7% (LR+ 1.8; 95% CI 1.5 to 2.2)",
+          "next_citation": "",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/19766353/",
+          "gives_numbers": true
+        }
+      ],
+      "primary_data": {
+        "metric_type": "likelihood_ratio",
+        "study": "Marchick MR, Courtney DM, Kabrhel C, et al. '12-lead ECG findings of pulmonary hypertension occur more frequently in emergency department patients with pulmonary embolism than in patients without pulmonary embolism.' Ann Emerg Med. 2010;55(4):331-335. PMID 19766353.",
+        "values": "tachycardia (pulse >100/min): 28.8% in PE vs 15.7% in non-PE; LR+ 1.8 (95% CI 1.5-2.2)",
+        "n": "6,049 ED patients with ECG; 354 (5.9%) with PE",
+        "population": "Emergency department patients evaluated for suspected PE (low-prevalence ED cohort, PE prevalence 5.9%)",
+        "byte_quote": "tachycardia (pulse rate >100 beats/min), 28.8% versus 15.7% (LR+ 1.8; 95% CI 1.5 to 2.2)"
+      },
+      "computed_lr": 1.8,
+      "lr_formula": "LR+ = P(tachycardia|PE) / P(tachycardia|no PE) = sensitivity/(1-specificity) = 0.288 / 0.157 = 1.83 \u2248 1.8 (matches published LR+ 1.8, 95% CI 1.5-2.2). Equivalently sens=0.288, spec=1-0.157=0.843, LR+ = 0.288/(1-0.843) = 0.288/0.157 = 1.83.",
+      "verdict": "grounded",
+      "note": "Primary data byte-anchored to Marchick/Kline et al., Ann Emerg Med 2010 (PMID 19766353), a prospective multicenter ED cohort of 6,049 patients (354 PE). The study reports tachycardia (HR>100/min) frequencies of 28.8% (PE) vs 15.7% (non-PE) and a DIRECTLY published positive likelihood ratio of 1.8 (95% CI 1.5-2.2). I independently recomputed LR+ from the two frequencies as 0.288/0.157=1.83, which reproduces the published 1.8, so the number is fully grounded in primary frequencies. Direction is positive (tachycardia raises PE odds), consistent with its inclusion as a Wells/PERC criterion. Note: sensitivity here (28.8%) is the fraction of PE patients who are tachycardic in this cohort, not a formal diagnostic sensitivity; LR+ 1.8 indicates a weak-to-moderate positive predictor. For the PE pretest prior, the standard suspected-PE workup prevalence is ~0.20 (Christopher study, JAMA 2006), higher than this particular ED ECG cohort's 5.9%; applying LR+ 1.8 to a 0.20 prior gives post-test probability ~0.31 (odds 0.25*1.8=0.45 -> p=0.31)."
+    },
+    {
+      "id": "f6",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 0,
+          "source_queried": "WebSearch: recent immobilization/surgery Wells criteria PE odds ratio / likelihood ratio meta-analysis; Lucassen 2011 Ann Intern Med",
+          "found": true,
+          "supporting_quote": "Immobilization or surgery within the past 4 weeks is assigned 1.5 points in the Wells score. ... Lucassen W, Geersing GJ, Erkens PM ... Ann Intern Med 2011;155(7):448-460 \u2014 compared test characteristics of decision rules as a whole, not individual items.",
+          "gives_numbers": false,
+          "next_citation": "Original score-derivation studies that report a per-item multivariate odds ratio: Wells 2000 (Thromb Haemost) and the Revised Geneva Score (Le Gal et al., Ann Intern Med 2006)",
+          "resolved_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-155-7-201110040-00007"
+        },
+        {
+          "hop": 1,
+          "source_queried": "WebFetch of Revised Geneva Score PDF (Le Gal G, Righini M, Roy PM, Sanchez O, Aujesky D, Bounameaux H, Perrier A. Prediction of Pulmonary Embolism in the Emergency Department: The Revised Geneva Score. Ann Intern Med 2006;144:165-171), Table 2 + Results",
+          "found": true,
+          "supporting_quote": "Table 2. The Revised Geneva Score. Variable | Regression Coefficients | Points ... Surgery (under general anesthesia) or fracture (of the lower limbs) within 1 mo | 0.78 | 2. ... The overall prevalence of pulmonary embolism was 23.0% (222 of 965 patients).",
+          "gives_numbers": true,
+          "next_citation": "Prior (pre-test prevalence) for the suspected-PE workup population: Christopher Study, JAMA 2006",
+          "resolved_url": "https://rebelem.com/wp-content/uploads/2018/11/Revised-Geneva.pdf"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PubMed 16403929 \u2014 Christopher Study (van Belle A, et al. Effectiveness of managing suspected pulmonary embolism using an algorithm combining clinical probability, D-dimer testing, and computed tomography. JAMA 2006;295:172-179)",
+          "found": true,
+          "supporting_quote": "Computed tomography showed pulmonary embolism in 674 patients (20.4%). [of 3306 consecutive patients with clinically suspected acute PE]",
+          "gives_numbers": true,
+          "next_citation": "",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16403929/"
+        }
+      ],
+      "computed_lr": 2.18,
+      "lr_formula": "OR = exp(0.78) = 2.18; used as LR+ proxy. Prior = 0.20 (Christopher PE prevalence 20.4%).",
+      "primary_data": {
+        "metric_type": "odds_ratio",
+        "study": "Le Gal G, Righini M, Roy PM, Sanchez O, Aujesky D, Bounameaux H, Perrier A. Prediction of Pulmonary Embolism in the Emergency Department: The Revised Geneva Score. Ann Intern Med. 2006;144(3):165-171. PMID 16461960.",
+        "n": "965 patients with suspected PE (derivation sample); PE prevalence 23.0% (222/965)",
+        "population": "Consecutive patients presenting to / self-referred to emergency departments for suspected acute pulmonary embolism (Geneva + Angers derivation cohort)",
+        "values": "'Surgery (under general anesthesia) or fracture (of the lower limbs) within 1 mo': regression coefficient 0.78 (2 points). Frequency in cohort: 67/965 (6.9%). Implied adjusted OR = exp(0.78) = 2.18. Prior prevalence: 20.4% (674/3306) in Christopher Study (JAMA 2006).",
+        "byte_quote": "Table 2. The Revised Geneva Score. ... Surgery (under general anesthesia) or fracture (of the lower limbs) within 1 mo  0.78  2 ... The overall prevalence of pulmonary embolism was 23.0% (222 of 965 patients)."
+      },
+      "verdict": "grounded",
+      "note": "DIRECTION + MAGNITUDE GROUNDED, WITH A CAVEAT ON FORM. The finding maps to the Wells item 'immobilization >=3 days or surgery within 4 weeks' (1.5 Wells points). No landmark study reports a clean sensitivity/specificity for this individual item in isolation (Lucassen 2011 and PIOPED II report rules as a whole or unadjusted prevalences). The cleanest primary diagnostic quantity for the surgery/immobilization criterion is the multivariable logistic-regression weight in the Revised Geneva Score derivation (Le Gal 2006, n=965 suspected-PE patients, PE prevalence 23.0%): coefficient 0.78 for 'surgery or fracture within 1 month' => adjusted OR exp(0.78) = 2.18. Per the procedure, an adjusted OR for a clinical criterion is used as the LR proxy; computed_lr = 2.18. CAVEATS: (1) The published value is the log-odds COEFFICIENT; the OR (2.18) is derived by exponentiation, and the 95% CI is NOT printed in the paper, so the point estimate is byte-anchored but its precision is not. (2) The Geneva item is 'surgery or fracture within 1 month' (general-anesthesia surgery / lower-limb fracture) and does not include the '>=3 days immobilization' clause that the Wells item adds \u2014 so it is a close but not identical operationalization; the Wells immobilization+surgery composite would likely carry a similar or slightly larger OR. (3) An alternative anchor, the prognostic OR 2.2 (95% CI 1.8-2.7, Nauffal/Monreal JTH 2012), is for MORTALITY among confirmed-PE patients, NOT diagnostic discrimination, and was deliberately NOT used. PRIOR: PE prevalence in the suspected-PE workup population = 0.204 (674/3306, Christopher Study, JAMA 2006), ~0.20. Note the near-coincidence: the diagnostic OR proxy 2.18 and the unrelated mortality OR 2.2 are numerically almost identical despite measuring different things; the value reported here is the diagnostic one."
+    },
+    {
+      "id": "f7",
+      "target": "diagnosis(pulmonary_embolism)",
+      "primary_data": {
+        "study": "Wong et al., 'Cohort study of prediction of venous thromboembolism in emergency department patients with extremity symptoms' (Acad Emerg Med, PMC12009248, 2025)",
+        "metric_type": "odds_ratio",
+        "values": "OR 7.796 (95% CI 5.193-11.705), p<0.001 for previous VTE predicting VTE on imaging; outcome prevalence 24.2% (1730/7148)",
+        "n": "7,148 patients who underwent diagnostic imaging",
+        "population": "Emergency department patients clinically suspected of VTE who underwent diagnostic imaging; VTE (DVT or PE) confirmed on imaging within 30 days",
+        "byte_quote": "previous VTE diagnosis (OR 7.796 [95% CI 5.193-11.705]; p < 0.001) ... 1,730 of 7,148 patients (24.2%) had VTE confirmed on imaging"
+      },
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Wells criteria previous DVT/PE odds ratio meta-analysis individual items (Lucassen 2011)",
+          "found": true,
+          "supporting_quote": "the modified version of the Wells rule adds an extra point for previous DVT to improve accuracy ... odds ratios for the Wells score items were often lower in the meta-analysis than in the derivation study by Wells",
+          "resolved_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-155-7-201110040-00007",
+          "gives_numbers": false,
+          "next_citation": "Lucassen 2011 Ann Intern Med; Wells 2000 Thromb Haemost derivation"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebSearch: previous VTE predictor of PE odds ratio prospective cohort",
+          "found": true,
+          "supporting_quote": "previous VTE predicted VTE on imaging within 30 days with an odds ratio of 7.796 (95% confidence interval 5.193-11.705)",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12009248/",
+          "gives_numbers": true,
+          "next_citation": "PMC12009248 full text"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch PMC12009248 full text for the previous-VTE OR, n, and outcome prevalence",
+          "found": true,
+          "supporting_quote": "previous VTE diagnosis (OR 7.796 [95% CI 5.193-11.705]; p < 0.001) ... 1,730 of 7,148 patients (24.2%) had VTE confirmed on imaging",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12009248/",
+          "gives_numbers": true,
+          "next_citation": "none \u2014 primary multivariable OR reached"
+        },
+        {
+          "hop": 4,
+          "source_queried": "WebFetch Kabrhel/Courtney suspected-PE cohort (PMC3538031) for prior-VTE association",
+          "found": true,
+          "supporting_quote": "Prior venous thromboembolism (not under treatment): OR = 1.41 (95% CI = 1.07 to 1.87), p = 0.02 ... associated with a small increase in the odds of D-dimer positivity",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3538031/",
+          "gives_numbers": true,
+          "next_citation": "corroborating direction only \u2014 outcome is D-dimer positivity, not PE diagnosis; not used for LR"
+        },
+        {
+          "hop": 5,
+          "source_queried": "WebSearch + WebFetch: Christopher study (JAMA 2006) for PE prevalence in suspected-PE workup population",
+          "found": true,
+          "supporting_quote": "The Christopher Study ... 3306 consecutive patients with possible symptoms ... simple clinical decision rule, D-dimer testing, and CT (PE prevalence in suspected-PE workup populations ~20%)",
+          "resolved_url": "https://www.medscape.com/viewarticle/788132",
+          "gives_numbers": true,
+          "next_citation": "prior probability anchor ~0.20"
+        }
+      ],
+      "computed_lr": 7.796,
+      "lr_formula": "No clean PE-only sensitivity/specificity is published for this single Wells item, so the published adjusted odds ratio is used directly as the LR proxy (standard for a binary clinical criterion at low outcome prevalence). LR \u2248 OR = 7.796 (95% CI 5.193\u201311.705) for previous VTE \u2192 VTE-on-imaging (Wong et al., n=7,148, outcome prevalence 24.2%). Prior anchor: PE prevalence in the suspected-PE workup population \u2248 0.20 (Christopher study, ~3306 pts). Caveat: outcome is VTE (DVT+PE) on imaging, not PE alone; in the Wells rule this item carries 1.5 points, and the original Wells derivation OR (Thromb Haemost 2000) sits behind a paywall (HTTP 403), so the byte-anchored ED-cohort OR is used as the grounded proxy. Corroborating but weaker: prior-VTE OR 1.41 (95% CI 1.07\u20131.87) for D-dimer positivity in a suspected-PE cohort (Kabrhel, PMC3538031) \u2014 direction-consistent, not used numerically because its outcome is D-dimer, not PE.",
+      "verdict": "grounded",
+      "note": "Positive finding (previous_vte present), so a positive LR proxy (>1) is expected; computed_lr = OR 7.796, byte-anchored to Wong et al. (PMC12009248): \"previous VTE diagnosis (OR 7.796 [95% CI 5.193-11.705]; p < 0.001)\", n=7,148, outcome prevalence 24.2%. The metric is an adjusted OR used as the LR proxy because no PE-specific sensitivity/specificity exists for this isolated Wells item (per the Lucassen 2011 meta-analysis, individual Wells items are reported as ORs, generally lower than the original derivation, with previous-DVT specifically up-weighted in the modified Wells rule). Grounding caveats: (1) outcome is VTE-on-imaging (DVT or PE combined), not PE alone \u2014 directionally and mechanistically the same criterion the Wells rule encodes, but the magnitude may overstate the PE-only effect; (2) the canonical original Wells 2000 Thromb Haemost item-level OR could not be byte-anchored (publisher paywalls returned HTTP 403/402 on Thieme, ScienceDirect, ACP, JTH, Wiley). Prior probability for the PE workup \u2248 0.20 from the Christopher study (~3306 consecutive suspected-PE patients). A direction-consistent but non-PE corroborating value (prior-VTE OR 1.41 for D-dimer positivity, Kabrhel PMC3538031) was found but excluded from the LR computation because its outcome is not PE diagnosis."
+    },
+    {
+      "id": "f8",
+      "target": "diagnosis(pulmonary_embolism)",
+      "primary_data": {
+        "study": "Bannelier H, Gorlicki J, Penaloza A, et al. Evaluation of the \"hemoptysis\" item in clinical decision rules for the diagnosis of pulmonary embolism in the emergency department. Academic Emergency Medicine. 2022;29(10):1205-1212. PMCID: PMC9804711",
+        "metric_type": "odds_ratio",
+        "values": "PE in 3/37 (8.1%) with hemoptysis vs 84/2871 (2.9%) without; absolute difference 5.2% (95% CI 0.0%-18%), non-significant. Computed unadjusted OR = 2.84 (using 3/38 vs 84/2871).",
+        "n": "2908 ED patients with low clinical probability of suspected PE (post hoc analysis of two European cohorts); overall PE prevalence 87/2908 = 3% at 3 months",
+        "population": "Emergency department patients with a LOW clinical probability of suspected PE (France/Belgium); note this low-probability subset has PE prevalence ~3%, far below the ~20% of an unselected suspected-PE workup population",
+        "byte_quote": "three (8.1%) PE cases in the 37 patients with hemoptysis ... 84 (2.9%) PE cases in the 2871 patients with no hemoptysis ... difference 5.2% [95% CI 0.0%-18%]. ... 87 patients (3%) had a PE diagnosed at 3 months."
+      },
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: hemoptysis Wells criteria PE odds ratio meta-analysis Lucassen 2011 / hemoptysis PE sensitivity specificity likelihood ratio",
+          "found": true,
+          "supporting_quote": "Evaluation of the 'hemoptysis' item in clinical decision rules for the diagnosis of pulmonary embolism in the emergency department - PMC (PMC9804711); plus Lucassen 2011 Annals Intern Med decision-rule meta-analysis hit",
+          "gives_numbers": false,
+          "next_citation": "PMC9804711",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9804711/"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PMC9804711 (Bannelier 2022, Acad Emerg Med) for hemoptysis 2x2 data and PE prevalence",
+          "found": true,
+          "supporting_quote": "three (8.1%) PE cases in the 37 patients with hemoptysis ... 84 (2.9%) PE cases in the 2871 patients with no hemoptysis ... difference 5.2% [95% CI 0.0%-18%] ... 87 patients (3%) had a PE diagnosed at 3 months",
+          "gives_numbers": true,
+          "next_citation": "(primary 2x2 reached; OR computable directly)",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9804711/"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch ACP Journals Lucassen 2011 meta-analysis for individual-item hemoptysis OR (pooled)",
+          "found": false,
+          "supporting_quote": "HTTP 403 Forbidden; full text not retrievable. Lucassen 2011 reports decision-rule (not individual-item) sens/spec; no byte-anchored hemoptysis OR obtained.",
+          "gives_numbers": false,
+          "next_citation": "",
+          "resolved_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-155-7-201110040-00007"
+        }
+      ],
+      "computed_lr": 2.84,
+      "lr_formula": "OR = (a*d)/(b*c) with a=PE+hemoptysis=3, b=PE+no-hemoptysis=84, c=no-PE+hemoptysis=35 (38-3), d=no-PE+no-hemoptysis=2787 (2871-84). OR = (3*2787)/(84*35) = 8361/2940 = 2.84. (Equivalently from rates: 8.1% vs 2.9% PE -> odds 0.0882 vs 0.0301 -> OR 2.93.) Used as LR proxy for the positive finding hemoptysis(present).",
+      "verdict": "grounded",
+      "note": "computed_lr derives directly from byte-anchored primary 2x2 counts in Bannelier et al. 2022 (Acad Emerg Med, PMC9804711): 3/38 PE with hemoptysis vs 84/2871 without. Unadjusted OR ~2.8 (proxy LR+ for hemoptysis present), directionally raising PE odds. IMPORTANT CAVEATS: (1) The association is statistically NON-significant in this single cohort (absolute-difference 95% CI 0.0%-18% crosses null; study explicitly underpowered because hemoptysis is rare, ~1-1.3% of patients). So this is a real computed number but with a wide, null-touching CI. (2) The cohort is LOW-clinical-probability ED patients (PE prevalence 3%), not an unselected suspected-PE population. For the diagnostic prior, the suspected-PE workup population prevalence is conventionally ~0.20 (Christopher study, JAMA 2006), versus 0.03 in this low-risk subset. (3) The landmark pooled source for individual Wells items (Lucassen 2011, Annals Intern Med) was not byte-accessible (403); it reports decision-rule-level, not per-item, accuracy, so no pooled hemoptysis OR could be anchored. Hemoptysis carries 1 point in the original Wells score, consistent with this modest (~2-3x) effect direction."
+    },
+    {
+      "id": "f9",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Lucassen 2011 Annals Intern Med meta-analysis of Wells clinical decision rules for excluding PE",
+          "found": true,
+          "resolved_url": "https://www.acpjournals.org/doi/10.7326/0003-4819-155-7-201110040-00007",
+          "supporting_quote": "Clinical Decision Rules for Excluding Pulmonary Embolism: A Meta-analysis (Lucassen et al., Ann Intern Med 2011). Establishes the Wells rule context but does not break out a usable per-item likelihood ratio for the malignancy criterion in the accessible text; full text was 403/paywalled.",
+          "gives_numbers": false,
+          "next_citation": "West, Goodacre, Sampson 2007 QJM \u2014 value of individual clinical features in PE diagnosis"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebSearch + WebFetch: West J, Goodacre S, Sampson F. 'The value of clinical features in the diagnosis of acute pulmonary embolism: systematic review and meta-analysis.' QJM 2007;100(12):763-769. PMID 18089542. DOI 10.1093/qjmed/hcm113",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/18089542/",
+          "supporting_quote": "Meta-analysis of 18 studies, 5,997 patients. Abstract lists the most useful features for ruling IN PE, including 'active cancer (1.74)' as a pooled positive likelihood ratio. 95% CI not retrievable from the accessible abstract/paywalled full text, but the point estimate 1.74 is stated literally.",
+          "gives_numbers": true,
+          "next_citation": "Christopher Study (van Belle, JAMA 2006) \u2014 PE prevalence ~20% in suspected-PE workup population for the prior"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebSearch: PE prevalence in suspected-PE workup population (Christopher/Wells algorithm cohorts)",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8824365/",
+          "supporting_quote": "Prevalence of PE in the suspected-PE diagnostic workup population is consistently reported around 20% across Wells/Christopher-derivation cohorts, giving a pretest probability prior of ~0.20.",
+          "gives_numbers": true,
+          "next_citation": ""
+        }
+      ],
+      "computed_lr": 1.74,
+      "lr_formula": "Active cancer is a single clinical criterion for which the pooled POSITIVE likelihood ratio is published directly: LR+ = 1.74 (West, Goodacre & Sampson, QJM 2007, meta-analysis of 18 studies / 5,997 patients). Used as-is \u2014 no sens/spec recomputation needed since the meta-analysis already pooled per-feature LR+. For context, applied to the suspected-PE prior of ~0.20 (pretest odds 0.25): posttest odds = 0.25 x 1.74 = 0.435 -> posttest probability ~0.30.",
+      "primary_data": {
+        "study": "West J, Goodacre S, Sampson F. The value of clinical features in the diagnosis of acute pulmonary embolism: systematic review and meta-analysis. QJM 2007;100(12):763-769. PMID 18089542; DOI 10.1093/qjmed/hcm113",
+        "metric_type": "likelihood_ratio",
+        "values": "pooled positive likelihood ratio (LR+) for active cancer = 1.74",
+        "n": "18 studies, 5,997 patients",
+        "population": "patients with suspected acute pulmonary embolism (PE prevalence in this workup population ~0.20, per Christopher/Wells-derivation cohorts)",
+        "byte_quote": "...the most useful features for ruling in PE [include]... active cancer (1.74)... [pooled positive likelihood ratios from a meta-analysis of 18 studies, 5997 patients]."
+      },
+      "verdict": "grounded",
+      "note": "f9 active_malignancy(present) is GROUNDED to a published pooled positive likelihood ratio of 1.74 for the 'active cancer' clinical feature in suspected-PE patients (West/Goodacre/Sampson, QJM 2007; PMID 18089542; meta-analysis of 18 studies, 5,997 patients). This is the direct LR for the Wells 'active malignancy' item and matches its direction (mild positive \u2014 raises PE probability). computed_lr=1.74 used as-is, which is the correct treatment for a single clinical criterion whose per-feature LR+ was meta-analytically pooled (no sens/spec recomputation required). Caveats: (1) The 95% CI for the 1.74 estimate could not be retrieved \u2014 the QJM full text is paywalled and the ACP/Lucassen 2011 full text returned HTTP 403; only the point estimate is byte-anchored from the abstract. (2) The Lucassen 2011 Annals meta-analysis is the canonical Wells-rule anchor but did not yield a per-item malignancy LR in accessible text. (3) Prior of PE ~0.20 is the standard suspected-PE workup prevalence (Christopher/Wells cohorts). Note this LR+ of 1.74 is modest, consistent with malignancy contributing only 1 point in the Wells score; much larger ORs (e.g. 13.5) in the literature are for residual/chronic embolic load or VTE risk generally, NOT the diagnostic LR for an acute-PE rule-in, and were deliberately not used."
+    },
+    {
+      "id": "f10",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: PIOPED II Stein 2006 NEJM CTPA sensitivity specificity pulmonary embolism",
+          "found": true,
+          "supporting_quote": "PIOPED II demonstrated an 83% sensitivity and 96% specificity with CT angiography in detecting acute pulmonary embolism. PIOPED II (2006) is the largest study to date which compared CT angiography (CTA) against a composite reference standard.",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16738268/",
+          "gives_numbers": true,
+          "next_citation": "Stein PD et al, NEJM 2006;354:2317-2327"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PubMed 16738268 (PIOPED II abstract) and WikiJournalClub PIOPED_II",
+          "found": true,
+          "supporting_quote": "the sensitivity of CTA was 83 percent and the specificity was 96 percent. ... Among 824 patients with a reference diagnosis and a completed CT study ... Positive predictive values were 96 percent with a concordantly high or low probability on clinical assessment, 92 percent with an intermediate probability on clinical assessment.",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16738268/",
+          "gives_numbers": true,
+          "next_citation": "Stein PD, Fowler SE, Goodman LR, et al. NEJM 2006;354:2317-2327"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch PMC10928556 (ERS Breathe review confirming primary counts and citation)",
+          "found": true,
+          "supporting_quote": "CTPA alone had a sensitivity of 83% (150 of 181 patients) and a specificity of 96% (567 of 592 patients). The positive predictive value was 86% (150 of 175 patients) ... Stein PD, Fowler SE, Goodman LR, et al. Multidetector computed tomography for acute pulmonary embolism. New England Journal of Medicine. 2006;354:2317-2327.",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10928556/",
+          "gives_numbers": true,
+          "next_citation": ""
+        }
+      ],
+      "computed_lr": 20.75,
+      "lr_formula": "LR+ = sensitivity / (1 - specificity) = 0.83 / (1 - 0.96) = 0.83 / 0.04 = 20.75",
+      "verdict": "grounded",
+      "primary_data": {
+        "study": "PIOPED II \u2014 Stein PD, Fowler SE, Goodman LR, et al. Multidetector computed tomography for acute pulmonary embolism. N Engl J Med 2006;354:2317-2327. PMID 16738268.",
+        "metric_type": "sensitivity_specificity",
+        "population": "Patients with suspected acute pulmonary embolism evaluated with multidetector CTPA against a composite reference standard (V/Q scan, venous ultrasound, DSA); 824 patients with a reference diagnosis and completed CT study (CTA-alone analysis on 773 after excluding 51 inconclusive).",
+        "n": "773 (CTA-alone analysis: 181 PE-positive, 592 PE-negative by reference standard); 824 total with reference diagnosis",
+        "values": "sensitivity 83% (150/181), specificity 96% (567/592); PPV 86% (150/175), NPV 95%",
+        "byte_quote": "CTPA alone had a sensitivity of 83% (150 of 181 patients) and a specificity of 96% (567 of 592 patients). The positive predictive value was 86% (150 of 175 patients)."
+      },
+      "note": "Grounded in PIOPED II (Stein 2006 NEJM), the landmark study establishing CTPA test characteristics and effectively the diagnostic reference standard for PE. CTA-alone sensitivity 83% (150/181) and specificity 96% (567/592) are byte-anchored from the NEJM paper (confirmed in the original abstract via PubMed 16738268 and re-quoted with raw counts in the ERS Breathe review PMC10928556). LR+ = 0.83/0.04 = 20.75 \u2014 a very high positive likelihood ratio, consistent with a confirmatory test. Caveats: (1) Performance is location-dependent \u2014 sensitivity 97% main/lobar, 68% segmental, 25% subsegmental \u2014 so the pooled LR+ understates main-vessel and overstates subsegmental performance. (2) PPV varied with pretest probability (96% with concordant high/low clinical assessment vs 58% with low pretest probability), reflecting the standard LR-independent dependence of post-test probability on prior; PE workup prevalence in the suspected-PE population is roughly 0.15-0.23 (~0.20). (3) An alternative LR+ using the 96% specificity rounded differently changes little; using exact counts spec = 567/592 = 0.9578 gives LR+ = 0.829/0.0422 = 19.6, so the reported value is robust at ~20."
+    },
+    {
+      "id": "f11",
+      "target": "diagnosis(pulmonary_embolism)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PubMed abstract, Stein PD et al. Multidetector computed tomography for acute pulmonary embolism (PIOPED II). N Engl J Med 2006;354:2317-2327. PMID 16738268",
+          "found": true,
+          "supporting_quote": "the sensitivity of CTA was 83 percent and the specificity was 96 percent",
+          "gives_numbers": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16738268/",
+          "next_citation": "PIOPED II full text / WikiJournalClub summary for NPV by clinical probability"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WikiJournalClub PIOPED II summary (corroborating NPV by Wells clinical probability)",
+          "found": true,
+          "supporting_quote": "NPV of PE in patients with negative CTA and low, intermediate, or high clinical probability was 96, 89, 60%, respectively.",
+          "gives_numbers": true,
+          "resolved_url": "https://www.wikijournalclub.org/wiki/PIOPED_II",
+          "next_citation": ""
+        }
+      ],
+      "computed_lr": 0.18,
+      "lr_formula": "LR- = (1 - sensitivity) / specificity = (1 - 0.83) / 0.96 = 0.17 / 0.96 = 0.177 \u2248 0.18",
+      "verdict": "grounded",
+      "primary_data": {
+        "study": "Stein PD, Fowler SE, Goodman LR, et al. Multidetector Computed Tomography for Acute Pulmonary Embolism (PIOPED II). N Engl J Med 2006;354:2317-2327. PMID 16738268",
+        "metric_type": "sensitivity_specificity",
+        "values": "sensitivity 83%, specificity 96% (CTA alone, adequate/diagnostic-quality studies)",
+        "n": "773 patients with diagnostic-quality CTA (CTA detected PE in 150 of 181 with PE = 83% sens; correctly negative in 567 of 592 without PE = 96% spec)",
+        "population": "Patients with suspected acute PE enrolled in the prospective multicenter PIOPED II trial, against a composite reference standard",
+        "byte_quote": "the sensitivity of CTA was 83 percent and the specificity was 96 percent"
+      },
+      "note": "A negative CTPA on an adequate (diagnostic-quality) study is the index finding; the expected metric is LR-. Computed directly from PIOPED II (Stein 2006 NEJM, PMID 16738268) sensitivity 83% and specificity 96%: LR- = (1-0.83)/0.96 = 0.18. This is byte-anchored to the literal abstract sentence. Corroboration: PIOPED II reported the negative predictive value of a negative CTA as 96%, 89%, and 60% for low, intermediate, and high Wells clinical probability respectively (WikiJournalClub summary), confirming that a negative CTPA strongly but not perfectly lowers PE probability and that with high pretest probability a negative CTPA alone may be insufficient (concordance principle). Caveat: 83% sensitivity (CTA alone) reflects 2006 multidetector technology and a composite reference standard; modern CTPA scanners likely have higher sensitivity, so the true LR- in current practice may be somewhat lower (more strongly exclusionary). Management studies (e.g., Christopher 2006 JAMA and a 23-study meta-analysis) report ~1.2-1.4% 3-month VTE risk after a negative CTPA, consistent with this LR- producing a low post-test probability in the typical workup population (PE prevalence ~20%)."
+    }
+  ]
+}

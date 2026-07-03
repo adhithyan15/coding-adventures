@@ -1,0 +1,8 @@
+{
+ "check_id": 220,
+ "idx": 90,
+ "slot": "total_direct_costs",
+ "claimed_value": 80000,
+ "scenario": "A grantee's approved budget for the year lists $80,000 in total direct costs and requests indirect cost recovery on top of that.",
+ "cited_span": "$80,000 in total direct costs"
+}

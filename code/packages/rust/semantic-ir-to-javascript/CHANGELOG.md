@@ -1,0 +1,571 @@
+# Changelog
+
+All notable changes to `semantic-ir-to-javascript` are documented here.
+
+## 0.11.0 — mixins: `include` / `extend` module method resolution (MX4)
+
+### Added
+
+- The inlined `__Sir` OOP runtime now executes **Ruby mixins** — a module's
+  methods are found via `include` / `extend` — so a translated
+  `module M; def foo; …; end; end` + `include M` resolves `foo` on including
+  classes' instances, identically to the reference backends
+  (sir-mixins, MX4). Runtime-only: no core-IR / frontend change (the merged
+  MX1 frontend already lowers module bodies + `include` / `extend`).
+  - `Feature::Modules` is now **accepted** by the JS backend. A module body's
+    `def`s register into the SAME `methodTable` a class uses, keyed by the
+    module name (via the existing `__def_method__` builtin — an "owner" is now
+    a class *or* a module).
+  - **`include M`** → `__include__("Owner", "M")` →
+    `__Sir.includeModule("Owner", "M")`, appending `M` to a per-owner
+    `includedModules` list in include order.
+  - **`extend M`** → `__extend__("Owner", "M")` →
+    `__Sir.extendModule("Owner", "M")`, appending to a per-owner
+    `extendedModules` list; `M`'s (instance) methods become **class methods**
+    of the owner, callable as `Owner.method`.
+  - **`Klass.method(args…)`** on a constant receiver →
+    `__class_method__("Klass", "method", args…)` →
+    `__Sir.callClassMethod(…)` (the class-method dispatch arm — previously
+    unhandled by this backend), resolving through the class-method MRO.
+  - **`resolveMethod` now follows Ruby's MRO**: for a receiver of class `C`
+    the walk searches `C` → `C`'s included modules **most-recent-first**
+    (reverse of include order, each expanded depth-first through its own
+    `include`s) → `C`'s superclass → its modules → … A class-defined method
+    **shadows** a mixed-in module method (class-first MRO), and a **diamond**
+    include (a module reached via two paths) is resolved **once** at its
+    earliest position. `super` and `initialize` resolution are MRO-aware too.
+
+### Security
+
+- Dispatch stays **explicit-table, cycle-guarded** (the C3 RCE bar). The new
+  `includedModules` / `extendedModules` are real `Map`s keyed by owner *name
+  strings* holding module *name strings* — never `Object` properties — so a
+  module or owner literally named `constructor` / `__proto__` is inert data,
+  never a prototype write or a reflective host callable. A single shared
+  `seen` set spans the whole MRO walk, so a self-including module
+  (`module M; include M; end`) or a cyclic hierarchy **terminates** with a
+  `NoMethodError` instead of looping.
+
+### Tests
+
+- Unit (emit shape): `__include__` / `__extend__` / `__class_method__` route
+  to the runtime helpers.
+- Execution-proofs under Node (hand-built SIR mirroring the MX1 frontend):
+  included-module method callable; class method shadows module; diamond
+  include resolves once; `extend` makes a class method; self-including module
+  terminates.
+
+## 0.10.0 — typed runtime errors (ZeroDivision/Index/Key/NoMethod, T3)
+
+### Added
+
+- Faulting emitted-runtime operations now raise the **correct typed
+  `SirError`** (matching Ruby), so a translated
+  `begin; …; rescue ZeroDivisionError => e; …; end` catches them — and
+  identically across backends (sir-typed-runtime-errors, T3). Runtime-only:
+  no core-IR / frontend change.
+  - **Division by zero** (`1 / 0`, `1.0 / 0`) → `ZeroDivisionError`
+    (`"divided by 0"`). Native JS `/` yields `Infinity`, so the emitter now
+    routes the 2-arg `/` builtin through a new inlined `__Sir.divide(a, b)`
+    helper that adds an explicit `b === 0` check (covering integer-zero,
+    float-zero, and `-0` divisors uniformly) and `raiseError`s the typed
+    error. Non-zero divisors divide natively as before — no numeric program
+    changes. (`-`/`%` and comparisons keep native infix.)
+  - **`arr.fetch(oob)`** → `IndexError`; **`hash.fetch(missing)`** with no
+    default → `KeyError`. A supplied default (`fetch(k, d)`) is returned
+    instead of raising, matching Ruby. Handled in `callMethod` ahead of the
+    method allowlist (negative array indices count from the end).
+    - **Security (CWE-470):** `arr.fetch` first validates its index is a real
+      integer (`typeof === "number" && Number.isInteger`) — a non-integer,
+      source-controlled index (`arr.fetch("constructor")`, `"__proto__"`, …)
+      raises `TypeError` (Ruby: *no implicit conversion of String into
+      Integer*) instead of sailing past the `NaN`-poisoned bounds checks to a
+      reflective `recv[idx]` read that would leak prototype/host gadgets and
+      bypass the allowlist. Regression: `t3_array_fetch_non_integer_index_raises_type_error_not_gadget`.
+  - **Unknown method** (an allowlist miss, or a `SirInstance` method miss) →
+    `NoMethodError` (`undefined method \`x\` for <class>`) via a new
+    `classDescription` receiver-describer, replacing the previous JS-native
+    `TypeError` floor (which a `rescue` would miss or catch over-broadly).
+- The plain index operators `arr[i]` / `hash[k]` are **unchanged**: they
+  still return `nil` (Ruby does NOT raise for `[]`) — no over-raise.
+- Dispatch remains an explicit runtime **tag** test / typed-string raise,
+  never reflection / `eval` on a source-derived name
+  ([[dynamic-dispatch-rce]]); the method allowlist still blocks reflective
+  gadgets — now surfacing the rejection as a typed `NoMethodError`.
+- Execution proofs in `run_with_node.rs` (`t3_*`) run each case under `node`
+  and assert the typed clause catches (`1/0`→ZeroDivisionError,
+  `arr.fetch(oob)`→IndexError, `h.fetch(miss)`→KeyError,
+  `obj.frobnicate`→NoMethodError), that `ZeroDivisionError` also chains up to
+  `StandardError`, that `arr[oob]`/`h[miss]` still return `nil` (no
+  over-raise), and that `fetch` with a default returns it.
+
+## 0.9.0 — polymorphic `+` / `*` for strings and arrays (PO3)
+
+### Added
+
+- `+` and `*` are now **type-polymorphic**, matching Ruby's operator
+  overloading (sir-polymorphic-operators, PO3). All these lower to the same
+  SIR `+`/`*` builtins, so dispatch happens at runtime on the **first
+  operand's type** via two new inlined helpers `__Sir.plus` / `__Sir.times`
+  (also exported and used by `builtins["+"]` / `builtins["*"]` for the
+  variadic / value-reference paths):
+  - `"a" + "b"` → `"ab"` (String concat), `[1] + [2]` → `[1, 2]` (Array concat).
+  - `"ab" * 3` → `"ababab"` (String repeat), `[0] * 3` → `[0, 0, 0]`
+    (Array repeat), `[1, 2] * ", "` → `"1, 2"` (Array join via the same
+    `format` display helper `puts`/`print` use).
+- The emitter now routes the **2-arg** `+`/`*` through `__Sir.plus`/`__Sir.times`
+  instead of native infix; numeric `+`/`*` semantics (int/float promotion,
+  variadic fold) are byte-for-byte unchanged — the String/Array arms sit
+  strictly ahead of the numeric path. `-`/`/`/`%` and the comparisons keep
+  native infix.
+- Dispatch is a runtime **tag** test (`typeof x === "string"` /
+  `Array.isArray(x)`), never reflection / `eval` / property access on a
+  source-derived name ([[dynamic-dispatch-rce]]).
+- Fixes the `[] + []` bug: native JS `[1] + [2]` coerces to the string
+  `"1,2"`; the Array-concat arm returns a **fresh** array with no aliasing or
+  mutation of the inputs.
+- Execution proofs in `run_with_node.rs` (`poly_*`) run each arm under `node`
+  and assert stdout, plus a regression that `1 + 2` → 3 and `2 * 3` → 6 are
+  unchanged.
+
+### Security — bound the repeat count (CWE-1284 / CWE-400)
+
+- The String- and Array-repeat arms multiply a length by a
+  **program-controlled** `count`. Unguarded, `String.prototype.repeat` throws a
+  raw `RangeError` on a negative/huge count and an array-repeat loop can
+  allocate until the process OOMs — a denial of service. A shared `repeatCount`
+  guard clamps a non-finite / non-integer / `count <= 0` to an **empty** result
+  and rejects an oversized product (`unitLen * count > Number.MAX_SAFE_INTEGER`)
+  with a Ruby-shaped `ArgumentError: argument too big` **before** any
+  allocation; an empty receiver short-circuits so a huge count on `"" * n` /
+  `[] * n` does no work. Regression: `poly_string_repeat_overflow_is_rejected`
+  asserts node exits non-zero with the `argument too big` message.
+
+## 0.8.0 — `puts` builtin (Ruby semantics)
+
+### Added
+
+- The JavaScript backend now emits and executes Ruby's `puts`, the most common
+  output method. `puts` maps to a new variadic runtime helper `__Sir.puts(...)`
+  (routed by the emit helper table, with a matching `builtins["puts"]` entry),
+  reusing `format` for element rendering.
+- Ruby semantics implemented exactly: no-arg → one newline; `puts x` →
+  `x` + newline (no double newline when the text already ends in `"\n"`);
+  `puts a, b` → one line per arg; `puts []` → a single newline; a native array
+  is flattened recursively, one **element** per line; `puts null` → a blank
+  line. Writes via `process.stdout.write` (not `console.log`) so the
+  trailing-newline suppression is honoured.
+- Execution proof `run_with_node.rs::puts_matches_ruby_output` runs
+  `puts "hello"; puts; puts [1,2,3]` under `node` and asserts stdout is exactly
+  `hello\n\n1\n2\n3\n` (the Ruby reference output).
+
+### Security — cycle-guard the `puts` array flatten (CWE-674)
+
+- `putsOne` flattened arrays by recursing per element with **no bound**. A JS
+  array is a shared, mutable reference, so a translated program can build a
+  self-referential array (`a = []; a << a; puts a`) or a pathologically deep
+  one; the unguarded recursion threw `RangeError: Maximum call stack size
+  exceeded` — a denial of service (uncontrolled recursion). The flatten now
+  threads a `Set` of the array references on the active path: an array
+  re-encountered within its own subtree is a cycle and is written as Ruby's
+  `[...]` placeholder + newline instead of recursing, so `puts a` on a
+  self-referential array now **terminates** exactly as real Ruby does.
+  Non-cyclic output is byte-for-byte unchanged (`puts [1,[2,3]]` →
+  `1\n2\n3\n`); a new regression test (`puts_cyclic_array_terminates`) proves
+  the self-referential case exits cleanly with `[...]\n`.
+
+## Unreleased
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### Security
+
+- **Allowlist method-dispatch names in `callMethod` to block a
+  Function-constructor RCE (C3).**  `callMethod(recv, name, …args)` performed
+  an unrestricted dynamic `recv[name]` lookup with an attacker-controlled
+  `name`.  A translated untrusted program could therefore reach reflective
+  gadgets — chiefly `constructor`, which on any function yields the global
+  `Function` constructor, letting `id.constructor("return …evil…")` synthesise
+  and run arbitrary code (a native higher-order method like
+  `Array.prototype.map` then invokes it → remote code execution).  `apply`,
+  `call`, `bind`, `__proto__`, `prototype`, and the `__define/lookup*etter__`
+  pair were equally reachable.  `callMethod` now dispatches **only** through a
+  fixed allowlist of known-safe Array / String / Number methods; any name
+  outside it (every gadget included) throws a `TypeError` *before* the lookup.
+  This is the primary, load-bearing gate — the emitted JS is what executes.
+  A node execution-proof asserts `callMethod(id, "constructor", …)` throws
+  instead of building a function.  `length` remains special-cased ahead of the
+  allowlist as a property read.
+
+## 0.7.0 — user-defined-class OOP: instantiation, dispatch, super, ivars (O3)
+
+The JavaScript analogue of O1's Python/TypeScript OOP runtime.  The
+backend now **executes** user-defined-class object-orientation end-to-end
+through Node, using an inlined `__Sir` OOP runtime (no import, no
+`npm install`) — the JS half of the SIR18 `Classes` dispatch surface.
+
+### Added
+
+- **Inlined OOP runtime (`runtime.rs`).**  Added to the self-contained
+  `__Sir` IIFE:
+  - `SirInstance` — a user object tagged with its class name, carrying a
+    prototype-less (`Object.create(null)`) instance-variable bag; plus
+    `newInstance(cls)`.
+  - `methodTable` / `classMethodTable` — instance and class ("static")
+    method tables, each a real `Map` keyed on a **flat `"Class\x00method"`
+    string** (NUL-joined so distinct `(class, method)` pairs never
+    collide).  `defMethod(cls, name, fn)` / `defClassMethod(cls, name, fn)`
+    register a method body closure.
+  - `callNew(cls, …args)` — allocate, resolve the inherited `initialize`
+    by walking `class → superclass` (the SAME `seen`-guarded ancestry map
+    the exception runtime uses), apply it with `self` bound, and return the
+    instance (Ruby discards `initialize`'s result).
+  - `callMethod` **extended**: a `SirInstance` receiver resolves the user
+    method table (walking ancestry) and applies with `self` bound; every
+    other receiver falls through to the **unchanged** built-in / collection
+    path (arrays' `push`/`map`/…, strings, the RCE-hardened allowlist).
+  - `callSuper(method, cls, …args)` — resolve `method` from the
+    *superclass* of `cls` and apply with the current `self` still bound.
+  - `currentSelf()` + a `pushSelf`/`popSelf` self-stack (balanced with
+    try/finally, so an exception thrown mid-method still unwinds `self`).
+  - `ivarGet`/`ivarSet` and `cvarGet`/`cvarSet` acting on the current
+    `self` (unset reads yield `null`, matching Ruby nil).
+
+- **OOP emit arms (`emit.rs`).**  `emit_builtin_call` now routes the O2
+  frontend's OOP builtins to the runtime: `__new__`→`__Sir.callNew`,
+  `__super__`→`callSuper`, `__def_method__`→`defMethod`,
+  `__def_class_method__`→`defClassMethod`, `__self__`→`currentSelf()`.
+  Class/method-name operands (a `StrLit`, or a `Const` VarRef like
+  `Dog.new`) emit as string literals via `quote_js_string`.  `@x`/`@@x`
+  reads and writes (`Scope::Instance`/`ClassVar`) lower to
+  `ivarGet`/`ivarSet` / `cvarGet`/`cvarSet` — these scopes previously hit
+  the deferred-scope panic.
+
+- **Feature acceptance (`lib.rs`).**  `ACCEPTED_FEATURES` now includes
+  `InstanceVars` and `ClassVars` (alongside the already-accepted
+  `Classes`/`Constants`).  Genuinely-unsupported constructs (e.g.
+  `StrConcat` string interpolation, `TailCalls`, `Intrinsics`) are still
+  rejected cleanly rather than mis-emitted.
+
+### Security
+
+- **All OOP dispatch is explicit `Map` lookup on a `(class, method)`
+  string key — never `recv[name]`, reflection, `eval`, or `new Function`
+  on a source-derived name** (the same C3 RCE lesson that bit this crate's
+  `callMethod`).  A user class or method literally named `constructor` /
+  `__proto__` / `prototype` is only ever a Map *key*: a miss floors to a
+  clean `NoMethodError`, never reaching a host callable.  The method tables
+  are real `Map`s (not `{}`) and the instance/class-var bags are
+  prototype-less, so a `"__proto__"` name cannot poison any prototype
+  chain.  Every ancestry walk is `seen`-guarded, so a cyclic hierarchy
+  terminates instead of looping.
+
+### Tests
+
+- Emitted-shape unit tests for every new builtin (`__new__`→`callNew`,
+  `__super__`→`callSuper`, `def`/`def self`→`defMethod`/`defClassMethod`,
+  `__self__`→`currentSelf`) and for `@ivar`/`@@cvar` reads/writes.
+- Node execution-proofs (hand-built SIR modules): **P1** Dog
+  `initialize`/`speak` prints `Rex says woof`; **P2** `Cat < Animal` with
+  `super(4)` and a parent-set ivar prints `Tom with 4`; a security proof
+  that `__new__("constructor")` + a `__proto__` method dispatch does NOT
+  execute host code (clean method-miss); and a cyclic-ancestry (`A<B<A`)
+  proof that resolution terminates.
+
+## 0.6.0 — exception handling (try/catch/raise) + user-class ancestry (E1)
+
+### Added
+
+- **`Stmt::TryCatch` lowers to native `try`/`catch`/`finally` (E1).**  The
+  backend previously *panicked* on any `TryCatch`.  It now emits a native
+  `try { <body> } catch (__exc) { … } finally { <ensure> }`.  Because a native
+  `catch` binds one variable and catches everything while Ruby has an ordered
+  list of *typed* `rescue` clauses, the catch body is an if/else-if chain that
+  asks `__Sir.rescueMatches(__exc, ["Foo", "Bar"])` for each clause in source
+  order, binds `=> e` when present, and re-`throw`s the original exception if
+  no clause matches (Ruby's "propagate when unrescued").  An empty
+  `exception_types` is a bare `rescue` (catch-all).  Mirrors the TypeScript
+  backend's `TryCatch` arm exactly, minus the type annotation on the binding.
+- **`raise` builtin lowers to `__Sir.raiseError` (E1).**  `raise Foo, "msg"`
+  (a `Const` class name + message) → `__Sir.raiseError("Foo", <msg>)`;
+  `raise Foo` → `__Sir.raiseError("Foo")`; a non-`Const` first arg
+  (`raise "msg"`) → `__Sir.raiseError("RuntimeError", <arg>)`; bare `raise` →
+  `__Sir.raiseError()` (a generic `RuntimeError` re-raise).  Matches the TS
+  backend's shape.
+- **Inlined exception runtime.**  Ported the plain-JS-compatible pieces of the
+  published `@coding-adventures/sir-runtime-exceptions` package into the
+  backend's self-contained `__Sir` IIFE: a class-name-tagged `SirError` (a real
+  `Error` subclass), `raiseError(cls, msg)`, `rescueMatches(exc, classNames)`,
+  and the built-in Ruby `ANCESTRY` table (so `rescue StandardError` catches a
+  `RuntimeError`/`ArgumentError`/…).  No `import`/`require`; the emitted `.js`
+  still runs directly under `node`.
+- **User-defined class ancestry (E2, the JS half).**  Added
+  `__Sir.registerAncestry(map)`, which merges a user
+  `{ childClass: superclassName }` map into the runtime's ancestry lookup.  The
+  emitter collects every `Stmt::ClassDef { name, superclass: Some(_) }` pair in
+  the module (recursing into nested bodies) and emits one
+  `__Sir.registerAncestry({ … })` at program init — so
+  `class MyErr < StandardError; raise MyErr; rescue StandardError` matches
+  through the merged chain.  A `ClassDef` body's (non-`def`) statements are now
+  emitted inline instead of panicking.
+- **Accepts `Feature::Exceptions`, `Feature::Classes`, and `Feature::Constants`.**
+  Exceptions and classes are lowered as above; `Constants` is accepted because
+  `raise Foo` names its class as a `Const` `VarRef` (consumed by the `raise` arm
+  as a string) — any other constant read emits its bare identifier.
+
+### Security
+
+- **Ancestry dispatch is by explicit table lookup, never reflection.**
+  `rescueMatches` / `isAncestorOrSelf` resolve a class's superclass chain via
+  `ancestry[cur]` string-map reads only — no `eval`, no dynamic code
+  synthesis; class and method names are treated as pure data.  The mutable
+  ancestry map is `Object.create(null)` (prototype-less), so a user class
+  literally named `constructor`/`__proto__` cannot poison the lookup, and a
+  malformed (cyclic) user map terminates via a `seen` guard.
+
+### Tests
+
+- Emitted-shape unit tests for the `TryCatch` else-chain, the four `raise`
+  shapes, and one-shot `registerAncestry` emission (present iff a class
+  inherits).
+- Four `node` execution-proofs: built-in ancestry (`ArgumentError` caught by
+  `rescue StandardError`), bare `rescue` catch-all, an unmatched type
+  re-raising to a non-zero exit, and USER ancestry
+  (`class MyErr < StandardError` caught by `rescue StandardError`).
+
+## 0.5.0 — method dispatch (`__method__`) execution
+
+Adds the minimal runtime support the JavaScript frontend's C3 member-method
+lowering needs to **run**.  A method call `recv.meth(args…)` reaches the
+backend as `BuiltinCall("__method__", [recv, StrLit("meth"), args…])`; the
+emitter now routes it to a new runtime helper, `__Sir.callMethod`, which
+invokes the JS-native method on the receiver (arrays' `push`/`pop`/`map`/
+`filter`/`forEach`/`includes`/`reduce`/…, strings' `toUpperCase`/…) and
+unwraps any `Closure` callback argument into a plain JS function.  This lets
+JavaScript→SIR→JS collection programs execute end-to-end under `node`.
+
+### Added
+
+- `emit_builtin_call` special-cases `BuiltinCall("__method__", [recv,
+  StrLit(name), args…])` → `__Sir.callMethod(recv, "name", args…)` (receiver
+  first, method name second, call args after).
+- Runtime `callMethod(recv, name, ...args)`: unwraps `Closure` args via
+  `applyClosure`, accepts `length` as a nullary method, and dispatches to the
+  native `recv[name]` method (throwing a clear `TypeError` when absent).
+
+## 0.4.0 — KW4 (keyword-parameter & argument emission)
+
+Replaces the KW1 compile-compat stubs with **real** keyword-parameter and
+keyword-argument emission.  JavaScript has no native keyword-argument call
+form, so — exactly as the TypeScript backend does (spec §4) — keyword
+constructs lower to a zero-dependency **options object**.  No runtime
+library is required; the lowering is direct.
+
+### Added
+
+- `accepts_features()` now declares `KeywordParams` (mirrors `DefaultParams`).
+- **Def side.** A function's `Keyword` params (`def f(a:)` / `def f(a: 1)`)
+  are folded into a single trailing options-object parameter `__kw`; the
+  body prologue destructures it: `const { b, c = <default> } = __kw ?? {};`.
+  A **required** keyword (`Keyword`, `default: None`) destructures bare; an
+  **optional** keyword (`Keyword`, `default: Some(e)`) carries a JS
+  destructuring default `name = <e>`, which fires on `undefined` exactly
+  like SIR optional-keyword semantics.  The `?? {}` guard lets an
+  all-optional callee be called with no options object.  When a keyword
+  name is not a valid JS identifier, the prologue emits the explicit
+  `{ "raw key": sanitized_local }` rename form so the object key still
+  matches the call site.  `__kw` is collision-safe: `sanitize_ident` never
+  produces a leading `__`, so no user parameter can sanitize to it.
+- **Call side.** In a call's `args`, positionals emit as before and every
+  `Expr::KeywordArg` collapses into one trailing object literal:
+  `f(1, b: 2, c: 3)` → `f(1, { b: 2, c: 3 })`; a call with only keyword
+  args → `f({ b: 2 })`; none → no trailing object.  `IndirectCall` routes
+  the same object as the last element of its argument array.  The object
+  key is the raw keyword `name`, matching the callee's destructuring
+  prologue.  A new `emit_call_args` helper drives both call sites.
+
+### Changed
+
+- The `emit_expr` `KeywordArg` arm is now a pure defensive panic: keyword
+  args are peeled off by `emit_call_args` before recursion, so reaching
+  that arm signals a backend bug rather than a deferred feature.
+
+### Tests
+
+- Emitted-shape unit tests: trailing `__kw` object + destructuring
+  prologue (required & optional keywords), keyword-only function, call-side
+  object collapse (positional+keyword, keyword-only, none), and the
+  `IndirectCall` object placement.
+- Execution-proof through `node` (skips gracefully if absent):
+  `add(5)` defaults the omitted keyword to 10 (→15) and
+  `add(5, delta: 100)` supplies it (→105); a required-keyword call
+  `pick(chosen: 7)` returns 7.
+
+## 0.3.0 — P2d (default-parameter emission)
+
+Adds **default parameters** to the JavaScript backend.  JavaScript's
+native default-parameter feature has *exactly* SIR's semantics — the
+default expression is evaluated **at call time**, only when the argument
+is omitted, in **param scope** (so a later default may reference an
+earlier parameter by name).  The lowering is therefore a direct native
+inline: no runtime helper, no call-site padding.
+
+### Added
+
+- `accepts_features()` now declares `DefaultParams`.
+- Emit: a `Param { default: Some(expr) }` lowers to a native JS default
+  parameter `name = <emitted default>`.  The default expression is
+  emitted with the ordinary `emit_expr`, so a default that references an
+  earlier parameter (`VarRef { scope: Param }`) becomes a bare name —
+  valid JavaScript, since earlier params are in scope left-to-right.
+  `Rest`/`KwRest` params are unchanged; `IndirectCall` and closure
+  defaults are unchanged / deferred.
+- `DirectCall` documented and confirmed to emit **only the args present**
+  — the SIR validator allows omitting trailing defaulted args (arity ≥
+  `required_param_count`), and native JS defaults fill the omitted
+  trailing params at call time.  No padding is inserted.
+- Unit tests: `f(a, b = a + 1)` emits `function f(a, b = (a + 1)) {`; a
+  short `DirectCall` (`f(5)`) is not padded.
+- Integration test (`tests/run_with_node.rs`,
+  `default_param_is_call_time_and_param_scoped`): hand-builds a module
+  with `f(a, b = a + 1)` returning `b` and a `main` that calls
+  `print(f(5))` then `print(f(5, 10))`, emits JavaScript, **runs it under
+  `node`**, and asserts stdout `6` then `10` — proving the default is
+  evaluated at call time (depends on the actual `a = 5`) and in param
+  scope (references the earlier param `a`).
+
+## 0.2.0 — D4 (completes SIR16 / v1 parity for the JS backend)
+
+Brings the JavaScript backend to **full SIR16 / v1 parity**: the six
+SIR16 features it previously deferred are now emitted and accepted.
+JavaScript supports all of them natively, so each lowering is direct.
+
+### Added
+
+- `accepts_features()` now declares the v0 surface **plus all of SIR16**:
+  `Floats`, `ShortCircuit`, `Sequences`, `Maps`, `MutableBindings`,
+  `Loops`. (`accepts_intrinsics()` stays empty.)
+- Emit arms for every SIR16 node:
+  - `Floats` — `FloatLit` emits a native `number` literal (already wired
+    in D1; the `Floats` capability is now accepted). `NaN`/`Infinity`/
+    `-Infinity` spelled out; integer-valued floats keep an explicit `.0`.
+  - `ShortCircuit` — `LogicalAnd`/`LogicalOr` emit a truthy-guarded arrow
+    IIFE (`((__l) => __Sir.truthy(__l) ? (rhs) : __l)(lhs)` for And, the
+    mirror for Or) so the rhs runs only when the lhs decides, routing the
+    test through `__Sir.truthy` (only `false`/`nil` are falsy).
+  - `Sequences` — `SeqLit` → `[…]`, `SeqIndex` → `(arr)[i]`, `SeqLen` →
+    `(arr).length`, `SeqSet` → `(arr)[i] = v;` (native arrays).
+  - `Maps` — `MapLit` → `new Map([[k, v], …])`, `MapGet` →
+    `((m).get(k) ?? null)` (missing key reads as nil), `MapSet` →
+    `(m).set(k, v);` (native `Map`, matching the TypeScript backend's
+    representation).
+  - `MutableBindings` — `Assign` (Local/Param/Capture/Global) → a plain
+    `name = value;` reassignment. `let` (never `const`) is already the
+    keyword for every binding, so no const→let pre-pass is needed (unlike
+    the Rust/TypeScript backends).
+  - `Loops` — `While` → `while (__Sir.truthy(cond)) { … }`; `ForRange` →
+    a direction-aware C-style `for` with `stop`/`step` evaluated once into
+    block-scoped `__sir_stop_N`/`__sir_step_N` temporaries (a per-module
+    monotonic counter keeps them deterministic); `ForEach` → `for (let x
+    of iter) { … }`.
+- `emit_block_as_stmts` helper for loop bodies (trailing value discarded;
+  a bare `nil` value is dropped).
+- Unit tests for every new emit arm (floats incl. specials, short-circuit
+  And/Or, seq build/index/len, map lit/get, assign, seq-set, map-set,
+  while, for-range incl. distinct nested temporaries, for-each).
+- Integration tests (`tests/run_with_node.rs`) that hand-build SIR16
+  modules, emit JavaScript, **run it under `node`**, and assert stdout:
+  float arithmetic promotion (`3.5`), short-circuit (rhs not evaluated),
+  `or` first-truthy (`7`), sequence build/index/len/set, map
+  build/get/set (incl. missing-key → nil), a `while` counter, a
+  for-range accumulator (and a descending step), for-each over a
+  sequence, and mutable reassignment (`42`).
+
+### Still deferred (rejected at the capability check)
+
+- String interpolation — `StrConcat` (`StringInterpolation`).
+- OOP & exceptions — `ClassDef`/`ModuleDef`/`SingletonClassDef`,
+  `TryCatch`, and the `Instance`/`ClassVar`/`Const` scopes (`Classes`,
+  `Modules`, `InstanceVars`, `ClassVars`, `Constants`, `Exceptions`).
+- `TailCalls` (V8 has no reliable TCO) and `Intrinsics` (empty
+  whitelist).
+
+The remaining `panic!` arms in `emit` cover only these unaccepted nodes,
+so they are defence-in-depth (unreachable for a capability-checked
+module), never reachable for an accepted feature.
+
+## 0.1.0 — D1 (initial runnable core)
+
+The first slice of the SIR18 JavaScript backend: the v0 expression /
+statement core, emitting self-contained JavaScript that runs under
+Node.js with no dependencies.
+
+### Added
+
+- `JavaScriptBackend` implementing `semantic_ir::Backend`:
+  - `target_tag()` → `"javascript"`.
+  - `accepts_features()` → the **v0 feature set** (`Closures`, `Pairs`,
+    `Symbols`, `Strings`, `DynamicTyping`, `OptionalTypeAnnotations`,
+    `MutualRecursion`, `Globals`).
+  - `accepts_intrinsics()` → empty.
+  - `compile()` → validate → capability check → reject `TailCalls` →
+    lower to JavaScript.
+- `compile(&module)` convenience free function.
+- Inlined `__Sir` runtime (`src/runtime.rs`): an IIFE with `Sym`/`Pair`/
+  `Closure` classes, symbol interning, `applyClosure`, SIR `truthy`,
+  `format`/`print`, and a builtins dispatch table (arithmetic,
+  comparison, pair ops, predicates, `len`, `range`). Pasted verbatim
+  into every artifact, so output is fully self-contained.
+- Emitter (`src/emit.rs`) for the v0 nodes:
+  - Literals: `IntLit`, `FloatLit`, `BoolLit`, `NilLit`, `StrLit`,
+    `SymLit`.
+  - `VarRef` by scope: `Local`/`Param`/`Capture`/`Global` → bare
+    identifier; `Builtin` → `__Sir.builtinClosure("name")`.
+  - `If` → SIR-truthy ternary.
+  - `Block`: function-body form (flat `{ …; return v; }`) and
+    expression form (IIFE).
+  - `DirectCall`, `IndirectCall` (`__Sir.applyClosure`), `BuiltinCall`
+    (native-infix specialisation for `+ - * / % = != < > <= >=`,
+    `not`/`neg`/`len`, `__Sir.print`; everything else via
+    `__Sir.callBuiltin`).
+  - `Function` declarations (captures prepended before params; native
+    `...rest` for rest params).
+  - `LetBinding`/`LetStarBinding`/`ExprStmt`; the `_init` `global_set`
+    pattern renders as a direct assignment.
+  - `MakeClosure` → `new __Sir.Closure((..._a) => fn(caps…, ..._a))`.
+  - Module wrapping: banner comment, `"use strict";`, inlined runtime,
+    module globals, function declarations, then `_init()` and `main()`.
+- `sanitize_ident` (reserved words → `_$` prefix; invalid chars →
+  `_$<hex>`; empty → `_$empty`), JS string escaping, and float
+  formatting (explicit decimal point; `NaN`/`Infinity` handled).
+- Tests: unit coverage for `sanitize_ident` and each emit arm, a
+  determinism test, and an end-to-end integration test
+  (`tests/run_with_node.rs`) that lowers Twig → SIR → JS and **executes
+  the result under `node`** (add → `3`, factorial → `120`,
+  closure-adder → `8`), skipping execution when `node` is absent.
+- Package scaffolding: `Cargo.toml`, `README.md`, this changelog, and
+  `BUILD` / `BUILD_windows`. Registered in the Rust workspace
+  (`code/packages/rust/Cargo.toml`).
+
+### Deferred
+
+The following are intentionally **not** implemented in this milestone and
+are **rejected at the capability check** (their `Feature`s are absent
+from `accepts_features()`), so a module that uses them is turned away
+rather than mis-compiled:
+
+- Collections — `SeqLit`/`SeqIndex`/`SeqLen`, `MapLit`/`MapGet`
+  (`Sequences`, `Maps`).
+- Loops — `While`/`ForRange`/`ForEach` (`Loops`).
+- Mutation — mutable `Assign`, `SeqSet`/`MapSet` (`MutableBindings`).
+- Short-circuit — `LogicalAnd`/`LogicalOr` (`ShortCircuit`).
+- Floats as a declared feature (`FloatLit` *emission* is implemented,
+  but the `Floats` capability is not yet accepted).
+- String interpolation — `StrConcat` (`StringInterpolation`).
+- OOP & exceptions — `ClassDef`/`ModuleDef`/`SingletonClassDef`,
+  `TryCatch`, and the `Instance`/`ClassVar`/`Const` scopes
+  (`Classes`, `Modules`, `InstanceVars`, `ClassVars`, `Constants`,
+  `Exceptions`).
+- `TailCalls` (V8 has no reliable TCO) and `Intrinsics` (empty
+  whitelist) — fundamentally unsupported / out of scope for v0.

@@ -4,6 +4,6 @@ _targets = [
     rust_library(
         name = "symbolic-vm",
         srcs = ["src/**/*.rs", "tests/**/*.rs"],
-        deps = ["symbolic-ir"],
+        deps = ["symbolic-ir", "cas-simplify"],
     ),
 ]

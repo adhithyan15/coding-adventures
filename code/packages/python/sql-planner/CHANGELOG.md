@@ -1,5 +1,131 @@
 # Changelog
 
+## [0.44.0] - 2026-06-19
+
+### Added
+
+- **`CreateTriggerStmt.if_not_exists: bool`** — new field on the
+  `CreateTriggerStmt` AST node (default `False`).  Set to `True` when the
+  SQL source contains `CREATE TRIGGER IF NOT EXISTS`.
+
+- **`CreateTrigger.if_not_exists: bool`** — matching field on the
+  `CreateTrigger` logical-plan node so the flag survives the
+  plan → IR → VM pipeline.
+
+- **`_plan_create_trigger`** passes `if_not_exists` through to the plan
+  node unchanged.
+
+- `UpdateStmt` (AST) and `Update` (plan node) each gain an `on_conflict:
+  str | None` field carrying the optional `UPDATE OR <action>` strategy.
+  `None` means default ABORT behaviour.  Valid non-`None` values are
+  `"REPLACE"`, `"IGNORE"`, `"ABORT"`, `"FAIL"`, and `"ROLLBACK"`.
+  The planner's `_plan_update()` forwards the field through without
+  transformation so downstream stages can act on it.
+
+## [0.43.0] - 2026-05-23
+
+### Added
+
+- ``_expand_returning_wildcards()`` helper used by the INSERT,
+  UPDATE, and DELETE planners.  Walks the RETURNING list and
+  replaces every :class:`Wildcard` entry with one
+  ``Column(table, col)`` per table column in declaration order.
+  Required because the codegen rejects Wildcards in expression
+  position; expansion must happen before resolution.
+
+## [0.42.0] - 2026-05-23
+
+### Added
+
+- ``TableRef`` (AST) and ``Scan`` (plan node) gain ``index_hint:
+  str | None`` and ``not_indexed: bool`` fields carrying SQLite's
+  ``INDEXED BY`` / ``NOT INDEXED`` query hints from FROM through to
+  the optimizer.
+- ``_try_index_scan`` honours both hints: ``not_indexed=True``
+  short-circuits to a full scan; ``index_hint=<name>`` filters
+  candidate indexes to just the named one and raises
+  ``IndexNotFound`` if no such index exists on the table.
+- New error class ``IndexNotFound`` in ``sql_planner.errors``.
+
+## [0.41.0] - 2026-05-23
+
+### Added
+
+- ``CreateTableStmt`` (AST) and ``CreateTable`` (plan node) gained a
+  ``strict: bool = False`` field carrying SQLite's STRICT trailing
+  table-option through the plan layer.  Forwarded to the codegen IR and
+  ultimately to ``Backend.create_table(strict=...)``.
+
+## [0.40.0] - 2026-05-23
+
+### Added
+
+- ``AlterTableStmt`` and the plan-side ``AlterTable`` both gained
+  three new optional fields — ``rename_to``, ``rename_column``, and
+  ``drop_column`` — alongside the existing ``column`` field.  Exactly
+  one is non-None per instance; the codegen forwards whichever is
+  set.  The previous shape (only ``column``) is preserved when ADD
+  is used, so no breakage for callers that already construct
+  AlterTable nodes.
+- ``_plan_alter_table`` propagates all four optional fields from
+  the AST to the plan node.
+
+## [0.39.0] - 2026-05-23
+
+### Added
+
+- **Implicit COLLATE propagation** from a column's declared collation
+  into comparison operators referencing that column.  Mirrors SQLite::
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+      SELECT * FROM users WHERE email = 'Adhithya@example.com';
+      -- ↑ implicitly NOCASE — case-insensitive match
+
+  Implementation: new ``_propagate_column_collation`` pass runs after
+  ``_resolve`` on WHERE / HAVING / UPDATE-WHERE / DELETE-WHERE
+  predicates.  For each ``BinaryExpr`` comparison whose operand is a
+  resolved ``Column`` with a declared collation (looked up via
+  ``SchemaProvider.column_collation`` introduced in 0.38), both
+  operands get wrapped in the matching scalar function
+  (``lower()`` for NOCASE, ``rtrim()`` for RTRIM).  ``Between``
+  predicates propagate the same way (collation flows to all three
+  operands).
+
+- Known limitations:
+  - Explicit ``COLLATE BINARY`` postfix does NOT override a
+    column-declared NOCASE (because the explicit-BINARY postfix
+    becomes an identity transform at the adapter, leaving no marker
+    for this pass to recognise).  Override with ``COLLATE NOCASE``
+    or ``COLLATE RTRIM`` instead — those work as expected.
+  - HAVING clauses don't propagate column collation through GROUP BY
+    (the column reference there is to the grouped value, not the
+    underlying table column).  Use explicit ``COLLATE NOCASE`` on
+    the HAVING.
+
+## [0.38.0] - 2026-05-23
+
+### Added
+
+- ``_resolve_order_key`` consults ``schema.column_collation(table,
+  column)`` when an ORDER BY references a column without an explicit
+  ``COLLATE`` override.  This lets ``CREATE TABLE t(name TEXT COLLATE
+  NOCASE); SELECT * FROM t ORDER BY name`` sort case-insensitively
+  without the user repeating the COLLATE clause on every query —
+  matching SQLite.  Lookup is via ``getattr(schema, 'column_collation',
+  None)`` so minimal schema providers (e.g. ``InMemorySchemaProvider``
+  used in unit tests) that don't expose the method are silently
+  treated as "no declared collation".
+
+## [0.37.0] - 2026-05-22
+
+### Added
+
+- ``SortKey.collation: str | None`` on both the AST
+  (``sql_planner.ast.SortKey``) and the plan
+  (``sql_planner.plan.SortKey``).  Carries SQLite's ``COLLATE name``
+  clause through to the codegen.  ``None`` means BINARY (default).
+- Planner threads ``collation`` from AST → plan SortKey unchanged.
+
 ## [0.36.0] - 2026-05-21
 
 ### Added

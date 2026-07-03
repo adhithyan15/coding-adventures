@@ -1,0 +1,1 @@
+var x=function*(){yield 1};

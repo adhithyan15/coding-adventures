@@ -68,18 +68,34 @@ use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType};
 /// explicitly. The execution engine must maintain type safety at all times.
 ///
 /// ```text
-/// ┌──────────┬───────────────────────────────────────────────┐
-/// │ Variant  │ Description                                   │
-/// ├──────────┼───────────────────────────────────────────────┤
-/// │ I32(i32) │ 32-bit signed integer (also used for bools)   │
-/// │ I64(i64) │ 64-bit signed integer                         │
-/// │ F32(f32) │ 32-bit IEEE 754 float                         │
-/// │ F64(f64) │ 64-bit IEEE 754 float                         │
-/// └──────────┴───────────────────────────────────────────────┘
+/// ┌────────────────────┬─────────────────────────────────────────────────┐
+/// │ Variant            │ Description                                      │
+/// ├────────────────────┼─────────────────────────────────────────────────┤
+/// │ I32(i32)           │ 32-bit signed integer (also used for bools and   │
+/// │                    │ for `i31ref` payloads — see L3b-3a-3a)           │
+/// │ I64(i64)           │ 64-bit signed integer                            │
+/// │ F32(f32)           │ 32-bit IEEE 754 float                            │
+/// │ F64(f64)           │ 64-bit IEEE 754 float                            │
+/// │ Ref(Option<u32>)   │ A WasmGC reference: `None` = null, `Some(h)` = a │
+/// │                    │ handle into the engine's GC object heap          │
+/// │                    │ (L3b-3a-3b — the `$LispyPair` cons cell)         │
+/// └────────────────────┴─────────────────────────────────────────────────┘
 /// ```
+///
+/// ## Why an `i31ref` is an `I32`, but a struct ref is a `Ref`
+///
+/// In the uniform-anyref lisp value model, *every* lisp value is a WasmGC
+/// `anyref`.  Small integers are boxed as `i31ref` — but an `i31ref` is just a
+/// tagged 31-bit payload with no heap identity, so we carry it as its plain
+/// `I32` payload (the box/unbox ops are stack-identity no-ops, L3b-3a-3a).  A
+/// **cons cell**, by contrast, is a heap object with identity and mutable
+/// fields, so it needs a real reference: `Ref(Some(handle))` points at a
+/// `GcStruct` in the engine's `gc_heap`.  `Ref(None)` is the null reference
+/// (`ref.null`), which in the lisp model is how `nil` is represented.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum WasmValue {
     /// 32-bit integer. Wrapping arithmetic via `i32::wrapping_*` methods.
+    /// Also carries `i31ref` payloads (an `i31ref` ≡ its `i32` payload).
     I32(i32),
     /// 64-bit integer. Wrapping arithmetic via `i64::wrapping_*` methods.
     I64(i64),
@@ -87,7 +103,23 @@ pub enum WasmValue {
     F32(f32),
     /// 64-bit IEEE 754 double-precision float.
     F64(f64),
+    /// A WasmGC reference value. `None` is the null reference (`ref.null`);
+    /// `Some(handle)` is a non-null reference into the engine's GC object heap
+    /// (`gc_heap[handle]`). Used for `$LispyPair` cons cells (L3b-3a-3b).
+    Ref(Option<u32>),
 }
+
+/// The typed-stack tag we use for [`WasmValue::Ref`] when round-tripping through
+/// the GenericVM's `TypedVMValue`.  `0x6E` is the WASM binary type byte for
+/// `anyref`, which is exactly what a lisp reference value *is* in the
+/// uniform-anyref model.  The handle (or the null sentinel) rides along in the
+/// `Value::Int` payload.
+const REF_TAG: u8 = 0x6E;
+
+/// The `Value::Int` payload we use to mark a *null* reference on the typed
+/// stack.  A real heap handle is a `u32` (always `>= 0` when widened to `i64`),
+/// so `-1` is an unambiguous "this is `ref.null`" marker.
+const REF_NULL_SENTINEL: i64 = -1;
 
 impl WasmValue {
     /// Convert to a [`TypedVMValue`] for the GenericVM's typed stack.
@@ -112,6 +144,15 @@ impl WasmValue {
                 value_type: 0x7C, // F64
                 value: Value::Float(v),
             },
+            // A GC reference: tag as anyref (0x6E), carry the handle (or the
+            // null sentinel) in the integer payload.
+            WasmValue::Ref(handle) => TypedVMValue {
+                value_type: REF_TAG,
+                value: Value::Int(match handle {
+                    Some(h) => h as i64,
+                    None => REF_NULL_SENTINEL,
+                }),
+            },
         }
     }
 
@@ -134,6 +175,11 @@ impl WasmValue {
                 Value::Float(v) => Ok(WasmValue::F64(*v)),
                 _ => Err(TrapError::new("type mismatch: expected f64")),
             },
+            REF_TAG => match &tv.value { // anyref / GC reference
+                Value::Int(v) if *v == REF_NULL_SENTINEL => Ok(WasmValue::Ref(None)),
+                Value::Int(v) => Ok(WasmValue::Ref(Some(*v as u32))),
+                _ => Err(TrapError::new("type mismatch: expected anyref")),
+            },
             other => Err(TrapError::new(format!(
                 "unknown value type: 0x{:02X}",
                 other
@@ -143,22 +189,21 @@ impl WasmValue {
 
     /// Create the zero/default value for a given WASM type.
     ///
-    /// For WasmGC reference types (`Anyref`, `I31ref`, `StructRef`) the
-    /// execution engine currently has no heap; we return `I32(0)` as a
-    /// null-pointer sentinel so the interpreter can initialise locals without
-    /// panicking.  When full GC execution support lands these arms will be
-    /// replaced with proper null-reference values.
+    /// For the reference types (`Anyref`, `StructRef`) the default is the
+    /// **null reference** `Ref(None)` — the correct WasmGC zero value for a
+    /// nullable reference, and (in the lisp model) the representation of `nil`.
+    /// `I31ref` is the exception: an `i31ref` is carried as its `i32` payload
+    /// (L3b-3a-3a), so its zero value is `I32(0)`, not a null reference.
     pub fn default_for(vt: ValueType) -> Self {
         match vt {
             ValueType::I32 => WasmValue::I32(0),
             ValueType::I64 => WasmValue::I64(0),
             ValueType::F32 => WasmValue::F32(0.0),
             ValueType::F64 => WasmValue::F64(0.0),
-            // GC reference types: represent as null (I32 0) until the
-            // wasm-execution engine grows native GC support.
-            ValueType::Anyref | ValueType::I31ref | ValueType::StructRef(_) => {
-                WasmValue::I32(0)
-            }
+            // An `i31ref` is its `i32` payload, so its zero value is I32(0).
+            ValueType::I31ref => WasmValue::I32(0),
+            // Nullable GC reference types default to the null reference.
+            ValueType::Anyref | ValueType::StructRef(_) => WasmValue::Ref(None),
         }
     }
 
@@ -764,6 +809,24 @@ pub enum DecodedOperand {
     F32(f32),
     /// f64 constant.
     F64(f64),
+    /// A WasmGC instruction's decoded immediates: the `0xFB` sub-opcode plus the
+    /// (up to two) index immediates it carries.  Unused indices are `0`.
+    ///
+    /// | sub  | instruction  | type_idx | field_idx |
+    /// |------|--------------|----------|-----------|
+    /// | 0x00 | struct.new   | ✓        | —         |
+    /// | 0x02 | struct.get   | ✓        | ✓         |
+    /// | 0x04 | struct.set   | ✓        | ✓         |
+    /// | 0x1C | i31.new      | —        | —         |
+    /// | 0x1D | i31.get_s    | —        | —         |
+    ///
+    /// Carrying all three together (rather than a bare `Int(sub)`) lets the
+    /// single `0xFB` handler dispatch *and* read its indices from one place.
+    Gc {
+        sub: u8,
+        type_idx: u32,
+        field_idx: u32,
+    },
 }
 
 /// Decode all instructions in a function body.
@@ -775,6 +838,81 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
     while offset < code.len() {
         let opcode_byte = code[offset];
         offset += 1;
+
+        // ── WasmGC two-byte opcodes: `0xFB <sub-opcode> [immediates]` ──────────
+        //
+        // The MVP opcode table (`get_opcode`) is single-byte and doesn't know
+        // the `0xFB` GC prefix, so we decode it explicitly: read the sub-opcode
+        // byte, then any index immediates it carries, and bundle them in a
+        // `Gc { sub, type_idx, field_idx }` operand. The engine's `0xFB` handler
+        // dispatches on `sub` and reads the indices from there.
+        //
+        //   sub  instruction   immediates
+        //   0x00 struct.new    <type_idx>
+        //   0x02 struct.get    <type_idx> <field_idx>
+        //   0x04 struct.set    <type_idx> <field_idx>
+        //   0x1C i31.new       (none)
+        //   0x1D i31.get_s     (none)
+        if opcode_byte == 0xFB {
+            let sub = if offset < code.len() {
+                let s = code[offset];
+                offset += 1;
+                s
+            } else {
+                0
+            };
+            let (type_idx, field_idx) = match sub {
+                // struct.new: one index immediate (the struct type).
+                0x00 => {
+                    let (t, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (t, 0)
+                }
+                // ref.test (0x14) / ref.test null (0x15): one heap-type immediate
+                // (LANG77 L3b-3a-4). For McCarthy `pair?` the heap type is the
+                // concrete `$LispyPair` struct type, whose small typeidx encodes
+                // identically as a signed or unsigned LEB, so we read it as a
+                // typeidx. (Abstract heap types — negative sLEB — are not used.)
+                0x14 | 0x15 => {
+                    let (t, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (t, 0)
+                }
+                // struct.get / struct.set: two index immediates (type, field).
+                0x02 | 0x04 => {
+                    let (t, sz1) = decode_leb_u32(code, offset);
+                    let (f, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (t, f)
+                }
+                // i31.new / i31.get_s (and any unknown sub-opcode): no immediates.
+                _ => (0, 0),
+            };
+            instructions.push(DecodedInstruction {
+                opcode: 0xFB,
+                operand: DecodedOperand::Gc { sub, type_idx, field_idx },
+            });
+            continue;
+        }
+
+        // ── `ref.null` (`0xD0 <heap_type>`) ────────────────────────────────────
+        //
+        // `ref.null` is a *single-byte* primary opcode (not `0xFB`-prefixed)
+        // followed by a one-byte heap-type immediate (the encoder emits `none` =
+        // `0x0F`).  We must consume that immediate explicitly, otherwise the
+        // `0x0F` would be mis-decoded as a separate instruction.  The heap type
+        // doesn't change runtime behaviour (every null is the same null in our
+        // model), so we drop it and carry no operand.
+        if opcode_byte == 0xD0 {
+            if offset < code.len() {
+                offset += 1; // skip the heap-type byte
+            }
+            instructions.push(DecodedInstruction {
+                opcode: 0xD0,
+                operand: DecodedOperand::None,
+            });
+            continue;
+        }
 
         let info = get_opcode(opcode_byte);
         let operand = if let Some(info) = info {
@@ -800,23 +938,17 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
         return (DecodedOperand::None, 0);
     }
 
-    // Handle multi-immediate opcodes: memarg, call_indirect
-    if immediates.len() == 2 {
-        if immediates[0] == "memarg" || (immediates[0] == "memarg" && immediates[1] == "memarg") {
-            // This shouldn't happen — memarg is a single immediate label.
-        }
-        if immediates[0] == "typeidx" && immediates[1] == "tableidx" {
-            // call_indirect
-            let (type_idx, sz1) = decode_leb_u32(code, offset);
-            let (table_idx, sz2) = decode_leb_u32(code, offset + sz1);
-            return (
-                DecodedOperand::CallIndirect {
-                    type_idx,
-                    table_idx,
-                },
-                sz1 + sz2,
-            );
-        }
+    // Handle multi-immediate opcodes: call_indirect (typeidx + tableidx).
+    if immediates.len() == 2 && immediates[0] == "typeidx" && immediates[1] == "tableidx" {
+        let (type_idx, sz1) = decode_leb_u32(code, offset);
+        let (table_idx, sz2) = decode_leb_u32(code, offset + sz1);
+        return (
+            DecodedOperand::CallIndirect {
+                type_idx,
+                table_idx,
+            },
+            sz1 + sz2,
+        );
     }
 
     // Single immediate
@@ -984,6 +1116,28 @@ pub struct SavedFrame {
     /// The br_table targets table for the caller, saved so the callee can
     /// overwrite `ctx.br_table_targets` and restore it on return (LANG34).
     pub br_table_targets: Vec<Vec<u32>>,
+    /// The caller's WasmGC operand table, saved so the callee can overwrite
+    /// `ctx.gc_ops` and restore it on return (LANG77 L3b-3a-3b).
+    pub gc_ops: Vec<GcOp>,
+}
+
+/// A heap-allocated WasmGC struct object — the engine's representation of one
+/// `struct.new` allocation.  For McCarthy Lisp this is a `$LispyPair` cons cell:
+/// `type_idx` identifies the struct type, and `fields` holds the field values
+/// (`fields[0]` = car, `fields[1]` = cdr).  Each field is itself an `anyref`
+/// (an `I32` i31 payload, or a nested `Ref` to another cons / null).
+///
+/// The heap is an **append-only arena**: `struct.new` pushes a new object and
+/// returns its index as the handle; there is no reclamation.  That is correct
+/// and sufficient for terminating lisp evaluation — the total number of
+/// allocations is bounded by the VM's instruction budget, so a program cannot
+/// allocate unboundedly without first exhausting its step budget.
+#[derive(Debug, Clone, PartialEq)]
+pub struct GcStruct {
+    /// The struct type index this object was allocated with (`struct.new N`).
+    pub type_idx: u32,
+    /// The field values, in declaration order.
+    pub fields: Vec<WasmValue>,
 }
 
 /// The WASM execution context — all runtime state for WASM instructions.
@@ -1005,11 +1159,79 @@ pub struct WasmExecutionContext {
     /// `[l0, l1, ..., l_{n-1}, default]`.  Saved/restored on every call so
     /// that the callee's table doesn't collide with the caller's (LANG34).
     pub br_table_targets: Vec<Vec<u32>>,
+    /// Per-function WasmGC operand table (LANG77 L3b-3a-3b).  Each `0xFB`
+    /// instruction stores an index into this Vec as its operand; the entry
+    /// holds the decoded `(sub, type_idx, field_idx)`.  Like `br_table_targets`
+    /// this is per-function and saved/restored across calls.
+    pub gc_ops: Vec<GcOp>,
+    /// The WasmGC object heap (LANG77 L3b-3a-3b) — an append-only arena of
+    /// `struct.new` allocations.  A `WasmValue::Ref(Some(h))` indexes into this
+    /// Vec.  **Module-global**: it persists across calls within one run (a cons
+    /// built in a callee and returned stays live), so it is *not* saved/restored
+    /// per call.
+    pub gc_heap: Vec<GcStruct>,
+    /// Field counts per struct type index (LANG77 L3b-3a-3b).  `struct.new N`
+    /// pops `struct_field_counts[N]` field values.  Supplied by the embedder via
+    /// [`WasmExecutionEngine::set_struct_field_counts`] (the parser does not yet
+    /// surface struct type definitions to the engine); empty by default, in
+    /// which case any `struct.*` op is a clean trap.  Module-global / constant.
+    pub struct_field_counts: Vec<u32>,
+}
+
+/// One decoded WasmGC instruction's immediates — see [`DecodedOperand::Gc`].
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct GcOp {
+    /// The `0xFB` sub-opcode (e.g. `0x00` struct.new, `0x02` struct.get).
+    pub sub: u8,
+    /// The struct type index immediate (0 when the op carries none).
+    pub type_idx: u32,
+    /// The field index immediate (0 when the op carries none).
+    pub field_idx: u32,
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Section 10: Instruction handlers
 // ══════════════════════════════════════════════════════════════════════════════
+
+// ── Helper: convert a decoded operand into a VM operand ───────────────────
+//
+// Most operands collapse to a single `Operand::Index`.  The two complex
+// variants — `BrTable` (variable-length label vector) and `Gc` (the WasmGC
+// sub-opcode + its index immediates) — don't fit in one `usize`, so they are
+// spilled into per-function side-tables (`br_table_targets`, `gc_ops`) and the
+// operand becomes an index into the relevant table.  Both instruction-build
+// sites (top-level entry and nested callee) call this so the bookkeeping lives
+// in exactly one place.
+fn convert_operand(
+    operand: &DecodedOperand,
+    br_table_targets: &mut Vec<Vec<u32>>,
+    gc_ops: &mut Vec<GcOp>,
+) -> Option<Operand> {
+    match operand {
+        DecodedOperand::None => None,
+        DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
+        DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
+        DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
+        DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
+        DecodedOperand::CallIndirect { type_idx, .. } => Some(Operand::Index(*type_idx as usize)),
+        DecodedOperand::BrTable { labels, default_label } => {
+            let idx = br_table_targets.len();
+            let mut table: Vec<u32> = labels.clone();
+            table.push(*default_label);
+            br_table_targets.push(table);
+            Some(Operand::Index(idx))
+        }
+        DecodedOperand::Gc { sub, type_idx, field_idx } => {
+            let idx = gc_ops.len();
+            gc_ops.push(GcOp {
+                sub: *sub,
+                type_idx: *type_idx,
+                field_idx: *field_idx,
+            });
+            Some(Operand::Index(idx))
+        }
+    }
+}
 
 // ── Helper: pop a WasmValue from the VM's typed stack ─────────────────────
 fn pop_wasm(vm: &mut GenericVM) -> Result<WasmValue, VMError> {
@@ -1026,6 +1248,24 @@ fn push_wasm(vm: &mut GenericVM, val: WasmValue) {
 fn peek_wasm(vm: &GenericVM) -> Result<WasmValue, VMError> {
     let tv = vm.peek_typed()?;
     WasmValue::from_typed(&tv).map_err(|e| VMError::GenericError(e.message))
+}
+
+// ── Helper: pop a *non-null* struct reference handle ──────────────────────
+//
+// Used by `struct.get` / `struct.set`.  A null reference is a clean trap (the
+// WasmGC spec traps on a null struct access), and any non-reference value
+// (e.g. a bare i31 payload) is a type mismatch — also a clean trap, never a
+// panic.  `op` names the operation for the error message.
+fn pop_struct_ref(vm: &mut GenericVM, op: &str) -> Result<u32, VMError> {
+    match pop_wasm(vm)? {
+        WasmValue::Ref(Some(h)) => Ok(h),
+        WasmValue::Ref(None) => Err(VMError::GenericError(format!(
+            "{op}: null reference (cannot access a field of nil)"
+        ))),
+        other => Err(VMError::GenericError(format!(
+            "{op}: expected a struct reference, got {other:?}"
+        ))),
+    }
 }
 
 // ── Helper: get operand as integer ────────────────────────────────────────
@@ -1282,6 +1522,139 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     vm.register_context_opcode(0x42, |vm, instr, _code, _ctx| {
         let val = operand_int(instr);
         push_wasm(vm, WasmValue::I64(val));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // WasmGC prefix (0xFB) — LANG77 / McCarthy L3b-3a-3a + L3b-3a-3b.
+    //
+    // The decoder bundles the sub-opcode and its index immediates into the
+    // `ctx.gc_ops` side-table; the instruction's operand is the index into it.
+    // We dispatch on the sub-opcode:
+    //
+    //   - `i31.new`   (0x1C) / `i31.get_s` (0x1D): an `i31ref` ≡ its plain `i32`
+    //     payload on the value stack, so both are stack-identity **no-ops** —
+    //     the i32 passes straight through (L3b-3a-3a).
+    //   - `struct.new` (0x00): pop `struct_field_counts[type_idx]` field values
+    //     (last field on top), allocate a `GcStruct` on the heap, push a
+    //     `Ref(Some(handle))` (L3b-3a-3b).
+    //   - `struct.get` (0x02): pop a non-null struct ref, push `fields[field_idx]`.
+    //   - `struct.set` (0x04): pop the new value then a non-null struct ref,
+    //     write `fields[field_idx]`.
+    //
+    // Every failure mode (unknown type/field index, null deref, missing arity,
+    // type mismatch, unknown sub-opcode) is a clean trap, never a panic.
+    vm.register_context_opcode(0xFB, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let op_idx = operand_int(instr) as usize;
+        let op = *ctx.gc_ops.get(op_idx).ok_or_else(|| {
+            VMError::GenericError(format!("WasmGC operand index {op_idx} out of range"))
+        })?;
+        match op.sub {
+            // i31.new / i31.get_s: i31ref ≡ its i32 payload — stack-identity.
+            0x1C | 0x1D => {}
+
+            // struct.new <type_idx>: allocate a cons-like object.
+            0x00 => {
+                let n = *ctx
+                    .struct_field_counts
+                    .get(op.type_idx as usize)
+                    .ok_or_else(|| {
+                        VMError::GenericError(format!(
+                            "struct.new: no field count registered for struct type {} \
+                             (call set_struct_field_counts)",
+                            op.type_idx
+                        ))
+                    })? as usize;
+                // Pop the fields. WasmGC pushes field 0 first, so field (n-1) is
+                // on top: pop into the tail of the Vec, then it reads correctly.
+                let mut fields = vec![WasmValue::I32(0); n];
+                for slot in fields.iter_mut().rev() {
+                    *slot = pop_wasm(vm)?;
+                }
+                let handle = ctx.gc_heap.len() as u32;
+                ctx.gc_heap.push(GcStruct { type_idx: op.type_idx, fields });
+                push_wasm(vm, WasmValue::Ref(Some(handle)));
+            }
+
+            // struct.get <type_idx> <field_idx>: read a field.
+            0x02 => {
+                let handle = pop_struct_ref(vm, "struct.get")?;
+                let obj = ctx.gc_heap.get(handle as usize).ok_or_else(|| {
+                    VMError::GenericError(format!("struct.get: dangling handle {handle}"))
+                })?;
+                let val = *obj.fields.get(op.field_idx as usize).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "struct.get: field {} out of range for struct with {} field(s)",
+                        op.field_idx,
+                        obj.fields.len()
+                    ))
+                })?;
+                push_wasm(vm, val);
+            }
+
+            // struct.set <type_idx> <field_idx>: write a field.
+            0x04 => {
+                // Stack order: ... ref, value (value on top).
+                let val = pop_wasm(vm)?;
+                let handle = pop_struct_ref(vm, "struct.set")?;
+                let obj = ctx.gc_heap.get_mut(handle as usize).ok_or_else(|| {
+                    VMError::GenericError(format!("struct.set: dangling handle {handle}"))
+                })?;
+                let slot = obj.fields.get_mut(op.field_idx as usize).ok_or_else(|| {
+                    VMError::GenericError(format!(
+                        "struct.set: field {} out of range",
+                        op.field_idx
+                    ))
+                })?;
+                *slot = val;
+            }
+
+            // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
+            // 1 if it is an instance of the heap type, else 0 (LANG77 L3b-3a-4).
+            // This is what McCarthy `pair?` lowers to: "is this value a cons
+            // cell?" — i.e. a (non-null) `$LispyPair` struct reference.
+            //
+            // Our value model has exactly one struct type ($LispyPair), so a
+            // `struct.new` result — the only way to make a `Ref(Some(_))` — is
+            // always that type. A test against any concrete struct type is
+            // therefore "is it a struct ref": `Ref(Some(_))` → 1; an `i31`
+            // payload (`I32`) or the null reference → 0. The `0x15` (nullable)
+            // variant additionally accepts the null reference.
+            0x14 | 0x15 => {
+                let nullable = op.sub == 0x15;
+                let matches = match pop_wasm(vm)? {
+                    WasmValue::Ref(Some(_)) => true,
+                    WasmValue::Ref(None) => nullable,
+                    _ => false, // an i31 payload / numeric value is not a struct ref
+                };
+                push_wasm(vm, WasmValue::I32(if matches { 1 } else { 0 }));
+            }
+
+            other => {
+                return Err(VMError::GenericError(format!(
+                    "unsupported WasmGC opcode 0xFB 0x{other:02X}"
+                )));
+            }
+        }
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // ref.null (0xD0 <heap_type>) — push the null reference (LANG77 L3b-3a-3b).
+    // In the lisp value model this is how `nil` is materialised.
+    vm.register_context_opcode(0xD0, |vm, _instr, _code, _ctx| {
+        push_wasm(vm, WasmValue::Ref(None));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // ref.is_null (0xD1) — pop an anyref, push i32 1 if it is the null
+    // reference, else 0 (LANG77 L3b-3a-3b).  A boxed integer (i31 payload, an
+    // `I32`) is a non-null reference, so it yields 0.
+    vm.register_context_opcode(0xD1, |vm, _instr, _code, _ctx| {
+        let is_null = matches!(pop_wasm(vm)?, WasmValue::Ref(None));
+        push_wasm(vm, WasmValue::I32(if is_null { 1 } else { 0 }));
         vm.advance_pc();
         Ok(None)
     });
@@ -2440,6 +2813,7 @@ fn call_function(
         return_pc: vm.pc + 1,
         return_arity: func_type.results.len(),
         br_table_targets: std::mem::take(&mut ctx.br_table_targets),
+        gc_ops: std::mem::take(&mut ctx.gc_ops),
     });
 
     // Initialize callee locals.
@@ -2455,39 +2829,24 @@ fn call_function(
     let decoded = decode_function_body(&body);
     ctx.control_flow_map = build_control_flow_map(&decoded);
 
-    // Convert to VM instructions, and simultaneously build the callee's
-    // br_table targets table.  Each br_table instruction stores its index
-    // into this Vec as its Operand::Index; the Vec entry holds
-    // [l0, l1, ..., l_{n-1}, default_label] so the handler can dispatch
-    // the correct branch depth based on the runtime selector.
+    // Convert to VM instructions, simultaneously building the callee's
+    // per-function side-tables (br_table targets + WasmGC ops).  Each complex
+    // instruction stores its index into the relevant Vec as its Operand::Index.
     let mut callee_br_table_targets: Vec<Vec<u32>> = Vec::new();
+    let mut callee_gc_ops: Vec<GcOp> = Vec::new();
     let mut vm_instructions: Vec<Instruction> = Vec::new();
     for d in &decoded {
-        let operand = match &d.operand {
-            DecodedOperand::None => None,
-            DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
-            DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
-            DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
-            DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
-            DecodedOperand::CallIndirect { type_idx, .. } => {
-                Some(Operand::Index(*type_idx as usize))
-            }
-            DecodedOperand::BrTable { labels, default_label } => {
-                // Record the full label table and use its index as the operand.
-                let idx = callee_br_table_targets.len();
-                let mut table: Vec<u32> = labels.clone();
-                table.push(*default_label);
-                callee_br_table_targets.push(table);
-                Some(Operand::Index(idx))
-            }
-        };
+        let operand =
+            convert_operand(&d.operand, &mut callee_br_table_targets, &mut callee_gc_ops);
         vm_instructions.push(Instruction {
             opcode: d.opcode,
             operand,
         });
     }
-    // Install the callee's br_table targets; the caller's were saved above.
+    // Install the callee's side-tables; the caller's were saved above.  The GC
+    // *heap* and struct field counts are module-global, so they are left alone.
     ctx.br_table_targets = callee_br_table_targets;
+    ctx.gc_ops = callee_gc_ops;
 
     // Set up callee code and jump to start.
     // We need to use a recursive execution approach. Execute the callee inline.
@@ -2535,6 +2894,7 @@ fn call_function(
         ctx.label_stack = frame.label_stack;
         ctx.control_flow_map = frame.control_flow_map;
         ctx.br_table_targets = frame.br_table_targets;
+        ctx.gc_ops = frame.gc_ops;
 
         // Truncate stack to caller's height.
         while vm.typed_stack.len() > frame.stack_height {
@@ -2589,6 +2949,10 @@ pub struct WasmExecutionEngine {
     func_types: Vec<FuncType>,
     func_bodies: Vec<Option<FunctionBody>>,
     host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    /// Field counts per struct type index (LANG77 L3b-3a-3b).  Empty by default;
+    /// set with [`WasmExecutionEngine::set_struct_field_counts`].  Flows into the
+    /// execution context so `struct.new N` knows how many fields to pop.
+    struct_field_counts: Vec<u32>,
 }
 
 impl WasmExecutionEngine {
@@ -2607,7 +2971,19 @@ impl WasmExecutionEngine {
             func_types: config.func_types,
             func_bodies: config.func_bodies,
             host_functions: config.host_functions,
+            struct_field_counts: Vec::new(),
         }
+    }
+
+    /// Register the field counts of the module's WasmGC struct types, indexed by
+    /// type index: `counts[N]` is the number of fields of struct type `N`, which
+    /// is how many values `struct.new N` pops.  The wasm parser does not yet
+    /// surface struct type definitions to the engine, so the embedder supplies
+    /// them here (LANG77 L3b-3a-3b; populated automatically from the parsed
+    /// module once that lands, L3b-3a-3c).  Returns `&mut self` for chaining.
+    pub fn set_struct_field_counts(&mut self, counts: Vec<u32>) -> &mut Self {
+        self.struct_field_counts = counts;
+        self
     }
 
     /// Consume the engine and return the mutated runtime state.
@@ -2659,30 +3035,16 @@ impl WasmExecutionEngine {
         let decoded = decode_function_body(&body);
         let control_flow_map = build_control_flow_map(&decoded);
 
-        // Convert to VM instructions, building the top-level br_table targets
-        // table in lockstep.  Each br_table instruction stores its index into
-        // this Vec as its Operand::Index.  Nested calls save/restore this on
-        // the saved-frame stack so callee and caller don't collide.
+        // Convert to VM instructions, building the top-level per-function
+        // side-tables (br_table targets + WasmGC ops) in lockstep.  Each complex
+        // instruction stores its index into the relevant Vec as its
+        // Operand::Index.  Nested calls save/restore these on the saved-frame
+        // stack so callee and caller don't collide.
         let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
+        let mut gc_ops: Vec<GcOp> = Vec::new();
         let mut vm_instructions: Vec<Instruction> = Vec::new();
         for d in &decoded {
-            let operand = match &d.operand {
-                DecodedOperand::None => None,
-                DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
-                DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
-                DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
-                DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
-                DecodedOperand::CallIndirect { type_idx, .. } => {
-                    Some(Operand::Index(*type_idx as usize))
-                }
-                DecodedOperand::BrTable { labels, default_label } => {
-                    let idx = br_table_targets.len();
-                    let mut table: Vec<u32> = labels.clone();
-                    table.push(*default_label);
-                    br_table_targets.push(table);
-                    Some(Operand::Index(idx))
-                }
-            };
+            let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops);
             vm_instructions.push(Instruction {
                 opcode: d.opcode,
                 operand,
@@ -2718,6 +3080,11 @@ impl WasmExecutionEngine {
             saved_frames: Vec::new(),
             returned: false,
             br_table_targets,
+            gc_ops,
+            // The GC heap starts empty and grows as `struct.new` allocates; it
+            // lives for the whole call so a cons built in a callee survives.
+            gc_heap: Vec::new(),
+            struct_field_counts: self.struct_field_counts.clone(),
         };
 
         let code = CodeObject {
@@ -2921,6 +3288,315 @@ mod tests {
         assert_eq!(result, vec![WasmValue::I32(10)]);
     }
 
+    // ── WasmGC i31 execution (LANG77 / McCarthy L3b-3a-3a) ────────────────────
+
+    #[test]
+    fn test_decode_gc_i31_two_byte_opcodes() {
+        // The decoder must group `0xFB <sub>` into ONE instruction carrying the
+        // sub-opcode, not two single-byte instructions.
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0xFB, 0x1C, 0xFB, 0x1D, 0x0B], // i31.new, i31.get_s, end
+        };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 3, "0xFB-prefixed pairs must collapse to one instr each");
+        assert_eq!(instrs[0].opcode, 0xFB);
+        assert!(matches!(instrs[0].operand, DecodedOperand::Gc { sub: 0x1C, .. }));
+        assert_eq!(instrs[1].opcode, 0xFB);
+        assert!(matches!(instrs[1].operand, DecodedOperand::Gc { sub: 0x1D, .. }));
+        assert_eq!(instrs[2].opcode, 0x0B, "end");
+    }
+
+    #[test]
+    fn test_i31_box_unbox_round_trip() {
+        // fn() -> i32 { i31.get_s(i31.new(i32.const 42)) }  → 42
+        // bytes: i32.const 42 (0x41 0x2A), i31.new (0xFB 0x1C), i31.get_s (0xFB 0x1D), end (0x0B)
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x41, 0x2A, 0xFB, 0x1C, 0xFB, 0x1D, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(42)], "i31 box/unbox must round-trip the integer");
+    }
+
+    #[test]
+    fn test_unsupported_gc_opcode_is_clean_error() {
+        // An unimplemented GC sub-opcode (here 0x77, not a real WasmGC op) must
+        // be a clean Err, not a panic.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code: vec![0xFB, 0x77, 0x0B] };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── WasmGC struct heap + references (LANG77 / McCarthy L3b-3a-3b) ──────────
+
+    /// Helper: build a single-function engine from a raw code body and result
+    /// type, with the given struct field-count table registered.
+    fn gc_engine(
+        code: Vec<u8>,
+        results: Vec<ValueType>,
+        struct_field_counts: Vec<u32>,
+    ) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_struct_field_counts(struct_field_counts);
+        engine
+    }
+
+    #[test]
+    fn test_decode_struct_ops_carry_indices() {
+        // struct.new 0 ; struct.get 0 1 ; struct.set 0 1 — the decoder must read
+        // the type/field index immediates, not mis-decode them as opcodes.
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0xFB, 0x00, 0x00, // struct.new 0
+                0xFB, 0x02, 0x00, 0x01, // struct.get 0 1
+                0xFB, 0x04, 0x00, 0x01, // struct.set 0 1
+                0x0B, // end
+            ],
+        };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 4, "three GC ops + end");
+        assert!(matches!(
+            instrs[0].operand,
+            DecodedOperand::Gc { sub: 0x00, type_idx: 0, .. }
+        ));
+        assert!(matches!(
+            instrs[1].operand,
+            DecodedOperand::Gc { sub: 0x02, type_idx: 0, field_idx: 1 }
+        ));
+        assert!(matches!(
+            instrs[2].operand,
+            DecodedOperand::Gc { sub: 0x04, type_idx: 0, field_idx: 1 }
+        ));
+        assert_eq!(instrs[3].opcode, 0x0B);
+    }
+
+    #[test]
+    fn test_decode_ref_null_consumes_heap_type_byte() {
+        // ref.null none (0xD0 0x0F) must be ONE instruction — the 0x0F heap-type
+        // byte must be consumed, not decoded as a separate instruction.
+        let body = FunctionBody { locals: vec![], code: vec![0xD0, 0x0F, 0xD1, 0x0B] };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 3, "ref.null, ref.is_null, end");
+        assert_eq!(instrs[0].opcode, 0xD0);
+        assert_eq!(instrs[1].opcode, 0xD1, "ref.is_null");
+        assert_eq!(instrs[2].opcode, 0x0B);
+    }
+
+    #[test]
+    fn test_cons_car_round_trip_on_heap() {
+        // The flagship slice goal: (CAR (CONS 7 9)) → 7, run on the engine.
+        //   i32.const 7, i31.new      ; car = box(7)
+        //   i32.const 9, i31.new      ; cdr = box(9)
+        //   struct.new 0              ; $LispyPair{car, cdr}  → ref
+        //   struct.get 0 0            ; read car  → i31ref
+        //   i31.get_s                 ; unbox     → 7
+        let code = vec![
+            0x41, 0x07, 0xFB, 0x1C, // i32.const 7 ; i31.new
+            0x41, 0x09, 0xFB, 0x1C, // i32.const 9 ; i31.new
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x02, 0x00, 0x00, // struct.get 0 0  (car)
+            0xFB, 0x1D, // i31.get_s
+            0x0B, // end
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(7)], "(CAR (CONS 7 9)) must be 7");
+    }
+
+    #[test]
+    fn test_cdr_reads_second_field() {
+        // (CDR (CONS 7 9)) → 9 — confirms field ordering (field 1 = cdr).
+        let code = vec![
+            0x41, 0x07, 0xFB, 0x1C, // box 7
+            0x41, 0x09, 0xFB, 0x1C, // box 9
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xFB, 0x02, 0x00, 0x01, // struct.get 0 1  (cdr)
+            0xFB, 0x1D, // i31.get_s
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(9)]);
+    }
+
+    #[test]
+    fn test_struct_set_mutates_field() {
+        // Build (CONS 7 9), RPLACA-style overwrite car with 42, read it back.
+        //   ... struct.new 0  (ref on stack)
+        //   ref is consumed by struct.get, so we need two refs; instead use a
+        //   local. Simpler: dup via building, set, then get on the same ref by
+        //   keeping it through local 0.
+        // Code: box7, box9, struct.new0 -> local.set 0 ; local.get0, box42,
+        //       struct.set 0 0 ; local.get0, struct.get 0 0, i31.get_s.
+        let code = vec![
+            0x41, 0x07, 0xFB, 0x1C, // box 7
+            0x41, 0x09, 0xFB, 0x1C, // box 9
+            0xFB, 0x00, 0x00, // struct.new 0
+            0x21, 0x00, // local.set 0 (the ref)
+            0x20, 0x00, // local.get 0
+            0x41, 0x2A, 0xFB, 0x1C, // box 42
+            0xFB, 0x04, 0x00, 0x00, // struct.set 0 0  (car := 42)
+            0x20, 0x00, // local.get 0
+            0xFB, 0x02, 0x00, 0x00, // struct.get 0 0  (car)
+            0xFB, 0x1D, // i31.get_s
+            0x0B,
+        ];
+        // One anyref local to hold the cons ref.
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![ValueType::Anyref], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_struct_field_counts(vec![2]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(42)]);
+    }
+
+    #[test]
+    fn test_ref_null_is_null_true_and_false() {
+        // ref.is_null(ref.null)            → 1
+        let code_null = vec![0xD0, 0x0F, 0xD1, 0x0B];
+        let mut e1 = gc_engine(code_null, vec![ValueType::I32], vec![]);
+        assert_eq!(e1.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
+
+        // ref.is_null(struct.new 0)        → 0  (a cons is not null)
+        let code_cons = vec![
+            0x41, 0x01, 0xFB, 0x1C, // box 1
+            0x41, 0x02, 0xFB, 0x1C, // box 2
+            0xFB, 0x00, 0x00, // struct.new 0
+            0xD1, // ref.is_null
+            0x0B,
+        ];
+        let mut e2 = gc_engine(code_cons, vec![ValueType::I32], vec![2]);
+        assert_eq!(e2.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_ref_test_distinguishes_cons_from_atom_and_nil() {
+        // McCarthy `pair?` lowers to `ref.test $LispyPair`. Here $LispyPair is
+        // type 0 (the only struct type), so the op is `0xFB 0x14 0x00`.
+
+        // pair?(atom 5) → 0  — a boxed integer is not a cons.
+        let atom = vec![
+            0x41, 0x05, 0xFB, 0x1C, // i32.const 5 ; i31.new
+            0xFB, 0x14, 0x00, // ref.test $LispyPair
+            0x0B,
+        ];
+        let mut e = gc_engine(atom, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+
+        // pair?(cons 1 2) → 1  — a struct ref IS a cons.
+        let cons = vec![
+            0x41, 0x01, 0xFB, 0x1C, // box 1
+            0x41, 0x02, 0xFB, 0x1C, // box 2
+            0xFB, 0x00, 0x00, // struct.new $LispyPair
+            0xFB, 0x14, 0x00, // ref.test $LispyPair
+            0x0B,
+        ];
+        let mut e = gc_engine(cons, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
+
+        // pair?(nil) → 0  — the null reference is not a cons.
+        let nil = vec![
+            0xD0, 0x0F, // ref.null
+            0xFB, 0x14, 0x00, // ref.test $LispyPair (non-null)
+            0x0B,
+        ];
+        let mut e = gc_engine(nil, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_ref_test_null_variant_accepts_null() {
+        // The nullable `ref.test null` (0x15) additionally matches the null ref.
+        let nil = vec![
+            0xD0, 0x0F, // ref.null
+            0xFB, 0x15, 0x00, // ref.test null $LispyPair
+            0x0B,
+        ];
+        let mut e = gc_engine(nil, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
+    }
+
+    #[test]
+    fn test_struct_get_on_null_traps_cleanly() {
+        // (CAR nil) — struct.get on ref.null must be a clean Err, not a panic.
+        let code = vec![
+            0xD0, 0x0F, // ref.null
+            0xFB, 0x02, 0x00, 0x00, // struct.get 0 0
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_struct_new_without_registered_arity_traps() {
+        // struct.new with no field-count table registered must trap cleanly
+        // (no panic, no silent 0-field object).
+        let code = vec![0xFB, 0x00, 0x00, 0x0B];
+        let mut engine = gc_engine(code, vec![], vec![]); // empty arity table
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_struct_get_out_of_range_field_traps() {
+        // struct.get with a field index past the end traps cleanly.
+        let code = vec![
+            0x41, 0x07, 0xFB, 0x1C, // box 7
+            0x41, 0x09, 0xFB, 0x1C, // box 9
+            0xFB, 0x00, 0x00, // struct.new 0  (2 fields)
+            0xFB, 0x02, 0x00, 0x05, // struct.get 0 5  (out of range)
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_ref_value_round_trips_through_typed_stack() {
+        // A Ref must survive to_typed/from_typed unchanged (handle + null).
+        for v in [WasmValue::Ref(None), WasmValue::Ref(Some(0)), WasmValue::Ref(Some(7))] {
+            let tv = v.to_typed();
+            assert_eq!(WasmValue::from_typed(&tv).unwrap(), v);
+        }
+    }
+
     #[test]
     fn test_wrapping_arithmetic() {
         // Test i32 overflow wraps
@@ -2959,6 +3635,14 @@ mod tests {
         assert_eq!(WasmValue::default_for(ValueType::I64), WasmValue::I64(0));
         assert_eq!(WasmValue::default_for(ValueType::F32), WasmValue::F32(0.0));
         assert_eq!(WasmValue::default_for(ValueType::F64), WasmValue::F64(0.0));
+        // GC reference defaults (LANG77 L3b-3a-3b): an i31ref defaults to its
+        // i32 payload, the nullable reference types default to the null ref.
+        assert_eq!(WasmValue::default_for(ValueType::I31ref), WasmValue::I32(0));
+        assert_eq!(WasmValue::default_for(ValueType::Anyref), WasmValue::Ref(None));
+        assert_eq!(
+            WasmValue::default_for(ValueType::StructRef(0)),
+            WasmValue::Ref(None)
+        );
     }
 
     #[test]

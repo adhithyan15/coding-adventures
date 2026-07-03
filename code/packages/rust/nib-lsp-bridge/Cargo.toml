@@ -1,0 +1,14 @@
+[package]
+name = "nib-lsp-bridge"
+version = "0.2.0"
+edition = "2021"
+description = "NIB-LSP01 + NIB-FMT01 — Nib instantiation of grammar-lsp-bridge; provides nib_language_spec() and the nib-lsp-server binary.  v0.2.0 wires nib-formatter so textDocument/formatting becomes a real LSP capability."
+
+[dependencies]
+grammar-lsp-bridge      = { path = "../grammar-lsp-bridge" }
+coding-adventures-ls00  = { path = "../ls00" }
+nib-formatter           = { path = "../nib-formatter" }
+
+[[bin]]
+name = "nib-lsp-server"
+path = "bin/nib_lsp_server.rs"

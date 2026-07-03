@@ -258,6 +258,120 @@ class Tensor:
         return Tensor(flat, shape, requires_grad, device)
 
     # =====================================================================
+    # NumPy interop (MX11)
+    #
+    # See code/specs/MX11-numpy-interop.md for the full contract.  TL;DR:
+    # numpy is a soft dependency (try/except at call time); both directions
+    # copy (no view sharing); output dtype is always f64.
+    # =====================================================================
+
+    @classmethod
+    def from_numpy(
+        cls,
+        arr,
+        *,
+        requires_grad: bool = False,
+        device: str | None = None,
+    ) -> Tensor:
+        """Build a Tensor from a numpy ndarray.
+
+        Always copies (the source ndarray and the resulting Tensor share
+        no memory — mutating one does not affect the other).  Supported
+        numpy dtypes are cast to Python ``float``; see the MX11 spec for
+        the full dtype matrix.
+
+        Args:
+            arr: numpy.ndarray.  Must have a numeric or bool dtype, must
+                not be empty (any dim == 0 raises ``ValueError``).
+                0-d arrays are accepted and produce a shape-``(1,)``
+                Tensor matching the SumFunction(dim=None) convention.
+            requires_grad: whether the resulting Tensor should track
+                gradients.  Default False.
+            device: device string; defaults to the Tensor default ("cpu").
+
+        Raises:
+            ImportError: if numpy isn't installed.
+            TypeError: if ``arr`` isn't a numpy ndarray, or if its dtype
+                is unsupported (complex, object, string, structured, ...).
+            ValueError: if ``arr`` is empty (any dim == 0).
+        """
+        try:
+            import numpy as np
+        except ImportError:
+            raise ImportError(
+                "numpy is required for Tensor.from_numpy; "
+                "install it with 'pip install numpy'"
+            ) from None
+        if not isinstance(arr, np.ndarray):
+            raise TypeError(
+                f"Tensor.from_numpy expected numpy.ndarray, got "
+                f"{type(arr).__name__}"
+            )
+        # Only numeric and bool dtypes are supported.  ``kind`` letters:
+        #   'f' = float, 'i' = signed int, 'u' = unsigned int, 'b' = bool.
+        # Everything else (complex 'c', object 'O', string 'U'/'S',
+        # structured 'V', ...) raises with a clear message.
+        if arr.dtype.kind not in ("f", "i", "u", "b"):
+            raise TypeError(
+                f"Tensor.from_numpy: unsupported numpy dtype "
+                f"{arr.dtype!r}; only floats, ints, uints, and bool "
+                f"are supported"
+            )
+        if arr.size == 0:
+            raise ValueError(
+                "Tensor.from_numpy: empty arrays (any dim == 0) are not "
+                "supported because ml_framework_core.Tensor requires "
+                "numel >= 1"
+            )
+        # 0-d (scalar) arrays become shape (1,) — matches the
+        # SumFunction(dim=None) scalar convention.
+        if arr.ndim == 0:
+            return cls(
+                [float(arr.item())],
+                (1,),
+                requires_grad=requires_grad,
+                device=device if device is not None else "cpu",
+            )
+        # Non-contiguous (transposed, strided) arrays: copy via
+        # ascontiguousarray so the flat-list extraction matches the
+        # user-visible shape ordering.
+        contig = np.ascontiguousarray(arr)
+        data = [float(x) for x in contig.flatten().tolist()]
+        shape = tuple(int(d) for d in arr.shape)
+        return cls(
+            data,
+            shape,
+            requires_grad=requires_grad,
+            device=device if device is not None else "cpu",
+        )
+
+    def to_numpy(self):
+        """Convert this Tensor to a numpy ndarray.
+
+        Always returns a fresh ``np.float64`` copy — mutating the
+        returned array is safe and does not affect the Tensor.  Output
+        shape matches ``self.shape``.
+
+        Raises:
+            ImportError: if numpy isn't installed.
+        """
+        try:
+            import numpy as np
+        except ImportError:
+            raise ImportError(
+                "numpy is required for Tensor.to_numpy; "
+                "install it with 'pip install numpy'"
+            ) from None
+        # np.array(list, dtype=np.float64) constructs a fresh f64 buffer
+        # from the Python floats; reshape into the Tensor's shape.
+        # Both steps copy — the returned ndarray owns its own buffer.
+        return np.array(self.data, dtype=np.float64).reshape(self.shape)
+
+    def numpy(self):
+        """PyTorch-style alias for :meth:`to_numpy`."""
+        return self.to_numpy()
+
+    # =====================================================================
     # Arithmetic operators (each creates an autograd-tracked result)
     # =====================================================================
 

@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_chained_call_arg/input/a.js
+--compilation_level
+WHITESPACE_ONLY

@@ -1,0 +1,21 @@
+% ============================================================================
+% collagen-defect-recall.query.adj — a worked recall query over the collagen library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which disease does a
+% defect in collagen type X cause?" question: it states no biochemistry fact — it
+% only `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli collagen-defect-recall.query.adj
+% ============================================================================
+
+import "collagen-defect-edges.adj"
+
+? defect_causes(type_i, $Disease)     % expect osteogenesis_imperfecta
+? defect_causes(type_ii, $Disease)    % expect stickler_syndrome
+? defect_causes(type_iv, $Disease)    % expect alport_syndrome
+? defect_causes(type_v, $Disease)     % expect classical_ehlers_danlos
+? defect_causes(type_vii, $Disease)   % expect dystrophic_epidermolysis_bullosa

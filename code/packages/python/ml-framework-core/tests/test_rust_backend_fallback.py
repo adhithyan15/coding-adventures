@@ -259,6 +259,128 @@ class ElementwiseFallbackTests(unittest.TestCase):
 
 
 # ──────────────────────────────────────────────────────────────────
+# MX10 Phase 2-back — Mul + Div backward fallback tests
+# ──────────────────────────────────────────────────────────────────
+
+
+class ElementwiseBackwardFallbackTests(unittest.TestCase):
+    """Confirm Mul/Div backward still work when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_mul_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``mul_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.mul_backward_via_rust(
+                [1.0, 1.0], [2.0, 3.0], [4.0, 5.0], (2,)
+            )
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_div_backward_via_rust_raises_when_unavailable(self) -> None:
+        """``div_backward_via_rust`` must raise (defence-in-depth)."""
+        with self.assertRaises(RuntimeError):
+            _rust_backend.div_backward_via_rust(
+                [1.0, 1.0], [2.0, 3.0], [4.0, 5.0], (2,)
+            )
+
+    def test_mul_backward_correct_via_fallback(self) -> None:
+        """``(a * b).backward(grad)`` produces (grad*b, grad*a) per cell.
+
+        Hand-computed: a=[2,3], b=[4,5], grad=[1,1]:
+          grad_a = [1*4, 1*5] = [4, 5]
+          grad_b = [1*2, 1*3] = [2, 3]
+        """
+        a = Tensor([2.0, 3.0], (2,), requires_grad=True)
+        b = Tensor([4.0, 5.0], (2,), requires_grad=True)
+        c = a * b
+        c.backward(Tensor([1.0, 1.0], (2,)))
+        self.assertEqual(a.grad.data, [4.0, 5.0])
+        self.assertEqual(b.grad.data, [2.0, 3.0])
+
+    def test_div_backward_correct_via_fallback(self) -> None:
+        """``(a / b).backward(grad)`` produces (grad/b, -grad*a/b²) per cell.
+
+        Hand-computed: a=[1,2], b=[2,4], grad=[1,1]:
+          grad_a = [1/2, 1/4] = [0.5, 0.25]
+          grad_b = [-1*1/4, -1*2/16] = [-0.25, -0.125]
+        """
+        a = Tensor([1.0, 2.0], (2,), requires_grad=True)
+        b = Tensor([2.0, 4.0], (2,), requires_grad=True)
+        c = a / b
+        c.backward(Tensor([1.0, 1.0], (2,)))
+        self.assertEqual(a.grad.data, [0.5, 0.25])
+        self.assertEqual(b.grad.data, [-0.25, -0.125])
+
+    def test_mul_backward_respects_requires_grad_short_circuit(self) -> None:
+        """If only one input has requires_grad=True, the other gets None.
+
+        Confirms the dispatch path doesn't break the short-circuit
+        contract.  Tested on a Rust-eligible tensor size to make
+        sure the dispatch branch is exercised when the extension is
+        available, and on a small size that falls back to pure-Python.
+        """
+        a = Tensor([2.0, 3.0], (2,), requires_grad=True)
+        b = Tensor([4.0, 5.0], (2,), requires_grad=False)
+        c = a * b
+        c.backward(Tensor([1.0, 1.0], (2,)))
+        self.assertEqual(a.grad.data, [4.0, 5.0])
+        # b has requires_grad=False, so backward shouldn't populate b.grad
+        # (the autograd engine drops grads for non-requiring tensors).
+        self.assertIsNone(b.grad)
+
+
+# ──────────────────────────────────────────────────────────────────
+# MX10 Phase 2b — Pow (scalar exponent) fallback tests
+# ──────────────────────────────────────────────────────────────────
+
+
+class PowFallbackTests(unittest.TestCase):
+    """Confirm PowFunction still works when the Rust path is disabled."""
+
+    def setUp(self) -> None:
+        self._saved_available = _rust_backend._RUST_AVAILABLE
+        _rust_backend._RUST_AVAILABLE = False
+
+    def tearDown(self) -> None:
+        _rust_backend._RUST_AVAILABLE = self._saved_available
+
+    def test_pow_via_rust_raises_when_unavailable(self) -> None:
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        with self.assertRaises(RuntimeError) as ctx:
+            _rust_backend.pow_via_rust(a, 2.0)
+        self.assertIn("Rust backend is not available", str(ctx.exception))
+
+    def test_pow_backward_via_rust_raises_when_unavailable(self) -> None:
+        with self.assertRaises(RuntimeError):
+            _rust_backend.pow_backward_via_rust(
+                [1.0, 1.0, 1.0], [1.0, 2.0, 3.0], 2.0, (3,)
+            )
+
+    def test_pow_correct_via_fallback(self) -> None:
+        """``[1, 2, 3].pow(2) == [1, 4, 9]`` (no f32 ops, exact equality)."""
+        from ml_framework_core import PowFunction
+        a = Tensor([1.0, 2.0, 3.0], (3,))
+        result = PowFunction.apply(a, 2.0)
+        self.assertEqual(result.shape, (3,))
+        self.assertEqual(result.data, [1.0, 4.0, 9.0])
+
+    def test_pow_backward_correct_via_fallback(self) -> None:
+        """Power rule: ``d(x²)/dx = 2x``.  For ``a = [1, 2, 3]``,
+        ``grad = [1, 1, 1]``, backward gives ``[2, 4, 6]``."""
+        from ml_framework_core import PowFunction
+        a = Tensor([1.0, 2.0, 3.0], (3,), requires_grad=True)
+        y = PowFunction.apply(a, 2.0)
+        y.backward(Tensor([1.0, 1.0, 1.0], (3,)))
+        self.assertIsNotNone(a.grad)
+        self.assertEqual(a.grad.data, [2.0, 4.0, 6.0])
+
+
+# ──────────────────────────────────────────────────────────────────
 # MX10 Phase 3 — reduction fallback tests
 #
 # Same pattern as elementwise: monkey-patch ``_RUST_AVAILABLE = False``

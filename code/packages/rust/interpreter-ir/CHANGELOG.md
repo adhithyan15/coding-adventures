@@ -1,5 +1,62 @@
 # Changelog — interpreter-ir
 
+## [0.10.0] — 2026-06-28 (LANG-FULL E4 — string opcode classification truth-up)
+
+The shared opcode taxonomy now covers the full E4 string surface that later
+backend/frontend slices have already implemented and matrix-proven:
+
+- `is_string_op(op)` recognises `str_slice` and `str_cmp` in addition to the
+  original literal/length/index/concat/equality/output ops.
+- `str_slice` and `str_cmp` are value-producing, so generic passes no longer
+  miss them when scanning for destination-producing string work.
+- `str_slice` is marked allocating, matching the immutable string contract: it
+  produces a fresh string value just like `str_concat`.
+
+## [0.9.0] — 2026-06-27 (LANG-FULL E4 — string op taxonomy, VM slice)
+
+Defines the shared string type helper and six E4 string opcodes for downstream
+passes to classify before backend lowering lands.
+
+- New **`STR_TYPE`** constant and `is_str_type(type_hint)` helper for the
+  `"str"` scalar type.
+- New **`is_string_op(op)`** predicate covering `str_const`, `str_len`,
+  `str_index`, `str_concat`, `str_eq`, and `print_str`.
+- `str_const`/`str_len`/`str_index`/`str_concat`/`str_eq` are value-producing;
+  `print_str` is side-effecting; `str_concat` is marked allocating because it
+  creates a fresh immutable string value.
+
+## [0.8.0] — 2026-06-22 (LANG-FULL E8 — numeric conversion opcodes, PR-1)
+
+Defines the three `integer`↔`real` conversion opcodes in the shared op-classifier
+(`opcodes.rs`), so downstream passes recognise them as a category (spec
+`code/specs/lang-full-e8-numeric-conversions.md`).
+
+- New **`is_conversion(op)`** predicate covering `int_to_real`,
+  `real_to_int_trunc`, `real_to_int_floor` — distinct from the width-masking
+  `is_coercion` (`cast`/`type_assert`) because these change the numeric
+  *representation* and the `real → integer` direction traps on out-of-range.
+- All three registered in `is_value_producing` (each yields a `dest`).
+- Doctest + the existing category coverage stays exhaustive (no silent gaps).
+
+## [0.7.0] — 2026-06-20 (LANG-FULL E5 — array primitive)
+
+### Added — `array<T>` type + four array opcodes
+
+The IIR surface for bounded, indexable aggregates (enabler E5 — ALGOL/BASIC
+arrays, Twig lists). Representation-agnostic by design (see
+`code/specs/lang-full-e5-arrays.md`):
+
+- **Type helpers** `make_array_type`/`is_array_type`/`array_elem_type` mirror the
+  existing `ref<T>` helpers, encoding the element type as `"array<T>"`.
+- **Opcodes** `alloc_array` (→ `array<T>`), `array_len` (→ `i64`), `array_get`
+  (bounds-checked load → `T`), `array_set` (bounds-checked store) — `is_array_op`
+  predicate; the value-producing three join `is_value_producing`, `alloc_array`
+  joins `is_allocating`. `array_get`/`array_set` are bounds-checked *by
+  definition* (out-of-range index → trap).
+
+No backend lowers these yet except `vm-core` 0.7.0 (the reference interpreter);
+backends and frontends follow in the E5 PR sequence.
+
 ## [0.6.0] — 2026-05-12
 
 ### Added (LANG34 — First-Class Closure Opcodes)

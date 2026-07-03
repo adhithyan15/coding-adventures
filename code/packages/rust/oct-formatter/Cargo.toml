@@ -1,0 +1,10 @@
+[package]
+name = "oct-formatter"
+version = "0.1.0"
+edition = "2021"
+description = "OCT-FMT01 — canonical Oct pretty-printer.  Tokens → canonical source.  Sibling of nib-formatter, basic-formatter, twig-formatter."
+
+[dependencies]
+format-doc                  = { path = "../format-doc" }
+coding-adventures-oct-lexer = { path = "../oct-lexer" }
+lexer                       = { path = "../lexer" }

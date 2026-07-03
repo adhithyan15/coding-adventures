@@ -2,6 +2,54 @@
 
 ## Unreleased
 
+- Parse `.save`, scoped or global `.probe`, and `.measure` / `.meas` cards,
+  and expose `selectOutputs()` / `measureResults()` helpers plus matching
+  `ParsedNetlist` methods for analysis-plan results.
+- Add a deck execution layer with `buildAnalysisPlan()`, `runAnalysisPlan()`,
+  `runNetlist()`, plus matching `ParsedNetlist` methods for runnable `.op`,
+  `.dc`, `.ac dec` / `.ac log`, and `.tran` cards.
+
+## 0.3.0 — 2026-06-05
+
+- Resolve `.temp` cards into Kelvin engine-call temperatures and let explicit
+  `.noise temp=<kelvin>` overrides win over deck-level operating temperatures.
+- Route selected `.options` keys into engine-call helpers:
+  `dcOpOptions()` for DC Newton options and `adaptiveTransientOptions()` for
+  adaptive transient options.
+- Parse SPICE `.four <frequency> <V(node)|I(source)>...` Fourier-analysis
+  cards.
+- Parse SPICE `.print <analysis> <V(node)|I(source)>...` and
+  `.plot <analysis> <V(node)|I(source)>...` output cards.
+- Parse SPICE `.temp <celsius> [celsius ...]` operating-temperature cards.
+- Parse MOS Level-1 capacitance parameters with `.model ... NMOS|PMOS(... CGSO=<c>
+  CGDO=<c> CGBO=<c> CBS=<c> CBD=<c>)`.
+- Parse diode model-card emission coefficients with `.model ... D(... N=<n>)`
+  and pass them into TypeScript `diode` elements.
+- Parse diode model-card reverse-breakdown parameters with
+  `.model ... D(... BV=<v> IBV=<i>)`.
+- Parse diode model-card junction capacitance with
+  `.model ... D(... CJO=<c>)` / `.model ... D(... CJ0=<c>)`.
+- Parse diode model-card transit time with `.model ... D(... TT=<time>)`.
+- Parse BJT model-card capacitances with `.model ... NPN|PNP(... CJE=<c>
+  CJC=<c>)` and pass them into TypeScript `bjt` elements.
+- Parse BJT model-card forward transit time with
+  `.model ... NPN|PNP(... TF=<time>)`.
+- Parse BJT model-card reverse transit time with
+  `.model ... NPN|PNP(... TR=<time>)`.
+- Parse and validate transient integration methods from
+  `.tran ... method=<euler|trap|gear2>`, and expose fallback routing from
+  `.options method=<...>`.
+- Parse conservative SPICE `T` transmission-line cards of the form
+  `Tname n1 n2 n3 n4 Z0=<ohms> TD=<seconds>`, including subcircuit node
+  remapping and validation for unsupported, missing, non-finite, and
+  non-positive parameters.
+- Reject SPICE `K` mutual-inductor cards that reference missing inductors or
+  use non-finite coupling coefficients.
+- Parse SPICE `K` mutual-inductor cards into `mutualInductor` elements,
+  including subcircuit-local inductor reference remapping.
+- Parse SPICE `J` JFET elements via `.model <name> NJF(...)` and
+  `.model <name> PJF(...)` cards with `BETA` / `B`, `VTO`, and `LAMBDA`
+  parameters, including subcircuit drain/gate/source remapping.
 - Parse capacitor `IC=<voltage>` initial-voltage parameters.
 - Parse inductor `IC=<current>` initial-current parameters.
 - Parse independent-source `AC <magnitude> [phase]` specs, including combined

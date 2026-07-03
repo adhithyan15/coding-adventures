@@ -1,0 +1,8 @@
+{
+ "idx": 84,
+ "policy": "A data processor may engage a sub-processor only if it has the controller's prior written authorization. A general written authorization permitting sub-processors satisfies this requirement provided the controller is informed of any intended changes and does not object.",
+ "scenario": "CloudKeep, a processor for retailer Bryce Co., signed a data-processing agreement and began using a new sub-processor, ByteHaul, for backups. CloudKeep emailed Bryce Co. about adding ByteHaul 14 days before the change, and Bryce Co. never raised an objection.",
+ "question": "Was CloudKeep's engagement of ByteHaul authorized under the policy?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether the agreement granted general written authorization for sub-processors"
+}

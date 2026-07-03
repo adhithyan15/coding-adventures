@@ -65,6 +65,11 @@ def _greater_zero(sym: IRSymbol) -> IRApply:
     return IRApply(GREATER, (sym, IRInteger(0)))
 
 
+def _greater_equal_zero(sym: IRSymbol) -> IRApply:
+    """Build GreaterEqual(sym, 0)."""
+    return IRApply(GREATER_EQUAL, (sym, IRInteger(0)))
+
+
 def _less_zero(sym: IRSymbol) -> IRApply:
     """Build Less(sym, 0)."""
     return IRApply(LESS, (sym, IRInteger(0)))
@@ -80,6 +85,14 @@ def _ctx_pos(*syms: IRSymbol) -> AssumptionContext:
     ctx = _fresh_ctx()
     for s in syms:
         ctx.assume_relation(_greater_zero(s))
+    return ctx
+
+
+def _ctx_nonneg(*syms: IRSymbol) -> AssumptionContext:
+    """Return a context in which all given symbols are assumed non-negative."""
+    ctx = _fresh_ctx()
+    for s in syms:
+        ctx.assume_relation(_greater_equal_zero(s))
     return ctx
 
 
@@ -238,6 +251,11 @@ class TestRadcan:
         expr = IRApply(SQRT, (IRApply(POW, (x, IRInteger(2))),))
         assert radcan(expr, ctx) == x
 
+    def test_sqrt_x_squared_nonnegative(self) -> None:
+        ctx = _ctx_nonneg(x)
+        expr = IRApply(SQRT, (IRApply(POW, (x, IRInteger(2))),))
+        assert radcan(expr, ctx) == x
+
     def test_sqrt_x_squared_no_ctx(self) -> None:
         """Sqrt(x²) stays unevaluated without positivity context."""
         expr = IRApply(SQRT, (IRApply(POW, (x, IRInteger(2))),))
@@ -252,6 +270,16 @@ class TestRadcan:
         expr = IRApply(SQRT, (inner,))
         result = radcan(expr, ctx)
         # Should produce Mul(x, Sqrt(y))
+        assert isinstance(result, IRApply)
+        assert result.head == MUL
+        assert x in result.args
+        assert IRApply(SQRT, (y,)) in result.args
+
+    def test_sqrt_mul_nonnegative_perfect_square_factor(self) -> None:
+        ctx = _ctx_nonneg(x)
+        inner = IRApply(MUL, (IRApply(POW, (x, IRInteger(2))), y))
+        expr = IRApply(SQRT, (inner,))
+        result = radcan(expr, ctx)
         assert isinstance(result, IRApply)
         assert result.head == MUL
         assert x in result.args

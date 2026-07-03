@@ -1,9 +1,76 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
+> **🎉 MACSYMA truly-finish plan closed (2026-05-29).** All eight
+> tracks of `code/specs/macsyma-truly-finish-plan.md` (F through N)
+> have landed across Python, TypeScript, and Rust.  Every CHANGELOG
+> `Unreleased` section in the MACSYMA pipeline is empty.  MACSYMA is
+> considered feature-complete for mainstream Maxima 5.x parity; new
+> work is feature-driven (e.g. Maple frontend) rather than gap-driven.
+
+> **🎉 MACSYMA finish-plan closed (2026-05-28).** All five tracks of
+> `code/specs/macsyma-finish-plan.md` (ten sub-tracks total) have
+> shipped across all three languages.  Sub-track PR map:
+>
+> | Sub-track | PR | Description |
+> |---|---|---|
+> | A1 | ✅ #4552 | Phase 86 generic recogniser port (TS + Rust) |
+> | A2 | ✅ #4557 | Delete 42 redundant grid helpers (all 3 langs) |
+> | B1 | ✅ #4558 | Apart simple-roots port (TS + Rust) |
+> | B2 | ✅ #4559 | Apart-retry telescope chain port (TS + Rust) |
+> | B3 | ✅ #4560 | Apart repeated-linear-factors port (TS + Rust) |
+> | C1 | ✅ #4561 | Frobenius / power-series ODE (Python) |
+> | C2 | ✅ #4562 | Frobenius port (TS + Rust) |
+> | D1 | ✅ #4563 | Bivariate Hensel lifting (Python `cas-factor`) |
+> | D2 | ✅ #4564 | Bivariate Hensel port (TS + Rust) |
+> | E1 | ✅ #4569 | Generic tabular IBP fallback (Python `symbolic-vm`) |
+> | E2 | ✅ this PR | Generic IBP port (TS + Rust `symbolic-vm` 0.16.0) |
+>
+> The MACSYMA pipeline is now considered done for the purposes of this
+> repo.  New work is feature-driven (e.g. Maple frontend) rather than
+> gap-driven.
+
+> **MACSYMA parity audit follow-up (2026-06-06).** A fresh `Apart`
+> audit found one post-finish residual gap: mixed rational-root plus
+> irreducible-denominator factors still returned unevaluated
+> `Apart(...)` even though pure irreducible and fully split repeated
+> rational factors were handled. This PR closes that gap across Python,
+> TypeScript, and Rust by subtracting rational-pole terms and emitting
+> the remaining proper irreducible residual.
+
+> **MACSYMA summation audit follow-up (2026-06-06).** Infinite telescope
+> limits now recognise direct decaying exponential terms, not only rational
+> quotients with diverging denominators. Across Python, TypeScript, and Rust,
+> `exp(-k)` and `b^(-k)` with `|b| > 1` are treated as vanishing at infinity,
+> closing structurally telescoping exponential tails while preserving
+> conservative fallthrough for growing or sign-ambiguous exponentials.
+
+> **MACSYMA limit audit follow-up (2026-06-06).** Advanced limits at infinity
+> now recognise bounded numerators over diverging denominators across Python,
+> TypeScript, and Rust. This closes `limit(sin(x)/x, x, inf)` and
+> `limit(cos(x)/(x^2+1), x, minf)` to exact `0`, rather than accepting the
+> oscillatory numerator's direct `sin(inf)` / `cos(inf)` classification as an
+> unevaluated `Limit(...)`.
+
+> **SPICE completion follow-up inventory (2026-06-06).** The 2026-06-05
+> release cut closed the planned SPICE 1970s compatibility slice, but a live
+> follow-up audit found one real parity gap: Rust had advanced named-corner
+> wrappers and stable tables that Python and TypeScript still lacked for
+> `.MC`, `.SENS`, `.NOISE`, and two-port S-parameters. That gap is now closed
+> in the Python and TypeScript packages with native wrappers and stable
+> tab-separated direct/corner table output. The remaining work is not a blocker
+> for the current compatibility slice, but it is still real project work:
+> Python/TypeScript parity for the wider Rust named-corner family
+> (fixed/adaptive transient samples, PSS, Fourier, distortion, constrained
+> pole-zero, and temperature operating-point corners), broader ordered parallel
+> corner orchestration outside the current Rust helpers, full `hardware-vm`
+> scheduler integration, Verilog-A/custom compact models, production sparse/KLU
+> and SPICE3-era raw/control/BSIM surfaces, and richer nonlinear distortion
+> accuracy beyond the Phase 8 executable footholds.
+
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-22 (after Phase 48 Apart-for-repeated-linear-
-> factors landed in Python — all three Phase 45-documented summation
-> gaps are now closed).
+> Last updated: 2026-06-06 (MACSYMA `Apart` mixed residual parity, SPICE
+> completion follow-up inventory, Python and TypeScript advanced-corner
+> parity, and explicit remaining roadmap).
 >
 > **Phase 48 — Apart for repeated linear factors (Python only, so far):**
 > `symbolic-vm` 0.72.0 (PR #3927).  Extends ``Apart`` to decompose
@@ -186,10 +253,11 @@ files.
 | v0.6.0 | #2353 | DC parameter sweep (`.DC`) |
 | v0.7.0 | #2357 | DC sensitivity analysis (`.SENS`) — ∂V/∂P per element |
 | v0.8.0 | #2359 | Monte Carlo (`.MC`) — Gaussian + uniform tolerance distributions |
-| v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist + shot noise, adjoint method |
+| v0.9.0 | #2370 | Noise analysis (`.NOISE`) — Johnson-Nyquist, MOSFET channel thermal, and shot noise; adjoint method |
 
-**Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `VoltageSource`,
-`CurrentSource`, `BSource`, `Diode`, `Mosfet`, `BJT`
+**Elements on main:** `Resistor`, `Capacitor`, `Inductor`, `MutualInductor`,
+`TransmissionLine`, `VoltageSource`, `CurrentSource`, `BSource`, `Diode`,
+`Mosfet`, `BJT`, `JFET`
 
 **Analyses on main:** `dc_op`, `transient`, `ac_sweep`, `tf`, `dc_sweep`,
 `sens_dc`, `mc_dc`, `noise_ac`
@@ -197,7 +265,8 @@ files.
 **Waveforms on main:** `PwlWaveform`, `SinWaveform`, `PulseWaveform`, `ExpWaveform`
 
 **Netlist parser on main:** `spice-netlist-parser` 0.2.0 — parses R, C, L, V,
-I, M (MOSFET), D, Q (BJT), E/G/F/H (controlled sources), `.subckt` / X instances,
+I, M (MOSFET), D, Q (BJT), J (JFET), K (mutual inductor), T (lossless
+transmission line), E/G/F/H (controlled sources), `.subckt` / X instances,
 `.tran`, `.dc`, `.ac`, `.op`, `.tf`, `.sens`, `.mc`, `.noise`, `.model` cards;
 IC parameters for C/L; AC phasor specs for V/I sources.
 
@@ -205,13 +274,13 @@ IC parameters for C/L; AC phasor specs for V/I sources.
 
 ### What is in flight
 
-- PSS analysis helpers across Python, TypeScript, and Rust SPICE
-  engines: ordered residual vectors, L2/RMS norms, finite-difference residual
-  Jacobians, reactive initial-condition update deltas, and Newton candidate
-  circuits have landed. One-step Newton iteration acceptance and bounded
-  Newton solves have landed; this follow-up wraps the solve in a direct PSS
-  analysis result that returns one steady-state transient period from the
-  solved circuit.
+- 1970s SPICE compatibility planning: the active workstream is tracked in
+  `spice-1970s-compatibility.md`. JFET device/model-card support, mutual
+  inductors, ideal transmission lines, Gear-2 transient integration,
+  pseudo-transient DC continuation, 1970s model-card depth, classic text output
+  cards including direct and named-corner DC operating-point temperature
+  tables, and the first Phase 8 small-signal distortion / pole-zero footholds
+  are now reflected there with per-phase status.
 
 ---
 
@@ -232,11 +301,20 @@ and the sparse real solver path landed in PR #3391.
 
 | Feature | Design notes |
 |---|---|
-| **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. Shipped in PR #3490. |
-| **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms shipped in PR #3524; one-period node-closure residual helpers shipped in PR #3534; tolerance-aware residual closure shipped in PR #3540; branch-current residual closure shipped in PR #3553; ordered residual vectors shipped in PR #3560; residual vector norms shipped in PR #3566; finite-difference residual Jacobians shipped in PR #3570; Newton correction helpers shipped in PR #3578; Newton candidate helpers shipped in PR #3588; one-step Newton iteration acceptance shipped in PR #3770; bounded Newton solve shipped in PR #3776; direct PSS analysis output is in flight as the next shooting-Newton foothold. |
-| **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516. |
-| **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. |
+| **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. Shipped in PR #3490; direct and named-corner S-parameter text tables plus named S-parameter corners are now exposed in the live Rust SPICE package. |
+| **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms shipped in PR #3524; one-period node-closure residual helpers shipped in PR #3534; tolerance-aware residual closure shipped in PR #3540; branch-current residual closure shipped in PR #3553; ordered residual vectors shipped in PR #3560; residual vector norms shipped in PR #3566; finite-difference residual Jacobians shipped in PR #3570; Newton correction helpers shipped in PR #3578; Newton candidate helpers shipped in PR #3588; one-step Newton iteration acceptance shipped in PR #3770; bounded Newton solve shipped in PR #3776; direct PSS analysis output is now exposed in the live Rust SPICE package as a steady-state text table over selected voltage/current probes. PSS can also be evaluated and rendered as stable text tables across named corners in the live Rust SPICE package. |
+| **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516; Monte Carlo DC, DC sensitivity, AC noise, S-parameters, PSS, constrained pole-zero, fixed-step and adaptive transient samples, DC temperature operating points, Fourier post-processing, and transient-projected distortion corners are now exposed in the live Rust SPICE package; DC operating-point, AC frequency sweep, DC source sweep, transfer-function, Monte Carlo DC, DC sensitivity, AC noise, S-parameter, PSS, constrained pole-zero, fixed-step and adaptive transient sample, DC temperature operating-point, Fourier, and transient-projected distortion corner results also have stable text tables. Python and TypeScript now expose native sequential named-corner wrappers and stable direct/corner tables for Monte Carlo DC, DC sensitivity, AC noise, and S-parameters. Rust DC operating-point, `.DC` source-sweep, `.AC` frequency-sweep, `.TF` transfer-function, Monte Carlo DC, DC sensitivity, AC noise, and S-parameter corners can now also be evaluated through order-preserving parallel helpers; Python/TypeScript parity for the wider Rust corner family and broader parallel corner orchestration remain future work. |
+| **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. SPICE-side Rust footholds now expose binary digital event timelines and named digital event streams as finite-edge PWL voltage sources, derive bridge breakpoint schedules over event starts and finite-edge transition endpoints, run direct fixed-step, adaptive, and named-corner digital-input transient bridge fixtures, sample one or more transient probes back into thresholded named digital event streams, and render bridge schedules, single, named multi-signal, fixed-step bridge, adaptive bridge, and cornered bridge event streams as stable tab-separated text tables; full `hardware-vm` scheduler integration remains future work. |
 | **Verilog-A compact models** | Custom device models. Requires a Verilog-A parser (`code/specs/verilog-a-parser.md` is referenced but not written). |
+
+#### SPICE 1970s compatibility
+
+The compatibility workstream is split into concrete phases in
+`code/specs/spice-1970s-compatibility.md`. This is the plan to move the current
+solver from a strong SPICE-compatible educational engine toward a recognizable
+Berkeley SPICE1/SPICE2-era simulator surface. Phase 1 JFET support, Phase 2
+mutual inductors, and Phase 3 ideal transmission lines are complete for the
+current compatibility target.
 
 ---
 
@@ -330,6 +408,12 @@ numeric backend is unaffected).
 `sqrt(x²)→x` — both require an `x≥0` assumption context, and the TS/Rust
 ports do not yet have an assumption system.  Python keeps those rules behind
 `is_nonneg(x)` checks.
+
+**Update (2026-06-06):** TS/Rust MACSYMA runtime sessions now feed their
+assumption context into direct `abs`, `sqrt`, and `log` evaluation, matching
+the Python reference for `assume(x >= 0); sqrt(x^2)`, `log(x^n)`, and
+`abs(x)`. The lower-level TS/Rust `symbolic-vm` packages remain
+assumption-free by design; the MACSYMA runtime layer owns session assumptions.
 
 **Pi-multiple detection** (Phase 33) covers both numeric (`IRFloat ≈ q·π`,
 denominators {1,2,3,4,6}) and structural IR (`%pi`, `Neg(%pi)`, `Mul(n,%pi)`,
@@ -534,8 +618,10 @@ The Risch integration suite is ~90% complete. Known remaining gaps:
 | `∫ log(ax+b)^n dx`, `∫ Q(x)·log(x)^n dx` (Phase 26 log-power IBP) | IBP reduction `F_n = (ax+b)/a·log(ax+b)^n − n·F_{n-1}` and term-by-term poly×log^n | ✅ Python PR #3372 `symbolic-vm` 0.56.0; TS + Rust `symbolic-vm` 0.4.0 (same PR as Phase 27) |
 | `∫ sin(log(x)) dx`, `∫ cos(log(x)) dx`, `∫ xᵏ·sin/cos(log(x)) dx` (Phase 27 trig-of-log) | u=log(x) substitution converts to exp×trig form; closed form `x^(k+1)·((k+1)trig(log x)∓cotrig(log x))/((k+1)²+1)` | ✅ Python PR #3373 `symbolic-vm` 0.57.0; TS + Rust `symbolic-vm` 0.4.0 |
 | `∫ P(x)·log(Q(x)) dx`, `∫ P(x)·atan(Q(x)) dx` for non-linear Q (Phase 28 general IBP) | IBP with residual integrated via polynomial long division + Case A (prop to D′) / Case B (const/quadratic) | ✅ Python PR #3380 `symbolic-vm` 0.58.0; TS + Rust `symbolic-vm` 0.5.0 (PR #3381) |
+| `∫ exp(c·x²) dx` for exact rational `c ≠ 0` (Phase 23 error-function forms) | Emits `Sqrt(%pi)/(2*sqrt(|c|))*Erf(sqrt(|c|)*x)` for `c < 0` and the matching `Erfi` form for `c > 0`. | ✅ Python already complete; TS + Rust `symbolic-vm` 0.18.0 port the special-function fallback. |
+| `∫ sin/cos(a·x²) dx` and `∫ sin/cos(q·π·x²) dx` (Phase 23 Fresnel forms) | Emits `FresnelS` / `FresnelC` with the same scaling conventions as the Python reference; the canonical `q=1/2` case returns `FresnelS(x)` / `FresnelC(x)`. | ✅ Python already complete; TS + Rust `symbolic-vm` 0.17.0 port the special-function fallback. |
 | `∫ c / (a + b·sin/cos(α·x + β)) dx` for rational `a, b, α, β` with `α ≠ 0` (Phases 34–38 Weierstrass family) | `u = tan((α·x+β)/2)` substitution: arctan form (`a² > b²`), degenerate `a² = b²`, log form (`a² < b²`), and linear-argument lifting all wired. | ✅ All discriminant regimes and both `b > |a|` / `b < −|a|` cos branches closed across all three languages. Phase 34 (PRs #3472/#3473/#3475 — arctan), Phase 35 (degenerate), Phase 36 (log form, `b > |a|`), Phase 37 (cos `b < −|a|` — PRs #3683/#3685/#3689), Phase 38 (non-bare linear arguments — PRs #3690/#3691/#3692). Symbolic `a, b, α, β` still need an assumption context. |
-| `∫ f(x)·g(x)` where neither integrates alone | General IBP fallback missing; only specific matched patterns work | Open |
+| `∫ f(x)·g(x)` where neither integrates alone | Generic tabular IBP fallback — Python (#4569 `symbolic-vm` 0.73.0), TS + Rust (this PR `symbolic-vm` 0.16.0).  Bounded by 5 factors / poly degree 8. | ✅ Track E1 + E2 |
 
 #### Completed REPL and session features
 

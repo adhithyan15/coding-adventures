@@ -1,0 +1,666 @@
+{
+  "rung": "rung5_multistep",
+  "description": "Rung-5 multi-step formula chains: dimensional word problems whose gold ADJ program needs TWO OR MORE chained let-bindings \u2014 an intermediate quantity is computed and then consumed by the next step (e.g. total_distance = leg1 + leg2; total_time = t1 + t2; answer = total_distance / total_time). This is the reasoning step beyond rung-4 dimensional arithmetic (which was a SINGLE operation): the model must DECOMPOSE the problem into ordered sub-results and let the engine carry dimensions through every link of the chain. The intermediate results (total_distance, total_time, \u2026) are NEVER written as literals \u2014 the engine computes each and threads it forward \u2014 so the no-result-literals gate holds for the chain just as it did for one op. Five families: average speed over two legs (km/h), net displacement rate (km/h, via subtraction then division), combined density (g/ml), average power (j/s), and average flow rate (l/min). Every options set includes the signature multi-step TRAP \u2014 the average-of-the-two-ratios answer (which equals total/total only when the denominators are equal, so all items use UNEQUAL denominators to separate them) \u2014 plus a skip-a-step distractor (the numerator sum, undivided), a wrong-unit distractor (right magnitude, wrong dimension), and a single-leg ratio. A number-only or single-step reasoner falls for the average-of-ratios trap; only the engine, carrying the chained dimensional computation, lands the weighted total/total with the right unit. Reuses the compute_dimensioned extractor unchanged (it reads the final let binding 'answer' from the JSON derived section); no engine or harness change \u2014 pure new data exercising deeper let-chaining the engine already supports.",
+  "items": [
+    {
+      "id": "r5m-01",
+      "qtype": "avg_speed_two_legs",
+      "stem": "A delivery van drives 120 kilometers in 2 hours, then 300 kilometers in 3 hours. What is its average speed over the whole trip?",
+      "program": "observe first_distance(quantity(120, km))\nobserve first_time(quantity(2, h))\nobserve second_distance(quantity(300, km))\nobserve second_time(quantity(3, h))\nlet total_distance = first_distance + second_distance\nlet total_time = first_time + second_time\nlet answer = total_distance / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 84,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 80,
+          "unit": "km/h"
+        },
+        "C": {
+          "value": 84,
+          "unit": "m/s"
+        },
+        "D": {
+          "value": 420,
+          "unit": "km"
+        },
+        "E": {
+          "value": 60,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r5m-02",
+      "qtype": "avg_speed_two_legs",
+      "stem": "A delivery van drives 150 kilometers in 3 hours, then 200 kilometers in 2 hours. What is its average speed over the whole trip?",
+      "program": "observe first_distance(quantity(150, km))\nobserve first_time(quantity(3, h))\nobserve second_distance(quantity(200, km))\nobserve second_time(quantity(2, h))\nlet total_distance = first_distance + second_distance\nlet total_time = first_time + second_time\nlet answer = total_distance / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 70,
+          "unit": "km/h"
+        },
+        "C": {
+          "value": 70,
+          "unit": "m/s"
+        },
+        "D": {
+          "value": 350,
+          "unit": "km"
+        },
+        "E": {
+          "value": 50,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r5m-03",
+      "qtype": "avg_speed_two_legs",
+      "stem": "A delivery van drives 60 kilometers in 1 hours, then 360 kilometers in 5 hours. What is its average speed over the whole trip?",
+      "program": "observe first_distance(quantity(60, km))\nobserve first_time(quantity(1, h))\nobserve second_distance(quantity(360, km))\nobserve second_time(quantity(5, h))\nlet total_distance = first_distance + second_distance\nlet total_time = first_time + second_time\nlet answer = total_distance / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 66,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 70,
+          "unit": "m/s"
+        },
+        "C": {
+          "value": 70,
+          "unit": "km/h"
+        },
+        "D": {
+          "value": 420,
+          "unit": "km"
+        },
+        "E": {
+          "value": 60,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r5m-04",
+      "qtype": "avg_speed_two_legs",
+      "stem": "A delivery van drives 90 kilometers in 3 hours, then 200 kilometers in 2 hours. What is its average speed over the whole trip?",
+      "program": "observe first_distance(quantity(90, km))\nobserve first_time(quantity(3, h))\nobserve second_distance(quantity(200, km))\nobserve second_time(quantity(2, h))\nlet total_distance = first_distance + second_distance\nlet total_time = first_time + second_time\nlet answer = total_distance / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 65,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 58,
+          "unit": "m/s"
+        },
+        "C": {
+          "value": 290,
+          "unit": "km"
+        },
+        "D": {
+          "value": 58,
+          "unit": "km/h"
+        },
+        "E": {
+          "value": 30,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r5m-05",
+      "qtype": "net_displacement_rate",
+      "stem": "A train passes the 20-kilometer marker and later the 140-kilometer marker, 2 hours apart. What is its average speed between the markers?",
+      "program": "observe start_marker(quantity(20, km))\nobserve finish_marker(quantity(140, km))\nobserve elapsed(quantity(2, h))\nlet net_distance = finish_marker - start_marker\nlet answer = net_distance / elapsed\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 120,
+          "unit": "km"
+        },
+        "C": {
+          "value": 60,
+          "unit": "m/s"
+        },
+        "D": {
+          "value": 80,
+          "unit": "km/h"
+        },
+        "E": {
+          "value": 60,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r5m-06",
+      "qtype": "net_displacement_rate",
+      "stem": "A train passes the 50-kilometer marker and later the 410-kilometer marker, 4 hours apart. What is its average speed between the markers?",
+      "program": "observe start_marker(quantity(50, km))\nobserve finish_marker(quantity(410, km))\nobserve elapsed(quantity(4, h))\nlet net_distance = finish_marker - start_marker\nlet answer = net_distance / elapsed\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 102,
+          "unit": "km/h"
+        },
+        "C": {
+          "value": 360,
+          "unit": "km"
+        },
+        "D": {
+          "value": 90,
+          "unit": "m/s"
+        },
+        "E": {
+          "value": 115,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r5m-07",
+      "qtype": "net_displacement_rate",
+      "stem": "A train passes the 15-kilometer marker and later the 135-kilometer marker, 3 hours apart. What is its average speed between the markers?",
+      "program": "observe start_marker(quantity(15, km))\nobserve finish_marker(quantity(135, km))\nobserve elapsed(quantity(3, h))\nlet net_distance = finish_marker - start_marker\nlet answer = net_distance / elapsed\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 40,
+          "unit": "km/h"
+        },
+        "C": {
+          "value": 120,
+          "unit": "km"
+        },
+        "D": {
+          "value": 40,
+          "unit": "m/s"
+        },
+        "E": {
+          "value": 50,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r5m-08",
+      "qtype": "net_displacement_rate",
+      "stem": "A train passes the 100-kilometer marker and later the 520-kilometer marker, 6 hours apart. What is its average speed between the markers?",
+      "program": "observe start_marker(quantity(100, km))\nobserve finish_marker(quantity(520, km))\nobserve elapsed(quantity(6, h))\nlet net_distance = finish_marker - start_marker\nlet answer = net_distance / elapsed\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 86,
+          "unit": "km/h"
+        },
+        "B": {
+          "value": 420,
+          "unit": "km"
+        },
+        "C": {
+          "value": 70,
+          "unit": "km/h"
+        },
+        "D": {
+          "value": 70,
+          "unit": "m/s"
+        },
+        "E": {
+          "value": 103,
+          "unit": "km/h"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r5m-09",
+      "qtype": "combined_density",
+      "stem": "A chemist combines two liquids: 20 grams occupying 10 milliliters, and 100 grams occupying 20 milliliters. What is the density of the mixture?",
+      "program": "observe first_mass(quantity(20, g))\nobserve first_volume(quantity(10, ml))\nobserve second_mass(quantity(100, g))\nobserve second_volume(quantity(20, ml))\nlet total_mass = first_mass + second_mass\nlet total_volume = first_volume + second_volume\nlet answer = total_mass / total_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "g/ml"
+        },
+        "B": {
+          "value": 120,
+          "unit": "g"
+        },
+        "C": {
+          "value": 4,
+          "unit": "g/l"
+        },
+        "D": {
+          "value": 4,
+          "unit": "g/ml"
+        },
+        "E": {
+          "value": 2,
+          "unit": "g/ml"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r5m-10",
+      "qtype": "combined_density",
+      "stem": "A chemist combines two liquids: 20 grams occupying 10 milliliters, and 180 grams occupying 30 milliliters. What is the density of the mixture?",
+      "program": "observe first_mass(quantity(20, g))\nobserve first_volume(quantity(10, ml))\nobserve second_mass(quantity(180, g))\nobserve second_volume(quantity(30, ml))\nlet total_mass = first_mass + second_mass\nlet total_volume = first_volume + second_volume\nlet answer = total_mass / total_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "g/ml"
+        },
+        "B": {
+          "value": 200,
+          "unit": "g"
+        },
+        "C": {
+          "value": 5,
+          "unit": "g/l"
+        },
+        "D": {
+          "value": 2,
+          "unit": "g/ml"
+        },
+        "E": {
+          "value": 5,
+          "unit": "g/ml"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r5m-11",
+      "qtype": "combined_density",
+      "stem": "A chemist combines two liquids: 60 grams occupying 20 milliliters, and 420 grams occupying 60 milliliters. What is the density of the mixture?",
+      "program": "observe first_mass(quantity(60, g))\nobserve first_volume(quantity(20, ml))\nobserve second_mass(quantity(420, g))\nobserve second_volume(quantity(60, ml))\nlet total_mass = first_mass + second_mass\nlet total_volume = first_volume + second_volume\nlet answer = total_mass / total_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "g/ml"
+        },
+        "B": {
+          "value": 5,
+          "unit": "g/ml"
+        },
+        "C": {
+          "value": 480,
+          "unit": "g"
+        },
+        "D": {
+          "value": 6,
+          "unit": "g/l"
+        },
+        "E": {
+          "value": 3,
+          "unit": "g/ml"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r5m-12",
+      "qtype": "combined_density",
+      "stem": "A chemist combines two liquids: 80 grams occupying 10 milliliters, and 120 grams occupying 40 milliliters. What is the density of the mixture?",
+      "program": "observe first_mass(quantity(80, g))\nobserve first_volume(quantity(10, ml))\nobserve second_mass(quantity(120, g))\nobserve second_volume(quantity(40, ml))\nlet total_mass = first_mass + second_mass\nlet total_volume = first_volume + second_volume\nlet answer = total_mass / total_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "g/ml"
+        },
+        "B": {
+          "value": 4,
+          "unit": "g/ml"
+        },
+        "C": {
+          "value": 200,
+          "unit": "g"
+        },
+        "D": {
+          "value": 4,
+          "unit": "g/l"
+        },
+        "E": {
+          "value": 8,
+          "unit": "g/ml"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r5m-13",
+      "qtype": "average_power",
+      "stem": "A motor uses 1200 joules over 2 seconds in its first phase, then 900 joules over 3 seconds in its second phase. What is its average power over both phases?",
+      "program": "observe first_energy(quantity(1200, j))\nobserve early_time(quantity(2, s))\nobserve second_energy(quantity(900, j))\nobserve late_time(quantity(3, s))\nlet total_energy = first_energy + second_energy\nlet total_time = early_time + late_time\nlet answer = total_energy / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 450,
+          "unit": "j/s"
+        },
+        "B": {
+          "value": 2100,
+          "unit": "j"
+        },
+        "C": {
+          "value": 420,
+          "unit": "j/s"
+        },
+        "D": {
+          "value": 420,
+          "unit": "j"
+        },
+        "E": {
+          "value": 600,
+          "unit": "j/s"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r5m-14",
+      "qtype": "average_power",
+      "stem": "A motor uses 1200 joules over 4 seconds in its first phase, then 1800 joules over 2 seconds in its second phase. What is its average power over both phases?",
+      "program": "observe first_energy(quantity(1200, j))\nobserve early_time(quantity(4, s))\nobserve second_energy(quantity(1800, j))\nobserve late_time(quantity(2, s))\nlet total_energy = first_energy + second_energy\nlet total_time = early_time + late_time\nlet answer = total_energy / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 600,
+          "unit": "j/s"
+        },
+        "B": {
+          "value": 3000,
+          "unit": "j"
+        },
+        "C": {
+          "value": 500,
+          "unit": "j"
+        },
+        "D": {
+          "value": 500,
+          "unit": "j/s"
+        },
+        "E": {
+          "value": 300,
+          "unit": "j/s"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r5m-15",
+      "qtype": "average_power",
+      "stem": "A motor uses 1200 joules over 3 seconds in its first phase, then 400 joules over 2 seconds in its second phase. What is its average power over both phases?",
+      "program": "observe first_energy(quantity(1200, j))\nobserve early_time(quantity(3, s))\nobserve second_energy(quantity(400, j))\nobserve late_time(quantity(2, s))\nlet total_energy = first_energy + second_energy\nlet total_time = early_time + late_time\nlet answer = total_energy / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 300,
+          "unit": "j/s"
+        },
+        "B": {
+          "value": 1600,
+          "unit": "j"
+        },
+        "C": {
+          "value": 320,
+          "unit": "j"
+        },
+        "D": {
+          "value": 400,
+          "unit": "j/s"
+        },
+        "E": {
+          "value": 320,
+          "unit": "j/s"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r5m-16",
+      "qtype": "average_power",
+      "stem": "A motor uses 2000 joules over 5 seconds in its first phase, then 2400 joules over 3 seconds in its second phase. What is its average power over both phases?",
+      "program": "observe first_energy(quantity(2000, j))\nobserve early_time(quantity(5, s))\nobserve second_energy(quantity(2400, j))\nobserve late_time(quantity(3, s))\nlet total_energy = first_energy + second_energy\nlet total_time = early_time + late_time\nlet answer = total_energy / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 550,
+          "unit": "j/s"
+        },
+        "B": {
+          "value": 600,
+          "unit": "j/s"
+        },
+        "C": {
+          "value": 4400,
+          "unit": "j"
+        },
+        "D": {
+          "value": 550,
+          "unit": "j"
+        },
+        "E": {
+          "value": 400,
+          "unit": "j/s"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r5m-17",
+      "qtype": "average_flow_rate",
+      "stem": "Two pumps fill a tank: the first delivers 80 liters in 2 minutes, the second 300 liters in 3 minutes. What is the average fill rate across both pumps?",
+      "program": "observe first_flow_volume(quantity(80, l))\nobserve first_flow_time(quantity(2, min))\nobserve second_flow_volume(quantity(300, l))\nobserve second_flow_time(quantity(3, min))\nlet total_volume = first_flow_volume + second_flow_volume\nlet total_time = first_flow_time + second_flow_time\nlet answer = total_volume / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "l/min"
+        },
+        "B": {
+          "value": 76,
+          "unit": "l/min"
+        },
+        "C": {
+          "value": 380,
+          "unit": "l"
+        },
+        "D": {
+          "value": 76,
+          "unit": "l"
+        },
+        "E": {
+          "value": 40,
+          "unit": "l/min"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r5m-18",
+      "qtype": "average_flow_rate",
+      "stem": "Two pumps fill a tank: the first delivers 160 liters in 4 minutes, the second 200 liters in 2 minutes. What is the average fill rate across both pumps?",
+      "program": "observe first_flow_volume(quantity(160, l))\nobserve first_flow_time(quantity(4, min))\nobserve second_flow_volume(quantity(200, l))\nobserve second_flow_time(quantity(2, min))\nlet total_volume = first_flow_volume + second_flow_volume\nlet total_time = first_flow_time + second_flow_time\nlet answer = total_volume / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 70,
+          "unit": "l/min"
+        },
+        "B": {
+          "value": 360,
+          "unit": "l"
+        },
+        "C": {
+          "value": 60,
+          "unit": "l/min"
+        },
+        "D": {
+          "value": 60,
+          "unit": "l"
+        },
+        "E": {
+          "value": 40,
+          "unit": "l/min"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r5m-19",
+      "qtype": "average_flow_rate",
+      "stem": "Two pumps fill a tank: the first delivers 40 liters in 2 minutes, the second 240 liters in 5 minutes. What is the average fill rate across both pumps?",
+      "program": "observe first_flow_volume(quantity(40, l))\nobserve first_flow_time(quantity(2, min))\nobserve second_flow_volume(quantity(240, l))\nobserve second_flow_time(quantity(5, min))\nlet total_volume = first_flow_volume + second_flow_volume\nlet total_time = first_flow_time + second_flow_time\nlet answer = total_volume / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 34,
+          "unit": "l/min"
+        },
+        "B": {
+          "value": 280,
+          "unit": "l"
+        },
+        "C": {
+          "value": 40,
+          "unit": "l"
+        },
+        "D": {
+          "value": 40,
+          "unit": "l/min"
+        },
+        "E": {
+          "value": 20,
+          "unit": "l/min"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r5m-20",
+      "qtype": "average_flow_rate",
+      "stem": "Two pumps fill a tank: the first delivers 160 liters in 2 minutes, the second 240 liters in 6 minutes. What is the average fill rate across both pumps?",
+      "program": "observe first_flow_volume(quantity(160, l))\nobserve first_flow_time(quantity(2, min))\nobserve second_flow_volume(quantity(240, l))\nobserve second_flow_time(quantity(6, min))\nlet total_volume = first_flow_volume + second_flow_volume\nlet total_time = first_flow_time + second_flow_time\nlet answer = total_volume / total_time\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "l/min"
+        },
+        "B": {
+          "value": 400,
+          "unit": "l"
+        },
+        "C": {
+          "value": 50,
+          "unit": "l"
+        },
+        "D": {
+          "value": 80,
+          "unit": "l/min"
+        },
+        "E": {
+          "value": 50,
+          "unit": "l/min"
+        }
+      },
+      "gold_letter": "E"
+    }
+  ]
+}

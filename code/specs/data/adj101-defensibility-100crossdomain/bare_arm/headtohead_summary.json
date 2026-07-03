@@ -1,0 +1,13 @@
+{
+ "computational": {
+  "bare_correct": 10,
+  "fw_correct": 9,
+  "bare_auditable": 0,
+  "fw_auditable": 10
+ },
+ "underdetermined": {
+  "n": 4,
+  "bare_fabricated": 0,
+  "fw_abstained": 4
+ }
+}

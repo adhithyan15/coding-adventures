@@ -1,0 +1,64 @@
+{
+  "id": "23-null-in-order-by",
+  "description": "NULL values sort FIRST in ascending ORDER BY (SQLite default: NULLs are less than any value)",
+  "level": 1,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE scores (id INTEGER, score INTEGER)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES (1, 10)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES (2, NULL)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES (3, 5)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES (4, NULL)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES (5, 20)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id, score FROM scores ORDER BY score ASC",
+      "expected_columns": ["id", "score"],
+      "expected_rows": [
+        [2, null],
+        [4, null],
+        [3, 5],
+        [1, 10],
+        [5, 20]
+      ],
+      "note": "ASC: NULLs sort before all numeric values (SQLite: NULL < everything)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id, score FROM scores ORDER BY score DESC",
+      "expected_columns": ["id", "score"],
+      "expected_rows": [
+        [5, 20],
+        [1, 10],
+        [3, 5],
+        [2, null],
+        [4, null]
+      ],
+      "note": "DESC: NULLs sort after all numeric values (NULL is still smallest, so DESC puts them last)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id FROM scores WHERE score IS NOT NULL ORDER BY score ASC",
+      "expected_columns": ["id"],
+      "expected_rows": [[3], [1], [5]],
+      "note": "Filtering NULLs out with IS NOT NULL, then sorting"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "case_id": "case_bacterial_culture",
+  "findings": [
+    {
+      "functor": "csf_neutrophilic_pleocytosis",
+      "value": "high",
+      "polarity": "stated",
+      "span": "CSF shows a markedly elevated white count with neutrophil predominance"
+    },
+    {
+      "functor": "csf_glucose",
+      "value": "low",
+      "polarity": "stated",
+      "span": "glucose 28 mg/dL (serum 110, ratio 0.25)"
+    },
+    {
+      "functor": "csf_protein",
+      "value": "high",
+      "polarity": "stated",
+      "span": "protein 220 mg/dL"
+    },
+    {
+      "functor": "csf_gram_stain",
+      "value": "positive",
+      "polarity": "stated",
+      "span": "Gram stain shows gram-positive diplococci"
+    },
+    {
+      "functor": "csf_culture",
+      "value": "positive",
+      "polarity": "inferred",
+      "span": "CSF culture later grew Streptococcus pneumoniae",
+      "justification": {
+        "type": "ENTAILED"
+      }
+    },
+    {
+      "functor": "enteroviral_pcr",
+      "value": "negative",
+      "polarity": "denied",
+      "span": "no mention of enterovirus PCR"
+    },
+    {
+      "functor": "seizure",
+      "value": "absent",
+      "polarity": "denied",
+      "span": "no mention of seizure"
+    },
+    {
+      "functor": "fever",
+      "value": "present",
+      "polarity": "stated",
+      "span": "A 19-year-old presents with fever, severe headache, and neck stiffness for one day."
+    },
+    {
+      "functor": "meningismus",
+      "value": "present",
+      "polarity": "stated",
+      "span": "neck stiffness"
+    }
+  ],
+  "discard": [
+    {
+      "text": "severe headache",
+      "reason": "not a finding"
+    },
+    {
+      "text": "one day",
+      "reason": "not a finding"
+    }
+  ],
+  "inference_justifications": [
+    {
+      "finding": "csf_culture",
+      "value": "positive",
+      "type": "ENTAILED"
+    }
+  ],
+  "_model_raw_ok": true
+}

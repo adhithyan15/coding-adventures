@@ -1,0 +1,23 @@
+// Navbar.light.msl — default light-theme styling.
+
+style Navbar {
+  part navbar {
+    padding      : 12 ;
+    background   : "#f8f9fa" ;
+    border-width : 1 ;
+    border-color : "#dee2e6" ;
+  }
+  part navbar-brand {
+    padding   : 4 ;
+    color     : "#212529" ;
+    font-size : 18 ;
+  }
+  part navbar-link {
+    padding       : 8 ;
+    background    : "transparent" ;
+    color         : "#0d6efd" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

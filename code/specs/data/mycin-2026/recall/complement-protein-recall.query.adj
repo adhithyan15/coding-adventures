@@ -1,0 +1,21 @@
+% ============================================================================
+% complement-protein-recall.query.adj — a worked recall query over the
+% complement-protein library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what does complement
+% component X do?" question: it states no immunology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the
+% citing clause's source/locator/trust. All knowledge is in the library; none is
+% here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli complement-protein-recall.query.adj
+% ============================================================================
+
+import "complement-protein-edges.adj"
+
+? has_function(c3b, $Function)                       % expect opsonization
+? has_function(c5a, $Function)                       % expect neutrophil_chemotactic_agent
+? has_function(membrane_attack_complex, $Function)   % expect causes_cell_lysis
+? has_function(c3a, $Function)                       % expect anaphylatoxin

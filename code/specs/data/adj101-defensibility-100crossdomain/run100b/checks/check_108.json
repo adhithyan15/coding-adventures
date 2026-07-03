@@ -1,0 +1,8 @@
+{
+ "check_id": 108,
+ "idx": 43,
+ "slot": "window1_minutes",
+ "claimed_value": 105,
+ "scenario": "A kitchen cooks a large batch of beef chili at lunch. Staff log that it reached 70 degrees F exactly 1 hour 45 minutes after cooking ended. The chili was then moved to the walk-in cooler. At the next check the chili measured 41 degrees F.",
+ "cited_span": "it reached 70 degrees F exactly 1 hour 45 minutes after cooking ended"
+}

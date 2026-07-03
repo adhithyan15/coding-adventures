@@ -1,0 +1,29 @@
+// ReviewHistoryPanel.mil - reusable Anki-style review history summary surface.
+//
+// Hosts compute summaries from Engram's shared review-history facade and pass
+// localized labels plus formatted values into this component.
+
+component ReviewHistoryPanel {
+  slot history-label : text ;
+  slot window-label : text ;
+  slot total-label : text ;
+  slot total-value : text ;
+  slot correct-label : text ;
+  slot correct-value : text ;
+  slot unique-label : text ;
+  slot unique-value : text ;
+  slot accuracy-label : text ;
+  slot accuracy-value : text ;
+  slot again-label : text ;
+  slot again-value : text ;
+  slot hard-label : text ;
+  slot hard-value : text ;
+  slot good-label : text ;
+  slot good-value : text ;
+  slot easy-label : text ;
+  slot easy-value : text ;
+  slot first-label : text ;
+  slot first-value : text ;
+  slot last-label : text ;
+  slot last-value : text ;
+}

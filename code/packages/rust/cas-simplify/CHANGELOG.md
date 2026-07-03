@@ -1,12 +1,50 @@
 # Changelog — cas-simplify (Rust)
 
-## Unreleased
+## [0.2.0] — 2026-05-29
+
+**Track G2 — compound-relation assumption store (Rust port).**
+
+Extends `AssumptionContext` so `assume_relation(...)` and
+`is_true_relation(...)` accept arbitrary relational shapes, not just
+plain-symbol-vs-zero.  Previously `assume(a^2 > b^2)` was silently
+dropped; under Track G2 it is canonicalised into a
+`(IRNode, &'static str, IRNode)` triple and stored in a new
+`HashSet`.  Subsequent `is(a^2 > b^2)` / `is(b^2 < a^2)` queries
+return `Some(true)` via structural lookup with commutativity-aware
+rewriting.  The legacy plain-symbol path is unchanged; the new path
+fires only when the plain-symbol path returns `None`.
+
+Mirrors Python `cas-simplify` 0.4.0 (Track G1) and TypeScript
+`@coding-adventures/cas-simplify` 0.2.0.  The symbolic-coefficient
+Weierstrass integrator that consumes this store ships in
+`symbolic-vm` 0.19.0.
 
 ### Added
 
-- Added deterministic `AssumptionContext::facts_for(...)` and
-  `AssumptionContext::symbols_with_facts()` metadata queries for MACSYMA
-  property inspection.
+- Private `general_relations` field on `AssumptionContext`, a
+  `HashSet<(IRNode, &'static str, IRNode)>` of canonical compound
+  relations.
+- Private helpers `parse_relation`, `canon_relation`, `node_key`, and
+  the centralised `head_to_op` map.
+- `assume_relation`, `forget_relation`, and `is_true_relation` now
+  have a compound-relation fallback when the plain-symbol path
+  doesn't apply.  `forget_all` clears both stores.
+
+### Semantics
+
+- No negative-knowledge inference: `assume(a^2 > b^2)` does NOT make
+  `is(a^2 < b^2)` return `Some(false)` — it returns `None`.
+- Commutativity is honoured: `is(b^2 < a^2)` ≡ `is(a^2 > b^2)`,
+  `is(b^2 = a^2)` ≡ `is(a^2 = b^2)`, and similarly for `<=` / `>=` and `!=`.
+
+## [0.3.0] — 2026-05-29
+
+### Added
+
+- Released the previously-Unreleased deterministic
+  `AssumptionContext::facts_for(...)` and
+  `AssumptionContext::symbols_with_facts()` metadata queries as part
+  of the `macsyma-truly-finish-plan` closure sweep (Track N).
 
 ## [0.1.0] — 2026-04-27
 

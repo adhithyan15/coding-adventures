@@ -1,0 +1,4 @@
+--js
+tests/diff/charset-us-ascii/input/a.js
+--compilation_level
+WHITESPACE_ONLY

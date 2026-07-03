@@ -1,0 +1,35 @@
+% Vignette 4 — equivocal NSTEMI. The case where the framework's
+% kickback machinery matters most.
+%
+% 64yo M with pressure-like chest pain x 90 min. Mild diaphoresis,
+% no radiation. PMH: HTN, diabetes. Vitals borderline. ECG: T-wave
+% inversions in lateral leads — could be old, could be new.
+% Troponin pending.
+%
+% Expected behaviour: posterior in the 40-60% range; uncertainty
+% over the precipitator AND over whether the T-wave inversions are
+% new vs old AND whether troponin will rise. Kickback strongly
+% suggested — the answer hinges on resolutions we can obtain.
+
+observe demographic(age_over_55)
+observe pmh(hypertension)
+observe pmh(diabetes)
+observe symptom_quality(pressure_like)
+observe associated_symptom(diaphoresis)
+
+uncertain { precipitator(exertional),
+            precipitator(rest),
+            precipitator(positional) } for acs
+  source "patient could not clearly specify precipitator"
+
+uncertain { ecg(new_t_wave_inversion),
+            denied(ecg_acute_st_changes) } for acs
+  source "T-wave inversions present on ECG but priors unavailable to confirm new vs old"
+  trust empirical
+
+uncertain { biomarker(troponin_dynamic_rise),
+            biomarker(troponin_undetectable_serial) } for acs
+  source "first troponin pending; second sample at +3h"
+  trust authoritative
+
+? acs

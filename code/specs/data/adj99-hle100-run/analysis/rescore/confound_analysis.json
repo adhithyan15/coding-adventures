@@ -1,0 +1,74 @@
+{
+  "format_confound": {
+    "format_tell_separates_arm_accuracy": 1.0,
+    "note": "A 1-line regex on {RETRIEVED FACTS, REASONING CHAIN, [cites, (src:} predicts fw-vs-plain at this accuracy. ~1.0 means the 'blind' judge could identify the arm from style alone; it was not blind.",
+    "has_tell_by_arm": {
+      "plain-haiku": {
+        "has_tell": 0,
+        "n": 100
+      },
+      "plain-opus": {
+        "has_tell": 0,
+        "n": 98
+      },
+      "fw-opus": {
+        "has_tell": 98,
+        "n": 98
+      },
+      "fw-haiku": {
+        "has_tell": 99,
+        "n": 99
+      }
+    }
+  },
+  "score_vs_correctness": {
+    "pooled_mean_def_correct": 4.015,
+    "pooled_mean_def_incorrect": 2.839,
+    "per_arm": {
+      "plain-haiku": {
+        "mean_def_correct": 3.0,
+        "n_correct": 4,
+        "mean_def_incorrect": 2.104,
+        "n_incorrect": 96
+      },
+      "plain-opus": {
+        "mean_def_correct": 4.333,
+        "n_correct": 27,
+        "mean_def_incorrect": 3.493,
+        "n_incorrect": 71
+      },
+      "fw-haiku": {
+        "mean_def_correct": 3.429,
+        "n_correct": 7,
+        "mean_def_incorrect": 2.62,
+        "n_incorrect": 92
+      },
+      "fw-opus": {
+        "mean_def_correct": 4.0,
+        "n_correct": 27,
+        "mean_def_incorrect": 3.465,
+        "n_incorrect": 71
+      }
+    },
+    "def_ge4_count": 155,
+    "def_ge4_wrong_count": 109,
+    "def_ge4_wrong_fraction": 0.703,
+    "note": "If defensibility measured soundness, def>=4 answers would mostly be correct. They are mostly WRONG, because the rubric scored attribution, not whether the load-bearing premise was true or flagged fallible."
+  },
+  "old_def_means_by_arm": {
+    "plain-haiku": 2.14,
+    "plain-opus": 3.724,
+    "fw-haiku": 2.677,
+    "fw-opus": 3.612
+  },
+  "fw_provenance_vs_score": {
+    "mean_def_provenance_complete": 3.269,
+    "mean_def_provenance_incomplete": 2.788,
+    "note": "Within fw, the citation-completeness flag tracks the old score — more confirmation the rubric graded citation chrome."
+  },
+  "counts": {
+    "total_cells": 400,
+    "agent_errors": 5,
+    "blind_cells_emitted": 395
+  }
+}

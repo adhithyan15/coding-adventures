@@ -1,0 +1,8 @@
+{
+ "check_id": 39,
+ "idx": 17,
+ "slot": "increases_hap_emissions",
+ "claimed_value": true,
+ "scenario": "Lakeside Coatings wants to swap one pump for a slightly larger model. The change is mechanically trivial, but it will increase emissions of the HAP methylene chloride by 0.3 tpy.",
+ "cited_span": "it will increase emissions of the HAP methylene chloride by 0.3 tpy"
+}

@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-collection-actions"
+version = "0.1.0"
+description = "Reusable collection import/export and note workflow actions built on the Mosaic UI pipeline"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["CollectionActions"]
+
+[kernel]
+version = "1"

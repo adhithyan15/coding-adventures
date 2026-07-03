@@ -1,0 +1,58 @@
+{
+  "id": "16-null-handling",
+  "description": "NULL values in INSERT, SELECT, WHERE, and ORDER BY",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE maybe (id, value)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO maybe VALUES (1, 'present')"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO maybe VALUES (2, NULL)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO maybe VALUES (3, 'also present')"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO maybe VALUES (?, ?)",
+      "params": [4, null],
+      "note": "NULL can also be supplied as a qmark parameter"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id, value FROM maybe ORDER BY id",
+      "expected_columns": ["id", "value"],
+      "expected_rows": [
+        [1, "present"],
+        [2, null],
+        [3, "also present"],
+        [4, null]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id FROM maybe WHERE value IS NULL ORDER BY id",
+      "expected_columns": ["id"],
+      "expected_rows": [[2], [4]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id FROM maybe WHERE value IS NOT NULL ORDER BY id",
+      "expected_columns": ["id"],
+      "expected_rows": [[1], [3]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS n FROM maybe WHERE value IS NULL",
+      "expected_columns": ["n"],
+      "expected_rows": [[2]]
+    }
+  ]
+}

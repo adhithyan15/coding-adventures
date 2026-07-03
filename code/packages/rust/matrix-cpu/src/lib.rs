@@ -68,6 +68,7 @@ pub fn profile() -> BackendProfile {
         // Supports F32 (bit 0), U8 (bit 1), I32 (bit 2).
         supported_dtypes: 0b0000_0111,
         gflops_f32: 40,
+        gflops_f64: 40, // MXF-1 gave the CPU f64 kernels; it runs them at ≈ its f32 rate
         gflops_u8: 60,
         gflops_i32: 50,
         host_to_device_bw: 100,    // host = device for CPU; effectively no transfer cost

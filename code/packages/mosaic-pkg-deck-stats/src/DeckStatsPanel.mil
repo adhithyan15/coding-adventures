@@ -1,0 +1,23 @@
+// DeckStatsPanel.mil - target-neutral deck statistics surface.
+//
+// Hosts compute deck stats from the Engram core facade and pass localized
+// labels plus formatted values into this component.
+
+component DeckStatsPanel {
+  slot deck-label : text ;
+  slot deck-name : text ;
+  slot deck-list-label : text ;
+  slot deck-names : list<text> ;
+  slot total-label : text ;
+  slot total-value : text ;
+  slot new-label : text ;
+  slot new-value : text ;
+  slot due-label : text ;
+  slot due-value : text ;
+  slot learning-label : text ;
+  slot learning-value : text ;
+  slot hidden-label : text ;
+  slot hidden-value : text ;
+
+  emit onSelectDeck ( value : text ) ;
+}

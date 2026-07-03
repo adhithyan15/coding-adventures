@@ -1,0 +1,7 @@
+{
+ "idx": 2,
+ "id": "MED-3",
+ "scenario": "At the bedside, Nurse Okafor verified the patient's wristband against the blood unit label. The second checker, Nurse Lindqvist, was paged away and never independently verified the unit before the infusion line was opened.",
+ "policy": "A blood transfusion requires two qualified staff members to independently verify the patient identification and the blood unit label at the bedside. If either verification step is not completed, the transfusion must not begin.",
+ "question": "Was it permissible to begin this transfusion?"
+}

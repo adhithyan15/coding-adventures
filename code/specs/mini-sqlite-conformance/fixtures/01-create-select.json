@@ -1,0 +1,33 @@
+{
+  "id": "01-create-select",
+  "description": "CREATE TABLE, INSERT rows, SELECT all rows",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE users (id, name, age)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO users VALUES (1, 'Alice', 30)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO users VALUES (2, 'Bob', 25)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO users VALUES (3, 'Charlie', 35)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT id, name, age FROM users ORDER BY id",
+      "expected_columns": ["id", "name", "age"],
+      "expected_rows": [
+        [1, "Alice", 30],
+        [2, "Bob", 25],
+        [3, "Charlie", 35]
+      ]
+    }
+  ]
+}

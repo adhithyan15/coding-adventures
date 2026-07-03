@@ -1,0 +1,54 @@
+{
+  "hash": "a6ac14b7cf554c5c",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/",
+  "title": "Functional outcomes in adults with community-acquired bacterial meningitis (MeninGene, Netherlands 2006–2024)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Streptococcus pneumoniae was the most common cause of community-acquired bacterial meningitis, 2029/2974 (68%).",
+      "byte_quote": "Streptococcus pneumoniae was the most common pathogen (2029/2974; 68%)"
+    },
+    {
+      "id": "c2",
+      "text": "Neisseria meningitidis caused 329/2974 (11%) of cases.",
+      "byte_quote": "Neisseria meningitidis (329/2974; 11%)"
+    },
+    {
+      "id": "c3",
+      "text": "Listeria monocytogenes caused 182/2974 (6%) of cases.",
+      "byte_quote": "Listeria monocytogenes (182/2974; 6%)"
+    },
+    {
+      "id": "c4",
+      "text": "Haemophilus influenzae caused 119/2974 (4%) of cases.",
+      "byte_quote": "Haemophilus influenzae (119/2974; 4%)"
+    },
+    {
+      "id": "c5",
+      "text": "Streptococcus pyogenes caused 83/2974 (3%) of cases.",
+      "byte_quote": "Streptococcus pyogenes (83/2974; 3%)"
+    },
+    {
+      "id": "c6",
+      "text": "Population/cohort: adults aged 16 years or older with community-acquired bacterial meningitis in the Netherlands (MeninGene), Jan 2006–Jan 2024, n=2974.",
+      "byte_quote": "We conducted a nationwide prospective cohort study in the Netherlands (MeninGene) from January 2006 to January 2024, including patients aged 16 years or older diagnosed with community-acquired bacterial meningitis."
+    },
+    {
+      "id": "c7",
+      "text": "Patients with meningococcal (N. meningitidis) meningitis were younger (median 26 vs 62 years).",
+      "byte_quote": "meningococcal meningitis were younger (26 [IQR 18–54] vs"
+    },
+    {
+      "id": "c8",
+      "text": "Patients with listeria (L. monocytogenes) meningitis were more likely to be immunocompromised (121/182, 66%).",
+      "byte_quote": "listeria meningitis were more likely to be immunocompromised (121/182 [66%]"
+    },
+    {
+      "id": "c9",
+      "text": "Patients with S. pyogenes meningitis were more likely to have an extra-meningeal focus of infection (74/83, 89%).",
+      "byte_quote": "extra-meningeal focus of infection (74/83 [89%]"
+    }
+  ],
+  "cites": []
+}

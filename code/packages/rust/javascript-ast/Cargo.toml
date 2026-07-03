@@ -1,9 +1,13 @@
 [package]
 name = "coding-adventures-javascript-ast"
-version = "0.1.0"
+version = "0.17.0"
 edition = "2021"
-description = "Backend-agnostic JavaScript AST — every node carries a CV ID per CLOC02; reusable by the Closure-Compiler-clone and the future V8-in-Rust clone."
+description = "Backend-agnostic JavaScript AST — full ESTree-compatible node taxonomy with optional per-node CV id. Reusable by the Closure-Compiler-clone and the future V8-in-Rust clone. Per CLOC02 / CLOC09."
 
 [dependencies]
 coding_adventures_correlation_vector = { path = "../correlation-vector" }
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+serde_json = "1"

@@ -19,6 +19,9 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Do not use `mise exec --` in BUILD files.** CI runners install language tools directly into PATH via `actions/setup-*`; they do not have mise. BUILDs that prefix `mise exec --` (or hardcode `/Users/adhithya/.local/bin/mise`) fail with `mise: not found`. Call `cargo`, `npm`, `python`, `go`, `bundle` directly — mise's local shims handle dispatch transparently. Re-learned during rebases; conflict resolution that picks the branch's `mise exec`-prefixed BUILD over main's bare-command BUILD reintroduces this break. After rebase: `git diff origin/main...HEAD -- '**/BUILD'` to verify only intentional BUILD diffs remain.
 - **TypeScript program path depth.** Programs at `code/programs/typescript/<name>/` reach packages with `../../../packages/typescript/<pkg>` (three `..`, not two).
 - **Don't install sibling deps in parallel** from inside a TS BUILD — two packages racing `cd ../state-machine && npm ci` corrupt each other's `node_modules` (ETXTBSY on esbuild). The build tool already handles topological order; only install what your own package needs.
+- **BUILD scripts run as POSIX sh on CI, not bash.** `set -euo pipefail` errors with `Illegal option -o pipefail` on Ubuntu's `/bin/sh` (dash). Use `set -e` only; replace `[[ ]]` with `[ ]`; no arrays; no `local`. Shebangs are ignored when the script is sourced/dispatched by name. Verify locally with `sh ./BUILD`, not `bash ./BUILD`.
+- **Multi-line `if`/`for`/`case` blocks inside BUILD itself break** because the build-tool dispatches each LINE through a fresh `sh -c`. Symptom: `Syntax error: end of file unexpected (expecting "fi")`. If you need a real shell script, put it in a sibling file (e.g. `tools/run-tests.sh`) and make BUILD a one-liner that invokes it: `sh tools/run-tests.sh`. Single-line `&&` chaining also works for short pipelines.
+- **NEVER name a build-output directory `build/` next to a `BUILD` file on macOS/Windows.** HFS+/NTFS are case-insensitive — `build` and `BUILD` collide, so `rm -rf build` from inside the BUILD script deletes the script itself (mid-execution, with no way to recover except `git checkout HEAD -- BUILD`). Use `_build/`, `.cmake-out/`, `gradle-build/`, or any name whose case-insensitive folding doesn't match `BUILD`. This has now bitten the repo twice: Gradle (lesson #48) and CMake/C++ (mosaic-flux-qt cycle 8).
 
 ## Cross-platform & Windows BUILD_windows
 
@@ -183,6 +186,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Grammar-lexer test helper**: `_tok_type` normalizer is required — non-keyword tokens keep `TokenType` enum values, only promoted keywords use strings. Direct `t.type == "EOF"` comparison fails because `TokenType.EOF != "EOF"`.
 - **Bracket-aware regex delimiter scanning** in `.tokens` parsers — `/` inside `[...]` is not the closing delim. Don't escape it as `[^\/]`; the parser handles it correctly.
 - **New language frontends MUST wrap `GrammarLexer` / `GrammarParser`, not hand-write their own.** Every Twig/Lisp/whatever frontend in the repo (Python, Rust, etc.) is a thin shim that loads `code/grammars/<lang>.tokens` and `<lang>.grammar`. The wrapper pattern is the canonical approach — see `code/packages/rust/brainfuck/` for the reference. The standalone `lisp-lexer` / `lisp-parser` Rust crates are NOT a model — they predate the grammar-tools refactor. Hand-writing forks the grammar into a second implementation that drifts silently.
+- **In the S language `_` is the assignment operator, so it cannot appear in any identifier** (the `NAME` pattern in `s.tokens` excludes it). Builtin names borrowed from R that contain an underscore — `seq_len`, `seq_along`, `is_null` — are therefore unwriteable in S: `seq_len(4)` lexes as `seq _ len(4)` (assign `len(4)` to `seq`) and the call silently does the wrong thing rather than erroring. Use dot-style names (`is.na`, `as.character` — dots ARE valid in S names) or drop the underscore form. Hit while adding the S v2 builtin library; the failure surfaced as a runtime "expected double" panic in a test, not a parse error.
 - **Rust GrammarParser NAME-match collision fix** (parser/grammar_parser.rs `match_token_reference`): when the grammar expects literal `NAME`, reject tokens whose `type_name` is set (e.g. a `QUOTE` token whose `type_: Name` is just the enum-fallback). The original logic only excluded type_name'd tokens for non-NAME custom types, so a Twig `'foo` would lex `'` as `(type_=Name, type_name="QUOTE")` and then incorrectly match the `NAME` slot in `atom = ... | NAME`. Symmetric tightening: a custom Name-based type reference (e.g. `AT_KEYWORD`) requires `type_name == expected_type` — bare-Name tokens no longer cross-pollute custom types.
 - **Custom token types (DIMENSION, HASH_COLOR, TOKEN_REF, …) do NOT get new `TokenType` enum variants.** The GrammarLexer maps custom-named regex tokens to `type_ = TokenType::Name` with `type_name = Some("DIMENSION")` etc. To detect them in a Rust compiler, use `t.type_name.as_deref() == Some("TOKEN_REF")`, NOT `t.type_ == TokenType::TokenRef` (which doesn't exist). Tests must check `t.type_ == TokenType::Name && t.type_name.as_deref() == Some("DIMENSION")`.
 - **`GrammarParser::new` takes `Vec<Token>` and `ParserGrammar` by value.** Do NOT borrow: `GrammarParser::new(&tokens, &grammar)` fails. Use `GrammarParser::new(tokens, grammar)`. If you need the token list after parsing, clone before passing.
@@ -197,6 +201,9 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Coupled version bumps across PRs need explicit numbering reservations.** When Phase 34 (TS) was being pushed before Phase 29-33 (TS) had merged, the natural `0.5.0 → 0.6.0` bump would have collided with PR #3468's `0.5.0 → 0.6.0`. Fix: bump Phase 34 to `0.7.0` directly (skipping 0.6.0) and call out the reservation in the CHANGELOG note ("leaves 0.6.0 for the in-flight Phase 29-33 port"). Rebase merge order — Phase 29-33 first, then Phase 34 — produces a clean 0.5.0 → 0.6.0 → 0.7.0 history without per-PR conflicts.
 - **Numerical-derivative testing is the universal correctness check across Python/TS/Rust CAS ports.** Instead of asserting exact IR shapes (which vary with the surrounding simplifier passes), substitute `x ← x_val` into the returned closed form, evaluate through the full backend (`vm.eval` / `SymbolicBackend.eval`), and central-difference at several sample points. Compare against the original integrand at the same samples. Tolerance of `1e-4` with step `h = 1e-5` is enough headroom for f64 round-trips through `Sin`/`Cos`/`Tan`/`Atan`/`Sqrt`. This single pattern carried Phases 26, 27, 28, and 34 across three languages with zero per-language correctness divergence.
 - **`git rebase` from a noisy-working-tree branch on Windows.** Switching branches in the coding-adventures checkout always surfaces a long list of `D code/programs/kotlin/.../.gradle/...` deletions (Gradle build outputs untracked in some branches, tracked in others). Plain `git rebase origin/main` errors with `cannot rebase: You have unstaged changes`. Fix: `git rebase --autostash origin/main`. Autostash also drops the changes silently if they don't apply cleanly to the rebased branch.
+- **SQL query planner: `Project` must be the OUTERMOST (last) step in `planSelect`.** The correct 8-step pipeline is `Scan → Filter → Aggregate → Having → Distinct → Sort → Limit → Project`. Building `Project` before `Distinct`/`Sort`/`Limit` produces the wrong tree shape — e.g. `Sort(Project(Scan))` instead of `Project(Sort(Scan))`. Tests C5 (ORDER BY), C6 (LIMIT), C7 (DISTINCT), and Struct stacking all fail if `Project` is wrapped too early. This bug appeared identically in Java, Kotlin, and Haskell `planSelect` implementations (PR #7045, #7047, #7048). Fix: move `Project` construction to the last step after all sorting/pagination nodes are wrapped.
+- **Haskell: always export data type constructors with `TypeName(..)` in the module export list.** `TypeName` alone exports the TYPE but not its constructors — `LitInt`/`LitText`/etc. from `LiteralVal` become invisible to callers including the package's own test suite. Symptom: `Data constructor not in scope: LitInt :: t0 -> SqlPlanner.LiteralVal`. On Windows CI tests silently pass as "skipped" (cabal not found), masking the error. Fix: `LiteralVal(..)` in the export list. Applies to every custom ADT whose constructors are referenced by callers or tests.
+- **Java 21: unnamed variables/patterns (`_`) are a preview feature, disabled by default.** `case Foo _` and `case Foo(_, var x)` trigger `unnamed variables are a preview feature and are disabled by default` on Java 21 (JEP 443 — finalized only in Java 22). Fix: replace `_` with a named binding: `ignored`, `op2`, `nm`, `pat2`, etc. Record patterns with named bindings (`case Foo(var x, var y)`) and type patterns with names (`case Foo bar`) ARE finalized in Java 21.
 
 ## Cryptography & security review
 
@@ -242,6 +249,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **CodeQL flags `int64 → int` downcasts of CLI input** as `go/incorrect-integer-conversion`. Add explicit platform-sized bounds checks first; for `float64`, reject NaN/Inf/non-integral before the cast.
 - **Miri timeout grows with code, not with test count.** `lang-runtime-safety.yml` had `timeout-minutes: 30`; PR 5 (closures) tripled `twig-vm` Miri wallclock and one of two parallel runs failed at 30:15 from runner variance, not a real bug. Bump generously (90 min) and shard by crate when wallclock crosses 60 min. Locally, `MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm` is the canonical pre-push smoke check; don't trust the timeout to catch slowdown.
 - **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `lispy-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
+- **Changing a shared frontend compiler runs DOWNSTREAM consumers' tests in CI — run them locally first.** Editing `twig-ir-compiler`'s lowering (LANG-FULL TW2: value-defines → typed locals) passed `cargo test -p twig-ir-compiler` and the lang-aot matrix locally, but CI's affected-package detection also rebuilt `twig-vm`, whose `dispatch.rs` test compiled a real Twig program and asserted on the *exact* emitted ops (`(define x 5)` → a `global_set` writing `x` to the host global table).  The new lowering dropped that `global_set`, so the downstream test's expectation broke (the result was still correct).  This is NOT a latent bug to defer — it's a test that legitimately tracks the compiler output you changed, so update it in the same PR.  Rule: when a PR touches a shared `*-ir-compiler` (or any crate many others depend on), enumerate consumers with `grep -rln '<crate>' */Cargo.toml` and run **each** consumer's tests (`cargo test -p <consumer>`) before pushing — not just the changed crate + the integration matrix.  Preserve a downstream test's *intent* when updating it (here: keep exercising `global_set` by switching to a lambda-**captured** define, which still hits the global table) rather than deleting the assertion.
 
 ## QR / format-marker / file-format specifics
 
@@ -259,11 +267,17 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Always pull `origin/main` first** (`git fetch origin && git merge origin/main`) before starting work — the repo moves fast.
 - **Default to a fresh `git worktree`** from `origin/main` whenever the source checkout is shared, noisy, or has other agents active. Treat it as the default, not an exception.
 - **Add new lessons to this file IMMEDIATELY** when a CI failure or mistake recurs. Don't wait until later. Keep entries short — read this file before starting any work.
+- **STOP and generalise when you find yourself writing the Nth variant of the same helper.** During the cas-summation work an agent generated **74 open PRs + 27 already-merged PRs** that added a hand-written grid of `N-Sqrt × M-Log × polynomial` helper functions — one per `(N, M)` pair, up to N=64. The bodies were identical modulo two hardcoded counts. A single generic `_log_sqrt_poly_effective_x2_generic(node, k)` that *counts* factors instead of hardcoding them handles every `(N, M, K)` combination, including cases beyond the grid that silently failed. Symptoms to watch for: functions whose names embed a small integer (`_two_sqrt_six_log_poly_*`), CHANGELOGs listing `Phase N — N-Family`, version bumps far past semver-meaningful (`2.373.0`), tests that just instantiate the same template N times. Whenever a "family" pattern emerges, ask "can the count be a `for` loop?" before writing helper N+1. Cleanup PR for this specific incident: #4545 (Phase 86 — generic log×sqrt×poly recogniser).
 - **`flock` is Linux-only — use `mkdir` spin-lock for cross-platform BUILD serialization.** `flock /tmp/name.lock sh -c "..."` works on Linux but fails with `sh: flock: command not found` on macOS runners. Replace with: `while ! mkdir /tmp/name.lock 2>/dev/null; do sleep 1; done; (cmd); EC=$?; rmdir /tmp/name.lock 2>/dev/null; exit $EC`. The `mkdir` call is atomic on all POSIX filesystems; the subshell captures the exit code so the lock is always released and the correct status propagates.
 - **Generated BUILD scripts must be POSIX-compatible.** The repo's build-tool runs `BUILD` files via `sh`, which on Ubuntu CI is dash. Dash rejects `set -o pipefail` ("Illegal option -o pipefail"). Don't emit `#!/usr/bin/env bash` shebangs or `set -euo pipefail` from any code-generator's BUILD template. Plain commands match the convention of `cli-builder`, `state-machine`, etc.
 - **Don't let downstream tools re-parse `.tokens` / `.grammar` files at runtime.** Those files are build-time-only artifacts: `<lang>-lexer/build.rs` and `<lang>-parser/build.rs` already compile them into Rust source via `grammar_tools::compiler`, baking the parsed `TokenGrammar` / `ParserGrammar` into the lexer/parser rlibs as struct literals. Tools that need keyword lists, brackets, or grammar rules should pull from those compiled artifacts (e.g. `twig_token_grammar_spec()`, `twig_grammar()`) — not re-parse the source files. The `<lang>-spec-dump` binary in each language's parser crate is the canonical exit point: it serialises the embedded grammars to a `LanguageSpec` JSON document for editor tooling. Same source of truth, no drift.
 - **grammar-tools codegen for `-compiler` packages** (not `-lexer`/`-parser`): `generate-rust-compiled-grammars` only auto-discovers `*-lexer` and `*-parser` packages. For `*-compiler` packages that embed both token + parser grammars in one `_grammar.rs`, run separately: `grammar-tools -f compile-tokens <file>.tokens` and `grammar-tools compile-grammar <file>.grammar`, then combine the two function bodies under one header with both import groups. The `-f` flag is needed for `.tokens` files that use `escapes: standard` (the validator rejects it, but the compiler correctly emits `escapes: Some("standard")` in the struct).
 - **Never hand-edit `_grammar.rs` files.** Edit the `.tokens` or `.grammar` source files in `code/grammars/` and re-run the grammar-tools pipeline to regenerate. Hand-edits diverge from the grammar source of truth and break the single-source-of-truth invariant.
+- **Autonomous loops MUST use CronCreate, not ScheduleWakeup.** During a multi-cycle scaffolding job, an agent used `ScheduleWakeup` to chain cycles together (each wakeup fired the prompt for the next cycle). When auto-mode exited between cycles, the agent treated the wakeup-fired prompt as a passive notification and responded with "No response requested" instead of executing the work — the loop stalled silently. `CronCreate` prompts are always treated as actionable (the agent reliably acts on them — every babysit-PR cron has proven this), and the cron survives session restarts and auto-mode toggles. **Pattern for autonomous loops**: (1) write a state file at `.claude/<job>-state.json` recording the work queue and per-item status (`pending` / `in-progress` / `pr-open` / `merged`); (2) `CronCreate` ONE recurring job (3 min interval — not 5, the user is impatient and so should you be) with a prompt that opens with literal directive language ("AUTONOMOUS LOOP DRIVER — execute the steps below without asking for confirmation. This cron-fired prompt IS the directive; do not defer to the user."); (3) the prompt reads the state file, transitions states, babysits open PRs (handling CI failures and conflicts), starts new cycles when prior ones merge, and `CronDelete`s itself when all entries reach `merged`. NEVER use `ScheduleWakeup` for autonomous work — only for one-shot follow-ups the user expects.
+- **Gradle's `build/` directory collides with the repo-required `BUILD` script on case-insensitive macOS HFS+.** Two failure modes: (1) `gradle test` fails to create `build/reports/problems/` because the filesystem already has `BUILD` at the same name; (2) `rm -rf build` (cleaning gradle's output) ALSO deletes the `BUILD` script — silent data loss. **Fix in `build.gradle.kts`**: `layout.buildDirectory.set(file(".gradle-out"))`. Add `.gradle-out/` to the package's `.gitignore` alongside `.gradle/`. Document the redirect in the README so other contributors don't undo it. Applies to every new Kotlin/Gradle package added under `code/packages/kotlin/`. Same logic would apply to any other Gradle-using language we add (Java, Scala, etc.) if their convention is also lowercase `build/`. **NEVER `rm -rf build` in a repo with a `BUILD` script** — use `rm -rf .gradle-out` (or whatever you redirected to).
+- **Plan autonomous work for maximum parallelism: smallest unblocker first, then fan out.** When the work queue contains N independent items (e.g., 8 runtime libraries, none of which depend on each other), DO NOT serialize them through the loop one PR at a time. The right pattern: identify the smallest piece of work that unblocks parallel streams, push it as a quick PR, and **while it's in review/CI, open the rest as parallel PRs** — each on its own branch, each with its own babysit. The shared cron then juggles them all: it advances any stream whose PR merged, fixes any stream whose CI broke, rebases any that conflicts. Concretely: for the Phase-2 runtime libraries, the first PR (`mosaic-flux-react`) was the reference implementation that established the API surface; once it was in CI, the next three (`html`, `webcomponent`, `swiftui`) could have been opened in parallel rather than waiting on the chain. Recognizing parallelism is a state-file design choice — list items as `{ id, depends_on: [...], status }` so the driver can pick ALL items whose `depends_on` are merged.
+
+- **A subagent sees the Agent tool's `description`/title, not only its `prompt` — never leak the answer there.** In a blind-evaluation experiment (ADJ52: a domain-blind ingester that must classify a clinical case without knowing the diagnosis), an `Agent` call's `description` was "Domain-blind ingester on McArdle case". The subagent picked up "McArdle" from the description and referenced it in its reasoning, contaminating the supposedly blind run — even though the prompt itself was scrubbed. Rule: **every field that reaches a subagent (description AND prompt) must be scrubbed of the ground truth / answer / case name.** Keep descriptions generic ("Ingest problem statement into IR"). The same leak applies to file paths handed to a sandboxed agent — a path like `.../cases/mcardle-pmr/...` names the answer; pass inputs inline, not by revealing the path. Discard and re-run any blind output produced after such a leak.
 
 ## Mosaic compiler pipeline
 
@@ -278,7 +292,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 ## mosaic-emit-xaml — running the generated output on Windows
 
-- **`HostDialog` cannot lower inside a `<UserControl>` root — the XAML root must BE the `<ContentDialog>` and the partial class must extend `ContentDialog`.** Discovered while making the first end-to-end Mosaic→XAML→on-screen-dialog demo run (`demo/hello-dialog-xaml/`). WinUI 3's `ContentDialog` is a top-layer primitive that becomes the visual root when shown; wrapping it as `<UserControl><ContentDialog>...</ContentDialog></UserControl>` parents the dialog to the UserControl, then `await ShowAsync()` fails with `ArgumentException: Value does not fall within the expected range` or a native `0xc000027b` heap-corruption crash in `CoreMessagingXP.dll`, depending on timing. **Fix pattern**: when the moslayout root is `HostDialog`, `emit_xaml` must emit `<ContentDialog x:Class="...">` as the root and the matching `.xaml.cs` partial class must be `: ContentDialog`. Non-HostDialog cases keep the existing `<UserControl>` lowering. Generalises to any future top-layer-popup primitive (HostFlyout, HostMenuFlyout, etc.) — same "root promotion" rule.
+- **`HostDialog` cannot lower inside a `<UserControl>` root — the XAML root must BE the `<ContentDialog>` and the partial class must extend `ContentDialog`.** Discovered while making the first end-to-end Mosaic→XAML→on-screen-dialog demo run (`code/programs/csharp/hello-dialog-xaml/`). WinUI 3's `ContentDialog` is a top-layer primitive that becomes the visual root when shown; wrapping it as `<UserControl><ContentDialog>...</ContentDialog></UserControl>` parents the dialog to the UserControl, then `await ShowAsync()` fails with `ArgumentException: Value does not fall within the expected range` or a native `0xc000027b` heap-corruption crash in `CoreMessagingXP.dll`, depending on timing. **Fix pattern**: when the moslayout root is `HostDialog`, `emit_xaml` must emit `<ContentDialog x:Class="...">` as the root and the matching `.xaml.cs` partial class must be `: ContentDialog`. Non-HostDialog cases keep the existing `<UserControl>` lowering. Generalises to any future top-layer-popup primitive (HostFlyout, HostMenuFlyout, etc.) — same "root promotion" rule.
 
 - **Every emitted `xmlns:` prefix must be declared on the root, or XAML fails to parse.** Same demo found `emit_host_dialog` writing `mos:Dialog.IsOpen="{Binding ...}"` without ever declaring `xmlns:mos="..."`. The XAML compiler accepted the source but the runtime XAML loader rejected the binding, manifesting as an opaque "could not be started" error dialog ahead of any other crash. **Fix pattern**: either reuse PR-5's `used_xmlns` mechanism to declare every prefix referenced by an emitter, or drop the attribute. Recommend the latter for `mos:Dialog.IsOpen` — the existing "host owns the lifecycle" contract (host code-behind calls `ShowAsync()/Hide()`) is sufficient.
 
@@ -294,6 +308,778 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 - **The unpackaged WinUI 3 bootstrap rejects the app with a system error dialog if the Windows App Runtime isn't installed on the machine.** The dialog reads "This application requires the Windows App Runtime Version X.Y (MSIX package version >= ...)". Two ways out: (a) document `winget install Microsoft.WindowsAppRuntime.1.7` in the emitted README, OR (b) set `<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>` in the emitted `.csproj` to bundle the runtime. (b) avoids the install dance but increases output size to ~50MB.
 
-- **The catalogue of issues from the first end-to-end demo lives at `demo/hello-dialog-xaml/ISSUES.md`** — read that BEFORE starting any "make the Mosaic XAML output actually run" work. Each entry there is a follow-up PR. Once they all land, `mosaic-compile --backend xaml --emit-project` should produce a project that runs end-to-end with only the user's business logic added.
+- **The catalogue of issues from the first end-to-end demo lives at `code/programs/csharp/hello-dialog-xaml/ISSUES.md`** — read that BEFORE starting any "make the Mosaic XAML output actually run" work. Each entry there is a follow-up PR. Once they all land, `mosaic-compile --backend xaml --emit-project` should produce a project that runs end-to-end with only the user's business logic added.
 
 - **N-API: `napi_value` is a local handle; storing it across calls requires `napi_ref`.** Surfaced when matrix-rust-napi's class-based API (Phase 2b's `Graph` / `Runtime` classes with `Graph.fromJson` / `Runtime.create` static methods) silently returned `undefined` from every static-method call. Root cause: the class constructors were stored in an `AtomicUsize` as raw `napi_value`s captured from `napi_define_class` inside `napi_register_module_v1`. By the time a later JS-triggered callback (`Graph.fromJson(...)`) loaded the stored value and passed it to `napi_new_instance`, the local handle had been invalidated when its handle scope ended, and `napi_new_instance` returned `napi_invalid_arg` (status 1). **Fix pattern**: immediately after `napi_define_class`, wrap the returned `napi_value` in a persistent `napi_ref` via `napi_create_reference(env, class, /* refcount */ 1, &mut ref)`. Store `napi_ref` in the AtomicUsize. In each static-method callback, call `napi_get_reference_value(env, stored_ref, &mut value)` to get a scope-bound `napi_value` for that callback, then pass it to `napi_new_instance`. `napi_ref` is also pointer-sized so the AtomicUsize approach still works for Worker-thread safety. `font-parser-node` has the same latent bug in `FONT_FILE_CTOR` but no existing test reaches `napi_new_instance` (every input rejects earlier via `fp::load`), so it's never fired in practice — file a follow-up to fix it before the next consumer of that addon hits the same wall. **Always throw a precise JS error** (not silently return `undefined`) on every napi-call failure inside static-method shims — silent returns mask exactly this kind of bug.
+
+- **Ruby parser: `method_call_no_paren` can mis-eat a `def` body's tail expression.** Surfaced in Phase 6m when `def myor(a, b)\n  a || b\nend` started parsing as `method_call_no_paren("def", expression="myor(a,b)")` at the top level — the inner def_statement was lost and the body's `a || b` ended up as a separate statement after, leaving the literal `end` as a third statement. Root cause: `method_call_no_paren = (NAME|KEYWORD) expression { COMMA expression }`. When the parser tries `def_statement` first and its body's `statement` rule fails on `a || b` (because the alternation backtracking for `NAME` then-`||` doesn't fully unwind), the framework backtracks to `method_call_no_paren` at the top level, which happily consumes `def` (as KEYWORD callee) plus `myor(a, b)` (as expression argument). **Workaround**: wrap the tail expression in parens — `def myor(a, b)\n  (a || b)\nend` — which forces the expression through the `LPAREN expression RPAREN` atom in `factor`, bypassing the ambiguity. **Affected phases**: 6m logical operators (`&&`/`||`/`and`/`or`/`!`/`not`), likely 6n/6o (range, ternary), 6p (compound assignment). Plan a follow-up to either (a) drop `method_call_no_paren` from `statement` alternation in favour of an explicit `command_call` shape that only fires when a `(NAME|KEYWORD)` is followed by something other than a binary operator, or (b) reorder so `expression_stmt` is tried before `method_call_no_paren`.
+
+## Mosaic emitters — language-specific coercion traps
+
+- **JavaScript loose equality makes `0 == ""` true — so a code-generator that defaults numeric slots to `""` produces a subtle false-positive bug in every comparison against an unset value.** Surfaced in PR #4999 (`mosaic-emit-webcomponent`). The Web Component emitter generated `const editRow = this.getAttribute("edit-row") ?? "";` uniformly for every typed slot. In the visicalc demo's per-cell editing predicate `r == editRow`, leaving `edit-row` unset rendered the editor at cell (0, 0) by default — because `0 == ""` (via JS coercing `""` to `0`). The host had to explicitly set `edit-row="-1"` as a workaround, but the right fix is in the emitter. **Fix pattern (by slot type)**: `Number` → `attr !== null ? Number(attr) : NaN` (NaN's `==` is always false, even against itself — exactly the "no value" sentinel semantics every numeric comparison needs); `Bool` → `attr === "true"` (strict string equality, absent attribute reads `false`, matches HTML boolean-attribute conventions); `List` → `JSON.parse(attr ?? "[]")` (already existed pre-fix); `Text`/`Image`/`Color` → keep `attr ?? ""` (these are never compared numerically and `${var}` template interpolation strings-coerces uniformly). **Scope check**: this trap is specific to JS-emitting custom-element backends. HTML emitter renders server-side without `getAttribute`; React uses typed props; SwiftUI/Compose/Qt/Flutter/XAML all have static type systems that catch the mismatch at compile time. So the fix is only needed in `mosaic-emit-webcomponent`.
+
+- **Swift and Kotlin's `==` operator rejects `Int == Double` — when a For-index (`Int`) is compared against a Number-typed slot (`Double`), the emitter must rename-and-cast the index.** Surfaced first in PR #4987 (SwiftUI) and again in PR #4994 (Compose). When `Grid.mll` writes `is-editing: ( r == editRow )` with `editRow: number`, the SwiftUI/Compose backends emit a `ForEach`/`forEachIndexed` whose index variable is `Int`. The naive translation `r == editRow` then fails to compile in both languages because `Int == Double` requires explicit conversion. **Fix pattern**: rename the for-index in the emitter (`_swiftIdx<idx>` in SwiftUI; `_kotlinIdx<idx>` in Compose), then introduce a shadow binding `let r = Double(_swiftIdx0)` / `val r = _kotlinIdx0.toDouble()` so the user-visible identifier (`r`) keeps the same name across the layout but is now `Double` everywhere it's used in expressions. The shadow rename is necessary because the layout's bound name (`as: r`) cannot collide with the emitter's index variable in the host-language scope. **Scope check**: this trap is Swift/Kotlin-specific. Dart's `==` accepts `int == double` (returns true when numerically equal — `1 == 1.0` is `true`). C# implicitly promotes `int` to `double` for `==`. Qt/QML uses JS-style coercion. So no analogous fix is needed in `mosaic-emit-flutter`, `mosaic-emit-xaml`, or `mosaic-emit-qt`.
+
+- **The taxonomy of emitter coercion bugs maps cleanly onto host-language semantics — survey by language family, not by backend.** Three classes show up:
+  1. **JS loose-equality + empty-string-default trap** — only JS-emitting custom-element backends (`mosaic-emit-webcomponent`). HTML/React use different rendering pipelines that don't go through `getAttribute`.
+  2. **Strict-static `Int != Double` rejection** — only Swift/Kotlin (`mosaic-emit-swiftui`, `mosaic-emit-compose`). C#/Dart/QML coerce naturally.
+  3. **No-coercion-needed languages** — Flutter (Dart), Qt (QML), XAML (C#), HTML (static markup). When a new emitter-coercion bug class is discovered, classify by host-language semantics first; the backend list to audit falls out automatically.
+
+## sql-execution-engine — grammar drift between a shared grammar and its hand-written tree-walker
+
+- **A hand-written AST tree-walker that switches on rule names will silently rot when the shared grammar grows new precedence layers — and the failure mode is `nil`, not a parse error.** `sql-execution-engine` (Go) walks the `sql-parser` AST with a `switch node.RuleName` in `evalExpr`. Over many PRs (#4055–#4164) `code/grammars/sql.grammar` adopted SQLite's full operator-precedence ladder, inserting two new rules — `collated` (`COLLATE` postfix) and `bitwise` (`& | << >>`) — *between* `comparison` and `additive`, and rewrote `comparison` to take `collated` operands. The evaluator had no `case "collated"`/`case "bitwise"`, so every expression fell through to `default: return nil` *before reaching* `column_ref`. Result: `SELECT id, name` returned `<nil>` for every cell, `WHERE` matched zero rows, and `TestWhereNumericComparison` panicked on an empty slice. `SELECT *` kept working because it reads the row map directly and never touches `evalExpr` — a misleading "half the package works" signal. Separately, `limit_clause` changed from bare `NUMBER` tokens to `signed_number` child nodes (plus negative-LIMIT-means-unbounded and MySQL `LIMIT m, n`), so `executeLimit` found no NUMBER tokens and ignored LIMIT/OFFSET entirely. **Why it lay hidden**: the Go build tool only rebuilds/tests packages whose diff touches them or a transitive dep, so the break stayed dormant until an unrelated `go/lexer` change re-triggered the engine's tests on a `main` CodeQL build. **Fix pattern**: when you add a precedence layer to a shared `.grammar`, grep every consumer that walks the parse tree by rule name (`grep -rl 'RuleName' code/packages/*/sql-*`) and add the passthrough/eval case in the same PR. A new wrapper rule needs at minimum a passthrough case (`evalCollated` just evaluates its inner node); operator layers need real evaluation (`evalBitwise`, `||` concat, unary `~`/`+`). **Prevention idea**: give the tree-walker a `default:` that returns a sentinel error instead of `nil`, so an unhandled rule surfaces as a loud `EvaluationError` rather than silent NULLs — file a follow-up to do this across the grammar-driven Go engines.
+
+## closure compiler clone (closurec) — pass scheduler `changed=true` infinite-loop hazard
+
+- **Under `IterationPolicy::FixedPoint`, a pass that reports `changed = true` while returning an unchanged program causes the pipeline scheduler to re-run that pass forever.** Surfaced first as a security-review catch on CLOC13.E (PR #4766, `closure-pass-remove-unused-vars`). The pattern that triggers it: a pass body wires up new analysis (scope-analyzer use-count, alias scan, shape candidates, etc.), identifies candidates, but *defers the actual program mutation* to a follow-up PR. The intuitive draft is `changed = !candidates.is_empty()` — "I found work, so something changed." But the scheduler keys `FixedPoint` on `changed`: each iteration re-runs the pass, the pass re-finds the same candidates, claims a change, returns the same program, and the loop spins. **Fix pattern (now codified across CLOC13.A..E)**: until step 3 (the apply step) actually mutates the program, hard-pin `changed = false` as a struct literal in the returned `PassOutput { .. changed: false, .. }`. Don't derive it. Don't condition it. Add inline comment AND CHANGELOG note pointing at this lesson so the next contributor doesn't reintroduce the bug when they wire the apply step. The same discipline applies to `OneShot` passes (rename, CLOC13.A) even though the literal infinite loop doesn't fire — pipeline consumers may key off `changed` for cache invalidation or to skip downstream serialization, and reporting `true` without mutation forces unnecessary work. **Defence in depth**: the candidate vec gets bound to `_alias_candidates` / `_shape_candidates` / etc. so the work-survey is preserved for the apply-step PR without triggering an unused-var warning, and so the `_` prefix telegraphs "this is deliberately unused until step 3 lands."
+
+- **Open at most one shared-crate PR at a time — sibling merges cascade-rebase every other shared-crate PR.** Surfaced when PR #4752 (CLOC12.15 `BigIntLiteral` in `javascript-ast`) needed *four* rebases as orthogonal sibling PRs touching `javascript-ast` landed one after another. Each sibling merge re-derived the file hash, GitHub flipped the PR to `CONFLICTING`, and the local worktree needed a rebase + force-push-with-lease cycle. Burned ~30 min of wall-clock per cycle, plus re-running tests + re-running `/security-review` per rebase. **Fix pattern**: before opening a shared-crate PR, check `gh pr list --state open` for any in-flight PR touching the same crate. If one exists, defer the new PR; pick truly orthogonal work instead (a pass-body PR that consumes the shared crate via Cargo dep doesn't *modify* it and so doesn't cascade). The CLOC13 5-stream parallel set worked specifically because each PR modified a different pass crate and only *consumed* the shared `closure-scope-analyzer` via path dep — no rebase cascades. **Detect early**: a PR transitioning `CLEAN → CONFLICTING` immediately after a sibling merge is the cascade firing. Don't bisect; rebase, re-test, re-review, re-push.
+
+- **Prep-locally-while-blocked: when a shared-crate PR blocks the next move, draft the follow-up in its own worktree without pushing — verify build + tests + security review locally, then push the moment the blocker merges.** Surfaced during the CLOC13 cascade: PR #4778 (CLOC13.B inline body, a pass-body PR) sat in CI for ~6 minutes; the natural next move was CLOC13.0 (analyzer body activation), which was a *shared-crate* PR and therefore blocked by the standing "one shared-crate PR at a time" rule. Idling 6 minutes is wasted wall-clock. **Pattern**: `git worktree add .claude/worktrees/<next-task>-tree -b <branch> origin/main`, then write the full implementation + tests + CHANGELOG + version bump + run the local cargo test suite + run /security-review via Agent — all *without* pushing. When the blocker's `mergedAt` flips non-null: `git fetch origin && git merge origin/main` in the prepped worktree (fast-forward in the common case), re-run tests against the now-current main, and push. **Numbers from CLOC13.0**: prep took ~4 minutes (read analyzer source, write 119-line body, write 7 new tests, run cargo test, run security review). When #4778 merged, time from "merged" to "PR open" was ~25 seconds (rebase + retest + push + gh pr create). Without the prep, that gap would have been the full 4 minutes. **When the rule doesn't apply**: if the worktree's diff would conflict with the blocker's diff (e.g., both modify the same lines of the same file), the rebase after merge fails and the prep is wasted. Detect by checking `git diff origin/main...<blocker-branch>` against your intended changes before starting prep. **Why this beats "just wait"**: the blocker's merge is itself a signal that the system is ready for the next layer. Prep lets you ride that wave instead of starting from cold context every time. Especially valuable in autonomous-loop mode where idle minutes are dead minutes.
+
+- **closurec version bumps are a 3-file change, not a 2-file change.** Bumping `code/programs/rust/closurec/Cargo.toml` requires synchronised bumps in **both** `code/programs/rust/closurec/cli.spec.json` (the version cli-builder reads at startup to populate `ParserOutput::Version(v).version`, which the `--version` banner prints) **and** `code/programs/rust/closurec/tests/diff/help-markdown/expected.stdout` (the golden line `Version: X.Y.Z` for the `--help_markdown` byte-exact integration test). Surfaced in CLOC14 (PR #4929): bumped Cargo.toml 0.43.0 → 0.44.0, missed both downstream spots, `tests::version_string_matches_crate_version` (which asserts `--version` output contains `env!("CARGO_PKG_VERSION")`) failed on macos-latest CI. Required a follow-up fix commit. **Mitigation**: before pushing a version bump, `grep -rn "$OLD_VERSION" code/programs/rust/closurec/` and confirm zero hits. The unit test that catches the spec drift is in the main binary's `mod tests` (`cargo test --bin closurec`), not in `tests/`, so a partial test run via `--test diff_minify` won't catch it.
+
+- **Pull-from-origin-first failure mode: a multi-hour-stale main worktree silently hides recently-landed files, leading to redundant PR work that has to be closed.** Surfaced when I drafted PR #4784 (a CLOC13 spec) at `code/specs/CLOC13-scope-analyzer-and-pass-bodies.md` without realising `code/specs/CLOC13-scope-analyzer.md` had already landed on main (in a commit I never pulled). My local main worktree had been on commit `69dbb4119` for the entire session; main had advanced past that with the CLOC13 spec + ADJ14 + LP19e + others. The redundant PR ran CI, sat in review queue, then had to be closed with a self-correcting comment. CLAUDE.md working principle #1 ("Pull from origin/main first") exists precisely for this. **Mitigation**: at the start of every loop iteration that does any work in the main worktree (not just feature worktrees), run `git fetch origin && git merge origin/main` BEFORE any Read/Edit/Write. Feature worktrees forked from `origin/main` are immune to this specific bug because they're forked fresh — but the main worktree is sticky-stateful and silently rots. **Detection**: if `code/...` paths returned from `git ls-tree -r origin/main` don't appear in `ls code/...`, the worktree is stale. Treat that mismatch as a stop-the-line signal. **Cost**: ~40 minutes of wall-clock to draft, push, and then close #4784 — plus the contributor-trust hit from a self-acknowledged "this was redundant" comment.
+
+- **The macOS native-executable path can't link the runtime archive's external helpers (`__twig_alloc_bytes`, `__twig_putchar`, …); native AOT smoke tests are Linux/Windows-gated for exactly this reason.** Surfaced in McCarthy L3b when adding heap cons-cell support to the native backends. The aarch64 backend correctly emits `BL __twig_alloc_bytes` for the new `alloc` op (verified: the object compiles and `ld` is reached), but `compile_file_to_macos_executable` then fails with `ld: Undefined symbols: "__twig_alloc_bytes"`. **It is NOT a codegen bug** — a plain Brainfuck program (whose tape uses `alloc_bytes`) fails identically on the macOS-exe path (`__twig_alloc_bytes` AND `__twig_putchar` both undefined). The macOS runtime archive embedded by `twig-aot/build.rs` does not resolve these C helpers (symbol-prefix / archive-member granularity), and twig-aot's own `macos_arm64_smoke` tests only exercise *scalar* programs (no externals), so the gap was never caught. **Mitigation**: gate any native-executable e2e test that uses a runtime helper (`alloc_bytes`/`putchar`/`print_string`/cons cells) to `#[cfg(target_os = "linux")]` + `#[cfg(target_os = "windows")]` — matching the existing Nib/Brainfuck/BASIC smoke tests — and rely on CI-ubuntu (x86_64-linux) for the real end-to-end check. Verify backend codegen host-independently with `compile`-returns-bytes unit tests (hand-built CIR) in the backend crate. Fixing the macOS archive (so `alloc_bytes` etc. link there) is a separate twig-aot build-system task, out of scope for a frontend/backend-op PR.
+
+## ADJ benchmarks — output format leaks the arm and can invert a "blind" LLM-judge result
+
+- **When two arms of a benchmark differ in output *format*, a "blind" LLM judge is not blind — style leaks the condition, and a rubric that rewards that style measures the format, not the property you care about. The failure is not noise; it can systematically *invert* the conclusion.** Surfaced when re-examining ADJ99 (HLE-100, 4 arms × 100 items). ADJ99 scored "defensibility" 0–5 with a blind Opus judge, but the rubric's top scores were "nearly every claim traceable to a cited source" — i.e. it operationalized **citation/traceability density**, not the thesis definition of defensibility ("the load-bearing premise is surfaced and flagged as fallible so a reviewer can override it and re-derive"). The `fw-*` arms emit a literal `RETRIEVED FACTS (CAS): … REASONING CHAIN … [cites: n]` structure; the `plain-*` arms emit prose. A **one-line regex** on `{RETRIEVED FACTS, REASONING CHAIN, [cites, (src:}` separated fw-vs-plain with **100% accuracy** (197/197 plain clean, 197/197 fw tagged), so the judge could read the arm off the style — and **70.3%** of the def≥4 answers were actually *wrong*, because the rubric graded whether claims were *attributed*, not whether the pivot was *true or flagged fallible*. **What the correction showed**: re-judging all 395 non-error cells with a construct-valid rubric (does the trace expose its load-bearing premise and flag it as fallible? — booleans for `premise_named` / `premise_flagged_fallible` / `would_flip`), after **format-normalizing** every trace into one `REASONING:/CONCLUSION:` envelope with all citation chrome stripped, did not merely temper the numbers — it **reversed ADJ99's headline**. The fw−plain gap *widened* (haiku +0.54→+0.81; opus **−0.11→+0.45**, a sign flip), and ADJ99's H2 ("framework helps Opus defensibility"), which ADJ99 had declared FALSIFIED, became TRUE. The bad rubric had been **masking** the framework's real effect (it ~doubles the rate of flagging the pivot as fallible at both model scales), not inflating it. **Fix pattern**: (1) before trusting any arm-vs-arm judge delta, run a *deterministic* leak check — a regex/string classifier that tries to predict the arm from raw output; if it beats chance, the judge isn't blind, so normalize format and re-judge. (2) Name the **construct** you actually mean (locus-exposure / fallibility-flagging) and keep it distinct from the convenient **proxy** (citation count); traceability ≠ defensibility, and they diverge exactly on confidently-wrong-with-citations. (3) Keep the metric correctness-decoupled on purpose — under the corrected rubric 84% of def≥4 cells are *wrong*, which is the intended behavior (a defensible-but-wrong answer should score high). **Caveat that still applies to the correction itself**: it is single-judge (n=1/cell). A corrected number isn't load-bearing until a second, ideally non-Opus, judge over the same normalized traces reproduces the direction (cf. ADJ95's single-judge-noise warning). Full writeup + reproducible pipeline: `code/specs/data/adj99-hle100-run/analysis/rescore/` (PR #5261).
+
+- **Workflow fan-out of LLM judges hits a hard rate-limit wall around ~50 calls per window; throttle with small *sequential* `parallel()` batches, not one big `parallel()`.** Surfaced running the ADJ99 rescore (395 blind Opus judges via the Workflow tool). A single `parallel()` over all 395 (or even 60) let the first ~50 succeed, then every later agent failed with "subagent completed without calling StructuredOutput (after 2 nudges)" — the rate-limit error surfaces as a missing tool call, not an obvious 429. The workflow concurrency cap (`min(16, cores-2)`) is *not* the lever; sustained tokens/min is. **Fix pattern**: process the index list in sequential batches (`for i … i += BATCH { await parallel(batch) }`) with `BATCH = 10` — the per-batch barrier waits for stragglers, which adds idle time and drops sustained throughput to ~24/min, under the ceiling. Bigger batches (30) self-pace to ~36/min and still wall. Accumulate verdicts across runs by idx, recompute the missing set, and mop up stragglers with one more small fresh-window pass. Also: **`args` passed to a workflow can arrive JSON-stringified** — always `Array.isArray(args) ? args : JSON.parse(args)`.
+
+## adj-constraint-solver — solver math over user input must use CHECKED arithmetic (silent i64 wrap flips verdicts)
+
+- **A fixed-width rational (`cas-solve::Frac`, i64-backed) used inside a constraint solver wraps silently on coefficient blow-up, and the wrap can FLIP a feasibility verdict — guard the operands BEFORE the op, not the already-wrapped result.** Surfaced in security review of ADJ constraints C1 (PR #5424, Fourier–Motzkin QF_LRA). The first cut ran FM elimination over `Frac` and tried to bound blow-up with a post-hoc `within_bounds()` check (cap 10^15) on the *result* of `scale().add_scaled()`. Two bugs: (1) `Frac`'s final `(n/g) as i64` cast wraps silently (no panic, no checked cast), so a positive numerator could become negative — and in FM the *sign* of a coefficient decides upper-vs-lower bound and the sign of a residual constant decides Unsat-vs-feasible, so a wrapped sign flips the answer; (2) the guard inspected the already-wrapped value, and 10^15 was far too loose (10^15 × 10^15 = 10^30, and gcd doesn't guarantee reduction below i64::MAX ≈ 9.2·10^18). A crafted `.adj` with ~9-decimal coprime-denominator bounds across a few coupled variables reaches the wrap in one elimination step. **Fix pattern**: replace the fixed-width rational on the user-input math path with a *self-contained checked* rational — `Rat { num: i128, den: i128 }` where every op (`add`/`sub`/`mul`/`div`/`neg`/`new`) returns `Option`, returning `None` on `i128::checked_*` overflow OR past an explicit magnitude cap (`RAT_CAP = 10^18`). Pick the cap so that even the *comparison* cross-products (`a.num * b.den`, used by `Ord`) stay within i128: 10^18 × 10^18 = 10^36 < i128::MAX ≈ 1.7·10^38. Then thread `Option`/`?` through every combinator (`LinForm::scale`/`add_scaled`, `linearize`, the FM combine step, witness back-substitution, and the witness re-check) and collapse any `None` to an `Unknown` outcome — never a wrapped value. **Decision-vs-witness split that limits blast radius**: compute the Sat/Unsat verdict *before* reconstructing a witness, so an overflow during witness construction only drops the witness (return Sat with an empty assignment) while keeping the exact verdict — a feasibility answer is never corrupted by witness math. **Lock it with contract tests**: assert `Rat::new(i128::MAX, 1).is_none()`, `big.mul(big).is_none()`, exact ordering of `1/3 < 1/2 < 2/3`, and an end-to-end "overflowing constraint set is Unsat-or-Unknown, never a fabricated Sat". **General rule**: any solver/CAS arithmetic that runs on attacker- or model-controlled magnitudes (constraint coefficients, LP tableaus, polynomial coeffs) must be overflow-checked at a trust boundary; "exact rational" is only exact until the backing integer wraps. Also: keep the JSON witness rendering through the existing finite-guarding `jnum` (maps non-finite f64 → `null`) so a degenerate witness can't emit `Infinity`/`NaN` and break the JSON.
+
+## adj-lang grammar changes — regenerate the embedded _parser_grammar.rs with the in-crate bin, and never fmt generated files
+
+- **A `.grammar`/`.tokens` edit is not live — the parser is the checked-in `src/_parser_grammar.rs` / `src/_lexer_grammar.rs`, embedded Rust data structures compiled from the grammar. You MUST regenerate them, and each grammar-driven Rust crate ships its own regen binary.** Surfaced adding `optimize_decl` (`minimize`/`maximize`) to `adj_lang.grammar` for ADJ constraints C2. Three traps: (1) **wrong tool/language** — the *Go* `grammar-tools` (`code/programs/go/grammar-tools/`) `compile-grammar` emits *Go* (`gt.RuleReference{…}`); the Rust crates need the *Rust* emitter in the `grammar-tools` **Rust** crate (`grammar_tools::compiler::compile_parser_grammar`). Running the Go tool clobbered the Rust file with Go syntax. (2) **wrong output path** — `cargo run --example` / `--bin` runs with CWD = the crate root, so a relative `src/_parser_grammar.rs` writes into *that crate's* src, not the target crate's. The canonical fix: `adj-lang` already ships `src/bin/regen_grammars.rs`, which reads `code/grammars/adj_lang.{tokens,grammar}` and writes BOTH `src/_lexer_grammar.rs` and `src/_parser_grammar.rs` to the right place — just `cd code/packages/rust/adj-lang && cargo run --bin regen_grammars`. Look for an existing `regen_*` bin before hand-rolling regeneration. (3) **don't `cargo fmt` generated files** — `cargo fmt -p adj-lang` reformats `_lexer_grammar.rs`/`_parser_grammar.rs` (e.g. single-line `keywords: vec![…]` → multi-line) and the regen bin itself, producing churn unrelated to your change. The convention is generated files stay in the compiler's native emission style: after `cargo fmt`, `git checkout` the generated files + the regen bin, then re-run the regen bin so only the intended rule diff remains. **New-keyword note**: structural keywords matched as grammar literals (`"minimize"`, `"solve"`, `"check"`, `"let"`, `"symbol"`) do NOT need a `keywords:` block entry in the `.tokens` file — `"x"` matches an IDENT token by value, so a word matching `[a-z_][a-z0-9_]*` works as a literal with zero tokens-file change. Only add to `keywords:` if you need lexer-level reservation. **Verify**: after regen, `grep <new_rule> src/_parser_grammar.rs` must hit, and a round-trip parse test (`compile("minimize x")`) must produce the new AST node. No CI check regenerates-and-diffs grammars today, but a faithful regen (vs hand-edit) keeps the file byte-identical to what the next contributor's regen produces.
+
+## closurec WHITESPACE_ONLY paren elision — `**` forbids an unparenthesised unary LEFT operand (`(-a)**b` must keep its parens)
+
+- **When stripping a redundant grouping paren around a binary operator's LEFT operand (`(a)+b` → `a+b`), the `**` (exponentiation) case is special: `**` requires its left side to be an `UpdateExpression`, NOT a `UnaryExpression`, so `-a**b` is a `SyntaxError`. `(-a)**b`, `(!a)**b`, `(~a)**b`, `(+a)**b`, `(typeof a)**b`, … MUST keep their parens even though the operand is otherwise "safe" to unwrap.** Surfaced implementing gap-077 (CLOC12.88, left-operand paren elision in `src/whitespace_only.rs`). The first cut mirrored gap-075/078 (right-operand): anchor on a grouping `(` whose matching `)` is followed by a binary operator, check the span with `is_safe_unary_paren_operand`, drop both parens. But `is_safe_unary_paren_operand` accepts a *leading prefix-unary chain* (`-a`, `!a`) as a valid atomic operand — correct for the RIGHT side (`a**-b` is legal) but WRONG for the LEFT side of `**`. So `(-a)**b` got stripped to `-a**b`, which is invalid JS. The byte-identity fixture `minify_exp_of_unary` (`var x=(-a)**b;`, expected to round-trip unchanged) caught it — the unit suite was green (489/489) but the harness `diff_minify_all_fixtures` diverged on exactly that fixture. **Fix pattern**: in the left-operand pre-pass, before dropping the parens, add an `exp_unary_hazard` guard — if the operator immediately after `)` is `**` AND the parenthesised span's FIRST token is a prefix unary (`is_structural_punct` `-`/`+`/`!`/`~` OR a word-like `typeof`/`void`/`delete`/`await`), skip the strip. Only `**` needs this; every other binary operator (`+ - * / % == < && || & << …`) accepts an unparenthesised unary left operand. A plain `(a)**b` (atomic non-unary operand) still strips to `a**b`. **General rule**: the RIGHT and LEFT operands of an operator do NOT have symmetric parenthesisation rules — `**` is the asymmetric case (unary OK on the right, not on the left). When mirroring a right-operand transform to the left, re-derive the safety guard against the JS grammar rather than assuming symmetry, and lean on a JAR-captured byte-identity fixture (`(-a)**b`) to catch the asymmetry. The unit tests alone passed; the golden fixture is what flagged the invalid output.
+
+## git checkout -- <file> restores from the INDEX, not HEAD — a staged change survives the "undo" and silently ships
+
+- **`git checkout -- <file>` (and `git restore <file>` without `--source`) restores the working tree from the *staging area*, NOT from HEAD. If a change was already `git add`-ed, this "undo" does NOT revert it — the staged content stays and gets committed.** Surfaced in the closurec byte-identity loop (CLOC14.54, PR #5553). I appended a wrong gap-112 spec entry and a wrong `("for_await_of", "gap-112…")` IGNORE_FIXTURES entry, then ran `git add -A` (just to inspect `git status`), discovered the mistake, and tried to undo the two files with `git checkout -- code/specs/CLOC12-gaps.md` and `git checkout -- tests/diff_minify.rs`. Because the bad edits were already staged, `checkout --` restored them *from the index* — they survived, shipped in #5553, and (a) wrongly marked the **passing** `minify_for_await_of` fixture as an ignored gap, and (b) left a duplicate `### gap-112` spec entry. The diff_minify walk-test stayed green (ignoring a passing fixture just skips it — no failure), so nothing caught it until the *next* PR's rebase surfaced the duplicates as a conflict. **Fix pattern**: to truly discard a change after a `git add`, use `git restore --source=HEAD --staged --worktree <file>` (or `git checkout HEAD -- <file>`, which is explicit about the source being HEAD). The bare `git checkout -- <file>` form only works as an "undo" when the change was never staged. **General rule**: after any "revert this edit" step that *follows* a `git add`, re-run `git diff --cached <file>` (and `git diff <file>`) to confirm the change is actually gone before committing — an "undo" that reads from the index is a no-op for staged hunks. Especially dangerous for IGNORE-list / allowlist edits, where wrongly ignoring a passing test produces no failure signal.
+
+## closurec number printer — emit over the f64 VALUE with shortest-round-trip, and don't globally round the integer (it corrupts the scientific form)
+
+When testing variable-length codecs, the round-trip test parameter set MUST include at least one value in each form whose low byte is < 128 (e.g. 256, 300, 515, 768) — otherwise a low-byte-first regression silently passes. Pure round-trip tests on a self-consistent broken codec are blind to byte-order bugs by construction. The integration test that catches it reliably is "≥ 200 KB of repetitive text → ≥ 128 sequences in a single block" — that input distribution naturally produces counts spanning both halves of the 2-byte range.
+
+- **JS `Number`s are IEEE-754 f64; Closure's number printer emits the shortest STRING (decimal / uppercase-`E` scientific / lowercase `0x` hex) that round-trips to the f64 VALUE, not to the exact source integer. When adding a new candidate form (gap-114: large int → hex), round to f64 ONLY for that candidate — do NOT round the shared integer `n` globally, because the existing `scientific_form_of(n)` depends on `n` being the exact `m×10^e`.** Surfaced closing gap-114 in `normalize_number_value` (`whitespace_only.rs`). The hex case is genuinely f64-sensitive: `123456789012345678` exceeds 2^53, so its runtime value is the nearest double `123456789012345680`, and upstream emits `0x1b69b4ba630f350` (hex of the double) — NOT `0x…34e` (hex of the exact u128). So the hex candidate MUST be `format!("0x{:x}", (n as f64) as u128)`. The trap: I first "fixed" this by rounding `n` globally (`let n = (n as f64) as u128;`) before computing decimal/scientific/hex — which made the gap-114 fixture pass but **regressed `minify_num_exp_23`**: `100000000000000000000000` (10^23) round-trips through f64 to `99999999999999991611392`, which is no longer a clean power of ten, so `scientific_form_of` returned `None`, the `1E23` candidate vanished, and hex (`0x152d02c7e14af6000000`, 22 chars) wrongly won over the correct `1E23` (4 chars). The unit suite stayed green (625 passed) — only the `diff_minify` golden fixture caught it. **Fix pattern**: keep decimal/scientific over the EXACT integer (upstream's shortest-round-trip decimal reproduces `1E23` for a clean power), and round to f64 for the hex candidate alone. **General rule**: the byte-exact match for `> 2^53` numbers requires shortest-round-trip (Grisu/Ryu) formatting over the double; that's deferred. Until then, only add narrowly-scoped f64-aware candidates and verify against the JAR across the 2^53 boundary AND clean powers of ten (`1E23`, `1E18`). And — as with gap-077 — a green unit suite is not enough for number/formatting changes; the JAR-captured `diff_minify` golden is the gate that catches the cross-form regression.
+
+---
+
+## Lesson 92 — CI runners are ~25× slower for LZSS/compute-heavy tests; always set an explicit timeout
+
+**Date:** 2026-04-26
+
+**What happened:** The TypeScript ZStd TC-8 regression test (200 KB repetitive text → ≥ 128 sequences) ran in ~450 ms locally but took 12–15 seconds on CI runners. Vitest's default per-test timeout is 5 seconds. The CI job failed with a timeout error even though the test was functionally correct and passing locally.
+
+**Rule:** Any test that triggers an LZSS/LZ77 pass over more than 50 KB should have an explicit timeout set to at least `30_000` ms (30 s) in vitest:
+
+```ts
+it("round-trips 200 KB ...", () => { ... }, 30_000);
+```
+
+CI runners (especially GitHub Actions free-tier) run at roughly 25× slower wall-clock for CPU-intensive loops. A test that takes < 1 s locally may take 25 s on CI. Default framework timeouts (5 s for vitest, 60 s for Go's `go test`) are often too tight for large compression round-trips. Always measure on CI before assuming the default is safe.
+
+---
+
+## Lesson 93 — `unpack('C*', ...)` in Perl amplifies memory before any size check
+
+**Date:** 2026-04-26
+
+**What happened:** The Perl ZStd `decompress` function called `my @data = unpack('C*', $input)` on the raw compressed bytes as its very first step, converting each byte into a full Perl scalar. A Perl scalar occupies ~56 bytes on 64-bit builds (SV header + IV/PV storage). A 64 MB compressed input therefore expands to ~3.5 GB of Perl scalars on the heap before any frame-header validation or size guard could fire — a classic unpack memory amplification attack.
+
+**Rule:** In Perl, never `unpack('C*', ...)` a caller-supplied buffer without first checking its length:
+
+```perl
+die "input too large" if length($data) > 64 * 1024 * 1024;
+my @bytes = unpack('C*', $data);
+```
+
+64 MB is a safe upper bound for all realistic ZStd frames (the compressor's MAX_BLOCK_SIZE is 128 KB). The same pattern applies to any language where unpacking bytes into an array of objects/scalars multiplies memory by a large constant factor. Always validate the *raw byte count* before the amplifying operation, not just the logical content-size field inside the frame.
+
+---
+
+## Lesson 94 — Trailing bytes after the last ZStd block must be rejected, not silently ignored
+
+**Date:** 2026-04-26
+
+**What happened:** The Lua ZStd decoder iterated blocks in a `while true` loop and broke on `last_block == 1`. Any bytes remaining in the input after the last block were silently ignored. A fuzz input consisting of a valid 5-byte frame followed by 1 MB of garbage would be accepted without complaint, masking corruption and making the decoder lenient about malformed or concatenated frames.
+
+**Rule:** After the block-decoding loop exits (when `last_block == 1`), assert that the read cursor equals `#data` (or `data.length`, or the frame boundary). If any bytes remain, raise an error:
+
+```lua
+if pos <= #data then
+  error("unexpected trailing data after last block")
+end
+```
+
+The same check belongs in every language port. A strict decoder is far safer — it surfaces truncation and concatenation bugs immediately rather than silently returning partial output or accepting garbage.
+
+---
+
+## WEB09 Java Conduit / JNI cross-thread callbacks — five gotchas
+
+**Date:** 2026-04-27
+
+Porting Conduit to Java over `web-core` via `jni-bridge` surfaced a cluster of JNI-specific traps. All five recur for any future JVM↔Rust callback port (Kotlin, etc.):
+
+1. **`JNIEnv*` is thread-local; the JavaVM is not.** web-core dispatches on Rust I/O threads the JVM never created. You cannot reuse the registration-call `env`. Capture the `JavaVM*` once via `GetJavaVM` (offset 219 on the JNIEnv table) on a JVM thread, then on each I/O thread call `AttachCurrentThreadAsDaemon` (offset 7 on the *JavaVM invocation* table — a different table, `JavaVM = *const *const c_void`). Daemon attach is idempotent, needs no `DetachCurrentThread`, and doesn't block JVM shutdown. Plain `AttachCurrentThread` requires a matching detach before the thread exits or the JVM aborts.
+
+2. **Local refs leak on a self-attached thread.** Local references are normally freed when a native method returns to Java — but an I/O thread that attached itself and loops forever never returns, so every `NewObjectA`/`NewStringUTF`/`CallObjectMethod` local ref accumulates = unbounded leak per request. Bracket each dispatch with `PushLocalFrame(env, n)` / `PopLocalFrame(env, null)` (offsets 19/20) and copy everything you need into owned Rust values before popping.
+
+3. **Handler objects must be promoted to global refs.** A Java lambda passed to `addRoute` is a local ref, dead after the native call returns. `NewGlobalRef` (offset 21) it at registration; `DeleteGlobalRef` (22) on dispose. `jclass` from `FindClass` is also local — pin the classes you cache as globals too, and resolve all method IDs on a JVM thread (FindClass from a native thread uses the system classloader, which can't see app classes).
+
+4. **Disjoint closure capture drops the Send+Sync wrapper.** web-core closures must be `Send + Sync`. Wrapping a raw `jobject` in a `struct Obj(jobject); unsafe impl Send/Sync` is not enough if the closure writes `obj.0` — Rust 2021 captures only the inner `*mut c_void` field (not Send). Add a `fn get(&self) -> jobject { self.0 }` and call `obj.get()` so the whole wrapper is captured. (Same lesson as the Node port's `ThreadSafePtr::get`.)
+
+5. **A Rust panic must never unwind across `extern "C"`.** A poisoned `Mutex` makes `.lock().unwrap()` panic; if that happens inside a JNI entrypoint called from a JVM thread, the unwind crosses the FFI boundary = UB (usually a JVM abort). Use `.lock().unwrap_or_else(|e| e.into_inner())` (poison-tolerant), and null-check every peer `jlong` before `Box::from_raw`/deref so a use-after-close lifecycle bug degrades to a safe no-op instead of dereferencing a dangling pointer. Route handler *errors* as data (an `Outcome` enum), never as panics.
+
+Also: the security sub-agent flagged a `pct_decode` "off-by-one" (`i + 2 < len`) as HIGH — it was a false positive (`i+2 < len` ⟺ `i+2` is a valid index; a trailing `%XX` decodes fine). Always settle a claimed boundary bug with a targeted unit test before "fixing" it; here the fix would have introduced the bug.
+
+---
+
+## WEB11 Perl Conduit — the crash was `newSVpv(ptr, 0)`, NOT a threading wall
+
+**Date:** 2026-06-14
+
+**What happened:** The Perl Conduit cdylib SIGSEGV'd on the first request dispatch. I initially (wrongly) blamed non-threaded Perl + web-core worker threads. The real cause was a one-line memory bug, and the threading model is actually fine.
+
+**Two corrected findings:**
+
+1. **`newSVpv(ptr, len)` treats `len == 0` as "call `strlen(ptr)`".** Perl's `newSVpv` uses the C string length when you pass 0. An empty Rust `&str` (`""`) has a non-NUL-terminated pointer, so `strlen` reads out of bounds → segfault. The very first empty field (an empty `QUERY_STRING`) crashed it. **Fix: use `newSVpvn` (explicit length, never strlens) for ALL Rust→Perl string conversions** where the value can be empty. The crash reproduced single-threaded, which is what unmasked the misdiagnosis.
+
+2. **The embeddable-http-server serve path is single-threaded inline — it does NOT spawn.** `HttpServer::bind` builds a single `TcpRuntime` (not the `ShardedTcpRuntime`); `TcpRuntime::serve()` → `StreamReactor::serve()` runs the event loop on the *calling* thread and dispatches handlers inline. So foreground `serve()` runs handlers on the calling thread — perfect for a single-interpreter language. (The `ShardedTcpRuntime` that DOES `thread::spawn` per worker is a separate, unused-by-this-path API.) The only spawn was in my own cdylib's `serve_background`; that one path is unsafe for non-threaded Perl, so the Perl port serves in the foreground and tests fork a client process.
+
+**Rule:** When a foreign-language port over web-core crashes on dispatch, reproduce it **single-threaded** (foreground serve in a standalone process + curl) before blaming threads. And from Rust always cross the boundary with the explicit-length string constructor (`newSVpvn`, not `newSVpv`); the strlen-on-zero footgun is silent until an empty value hits it. For a single-interpreter language, prefer foreground `serve()` (the inline reactor runs handlers on the calling thread) and fork a client for concurrent E2E tests.
+
+---
+
+## WEB12 Swift Conduit — three Swift/SPM gotchas + the reusable C ABI pattern
+
+**Date:** 2026-06-14
+
+Built `conduit-capi` (a reusable Rust C ABI for the whole Conduit framework, to be
+shared by WEB12–WEB18) and the Swift port on top of it. Three gotchas worth
+remembering:
+
+1. **`"\r\n"` is ONE extended grapheme cluster in Swift.** A CRLF check written as
+   `location.contains("\r")` (Character-based) returns FALSE for a string
+   containing `\r\n`, because Swift treats CRLF as a single `Character`. Scan
+   **unicode scalars** instead: `location.unicodeScalars.contains { $0 == "\r" || $0 == "\n" }`.
+   The response-splitting guard silently passed until a test caught it.
+
+2. **A library's relative `-L` linker path breaks for downstream packages.** SPM
+   runs the linker from the *root* package being built. So `Sources/CConduit` in
+   the Conduit library's `linkerSettings` resolves correctly for Conduit's own
+   tests but NOT when a demo/executable in another package links it — you get
+   `library 'conduit_capi' not found`. Fix: the downstream package re-adds its own
+   `-L <relative-path-to-the-staged-lib>` in its target's `linkerSettings`. (The
+   library's wrong path then just emits a harmless `search path not found` warning.)
+
+3. **Edition-2021 disjoint closure capture defeats a `Send + Sync` wrapper.** A
+   closure that touches `cb.ctx` (a raw pointer field) captures *that field*, not
+   the whole `Send + Sync` struct, so the closure isn't `Send`/`Sync`. Call a
+   `&self` method (`cb.call(...)`) instead — a method borrows the whole struct, so
+   the closure captures the wrapper and inherits its `Send + Sync`.
+
+**Reusable C ABI pattern:** the seven C-ABI-capable ports (Swift/C++/Go/C#/F#/Dart/
+Haskell) share ONE `conduit-capi` crate instead of re-wrapping the facade each
+time. The trust boundary (header_safe, status clamp, UTF-8 validation, panic
+isolation) is audited once. Handlers cross as a C function pointer + opaque `ctx`
++ a `ctx_free` destructor; the host boxes its closure. `crate-type = ["staticlib",
+"cdylib", "lib"]` serves compile-time linkers, FFI loaders, and `cargo test`.
+---
+
+## Swift IRC binding — POSIX `close`/`send` shadow inside a socket class
+
+**Date:** 2026-06-14
+
+The Swift IRC port (`IrcServerNative`, on the reusable `irc-server-capi` C ABI —
+the same pattern as `conduit-capi`) reuses Conduit's raw POSIX-socket test client.
+Gotcha: a class with a method named `close()` (or `send()`) **shadows the global C
+`close`/`send`** inside its own body — `close(fd)` resolves to the instance method
+and fails to compile (`use of 'close' refers to instance method rather than global
+function`). Even inside `init`, before the method exists conceptually, the name
+resolves to the member. Fix: wrap the C calls in free functions
+(`private func cclose(_ fd: Int32) -> Int32 { close(fd) }`) and call those from the
+class. Same `SOCK_STREAM` enum-vs-macro normalization as Conduit applies.
+
+This completed the all-Rust IRC engine port to **all 8 targets** (Rust engine +
+Python/Ruby/Node/Java/Elixir/Perl/Swift). The native-binding effort surfaced four
+real engine bugs, each fixed engine-wide with a regression test: panic containment
+(`catch_unwind` + poison-tolerant locks), RST survival (close-now instead of `?`
+propagation), the stop-before-serve race (don't reset the stop flag at loop entry),
+and an Elixir concurrent-resource data race (`Mutex` around the inner handle).
+---
+
+## stream-reactor — never reset a cancellation flag inside the run loop's own entry
+
+**Date:** 2026-06-14
+
+**`StreamReactor::serve()` must NOT reset the stop flag — a `stop()` racing serve startup gets silently swallowed.** The reactor's `serve()` used to do `self.stop_flag.store(false)` at the top. The flag is already `false` at construction, so the reset was redundant on first serve — but it created a race: an FFI binding (JNI/N-API/etc.) that flips a "running" flag and lets the caller request `stop()` *before* the background serve thread enters the loop would have its stop erased, so `serve()` runs forever and `join()` hangs. This was invisible in Python/Ruby because their tests wait for the server to actually be listening before stopping (and Python/Ruby `join` with a timeout); it surfaced in the JVM binding, whose JUnit tests flip running→stop synchronously in one thread, and whose native `join()` has no timeout. **Rule:** a `stop()` request must never be lost — don't reset stop/cancellation flags inside the run loop's own entry. Reset (re-arm) only via an explicit separate operation if a consumer truly needs to re-run. Reproduce FFI hangs single-threaded in pure Rust (spawn serve, `stop()` immediately, `join()`) before blaming the binding; use `sample <pid>`/jstack to see the native thread stuck in `kevent`.
+
+---
+
+## WEB13 C++ Conduit — four C++ gotchas linking the reusable C ABI
+
+**Date:** 2026-06-14
+
+Second consumer of the `conduit-capi` C ABI (after Swift). Header-only C++ wrapper.
+Four things worth remembering:
+
+1. **A reused HTTP-client result struct must be RESET each request.** The E2E
+   client appended parsed headers with `emplace_back` into a caller-provided
+   `out` struct reused across requests, so `headerValue("content-type")` returned
+   the FIRST match (from an earlier route) — the echo content-type assertion
+   failed even though the server was correct. Always `out = Result{};` at the top
+   of the request function. (The server/port was never wrong; the test client was.)
+
+2. **A joinable `std::thread` destroyed during stack unwinding calls
+   `std::terminate`.** A failing assertion in the E2E threw, which destroyed the
+   still-joinable watchdog `std::thread` before the harness could catch it →
+   `libc++abi: terminating`, masking the real failure. Wrap the body in
+   `try { ... } catch (...) { join_watchdog(); throw; }` so the thread is always
+   joined first and the real error surfaces.
+
+3. **`extern "C" inline` trampolines, not C++ ones.** Passing a C++ function
+   pointer where the C ABI typedef expects a C-linkage pointer warns under
+   `-Wpedantic -Werror` (and is technically a language-linkage mismatch). Declare
+   the trampolines `extern "C"` (and `inline` so the single header stays
+   include-safe across TUs).
+
+4. **Delete the copy ctor → you must add a move ctor for return-by-value.** A
+   `make_app()` factory returning `Application` by value fails to compile if the
+   copy ctor is deleted and no move ctor exists — NRVO is not guaranteed for a
+   named local. Add `Application(Application&&) noexcept` that transfers the handle
+   and marks the source consumed.
+
+**Link flags:** a Rust staticlib needs its platform `native-static-libs` (e.g.
+`-liconv -lSystem -lc -lm` on macOS, `-lpthread -ldl -lrt -lm` on Linux). Don't
+hardcode them — query `cargo rustc --release --crate-type staticlib -- --print
+native-static-libs` and pass the result to the C++ link line.
+
+**Build-tool note:** C++ packages are discovered as "unknown" language (the
+build-tool's language list has no "cpp"), so the undeclared-local-ref validator
+skips them — but declare `# build-tool: deps=rust/conduit-capi` anyway so the
+build graph pulls the Rust crate in and the runner gets `cargo`.
+
+## WEB14 Go Conduit — cgo + conduit-capi gotchas
+
+**conduit.Application.GetSetting is invalid after Bind().** `conduit_server_bind`
+moves (and frees) the native `ConduitApp*` into the server handle on BOTH
+success and failure. Any Go closure registered as a handler, before-filter, or
+after-hook that calls `app.GetSetting()` at request time will read from a freed
+pointer. Fix: pre-capture settings into local strings BEFORE registering the
+hooks. Surfaced in conduit-hello's after-hook stamping `x-served-by`.
+
+**cgo Rule 6 / uintptr-as-void*: use cgo.Handle, not raw casts.** Passing a
+`uintptr` value of a Go pointer directly to C as `void*` triggers `go vet` Rule
+6 warnings (the GC may move the pointer between the cast and the store). The
+correct pattern: `cgo.NewHandle(fn)` returns a GC-safe integer handle; cast
+`C.uintptr_t(handle)` to `void*` in a C shim (where the cast is invisible to
+`go vet`). The trampoline recovers the value with `cgo.Handle(uintptr(ctx)).Value()`.
+
+**Static link the Rust .a by full path, not -lconduit_capi.** On Linux `ld`
+resolves `-lconduit_capi` to the sibling `.so` cdylib, not the `.a` staticlib.
+Resulting binary fails at runtime (`libconduit_capi.so.0: not found`). Use the
+full path in `#cgo LDFLAGS: ${SRCDIR}/.../libconduit_capi.a` instead.
+
+**cgo LDFLAGS native deps differ by OS.** macOS needs `-liconv`; Linux needs
+`-lpthread -ldl -lm -lrt -lutil`. The full list comes from
+`cargo rustc --release --crate-type staticlib -- --print native-static-libs`.
+
+**Go BUILD files that link a Rust static lib must be self-sufficient (build
+the Rust lib themselves).** The `# build-tool: deps=rust/foo` directive ensures
+ordering in the *normal* build workflow (which uses the build-tool directly),
+but the CodeQL workflow generates a `build-plan.json` of 300+ packages and
+processes them in plan order — which may reach `go/conduit` before
+`rust/conduit-capi`. Bare `go test` then fails: `libconduit_capi.a: No such
+file or directory`. Fix: add a `tools/run-tests.sh` that runs `cargo build
+--release` for the Rust crate first (mirroring the C++ pattern), and call
+`sh tools/run-tests.sh` from the BUILD file. The deps= hint still fires in
+the normal build (making the cargo step a fast no-op); CodeQL gets the Rust
+lib on demand. Surfaced in PR #5739.
+
+## tcp-runtime — cross-thread reactor wakeup + running ThreadSanitizer locally
+
+**Date:** 2026-06-14
+
+Multi-core PR2: a `Send + Sync` `WakeHandle` lets an off-reactor mailbox interrupt
+the reactor's `poll` immediately instead of waiting the 10 ms poll timeout. Two
+durable lessons:
+
+1. **Decouple the cross-thread trigger from the `&mut self` platform.** The
+   platform's `wake(&mut self)` is owned by the reactor thread; producers are on
+   other threads. The fix is a handle that owns a *duplicated* OS primitive
+   (`Kqueue::try_clone` of the kqueue fd; `OwnedFd::try_clone` of the `eventfd`)
+   and re-issues the trigger via a `&self` syscall (`kevent`/`write`, both
+   thread-safe). Give the trait a **default `wake_handle` returning
+   `Unsupported`** so a backend that can't share its primitive (IOCP, today) keeps
+   working — callers just fall back to the poll timeout. Never make the whole
+   reactor depend on a capability one platform lacks.
+
+2. **Running ThreadSanitizer on this repo needs `-Zbuild-std`.** Plain
+   `RUSTFLAGS="-Zsanitizer=thread" cargo +nightly test` fails with "mixing
+   `-Zsanitizer` will cause an ABI mismatch" because the prebuilt std/deps weren't
+   compiled with the sanitizer. Rebuild everything from source:
+   ```
+   rustup +nightly component add rust-src
+   RUSTFLAGS="-Zsanitizer=thread" cargo +nightly test -Zbuild-std \
+     -p stream-reactor --lib --target aarch64-apple-darwin <test-filter>
+   ```
+   The `--target` is required (build-std needs an explicit target). A clean TSan
+   run on the wake stress test (8 threads firing `wake()` while the reactor
+   drains) is the canonical check for the new cross-thread `unsafe` fd sharing.
+
+## multi-core — SO_REUSEPORT does NOT load-balance on macOS/BSD (only Linux)
+
+**Date:** 2026-06-14
+
+The `sharded-echo-bench` (multi-core PR4) measured the `ShardedTcpRuntime` at
+1/2/4/8 reactor shards and the per-shard accept-balance column revealed a hard
+truth: on **macOS** every connection lands on a **single** shard (`[0% 0% 0% 100%]`),
+so throughput is flat (8-shard ≈ 0.97× single-shard). Plain `SO_REUSEPORT` only
+load-balances on **Linux** (kernel hash across the reuseport group); macOS/*BSD
+permit the multi-bind but deliver all connections to one socket (in practice the
+last bound), and FreeBSD needs the separate `SO_REUSEPORT_LB` option.
+
+Consequences:
+- The N-reactor + SO_REUSEPORT design scales on **Linux** (the deployment target
+  and where CI runs) but gives **no** accept distribution on a macOS dev box.
+  Don't read a flat local (macOS) scaling curve as "the runtime doesn't scale" —
+  check the shard-balance column first; it's a kernel policy, not a runtime bug.
+- True multi-core accept distribution on macOS/BSD needs an explicit fan-out (a
+  single accept loop that round-robins accepted fds to per-core reactors, or
+  `SO_REUSEPORT_LB`), not reliance on the kernel balancing plain `SO_REUSEPORT`.
+- Lesson for benchmarks: always surface the *distribution*, not just the average.
+  A single throughput number would have hidden this; the per-shard column made it
+  obvious in one glance.
+
+## multi-core — accept fan-out fixes macOS distribution; even ≠ throughput scaling
+
+**Date:** 2026-06-14
+
+Closing the macOS `SO_REUSEPORT` gap (multi-core PR5): on macOS/BSD a
+`ShardedTcpRuntime` now uses an explicit accept fan-out — one acceptor owns the
+client-facing listener and round-robins each accepted socket to a worker reactor
+via `adopt_stream` (transport-platform) + `StreamMailbox::adopt_connection`
+(stream-reactor). The workers bind throwaway loopback listeners and only *serve*
+adopted connections. Linux keeps the kernel `SO_REUSEPORT` balancing.
+
+Two durable lessons:
+
+1. **Even distribution is necessary but NOT sufficient for throughput scaling.**
+   The fan-out fixed the shard balance (`[0% … 100%]` → `[13% × 8]`) and made
+   `conns/s` scale (connection setup parallelizes). But steady-state `req/s` for a
+   trivial **echo** stayed flat — echo on loopback is latency-bound, not
+   CPU-bound, so spreading connections across cores adds no throughput when the
+   per-request work is near-zero. Don't read "added cores, req/s didn't move" as
+   "the fan-out didn't work" — check the shard-balance column (it did) and
+   remember scaling only shows up once each connection's work can saturate a core
+   (real parsing, TLS, compute). A benchmark must measure a CPU-bound load to
+   demonstrate throughput scaling; a benchmark must measure *distribution* to
+   demonstrate the fan-out.
+
+2. **Cross-thread fd handoff is the crux and must be TSan-clean.** The acceptor
+   creates an `OwnedFd` on its thread and hands it to a worker reactor through the
+   mailbox; the worker adopts it into its own kqueue. `OwnedFd` is `Send`, the fd
+   is linear (consumed exactly once on every path), and the whole chain
+   (acceptor → mailbox → adopt_stream) passes under ThreadSanitizer. Run the
+   distribution test under `-Zsanitizer=thread -Zbuild-std` whenever this path
+   changes.
+
+## haskell FFI — GHC 9.4.8 int-conversion + runtime dylib path (WEB18)
+
+**Date:** 2026-06-14
+
+The Haskell Conduit port (WEB18, the first Haskell package using GHC C FFI) was
+green locally on GHC 9.14.1 but red on CI, which pins GHC 9.4.8. Two distinct,
+environment-specific failures that a newer local GHC masked:
+
+1. **macOS compile error — `-Wint-conversion`.** GHC < 9.6 generates libffi
+   adjustor C stubs for every `foreign import ccall "wrapper"` that assign a
+   `void*` (`HsPtr`) to an `ffi_arg` (`unsigned long`): `*(ffi_arg*)resp = cret;`.
+   Clang 15+ (macOS CI) promotes `-Wint-conversion` from a warning to a hard
+   error, so `gcc' failed in phase C Compiler`. Fix: add
+   `-optc-Wno-error=int-conversion` to the **library** `ghc-options` (the stub is
+   emitted when compiling the module that declares the `"wrapper"` imports). GHC
+   9.6+ fixed the codegen, which is why a modern local GHC never sees it.
+
+2. **Linux runtime error — `libconduit_capi.so: cannot open shared object file`.**
+   `cabal test --extra-lib-dirs=DIR` only affects **link** time. At **run** time
+   the test binary loads the cdylib through the OS dynamic loader, which does not
+   consult `--extra-lib-dirs`. Fix: `export LD_LIBRARY_PATH` (Linux) and
+   `DYLD_LIBRARY_PATH` (macOS) to the release dir (and `…/deps`) in run-tests.sh
+   before invoking `cabal test`. Locally this was masked because I had been
+   exporting `DYLD_LIBRARY_PATH` by hand in every manual run.
+
+Durable lessons:
+- **Match the CI toolchain version locally before declaring green.** CI's
+  `haskell-actions/setup` pins `ghc-version: 9.4`; a newer local GHC hid a
+  codegen bug. For any FFI-heavy package, test on the CI-pinned compiler.
+- **Link path ≠ run path for cdylibs.** Any port that dynamically links
+  conduit-capi (vs. static) must set the loader path at run time, not just the
+  linker path at build time. Sibling dynamic-load ports (C#) sidestep this with a
+  custom `CONDUIT_CAPI_PATH` resolver; GHC FFI has no such hook, so the OS loader
+  env vars are mandatory.
+
+## LANG-FULL N6 (Nib u8 wrap) — the exit-code matrix can't prove a u8 wrap
+
+**Date:** 2026-06-15
+
+Attempted N6 (make `200u8 + 100u8 = 44` run cross-backend). Three findings that
+block a HONEST proof — recorded so the next attempt doesn't ship a false positive:
+
+1. **`Expect::Exit` is `& 0xFF` — it CANNOT distinguish a u8 wrap from no wrap.**
+   `lang_matrix.rs` reads the process exit code, which the OS/C-runtime truncates
+   to 8 bits (documented at the top of the file: "process exit code (`& 0xFF`)").
+   `200 + 100 = 300`; `300 & 0xFF = 44` **whether or not the backend masks**. So a
+   Nib `fn main() -> u8 { return 200 + 100; }` "passes" `Expect::Exit(44)` even when
+   the arithmetic is plain i64 with no E2 mask. For u8 the exit-code truncation IS
+   the u8 mask, so the test proves nothing. u16/u32 are worse — their masked values
+   (4464, …) exceed 255 and can't ride an exit code at all. **A real N6 proof needs
+   the value at full width**: either a stdout print (`Expect::Stdout`, but Nib has
+   no `print`/`out` — Oct does, via O-OUT) or a return-value-at-width harness like
+   `iir-to-wasm/tests/width_wrap.rs` (which calls `load_and_run` and reads the raw
+   i64 result, NOT an exit code). Decide the proof mechanism BEFORE writing N6.
+
+2. **The Nib `type_hint` lookup was a silent no-op.** `arith_result_hint` /
+   `lookup_node_type` consult `types: HashMap<usize, NibType>` keyed by AST-node
+   pointer address. Tagging the `add` op with the inferred `u8` produced `i64`
+   anyway (unit-tested: the emitted `add` carried `"i64"`, not `"u8"`). Either the
+   checker doesn't type the `add_expr` node, or the pointer keys don't match the
+   nodes the compiler walks (the checker types one AST, `compile_typed` may walk a
+   moved/rebuilt one). Verify the lookup actually returns `Some(U8)` (a direct unit
+   test on the emitted hint) BEFORE relying on it — the i64 collapse hid this for
+   every prior Nib item because everything was i64 regardless.
+
+3. **JVM + CLR E2 mask legs were only structurally tested and don't fire for the
+   real shape.** Their executed proof was explicitly deferred to "the integration
+   PR." With the universal shape (i64 slots + narrow hint on the op — see
+   `iir-to-llvm`'s `e2_*` tests), a u8 add over `long` operands returns the unmasked
+   value on JVM (`iir_type_to_jvm("u8") = Int` → `IADD`, but operands ride `long`
+   slots; the `iand` mask path doesn't match). Native/LLVM/WASM/VM/JIT mask
+   correctly; JVM/CLR need a fix for the i64-operand case. These are two real
+   remaining E2 backend legs, not done.
+
+Net: N6 is a multi-part item (proof-mechanism design + Nib type-lookup fix + JVM/CLR
+backend fixes), NOT a one-line frontend wiring. The native-AOT E2 leg (PR #5887,
+merged) IS real — its `aarch64-backend` proof installs and *calls* the generated
+code and reads the raw u64 (44), so it is not exit-code-confounded.
+
+## Identity must be a SUBSET of fields when a rich struct is a map/graph key (spreadsheet-core fill PR)
+
+`CellAddress` carries `{row, col, absolute_row, absolute_col}` and derives
+`Eq`/`Hash` over **all four** fields. But a cell's *identity* is its position
+(`row, col`) only — the `$` markers just steer copy/fill shifting. The engine
+stored cells (and dependency-graph nodes) keyed by the bare `CellAddress`, yet
+the evaluator looked them up with the address taken **straight from the formula's
+`Ref`**, flags and all. So `=$A$1` built a lookup key `{1,1,true,true}` that never
+matched the relatively-stored `{1,1,false,false}` cell → it read as empty (**0**),
+and editing `A1` never recomputed a dependent that referenced it absolutely.
+
+Nobody had ever written a test that *evaluated* an absolute reference, so the bug
+sat latent until the fill feature (whose whole point is "`$A$1` stays pinned")
+surfaced it. Fix: a `without_absolute()` normaliser applied at the two key
+boundaries (the evaluator's `lookup` closure and `collect_refs`).
+
+Lesson: when a struct with "decorative" fields is used as a `HashMap` key or graph
+node, either (a) don't derive `Hash`/`Eq` over the decorative fields, or (b)
+normalise to the identity subset at **every** key boundary — and add a test that
+exercises the decorated form through the real lookup path, not just the AST. A
+derive that silently widens identity is a landmine.
+
+## stream-reactor `defer_read` REPLAYS the chunk — it is not "pause output" (WEB01b-1a, PR #6047)
+
+`MailboxHttpServer` (the new mailbox/deferred-response HTTP server) framed a
+request, submitted it to the worker pool, and returned
+`TcpHandlerResult::defer_read()` intending "pause this connection's reads until
+the response is written." The test passed locally on macOS but failed on the
+Linux CI runner: the client received a spurious `400 Bad Request` written
+*before* the real `200 OK` on the same connection.
+
+Root cause: in `code/packages/rust/stream-reactor`, `defer_read` does **not**
+mean "pause output." It means **"I did NOT consume these bytes — buffer this
+chunk and *replay* it (re-invoke the handler with the same bytes) when reads
+resume."** The mailbox response-router calls `resume_all_reads()` for *every*
+connection's response, so a deferred chunk gets replayed (`progress_reads_with_state`
+→ `apply_read_chunk`, stream-reactor/src/lib.rs:651-668,720-724). Because the
+handler had already *consumed* the bytes (drained its buffer + submitted the
+job), the replay re-fed the chunk. On macOS the whole request arrived in one TCP
+segment, so the replay merely double-submitted (the leading `200` still satisfied
+the assertion). On Linux under load the request was TCP-segmented, so the
+replayed **trailing fragment** (`ection: close\r\n\r\n`) parsed as a malformed
+head → `pop_request` returned `Err` → a `400` was queued before the real `200`.
+
+Fixes:
+1. After a successful consume+submit, return `TcpHandlerResult::default()`
+   (keep reading) — **never** `defer_read()`. Only return `defer_read` when you
+   genuinely did NOT consume the bytes and want them replayed (e.g. the
+   QueueFull backpressure case in embeddable-tcp-server). There is currently no
+   "pause-without-replay" primitive; a per-connection in-flight gate needs a
+   reorder buffer (deferred to WEB01b-1b).
+2. Drain **every** complete request a read delivered by looping `pop_request`
+   until `Ok(None)` — one TCP read can carry multiple coalesced/pipelined
+   requests; popping once strands the extras in the buffer and hangs a client
+   that sent them together and then waited. (Caught by the security review.)
+
+Lesson: a handler-result flag named for an *intent* ("defer") may be implemented
+as a *mechanism* ("replay") — read the reactor's drain path before reusing it,
+and never trust a same-host test to expose a TCP-segmentation-dependent bug
+(loopback coalescing hides it; the Linux runner under parallel load splits the
+read and surfaces it).
+
+## `mv file.bak file` restores OLD mtime → cargo skips the rebuild (false "race")
+
+While building WEB01b-1b I did a "does this test actually prove anything" check:
+`sed -i.bak 's/ordered_responses: true/false/' lib.rs` (build+run → correctly
+FAILED), then `mv lib.rs.bak lib.rs` to restore. The restored file had
+`ordered_responses: true` again — but every subsequent `cargo test` kept FAILING
+as if it were still `false`. Adding ANY `eprintln!` "fixed" it, which screamed
+"timing race." It was not a race.
+
+`mv` preserves the SOURCE file's mtime. The `.bak` was created at the moment of
+the `sed` (before the false-build), so restoring it stamped `lib.rs` with an
+mtime OLDER than the compiled artifact from the false build. Cargo's
+mtime-based staleness check then judged `lib.rs` "older than the build" and
+skipped recompiling — so the tests ran against the stale `ordered_responses:
+false` binary. Adding an `eprintln` edited the file (fresh mtime) and forced a
+real rebuild, which is why it "passed."
+
+Lessons:
+- To revert a quick experiment, restore from git (`git checkout -- file`) or
+  `touch file` after a `cp`/`mv` — never trust `mv file.bak file` to trigger a
+  rebuild; it can move the mtime backwards.
+- A Heisenbug that disappears the instant you add a print, where the print is
+  AFTER the observed effect, is almost never a real race — suspect a stale build
+  artifact (or caching) first. Confirm by `touch`-ing the source and re-running
+  clean BEFORE hunting for a concurrency bug.
+
+## clang `@llvm.floor.f64`/math intrinsics need `-lm` on Linux (E8 PR-2, #6584)
+
+A RUN-verified iir-to-llvm test that compiled a program using `@llvm.floor.f64`
+passed locally on macOS but failed `build (ubuntu-latest)` with `clang: error:
+linker command failed`. Cause: at `-O0` (the default for `clang -x ir`) the
+`@llvm.floor.f64`/`@llvm.trunc.f64` intrinsics lower to libm `floor`/`trunc`
+*calls*, which on Linux must be linked with `-lm`. macOS libm lives in libSystem
+(linked by default), so the gap is invisible locally. Fix: add `.arg("-lm")` to
+the clang invocation. LESSON: any LLVM program using a floating-point math
+intrinsic (floor/trunc/sin/sqrt/…) must link `-lm`; test it on Linux CI, and the
+real entier matrix pipeline (E8 PR-7) must link `-lm` too.
+## Autonomous loop must self-heal: a single ScheduleWakeup is not durable
+
+The SIR-completion loop used `ScheduleWakeup(180s)` to babysit each PR. When the
+session went idle/closed, the wakeup chain stopped and PR #6561 (M3) sat
+unbabysat for ~3 days (the user had to nudge it back). LESSON: a session-scoped
+ScheduleWakeup loop does NOT survive a closed session — for multi-day autonomy,
+prefer a durable cloud schedule (the `/schedule` skill / CronCreate), and on
+EVERY wake re-derive state from `git fetch` + `gh pr list` rather than assuming
+the previous turn's plan still holds. Also: a merged PR with no open follow-up
+means "pick up the next item," not "idle" — check `mergedAt`, mark the task
+done, and immediately start the next backlog item in the same turn.
+
+## Lazy synthetic-function emission breaks exact module-function-count assertions
+
+BA2 (BASIC multi-item PRINT) appends two synthetic helper functions
+(`__basic_print_uint`/`__basic_print_int`) to the module whenever a `PRINT`
+renders a value. A pre-existing test (`compiles_def_fn_into_sibling_function`)
+compiled a program that PRINTs and asserted `m.functions.len() == 2` (main +
+the DEF FN sibling) — which silently became 4. It passed on a stale local test
+binary but failed `build (ubuntu-latest)` on fresh CI (cf. the closurec
+stale-binary lesson). LESSON: when a frontend change adds module-level functions
+conditionally, grep the whole crate for `functions.len()` / `functions.iter().count()`
+assertions and any downstream consumer (e.g. `basic-dap`) before pushing; assert
+the *named* functions you care about (`functions[0].name == "main"`,
+`.iter().find(|f| f.name == "FNS")`) rather than a brittle total count. Always
+re-run the FULL crate test suite (not `--lib` alone, and not a possibly-cached
+binary) after changing module assembly.
+
+## A tail expression holding a MutexGuard temporary compiles locally but fails CI (E0597)
+
+`String::from_utf8(buf.lock().unwrap().clone()).expect(...)` as the **final
+expression** of a function holds the `MutexGuard` temporary until the end of the
+block — i.e. it is dropped *after* the `Arc` it borrows goes out of scope. A
+newer local rustc accepted this; the CI toolchain rejected it as E0597
+("`buf` does not live long enough ... dropped here while still borrowed"). BA2's
+JIT-capture helpers hit this and turned a green local run into a red CI build.
+LESSON: the local rustc can be MORE lenient than CI's — a clean local build is
+not proof CI compiles. Bind the cloned value to a `let` first
+(`let bytes = buf.lock().unwrap().clone();`) so the guard drops at that
+statement. When a CI build error can't be reproduced locally, suspect a
+toolchain-version difference (temporary-lifetime/edition rules, lint levels)
+rather than assuming the local result holds.
+
+## NullBackend stubs FullyTyped functions to no-ops — breaks programs that call them
+
+`jit_smoke.rs` used `jit_core::NullBackend`, whose `compile()` returns
+`Some(sentinel)` and `run()` returns `Value::Null` — i.e. it "compiles" every
+function to a **no-op binary**. Before BA2 this was harmless: BASIC's `main` was
+the only function and `execute_with_jit` Phase-2 interprets `main` directly. BA2
+made `PRINT` lower to a `call` of FullyTyped helper functions
+(`__basic_print_int`/`__basic_print_uint`), which Phase-1 **eagerly compiles** —
+with NullBackend they became no-op binaries, so `PRINT 42` emitted only the
+trailing newline (`"\n"`, no digits). It passed locally but failed on CI
+(environment-dependent whether the cached no-op was consulted). The sibling test
+`jit_real_backend.rs` (BasicCirJit, whose `compile` returns `None` for the
+helpers' `call`/`putchar` → interpreter runs them) PASSED on CI — proving the
+interpreter executes the recursive helpers correctly and that `compile → None`
+is the working pattern. LESSON: `NullBackend` is only safe for programs whose
+output doesn't depend on a *called* function's side effects; once a frontend
+emits cross-function `call`s, use a backend whose `compile` returns `None`
+(defer-to-interpreter) so nothing is stubbed. When a JIT test passes locally but
+fails on CI with missing output, suspect eager-compilation of FullyTyped
+functions to no-op binaries.
+
+## Gradle / JVM
+
+### Gradle optimizer packages need `includeBuild` for the build-tool's dep graph
+
+When a Gradle package (Java or Kotlin) depends on a sibling package via a file-based JAR
+(`implementation(files("../sql-planner/gradle-build/libs/..."))`), the build tool's
+`parseGradleDeps` function reads `includeBuild(...)` lines from `settings.gradle.kts` to
+construct the dependency graph. Without this, the validator raises:
+
+  `<lang>/sql-optimizer (BUILD): undeclared local package refs: <lang>/sql-planner`
+
+Fix: Add `includeBuild("../sql-planner")` to the optimizer's `settings.gradle.kts` BEFORE
+the `rootProject.name` line. This applies to Java and Kotlin optimizer packages (and
+any future Gradle packages that depend on siblings via file deps).
+
+Discovered: 2026-06-30 during Java sql-optimizer CI (PR #7073 fix commit d31296a48).
+
+## Adding a match arm to a deeply-recursive fn can overflow the stack (macOS CI only)
+
+Symptom: `build (macos-latest)` failed while `windows`/`ubuntu` passed —
+`logic-engine` test `deeply_nested_expression_is_a_clean_error_not_a_stack_overflow`
+aborted with "has overflowed its stack, fatal runtime error: stack overflow"
+(PR #7299, adding `ComputeOp::Abs`).
+
+Cause: `logic-engine/src/compute.rs::eval` recurses up to `MAX_EVAL_DEPTH` (256)
+levels. In **debug builds** (which `cargo test` / CI use) the compiler reserves
+stack for ALL match arms' locals in the function's single frame — it does not
+scope stack slots per-arm. Adding a new `ComputeExpr::Unary` arm with several
+locals (`operand, dim, exact, result, …`) enlarged every one of the up-to-256
+recursive `eval` frames. 256 × a fatter frame overflowed the macOS test thread's
+~2 MB stack BEFORE the depth guard could return a clean `TooDeep`. Windows/ubuntu
+have more headroom so they passed, and the local `cargo test` on macOS passed too
+(margin is razor-thin and runner-dependent) — so it only surfaced on CI macOS.
+
+Fix: move the new arm's body into a separate `#[inline(never)]` helper (e.g.
+`eval_unary`) so its locals live in their own frame instead of bloating every
+recursive `eval` frame — restoring `eval` to ~its pre-change size. Behavior is
+identical; the deep-nesting test's guarantee ("clean `TooDeep`, never a stack
+overflow") is preserved.
+
+Rule: when adding a match arm to a function that RECURSES up to a large fixed
+depth (`eval`, tree walkers, parsers with a depth cap), keep the arm's body in an
+`#[inline(never)]` helper rather than inline — otherwise its locals multiply
+across every recursive frame and can overflow a small (macOS 2 MB) test-thread
+stack in debug builds. `cargo test -p <crate>` locally is NOT sufficient to catch
+it (margin is runner-dependent); the guard is the deep-nesting stack test on CI
+macOS.
+
+Recurrence (PR #7343, adding binary `Min2`/`Max2`): the same overflow re-appeared,
+and the FIRST two fixes made it WORSE — a cautionary tale about the mechanism:
+  1. Adding a separate `if op == Min2 || Max2 { let result_dim…; let (x,y)…;
+     let result…; let exact…; }` block BEFORE the general path DUPLICATED those
+     locals (the general path has the identical set), so the frame grew by a full
+     extra copy → still overflowed.
+  2. Extracting the whole `Bin` arm into `#[inline(never)] fn eval_binary`
+     (mirroring `eval_unary`) made it WORSE, not better: the `deeply_nested` test
+     nests `Bin(Add, …)` 306 deep, so the recursion is `eval → eval_binary → eval
+     → eval_binary → …` — **two** stack frames per nesting level instead of one.
+     Even though each `eval` frame shrank, the total (`eval`+`eval_binary`) × 256
+     exceeded the single inline frame × 256. Extraction only helps when the
+     extracted helper is NOT on the deep-recursion path (e.g. `eval_unary` is fine
+     because the test doesn't nest unary ops 256-deep).
+The fix that WORKED: keep the `Bin` arm inline and FOLD min/max into the EXISTING
+`result`/`exact` `match op { … }` arms (and map them through `dim_op` like
+addition), adding ZERO new persistent locals — match arms share the frame's slots,
+they don't each get their own. Frame(after) ≈ frame(main), so CI behaviour matches
+the passing baseline.
+Corrected rule: to add an op to a depth-capped recursive `eval`, FOLD it into the
+existing match arms (reuse the shared locals); do NOT add a parallel `if`-block
+(duplicates locals) and do NOT extract the recursive arm into a helper that then
+sits ON the recursion path (doubles frame COUNT). `cargo test` locally cannot
+verify the margin — local debug frames are so fat that even `main` overflows at
+`RUST_MIN_STACK=5MB`, yet passes on CI at 2MB; the only reliable check is the
+delta-vs-main (no new locals) plus the CI macOS run itself.
+
+Discovered: 2026-07-02 during logic-engine abs-value CI (PR #7299 fix commit adf710c3).
+
+---
+
+### Java mini-sqlite Level 1 graduation — plan tree normalization required
+
+`SqlPlanner.planSelect()` produces `Project(Sort(Limit(Distinct(core))))` — Project is the
+outermost (last) node.  `SqlCodegen.compilePlan()` expects Sort/Limit/Distinct to be
+OUTERMOST so it can peel them in its while-loop and then call `compileCore(Project(core))`.
+If Project is outermost and Sort is inside it, `compileScanBody(Sort(...))` throws
+"Unsupported plan node in scan body: Sort".
+
+**Fix**: normalize the plan before calling `SqlCodegen.compile()`:
+
+1. Peel Sort/Limit/Distinct from under Project (in the order they appear in the plan,
+   i.e., outermost-first via `addLast`).
+2. Rebuild: apply wrappers LAST-to-FIRST so Sort is outermost:
+   `Project(Limit(Sort(core)))` → `Sort(Limit(Project(core)))`.
+3. When Sort key columns are NOT in the SELECT list (e.g. `SELECT label FROM t ORDER BY rank`),
+   inject them as extra hidden OutputColumn.Expr entries into the Project so SortResult can
+   find them by name; strip those extra columns from the final QueryResult.
+
+Additional mini-sqlite Level 1 lessons:
+
+- **SqlPlanner passes `OutputColumn.Star` through unchanged.** `SqlCodegen.emitProjectColumns`
+  silently skips Star columns ("the planner should have resolved them"), producing an empty
+  result schema. Fix: expand `*` to explicit column references before planning by querying
+  `backend.columns(table)` for each table in the FROM/JOIN list.
+- **`INSERT INTO table VALUES (...)` with no column list** sends an empty columns list to
+  `InsertRow`, causing the instruction to pop 0 values and store an empty row.  Fix: expand
+  the column list from `backend.columns(table)` before planning.
+- **`SqlCodegen.compileCore` only handles `Project(Aggregate)` directly.** If `Having` wraps
+  the Aggregate (`Project(Having(Aggregate(...)))`), it falls through to
+  `compileScanBody(Having(Aggregate))` which strips Having then throws "Unsupported: Aggregate".
+  Fix: strip Having from between Project and Aggregate during normalization, save the Having
+  predicate, and post-filter result rows using a simple expression evaluator after execution.
+- **`NullOrder` default in SqlTextParser must be NULLS_FIRST for ASC** to match SqlVm's
+  sort semantics (null rank = 0 = lowest, which makes NULLs sort first in ASC).  Using
+  NULLS_LAST for both ASC and DESC (the initial incorrect default) puts NULLs last in ASC,
+  violating the VM's sort-null-first-by-default contract.
+- **Jacoco `excludes` on violationRules** does NOT exclude classes from measurement — it only
+  applies to class-level rules.  To exclude old/unrelated classes from the COVEREDRATIO
+  check, use `classDirectories.setFrom(files(...).map { fileTree(it) { exclude(...) }})` on
+  the `jacocoTestCoverageVerification` task.
+
+Discovered: 2026-07-01 during Java mini-sqlite Level 1 graduation (PR #7153).
+
+## Mosaic .msl part names must match the layout/package part names exactly (silent style drop)
+
+A stylesheet (`.msl`) styles named `part`s; the emitter matches each `part X {...}`
+block to a part of the same name in the layout (`.mll`) / resolved package composition.
+If a part name doesn't match, the emitter **silently drops** those styles — the element
+renders with NO styling, no error.
+
+`Grid.light.msl` was authored against the legacy monolithic-Grid naming
+(`sheet/cell`, `sheet/header-cell`, …) removed in U29-X1, while the shipped
+`mosaic-pkg-grid` composition (and `Grid.dark.msl`) use flat names (`cell`,
+`header-cell`, `header-row`, `data-row`). Result: the light-theme grid cells had
+no borders/background → **no gridlines**. It stayed hidden because the light theme
+was **dead code** (rendered by no demo) until the web dark/light switcher (PR #7338)
+finally exercised it.
+
+Lessons:
+- When you light up a previously-dead variant/theme, VERIFY IT ACTUALLY RENDERS
+  (drive it), don't assume parity with the working variant — the parallel file may
+  have drifted.
+- Keep sibling stylesheets' `part` names identical to each other and to the
+  layout/package parts. A quick guard: `diff <(grep '^\s*part ' X.dark.msl) <(grep '^\s*part ' X.light.msl)`.
+- Silent-drop-on-mismatch is a sharp edge in the emitter; a warning for unmatched
+  `part` blocks would have caught this at build time (possible follow-up).
+
+Discovered: 2026-07-02, light-theme grid had no gridlines after PR #7338 shipped the switcher.

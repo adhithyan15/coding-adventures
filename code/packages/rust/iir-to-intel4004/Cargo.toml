@@ -1,0 +1,16 @@
+[package]
+name = "iir-to-intel4004"
+version = "0.4.0"
+edition = "2021"
+description = "IIR → Intel 4004 machine code backend — lowers IIRModule to a Vec<u8> of encoded 4-bit-data, 8-bit-instruction Intel 4004 opcodes.  v0.3.0 (A4++): ACC-first linear allocator over the 4004's 16 4-bit GP registers (r0..r15) + multi-register `const` + `mov` (via LD+XCH pairs) + ret-value staging.  ACC comes first in the pool to preserve v0.2.0's 3-byte shape for the trivial `const v; ret v` case (no XCH/LD when v is the sole var).  Subsequent consts evict the previous ACC owner via XCH r before clobbering ACC with LDM.  Mirrors iir-to-intel8008 v0.3.0 (A2++)'s A-first pool ordering.  Stack spilling via the 4004's data-RAM lands later."
+
+[lib]
+name = "iir_to_intel4004"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"

@@ -1,0 +1,9 @@
+[package]
+name = "gate-netlist-format"
+version = "0.1.0"
+edition = "2021"
+description = "HNL (Hardware NetList) data model — generic and stdcell netlists with JSON serde and structural validation"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

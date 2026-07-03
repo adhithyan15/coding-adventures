@@ -1,0 +1,28 @@
+// Tabs.light.msl — default light-theme styling.
+
+style Tabs {
+  part tabs {
+    padding : 0 ;
+  }
+  part tabs-bar {
+    padding      : 0 ;
+    border-width : 0 ;
+  }
+  part tabs-tab {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#0d6efd" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part tabs-panel {
+    padding      : 16 ;
+    background   : "#ffffff" ;
+    color        : "#212529" ;
+    border-width : 1 ;
+    border-color : "#dee2e6" ;
+    font-size    : 14 ;
+  }
+}

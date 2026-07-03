@@ -1,0 +1,8 @@
+{
+ "check_id": 100,
+ "idx": 42,
+ "slot": "deductible_rate_pct",
+ "claimed_value": 2,
+ "scenario": "A windstorm tore shingles off an insured home, and the assessed covered roof loss is $15,000. The policy is in force and windstorm is a covered peril.",
+ "cited_span": "a 2% windstorm deductible"
+}

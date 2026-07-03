@@ -1,0 +1,8 @@
+{
+ "idx": 18,
+ "policy": "Any party that discharges dredged or fill material into waters of the United States must obtain a Section 404 permit, except that normal farming, silviculture, and ranching activities that are part of an established, ongoing operation are exempt from the permit requirement.",
+ "scenario": "Sandhill Farm, an established and continuously operated cattle ranch, plows a field crossing a small jurisdictional wetland as part of its routine annual planting that it has performed every season for fifteen years. The plowing incidentally redeposits soil within the wetland.",
+ "question": "Must Sandhill Farm obtain a Section 404 permit for this plowing?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "exempt"
+}

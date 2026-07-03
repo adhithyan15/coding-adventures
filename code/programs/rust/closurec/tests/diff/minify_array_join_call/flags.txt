@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_array_join_call/input/a.js
+--compilation_level
+WHITESPACE_ONLY

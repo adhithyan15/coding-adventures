@@ -1,0 +1,78 @@
+{
+  "kind": "treatment-constraints",
+  "rules": {
+    "ci_penicillin_cephalosporin": {
+      "effect": "penicillin allergy → β-lactam class exclusion (3rd-gen cross-reactivity <1%)",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "byte_quote": "Third-generation cephalosporins (e.g., ceftriaxone and cefixime) have lower cross-reactivity with IgE-mediated penicillin-allergic patients (<1%) compared with first- and second-generation cephalosporins (range: 1%–8%).",
+      "url": "https://www.cdc.gov/std/treatment-guidelines/penicillin-allergy.htm",
+      "source_title": "Penicillin Allergy — CDC STI Treatment Guidelines, 2021"
+    },
+    "ci_aztreonam_safe_penicillin": {
+      "effect": "aztreonam usable WITH CAUTION in β-lactam allergy (cross-reactivity rare, not nil)",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Both animal and human data suggest that AZACTAM (aztreonam for injection, USP) is rarely cross-reactive with other beta-lactam antibiotics and weakly immunogenic. While cross-reactivity of aztreonam with other beta-lactam antibiotics is rare, this drug should be administered with caution to any patient with a history of hypersensitivity to beta-lactams (eg, penicillins, cephalosporins, and/or carbapenems).",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+      "source_title": "AZACTAM (aztreonam for injection, USP) — FDA Prescribing Information (DailyMed)"
+    },
+    "ci_moxifloxacin_pregnancy": {
+      "effect": "moxifloxacin contraindicated in pregnancy → drug exclusion",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Based on animal studies with moxifloxacin, moxifloxacin hydrochloride may cause fetal harm. [...] when moxifloxacin was administered to rats and rabbits during pregnancy and throughout lactation (rats only) at doses associated with maternal toxicity, decreased neonatal body weights, increased incidence of skeletal variations (rib and vertebra combined), and increased fetal loss were observed. Advise pregnant women of the potential risk to the fetus.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+      "source_title": "DailyMed — MOXIFLOXACIN HYDROCHLORIDE tablet (FDA Prescribing Information), Section 8.1 Pr"
+    },
+    "ci_tmpsmx_pregnancy": {
+      "effect": "tmp_smx contraindicated in pregnancy → drug exclusion",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "byte_quote": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+      "source_title": "DailyMed — SULFAMETHOXAZOLE AND TRIMETHOPRIM injection (FDA prescribing information / drug"
+    },
+    "ci_vancomycin_nephrotoxicity": {
+      "effect": "vancomycin nephrotoxicity → renal dose-ceiling penalty",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "byte_quote": "Vancomycin Hydrochloride for Injection can result in acute kidney injury (AKI), including acute renal failure, mainly due to interstitial nephritis or less commonly acute tubular necrosis. The risk of AKI increases with higher vancomycin serum levels, prolonged exposure, concomitant administration of other nephrotoxic drugs, concomitant administration of piperacillin-tazobactam... Concurrent and/or sequential systemic or topical use of other potentially, neurotoxic and/or nephrotoxic drugs requires more frequent monitoring of renal function.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=65e5f2ee-934c-40d7-967c-00d085f84ffd",
+      "source_title": "DailyMed — VANCOMYCIN HYDROCHLORIDE injection, powder, lyophilized, for solution (FDA pres"
+    },
+    "ci_aminoglycoside_vancomycin": {
+      "effect": "aminoglycoside + vancomycin → additive nephrotoxicity dose penalty",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Monitor renal function in patients receiving vancomycin and concurrent and/or sequential systemic or topical use of other potentially, neurotoxic and/or nephrotoxic drugs, such as amphotericin B, aminoglycosides, bacitracin, polymixin B, colistin, viomycin, or cisplatin.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=f604d399-fded-4f4f-8efe-af558ed07b9d",
+      "source_title": "VANCOMYCIN HYDROCHLORIDE injection, powder, lyophilized, for solution — FDA label (DailyMe"
+    },
+    "ci_fluoroquinolone_qt": {
+      "effect": "fluoroquinolone QT prolongation → exclusion on QT prolongation",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Avoid moxifloxacin hydrochloride in patients with the following risk factors due to the lack of clinical experience with the drug in these patient populations: Known prolongation of the QT interval; Uncorrected hypokalemia or hypomagnesemia; Class IA (for example, quinidine, procainamide) or Class III (for example, amiodarone, sotalol) antiarrhythmic agents.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+      "source_title": "MOXIFLOXACIN HYDROCHLORIDE tablet — FDA prescribing information (DailyMed), Section 5.6 QT"
+    },
+    "ci_vancomycin_renal_dose": {
+      "effect": "vancomycin renal dose adjustment + level monitoring",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "byte_quote": "The initial dose should be no less than 15 mg/kg in patients with any degree of renal impairment.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=99e523d8-9bde-43cb-8434-497015e5dcbd",
+      "source_title": "VANCOMYCIN injection, for intravenous use — FDA Prescribing Information (DailyMed, U.S. Na"
+    }
+  },
+  "hash": "cf01db085d4c2b7f"
+}

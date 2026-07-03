@@ -1,7 +1,8 @@
 use spice_engine::{
-    tf, tf_corners, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
-    CurrentSource, Element, Inductor, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SpiceError,
-    TfResult, Vccs, Vcvs, VoltageSource,
+    format_corner_tf_table, format_tf_table, tf, tf_corners, tf_corners_parallel, Bjt, BjtPolarity,
+    Capacitor, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CurrentSource, Element, Inductor,
+    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SpiceError, TfResult, Vccs, Vcvs,
+    VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -38,6 +39,20 @@ fn tf_voltage_divider_reports_gain_and_impedances() {
     assert_close(result.transfer_ratio, 0.5);
     assert_close(result.input_impedance_ohms, 2_000.0);
     assert_close(result.output_impedance_ohms, 500.0);
+}
+
+#[test]
+fn tf_text_output_table_is_stable() {
+    let result = TfResult {
+        transfer_ratio: 0.5,
+        input_impedance_ohms: 2_000.0,
+        output_impedance_ohms: 500.0,
+    };
+
+    assert_eq!(
+        format_tf_table(&result),
+        "TransferRatio\tInputImpedance\tOutputImpedance\n5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    );
 }
 
 #[test]
@@ -102,6 +117,118 @@ fn tf_corners_runs_transfer_function_per_corner() {
     assert_close(result.points[0].result.input_impedance_ohms, 2_000.0);
     assert_close(result.points[1].result.input_impedance_ohms, 1_500.0);
     assert_close(result.points[2].result.input_impedance_ohms, 3_000.0);
+}
+
+#[test]
+fn corner_tf_text_output_table_is_stable() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+
+    let result = tf_corners(
+        &circuit,
+        "out",
+        "Vin",
+        &[
+            CornerSpec::new("nominal", vec![]),
+            CornerSpec::new(
+                "rbot-fast",
+                vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+            ),
+            CornerSpec::new(
+                "rbot-slow",
+                vec![CornerOverride::new("Rbot", "resistance", 2_000.0)],
+            ),
+        ],
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_corner_tf_table(&result),
+        "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\nnominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\nrbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\nrbot-slow\t6.666667e-01\t3.000000e+03\t6.666667e+02\n"
+    );
+}
+
+#[test]
+fn tf_corners_parallel_matches_ordered_sequential_results() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+    let corners = [
+        CornerSpec::new("nominal", vec![]),
+        CornerSpec::new(
+            "rbot-fast",
+            vec![CornerOverride::new("Rbot", "resistance", 500.0)],
+        ),
+        CornerSpec::new(
+            "rtop-slow",
+            vec![CornerOverride::new("Rtop", "resistance", 2_000.0)],
+        ),
+    ];
+
+    let sequential = tf_corners(&circuit, "out", "Vin", &corners).unwrap();
+    let parallel = tf_corners_parallel(&circuit, "out", "Vin", &corners).unwrap();
+
+    assert_eq!(parallel.input_source, sequential.input_source);
+    assert_eq!(parallel.output_node, sequential.output_node);
+    assert_eq!(parallel.points.len(), sequential.points.len());
+    for (parallel_point, sequential_point) in parallel.points.iter().zip(sequential.points.iter()) {
+        assert_eq!(parallel_point.corner_name, sequential_point.corner_name);
+        assert_close(
+            parallel_point.result.transfer_ratio,
+            sequential_point.result.transfer_ratio,
+        );
+        assert_close(
+            parallel_point.result.input_impedance_ohms,
+            sequential_point.result.input_impedance_ohms,
+        );
+        assert_close(
+            parallel_point.result.output_impedance_ohms,
+            sequential_point.result.output_impedance_ohms,
+        );
+    }
+    assert_eq!(
+        format_corner_tf_table(&parallel),
+        "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\nnominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\nrbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\nrtop-slow\t3.333333e-01\t3.000000e+03\t6.666667e+02\n"
+    );
+}
+
+#[test]
+fn tf_corners_parallel_reports_corner_override_errors() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vin", "in", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rtop", "in", "out", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbot", "out", "0", 1_000.0,
+    )));
+    let corners = [CornerSpec::new(
+        "bad",
+        vec![CornerOverride::new("Rmissing", "resistance", 500.0)],
+    )];
+
+    assert!(matches!(
+        tf_corners_parallel(&circuit, "out", "Vin", &corners),
+        Err(SpiceError::InvalidElement { name, reason })
+            if name == "dc_corners" && reason.contains("Rmissing")
+    ));
 }
 
 #[test]
@@ -178,6 +305,10 @@ fn tf_bjt_common_emitter_reports_small_signal_gain() {
         25.85e-6,
         100.0,
         thermal_voltage,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
     )));
     circuit.add(Element::Resistor(Resistor::new(
         "Rload", "out", "0", 1_000.0,
@@ -220,6 +351,7 @@ fn tf_mosfet_common_source_uses_gate_bias_for_small_signal_gain() {
             saturation_current: 1.0e-15,
             n_sub: 1.0,
             t_nom: 300.15,
+            ..MosfetLevel1Params::default()
         },
     )));
 

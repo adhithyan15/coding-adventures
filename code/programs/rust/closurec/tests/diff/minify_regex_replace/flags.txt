@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_regex_replace/input/a.js
+--compilation_level
+WHITESPACE_ONLY

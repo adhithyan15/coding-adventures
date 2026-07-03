@@ -84,11 +84,29 @@ mod _grammar;
 ///
 /// UI29 §2.1 froze the kernel at 15 primitives. `For` is one of the two
 /// meta-primitives in that set (the other is `If`, landing in U29-G2).
-/// `Grid` is retained in this list for backwards-compatibility with the
-/// pre-UI29 backends and will be removed by U29-X1 once the userland
-/// `mosaic-pkg-grid` package proves the new architecture end-to-end.
+///
+/// **U29-X1 milestone (PR landing this comment block):** the legacy
+/// `Grid` built-in primitive has been removed. It survived through
+/// UI31-L10 as a backwards-compat shim for VisiCalc's pre-UI28-1
+/// Grid.{desktop,touch}.mll, and through UI28-1 v0.2.0 as a "just
+/// in case some demo we forgot still uses it" safety net. Both of
+/// those reasons are gone now:
+///
+///   - mosaic-pkg-grid v0.2.0 (#4408) ships the userland Grid
+///     composition that proves Cell-and-Column userland composition
+///     end-to-end.
+///   - VisiCalc's Grid.{desktop,touch}.mll (#4411) was rewired to
+///     use the v0.2.0 composition shape directly (inlined until the
+///     cross-package resolver lands).
+///   - A grep across the entire repo confirms ZERO `.mll` files use
+///     `Grid` as a tag — the primitive is dead in the source layer.
+///
+/// Per-emitter `"Grid" => ...` special-case dispatch is now dead
+/// code; a follow-up PR will sweep it. This PR removes the
+/// registration so any future use of `Grid` resolves as a userland
+/// component reference (matching the userland v0.2.0 package).
 const PRIMITIVES: &[&str] = &[
-    "Box", "Row", "Column", "Text", "Image", "Spacer", "Grid",
+    "Box", "Row", "Column", "Text", "Image", "Spacer",
     // Extended set from earlier specs (kept for completeness):
     "Scroll", "Divider", "Stack", "Icon",
     // U29-G1 — control-flow meta-primitive. See `validate_for_node` for the
@@ -100,13 +118,40 @@ const PRIMITIVES: &[&str] = &[
     // (currently both nodes coexist as siblings in `children`).
     "If",
     "Else",
-    // UI29 §2.1 / UI29-1 — host primitives. Each lowers to the host
-    // platform's native widget (DOM <input>, SwiftUI TextField, Qt
-    // TextInput, etc.). HostDialog (UI29-1) is the 16th kernel
-    // primitive, added after mosaic-pkg-dialog v0.1.0 exposed the need
-    // for a native dialog primitive with modal/focus/top-layer/
-    // accessibility semantics that composition cannot provide.
+    // UI29 §2.1 / UI29-1 / UI29-2 / UI29-4 — host primitives. Each
+    // lowers to the host platform's native widget (DOM <input>,
+    // SwiftUI TextField, Qt TextInput, etc.). HostDialog (UI29-1) is
+    // the 16th kernel primitive, added after mosaic-pkg-dialog v0.1.0
+    // exposed the need for a native dialog primitive with modal/focus/
+    // top-layer/accessibility semantics that composition cannot
+    // provide.
+    // HostCheckbox and HostRadio (UI29-2) are the 17th and 18th,
+    // added after mosaic-pkg-toolkit's Checkbox/Radio were found to
+    // be fake HostButton wrappers — losing native a11y role,
+    // checked-state visuals (tri-state, focus ring), and keyboard
+    // semantics that only the platform's real checkbox/radio widget
+    // provides.
+    // HostLink, HostTooltip, and HostNumberInput (UI29-4) are the
+    // 19th, 20th, and 21st. HostLink closes the only remaining fake-
+    // X pattern in the toolkit (Breadcrumb + Nav fake `<a>` via
+    // HostButton, losing role="link", Ctrl-click new-tab, visited-
+    // state). HostTooltip wraps a single child with a platform-native
+    // hover/long-press tooltip with proper aria-describedby wiring.
+    // HostNumberInput exposes numeric-only entry with mobile numeric
+    // keyboard, ± stepper buttons (Qt SpinBox / WinUI NumberBox), and
+    // min/max validation. See code/specs/UI29-4-form-and-nav-
+    // candidates-survey.md for the full inclusion-criteria audit.
     "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+    "HostCheckbox", "HostRadio",
+    "HostLink", "HostTooltip", "HostNumberInput",
+    // UI31 — `HostTable` sibling primitives. Recognised by the React
+    // emitter's HostTable dispatcher pre-UI31; promoting to PRIMITIVES
+    // here so the parser stops routing them through the unknown-
+    // component-reference fallback path and so future backends'
+    // emitters can match on them directly. See
+    // `code/specs/UI31-host-table.md` §2 for the structural shape.
+    "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
+    "Col",
 ];
 
 fn is_primitive(tag: &str) -> bool {
@@ -174,7 +219,27 @@ pub struct LayoutDef {
 /// ```
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LayoutNode {
-    /// Element type name, e.g. `Column`, `Grid`, `Text`.
+    /// Element type name.
+    ///
+    /// Two forms (UI34):
+    ///
+    /// * **Unqualified** — a single PascalCase component or kernel
+    ///   primitive name: `"Column"`, `"Grid"`, `"HostTable"`.  This
+    ///   is the legacy form used by every pre-UI34 `.mll` file.
+    /// * **Qualified** — the canonical UI34 cross-package reference:
+    ///   `"pkg::mosaic-pkg-grid::Grid"`.  The string is the
+    ///   author-written source syntax verbatim, so the AST round-
+    ///   trips to the same `.mll` text.
+    ///
+    /// Callers that care about the structure should prefer the
+    /// helper methods [`LayoutNode::package_ref`] and
+    /// [`LayoutNode::component`] over splitting the string by hand.
+    ///
+    /// **Resolver invariant.**  After the `mosaic-compile`
+    /// package-resolver has run (UI34 §5), no `tag` may start with
+    /// `pkg::` — every qualified reference must have been
+    /// substituted with the resolved sub-tree.  Each backend emitter
+    /// asserts this with a `debug_assert!` in its entry point.
     pub tag: String,
     /// Optional part name for mosstyle targeting, e.g. `root`, `cell-grid`.
     pub part_name: Option<String>,
@@ -182,6 +247,68 @@ pub struct LayoutNode {
     pub props: Vec<LayoutProp>,
     /// Child nodes (containers only; leaf nodes like `Grid` have no children).
     pub children: Vec<LayoutNode>,
+}
+
+impl LayoutNode {
+    /// UI34 — return `Some((package_name, component_name))` when
+    /// `tag` is a qualified `pkg::P::C` reference; `None`
+    /// otherwise.
+    ///
+    /// ```
+    /// # use moslayout_compiler::LayoutNode;
+    /// let q = LayoutNode {
+    ///     tag: "pkg::mosaic-pkg-grid::Grid".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(q.package_ref(), Some(("mosaic-pkg-grid", "Grid")));
+    ///
+    /// let p = LayoutNode {
+    ///     tag: "HostTable".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(p.package_ref(), None);
+    /// ```
+    pub fn package_ref(&self) -> Option<(&str, &str)> {
+        let rest = self.tag.strip_prefix("pkg::")?;
+        let (pkg, comp) = rest.split_once("::")?;
+        // Defensive: a well-formed qualified tag has exactly
+        // `pkg::P::C`.  If the parser ever emits a malformed shape
+        // (extra `::`) we return `None` rather than guessing — the
+        // validator will surface a clean error.
+        if pkg.is_empty() || comp.is_empty() || comp.contains("::") {
+            return None;
+        }
+        Some((pkg, comp))
+    }
+
+    /// The component name portion of `tag` — strips the
+    /// `pkg::P::` prefix when present, otherwise returns `tag`
+    /// unchanged.
+    ///
+    /// Use this in emitter switch statements where the package is
+    /// irrelevant (e.g. counting node depth) but care must be
+    /// taken to compare the bare component name.
+    ///
+    /// ```
+    /// # use moslayout_compiler::LayoutNode;
+    /// let q = LayoutNode {
+    ///     tag: "pkg::mosaic-pkg-grid::Grid".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(q.component(), "Grid");
+    ///
+    /// let p = LayoutNode {
+    ///     tag: "HostTable".to_string(),
+    ///     part_name: None, props: vec![], children: vec![],
+    /// };
+    /// assert_eq!(p.component(), "HostTable");
+    /// ```
+    pub fn component(&self) -> &str {
+        match self.package_ref() {
+            Some((_, comp)) => comp,
+            None => &self.tag,
+        }
+    }
 }
 
 /// A structural property on a layout node.
@@ -367,11 +494,19 @@ pub fn validate(
     let mut parts = Vec::new();
     let mut part_names: HashSet<String> = HashSet::new();
 
+    // UI29 §3.4 — start with an empty loop-binding scope at the layout
+    // root. Each `For` node we walk into pushes its `as:` (and optional
+    // `index:`) bindings onto the stack for the duration of its
+    // children walk. The stack is per-call rather than per-tree-level
+    // — siblings never see each other's bindings, only ancestors'.
+    let loop_bindings: HashSet<String> = HashSet::new();
+
     validate_node(
         &def.root,
         &known_slots,
         &known_emits,
         has_interface,
+        &loop_bindings,
         &mut parts,
         &mut part_names,
         &mut errors,
@@ -389,6 +524,7 @@ fn validate_node(
     known_slots: &HashSet<String>,
     known_emits: &HashSet<String>,
     has_interface: bool,
+    loop_bindings: &HashSet<String>,
     parts: &mut Vec<PartEntry>,
     part_names: &mut HashSet<String>,
     errors: &mut Vec<CompileError>,
@@ -401,8 +537,15 @@ fn validate_node(
     // `InvalidPrimitiveUsage` before the rest of the prop-walking surfaces
     // `UnknownSlot` for `each:` / `when:`-referenced slots the user already
     // mistyped.
+    //
+    // UI29 §3.4 — `For` validation now consults `loop_bindings` to allow
+    // a NAME in `each:` to resolve to an enclosing For's binding. Without
+    // the scope, `For (each: row, as: cell) { ... }` (nested-For-over-
+    // outer-binding) would be rejected as "must be a slot reference or
+    // expression" because the parser parses bare NAMEs as Keyword, which
+    // pre-§3.4 the validator unconditionally rejected.
     match node.tag.as_str() {
-        "For" => validate_for_node(node, errors),
+        "For" => validate_for_node(node, loop_bindings, errors),
         "If" => validate_if_node(node, errors),
         "Else" => validate_else_node(node, errors),
         _ => {}
@@ -475,6 +618,47 @@ fn validate_node(
         prev_tag = Some(child.tag.as_str());
     }
 
+    // UI29 §3.4 — extend the loop-binding scope when descending into a
+    // `For`'s body. The For's `as:` and (optional) `index:` bindings are
+    // visible only to descendants in this subtree; siblings of the For
+    // do NOT see them (the per-call scope set is rebuilt per recursion).
+    //
+    // Shadowing: an inner For's `as:` with the same NAME as an outer's
+    // is silently allowed per UI29 §3.4 ("Nested `For`s shadow"). The
+    // shadow-warning case (For binding shadowing a slot) is also
+    // accepted today — see the open question in §3.4 ("Slots win? `For`
+    // wins?") — defaulting to "For wins" by construction since the
+    // loop_bindings scope is checked before the slot-known set in any
+    // emitter's name-resolution.
+    let child_loop_bindings: HashSet<String> = if node.tag == "For" {
+        let mut extended = loop_bindings.clone();
+        if let Some(as_name) = node
+            .props
+            .iter()
+            .find(|p| p.name == "as")
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Keyword(s) => Some(s.clone()),
+                _ => None,
+            })
+        {
+            extended.insert(as_name);
+        }
+        if let Some(idx_name) = node
+            .props
+            .iter()
+            .find(|p| p.name == "index")
+            .and_then(|p| match &p.value {
+                LayoutPropValue::Keyword(s) => Some(s.clone()),
+                _ => None,
+            })
+        {
+            extended.insert(idx_name);
+        }
+        extended
+    } else {
+        loop_bindings.clone()
+    };
+
     // Recurse into children.
     for child in &node.children {
         validate_node(
@@ -482,6 +666,7 @@ fn validate_node(
             known_slots,
             known_emits,
             has_interface,
+            &child_loop_bindings,
             parts,
             part_names,
             errors,
@@ -516,7 +701,11 @@ fn validate_node(
 //   contexts. That requires `expr` (U29-G3) and a real lexical-scope walker;
 //   it cannot be checked at the `LayoutNode` level today.
 // • The `each:` slot's element type. Needs interface-aware analysis.
-fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
+fn validate_for_node(
+    node: &LayoutNode,
+    loop_bindings: &HashSet<String>,
+    errors: &mut Vec<CompileError>,
+) {
     // Part_name on a control-flow primitive is a category error.
     if let Some(part) = &node.part_name {
         errors.push(CompileError {
@@ -540,20 +729,46 @@ fn validate_for_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
                 // Pre-G3 this was SlotRef-only. U29-G3 lifted the restriction
                 // so `each:` can be either a slot reference (`each: slot: rows`)
                 // or any expression that evaluates to a list at runtime
-                // (`each: cols.visible`, `each: row.cells`). Type-of-list
-                // checking still belongs in a later pass with .mil-aware
-                // analysis; here we only enforce that the value is something
-                // list-shaped (SlotRef or Expr — never Number/String/Keyword).
-                if !matches!(
-                    prop.value,
-                    LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)
-                ) {
+                // (`each: cols.visible`, `each: row.cells`). U29 §3.4 further
+                // lifts the restriction to accept a bare NAME (parsed as
+                // Keyword) when the NAME shadows an enclosing `For`'s `as:`
+                // or `index:` binding — the nested-For-over-outer-binding
+                // case that mosaic-pkg-grid's Grid.mll needs:
+                //
+                //   For (each: slot: rows, as: row) {       ← outer
+                //     For (each: row, as: cell) { … }       ← inner: each: row
+                //   }                                          resolves to
+                //                                              outer's `as:`
+                //
+                // Type-of-list checking still belongs in a later pass with
+                // .mil-aware analysis; here we only enforce that the value
+                // shape is one of {SlotRef, Expr, Keyword-in-loop-scope}.
+                let accepted = match &prop.value {
+                    LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_) => true,
+                    LayoutPropValue::Keyword(name) => loop_bindings.contains(name),
+                    _ => false,
+                };
+                if !accepted {
+                    // The error message tailors to the bad shape: a Keyword
+                    // that's NOT in scope means the author wrote a bare
+                    // NAME that's neither a loop binding nor a slot — the
+                    // most useful hint is "did you mean `slot: NAME`?".
+                    let msg = match &prop.value {
+                        LayoutPropValue::Keyword(name) => format!(
+                            "`For` prop `each:` references bare name `{}`, but it isn't \
+                             an enclosing `For`'s `as:`/`index:` binding. Did you mean \
+                             `each: slot: {}`? (UI29 §3.4)",
+                            name, name
+                        ),
+                        _ => "`For` prop `each:` must be a slot reference, an enclosing \
+                              `For` binding, or an expression (e.g. `each: slot: rows`, \
+                              `each: row` where `row` is bound by an outer `For`, or \
+                              `each: cols.visible`)"
+                            .to_string(),
+                    };
                     errors.push(CompileError {
                         kind: ErrorKind::InvalidPrimitiveUsage,
-                        message:
-                            "`For` prop `each:` must be a slot reference or expression \
-                             (e.g. `each: slot: rows` or `each: cols.visible`)"
-                                .to_string(),
+                        message: msg,
                     });
                 }
             }
@@ -862,20 +1077,34 @@ fn extract_child_nodes(layout_def: &GrammarASTNode) -> Result<Vec<LayoutNode>, C
 
 /// Analyze a `node` AST node into a `LayoutNode`.
 ///
-/// Grammar: `node = NAME [ part_name ] [ LPAREN prop_list RPAREN ] [ LBRACE { node } RBRACE ]`
+/// Grammar (UI34): `node = qualified_name [ part_name ] [ LPAREN prop_list RPAREN ] [ LBRACE { node } RBRACE ]`
 ///
-/// The children of a `node` ASTNode may contain (in order):
-/// - Token(NAME)                         — the primitive tag
-/// - ASTNode("part_name")               — optional
-/// - Token(LPAREN), ASTNode("prop_list"), Token(RPAREN) — optional
-/// - Token(LBRACE), ASTNode("node")*, Token(RBRACE)    — optional
+/// where `qualified_name = NAME | KEYWORD(pkg) DOUBLE_COLON NAME DOUBLE_COLON NAME`.
+///
+/// The children of a `node` ASTNode contain (in order):
+/// - ASTNode("qualified_name")            — the type-name reference (always present)
+/// - ASTNode("part_name")                 — optional
+/// - Token(LPAREN), ASTNode("prop_list"), Token(RPAREN)  — optional
+/// - Token(LBRACE), ASTNode("node")*, Token(RBRACE)      — optional
 fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
     let children = &node_ast.children;
     let mut idx = 0;
 
     // ── TAG ──────────────────────────────────────────────────────────────────
-    // First child must be the NAME token for the primitive tag.
+    // First child must be the `qualified_name` AST node (UI34).  It either
+    // wraps a single NAME token (legacy form) or a five-token sequence
+    // `KEYWORD(pkg) :: NAME :: NAME` (qualified form).  We encode the
+    // qualified form into the tag string verbatim (`"pkg::P::C"`); see the
+    // doc-comment on [`LayoutNode::tag`].
     let tag = match children.get(idx) {
+        Some(ASTNodeOrToken::Node(n)) if n.rule_name == "qualified_name" => {
+            idx += 1;
+            extract_qualified_name(n)?
+        }
+        // Fallback for the (currently impossible) case where the grammar
+        // hands us a bare NAME token at the head of `node`.  Treating it
+        // as an unqualified tag keeps the analyzer robust to grammar
+        // evolution without silently producing the wrong AST.
         Some(ASTNodeOrToken::Token(t)) if t.type_ == TokenType::Name => {
             idx += 1;
             t.value.clone()
@@ -883,7 +1112,10 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
         _ => {
             return Err(CompileError {
                 kind: ErrorKind::InternalError,
-                message: format!("Expected NAME token at start of node, got {:?}", children.get(0)),
+                message: format!(
+                    "Expected qualified_name AST node at start of node, got {:?}",
+                    children.get(0)
+                ),
             });
         }
     };
@@ -956,6 +1188,65 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
         part_name,
         props,
         children: child_nodes,
+    })
+}
+
+/// Extract a node's type-name from a `qualified_name` AST node (UI34).
+///
+/// Grammar:
+///     qualified_name = NAME
+///                    | KEYWORD(pkg) DOUBLE_COLON NAME DOUBLE_COLON NAME
+///
+/// Unqualified form returns the single NAME verbatim (`"Grid"`).  Qualified
+/// form returns the canonical source-syntax string (`"pkg::P::C"`) — see
+/// the doc-comment on [`LayoutNode::tag`] for the rationale.  Storing the
+/// reference encoded into the existing `tag` field keeps the ≈ 350 in-repo
+/// `LayoutNode { … }` literal constructions in emitter test code compiling
+/// unchanged (UI34 §4.1).
+fn extract_qualified_name(qn_ast: &GrammarASTNode) -> Result<String, CompileError> {
+    // Walk the children.  We accept either:
+    //   • A single NAME token → unqualified.
+    //   • A KEYWORD(pkg) followed by `::`, NAME, `::`, NAME → qualified.
+    // Anything else is an InternalError because the grammar should never
+    // produce a `qualified_name` of a different shape.
+    let children = &qn_ast.children;
+
+    // Unqualified shape — single NAME token.
+    if children.len() == 1 {
+        if let Some(ASTNodeOrToken::Token(t)) = children.get(0) {
+            if t.type_ == TokenType::Name {
+                return Ok(t.value.clone());
+            }
+        }
+    }
+
+    // Qualified shape — `pkg :: P :: C` is exactly five tokens.
+    if children.len() == 5 {
+        // We don't need to inspect each token's `type_` exhaustively
+        // (the grammar already constrained the shape).  Pull the raw
+        // string values and re-glue them with `::`.
+        let parts: Vec<&str> = children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+                _ => None,
+            })
+            .collect();
+        if parts.len() == 5 && parts[1] == "::" && parts[3] == "::" {
+            // The result string is `pkg::P::C` — the verbatim source
+            // syntax the author wrote.  Storing the canonical form
+            // means a future round-trip emitter can reconstitute the
+            // original `.mll` text without consulting any side table.
+            return Ok(format!("{}::{}::{}", parts[0], parts[2], parts[4]));
+        }
+    }
+
+    Err(CompileError {
+        kind: ErrorKind::InternalError,
+        message: format!(
+            "Could not extract qualified_name (got {} children)",
+            children.len()
+        ),
     })
 }
 
@@ -2077,6 +2368,20 @@ mod tests {
     /// modal/focus/top-layer/accessibility semantics. PRIMITIVES is the
     /// canonical roster every backend looks at; pin the entry so future
     /// refactors that mistakenly drop it are caught at test time.
+    ///
+    /// UI29-2 — `HostCheckbox` and `HostRadio` joined as primitives 17 and
+    /// 18 after `mosaic-pkg-toolkit`'s Checkbox/Radio were found to be
+    /// fake `HostButton` wrappers.
+    ///
+    /// UI29-4 — `HostLink`, `HostTooltip`, and `HostNumberInput` joined as
+    /// primitives 19, 20, and 21 after the post-UI29-2 toolkit audit
+    /// identified Breadcrumb and Nav as the only remaining fake-X
+    /// patterns (both faking `<a>` via `HostButton`). HostTooltip and
+    /// HostNumberInput were promoted in the same batch because their
+    /// per-backend native-widget shape varies enough (e.g. Qt's `SpinBox`
+    /// with built-in ± buttons, mobile platforms' `inputmode="numeric"`
+    /// keyboard) that userland composition couldn't reach parity.
+    /// The kernel now stands at 21 primitives.
     #[test]
     fn host_dialog_and_friends_in_primitives() {
         assert!(PRIMITIVES.contains(&"HostInput"));
@@ -2086,6 +2391,47 @@ mod tests {
         assert!(
             PRIMITIVES.contains(&"HostDialog"),
             "UI29-1 added HostDialog as the 16th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostCheckbox"),
+            "UI29-2 added HostCheckbox as the 17th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostRadio"),
+            "UI29-2 added HostRadio as the 18th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostLink"),
+            "UI29-4 added HostLink as the 19th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTooltip"),
+            "UI29-4 added HostTooltip as the 20th kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostNumberInput"),
+            "UI29-4 added HostNumberInput as the 21st kernel primitive"
+        );
+        // UI31 — HostTable family structural sub-tags.
+        assert!(
+            PRIMITIVES.contains(&"HostTableColGroup"),
+            "UI31 added HostTableColGroup as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTableHead"),
+            "UI31 added HostTableHead as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTableBody"),
+            "UI31 added HostTableBody as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostTableFoot"),
+            "UI31 added HostTableFoot as a HostTable structural sub-tag"
+        );
+        assert!(
+            PRIMITIVES.contains(&"Col"),
+            "UI31 added Col as the cell-definition sub-tag inside HostTableColGroup"
         );
     }
 
@@ -2393,6 +2739,180 @@ mod tests {
         );
     }
 
+    // =====================================================================
+    // UI29 §3.4 — For-loop binding scope
+    //
+    // These tests pin the scope-walker behaviour:
+    //   1. Nested For with `each: <outer-as-binding>` is accepted
+    //   2. Bare NAME that isn't bound anywhere is rejected with a helpful
+    //      hint ("did you mean `slot: NAME`?")
+    //   3. Outer For's `as:` is in scope for descendants
+    //   4. Inner For's `as:` shadows outer's
+    //   5. Sibling For's bindings don't leak across
+    //   6. `index:` bindings are also in scope (not just `as:`)
+    //
+    // Required by mosaic-pkg-grid v0.2.0's Grid.mll, which nests
+    // `For (each: slot: viewport-rows, as: row, index: r) {
+    //    Row {
+    //      For (each: row, as: cell, index: c) { Cell(...) }
+    //    }
+    //  }`.
+    // =====================================================================
+
+    #[test]
+    fn g34_nested_for_with_outer_as_binding_compiles() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Row {
+                  For ( each: row, as: cell ) {
+                    Text ( content: slot: cell )
+                  }
+                }
+              }
+            }
+          }
+        "#;
+        // Should compile cleanly — the inner `each: row` resolves to
+        // the outer For's `as: row` binding per UI29 §3.4.
+        compile(src, None).expect("nested For over outer binding must compile");
+    }
+
+    #[test]
+    fn g34_nested_for_with_outer_index_binding_compiles() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: r-data, index: r-idx ) {
+                For ( each: r-idx, as: x ) {
+                  Text ( content: slot: x )
+                }
+              }
+            }
+          }
+        "#;
+        // `each: r-idx` resolves to the outer's `index:` binding.
+        // Inner For's `as: x` is also a Keyword that the inner For
+        // happily declares.
+        compile(src, None).expect("nested For over outer index binding must compile");
+    }
+
+    #[test]
+    fn g34_unbound_bare_name_in_for_each_is_rejected_with_hint() {
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: rows, as: row ) {
+                Text ( content: slot: row )
+              }
+            }
+          }
+        "#;
+        // `rows` is a bare NAME with no enclosing For binding — should
+        // be rejected with a hint to use `slot: rows`.
+        let err = compile(src, None).expect_err("bare unbound NAME in each: must be rejected");
+        let msg = format!("{:?}", err);
+        assert!(
+            msg.contains("rows") && msg.contains("slot:"),
+            "expected error message to suggest `slot:` for bare NAME `rows`, got: {}",
+            msg
+        );
+    }
+
+    #[test]
+    fn g34_sibling_for_bindings_do_not_leak() {
+        // Two sibling Fors. The second cannot see the first's `as:`.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) { Text ( content: slot: row ) }
+              For ( each: row, as: other ) { Text ( content: slot: other ) }
+            }
+          }
+        "#;
+        let err = compile(src, None)
+            .expect_err("sibling For cannot reference earlier sibling's binding");
+        let msg = format!("{:?}", err);
+        assert!(
+            msg.contains("row"),
+            "expected error message to mention the unbound `row`, got: {}",
+            msg
+        );
+    }
+
+    #[test]
+    fn g34_three_deep_nested_for_resolves_through_multiple_scopes() {
+        // Innermost For sees ALL enclosing bindings, not just immediate parent.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: outer, as: a ) {
+                For ( each: a, as: b ) {
+                  For ( each: b, as: c ) {
+                    Text ( content: slot: c )
+                  }
+                }
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("three-deep nested For must compile");
+    }
+
+    #[test]
+    fn g34_inner_for_can_still_shadow_outer_as_binding() {
+        // Both Fors use `as: x`. Per UI29 §3.4 ("Nested Fors shadow"),
+        // this is silently allowed. The inner's `each: x` resolves to
+        // whichever For most-recently bound `x` — but since x is in
+        // scope at all, the validator accepts.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: x ) {
+                For ( each: x, as: x ) {
+                  Text ( content: slot: x )
+                }
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("shadowing inner `as: x` must compile per §3.4");
+    }
+
+    #[test]
+    fn g34_for_each_slot_ref_still_works_after_scope_change() {
+        // Regression guard — the §3.4 changes must NOT break the
+        // pre-§3.4 happy path (each: slot: rows). Without this guard,
+        // a future refactor of the validator could lose the SlotRef
+        // branch silently.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: slot: rows, as: row ) {
+                Text ( content: slot: row )
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("plain slot ref each: still works after §3.4");
+    }
+
+    #[test]
+    fn g34_for_each_expr_still_works_after_scope_change() {
+        // Same regression guard for the Expr branch.
+        let src = r#"
+          layout L {
+            Column [ root ] {
+              For ( each: cols.visible, as: col ) {
+                Text ( content: slot: col )
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("Expr each: still works after §3.4");
+    }
+
     #[test]
     fn for_appears_in_the_primitive_list() {
         // Pins the `For` entry in PRIMITIVES so a future refactor that
@@ -2418,5 +2938,117 @@ mod tests {
             n.tag == "For" || n.children.iter().any(contains_for)
         }
         assert!(contains_for(&result.def.root));
+    }
+
+    // ── UI34 — pkg::P::C qualified references ─────────────────────────────
+
+    /// `pkg::package-name::Component` parses and the analyzer stores it
+    /// verbatim in the child node's `tag` field.
+    #[test]
+    fn ui34_qualified_tag_round_trips_into_tag_field() {
+        let src = r#"
+            layout Demo {
+                Box [ root ] {
+                    pkg::mosaic-pkg-grid::Grid { }
+                }
+            }
+        "#;
+        let def = parse_and_analyze(src);
+        let child = &def.root.children[0];
+        assert_eq!(child.tag, "pkg::mosaic-pkg-grid::Grid");
+        assert_eq!(
+            child.package_ref(),
+            Some(("mosaic-pkg-grid", "Grid")),
+            "package_ref() must split the canonical pkg::P::C form"
+        );
+        assert_eq!(child.component(), "Grid");
+    }
+
+    /// Unqualified tags don't accidentally look like qualified ones.
+    #[test]
+    fn ui34_unqualified_tag_has_no_package_ref() {
+        let src = "layout Demo { Box [ root ] { HostTable { } } }";
+        let def = parse_and_analyze(src);
+        let child = &def.root.children[0];
+        assert_eq!(child.tag, "HostTable");
+        assert_eq!(child.package_ref(), None);
+        assert_eq!(child.component(), "HostTable");
+    }
+
+    /// Qualified tag at the layout root works too — Grid.desktop.mll
+    /// in the VisiCalc demo will use this exact shape once UI34 lands.
+    #[test]
+    fn ui34_qualified_root_node_with_props() {
+        let src = r#"
+            layout Grid {
+                pkg::mosaic-pkg-grid::Grid (
+                    viewport-rows:  slot: viewport-rows ,
+                    column-headers: slot: column-headers ,
+                    onNavigate:     emit: onNavigate
+                )
+            }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(def.root.tag, "pkg::mosaic-pkg-grid::Grid");
+        let pkg = def.root.package_ref().expect("must be qualified");
+        assert_eq!(pkg.0, "mosaic-pkg-grid");
+        assert_eq!(pkg.1, "Grid");
+        // Props pass through unchanged.
+        assert_eq!(def.root.props.len(), 3);
+        assert_eq!(def.root.props[0].name, "viewport-rows");
+    }
+
+    /// `package_ref()` is robust to malformed tags — it returns `None`
+    /// rather than panicking or guessing.
+    #[test]
+    fn ui34_package_ref_rejects_malformed_tags() {
+        // Missing component segment.
+        let n = LayoutNode {
+            tag: "pkg::mosaic-pkg-grid".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert_eq!(n.package_ref(), None);
+
+        // Empty package.
+        let n = LayoutNode {
+            tag: "pkg::::Grid".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert_eq!(n.package_ref(), None);
+
+        // Three segments after `pkg::` — the `Some` arm requires exactly
+        // two — extra `::` rejected to keep round-trip exact.
+        let n = LayoutNode {
+            tag: "pkg::a::b::c".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert_eq!(n.package_ref(), None);
+    }
+
+    /// A qualified tag can be a child of another qualified tag —
+    /// `mosaic-pkg-grid`'s Grid composes Cell, both qualified inside
+    /// the package's own layout files.
+    #[test]
+    fn ui34_qualified_tags_nest() {
+        let src = r#"
+            layout Demo {
+                pkg::mosaic-pkg-grid::Grid {
+                    pkg::mosaic-pkg-grid::Cell ( slot: value )
+                }
+            }
+        "#;
+        let def = parse_and_analyze(src);
+        assert_eq!(def.root.tag, "pkg::mosaic-pkg-grid::Grid");
+        assert_eq!(def.root.children.len(), 1);
+        assert_eq!(
+            def.root.children[0].tag,
+            "pkg::mosaic-pkg-grid::Cell"
+        );
     }
 }

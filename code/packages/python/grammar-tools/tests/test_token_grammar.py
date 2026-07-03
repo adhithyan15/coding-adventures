@@ -1086,3 +1086,133 @@ class TestMagicComments:
         assert len(grammar.definitions) == 2
         assert grammar.definitions[0].name == "NUMBER"
         assert grammar.definitions[1].name == "PLUS"
+
+
+# ---------------------------------------------------------------------------
+# F10: declarative lexer mode transitions
+# ---------------------------------------------------------------------------
+
+
+def test_f10_no_transitions_is_backward_compatible() -> None:
+    from grammar_tools.token_grammar import parse_token_grammar
+
+    g = parse_token_grammar("NUMBER = /[0-9]+/")
+    assert g.start_mode is None
+    assert g.transitions == []
+
+
+def test_f10_parse_start_mode() -> None:
+    from grammar_tools.token_grammar import parse_token_grammar
+
+    g = parse_token_grammar(
+        'NAME = /[a-z]+/\nstart_mode: div\ngroup div:\n  SLASH = "/"\n'
+    )
+    assert g.start_mode == "div"
+
+
+def test_f10_parse_transition_alternation_and_value_guard() -> None:
+    from grammar_tools.token_grammar import (
+        TransitionAction,
+        parse_token_grammar,
+    )
+
+    src = (
+        "NAME = /[a-z]+/\n"
+        "transitions:\n"
+        "  on (NAME | NUMBER | RPAREN) -> set-mode div\n"
+        '  on KEYWORD="return" -> set-mode default, pop\n'
+    )
+    g = parse_token_grammar(src)
+    assert len(g.transitions) == 2
+    r0, r1 = g.transitions
+    assert r0.on_tokens == ("NAME", "NUMBER", "RPAREN")
+    assert r0.actions == (TransitionAction("set_mode", "div"),)
+    assert r1.on_tokens == ("KEYWORD",)
+    assert r1.on_value == "return"
+    assert r1.actions == (
+        TransitionAction("set_mode", "default"),
+        TransitionAction("pop"),
+    )
+
+
+def test_f10_parse_in_guard() -> None:
+    from grammar_tools.token_grammar import parse_token_grammar
+
+    src = (
+        "NAME = /[a-z]+/\n"
+        "group template:\n  TAIL = /x/\n"
+        "transitions:\n"
+        "  on TEMPLATE_HEAD in default -> push template, set-mode default\n"
+    )
+    g = parse_token_grammar(src)
+    assert g.transitions[0].in_mode == "default"
+
+
+def test_f10_transition_missing_arrow_errors() -> None:
+    import pytest
+
+    from grammar_tools.token_grammar import (
+        TokenGrammarError,
+        parse_token_grammar,
+    )
+
+    with pytest.raises(TokenGrammarError, match="->"):
+        parse_token_grammar("NAME = /x/\ntransitions:\n  on NAME set-mode div\n")
+
+
+def test_f10_transition_unknown_action_errors() -> None:
+    import pytest
+
+    from grammar_tools.token_grammar import (
+        TokenGrammarError,
+        parse_token_grammar,
+    )
+
+    with pytest.raises(TokenGrammarError, match="Unknown transition action"):
+        parse_token_grammar("NAME = /x/\ntransitions:\n  on NAME -> teleport\n")
+
+
+def test_f10_validate_rejects_undefined_target_mode() -> None:
+    from grammar_tools.token_grammar import (
+        parse_token_grammar,
+        validate_token_grammar,
+    )
+
+    g = parse_token_grammar(
+        "NAME = /x/\ntransitions:\n  on NAME -> set-mode div\n"
+    )
+    issues = validate_token_grammar(g)
+    assert any("undeclared mode" in i for i in issues)
+
+
+def test_f10_validate_accepts_declared_modes() -> None:
+    from grammar_tools.token_grammar import (
+        parse_token_grammar,
+        validate_token_grammar,
+    )
+
+    src = (
+        'NAME = /[a-z]+/\nstart_mode: default\ngroup div:\n  SLASH = "/"\n'
+        "transitions:\n"
+        "  on NAME -> set-mode div\n"
+        '  on KEYWORD="return" -> set-mode default\n'
+    )
+    g = parse_token_grammar(src)
+    assert not [i for i in validate_token_grammar(g) if "mode" in i]
+
+
+def test_f10_compiler_round_trips_transitions() -> None:
+    from grammar_tools.compiler import compile_token_grammar
+    from grammar_tools.token_grammar import parse_token_grammar
+
+    src = (
+        'NAME = /[a-z]+/\nstart_mode: default\ngroup div:\n  SLASH = "/"\n'
+        "transitions:\n  on (NAME | RPAREN) -> set-mode div\n"
+    )
+    g = parse_token_grammar(src)
+    code = compile_token_grammar(g, "js.tokens")
+    namespace: dict = {}
+    exec(compile(code, "<generated>", "exec"), namespace)
+    g2 = namespace["TOKEN_GRAMMAR"]
+    assert g2.start_mode == g.start_mode
+    assert g2.transitions == g.transitions

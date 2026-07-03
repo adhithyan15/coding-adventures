@@ -1,0 +1,8 @@
+{
+ "check_id": 77,
+ "idx": 32,
+ "slot": "non_accredited_investor_count",
+ "claimed_value": 40,
+ "scenario": "Helios Energy raised capital through a private placement. It conducted no general solicitation or advertising. The offering was sold to 12 accredited investors and 40 non-accredited investors.",
+ "cited_span": "sold to 12 accredited investors and 40 non-accredited investors"
+}

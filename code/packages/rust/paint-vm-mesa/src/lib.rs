@@ -3,7 +3,8 @@
 //! Mesa is not a single drawing API; it supplies software and driver-backed
 //! implementations for OpenGL and Vulkan. This crate gives the runtime a
 //! first-class place to model Mesa profiles such as llvmpipe and lavapipe while
-//! sharing the same GPU render plan as WGPU, Vulkan, OpenGL, and OpenCL.
+//! sharing the same GPU render plan as WGPU, Vulkan, OpenGL, and OpenCL,
+//! including image and gradient texture plans.
 
 use paint_instructions::{PaintScene, PixelContainer};
 use paint_vm_gpu_core::{
@@ -31,7 +32,7 @@ pub fn descriptor() -> PaintBackendDescriptor {
 }
 
 pub fn profile() -> GpuBackendProfile {
-    GpuBackendProfile::tier1_solid(
+    GpuBackendProfile::tier1_textured(
         "paint-vm-mesa",
         GpuApiFamily::Mesa,
         GpuRenderPath::DriverProfile,
@@ -86,7 +87,11 @@ fn reject_unsupported_plan(plan: &GpuPaintPlan) -> Result<(), PaintRenderError> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintInstruction, PaintRect, PaintText};
+    use paint_instructions::{
+        GradientKind, GradientStop, ImageSrc, PaintBase, PaintGradient, PaintImage,
+        PaintInstruction, PaintRect, PaintText, PixelContainer,
+    };
+    use paint_vm_gpu_core::GpuTextureKind;
     use paint_vm_runtime::PaintBackendTier;
 
     #[test]
@@ -104,6 +109,9 @@ mod tests {
         assert_eq!(profile.family, GpuApiFamily::Mesa);
         assert_eq!(profile.render_path, GpuRenderPath::DriverProfile);
         assert_eq!(profile.readback, GpuReadbackStrategy::DelegatedToProfile);
+        assert!(profile.supports_texture_sampling);
+        assert!(profile.supports_linear_gradients);
+        assert!(profile.supports_radial_gradients);
     }
 
     #[test]
@@ -119,6 +127,116 @@ mod tests {
 
         assert_eq!((plan.width, plan.height), (16, 16));
         assert_eq!(plan.meshes.len(), 1);
+        assert!(unsupported_plan_features(profile(), &plan).is_empty());
+    }
+
+    #[test]
+    fn plans_gradient_textures_with_shared_gpu_core() {
+        let mut scene = PaintScene::new(20.0, 10.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("linear".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 10.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ff0000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#0000ff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("radial".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 15.0,
+                    cy: 5.0,
+                    r: 5.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ffffff".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#000000".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            fill: Some("url(#linear)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 10.0,
+            y: 0.0,
+            width: 10.0,
+            height: 10.0,
+            fill: Some("url(#radial)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan(&scene).unwrap();
+
+        assert_eq!(plan.images.len(), 2);
+        assert_eq!(plan.images[0].kind, GpuTextureKind::LinearGradient);
+        assert_eq!(plan.images[1].kind, GpuTextureKind::RadialGradient);
+        assert!(unsupported_plan_features(profile(), &plan).is_empty());
+    }
+
+    #[test]
+    fn plans_pixel_images_with_shared_gpu_core() {
+        let mut pixels = PixelContainer::new(2, 1);
+        pixels.set_pixel(0, 0, 255, 0, 0, 255);
+        pixels.set_pixel(1, 0, 0, 0, 255, 255);
+        let mut scene = PaintScene::new(20.0, 10.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 3.0,
+            width: 16.0,
+            height: 4.0,
+            src: ImageSrc::Pixels(pixels),
+            opacity: Some(0.5),
+        }));
+
+        let plan = plan(&scene).unwrap();
+
+        assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].kind, GpuTextureKind::Image);
+        assert_eq!(plan.meshes[0].texture_id, Some(0));
+        assert_eq!(plan.meshes[0].vertices[0].color.a, 0.5);
         assert!(unsupported_plan_features(profile(), &plan).is_empty());
     }
 

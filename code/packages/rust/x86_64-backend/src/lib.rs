@@ -266,6 +266,7 @@ impl RegAlloc {
 // | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
 // | `input_i64`   | `int64_t __twig_input_i64(void)`              | yes     |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
+// | `str_eq`      | `int64_t __twig_str_eq(int64_t, int64_t)`    | yes     |
 
 #[derive(Debug, Clone, Copy)]
 struct BuiltinSig {
@@ -292,6 +293,33 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
+    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__twig_lispy_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
+    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
+    // logic — the generic `call_builtin` path marshals args + emits the CALL.
+    BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
+    BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
+    BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
+    // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
+    // program-exit boundary.  `int64_t __twig_lispy_unbox_int(uint64_t)`.
+    BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
+    // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
+    // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
+    BuiltinSig { name: "lispy_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "lispy_not",       n_args: 1, returns: true },
+    BuiltinSig { name: "lispy_equal",     n_args: 2, returns: true },
+    BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
+    // LANG77 W13b — the universal program-exit coercion for a polymorphic
+    // (lambda / `any`) result: dispatch on the runtime tag.
+    // `int64_t __twig_lispy_to_exit_code(uint64_t)`.
+    BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
+    // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
+    // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
+    BuiltinSig { name: "str_eq", n_args: 2, returns: true },
+    // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
+    BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
+    BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -539,7 +567,11 @@ fn emit_instr(
         let imm: u64 = match src {
             CIROperand::Int(n)   => *n as u64,
             CIROperand::Bool(b)  => if *b { 1 } else { 0 },
-            CIROperand::Float(_) => return Err(BackendError::UnsupportedOp("const_f64".into())),
+            // An `f64` (ALGOL `real`, LANG-FULL E3) rides its 8-byte stack slot
+            // as raw IEEE-754 bits — identical to an integer slot — so we
+            // materialise the bit pattern in a GPR and store it. No XMM register
+            // is needed to load a *constant*; only arithmetic/compare use SSE.
+            CIROperand::Float(f) => f.to_bits(),
             CIROperand::Var(_)   => return Err(BackendError::MalformedInstr(format!("{op} needs literal source"))),
         };
         // Prefer the shorter `mov r/m64, imm32` (sign-extended) when it
@@ -554,15 +586,115 @@ fn emit_instr(
         return Ok(());
     }
 
+    // --- LANG-FULL E8: int ⇄ real conversions ---
+    //
+    // These arrive with their bare IIR names (the `specialise` pass passes
+    // unrecognised ops through unchanged), so they are matched here, not via a
+    // typed `_<ty>` suffix. `Reg::Rax` names both `rax` and `xmm0` — the opcode
+    // selects the register file, exactly as the f64 arithmetic path relies on.
+    //
+    //   int_to_real        mov rax,[src]; cvtsi2sd xmm0,rax;       movsd [dest],xmm0
+    //   real_to_int_trunc  movsd xmm0,[src]; cvttsd2si rax,xmm0;   mov [dest],rax
+    //   real_to_int_floor  movsd xmm0,[src]; roundsd xmm0,xmm0,1; cvttsd2si rax,xmm0; mov [dest],rax
+    //
+    // `cvttsd2si` truncates toward zero and yields the integer-indefinite
+    // `0x8000…0` on NaN/±∞/out-of-range (no trap) — a documented divergence from
+    // the VM trap, shared with the JVM/aarch64 backends; every finite, in-range
+    // value converts identically. `roundsd … ,1` rounds toward −∞ (floor).
+    if op == "int_to_real" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("int_to_real needs srcs[0]".into()))?;
+        load_operand(asm, alloc, Reg::Rax, src);       // i64 → rax
+        asm.cvtsi2sd(Reg::Rax, Reg::Rax);              // xmm0 = (double) rax
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
+    if op == "real_to_int_trunc" || op == "real_to_int_floor" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;   // f64 → xmm0
+        if op == "real_to_int_floor" {
+            asm.roundsd(Reg::Rax, Reg::Rax, 1);        // xmm0 = floor(xmm0)  (mode 1 = −∞)
+        }
+        asm.cvttsd2si(Reg::Rax, Reg::Rax);             // rax = (i64) xmm0  (trunc toward zero)
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax
+        return Ok(());
+    }
+    // AL8 sqrt — `SQRTSD xmm0,xmm0` (SSE2; single hardware FP instruction, no libm).
+    //   f64_sqrt dest <- src  →  movsd xmm0,[src]; sqrtsd xmm0,xmm0; movsd [dest],xmm0
+    // NaN propagates; negative input → NaN (IEEE-754 / matches VM `f64::sqrt`).
+    if op == "f64_sqrt" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_sqrt needs srcs[0]".into()))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;            // f64 → xmm0
+        asm.sqrtsd(Reg::Rax, Reg::Rax);                         // xmm0 = sqrt(xmm0)
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
+    // BA-pow — `call pow` (libm two-argument power, no hardware opcode).
+    //   f64_pow dest <- base, exp  →  movsd xmm0,[base]; movsd xmm1,[exp]; call pow; movsd [dest],xmm0
+    // SysV: first FP arg xmm0, second xmm1; result xmm0.  MS x64: same (xmm0/xmm1).
+    if op == "f64_pow" {
+        let dest = require_dest(instr)?;
+        let base = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr("f64_pow needs srcs[0]".into()))?;
+        let exp_ = instr.srcs.get(1)
+            .ok_or_else(|| BackendError::MalformedInstr("f64_pow needs srcs[1]".into()))?;
+        load_fp_operand(asm, alloc, Reg::Rax, base)?;           // xmm0 = base
+        load_fp_operand(asm, alloc, Reg::Rcx, exp_)?;           // xmm1 = exp
+        asm.call_rel32("pow", ExternalRelocKind::PltRel32);     // xmm0 = pow(xmm0, xmm1)
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0
+        return Ok(());
+    }
+
+    // AL8 transcendentals — sin/cos/ln/exp via libm (`call rel32` → xmm0).
+    //
+    // Both System V AMD64 and MS x64 pass the first f64 arg in xmm0 and
+    // return the f64 result in xmm0, so there is no ABI difference here.
+    // libm is pre-linked on Linux (`-lm`) and macOS (`-lSystem`).
+    // ALGOL `ln` maps to libm `log` (natural logarithm).
+    if matches!(op, "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" | "f64_atan" | "f64_tan") {
+        let libm_sym = match op {
+            "f64_sin"  => "sin",
+            "f64_cos"  => "cos",
+            "f64_ln"   => "log",   // libm natural log is `log`, not `ln`
+            "f64_exp"  => "exp",
+            "f64_atan" => "atan",
+            "f64_tan"  => "tan",
+            _ => unreachable!(),
+        };
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(
+                format!("{op} needs srcs[0]")))?;
+        load_fp_operand(asm, alloc, Reg::Rax, src)?;                     // f64 → xmm0
+        asm.call_rel32(libm_sym, ExternalRelocKind::PltRel32);            // call sin/cos/log/exp
+        let slot = alloc.slot_of(dest);
+        asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store xmm0 result
+        return Ok(());
+    }
+
     // --- add_<ty> / sub_<ty> / mul_<ty> ---
-    if op.starts_with("add_") { return emit_binop(asm, alloc, instr, BinOp::Add); }
-    if op.starts_with("sub_") { return emit_binop(asm, alloc, instr, BinOp::Sub); }
-    if op.starts_with("mul_") { return emit_binop(asm, alloc, instr, BinOp::Mul); }
+    if let Some(ty) = op.strip_prefix("add_") { return emit_binop(asm, alloc, instr, BinOp::Add, ty); }
+    if let Some(ty) = op.strip_prefix("sub_") { return emit_binop(asm, alloc, instr, BinOp::Sub, ty); }
+    if let Some(ty) = op.strip_prefix("mul_") { return emit_binop(asm, alloc, instr, BinOp::Mul, ty); }
 
     // --- cmp_<rel>_<ty> ---
     if let Some(rest) = op.strip_prefix("cmp_") {
         let (rel, signed) = parse_cmp_suffix(rest)
             .ok_or_else(|| BackendError::MalformedInstr(format!("bad cmp mnemonic: {op}")))?;
+        // A `cmp_*_f64` (ALGOL `real`, LANG-FULL E3) uses `ucomisd` + `setcc`,
+        // not the integer `cmp` path.
+        if rest.ends_with("_f64") {
+            return emit_fp_cmp(asm, alloc, instr, rel);
+        }
         return emit_cmp(asm, alloc, instr, rel, signed);
     }
 
@@ -865,6 +997,178 @@ fn emit_instr(
         return Ok(());
     }
 
+    // ── LANG-FULL E5 — bounds-checked arrays (static, length-prefixed) ─────────
+    //
+    // An array is a single `__twig_alloc_bytes` block laid out as `[i64 length]
+    // [elem 0][elem 1]…`; the IIR *handle* is the block base. The native target
+    // has no managed runtime, so `array_get`/`array_set` emit an EXPLICIT
+    // unsigned bounds compare and trap with `ud2` — the x86_64 twin of the LLVM
+    // `icmp uge`+`llvm.trap` and WASM `i64.ge_u`+`unreachable` lowerings.
+
+    // `alloc_array <count> -> <dest>` — allocate `8 + count*8` bytes, store the
+    // length header, return base.  (The AOT specialiser collapses the `array<T>`
+    // result type to `any`, so the element width is not on `instr.ty` here; the
+    // native backend only supports 8-byte elements, so the stride is a fixed 8 —
+    // `array_get`/`array_set` validate the element width per access.)
+    //   rdi = count ; shl rdi,3 ; add rdi,8 ; call __twig_alloc_bytes ; [rax]=count
+    if op == "alloc_array" {
+        let dest = require_dest(instr)?;
+        let count_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("alloc_array: needs srcs[0]=count".into())
+        })?;
+        let arg0_reg = abi.arg_regs()[0];
+        load_operand(asm, alloc, arg0_reg, count_src);
+        asm.shl_imm8(arg0_reg, 3); // count*8
+        asm.add_imm32(arg0_reg, 8); // + 8-byte length header
+        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        // dest = base (rax); then write [base+0] = count.
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        load_operand(asm, alloc, Reg::Rcx, count_src); // reload (call clobbered regs)
+        asm.mov_mem_r64(Reg::Rax, 0, Reg::Rcx);
+        return Ok(());
+    }
+
+    // `array_len <handle> -> <dest>` — load the i64 length header at `[base+0]`.
+    if op == "array_len" {
+        let dest = require_dest(instr)?;
+        let h_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("array_len: needs srcs[0]=handle".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, h_src);
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, 0);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `array_get <handle>, <idx> -> <dest>` — bounds-check then load.
+    //   rax=base ; rcx=idx ; rdx=[base] (len) ; cmp rcx,rdx ; jb ok ; ud2 ; ok:
+    //   shl rcx,3 ; add rax,rcx ; mov rax,[rax+8] ; mov [rbp+dest],rax
+    if op == "array_get" {
+        let dest = require_dest(instr)?;
+        let h_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("array_get: needs srcs[0]=handle".into())
+        })?;
+        let i_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("array_get: needs srcs[1]=idx".into())
+        })?;
+        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
+        load_operand(asm, alloc, Reg::Rax, h_src);
+        load_operand(asm, alloc, Reg::Rcx, i_src);
+        asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
+        asm.cmp(Reg::Rcx, Reg::Rdx); // idx - len
+        let ok = asm.create_label();
+        asm.jcc(Cond::B, ok); // idx <u len → in bounds, skip trap
+        asm.ud2();
+        asm.bind(ok).map_err(BackendError::from)?;
+        asm.shl_imm8(Reg::Rcx, 3); // idx*8
+        asm.add(Reg::Rax, Reg::Rcx); // base + idx*8
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, 8); // element past the 8-byte header
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `array_set <handle>, <idx>, <val>` (no dest) — bounds-check, store.
+    if op == "array_set" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr("array_set: must not have a dest".into()));
+        }
+        let h_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("array_set: needs srcs[0]=handle".into())
+        })?;
+        let i_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("array_set: needs srcs[1]=idx".into())
+        })?;
+        let v_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("array_set: needs srcs[2]=val".into())
+        })?;
+        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
+        load_operand(asm, alloc, Reg::Rax, h_src);
+        load_operand(asm, alloc, Reg::Rcx, i_src);
+        asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
+        asm.cmp(Reg::Rcx, Reg::Rdx);
+        let ok = asm.create_label();
+        asm.jcc(Cond::B, ok);
+        asm.ud2();
+        asm.bind(ok).map_err(BackendError::from)?;
+        asm.shl_imm8(Reg::Rcx, 3); // idx*8
+        asm.add(Reg::Rax, Reg::Rcx); // base + idx*8
+        load_operand(asm, alloc, Reg::Rdx, v_src);
+        asm.mov_mem_r64(Reg::Rax, 8, Reg::Rdx); // store past the header
+        return Ok(());
+    }
+
+    // ---- Heap cons cells (lispy `ref<LispyPair>`) — L3b -------------------
+    //
+    // `iir_builtin_lowering::lower_heap_builtins` rewrites a Lisp frontend's
+    // `call_builtin "cons"/"car"/"cdr"/"null?"` into these word-granular heap
+    // ops.  A pair is a 2-word (16-byte) cell: field 0 = car/head, field 1 =
+    // cdr/tail.  We allocate it with `__twig_alloc_bytes` (the helper
+    // `alloc_bytes` uses) and read/write fields with plain 64-bit moves at
+    // byte displacement `idx*8`.  Values are raw 64-bit words — no NaN-boxing
+    // — so `(CAR (CONS 7 9))` round-trips to a raw `7`.  (V1 leaks; no GC.)
+
+    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.
+    if op == "alloc" {
+        let dest = require_dest(instr)?;
+        asm.mov_r64_imm32(abi.arg_regs()[0], 16); // 2 fields × 8 bytes
+        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `field_store <ptr>, <idx>, <value>` — `[ptr + idx*8] = value`.  No dest.
+    if op == "field_store" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "field_store: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[0]=ptr".into())
+        })?;
+        let disp = field_disp(instr, 1)?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, val_src);
+        asm.mov_mem_r64(Reg::Rax, disp, Reg::Rcx);
+        return Ok(());
+    }
+
+    // `field_load <ptr>, <idx> -> <dest>` — `dest = [ptr + idx*8]`.
+    if op == "field_load" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_load: needs srcs[0]=ptr".into())
+        })?;
+        let disp = field_disp(instr, 1)?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, disp);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `is_null <x> -> <dest>` — `dest = (x == 0)` (nil is the 0 word).
+    if op == "is_null" {
+        let dest = require_dest(instr)?;
+        let x_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("is_null: needs srcs[0]".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, x_src);
+        asm.cmp_imm32(Reg::Rax, 0);
+        asm.setcc(Cond::E, Reg::Rax);
+        asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
     // --- LANG38-parity additions ---
 
     // div_<ty> / mod_<ty> — signed types use IDIV, unsigned use DIV.
@@ -872,37 +1176,39 @@ fn emit_instr(
     if let Some(ty) = op.strip_prefix("mod_") { return emit_divmod(asm, alloc, instr, ty, true);  }
 
     // and_<ty> / or_<ty> / xor_<ty>
-    if op.starts_with("and_") { return emit_bitwise(asm, alloc, instr, Bitwise::And); }
-    if op.starts_with("or_")  { return emit_bitwise(asm, alloc, instr, Bitwise::Or);  }
-    if op.starts_with("xor_") { return emit_bitwise(asm, alloc, instr, Bitwise::Xor); }
+    if let Some(ty) = op.strip_prefix("and_") { return emit_bitwise(asm, alloc, instr, Bitwise::And, ty); }
+    if let Some(ty) = op.strip_prefix("or_")  { return emit_bitwise(asm, alloc, instr, Bitwise::Or,  ty); }
+    if let Some(ty) = op.strip_prefix("xor_") { return emit_bitwise(asm, alloc, instr, Bitwise::Xor, ty); }
 
     // shl_<ty>: logical shift left (same for signed/unsigned).
-    if op.starts_with("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl); }
+    if let Some(ty) = op.strip_prefix("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl, ty); }
     // shr_<ty>: arithmetic for signed (SAR), logical for unsigned (SHR).
     if let Some(ty) = op.strip_prefix("shr_") {
         let kind = if ty.starts_with('i') { ShiftKind::Sar } else { ShiftKind::Shr };
-        return emit_shift(asm, alloc, instr, kind);
+        return emit_shift(asm, alloc, instr, kind, ty);
     }
 
     // neg_<ty> dest = -src
-    if op.starts_with("neg_") {
+    if let Some(ty) = op.strip_prefix("neg_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::Rax, src);
         asm.neg_(Reg::Rax);
+        mask_narrow(asm, Reg::Rax, ty); // E2: -x mod 2ⁿ for narrow widths
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
     }
 
     // not_<ty> dest = ~src
-    if op.starts_with("not_") {
+    if let Some(ty) = op.strip_prefix("not_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::Rax, src);
         asm.not_(Reg::Rax);
+        mask_narrow(asm, Reg::Rax, ty); // E2: ~x flips only the low n bits for a uⁿ
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
         return Ok(());
@@ -938,6 +1244,13 @@ fn emit_divmod(
     ty: &str,
     is_mod: bool,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        // ALGOL `real` division (LANG-FULL E3). `mod` is integer-only.
+        if is_mod {
+            return Err(BackendError::UnsupportedOp("mod_f64 (real modulo is undefined)".into()));
+        }
+        return emit_fp_binop(asm, alloc, instr, FpBin::Div);
+    }
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
         .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[0]".into()))?;
@@ -957,6 +1270,9 @@ fn emit_divmod(
     if signed { asm.idiv(Reg::Rcx); } else { asm.div(Reg::Rcx); }
     // Result lives in RAX (quotient) or RDX (remainder).
     let result_reg = if is_mod { Reg::Rdx } else { Reg::Rax };
+    // E2: quotient/remainder of in-range uⁿ operands already fits, so this mask
+    // is a no-op; kept uniform with the other narrow ops.
+    mask_narrow(asm, result_reg, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
     Ok(())
@@ -974,6 +1290,7 @@ fn emit_bitwise(
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     op: Bitwise,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
@@ -987,6 +1304,9 @@ fn emit_bitwise(
         Bitwise::Or  => asm.or_(Reg::Rax,  Reg::Rcx),
         Bitwise::Xor => asm.xor_(Reg::Rax, Reg::Rcx),
     }
+    // E2: AND/OR/XOR of two already-masked uⁿ operands stays in range, so this
+    // mask is provably redundant — kept uniform with the other narrow ops.
+    mask_narrow(asm, Reg::Rax, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
@@ -1006,6 +1326,7 @@ fn emit_shift(
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     kind: ShiftKind,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
@@ -1022,6 +1343,10 @@ fn emit_shift(
         ShiftKind::Shr => asm.shr_cl(Reg::Rax),
         ShiftKind::Sar => asm.sar_cl(Reg::Rax),
     }
+    // E2: a left shift can push bits above the declared width (`1u8 << 8` must
+    // be 0, not 256), so mask the result.  Right shifts only shrink the value,
+    // so the mask is a no-op there — applied uniformly for simplicity.
+    mask_narrow(asm, Reg::Rax, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
@@ -1034,12 +1359,49 @@ fn emit_shift(
 #[derive(Debug, Clone, Copy)]
 enum BinOp { Add, Sub, Mul }
 
+/// LANG-FULL E2 (native-AOT leg): the bit-width of a narrow **unsigned** type,
+/// or `None` for full-width / signed / non-integer types.  See [`mask_narrow`].
+fn narrow_unsigned_bits(ty: &str) -> Option<u32> {
+    match ty {
+        "u4"  => Some(4),
+        "u8"  => Some(8),
+        "u16" => Some(16),
+        "u32" => Some(32),
+        _ => None, // u64 / i* / f* / bool / void — no masking
+    }
+}
+
+/// Mask the value in `reg` down to `ty`'s width when `ty` is a narrow unsigned
+/// type, so narrow arithmetic *wraps* mod-2ⁿ instead of keeping the full 64-bit
+/// result (`add_u8 200, 100` → 44, not 300).  Mirrors the masks the other
+/// backends (vm-core, jit-core, wasm, jvm, cil) already emit.  `RCX` is the
+/// scratch register for the mask constant; the stack-spill allocator keeps every
+/// live value in a stack slot, so `RCX` is free between instructions.  `reg` is
+/// always `RAX` or `RDX` here (never `RCX`).  A no-op for full-width / signed /
+/// non-integer types.
+fn mask_narrow(asm: &mut Assembler, reg: Reg, ty: &str) {
+    if let Some(bits) = narrow_unsigned_bits(ty) {
+        let mask = (1u64 << bits) - 1;
+        asm.mov_r64_imm64(Reg::Rcx, mask);
+        asm.and_(reg, Reg::Rcx);
+    }
+}
+
 fn emit_binop(
     asm: &mut Assembler,
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     op: BinOp,
+    ty: &str,
 ) -> Result<(), BackendError> {
+    if ty == "f64" {
+        let fk = match op {
+            BinOp::Add => FpBin::Add,
+            BinOp::Sub => FpBin::Sub,
+            BinOp::Mul => FpBin::Mul,
+        };
+        return emit_fp_binop(asm, alloc, instr, fk);
+    }
     let dest = require_dest(instr)?;
     let lhs = instr.srcs.first()
         .ok_or_else(|| BackendError::MalformedInstr(format!("{:?} needs srcs[0]", op)))?;
@@ -1051,6 +1413,124 @@ fn emit_binop(
         BinOp::Add => asm.add(Reg::Rax, Reg::Rcx),
         BinOp::Sub => asm.sub(Reg::Rax, Reg::Rcx),
         BinOp::Mul => asm.imul(Reg::Rax, Reg::Rcx),
+    }
+    mask_narrow(asm, Reg::Rax, ty); // E2: wrap u8/u16/u32 results mod 2ⁿ
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+/// Which floating-point binary op (LANG-FULL E3).
+#[derive(Debug, Clone, Copy)]
+enum FpBin { Add, Sub, Mul, Div }
+
+/// Load an `f64` operand into an XMM register (`Reg`'s number names the XMM
+/// slot: `Rax`→`xmm0`, `Rcx`→`xmm1`). Frontends materialise constants into
+/// stack slots first, so an arithmetic/compare operand is a `Var`.
+fn load_fp_operand(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    xmm: Reg,
+    op: &CIROperand,
+) -> Result<(), BackendError> {
+    match op {
+        CIROperand::Var(name) => {
+            let slot = alloc.slot_of(name);
+            asm.movsd_load(xmm, Reg::Rbp, RegAlloc::rbp_offset(slot));
+            Ok(())
+        }
+        other => Err(BackendError::UnsupportedOp(format!(
+            "f64 operand must be a Var (materialise the constant first), got {other:?}"
+        ))),
+    }
+}
+
+/// Emit an `f64` `add`/`sub`/`mul`/`div`: `movsd xmm0,[a]; movsd xmm1,[b];
+/// <op>sd xmm0,xmm1; movsd [dest],xmm0` (LANG-FULL E3). IEEE division by zero is
+/// `±inf`/`NaN` (no trap), matching every other backend.
+fn emit_fp_binop(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: FpBin,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("f64 binop needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("f64 binop needs srcs[1]".into()))?;
+    load_fp_operand(asm, alloc, Reg::Rax, lhs)?; // xmm0
+    load_fp_operand(asm, alloc, Reg::Rcx, rhs)?; // xmm1
+    match kind {
+        FpBin::Add => asm.addsd(Reg::Rax, Reg::Rcx),
+        FpBin::Sub => asm.subsd(Reg::Rax, Reg::Rcx),
+        FpBin::Mul => asm.mulsd(Reg::Rax, Reg::Rcx),
+        FpBin::Div => asm.divsd(Reg::Rax, Reg::Rcx),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.movsd_store(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+/// Emit an `f64` comparison via `ucomisd` + `setcc` (LANG-FULL E3). The boolean
+/// result is an `int` 0/1. `ucomisd` sets ZF/PF/CF like an *unsigned* compare,
+/// and a NaN operand sets PF (and ZF, CF). We pick operand order + condition so
+/// every relation has **IEEE-ordered** semantics (a NaN makes `<`/`<=`/`>`/`>=`
+/// and `==` false; `!=` true):
+///
+/// | rel | `ucomisd` | setcc | why                                          |
+/// |-----|-----------|-------|----------------------------------------------|
+/// | `<` | `b, a`    | `A`   | ordered `b > a` ⇒ `a < b`; NaN → CF/ZF set → false |
+/// | `<=`| `b, a`    | `AE`  | ordered `b >= a`; NaN → CF set → false       |
+/// | `>` | `a, b`    | `A`   | ordered `a > b`                              |
+/// | `>=`| `a, b`    | `AE`  | ordered `a >= b`                             |
+/// | `==`| `a, b`    | `E && NP` | ZF=1 (equal **or** NaN) **and** PF=0 (not NaN) |
+/// | `!=`| `a, b`    | `NE || P` | ZF=0 **or** PF=1 (NaN)                    |
+fn emit_fp_cmp(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    rel: CmpRel,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("f64 cmp needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("f64 cmp needs srcs[1]".into()))?;
+    // Load a→xmm0, b→xmm1.
+    load_fp_operand(asm, alloc, Reg::Rax, lhs)?; // xmm0 = a
+    load_fp_operand(asm, alloc, Reg::Rcx, rhs)?; // xmm1 = b
+
+    match rel {
+        CmpRel::Lt | CmpRel::Le => {
+            // Compare b to a (reversed), so a single `seta`/`setae` is ordered.
+            asm.ucomisd(Reg::Rcx, Reg::Rax); // ucomisd xmm1(b), xmm0(a)
+            asm.setcc(if rel == CmpRel::Lt { Cond::A } else { Cond::Ae }, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        }
+        CmpRel::Gt | CmpRel::Ge => {
+            asm.ucomisd(Reg::Rax, Reg::Rcx); // ucomisd xmm0(a), xmm1(b)
+            asm.setcc(if rel == CmpRel::Gt { Cond::A } else { Cond::Ae }, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        }
+        CmpRel::Eq => {
+            // ZF=1 AND PF=0 → equal and ordered. `sete`(Rax) & `setnp`(Rcx).
+            asm.ucomisd(Reg::Rax, Reg::Rcx);
+            asm.setcc(Cond::E, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+            asm.setcc(Cond::Np, Reg::Rcx);
+            asm.movzx_r64_r8(Reg::Rcx, Reg::Rcx);
+            asm.and_(Reg::Rax, Reg::Rcx);
+        }
+        CmpRel::Ne => {
+            // ZF=0 OR PF=1 → not-equal or unordered. `setne` | `setp`.
+            asm.ucomisd(Reg::Rax, Reg::Rcx);
+            asm.setcc(Cond::Ne, Reg::Rax);
+            asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+            asm.setcc(Cond::P, Reg::Rcx);
+            asm.movzx_r64_r8(Reg::Rcx, Reg::Rcx);
+            asm.or_(Reg::Rax, Reg::Rcx);
+        }
     }
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
@@ -1159,6 +1639,50 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
             format!("{} needs a dest", instr.op)))
 }
 
+/// The byte size of an E5 array element type on the native backend. 64-bit
+/// integer and `f64` elements share the same 8-byte memory representation here:
+/// the backend copies raw bits between stack slots and array storage, while f64
+/// arithmetic/comparisons load those bits through SSE when needed. Smaller
+/// element widths still produce a clear error rather than a silently wrong
+/// stride.
+fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
+    match elem {
+        "i64" | "u64" | "f64" => Ok(8),
+        other => Err(BackendError::MalformedInstr(format!(
+            "array element {other:?} not supported on the native backend (8-byte elements only so far)"
+        ))),
+    }
+}
+
+/// Largest field byte-displacement the heap ops accept.  Bounds the offset
+/// **in the backend** rather than relying on the lowering pass only ever
+/// emitting field index 0/1, so a future producer with a larger index gets
+/// a clean `MalformedInstr`, never a wrapped/oversized displacement.
+const MAX_FIELD_DISP: u64 = 0x7FF8;
+
+/// Read a `field_load`/`field_store` field-index operand (a compile-time
+/// `Int`) and convert it to a byte displacement (`idx * 8`).  Pair fields
+/// are word-sized: index 0 → disp 0 (car), index 1 → disp 8 (cdr).  A
+/// negative, non-literal, or out-of-range index is a `MalformedInstr`.
+fn field_disp(instr: &CIRInstr, i: usize) -> Result<i32, BackendError> {
+    match instr.srcs.get(i) {
+        Some(CIROperand::Int(n)) if *n >= 0 => (*n as u64)
+            .checked_mul(8)
+            .filter(|off| *off <= MAX_FIELD_DISP)
+            .map(|off| off as i32)
+            .ok_or_else(|| {
+                BackendError::MalformedInstr(format!(
+                    "{}: field index {n} is out of range",
+                    instr.op
+                ))
+            }),
+        _ => Err(BackendError::MalformedInstr(format!(
+            "{}: field index at srcs[{i}] must be a non-negative integer literal",
+            instr.op
+        ))),
+    }
+}
+
 fn label_name(instr: &CIRInstr) -> Option<&str> {
     match instr.srcs.first()? {
         CIROperand::Var(s) => Some(s.as_str()),
@@ -1187,6 +1711,197 @@ mod tests {
 
     fn fn_ctx<'a>(name: &'a str, params: &'a [(String, String)], return_type: &'a str) -> FunctionContext<'a> {
         FunctionContext { name, params, return_type }
+    }
+
+    // LANG-FULL E5 — bounds-checked arrays lower to a `__twig_alloc_bytes` call,
+    // an explicit `cmp`+`jb`+`ud2` bounds trap, and base+idx*8 loads/stores.
+    #[test]
+    fn array_ops_lower_with_bounds_trap() {
+        let ctx = fn_ctx("arr", &[], "u64");
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(3)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            instr("const_u64", Some("v"), vec![Op::Int(42)]),
+            instr("array_set", None, vec![Op::Var("a".into()), Op::Var("i".into()), Op::Var("v".into())]),
+            instr("array_get", Some("r"), vec![Op::Var("a".into()), Op::Var("i".into())]),
+            instr("array_len", Some("m"), vec![Op::Var("a".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV)
+            .expect("array ops must lower");
+        // Two bounds checks (array_get + array_set) ⇒ at least two `ud2` (0F 0B) traps.
+        let traps = bytes.windows(2).filter(|w| *w == [0x0F, 0x0B]).count();
+        assert!(traps >= 2, "expected ≥2 ud2 bounds traps, got {traps} in {bytes:02X?}");
+    }
+
+    /// `f64` array elements lower as raw 8-byte loads/stores; f64 math reads
+    /// the same bits from the destination slot through SSE later.
+    #[test]
+    fn array_get_accepts_f64_element() {
+        let ctx = fn_ctx("arr", &[], "u64");
+        let mut get = instr("array_get", Some("r"),
+            vec![Op::Var("a".into()), Op::Var("i".into())]);
+        get.ty = "f64".to_string();
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(1)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            get,
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_ok(),
+            "f64 array element should lower as an 8-byte native load");
+    }
+
+    // ---- L3b: cons heap ops (alloc / field_store / field_load / is_null) ----
+
+    #[test]
+    fn cons_car_heap_ops_lower() {
+        // CIR for `(CAR (CONS 7 9))`: allocate a 2-word cell, store 7/9 into
+        // fields 0/1, load field 0 back.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(1), Op::Var("t".into())]),
+            instr("field_load", Some("r"), vec![Op::Var("cell".into()), Op::Int(0)]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&fn_ctx("cons_car", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("cons/car heap ops must lower");
+        assert!(!bytes.is_empty());
+    }
+
+    // ---- L3b-2b (LANG77): cons/car via the runtime-call path ----
+
+    fn call_builtin(dest: Option<&str>, name: &str, args: &[&str]) -> CIRInstr {
+        let mut srcs = vec![Op::Var(name.into())];
+        srcs.extend(args.iter().map(|a| Op::Var((*a).into())));
+        instr("call_builtin", dest, srcs)
+    }
+
+    #[test]
+    fn lispy_runtime_cons_car_emit_external_calls() {
+        // `(CAR (CONS 7 9))` through the runtime path: two CALLs to the C
+        // lisp runtime, surfaced as external relocations.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("r"), "lispy_car", &["cell"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("lispy", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("lispy runtime calls must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_lispy_cons"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__twig_lispy_car"), "missing car call: {symbols:?}");
+    }
+
+    #[test]
+    fn lispy_cons_wrong_arity_is_rejected() {
+        // lispy_cons takes exactly 2 args; one arg is a soft refusal.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h"]),
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        assert!(compile_function(&fn_ctx("bad_cons", &[], "u64"), &ir, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn lispy_full_boxed_cons_car_unbox_lowers() {
+        // The complete L3b-2c-1 CIR for `(CAR (CONS 7 9))`: boxed atoms,
+        // cons, car, then unbox the result for the exit code.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7 << 3)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9 << 3)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("boxed"), "lispy_car", &["cell"]),
+            call_builtin(Some("r"), "lispy_unbox_int", &["boxed"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("full", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("boxed cons/car/unbox must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        for want in ["__twig_lispy_cons", "__twig_lispy_car", "__twig_lispy_unbox_int"] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    #[test]
+    fn lispy_atom_eq_predicates_and_truthy_lower() {
+        // L3b-2c-2: ATOM = not(pair?), normalised via lispy_truthy; plus EQ.
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
+            call_builtin(Some("p"), "lispy_pair_p", &["x"]),
+            call_builtin(Some("a"), "lispy_not", &["p"]),
+            call_builtin(Some("t"), "lispy_truthy", &["a"]),
+            call_builtin(Some("e"), "lispy_equal", &["x", "x"]),
+            instr("ret_u64", None, vec![Op::Var("e".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("preds", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("predicates must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_lispy_pair_p", "__twig_lispy_not",
+            "__twig_lispy_truthy", "__twig_lispy_equal",
+        ] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    /// W14b (F7): the universal exit coercion `lispy_to_exit_code` — the program
+    /// boundary for a polymorphic lambda result — lowers to a call into the runtime.
+    #[test]
+    fn lispy_to_exit_code_lowers() {
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
+            call_builtin(Some("r"), "lispy_to_exit_code", &["x"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("exit_coerce", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("to_exit_code must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_lispy_to_exit_code"),
+            "missing __twig_lispy_to_exit_code: {symbols:?}",
+        );
+    }
+
+    #[test]
+    fn is_null_lowers() {
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(0)]),
+            instr("is_null", Some("r"), vec![Op::Var("x".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&fn_ctx("isnull", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("is_null must lower");
+        assert!(!bytes.is_empty());
+    }
+
+    #[test]
+    fn field_store_rejects_dest_and_non_literal_index() {
+        let bad_dest = vec![instr("field_store", Some("oops"),
+            vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())])];
+        assert!(compile_function(&fn_ctx("bad", &[], "u64"), &bad_dest, X86_64Abi::SysV).is_err());
+        let bad_idx = vec![instr("field_load", Some("r"),
+            vec![Op::Var("cell".into()), Op::Var("i".into())])];
+        assert!(compile_function(&fn_ctx("bad2", &[], "u64"), &bad_idx, X86_64Abi::SysV).is_err());
+        let huge = vec![instr("field_load", Some("r"),
+            vec![Op::Var("cell".into()), Op::Int(1 << 40)])];
+        assert!(compile_function(&fn_ctx("bad3", &[], "u64"), &huge, X86_64Abi::SysV).is_err());
     }
 
     // ---- Prologue + epilogue shape ----
@@ -2049,5 +2764,124 @@ mod tests {
             .filter(|r| r.symbol == "__twig_print_i64")
             .collect();
         assert_eq!(plt.len(), 1);
+    }
+
+    // =======================================================================
+    // LANG-FULL E2 (native-AOT leg): narrow-width unsigned masking
+    // =======================================================================
+    //
+    // x86_64 mirrors the aarch64 backend: after each narrow `uⁿ` op the codegen
+    // appends `movabs rcx, <mask>; and <dst>, rcx` so the result wraps mod-2ⁿ
+    // (`add_u8 200, 100` → 44, not 300).  There is no in-repo x86 JIT loader, so
+    // the *executed* value proof for x86_64 is the lang-aot matrix on a Linux
+    // x86_64 CI runner (and the aarch64 backend proves the masked values by
+    // directly executing its output).  Here we prove the mask bytes are emitted.
+
+    fn typed_instr(op: &str, dest: Option<&str>, srcs: Vec<Op>, ty: &str) -> CIRInstr {
+        CIRInstr { op: op.into(), dest: dest.map(str::to_string), srcs, ty: ty.into(), deopt_to: None }
+    }
+
+    /// Compile `const a; const b; <op> v0 = a,b; ret v0` at width `ty`, return
+    /// the byte length of the generated function.
+    fn narrow_binop_len(full_op: &str, ty: &str) -> usize {
+        let ir = vec![
+            typed_instr(&format!("const_{ty}"), Some("a"), vec![Op::Int(200)], ty),
+            typed_instr(&format!("const_{ty}"), Some("b"), vec![Op::Int(100)], ty),
+            typed_instr(full_op, Some("v0"), vec![Op::Var("a".into()), Op::Var("b".into())], ty),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        compile_function(&fn_ctx("f", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("narrow binop must lower")
+            .len()
+    }
+
+    #[test]
+    fn narrow_add_emits_extra_mask_bytes() {
+        // u8 add masks its result; u64 add does not — so the u8 function is
+        // strictly longer (the `movabs rcx,mask; and rax,rcx` mask sequence).
+        assert!(
+            narrow_binop_len("add_u8", "u8") > narrow_binop_len("add_u64", "u64"),
+            "u8 add must emit a width mask the u64 add omits",
+        );
+    }
+
+    #[test]
+    fn narrow_widths_all_emit_mask() {
+        let wide = narrow_binop_len("add_u64", "u64");
+        for ty in ["u4", "u8", "u16", "u32"] {
+            assert!(
+                narrow_binop_len(&format!("add_{ty}"), ty) > wide,
+                "{ty} add must emit a width mask",
+            );
+        }
+    }
+
+    #[test]
+    fn i64_op_is_never_masked() {
+        // i64 is full-width — identical length to the unmasked u64 form.
+        assert_eq!(
+            narrow_binop_len("add_i64", "i64"),
+            narrow_binop_len("add_u64", "u64"),
+        );
+    }
+
+    // ---- f64 (ALGOL `real`) SSE2 — LANG-FULL E3 ----
+    //
+    // x86_64 is not locally runnable (no x86 ISA simulator); these are
+    // structural exact-opcode checks. The encodings were verified byte-for-byte
+    // against the system assembler, and the *executed* cross-backend proof is
+    // the lang-aot matrix `NativeAot` column on the Linux-x86 CI runner.
+
+    fn finstr(op: &str, dest: Option<&str>, srcs: Vec<Op>) -> CIRInstr {
+        CIRInstr { op: op.into(), dest: dest.map(str::to_string), srcs, ty: "f64".into(), deopt_to: None }
+    }
+
+    /// `r := 2.5 * 2.0` lowers to `movsd` loads (F2 0F 10), `mulsd` (F2 0F 59),
+    /// and a `movsd` store (F2 0F 11) — no integer `imul`.
+    #[test]
+    fn f64_multiply_emits_sse() {
+        let ir = vec![
+            finstr("const_f64", Some("a"), vec![Op::Float(2.5)]),
+            finstr("const_f64", Some("b"), vec![Op::Float(2.0)]),
+            finstr("mul_f64", Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let b = compile_function(&fn_ctx("fmul", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("f64 multiply must lower");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x59]), "expected mulsd (F2 0F 59)");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x10]), "expected movsd load (F2 0F 10)");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x11]), "expected movsd store (F2 0F 11)");
+    }
+
+    /// `7.0 / 2.0` uses `divsd` (F2 0F 5E), not the integer `idiv` path.
+    #[test]
+    fn f64_divide_emits_divsd() {
+        let ir = vec![
+            finstr("const_f64", Some("a"), vec![Op::Float(7.0)]),
+            finstr("const_f64", Some("b"), vec![Op::Float(2.0)]),
+            finstr("div_f64", Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let b = compile_function(&fn_ctx("fdiv", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("f64 divide must lower");
+        assert!(contains_seq(&b, &[0xF2, 0x0F, 0x5E]), "expected divsd (F2 0F 5E)");
+    }
+
+    /// `r < 4.0` uses `ucomisd` (66 0F 2E) + `setcc`, not integer `cmp`.
+    #[test]
+    fn f64_compare_emits_ucomisd() {
+        let ir = vec![
+            finstr("const_f64", Some("a"), vec![Op::Float(3.5)]),
+            finstr("const_f64", Some("b"), vec![Op::Float(4.0)]),
+            finstr("cmp_lt_f64", Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let b = compile_function(&fn_ctx("fcmp", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("f64 compare must lower");
+        assert!(contains_seq(&b, &[0x66, 0x0F, 0x2E]), "expected ucomisd (66 0F 2E)");
+    }
+
+    fn contains_seq(hay: &[u8], needle: &[u8]) -> bool {
+        hay.windows(needle.len()).any(|w| w == needle)
     }
 }

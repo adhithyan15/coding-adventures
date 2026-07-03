@@ -1,0 +1,31 @@
+// InputGroup.light.msl — default light-theme styling.
+
+style InputGroup {
+  part input-group {
+    padding : 0 ;
+  }
+  part input-group-prefix {
+    padding       : 8 ;
+    background    : "#e9ecef" ;
+    color         : "#495057" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+  }
+  part input-group-field {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+  }
+  part input-group-suffix {
+    padding       : 8 ;
+    background    : "#e9ecef" ;
+    color         : "#495057" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+  }
+}

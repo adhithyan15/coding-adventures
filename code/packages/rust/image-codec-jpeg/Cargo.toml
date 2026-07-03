@@ -1,0 +1,9 @@
+[package]
+name = "image-codec-jpeg"
+version = "0.1.0"
+edition = "2021"
+description = "Baseline JPEG encoder/decoder — IC04: YCbCr, 8×8 DCT, standard quantization, Huffman entropy coding"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }
+dsp-dct         = { path = "../dsp-dct" }

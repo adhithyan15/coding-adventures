@@ -1,0 +1,91 @@
+{
+  "hash": "83a052af6bc47106",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5644167/",
+  "title": "Local epidemiology and resistance profiles in acute uncomplicated cystitis (AUC) in women: a prospective cohort study in an urban urological ambulatory setting (Seitz et al., BMC Infect Dis. 2017)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5644167/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "E. coli is by far the most common uropathogen in acute uncomplicated cystitis in women, found in more than 80% of positive urine cultures.",
+      "byte_quote": "Escherichia coli (E. coli) is still by far the most common uropathogen for acute uncomplicated cystitis (AUC) in women and is found in more than 80% of the positive urine cultures."
+    },
+    {
+      "id": "c2",
+      "text": "In this cohort the most common organism was E. coli at 86.3% (365/423), followed by Enterococcus faecalis 10.2% (43/423) and Klebsiella pneumoniae 3.5% (15/423).",
+      "byte_quote": "The most common bacteria was E. coli with 86.3% (365/423) followed by Enterococcus faecalis with 10.2% (43/423) and Klebsiella pneumoniae with 3.5% (15/423)."
+    },
+    {
+      "id": "c3",
+      "text": "Summary organism distribution: E. coli 86%, Enterococcus faecalis 10%, Klebsiella pneumoniae 4%.",
+      "byte_quote": "The most commonly detected bacteria was E. coli with 86%, followed by Enterococcus faecalis with 10% and Klebsiella pneumoniae with 4%."
+    },
+    {
+      "id": "c4",
+      "text": "E. coli was highly susceptible to fosfomycin-trometamol (99.2%), nitrofurantoin (98.1%) and cefpodoxime (92.9%).",
+      "byte_quote": "Susceptibility testing showed E. coli strains to be highly sensitive to the following oral antibiotics: fosfomycin-trometamol (99.2%), nitrofurantoin (98.1%) and cefpodoxime (92.9%)."
+    },
+    {
+      "id": "c5",
+      "text": "E. coli resistance: ciprofloxacin 15.1%, trimethoprim/sulfamethoxazole 25.2%, amoxicillin/clavulanic acid 25.2%.",
+      "byte_quote": "E. coli was resistant to ciprofloxacin in 15.1% of cases, to trimethoprim/sulfamethoxazole in 25.2% of cases and to amoxicillin/clavulanic acid in 25.2% of cases."
+    },
+    {
+      "id": "c6",
+      "text": "E. coli aminopenicillin resistance was alarming, between 25.2% and 39.7% (ampicillin, amoxicillin with sulbactam/clavulanic acid).",
+      "byte_quote": "Our data demonstrate alarming resistance rates for aminopenicillins (ampicillin, amoxicillin in combination with sulbactam and clavulanic acid, respectively) between 25.2 and 39.7%."
+    },
+    {
+      "id": "c7",
+      "text": "Fosfomycin, pivmecillinam and nitrofurantoin are first-line therapy with high evidence level (LE 1a, GR A).",
+      "byte_quote": "Fosfomycin, pivmecilliam and nitrofurantoin are considered to be first-line therapy with high levels of evidence (LE: 1a, GR: A)."
+    },
+    {
+      "id": "c8",
+      "text": "An antibiotic resistance rate below 20% suffices to classify an agent as first-line medication.",
+      "byte_quote": "Resistance rates of <20% already suffice to class an antibiotic as first-line medication."
+    },
+    {
+      "id": "c9",
+      "text": "Fosfomycin-trometamol and nitrofurantoin can be given as first-line therapy without susceptibility testing.",
+      "byte_quote": "On the basis of our data and international studies (ECO-SENS) it can currently be confirmed that fosfomycin-trometamol and nitrofurantoin can be given in our urological practice as first-line therapy without susceptibility testing."
+    },
+    {
+      "id": "c10",
+      "text": "TRS, CIP and AMC should only be used to treat AUC after a susceptibility test has been performed.",
+      "byte_quote": "AUC should therefore only be treated with TRS, CIP and AMC after a susceptibility test has been carried out."
+    },
+    {
+      "id": "c11",
+      "text": "Mean patient age was 32.7 years (range 18-65), with the age peak at 18-25 years (42%).",
+      "byte_quote": "The average age of the patients was 32.7 years (range 18–65). The age peak in the cohort was between ages 18 and 25 (42%)."
+    },
+    {
+      "id": "c12",
+      "text": "AUC was more common in pre-menopausal than post-menopausal women (86.9% vs 13.1%).",
+      "byte_quote": "Among pre-menopausal patients AUC was more common than among post-menopausal women (86.9% vs. 13.1%)."
+    },
+    {
+      "id": "c13",
+      "text": "Three main risk factors influencing AUC rate: recurrent UTIs (20.3%), preceding sexual intercourse (15.3%), and a new sex partner (12.9%).",
+      "byte_quote": "Three main factors that might influence the rate of AUC in our cohort were recurrent urinary tract infections (20.3%), preceding sexual intercourse (15.3%) and a new sex partner (12.9%)."
+    },
+    {
+      "id": "c14",
+      "text": "AUC was defined by at least one of: suprapubic pain, urge symptoms, dysuria, increased voiding frequency.",
+      "byte_quote": "Indicators of an AUC were defined in terms of at least one of the following symptoms: suprapubic pain, urge symptoms, dysuria and increased voiding frequency."
+    },
+    {
+      "id": "c15",
+      "text": "A urine culture was defined as positive at >=10e3 CFU/mL; mixed cultures were not analysed.",
+      "byte_quote": "A urine culture was defined as positive if ≥10e3CFU/mL. Mixed cultures were not analysed."
+    }
+  ],
+  "cites": [
+    "ECO-SENS I & II studies (refs 5,6)",
+    "2014 ECO-SENS Update (ref 6)",
+    "ARESC Study — Antimicrobial Resistance Epidemiological Survey on Cystitis (refs 8,9)",
+    "EAU Guidelines, European Association of Urology, March 2015 (ref 12)",
+    "IDSA Guidelines, Infectious Diseases Society of America (ref 14)",
+    "German National Guidelines DGU (ref 10)"
+  ]
+}

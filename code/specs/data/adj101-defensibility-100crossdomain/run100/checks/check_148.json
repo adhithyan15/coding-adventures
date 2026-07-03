@@ -1,0 +1,8 @@
+{
+ "check_id": 148,
+ "idx": 59,
+ "slot": "is_means_of_egress_door",
+ "claimed_value": false,
+ "scenario": "A dwelling unit has a bathroom fitted with a sliding pocket door. The bathroom opens off a central hallway; the hallway, not the bathroom, provides access to the unit's required exit, and the bathroom is a dead-end room.",
+ "cited_span": "the hallway, not the bathroom, provides access to the unit's required exit, and the bathroom is a dead-end room"
+}

@@ -1,0 +1,29 @@
+{
+  "queries": [],
+  "ranked": [],
+  "decision": {
+    "type": "empty"
+  },
+  "solve": {
+    "outcome": "unsupported",
+    "reason": "inequality constraints \u2014 feasibility/LP is track C1/C2"
+  },
+  "optimize": {
+    "outcome": "optimal",
+    "value": 44,
+    "assignments": [
+      {
+        "name": "emergency_shelter",
+        "value": 4
+      },
+      {
+        "name": "hot_meals",
+        "value": 8
+      }
+    ],
+    "binding": [
+      0,
+      2
+    ]
+  }
+}

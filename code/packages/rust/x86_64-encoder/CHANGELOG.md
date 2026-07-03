@@ -1,5 +1,59 @@
 # Changelog — `x86_64-encoder`
 
+## 0.6.0 — 2026-06-28 (AL8-sqrt — `SQRTSD xmm_dst, xmm_src`)
+
+### Added — `sqrtsd`
+
+`sqrtsd(xmm_dst, xmm_src)` emits `SQRTSD xmm_dst, xmm_src` — SSE2 double-
+precision hardware square root.  Opcode: `F2 0F 51 /r` — e.g. `sqrtsd xmm0,
+xmm0` = `F2 0F 51 C0`.  Single instruction, no libm call; NaN propagates,
+negative → NaN per IEEE-754.
+
+## 0.5.0 — 2026-06-23 (int ⇄ real conversions — LANG-FULL E8 PR-6b)
+
+### Added — `cvtsi2sd` / `cvttsd2si` / `roundsd`
+
+Three SSE conversion encoders for the E8 numeric-conversion ops, plus two new
+private emit helpers they need:
+
+| Method | Instruction | Encoding | Purpose |
+|--------|-------------|----------|---------|
+| `cvtsi2sd(xmm_dst, gpr_src)` | `CVTSI2SD xmm, r/m64` | `F2 REX.W 0F 2A /r` | signed i64 → double |
+| `cvttsd2si(gpr_dst, xmm_src)` | `CVTTSD2SI r64, xmm/m64` | `F2 REX.W 0F 2C /r` | double → i64, toward zero |
+| `roundsd(xmm_dst, xmm_src, imm8)` | `ROUNDSD xmm, xmm, ib` | `66 0F 3A 0B /r ib` | round under `imm8` (1 = floor) |
+
+- `emit_sse_rr_w` — SSE reg/reg with a **mandatory REX.W** (the existing
+  `emit_sse_rr` only adds a REX byte for high registers and never sets W;
+  `cvtsi2sd`/`cvttsd2si` mix a 64-bit GPR with an XMM and require it).
+- `emit_sse_rri_0f3a` — the **three-byte** `66 0F 3A <op>` form with a trailing
+  `imm8` (used by `roundsd`).
+
+Exact bytes unit-tested for the base (xmm0/rax) encodings and for ModRM.reg /
+ModRM.rm placement with REX.R/REX.B extension (e.g. `cvtsi2sd xmm1,r8` =
+`F2 49 0F 2A C8`). `cvttsd2si` yields the integer-indefinite `0x8000…0` on
+NaN/±∞/out-of-range (no trap) — a documented divergence from the VM trap, shared
+with the JVM/aarch64 backends.
+
+## 0.4.0 — 2026-06-20 (SSE2 scalar double-precision FP — LANG-FULL E3)
+
+### Added — `movsd`/`addsd`/`subsd`/`mulsd`/`divsd`/`ucomisd` (double)
+
+Scalar double-precision SSE2 instructions, for ALGOL `real` (enabler E3) on the
+native-AOT backend:
+
+- `movsd_load`/`movsd_store` — load/store a 64-bit double (`F2 0F 10`/`F2 0F 11`,
+  `[base + disp32]`). A `float64` value rides its 8-byte stack slot as raw bits.
+- `addsd`/`subsd`/`mulsd`/`divsd xmm_dst, xmm_src` — double arithmetic
+  (`F2 0F 58`/`5C`/`59`/`5E`).
+- `ucomisd xmm_a, xmm_b` — unordered double compare, sets `ZF`/`PF`/`CF`
+  (`66 0F 2E`); read with `setcc` (NaN sets `PF`).
+
+The `Reg` numbers double as XMM numbers (`Rax`→`xmm0`, …) — the mandatory prefix
++ `0F` opcode select the XMM register file; REX is emitted only for high
+registers, always `W=0`. **The reg-reg opcodes are byte-identical to the system
+assembler** (`clang -masm=intel`); the mem forms use the encoder's existing
+`disp32` policy. Exact-encoding unit tests included.
+
 ## 0.3.0 — 2026-05-20 (LANG76 — byte memory primitives)
 
 Two new instruction emitters for `load_byte` / `store_byte` lowering

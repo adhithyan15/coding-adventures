@@ -1,0 +1,7 @@
+{
+ "idx": 10,
+ "key": "viral_meningitis::csf_glucose(normal)",
+ "lr": 4.9,
+ "computed": "normal-glucose LR for aseptic = spec/(1-sens) of the bacterial low-glucose test = 0.98/(1-0.80) = 4.9",
+ "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) ... CSF:serum glucose ratio <0.4 = 80% sensitive, 98% specific."
+}

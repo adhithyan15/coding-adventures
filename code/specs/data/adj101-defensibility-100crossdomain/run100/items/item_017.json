@@ -1,0 +1,7 @@
+{
+ "idx": 17,
+ "id": "STA-8",
+ "scenario": "At a roadside crash, a bystander volunteer pulled an injured passenger from a car. Acting with gross negligence, he dragged the passenger by the neck despite an obvious spinal injury, worsening the harm.",
+ "policy": "A volunteer who renders emergency aid at the scene of an accident is shielded from liability for ordinary negligence under the Good Samaritan rule. Override: the shield does not apply, and the volunteer remains liable, where the volunteer's conduct constitutes gross negligence or willful misconduct.",
+ "question": "Is the volunteer liable for the additional harm?"
+}

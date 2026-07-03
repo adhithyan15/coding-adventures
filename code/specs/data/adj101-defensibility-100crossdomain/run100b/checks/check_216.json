@@ -1,0 +1,8 @@
+{
+ "check_id": 216,
+ "idx": 83,
+ "slot": "transfer_to_third_party",
+ "claimed_value": true,
+ "scenario": "DriftMedia operates a free news website and transfers readers' browsing identifiers to an analytics partner, AdLoom. A reader, Sam, asked DriftMedia to honor an opt-out of the sale of his personal information. DriftMedia's privacy team noted that the AdLoom transfer is governed by a signed data-processing agreement and that AdLoom uses the identifiers to build audience segments.",
+ "cited_span": "transfers readers' browsing identifiers to an analytics partner, AdLoom"
+}

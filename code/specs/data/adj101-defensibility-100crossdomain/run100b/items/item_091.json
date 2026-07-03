@@ -1,0 +1,7 @@
+{
+ "idx": 91,
+ "id": "WOR-2",
+ "scenario": "Marcus earned an average weekly wage of $2,400 before a compensable back injury left him temporarily totally disabled. Two-thirds of his average weekly wage is $1,600.",
+ "policy": "Temporary total disability benefits are paid at a rate of 66.67% of the employee's average weekly wage, subject to a statutory maximum of $1,200 per week. If the calculated rate exceeds the maximum, the employee receives the maximum.",
+ "question": "What weekly temporary total disability benefit is Marcus entitled to?"
+}

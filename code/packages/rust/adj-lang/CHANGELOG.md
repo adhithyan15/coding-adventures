@@ -1,0 +1,868 @@
+# Changelog
+
+## [0.38.0] - 2026-07-02 — accent-wrapped operands (`\hat{x}`, `\bar{x}`, …) compute transparently in `latex "…"`
+
+### Added
+
+- `latex "\hat{x}"`, `\bar{x}`, `\vec{x}`, `\tilde{x}` and any other **accent** over an operand now
+  compute, lowering **transparently to the accented operand**. In arithmetic an accent is a
+  notational decoration, not an operation: a model that writes a statistics formula like
+  `\hat{p}(1 - \hat{p})` (estimated-variance numerator) or `\bar{x} - \bar{y}` (difference of means)
+  means the accented symbol to carry its operand's value — the hat/bar just marks it as an
+  estimate/mean in prose. The adapter recognises `MathExpr::Accent { body, .. }` and lowers to
+  `latex_math_to_expr_ast(body, …)`, so `\hat{a}(b - \hat{a})` computes as `a·(b − a)` with dimension
+  and value flowing through the decoration unchanged (previously an `UnsupportedLatexMath` error).
+  This is the first **non-function** LaTeX construct consumed after the named-operator surface
+  saturated. Pure **adapter** recognition: no engine, AST, or lowering change. +1 e2e unit test
+  (`\hat{a}(b − \hat{a})` = 21; `\bar{x} + \bar{y}` = 10).
+
+## [0.37.0] - 2026-07-02 — `\operatorname{sin/cos/…}` trig-family word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{sin}(x)"` and the whole **trigonometric family** — direct
+  (`sin`/`cos`/`tan`/`cot`/`sec`/`csc`), inverse (`asin`/`acos`/`atan` and their `arc…`
+  aliases), and hyperbolic (`sinh`/`cosh`/`tanh`) — now compute, reaching the SAME native
+  `ExprAst::Call(NamedFn::…)` as their backslash-macro spellings (`\sin(x)`, `\arctan(x)`). A
+  model that writes the operator *name* instead of the macro lands on the identical node.
+  `\operatorname{…}` is a TEXT command, so — exactly like `\operatorname{exp}`/`floor`/`sgn` —
+  these parse as the operator-name juxtaposition `Bin(Mul, Text("sin"), (x))` rather than a
+  `Call`; one consolidated adapter arm recognises the family via the new `operator_name_trig_fn`
+  helper (which maps the trimmed text name — accepting `arcsin`≡`asin` etc. — to its `NamedFn`)
+  and lowers to `ExprAst::Call` (transcendental, Scalar→Scalar). Pure **adapter** recognition:
+  no engine, AST, or lowering change. +1 e2e unit test (cos(0)=1; sinh(0)=0; arctan(0)=0 via
+  the alias path).
+
+## [0.36.0] - 2026-07-02 — `\operatorname{abs/exp/log/ln}` word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{abs}(x)"`, `\operatorname{exp}(x)`, `\operatorname{log}(x)`, and
+  `\operatorname{ln}(x)` now compute the **single-argument unary functions**, reaching the SAME
+  native nodes as their existing spellings: `abs`→`ExprAst::Abs` (the `|x|` absolute value,
+  dimension-preserving), and `exp`/`log`/`ln`→`ExprAst::Call(NamedFn::Exp/Log/Ln)` (the
+  transcendentals already lowered from the `\exp`/`\log`/`\ln` macro `Call`s). A model that writes
+  the operator *name* instead of the bracket/macro lands on the identical node. `\operatorname{…}`
+  is a TEXT command, so — exactly like `\operatorname{floor}`/`sgn`/`trunc` — these parse as the
+  operator-name juxtaposition `Bin(Mul, Text("exp"), (x))` rather than a `Call` or a `Fenced`; the
+  adapter matches via `operator_name_is(lhs, …)` and lowers to the existing node. Pure **adapter**
+  recognition: no engine, AST, or lowering change. +1 e2e unit test (abs(a−b)=7; exp(ln(x))
+  round-trip; base-10 log(1000)=3).
+
+## [0.35.0] - 2026-07-02 — `\operatorname{min/max/gcd/lcm}` word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{min}(a, b)"`, `\operatorname{max}(…)`, `\operatorname{gcd}(…)`, and
+  `\operatorname{lcm}(…)` now compute the **variadic binary functions**, reaching the SAME
+  native ops (`ComputeOp::Min2`/`Max2`/`Gcd`/`Lcm`) as their already-supported function-call
+  spellings (`\min(a, b)`, `\gcd(a, b, c)`): a model that writes the operator *name* instead
+  of the backslash macro lands on the identical node. `\operatorname{…}` is a TEXT command,
+  so — unlike `\min(…)`, which parses as a `Call` — `\operatorname{gcd}(a, b)` parses as the
+  operator-name juxtaposition `Bin(Mul, Text("gcd"), (a, b))` (the same shape the adapter
+  already recognises for `\operatorname{floor}`/`sgn`/`trunc`); the adapter matches via
+  `operator_name_is(lhs, …)` and folds the comma-separated argument `Sequence` through the
+  SAME `Call2` chain as the call spelling (`gcd(a, b, c)` → `gcd(gcd(a, b), c)`, associative).
+  Two-or-more operands accepted; a single argument is a clean, explicit error. Pure **adapter**
+  recognition: no engine, AST, or lowering change. The shared fold is factored into
+  `latex_nary_fold`, now used by both the `\min(…)` `Call` path and the `\operatorname{min}(…)`
+  juxtaposition path. +2 e2e unit tests (min/max/gcd/lcm word spellings; one-arg rejection).
+
+## [0.34.0] - 2026-07-02 — `\operatorname{floor/ceil/round}` word spellings in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{floor}(x)"`, `\operatorname{ceil}(x)`, and `\operatorname{round}(x)`
+  now compute the **word-spelled roundings**, reaching the SAME `ComputeOp`s as their
+  already-supported Unicode-bracket twins (`⌊x⌋`→`Floor`, `⌈x⌉`→`Ceil`, `⌊x⌉`→`Round`): a
+  model that writes the operator *name* instead of the bracket lands on the identical node.
+  `\operatorname{…}` is a TEXT command, so each parses as the operator-name juxtaposition
+  `Bin(Mul, Text("floor"), (x))` — the same shape the adapter already recognises for
+  `\operatorname{trunc}`/`\operatorname{sgn}` — and lowers via `operator_name_is(lhs, …)` to
+  the existing `ExprAst::Floor`/`Ceil`/`Round` (dimension-preserving). Pure **adapter**
+  recognition: no engine, AST, or lowering change. +1 e2e unit test (floor/ceil/round).
+
+## [0.33.0] - 2026-07-02 — `\operatorname{sgn}` sign function in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{sgn}(x)"` now computes the **sign** `sgn(x)` (`−1`/`0`/`+1`).
+  New `ExprAst::Sign` lowers to the new `logic_engine::ComputeOp::Sign`. `\operatorname`
+  is a TEXT command, so `\operatorname{sgn}(x)` parses as the operator-name
+  juxtaposition `Bin(Mul, Text("sgn"), (x))` — the same shape the adapter already
+  recognises for `\operatorname{trunc}` — and lowers via `operator_name_is(lhs, "sgn")`.
+  Unlike the rounding ops, `sgn` collapses to a dimensionless `Scalar` while accepting a
+  dimensioned operand, so `\operatorname{sgn}(a - b)` (the sign of a net quantity)
+  computes to a clean ±1. +adapter and lower unit tests.
+
+## [0.32.0] - 2026-07-02 — `\bmod` / `\pmod` modulo in `latex "…"`
+
+### Added
+
+- `latex "a \bmod b"` and `latex "a \pmod{b}"` now compute the **modulo** `a mod b`
+  (the remainder with the sign of the dividend). New `ArithOp::Mod` lowers to the new
+  `logic_engine::ComputeOp::Mod`. `\bmod`/`\pmod` are not in the frontend's operator
+  tables, so they parse as a bare `Symbol("bmod")`/`Symbol("pmod")` inside an implicit
+  multiplication — `a \bmod b` → `Bin(Mul, Bin(Mul, a, bmod), b)`. The adapter
+  recognises that operator-name-juxtaposition shape (the same technique used for
+  `\operatorname{trunc}(x)`) via a `mod_juxtaposition_lhs` helper and lowers it to
+  `a mod b`. The arm sits above the general `Bin(Mul, …)` so genuine products still
+  multiply; the congruence form `x \equiv y \pmod{n}` parses as a rejected `Rel(Equiv)`,
+  so only the direct remainder computes — never a mis-lowered congruence. +adapter and
+  lower unit tests.
+
+## [0.31.0] - 2026-07-02 — n-ary `\min`/`\max`/`\gcd`/`\lcm` in `latex "…"`
+
+### Changed
+
+- `\min`/`\max`/`\gcd`/`\lcm` now accept **two OR MORE** comma-separated arguments
+  (previously exactly two). Because these ops are associative, an n-ary call
+  **left-folds** into a chain of the existing binary `ExprAst::Call2` —
+  `\min(a, b, c)` becomes `min(min(a, b), c)` — so it reuses the native
+  `ComputeOp::Min2`/`Max2`/`Gcd`/`Lcm` with **no engine change** and no n-ary op.
+  A two-arg call is unchanged (a single `Call2`). `latex_two_args` (exactly-two)
+  became `latex_nary_args` (≥ 2). A single-arg `\min(a)` is still a clean
+  `UnsupportedLatexMath` error.
+
+### Tests
+
+- n-ary lower test: `\min(a,b,c,d)=2`, `\max(a,b,c,d)=9`, `\gcd(24,36,60)=12`,
+  `\lcm(2,3,4)=12`. The wrong-arity test now asserts only the one-arg rejection
+  (three-plus args are valid).
+
+## [0.30.0] - 2026-07-02 — `\operatorname{trunc}(x)` truncation in `latex "…"`
+
+### Added
+
+- The `latex "…"` adapter now lowers **`\operatorname{trunc}(x)`** to the native
+  `ComputeOp::Trunc` (truncate toward zero) via a new `ExprAst::Trunc`. Because
+  `\operatorname{…}` is a TEXT command, the frontend parses
+  `\operatorname{trunc}(x)` NOT as a function call but as an implicit
+  multiplication (juxtaposition) — `Bin(Mul, Text("trunc"), (x))`. The adapter
+  recognises that exact operator-name shape (a new `operator_name_is` helper)
+  above the general `Bin(Mul, …)` arm, so a genuine product (`2x`) still
+  multiplies; only a `trunc`-named text factor is intercepted. This is the last
+  common scalar unary the surface was missing.
+
+### Tests
+
+- Two lower tests: `\operatorname{trunc}(a/b)` with `a=7, b=2` compute-and-decides
+  to 3, and `\operatorname{trunc}((0 - a)/b)` to −3 (toward zero, NOT the floor −4).
+
+## [0.29.0] - 2026-07-02 — binary `\gcd(a, b)` / `\lcm(a, b)` in `latex "…"`
+
+### Added
+
+- The `latex "…"` adapter now lowers **`\gcd(a, b)`** / **`\lcm(a, b)`** to the
+  native `ComputeOp::Gcd` / `Lcm`, reusing the same two-argument binary-`Call`
+  path as `\min`/`\max`: `BinFn` gains `Gcd`/`Lcm`, the adapter maps
+  `Func::Gcd`/`Func::Lcm` → `ExprAst::Call2` (peeling the transparent
+  `Group`/`Fenced` around the two-element `Sequence`, exactly-two enforced), and
+  `lower_bin_fn` routes them to the engine ops. These are the `Func::Gcd`/`Lcm`
+  variants the latex frontend already parsed but the adapter previously rejected.
+  Only `Func::Det` and unknown `Other` remain unsupported.
+
+### Tests
+
+- One lower test: `\gcd(12, 18)` compute-and-decides to 6 and `\lcm(4, 6)` to 12.
+
+## [0.28.0] - 2026-07-02 — binary `\min(a, b)` / `\max(a, b)` in `latex "…"`
+
+### Added
+
+- The `latex "…"` adapter now lowers the **binary** `\min(a, b)` / `\max(a, b)`
+  to the native `ComputeOp::Min2` / `Max2` — the **first two-argument (binary)
+  `Call` lowering**. The latex frontend parses the call's parenthesised argument
+  as a two-element `Sequence`; the adapter peels the transparent `Group`/`Fenced`
+  wrapper, requires **exactly two** operands, and builds the new
+  `ExprAst::Call2(BinFn, …)` → `ComputeExpr::Bin(Min2/Max2, …)`. These are the
+  `Func::Min`/`Func::Max` variants the frontend already parsed but the adapter
+  previously rejected as "not yet supported".
+- New surface AST: `BinFn { Min, Max }` and `ExprAst::Call2(BinFn, Box, Box)`,
+  kept distinct from the single-argument `NamedFn`/`ExprAst::Call` (honest arity)
+  and from the slot-reducing `AggOp::Min`/`Max`.
+- A one-argument (`\min(a)`) or three-argument (`\min(a, b, c)`) call has no
+  binary lowering and is a clean, explicit `UnsupportedLatexMath` error rather
+  than a silent mis-lowering. `gcd`/`lcm`/`det`/`Other` remain unsupported.
+
+### Tests
+
+- Two lower tests: `\min(a, b)` / `\max(a, b)` compute-and-decide to the correct
+  selected operand, and wrong-arity (`\min(a)`, `\min(a, b, c)`) is rejected.
+
+## [0.27.0] - 2026-07-02 — rest of the trig family in `latex "…"` (`\arcsin`…/`\sinh`…/`\cot`/`\sec`/`\csc`)
+
+### Added
+
+- The `latex "…"` adapter now lowers the **inverse** (`\arcsin`/`\arccos`/`\arctan`),
+  **hyperbolic** (`\sinh`/`\cosh`/`\tanh`), and **reciprocal** (`\cot`/`\sec`/`\csc`)
+  trig functions to their native transcendental `ComputeOp`s via the existing
+  `ExprAst::Call` / `NamedFn` mechanism — the `Func` variants the latex frontend
+  already parses but the adapter previously rejected as "not yet supported". No
+  latex-crate change; each is a `Scalar → Scalar` call.
+
+### Notes
+
+- The remaining `Func` variants are still a clean, explicit adapter error: the
+  aggregate/multi-arg `min`/`max`/`gcd`/`lcm`/`det` (await a binary/variadic slice)
+  and an unknown `Other` such as `\operatorname{trunc}` (truncation awaits faithful
+  `\operatorname{…}(x)` juxtaposition handling).
+
+## [0.26.0] - 2026-07-02 — named transcendental functions in `latex "…"` (`\sin`/`\cos`/`\tan`/`\ln`/`\log`/`\exp`)
+
+### Added
+
+- The `latex "…"` adapter now lowers a **named-function call** — `\sin(x)`,
+  `\cos(x)`, `\tan(x)`, `\ln(x)`, `\log(x)`, `\exp(x)` (a `MathExpr::Call`) — to
+  the matching native transcendental `ComputeOp` via a new `ExprAst::Call` and a
+  `NamedFn` tag. This is the **named-function mechanism**: the first LaTeX consumer
+  slice beyond the bracket-unary family (√ / ⁿ√ / Pow / Abs / Floor / Ceil /
+  Round), and it reuses the `ComputeExpr::Unary` node — no new engine node type.
+- Each is `Scalar → Scalar` (a transcendental of a dimensioned quantity is a
+  category error, rejected by the engine) and drops the exact-rational sidecar.
+
+### Notes
+
+- Only the curated single-argument transcendental set is supported. The other
+  `Func` variants (`min`/`max`/`gcd`/`lcm`/`det`, the inverse and hyperbolic trig,
+  and an unknown `Other`) are a clean, explicit adapter error rather than a silent
+  mis-lowering — `min`/`max` await the binary-op slice; truncation awaits
+  `\operatorname{trunc}`.
+
+## [0.25.0] - 2026-07-02 — round-to-nearest in `latex "…"` (lowers to `ComputeOp::Round`)
+
+### Added
+
+- The `latex "…"` adapter now lowers the standard **nearest-integer fence**
+  `\left\lfloor x\right\rceil` (floor-left, ceil-right — a `MathExpr::Fenced` with
+  delimiters `\lfloor`/`\rceil`) to the native `ComputeOp::Round` via a new
+  `ExprAst::Round`. Round is nearest with **ties away from zero** (`⌊7/2⌉ = 4`).
+- The asymmetric delimiters matter: `\lfloor…\rfloor` is floor, `\lfloor…\rceil`
+  is round — the distinct *closing* delimiter selects the op, so the round arm sits
+  beside the existing floor/ceil arms with no ambiguity. The latex frontend already
+  surfaces these control-word delimiters as data, so no latex-crate change was
+  needed.
+
+### Notes
+
+- Round is **dimension-preserving** (`⌊3.6 mmol⌉ = 4 mmol`) and the exact rational
+  sidecar snaps to an integer. Truncation toward zero (`\operatorname{trunc}`) has
+  no bracket notation and is deferred to the future named-function slice.
+
+## [0.24.0] - 2026-07-02 — floor & ceiling in `latex "…"` (lower to `ComputeOp::Floor` / `ComputeOp::Ceil`)
+
+### Added
+
+- The `latex "…"` adapter now lowers a **floor fence** `\left\lfloor x\right\rfloor`
+  and a **ceiling fence** `\left\lceil x\right\rceil` (a `MathExpr::Fenced` whose
+  delimiters are `\lfloor`/`\rfloor` or `\lceil`/`\rceil`) to the native
+  `ComputeOp::Floor` / `ComputeOp::Ceil` via new `ExprAst::Floor` / `ExprAst::Ceil`.
+  This mirrors the absolute-value slice exactly: a delimiter pair → a unary op,
+  reusing `ComputeExpr::Unary`. `⌊7/2⌋ = 3`, `⌈7/2⌉ = 4`.
+- Any **other** delimiter pair (`|x|` abs, `(x)`, `[x]`, `\langle x\rangle`) keeps
+  its existing meaning — only `\lfloor`/`\rfloor` and `\lceil`/`\rceil` carry the
+  floor / ceiling meaning; the latex frontend already surfaces those control-word
+  delimiters as data, so no latex-crate change was needed.
+
+### Notes
+
+- Floor and ceiling are **dimension-preserving** (`⌊3.7 mmol⌋ = 3 mmol`), so a
+  dimensioned operand computes cleanly, and the exact rational sidecar snaps to an
+  integer (`⌊7/2⌋ = 3/1`). Floor rounds toward −∞ (`⌊−7/2⌋ = −4`).
+
+## [0.23.0] - 2026-07-01 — absolute value `|x|` in `latex "…"` (lowers to `ComputeOp::Abs`)
+
+### Fixed / Added
+
+- The `latex "…"` adapter now lowers an **absolute-value fence** `|x|` /
+  `\left|x\right|` (a `MathExpr::Fenced` whose delimiters are `|`/`|`) to the
+  native `ComputeOp::Abs` via a new `ExprAst::Abs`. **This fixes a latent
+  correctness bug**: previously the `|…|` bars were silently dropped and `|a − b|`
+  computed the *signed* difference — `|3 − 10|` returned `−7` instead of `7`.
+- Any **other** delimiter pair (`(x)`, `[x]`, `\langle x\rangle`) is still
+  presentation grouping and unwraps to the body's arithmetic exactly as before —
+  only the `|`/`|` pair carries the absolute-value meaning.
+
+### Notes
+
+- Absolute value is **dimension-preserving** (`|−4 dollars| = 4 dollars`), so a
+  dimensioned operand computes cleanly (unlike `\sqrt`, which needs a
+  representable half-dimension). An abs *constraint* is piecewise-linear (not
+  affine/polynomial), so the solver treats it as `Unknown`. adj-lang 0.22 → 0.23
+  (logic-engine 0.28.0 / adj-constraint-solver 0.12.0).
+
+## [0.22.0] - 2026-07-01 — nth root `\sqrt[n]{x}` in `latex "…"` (lowers to `x ^ (1/n)`)
+
+### Added
+
+- The `latex "…"` adapter now accepts an **nth root** `\sqrt[n]{x}` (a
+  `MathExpr::Root` *with* an explicit degree), lowering it to `x ^ (1/n)` on the
+  native `ComputeOp::Pow` — the reciprocal exponent `1/n` is computed once at
+  adapt time and emitted as a single `Lit`. The cube root `\sqrt[3]{27}`
+  computes `27 ^ (1/3) = 3`; the fourth root `\sqrt[4]{16}` computes `2`. This
+  completes the radical family alongside the square root `\sqrt{x}` (0.21.0):
+  both reuse the one power engine, so no new engine op is needed.
+- The degree `n` must be a **positive integer** literal (`\sqrt[3]{…}`,
+  `\sqrt[4]{…}`). A symbolic degree (`\sqrt[k]{…}`) has no numeric value and a
+  zero degree would make `1/0` undefined, so both are rejected at adapt time
+  (`UnsupportedLatexMath`), never silently mislowered.
+
+### Notes
+
+- As with the square root, a fractional-power base carries the engine's own
+  dimensional rule: a `Scalar` (dimensionless) base computes cleanly, and a
+  dimensioned base (a `\sqrt[3]{dollars}` has no representable third-dimension)
+  is a `DimensionMismatch`, not a silently-wrong number. An nth-root *constraint*
+  (`constrain latex "$\sqrt[3]{x} = 3$"`) is non-polynomial (a fractional
+  exponent), so the solver treats it as `Unknown`, as before.
+
+## [0.21.0] - 2026-07-01 — `\sqrt{x}` in `latex "…"` (lowers to `x ^ 0.5`)
+
+### Added
+
+- The `latex "…"` adapter now accepts a **square root** `\sqrt{x}` (a
+  `MathExpr::Root` with no explicit degree), lowering it to `x ^ 0.5` on the
+  native `ComputeOp::Pow` (adj-lang 0.20.0 / logic-engine 0.27.0). No new engine
+  op: the power engine computes `√9 = 3` for a dimensionless (`Scalar`) base and
+  cleanly rejects a dimensioned base (a `√dollars` has no representable
+  half-dimension — a `DimensionMismatch`, not a silently-wrong number).
+
+### Notes
+
+- An **nth root** `\sqrt[n]{x}` (a `Root` with an explicit degree) is still
+  unsupported — its `1/n` exponent needs a dedicated non-integer path — and
+  falls through to the existing `UnsupportedLatexMath` error. A square-root
+  constraint (`constrain latex "$\sqrt{x} = 3$"`) is non-polynomial (a
+  fractional exponent), so the solver treats it as `Unknown`, as before.
+
+## [0.20.0] - 2026-07-01 — native `^` power in `latex "…"` (emit `ComputeOp::Pow`)
+
+### Changed
+
+- The `latex "…"` adapter now lowers `x^n` to a **single native power node**
+  (`ArithOp::Pow` → `logic_engine::ComputeOp::Pow`) instead of expanding it to a
+  parse-time `x*x*…` chain. Two consequences:
+  - The old **integer-exponent cap (0–8) is gone** — `latex "$x^{10}$"` (and
+    higher) now compute; the engine computes the power and applies its own
+    dimensional / overflow (`NonFinite`) rules.
+  - The derivation tree shows one `^` step rather than a multiplication chain.
+  The exponent must still be a **non-negative integer literal** (a symbolic
+  exponent like `x^y` remains unsupported on this surface — a later slice).
+- Added `ArithOp::Pow` to the `let`-formula AST (produced only by the latex
+  adapter; the surface arithmetic grammar does not yet spell `^`). Removed the
+  now-unused `expand_power` helper.
+
+### Notes
+
+- A latex `x^2 = 4` constraint still solves as a quadratic: the constraint
+  solver's polynomial recogniser was taught to read `ComputeOp::Pow` (see
+  adj-constraint-solver 0.11.0), so no solving capability regresses.
+
+## [0.19.0] - 2026-06-27 — predicate RHS expressions
+
+### Added
+
+- Predicate evidence now accepts a full arithmetic expression on the right-hand
+  side: `contributes 1000000 from answer == 3 / 10 to opt_a`. This lets a
+  decomposer emit the printed option expression directly while ADJ evaluates and
+  compares the values.
+- Lowering now preserves the predicate RHS as a `ComputeExpr` through
+  `logic_engine::PredicateContributionClause::from_lr_expr`.
+
+## [0.18.0] - 2026-06-27 — native LaTeX math expressions and equations
+
+### Added
+
+- **`latex "<math>"` expression factors** — ADJ arithmetic now accepts LaTeX math
+  anywhere an expression is already legal (`let`, ordinary `constrain`, objectives).
+  The adapter parses the string with the repo's LaTeX `MathFrontend` and lowers the
+  supported arithmetic subset into the existing `ExprAst`; callers do not normalize
+  model output in host code.
+- **`constrain latex "<equation>"`** — relation-shaped LaTeX (`$x^2 = 4$`,
+  `x + y = 10`) lowers directly into the constraint system and flows through the
+  existing native solver. Integer powers up to 8 lower to repeated multiplication, so
+  the current polynomial root path handles equations like `x^2 = 4`.
+
+### Changed
+
+- `adj_lang.grammar` adds `latex_expr` and `constrain_latex_decl`; generated parser
+  grammar regenerated.
+- `adj_lang.tokens` now leaves string escapes raw so the adapter can preserve LaTeX
+  commands while keeping existing provenance-string escape behavior.
+- `adj-lang` now depends on the completed `latex`/`math-frontend` crates for native
+  notation parsing.
+
+## [0.17.0] - 2026-06-21 — multi-source corroboration (`cites … locator …`, ADJ-A9)
+
+### Added
+
+- **`cites "<source>" locator "<locator>"`** — a repeatable annotation that
+  attaches a corroborating citation (a co-equal source for the *same* fact) to
+  any clause (`prior`/`contributes`/`interacts`/`uncertain`/`relate`/rule). Each
+  carries a required locator so the span is re-fetchable. Lowers onto
+  `logic_engine::Provenance::corroborations` (documentary only — no change to the
+  LR arithmetic). New `Annotation::Cites { source, locator }`; one new keyword
+  `cites` (the existing `locator` keyword is reused as the separator, so no short
+  `at` keyword is reserved).
+- New lower tests: `cites_lowers_to_corroborations_in_order`,
+  `cites_repeats_freely_unlike_at_most_once_source`.
+
+### Changed
+
+- `_lexer_grammar.rs` / `_parser_grammar.rs` regenerated (`cites` keyword +
+  `cites_annotation` rule). The at-most-once checks for `source`/`locator`/
+  `trust` are unchanged; only `cites` repeats.
+- README §"awkwardness" updates A9 from "not yet covered" to covered.
+
+## [0.16.1] - 2026-06-20 — string-literal escape hardening (byte-provenance)
+
+### Added
+
+- **`\t` (tab) escape** in string literals, completing the common escape set
+  (`\"`, `\\`, `\n`, `\t`). Handled in `unquote_string`; the lexer regex
+  `"([^"\\]|\\.)*"` already admitted it.
+
+### Changed / hardened
+
+- `unquote_string` now keeps a dangling trailing backslash verbatim instead of
+  dropping it (defensive — the real lexer can't emit this, but the unescaper
+  must never silently mutate a citation).
+- Documented the full escape table on `unquote_string` and in `adj_lang.tokens`,
+  spelling out *why* it is load-bearing: a `source "..."` provenance span must
+  reproduce the cited page byte-for-byte after unescaping, so a span that itself
+  contains a double quote (e.g. a histology page's `"Orphan Annie eye"` nuclei)
+  is carried as `\"` and restored here. This unblocks grounding quote-containing
+  verbatim spans that were previously (wrongly) treated as un-carryable.
+
+### Tests
+
+- Six new unit/round-trip tests pin every escape-table row, the
+  unknown-escape-kept-verbatim rule, the dangling-backslash case, and an
+  end-to-end `source "...\"...\""` → real-quote check through lexer+parser+adapter.
+
+### Notes
+
+- No grammar/AST/API change. `_lexer_grammar.rs` regenerated (line-number
+  metadata only; the STRING pattern is unchanged).
+
+## [0.16.0] - 2026-06-16 — context precedence surface (ADJ73 PR-B)
+
+### Added
+
+- **`rule { … context: <name> }`** — ground a rule in a CONTEXT (jurisdiction / guideline
+  edition / specialty). Lowers to `logic_engine::Rule::with_context`.
+- **`context_order { higher > lower, … }`** — a top-level statement declaring grounded context
+  precedence edges; each `a > b` lowers to `KnowledgeBase::add_context_outranks`. The resolver
+  consults this BEFORE the priority tier (lex superior): a rule in a greater context defeats a
+  conflicting one in a lesser context regardless of tier.
+- Grammar: `context_order_decl` added to `statement`; `rule_decl` gains a trailing
+  `[ "context" COLON IDENT ]` (after `[ "priority" … ]`). `context_order`/`context` are
+  IDENT-matched literals; `>` is the existing `GT` operator. `_parser_grammar.rs` /
+  `_lexer_grammar.rs` regenerated.
+- AST: `Statement::Rule` gains `context: Option<String>`; new `Statement::ContextOrder { edges }`.
+  Adapter: a shared `ident_after_keyword` helper extracts both `priority:` and `context:`;
+  `adapt_context_order` pairs the `IDENT > IDENT` edges (skipping the `>` Name token).
+
+### Notes
+
+Surface for logic-engine 0.19's grounded context precedence. A test compiles
+`context_order { ninth_circuit > district_court }` + `context:`-tagged rules and verifies via
+`enumerate_governing` that the higher-context rule governs **even with a lower priority tier**
+(lex superior), and that multi-edge orders lower transitively. The grounded `context-precedence`
+*rulebook* (byte-provenanced `outranks_context` edges + recency/appeal meta-rules) is the next
+slice.
+
+## [0.15.0] - 2026-06-16 — precedence surface syntax (ADJ73 PR-C)
+
+### Added
+
+- **`rule { … priority: <tier> }`** — optional named precedence tier on a derivation rule
+  (`default` | `specific` | `authoritative` | `mandatory`). Lowers to
+  `logic_engine::Rule::with_priority(Priority::…)`; absent ⇒ `Default`. An unknown tier is a
+  clean `LowerError::UnknownPriorityTier`, not a silent default.
+- **`functional <pred>(<arg>, …)`** — top-level declaration that a predicate is functional on
+  its last argument (arg names are placeholders; only functor + arity matter). Lowers to
+  `KnowledgeBase::declare_functional(functor, arity)`. Two derivations sharing the key but
+  differing on the last arg then *conflict*, and the `priority:` tier picks the governing one
+  (`logic_engine::govern::enumerate_governing`).
+- Grammar: `functional_decl` added to `statement`; `rule_decl` gains a trailing
+  `[ "priority" COLON IDENT ]`. `functional`/`priority` are IDENT-matched literals (no new lexer
+  tokens). `_parser_grammar.rs` / `_lexer_grammar.rs` regenerated.
+- AST: `Statement::Functional { functor, arity }`; `Statement::Rule` gains `priority: Option<String>`.
+
+### Notes
+
+This is the **surface** for the merged ADJ73 engine core (logic-engine 0.18 `Priority` /
+`declare_functional` / `enumerate_governing`). Tests compile the new syntax and verify the full
+path parse → lower → `enumerate_governing` (higher tier governs; equal tiers conflict;
+non-functional predicates unaffected — back-compat). `adj-lang-cli` *governing* rendering is the
+next slice (PR-3); the CLI's existing `decide`/recall paths are unchanged.
+
+## [0.14.0] - 2026-06-16 — `rule { head: … when: … }` derivation rules (Datalog clauses)
+
+### Added
+
+- **`rule { head: <term>  when: <lit>, <lit> … }`** — a DERIVATION RULE with a body
+  (a Horn clause / Datalog rule), the missing primitive that lets a `rulebook`
+  express CONDITIONAL knowledge, not just ground `relate` edges + LR clauses. Where
+  `relate` asserts a ground fact, a `rule` lets the engine DERIVE its head whenever
+  the body holds under the current substitution — variables (`$D`) bind across head
+  and body, and a literal prefixed `not` is negation-as-failure. Lowers to the
+  existing `logic_engine::Rule { head, body }`, so `? head($X)` enumerates every
+  derivable answer via the same SLD/unification machinery `relate` resolves through.
+  This is the keystone for moving DOMAIN RULES (contraindications, step-therapy,
+  formulary policy) out of host-code and into ADJ: each domain is authored once as a
+  `rule`-bearing `rulebook`, byte-provenanced + gated into the CAS, and the engine
+  derives consequences from per-case facts. Rules carry the same `source`/`locator`/
+  `trust` annotations every grounded clause carries (new `Rule.provenance` field).
+  Block form mirrors `rulebook { … }`; `head`/`when`/`not` are IDENT-matched literals.
+
+## [0.13.0] - 2026-06-14 — relational queries pass vocabulary enforcement (MYCIN-2026 REL-3)
+
+### Changed
+
+- **`enforce_vocabulary` accepts a binding query over a defined `relation`.** A
+  query whose functor is a `define`d relation (`? deficient_in(tay_sachs, $E)`) is
+  now valid under a `use`d vocabulary, alongside the existing hypothesis queries —
+  relational recall is the single-hop special case of the differential, so the
+  vocabulary check accepts either. Previously a relational query inside a `use`
+  scope was wrongly rejected as a non-hypothesis (`UndefinedTerm`).
+
+## [0.12.0] - 2026-06-14 — relational recall: `relate` edges + binding queries (MYCIN-2026 REL-2)
+
+### Added
+
+- **`relate <rel>(<args>)`** — a ground RELATIONAL EDGE, the first-class fact
+  type behind relational recall (the board-exam substrate). Asserts a typed edge
+  in a knowledge graph (`relate deficient_in(tay_sachs, hexosaminidase_a)`),
+  carrying the usual `source`/`locator`/`trust` annotations; the lowerer turns it
+  into a `logic_engine::Fact` whose `provenance` carries the citation, so a
+  binding query's answer can be returned WITH a proof. New `Statement::Relate`;
+  grammar `relate_decl`.
+- **Logic variables (`$Name`) + binding queries.** A `$`-prefixed `VAR` token
+  may appear as a term argument in a query goal: `? deficient_in(tay_sachs, $E)`
+  asks the engine to BIND `$E` to whatever the grounded edge holds (and the
+  reverse `? deficient_in($D, hexosaminidase_a)` is free). Resolved by the
+  existing SLD/unification machinery (`logic_engine::enumerate_all`). New
+  `Term::Var`; repeated variables within one goal share identity. A ground
+  hypothesis query (`? bacterial`) is unchanged — fact recall is the single-hop,
+  zero-uncertainty special case of the same engine.
+- **`entity` / `relation from <domain> to <range>` define kinds** — the
+  controlled vocabulary can now declare graph NODE kinds (`disease`, `enzyme`)
+  and typed EDGE kinds (`deficient_in : relation from disease to enzyme`). New
+  `DefineKind::Entity` and `DefineKind::Relation { from, to }`.
+
+### Notes
+
+- Grammar/lexer regenerated (`_lexer_grammar.rs`, `_parser_grammar.rs`) from the
+  updated `adj_lang.{tokens,grammar}`. Strict relation-argument type enforcement
+  is a later slice; REL-2 lands the surface + lowering + resolution. Pairs with
+  `logic-engine` 0.15.0 (`Fact::provenance`).
+
+## [0.11.0] - 2026-06-12 — `import "path"` (MYCIN-2026 M3)
+
+### Added
+
+- **`import "<relative path>"`** — compose a program across files: a dictionary,
+  a rulebook that imports + `use`s it, and a case that imports the rulebook can
+  each be their own checked-in `.adj`. New `Statement::Import(String)`; grammar
+  `import_decl`.
+- **`resolve` module** — the import-graph policy, with **no filesystem I/O** (it
+  drives an injected `ImportProvider`, so the graph logic is unit-testable
+  without a disk and the FS trust boundary lives in the caller):
+  - **relative** — `provider.resolve(importer, literal)` → canonical id.
+  - **idempotent** — a `visited` set keyed by canonical id; a file merges once
+    (diamond imports don't duplicate clauses).
+  - **acyclic** — a DFS stack; re-entering a stacked id is `ImportError::Cycle`
+    (cycle check precedes the idempotency check, so a cycle never masquerades as
+    a harmless repeat). Self-import included.
+  - **bounded** — `ImportLimits { max_depth, max_files }` (default 32 / 256);
+    past either, `DepthExceeded` / `TooManyFiles`. Depth is checked on every
+    descent, so the graph walk can't exceed `max_depth` frames on hostile input.
+  - Merge order is depth-first **post-order** — an imported file's declarations
+    precede the importer's, so a dictionary is in scope by the time the rulebook
+    that `use`s it is merged.
+- **`compile_with_imports(root_id, provider, limits)`** — resolve then lower, with
+  a combined `CompileWithImportsError`. `lower` now rejects a stray unresolved
+  `import` as `LowerError::UnresolvedImport` (never silently dropped).
+- 8 resolver tests (3-file chain, diamond, direct + self cycle, depth + fan-out
+  bounds, unresolvable path, importer-relative). Grammar regenerated. **M3
+  completes the MYCIN-2026 language foundation (M0–M3).**
+
+## [0.10.0] - 2026-06-12 — `rulebook` + `use` (MYCIN-2026 M2)
+
+### Added
+
+- **`rulebook <name> { … }`** — a named, reusable block of clauses
+  (`prior`/`contributes`/`interacts`/`uncertain`), so a body of adjudicatable
+  knowledge can be written once, checked in as code, and (M3) imported. A
+  rulebook is a *container*, not a namespace: its clauses lower into the
+  `KnowledgeBase` exactly as if written at top level (`flatten_clauses`). New
+  AST `Statement::Rulebook { name, statements }`.
+- **`use <dictionary>`** — binds a declared `dictionary` (by name) as the
+  controlled vocabulary the enclosing scope's clauses are checked against. Legal
+  at top level or inside a `rulebook`. New AST `Statement::Use(String)`.
+- **Scoped vocabulary enforcement (M2).** When any `use` appears, enforcement
+  becomes *per-scope*: a top-level `use D` checks the top-level clauses against
+  `D`; a rulebook's own `use D'` checks that rulebook against `D'` (falling back
+  to a top-level `use`). A scope with no `use` is unchecked — a rulebook opts in
+  to checking by `use`-ing a dictionary. A `use` of a dictionary the program
+  never declared is `LowerError::UndefinedDictionary`. When **no** `use` appears
+  anywhere, M1 whole-program enforcement is unchanged (fully backward-compatible).
+- **Rulebooks are flat.** A `rulebook` nested directly in another is a clean
+  `LowerError::NestedRulebook` (nesting has no defined scoping semantics; the
+  refusal also keeps clause-flattening non-recursive, so deeply-nested untrusted
+  source cannot drive unbounded recursion in the lowerer).
+- 8 tests (rulebook lowers like top-level; `use` checks/rejects terms; undefined
+  dictionary; no-`use` rulebook unchecked; top-level `use` scoping; nested
+  rulebook rejected). Grammar regenerated. Next (MYCIN-2026): M3 `import "path"`.
+
+## [0.9.0] - 2026-06-12 — `dictionary` + `define` (MYCIN-2026 M1)
+
+### Added
+
+- **`dictionary <name> { … }` and `define`** — the controlled vocabulary as a
+  first-class, named grammar construct (MYCIN-2026). `define <name> : hypothesis`
+  registers a hypothesis; `define <name> : finding values [v…]` registers a
+  finding functor with a *closed* value domain; `surface "…", "…"` lists the
+  decomposer's surface forms. A `define` is valid bare or inside a `dictionary`
+  block. New `LBRACK`/`RBRACK` tokens; grammar regenerated.
+- AST: `Statement::Define(Define)` + `Statement::Dictionary { name, defines }`;
+  `Define { name, kind: DefineKind::{Hypothesis | Finding{values}}, surfaces }`
+  (exported). `LoweredProgram` gains `dictionary: Vec<Define>`.
+- **Compile-time vocabulary enforcement** (replaces the prototype's side-car
+  `dict_lint.py`): when a program declares a dictionary (≥1 `define`), every
+  finding / hypothesis used in `prior`/`contributes`/`interacts`/`observe`/`?`
+  must be defined, and a finding value must be in its declared domain — else
+  `LowerError::UndefinedTerm` / `ValueNotInDomain`. The IR a decomposer emits and
+  the rulebook it compiles against share one closed vocabulary by construction.
+  A program with **no** dictionary is unchecked (backward-compatible). 6 tests.
+- Next (MYCIN-2026): M2 `rulebook` + `use`, M3 `import`.
+
+## [0.8.0] - 2026-06-11 — `minimize`/`maximize` LP objective (ADJ constraints track C2)
+
+### Added
+
+- **`minimize <expr>` / `maximize <expr>`** surface syntax — a linear-programming
+  objective over the declared symbols. New grammar rule `optimize_decl` (like
+  `solve`/`check`, the keywords are IDENT-matched literals, not lexer keywords),
+  regenerated `_parser_grammar.rs`.
+- AST: `Statement::Optimize { dir, objective }` + `OptDir { Minimize, Maximize }`
+  (exported). Adapter `adapt_optimize`. The objective is kept as an unevaluated
+  `ComputeExpr` (it mentions the symbols the LP solver assigns).
+- `ConstraintSystem` gains `objective: Option<(OptDir, ComputeExpr)>`; `is_empty`
+  accounts for it. The solver (`adj-constraint-solver` 0.6.0) reads it. 2 tests.
+
+## [0.7.0] - 2026-06-11 — constraint sublanguage (symbols + constrain/solve/check, ADJ constraints B1)
+
+### Added
+
+- **`symbol <name> : <sort>`** — declare an unknown the engine will solve for
+  (`sort` is a dimensional sort term: `scalar`, `money(usd)`, …).
+- **`constrain <expr> <relop> <expr>`** — assert an (in)equality. `relop` is
+  `>= <= > < == = !=`; operands reuse the `let` arithmetic `expr`, so a
+  constraint may mention observed slots, earlier `let`s, and symbols. (Typed
+  literals like `money(2000, usd)` are referenced via an `observe`d name, since
+  constraint operands are arithmetic exprs.)
+- **`solve for { a, b, … }`** — name the unknowns to solve for; **`check`** —
+  ask whether the constraint set is satisfiable.
+- New AST: `Statement::{Symbol, Constrain, SolveFor, Check}` + `RelOp`.
+- **`ConstraintSystem`** (`symbols`, `constraints`, `solve_for`, `check`),
+  exposed on `LoweredProgram.constraints`. The lowerer builds it, keeping each
+  constraint's two sides as **unevaluated `ComputeExpr` trees** (they mention
+  symbols the solver assigns). **No solving yet** — the reuse solver backends
+  (`cas-solve` / `SatTactic` / `LiaTactic`) are wired in track B2.
+
+### Grammar
+
+- `.tokens`: added `COLON` (`:`) and `NE` (`!=`, listed before `>`/`<` for
+  maximal munch).
+- `.grammar`: `symbol_decl` / `constrain_decl` / `relop` / `solve_decl` /
+  `check_decl`. Regenerated `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
+## [0.6.0] - 2026-06-11 — `let` + arithmetic (computed values, ADJ expansion step 3b)
+
+### Added
+
+- **`let <name> = <expr>`** — bind a value the engine **computes** on the CPU
+  from a formula the model writes. `<expr>` supports `+ - * /` with standard
+  precedence and parentheses, references to observed slots and earlier `let`s,
+  numeric literals, and aggregations `sum/count/min/max/avg(slot)` over every
+  observation of a slot. The lowerer evaluates the formula via
+  `logic_engine::compute` against the facts seen so far and binds the resulting
+  `Derived` (with its derivation tree) into the KB — so a **predicate fires
+  over a computed value exactly as over an observed one**
+  (`from csf_ratio <= 0.4 to bacterial`). The model never does the arithmetic.
+- New AST: `Statement::Let { name, expr }`, `ExprAst` (`Ref/Lit/Bin/Agg`),
+  `ArithOp`, `AggOp`. New `LowerError::ComputationFailed` (unknown slot,
+  division by zero, empty aggregation, … surfaced cleanly, never a panic).
+
+### Grammar
+
+- `.tokens`: added `PLUS - * / =` (`EQUALS`). Two ordering disciplines:
+  `EQUALS` after `EQEQ` (so `==` wins maximal munch), and the arithmetic
+  operators after `NUMBER` so a negative literal `-5` still lexes as one
+  `NUMBER(-5)` — a binary `-` only matches a `-` not glued to a digit, so a
+  `let` formula must **space its operators** (`a - 5`, `total - discount`).
+- `.grammar`: `let_decl` + the `expr` / `term_expr` / `factor` / `agg`
+  precedence cascade. Regenerated `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
+## [0.5.0] - 2026-06-10 — predicate evidence + valued facts
+
+### Added
+
+- **Numeric predicate evidence in `contributes`** — first-class operator
+  syntax: `contributes <lr> from <slot> >= <value> to <verdict>`. The five
+  comparison operators `>= <= > < ==` lower to a
+  `logic_engine::PredicateContributionClause`; a saturating `lr` makes the
+  rule **deterministic** (deterministic = the saturating limit of a
+  probabilistic LR, evaluated on the CPU at decision time — the model that
+  authored the rulebook never ran the comparison).
+- **Valued facts** — `observe gross_income(18000)`: numeric literals are now
+  allowed as compound arguments (`term = IDENT [ LPAREN ( term | NUMBER )
+  { COMMA ( term | NUMBER ) } RPAREN ]`). These are the facts predicates
+  read. New `ast::Term::Num(f64)`.
+- New AST types: `ast::Evidence { Term | Predicate { slot, op, value } }`
+  (the evidence side of `contributes`) and `ast::CmpOp`. `Statement::Contributes`
+  now carries `evidence: Evidence` instead of `evidence: Term`.
+
+### Grammar
+
+- `.tokens`: added comparison-operator tokens `GE LE EQEQ GT LT`
+  (two-character operators listed before single-character ones so maximal
+  munch tokenises `>=` before `>`).
+- `.grammar`: `contributes_decl` now takes `evidence = predicate | term`;
+  the `predicate | term` alternation relies on the parser's full
+  backtracking (both start with `IDENT`). Regenerated
+  `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
+## [0.4.0] - 2026-06-10 — differential decision over `?` queries
+
+### Added
+
+- **`decide(&LoweredProgram) -> Differential`** and
+  **`compile_and_decide(src) -> Differential`** — treat a program's `? h`
+  query lines as the set of *competing hypotheses* and run the new
+  `logic_engine::differential` over them: rank by posterior, pick the
+  argmax, report the between-hypothesis margin, and kick back when an open
+  uncertainty could flip the ranking. A multi-`?` adj-lang program is now
+  directly a differential (the natural reading); a single-`?` program
+  yields a determinate single-hypothesis result. No grammar change — the
+  competing set is already expressible as multiple `?` lines.
+
+## [0.3.0] - 2026-06-02 — grammar-driven frontend
+
+### Changed
+
+- **Replaced the hand-written lexer and parser with the repo's
+  grammar-driven infrastructure.** Conformant with every other
+  language frontend in the codebase (csharp-lexer, dot-parser,
+  dartmouth-basic, css, javascript, java, ruby, sql, …).
+- Grammars now live in
+  [`code/grammars/adj_lang.tokens`](../../../grammars/adj_lang.tokens)
+  and
+  [`code/grammars/adj_lang.grammar`](../../../grammars/adj_lang.grammar)
+  as the canonical source-of-truth. Any future language port of the
+  Adj-Lang frontend (Elixir / Go / Python / Ruby / Swift /
+  TypeScript) regenerates from the same files.
+- `src/_lexer_grammar.rs` and `src/_parser_grammar.rs` are
+  auto-generated by `grammar-tools compile-tokens` /
+  `compile-grammar`. **DO NOT EDIT — regenerate from source.**
+- New `src/adapter.rs` maps the generic
+  `parser::grammar_parser::GrammarASTNode` tree into the typed
+  `ast::Statement` enum the lowerer already consumes. Keeping the
+  typed AST means the lowerer (`src/lower.rs`) is unchanged.
+- `src/lib.rs` shrinks to a thin `parse()` / `compile()` wrapper
+  over `GrammarLexer + GrammarParser + adapt_program + lower`.
+
+### Removed
+
+- `src/lexer.rs` (371 LOC hand-written).
+- `src/parser.rs` (535 LOC hand-written recursive descent + depth guard).
+
+### Preserved features
+
+- `uncertain { e1, e2, ... } for <conclusion>` statement (added in
+  0.2.0 via #4933 / #4935) — now expressed via the declarative
+  grammar (`uncertain_decl` in `adj_lang.grammar`, `KwUncertain` +
+  `LBRACE` + `RBRACE` in `adj_lang.tokens`, `adapt_uncertain` in
+  `adapter.rs`).
+
+### Why
+
+The original 0.1.0 frontend was hand-written despite the repo
+having `grammar-tools`, `lexer`, and `parser` crates for exactly
+this purpose. The user (correctly) flagged this as off-pattern.
+The grammar-driven approach gives us:
+
+- **Cross-language portability** — the same `.tokens` / `.grammar`
+  files drive Elixir / Go / Python / Ruby / Rust / Swift /
+  TypeScript implementations.
+- **Versioning** — `@version 1` in the grammars enables multiple
+  Adj-Lang versions to coexist.
+- **Language-server support** (LS02).
+- **Browser-compatible builds** via WASM (LANG63).
+- **Single source of truth** — the grammar files are the spec.
+
+## [0.2.0] - 2026-06-02
+
+### Added
+
+- New `uncertain { e1, e2, ... } for <conclusion>` statement,
+  lowering to `logic_engine::UncertaintyMarker`. Accepts the
+  standard `source`/`locator`/`trust` annotations.
+- New lexer tokens: `KwUncertain`, `LBrace`, `RBrace`.
+- 2 new parser tests (basic + annotated forms), 1 new lower test
+  (`uncertain_statement_produces_voi_report_on_aggregation`
+  confirms end-to-end: surface syntax compiles, runs through
+  `SearchMode::LRAggregate`, and produces a non-empty
+  `uncertainties` vector with the right VOI logit range).
+
+Total tests: 29 (was 26 in 0.1.0).
+
+### ADJ46 awkwardness items dissolved by 0.2.0
+
+- **A5** (uncertainty markers) — fully addressed at the surface
+  layer. The IR pipeline can now hand off "no clear precipitator"
+  as a structured `uncertain { … } for …` clause, and the engine
+  surfaces it back to the user as a VOI report.
+
+## [0.1.0] - 2026-06-02
+
+### Added
+
+- Initial release. Hand-written lexer + recursive-descent parser +
+  lowering pass for the v0.1 surface syntax described in `README.md`.
+- Grammar covers: `prior`, `contributes`, `interacts`, `observe`,
+  `?`-prefix queries; `source`/`locator`/`trust` annotations;
+  identifiers, compound terms with multi-arg arity, line comments,
+  string literals with backslash escapes.
+- Lowering produces a `LoweredProgram { kb, queries }` where `kb` is
+  populated with `Fact`, `PriorClause`, `ContributionClause`, and
+  `JointContributionClause` entries ready for
+  `logic_engine::search`.
+- Lowerer enforces: at most one `prior` per conclusion, at most one
+  `source`/`locator`/`trust` annotation per statement.
+- Default trust tier when a `source` annotation is present but no
+  `trust` is given is `Authoritative`. When neither is given, the
+  tier is `Unattributed`.
+- 24 tests across lexer (9), parser (8), and lower (6+1 headline).
+- **Headline test**:
+  `lowers_full_acs_rulebook_and_reproduces_adj36_posterior` compiles
+  the ACS rulebook end-to-end (parse + lower + search via
+  `SearchMode::LRAggregate`) and reproduces ADJ36's 28.1% posterior.
+
+### ADJ46 awkwardness items dissolved
+
+- **A4** — `interacts` is syntactically distinct from `contributes`,
+  so the proof DAG can name the interaction term explicitly.
+- **A10** — the rulebook surface is now a domain-expert-readable
+  DSL, not hand-written Rust.
+
+### Not yet shipped
+
+- A5 (uncertainty markers), A7 (kickback variant), A8 (counterfactual
+  queries), A9 (multi-source aggregation). Each is a small additive
+  grammar extension; the parser is structured so each new clause kind
+  adds one arm to `parser::parse_statement` and one variant to the
+  lowerer.

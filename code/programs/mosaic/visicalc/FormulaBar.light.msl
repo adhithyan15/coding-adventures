@@ -1,0 +1,55 @@
+// FormulaBar.light.msl — light theme for the formula bar (VC1.5).
+//
+// Companion to FormulaBar.dark.msl. Identical structure (same parts,
+// same property keys), only the colour palette inverts to match a
+// light system theme — the default on iOS, macOS (when system theme
+// is light), Windows in light mode, and most desktop browsers
+// before `prefers-color-scheme: dark` flipped the bias.
+//
+// Palette mapping rationale (dark → light):
+//
+//   #252526 toolbar background    → #f3f3f3 (system chrome grey)
+//   #2d2d30 address-label bg      → #e7e7e7 (slight contrast vs bar)
+//   #9d9d9d address-label fg      → #555555 (darker for legibility on light bg)
+//   #3f3f46 borders               → #c8c8c8 (subtle dividers on light)
+//   #cccccc input fg              → #1f1f1f (near-black for primary text)
+//
+// Border-bottom thickness + paddings + font-sizes stay the same —
+// the only axis that changes is colour. This keeps the layout shape
+// (the .mll) coupled-to-zero theme-axis decisions.
+
+style FormulaBar {
+  part bar {
+    background:          #f3f3f3 ;
+    padding:             4px ;
+    border-bottom-width: 1px ;
+    border-bottom-style: solid ;
+    border-bottom-color: #c8c8c8 ;
+  }
+
+  part address-label {
+    font-family:  monospace ;
+    font-size:    12px ;
+    color:        #555555 ;
+    background:   #e7e7e7 ;
+    min-width:    48px ;
+    padding:      4px ;
+    text-align:   right ;
+    margin-right: 8px ;
+  }
+
+  part formula-field {
+    font-family:         monospace ;
+    font-size:           13px ;
+    flex:                1 ;
+    border-style:        none ;
+    border-bottom-width: 1px ;
+    border-bottom-style: solid ;
+    border-bottom-color: #c8c8c8 ;
+    background:          transparent ;
+    color:               #1f1f1f ;
+    padding:             4px ;
+    outline:             none ;
+    width:               100% ;
+  }
+}

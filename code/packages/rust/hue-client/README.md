@@ -13,13 +13,17 @@ Included surfaces:
 - resource snapshot and collection requests
 - typed aggregate resource snapshots from a single CLIP v2 snapshot envelope
 - resource snapshot summaries for resource-family, owner ref, scene action, and
-  state projection coverage
+  state projection coverage, with relationship, scene-state, projectable-surface,
+  and partial-lighting predicates
+- resource snapshot readiness summaries for bridge identity, lighting, area
+  relationship, scene, sensor/input, and state projection handoff checks
 - resource-specific reads
 - structured command request bodies from `hue-core`
+- command-plan execution through the `HueClient` facade
 - event-stream request shape
 - event-stream batch parsing from Server-Sent Events data frames
 - event-stream summaries for retry hints, record coverage, resource items, and
-  resource-type coverage
+  resource-type coverage, with typed-item and multi-type predicates
 - incremental event-stream decoding for split Server-Sent Events chunks
 - Hue v2 envelope/error parsing
 - Hue bridge resource decoding for paired bridge identity and time zone data
@@ -30,6 +34,8 @@ Included surfaces:
 - Hue light resource decoding
 - Hue light, grouped-light, motion, and button state update extraction from
   snapshots and event-stream batches
+- unified Hue state update extraction from snapshots and event-stream batches
+- grouped-light state update collection reads through the `HueClient` facade
 
 ## Dependencies
 

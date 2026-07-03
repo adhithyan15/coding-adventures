@@ -1,0 +1,29 @@
+// NumberInput.mil — interface for the toolkit NumberInput (v0.4).
+//
+// A styled single-line numeric input. Thin wrapper around the
+// UI29-4 HostNumberInput kernel primitive with toolkit-default
+// theming (border, focus, padding — mirrors the Input wrapper).
+//
+// The numeric-keyboard surfacing (mobile keypads), ± stepper
+// affordances (Qt SpinBox, XAML NumberBox), and range validation
+// all come from the kernel for free. The toolkit's job is just
+// the visual chrome.
+
+component NumberInput {
+  // Current numeric value. Required. Two-way: host's onChange
+  // handler typically updates the slot.
+  slot value : number ;
+
+  // Placeholder text shown when the input is empty.
+  slot placeholder : text ;
+
+  // Disabled flag. When true, the input renders disabled and
+  // stops firing onChange.
+  slot disabled : bool ;
+
+  // Fired on commit (Enter / blur). Payload is the new numeric
+  // value. Per UI29-4 spec §3.3, numeric fields explicitly do
+  // NOT fire per-keystroke — intermediate states like "12"
+  // while typing "12.5" aren't meaningful values.
+  emit onChange ( value : number ) ;
+}

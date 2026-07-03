@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.4.0] - 2026-06-14
+
+### Added
+
+- **F10 declarative lexer mode transitions** (`grammar_lexer_f10.go`): The lexer
+  now reads a `transitions:` table from the `TokenGrammar` struct (populated by
+  the grammar-tools F10 parser) and fires mode-switch actions automatically after
+  every emitted token — no more `OnTokenCallback` code required for common cases.
+
+  Supported actions:
+  - `set_mode TARGET` — flat toggle: replace the active group in place.
+  - `push TARGET` — nested region: push an exclusive group onto the stack.
+  - `pop` — close a nested region, restoring the previous group.
+  - `enable_skip` / `disable_skip` — suspend or resume skip-pattern processing.
+
+  Rule matching (first-match-wins):
+  1. Token type must appear in the rule's `on_tokens` list.
+  2. If `in_mode` is set, the current active group must match.
+  3. If `on_value` is set, the token's value must match.
+
+- **Flat-mode inheritance** (`computeInheritingModes`): Groups targeted by
+  `set_mode` (but not `push`) automatically inherit the default group's patterns
+  as a fallthrough. Push targets remain exclusive — only their own patterns apply.
+  This lets a `div` mode recognise `/` as `SLASH_DIV` while still tokenising
+  numbers, identifiers, etc. from the default mode without duplicating patterns.
+
+- **`startMode` field** on `GrammarLexer`: when `TokenGrammar.StartMode` is set,
+  the lexer begins in that group and resets to it between `Tokenize()` calls
+  (previously always reset to `"default"`).
+
+- **11 new tests** in `f10_lexer_test.go` covering backward compatibility,
+  `computeInheritingModes` (4 cases), `set_mode` transition, flat-mode
+  inheritance, in-mode guard, push/pop nesting, disable_skip, and start_mode.
+
 ## [0.3.0] - 2026-04-04
 
 ### Added

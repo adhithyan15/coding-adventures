@@ -116,6 +116,16 @@ Slots absent from the fixture render as `[slot: name]` placeholders.
 | If / Else (UI29)     | `<!-- mosaic-if when="..." -->` comment markers       |
 | For (UI29)           | `<!-- mosaic-for each="..." as="..." -->` comment markers |
 
+### Event hydration markers
+
+The HTML backend remains script-free. Host primitives that declare events keep
+their event names as neutral `data-*` markers so a downstream hydrator can
+attach listeners without parsing Mosaic source files:
+
+- `HostButton` with `onClick` or `onTap` emits `data-on-click`.
+- `HostInput` with `onChange`, `onCommit`, or `onCancel` emits
+  `data-on-change`, `data-on-commit`, or `data-on-cancel`.
+
 ### The `If` / `For` static-HTML compromise
 
 HTML has no runtime conditional or loop construct. The pipeline emitter

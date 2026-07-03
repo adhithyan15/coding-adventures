@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/sir-runtime-pairs",
+  "version": "0.1.0",
+  "description": "Cons-pair runtime for Semantic-IR-emitted TypeScript/JavaScript — the SIR Pair value type with cons/car/cdr and an injectable Lisp-list display hook",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "pairs",
+    "cons",
+    "compiler",
+    "cross-language",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

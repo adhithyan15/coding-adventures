@@ -15,7 +15,7 @@
 //! can submit jobs and return immediately. Worker responses are delivered later
 //! through the TCP mailbox owned by the Rust runtime.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
 use std::io::{self, BufRead, BufReader, Write};
 use std::marker::PhantomData;
@@ -103,6 +103,20 @@ pub struct EmbeddableTcpServerOptions {
     pub worker_job_timeout: Option<Duration>,
     pub worker_restart_policy: StdioWorkerRestartPolicy,
     pub worker: WorkerCommand,
+    /// WEB01b-1b: when `true`, the in-process mailbox response router writes each
+    /// connection's responses back in **submission order** (not worker-completion
+    /// order), via a per-connection reorder buffer. This is what a pipelined
+    /// HTTP/1.1 keep-alive connection needs: requests R1, R2, R3 submitted in that
+    /// order have their responses written R1, R2, R3 even when the (unordered)
+    /// worker pool finishes them out of order. Default `false` preserves the
+    /// completion-order behaviour exactly for every other consumer.
+    ///
+    /// Memory is bounded by the pool's queue depth (a connection that pipelines
+    /// past it is shed via a submit error), and per-connection buffers are
+    /// reclaimed as responses drain — the same lifecycle as the existing route
+    /// table. Like that table, this assumes `worker_fn` always returns a result:
+    /// a permanently-wedged `worker_fn` pins its job's buffer entries until exit.
+    pub ordered_responses: bool,
 }
 
 impl EmbeddableTcpServerOptions {
@@ -126,9 +140,18 @@ impl Default for EmbeddableTcpServerOptions {
             worker_job_timeout: None,
             worker_restart_policy: StdioWorkerRestartPolicy::default(),
             worker: WorkerCommand::new("worker", Vec::<String>::new()),
+            ordered_responses: false,
         }
     }
 }
+
+/// Per-connection submission-order queues of job-ids, used by the in-process
+/// mailbox router when `ordered_responses` is on. For each connection it holds
+/// the ids of its in-flight jobs in the order they were submitted; the router
+/// writes a connection's responses by draining the front of its queue, so a
+/// completed-but-out-of-order response waits until every earlier one on the same
+/// connection has been written. `None` everywhere when ordering is off.
+type ConnectionOrder = Arc<Mutex<BTreeMap<ConnectionId, VecDeque<String>>>>;
 
 /// Language-neutral stdio worker that speaks `generic-job-protocol` JSON lines.
 #[derive(Debug)]
@@ -219,6 +242,9 @@ pub struct RustThreadPoolJobSubmitter<Request, Response> {
     pool: RustThreadPool<Request, Response>,
     routes: Arc<Mutex<BTreeMap<String, ConnectionId>>>,
     next_job_id: Arc<AtomicU64>,
+    /// `Some` only when `ordered_responses` is on: records each connection's
+    /// submission order so the router can write responses back in that order.
+    order: Option<ConnectionOrder>,
     _types: PhantomData<fn() -> (Request, Response)>,
 }
 
@@ -228,6 +254,7 @@ impl<Request, Response> Clone for RustThreadPoolJobSubmitter<Request, Response> 
             pool: self.pool.clone(),
             routes: Arc::clone(&self.routes),
             next_job_id: Arc::clone(&self.next_job_id),
+            order: self.order.clone(),
             _types: PhantomData,
         }
     }
@@ -261,11 +288,35 @@ where
             .expect("thread pool worker route table mutex poisoned")
             .insert(id.clone(), connection_id);
 
+        // Register submission order BEFORE handing the job to the pool, so the
+        // job-id is in the connection's queue before any worker can finish it (the
+        // router only writes ids it finds at the front of that queue).
+        if let Some(order) = &self.order {
+            order
+                .lock()
+                .expect("thread pool worker order table mutex poisoned")
+                .entry(connection_id)
+                .or_default()
+                .push_back(id.clone());
+        }
+
         if let Err(error) = self.pool.submit(request) {
             self.routes
                 .lock()
                 .expect("thread pool worker route table mutex poisoned")
                 .remove(&id);
+            if let Some(order) = &self.order {
+                // Roll back the order entry for the failed submit (it never ran).
+                let mut guard = order
+                    .lock()
+                    .expect("thread pool worker order table mutex poisoned");
+                if let Some(queue) = guard.get_mut(&connection_id) {
+                    queue.retain(|queued| queued != &id);
+                    if queue.is_empty() {
+                        guard.remove(&connection_id);
+                    }
+                }
+            }
             return Err(error.into());
         }
 
@@ -711,10 +762,18 @@ where
             worker_fn,
         );
         let routes = Arc::new(Mutex::new(BTreeMap::new()));
+        // WEB01b-1b: the per-connection submission-order table — present only when
+        // the caller opts into ordered responses, so default callers are unchanged.
+        let order: Option<ConnectionOrder> = if options.ordered_responses {
+            Some(Arc::new(Mutex::new(BTreeMap::new())))
+        } else {
+            None
+        };
         let submitter = RustThreadPoolJobSubmitter {
             pool: pool.clone(),
             routes: Arc::clone(&routes),
             next_job_id: Arc::new(AtomicU64::new(1)),
+            order: order.clone(),
             _types: PhantomData,
         };
         let runtime = build_runtime_mailbox(&options, submitter, init, handler, on_close)
@@ -729,6 +788,7 @@ where
             mailbox,
             Arc::new(map_response),
             Arc::clone(&response_stop),
+            order,
         );
 
         Ok(Self {
@@ -826,52 +886,147 @@ where
     })
 }
 
+/// What the router will write to a connection for one finished job. Computing it
+/// up front (running `map_response`) lets the ordered router buffer it until all
+/// earlier responses on the same connection have been written.
+enum ReadyOutcome {
+    Write { bytes: Vec<u8>, close: bool },
+    Close,
+}
+
+/// Run `map_response` on a job result and reduce it to a `ReadyOutcome`. A failed
+/// map or any non-`Ok` job result (error/cancelled/timed-out) closes the
+/// connection, matching the original completion-order behaviour.
+fn ready_outcome<Response, MapResponse>(
+    result: JobResult<Response>,
+    map_response: &MapResponse,
+) -> ReadyOutcome
+where
+    MapResponse: Fn(Response) -> Result<TcpMailboxFrame, WorkerError>,
+{
+    match result {
+        JobResult::Ok { payload } => match map_response(payload) {
+            Ok(frame) => {
+                let close = frame.close;
+                ReadyOutcome::Write {
+                    bytes: frame.flatten_writes(),
+                    close,
+                }
+            }
+            Err(_) => ReadyOutcome::Close,
+        },
+        JobResult::Error { .. } | JobResult::Cancelled { .. } | JobResult::TimedOut { .. } => {
+            ReadyOutcome::Close
+        }
+    }
+}
+
+/// Write one finished outcome to its connection.
+fn write_outcome(mailbox: &TcpMailbox, connection_id: ConnectionId, outcome: ReadyOutcome) {
+    match outcome {
+        ReadyOutcome::Write { bytes, close } => {
+            if close {
+                mailbox.send_and_close(connection_id, bytes);
+            } else if !bytes.is_empty() {
+                mailbox.send(connection_id, bytes);
+            }
+        }
+        ReadyOutcome::Close => mailbox.close(connection_id),
+    }
+}
+
 fn spawn_rust_thread_pool_response_router<Request, Response, MapResponse>(
     pool: RustThreadPool<Request, Response>,
     routes: Arc<Mutex<BTreeMap<String, ConnectionId>>>,
     mailbox: TcpMailbox,
     map_response: Arc<MapResponse>,
     stop: Arc<AtomicBool>,
+    order: Option<ConnectionOrder>,
 ) -> thread::JoinHandle<()>
 where
     Request: Send + 'static,
     Response: Send + 'static,
     MapResponse: Fn(Response) -> Result<TcpMailboxFrame, WorkerError> + Send + Sync + 'static,
 {
-    thread::spawn(move || loop {
-        if stop.load(Ordering::SeqCst) {
-            break;
-        }
-        let Some(response) = pool
-            .recv_response_timeout(Duration::from_millis(10))
-            .unwrap_or(None)
-        else {
-            continue;
-        };
-        mailbox.resume_all_reads();
-        let Some(connection_id) = routes
-            .lock()
-            .expect("thread pool worker route table mutex poisoned")
-            .remove(&response.id)
-        else {
-            continue;
-        };
+    thread::spawn(move || {
+        // Ordered mode keeps a small per-router buffer of finished-but-not-yet-
+        // written responses, keyed by job-id, until each becomes the front of its
+        // connection's submission queue. Unused (and never populated) when off.
+        let mut ready: BTreeMap<String, (ConnectionId, ReadyOutcome)> = BTreeMap::new();
 
-        match response.result {
-            JobResult::Ok { payload } => match map_response(payload) {
-                Ok(frame) => {
-                    let close = frame.close;
-                    let bytes = frame.flatten_writes();
-                    if close {
-                        mailbox.send_and_close(connection_id, bytes);
-                    } else if !bytes.is_empty() {
-                        mailbox.send(connection_id, bytes);
+        loop {
+            if stop.load(Ordering::SeqCst) {
+                break;
+            }
+            let Some(response) = pool
+                .recv_response_timeout(Duration::from_millis(10))
+                .unwrap_or(None)
+            else {
+                continue;
+            };
+            mailbox.resume_all_reads();
+
+            match &order {
+                // ── Completion order (default): write each response as it lands ──
+                None => {
+                    let Some(connection_id) = routes
+                        .lock()
+                        .expect("thread pool worker route table mutex poisoned")
+                        .remove(&response.id)
+                    else {
+                        continue;
+                    };
+                    let outcome = ready_outcome(response.result, map_response.as_ref());
+                    write_outcome(&mailbox, connection_id, outcome);
+                }
+
+                // ── Submission order (WEB01b-1b): buffer, then drain in order ──
+                Some(order) => {
+                    let connection_id = {
+                        // Peek (do NOT remove yet — removal happens when we write).
+                        let routes = routes
+                            .lock()
+                            .expect("thread pool worker route table mutex poisoned");
+                        match routes.get(&response.id) {
+                            Some(id) => *id,
+                            None => continue, // connection already gone; drop it.
+                        }
+                    };
+                    let outcome = ready_outcome(response.result, map_response.as_ref());
+                    ready.insert(response.id.clone(), (connection_id, outcome));
+
+                    // Pull every now-writable job off the front of this
+                    // connection's queue (holds only the order lock).
+                    let mut writable: Vec<String> = Vec::new();
+                    {
+                        let mut guard = order
+                            .lock()
+                            .expect("thread pool worker order table mutex poisoned");
+                        if let Some(queue) = guard.get_mut(&connection_id) {
+                            while let Some(front) = queue.front() {
+                                if ready.contains_key(front) {
+                                    writable.push(queue.pop_front().expect("front exists"));
+                                } else {
+                                    break; // an earlier response hasn't finished yet.
+                                }
+                            }
+                            if queue.is_empty() {
+                                guard.remove(&connection_id);
+                            }
+                        }
+                    }
+
+                    // Write them out in submission order (no locks held across I/O
+                    // except the brief routes removal).
+                    for job_id in writable {
+                        let (conn, outcome) = ready.remove(&job_id).expect("buffered outcome");
+                        routes
+                            .lock()
+                            .expect("thread pool worker route table mutex poisoned")
+                            .remove(&job_id);
+                        write_outcome(&mailbox, conn, outcome);
                     }
                 }
-                Err(_) => mailbox.close(connection_id),
-            },
-            JobResult::Error { .. } | JobResult::Cancelled { .. } | JobResult::TimedOut { .. } => {
-                mailbox.close(connection_id)
             }
         }
     })
@@ -1534,6 +1689,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 worker_job_timeout: None,
                 worker_restart_policy: StdioWorkerRestartPolicy::default(),
                 worker,
+                ordered_responses: false,
             },
             |_| (),
             handle_tcp_bytes,
@@ -1802,6 +1958,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 worker_job_timeout: None,
                 worker_restart_policy: StdioWorkerRestartPolicy::default(),
                 worker,
+                ordered_responses: false,
             },
             |_| (),
             handle_tcp_bytes_mailbox,
@@ -1837,6 +1994,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 worker_job_timeout: None,
                 worker_restart_policy: StdioWorkerRestartPolicy::default(),
                 worker: WorkerCommand::new("worker", Vec::<String>::new()),
+                ordered_responses: false,
             },
             |_| (),
             handle_tcp_bytes_mailbox_with_submitter::<
@@ -2269,6 +2427,7 @@ emit(second, "second")
                 worker_job_timeout: None,
                 worker_restart_policy: StdioWorkerRestartPolicy::default(),
                 worker: WorkerCommand::new("worker", Vec::<String>::new()),
+                ordered_responses: false,
             },
             |_| (),
             handle_tcp_bytes_mailbox_with_submitter::<
@@ -2301,5 +2460,66 @@ emit(second, "second")
         }
 
         stop_server(server, handle);
+    }
+
+    /// WEB01b-1b: with `ordered_responses` on, the in-process mailbox router
+    /// writes a connection's responses in **submission order** even when the
+    /// (unordered) worker pool finishes them out of order. Each input byte `b`
+    /// becomes one job whose worker sleeps `(N-1-b)*20ms`, so byte 0 finishes LAST
+    /// and byte N-1 finishes FIRST. Submitting bytes `0,1,2,3` and reading back
+    /// `0,1,2,3` proves the reorder buffer restored submission order (the
+    /// completion order was `3,2,1,0`).
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn inprocess_mailbox_orders_responses_by_submission_when_enabled() {
+        let n: u8 = 4;
+        let server = EmbeddableTcpServer::new_inprocess_mailbox(
+            EmbeddableTcpServerOptions {
+                host: "127.0.0.1".to_string(),
+                port: 0,
+                worker_processes: 4,
+                ordered_responses: true,
+                ..EmbeddableTcpServerOptions::default()
+            },
+            |_info| (),
+            |info: TcpConnectionInfo,
+             _state: &mut (),
+             data: &[u8],
+             submitter: &RustThreadPoolJobSubmitter<u8, u8>| {
+                for &byte in data {
+                    let _ = submitter.submit(info.id, byte);
+                }
+                TcpHandlerResult::default()
+            },
+            |_info, _state| {},
+            |response: u8| Ok(TcpMailboxFrame::write(vec![response])),
+            move |job: JobRequest<u8>| {
+                let byte = job.payload;
+                thread::sleep(Duration::from_millis(u64::from(n - 1 - byte) * 20));
+                JobResult::Ok { payload: byte }
+            },
+        )
+        .expect("bind ordered in-process mailbox");
+
+        let addr = server.local_addr();
+        let background = server.clone();
+        let handle = thread::spawn(move || background.serve());
+        thread::sleep(Duration::from_millis(50));
+
+        let mut stream = TcpStream::connect(addr).expect("connect");
+        stream
+            .set_read_timeout(Some(Duration::from_secs(10)))
+            .unwrap();
+        stream.write_all(&[0u8, 1, 2, 3]).expect("write bytes");
+        let mut out = vec![0u8; 4];
+        stream.read_exact(&mut out).expect("read responses");
+
+        server.stop();
+        let _ = handle.join();
+        assert_eq!(
+            out,
+            vec![0u8, 1, 2, 3],
+            "ordered mailbox must write responses in submission order (completion was 3,2,1,0)",
+        );
     }
 }

@@ -50,6 +50,7 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
@@ -102,7 +103,9 @@ static RUNTIME_WINDOWS_X86_64: &[u8] =
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
-use iir_builtin_lowering::lower_global_io;
+use iir_builtin_lowering::{
+    intern_symbols, lower_global_io, lower_heap_builtins_runtime, lower_lisp_repr,
+};
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
 
@@ -1444,6 +1447,631 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
     });
 }
 
+/// After `lower_string_literals_for_aot`, some `push_aot_string_literal` blocks
+/// (alloc_bytes + store_byte sequences) become dead because their `buf_var` is
+/// never used by anything other than the `store_byte` writes into that buffer.
+/// This happens when every `str_eq`/`str_cmp` op whose operands were in the
+/// `strings` map got folded to a `const` integer, leaving the allocation with
+/// no live consumer.
+///
+/// Dead blocks inflate the CIR variable count; on aarch64 the frame-size limit
+/// is 504 bytes (7-bit signed immediate × 8 for stp_pre/ldp_post), so a
+/// function with several string-literal comparisons exceeds that limit and the
+/// backend returns `BackendError::FrameTooLarge`.  This pass eliminates those
+/// dead blocks before register allocation.
+///
+/// A block is dead when its `__aot_str{N}_buf` variable does not appear in the
+/// srcs of any instruction other than `store_byte` (writes into the buffer are
+/// not observable consumers; they only make sense if the buffer is later read).
+fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
+    use std::collections::{HashMap, HashSet};
+
+    // ① Collect all __aot_str{N}_buf vars produced by alloc_bytes.
+    let aot_bufs: HashSet<String> = func.instructions
+        .iter()
+        .filter(|instr| instr.op == "alloc_bytes")
+        .filter_map(|instr| instr.dest.as_ref())
+        .filter(|dest| dest.starts_with("__aot_str") && dest.ends_with("_buf"))
+        .cloned()
+        .collect();
+
+    if aot_bufs.is_empty() {
+        return;
+    }
+
+    // ② Collect alias-mov instructions: `mov alias = buf_var` where buf_var ∈ aot_bufs.
+    //    These are emitted by `lower_string_literals_for_aot` to make the original
+    //    `str_const` dest variable available for use in `call` and similar instructions.
+    let alias_movs: HashMap<String, String> = func.instructions
+        .iter()
+        .filter(|instr| instr.op == "mov")
+        .filter_map(|instr| {
+            let alias = instr.dest.as_ref()?;
+            let src = match instr.srcs.first()? {
+                Operand::Var(v) => v,
+                _ => return None,
+            };
+            if aot_bufs.contains(src) {
+                Some((alias.clone(), src.clone()))
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    // ③ Find alias dests that are "live" — referenced in srcs of any instruction
+    //    other than write-only buffer ops and the alias-mov itself.
+    //    A live alias means the buf it points to is needed at runtime.
+    let live_alias_dests: HashSet<String> = func.instructions
+        .iter()
+        .filter(|instr| {
+            if instr.op == "store_byte" || instr.op == "field_store" {
+                return false;
+            }
+            // Exclude the alias-defining mov itself from the liveness scan.
+            if instr.op == "mov" {
+                if let Some(dest) = &instr.dest {
+                    if alias_movs.contains_key(dest) {
+                        return false;
+                    }
+                }
+            }
+            true
+        })
+        .flat_map(|instr| instr.srcs.iter())
+        .filter_map(|op| if let Operand::Var(n) = op { Some(n.clone()) } else { None })
+        .filter(|n| alias_movs.contains_key(n))
+        .collect();
+
+    // ④ A buf is live if directly referenced (non-write-only, non-alias-mov) OR if
+    //    its alias dest is live (i.e. the pointer is passed to a `call` etc.).
+    let live_bufs: HashSet<String> = {
+        let direct: HashSet<String> = func.instructions
+            .iter()
+            .filter(|instr| {
+                if instr.op == "store_byte" || instr.op == "field_store" {
+                    return false;
+                }
+                // The alias-mov doesn't constitute a "read" of the buffer data.
+                if instr.op == "mov" {
+                    if let Some(dest) = &instr.dest {
+                        if alias_movs.contains_key(dest) {
+                            return false;
+                        }
+                    }
+                }
+                true
+            })
+            .flat_map(|instr| instr.srcs.iter())
+            .filter_map(|op| if let Operand::Var(n) = op { Some(n.clone()) } else { None })
+            .filter(|n| aot_bufs.contains(n))
+            .collect();
+
+        let via_alias: HashSet<String> = alias_movs
+            .iter()
+            .filter(|(alias, _)| live_alias_dests.contains(alias.as_str()))
+            .map(|(_, buf)| buf.clone())
+            .collect();
+
+        direct.union(&via_alias).cloned().collect()
+    };
+
+    let dead_bufs: HashSet<String> = aot_bufs.difference(&live_bufs).cloned().collect();
+    if dead_bufs.is_empty() {
+        return;
+    }
+
+    // Derive the string prefix (__aot_str{N}) from each dead buf name so we can
+    // match all associated vars (_len, _buf, _off{i}, _byte{i}).
+    let dead_prefixes: HashSet<String> = dead_bufs
+        .iter()
+        .map(|buf| buf.strip_suffix("_buf").unwrap_or(buf).to_string())
+        .collect();
+
+    // Remove instructions that belong to dead string blocks:
+    //  - Any instruction whose dest starts with `{prefix}_` (const for len/tlen/off/byte,
+    //    alloc_bytes for buf).
+    //  - Any `store_byte` or `field_store` instruction whose first src is a dead buf.
+    //  - Any alias-mov `mov alias = dead_buf` (safe because alias dest is not live).
+    func.instructions.retain(|instr| {
+        if let Some(dest) = &instr.dest {
+            for prefix in &dead_prefixes {
+                if dest.starts_with(&format!("{prefix}_")) {
+                    return false;
+                }
+            }
+        }
+        if instr.op == "store_byte" || instr.op == "field_store" {
+            if let Some(Operand::Var(ptr)) = instr.srcs.first() {
+                if dead_bufs.contains(ptr) {
+                    return false;
+                }
+            }
+        }
+        // Strip alias-movs for dead bufs (safe — alias dest not in live_alias_dests).
+        if instr.op == "mov" {
+            if let Some(dest) = &instr.dest {
+                if let Some(buf) = alias_movs.get(dest) {
+                    if dead_bufs.contains(buf) {
+                        return false;
+                    }
+                }
+            }
+        }
+        true
+    });
+}
+
+/// Lower the landed E4 literal-output string ops to native byte-buffer I/O.
+///
+/// Buffer layout (LANG-STR-RT): every heap string begins with an 8-byte
+/// little-endian length followed by the raw UTF-8 bytes:
+///
+///   offset 0  : int64_t length    (written by `field_store buf, 0, len`)
+///   offset 8  : char bytes[0..n)  (written by N × `store_byte buf, 8+i, byte`)
+///
+/// This header lets the runtime helpers (`__twig_str_eq`, etc.) and the
+/// fallback `str_len` / `print_str` code read the length without any
+/// out-of-band bookkeeping — a pointer to the buffer is sufficient.
+/// The static-fold path (literal strings tracked in the `strings` map)
+/// still avoids runtime loads for `str_len` by folding to a `const`.
+fn push_aot_string_literal(
+    lowered: &mut Vec<IIRInstr>,
+    next: &mut usize,
+    literal: String,
+) -> (String, String, String) {
+    let base = format!("__aot_str{next}");
+    *next += 1;
+    let len_var  = format!("{base}_len");
+    let tlen_var = format!("{base}_tlen");
+    let buf_var  = format!("{base}_buf");
+
+    let n = literal.len() as i64;
+    // length constant (used by str_len static fold and field_store header)
+    lowered.push(IIRInstr::new(
+        "const",
+        Some(len_var.clone()),
+        vec![Operand::Int(n)],
+        "i64",
+    ));
+    // total allocation = header (8 bytes) + string bytes.
+    // saturating_add prevents n+8 from wrapping negative on a theoretical
+    // 9-exabyte literal, avoiding a heap under-allocation.
+    lowered.push(IIRInstr::new(
+        "const",
+        Some(tlen_var.clone()),
+        vec![Operand::Int(n.saturating_add(8))],
+        "i64",
+    ));
+    lowered.push(IIRInstr::new(
+        "alloc_bytes",
+        Some(buf_var.clone()),
+        vec![Operand::Var(tlen_var)],
+        "i64",
+    ));
+    // write the 8-byte length header at field index 0 (byte offset 0)
+    lowered.push(IIRInstr::new(
+        "field_store",
+        None,
+        vec![
+            Operand::Var(buf_var.clone()),
+            Operand::Int(0),
+            Operand::Var(len_var.clone()),
+        ],
+        "void",
+    ));
+    // write string bytes at offset 8 + idx
+    for (idx, byte) in literal.bytes().enumerate() {
+        let off_var  = format!("{base}_off{idx}");
+        let byte_var = format!("{base}_byte{idx}");
+        lowered.push(IIRInstr::new(
+            "const",
+            Some(off_var.clone()),
+            vec![Operand::Int(8 + idx as i64)],
+            "i64",
+        ));
+        lowered.push(IIRInstr::new(
+            "const",
+            Some(byte_var.clone()),
+            vec![Operand::Int(byte as i64)],
+            "i64",
+        ));
+        lowered.push(IIRInstr::new(
+            "store_byte",
+            None,
+            vec![
+                Operand::Var(buf_var.clone()),
+                Operand::Var(off_var),
+                Operand::Var(byte_var),
+            ],
+            "void",
+        ));
+    }
+
+    (buf_var, len_var, literal)
+}
+
+fn lower_string_literals_for_aot(func: &mut IIRFunction) {
+    let mut lowered = Vec::with_capacity(func.instructions.len());
+    let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
+    let mut ints: HashMap<String, i64> = HashMap::new();
+    let mut next = 0usize;
+
+    for instr in std::mem::take(&mut func.instructions) {
+        if instr.op == "const" {
+            if let (Some(dest), Some(Operand::Int(value))) =
+                (instr.dest.as_ref(), instr.srcs.first())
+            {
+                ints.insert(dest.clone(), *value);
+            }
+            lowered.push(instr);
+            continue;
+        }
+
+        if instr.op == "mov" {
+            if let (Some(dest), Some(Operand::Var(src))) =
+                (instr.dest.as_ref(), instr.srcs.first())
+            {
+                if let Some(value) = ints.get(src).copied() {
+                    ints.insert(dest.clone(), value);
+                }
+                if let Some(string) = strings.get(src).cloned() {
+                    strings.insert(dest.clone(), string);
+                }
+            }
+            lowered.push(instr);
+            continue;
+        }
+
+        if matches!(instr.op.as_str(), "add" | "sub" | "mul" | "div") {
+            if let Some(dest) = instr.dest.as_ref() {
+                let left = int_metadata_value(instr.srcs.first(), &ints);
+                let right = int_metadata_value(instr.srcs.get(1), &ints);
+                let value = match (instr.op.as_str(), left, right) {
+                    ("add", Some(left), Some(right)) => left.checked_add(right),
+                    ("sub", Some(left), Some(right)) => left.checked_sub(right),
+                    ("mul", Some(left), Some(right)) => left.checked_mul(right),
+                    ("div", Some(left), Some(right)) if right != 0 => left.checked_div(right),
+                    _ => None,
+                };
+                if let Some(value) = value {
+                    ints.insert(dest.clone(), value);
+                }
+            }
+            lowered.push(instr);
+            continue;
+        }
+
+        if instr.op == "str_const" {
+            let dest = match instr.dest.clone() {
+                Some(dest) => dest,
+                None => {
+                    lowered.push(instr);
+                    continue;
+                }
+            };
+            let literal = match instr.srcs.first() {
+                Some(Operand::Str(literal)) => literal.clone(),
+                _ => {
+                    lowered.push(instr);
+                    continue;
+                }
+            };
+            if !is_printable_ascii_str(&literal) {
+                lowered.push(instr);
+                continue;
+            }
+
+            let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
+            // Emit `mov dest = buf_var` so that `dest` is defined for any instruction
+            // that uses it directly (e.g. `call strlen(dest)`).  The alias is stripped by
+            // `strip_dead_aot_string_allocs` when `dest` is not observed outside the
+            // already-folded string ops, so this does not inflate the frame for fold-only
+            // strings.
+            lowered.push(IIRInstr::new(
+                "mov",
+                Some(dest.clone()),
+                vec![Operand::Var(buf_var)],
+                "i64",
+            ));
+            strings.insert(dest.clone(), (dest, len_var, lit));
+            continue;
+        }
+
+        if instr.op == "str_concat" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let literal = format!("{left_literal}{right_literal}");
+            if !is_printable_ascii_str(&literal) {
+                lowered.push(instr);
+                continue;
+            }
+
+            let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
+            lowered.push(IIRInstr::new(
+                "mov",
+                Some(dest.clone()),
+                vec![Operand::Var(buf_var)],
+                "i64",
+            ));
+            strings.insert(dest.clone(), (dest, len_var, lit));
+            continue;
+        }
+
+        if instr.op == "str_slice" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(src), Operand::Var(start), Operand::Var(end)] = instr.srcs.as_slice()
+            else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, literal)) = strings.get(src).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let (Some(start), Some(end)) = (ints.get(start).copied(), ints.get(end).copied())
+            else {
+                lowered.push(instr);
+                continue;
+            };
+            if start < 0 || end < start || end as usize > literal.len() {
+                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                let (bv, lv, lt) = push_aot_string_literal(&mut lowered, &mut next, String::new());
+                lowered.push(IIRInstr::new("mov", Some(dest.clone()), vec![Operand::Var(bv)], "i64"));
+                strings.insert(dest.clone(), (dest, lv, lt));
+                continue;
+            }
+            let slice = literal.as_bytes()[start as usize..end as usize].to_vec();
+            let Ok(literal) = String::from_utf8(slice) else {
+                lowered.push(instr);
+                continue;
+            };
+            if !is_printable_ascii_str(&literal) {
+                lowered.push(instr);
+                continue;
+            }
+            let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
+            lowered.push(IIRInstr::new("mov", Some(dest.clone()), vec![Operand::Var(buf_var)], "i64"));
+            strings.insert(dest.clone(), (dest, len_var, lit));
+            continue;
+        }
+
+        if instr.op == "str_len" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some(Operand::Var(src)) = instr.srcs.first() else {
+                lowered.push(instr);
+                continue;
+            };
+            if let Some((_, _, literal)) = strings.get(src).cloned() {
+                // Compile-time fold: length is statically known.
+                ints.insert(dest.clone(), literal.len() as i64);
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(dest),
+                    vec![Operand::Int(literal.len() as i64)],
+                    &instr.type_hint,
+                ));
+            } else {
+                // Runtime fallback: read the 8-byte length from offset 0 of the
+                // LANG-STR-RT buffer (field index 0 → byte offset 0).
+                lowered.push(IIRInstr::new(
+                    "field_load",
+                    Some(dest),
+                    vec![Operand::Var(src.clone()), Operand::Int(0)],
+                    &instr.type_hint,
+                ));
+            }
+            continue;
+        }
+
+        if instr.op == "str_index" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(src), Operand::Var(idx)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, literal)) = strings.get(src).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some(idx) = ints.get(idx).copied() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some(byte) = usize::try_from(idx)
+                .ok()
+                .and_then(|idx| literal.as_bytes().get(idx))
+                .copied()
+            else {
+                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(dest),
+                    vec![Operand::Int(0)],
+                    &instr.type_hint,
+                ));
+                continue;
+            };
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(dest),
+                vec![Operand::Int(byte as i64)],
+                &instr.type_hint,
+            ));
+            continue;
+        }
+
+        if instr.op == "str_eq" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let left_lit = strings.get(left).map(|(_, _, l)| l.clone());
+            let right_lit = strings.get(right).map(|(_, _, r)| r.clone());
+            if let (Some(ll), Some(rl)) = (left_lit, right_lit) {
+                // Both statically known: fold to a compile-time constant.
+                lowered.push(IIRInstr::new(
+                    "const",
+                    Some(dest),
+                    vec![Operand::Int((ll == rl) as i64)],
+                    &instr.type_hint,
+                ));
+            } else {
+                // At least one operand is a runtime string (function parameter
+                // or return value).  Delegate to __twig_str_eq which reads the
+                // LANG-STR-RT length header and memcmp's the data.
+                lowered.push(IIRInstr::new(
+                    "call_builtin",
+                    Some(dest),
+                    vec![
+                        Operand::Var("str_eq".into()),
+                        Operand::Var(left.clone()),
+                        Operand::Var(right.clone()),
+                    ],
+                    &instr.type_hint,
+                ));
+            }
+            continue;
+        }
+
+        if instr.op == "str_cmp" {
+            let Some(dest) = instr.dest.clone() else {
+                lowered.push(instr);
+                continue;
+            };
+            let [Operand::Var(left), Operand::Var(right)] = instr.srcs.as_slice() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, left_literal)) = strings.get(left).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let Some((_, _, right_literal)) = strings.get(right).cloned() else {
+                lowered.push(instr);
+                continue;
+            };
+            let value = match left_literal.as_bytes().cmp(right_literal.as_bytes()) {
+                Ordering::Less => -1,
+                Ordering::Equal => 0,
+                Ordering::Greater => 1,
+            };
+            ints.insert(dest.clone(), value);
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(dest),
+                vec![Operand::Int(value)],
+                &instr.type_hint,
+            ));
+            continue;
+        }
+
+        if instr.op == "print_str" {
+            let Some(Operand::Var(src)) = instr.srcs.first() else {
+                lowered.push(instr);
+                continue;
+            };
+            // Data starts at buf + 8 (LANG-STR-RT: first 8 bytes = i64 length).
+            // Whether the string came from a literal (tracked in `strings`) or
+            // a runtime parameter, both use the same buffer layout, so the
+            // same add-8 + call_builtin sequence works for both paths.
+            let ps_idx = next;
+            next += 1;
+            let off_var  = format!("__aot_ps{ps_idx}_off");
+            let data_var = format!("__aot_ps{ps_idx}_dat");
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(off_var.clone()),
+                vec![Operand::Int(8)],
+                "i64",
+            ));
+            lowered.push(IIRInstr::new(
+                "add",
+                Some(data_var.clone()),
+                vec![Operand::Var(src.clone()), Operand::Var(off_var)],
+                "i64",
+            ));
+            if let Some((_, len_var, _)) = strings.get(src).cloned() {
+                // Length is statically known; avoid a runtime load.
+                lowered.push(IIRInstr::new(
+                    "call_builtin",
+                    None,
+                    vec![
+                        Operand::Var("print_string".into()),
+                        Operand::Var(data_var),
+                        Operand::Var(len_var),
+                    ],
+                    "void",
+                ));
+            } else {
+                // Runtime string: read the length header (field index 0).
+                let len_var = format!("__aot_ps{ps_idx}_len");
+                lowered.push(IIRInstr::new(
+                    "field_load",
+                    Some(len_var.clone()),
+                    vec![Operand::Var(src.clone()), Operand::Int(0)],
+                    "i64",
+                ));
+                lowered.push(IIRInstr::new(
+                    "call_builtin",
+                    None,
+                    vec![
+                        Operand::Var("print_string".into()),
+                        Operand::Var(data_var),
+                        Operand::Var(len_var),
+                    ],
+                    "void",
+                ));
+            }
+            continue;
+        }
+
+        lowered.push(instr);
+    }
+
+    func.instructions = lowered;
+}
+
+fn is_printable_ascii_str(s: &str) -> bool {
+    s.bytes()
+        .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
+}
+
+fn int_metadata_value(src: Option<&Operand>, ints: &HashMap<String, i64>) -> Option<i64> {
+    match src? {
+        Operand::Int(value) => Some(*value),
+        Operand::Var(name) => ints.get(name).copied(),
+        _ => None,
+    }
+}
+
 /// Step 3b: default any remaining `"any"` hints on arithmetic / move
 /// instructions to `"i64"`.
 ///
@@ -1473,10 +2101,19 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///  0. `lower_global_io` — converts `call_builtin "global_set"` /
 ///     `"global_get"` to `global_store` / `global_load` (LANG39).
 ///     Must run first so the const-string look-back can see all instructions.
+///  0a-string. `lower_string_literals_for_aot` — converts E4 literal-output
+///     `str_const` + `print_str` into existing native heap-byte I/O
+///     (`alloc_bytes`, `store_byte`, and `call_builtin "print_string"`) and
+///     folds direct literal `str_len` to an integer constant.
 ///  0b. `strip_dead_string_consts` — removes `const %n = Var("name")`
 ///     instructions that are now dead after step 0.  Without this pass,
 ///     `aot_specialise` converts them to `const_str` which the ARM64 backend
 ///     cannot lower (there is no stack-slot for a string pointer).
+///  0c. `strip_dead_aot_string_allocs` — removes `alloc_bytes` + `store_byte`
+///     blocks for `__aot_str{N}` buffers whose `buf_var` is never read by any
+///     non-`store_byte` instruction.  This shrinks the CIR variable count for
+///     functions with many folded string comparisons, keeping the aarch64 stack
+///     frame within the 504-byte stp/ldp limit.
 ///  1. `pre_lower_aot_builtins` — lowers `call_builtin "+"` → `add`, etc.
 ///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
 ///  3. `propagate_aot_types` — fixed-point type propagation.
@@ -1485,12 +2122,43 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // Phase 0: lower global_set / global_get → global_store / global_load.
     lower_global_io(module);
 
+    // Phase 0a: lower lispy heap builtins to **runtime calls** (LANG77,
+    // McCarthy L3b-2b).  A lisp frontend (McCarthy Lisp, Twig) emits
+    // `call_builtin "cons"/"car"/"cdr"`; this rewrite renames them to
+    // `lispy_cons`/`lispy_car`/`lispy_cdr`, which the backends dispatch to
+    // `__twig_lispy_*` in the linked C lisp runtime
+    // (`twig-aot/runtime/lispy_runtime.c`).  Unlike the structural
+    // `lower_heap_builtins` (alloc + field_*, used by the managed wasm/jvm/
+    // clr/beam backends), this keeps the value NaN-box **tagged** — which is
+    // what later enables `pair?`/`ATOM`/`EQ`/symbols (L3b-2c).  It only
+    // touches those exact builtin names, so a module without them — every
+    // Twig/Nib/Brainfuck program today — is left unchanged.
+    lower_heap_builtins_runtime(module);
+
+    // Phase 0a″: compile-time symbol interning (LANG77 / L3b-2c-3).
+    // Rewrite each `const Var(name):symbol` to the finished tagged immediate
+    // `(id << 32) | TAG_SYMBOL`, with module-wide ids (so the same name → the
+    // same id → `EQ` is word equality). Runs before `lower_lisp_repr` so the
+    // representation pass sees finished symbol immediates. A no-op for modules
+    // without symbol literals.
+    intern_symbols(module);
+
+    // Phase 0a′: type-directed lisp-value representation (LANG77 / L3b-2c).
+    // After cons/car/cdr are `lispy_*` calls, box the integer atoms that flow
+    // into them (so their NaN-box tag is `000`, not the heap tag a raw int's
+    // low bits would collide with) and unbox the program result at the exit
+    // boundary.  Gate-free and type-directed: a module with no `lispy_*` calls
+    // (every Twig/Nib/Brainfuck program) has nothing to box and is unchanged.
+    lower_lisp_repr(module);
+
     for func in &mut module.functions {
+        lower_string_literals_for_aot(func);
         // Phase 0b: remove dead name-register `const` instructions.
         // `lower_global_io` leaves `const %n = Var("x")` in place even after
         // the `global_set`/`global_get` that consumed it is rewritten.
         // These become `const_str` in CIR which the ARM64 backend rejects.
         strip_dead_string_consts(func);
+        strip_dead_aot_string_allocs(func);
         pre_lower_aot_builtins(func);
         normalize_params_to_i64(func);
         propagate_aot_types(func);
@@ -1749,6 +2417,14 @@ fn compile_one_with_globals(
 // Tests
 // ===========================================================================
 
+// LANG77 golden divergence guard for the native lisp runtime.  Lives as a
+// lib unit-test module (not an integration test) so the build-script's
+// `cargo:rustc-link-lib=static=twig_aot_runtime` directive reliably places
+// the runtime archive on this binary's link line — letting the test call the
+// `__twig_lispy_*` C functions directly.
+#[cfg(test)]
+mod lispy_runtime_golden;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1819,6 +2495,383 @@ mod tests {
 
         // Verify Mach-O magic and file type.
         let bytes = result.unwrap();
+        assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
+        let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
+        assert_eq!(filetype, 1, "MH_OBJECT");
+    }
+
+    #[test]
+    fn string_literal_print_lowers_to_heap_byte_io() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_const" && i.op != "print_str"),
+            "native lowering should remove literal string ops: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().any(|i| i.op == "alloc_bytes"),
+            "string literal should allocate a byte buffer"
+        );
+        assert_eq!(
+            f.instructions.iter().filter(|i| i.op == "store_byte").count(),
+            5,
+            "HELLO should lower to five byte stores"
+        );
+        assert!(
+            f.instructions.iter().any(|i| {
+                i.op == "call_builtin"
+                    && matches!(i.srcs.first(), Some(Operand::Var(name)) if name == "print_string")
+            }),
+            "print_str should lower to call_builtin print_string"
+        );
+    }
+
+    #[test]
+    fn string_literal_len_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
+        assert!(
+            matches!(len_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(5)]),
+            "str_len over a literal should fold to const 5: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_len"),
+            "native lowering should remove folded str_len: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("str_index", Some("b".into()), vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(66)]),
+            "str_index over a literal should fold to byte 66: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_index"),
+            "native lowering should remove folded str_index: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_out_of_bounds_lowers_to_trap() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(3)], "i64"),
+                IIRInstr::new("str_index", Some("b".into()), vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().any(|i| i.op == "type_assert"),
+            "out-of-bounds str_index should lower to an unconditional native trap: {:?}",
+            f.instructions
+        );
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(0)]),
+            "trap path should still seed the destination for downstream typing: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_uses_integer_mov_metadata() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("tmp".into()), vec![Operand::Int(2)], "i64"),
+                IIRInstr::new("mov", Some("i".into()), vec![Operand::Var("tmp".into())], "i64"),
+                IIRInstr::new("str_index", Some("b".into()), vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(67)]),
+            "str_index should see integer metadata through mov: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_index_uses_computed_len_metadata() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "str_const",
+                    Some("s".into()),
+                    vec![Operand::Str("ABCDE".into())],
+                    "str",
+                ),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new(
+                    "sub",
+                    Some("i".into()),
+                    vec![Operand::Var("n".into()), Operand::Var("one".into())],
+                    "i64",
+                ),
+                IIRInstr::new(
+                    "str_index",
+                    Some("b".into()),
+                    vec![Operand::Var("s".into()), Operand::Var("i".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(69)]),
+            "str_index should see integer metadata through str_len + sub: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_concat_len_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+                IIRInstr::new("str_concat", Some("s".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
+        assert!(
+            matches!(len_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(5)]),
+            "str_len over a literal concat should fold to const 5: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_concat" && i.op != "str_len"),
+            "native lowering should remove folded str_concat + str_len: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_slice_index_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "str_const",
+                    Some("s".into()),
+                    vec![Operand::Str("ABCDE".into())],
+                    "str",
+                ),
+                IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+                IIRInstr::new(
+                    "str_slice",
+                    Some("sub".into()),
+                    vec![
+                        Operand::Var("s".into()),
+                        Operand::Var("start".into()),
+                        Operand::Var("end".into()),
+                    ],
+                    "str",
+                ),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new(
+                    "str_index",
+                    Some("b".into()),
+                    vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let byte_const = f
+            .instructions
+            .iter()
+            .find(|i| i.dest.as_deref() == Some("b"));
+        assert!(
+            matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(67)]),
+            "str_slice feeding str_index should fold to byte 67: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions
+                .iter()
+                .all(|i| i.op != "str_slice" && i.op != "str_index"),
+            "native lowering should remove folded str_slice + str_index: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_eq_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("str_eq", Some("ok".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let eq_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ok"));
+        assert!(
+            matches!(eq_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(1)]),
+            "str_eq over equal literals should fold to const 1: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_eq"),
+            "native lowering should remove folded str_eq: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_cmp_lowers_to_i64_const() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("ALPHA".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("BETA".into())], "str"),
+                IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        let cmp_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ord"));
+        assert!(
+            matches!(cmp_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(-1)]),
+            "str_cmp over ordered literals should fold to const -1: {:?}",
+            f.instructions
+        );
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_cmp"),
+            "native lowering should remove folded str_cmp: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_print_compiles_to_macho_object() {
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HELLO".into())], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("native_string_print", "lang");
+        module.functions.push(main);
+        module.entry_point = Some("main".into());
+
+        let bytes = compile_module_macos_arm64_object(&module)
+            .unwrap_or_else(|e| panic!("native string print should compile: {e}"));
         assert_eq!(&bytes[0..4], &[0xCF, 0xFA, 0xED, 0xFE], "Mach-O magic");
         let filetype = u32::from_le_bytes(bytes[12..16].try_into().unwrap());
         assert_eq!(filetype, 1, "MH_OBJECT");
@@ -2107,5 +3160,135 @@ mod tests {
         }
         assert!(had_real, "at least one target must have a real runtime archive on the host");
         assert!(had_stub, "at least one target should be a stub on this host");
+    }
+
+    // ---- LANG-STR-RT: runtime string ABI (length-prefixed buffers) ----
+
+    #[test]
+    fn string_param_len_lowers_to_field_load() {
+        // `str_len` on a variable not in the `strings` map (simulates a function
+        // parameter) must fall back to `field_load s, 0 → dest` which reads the
+        // 8-byte length header from the LANG-STR-RT buffer at runtime.
+        let mut f = IIRFunction::new(
+            "strlen",
+            vec![("s".into(), "str".into())],
+            "i64",
+            vec![
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_len"),
+            "str_len on a parameter should be removed by lowering: {:?}",
+            f.instructions
+        );
+        let field_load = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
+        assert!(
+            matches!(
+                field_load,
+                Some(i) if i.op == "field_load"
+                    && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "s")
+                    && matches!(i.srcs.get(1), Some(Operand::Int(0)))
+            ),
+            "runtime str_len should lower to field_load s, 0: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_param_eq_lowers_to_call_builtin_str_eq() {
+        // `str_eq` where at least one operand is a runtime string (not in the
+        // `strings` map) must lower to `call_builtin "str_eq" a b → dest`.
+        let mut f = IIRFunction::new(
+            "same",
+            vec![("a".into(), "str".into()), ("b".into(), "str".into())],
+            "i64",
+            vec![
+                IIRInstr::new("str_eq", Some("ok".into()), vec![
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        assert!(
+            f.instructions.iter().all(|i| i.op != "str_eq"),
+            "str_eq on parameters should be removed by lowering: {:?}",
+            f.instructions
+        );
+        let call = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ok"));
+        assert!(
+            matches!(
+                call,
+                Some(i) if i.op == "call_builtin"
+                    && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "str_eq")
+                    && matches!(i.srcs.get(1), Some(Operand::Var(v)) if v == "a")
+                    && matches!(i.srcs.get(2), Some(Operand::Var(v)) if v == "b")
+            ),
+            "runtime str_eq should lower to call_builtin str_eq: {:?}",
+            f.instructions
+        );
+    }
+
+    #[test]
+    fn string_literal_buffer_has_length_header() {
+        // After lowering `str_const "HI"`, the emitted instructions must include a
+        // `field_store buf, 0, len_var` to write the 8-byte LANG-STR-RT header,
+        // allocate 10 bytes (8 + 2), and write the 2 bytes at offsets 8 and 9.
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("HI".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+
+        lower_string_literals_for_aot(&mut f);
+
+        // Must allocate 2 + 8 = 10 bytes.
+        let alloc = f.instructions.iter().find(|i| i.op == "alloc_bytes").expect("alloc_bytes");
+        let alloc_src = alloc.srcs.first().expect("alloc size operand");
+        // alloc_bytes takes a Var pointing to the tlen const, not a literal Int.
+        // Verify the total-len const feeds 10.
+        if let Operand::Var(tlen_var) = alloc_src {
+            let tlen_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some(tlen_var.as_str()));
+            assert!(
+                matches!(tlen_const, Some(i) if i.srcs == vec![Operand::Int(10)]),
+                "alloc should request 10 bytes (8 header + 2 data): {:?}",
+                f.instructions
+            );
+        } else {
+            panic!("alloc_bytes arg should be a Var, got {:?}", alloc_src);
+        }
+
+        // Must have a field_store for the length header.
+        assert!(
+            f.instructions.iter().any(|i| i.op == "field_store"),
+            "buf must have a field_store for the length header: {:?}",
+            f.instructions
+        );
+
+        // Byte stores should be at offsets 8 and 9, not 0 and 1.
+        let store_offsets: Vec<i64> = f.instructions.iter()
+            .filter(|i| i.op == "store_byte")
+            .filter_map(|i| {
+                if let Some(Operand::Var(off_var)) = i.srcs.get(1) {
+                    f.instructions.iter().find(|c| c.dest.as_deref() == Some(off_var))
+                        .and_then(|c| c.srcs.first())
+                        .and_then(|op| if let Operand::Int(v) = op { Some(*v) } else { None })
+                } else { None }
+            })
+            .collect();
+        assert_eq!(store_offsets, vec![8, 9], "byte stores must be at offset 8..9: {:?}", f.instructions);
     }
 }

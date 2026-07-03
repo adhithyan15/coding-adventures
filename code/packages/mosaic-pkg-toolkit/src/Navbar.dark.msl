@@ -1,0 +1,23 @@
+// Navbar.dark.msl — dark-theme styling.
+
+style Navbar {
+  part navbar {
+    padding      : 12 ;
+    background   : "#111827" ;
+    border-width : 1 ;
+    border-color : "#374151" ;
+  }
+  part navbar-brand {
+    padding   : 4 ;
+    color     : "#f3f4f6" ;
+    font-size : 18 ;
+  }
+  part navbar-link {
+    padding       : 8 ;
+    background    : "transparent" ;
+    color         : "#60a5fa" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

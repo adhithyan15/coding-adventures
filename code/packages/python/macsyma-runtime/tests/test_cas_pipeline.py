@@ -379,6 +379,26 @@ def test_pipeline_totient() -> None:
     assert result == _int(4)
 
 
+def test_pipeline_assumptions_feed_elementary_abs_sqrt_log() -> None:
+    """Assumptions feed direct abs/sqrt/log evaluation, not only radcan."""
+    sqrt_result = _eval_seq("assume(x >= 0)", "sqrt(x^2)")
+    assert isinstance(sqrt_result, IRSymbol)
+    assert sqrt_result.name == "x"
+
+    log_result = _eval_seq("assume(x >= 0)", "log(x^3)")
+    assert isinstance(log_result, IRApply)
+    assert log_result.head.name == "Mul"
+    assert log_result.args[0] == IRInteger(3)
+    assert isinstance(log_result.args[1], IRApply)
+    assert log_result.args[1].head.name == "Log"
+    assert log_result.args[1].args == (IRSymbol("x"),)
+
+    abs_result = _eval_seq("assume(y < 0)", "abs(y)")
+    assert isinstance(abs_result, IRApply)
+    assert abs_result.head.name == "Neg"
+    assert abs_result.args == (IRSymbol("y"),)
+
+
 # ===========================================================================
 # Section L: Complex number operations (B2)
 # ===========================================================================
@@ -1458,6 +1478,13 @@ def test_pipeline_radcan_sqrt_squared() -> None:
     assert result.head.name == "Abs", (
         f"Expected Abs head from radcan(sqrt(x^2)), got {result.head.name!r}"
     )
+
+
+def test_pipeline_radcan_uses_nonnegative_assumption() -> None:
+    """assume(x >= 0); radcan(sqrt(x^2)) -> x."""
+    result = _eval_seq("assume(x >= 0)", "radcan(sqrt(x^2))")
+    assert isinstance(result, IRSymbol)
+    assert result.name == "x"
 
 
 # ===========================================================================

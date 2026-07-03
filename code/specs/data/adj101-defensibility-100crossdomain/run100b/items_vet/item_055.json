@@ -1,0 +1,8 @@
+{
+ "idx": 55,
+ "policy": "A landlord must make repairs that affect a unit's habitability within a reasonable time after receiving notice of the defect. A heating-system failure in winter must be repaired within 24 hours of notice; failure to do so entitles the tenant to a rent abatement.",
+ "scenario": "On January 12, the heat in Omar's apartment stopped working. A repair technician arrived and fixed it 40 hours after the landlord first learned of the problem. Omar is now seeking a rent abatement.",
+ "question": "Is Omar entitled to a rent abatement?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "when the landlord received notice of the defect"
+}

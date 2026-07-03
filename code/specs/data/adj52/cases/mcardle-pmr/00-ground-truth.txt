@@ -1,0 +1,38 @@
+GROUND TRUTH (NOT given to ingester, deriver, or plain-Claude subagents)
+
+Source: PMC11724029 — "Late Presentation of McArdle's Disease Mimicking
+Polymyalgia Rheumatica: A Case Report and Review of the Literature" (2025,
+open access).
+
+Final diagnosis: Late-onset McArdle disease (Glycogen Storage Disease
+Type V; myophosphorylase deficiency).
+
+Confirmed by:
+- Muscle biopsy: myophosphorylase staining entirely negative in myofibres;
+  PAS staining strongly positive in fibers and vacuoles (glycogen).
+- Enzymatic assay (Erasmus University Rotterdam): phosphorylase activity
+  grossly reduced (3.9; ref 75-400 nmol/min/mg); muscle glycogen elevated
+  (234.0; ref 30-180 ug/h/mg).
+- Genetics: homozygous PYGM pathogenic variant c.148C>T p.(Arg50*).
+
+Initial misdiagnosis: Polymyalgia rheumatica (PMR).
+
+Why PMR was wrong / the discriminators the framework SHOULD catch:
+- Markedly elevated creatine kinase (811, then 3473 IU/L) is INCOMPATIBLE
+  with PMR — PMR has a normal CK. Elevated CK points to a primary myopathy.
+- Lifelong exercise intolerance (childhood inability to sprint, muscle
+  spasms on long walks, episodic short-lived myalgia "normal for him") is
+  the hallmark of a metabolic myopathy (the McArdle "second wind"), not an
+  inflammatory rheumatologic disease of older age.
+- Negative ANA/ENA/myositis panel argues against autoimmune myositis.
+- The steroid response is a CONFOUNDER that made PMR look correct.
+
+Correct disposition: pursue tissue/genetic diagnosis (muscle biopsy,
+myophosphorylase stain, PYGM genetic testing) rather than committing to
+PMR. Definitive management is conservative (carbohydrate-rich diet, oral
+sucrose before exercise, paced activity), NOT chronic steroids.
+
+What a naive reader / LLM is likely to produce: polymyalgia rheumatica
+(common, fits age + proximal pattern + elevated inflammatory markers +
+steroid response) and continue/taper steroids — missing the elevated CK
+and the lifelong exercise-intolerance red flags.

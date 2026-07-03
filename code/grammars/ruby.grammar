@@ -25,33 +25,552 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | return_statement | break_statement | next_statement | assignment | method_with_block | method_call | method_call_no_paren | expression_stmt ;
-def_statement = "def" NAME [ LPAREN [ params ] RPAREN ] { !"end" statement } "end" ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+# Phase 6r — multiple assignment `a, b = 1, 2`.
+#
+# Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
+# form wins when the source begins with `NAME COMMA NAME`.  The rule
+# requires at least two LHS names (`NAME COMMA NAME { COMMA NAME }`)
+# so that single-NAME assignments still fall through to the existing
+# `assignment` rule unchanged.
+#
+# Shape:
+#   multi_assignment = NAME COMMA NAME { COMMA NAME }
+#                      EQUALS
+#                      expression { COMMA expression } ;
+#
+# Lowering (in ruby-to-semantic-ir):
+#   Each (lhs[i], rhs[i]) pair lowers to its own `LetBinding` /
+#   `Assign` — exactly as `lhs[i] = rhs[i]` would.  The lowerer
+#   returns a Vec<Stmt> from this one source statement.
+#
+# v0 restrictions (deferred to later phases):
+#   - LHS count must equal RHS count for the *non-splat* targets;
+#     mismatched arities still produce a RubyLowerError.  When a splat
+#     target IS present (Phase 9b — see below), the splat absorbs zero
+#     or more "extra" RHS values into a Sequence and the non-splat LHS
+#     count drives the arity check.
+#   - Single-RHS auto-unpack `a, b = arr` is NOT supported.
+#   - Multi-assignment LHS inside a `modifier_statement`
+#     (`a, b = 1, 2 if cond`) is NOT supported — modifier_statement's
+#     LHS alternation lists single-LHS forms only.
+#
+# Phase 9b (FC) — splat target on the LHS.
+#
+# `mlhs_target` allows an optional leading `*` so one (at most) of the
+# LHS positions can absorb the "rest" of the RHS values into a Sequence:
+#
+#   a, *b = 1, 2, 3      → a == 1; b == [2, 3]
+#   *a, b = 1, 2, 3      → a == [1, 2]; b == 3
+#   a, *b, c = 1, 2, 3, 4 → a == 1; b == [2, 3]; c == 4
+#
+# Same shape as `param` and `call_arg` (`[ "*" ] NAME`).  At most one
+# splat per LHS is allowed; the lowerer enforces the single-splat rule
+# (the grammar would allow multiple `*` tokens but the lowerer rejects
+# them with a clear error message).
+multi_assignment = mlhs_target COMMA mlhs_target { COMMA mlhs_target } EQUALS expression { COMMA expression } ;
+mlhs_target  = [ "*" ] NAME ;
+# Phase 6q — modifier conditionals/loops `x if y`, `x unless y`,
+# `x while y`, `x until y`.
+#
+# Placed AFTER the keyword-starting forms (`if_statement`, `while_statement`,
+# etc.) so they win first when a line *begins* with one of those keywords,
+# and BEFORE the bare statement forms (`assignment`, `method_call_no_paren`,
+# `expression_stmt`) so we try the modifier wrapper before committing to a
+# plain statement.  PEG-style backtracking on alternation failure unwinds
+# cleanly when the trailing `if|unless|while|until expression` clause isn't
+# present, falling through to the plain forms.
+#
+# The leading alternation duplicates the LHS forms that can sensibly carry
+# a trailing modifier:
+#   - assignment        — `x = 1 if cond`
+#   - method_call_no_paren — `puts "hi" if cond`
+#   - method_call       — `puts(1) if cond`
+#   - expression_stmt   — `x + 1 if cond`, `42 if cond`
+#
+# `method_with_block` is intentionally omitted; trailing modifiers on blocks
+# are rare in idiomatic Ruby and the AST shape doesn't need it.
+#
+# Lowering (in ruby-to-semantic-ir):
+#   `lhs if cond`    → ExprStmt(If(cond, Block{stmts:[lhs]}, NilLit))
+#   `lhs unless cond`→ ExprStmt(If(not cond, Block{stmts:[lhs]}, NilLit))
+#   `lhs while cond` → While(cond, Block{stmts:[lhs]})
+#   `lhs until cond` → While(not cond, Block{stmts:[lhs]})
+# The trailing keyword tokens are LEXER-DISAMBIGUATED: ruby-lexer's
+# `tag_modifier_keywords` post-pass re-tags `if`/`unless`/`while`/`until`
+# to `if_modifier`/`unless_modifier`/`while_modifier`/`until_modifier`
+# when they follow an expression-ending token on the same line.  The
+# leading-keyword statement rules (`if_statement`, etc.) match the bare
+# `"if"` literal — those tokens are never re-tagged because they sit at
+# the start of a line / after a semicolon / after a non-expression-ending
+# token.  This split sidesteps the grammar's newline-insensitive default
+# mode (modifier syntax is intrinsically a same-line construct in Ruby).
+modifier_statement = ( assignment | method_call_no_paren | method_call | expression_stmt ) ( "if_modifier" | "unless_modifier" | "while_modifier" | "until_modifier" ) expression ;
+# Phase 16e (FC) — method-level rescue/ensure: a `def` body may carry
+# trailing `rescue`/`ensure` clauses WITHOUT an explicit `begin` (the
+# whole method body is the protected region).  The body repetition gets
+# the same `!"rescue" !"ensure"` negative-lookahead as begin_statement so
+# it stops at the first clause; the lowerer wraps the body + clauses in a
+# `Stmt::TryCatch` (Phase 16a) when any clause is present.
+#
+# Issue #59 (OOP-cascade unblock) — CLASS-METHOD / singleton-method
+# definitions `def self.m` and `def Recv.m`.  A method definition may now
+# carry an OPTIONAL RECEIVER prefix (`def_receiver`) before the method
+# name: `def self.zero; end` (a class method on the enclosing class) and
+# `def Foo.bar(x); end` (a singleton method on the constant `Foo`).  The
+# receiver is `self` (the dominant idiom for class methods, mirroring
+# `class << self` in Phase 14e) or a bare `NAME`/constant, followed by a
+# literal `.` and then the method name.  The `.` is a `Dot` token matched
+# by VALUE (same convention as `dot_call`), so `def self . m` and
+# `def self.m` both parse.  The lowerer keys on the PRESENCE of the
+# `def_receiver` node: absent → an ordinary instance method (unchanged);
+# present → a class-method registration (`__def_class_method__`).  Because
+# the receiver is OPTIONAL, every pre-existing `def m` continues to parse
+# byte-for-byte as before (the optional group cleanly matches nothing when
+# the token after the method name is `(`, `=`, a newline, or a body
+# statement — none of which is a `.`).
+def_statement = "def" [ def_receiver ] NAME [ LPAREN [ params ] RPAREN ] { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
+# The receiver prefix of a class/singleton method definition: `self.` or
+# `Const.` (or `name.`).  `singleton_receiver` (Phase 14e — `self | NAME`)
+# is reused verbatim so the `self`/`NAME` choice stays in one place.  The
+# trailing `.` is matched by literal VALUE (the lexer emits `.` as a `Dot`
+# token; matching the value keeps this in step with `dot_call`'s `"."`).
+def_receiver = singleton_receiver "." ;
+# Phase 7c — Ruby 3.0 endless method definition: `def foo = expr` and
+# `def foo(x, y) = expr`.  No `end`, no block body — just a single
+# expression after the `=`.  Placed BEFORE `def_statement` in the
+# `statement` alternation so PEG tries the endless form first; if the
+# `=` isn't present the parser falls through to the block form.
+#
+# Issue #59 — the same optional `def_receiver` prefix admits endless
+# class-method definitions `def self.m = expr` / `def Foo.m = expr`.
+endless_def_statement = "def" [ def_receiver ] NAME [ LPAREN [ params ] RPAREN ] EQUALS expression ;
 # Phase 6f — class/module namespace declarations.  The body is a
 # sequence of statements (which may include nested `def`s).  Like
 # `def_statement`, the body repetition uses a negative lookahead so it
 # stops at the closing `end` keyword instead of greedily consuming it.
-class_statement  = "class"  NAME { !"end" statement } "end" ;
+#
+# Phase 14c — optional superclass clause `< Bar` after the class name
+# (`class Foo < Bar`).  The `"<"` literal matches by *value*: the lexer
+# reclassifies `<` to a `Name`-type token (see the comparison-operator
+# note below), but the literal matcher compares the token value, so
+# `"<"` matches transparently.  The superclass is a single `NAME`; the
+# lowerer lifts it into `Stmt::ClassDef.superclass`.
+#
+# Phase 14e — singleton-class form `class << RECEIVER … end` (opens the
+# receiver's singleton/metaclass; `def`s inside become singleton
+# methods).  The `<<` literal matches the left-shift Op token by value
+# (`class << self` lexes as `class`, `<<`, `self` — the space before
+# `self` keeps `<<` a shift operator, not a heredoc opener).  The
+# receiver is `self` (the dominant idiom) or a bare `NAME`.  The
+# singleton alternative is listed FIRST so PEG tries it before the
+# `"class" NAME …` form (the `<<` after `class` disambiguates).
+class_statement  = "class" "<<" singleton_receiver { !"end" statement } "end"
+                 | "class" NAME [ "<" NAME ] { !"end" statement } "end" ;
+singleton_receiver = "self" | NAME ;
 module_statement = "module" NAME { !"end" statement } "end" ;
 # Phase 6g — blocks `do … end` and brace-blocks `method { … }`.
 method_with_block = ( NAME | KEYWORD ) [ LPAREN [ expression { COMMA expression } ] RPAREN ] block ;
 block        = do_block | brace_block ;
 do_block     = "do" [ block_params ] { !"end" statement } "end" ;
 brace_block  = LBRACE [ block_params ] { statement } RBRACE ;
-block_params = "|" NAME { COMMA NAME } "|" ;
+# Phase 21a (FC) — block-local variables.  After the regular block
+# parameters, an optional `;` introduces a list of *block-local*
+# variables: `{ |x; y, z| … }`.  These are fresh locals scoped to the
+# block body (they shadow any same-named outer binding and never bind
+# to an argument).  The `;` is a `Semicolon` token; the names after it
+# are ordinary `NAME` tokens, so the lowerer splits the pipe contents
+# at the semicolon: names before it are params, names after it are
+# block-locals (declared in the block's local scope but NOT added to
+# the parameter list).
+block_params = "|" NAME { COMMA NAME } [ ";" NAME { COMMA NAME } ] "|" ;
 # Phase 6j — control-flow keywords: `return`, `break`, `next`.
 return_statement = "return" [ expression ] ;
 break_statement  = "break"  [ expression ] ;
 next_statement   = "next"   [ expression ] ;
-params       = NAME { COMMA NAME } ;
+# Phase 11b (FC) — `redo` restarts the current loop iteration WITHOUT
+# re-evaluating the loop condition or advancing the iterator.  Unlike
+# `break`/`next`, `redo` never carries a value — it is a bare keyword.
+redo_statement   = "redo" ;
+# Phase 11c (FC) — `retry` re-executes the enclosing `begin` block from
+# the top (inside a `rescue` clause).  Like `redo`, it is a bare keyword
+# that never carries a value.
+retry_statement  = "retry" ;
+# Phase 24a (FC) — `alias new old` defines `new` as another name for the
+# existing method `old`.  The lexer already classifies `alias` as a Ruby
+# KEYWORD (matched here by VALUE), so no lexer change is needed.  Both
+# operands are bare method-name identifiers (NAME tokens); the symbol
+# forms (`alias :new :old`) are a deliberate follow-up slice.  Placed in
+# the `statement` alternation BEFORE `method_call`/`expression_stmt` so the
+# leading `alias` keyword wins — otherwise a bare `alias` would be matched
+# by the `KEYWORD` alternative of `factor` (via `expression_stmt`) and the
+# two name operands would be left unconsumed (same shadowing hazard the
+# Phase 23b `defined?` rule documents).
+alias_statement  = "alias" NAME NAME ;
+# Phase 24b (FC) — `undef name` removes the method `name` from the current
+# class/module.  Like `alias`, the lexer already classifies `undef` as a
+# Ruby KEYWORD (matched here by VALUE), so no lexer change is needed.  The
+# single operand is a bare method-name identifier (a NAME token); the
+# symbol form (`undef :name`) and the multi-name form (`undef a, b`) are
+# deliberate follow-up slices.  Placed in the `statement` alternation
+# BEFORE `method_call`/`expression_stmt` (right after `alias_statement`)
+# so the leading `undef` keyword wins — otherwise a bare `undef` would be
+# matched by the `KEYWORD` alternative of `factor` (via `expression_stmt`)
+# and the name operand would be left unconsumed (same shadowing hazard the
+# Phase 23b `defined?` and Phase 24a `alias` rules document).
+undef_statement  = "undef" NAME ;
+# Phase 6t — `yield` keyword.  Inside a method body, `yield` invokes
+# the block argument supplied by the caller (if any), forwarding the
+# given arguments to it.  All three surface forms supported:
+#
+#   yield                # bare — no args
+#   yield x              # parenless — one or more args
+#   yield x, y           # parenless — multiple args
+#   yield(x)             # parens — same
+#   yield(x, y)
+#   yield()              # parens, no args
+#
+# Placed in `statement` AFTER `next_statement` and BEFORE the catch-all
+# `multi_assignment` / `modifier_statement` / `assignment` /
+# `method_with_block` / `method_call` family so that `yield` (which the
+# lexer reclassifies as a KEYWORD token) doesn't accidentally fall
+# through to `method_call_no_paren` (which would treat it as a
+# keyword-led paren-less method call, losing the yield-specific
+# lowering).
+#
+# Args reuse `call_arg` (Phase 6s) so splat (`yield *arr`) and
+# double-splat (`yield **hsh`) work uniformly with method-call args.
+yield_statement = "yield" [ yield_args ] ;
+yield_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+           | call_arg { COMMA call_arg } ;
+# Phase 22d (FC) — `super` keyword.  Inside a method, `super` calls the
+# same-named method in the superclass.  Three surface forms, mirroring
+# `yield` exactly (and reusing `call_arg`, so splat/double-splat/
+# block-pass/forward args ride through uniformly):
+#
+#   super                # bare — "zsuper": forwards ALL of the current
+#                        #   method's arguments implicitly
+#   super()              # explicit EMPTY argument list (forwards nothing)
+#   super(x) / super x   # explicit args (parens or parenless)
+#
+# The bare-vs-`super()` distinction is semantically load-bearing in Ruby
+# (zsuper forwards the caller's args; `super()` forwards none), so the
+# lowerer keys on the PRESENCE of a `super_args` node: absent → bare
+# zsuper, present → explicit (even with zero call_args).
+#
+# Issue #59 (OOP-cascade unblock) — `super` is now an EXPRESSION, not a
+# statement.  The old `super_statement` (a `statement`-alternation member)
+# could parse only a stand-alone `super`, so `super + " tail"`, `x = super`
+# and `puts(super)` failed.  The dedicated `super_expr` production (spliced
+# into `factor`, see below) subsumes ALL forms; a stand-alone `super` line
+# now parses as `expression_stmt → … → factor → super_expr`, so
+# `super_statement` was removed from the `statement` alternation to avoid it
+# shadowing the expression form (a PEG match of the statement rule consumes
+# only `super` and cannot backtrack, leaving a trailing `+ 1` orphaned).
+# `super_args` is retained — `super_expr` reuses it verbatim.
+super_args = LPAREN [ call_arg { COMMA call_arg } ] RPAREN
+           | call_arg { COMMA call_arg } ;
+# Phase 6s — splat (`*args`) and double-splat (`**kwargs`) parameters.
+#
+# `params` previously was `NAME { COMMA NAME }`.  We now wrap each
+# parameter in a `param` rule that admits an optional leading `*` /
+# `**` prefix.  The lexer emits `*` as a single Star token (value
+# "*"), and the 1.8-baseline state machine already coalesces `**` into
+# one Name-typed token with value "**".  Both forms match here by
+# literal value.
+#
+# Multiple splats or double-splats per signature are syntactically
+# accepted but semantically illegal in Ruby; the SIR lowerer accepts
+# the first of each and flags duplicates as a deferred limitation
+# (v0 keeps the grammar permissive and pushes shape validation up).
+# Phase 22c (FC) — argument forwarding `...`.  Ruby 2.7+ lets a method
+# declare `def m(...)` and forward every argument (positional, keyword
+# and block) to an inner call with `n(...)`.  The lexer fuses `...` into
+# a single Name-typed token (value "...", shared with the exclusive
+# range operator — see `fuse_range_ops`).  Because `...` is Name-typed,
+# the `param = [ "*" | "**" ] NAME` branch WOULD greedily match it as a
+# parameter named "..." — so the bare `"..."` alternative is listed
+# FIRST to claim the token as a literal forwarding marker before the
+# `param` branch sees it.  Ordinary signatures (`def m(a, b)`,
+# `def m(*args)`) are unaffected: their first token is never `...`, so
+# the literal alternative fails and the `param` branch runs.  v0 lowering
+# drops the forwarding param (no Param node — `...` is a literal token
+# child, not a `param` node); the call-side `n(...)` marker carries the
+# forwarding semantics.
+params       = "..." | param { COMMA param } ;
+# Phase P7 (Ruby 1.0) — optional/default parameters `name = expr`.
+#
+# A `param` may now carry a trailing `= expression` default value, e.g.
+# `def f(a = 1)` or `def f(a, b = a + 1)`.  The default is an ordinary
+# `expression`, which the PEG parser stops at the next COMMA / RPAREN
+# (the default `a + 1` does not greedily swallow a following `, c`
+# because `expression` itself never matches a bare comma list).  Ruby
+# defaults are evaluated at call time and may reference EARLIER params
+# (`def f(a, b = a)` is legal Ruby), so the SIR lowerer evaluates the
+# default subtree in the param scope.  Splat (`*rest`) and double-splat
+# (`**kwrest`) params never carry a default; the grammar is permissive
+# here and the lowerer attaches `Param.default` only to ordinary params.
+#
+# Phase KW7 (Ruby 1.0 unblock) — keyword parameters `name:` / `name: expr`.
+#
+# A `param` may instead carry a trailing `COLON [ expression ]` making it a
+# KEYWORD parameter (matched by name at the call site, not by position):
+#   `def f(a:)`     → required keyword (no default)
+#   `def f(a: 1)`   → optional keyword (default `1`)
+# The trailing suffix is a THREE-WAY choice keyed on the token right after
+# NAME:
+#   COLON   → keyword param   (KW7 — this branch)
+#   EQUALS  → positional optional/default param (P7)
+#   nothing → positional required param
+# The COLON is the sole discriminator between a keyword param and a
+# positional-default param — `a:` vs `a = 1` are DIFFERENT constructs
+# (`a:` is bound by name, `a = 1` by position), so keeping the two suffix
+# branches disjoint on their opening token (COLON vs EQUALS) is what keeps
+# lowering unambiguous.
+#
+# Disambiguation from hash/symbol syntax (`NAME COLON` also opens a
+# `hash_entry` `k: v` and a `hash_pattern_pair` `k:`): those rules are only
+# reachable inside a `{ … }` hash literal or a `case/in` pattern, never
+# inside a parenthesised parameter list.  A `param` is reached ONLY from
+# `params`, which is reached ONLY from the `def`/lambda `LPAREN … RPAREN`
+# frame — so the `NAME COLON` here can never collide with a hash-entry
+# parse.  The optional trailing `expression` after COLON is what separates
+# required (`a:`) from optional (`a: 1`); a bare `NAME COLON` at the end of
+# the list (next token `,` / `)`) cleanly matches the no-expression form
+# (same optional-tail shape as `hash_pattern_pair`).
+#
+# The suffix alternation lists the COLON branch BEFORE the EQUALS branch;
+# the two are disjoint on their first token so order is not load-bearing,
+# but keeping keyword-first mirrors the call-side `call_arg` ordering below.
+param        = [ "*" | "**" ] NAME [ COLON [ expression ] | EQUALS expression ] ;
 if_statement = "if" expression { !"else" !"elsif" !"end" statement } { elsif_clause } [ else_clause ] "end" ;
 elsif_clause = "elsif" expression { !"else" !"elsif" !"end" statement } ;
 else_clause  = "else" { !"end" statement } ;
 unless_statement = "unless" expression { !"else" !"end" statement } [ else_clause ] "end" ;
 while_statement = "while" expression { !"end" statement } "end" ;
 until_statement = "until" expression { !"end" statement } "end" ;
-assignment   = NAME EQUALS expression ;
-method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPAREN ;
+# Phase 6u — `case … when … else … end`.
+#
+# Shape:
+#   case_statement = "case" expression { when_clause } [ else_clause ] "end" ;
+#   when_clause    = "when" expression { COMMA expression }
+#                          { !"when" !"else" !"end" statement } ;
+#
+# Reuses the existing `else_clause` rule (defined for if_statement)
+# so the else body parses the same way it does in `if … else … end`.
+#
+# Each `when_clause` may list multiple values (`when 1, 2, 3`); the
+# SIR lowerer expands them as an `||` chain inside the synthetic
+# `if` condition.  The result of a `case` expression is the value of
+# the matched `when` body (or `else` body, or NilLit) — matching
+# Ruby semantics.
+#
+# v0 deferred:
+#   - `when` doesn't accept ranges/regexes/class patterns (uses `==`
+#     instead of Ruby's `===`).  Phase 7d adds full `case/in`
+#     pattern matching with the proper match semantics.
+#   - `when *splat` argument splat in the value list — deferred
+#     (the grammar accepts only positional values via `expression`).
+case_statement = "case" expression { when_clause | in_clause } [ else_clause ] "end" ;
+when_clause    = "when" expression { COMMA expression } { !"when" !"in" !"else" !"end" statement } ;
+# Phase 7d — Ruby 3.0 case/in pattern matching.
+#
+# `case/in` is structurally similar to `case/when` — the same scrutinee
+# expression sits in front, followed by a sequence of clauses, each with
+# a body.  The difference is the pattern language: `when` does a simple
+# `==` (well, `===`) test against a value, while `in` introduces a
+# structural pattern that can bind locals on a successful match.
+#
+# Supported v0 patterns (sufficient for the most common use-cases):
+#   literal_pattern   :  NUMBER | STRING | symbol_literal | KEYWORD
+#                        (KEYWORD covers `nil` / `true` / `false`)
+#   binding_pattern   :  NAME — matches anything and binds the value
+#                        to that local
+#   array_pattern     :  LBRACKET [ pattern { COMMA pattern } ] RBRACKET
+#   hash_pattern      :  LBRACE [ hash_pattern_pair { COMMA hash_pattern_pair } ] RBRACE
+#   hash_pattern_pair :  NAME COLON [ pattern ]  — `name:` shorthand
+#                        binds; `name: <pattern>` matches sub-pattern
+#
+# Order matters: array/hash come first so their `[`/`{` openers shadow
+# the literal/binding forms; literal comes before binding so concrete
+# constants don't get swallowed as bindings.
+in_clause      = "in" pattern { !"when" !"in" !"else" !"end" statement } ;
+pattern        = array_pattern | hash_pattern | class_pattern | pin_pattern | literal_pattern | binding_pattern ;
+literal_pattern   = NUMBER | STRING | symbol_literal | KEYWORD ;
+binding_pattern   = NAME ;
+array_pattern     = LBRACKET [ ( splat_pattern | pattern ) { COMMA ( splat_pattern | pattern ) } ] RBRACKET ;
+hash_pattern      = LBRACE [ hash_pattern_pair { COMMA hash_pattern_pair } ] RBRACE ;
+hash_pattern_pair = NAME COLON [ pattern ] ;
+# Phase FC — splat element inside an array pattern.  `*rest` binds the
+# "rest" of the sequence; bare `*` matches it anonymously.  An array
+# pattern with a single splat (`[a, *mid, b]`) lowers structurally; the
+# two-splat *find* form (`[*, x, *]`) parses here but is lowered via the
+# `__pattern_match__` marker (a correct contiguous-window search is not
+# expressible inline without a new SIR search primitive).
+splat_pattern     = "*" [ NAME ] ;
+# Phase FC — pin pattern `^x`: matches when the scrutinee equals the
+# value of the already-bound local `x` (no new binding).  The `^` is the
+# unique opener, so placement among the literal/binding alternatives is
+# unambiguous.
+pin_pattern       = "^" NAME ;
+# Phase FC — class pattern `Foo(p, …)`: matches when the scrutinee is an
+# instance of `Foo` and its deconstructed positional elements match the
+# inner patterns.  Listed in `pattern` BEFORE `binding_pattern` so the
+# `NAME LPAREN` form wins; a bare constant `Foo` (no parens) still falls
+# through to `binding_pattern`.
+class_pattern     = NAME LPAREN [ pattern { COMMA pattern } ] RPAREN ;
+# Phase 6v — `begin … rescue … ensure … end`.
+#
+# Shape:
+#   begin_statement = "begin"
+#                     { !"rescue" !"ensure" !"end" statement }
+#                     { rescue_clause }
+#                     [ ensure_clause ]
+#                     "end" ;
+#   rescue_clause   = "rescue" [ exception_list ] [ "=>" NAME ]
+#                            { !"rescue" !"ensure" !"end" statement } ;
+#   exception_list  = NAME { COMMA NAME } ;
+#   ensure_clause   = "ensure" { !"end" statement } ;
+#
+# v0 deferred:
+#   - `else` clause inside begin (executes when no exception raised)
+#     is NOT supported — typical Ruby code uses ensure for cleanup.
+#   - retry / raise inside rescue body lowers like any other statement
+#     (the SIR validator may emit warnings for unrecognised `retry`).
+#   - Exception class hierarchy is NOT modelled — `rescue StandardError`
+#     and `rescue` (bare) lower identically.
+begin_statement = "begin" { !"rescue" !"ensure" !"end" statement } { rescue_clause } [ ensure_clause ] "end" ;
+# `rescue_clause` accepts either the bare form (`rescue`) or the
+# typed-with-binding form (`rescue ExceptionType[, OtherType] => var`).
+# The exception types and `=> var` MUST appear together — bare
+# `rescue ExceptionType` (no `=>`) would create grammar ambiguity with
+# the rescue body's first NAME-led statement (e.g. `rescue x = 2`
+# would parse `x` as an exception type, then fail at `=`).
+# v0 deferred: write `rescue ExceptionType => _` as a workaround for
+# bare exception-type rescue.
+rescue_clause   = "rescue" [ exception_list "=>" NAME ] { !"rescue" !"ensure" !"end" statement } ;
+exception_list  = NAME { COMMA NAME } ;
+ensure_clause   = "ensure" { !"end" statement } ;
+# Phase 6p — compound assignment (`x += 1`, `x ||= 1`, etc.).
+#
+# The lexer's `fuse_compound_assigns` post-pass folds `Op =` adjacent
+# token pairs into a single `Name`-typed token whose value is the
+# fused operator (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  The grammar
+# matches by literal value — same convention as `"=>"`, `"<="`,
+# `"&&"`, etc.
+#
+# `EQUALS` (token-type match) handles the plain `=` case; the literal
+# alternatives below handle each compound form.  Lowerer dispatches
+# on the operator token to decide between LetBinding/Assign of the
+# RHS (`=`) versus assign-of-binary-op (the compound forms).
+#
+# Note: `==`, `!=`, `<=`, `>=`, `===` are intentionally excluded —
+# those are comparison operators, not assignments, and are handled
+# at the `comparison` layer.  The fusion pass deliberately runs only
+# on Op tokens (Plus/Minus/Star/Slash) and the two Name-typed
+# logicals (`||`/`&&`) to avoid colliding with comparison ops which
+# the lexer fuses directly.
+assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "<<=" | ">>=" | "&=" | "|=" | "^=" | "||=" | "&&=" ) expression ;
+# Phase 7e — Ruby 3.0 rightward (single-line) assignment `expr => var`.
+#
+# Mirror image of the normal `var = expr` assignment: the value is on
+# the left, the binding name is on the right after `=>`.  In practice
+# it's nearly always used with the case/in pattern-match payload, but
+# Ruby 3.0 made the bare form a first-class statement.
+#
+# Placed AFTER `modifier_statement` (so `x = 1 if cond` still wins) and
+# BEFORE `assignment` (so `x = 1` falls through cleanly), and BEFORE
+# `expression_stmt` (otherwise `expr` alone would consume the entire
+# token stream before `=>` is seen).
+#
+# Conflict safety: `=>` is also the hash-rocket inside hash literals
+# (`{ "a" => 1 }`).  Rightward-assign is at the statement level — a
+# hash literal as a bare statement would parse as `expression_stmt`,
+# which sits later in the alternation; PEG backtracks cleanly because
+# rightward_assignment requires `=>` to come *after* a complete
+# expression at the statement boundary, not inside a `{...}` body.
+rightward_assignment = expression "=>" NAME ;
+# Phase 6l — method receiver chains.  `foo.bar`, `foo.bar.baz`,
+# `foo.bar(args)`, `foo(1).bar`, `foo.bar(args).baz(more)`, etc.
+#
+# Postfix design: a `dot_call` rule captures one `.method[(...)]` step;
+# `{ dot_call }` repetitions appended to both `factor` (so chains work
+# everywhere expressions go) and to `method_call` (so statement-level
+# `foo(1).bar` parses cleanly).
+#
+# Setter calls (`foo.bar = 1`) and bracket access (`arr[0]`) are
+# deliberately out of scope for this chunk — they get their own phases.
+# Issue #59 — the `KEYWORD` head is guarded with `!"super"` so a statement
+# `super(x, y)` / `super()` does NOT match here (which would mislower it as
+# an ordinary call to a method literally named `super`).  `super` in every
+# form now routes through `factor`'s `super_expr`; the guard hands the
+# `super` token off to `expression_stmt → … → super_expr` instead.  Every
+# other keyword-led call (`puts(1)`, value-keyword receivers) is unaffected.
+method_call  = ( NAME | !"super" KEYWORD ) LPAREN [ call_arg { COMMA call_arg } ] RPAREN { dot_call } ;
+dot_call     = "." ( NAME | KEYWORD ) [ LPAREN [ call_arg { COMMA call_arg } ] RPAREN ] [ block ] ;
+# Phase 15d (FC) — scope-resolution operator `Foo::Bar` (and chains
+# `A::B::C`).  The lexer emits `::` as a `Colon` token whose VALUE is
+# "::", so the grammar literal `"::"` matches it by value.  A
+# `scope_resolution` postfix mirrors `dot_call`: it captures one `::Name`
+# step and is appended to `factor`'s postfix alternation so a constant
+# path parses as `((Foo)::Bar)::Baz`.  The lowerer folds each step into a
+# qualified `Scope::Const` name.
+scope_resolution = "::" ( NAME | KEYWORD ) ;
+# Phase 6s — splat call arguments.  `f(*arr)` and `f(**hsh)` (and the
+# mixed form `f(1, *arr, **hsh, named: x)`) flow through here.  The
+# optional `[ "*" | "**" | "&" ]` prefix sits inside a single call_arg
+# slot, so positional, splat and block-pass args interleave naturally
+# on the COMMA separator.  Lowering wraps the prefixed forms in
+# `BuiltinCall("splat", …)` / `BuiltinCall("double_splat", …)` /
+# `BuiltinCall("block_pass", …)`.
+#
+# Phase 22b (FC) — block-pass argument `&blk`.  The lexer emits a lone
+# `&` as a Name-typed Op token (value "&"); the `&.` safe-nav fusion
+# only triggers when a `.` immediately follows, so `&blk` keeps the `&`
+# standalone.  There is no binary `&` rule in the expression hierarchy
+# (the chain is logical_or → logical_and → … → factor with no bitwise
+# layer), so admitting `&` as a call_arg prefix introduces no ambiguity.
+#
+# Phase 22c (FC) — forward-all argument `...`.  `n(...)` forwards every
+# argument received by an enclosing `def m(...)`.  No call_arg grammar
+# change is needed: the lexer fuses `...` into a single Name-typed token
+# (value "..."), and `factor`'s `NAME` alternative already matches it as
+# a bare-name expression — so `n(...)` parses as a call_arg whose
+# expression is the bare name `...`.  A beginless exclusive-range
+# argument (`m(...5)`) instead parses as a `range` (the `... 5` form),
+# keeping the two disjoint at the parse-tree level.  Lowering inspects
+# the lowered operand: a bare `VarRef { name: "..." }` becomes
+# `BuiltinCall("forward_args", [])`; anything else (incl. ranges) is
+# left untouched.  (Putting a literal `"..."` alternative here would be
+# dead — the NAME branch shadows it — and listing it first would break
+# `m(...5)` since the parser does not backtrack across the call_arg
+# boundary once `...` is consumed.)
+# Phase KW7 (Ruby 1.0 unblock) — keyword argument `name: expr`.
+#
+# `f(a: 1)` passes `1` to the callee's keyword parameter `a` BY NAME.  A
+# new leading alternative `NAME COLON expression` captures it and lowers to
+# an `Expr::KeywordArg { name, value }` — NOT a trailing hash literal.
+#
+# Why the keyword branch must be listed FIRST: without it, `f(a: 1)` would
+# funnel `a` into the `expression` branch, which parses `a` as a bare
+# `factor` and then STOPS (the trailing `{ dot_call | scope_resolution }`
+# postfix accepts only `.`/`::`, not `:`), leaving `: 1` unconsumed and the
+# RPAREN match failing.  (Real Ruby treats `f(a: 1)` as sugar for a trailing
+# keyword — equivalently a trailing implicit hash — but SIR models it as a
+# first-class `KeywordArg`, so we produce the keyword node directly rather
+# than a `hash_literal`.)  Listing `NAME COLON expression` before the
+# `[ "*" | "**" | "&" ] expression` branch makes the keyword form win
+# whenever a bare `NAME` is immediately followed by a COLON; every other
+# argument shape (a positional whose expression merely *starts* with a NAME
+# that is NOT followed by a colon, a splat, a block-pass) falls through to
+# the second branch unchanged.
+#
+# Disjointness: the two branches share a `NAME` opener, but the SECOND token
+# decides — COLON selects the keyword branch, anything else backtracks into
+# the positional `expression` branch.  A hash-literal argument written with
+# braces (`f({ a: 1 })`) still parses via the `expression` branch (its first
+# token is `{`, not a bare `NAME`), so explicit-hash args are unaffected.
+call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # Phase 6h — paren-less method call.  Idiomatic Ruby allows
 # `puts 1, 2` (no parens) when the call has at least one argument.
 #
@@ -65,7 +584,10 @@ method_call  = ( NAME | KEYWORD ) LPAREN [ expression { COMMA expression } ] RPA
 # greedily — matching idiomatic Ruby.  `puts(1) + 2`, by contrast,
 # matches `method_call` first and leaves `+ 2` for downstream rules
 # (same as existing behaviour pre-6h).
-method_call_no_paren = ( NAME | KEYWORD ) expression { COMMA expression } ;
+# Issue #59 — `!"super"` guard mirrors `method_call`: a parenless
+# `super x` at statement level routes to `super_expr` (via expression_stmt),
+# not to a spurious paren-less call to a method named `super`.
+method_call_no_paren = ( NAME | !"super" KEYWORD ) expression { COMMA expression } ;
 expression_stmt = expression ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
 #
@@ -87,16 +609,215 @@ expression_stmt = expression ;
 # The literal matchers below (`"<"`, `">="`, etc.) match by *value*,
 # not type, so this works transparently — same trick `hash_entry` uses
 # for `"=>"`.
-expression   = sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
+# Phase 6m — logical operators `&&`, `||`, `and`, `or`, `not`, `!`.
+#
+# Inserted ABOVE the comparison layer so logical chains operate on
+# whole comparisons:
+#
+#   expression   = logical_or
+#   logical_or   = logical_and { ( "||" | "or" ) logical_and }
+#   logical_and  = logical_not { ( "&&" | "and" ) logical_not }
+#   logical_not  = ( "!" | "not" ) logical_not | comparison
+#   comparison   = sum { CMP_OP sum }    (the pre-6m `expression` body)
+#
+# Precedence: `||`/`or` < `&&`/`and` < `!`/`not` < comparison.  This
+# matches the **symbol** form precedence (`&&`/`||`/`!`).  Real Ruby
+# gives the keyword form (`and`/`or`/`not`) a *lower* precedence than
+# even assignment — they're typically used as control-flow connectors
+# (`x.save or raise`).  v0 collapses both forms onto the same precedence
+# level for simplicity; if a Ruby program mixes them in a way that
+# depends on the difference, it'll be flagged for a follow-up phase
+# (we don't have any such program in the test corpus today).
+#
+# Left-associativity: `a || b || c` folds as `(a || b) || c`,
+# matching `+`/`-` and Ruby's actual semantics.
+# Phase 6n — range expressions `a..b` (inclusive) and `a...b` (exclusive).
+#
+# Precedence: range is OUTER over `logical_or` because Ruby's `..`/`...`
+# bind *looser* than `||`.  So `a || b .. c || d` parses as
+# `(a || b) .. (c || d)` — exactly what you'd expect.
+#
+# Shape: `range = logical_or [ ( "..." | ".." ) logical_or ]`.  The
+# zero-or-one repetition means a bare `logical_or` passes through
+# transparently (no range), while a single range op binds exactly two
+# operands.  Range is NOT chainable in Ruby — `1..5..10` is a parse
+# error — so the optional rather than zero-or-more form is correct.
+#
+# Note on token typing: the lexer's `fuse_range_ops` fuses two `.`
+# tokens into a single `Name`-typed token with value `..` (and three
+# into `...`).  Era ≥ 2.6 sets an `endless` flag on `..`/`...` tokens
+# followed by a closer — but for v0 we treat both ends as required.
+# Endless ranges (`(1..)`, `arr[2..]`) and beginless ranges (`(..5)`)
+# are deferred to a follow-up phase.
+#
+# Operator alternation lists `"..."` before `".."` defensively, but
+# the lexer already pre-fuses the two forms into distinct tokens so
+# the order is not actually significant.
+#
+# Phase 10c — endless ranges (`1..`, `1...`, `(1..)`, `arr[2..]`).  The
+# trailing operand is now ITSELF optional: `[ ( "..." | ".." ) [ logical_or ] ]`.
+# When the range operator is present but no `logical_or` follows (the
+# next token is a closer — `)`, `]`, `,`, newline, or EOF — which cannot
+# begin a `logical_or`), the optional cleanly matches nothing and the
+# node carries exactly one operand plus the op token: an endless range.
+# A bare `logical_or` (no op) still passes through; `1..5` still binds
+# two operands.
+#
+# Phase 10d — beginless ranges (`..5`, `...5`, `(..5)`, `arr[..2]`).  A
+# beginless range LEADS with the range op (no left operand), so it needs
+# its own production placed FIRST in the alternation:
+#   range = ( "..." | ".." ) logical_or
+#         | logical_or [ ( "..." | ".." ) [ logical_or ] ] ;
+# The two alternatives are disjoint on their first token — a beginless
+# range starts with `..`/`...` (a Name token from `fuse_range_ops`),
+# while the normal/endless form starts with a `logical_or`, which can
+# never begin with `..`.  So no ambiguity and no backtracking hazard.
+# The beginless alt requires a trailing `logical_or` (the end operand);
+# a lone `..` with nothing on either side is not valid Ruby.
+# Phase 6o — ternary `cond ? a : b`.
+#
+# Precedence: ternary sits ABOVE range (looser than `..`/`...`)
+# and below assignment.  In Ruby:
+#   a..b ? c : d         parses as  (a..b) ? c : d
+#   a = b ? c : d        parses as  a = (b ? c : d)
+# Our `assignment` rule is statement-level (not in the expression
+# hierarchy), so we only need to slot ternary above range:
+#
+#   expression = ternary
+#   ternary    = range [ "?" expression ":" expression ]
+#
+# Right-associativity (`a ? b : c ? d : e` → `a ? b : (c ? d : e)`)
+# falls out naturally because the false-branch recurses into
+# `expression` (which is `ternary` at the top).
+#
+# Colon ambiguity note: `:foo` opens a symbol literal in `factor`.
+# But by the time the ternary `:` is reached, the true-branch
+# (`b` in `a ? b : c`) has already completed its `factor` parse —
+# control has unwound back to the ternary rule, so the `:` it
+# consumes is the ternary separator, not a symbol opener.
+expression   = ternary ;
+ternary      = range [ "?" expression ":" expression ] ;
+range        = ( "..." | ".." ) logical_or | logical_or [ ( "..." | ".." ) [ logical_or ] ] ;
+logical_or   = logical_and { ( "||" | "or" ) logical_and } ;
+logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;
+# `logical_not` uses `{ }` (zero-or-more) instead of right-recursive
+# alternation.  Functionally equivalent for parsing — `!!x` matches as
+# two leading `!` tokens then a `comparison` — but more parser-friendly:
+# the recursive `(...) logical_not | comparison` shape was causing
+# backtracking issues when statements like `a || b` lived inside a
+# `def` body (the alternation didn't unwind cleanly).
+logical_not  = { ( "!" | "not" ) } comparison ;
+comparison   = sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
 sum          = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
 # Phase 6k — unary minus.  New `factor` alternative AFTER literals/names
 # so they win first.  Right-recursive: `--5` parses fine.  Precedence:
 # tighter than binary `+ -` (since `unary_minus` lives inside `factor`),
 # so `-5 + 3` parses as `(-5) + 3`.
-factor       = NUMBER | STRING | NAME | KEYWORD | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ;
+# Phase 6l — `method_call` placed FIRST in factor's atom alternation so
+# `foo(1).bar` in expression position parses as `(foo(1)).bar` instead of
+# leaving `(1).bar` unconsumed.  When no parens follow the name, the
+# method_call alternative fails (requires LPAREN) and we fall through to
+# the bare-NAME branch.
+#
+# The bare `KEYWORD` atom is what lets value-keywords `nil`/`true`/`false`/
+# `self` stand alone as expressions (e.g. `x = nil`, `puts self`).  But the
+# lexer tags EVERY reserved word as a `KEYWORD` token, so an unguarded
+# `KEYWORD` atom will happily match a *structural* keyword too — and that
+# silently corrupts block bodies.  Worked example:
+#
+#     def f(a)
+#       a
+#     end
+#
+# The body statement `a` funnels into `method_call_no_paren` (`NAME
+# expression`).  Its argument `expression` reaches this `factor`, where an
+# unguarded `KEYWORD` cheerfully consumes the `end` that was meant to close
+# the `def`.  The def's terminator is gone → `def_statement` fails to close
+# and the whole method is mis-parsed (no `def_statement` node at all).  The
+# same swallow breaks any block whose final statement is a bare identifier
+# (`while … a end`, `class … a end`, an `if` arm, …) and the optional
+# argument of `return`/`break`/`next`/`yield`.
+#
+# Fix: forbid the bare-`KEYWORD` atom from matching the block-terminator /
+# clause-separator keywords.  These never denote a *value*, so excluding
+# them costs nothing and stops the swallow at the root — one guard repairs
+# every block body and every optional-expression statement at once.  Value
+# keywords (`nil`/`true`/`false`/`self`) are untouched, so `puts nil` etc.
+# still parse.  The `!"…"` lookaheads only peek; they consume nothing.
+# Issue #59 (OOP-cascade unblock) — `super` as an EXPRESSION.
+#
+# Phase 22d gave `super` a statement-only form (`super_statement`).  But
+# `super` is a *value-producing* keyword: `x = super`, `super + " tail"`,
+# `puts(super)` all use its return value in expression position.  A
+# dedicated `super_expr` production is spliced into `factor` FIRST (before
+# the bare `NAME`/guarded-`KEYWORD` atoms) so the leading `super` keyword
+# is claimed here — otherwise the guarded `KEYWORD` atom would match the
+# bare `super` token and leave any `(args)` / parenless args dangling
+# (the exact factor-KEYWORD swallow hazard documented on the `KEYWORD`
+# atom below, and why `defined?`/`alias`/`undef` are handled specially).
+#
+# `super` is intentionally NOT added to the factor `KEYWORD`-guard
+# exclusion list: unlike `end`/`rescue`/`else`/… (which never denote a
+# value and must stay OUT of expressions so block bodies close), `super`
+# DOES denote a value and belongs IN expressions.  Handling it via its
+# own production — rather than relaxing the guard — keeps the arg-carrying
+# forms (`super(x)`, `super x`) intact while the guard continues to
+# protect block terminators.
+#
+# The argument forms reuse `super_args` (Phase 22d) verbatim, so
+# `super()`, `super(x)` and `super x` in expression position lower the
+# same way they do as statements.  A bare `super` (no `super_args`) is the
+# zsuper form; the lowerer keys on the presence of the `super_args` node
+# exactly as `super_statement` does.
+#
+# Precedence note: a parenless `super x + 1` binds as `super(x + 1)`
+# because `super_args`' parenless branch pulls a whole `call_arg`
+# (→ `expression`) greedily — matching `yield x + 1` and idiomatic Ruby.
+# To add to the *result* of a bare `super`, parenthesise the zsuper form
+# is not required — `super + 1` has no `super_args` (the `+` cannot begin
+# a `call_arg`/`LPAREN`), so it parses as bare-`super` then the enclosing
+# `sum` applies `+ 1` to the produced value.
+super_expr   = "super" [ super_args ] ;
+factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
+# Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
+#
+# Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter
+# list is parenthesised and BEFORE the block; the body is a brace_block
+# or do_block.  v0 reuses the existing `params` rule (Phase 6s aware,
+# so splat is supported in arrow params) and the existing `block` rule
+# (which also admits a redundant `|...|` block_params header — we
+# ignore that case in lowering).
+#
+# Place in `factor` BEFORE the bare NAME / KEYWORD alternatives so that
+# the leading `->` literal wins (NAME alone can't start with `-`, but
+# the literal match is checked first regardless).
+#
+# `lambda { … }` and `proc { … }` are already handled by the existing
+# `method_with_block` rule (no new grammar needed — they're just NAME +
+# brace_block calls).  The SIR lowerer marks both as
+# `BuiltinCall("lambda", …)` via `ruby_builtin_effects` to give
+# downstream emitters a single closure-construction shape.
+lambda_literal = "->" [ LPAREN [ params ] RPAREN ] block ;
 unary_minus  = MINUS factor ;
-symbol_literal = COLON ( NAME | KEYWORD | STRING ) ;
+# Phase 23b — Ruby `defined?` operator.  `defined?(expr)` / `defined? expr`
+# returns a description string of the operand (or nil if undefined); the
+# operand is never raised on.  The lexer emits `defined?` as a single
+# KEYWORD token (trailing `?` included), so we match it by VALUE.  The
+# operand is a `factor`, which covers both the parenthesised form
+# (`defined?(x)` → `LPAREN expression RPAREN`) and the bare tight form
+# (`defined? x` → NAME).  Placed FIRST in the `factor` alternation so the
+# leading `defined?` keyword wins over the bare `KEYWORD` alternative
+# (which would otherwise match `defined?` alone and leave the operand
+# unconsumed).
+defined_expression = "defined?" factor ;
+# Phase 15d (FC) — the colon is matched by the literal ":" (by VALUE)
+# rather than the COLON token reference (by TYPE).  The lexer emits both
+# `:` and `::` as `Colon`-typed tokens distinguished only by value, so a
+# by-type match would let `symbol_literal` swallow the `::` of a
+# scope-resolution (`Foo::Bar`).  Matching the literal ":" keeps symbols
+# to the single-colon form and frees `::` for `scope_resolution`.
+symbol_literal = ":" ( NAME | KEYWORD | STRING ) ;
 array_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
 hash_literal = LBRACE [ hash_entry { COMMA hash_entry } ] RBRACE ;
-hash_entry   = NAME COLON expression | expression "=>" expression ;
+hash_entry   = NAME COLON expression | NAME COLON | expression "=>" expression ;

@@ -1,0 +1,21 @@
+{
+  "hash": "68dbd8695b0a25c922cfab29e4145f5a910abb23835d26b539ba1ed05fd420de",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23436923/",
+  "title": "Weight loss / hypermetabolism in pheochromocytoma (energy metabolism literature, via search synthesis)",
+  "interned_at": "",
+  "content": "Catecholamine overproduction in pheochromocytoma affects basal metabolism, resulting in weight loss despite normal food intake. Resting energy expenditure (REE) measured in pheochromocytoma patients was 10.4% higher than the predicted value, which explains the metabolic basis for weight loss. The prevalence of weight loss as a specific presenting symptom is not explicitly quantified in the available literature.",
+  "citations": [
+    {
+      "start": 294,
+      "end": 414,
+      "quote": "The prevalence of weight loss as a specific presenting symptom is not explicitly quantified in the available literature.",
+      "used_for": "weight_loss(5kg_unintended_weeks)->pheochromocytoma"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "No primary diagnostic-accuracy study reporting weight-loss sens/spec/LR/prevalence with an N exists; chain cannot reach a diagnostic root.",
+      "interned_hash": ""
+    }
+  ]
+}

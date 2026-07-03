@@ -109,8 +109,8 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `cmp_ge`       | `if_icmplt +7; iconst_1; goto +4; iconst_0`               |
 | `label`        | Backpatch target — no bytes emitted                       |
 | `jmp`          | `goto <offset>` + backpatch fixup                         |
-| `jmp_if_true`  | `iload cond; ifne <offset>` + backpatch                   |
-| `jmp_if_false` | `iload cond; ifeq <offset>` + backpatch                   |
+| `jmp_if_true`  | `iload cond; ifne <offset>` (i32) / `lload; lconst_0; lcmp; ifne` (i64) + backpatch |
+| `jmp_if_false` | `iload cond; ifeq <offset>` (i32) / `lload; lconst_0; lcmp; ifeq` (i64) + backpatch |
 | `ret`          | `iload/lload/fload/dload result; ireturn/lreturn/…`       |
 | `ret_void`     | `return`                                                  |
 | `call`         | `iload args…; invokestatic CP#; istore dest`              |
@@ -119,6 +119,60 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `type_assert`    | nop (erased at lowering time)                               |
 | `alloc_closure`  | `newarray T_LONG; lastore (×N); astore dest` — LANG36       |
 | `call_closure`   | `newarray T_LONG; lastore (×M); invokestatic __callClosure` — LANG36 |
+| `alloc_bytes`    | no bytecode — the tape is the static `env/BFRuntime.__tape : [B` (LM-J) |
+| `load_byte`      | `getstatic __tape; <idx>; baload; sipush 0xFF; iand` (+`l2i`/`i2l` for i64) — LM-J |
+| `store_byte`     | `getstatic __tape; <idx>; <val>; bastore` (+`l2i` for i64) — LM-J |
+| `call_builtin putchar`/`getchar` | `invokestatic env/BFRuntime.putchar(I)V` / `getchar()I` — Brainfuck `.`/`,` |
+| `alloc_array`    | `<count>; [l2i]; newarray T_<elem>; astore dest` — native `int[]`/`long[]`/`double[]` (E5) |
+| `array_get`      | `aload handle; <idx>; [l2i]; <T>aload; store dest` — native bounds check (E5) |
+| `array_set`      | `aload handle; <idx>; [l2i]; <val>; <T>astore` — native bounds check (E5) |
+| `array_len`      | `aload handle; arraylength; [i2l]; store dest` — E5 |
+| `str_const`      | `ldc CONSTANT_String; astore dest` — ASCII literal-output foothold (E4) |
+| `str_concat`     | `aload a; aload b; invokevirtual java/lang/String.concat(String); astore dest` — literal append foothold (E4) |
+| `str_len`        | `aload s; invokevirtual java/lang/String.length()I; [i2l]; store dest` — literal length foothold (E4) |
+| `str_index`      | `aload s; <idx>; invokevirtual java/lang/String.charAt(I)C; [i2l]; store dest` — literal index foothold (E4) |
+| `str_eq`         | `aload a; aload b; invokevirtual java/lang/String.equals(Object)Z; [i2l]; store dest` — literal equality foothold (E4) |
+| `str_cmp`        | `aload a; aload b; invokevirtual java/lang/String.compareTo(String)I; invokestatic java/lang/Integer.signum(I)I; [i2l]; store dest` — literal ordering foothold (E4) |
+| `print_str`      | `getstatic System.out; aload s; invokevirtual PrintStream.print(String)` — E4 |
+
+The byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`) are how Brainfuck runs on
+the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload`/`bastore`
+index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` call the
+`env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
+
+The E4 string rows are intentionally a narrow literal-output slice: Dartmouth BASIC
+`PRINT "HELLO"` now runs on real `java`, and Twig `(string-length "HELLO")`
+uses `String.length()`, `(string-ref "ABC" 1)` uses `String.charAt(I)`,
+`(string=? "HELLO" "HELLO")` uses `String.equals(Object)`, and
+`(string<? "ALPHA" "BETA")` uses `String.compareTo(String)`, while
+`(string-length (string-append "AB" "CDE"))` uses `String.concat(String)` plus
+`String.length()`. Non-literal string values remain rejected until the JVM
+backend owns the shared UTF-8 byte semantics.
+
+**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): narrow **unsigned**
+integers (`u4`/`u8`/`u16`/`u32`) use the JVM **`int` model** — `int` locals, `I` descriptors,
+the int opcodes (`iadd`/`iand`/…), and the result masked with `iconst/sipush/ldc <mask>;
+iand` — so `200u8+100u8=44` and `~0u8=255`. JVM `int` ops already wrap mod-2³², so `u32`/`i32`
+need no mask. A positive mask + `iand` is used (not `i2b`/`i2s`, which sign-extend) to keep
+the unsigned widths unsigned.
+
+A scalar program reaches this backend through `lang_aot::concretize_scalar_any_for_jvm`,
+which narrows the module's `i64`→`i32` *before* lowering (the in-repo `jvm-simulator` is
+32-bit and a scalar entry must `ireturn`). So a narrow op already meets `i32` operands — the
+int op + int mask are operand-consistent. *(v0.13.0 briefly used a `long` register model,
+like wasm; that was reverted in v0.13.1 because it conflicts with `concretize` — it left the
+narrow op `long` while the consts/return were `int`, producing unverifiable bytecode. wasm
+keeps genuine `i64` operands with no concretize-to-i32, so its i64 model stands; the JVM is
+the odd one out because of the 32-bit-simulator concretization.)*
+
+**Narrow mask on the `long` model** (LANG-FULL O2, v0.14.0): a *printing* program (Oct's
+`out`, BASIC's `PRINT`) is **not** concretized — it keeps the `i64`/`long` model so its value
+can reach `print_i64`. Oct's only integer type is `u8`, so a printing Oct program emits a
+narrow-hinted op (`200u8 + 100u8`, `~0u8`) over **`long`** operands. There the int op + int
+mask would be unverifiable, so `narrow_op_over_long` keeps the op on the long model
+(`ladd`/`lxor`/…) and the mask becomes `i2l; land` (the masks are positive, so widening
+zero-extends). It keys off the actual operand types, so concretized int-model programs are
+untouched. This is what makes Oct `200u8+100u8=44` / `~0u8=255` run on real `java`.
 
 ## Closures (LANG36)
 
@@ -185,6 +239,14 @@ for non-closure paths (unlike the BEAM backend).
 | `f64`                                 | `D` (double)   | 2          |
 | `void`                                | `V` (void)     | 0          |
 
+A **comparison op** (`cmp_eq`/…/`cmp_ge`) is special-cased to an `int` dest slot
+regardless of its `type_hint`: the hint is the *operand* width, but a comparison
+always produces a 0/1 `int` (stored with `istore`). Without this, a comparison
+over `i64` operands got a `Long` slot, so a later `jmp_if_false` read it with the
+long guard (`lload; lconst_0; lcmp`) while it was `istore`d as int → the verifier
+rejected an "uninitialized register pair" (LANG-FULL BA-JVM-1, the BASIC `IF`/
+`FOR` programs over their i64 value model).
+
 ## Register allocation
 
 Variables are allocated to JVM local variable slots via a deterministic
@@ -196,6 +258,12 @@ two-pass scan:
 
 The same variable name always maps to the same slot within one function.
 This is a simple linear scan — no liveness analysis, no spilling.
+
+A `mov` whose source and destination slots differ in width **bridges** them with
+`i2l`/`l2i`: e.g. a bool/int comparison result moved into a `long` accumulator
+(Oct's `&&`/`||` short-circuit over its i64 value model) widens with `i2l` before
+`lstore`, so the long slot's second half is initialised — otherwise a later
+`lload` of it fails JVM verification ("uninitialized register pair").
 
 ## Label/jump backpatching
 

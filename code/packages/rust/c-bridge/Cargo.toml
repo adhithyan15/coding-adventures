@@ -1,0 +1,47 @@
+# c-bridge — Stable C ABI exposing the matrix-cpu execution engine
+# to any language with C FFI (Ruby, Lua, Go, Swift, Kotlin, Crystal,
+# Nim, Zig, Wasm hosts, ...).
+#
+# Architecture: matches the python-bridge / node-bridge / ruby-bridge
+# pattern in the workspace.  Zero new transitive deps — uses only the
+# already-vetted matrix-ir / matrix-ir-json / matrix-runtime / matrix-cpu
+# stack plus the workspace json libs.
+#
+# v0.1 exposes a single C function pair:
+#
+#   /* Returns a malloc'd null-terminated JSON envelope string with
+#      the same shape `matrix_rust_python.run_graph_on_cpu` returns.
+#      Caller MUST free the returned pointer via matrix_cpu_free_string.
+#      Returns NULL on error and writes the error message into *err_out
+#      (also caller-frees via matrix_cpu_free_string). */
+#   char* matrix_cpu_run_graph(const char* envelope_json,
+#                              char** err_out);
+#
+#   void matrix_cpu_free_string(char* s);
+#
+# Any language that can call C can drive matrix-cpu graphs through this
+# pair.  See the README for per-language usage examples.
+
+[package]
+name = "c-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Stable C ABI for matrix-cpu — drive Rust graph execution from any language with C FFI"
+license = "MIT"
+
+[lib]
+# cdylib: produce a .so / .dylib / .dll that any C-FFI-capable language
+# can link.  Also rlib so workspace tests can call the Rust API
+# directly without spawning a process.
+crate-type = ["cdylib", "rlib"]
+name = "matrix_c_bridge"
+
+[dependencies]
+matrix-ir                          = { path = "../matrix-ir" }
+matrix-ir-json                     = { path = "../matrix-ir-json" }
+matrix-runtime                     = { path = "../matrix-runtime" }
+matrix-cpu                         = { path = "../matrix-cpu" }
+compute-ir                         = { path = "../compute-ir" }
+executor-protocol                  = { path = "../executor-protocol" }
+coding-adventures-json-value       = { path = "../json-value" }
+coding-adventures-json-serializer  = { path = "../json-serializer" }

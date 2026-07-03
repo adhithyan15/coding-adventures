@@ -1,0 +1,8 @@
+{
+ "check_id": 88,
+ "idx": 38,
+ "slot": "applies_for_transit_pass",
+ "claimed_value": true,
+ "scenario": "Walter is registered as legally blind with the state registry. He applies for the Public Transit Pass.",
+ "cited_span": "He applies for the Public Transit Pass."
+}

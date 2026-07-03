@@ -1,0 +1,53 @@
+{
+  "version": "1.1.0",
+  "description": "mini-sqlite conformance fixture suite — Level 0 (fixtures 01–16) and Level 1 (fixtures 17–24)",
+  "fixtures": [
+    "fixtures/01-create-select.json",
+    "fixtures/02-qmark-binding-insert.json",
+    "fixtures/03-projection-aliases.json",
+    "fixtures/04-where-filtering.json",
+    "fixtures/05-order-by-limit-offset.json",
+    "fixtures/06-aggregates.json",
+    "fixtures/07-update-delete.json",
+    "fixtures/08-transaction-commit.json",
+    "fixtures/09-transaction-rollback.json",
+    "fixtures/10-error-wrong-param-count.json",
+    "fixtures/11-error-unknown-table.json",
+    "fixtures/13-drop-table.json",
+    "fixtures/14-executemany.json",
+    "fixtures/15-fetchone-fetchmany.json",
+    "fixtures/16-null-handling.json",
+    "fixtures/17-null-aggregate-semantics.json",
+    "fixtures/18-string-functions.json",
+    "fixtures/19-math-functions.json",
+    "fixtures/20-limit-edge-cases.json",
+    "fixtures/21-distinct-aggregate.json",
+    "fixtures/22-string-concat-null.json",
+    "fixtures/23-null-in-order-by.json",
+    "fixtures/24-having-aggregate.json"
+  ],
+  "op_types": {
+    "execute": "Call connection.execute(sql, params?) — no result expected",
+    "executemany": "Call connection.executemany(sql, param_seq) — no result expected",
+    "query": "Call cursor.execute(sql, params?), then cursor.fetchall(); compare columns and rows",
+    "fetchone_test": "Call cursor.execute(sql); call fetchone() twice; compare each row",
+    "fetchmany_test": "Call cursor.execute(sql); call fetchmany(size) twice; compare each batch",
+    "fetchall_test": "Call cursor.execute(sql); call fetchall(); compare all rows",
+    "fetchall_empty_test": "Call cursor.execute(sql); call fetchall(); expect empty result",
+    "commit": "Call connection.commit()",
+    "rollback": "Call connection.rollback()",
+    "expect_error": "Call connection.execute(sql, params?); expect an exception of error_type",
+    "connect_expect_error": "Call connect(database); expect an exception of error_type"
+  },
+  "error_types": {
+    "ProgrammingError": "Wrong parameter count, invalid SQL syntax, or other client-side misuse",
+    "OperationalError": "Table not found, database locked, or other runtime SQL error",
+    "NotSupportedError": "Feature not supported at this level (e.g. file-backed connections at Level 0)"
+  },
+  "type_notes": [
+    "NULL in expected_rows is the language-native null/nil/None/null value",
+    "Numeric values in expected_rows are integers unless stated otherwise",
+    "Column name comparison is case-insensitive: 'Name' and 'name' both match",
+    "Row order is significant only when ORDER BY is present in the query"
+  ]
+}

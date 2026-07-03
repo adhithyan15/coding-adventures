@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.3.0 — 2026-05-29
+
+**Track J1 — Taylor-series-expansion fallback for limit evaluation.**
+
+### Added
+
+- New module `cas_limit_series.series_limit` exporting
+  `try_series_limit(expr, var, point, *, max_order=12)`. Computes the
+  limit of an `f(x) / g(x)` quotient by Taylor-expanding numerator and
+  denominator at `point` and reading off the leading-order coefficients.
+- Supports `sin`, `cos`, `tan`, `exp`, `log(1+u)`, `Pow` (non-negative
+  and `-1` integer exponents), polynomial arithmetic. Uses exact
+  `fractions.Fraction` math throughout.
+- Internal `Series` class implements truncated-power-series arithmetic
+  (add, sub, mul, neg, reciprocal-of-nonzero-constant, integer power
+  by repeated squaring, composition with zero-constant inner series).
+- Order iteration: starts at `N = 4`, bumps by 2 up to `N = 12` if the
+  leading coefficient hasn't been resolved.
+- Wired into `limit_advanced.py`: when L'Hôpital comes back with an
+  unevaluated `Limit(...)` for a 0/0 form at a finite point, the
+  Taylor fallback is consulted before returning. Also fires for 0/0
+  forms when no `diff_fn` is supplied.
+
+### Acceptance cases (all close exactly)
+
+| Limit | Value |
+|---|---|
+| `lim_{x→0} (sin(x) − x)/x³` | `−1/6` |
+| `lim_{x→0} (1 − cos(x))/x²` | `1/2` |
+| `lim_{x→0} (exp(x) − 1 − x)/x²` | `1/2` |
+| `lim_{x→0} (tan(x) − x)/x³` | `1/3` |
+| `lim_{x→0} (log(1+x) − x)/x²` | `−1/2` |
+| `lim_{x→0} (sin(x) − x)/(exp(x²) − 1)` | `0` (p=3 > q=2) |
+
+### Changed
+
+- `test_phase20.py::test_no_diff_fn_indeterminate` now asserts that
+  `sin(x)/x` closes to `1` when `diff_fn` is absent (previously the
+  test expected an unevaluated `Limit(...)`; Taylor closes it without
+  any differentiation).
+
+### Bounds
+
+- Hard ceiling `max_order = 12` keeps polynomial multiplication
+  bounded by O(N²).
+- No recursion in the order loop — fixed number of iterations.
+- No `eval` of any user-controlled string anywhere.
+
+## 0.2.2 - 2026-06-06
+
+### Added
+
+- Limits at infinity now recognise bounded numerators divided by diverging
+  denominators. This closes MACSYMA-style cases such as `limit(sin(x)/x, x,
+  inf)` and `limit(cos(x)/(x^2+1), x, minf)` to exact `0` instead of falling
+  through to an unevaluated `Limit(...)`.
+
 ## 0.2.1 — 2026-05-14
 
 **Bug fix: `ZeroDivisionError` from direct substitution now routes to L'Hôpital.**

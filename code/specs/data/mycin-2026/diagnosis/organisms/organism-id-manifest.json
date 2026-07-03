@@ -1,0 +1,222 @@
+{
+  "kind": "organism-id",
+  "clauses": {
+    "prior_s_pneumoniae": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.51,
+      "byte_quote": "The most common pathogens were Streptococcus pneumoniae (51 percent of episodes) and Neisseria meningitidis (37 percent).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15509818/"
+    },
+    "prior_n_meningitidis": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.139,
+      "byte_quote": "As per Thigpen etal. out of the 1670 cases reported in the U.S. during 2003\u20132007, S. pneumoniae was the predominant infective species (58.0%), followed by GBS (18.1%), N. meningitidis (13.9%), H. influenzae (6.7%), and L. monocytogenes (3.4%).",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470351/"
+    },
+    "prior_h_influenzae": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.067,
+      "byte_quote": "As per Thigpen etal. out of the 1670 cases reported in the U.S. during 2003\u20132007, S. pneumoniae was the predominant infective species (58.0%), followed by GBS (18.1%), N. meningitidis (13.9%), H. influenzae (6.7%), and L. monocytogenes (3.4%).",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470351/"
+    },
+    "prior_listeria": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.06,
+      "byte_quote": "Listeria monocytogenes (182/2974; 6%) ... Patients with listeria meningitis were more likely to be immunocompromised (121/182 [66%] vs. 791/2791 [28%]) ... Mortality was highest for L. monocytogenes (58/182; 32%)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/"
+    },
+    "prior_gram_negative_bacilli": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.03,
+      "byte_quote": "Gram-negative bacilli (other than Haemophilus influenzae) caused 33 percent of the nosocomial episodes but only 3 percent of the community-acquired episodes.",
+      "url": "https://cdr.lib.unc.edu/concern/articles/p2677168g"
+    },
+    "prior_group_b_strep": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 0.02,
+      "byte_quote": "The frequency of group B S. agalactiae in neonates was highest in Europe and lowest in the Eastern Mediterranean region, with weighted means of 58.2% and 4.9%, respectively.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/"
+    },
+    "prior_s_aureus": {
+      "status": "refuted",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 0.01,
+      "byte_quote": "Staphylococcus aureus 7/131 (5.3%) 8/75 (10.7%) 15/206 (7.3%)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10883623/"
+    },
+    "morph_gpd_pneumococcus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 50,
+      "byte_quote": "Cells of S pneumoniae are elongated (\"lancet-shaped\") cocci that are surrounded by a polysaccharide capsule and predominantly organized in pairs (diplococci).",
+      "url": "https://academic.oup.com/ofid/article/3/4/ofw206/2593338"
+    },
+    "morph_gnd_meningococcus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 50,
+      "byte_quote": "Intracellular gram-negative diplococci and leukocytes in the CSF from a patient with meningococcal meningitis. The arrow denotes diplococci in proximity and within leukocytes.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349422/"
+    },
+    "morph_gpb_listeria": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 45,
+      "byte_quote": "gram-positive bacilli with tumbling motility ... This characteristic of L. monocytogenes is evident through peritrichous flagella movement and is clinically useful to corroborate high suspicion of Listeria infection before the confirmatory microbiological examination.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5986172/"
+    },
+    "morph_gncocco_hflu": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 45,
+      "byte_quote": "The initial test is Gram staining, which reveals pleomorphic gram-negative coccobacilli.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK562176/"
+    },
+    "morph_gnb_enteric": {
+      "status": "refuted",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 40,
+      "byte_quote": "H. influenzae, a fastidious, pleomorphic, gram-negative coccobacillus, requires hemin (X factor) ... A Gram stain of an infected body fluid may demonstrate small, gram-negative coccobacilli suggestive of H. influenzae disease.",
+      "url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html"
+    },
+    "morph_gpcc_saureus": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 45,
+      "byte_quote": "Gram-positive cocci include Staphylococcus (catalase-positive), which grows clusters, and Streptococcus (catalase-negative), which grows in chains.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470553/"
+    },
+    "host_neonate_gbs": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 12,
+      "byte_quote": "Streptococcus agalactiae or group B Streptococcus (GBS) is the leading cause of neonatal sepsis and meningitis.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/"
+    },
+    "host_neonate_gnb": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 8,
+      "byte_quote": "The **predominant pathogens** are the following: [Group B streptococcus](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections) (GBS) [_Escherichia coli_](/professional/infectious-diseases/gram-negative-bacilli/escherichia-coli-infections) (particularly those strains contain",
+      "url": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis"
+    },
+    "host_neonate_listeria": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 4,
+      "byte_quote": "Those most at risk for severe disease are pregnant women, infants <2 months of age, the elderly, and those with immunodeficiencies, particularly with impairment of T-cell function such as in HIV/AIDS. ... L. monocytogenes is a relatively rare yet clinically significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/"
+    },
+    "host_olderadult_listeria": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 5,
+      "byte_quote": "All patients with acute community-acquired Lm meningitis were immunocompromised or over 50 years old. ... In the multivariate analysis only age (OR 1.026; 95% CI 1.00-1.05; p = 0.042) ... were independently associated with a Lm meningitis.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/"
+    },
+    "host_olderadult_gnb": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 2,
+      "byte_quote": "Meningococcal meningitis was less frequent in elderly patients (P < 0.0001), whereas listerial (P = 0.0196), gram-negative bacillary (P = 0.0065), and meningitis of unknown origin (P = 0.0076) were more frequent.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23446215/"
+    },
+    "host_infantchild_nmen": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 2,
+      "byte_quote": "This condition primarily affects children and young adults, ranking as the leading cause of bacterial meningitis in these groups and the second-leading cause in adults.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK549849/"
+    },
+    "host_infantchild_hflu": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 2,
+      "byte_quote": "Leading cause of bacterial meningitis and other invasive bacterial disease, primarily among children younger than age 5 years ... Meningitis accounted for 50% to 65% of cases in the prevaccine era.",
+      "url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html"
+    },
+    "host_immuno_listeria": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 6,
+      "byte_quote": "The use of immunosuppressive medication has been reported to be an important predisposing factor for infections with Listeria monocytogenes ... whilst listerial meningitis was encountered more frequently (35 of 87 [40 %] vs. 43 of 1348 [3 %], P < 0.0001)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/"
+    },
+    "host_immuno_gnb": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 3,
+      "byte_quote": "Eight infections were hospital-acquired and most patients had predisposing factors, mainly chronic alcoholism and an immunocompromised status.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16451418/"
+    },
+    "host_listeriaexp_listeria": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 9,
+      "byte_quote": "High risk foods include deli meat and ready-to-eat meat products (such as cooked, cured and/or fermented meats and sausages), soft cheeses and cold smoked fishery products.",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/listeriosis"
+    },
+    "host_neurosurg_saureus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 8,
+      "byte_quote": "They reported that the most common organisms by rank were coagulase-negative staphylococci, Acinetobacter species, and Staphylococcus aureus. Most (78/91, 86%) of the infections were related to the placement of an external ventricular drain (EVD).",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/"
+    },
+    "host_neurosurg_gnb": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 6,
+      "byte_quote": "a different spectrum of microorganisms (ie, resistant gram-negative bacilli and staphylococci) is the more likely the etiologic agents",
+      "url": "https://academic.oup.com/cid/article/64/6/e34/2996079"
+    },
+    "host_crowding_nmen": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 4,
+      "byte_quote": "cases of meningococcal disease occurred 9\u201323 times more frequently in students residing in dormitories than in those residing in other types of accommodations ... rates of disease were elevated among students living in dormitories compared with students living off-campus (3.2/100,000 vs. 0.96/100,000, p=0.05)",
+      "url": "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm"
+    },
+    "host_petechial_nmen": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 7,
+      "byte_quote": "Meningococcal rash is similar, an erythematous macular and petechial rash on the legs that quickly disseminates, becoming purpuric and even necrotic if meningococcemia remains untreated",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/"
+    }
+  },
+  "hash": "47e70b44fdb64b8c"
+}

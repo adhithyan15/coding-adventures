@@ -233,6 +233,37 @@ fun backendAsSchemaProvider(backend: Backend): SchemaProvider =
         override fun listIndexes(table: String): List<IndexDef> = backend.listIndexes(table)
     }
 
+// ── CursorBackend ─────────────────────────────────────────────────────────────
+//
+// Optional mixin interface for [Backend] implementations that support positioned
+// cursors — i.e., a cursor that can also UPDATE or DELETE the row at its current
+// position.
+//
+// Declaring the interface here (in sql-backend, alongside [Backend] and [Cursor])
+// keeps it in the same package so [InMemoryBackend] can implement it without any
+// circular dependency.  Consumers (e.g. sql-vm) check `backend is CursorBackend`
+// rather than using reflection to find an `openCursor` method by name, which
+// eliminates a ReDoS-class risk and survives obfuscation.
+
+/**
+ * Mixin interface for [Backend] implementations that expose positioned cursors.
+ *
+ * Implement this interface alongside [Backend] when your backend supports
+ * row-level UPDATE / DELETE via a [Cursor].  Consumers use a Kotlin `is`-check
+ * (`if (backend is CursorBackend) backend.openCursor(table)`) instead of
+ * reflection to discover this capability.
+ */
+interface CursorBackend {
+    /**
+     * Open a [Cursor] over [table] that supports positioned UPDATE / DELETE.
+     *
+     * The returned [Cursor] must implement [RowIterator] so callers can iterate
+     * over rows with [RowIterator.next] while optionally mutating the current
+     * row via the [Backend.update] / [Backend.delete] API.
+     */
+    fun openCursor(table: String): Cursor
+}
+
 private data class StoredRow(val rowid: Int, var row: Row)
 private data class TableState(
     val name: String,
@@ -261,7 +292,7 @@ private data class Snapshot(
 private data class Savepoint(val name: String, val snapshot: Snapshot)
 private data class KeyedRow(val key: List<Any?>, val rowid: Int)
 
-class InMemoryBackend : Backend() {
+class InMemoryBackend : Backend(), CursorBackend {
     private val tablesByKey = linkedMapOf<String, TableState>()
     private val indexesByKey = linkedMapOf<String, IndexDef>()
     private val triggersByKey = linkedMapOf<String, TriggerDef>()
@@ -282,7 +313,7 @@ class InMemoryBackend : Backend() {
     override fun scan(table: String): RowIterator =
         ListRowIterator(tableState(table).rows.map { it.row })
 
-    fun openCursor(table: String): Cursor {
+    override fun openCursor(table: String): Cursor {
         val key = normalizeName(table)
         return TableCursor(key, tableState(table))
     }

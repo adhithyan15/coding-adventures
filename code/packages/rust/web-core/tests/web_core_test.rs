@@ -14,7 +14,9 @@ use std::time::Duration;
 use embeddable_http_server::{HttpRequest, HttpServerOptions};
 use http_core::{Header, HttpVersion, RequestHead};
 use tcp_runtime::{ConnectionId, TcpConnectionInfo};
-use web_core::{LogLevel, RouteLookupResult, Router, WebApp, WebResponse, WebServer};
+use web_core::{
+    LogLevel, MailboxWebServer, RouteLookupResult, Router, WebApp, WebResponse, WebServer,
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -505,4 +507,339 @@ fn e2e_on_server_stop_fires_after_serve_exits() {
     stop.stop();
     thread::sleep(Duration::from_millis(100));
     assert_eq!(stopped.load(Ordering::SeqCst), 1, "on_server_stop should have fired once");
+}
+
+// ---------------------------------------------------------------------------
+// WEB01a-2 — ShardedWebServer: parallel request handling across reactor shards
+// ---------------------------------------------------------------------------
+
+/// Bind and start a `ShardedWebServer` on port 0 with `worker_count` shards,
+/// returning the port and a stop handle. Mirrors `start_server` but parallel.
+fn start_sharded_server(
+    app: WebApp,
+    worker_count: usize,
+) -> (u16, usize, tcp_runtime::ShardedStopHandle) {
+    use web_core::ShardedWebServer;
+    let app = Arc::new(app);
+
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    let mut server = ShardedWebServer::bind_kqueue_sharded(
+        "127.0.0.1:0",
+        HttpServerOptions::default(),
+        worker_count,
+        Arc::clone(&app),
+    )
+    .expect("bind kqueue sharded");
+
+    #[cfg(target_os = "linux")]
+    let mut server = ShardedWebServer::bind_epoll_sharded(
+        "127.0.0.1:0",
+        HttpServerOptions::default(),
+        worker_count,
+        Arc::clone(&app),
+    )
+    .expect("bind epoll sharded");
+
+    #[cfg(target_os = "windows")]
+    let mut server = ShardedWebServer::bind_windows_sharded(
+        "127.0.0.1:0",
+        HttpServerOptions::default(),
+        worker_count,
+        Arc::clone(&app),
+    )
+    .expect("bind windows sharded");
+
+    let port = server.local_addr().port();
+    let shards = server.worker_count();
+    let stop = server.stop_handle();
+    thread::spawn(move || {
+        let _ = server.serve();
+    });
+    thread::sleep(Duration::from_millis(20));
+    (port, shards, stop)
+}
+
+/// A `ShardedWebServer` actually handles requests **concurrently** across its
+/// shards — proven deterministically (not by wall-clock thresholds, which flake
+/// under CI load). The handler bumps an in-flight gauge, holds it briefly, and
+/// records the maximum number of handlers running at once. If dispatch were
+/// serial (single reactor) the gauge would never exceed 1; observing ≥ 2
+/// concurrent handlers proves real cross-shard parallelism. Every client also
+/// gets a correct 200, so parallelism does not corrupt the request/response
+/// contract.
+#[cfg(not(target_os = "windows"))]
+#[test]
+fn sharded_web_server_handles_requests_concurrently() {
+    let worker_count = 4;
+    let client_count = 8;
+
+    let in_flight = Arc::new(AtomicUsize::new(0));
+    let max_in_flight = Arc::new(AtomicUsize::new(0));
+    let handler_in_flight = Arc::clone(&in_flight);
+    let handler_max = Arc::clone(&max_in_flight);
+
+    let mut app = WebApp::new();
+    app.get("/work", move |_| {
+        // Enter: bump the in-flight count and raise the observed maximum.
+        let now = handler_in_flight.fetch_add(1, Ordering::SeqCst) + 1;
+        handler_max.fetch_max(now, Ordering::SeqCst);
+        // Hold the handler open long enough for sibling requests on other shards
+        // to overlap (loopback round-trips are sub-millisecond).
+        thread::sleep(Duration::from_millis(40));
+        handler_in_flight.fetch_sub(1, Ordering::SeqCst);
+        WebResponse::text("ok")
+    });
+
+    let (port, shards, stop) = start_sharded_server(app, worker_count);
+    assert_eq!(shards, worker_count, "all requested shards spawned");
+
+    // Release all clients together so they spread across shards and overlap.
+    let barrier = Arc::new(std::sync::Barrier::new(client_count));
+    let clients: Vec<_> = (0..client_count)
+        .map(|_| {
+            let barrier = Arc::clone(&barrier);
+            thread::spawn(move || {
+                barrier.wait();
+                http_get(port, "/work")
+            })
+        })
+        .collect();
+
+    for client in clients {
+        let (status, body) = client.join().expect("client thread");
+        assert_eq!(status, 200, "every concurrent request gets a 200");
+        assert_eq!(body, "ok");
+    }
+
+    let observed_max = max_in_flight.load(Ordering::SeqCst);
+    assert!(
+        observed_max >= 2,
+        "expected concurrent handler execution across shards, but the max observed \
+         in-flight handlers was {observed_max} (serial dispatch would never exceed 1)",
+    );
+
+    stop.stop();
+}
+
+/// CPU-bound throughput benchmark for `ShardedWebServer` (WEB01a-2).
+///
+/// `#[ignore]`d — like the embeddable-http-server stress test — because
+/// wall-clock scaling is sensitive to the host's core count and load, so it is a
+/// runnable *measurement*, not a CI pass/fail gate (the deterministic
+/// `sharded_web_server_handles_requests_concurrently` test is the CI proof of
+/// parallelism). Run manually on a multi-core machine:
+///
+/// ```sh
+/// cargo test -p web-core --test web_core_test -- --ignored --nocapture \
+///     sharded_web_server_cpu_bound_throughput_scales
+/// ```
+///
+/// Each request burns a fixed CPU budget (a busy hash loop — NOT an echo, which
+/// is latency-bound and would not scale). It serves the same concurrent load on
+/// a 1-shard and an N-shard server and prints both wall-clock times; with real
+/// cores the N-shard run finishes meaningfully faster.
+#[cfg(not(target_os = "windows"))]
+#[test]
+#[ignore]
+fn sharded_web_server_cpu_bound_throughput_scales() {
+    use std::time::Instant;
+
+    // A deterministic, optimiser-resistant CPU burn (~a few ms per request).
+    fn cpu_burn() -> u64 {
+        let mut acc: u64 = 0xcbf2_9ce4_8422_2325; // FNV offset basis
+        for i in 0..2_000_000u64 {
+            acc = (acc ^ i).wrapping_mul(0x0000_0100_0000_01b3); // FNV prime
+        }
+        acc
+    }
+
+    fn run_load(worker_count: usize, client_count: usize) -> std::time::Duration {
+        let mut app = WebApp::new();
+        app.get("/compute", move |_| WebResponse::text(format!("{}", cpu_burn())));
+        let (port, _shards, stop) = start_sharded_server(app, worker_count);
+
+        let barrier = Arc::new(std::sync::Barrier::new(client_count));
+        let start = Instant::now();
+        let clients: Vec<_> = (0..client_count)
+            .map(|_| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    let (status, _) = http_get(port, "/compute");
+                    assert_eq!(status, 200);
+                })
+            })
+            .collect();
+        for c in clients {
+            c.join().expect("compute client");
+        }
+        let elapsed = start.elapsed();
+        stop.stop();
+        thread::sleep(Duration::from_millis(50));
+        elapsed
+    }
+
+    let cores = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(1);
+    let client_count = 16;
+
+    let serial = run_load(1, client_count);
+    let parallel = run_load(cores.max(2), client_count);
+
+    println!(
+        "CPU-bound throughput: {client_count} requests — 1 shard: {serial:?}, \
+         {} shards: {parallel:?} (speedup {:.2}x, {cores} cores)",
+        cores.max(2),
+        serial.as_secs_f64() / parallel.as_secs_f64(),
+    );
+
+    if cores >= 2 {
+        assert!(
+            parallel < serial,
+            "expected the sharded server to finish CPU-bound load faster than a \
+             single reactor on {cores} cores (1 shard: {serial:?}, parallel: {parallel:?})",
+        );
+    }
+}
+
+// ---------------------------------------------------------------------------
+// WEB01b-3 — comparative benchmark: single-reactor vs sharded vs mailbox
+// ---------------------------------------------------------------------------
+
+/// Bind and start a `MailboxWebServer` on port 0 with a `worker_count`-thread
+/// pool, returning the port and the (cloneable) server so the caller can `stop`
+/// it. Mirrors `start_server` / `start_sharded_server`, but the mailbox stack is
+/// cross-platform (one `bind`) and `serve` takes `&self`, so we serve a clone.
+fn start_mailbox_server(app: WebApp, worker_count: usize) -> (u16, MailboxWebServer) {
+    let app = Arc::new(app);
+    let server = MailboxWebServer::bind(
+        "127.0.0.1",
+        0,
+        HttpServerOptions::default(),
+        worker_count,
+        Arc::clone(&app),
+    )
+    .expect("bind mailbox");
+    let port = server.local_addr().port();
+    let serve = server.clone();
+    thread::spawn(move || {
+        let _ = serve.serve();
+    });
+    thread::sleep(Duration::from_millis(20));
+    (port, server)
+}
+
+/// Comparative CPU-bound throughput across the three WEB01 serving modes
+/// (WEB01b-3): single-reactor [`WebServer`], `ShardedWebServer` (parallel *by
+/// connection*), and `MailboxWebServer` (parallel *by request*).
+///
+/// `#[ignore]`d for the same reason as the sharded benchmark above: wall-clock
+/// scaling depends on the host's core count and load, so this is a runnable
+/// *measurement* that documents **when to pick which mode**, not a CI pass/fail
+/// gate (the deterministic concurrency tests are the CI proofs). Run manually on
+/// a multi-core machine:
+///
+/// ```sh
+/// cargo test -p web-core --test web_core_test -- --ignored --nocapture \
+///     web_serving_modes_cpu_bound_comparison
+/// ```
+///
+/// Each request burns a fixed CPU budget (a busy hash loop — NOT an echo, which
+/// is latency-bound and would not scale). All three modes serve the same
+/// concurrent load; the table shows that both parallel modes beat the single
+/// reactor on real cores. Sharded and mailbox scale comparably for one-shot
+/// (`Connection: close`) clients — the spread shows where their dispatch models
+/// differ (sharded parallelises across connections; mailbox across requests, so
+/// it also overlaps sequential keep-alive on one connection — see WEB01b-1a/2).
+#[cfg(not(target_os = "windows"))]
+#[test]
+#[ignore]
+fn web_serving_modes_cpu_bound_comparison() {
+    use std::time::Instant;
+
+    // A deterministic, optimiser-resistant CPU burn (~a few ms per request) —
+    // identical to the sharded benchmark's, so the numbers are comparable.
+    fn cpu_burn() -> u64 {
+        let mut acc: u64 = 0xcbf2_9ce4_8422_2325; // FNV offset basis
+        for i in 0..2_000_000u64 {
+            acc = (acc ^ i).wrapping_mul(0x0000_0100_0000_01b3); // FNV prime
+        }
+        acc
+    }
+
+    fn build_app() -> WebApp {
+        let mut app = WebApp::new();
+        app.get("/compute", move |_| WebResponse::text(format!("{}", cpu_burn())));
+        app
+    }
+
+    // Fire `client_count` concurrent one-shot clients at `port`, all released
+    // together via the barrier, and return the wall-clock to drain them all.
+    fn drive_load(port: u16, client_count: usize) -> std::time::Duration {
+        let barrier = Arc::new(std::sync::Barrier::new(client_count));
+        let start = Instant::now();
+        let clients: Vec<_> = (0..client_count)
+            .map(|_| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    let (status, _) = http_get(port, "/compute");
+                    assert_eq!(status, 200);
+                })
+            })
+            .collect();
+        for c in clients {
+            c.join().expect("compute client");
+        }
+        start.elapsed()
+    }
+
+    let cores = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(1);
+    let workers = cores.max(2);
+    let client_count = 16;
+
+    // 1) Single reactor (WebServer) — the baseline.
+    let (port, stop) = start_server(build_app());
+    let single = drive_load(port, client_count);
+    stop.stop();
+    thread::sleep(Duration::from_millis(50));
+
+    // 2) ShardedWebServer — parallel by connection.
+    let (port, _shards, stop) = start_sharded_server(build_app(), workers);
+    let sharded = drive_load(port, client_count);
+    stop.stop();
+    thread::sleep(Duration::from_millis(50));
+
+    // 3) MailboxWebServer — parallel by request.
+    let (port, server) = start_mailbox_server(build_app(), workers);
+    let mailbox = drive_load(port, client_count);
+    server.stop();
+    thread::sleep(Duration::from_millis(50));
+
+    println!(
+        "WEB01 serving modes — {client_count} CPU-bound requests on {cores} cores ({workers} workers):\n  \
+         single-reactor : {single:?}\n  \
+         sharded ({workers}x)   : {sharded:?}  (speedup {:.2}x)\n  \
+         mailbox ({workers}x)   : {mailbox:?}  (speedup {:.2}x)",
+        single.as_secs_f64() / sharded.as_secs_f64(),
+        single.as_secs_f64() / mailbox.as_secs_f64(),
+    );
+
+    if cores >= 2 {
+        assert!(
+            sharded < single,
+            "expected sharded to beat single-reactor on {cores} cores \
+             (single: {single:?}, sharded: {sharded:?})",
+        );
+        assert!(
+            mailbox < single,
+            "expected mailbox to beat single-reactor on {cores} cores \
+             (single: {single:?}, mailbox: {mailbox:?})",
+        );
+    }
 }

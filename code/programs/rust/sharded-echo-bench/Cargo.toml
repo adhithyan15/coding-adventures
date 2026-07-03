@@ -1,0 +1,10 @@
+[package]
+name = "sharded-echo-bench"
+version = "0.2.0"
+edition = "2021"
+description = "Scaling benchmark for the multi-core ShardedTcpRuntime: throughput/latency at 1..N reactor shards"
+publish = false
+
+[dependencies]
+tcp-runtime = { path = "../../../packages/rust/tcp-runtime" }
+transport-platform = { path = "../../../packages/rust/transport-platform" }

@@ -1,0 +1,8 @@
+{
+ "check_id": 33,
+ "idx": 15,
+ "slot": "potential_to_emit_tpy",
+ "claimed_value": 85,
+ "scenario": "Riverside Energy proposes a plant with a potential to emit 85 tpy of ozone-precursor VOCs in a region designated nonattainment for ozone. The classification thresholds range from 100 tpy (Marginal) down to 10 tpy (Extreme) depending on severity.",
+ "cited_span": "potential to emit 85 tpy of ozone-precursor VOCs"
+}

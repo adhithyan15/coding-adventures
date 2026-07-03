@@ -1,0 +1,46 @@
+% ADJ52 case-30 — patient observations + queries.
+% Same vocabulary as rulebook.adj. Observations ONLY for what THIS patient
+% actually has. Tissue histology (PAS/PCR/clonality/AFB) and coeliac serology
+% were NOT yet obtained — they are the open uncertainties / candidate next
+% steps — so they are deliberately NOT observed.
+
+% --- antecedent seronegative rheumatic picture (preceded GI by ~5 years) ---
+observe arthralgia(migratory_preceding_gi)
+observe symptom(sicca)
+observe symptom(raynaud_like_colour_change)
+observe labs(low_titre_ana_ena_negative)
+observe treatment_response(arthralgia_settled_on_hydroxychloroquine)
+
+% --- current malabsorptive GI illness ---
+observe stool(steatorrhea)
+observe weight_loss(severe)
+
+% --- malabsorption / micronutrient derangement (one syndrome) ---
+observe labs(low_calcium)
+observe labs(low_magnesium)
+observe labs(low_phosphate)
+observe labs(low_vitamin_d)
+observe labs(low_albumin)
+observe labs(macrocytic_anaemia)
+observe labs(low_bmi)
+observe exam(cachexia)
+observe labs(elevated_inflammatory_markers)
+
+% --- imaging ---
+observe imaging(small_bowel_wall_thickening)
+observe imaging(mesenteric_lymphadenopathy)
+observe imaging(diffuse_small_intestine_hypermetabolism)
+observe imaging(asymmetric_sacroiliitis)
+
+% ===== QUERIES =====
+% q1/q2/q4 — unifying diagnosis / cause of the malabsorptive enteropathy
+? diagnosis(whipple_disease)
+? diagnosis(small_bowel_lymphoma)
+? diagnosis(coeliac_disease)
+? diagnosis(crohn_enteropathy)
+? diagnosis(intestinal_tuberculosis)
+
+% q3 — recommended next step
+? next_step(small_bowel_biopsy_pas_and_pcr)
+? next_step(mesenteric_node_biopsy_for_lymphoma)
+? next_step(continue_immunomodulation_without_biopsy)

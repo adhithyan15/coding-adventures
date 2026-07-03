@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.4.0"
+version = "0.166.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.166.0 (AL-multidim-real): ALGOL 60 2D **real** array matrix proof cell runs on all 7 backends; fractional f64 elements on the multidim flat-index path, floored via entier.  v0.165.0 (AL-multidim): 2D integer array cell on all 7 backends.  v0.164.0 (LANG-STR-RT): 7 NativeAot string-param cells unlocked."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -11,8 +11,35 @@ nib-iir-compiler      = { path = "../nib-iir-compiler" }
 brainfuck-iir-compiler = { path = "../brainfuck-iir-compiler" }
 dartmouth-basic-iir-compiler = { path = "../dartmouth-basic-iir-compiler" }
 oct-iir-compiler     = { path = "../oct-iir-compiler" }
+mccarthy-lisp-iir-compiler = { path = "../mccarthy-lisp-iir-compiler" }
+algol-iir-compiler = { path = "../algol-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
+iir-to-llvm           = { path = "../iir-to-llvm" }
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+iir-to-beam           = { path = "../iir-to-beam" }
+iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
+riscv-backend         = { path = "../riscv-backend" }
+riscv-encoder         = { path = "../riscv-encoder" }
+intel8008-backend     = { path = "../intel8008-backend" }
+intel8008-encoder     = { path = "../intel8008-encoder" }
+armv7-backend         = { path = "../armv7-backend" }
+armv7-encoder         = { path = "../armv7-encoder" }
+intel4004-backend     = { path = "../intel4004-backend" }
+intel4004-encoder     = { path = "../intel4004-encoder" }
+ge225-backend         = { path = "../ge225-backend" }
+ge225-encoder         = { path = "../ge225-encoder" }
+ibm704-backend        = { path = "../ibm704-backend" }
+ibm704-encoder        = { path = "../ibm704-encoder" }
+aot-core              = { path = "../aot-core" }
+jit-core              = { path = "../jit-core" }
+# JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes
+# McCarthy by dispatching its `lispy_*` builtins to the shared tagged-word value
+# runtime (`lispy-runtime`), bridged through the VM's `Value`.
+vm-core               = { path = "../vm-core" }
+lispy-runtime         = { path = "../lispy-runtime" }
 
 [[bin]]
 name = "lang-aot"
@@ -20,3 +47,24 @@ path = "bin/lang_aot.rs"
 
 [dev-dependencies]
 tempfile = "3"
+# In-repo wasm module runtime — used to RUN emitted wasm in tests and assert
+# the computed result (LANG77 / McCarthy L3b-3a-2). Keeps wasm verification
+# zero-external-dep.
+wasm-runtime = { path = "../wasm-runtime" }
+# The host-interface + value types the runtime resolves imports against. The
+# LANG-MATRIX harness implements a tiny `HostInterface` to satisfy the generic
+# `env.__print_i64` stdout import an I/O language (Dartmouth BASIC) emits, so
+# its `PRINT` output can be captured and asserted (LM-W BASIC).
+wasm-execution = { path = "../wasm-execution" }
+wasm-types = { path = "../wasm-types" }
+# In-repo JVM class-file parser + bytecode simulator — used to RUN the emitted
+# JVM class in tests and assert the computed result (LANG77 / McCarthy W3a),
+# mirroring how wasm-runtime verifies the wasm path. Keeps JVM verification
+# zero-external-dep (no `java` needed for the scalar path).
+jvm-class-file = { path = "../jvm-class-file" }
+jvm-simulator = { path = "../jvm-simulator" }
+# In-repo CLR (CIL) bytecode simulator — used to RUN the emitted CIL in tests and
+# assert the computed result (LANG77 / McCarthy W6a), mirroring jvm-simulator.
+clr-simulator = { path = "../clr-simulator" }
+mccarthy-lisp-vm = { path = "../mccarthy-lisp-vm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }

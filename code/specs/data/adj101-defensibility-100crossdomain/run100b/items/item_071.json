@@ -1,0 +1,7 @@
+{
+ "idx": 71,
+ "id": "CUS-2",
+ "scenario": "A container of furniture belonging to Hartwell Imports arrived at the Port of Easton on March 3. Hartwell did not file any clearance paperwork. The goods were still sitting uncleared in the customs warehouse on March 22.",
+ "policy": "Goods entering the country must be cleared through customs within 15 calendar days of the date the vessel arrives at the port of entry. If the goods are not cleared within that period, they are deemed abandoned and become property of the customs authority.",
+ "question": "Is the furniture deemed abandoned to the customs authority?"
+}

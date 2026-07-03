@@ -2,6 +2,14 @@
 
 All notable changes to this crate will be documented in this file.
 
+## [0.2.0] — 2026-06-27
+
+### Added
+
+- `STRING` is now a primary expression so `LET A$ = "HI"` and string equality
+  forms have a normal expression AST.
+- Parser tests now cover `$`-suffixed string variables in `LET` and `PRINT`.
+
 ## [0.1.0] — 2026-04-10
 
 ### Added

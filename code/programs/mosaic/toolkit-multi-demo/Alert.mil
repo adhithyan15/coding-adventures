@@ -1,0 +1,25 @@
+// Alert.mil — interface for the toolkit's Alert component.
+//
+// A colored info banner. Bootstrap's `<div class="alert alert-info">`
+// equivalent. One message string, an optional variant, an optional
+// dismissible flag. When dismissible, an inline close button fires
+// `onClose`.
+
+component Alert {
+  // The alert's message text. Required.
+  slot message : text ;
+
+  // Variant keyword. One of: primary, secondary, success, danger,
+  // warning, info, light, dark. Default: info.
+  // Drives the part-level styling via `part alert/<variant>`.
+  slot variant : text ;
+
+  // When true, an inline close button appears at the trailing edge
+  // and clicking it fires onClose. When false (default), no close
+  // button is rendered.
+  slot dismissible : bool ;
+
+  // Fired when the user clicks the dismiss button. Only fireable
+  // when dismissible: true.
+  emit onClose ;
+}

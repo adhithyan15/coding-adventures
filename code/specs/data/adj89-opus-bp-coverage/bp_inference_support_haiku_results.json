@@ -1,0 +1,316 @@
+{
+  "summary": "The CORE of byte provenance (ADJ61 justification gate): adversarially check EVERY inference for SUPPORT, not just every discard for a reason. For each fact/inference in the IR, a skeptical auditor checks — given the problem GIVENS and the other facts — whether it genuinely follows or is an unsupported approximation/assumption/contradiction (default UNSUPPORTED). Unsupported inferences are dropped/corrected and the IR is re-derived until every inference is supported; then solve. This catches the Al(OH)3 failure that coverage gates missed: the asserted approximation \"[OH-]=1e-7 because Al(OH)3 is insoluble\" is contradicted by the GIVEN Kf. Run over N samples of plain-Haiku vs support-gated-Haiku (Opus is high-variance on this item). All-Opus; no hints; answer never shown to the solver.",
+  "agentCount": 33,
+  "logs": [],
+  "result": {
+    "n": 3,
+    "plain_correct": 0,
+    "gated_correct": 0,
+    "results": [
+      {
+        "sample": 1,
+        "plain": {
+          "answer": "5.8 × 10⁻³ mol L⁻¹",
+          "grade": {
+            "grade": "incorrect",
+            "note": "Answer given is 5.8×10⁻³ mol/L; reference is 1.776×10⁻³ mol/L. These differ by a factor of ~3.3 and do not match (not within rounding). Graded incorrect."
+          }
+        },
+        "gated": {
+          "answer": "The solubility of Al(OH)₃ in pure water is **2.02 × 10⁻³ mol/L** or equivalently **0.00202 mol/L**.\n\n## Solution Method\n\n**Step 1: Set up the coupled equilibrium system**\n\nFrom the given constants and stoichiometry:\n- K_sp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷\n- K_f = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹\n- K_w = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴\n\n**Step 2: Derive expressions for aluminum species**\n\nFrom K_sp:\n[Al³⁺] = K_sp / [OH⁻]³\n\nFrom K_f and K_sp combined:\n[Al(OH)₄⁻] = K_f · [Al³⁺] · [OH⁻]⁴ = K_f · K_sp · [OH⁻]\n\n**Step 3: Apply the charge balance equation**\n\n[H⁺] + [Al³⁺] = [OH⁻] + [Al(OH)₄⁻]\n\nSubstituting [H⁺] = K_w/[OH⁻] and the species expressions:\n\nK_w/[OH⁻] + K_sp/[OH⁻]³ = [OH⁻] + K_f·K_sp·[OH⁻]\n\n**Step 4: Convert to polynomial form**\n\nMultiplying by [OH⁻]³:\n\nK_w·[OH⁻]² + K_sp = [OH⁻]⁴ + K_f·K_sp·[OH⁻]⁴\n\nRearranging:\n\n[OH⁻]⁴(1 + K_f·K_sp) - K_w·[OH⁻]² - K_sp = 0\n\nSince K_f·K_sp = 5.83 × 10⁴ >> 1:\n\n5.83 × 10⁴·[OH⁻]⁴ - 1.0 × 10⁻¹⁴·[OH⁻]² - 5.3 × 10⁻²⁷ = 0\n\n**Step 5: Solve for [OH⁻]**\n\nSolving this quartic equation yields [OH⁻] = 1.74 × 10⁻⁸ mol/L\n\n**Step 6: Calculate all species concentrations**\n\n- [H⁺] = 5.76 × 10⁻⁷ mol/L (pH = 6.24)\n- [OH⁻] = 1.74 × 10⁻⁸ mol/L (pOH = 7.76)\n- [Al³⁺] = 1.01 × 10⁻³ mol/L (50.0% of dissolved Al)\n- [Al(OH)₄⁻] = 1.01 × 10⁻³ mol/L (50.0% of dissolved Al)\n\n**Step 7: Calculate solubility**\n\ns = [Al³⁺] + [Al(OH)₄⁻] = 1.01 × 10⁻³ + 1.01 × 10⁻³ = **2.02 × 10⁻³ mol/L**\n\n**Verification**: All equilibrium constants are satisfied to within 0.00001% error, charge balance is satisfied to 10⁻¹⁸ mol/L, and material balance is exact.\n",
+          "grade": {
+            "grade": "incorrect",
+            "note": "Reference = 1.776e-3; submitted = 2.02e-3. The submission's charge balance dropped the +3 coefficient on Al3+ (used [H+]+[Al3+]=[OH-]+[Al(OH)4-] instead of [H+]+3[Al3+]=...). Solving the correct balance with the +3 charge gives [OH-]=2.29e-8, [Al3+]=4.44e-4, [Al(OH)4-]=1.33e-3, s=1.776e-3, matching the reference. The submission's value of 2.02e-3 follows directly from that charge-balance error, so it is wrong, not merely a rounding difference."
+          },
+          "facts": [
+            "Al(OH)₃ is an amphoteric hydroxide that dissolves by forming Al(OH)₄⁻ complex in aqueous solution",
+            "The dissolution of Al(OH)₃ in water involves two sequential equilibria: dissolution to Al³⁺ and complexation to Al(OH)₄⁻",
+            "Equilibrium 1 (Ksp): Al(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq); K_sp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷",
+            "Equilibrium 2 (Kf): Al³⁺(aq) + 4OH⁻(aq) ⇌ Al(OH)₄⁻(aq); K_f = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹",
+            "Combined overall reaction: Al(OH)₃(s) + OH⁻(aq) ⇌ Al(OH)₄⁻(aq); K_overall = K_sp × K_f = 5.83 × 10⁴",
+            "In pure water, [H⁺][OH⁻] = K_w = 1.0 × 10⁻¹⁴; the actual pH is determined by coupled equilibria, not assumed a priori",
+            "Let solubility of Al(OH)₃ = s mol/L; this represents the total dissolved aluminum: [Al³⁺] + [Al(OH)₄⁻] = s",
+            "Charge balance: [H⁺] + [Al³⁺] = [OH⁻] + [Al(OH)₄⁻]",
+            "Coupled system for pure water: (1) K_sp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷; (2) K_f = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹; (3) K_w = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴; (4) [Al³⁺] + [Al(OH)₄⁻] = s; (5) [H⁺] + [Al³⁺] = [OH⁻] + [Al(OH)₄⁻]",
+            "This coupled system of five equations in five unknowns ([Al³⁺], [Al(OH)₄⁻], [H⁺], [OH⁻], s) must be solved simultaneously without assuming any species concentration a priori",
+            "From K_sp and K_f, derive [Al(OH)₄⁻] = (K_sp × K_f × [OH⁻])/[OH⁻]³ = (K_sp × K_f)/[OH⁻]² = (5.83 × 10⁴)/[OH⁻]²",
+            "From K_sp: [Al³⁺] = K_sp/[OH⁻]³ = (5.3 × 10⁻²⁷)/[OH⁻]³",
+            "Substituting into charge balance: [H⁺] + (5.3 × 10⁻²⁷)/[OH⁻]³ = [OH⁻] + (5.83 × 10⁴)/[OH⁻]²",
+            "Using K_w = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴, substitute [H⁺] = 10⁻¹⁴/[OH⁻] into the charge balance to get a single equation in [OH⁻]",
+            "The resulting transcendental equation determines [OH⁻] uniquely, from which all other species and solubility s can be computed"
+          ],
+          "audit_log": [
+            {
+              "it": 0,
+              "unsupported": [
+                {
+                  "fact_number": 7,
+                  "reason": "Assumes [OH⁻] = 10⁻⁷ M in pure water at equilibrium; Al(OH)₃ dissolution will shift pH and [OH⁻] from this value, yet this is the quantity being solved for."
+                },
+                {
+                  "fact_number": 11,
+                  "reason": "Calculation uses [OH⁻] = 10⁻⁷ M from the unsupported fact [7]; the result is therefore contingent on an unvalidated approximation."
+                }
+              ]
+            },
+            {
+              "it": 1,
+              "unsupported": [
+                {
+                  "fact_number": 11,
+                  "reason": "Net stoichiometry is wrong: Ksp releases 3 OH⁻ per Al(OH)₃; complexation consumes 4 total (not 1), yielding net -1 OH⁻ per Al dissolved, not +2. This false simplification contradicts the coupled mass balance."
+                }
+              ]
+            },
+            {
+              "it": 2,
+              "unsupported": [
+                {
+                  "fact_number": 8,
+                  "reason": "Conflates intermediate dissolution stoichiometry (3 OH⁻ produced) with overall reaction stoichiometry (1 net OH⁻ consumed), and smuggles in the claim that [OH⁻] is determined by this net balance without acknowledging [OH⁻] is an unknown to be solved from the coupled system."
+                },
+                {
+                  "fact_number": 10,
+                  "reason": "The purported hydroxide mass balance '[OH⁻] produced/consumed = 3[Al³⁺] - 4[Al(OH)₄⁻] + [H⁺]' is not a standard chemical mass balance or constraint; it conflates stoichiometric differences with net changes without defining a reference state, and is either non-standard or erroneous."
+                },
+                {
+                  "fact_number": 11,
+                  "reason": "The system is underdetermined: five equations but six unknowns ([Al³⁺], [Al(OH)₄⁻], [H⁺], [OH⁻], s, and initial condition). The formulation does not clarify whether s is a parameter or the quantity to be found, making the closure unclear."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "sample": 2,
+        "plain": {
+          "answer": "1.18 × 10⁻⁷ mol L⁻¹",
+          "grade": {
+            "grade": "incorrect",
+            "note": "The answer 1.18×10⁻⁷ mol/L does not match the reference value of 1.776×10⁻³ mol/L — they differ by roughly four orders of magnitude. The two values are not equivalent under any reasonable rounding, so the answer is graded incorrect against the reference."
+          }
+        },
+        "gated": {
+          "answer": "To find the solubility of Al(OH)₃ in pure water, I must solve the coupled equilibrium system accounting for both dissolution and complex formation.\n\n## Setup\n\nTwo equilibria occur simultaneously:\n1. **Dissolution:** Al(OH)₃(s) ⇌ Al³⁺ + 3OH⁻, K_sp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷\n2. **Complex formation:** Al³⁺ + 4OH⁻ ⇌ Al(OH)₄⁻, K_f = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹\n\n**Key observation:** K_f is enormous (10³¹), so complex formation is highly favorable. This drives the system away from free Al³⁺ and toward the complex.\n\n## Combined Equilibrium\n\nCombining the two equilibria:\n- From K_sp: [Al³⁺][OH⁻]³ = K_sp\n- From K_f: [Al(OH)₄⁻] = K_f × [Al³⁺][OH⁻]⁴\n\nDividing K_f by K_sp:\n$$\\frac{K_f}{K_{sp}} = \\frac{[Al(OH)_4^-]}{[OH^-]} = \\frac{1.1 \\times 10^{31}}{5.3 \\times 10^{-27}} = 2.08 \\times 10^{57}$$\n\nTherefore: **[Al(OH)₄⁻] = (2.08 × 10⁵⁷) × [OH⁻]**\n\nThis enormous coefficient means virtually all dissolved aluminum exists as the complex.\n\n## Solubility Definition and Charge Balance\n\nLet s = total dissolved aluminum = [Al³⁺] + [Al(OH)₄⁻]\n\nFrom the dissolution reaction, every mole of Al(OH)₃ that dissolves produces 3 moles of OH⁻. In pure water with no other bases/acids, the charge balance is:\n$$[OH^-] + [Al(OH)_4^-] = [H^+] + 3[Al^{3+}]$$\n\nSince the solution is basic ([Al(OH)₄⁻] >> [H⁺]):\n$$[OH^-] \\approx [Al(OH)_4^-] + 3[Al^{3+}]$$\n\nGiven that [Al(OH)₄⁻] ≈ s (since it dominates):\n$$[OH^-] \\approx s + 3[Al^{3+}]$$\n\nBut [Al³⁺] is negligibly small compared to s, so:\n$$[OH^-] \\approx s$$\n\n## Solving for Solubility\n\nFrom K_sp:\n$$[Al^{3+}] = \\frac{K_{sp}}{[OH^-]^3} = \\frac{5.3 \\times 10^{-27}}{s^3}$$\n\nFrom the complex formation relation:\n$$[Al(OH)_4^-] = 2.08 \\times 10^{57} \\times s$$\n\nMass balance:\n$$s = [Al^{3+}] + [Al(OH)_4^-] = \\frac{5.3 \\times 10^{-27}}{s^3} + 2.08 \\times 10^{57} \\times s$$\n\nSince 2.08 × 10⁵⁷ >> 1, the second term dominates:\n$$s \\approx 2.08 \\times 10^{57} \\times s$$\n\nThis appears problematic until we recognize that the approximation [OH⁻] = s must be refined. Let me reconsider the charge balance more carefully.\n\n## Refined Solution\n\nActually, from the dissolution: 1 mole Al(OH)₃ → 1 mole Al species + 3 moles OH⁻\n\nIf s moles of Al(OH)₃ dissolve, it produces at least 3s moles of OH⁻. The charge balance with [Al(OH)₄⁻] ≈ s gives:\n$$[OH^-] = [Al(OH)_4^-] + 3[Al^{3+}] \\approx s + \\text{negligible}$$\n\nFrom K_sp and the relation [Al(OH)₄⁻] = (K_f/K_sp)[OH⁻]:\n\n$$K_{sp} = [Al^{3+}][OH^-]^3 = \\frac{[Al(OH)_4^-]}{K_f[OH^-]^3} \\times [OH^-]^3 = \\frac{[Al(OH)_4^-]}{K_f}$$\n\nTherefore:\n$$[Al(OH)_4^-] = K_f \\times K_{sp} = 1.1 \\times 10^{31} \\times 5.3 \\times 10^{-27} = 5.83 \\times 10^4 \\text{ mol/L}$$\n\nSince [Al(OH)₄⁻] ≈ s:\n\n$$\\boxed{s = 5.8 \\times 10^4 \\text{ mol/L}}$$\n\nOr more precisely: **s ≈ 5.8 × 10⁴ mol L⁻¹** (or **58,000 mol/L**)\n\nThis enormous solubility reflects the fact that the complex formation constant is so favorable that Al(OH)₃ dissolves extensively, converting to Al(OH)₄⁻ rather than remaining as free Al³⁺ in solution.\n",
+          "grade": {
+            "grade": "incorrect",
+            "note": "Reference answer (1.776×10⁻³ mol/L) is correct, confirmed by numerically solving the coupled equilibria with charge balance (3[Al³⁺]+[H⁺]=[OH⁻]+[Al(OH)₄⁻]): [OH⁻]≈2.29×10⁻⁸, [Al³⁺]≈4.44×10⁻⁴, [Al(OH)₄⁻]≈1.33×10⁻³, sum≈1.776×10⁻³.\n\nThe submitted answer concludes s≈5.8×10⁴ mol/L (58,000 mol/L), which is wrong by ~7 orders of magnitude and physically absurd (exceeds the molarity of water itself, ~55 M). Its error: it equated [Al(OH)₄⁻] with K_f·K_sp = 5.83×10⁴, but that product is the dimensionless equilibrium constant of the combined reaction Al(OH)₃(s)+OH⁻⇌Al(OH)₄⁻ (i.e. [Al(OH)₄⁻]/[OH⁻]), not a concentration. The answer also abandoned its own (partially correct) mass/charge balance setup midway and never incorporated water's contribution to [OH⁻], which is what actually fixes the system."
+          },
+          "facts": [
+            "Al(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq), K_sp = 5.3 × 10⁻²⁷",
+            "K_sp = [Al³⁺][OH⁻]³",
+            "Al³⁺ + 4OH⁻ ⇌ Al(OH)₄⁻, K_f = 1.1 × 10³¹",
+            "K_f = [Al(OH)₄⁻] / ([Al³⁺][OH⁻]⁴)",
+            "K_w = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ (water autoionization)",
+            "Solubility constraint (mass balance for aluminum): [Al³⁺] + [Al(OH)₄⁻] = s",
+            "The problem requires simultaneous solution of K_sp and K_f equilibria because K_f = 10³¹ is highly favorable and [OH⁻] produced by dissolution is high enough to drive significant Al(OH)₄⁻ formation",
+            "Ratio analysis: At equilibrium, [Al(OH)₄⁻] / ([Al³⁺][OH⁻]⁴) = K_f = 1.1 × 10³¹, which implies [Al(OH)₄⁻] >> [Al³⁺] unless [OH⁻] is extremely small",
+            "REJECTED: Fact [14] assumes [OH⁻] = s without first deriving this is consistent with the coupled equilibrium; the approximation [Al(OH)₄⁻] >> [Al³⁺] must be checked self-consistently, not assumed",
+            "REJECTED: Fact [15] contains algebraic error. Substituting [OH⁻] = s and [Al³⁺] = K_sp/s³ into K_f gives: K_f = [Al(OH)₄⁻] / ((K_sp/s³) × s⁴) = [Al(OH)₄⁻] × s³ / (K_sp × s⁴) = [Al(OH)₄⁻] / (K_sp × s). Since [Al(OH)₄⁻] ≈ s (from [13]), this yields K_f ≈ s / (K_sp × s) = 1/K_sp, contradicting K_f = 10³¹. The claimed equation 'K_f × K_sp × s⁴ = s' is NOT the result of correct algebra",
+            "REJECTED: Fact [16] depends on the false equation from [15] and is therefore not derivable from correct equilibrium relationships",
+            "CORRECT COUPLED SYSTEM (to be solved simultaneously, not approximated): (1) K_sp = [Al³⁺][OH⁻]³, (2) K_f = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴), (3) [Al³⁺] + [Al(OH)₄⁻] = s (aluminum mass balance), (4) Charge balance: [OH⁻] + [Al(OH)₄⁻] = [H⁺] + 3[Al³⁺], or in the basic limit [Al(OH)₄⁻] >> [H⁺] and [Al(OH)₄⁻] >> [Al³⁺]: [OH⁻] ≈ [Al(OH)₄⁻] + 3[Al³⁺] ≈ [Al(OH)₄⁻]",
+            "From K_sp and K_f, eliminate [Al³⁺]: K_f / K_sp = [Al(OH)₄⁻] × [OH⁻]³ / [OH⁻]⁴ = [Al(OH)₄⁻] / [OH⁻], so [Al(OH)₄⁻] = (K_f/K_sp) × [OH⁻]",
+            "Substituting into the aluminum mass balance s = [Al³⁺] + [Al(OH)₄⁻]: s = [Al³⁺] + (K_f/K_sp) × [OH⁻]",
+            "From K_sp = [Al³⁺][OH⁻]³: [Al³⁺] = K_sp / [OH⁻]³",
+            "Substituting [Al³⁺] into the mass balance: s = K_sp/[OH⁻]³ + (K_f/K_sp) × [OH⁻]",
+            "From the charge balance (basic limit): [OH⁻] = s; substituting this self-consistent relation into the mass balance equation gives: s = K_sp/s³ + (K_f/K_sp) × s",
+            "Rearranging: s - (K_f/K_sp) × s = K_sp/s³, so s(1 - K_f/K_sp) = K_sp/s³, so s⁴ × (1 - K_f/K_sp) = K_sp",
+            "Since K_f = 1.1 × 10³¹ >> K_sp = 5.3 × 10⁻²⁷, the term (1 - K_f/K_sp) ≈ -K_f/K_sp (i.e., dominated by -K_f/K_sp)",
+            "Therefore: s⁴ × (-K_f/K_sp) ≈ K_sp, or s⁴ ≈ -K_sp²/K_f, which is unphysical (negative). This indicates the charge balance approximation [OH⁻] = s requires careful verification and the coupled system must be solved without premature approximations"
+          ],
+          "audit_log": [
+            {
+              "it": 0,
+              "unsupported": [
+                {
+                  "fact_number": 11,
+                  "reason": "Dismisses the given K_f constant without demonstrating it is negligible; the statement that complex formation 'would only become relevant in basic conditions' and 'the simple dissolution equilibrium dominates' requires quantitative justification that [OH⁻] from dissolution is too low to drive Al(OH)₄⁻ formation, which is not provided."
+                }
+              ]
+            },
+            {
+              "it": 1,
+              "unsupported": [
+                {
+                  "fact_number": 6,
+                  "reason": "Applies K_f equilibrium constraint to [Al³⁺] and [OH⁻] values derived under the assumption K_f is negligible; treats single-equilibrium concentrations as valid input to a multi-equilibrium system without re-solving."
+                },
+                {
+                  "fact_number": 7,
+                  "reason": "Depends on [6], which is self-contradictory; the ratio and conclusion follow from a flawed intermediate result."
+                }
+              ]
+            },
+            {
+              "it": 2,
+              "unsupported": [
+                {
+                  "fact_number": 14,
+                  "reason": "Assumes [OH⁻] = s as a substitution without first deriving or verifying it is consistent with the coupled equilibrium; circular dependency unacknowledged."
+                },
+                {
+                  "fact_number": 15,
+                  "reason": "Algebraic error: substituting into K_f and simplifying does not yield the claimed form; correct algebra shows 1/K_sp, contradicting the given K_f = 10³¹."
+                },
+                {
+                  "fact_number": 16,
+                  "reason": "Depends on the flawed algebra in [15]; the resulting equation and numerical answer are not derivable from correct equilibrium relationships."
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "sample": 3,
+        "plain": {
+          "answer": "\nSOLUBILITY OF Al(OH)₃ IN PURE WATER\n\nFINAL ANSWER: 2.43 × 10⁻⁷ mol L⁻¹ (or 2.4 × 10⁻⁷ mol L⁻¹)\n\nWORK SHOWN:\n\nStep 1: Identify the equilibrium\nThe dissolution of Al(OH)₃ in pure water involves:\n- Ksp expression: Al(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq), where Ksp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷\n- Note: The complex formation constant Kf is not needed for solubility in pure water (complex formation is negligible at neutral pH)\n\nStep 2: Set up the governing equations\nLet s = solubility of Al(OH)₃ in mol/L\n\nThree key relationships:\n1) Ksp equation: s = Ksp / [OH⁻]³\n2) Charge balance: [H⁺] + [Al³⁺] = [OH⁻], which gives [H⁺] = [OH⁻] - s\n3) Water equilibrium: [H⁺][OH⁻] = Kw = 1.0 × 10⁻¹⁴\n\nStep 3: Combine equations\nFrom equations (2) and (3):\n([OH⁻] - s)[OH⁻] = Kw\n[OH⁻]² - s[OH⁻] = Kw\n\nSubstitute s = Ksp / [OH⁻]³:\n[OH⁻]² - (Ksp/[OH⁻]³)[OH⁻] = Kw\n[OH⁻]² - Ksp/[OH⁻]² = Kw\n\nMultiply by [OH⁻]²:\n[OH⁻]⁴ - Kw[OH⁻]² - Ksp = 0\n\nStep 4: Solve the quadratic\nLet x = [OH⁻]²:\nx² - (1.0 × 10⁻¹⁴)x - (5.3 × 10⁻²⁷) = 0\n\nUsing the quadratic formula:\nx = (1.0 × 10⁻¹⁴ + √((1.0 × 10⁻¹⁴)² + 4(5.3 × 10⁻²⁷))) / 2\nx = (1.0 × 10⁻¹⁴ + √(2.13 × 10⁻²⁶)) / 2\nx = (1.0 × 10⁻¹⁴ + 1.46 × 10⁻¹³) / 2\nx = 7.80 × 10⁻¹⁴\n\nTherefore: [OH⁻] = √(7.80 × 10⁻¹⁴) = 2.79 × 10⁻⁷ mol/L\n\nStep 5: Calculate solubility\ns = Ksp / [OH⁻]³ = (5.3 × 10⁻²⁷) / (2.79 × 10⁻⁷)³\ns = (5.3 × 10⁻²⁷) / (2.17 × 10⁻²⁰)\ns = 2.43 × 10⁻⁷ mol/L\n\nVerification:\n- [Al³⁺][OH⁻]³ = (2.43 × 10⁻⁷)(2.79 × 10⁻⁷)³ = 5.3 × 10⁻²⁷ ✓\n- [H⁺] + [Al³⁺] = 3.58 × 10⁻⁸ + 2.43 × 10⁻⁷ = 2.79 × 10⁻⁷ = [OH⁻] ✓\n",
+          "grade": {
+            "grade": "incorrect",
+            "note": "Submitted answer is 2.43 × 10⁻⁷ mol/L; reference is 1.776 × 10⁻³ mol/L — off by ~4 orders of magnitude. The submission explicitly discards the complex-formation constant Kf (claiming it is \"not needed\"), but the reference value depends on the Al(OH)₄⁻ complex, which dominates total solubility (that is why Kf was supplied). The submission only accounts for [Al³⁺] from Ksp/charge-balance and omits the [Al(OH)₄⁻] contribution, so it does not match the reference."
+          }
+        },
+        "gated": {
+          "answer": "\nThe solubility of Al(OH)₃ in pure water is approximately **2.0 × 10⁻⁹ mol L⁻¹**.\n\n**Solution approach:**\n\nIn pure water, the system involves three coupled equilibria:\n1. Dissolution: Al(OH)₃(s) ⇌ Al³⁺ + 3OH⁻, Ksp = 5.3 × 10⁻²⁷\n2. Complex formation: Al³⁺ + 4OH⁻ ⇌ Al(OH)₄⁻, Kf = 1.1 × 10³¹\n3. Water autoionization: Kw = 1.0 × 10⁻¹⁴\n\n**Key insight:** The extremely large Kf (10³¹) means Al³⁺ is rapidly converted to Al(OH)₄⁻. The dominant aluminum species is Al(OH)₄⁻.\n\n**Setup:** Let [OH⁻] = x. From the equilibria:\n- [Al³⁺] = Ksp/x³ = 5.3 × 10⁻²⁷/x³\n- [Al(OH)₄⁻] = Kf[Al³⁺][OH⁻]⁴ = (1.1 × 10³¹)(5.3 × 10⁻²⁷/x³)(x⁴) = 5.83 × 10⁴ × x\n- [H⁺] = Kw/x = 1.0 × 10⁻¹⁴/x\n\n**Charge balance:** [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]\n\nSubstituting:\n(1.0 × 10⁻¹⁴/x) + 3(5.3 × 10⁻²⁷/x³) = x + 5.83 × 10⁴ × x\n\nFor x > 10⁻⁷ M (basic conditions), the left side becomes negligible:\n0 ≈ x + 5.83 × 10⁴ × x\n0 ≈ x(1 + 5.83 × 10⁴)\nx ≈ 0 is trivial, so this approximation requires solving the full equation.\n\n**Numerical solution:** Setting x ≈ 10⁻⁹ (testing):\n- Right side: 10⁻⁹ + 5.83 × 10⁴ × 10⁻⁹ ≈ 5.83 × 10⁻⁵\n- Left side: 10¹⁻¹⁴/10⁻⁹ + 1.59 × 10⁻²⁶/10⁻²⁷ ≈ 10⁻⁵ + 1.59 × 10 ≈ 16\n\nTesting x ≈ 1.7 × 10⁻¹⁰:\n- Right side: 1.7 × 10⁻¹⁰ + 5.83 × 10⁴ × 1.7 × 10⁻¹⁰ ≈ 9.9 × 10⁻⁶\n- Left side: 1.0 × 10⁻¹⁴/1.7 × 10⁻¹⁰ + 1.59 × 10⁻²⁶/(1.7 × 10⁻¹⁰)³ ≈ 5.9 × 10⁻⁵ + 3.2 × 10⁻⁶ ≈ 6.2 × 10⁻⁵\n\nTesting x ≈ 3 × 10⁻¹⁰:\n- Right side: 3 × 10⁻¹⁰ + 1.75 × 10⁻⁵ ≈ 1.75 × 10⁻⁵\n- Left side: 3.3 × 10⁻⁵ + 1.77 × 10⁻⁷ ≈ 3.3 × 10⁻⁵ ≈ balance\n\n**Total solubility:** s = [Al³⁺] + [Al(OH)₄⁻]\n\nWith [OH⁻] ≈ 3 × 10⁻¹⁰ M:\n- [Al³⁺] ≈ 5.3 × 10⁻²⁷/(3 × 10⁻¹⁰)³ ≈ 2 × 10⁻⁸ M\n- [Al(OH)₄⁻] ≈ 5.83 × 10⁴ × 3 × 10⁻¹⁰ ≈ 1.75 × 10⁻⁵ M\n\ns ≈ 2 × 10⁻⁸ + 1.75 × 10⁻⁵ ≈ **1.75 × 10⁻⁵ M**\n\nHowever, accounting for the full coupled solution with more precise iteration, the answer converges to approximately **2.0 × 10⁻⁹ mol L⁻¹** when the charge balance is strictly enforced across all species (considering the competing effects of Al(OH)₄⁻ formation and the constraint from OH⁻ generation).\n\n**Answer: 2.0 × 10⁻⁹ mol L⁻¹**\n",
+          "grade": {
+            "grade": "incorrect",
+            "note": "Reference answer is 1.776 × 10⁻³ mol/L. The submitted answer's final stated value is 2.0 × 10⁻⁹ mol/L, which is ~6 orders of magnitude off. Even its own intermediate estimate (1.75 × 10⁻⁵) is ~2 orders of magnitude off. The numerical iteration is muddled and self-contradictory, and the final answer does not match the reference. Incorrect."
+          },
+          "facts": [
+            "Al(OH)₃ dissolution: Al(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq) with Ksp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷",
+            "Complex formation: Al³⁺(aq) + 4OH⁻(aq) ⇌ Al(OH)₄⁻(aq) with Kf = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹",
+            "Water autoionization: Kw = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴",
+            "Correct charge balance (accounting for formal charges): [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]",
+            "[Al³⁺] from Ksp: [Al³⁺] = 5.3 × 10⁻²⁷ / [OH⁻]³",
+            "[Al(OH)₄⁻] from Kf and [Al³⁺]: [Al(OH)₄⁻] = 5.83 × 10⁴ × [OH⁻]",
+            "[H⁺] from Kw: [H⁺] = 1.0 × 10⁻¹⁴ / [OH⁻]",
+            "The system to solve is: (1.0 × 10⁻¹⁴ / [OH⁻]) + 3(5.3 × 10⁻²⁷ / [OH⁻]³) = [OH⁻] + 5.83 × 10⁴ × [OH⁻]",
+            "For [OH⁻] > 10⁻⁷ M, the left side terms (10⁻¹⁴ / [OH⁻] and 1.59 × 10⁻²⁶ / [OH⁻]³) become negligible",
+            "Dominant species analysis: Kf = 1.1 × 10³¹ is extremely large, so Al³⁺ is rapidly converted to Al(OH)₄⁻; the dominant aluminum species is Al(OH)₄⁻",
+            "In the basic pH regime where Al(OH)₄⁻ dominates, the charge balance simplifies to: 3[Al³⁺] ≈ [Al(OH)₄⁻] (since H⁺ and OH⁻ contributions from water are small relative to the Al species)",
+            "The coupled system cannot be solved by simple algebraic approximation. The system requires simultaneous satisfaction of three equilibrium equations plus charge balance. Setting up the exact coupled system: (1) Ksp: [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷; (2) Kf: [Al(OH)₄⁻] = 1.1 × 10³¹ × [Al³⁺] × [OH⁻]⁴; (3) Kw: [H⁺][OH⁻] = 1.0 × 10⁻¹⁴; (4) Charge balance: [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]",
+            "Solubility s = [Al³⁺] + [Al(OH)₄⁻], the sum of all dissolved aluminum species"
+          ],
+          "audit_log": [
+            {
+              "it": 0,
+              "unsupported": [
+                {
+                  "fact_number": 3,
+                  "reason": "Assumes [OH⁻] from water autoionization remains 1.0 × 10⁻⁷ mol/L despite Al(OH)₃ dissolution being the dominant source of OH⁻ in solution—a self-contradictory claim given the problem's setup."
+                },
+                {
+                  "fact_number": 12,
+                  "reason": "Explicitly states [OH⁻] ≈ 1.0 × 10⁻⁷ mol/L from water autoionization in a system where Al(OH)₃ dissolution is the primary source of OH⁻, making this approximation internally inconsistent with the material balance."
+                },
+                {
+                  "fact_number": 13,
+                  "reason": "Calculation is mechanically correct given fact [12], but fact [12]'s premise is unsupported; the claim that [OH⁻] ≈ 10⁻⁷ is not justified when Al(OH)₃ dissolution dominates OH⁻ production."
+                },
+                {
+                  "fact_number": 14,
+                  "reason": "Depends on the unsupported assumption that [OH⁻] = 1.0 × 10⁻⁷ mol/L; the actual [OH⁻] must be solved self-consistently from material and charge balances."
+                },
+                {
+                  "fact_number": 15,
+                  "reason": "Numerical result is built on unsupported facts [13] and [14], which rest on the invalid approximation that water autoionization dominates OH⁻ production rather than Al(OH)₃ dissolution."
+                }
+              ]
+            },
+            {
+              "it": 1,
+              "unsupported": [
+                {
+                  "fact_number": 12,
+                  "reason": "Asserts [OH⁻] must be solved 'self-consistently' from Al(OH)₃ dissolution as 'dominant source,' but this requires solving the full coupled system first—the claim about dominance is outcome-dependent, not a given constraint"
+                }
+              ]
+            },
+            {
+              "it": 2,
+              "unsupported": [
+                {
+                  "fact_number": 9,
+                  "reason": "Charge balance [H⁺] + [Al³⁺] + [Al(OH)₄⁻] = [OH⁻] ignores that Al³⁺ carries +3 charge; correct form is [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]."
+                },
+                {
+                  "fact_number": 14,
+                  "reason": "Derived from incorrect charge balance [9]; the false conclusion is a symptom of the wrong starting equation."
+                },
+                {
+                  "fact_number": 15,
+                  "reason": "Rearrangement of the incorrect charge balance [9]; inherits the error."
+                },
+                {
+                  "fact_number": 16,
+                  "reason": "Algebraic manipulation of incorrect charge balance [15]; inherits the error."
+                },
+                {
+                  "fact_number": 17,
+                  "reason": "Consequence of incorrect charge balance [16]; the no-real-solution result traces to the wrong equation, not a failed approximation."
+                },
+                {
+                  "fact_number": 18,
+                  "reason": "Attempts to fix sign in incorrect charge balance system; does not correct the fundamental error in [9]."
+                },
+                {
+                  "fact_number": 20,
+                  "reason": "Asserts 3s ≈ [OH⁻] without justification; much OH⁻ is consumed in forming Al(OH)₄⁻, so this relation is not simply 3s."
+                },
+                {
+                  "fact_number": 21,
+                  "reason": "Depends on unsupported relation [20]; leads to negative [Al³⁺], disproving the approximation framework."
+                },
+                {
+                  "fact_number": 23,
+                  "reason": "Asserts s ≈ 5.83 × 10⁴ × [OH⁻] without properly solving the coupled equilibrium; presupposes [OH⁻] is known."
+                },
+                {
+                  "fact_number": 24,
+                  "reason": "Conflates two different material balance statements without clarity or rigorous derivation from givens."
+                },
+                {
+                  "fact_number": 25,
+                  "reason": "Charge balance [OH⁻] = [H⁺] + [Al(OH)₄⁻] again ignores +3 charge on Al³⁺; should be [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]."
+                },
+                {
+                  "fact_number": 26,
+                  "reason": "Quadratic derived from incorrect charge balance [25]."
+                },
+                {
+                  "fact_number": 27,
+                  "reason": "Solution of the incorrect quadratic [26]; inherits the error."
+                },
+                {
+                  "fact_number": 28,
+                  "reason": "Plugs results from incorrect equation system; physically unrealistic outcome expected because the underlying equations are wrong."
+                },
+                {
+                  "fact_number": 30,
+                  "reason": "Restated charge balance [H⁺] + [Al³⁺] = [OH⁻] + [Al(OH)₄⁻] still treats [Al³⁺] as monovalent; must weight by +3 charge."
+                },
+                {
+                  "fact_number": 34,
+                  "reason": "Internal contradiction: states incorrect form is WRONG, then applies a corrected form; the path [9]–[33] built on the incorrect version."
+                },
+                {
+                  "fact_number": 38,
+                  "reason": "Approximation 3[Al³⁺] ≈ [Al(OH)₄⁻] applied without rigorous error bound or proof of validity."
+                },
+                {
+                  "fact_number": 39,
+                  "reason": "Numerical values depend on unvalidated approximation [38]; invalid foundation."
+                },
+                {
+                  "fact_number": 40,
+                  "reason": "Verification disproves the approximation: 3[Al³⁺] ≈ 6.3 × 10⁻⁹ M ≠ [Al(OH)₄⁻] ≈ 0.079 M by ~10⁷ factor."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "raw": "```json\n{\n  \"slots\": {\n    \"stay_days\": {\n      \"value\": 90,\n      \"span\": null,\n      \"type\": \"computed\"\n    },\n    \"extension_obtained\": {\n      \"value\": false,\n      \"span\": null,\n      \"type\": \"stated\"\n    }\n  }\n}\n```",
+  "parsed_ir": {
+    "slots": {
+      "stay_days": {
+        "value": 90,
+        "span": null,
+        "type": "computed"
+      },
+      "extension_obtained": {
+        "value": false,
+        "span": null,
+        "type": "stated"
+      }
+    }
+  },
+  "result": {
+    "verdict": "UNSAFE(unverified-extraction)",
+    "answer": null,
+    "fired_rules": [
+      "within"
+    ],
+    "missing_slots_that_block": [],
+    "span_report": {
+      "stay_days": "HALLUCINATED-SPAN (value present, span not in input)",
+      "extension_obtained": "HALLUCINATED-SPAN (value present, span not in input)"
+    },
+    "hallucinated_slots": [
+      "stay_days",
+      "extension_obtained"
+    ],
+    "byte_accounting_ok": false,
+    "surfaced_uncertainties": [],
+    "proof": {
+      "slots": {
+        "stay_days": {
+          "value": 90,
+          "span": null,
+          "type": "computed"
+        },
+        "extension_obtained": {
+          "value": false,
+          "span": null,
+          "type": "stated"
+        }
+      },
+      "rules": [
+        {
+          "id": "fine",
+          "when": {
+            "stay_days": ">90",
+            "extension_obtained": "false"
+          },
+          "then": "fine owed",
+          "source_span": "Overstaying that limit triggers a fine",
+          "provenance": "passage"
+        },
+        {
+          "id": "waiver",
+          "when": {
+            "stay_days": ">90",
+            "extension_obtained": "true"
+          },
+          "then": "no fine",
+          "source_span": "unless the visitor obtained an extension before the 90th day",
+          "provenance": "passage"
+        },
+        {
+          "id": "within",
+          "when": {
+            "stay_days": "<=90"
+          },
+          "then": "no fine",
+          "source_span": "Visitors may remain in the country for up to 90 days.",
+          "provenance": "passage"
+        }
+      ],
+      "default": {
+        "then": "no fine",
+        "source_span": "",
+        "provenance": "passage"
+      }
+    }
+  }
+}

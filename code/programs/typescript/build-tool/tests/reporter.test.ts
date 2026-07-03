@@ -14,6 +14,7 @@ import { describe, it, expect } from "vitest";
 import {
   formatReport,
   formatDuration,
+  printReport,
   STATUS_DISPLAY,
 } from "../src/reporter.js";
 import type { BuildResult } from "../src/executor.js";
@@ -165,5 +166,24 @@ describe("formatReport", () => {
     expect(report).toContain("1 built");
     expect(report).not.toContain("skipped");
     expect(report).not.toContain("failed");
+  });
+});
+
+describe("printReport", () => {
+  it("writes the formatted report to stdout", () => {
+    const results = new Map<string, BuildResult>();
+    results.set("python/a", makeResult("python/a", "built", 1.5));
+    const original = process.stdout.write;
+    let captured = "";
+    process.stdout.write = ((chunk: string | Uint8Array): boolean => {
+      captured += typeof chunk === "string" ? chunk : Buffer.from(chunk).toString("utf-8");
+      return true;
+    }) as typeof process.stdout.write;
+    try {
+      printReport(results);
+    } finally {
+      process.stdout.write = original;
+    }
+    expect(captured).toContain("python/a");
   });
 });

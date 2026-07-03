@@ -3,7 +3,7 @@
 ## Overview
 
 LANG57 delivers the first typed Twig source files that live permanently in the
-repository: the **compiler's own data model** under `code/twig/compiler/`.
+repository: the **compiler's own data model** under `code/packages/twig/compiler/`.
 
 It also fixes a latent bug in `compile_match` that caused every `(match …)`
 expression to crash at runtime with `UnsupportedOpcode("jmpif")`.
@@ -78,12 +78,12 @@ and match expressions work end-to-end.
 
 ---
 
-## Part 3 — Compiler data model (`code/twig/compiler/`)
+## Part 3 — Compiler data model (`code/packages/twig/compiler/`)
 
 ### Directory layout
 
 ```
-code/twig/compiler/
+code/packages/twig/compiler/
   span.tw          Span record + validated constructor
   token.tw         TokenKind union + Token record
   diagnostic.tw    Severity union + Diagnostic record
@@ -325,7 +325,7 @@ to a temp directory and running them via `compile_module_tree` + `twig_vm::run`.
 - `cargo test -p twig-ir-compiler --lib` — all 72 existing tests still pass
 - `cargo test -p twig-module-driver --lib -- tw05d` — 6 integration tests pass
 - `cargo build --workspace` — clean build
-- `code/twig/compiler/` contains 7 `.tw` files
+- `code/packages/twig/compiler/` contains 7 `.tw` files
 - `code/specs/LANG57-tw05d-compiler-data-model.md` committed first
 
 ---

@@ -206,9 +206,39 @@ behavior — copying a formula from A1 to A2 increments relative rows
 but not absolute. The recalc engine itself does not care about
 absoluteness; it sees the resolved address.
 
-Sheet IDs are dense `u32`s, separately tracked from sheet names so
-that renaming a sheet does not require rewriting every formula. The
-formula AST holds `SheetId`; the parser converts names at parse time.
+Sheet IDs are dense `u32`s, separately tracked from sheet names.
+
+**Cross-sheet references (implemented; diverged from the original plan).** A
+formula reference may be sheet-qualified (`=Summary!A1`, `='Q1 Budget'!A1:B2`).
+The reference AST carries an **optional sheet *name*** — `FormulaAst::Ref { sheet:
+Option<String>, addr }` / `Range { sheet, range }`, where `None` is the formula's
+own sheet (the common case, byte-identical to single-sheet behaviour). The name is
+resolved to a `SheetId` later, at *evaluation / dependency-collection* time, by a
+workbook that knows its sheets.
+
+This **reverses** the earlier note here ("the AST holds `SheetId`; the parser
+converts names at parse time"): the bare `parse()` is workbook-free, so it cannot
+resolve a name, and keeping it pure means a formula that references a not-yet-created
+sheet is a clean `#REF!` at evaluation rather than a parse error (formulas can load
+in any order). The trade-off — accepted deliberately — is that **renaming a sheet
+must rewrite the stored name** in every referencing formula's AST, rather than being
+a free no-op. The parser disambiguates `Name!A1` (a `!` makes the preceding token a
+sheet name, never a cell) and single-quotes a name on re-emit only when it isn't a
+bare token. See `code/specs/visicalc-multi-sheet.md` for the full multi-sheet arc.
+
+**Resolution + cross-sheet recompute (implemented).** `evaluate` and `collect_refs`
+take a `resolve: Fn(&str) -> Option<SheetId>` callback; the workbook supplies
+`|name| self.sheet_by_name.get(name).copied()`. A qualified reference reads the
+resolved target sheet and registers a dependency edge `(target_sheet, addr)`, so the
+cross-sheet dependency graph (`Node = (SheetId, CellAddress)`) recomputes a formula
+on one sheet when a precedent on another sheet changes. An unknown sheet name → `None`
+→ `#REF!`, registering no precedent. Because edges are resolved when a formula is
+*set*, a forward reference to a not-yet-created sheet reads `#REF!` until re-entered
+— **except** on load: `deserialize` rebuilds the dependency graph after all sheets
+exist, so a workbook loaded with cross-sheet formulas (in any sheet order) is fully
+live. Sheet management — `rename_sheet` (rewrites every qualifier, keeps the id and
+values), `delete_sheet` (reindexes; inbound refs → permanent `#REF!`), `move_sheet`
+(reorders + reindexes), `sheet_names()` — rounds out the multi-sheet surface.
 
 ---
 
@@ -235,6 +265,132 @@ pub enum RecalcMode {
 
 The workbook is the unit of recalc. Multi-sheet dependencies live in
 the same graph.
+
+### Range operations — fill, cut/copy/paste
+
+Two operations replicate cells across the grid, both built on
+`FormulaAst::shift(d_row, d_col)` — a pure copy/paste reference rewrite that
+tracks **relative** refs and pins **absolute** (`$`) refs (the sibling of
+`adjust`, which moves both for structural edits). A reference shifted off the
+top/left edge collapses to `#REF!`.
+
+- **Fill** (`Workbook::fill(sheet, src, dst)`) replicates one `src` cell across
+  every cell of the `dst` range; each target shifts the formula by *its own*
+  offset from `src` (so `=A1` filled down a column becomes `=A2`, `=A3`, …). A
+  literal copies unchanged, an empty source clears each target, and the source's
+  display format rides along.
+
+- **Clipboard** (`copy`/`cut`/`paste`) captures a whole **rectangle** and shifts
+  it as a *unit*: every cell's formula shifts by the same block delta
+  `dst_anchor − src_anchor`, so the block's internal structure is preserved
+  (`=A1` copied two columns right pastes as `=C1`). `copy` leaves a reusable
+  buffer; `cut` is a one-shot move whose `paste` clears the source cells it
+  didn't overwrite. A paste overwrites the whole destination rectangle, so blank
+  source cells erase their targets; content and format both ride along.
+
+Both cap the affected range at `MAX_RANGE_CELLS` (DoS guard), treat an unknown
+sheet as a no-op, and compute their shift delta in `i64` clamped into `shift`'s
+`i32` contract so a high-coordinate operation can't overflow. `paste` returns
+`false` (writing nothing) when the clipboard is empty or the destination would
+run past the u32 grid edge.
+
+> Divergence from Excel: a **cut** shifts the moved formulas' own references
+> like a copy, rather than preserving them as a true move does. Excel's move
+> additionally rewrites *outside* references that pointed into the moved range;
+> the engine keeps cut a thin layer over the copy machinery and does not (yet)
+> track those inbound references.
+
+### Range sort
+
+`Workbook::sort_range(sheet, range, key_col, ascending) -> bool` reorders the
+**rows** of a rectangular `range` by the values in one **key column**, the way
+a spreadsheet's *Data ▸ Sort* does. It is the third member of the range-operation
+family, built on the same `FormulaAst::shift` machinery as fill and clipboard.
+
+Each row of `range` is treated as a record spanning the range's columns
+(`range.start.col ..= range.end.col`); the rows are permuted into key order while
+every record's cells stay together. `key_col` is an **absolute** column index and
+must lie inside the range, else the call is a no-op returning `false`. The sort
+key for a row is the cell's **computed value** at `(row, key_col)` — a formula
+sorts by what it evaluates to, not its text.
+
+**Total order over values** (so any mix of types has a deterministic order):
+
+| Rank | Kind | Within-kind order |
+|------|------|-------------------|
+| 0 | Number | numeric (ascending f64) |
+| 1 | Text | case-insensitive, then case-sensitive as a tiebreak |
+| 2 | Boolean | `FALSE` < `TRUE` |
+| 3 | Error | by a fixed sentinel order (`#REF!`, `#NAME?`, …) |
+| — | Empty | **always last**, in *both* directions (Excel's rule) |
+
+`ascending = false` reverses the comparison of the *non-empty* keys only — blanks
+still sink to the bottom. The sort is **stable**: rows with equal keys keep their
+original relative order.
+
+Because the rows physically move, a moved cell's formula has its references
+**shifted by that row's displacement** (`Δrow = dest − src`, `Δcol = 0`) through
+`FormulaAst::shift` — relative refs track, absolute (`$`) refs pin, an off-grid
+ref collapses to `#REF!` — exactly as if each row were cut and pasted to its new
+position. Display **formats** ride with their cells. Cells in the sorted rows but
+*outside* the column band are untouched, as are all cells outside the range.
+
+After permuting, the engine rebuilds the dependency graph and recalcs the whole
+workbook in one transaction (one revision bump), logging every cell in the range
+so a viewport `changed_since` snapshot taken before the sort sees the moves. The
+range is capped at `MAX_RANGE_CELLS` (the shared DoS guard).
+
+`sort_range` returns the **permutation** it applied — `Some(order)` where
+`order[new_row_offset] = old_row_offset` (0-based from `range.start.row`). This
+lets a caller that keeps its own per-cell side-table (the wasm facade's
+raw-source echo map) replay the exact row move with `rewrite_raw_for_fill`,
+rather than re-deriving the comparator. `None` is the no-op rejection (unknown
+sheet, out-of-range `key_col`, or an empty/inverted/single-row range); an
+already-sorted range returns `Some(identity)` and is left untouched.
+
+> Divergence from Excel: like `cut`, a sort shifts each moved formula's *own*
+> references by its row displacement and does **not** rewrite references that
+> pointed into the range from outside (or between two rows that both moved). A
+> column of plain data — the overwhelmingly common case — sorts exactly as
+> expected; a range thick with intra-range relative formulas inherits the same
+> documented limitation as `cut`.
+
+### Find / replace
+
+`Workbook::find_all(sheet, query, in_formulas, match_case) -> Vec<CellAddress>`
+and `Workbook::replace_all(sheet, query, replacement, match_case) -> usize`
+locate and bulk-edit cells whose text contains a substring — the engine side of
+*Edit ▸ Find / Replace*. Both scan only the **non-empty** cells (sparse: cost is
+proportional to populated cells, not the u32×u32 grid) and return addresses in
+(row, col) order.
+
+The **search text** for a cell depends on `in_formulas`:
+
+- `in_formulas = true` searches the cell's **source** — a formula's text
+  (`"=A1+2"`) or a literal's canonical string (`15` → `"15"`, `TRUE`, an error's
+  code). This is what `replace_all` edits.
+- `in_formulas = false` searches the cell's **computed display** value (the
+  format-applied string `get_display` returns), so you can find by what you see.
+
+`match_case = false` compares case-insensitively (ASCII). An empty `query` matches
+nothing (`find_all` returns empty, `replace_all` returns 0) — replacing "" would
+be meaningless.
+
+`replace_all` rewrites the matched substring(s) in each cell's **source**, then
+re-applies the result through `set_raw` (below) so the cell re-parses: a result
+that still begins with `=` re-parses as a formula (an invalid one degrades to
+`#VALUE!`), and a literal re-coerces (number / boolean / text). It returns the
+**count of cells changed**. One caveat, like a spreadsheet's: a replace can break
+a formula (replacing `1` in `=A1` yields `=A`, a `#NAME?`), and replacing inside a
+formula edits its *text*, not its references — the caller chooses the query.
+
+`Workbook::set_raw(sheet, addr, raw)` is the **single raw-string entry point** the
+replace path (and any host) uses: it trims, and routes an empty string to
+`clear_cell`, a `=`-prefixed string to `set_formula` (falling back to a `#VALUE!`
+literal if it won't parse), and anything else through literal coercion
+(`"TRUE"`/`"FALSE"` → boolean, a finite number → number, otherwise text) to
+`set_value`. It centralizes the "what a typed string means" policy that the
+facades previously each owned.
 
 ---
 
@@ -679,17 +835,120 @@ Without `enabled = true`, every cell in a cycle gets `Error(Ref)`.
 
 ## §16 Persistence
 
-Out of scope for this crate. Loading and saving XLSX files lives in a
-future `xlsx-io` crate. This crate exposes:
+The engine ships a small **portable JSON** save/load format — enough for a host
+to persist and reload a sheet without any file-format machinery. *No I/O happens
+in the crate*: `serialize` returns a `String`, `deserialize` takes a `&str`, and
+the host writes/reads the bytes wherever it likes (a file, `localStorage`, a
+text field).
 
 ```rust
-pub fn workbook_from_grid(rows: &[&[Cell]]) -> Workbook;
-pub fn workbook_to_grid(wb: &Workbook) -> Vec<Vec<Cell>>;
+pub fn serialize(&self) -> String;
+pub fn deserialize(&mut self, data: &str) -> Result<(), String>;
 ```
 
-— enough for in-memory construction and inspection. Round-tripping
-through XLSX (with all the file format's quirks) is the next layer
-up.
+What is stored is **source, not computed state**: per sheet, each cell as either
+a formula's text or a literal's typed value, plus the per-cell format codes
+(including formats on otherwise-empty cells). Computed values are recomputed by
+`deserialize` (via `recalc_all`), so the file is small and can never disagree
+with the engine. Cells and formats are emitted sorted by (row, col), so the
+output is stable — equal workbooks serialize byte-for-byte identically.
+
+```json
+{"version":1,"sheets":[{"name":"Sheet1",
+  "cells":[{"a1":"A1","value":{"number":15.0}},
+           {"a1":"E1","formula":"=SUM(A1:D1)"}],
+  "formats":[{"a1":"E1","code":"#,##0.00"}]}]}
+```
+
+A literal value is `{"number":n}` / `{"text":s}` / `{"bool":b}` /
+`{"error":"#REF!"}`; a non-finite number degrades to `#NUM!` (JSON has no
+NaN/∞). `deserialize` validates the JSON, `version`, and `sheets` array *before*
+mutating (a bad file leaves the workbook untouched), rebuilds sheets in file
+order (a single-sheet host keeps `SheetId(0)`), and keeps an unparseable stored
+formula as its literal text rather than dropping it. Loading and saving **XLSX**
+(with all the file format's quirks) remains out of scope — that's a future
+`xlsx-io` layer on top of this.
+
+### §16.1 Undo / Redo (session history)
+
+Undo/redo is a **session-layer** feature built directly on §16's serialize/
+deserialize, and lives in the host-facing session facade (`spreadsheet-core-wasm`
+`SpreadsheetSession`), not the pure-calc `Workbook`. The session exposes:
+
+```rust
+pub fn undo(&mut self) -> bool;      // restore the state before the last edit
+pub fn redo(&mut self) -> bool;      // replay the most recently undone edit
+pub fn can_undo(&self) -> bool;
+pub fn can_redo(&self) -> bool;
+```
+
+The model is **snapshot-based, not per-op inverse**. Every mutating session
+method (set-cell, set-format, fill, clipboard paste, structural insert/delete,
+load) runs through one internal `mutate` gate that:
+
+1. serializes the document *before* the edit;
+2. runs the edit;
+3. serializes again and, **only if the two differ**, pushes the pre-edit
+   snapshot onto an undo stack and clears the redo stack.
+
+Consequences, all intentional:
+
+- **Correct for every edit, present and future.** Because the unit of history is
+  a whole-document snapshot (the §16 source-only JSON), undo/redo needs no
+  knowledge of *what* an edit did — a new mutating op gets undo for free just by
+  going through `mutate`. This trades a per-edit double-serialize (cheap on the
+  sparse sheets the engine targets — a few hundred bytes) for zero per-op inverse
+  logic, which is the bug-prone part of command-stack undo.
+- **No-ops never enter history.** A failed edit (bad address), a `copy` (which
+  only touches the transient clipboard), an empty→empty `fill`, or a re-set to
+  the identical value all leave the serialization unchanged, so the user never
+  presses undo twice for one visible change.
+- **Restored formulas stay live.** `undo`/`redo` restore via the same
+  `deserialize` path (`recalc_all`), so a brought-back formula recomputes against
+  the restored precedents and keeps recalculating on later edits.
+- **Linear history.** A fresh edit after an undo clears the redo stack (you can't
+  redo across a divergence). History is bounded to `MAX_HISTORY` (100) snapshots,
+  oldest dropped — finite memory regardless of session length.
+- **The clipboard is not history.** The copy/cut buffer is transient editing
+  state, not document state, so it is deliberately excluded from snapshots; undo
+  restores cells, not what is on the clipboard.
+
+### §16.2 Column widths & row heights
+
+A real spreadsheet lets you resize columns and rows. The width/height is pure
+**presentation chrome** — the engine never *computes* with it — but it is stored in
+the engine (not left to each host) so it **persists across save/load** and stays
+consistent across every backend, the same way per-cell display formats are.
+
+- **Storage.** Each `Sheet` holds `col_widths: HashMap<u32, f64>` and
+  `row_heights: HashMap<u32, f64>`, keyed by the 1-based column / row index. The value
+  is an **opaque `f64` in host units** — the engine stores, key-shifts, and serializes
+  it but never interprets it. A column/row **absent** from the map uses the host's
+  default, so a sheet with no resizes is byte-identical to the pre-feature behaviour.
+  The host owns the unit (the demos use pixels), the default size, and any min/max clamp.
+- **API.** `column_width(sheet, col) -> Option<f64>` / `row_height(sheet, row)`;
+  `column_widths_in` / `row_heights_in` (bulk: only the customized indices in an
+  inclusive range, sorted, for a one-call viewport fetch); `set_column_width` /
+  `set_row_height` (return `bool`; **reject `NaN` / `±∞` / `≤ 0` / index 0** so a bad
+  host value can never poison the map or the serialized file; setting the current value
+  is a no-op with no revision bump, matching the diff-gating convention);
+  `clear_column_width` / `clear_row_height`.
+- **Structural edits shift the keys.** Insert/delete columns slide the `col_widths`
+  keys (drop a key in a deleted band); insert/delete rows do the same to `row_heights`;
+  the other axis is untouched. This reuses the same `insert_coord` / `delete_coord`
+  helpers that shift cell addresses and references, so a widened column stays widened as
+  it moves: widen C, insert a column at B, and the now-D column keeps its width.
+- **Sort-immune.** Column widths are columnar and row heights positional, so a range
+  sort — which reorders the *values* of row records — leaves both where they are. Resize
+  is chrome, not cell data (matches Excel).
+- **Persistence.** `serialize` adds optional per-sheet `colWidths` / `rowHeights` arrays
+  (sorted, emitted **only when non-empty**), so the document stays `version: 1` and a
+  workbook with no custom sizes serializes byte-identically — exactly how `formats` was
+  added. `deserialize` reads them **tolerantly**: a missing array, a non-finite / `≤ 0`
+  value, or a `0` / out-of-`u32` index is skipped, never aborting the load.
+- **Out of scope:** auto-fit ("size to widest cell" needs font metrics the engine
+  doesn't have) and hidden rows/columns (`set_*` rejects `≤ 0`; hiding is a separate
+  feature). See `code/specs/visicalc-column-width-row-height.md` for the full rollout.
 
 ---
 

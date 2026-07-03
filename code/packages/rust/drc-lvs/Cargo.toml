@@ -1,0 +1,8 @@
+[package]
+name = "drc-lvs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gate-netlist-format = { path = "../gate-netlist-format" }
+lef-def = { path = "../lef-def" }

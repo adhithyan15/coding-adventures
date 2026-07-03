@@ -1,0 +1,10 @@
+% Rulebook self-consistency (MYCIN-2026 M7): the two hypothesis priors are a
+% PARTITION of an undifferentiated CSF-pleocytosis presentation, so they must sum
+% to 1.0. This `check` encodes that invariant over the rulebook's own structure.
+% The real grounded priors (bacterial 0.037, viral 0.963) satisfy it → SAT.
+symbol total : scalar
+observe pb(0.037)
+observe pv(0.963)
+constrain total = pb + pv
+constrain total = 1.0
+check

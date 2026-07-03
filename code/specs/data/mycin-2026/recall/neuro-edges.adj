@@ -1,0 +1,159 @@
+% ============================================================================
+% neuro-edges — the neuroanatomical-localization knowledge-graph (MYCIN-2026 NEURO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #9 neurology):
+% the classic "lesion HERE -> this deficit" localizations. "A lesion of the subthalamic
+% nucleus — what movement disorder results?" becomes the binding query
+%     ? lesion_causes(subthalamic_nucleus, $Deficit).
+%
+% Direction note: the relation is structure -> deficit (`lesion_causes`), the board
+% direction — you are told the lesion site and must name the deficit/syndrome. The cited
+% spans read either way ("a lesion involving the Wernicke area results in fluent aphasia";
+% "Parkinson disease ... characterized by the degeneration of dopaminergic neurons in the
+% substantia nigra") — what matters for grounding is that one self-contained span names
+% BOTH the lesion site AND the resulting deficit. Each structure here maps to one
+% canonical syndrome, so a query binds a single answer with its citation.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the ninth ADJ-only recall domain; fifth Tier-2 organ-system domain
+% after RHEUM, ONCO, HISTO, CARDIO). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see neuro-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only localizations whose page states the association in a clean self-
+% contained span (both lesion site AND deficit named) are included. Deferred — cerebellar
+% hemisphere -> ataxia: its page describes the "cerebellar syndrome" and limb incoordination
+% in sentences that do not name "ataxia" alongside the lesion site in one declarative.
+% ============================================================================
+
+dictionary neuro_vocab {
+    define structure : entity   surface "brain structure", "lesion site", "nucleus", "cortical area"
+    define deficit   : entity   surface "neurological deficit", "syndrome", "movement disorder"
+
+    define lesion_causes : relation from structure to deficit  % the deficit a lesion site produces
+}
+
+rulebook neuro_facts {
+    use neuro_vocab
+
+    % --- Wernicke area lesion -> fluent (receptive) aphasia --------------------
+    relate lesion_causes(wernicke_area, fluent_aphasia)
+        source "A posterior lesion involving the Wernicke area results in fluent aphasia, characterized by impaired comprehension and severe paraphasia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559315/"
+        trust authoritative
+
+    % --- Broca area lesion -> nonfluent (expressive) aphasia -------------------
+    relate lesion_causes(broca_area, nonfluent_aphasia)
+        source "In contrast, an anterior lesion affecting the Broca area leads to nonfluent aphasia, in which patients have normal comprehension but produce speech that is telegraphic, effortful, and dysprosodic, without paraphasic errors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559315/"
+        trust authoritative
+
+    % --- arcuate fasciculus lesion -> conduction aphasia ----------------------
+    relate lesion_causes(arcuate_fasciculus, conduction_aphasia)
+        source "A lesion in the arcuate fasciculus or the white matter tract connecting the Wernicke and Broca areas results in conduction aphasia, characterized by impaired repetition and phonemic paraphasia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559315/"
+        trust authoritative
+
+    % --- substantia nigra degeneration -> Parkinson disease -------------------
+    relate lesion_causes(substantia_nigra, parkinson_disease)
+        source "Parkinson disease (PD) is a progressive neurodegenerative disorder characterized by the degeneration of dopaminergic neurons in the substantia nigra and the accumulation of alpha-synuclein within Lewy bodies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470193/"
+        trust authoritative
+
+    % --- subthalamic nucleus lesion -> hemiballismus --------------------------
+    relate lesion_causes(subthalamic_nucleus, hemiballismus)
+        source "Damage to the subthalamic nucleus can result in a disorder of movement called hemiballismus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559002/"
+        trust authoritative
+
+    % --- caudate nucleus (striatal) atrophy -> Huntington disease -------------
+    % Parallels the substantia-nigra -> Parkinson edge: the disease is characterized by
+    % degeneration at the named site. The HD page states the lesion site AND the disease in
+    % one self-contained span (its other pathophysiology sentences mention the caudate and HD
+    % separately, so this declarative is the clean both-endpoints source).
+    relate lesion_causes(caudate_nucleus, huntington_disease)
+        source "Adult-onset Huntington disease is typically characterized by early striatal atrophy in the caudate."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+        trust authoritative
+
+    % --- EXPAND: cerebellar localization — one span names BOTH lesion sites ----------
+    % Midline (vermis) vs hemispheric cerebellar lesions produce distinct deficits; the
+    % single declarative below names both endpoints for each edge.
+    relate lesion_causes(midline_cerebellum, imbalance)
+        source "Therefore, any midline cerebellar lesions manifest as imbalance, while hemispheric cerebellar lesions result mainly in incoordination."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562317/"
+        trust authoritative
+    relate lesion_causes(cerebellar_hemisphere, incoordination)
+        source "Therefore, any midline cerebellar lesions manifest as imbalance, while hemispheric cerebellar lesions result mainly in incoordination."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562317/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield neuroanatomy localizations (lesion site -> deficit), each
+    % grounded to a self-contained verbatim NCBI Bookshelf span naming both the
+    % structure and the deficit/syndrome it produces. (optic_chiasm ->
+    % bitemporal_hemianopia declined: NBK545213/NBK542287 have no single span that
+    % both names the chiasm and states it CAUSES the defect — left out, not stretched.)
+    % ------------------------------------------------------------------------
+
+    % Mammillary bodies (diencephalon) — the amnesia of Wernicke-Korsakoff.
+    relate lesion_causes(mammillary_bodies, wernicke_korsakoff_syndrome)
+        source "The amnesia associated with Wernicke-Korsakoff syndrome results from atrophy of diencephalic structures (thalamus, hypothalamus, and mammillary bodies)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430729/"
+        trust authoritative
+
+    % Amygdala (bilateral temporal) — Klüver-Bucy syndrome.
+    relate lesion_causes(amygdala, kluver_bucy_syndrome)
+        source "Kluver-Bucy syndrome (KBS) is a rare neuropsychiatric disorder due to lesions affecting bilateral temporal lobes, especially the hippocampus and amygdala."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544221/"
+        trust authoritative
+
+    % Hippocampus — anterograde amnesia (no new memories).
+    relate lesion_causes(hippocampus, anterograde_amnesia)
+        source "A lesion in the hippocampus can cause anterograde amnesia and the inability to make new memories."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537247/"
+        trust authoritative
+
+    % Medial longitudinal fasciculus — internuclear ophthalmoplegia.
+    relate lesion_causes(medial_longitudinal_fasciculus, internuclear_ophthalmoplegia)
+        source "Internuclear ophthalmoplegia is an ocular movement disorder caused by a lesion of the medial longitudinal fasciculus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441970/"
+        trust authoritative
+
+    % Posterior limb of the internal capsule — pure motor hemiparesis (lacunar).
+    relate lesion_causes(internal_capsule, pure_motor_hemiparesis)
+        source "Pure motor hemiparesis involves the posterior limb of the internal capsule, corona radiata, or ventral pons."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563216/"
+        trust authoritative
+
+    % Dominant (left) parietal lobe / angular gyrus — Gerstmann syndrome.
+    relate lesion_causes(dominant_parietal_lobe, gerstmann_syndrome)
+        source "Gerstmann's syndrome is caused by specific brain lesions which affect the posterior lobule of the parietal lobe in the dominant hemisphere, which is usually in the left hemisphere but in some patients it could be the right, especially the angular gyrus and adjacent structures (at the confluence of parietal, temporal and occipital lobes), some studies showed that it's caused not only by lesion in the mentioned area but also in the left middle frontal lobe of the dominant hemisphere."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519528/"
+        trust authoritative
+
+    % Nondominant (right) parietal lobe — hemispatial neglect.
+    relate lesion_causes(nondominant_parietal_lobe, hemispatial_neglect)
+        source "Damage to the non-dominant parietal lobe (usually right) leads to agnosia of the contralateral side of the world, also known as hemispatial neglect syndrome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537247/"
+        trust authoritative
+
+    % Frontal lobe (prefrontal cortex) — frontal lobe syndrome (personality change).
+    relate lesion_causes(frontal_lobe, personality_change)
+        source "Frontal lobe syndrome is characterized by impairments in executive function, behavior, emotion, motivation, and personality resulting from damage to the frontal lobes, particularly the prefrontal cortex and its associated neural networks."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532981/"
+        trust authoritative
+
+    % Posterior (dorsal) columns — loss of vibration and proprioception.
+    relate lesion_causes(posterior_columns, loss_of_proprioception)
+        source "The classic clinical features of Brown-Séquard syndrome include contralateral loss of pain and temperature (spinothalamic tract), ipsilateral hemiparesis (corticospinal tract), and ipsilateral loss of vibration and proprioception (posterior column pathway)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507888/"
+        trust authoritative
+}

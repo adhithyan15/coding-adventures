@@ -1,0 +1,7 @@
+{
+ "idx": 85,
+ "id": "CON-6",
+ "scenario": "The customer experienced qualifying downtime in June and submitted a credit request on July 20. The customer had one outstanding invoice with a due date of July 1, which remained unpaid as of July 20. The customer had emailed the provider on July 3 stating it was withholding payment.",
+ "policy": "A customer forfeits SLA credit eligibility for any month in which the customer's account is past due on the credit request date. An account is 'past due' if any undisputed invoice remains unpaid more than 15 days after its due date.",
+ "question": "Has the customer forfeited credit eligibility for June?"
+}

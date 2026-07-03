@@ -1,0 +1,245 @@
+use std::collections::HashSet;
+
+use crate::model::{
+    AppState, ExternalSourceRecord, ExternalSourceTarget, Rating, RatingCounts,
+    ReviewHistorySummary,
+};
+use crate::queue::deck_ids_in_scope;
+
+pub fn summarize_review_history(
+    state: &AppState,
+    deck_id: &str,
+    reviewed_after: u64,
+    reviewed_before: u64,
+) -> ReviewHistorySummary {
+    let mut summary = ReviewHistorySummary {
+        deck_id: deck_id.to_string(),
+        reviewed_after,
+        reviewed_before,
+        total_reviews: 0,
+        correct_reviews: 0,
+        unique_cards: 0,
+        rating_counts: RatingCounts::default(),
+        first_reviewed_at: None,
+        last_reviewed_at: None,
+    };
+
+    let manual_reschedule_review_ids = manual_reschedule_review_ids(&state.external_sources);
+    let deck_ids = deck_ids_in_scope(state, deck_id);
+    let deck_card_ids: HashSet<&str> = state
+        .cards
+        .iter()
+        .filter(|card| deck_ids.contains(card.deck_id.as_str()))
+        .map(|card| card.id.as_str())
+        .collect();
+    let mut reviewed_card_ids: HashSet<&str> = HashSet::new();
+
+    for review in &state.reviews {
+        if manual_reschedule_review_ids.contains(review.id.as_str()) {
+            continue;
+        }
+        if review.reviewed_at < reviewed_after || review.reviewed_at >= reviewed_before {
+            continue;
+        }
+        if !deck_card_ids.contains(review.card_id.as_str()) {
+            continue;
+        }
+
+        summary.total_reviews += 1;
+        reviewed_card_ids.insert(review.card_id.as_str());
+        summary.first_reviewed_at = match summary.first_reviewed_at {
+            Some(existing) => Some(existing.min(review.reviewed_at)),
+            None => Some(review.reviewed_at),
+        };
+        summary.last_reviewed_at = match summary.last_reviewed_at {
+            Some(existing) => Some(existing.max(review.reviewed_at)),
+            None => Some(review.reviewed_at),
+        };
+
+        match review.rating {
+            Rating::Again => summary.rating_counts.again += 1,
+            Rating::Hard => {
+                summary.rating_counts.hard += 1;
+                summary.correct_reviews += 1;
+            }
+            Rating::Good => {
+                summary.rating_counts.good += 1;
+                summary.correct_reviews += 1;
+            }
+            Rating::Easy => {
+                summary.rating_counts.easy += 1;
+                summary.correct_reviews += 1;
+            }
+        }
+    }
+
+    summary.unique_cards = reviewed_card_ids.len();
+    summary
+}
+
+fn manual_reschedule_review_ids(sources: &[ExternalSourceRecord]) -> HashSet<&str> {
+    sources
+        .iter()
+        .filter(|source| source.target == ExternalSourceTarget::Review)
+        .filter(|source| {
+            source
+                .data
+                .get("ease")
+                .and_then(|ease| ease.parse::<i64>().ok())
+                == Some(0)
+        })
+        .map(|source| source.target_id.as_str())
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::BTreeMap;
+
+    use crate::model::{Card, Deck, Review};
+
+    const NOW: u64 = 1_700_000_000_000;
+
+    fn card(id: &str, deck_id: &str) -> Card {
+        Card {
+            id: id.to_string(),
+            deck_id: deck_id.to_string(),
+            front: format!("front-{id}"),
+            back: format!("back-{id}"),
+            created_at: NOW,
+            lineage: None,
+        }
+    }
+
+    fn deck(id: &str, name: &str) -> Deck {
+        Deck {
+            id: id.to_string(),
+            name: name.to_string(),
+            description: String::new(),
+            created_at: NOW,
+        }
+    }
+
+    fn review(id: &str, card_id: &str, rating: Rating, reviewed_at: u64) -> Review {
+        Review {
+            id: id.to_string(),
+            session_id: "session".to_string(),
+            card_id: card_id.to_string(),
+            rating,
+            reviewed_at,
+            answer_time_ms: None,
+            leech_event: None,
+            previous_progress: None,
+            resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn summary_counts_reviews_for_deck_and_range() {
+        let state = AppState {
+            cards: vec![card("a", "deck"), card("b", "deck"), card("x", "other")],
+            reviews: vec![
+                review("r1", "a", Rating::Again, NOW + 10),
+                review("r2", "a", Rating::Hard, NOW + 20),
+                review("r3", "b", Rating::Good, NOW + 30),
+                review("r4", "b", Rating::Easy, NOW + 40),
+                review("before", "a", Rating::Good, NOW - 1),
+                review("other-deck", "x", Rating::Easy, NOW + 50),
+            ],
+            ..AppState::default()
+        };
+
+        let summary = summarize_review_history(&state, "deck", NOW, NOW + 50);
+
+        assert_eq!(summary.deck_id, "deck");
+        assert_eq!(summary.total_reviews, 4);
+        assert_eq!(summary.correct_reviews, 3);
+        assert_eq!(summary.unique_cards, 2);
+        assert_eq!(summary.rating_counts.again, 1);
+        assert_eq!(summary.rating_counts.hard, 1);
+        assert_eq!(summary.rating_counts.good, 1);
+        assert_eq!(summary.rating_counts.easy, 1);
+        assert_eq!(summary.first_reviewed_at, Some(NOW + 10));
+        assert_eq!(summary.last_reviewed_at, Some(NOW + 40));
+    }
+
+    #[test]
+    fn parent_deck_summary_counts_child_deck_reviews() {
+        let state = AppState {
+            decks: vec![
+                deck("parent", "Tamil"),
+                deck("child", "Tamil::Verbs"),
+                deck("sibling", "Spanish"),
+            ],
+            cards: vec![
+                card("a", "parent"),
+                card("b", "child"),
+                card("x", "sibling"),
+            ],
+            reviews: vec![
+                review("parent", "a", Rating::Good, NOW + 10),
+                review("child", "b", Rating::Again, NOW + 20),
+                review("sibling", "x", Rating::Easy, NOW + 30),
+            ],
+            ..AppState::default()
+        };
+
+        let summary = summarize_review_history(&state, "parent", NOW, NOW + 50);
+
+        assert_eq!(summary.total_reviews, 2);
+        assert_eq!(summary.correct_reviews, 1);
+        assert_eq!(summary.unique_cards, 2);
+        assert_eq!(summary.rating_counts.good, 1);
+        assert_eq!(summary.rating_counts.again, 1);
+        assert_eq!(summary.rating_counts.easy, 0);
+    }
+
+    #[test]
+    fn empty_range_returns_zero_summary() {
+        let state = AppState {
+            cards: vec![card("a", "deck")],
+            reviews: vec![review("r1", "a", Rating::Good, NOW + 10)],
+            ..AppState::default()
+        };
+
+        let summary = summarize_review_history(&state, "deck", NOW + 20, NOW + 30);
+
+        assert_eq!(summary.total_reviews, 0);
+        assert_eq!(summary.correct_reviews, 0);
+        assert_eq!(summary.unique_cards, 0);
+        assert_eq!(summary.first_reviewed_at, None);
+        assert_eq!(summary.last_reviewed_at, None);
+    }
+
+    #[test]
+    fn summary_ignores_imported_manual_reschedule_reviews() {
+        let state = AppState {
+            cards: vec![card("a", "deck")],
+            reviews: vec![
+                review("manual", "a", Rating::Good, NOW + 10),
+                review("answered", "a", Rating::Hard, NOW + 20),
+            ],
+            external_sources: vec![ExternalSourceRecord {
+                target: ExternalSourceTarget::Review,
+                target_id: "manual".to_string(),
+                source: "anki-v11".to_string(),
+                original_id: Some("manual".to_string()),
+                data: BTreeMap::from([("ease".to_string(), "0".to_string())]),
+            }],
+            ..AppState::default()
+        };
+
+        let summary = summarize_review_history(&state, "deck", NOW, NOW + 50);
+
+        assert_eq!(summary.total_reviews, 1);
+        assert_eq!(summary.correct_reviews, 1);
+        assert_eq!(summary.unique_cards, 1);
+        assert_eq!(summary.rating_counts.hard, 1);
+        assert_eq!(summary.rating_counts.good, 0);
+        assert_eq!(summary.first_reviewed_at, Some(NOW + 20));
+        assert_eq!(summary.last_reviewed_at, Some(NOW + 20));
+    }
+}

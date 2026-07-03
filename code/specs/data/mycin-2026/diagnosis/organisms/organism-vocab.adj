@@ -1,0 +1,92 @@
+% ============================================================================
+% organism-vocab — controlled vocabulary for ORGANISM IDENTIFICATION in
+% bacterial meningitis, as an IMPORTABLE CAS library.
+% ============================================================================
+% MYCIN-2026 A1. This is the step the 1976 MYCIN did *before* therapy: from the
+% clinical + laboratory findings, identify the *significant organism(s)*. The
+% bacterial-vs-viral arm (lib/meningitis.adj) answers "is this bacterial?"; this
+% vocabulary + rulebook answer "WHICH bacterium?", as a differential over the
+% specific pathogens. The probable-organism set then feeds the set-cover therapy
+% deriver (treatment/antibiotics/derive_regimen.py): identify → cover → dose.
+%
+% Same closed-vocabulary discipline as meningitis-vocab.adj: the decomposer is
+% constrained to these `surface` forms, and the compiler rejects any rulebook or
+% case that names a term not defined here, so the IR and the rulebook cannot
+% drift apart.
+%
+% The organism hypothesis names are chosen to align with the formulary's
+% organism vocabulary (treatment/antibiotics/formulary.json) so the identified
+% set maps directly onto drug coverage.
+%
+% Other libraries use this by:  import "organism-vocab.adj"  then  use organism_vocab
+
+dictionary organism_vocab {
+
+    % ======================== Hypotheses (the organisms) ========================
+    % The classic community + healthcare-associated bacterial-meningitis pathogens.
+
+    define s_pneumoniae : hypothesis
+        surface "Streptococcus pneumoniae", "pneumococcus", "pneumococcal"
+
+    define n_meningitidis : hypothesis
+        surface "Neisseria meningitidis", "meningococcus", "meningococcal"
+
+    define listeria : hypothesis
+        surface "Listeria monocytogenes", "listeria", "listerial"
+
+    define h_influenzae : hypothesis
+        surface "Haemophilus influenzae", "H. flu", "haemophilus"
+
+    define group_b_strep : hypothesis
+        surface "group B Streptococcus", "Streptococcus agalactiae", "GBS"
+
+    define gram_negative_bacilli : hypothesis
+        surface "gram-negative bacilli", "enteric gram-negative rods",
+                "E. coli", "Escherichia coli", "Klebsiella", "aerobic gram-negative rod"
+
+    define s_aureus : hypothesis
+        surface "Staphylococcus aureus", "staph aureus", "MRSA", "staphylococcal"
+
+    % ======================== Findings ==========================
+    % Each finding has a CLOSED value domain; the value the rulebook reasons over
+    % must be one of these and the compiler enforces it.
+
+    % --- CSF Gram-stain MORPHOLOGY (the strong, near-decisive identifier).
+    %     A positive Gram stain not only says "bacteria present" (the bacterial
+    %     arm) but, by morphology, points at the genus. ---
+    define csf_gram_morphology : finding values [
+            gram_positive_diplococci, gram_negative_diplococci,
+            gram_positive_bacilli, gram_negative_coccobacilli,
+            gram_negative_bacilli, gram_positive_cocci_clusters, none_seen]
+        surface "gram-positive diplococci", "lancet-shaped gram-positive diplococci",
+                "gram-negative diplococci", "gram-positive rods", "gram-positive bacilli",
+                "gram-negative coccobacilli", "pleomorphic gram-negative coccobacilli",
+                "gram-negative rods", "gram-negative bacilli",
+                "gram-positive cocci in clusters", "no organisms on Gram stain"
+
+    % --- Host age band (the dominant epidemiologic prior shifter). ---
+    define age_band : finding values [neonate, infant_child, adult, older_adult]
+        surface "neonate", "newborn", "infant", "young child", "child",
+                "adult", "middle-aged", "older adult", "elderly", "over 50"
+
+    % --- Host risk factors. ---
+    define immunocompromised : finding values [present, absent]
+        surface "immunocompromised", "immunosuppressed", "HIV", "transplant",
+                "on chemotherapy", "steroids", "immunocompetent"
+
+    define listeria_exposure : finding values [present, absent]
+        surface "pregnant", "unpasteurized dairy", "soft cheese", "deli meats",
+                "listeria exposure", "no listeria exposure"
+
+    define recent_neurosurgery_or_shunt : finding values [present, absent]
+        surface "recent neurosurgery", "post-neurosurgical", "CSF shunt",
+                "ventriculostomy", "penetrating head trauma", "no recent neurosurgery"
+
+    define crowding_exposure : finding values [present, absent]
+        surface "dormitory", "military barracks", "college student", "crowded living",
+                "outbreak contact", "no crowding exposure"
+
+    define petechial_rash : finding values [present, absent]
+        surface "petechial rash", "purpuric rash", "petechiae", "purpura fulminans",
+                "no rash"
+}

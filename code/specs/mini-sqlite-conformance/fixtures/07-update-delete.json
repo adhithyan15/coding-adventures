@@ -1,0 +1,60 @@
+{
+  "id": "07-update-delete",
+  "description": "UPDATE and DELETE with WHERE predicates",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE counters (name, value)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO counters VALUES ('hits', 10)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO counters VALUES ('misses', 3)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO counters VALUES ('errors', 0)"
+    },
+    {
+      "op": "execute",
+      "sql": "UPDATE counters SET value = 15 WHERE name = 'hits'"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT name, value FROM counters WHERE name = 'hits'",
+      "expected_columns": ["name", "value"],
+      "expected_rows": [["hits", 15]]
+    },
+    {
+      "op": "execute",
+      "sql": "UPDATE counters SET value = ? WHERE name = ?",
+      "params": [99, "misses"]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT value FROM counters WHERE name = 'misses'",
+      "expected_columns": ["value"],
+      "expected_rows": [[99]]
+    },
+    {
+      "op": "execute",
+      "sql": "DELETE FROM counters WHERE name = 'errors'"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS n FROM counters",
+      "expected_columns": ["n"],
+      "expected_rows": [[2]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT name FROM counters ORDER BY name",
+      "expected_columns": ["name"],
+      "expected_rows": [["hits"], ["misses"]]
+    }
+  ]
+}

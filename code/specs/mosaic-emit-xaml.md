@@ -526,7 +526,7 @@ Once `mosaic-pkg-grid` (UI29 §5.2) lands, the VisiCalc demo's Windows
 plumbing simplifies dramatically. The host project becomes:
 
 ```
-demo/visicalc/
+code/programs/typescript/visicalc/
   windows/xaml/
     VisiCalc.csproj           — generated (when --emit-project)
                                  includes a <ProjectReference> to

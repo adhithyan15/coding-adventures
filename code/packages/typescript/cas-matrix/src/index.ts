@@ -4,6 +4,7 @@ import {
   LIST,
   MUL,
   NEG,
+  POW,
   SQRT,
   SUB,
   app,
@@ -15,6 +16,7 @@ import {
   type IRInteger,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { Frac as SolveFrac, solveCubic, solveLinear, solveQuadratic, solveQuartic } from "@coding-adventures/cas-solve";
 import { Matrix, getMatrixBackend } from "matrix";
 
 export const MATRIX = "Matrix";
@@ -177,6 +179,69 @@ export function determinant(node: IRNode): IRNode {
     throw new MatrixError(`determinant: matrix must be square, got ${n}x${ncols}`);
   }
   return det(rows);
+}
+
+export function charPolyCoeffs(node: IRNode): IRNode[] {
+  return charPolyCoeffValues(node).map(rationalToIr);
+}
+
+export function charPoly(node: IRNode, variable: IRNode): IRNode {
+  const terms = charPolyCoeffValues(node).flatMap((coeff, power) => {
+    if (coeff.isZero()) return [];
+    const coeffNode = rationalToIr(coeff);
+    if (power === 0) return [coeffNode];
+    const variablePower = power === 1 ? variable : app(POW, [variable, int(power)]);
+    return coeff.equals(RationalValue.one()) ? [variablePower] : [app(MUL, [coeffNode, variablePower])];
+  });
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  return app(ADD, terms);
+}
+
+export function eigenvalues(node: IRNode): IRNode {
+  const rows = matrixToRationals(node);
+  const n = rows.length;
+  const ncols = rows[0]?.length ?? 0;
+  if (n !== ncols) {
+    throw new MatrixError(`eigenvalues: matrix must be square, got ${n}x${ncols}`);
+  }
+  if (n > 4) {
+    throw new MatrixError("eigenvalues: only matrices up to 4x4 are supported in this TypeScript port");
+  }
+
+  const coeffValues = charPolyCoeffValues(node);
+  const coeffs = coeffValues.map(toSolveFrac);
+  const result = solveCharacteristic(coeffs);
+  if (result.kind === "all") return app(sym("Eigenvalues"), [node]);
+
+  const roots = [...result.roots].sort(compareEigenRoot);
+  return app(LIST, roots.map((root) => app(LIST, [
+    root,
+    int(rootMultiplicity(root, coeffValues, n, roots.length)),
+  ])));
+}
+
+export function eigenvectors(node: IRNode): IRNode {
+  const rows = matrixToRationals(node);
+  const eigs = eigenvalues(node);
+  if (eigs.kind !== "apply" || headName(eigs.head) !== LIST.name) {
+    return app(sym("Eigenvectors"), [node]);
+  }
+
+  return app(LIST, eigs.args.map((pair) => {
+    if (pair.kind !== "apply" || pair.args.length < 2) {
+      return app(LIST, [pair, int(1), app(LIST, [])]);
+    }
+    const [lambda, multiplicity] = pair.args;
+    const lambdaValue = irToRationalValue(lambda);
+    if (lambdaValue === undefined) {
+      return app(LIST, [lambda, multiplicity, app(LIST, [])]);
+    }
+
+    const shifted = rows.map((row, rowIndex) =>
+      row.map((entry, colIndex) => entry.sub(rowIndex === colIndex ? lambdaValue : RationalValue.zero())));
+    return app(LIST, [lambda, multiplicity, nullspace(rationalsToMatrix(shifted))]);
+  }));
 }
 
 export function inverse(node: IRNode): IRNode {
@@ -489,6 +554,117 @@ function minor(rows: MatrixRows, skipRow: number, skipCol: number): MatrixRows {
     .map((row) => row.filter((_, colIndex) => colIndex !== skipCol));
 }
 
+function charPolyCoeffValues(node: IRNode): RationalValue[] {
+  const rows = matrixToRationals(node);
+  const n = rows.length;
+  const ncols = rows[0]?.length ?? 0;
+  if (n !== ncols) {
+    throw new MatrixError(`charPolyCoeffs: matrix must be square, got ${n}x${ncols}`);
+  }
+  const polyRows = rows.map((row, i) =>
+    row.map((entry, j) => (i === j ? [entry.neg(), RationalValue.one()] : [entry.neg()])));
+  return detPoly(polyRows);
+}
+
+function solveCharacteristic(coeffs: readonly SolveFrac[]) {
+  const degree = coeffs.length - 1;
+  if (degree === 1) return solveLinear(coeffs[1], coeffs[0]);
+  if (degree === 2) return solveQuadratic(coeffs[2], coeffs[1], coeffs[0]);
+  if (degree === 3) return solveCubic(coeffs[3], coeffs[2], coeffs[1], coeffs[0]);
+  if (degree === 4) return solveQuartic(coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]);
+  throw new MatrixError(`eigenvalues: unsupported characteristic polynomial degree ${degree}`);
+}
+
+function compareEigenRoot(left: IRNode, right: IRNode): number {
+  const leftRational = irToRationalValue(left);
+  const rightRational = irToRationalValue(right);
+  if (leftRational !== undefined && rightRational !== undefined) {
+    return compareRationalValues(leftRational, rightRational);
+  }
+  return 0;
+}
+
+function rootMultiplicity(
+  root: IRNode,
+  coeffs: readonly RationalValue[],
+  matrixSize: number,
+  rootCount: number,
+): number {
+  const rationalRoot = irToRationalValue(root);
+  if (rationalRoot === undefined) {
+    return rootCount === 1 ? matrixSize : 1;
+  }
+
+  let remaining = [...coeffs];
+  let multiplicity = 0;
+  while (remaining.length > 1) {
+    const division = divideByLinearFactor(remaining, rationalRoot);
+    if (!division.remainder.isZero()) break;
+    multiplicity += 1;
+    remaining = division.quotient;
+  }
+  return multiplicity === 0 ? 1 : multiplicity;
+}
+
+function divideByLinearFactor(
+  coeffs: readonly RationalValue[],
+  root: RationalValue,
+): { quotient: RationalValue[]; remainder: RationalValue } {
+  const degree = coeffs.length - 1;
+  if (degree <= 0) return { quotient: [], remainder: coeffs[0] ?? RationalValue.zero() };
+
+  const quotient = Array.from({ length: degree }, () => RationalValue.zero());
+  quotient[degree - 1] = coeffs[degree] ?? RationalValue.zero();
+  for (let i = degree - 2; i >= 0; i -= 1) {
+    quotient[i] = (coeffs[i + 1] ?? RationalValue.zero()).add(root.mul(quotient[i + 1]));
+  }
+  return {
+    quotient,
+    remainder: (coeffs[0] ?? RationalValue.zero()).add(root.mul(quotient[0])),
+  };
+}
+
+function detPoly(rows: RationalValue[][][]): RationalValue[] {
+  const n = rows.length;
+  if (n === 0) return [RationalValue.one()];
+  if (n === 1) return [...rows[0][0]];
+  if (n === 2) {
+    const [[a, b], [c, d]] = rows;
+    return polySub(polyMul(a, d), polyMul(b, c));
+  }
+  return rows[0].reduce((acc, entry, col) => {
+    const product = polyMul(entry, detPoly(minorPoly(rows, 0, col)));
+    return col % 2 === 0 ? polyAdd(acc, product) : polySub(acc, product);
+  }, [RationalValue.zero()]);
+}
+
+function minorPoly(rows: RationalValue[][][], skipRow: number, skipCol: number): RationalValue[][][] {
+  return rows
+    .filter((_, rowIndex) => rowIndex !== skipRow)
+    .map((row) => row.filter((_, colIndex) => colIndex !== skipCol));
+}
+
+function polyAdd(left: RationalValue[], right: RationalValue[]): RationalValue[] {
+  const length = Math.max(left.length, right.length);
+  return Array.from({ length }, (_, i) =>
+    (left[i] ?? RationalValue.zero()).add(right[i] ?? RationalValue.zero()));
+}
+
+function polySub(left: RationalValue[], right: RationalValue[]): RationalValue[] {
+  return polyAdd(left, right.map((entry) => entry.neg()));
+}
+
+function polyMul(left: RationalValue[], right: RationalValue[]): RationalValue[] {
+  if (left.length === 0 || right.length === 0) return [RationalValue.zero()];
+  const result = Array.from({ length: left.length + right.length - 1 }, () => RationalValue.zero());
+  left.forEach((a, i) => {
+    right.forEach((b, j) => {
+      result[i + j] = result[i + j].add(a.mul(b));
+    });
+  });
+  return result;
+}
+
 function matrixToRationals(node: IRNode): RationalValue[][] {
   return rowsOf(node).map((row) => row.map(entryToRational));
 }
@@ -501,6 +677,19 @@ function entryToRational(node: IRNode): RationalValue {
 
 function rationalToIr(value: RationalValue): IRNode {
   return value.denom === 1n ? int(value.numer) : rational(value.numer, value.denom);
+}
+
+function toSolveFrac(value: RationalValue): SolveFrac {
+  return new SolveFrac(value.numer, value.denom);
+}
+
+function irToRationalValue(node: IRNode): RationalValue | undefined {
+  if (node.kind === "integer") return new RationalValue(node.value, 1n);
+  if (node.kind === "rational") return new RationalValue(node.numer, node.denom);
+  if (node.kind === "apply" && headName(node.head) === NEG.name && node.args.length === 1) {
+    return irToRationalValue(node.args[0])?.neg();
+  }
+  return undefined;
 }
 
 function rationalsToMatrix(rows: readonly (readonly RationalValue[])[]): IRNode {
@@ -590,6 +779,13 @@ function compareAbsRational(a: RationalValue, b: RationalValue): number {
   return left > right ? 1 : -1;
 }
 
+function compareRationalValues(a: RationalValue, b: RationalValue): number {
+  const left = a.numer * b.denom;
+  const right = b.numer * a.denom;
+  if (left === right) return 0;
+  return left > right ? 1 : -1;
+}
+
 class RationalValue {
   readonly numer: bigint;
   readonly denom: bigint;
@@ -617,6 +813,10 @@ class RationalValue {
 
   isZero(): boolean {
     return this.numer === 0n;
+  }
+
+  equals(other: RationalValue): boolean {
+    return this.numer === other.numer && this.denom === other.denom;
   }
 
   add(other: RationalValue): RationalValue {

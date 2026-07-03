@@ -1,0 +1,7 @@
+{
+ "idx": 35,
+ "id": "SEC-6",
+ "scenario": "Customer Lin executed 5 day trades over a four-business-day window in a margin account. The account's equity is $18,000, which is below $25,000.",
+ "policy": "A broker-dealer must treat a customer as a 'pattern day trader' (triggering the $25,000 minimum equity requirement) only if the customer executes four or more day trades within five business days AND the number of day trades represents more than 6% of the customer's total trades in that margin account during the same period.",
+ "question": "Must the broker-dealer classify Lin as a pattern day trader and apply the $25,000 minimum?"
+}

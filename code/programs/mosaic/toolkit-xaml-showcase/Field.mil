@@ -1,0 +1,44 @@
+// Field.mil — interface for the toolkit's Field.
+//
+// Bootstrap's "form group" — a labelled text input with optional
+// help text below (or error text in red when validation fails).
+// The classic pattern:
+//
+//   Label
+//   [_____________ ]
+//   help / error
+//
+// v0.1 ships a text-input-only Field. A future PR (after UI29-2
+// children pass-through lands) can let Field wrap arbitrary content
+// (a Select, a Checkbox group, etc.) via a `children: node` slot.
+// For now the inner input is a HostInput inlined directly in
+// Field.mll — there's no inter-toolkit-component reference because
+// the kernel doesn't yet support self-package references in the
+// resolver.
+
+component Field {
+  // The label text shown above the input.
+  slot label : text ;
+
+  // The current value of the inner input. Required.
+  slot value : text ;
+
+  // Placeholder shown when the input is empty.
+  slot placeholder : text ;
+
+  // Help text shown below the input when there's no error.
+  slot help : text ;
+
+  // Error text shown below the input when validation fails. When
+  // set (non-empty), this REPLACES the help text and the field
+  // paints in the danger state. When empty, the help text shows.
+  slot error : text ;
+
+  // Disabled flag — propagates to the inner input.
+  slot disabled : bool ;
+
+  // Fired on each character change with the new text value.
+  emit onChange ( value : text ) ;
+  // Fired on Enter / commit.
+  emit onCommit ;
+}

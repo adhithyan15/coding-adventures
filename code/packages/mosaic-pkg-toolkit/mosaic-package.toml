@@ -7,12 +7,15 @@
 #
 # See `code/specs/mosaic-pkg-toolkit.md` for the design.
 #
-# Phase: v0.1 (PR-1) — scaffold + Button + Alert.
-# The full v0.1 catalog (13 components) lands across follow-up PRs.
+# Phase: v0.4 — UI29-4 host primitives integrated. Breadcrumb + Nav
+# rewritten on HostLink (BREAKING for hosts that wired onClick →
+# now onActivate); new Tooltip and NumberInput components wrap
+# HostTooltip / HostNumberInput. See CHANGELOG for the migration
+# guide.
 
 [package]
 name        = "mosaic-pkg-toolkit"
-version     = "0.1.0"
+version     = "0.11.0"
 description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
 license     = "MIT OR Apache-2.0"
 
@@ -22,11 +25,22 @@ license     = "MIT OR Apache-2.0"
 # v0.1 PR-3: Checkbox, Input, Radio (form controls).
 # v0.1 PR-4: ListGroup, Modal.
 # v0.1 PR-5: Field (label + HostInput + help/error).
+# v0.2 PR-6: Tier-2 batch 1 — Nav, ButtonGroup, Breadcrumb.
+# v0.4 UI29-4: Tooltip, NumberInput (new) + Breadcrumb/Nav rewrites.
+# v0.5: Pagination (HostLink-based, matching Nav/Breadcrumb).
+# v0.6: InputGroup (text input + optional prefix/suffix addons).
+# v0.7: Accordion (vertical expand/collapse panel stack).
+# v0.8: Tabs (horizontal tab bar + body panel).
+# v0.9: DropdownMenu (toggle button + revealed item list).
+# v0.10: Navbar (top-of-page brand + HostLink nav row).
+# v0.11: Select (dropdown selector, closes the Tier-2 batch).
 # Remaining Tier-1 (Card, Container) blocked on UI29-2 children
 # pass-through spec; ship when that lands.
 exports = [
-  "Alert", "Badge", "Button", "Checkbox", "Field", "Input",
-  "ListGroup", "Modal", "Radio", "Spinner", "Toast",
+  "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+  "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
+  "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
+  "Radio", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ]
 
 [dependencies]

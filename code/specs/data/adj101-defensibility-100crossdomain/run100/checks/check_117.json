@@ -1,0 +1,8 @@
+{
+ "check_id": 117,
+ "idx": 49,
+ "slot": "is_pre_existing",
+ "claimed_value": true,
+ "scenario": "A dog was treated for chronic hip dysplasia. The medical records establish that the dog was diagnosed with hip dysplasia by a veterinarian eight months before the policy's start date, making it pre-existing. The owner submitted a $2,000 treatment bill.",
+ "cited_span": "the dog was diagnosed with hip dysplasia by a veterinarian eight months before the policy's start date, making it pre-existing"
+}

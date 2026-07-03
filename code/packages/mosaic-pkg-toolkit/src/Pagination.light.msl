@@ -1,0 +1,34 @@
+// Pagination.light.msl — default light-theme styling.
+
+style Pagination {
+  part pagination {
+    padding : 0 ;
+  }
+  part pagination-prev {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#0d6efd" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part pagination-page {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#0d6efd" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part pagination-next {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#0d6efd" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

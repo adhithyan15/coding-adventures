@@ -1,0 +1,11 @@
+{
+  "name": "bacterial meningitis — PRE-CULTURE decision point (CSF chemistry back, Gram stain and culture still pending)",
+  "ground_truth": "High clinical suspicion of bacterial meningitis pending the dispositive Gram stain + culture; at THIS moment the verdict should be high-but-not-certain (you are still waiting on the confirmatory tests). Asserting ~100% here is indefensible — the confirmatory test could still change it.",
+  "observations": [
+    "csf_neutrophilic_pleocytosis(high)",
+    "csf_glucose(low)",
+    "csf_protein(elevated)",
+    "csf_lactate(elevated)",
+    "seizure(present)"
+  ]
+}

@@ -78,7 +78,7 @@ mod tests {
             line: 1,
             column: 1,
             type_name: Some("NAME".to_string()),
-            flags: None,
+            flags: None, cv: None,
         }])
         .unwrap();
 
@@ -96,7 +96,7 @@ mod tests {
                 line: 1,
                 column: 1,
                 type_name: Some("NAME".to_string()),
-                flags: None,
+                flags: None, cv: None,
             })],
             start_line: Some(1),
             start_column: Some(1),

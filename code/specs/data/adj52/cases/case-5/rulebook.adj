@@ -1,0 +1,233 @@
+% ============================================================================
+% ADJ52 case-5 derived rulebook.
+% Clinical area: urology / genitourinary infection-versus-neoplasm.
+% 51yo man, ~2.5y refractory "chronic prostatitis"-labeled LUTS, repeated
+% fluoroquinolone courses with relapse-on-stopping, mildly raised urine
+% leukocytes, marginally raised PSEP, LOW-POSITIVE TB IGRA (T-SPOT), right
+% renal calcified foci, bladder mucosal congestion/edema with diffuse
+% superficial ulceration over the right posterior wall, cytology atypia
+% (2/3), biopsy = inflammatory granulation tissue / polypoid fibrovascular
+% change with focal moderate-to-severe atypical urothelial hyperplasia.
+%
+% Differential built from the IR alone (no answer given), recursing into
+% subcategories. A rule is added ONLY because a citable source supports it
+% (anti-overfit), never to force a verdict.
+%
+% NOTE on grammar: every identifier matches /[a-z_][a-z0-9_]*/. Numeric/unit
+% findings were normalized to qualitative atoms:
+%   urine_leukocytes(31.6/uL, ref 0-25) -> urine_leukocytes(mildly_elevated)
+%   psep(1.34 ng/mL, ref 0-1.2)         -> psep(marginally_elevated)
+%   eps_white_cells(3-4/hpf)            -> eps_white_cells(below_prostatitis_threshold)
+% ============================================================================
+
+% ===== PRIORS (base rates for refractory male LUTS workup) =====
+
+% rationale: GU-TB is the classic mimic of refractory "prostatitis" and is the
+% unifying hypothesis when antibiotic-refractory LUTS coexists with a positive
+% TB assay and a granulomatous-looking bladder lesion; still uncommon overall.
+prior 0.18 for diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 Genitourinary Tuberculosis; F1000Research 9:1345" trust authoritative
+
+% rationale: chronic bacterial prostatitis is the label this patient carried and
+% a common cause of male LUTS, so it gets a substantial prior.
+prior 0.22 for diagnosis(chronic_bacterial_prostatitis)
+  source "AUA/EAU chronic prostatitis; StatPearls Chronic Prostatitis" trust authoritative
+
+% rationale: urothelial carcinoma is the malignancy the cytology/atypia raise and
+% must stay on the differential; bladder cancer is the most common urinary-tract
+% malignancy.
+prior 0.15 for diagnosis(bladder_urothelial_carcinoma)
+  source "PMC9411696 Etiology/Epidemiology of Bladder Cancer; Cleveland Clinic Bladder Cancer" trust authoritative
+
+% rationale: chronic pelvic pain syndrome (NIH IIIb) is the commonest prostatitis
+% category and a frequent home for antibiotic-refractory LUTS with scant pyuria.
+prior 0.12 for diagnosis(chronic_nonbacterial_prostatitis_cpps)
+  source "NIH chronic prostatitis/CPPS classification; StatPearls Chronic Prostatitis" trust authoritative
+
+% rationale: inflammatory pseudotumor / polypoid cystitis can produce a polypoid
+% fibrovascular ulcerated lesion mimicking tumor; uncommon.
+prior 0.06 for diagnosis(bladder_inflammatory_pseudotumor)
+  source "Pathology Outlines Granulomatous/polypoid cystitis; PMC3782910 cystoscopic biopsy profile" trust authoritative
+
+% ===== GENITOURINARY TUBERCULOSIS (tuberculous cystitis) =====
+
+% rationale: a positive TB interferon-release assay supplies host evidence of TB
+% infection; in the right clinical context it raises GU-TB (IGRA cannot, alone,
+% distinguish latent from active -> moderate, not large, LR). Encodes u3.
+contributes 3.0 from tb_igra(low_positive) to diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 (IGRA helpful as initial screen; positive does not confirm active)" trust authoritative
+
+% rationale: chronic LUTS that fail repeated standard antibiotic courses and relapse
+% on stopping is a textbook trigger to suspect GU-TB; fluoroquinolones are partially
+% anti-mycobacterial, giving transient improvement then relapse -- the exact pattern.
+contributes 4.0 from course(refractory_relapsing_despite_fluoroquinolone) to diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 (chronic prostatitis not resolving with standard antibiotics should raise suspicion of GU-TB); PMC4549703 sterile pyuria" trust authoritative
+
+% rationale: persistent leukocyturia without a cultured organism (sterile/mild pyuria)
+% is the classic urinary clue to GU-TB.
+contributes 2.0 from urine_leukocytes(mildly_elevated) to diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 (persistent sterile pyuria); NEJM Sterile Pyuria review" trust authoritative
+
+% rationale: renal parenchymal/collecting-system calcification occurs in ~40-70% of
+% renal TB and is an independent imaging clue distinct from the bladder lesion.
+contributes 2.5 from renal_finding(calcified_foci) to diagnosis(genitourinary_tuberculosis)
+  source "ScienceDirect Kidney Tuberculosis overview (calcification 40-70%); RadioGraphics 2021 GU-TB imaging" trust authoritative
+
+% rationale: a markedly enlarged-prostate-absent, NON-smoker host lowers the competing
+% bladder-cancer hypothesis but does not itself raise TB; kept neutral (not encoded as TB+).
+
+% --- CORRELATED BLADDER-LESION MANIFESTATIONS (one TB lesion -> count ONCE) ---
+% The broad zone of mucosal congestion/edema, the diffuse superficial ulceration,
+% and the biopsy reading of inflammatory granulation tissue with polypoid
+% fibrovascular change are the SAME tuberculous bladder lesion described three ways.
+% Writing an independent contributes for each would double-count one finding.
+% mechanism tb_bladder_lesion for diagnosis(genitourinary_tuberculosis) lr 4.5 : cystoscopy_finding(diffuse_superficial_ulceration), cystoscopy_finding(mucosal_congestion_and_edema), bladder_histology(inflammatory_granulation_tissue), bladder_histology(proliferating_fibrovascular_polypoid_change)
+%   source "StatPearls NBK557558 (urothelial erosions, ulcers, granulomas on cystoscopy); Pathology Outlines granulomatous cystitis (ulceration, granulation tissue)" trust authoritative
+
+% ===== CHRONIC BACTERIAL PROSTATITIS (the prior mistaken label) =====
+
+% rationale: EPS lecithin bodies present with white cells below the >10/hpf threshold
+% argue against an active bacterial prostatitis picture -> AGAINST.
+contributes 0.5 from eps_white_cells(below_prostatitis_threshold) to diagnosis(chronic_bacterial_prostatitis)
+  source "StatPearls Chronic Prostatitis (EPS leukocytosis >10/hpf supports inflammatory prostatitis)" trust authoritative
+
+% rationale: a marginally raised prostatic inflammation marker (PSEP) gives weak
+% support to a prostatic inflammatory process.
+contributes 1.4 from psep(marginally_elevated) to diagnosis(chronic_bacterial_prostatitis)
+  source "PSEP prostatic exosomal protein as prostatitis inflammation marker (marginal elevation)" trust empirical
+
+% rationale: TRUE bacterial prostatitis should be CURED, not transiently suppressed,
+% by appropriate fluoroquinolone courses; relapse-on-stopping after FOUR courses argues
+% strongly AGAINST simple bacterial prostatitis as the whole story.
+contributes 0.3 from course(refractory_relapsing_despite_fluoroquinolone) to diagnosis(chronic_bacterial_prostatitis)
+  source "StatPearls Chronic Prostatitis (fluoroquinolone-refractory relapse argues against straightforward bacterial prostatitis)" trust authoritative
+
+% rationale: a mildly enlarged prostate is a nonspecific compatible finding.
+contributes 1.3 from prostate_finding(mildly_enlarged) to diagnosis(chronic_bacterial_prostatitis)
+  source "StatPearls Chronic Prostatitis (prostatic enlargement nonspecific)" trust inferred
+
+% ===== BLADDER UROTHELIAL CARCINOMA (the malignancy worry) =====
+
+% rationale: urine cytology with atypical clusters worrisome for malignancy is the
+% test that raised cancer; it does contribute toward malignancy when taken at face value.
+contributes 3.0 from cytology(atypical_clusters_worrisome_for_malignancy) to diagnosis(bladder_urothelial_carcinoma)
+  source "NYU Urology CIS case (suspicious cytology); PMID 3856982 urinary cytology of bladder TB" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE against the tempting cancer answer) --
+% cystoscopy showed NO discrete tumor, only a broad inflammatory zone; absence of a
+% discrete mass argues against an exophytic urothelial carcinoma. (CIS is flat, so this
+% is a moderate, not absolute, down-weight.)
+contributes 0.4 from cystoscopy_finding(no_discrete_tumor) to diagnosis(bladder_urothelial_carcinoma)
+  source "PMC8000909 Imaging of bladder cancer (papillary tumors are discrete masses); Pathology Outlines bladder CIS (CIS flat, not always visible)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR -- contrast CT with normal bladder, no mass, no wall
+% thickening, no lymphadenopathy argues against an established/invasive bladder cancer.
+contributes 0.4 from ct_finding(no_mass_no_wall_thickening_no_nodes) to diagnosis(bladder_urothelial_carcinoma)
+  source "PMC8000909 / MDPI Cancers 13:1396 (bladder cancer shows wall thickening / mass / nodal disease on CT)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR -- lifelong NON-smoker removes the single greatest
+% bladder-cancer risk factor (smoking causes ~half of cases) -> AGAINST.
+contributes 0.6 from smoking_status(lifelong_non_smoker) to diagnosis(bladder_urothelial_carcinoma)
+  source "Cleveland Clinic Bladder Cancer (smoking >2x risk, ~50% of cases); PMC9411696 epidemiology" trust authoritative
+
+% ===== CHRONIC NONBACTERIAL PROSTATITIS / CPPS =====
+
+% rationale: antibiotic-refractory LUTS with scant inflammatory cells fits CPPS, the
+% commonest prostatitis category.
+contributes 2.0 from course(refractory_relapsing_despite_fluoroquinolone) to diagnosis(chronic_nonbacterial_prostatitis_cpps)
+  source "NIH CP/CPPS classification (antibiotic-refractory chronic pelvic pain)" trust authoritative
+contributes 1.5 from eps_white_cells(below_prostatitis_threshold) to diagnosis(chronic_nonbacterial_prostatitis_cpps)
+  source "NIH CP/CPPS IIIb (noninflammatory: scant leukocytes)" trust authoritative
+
+% rationale: CPPS does not produce a focally ulcerated bladder lesion with granulation
+% tissue on biopsy -> the structural bladder lesion argues AGAINST a pure CPPS label.
+contributes 0.4 from cystoscopy_finding(diffuse_superficial_ulceration) to diagnosis(chronic_nonbacterial_prostatitis_cpps)
+  source "NIH CP/CPPS (functional pain syndrome without destructive mucosal lesion)" trust inferred
+
+% ===== BLADDER INFLAMMATORY PSEUDOTUMOR / POLYPOID CYSTITIS =====
+
+% rationale: a polypoid fibrovascular proliferation with granulation tissue is the
+% histologic signature of an inflammatory pseudotumor / polypoid cystitis.
+contributes 3.5 from bladder_histology(proliferating_fibrovascular_polypoid_change) to diagnosis(bladder_inflammatory_pseudotumor)
+  source "Pathology Outlines polypoid cystitis / inflammatory pseudotumor (polypoid fibrovascular change)" trust authoritative
+contributes 2.0 from bladder_histology(inflammatory_granulation_tissue) to diagnosis(bladder_inflammatory_pseudotumor)
+  source "Pathology Outlines polypoid cystitis (granulation tissue)" trust authoritative
+
+% rationale: an inflammatory pseudotumor is a description, not an etiology; a positive
+% TB assay shifts the favored etiology toward TB rather than idiopathic pseudotumor.
+contributes 0.7 from tb_igra(low_positive) to diagnosis(bladder_inflammatory_pseudotumor)
+  source "Pathology Outlines (granulomatous cystitis etiologies include TB; identify cause)" trust inferred
+
+% ===== CORRELATED REACTIVE-ATYPIA MECHANISM (counts ONCE, across diagnoses) =====
+% The suspicious cytology AND the focal moderate-to-severe atypical urothelial
+% hyperplasia are ONE phenomenon: reactive urothelial change driven by the
+% inflammatory/ulcerative process. The cytology literature documents that the
+% atypical urothelial cells of bladder TB correlate to benign, reversible
+% hyperplasia. So this correlated pair fires ONCE in FAVOR of an
+% inflammatory/TB etiology (the reactive reading) -- not as independent evidence.
+% mechanism reactive_inflammatory_atypia for diagnosis(genitourinary_tuberculosis) lr 2.2 : cytology(atypical_clusters_worrisome_for_malignancy), bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)
+%   source "PMID 3856982 (urinary cytology of bladder TB: atypical urothelial cells correlate to benign reversible hyperplasia, reactive to inflammation)" trust authoritative
+
+% rationale: the SAME reactive-atypia mechanism, taken as reactive (not neoplastic),
+% argues AGAINST true carcinoma -- a single down-weight, counted once.
+% mechanism reactive_inflammatory_atypia_against_ca for diagnosis(bladder_urothelial_carcinoma) lr 0.5 : cytology(atypical_clusters_worrisome_for_malignancy), bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)
+%   source "PMID 3856982 (type I/II atypia in TB are benign reversible hyperplasia / reactive potential of urothelium); PMID 11186722 (post-TB cystitis follow-up)" trust authoritative
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: urine for AFB smear + mycobacterial culture (>=3 consecutive morning
+% specimens) + NAAT/Xpert MTB is the confirmatory pathway for GU-TB and resolves the
+% TB-versus-malignancy question; it is the highest-yield next step here.
+prior 0.20 for next_step(urine_afb_culture_and_tb_naat)
+  source "StatPearls NBK557558 (3-5 consecutive morning urines for mycobacterial culture; PCR 95.6% sens / 98.1% spec)" trust authoritative
+contributes 5.0 from course(refractory_relapsing_despite_fluoroquinolone) to next_step(urine_afb_culture_and_tb_naat)
+  source "StatPearls NBK557558 (refractory LUTS -> evaluate for GU-TB)" trust authoritative
+contributes 4.0 from tb_igra(low_positive) to next_step(urine_afb_culture_and_tb_naat)
+  source "StatPearls NBK557558 (positive IGRA prompts microbiologic confirmation in urine)" trust authoritative
+contributes 3.0 from renal_finding(calcified_foci) to next_step(urine_afb_culture_and_tb_naat)
+  source "RadioGraphics 2021 GU-TB imaging (renal calcification supports microbiologic TB workup)" trust authoritative
+
+% rationale: TB-specific tissue testing -- repeat/targeted biopsy with AFB stain,
+% mycobacterial culture and TB-PCR ON the bladder tissue -- adjudicates granulomatous
+% versus neoplastic when cytology is equivocal.
+prior 0.15 for next_step(targeted_bladder_biopsy_with_afb_stain_and_tb_pcr)
+  source "StatPearls NBK557558 (histopathology with culture); PMID 40176973 (biopsy + PCR confirm TB cystitis)" trust authoritative
+contributes 3.5 from cystoscopy_finding(diffuse_superficial_ulceration) to next_step(targeted_bladder_biopsy_with_afb_stain_and_tb_pcr)
+  source "PMID 40176973 (ulcerated lesion -> biopsy with AFB/PCR)" trust authoritative
+contributes 2.5 from cytology(atypical_clusters_worrisome_for_malignancy) to next_step(targeted_bladder_biopsy_with_afb_stain_and_tb_pcr)
+  source "PMID 11186722 (suspicious cytology in TB cystitis warrants biopsy of suspect sites)" trust empirical
+
+% rationale: transurethral resection / mapping biopsy is the malignancy-confirmation
+% path; it stays on the table because cytology was suspicious, but it ranks below the
+% TB workup given the negative cross-sectional imaging and reactive histology.
+prior 0.10 for next_step(transurethral_resection_for_malignancy)
+  source "AUA NMIBC (TURBT for suspected bladder tumor / persistent suspicious cytology)" trust authoritative
+contributes 2.5 from cytology(atypical_clusters_worrisome_for_malignancy) to next_step(transurethral_resection_for_malignancy)
+  source "AUA NMIBC (positive cytology drives cystoscopic resection)" trust authoritative
+contributes 0.5 from ct_finding(no_mass_no_wall_thickening_no_nodes) to next_step(transurethral_resection_for_malignancy)
+  source "PMC8000909 (negative cross-sectional imaging lowers pretest probability of resectable tumor)" trust inferred
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u3/u5/u6: the TB-versus-malignancy question is resolved by microbiologic + tissue TB
+% testing. Each candidate result moves the GU-TB posterior.
+uncertain { urine_tb(afb_or_culture_or_naat_positive), urine_tb(afb_and_culture_and_naat_negative), tissue_tb(granuloma_afb_or_pcr_positive), tissue_tb(carcinoma_confirmed) } for diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 (urine AFB/culture/NAAT and TB tissue testing adjudicate GU-TB)"
+
+% u5/u6: the malignancy hypothesis is resolved by the same tissue adjudication.
+uncertain { tissue_tb(carcinoma_confirmed), tissue_tb(granuloma_afb_or_pcr_positive) } for diagnosis(bladder_urothelial_carcinoma)
+  source "PMID 11186722 (post-TB cystitis: distinguish reactive atypia from true carcinoma on biopsy)"
+
+% --- contributes FROM each candidate test result so resolving moves the posterior ---
+contributes 9.0 from urine_tb(afb_or_culture_or_naat_positive) to diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 (urine culture/NAAT positive confirms GU-TB)" trust authoritative
+contributes 0.2 from urine_tb(afb_and_culture_and_naat_negative) to diagnosis(genitourinary_tuberculosis)
+  source "StatPearls NBK557558 (repeatedly negative urine TB testing lowers GU-TB; sensitivity imperfect)" trust authoritative
+contributes 8.0 from tissue_tb(granuloma_afb_or_pcr_positive) to diagnosis(genitourinary_tuberculosis)
+  source "PMID 40176973 (caseating granuloma + AFB/PCR on bladder tissue confirms TB cystitis)" trust authoritative
+contributes 0.15 from tissue_tb(carcinoma_confirmed) to diagnosis(genitourinary_tuberculosis)
+  source "PMID 11186722 (confirmed carcinoma reclassifies the lesion away from pure TB)" trust authoritative
+contributes 9.0 from tissue_tb(carcinoma_confirmed) to diagnosis(bladder_urothelial_carcinoma)
+  source "Pathology Outlines bladder CIS (tissue confirmation of carcinoma)" trust authoritative
+contributes 0.2 from tissue_tb(granuloma_afb_or_pcr_positive) to diagnosis(bladder_urothelial_carcinoma)
+  source "PMID 3856982 (granulomatous TB with reactive atypia is not carcinoma)" trust authoritative

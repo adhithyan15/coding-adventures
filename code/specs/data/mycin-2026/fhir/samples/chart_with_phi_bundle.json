@@ -1,0 +1,78 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "_doc": "SYNTHETIC FHIR Bundle (no real patient) — a chart export deliberately carrying PHI (name, address, phone, email, MRN, narrative text with the name, exact dates) so the de-identifier (deidentify.py) has something to strip, plus the treatment-relevant facts the chart→ChartFact bridge maps: a penicillin allergy, end-stage renal disease, and a tacrolimus med (a nephrotoxin). A complex patient for whom the empiric meningitis regimen turns out dose-infeasible / excluded → the optimizer abstains.",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p1",
+        "identifier": [{"system": "urn:mrn", "value": "MRN-4481920"},
+                       {"system": "http://hl7.org/fhir/sid/us-ssn", "value": "555-21-7788"}],
+        "name": [{"family": "Hernandez", "given": ["Maria", "Elena"]}],
+        "telecom": [{"system": "phone", "value": "+1-415-555-0173"},
+                    {"system": "email", "value": "maria.hernandez@example.com"}],
+        "address": [{"line": ["482 Pine Street", "Apt 6B"], "city": "San Francisco",
+                     "state": "CA", "postalCode": "94108"}],
+        "gender": "female",
+        "birthDate": "1968-04-12",
+        "text": {"status": "generated",
+                 "div": "<div>Maria Elena Hernandez, 56yo F, MRN-4481920, seen 2026-06-14</div>"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "id": "a1",
+        "recordedDate": "2019-03-02",
+        "code": {"text": "Penicillin",
+                 "coding": [{"system": "http://snomed.info/sct", "code": "373270004",
+                             "display": "Penicillin"}]},
+        "reaction": [{"manifestation": [{"text": "anaphylaxis"}]}]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "c1",
+        "recordedDate": "2021-08-15",
+        "clinicalStatus": {"coding": [{"code": "active"}]},
+        "code": {"text": "End-stage renal disease",
+                 "coding": [{"system": "http://snomed.info/sct", "code": "46177005",
+                             "display": "End stage renal disease"}]}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "m1",
+        "effectiveDateTime": "2026-06-10",
+        "medicationCodeableConcept": {"text": "Tacrolimus 1 mg capsule",
+            "coding": [{"system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                        "code": "197321", "display": "Tacrolimus"}]}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "o1",
+        "status": "final",
+        "effectiveDateTime": "2026-06-14T08:30:00Z",
+        "code": {"coding": [{"system": "http://loinc.org", "code": "33914-3",
+                             "display": "Estimated GFR"}]},
+        "valueQuantity": {"value": 9, "unit": "mL/min/1.73m2"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "o2",
+        "status": "final",
+        "effectiveDateTime": "2026-06-14T08:30:00Z",
+        "code": {"coding": [{"system": "http://loinc.org", "code": "29463-7",
+                             "display": "Body weight"}]},
+        "valueQuantity": {"value": 62, "unit": "kg"}
+      }
+    }
+  ]
+}

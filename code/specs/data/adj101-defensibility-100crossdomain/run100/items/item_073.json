@@ -1,0 +1,7 @@
+{
+ "idx": 73,
+ "id": "IMM-4",
+ "scenario": "Tomas applied for naturalization. During the statutory period he was convicted once for a drug offense involving marijuana. He has no other criminal history and meets all residence requirements.",
+ "policy": "An applicant for naturalization must demonstrate good moral character during the statutory period. A conviction for an aggravated felony at any time permanently bars a finding of good moral character; a single conviction for simple possession of 30g or less of marijuana does NOT bar good moral character.",
+ "question": "Is Tomas barred from establishing good moral character based on this conviction?"
+}

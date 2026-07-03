@@ -561,9 +561,15 @@ unsafe extern "C" fn free_data<T>(ptr: *mut c_void) {
 // ---------------------------------------------------------------------------
 
 /// Raise a Ruby exception. Does NOT return.
+///
+/// `rb_raise`'s second argument is a printf format string. We always pass the
+/// literal `%s` so the message content is never interpreted as format directives,
+/// preventing format-string injection when error messages contain user input.
 pub fn raise_error(exc_class: VALUE, msg: &str) -> ! {
     let c_msg = CString::new(msg).unwrap_or_else(|_| CString::new("(error)").unwrap());
-    unsafe { rb_raise(exc_class, c_msg.as_ptr()) }
+    // SAFETY: "%s\0" is a valid, literal printf format string. c_msg is a
+    // nul-terminated CString that lives until rb_raise longjmps.
+    unsafe { rb_raise(exc_class, b"%s\0".as_ptr() as *const c_char, c_msg.as_ptr()) }
 }
 
 /// Raise a RuntimeError.

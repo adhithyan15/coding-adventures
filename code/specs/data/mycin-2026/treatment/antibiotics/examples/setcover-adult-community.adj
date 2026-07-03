@@ -1,0 +1,25 @@
+% Worked example (B1): empiric adult-community meningitis regimen as a NATIVE
+% minimum-cost set-cover integer program. Booleans select drugs; the y_ aux
+% linearizes the grounded combination rule (vancomycin + ceftriaxone covers
+% resistant pneumococcus, which neither covers alone). minimize = total tier.
+% Solve:  adj-lang-cli setcover-adult-community.adj  -> optimize.optimal = vancomycin+ceftriaxone, cost 2.
+
+symbol x_vancomycin : bool
+symbol x_ceftriaxone : bool
+symbol x_ampicillin : bool
+symbol x_cefepime : bool
+symbol x_meropenem : bool
+symbol x_moxifloxacin : bool
+symbol x_aztreonam : bool
+symbol x_tmp_smx : bool
+symbol y_vancomycin_ceftriaxone : bool
+constrain y_vancomycin_ceftriaxone <= x_vancomycin
+constrain y_vancomycin_ceftriaxone <= x_ceftriaxone
+constrain y_vancomycin_ceftriaxone - (x_vancomycin + x_ceftriaxone) >= -1
+symbol y_vancomycin_cefepime : bool
+constrain y_vancomycin_cefepime <= x_vancomycin
+constrain y_vancomycin_cefepime <= x_cefepime
+constrain y_vancomycin_cefepime - (x_vancomycin + x_cefepime) >= -1
+constrain y_vancomycin_ceftriaxone + y_vancomycin_cefepime >= 1   % cover s_pneumoniae_resistant
+constrain x_ceftriaxone + x_cefepime + x_meropenem + x_moxifloxacin + x_aztreonam >= 1   % cover n_meningitidis
+minimize 1 * x_vancomycin + 1 * x_ceftriaxone + 1 * x_ampicillin + 2 * x_cefepime + 3 * x_meropenem + 4 * x_moxifloxacin + 4 * x_aztreonam + 3 * x_tmp_smx

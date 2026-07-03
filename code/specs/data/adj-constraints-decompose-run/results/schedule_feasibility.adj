@@ -1,0 +1,8 @@
+symbol design_finish : scalar
+symbol build_start : scalar
+symbol build_finish : scalar
+constrain design_finish >= 28
+constrain build_start = design_finish
+constrain build_finish - build_start >= 20
+constrain build_finish <= 45
+check

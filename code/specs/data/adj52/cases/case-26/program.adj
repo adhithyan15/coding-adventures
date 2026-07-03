@@ -1,0 +1,37 @@
+% ADJ52 case-26 program (this patient's observations + queries only; no rules).
+% 34yo woman, ~14 months treatment-resistant psychiatric illness (low mood,
+% broken sleep, nightmares, agitation, withdrawal) on antipsychotic + TCA +
+% benzodiazepine that "had not settled"; childhood immune thrombocytopenia and
+% intermittent wheeze; then evolving physical disease: vague abdominal pain,
+% anorexia, ~9 kg weight loss, amenorrhea, wasting, mild dehydration. Exam:
+% BP 88/44, HR 116; skin darkening over elbows/knees/ankles + buccal mucosal
+% pigmentation. Labs: Na 128, K 3.4, Hb 9.8, eosinophils 7%, urea mildly raised,
+% creatinine 1.1; cortisol very low with markedly elevated ACTH. Abdominal
+% cross-sectional imaging arranged (result pending); 21-hydroxylase Ab pending.
+
+% --- the Addisonian primary-adrenal-failure gestalt (one correlated syndrome) ---
+observe cortisol(very_low)
+observe acth(markedly_elevated)
+observe hyperpigmentation(mucocutaneous)
+observe sodium(low)
+observe hypotension(present)
+observe eosinophils(elevated)
+observe weight_loss(significant)
+
+% --- etiology-discriminating history / demographics ---
+observe history(childhood_immune_thrombocytopenia)
+observe history(intermittent_wheeze)
+observe history(chronic_constitutional_illness)
+observe demographic(female_adult)
+
+% NOT observed (open, decision-relevant — these are the arranged/pending tests):
+%   adrenal_imaging(atrophic_noncalcified) vs adrenal_imaging(enlarged_or_calcified)
+%   antibody(twenty_one_hydroxylase_positive) vs antibody(twenty_one_hydroxylase_negative)
+
+% --- queries: each candidate etiology + the recommended next step ---
+? etiology(autoimmune_adrenalitis)
+? etiology(tuberculous_adrenalitis)
+? etiology(adrenal_metastatic_infiltration)
+? etiology(bilateral_adrenal_hemorrhage)
+? etiology(secondary_adrenal_insufficiency)
+? next_step(abdominal_cross_sectional_imaging_and_twenty_one_hydroxylase_antibodies)

@@ -1,0 +1,406 @@
+{
+  "domain": "streptococcal_pharyngitis",
+  "target": "diagnosis(group_a_strep_pharyngitis)",
+  "tally": {
+    "grounded": 9
+  },
+  "per_finding": [
+    {
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Shaikh 2010 prevalence GAS children pharyngitis meta-analysis",
+          "found": true,
+          "supporting_quote": "Prevalence of Streptococcal Pharyngitis and Streptococcal Carriage in Children: A Meta-analysis (Shaikh N, Leonard E, Martin JM. Pediatrics. 2010 Sep;126(3):e557-64). PMID 20696723.",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/20696723/",
+          "next_citation": "PubMed abstract Shaikh 2010",
+          "gives_numbers": false
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PubMed abstract PMID 20696723 (Shaikh 2010)",
+          "found": true,
+          "supporting_quote": "Among children of all ages who present with sore throat, the pooled prevalence of GAS was 37% (95% confidence interval [CI]: 32%-43%). Children who were younger than 5 years had a lower prevalence of GAS (24% [95% CI: 21%-26%]). The prevalence of GAS carriage among well children with no signs or symptoms of pharyngitis was 12% (95% CI: 9%-14%).",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/20696723/",
+          "next_citation": "",
+          "gives_numbers": true
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch PMC3127779 (Le Marechal/adult Centor systematic review) for adult prevalence",
+          "found": true,
+          "supporting_quote": "The prevalence in children is reported to be around 20% to 25% while in adults it is between 5% to 10%",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3127779/",
+          "next_citation": "",
+          "gives_numbers": true
+        }
+      ],
+      "computed_lr": 0.37,
+      "lr_formula": "Prior is a base-rate, reported as a probability (not an LR). PRIMARY (child, byte-anchored meta-analysis): pretest prevalence P(GAS | child with sore throat) = 0.37 (95% CI 0.32-0.43); pretest odds = 0.37/(1-0.37) = 0.37/0.63 = 0.587. Under-5 stratum: 0.24 (CI 0.21-0.26). Asymptomatic carriage baseline (subtract for attributable infection) = 0.12 (CI 0.09-0.14). ADULT (background statement, not own-cohort primary data): 0.05-0.10 (point estimate ~0.075, odds 0.081). Reported computed_lr=0.37 = child all-ages pretest probability.",
+      "id": "f0",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "primary_data": {
+        "study": "Shaikh N, Leonard E, Martin JM. Prevalence of Streptococcal Pharyngitis and Streptococcal Carriage in Children: A Meta-analysis. Pediatrics. 2010 Sep;126(3):e557-64. PMID 20696723.",
+        "population": "Children of all ages presenting with sore throat (clinical/primary-care settings); gold standard = throat culture; antibiotics within 30 days excluded",
+        "n": "29 articles met inclusion criteria (screened 266 of 579 identified)",
+        "metric_type": "prevalence (pretest probability / base rate)",
+        "values": "Children all ages: 37% (95% CI 32%-43%); children <5y: 24% (95% CI 21%-26%); asymptomatic GAS carriage in well children: 12% (95% CI 9%-14%). Adult comparator (background figure, not Shaikh primary data): 5%-10%.",
+        "byte_quote": "Among children of all ages who present with sore throat, the pooled prevalence of GAS was 37% (95% confidence interval [CI]: 32%-43%). Children who were younger than 5 years had a lower prevalence of GAS (24% [95% CI: 21%-26%]). The prevalence of GAS carriage among well children with no signs or symptoms of pharyngitis was 12% (95% CI: 9%-14%)."
+      },
+      "verdict": "grounded",
+      "note": "Prior/base-rate finding: prevalence reported directly as a probability, not converted to an LR. PRIMARY, byte-anchored number is the pediatric figure from Shaikh 2010 (landmark meta-analysis, the canonical anchor for child GAS prevalence cited by IDSA): 37% (95% CI 32-43%) among children of ALL ages with sore throat; under-5s 24% (21-26%). Note carriage baseline is 12%, so attributable-infection prevalence in symptomatic children is lower than the raw culture-positive figure. ADULT prevalence (5-10%) is captured but is a BACKGROUND statement in PMC3127779 (adult Centor validation review), NOT that paper's own derived cohort estimate, so it is direction/secondary-quality only; the grounded computed_lr is anchored on the child meta-analysis primary data (0.37). Pretest odds: child all-ages 0.587, child <5y 0.316, adult ~0.081. Net: prevalence is age-dependent and must be specified; child=37%, adult=5-10%.\""
+    },
+    {
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: tonsillar exudate likelihood ratio Centor / Ebell 2000 JAMA",
+          "found": true,
+          "resolved_url": "https://thennt.com/lr/streptococal-pharyngitis/",
+          "supporting_quote": "The presence of tonsillar exudate has a positive likelihood ratio of 3.4 ... The absence of tonsillar exudate has a negative likelihood ratio of 0.74",
+          "next_citation": "Ebell MH, Smith MA, Barry HC, Ives K, Carey M. JAMA 2000;284(22):2912-2918",
+          "gives_numbers": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PubMed 11147989 (Ebell 2000 JAMA abstract)",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/11147989/",
+          "supporting_quote": "The most useful findings for evaluating the likelihood of strep throat are presence of tonsillar exudate, pharyngeal exudate, or exposure to strep throat infection in the previous 2 weeks (positive likelihood ratios, 3.4, 2.1, and 1.9, respectively)",
+          "next_citation": "Ebell et al., JAMA 2000;284(22):2912-8 \u2014 primary systematic review (Rational Clinical Examination)",
+          "gives_numbers": true
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch AFP 2001;0701 p157 (summary of Ebell 2000)",
+          "found": true,
+          "resolved_url": "https://www.aafp.org/pubs/afp/issues/2001/0701/p157.html",
+          "supporting_quote": "The presence of a tonsillar exudate had a likelihood ratio of 3.4; pharyngeal exudate had a likelihood ratio of 2.1.",
+          "next_citation": "Ebell MH, et al. JAMA. December 13, 2000;284:2912-8",
+          "gives_numbers": true
+        }
+      ],
+      "primary_data": {
+        "study": "Ebell MH, Smith MA, Barry HC, Ives K, Carey M. The Rational Clinical Examination: Does this patient have strep throat? JAMA. 2000;284(22):2912-2918 (Dec 13, 2000). Systematic review / pooled likelihood ratios.",
+        "population": "Patients (adults and children) presenting with acute sore throat / pharyngitis; GAS confirmed by throat culture",
+        "metric_type": "Pooled positive likelihood ratio (LR+) for the clinical sign tonsillar exudate (a Centor criterion), for group A streptococcal pharyngitis",
+        "n": "Pooled across studies in the systematic review (individual study n not specified in abstract)",
+        "values": "LR+ (tonsillar exudate present) = 3.4; LR- (tonsillar exudate absent) = 0.74",
+        "byte_quote": "The most useful findings for evaluating the likelihood of strep throat are presence of tonsillar exudate, pharyngeal exudate, or exposure to strep throat infection in the previous 2 weeks (positive likelihood ratios, 3.4, 2.1, and 1.9, respectively)"
+      },
+      "computed_lr": 3.4,
+      "lr_formula": "Finding f1 = tonsillar_exudate(present), so the relevant metric is LR+. The source (Ebell 2000 JAMA, Rational Clinical Examination) reports a directly-pooled positive likelihood ratio for this clinical sign rather than separate sens/spec, so per procedure step 3 the published stratum-specific clinical-criterion LR is used directly: LR+ = 3.4 (byte-anchored in the JAMA abstract and corroborated by AFP 2001 summary and TheNNT). Corresponding LR- (absence) = 0.74 (TheNNT, from same source). Prior: GAS prevalence in adults with acute sore throat ~5-15% (commonly cited ~10%); applying LR+ 3.4 to a 10% prior: pretest odds 0.10/0.90=0.111 -> posttest odds 0.111*3.4=0.378 -> posttest probability 0.378/1.378 = ~27%.",
+      "verdict": "grounded",
+      "id": "f1",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "note": "Primary anchor is the landmark Rational Clinical Examination systematic review: Ebell et al., JAMA 2000;284(22):2912-2918. It reports a pooled positive likelihood ratio of 3.4 for tonsillar exudate as a sign of strep throat (the JAMA abstract literally states 'positive likelihood ratios, 3.4, 2.1, and 1.9, respectively' for tonsillar exudate, pharyngeal exudate, and recent strep exposure). Because the source publishes a pooled clinical-criterion LR rather than separate sensitivity/specificity for this individual sign, computed_lr uses the published LR+ = 3.4 directly (procedure step 3, 'published stratum-specific LR for a clinical criterion'). The matching LR- for absence is 0.74 (TheNNT, same Ebell source). The abstract caveat applies: no single finding is accurate enough alone to rule in/out strep \u2014 this is why the sign is combined in the Centor/McIsaac score. Could not load the original JAMA full-text table directly (PubMed full text behind 403/paywall), but the LR+ = 3.4 value is byte-anchored in the PubMed abstract itself and independently corroborated by two summary sources tracing to the same primary citation, so verdict = grounded. PubMed entry 11147989 is cited as 2000 vol 284(22); the AFP summary dates it Dec 13, 2000, 284:2912-8."
+    },
+    {
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: tender anterior cervical lymphadenopathy LR GAS pharyngitis (Ebell Rational Clinical Examination)",
+          "found": true,
+          "supporting_quote": "the absence of tender anterior cervical nodes, tonsillar enlargement, or exudates were reliable predictors that GABHS was not present (negative LR of 0.60, 0.63, and 0.74, respectively). Ebell MH, et al. Does this patient have strep throat? JAMA 2000;284:2912-2918.",
+          "gives_numbers": true,
+          "next_citation": "Aalbers 2011 systematic review (pooled individual-sign LRs) PMC3127779",
+          "resolved_url": "https://www.aafp.org/pubs/afp/issues/2001/0701/p157.html"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch: PMC3127779 Aalbers 2011 BMC Medicine systematic review, Table of individual signs",
+          "found": true,
+          "supporting_quote": "Tender anterior cervical adenopathy | 16 | 4,144 | 0.67 (0.52 to 0.79) | 0.59 (0.49 to 0.69) | 1.65 (1.41 to 1.92) | 0.56 (0.41 to 0.76)",
+          "gives_numbers": true,
+          "next_citation": "none - primary pooled data reached",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3127779/"
+        }
+      ],
+      "id": "f2",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "computed_lr": 1.65,
+      "lr_formula": "LR+ = sens/(1-spec) = 0.67/(1-0.59) = 0.67/0.41 = 1.63 \u2248 published pooled LR+ 1.65 (95% CI 1.41-1.92)",
+      "verdict": "grounded",
+      "primary_data": {
+        "study": "Aalbers J, O'Brien KK, Chan WS, et al. Predicting streptococcal pharyngitis in adults in primary care: a systematic review of the diagnostic accuracy of symptoms and signs and validation of the Centor score. BMC Medicine. 2011;9:67.",
+        "population": "Adults presenting to primary care with sore throat / acute pharyngitis (GAS confirmed by throat culture/RADT)",
+        "n": "16 studies, 4,144 patients (pooled)",
+        "metric_type": "Pooled sensitivity, specificity, LR+ and LR- for individual sign 'tender anterior cervical adenopathy'",
+        "values": "sensitivity 0.67 (0.52-0.79); specificity 0.59 (0.49-0.69); LR+ 1.65 (1.41-1.92); LR- 0.56 (0.41-0.76)",
+        "byte_quote": "Tender anterior cervical adenopathy | 16 | 4,144 | 0.67 (0.52 to 0.79) | 0.59 (0.49 to 0.69) | 1.65 (1.41 to 1.92) | 0.56 (0.41 to 0.76)"
+      },
+      "note": "Finding f2 (tender_anterior_cervical_nodes present) is one of the four Centor criteria. The landmark finding-specific source is the Ebell 2000 JAMA Rational Clinical Examination ('Does this patient have strep throat?'), whose pooled estimates were updated and re-pooled by the Aalbers 2011 BMC Medicine systematic review (16 studies, 4,144 adult primary-care patients). The pooled LR+ for the PRESENT finding is 1.65 (95% CI 1.41-1.92); this is the grounded value for f2. Self-check: re-deriving from the pooled point estimates gives LR+ = 0.67/0.41 = 1.63, which agrees with the directly-pooled 1.65 (small difference because the authors pooled per-study LRs rather than recomputing from pooled sens/spec). For the parallel negative-finding case, LR- = 0.56. This sign is only weakly discriminating alone (LR+ ~1.65 barely shifts probability); its main diagnostic value is as one component of the Centor/McIsaac score, and its absence (LR- 0.56) is modestly more informative than its presence. Prior/prevalence not part of this finding's metric; GAS prevalence in adult sore-throat cohorts is typically ~10% (Shaikh 2010 reports ~37% in symptomatic children) \u2014 report separately if a prior is needed. Verdict grounded: computed_lr derives from byte-anchored pooled real numbers."
+    },
+    {
+      "chain": [
+        {
+          "hop": 0,
+          "source_queried": "Aalbers J, O'Brien KK, Chan WS, et al. Predicting streptococcal pharyngitis in adults in primary care: a systematic review of the diagnostic accuracy of symptoms and signs and validation of the Centor score. BMC Medicine. 2011;9:67. (PMC3127779)",
+          "found": true,
+          "supporting_quote": "Fever row, Table of diagnostic accuracy of individual symptoms and signs: Sensitivity (95% CI) 0.50 (0.39 to 0.62), Specificity (95% CI) 0.70 (0.58 to 0.79), +LR (95% CI) 1.65 (1.40 to 1.95), -LR (95% CI) 0.71 (0.64 to 0.80). Footnote: 'The most widely used cut-off point to indicate fever was 38.0C.'",
+          "gives_numbers": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3127779/",
+          "next_citation": "Primary pooled estimate; this is itself the meta-analysis of 21 adult primary-care studies (4,635 patients) using throat culture as reference standard."
+        },
+        {
+          "hop": 1,
+          "source_queried": "Ebell MH, Smith MA, Barry HC, et al. The rational clinical examination. Does this patient have strep throat? JAMA. 2000;284(22):2912-2918. (cross-check landmark adult meta-analysis)",
+          "found": true,
+          "supporting_quote": "Ebell 2000 JAMA names fever as one of the variables that best discriminate strep vs non-strep (along with tonsillar/pharyngeal exudate, enlarged tonsils, lymphadenopathy, absence of cough); LR+ values published for exudate 3.4, pharyngeal exudate 2.1, strep exposure 1.9. Fever is listed as discriminating but the most cited per-finding LR for history of fever / temperature >38C as a Centor criterion is the pooled Aalbers value (LR+ 1.65).",
+          "gives_numbers": false,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/11147989/",
+          "next_citation": "Used as corroboration of direction/landmark status; numeric anchor taken from Aalbers 2011 pooled table."
+        }
+      ],
+      "computed_lr": 1.65,
+      "lr_formula": "Finding present (history_of_fever(present)) -> use LR+. Published pooled LR+ = 1.65 (95% CI 1.40-1.95). Cross-check from pooled sens/spec: LR+ = sens/(1-spec) = 0.50/(1-0.70) = 0.50/0.30 = 1.67, which matches the published 1.65 (rounding/pooling). Negative-finding LR- (not the queried polarity) = (1-sens)/spec = (1-0.50)/0.70 = 0.50/0.70 = 0.71. Prior: GAS prevalence in adult sore-throat ~ 5-20% (probability 0.05-0.20).",
+      "verdict": "grounded",
+      "primary_data": {
+        "study": "Aalbers J, O'Brien KK, Chan WS, et al. Predicting streptococcal pharyngitis in adults in primary care: a systematic review of the diagnostic accuracy of symptoms and signs and validation of the Centor score. BMC Medicine. 2011;9:67. (PMC3127779)",
+        "population": "Adults presenting to primary care with sore throat; reference standard = throat culture for group A streptococcus",
+        "n": "21 studies, 4,635 patients pooled (fever analysis)",
+        "metric_type": "Pooled sensitivity, specificity, LR+ and LR- for the Centor finding 'history of fever / temperature >38C'",
+        "values": "Sensitivity 0.50 (95% CI 0.39-0.62); Specificity 0.70 (95% CI 0.58-0.79); LR+ 1.65 (95% CI 1.40-1.95); LR- 0.71 (95% CI 0.64-0.80); fever cut-off most commonly 38.0C",
+        "byte_quote": "Fever ... Sensitivity (95% CI) 0.50 (0.39 to 0.62), Specificity (95% CI) 0.70 (0.58 to 0.79), +LR (95% CI) 1.65 (1.40 to 1.95), -LR (95% CI) 0.71 (0.64 to 0.80)"
+      },
+      "id": "f3",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "note": "Finding f3 = history_of_fever(present), a Centor criterion (temp >38C). Best byte-anchored per-finding quantity is the pooled meta-analytic estimate from Aalbers 2011 (BMC Medicine, adult primary-care, throat-culture reference, 21 studies / 4,635 patients). For a PRESENT finding the relevant statistic is LR+ = 1.65 (95% CI 1.40-1.95). This is internally consistent with the reported sens/spec: sens/(1-spec) = 0.50/0.30 = 1.67 ~ 1.65. The Ebell 2000 JAMA Rational Clinical Examination is the landmark adult meta-analysis and names fever as a top discriminating variable but its summary tables surface explicit LR+ values for exudate (3.4), pharyngeal exudate (2.1) and recent strep exposure (1.9) rather than a clean fever LR; Aalbers is therefore used as the numeric anchor and Ebell as directional corroboration. Note this is an adult population (Centor was derived in adults); Shaikh 2012 (children) reports fever as a variable but its abstract did not surface a usable fever LR. Prior probability of GAS in adult sore throat is ~5-20%. LR+ of 1.65 is a weak positive shift, consistent with the literature consensus that no single Centor element rules strep in or out."
+    },
+    {
+      "id": "f4",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "primary_data": {
+        "study": "Aalbers J, O'Brien KK, Chan WS, et al. Predicting streptococcal pharyngitis in adults in primary care: a systematic review of the diagnostic accuracy of symptoms and signs and validation of the Centor score. BMC Medicine. 2011;9:67. (PMC3127779). Pooled meta-analysis of individual signs/symptoms; lineage traces to Ebell MH et al., 'The rational clinical examination: Does this patient have strep throat?' JAMA 2000;284:2912-8.",
+        "population": "Adults presenting with acute sore throat in primary care (systematic review pooling multiple primary cohorts)",
+        "n": "Pooled across included primary-care adult cohorts (multiple studies; finding-level pooled estimates)",
+        "metric_type": "sensitivity, specificity, LR+, LR- for the sign 'absence of cough' (the present finding raising GAS probability)",
+        "values": "absence of cough: sensitivity 0.74 (95% CI 0.68-0.79); specificity 0.49 (95% CI 0.40-0.58); LR+ 1.46 (95% CI 1.28-1.66); LR- 0.53 (95% CI 0.46-0.61)",
+        "byte_quote": "Sensitivity: 0.74 (95% CI 0.68 to 0.79); Specificity: 0.49 (95% CI 0.40 to 0.58); Positive Likelihood Ratio: 1.46 (95% CI 1.28 to 1.66); Negative Likelihood Ratio: 0.53 (95% CI 0.46 to 0.61). 'Absence of cough and tender cervical adenopathy both decrease the likelihood of GABHS pharyngitis by 15% to 20% when absent'"
+      },
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Centor criteria absence of cough likelihood ratio GAS sensitivity specificity; and Ebell 2000 rational clinical examination",
+          "found": true,
+          "supporting_quote": "The Ebell et al. study 'The rational clinical examination: does this patient have strep throat?' was published in JAMA in 2000... absence of cough was among the important discriminating factors",
+          "resolved_url": "https://www.aafp.org/pubs/afp/issues/2001/0701/p157.html",
+          "gives_numbers": false,
+          "next_citation": "Ebell MH et al. JAMA 2000;284:2912-8; systematic review PMC3127779"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch AAFP p157 (Ebell summary)",
+          "found": true,
+          "supporting_quote": "Only LR+ explicitly stated: tonsillar exudate 3.4, pharyngeal exudate 2.1, strep exposure 1.9; cough not individually quantified in this summary",
+          "resolved_url": "https://www.aafp.org/pubs/afp/issues/2001/0701/p157.html",
+          "gives_numbers": false,
+          "next_citation": "PMC3127779 systematic review Table 2"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch PMC3127779 (Aalbers/BMC Med 2011 systematic review) Table 2 individual signs",
+          "found": true,
+          "supporting_quote": "absence of cough are: Sensitivity 0.74 (95% CI 0.68 to 0.79); Specificity 0.49 (95% CI 0.40 to 0.58); Positive Likelihood Ratio 1.46 (95% CI 1.28 to 1.66); Negative Likelihood Ratio 0.53 (95% CI 0.46 to 0.61)",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3127779/",
+          "gives_numbers": true,
+          "next_citation": "primary cohorts pooled within review; corroborated by GetTheDiagnosis (sens 76%, spec 48%)"
+        },
+        {
+          "hop": 4,
+          "source_queried": "WebSearch corroboration of cough sens/spec",
+          "found": true,
+          "supporting_quote": "The sensitivity of absence of cough was 76%, with a specificity of 48%... positive likelihood ratios ranging from 1.45-2.33",
+          "resolved_url": "https://www.annemergmed.com/article/S0196-0644(05)00458-0/fulltext",
+          "gives_numbers": true,
+          "next_citation": "consistent with pooled LR+ 1.46"
+        }
+      ],
+      "computed_lr": 1.46,
+      "lr_formula": "Finding f4 = cough ABSENT is a PRESENT positive finding (the Centor criterion 'absence of cough'), so the operative ratio is LR+ for 'absence of cough'. LR+ = sensitivity / (1 - specificity) = 0.74 / (1 - 0.49) = 0.74 / 0.51 = 1.45 \u2248 1.46 (reported pooled value, 95% CI 1.28-1.66). Cross-check LR- (if cough were PRESENT, lowering GAS): (1 - sensitivity)/specificity = (1 - 0.74)/0.49 = 0.26/0.49 = 0.53. Both match the reported pooled estimates, confirming internal consistency.",
+      "verdict": "grounded",
+      "note": "Landmark lineage: Ebell MH et al. JAMA 2000 (Rational Clinical Examination) is the original pooled-LR meta-analysis; the finding-level numbers used here are the byte-anchored pooled estimates from the Aalbers et al. adult primary-care systematic review (BMC Medicine 2011, PMC3127779), Table 2, which validates the Centor score and reports per-sign accuracy. For finding f4 (cough ABSENT raising GAS), the correct multiplier is LR+ = 1.46 for the sign 'absence of cough.' Arithmetic reconstructs from byte-anchored sens=0.74 / spec=0.49 to 1.45, matching the reported 1.46. Corroborated independently by Annals of Emergency Medicine (Tanz/clinical diagnosis review: absence of cough sens 76%, spec 48%, LR+ 1.45-2.33). This is a modest finding \u2014 absence of cough alone shifts probability only ~15-20%; its diagnostic strength comes from combination in the Centor/McIsaac score. Population is adults with acute sore throat in primary care; pediatric estimates (e.g., Shaikh 2010, Tanz) differ. Prevalence/prior not the metric here (expected metric = LR), but for reference GAS prevalence in adult sore throat is typically ~10% and ~37% (0.37) in symptomatic children per Shaikh 2010."
+    },
+    {
+      "id": "f5",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "primary_data": {
+        "study": "Fine AM, Nizet V, Mandl KD. Large-Scale Validation of the Centor and McIsaac Scores to Predict Group A Streptococcal Pharyngitis. Arch Intern Med. 2012;172(11):847-852. (PMC3627733)",
+        "population": "206,870 patients aged 3+ presenting with painful throat at a US retail health chain (Sep 2006-Dec 2008); GAS determined by RADT/culture",
+        "n": "206870",
+        "metric_type": "age-stratified GAS prevalence -> derived LR for the 'age 3-14' finding",
+        "values": "Age 3-14: 23,959/64,789 GAS+ (37%); Age 15-44: 27,585/114,803 (24%); Age 45+: 4,469/27,278 (16%); Overall: 56,013/206,870 (27%)",
+        "byte_quote": "For patients 3 years and older, 27% tested GAS positive ... Age 3-14: 23,959/64,789 (37%); Age 15-44: 27,585/114,803 (24%); Age 45+: 4,469/27,278 (16%)"
+      },
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: McIsaac 1998 modified Centor age criterion + LR",
+          "found": true,
+          "resolved_url": "https://www.mdcalc.com/calc/104/centor-score-modified-mcisaac-strep-pharyngitis",
+          "supporting_quote": "In 1998, McIsaac modified the score by adding age as a fifth criterion... Age 3-14 years: add 1 point; 15-44: 0; >=45: subtract 1 point. Original derivation: McIsaac WJ et al. CMAJ. 1998;158(1):75-83.",
+          "gives_numbers": false,
+          "next_citation": "Age modifier is a single ordinal point, not a published LR; need age-stratified GAS prevalence to derive an LR for the 'age 3-14' finding"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebSearch: Shaikh 2010 prevalence GAS in children meta-analysis",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/20696723/",
+          "supporting_quote": "Shaikh N et al. Prevalence of Streptococcal Pharyngitis and Streptococcal Carriage in Children: A Meta-analysis. Pediatrics 2010;126(3):e557. (~37% GAS prevalence among children with sore throat) - supports high prevalence in children but is single-stratum, no contrast group for an LR.",
+          "gives_numbers": true,
+          "next_citation": "Need a single cohort with all age strata to compute LR(age 3-14) = P(age 3-14|GAS+)/P(age 3-14|GAS-)"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch Table 4: Fine et al. 2012 Large-Scale Validation (PMC3627733)",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3627733/",
+          "supporting_quote": "Age 3-14: 23,959/64,789 GAS+ (37%); Age 15-44: 27,585/114,803 (24%); Age 45+: 4,469/27,278 (16%); Overall 56,013/206,870 (27%) among 206,870 patients 3 years and above who presented with a painful throat.",
+          "gives_numbers": true,
+          "next_citation": "PRIMARY: these are real cohort GAS-test results; sufficient to compute LR for the age finding"
+        }
+      ],
+      "computed_lr": 1.58,
+      "lr_formula": "LR(age 3-14) = P(age 3-14 | GAS+) / P(age 3-14 | GAS-). From Fine 2012 (N=206,870): GAS+ total=56,013, GAS- total=206,870-56,013=150,857. Among GAS+, age 3-14 = 23,959 -> P=23,959/56,013=0.4277. Among GAS-, age 3-14 = 64,789-23,959=40,830 -> P=40,830/150,857=0.2706. LR+ = 0.4277/0.2706 = 1.58. (Direction confirms McIsaac +1 age modifier; baseline prior = overall prevalence 56,013/206,870 = 0.271, i.e. 27% pretest probability of GAS in age 3+ with sore throat.)",
+      "verdict": "grounded",
+      "note": "The McIsaac 'age 3-14' modifier is published as an ordinal score point (+1), not as a standalone LR, so I derived the LR from byte-anchored age-stratified GAS-test counts in Fine et al. 2012 (Arch Intern Med; PMC3627733), the largest validation cohort (N=206,870). Computed LR+ = 1.58 for being in the 3-14 age stratum vs. all other ages, consistent with the score modifier's positive direction. Independent corroboration of high pediatric prevalence: Shaikh 2010 meta-analysis (~37% GAS among children with sore throat) and Fine's own stratum prevalence (37% at 3-14 vs 16% at >=45). Caveat: this LR is for membership in the 3-14 stratum relative to the mixed 3+ population at one retail-clinic system; the magnitude depends on the age composition of the comparison group, so it is a cohort-specific derived LR rather than a universal constant. Pretest/prior of GAS in this sore-throat population = 27%."
+    },
+    {
+      "id": "f6",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Cochrane 2016 / Stewart 2014 RADT GAS pharyngitis sens/spec meta-analysis",
+          "found": true,
+          "supporting_quote": "Two landmark meta-analyses identified: Cohen JF 2016 Cochrane (CD010502, children) and Stewart EH 2014 PLOS ONE (adults+children).",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/27374000/",
+          "next_citation": "Cohen 2016 Cochrane summary sens/spec",
+          "gives_numbers": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PubMed 27374000 (Cohen 2016 Cochrane abstract)",
+          "found": true,
+          "supporting_quote": "In studies in which all participants underwent both RADT and throat culture (105 test evaluations; 58,244 participants; median prevalence of participants with GAS was 29.5%), RADT had a summary sensitivity of 85.6%; 95% confidence interval (CI) 83.3 to 87.6 and a summary specificity of 95.4%; 95% CI 94.5 to 96.2.",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/27374000/",
+          "next_citation": "",
+          "gives_numbers": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch PMC4219770 (Stewart 2014 PLOS ONE) \u2014 cross-check, adult subgroup",
+          "found": true,
+          "supporting_quote": "For the higher quality immunochromatographic methods in the adult population (1,216 patients), the pooled sensitivity was 91% (95% CI, 87 to 94%) and the pooled specificity was 93% (95% CI, 92 to 95%). The overall prevalence of GAS infection was 28.2% (15,254/54,098 patients) (range 3.7% to 66.6%).",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4219770/",
+          "next_citation": "",
+          "gives_numbers": true
+        }
+      ],
+      "primary_data": {
+        "study": "Cohen JF, Bertille R, Cohen R, Chalumeau M. Rapid antigen detection test for group A streptococcus in children with pharyngitis. Cochrane Database Syst Rev 2016;7:CD010502 (cross-checked against Stewart EH et al., PLOS ONE 2014;9(11):e111727)",
+        "population": "Children with pharyngitis who underwent both RADT and throat culture (gold standard); median GAS prevalence 29.5%",
+        "n": "105 test evaluations; 58,244 participants (Cochrane). Stewart adult immunochromatographic subgroup: 1,216 patients",
+        "metric_type": "diagnostic test sensitivity & specificity (summary estimates) \u2192 LR+",
+        "values": "Cochrane summary: sensitivity 85.6% (95% CI 83.3-87.6), specificity 95.4% (95% CI 94.5-96.2). Stewart adult immunochromatographic: sensitivity 91% (87-94), specificity 93% (92-95). Prior: median GAS prevalence 29.5% (Cochrane); 28.2% overall (Stewart).",
+        "byte_quote": "RADT had a summary sensitivity of 85.6%; 95% confidence interval (CI) 83.3 to 87.6 and a summary specificity of 95.4%; 95% CI 94.5 to 96.2."
+      },
+      "computed_lr": 18.6,
+      "lr_formula": "LR+ = sensitivity / (1 - specificity) = 0.856 / (1 - 0.954) = 0.856 / 0.046 = 18.6. [Adult alternative from Stewart 2014 immunochromatographic: LR+ = 0.91 / (1 - 0.93) = 0.91 / 0.07 = 13.0.] Prior odds from prevalence ~29.5%: P=0.295 (pre-test probability).",
+      "verdict": "grounded",
+      "note": "LR+ for a positive RADT computed from byte-anchored summary estimates. Primary anchor is the Cohen 2016 Cochrane meta-analysis (105 test evaluations, 58,244 participants), the cleanest single summary sens/spec sentence: sens 85.6%, spec 95.4% -> LR+ = 18.6. This cohort is children-specific; the finding f6 is age-unspecified ('acute sore throat'). For an adult, the Stewart 2014 PLOS ONE adult immunochromatographic subgroup (sens 91%, spec 93%) gives LR+ = 13.0 \u2014 a reasonable lower-bound alternative. Both are strongly positive (LR+ well above 10), making a positive RADT a strong rule-in test. Median GAS prevalence in these sore-throat cohorts (~28-29.5%) serves as the prior/pre-test probability. NOTE: WebFetch initially mislabeled the Stewart adult subgroup (91/93) as an 'overall' pooled estimate; Stewart deliberately reports no single overall pooled estimate due to high heterogeneity, so the Cochrane summary was chosen as the primary anchor. Cochrane full-text (cochranelibrary.com) returned HTTP 403; numbers confirmed via the PubMed abstract (PMID 27374000) and the SFPediatrie-hosted PDF reference."
+    },
+    {
+      "id": "f7",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "primary_data": {
+        "study": "Cohen JF, Bertille N, Cohen R, Chalumeau M. Rapid antigen detection test for group A streptococcus in children with pharyngitis. Cochrane Database Syst Rev 2016, Issue 7. Art. No.: CD010502. PMID 27374000.",
+        "metric_type": "summary (pooled) sensitivity and specificity of RADT vs throat culture reference standard",
+        "population": "children with pharyngitis; studies in which all participants underwent both RADT and throat culture; median GAS prevalence 29.5%",
+        "n": "105 test evaluations; 58,244 participants",
+        "values": "summary sensitivity 85.6% (95% CI 83.3-87.6); summary specificity 95.4% (95% CI 94.5-96.2)",
+        "byte_quote": "RADT had a summary sensitivity of 85.6%; 95% confidence interval (CI) 83.3 to 87.6 and a summary specificity of 95.4%; 95% CI 94.5 to 96.2."
+      },
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: Cochrane 2016 Cohen RADT GAS pooled sensitivity specificity",
+          "found": true,
+          "resolved_url": "https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD010502.pub2/full",
+          "supporting_quote": "On average, rapid tests for strep throat had a sensitivity of 86% and a specificity of 95%. Included 116 cohorts (98 unique studies; 101,121 participants).",
+          "gives_numbers": true,
+          "next_citation": "PubMed abstract PMID 27374000 for exact summary estimates"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch: https://pubmed.ncbi.nlm.nih.gov/27374000/",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/27374000/",
+          "supporting_quote": "RADT had a summary sensitivity of 85.6%; 95% confidence interval (CI) 83.3 to 87.6 and a summary specificity of 95.4%; 95% CI 94.5 to 96.2. (105 test evaluations; 58,244 participants; median GAS prevalence 29.5%)",
+          "gives_numbers": true,
+          "next_citation": ""
+        }
+      ],
+      "computed_lr": 0.1509,
+      "lr_formula": "LR- = (1 - sensitivity)/specificity = (1 - 0.856)/0.954 = 0.144/0.954 = 0.1509. Prior (median GAS prevalence in children with pharyngitis) = 29.5% = 0.295.",
+      "verdict": "grounded",
+      "note": "Landmark source: Cochrane DTA meta-analysis Cohen 2016 (CD010502), 105 test evaluations / 58,244 children, RADT vs throat-culture reference standard. Byte-anchored summary sensitivity 85.6% and specificity 95.4% drive LR-. Computed LR- = 0.15, i.e., a negative RADT lowers the odds of GAS roughly 6.6-fold \u2014 meaningful but NOT sufficient to fully exclude GAS in children, which is exactly why the 2012 IDSA guideline recommends back-up throat culture after a negative RADT in children/adolescents (sensitivity heterogeneous, 95% CI sens lower bound 83.3%). Population is pediatric; adult RADT specificity is similar/higher so adult LR- is comparable or slightly lower. Prevalence 29.5% is the median prior in this case-blind sore-throat population. computed_lr grounded entirely in real byte-anchored numbers; no figure was invented."
+    },
+    {
+      "id": "f8",
+      "target": "diagnosis(group_a_strep_pharyngitis)",
+      "primary_data": {
+        "study": "Shulman et al., IDSA 2012 Clinical Practice Guideline for the Diagnosis and Management of Group A Streptococcal Pharyngitis (Clin Infect Dis 2012;55(10):e86), with specificity figure from AAFP/Medscape pharyngitis reviews citing office-culture data",
+        "population": "Patients with acute pharyngitis; throat swab of tonsils/tonsillar fossae and posterior pharyngeal wall cultured on sheep-blood agar (single swab)",
+        "n": "not stated in guideline text (narrative synthesis); office-culture specificity ~97% (range 94-99%) from cited pediatric-office cohorts",
+        "metric_type": "Sensitivity and specificity of single-swab throat culture (reference standard for GAS)",
+        "values": "Sensitivity 90%-95% (single-swab blood agar culture, performed correctly); specificity ~99% (lab) / office culture 97%, range 94-99%",
+        "byte_quote": "If performed correctly, culture of a single throat swab on a blood agar plate is 90%-95% sensitive for detection of GAS pharyngitis. [IDSA 2012] / 'With correct sampling and plating techniques, a single-swab throat culture is 90 to 95 percent sensitive.' [AAFP 2009]",
+        "metric_type_note": "Culture is the diagnostic/reference standard; specificity treated as ~1.0 by definition"
+      },
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "WebSearch: throat culture sensitivity/specificity GAS reference standard",
+          "found": true,
+          "supporting_quote": "Culture of a single throat swab on a blood agar plate yields a sensitivity of 90-95% for the detection of group A streptococci (GAS) in the pharynx... Culture has specificity of approximately 99%... in office settings, the sensitivity ranges from 29 to 90 percent",
+          "gives_numbers": true,
+          "next_citation": "IDSA 2012 guideline (PMC7108032)",
+          "resolved_url": "https://emedicine.medscape.com/article/228936-workup"
+        },
+        {
+          "hop": 2,
+          "source_queried": "WebFetch IDSA 2012 guideline PMC7108032",
+          "found": true,
+          "supporting_quote": "If performed correctly, culture of a single throat swab on a blood agar plate is 90%-95% sensitive for detection of GAS pharyngitis. ... Culture of a throat swab on a sheep-blood agar plate has been the standard for the documentation of the presence of GAS pharyngitis",
+          "gives_numbers": true,
+          "next_citation": "AAFP 2009 pharyngitis review for corroboration of specificity",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7108032/"
+        },
+        {
+          "hop": 3,
+          "source_queried": "WebFetch AAFP 2009 (p383) pharyngitis review",
+          "found": true,
+          "supporting_quote": "With correct sampling and plating techniques, a single-swab throat culture is 90 to 95 percent sensitive. ... Throat culture is considered the diagnostic standard.",
+          "gives_numbers": true,
+          "next_citation": "specificity corroboration",
+          "resolved_url": "https://www.aafp.org/pubs/afp/issues/2009/0301/p383.html"
+        },
+        {
+          "hop": 4,
+          "source_queried": "WebSearch: throat culture specificity 99% / office culture specificity",
+          "found": true,
+          "supporting_quote": "office culture specificity was 97% (range: 94%-99%)",
+          "gives_numbers": true,
+          "next_citation": "none",
+          "resolved_url": "https://emedicine.medscape.com/article/228936-workup"
+        }
+      ],
+      "computed_lr": 92.5,
+      "lr_formula": "LR+ = sensitivity / (1 - specificity). Using byte-anchored sensitivity midpoint 0.925 (IDSA 90%-95%) and specificity 0.99: LR+ = 0.925 / (1 - 0.99) = 0.925 / 0.01 = 92.5. CAVEAT: throat culture is the reference standard, so its specificity is ~1.0 by definition; as spec -> 1.0, LR+ -> infinity. A positive GAS culture is treated as definitionally diagnostic. The finite value 92.5 uses the realistic reported specificity (~99%). Range: at sens 0.90, spec 0.94 -> 0.90/0.06 = 15; at sens 0.95, spec 0.99 -> 0.95/0.01 = 95.\",\"verdict\":\"grounded\"}",
+      "verdict": "grounded",
+      "note": "Finding f8 = positive throat culture for GAS, the REFERENCE STANDARD for the diagnosis. The byte-anchored sensitivity of a single-swab blood-agar culture is 90%-95% (IDSA 2012 guideline, corroborated verbatim by AAFP 2009). Because culture is the reference standard, its specificity is ~1.0 by definition (a positive GAS growth on selective sheep-blood agar essentially never occurs without GAS), making the true LR+ undefined/infinite \u2014 a positive culture is treated as confirmatory. To return a finite, grounded number I used the explicitly reported specificity of ~99% (office culture 97%, range 94-99%), giving LR+ = 0.925/0.01 = 92.5. Practical interpretation: a positive throat culture is near-diagnostic of GAS pharyngitis (very large LR+). Note the imperfect SENSITIVITY (90-95%) means a NEGATIVE single culture does NOT fully exclude GAS (LR- = (1-0.925)/0.99 = 0.076), which is why guidelines historically backed up negative RADTs with culture in children. Numbers are byte-grounded; specificity is the realistic-but-soft input since the reference standard cannot validate its own specificity against itself."
+    }
+  ]
+}

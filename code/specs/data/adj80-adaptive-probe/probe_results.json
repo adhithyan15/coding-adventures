@@ -1,0 +1,56 @@
+[
+  {
+    "model": "qwen2.5:0.5b",
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "tier": 2,
+    "protocol": "MONOLITHIC contract OK (light staging optional)",
+    "prior_evidence": "monolithic 0.00; atomic/staged ~0.5-0.58 -> needs decomposition"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "P1": false,
+    "P2": true,
+    "P3": false,
+    "tier": 0,
+    "protocol": "ATOMIC-NATURAL (single-focus steps; framework owns all structure)",
+    "prior_evidence": "monolithic 0.42, bare 0.50; free-staging HURT (0.17); v2 scaffold 0.67"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "P1": true,
+    "P2": true,
+    "P3": false,
+    "tier": 1,
+    "protocol": "STAGED-NATURAL (few natural steps; lenient parse)",
+    "prior_evidence": "bare 0.83, monolithic 0.67; v2 scaffold 1.00"
+  },
+  {
+    "model": "gemma4:latest",
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "tier": 2,
+    "protocol": "MONOLITHIC contract OK (light staging optional)",
+    "prior_evidence": "bare ~1.00 (handles contract directly)"
+  },
+  {
+    "model": "llama3.1:8b",
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "tier": 2,
+    "protocol": "MONOLITHIC contract OK (light staging optional)",
+    "prior_evidence": "bare 0.83 (handles contract directly)"
+  },
+  {
+    "model": "qwen2.5:14b",
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "tier": 2,
+    "protocol": "MONOLITHIC contract OK (light staging optional)",
+    "prior_evidence": "bare ~1.00 (handles contract directly)"
+  }
+]

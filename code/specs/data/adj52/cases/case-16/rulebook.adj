@@ -1,0 +1,204 @@
+% ============================================================================
+% ADJ52 case-16 derived rulebook.
+% Clinical area: antibiotic-refractory inflammatory lower-leg process in an
+%   elderly diabetic (a "cellulitis that is not cellulitis"), recursing into the
+%   subcategories of what makes a red, swollen, painful leg fail to respond to
+%   antibiotics: infection (ordinary / atypical / necrotizing), in-situ /
+%   infiltrative neoplasm, and anticoagulation-related muscle bleeding.
+%
+% Built from the IR ALONE (no answer given). Every clause carries
+%   % rationale + source "<citation>" + trust <...>. A rule is present ONLY
+%   because a citable source supports the finding->diagnosis link, NOT because
+%   it would make this case come out a particular way (anti-overfit). The
+%   tempting-but-wrong "bacterial cellulitis" answer carries its OWN clauses,
+%   including NEGATIVE discriminators that fire against it here.
+%
+% Magnitudes are QUALITATIVE to satisfy the adj-lang IDENT grammar
+%   (identifiers lowercase /[a-z_][a-z0-9_]*/, no uppercase, no leading digit):
+%   e.g. ldh(elevated_and_rising), age(over_50), wbc(normal), vital(afebrile).
+%
+% CORRELATED EVIDENCE: findings that are joint manifestations of ONE underlying
+%   mechanism (the literature describes them as one syndrome / shared cause) are
+%   grouped under a single "% mechanism ... lr ..." directive so the combined
+%   likelihood ratio fires ONCE rather than being double-counted per finding
+%   (which would saturate the posterior under naive independence).
+% ============================================================================
+
+% ===== PRIORS (base rates for a red, swollen, painful leg presented as infection) =====
+
+% rationale: a leg presenting as a hot, red, swollen limb is most often, at face value, ordinary bacterial cellulitis; it carries the largest prior before refractoriness is weighed.
+prior 0.50 for diagnosis(bacterial_cellulitis)
+  source "AAFP Necrotizing Soft Tissue Infections review; Medscape Cellulitis Workup (cellulitis is the default clinical read of a hot red swollen leg)" trust authoritative
+
+% rationale: anticoagulant-related spontaneous intramuscular calf bleeding is a recognized cause of a painful swollen calf with an intramuscular mass in a warfarin-treated patient.
+prior 0.12 for diagnosis(anticoagulation_intramuscular_hematoma)
+  source "J Am Geriatr Soc 2013 (spontaneous quadriceps hematoma on therapeutic warfarin); SHM Abstracts (spontaneous intramuscular calf hematoma on anticoagulant)" trust authoritative
+
+% rationale: primary cutaneous diffuse large B-cell lymphoma, leg type is a recognized malignant mimic of refractory cellulitis in elderly women; uncommon overall but the classic occult cause when antibiotics fail.
+prior 0.12 for diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PMC8177962 (PCDLBCL leg type presenting as cellulitis, antibiotic-refractory); PMC12605640 (leg-type DLBCL as lower-extremity edema/ulcers)" trust authoritative
+
+% rationale: a discrete intramuscular soft-tissue mass on cross-sectional imaging in an older adult keeps a primary soft-tissue sarcoma in the differential.
+prior 0.10 for diagnosis(soft_tissue_sarcoma)
+  source "StatPearls Undifferentiated Pleomorphic Sarcoma; PMC11799364 (gastrocnemius soft-tissue mass differential includes sarcoma)" trust authoritative
+
+% rationale: necrotizing soft-tissue infection is the limb-threatening infection that must be excluded for any leg failing to respond to antibiotics; prior is low because it is rare and usually fulminant.
+prior 0.08 for diagnosis(necrotizing_soft_tissue_infection)
+  source "StatPearls Necrotizing Fasciitis; Merck Manual NSTI (rare, fulminant deep infection)" trust authoritative
+
+% ===== BACTERIAL CELLULITIS (the tempting / presumed-wrong answer) =====
+
+% rationale: an antecedent skin break (ulcer/scab over the ankle) is the classic portal of entry for cellulitis.
+contributes 1.6 from history(skin_break_portal_of_entry) to diagnosis(bacterial_cellulitis)
+  source "Medscape Cellulitis Workup (skin breach as portal of entry)" trust authoritative
+
+% rationale: diabetes is a well-established host risk factor for skin and soft-tissue infection.
+contributes 1.4 from history(diabetes_mellitus) to diagnosis(bacterial_cellulitis)
+  source "Medscape Cellulitis Workup (diabetes predisposes to SSTI)" trust authoritative
+
+% rationale: cellulitis classically responds to appropriate antibiotics; failure of THREE successive regimens (cephalexin, doxycycline, IV cefazolin) is a documented red flag AGAINST simple bacterial cellulitis and toward a non-infectious mimic.
+contributes 0.2 from course(refractory_to_multiple_antibiotics) to diagnosis(bacterial_cellulitis)
+  source "PMC8177962 (consider lymphoma when cellulitic lesion is refractory to empiric antibiotics)" trust authoritative
+
+% rationale: bacterial cellulitis severe enough to warrant IV therapy usually produces fever and/or leukocytosis; an afebrile patient with a persistently normal WBC is atypical and argues against active pyogenic infection.
+contributes 0.5 from vital(afebrile) to diagnosis(bacterial_cellulitis)
+  source "Medscape Cellulitis Workup; wikidoc Cellulitis labs (leukocytosis/fever typical of significant cellulitis)" trust authoritative
+contributes 0.5 from wbc(normal) to diagnosis(bacterial_cellulitis)
+  source "wikidoc Cellulitis laboratory tests (leukocytosis seen in most significant cellulitis)" trust authoritative
+
+% ===== ANTICOAGULATION INTRAMUSCULAR HEMATOMA =====
+
+% rationale: therapeutic warfarin is the direct predisposing cause of spontaneous intramuscular bleeding.
+contributes 3.0 from medication(therapeutic_warfarin) to diagnosis(anticoagulation_intramuscular_hematoma)
+  source "J Am Geriatr Soc 2013 (therapeutic warfarin -> spontaneous quadriceps hematoma)" trust authoritative
+
+% rationale: a discrete intramuscular calf (gastrocnemius) lesion is the typical location/appearance of an anticoagulant muscle bleed.
+contributes 1.8 from imaging(discrete_intramuscular_lesion) to diagnosis(anticoagulation_intramuscular_hematoma)
+  source "SHM Abstracts (intramuscular calf hematoma); FAOJ 2014 (gastrocnemius bleed on warfarin)" trust authoritative
+
+% rationale: a hematoma is a one-time bleed that should stabilize; a steadily RISING LDH over days is not the expected course of a resolving bland hematoma and argues against it.
+contributes 0.5 from ldh(elevated_and_rising) to diagnosis(anticoagulation_intramuscular_hematoma)
+  source "Hematol Rep 2025 17(5):44 (when spontaneous muscle bleeding behaves atypically, suspect an underlying tumor rather than simple anticoagulant bleed)" trust authoritative
+
+% rationale: scattered cutaneous papules and macules at a site distant from the muscle are not explained by an intramuscular hematoma and argue against it as the unifying diagnosis.
+contributes 0.5 from skin(scattered_papules_and_macules) to diagnosis(anticoagulation_intramuscular_hematoma)
+  source "Hematol Rep 2025 17(5):44 (anticoagulant muscle bleed does not explain cutaneous infiltrative lesions)" trust inferred
+
+% ===== PRIMARY CUTANEOUS DLBCL, LEG TYPE (the occult malignant mimic) =====
+
+% rationale: PCDLBCL leg type characteristically arises on the lower leg of an elderly patient, with a strong female predominance in the seventh-eighth decades.
+contributes 2.0 from age(over_50) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PubMed 17875875 (60-case series: elderly, female predominance); ASCO 2020 e20044 Mayo experience" trust authoritative
+contributes 1.6 from patient_sex(female) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "Altmeyers Encyclopedia PCDLBCL leg type (female predominance)" trust authoritative
+contributes 2.0 from anatomic_site(lower_leg) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PubMed 17875875 (lower-leg location defines the entity)" trust authoritative
+
+% rationale: failure to respond to multiple antibiotic courses despite a cellulitis-like picture is the cardinal clinical clue that the red leg is lymphoma, not infection.
+contributes 3.0 from course(refractory_to_multiple_antibiotics) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PMC8177962 (antibiotic-refractory pseudocellulitis -> biopsy reveals leg-type DLBCL)" trust authoritative
+
+% rationale: an elevated and RISING serum LDH is a recognized marker of lymphoma tumor burden / tissue turnover and a prognostic factor in leg-type DLBCL.
+contributes 2.2 from ldh(elevated_and_rising) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PubMed 17875875 + ASCO 2020 e20044 (serum LDH elevated in a subset; LDH a prognostic factor in PCDLBCL-LT)" trust authoritative
+
+% rationale: a draining regional (inguinal) lymph node in the territory of a leg lymphoma raises locoregional nodal involvement rather than a reactive node of plain cellulitis.
+contributes 1.6 from imaging(regional_lymphadenopathy) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PubMed 17875875 (locoregional nodal spread in leg-type DLBCL); PMC12605640" trust authoritative
+
+% rationale: deep extension into fascial/muscle planes (a discrete intramuscular lesion plus diffuse muscle heterogeneity) is described for leg-type DLBCL, which infiltrates subcutaneous, fascial and muscle layers.
+contributes 1.5 from imaging(deep_muscle_infiltration) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PMC8177962 (CT: heterogeneous density involving subcutaneous, fascial and muscle layers)" trust authoritative
+
+% rationale: a definitive skin biopsy showing diffuse large atypical B-lymphocytes (CD20+, BCL2+, MUM1+) is confirmatory.
+contributes 8.0 from biopsy(diffuse_large_b_cell_infiltrate) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PMC8177962 (diffuse large atypical lymphocytes, CD20+/BCL2+/MUM1+, Ki67 high)" trust authoritative
+% rationale: a biopsy showing only acute inflammation / bacteria and no atypical lymphoid infiltrate argues strongly against lymphoma.
+contributes 0.15 from biopsy(acute_inflammation_no_atypia) to diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PMC8177962 (histology adjudicates infection vs lymphoma)" trust authoritative
+
+% ===== SOFT TISSUE SARCOMA =====
+
+% rationale: a discrete intramuscular soft-tissue mass in an older adult is the core finding raising primary sarcoma.
+contributes 2.5 from imaging(discrete_intramuscular_lesion) to diagnosis(soft_tissue_sarcoma)
+  source "PMC11799364 (gastrocnemius soft-tissue mass -> sarcoma in the differential); StatPearls UPS" trust authoritative
+
+% rationale: elevated LDH can accompany high-grade soft-tissue sarcoma tissue turnover.
+contributes 1.4 from ldh(elevated_and_rising) to diagnosis(soft_tissue_sarcoma)
+  source "PubMed 20863406 (high-grade soft-tissue sarcoma, aggressive biology)" trust inferred
+
+% rationale: soft-tissue sarcoma classically presents as a slowly enlarging, PAINLESS mass without an antibiotic-refractory inflammatory cellulitic picture; a hot, painful, draining, antibiotic-treated leg is atypical for it.
+contributes 0.4 from course(refractory_to_multiple_antibiotics) to diagnosis(soft_tissue_sarcoma)
+  source "AAFP 2022 Soft Tissue Masses; StatPearls UPS (painless gradually enlarging mass, not inflammatory pseudocellulitis)" trust authoritative
+
+% rationale: scattered cutaneous papules and macules distant from the deep mass are not the presentation of a single intramuscular sarcoma and argue against it as the unifying diagnosis.
+contributes 0.6 from skin(scattered_papules_and_macules) to diagnosis(soft_tissue_sarcoma)
+  source "AAFP 2022 Soft Tissue Masses (sarcoma is a solitary deep mass, not multifocal cutaneous lesions)" trust inferred
+
+% ===== NECROTIZING SOFT-TISSUE INFECTION =====
+
+% rationale: an antecedent skin break in a diabetic is a recognized risk factor for necrotizing infection.
+contributes 1.5 from history(skin_break_portal_of_entry) to diagnosis(necrotizing_soft_tissue_infection)
+  source "StatPearls Necrotizing Fasciitis (skin breach + diabetes as risk factors)" trust authoritative
+
+% rationale: pain shooting down the limb / pain out of proportion is an early clue to necrotizing infection.
+contributes 1.4 from symptom(pain_out_of_proportion) to diagnosis(necrotizing_soft_tissue_infection)
+  source "StatPearls Necrotizing Fasciitis (pain out of proportion as early sign)" trust authoritative
+
+% rationale: NSTI patients are acutely ill with high fever, tachycardia, and leukocytosis; an afebrile patient with normal WBC over the whole course is strongly against necrotizing infection.
+contributes 0.3 from vital(afebrile) to diagnosis(necrotizing_soft_tissue_infection)
+  source "Merck Manual NSTI; StatPearls Necrotizing Fasciitis (high fever / systemic toxicity expected)" trust authoritative
+contributes 0.4 from wbc(normal) to diagnosis(necrotizing_soft_tissue_infection)
+  source "StatPearls Necrotizing Fasciitis (marked leukocytosis typical; LRINEC uses WBC)" trust authoritative
+
+% rationale: soft-tissue GAS is a hallmark of (gas-forming) necrotizing infection; explicit absence of gas on CT argues against it.
+contributes 0.4 from imaging(no_gas_in_tissues) to diagnosis(necrotizing_soft_tissue_infection)
+  source "Merck Manual NSTI; StatPearls Necrotizing Fasciitis (soft-tissue gas / crepitus supports NSTI)" trust authoritative
+
+% ===== CORRELATED EVIDENCE: the 'this is lymphoma, not infection' cutaneous-infiltrate syndrome =====
+% The afebrile state, persistently normal WBC, scattered cutaneous papules/macules
+% (a cutaneous lymphomatous infiltrate rather than satellite infection), cloudy
+% non-purulent drainage, and isolated rising LDH are NOT independent observations:
+% the literature describes them together as the gestalt that distinguishes an
+% infiltrative neoplastic "pseudocellulitis" from true pyogenic infection.
+% Grouping them under ONE mechanism directive fires the combined LR ONCE,
+% avoiding naive-Bayes saturation. (Antibiotic-refractoriness, LDH, regional
+% adenopathy and deep infiltration still carry their own contributes above; the
+% genuinely redundant constitutional/cutaneous cluster is folded here.)
+% mechanism neoplastic_pseudocellulitis_signature for diagnosis(primary_cutaneous_dlbcl_leg_type) lr 4.0 : vital(afebrile), wbc(normal), skin(scattered_papules_and_macules), symptom(cloudy_nonpurulent_drainage)
+
+% ===== NEXT STEP (the procedure the vignette stops at) =====
+
+% rationale: skin/incisional biopsy with histopathology is the definitive next step that adjudicates an antibiotic-refractory pseudocellulitis between infection and neoplasm.
+prior 0.45 for next_step(skin_biopsy_histopathology)
+  source "PMC8177962 (biopsy of antibiotic-refractory cellulitic lesion reveals leg-type DLBCL); AAFP 2022 Soft Tissue Masses (biopsy of indeterminate soft-tissue lesion)" trust authoritative
+contributes 4.0 from course(refractory_to_multiple_antibiotics) to next_step(skin_biopsy_histopathology)
+  source "PMC8177962 (antibiotic failure mandates biopsy to look for non-infectious cause)" trust authoritative
+contributes 2.5 from skin(scattered_papules_and_macules) to next_step(skin_biopsy_histopathology)
+  source "PMC8177962 (accessible cutaneous lesions are the biopsy target)" trust authoritative
+contributes 2.0 from ldh(elevated_and_rising) to next_step(skin_biopsy_histopathology)
+  source "ASCO 2020 e20044 (rising LDH in a refractory lesion escalates toward tissue diagnosis)" trust inferred
+
+% rationale: continuing/broadening empiric antibiotics alone is the WRONG path once three regimens have failed without fever or leukocytosis; kept as a low-prior comparator next step.
+prior 0.10 for next_step(continue_broaden_antibiotics)
+  source "PMC8177962 (further empiric antibiotics delay the correct neoplastic diagnosis)" trust authoritative
+contributes 0.3 from course(refractory_to_multiple_antibiotics) to next_step(continue_broaden_antibiotics)
+  source "PMC8177962 (refractoriness argues against more of the same antibiotics)" trust authoritative
+
+% rationale: surgical exploration / fasciotomy is the next step IF necrotizing infection is the operative diagnosis; gated to the systemic-toxicity picture that is absent here.
+prior 0.08 for next_step(surgical_exploration_fasciotomy)
+  source "StatPearls Necrotizing Fasciitis (emergent surgical exploration for NSTI)" trust authoritative
+contributes 2.5 from symptom(pain_out_of_proportion) to next_step(surgical_exploration_fasciotomy)
+  source "StatPearls Necrotizing Fasciitis (pain out of proportion -> explore for NSTI)" trust authoritative
+contributes 0.4 from vital(afebrile) to next_step(surgical_exploration_fasciotomy)
+  source "Merck Manual NSTI (absence of systemic toxicity argues against emergent exploration)" trust inferred
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved at the biopsy point) =====
+
+% u1/u2/u5: the skin biopsy result adjudicates infiltrative lymphoma vs reactive/infectious tissue — the central open question the vignette stops on.
+uncertain { biopsy(diffuse_large_b_cell_infiltrate), biopsy(acute_inflammation_no_atypia) } for diagnosis(primary_cutaneous_dlbcl_leg_type)
+  source "PMC8177962 (skin biopsy histology adjudicates lymphoma vs infection)"
+
+% the same biopsy result decides whether the picture is, after all, an infectious cellulitis.
+uncertain { biopsy(acute_inflammation_no_atypia), biopsy(diffuse_large_b_cell_infiltrate) } for diagnosis(bacterial_cellulitis)
+  source "PMC8177962 (acute inflammation with organisms would re-favour infection)"

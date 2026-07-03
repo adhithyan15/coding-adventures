@@ -1,0 +1,17 @@
+[package]
+name = "coding-adventures-closure-pass-treeshake"
+version = "0.4.0"
+edition = "2021"
+description = "Tree-shaking pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Removes module exports and imports that aren't reachable from the program's entry points, eliminating whole-module dead weight that intra-module DCE can't see."
+
+[dependencies]
+coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+coding-adventures-closure-scope-analyzer = { path = "../closure-scope-analyzer" }
+coding-adventures-javascript-ast = { path = "../javascript-ast" }
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde_json = "1"
+
+[dev-dependencies]
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+coding-adventures-closure-pass-dce = { path = "../closure-pass-dce" }

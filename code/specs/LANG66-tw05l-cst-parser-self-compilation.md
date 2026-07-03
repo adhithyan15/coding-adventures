@@ -78,7 +78,7 @@ earlier), so 91 270 chars × 90 ≈ 8.2 M > 8 M ceiling.
 
 `MAX_DISPATCH_DEPTH` bumped from 65 536 to 131 072.  Version: 0.17.0 → 0.18.0.
 
-### `code/twig/compiler/main.tw`
+### `code/packages/twig/compiler/main.tw`
 
 `self-compile-all` extended to read `cst-parser.tw`, compile it, and add its
 69 functions to the sum.  Return value changes from 102 → **171**.

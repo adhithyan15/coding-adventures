@@ -1,0 +1,8 @@
+{
+ "check_id": 228,
+ "idx": 88,
+ "slot": "informed_of_risks_due_to_absence_of_safeguards",
+ "claimed_value": true,
+ "scenario": "Voyagr, a travel platform, transfers user Leah's booking details to a hotel partner in a country with no adequacy decision and has not signed any standard contractual clauses. Before the transfer, Voyagr showed Leah a notice explaining the absence of safeguards and the resulting risks, and Leah explicitly consented to this specific transfer.",
+ "cited_span": "Voyagr showed Leah a notice explaining the absence of safeguards and the resulting risks"
+}

@@ -526,7 +526,7 @@ class TestPhase40_ApartTelescope:
 
     def test_apart_irreducible_quadratic_stays_unevaluated(self):
         """``∑_{k=1}^{n} 1/(k² + 1)``: denominator has no rational roots,
-        so Apart returns the input unchanged and the Phase 40 retry is a
+        so Apart has no decomposition to expose and the Phase 40 retry is a
         no-op.  The sum must remain unevaluated."""
         denom = IRApply(ADD, (IRApply(POW, (K, _int(2))), _int(1)))
         f = IRApply(DIV, (_int(1), denom))

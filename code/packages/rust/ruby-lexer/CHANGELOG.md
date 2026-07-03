@@ -2,6 +2,375 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## [0.25.0] - 2026-06-03
+
+### Added (FC — `__END__` program terminator)
+
+`__END__` alone on a line (column 0) now ends tokenization: everything
+after it is Ruby's `DATA` section, not code, so it is no longer
+mis-lexed. The `push` scan loop checks, at each line start, whether the
+upcoming line is exactly `__END__` (via the new `is_end_marker` helper)
+and stops feeding the engine; `finish()` still flushes the EOF token.
+
+Scope: this halts tokenization only. `DATA` itself stays an ordinary
+constant read (no synthesized file handle) — a deliberate follow-up.
+Indented or mid-line `__END__` is unaffected (lexes as a normal Name),
+matching Ruby's column-0 requirement.
+
+New tests: `end_marker_halts_token_stream`,
+`end_marker_at_eof_without_trailing_newline`,
+`end_marker_requires_column_zero`, `end_marker_not_triggered_mid_line`.
+
+## [0.24.0] - 2026-05-26
+
+### Added (Phase 8a-2 (FC) — `>>` and `>>=` token fusion)
+
+New pre-fusion pass `fuse_right_shifts()` runs immediately before `fuse_compound_assigns()`:
+
+| Incoming pair (adjacent, no whitespace gap) | Folded into     |
+|---------------------------------------------|-----------------|
+| `Name(">")` + `Name(">")`                   | `Name(">>")`    |
+| `Name(">")` + `Name(">=")`                  | `Name(">>=")`   |
+
+This sidesteps the 1.8-era state-machine quirk where the greedy `>=` classifier already ate the `=` from `>>=` before the compound-assign pass got a chance.  Same adjacency rules as the existing compound-assign fusion: same line, no whitespace gap.
+
+### Tests
+
+- `coding-adventures-ruby-lexer`: 169 → **173** (+4):
+  - `right_shift_compound_assign_fuses_into_single_token`
+  - `right_shift_binary_operator_fuses_into_single_token`
+  - `right_shift_fusion_respects_whitespace_gap`
+  - `right_shift_fusion_leaves_unrelated_ge_alone` (regression)
+
+## [0.23.0] - 2026-05-26
+
+### Added (Phase 8a (FC) companion — fuse more compound-assign operators)
+
+`fuse_compound_assigns` recognises six additional left-flank operator tokens:
+
+- `%`, `**`, `<<`, `&`, `|`, `^` (all emitted by the 1.8-baseline state machine as `Name`-typed tokens)
+
+When immediately followed by a `=` with no whitespace gap, the pair folds into a single `Name("%=")` / `Name("**=")` / `Name("<<=")` / `Name("&=")` / `Name("|=")` / `Name("^=")` token, matching the existing fusion strategy for `+= -= *= /= ||= &&=`.
+
+This lets the parser's `assignment` rule match the new compound forms by value, the same way it already matches `+=` and friends.
+
+### Deferred
+
+- `>>=` is NOT yet handled because the state machine splits `>>` into two `>` tokens.  Folding it requires a separate `>>` pre-fusion pass and is tracked as a follow-up.
+
+## [0.22.0] - 2026-05-24
+
+### Added (Phase 6q companion — re-tag trailing-modifier keywords)
+
+New post-pass `tag_modifier_keywords` rewrites `if`/`unless`/`while`/`until` Keyword tokens to `if_modifier`/`unless_modifier`/`while_modifier`/`until_modifier` when they appear after an expression-ending token on the same line.  This is the lexer-side disambiguation that lets the grammar distinguish trailing-modifier syntax (`x if y`) from leading-keyword statement forms (`if y\n  x\nend`) without making newlines globally significant.
+
+Re-tag trigger:
+
+- Token value is `if`, `unless`, `while`, or `until` (Keyword type).
+- A preceding non-Newline token exists on the same `line`.
+- That preceding token's type is one of: `Number`, `String`, `Name`, `RParen`, `RBracket`, `RBrace`, or `Keyword` with value in `{nil, true, false, self, end}`.
+
+Effect: only the token's `value` is mutated (to `<kw>_modifier`); the `type_` stays `Keyword`.  Leading-position keywords (at file start, after a newline, after `;`/`,`/`(`/etc.) are untouched and continue to drive the `if_statement` / `while_statement` / etc. grammar rules.
+
+Era: pre-1.0 Ruby (modifier conditionals predate 1.0).  No era gating.
+
+### Tests
+
+- `coding-adventures-ruby-lexer`: 164 → **169** (+5):
+  - `modifier_if_after_method_call_no_paren_is_retagged` — `puts "hi" if cond` produces `if_modifier`.
+  - `modifier_unless_while_until_all_retagged` — all four forms re-tag uniformly.
+  - `leading_if_at_statement_start_is_not_retagged` — `if y ... end` survives bare.
+  - `newline_between_expr_and_if_prevents_retag` — `x = 1\nif y...` keeps bare `if`.
+  - `modifier_retag_uniform_across_all_eras` — same shape from 1.8 through 3.0.
+
+## [0.21.0] - 2026-05-24
+
+### Added (Phase 4o — heredoc opener variants `<<-TAG` and `<<~TAG`)
+
+Extends the existing Phase 3c `<<TAG` plain heredoc support with the two modifier forms:
+
+| Form | Since | Terminator | Body |
+|---|---|---|---|
+| `<<TAG` | 1.0 | exact at col 0 | verbatim |
+| `<<-TAG` | 1.9 | indent-tolerant | verbatim |
+| `<<~TAG` | 2.3 | indent-tolerant | common leading-ws stripped |
+
+The token shape is unchanged: a single `TokenType::String` token whose value is the reconstructed source (`<<TAG\nBODY\nTAG`, `<<-TAG\n…\nTAG`, or `<<~TAG\n…\nTAG`).  Parser distinguishes by the leading `<<` / `<<-` / `<<~` prefix.
+
+#### State-machine additions
+
+- New state: `after_lt_lt` (saw `<<`, peeks for `-` or `~`).
+- `after_lt → <` no longer emits immediately; instead enters `after_lt_lt`.
+- `after_lt_lt → -` emits `Op("<<-")`.
+- `after_lt_lt → ~` emits `Op("<<~")`.
+- Catch-all: emit plain `Op("<<")` and re-dispatch the follower.
+
+#### Action interpreter additions
+
+- `is_heredoc_open` now accepts `<<`, `<<-`, `<<~` as openers (was: `<<` only).
+- `PendingHeredoc` gains a `variant: HeredocVariant` field tracking which opener form was seen.
+- `capture_heredoc_bodies` matches terminator lines against the front heredoc's variant:
+  - `Plain`: line == tag (exact).
+  - `DashIndent` / `TildeIndent`: `line.trim_start()` == tag.
+- `finalize_heredoc` invokes `strip_common_leading_whitespace` on the body when the variant is `TildeIndent` and emits the appropriate `<<` / `<<-` / `<<~` prefix in the reconstructed token value.
+
+#### New helper
+
+- `strip_common_leading_whitespace(body) -> String` — computes the minimum leading-ws prefix across all non-empty body lines and strips it from every non-empty line; empty lines pass through unchanged.
+
+### Tests (+5 new, total 164)
+- `heredoc_dash_indent_terminator_allows_leading_whitespace`
+- `heredoc_tilde_indent_strips_common_leading_whitespace`
+- `heredoc_tilde_indent_uses_minimum_prefix_across_lines` — `2 vs 4 spaces → 2-space strip`.
+- `heredoc_plain_form_still_requires_exact_terminator` — leading-ws on `<<EOF` terminator → unterminated-heredoc diagnostic.
+- `heredoc_dash_and_tilde_variants_lex_uniformly_across_eras` — era invariance check.
+
+## [0.20.0] - 2026-05-24
+
+### Added (Phase 6p companion — compound-assignment operator fusion)
+
+New post-pass `fuse_compound_assigns` folds adjacent `Op` + `Equals` token pairs into a single `Name`-typed token whose value is the fused operator:
+
+| Source | Lexed before fusion | After fusion |
+|---|---|---|
+| `x += 1` | `Name(x)`, `Plus`, `Equals`, `Number(1)` | `Name(x)`, `Name("+=")`, `Number(1)` |
+| `x -= 1` | `Name(x)`, `Minus`, `Equals`, `Number(1)` | `Name(x)`, `Name("-=")`, `Number(1)` |
+| `x *= 1` | `Name(x)`, `Star`, `Equals`, `Number(1)` | `Name(x)`, `Name("*=")`, `Number(1)` |
+| `x /= 1` | `Name(x)`, `Slash`, `Equals`, `Number(1)` | `Name(x)`, `Name("/=")`, `Number(1)` |
+| `x ||= 1` | `Name(x)`, `Name("||")`, `Equals`, `Number(1)` | `Name(x)`, `Name("||=")`, `Number(1)` |
+| `x &&= 1` | `Name(x)`, `Name("&&")`, `Equals`, `Number(1)` | `Name(x)`, `Name("&&=")`, `Number(1)` |
+
+The parser's `assignment` rule matches these by literal value (`"+="`, etc.) — same convention as `"=>"`, `"<="`, `"&&"`.
+
+**Adjacency gate**: the fusion requires no whitespace between the op and `=`.  `x + = 1` (with a space) stays two tokens — that's a syntax error in real Ruby but it's not a compound assignment.
+
+**Era**: pre-1.0 Ruby — every era ≥ 1.8 emits the same fused shape, so no gating.
+
+### `/=` regex disambiguation guard
+
+`x /= 1` previously lexed as `Name(x)` followed by an unterminated regex (`/...`) because the `/` after a non-local name triggers the regex-vs-divide oracle.  New `suppress_regex_open` flag set by `push` for exactly one `step_char` call when the upcoming `/` is immediately followed by `=` — forces the state machine to emit `/` as a plain Op so `fuse_compound_assigns` can fold it.
+
+### Tests (+3 new, total 159)
+- `compound_assign_arithmetic_ops_fuse_into_single_token` — `+=`, `-=`, `*=`, `/=`.
+- `compound_assign_logical_ops_fuse_into_single_token` — `||=`, `&&=`.
+- `compound_assign_does_not_fuse_with_whitespace_gap` — `x + = 1` stays two tokens.
+
+## [0.19.0] - 2026-05-24
+
+### Added (Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals)
+
+Extends the existing `%w[…]` / `%q{…}` / `%i[…]` / `%I[…]` family with the three remaining built-in percent-literal flavors:
+
+- `%r{…}` — regex literal (interpolation-free in v0).
+- `%s{…}` — symbol literal (non-interpolating).
+- `%x{…}` — command-execution literal (sibling of `` `…` ``).
+
+All three pre-date the era split — every era ≥ 1.8 emits the same token shape.
+
+#### Token shape
+
+Each emits as a `TokenType::String` whose value is the verbatim source (`%r{pat}`, `%s{name}`, `%x{cmd}`).  Parser code distinguishes them from plain strings — and from each other — by inspecting the leading `%` + type letter.  Same sentinel-by-prefix trick used by `%w[…]` / `%q{…}` / heredocs / backticks.
+
+#### State-machine additions
+
+- Alphabet: `s`, `x` added (`r` was already present for the `\r` escape).
+- New tokens: `PercentR`, `PercentS`, `PercentX` (all mapped to `TokenType::String` in the emit handler).
+- New states: `percent_{r,s,x}_open` (peek for `{`) and `percent_{r,s,x}_body` (slurp until `}`).
+- `after_percent` gains three new dispatch arms (`r` → `percent_r_open`, etc.).
+- Body states emit on the matching `}` and parse-error on EOF (`unterminated_percent_{r,s,x}`).
+- Open states parse-error if the follower isn't `{` (`percent_{r,s,x}_no_delim`) and fall back to `% is modulo, letter is identifier`.
+
+#### Out of scope (deferred to follow-up)
+
+- Alternate delimiters (`%r[…]`, `%r(…)`, `%r/…/`, etc.).  V0 supports only `{` to keep the state count down — matches the existing `%q{…}` convention.
+- `#{}` interpolation inside `%r{…}` / `%x{…}` (real Ruby allows it).  Parser-side phases can layer interpolation later.
+- Regex flags after `%r{…}imx` — out of scope; flag-letter slurping after `%r}` is a follow-up.
+
+### Tests (+7 new, total 156)
+- `percent_r_regex_literal_lexes_as_string_with_prefix`
+- `percent_s_symbol_literal_lexes_as_string_with_prefix`
+- `percent_x_command_literal_lexes_as_string_with_prefix`
+- `percent_r_empty_body_lexes` — `%r{}`
+- `percent_r_s_x_lex_uniformly_across_all_eras` — era invariance.
+- `percent_x_does_not_swallow_following_tokens` — `%x{pwd} + 1` lexes cleanly.
+- `percent_r_unterminated_reports_diagnostic` — `parse_error(unterminated_percent_r)` path.
+
+## [0.18.0] - 2026-05-24
+
+### Added (Phase 4m — backtick command literals `` `cmd args` ``)
+
+Ruby has had `` `cmd args` `` command-execution literals since 1.0 — they spawn a shell, execute the body, and yield the standard-output as a string.  The lexer was the missing piece: until this chunk the leading backtick was an unrecognised character.
+
+Implementation lives entirely in the state machine — no post-pass needed.
+
+#### Token shape
+
+- **`` `cmd args` ``** → `TokenType::String` with value `` `cmd args` `` (literally, with the backticks re-wrapped).
+- Parser-side distinguishes backtick literals from plain strings by inspecting the lexeme's leading character — same sentinel-by-prefix trick used by percent literals (`%w[…]`) and heredocs (`<<TAG\n…TAG`).
+
+#### State-machine additions
+
+- Alphabet: `` ` `` (backtick).
+- New token kind: `Backtick` (mapped to `TokenType::String` in the emit handler).
+- New states: `backtick_body`, `backtick_escape`.
+- `data` → `backtick_body` on `` ` ``.
+- Inside `backtick_body`:
+  - `` ` `` → `data` (`emit(Backtick)`).
+  - `\\` → `backtick_escape`.
+  - `\n` is allowed (multi-line bodies, matching `string_d_body`).
+  - EOF → `parse_error(unterminated_backtick)`.
+  - Anything else → append.
+- `backtick_escape` handles the same five escapes as `string_d_escape` (`n`, `t`, `r`, `\\`, plus `` ` `` instead of `"` since `` ` `` is the close char) and falls through to `append_text(current)` otherwise.
+
+#### Out of scope (deferred to follow-up)
+
+- `#{}` interpolation inside `` `…` ``.  Real Ruby allows it; v0 treats `#` as a literal character inside the body.  The parser-side phase 7a (backtick parsing) can layer interpolation later.
+- Backtick as a *method name* (`def \`(cmd); …; end`).  Outside scope for v0 — that needs special lex-state feedback.
+
+### Tests (+7 new, total 149)
+- `backtick_simple_command_lexes_as_string_with_backticks`
+- `backtick_empty_body_lexes_to_two_backticks`
+- `backtick_escape_sequences_resolved_in_body`
+- `backtick_multiline_command_keeps_newlines`
+- `backtick_lexing_is_era_invariant` — every era ≥ 1.8 produces the same token shape (backticks are pre-1.0, hence era-invariant).
+- `backtick_does_not_swallow_following_tokens`
+- `backtick_unterminated_reports_diagnostic` — exercises the `parse_error(unterminated_backtick)` action.
+
+## [0.17.0] - 2026-05-24
+
+### Added (Phase 4l — radix-prefixed integers `0x1F`, `0b1010`, `0o17`, `0d42`)
+
+Ruby's four explicit-radix integer prefixes have been in the language since 1.0 but were never lexed by the v0 state machine.  Implemented as a post-pass fusion (same pattern as Phase 4k float fusion, Phase 4f numeric suffixes, etc.) — the state machine emits `Int("0")` + `Name("xDEAD")` and the post-pass fuses them.
+
+#### Supported shapes
+
+| Source        | Base | Result          |
+|---------------|------|-----------------|
+| `0x1F`        | 16   | `Number "0x1F"` |
+| `0xDEAD_BEEF` | 16   | `Number "0xDEAD_BEEF"` |
+| `0Xff`        | 16   | `Number "0Xff"` |
+| `0b1010`      |  2   | `Number "0b1010"` |
+| `0B1010_1100` |  2   | `Number "0B1010_1100"` |
+| `0o755`       |  8   | `Number "0o755"` |
+| `0O17`        |  8   | `Number "0O17"` |
+| `0d42`        | 10   | `Number "0d42"` |
+| `0D100_000`   | 10   | `Number "0D100_000"` |
+
+#### What this is **not** doing
+
+- **Old-style C-flavoured octal (`017`)**: already a single `Int("017")` from int_body — interpretation as octal vs decimal-with-padding is a parser/SIR-lowerer concern.
+- **Invalid digits**: `0xZZ` does NOT fuse — `Z` isn't a hex digit, so the post-pass declines and the parser later rejects the bad shape.  No diagnostic emitted at the lexer layer (out of scope for v0).
+- **Whitespace breaks fusion**: `0 x1F` is two tokens (`Int "0"`, `Name "x1F"`) — checks `whitespace_before_token`.
+- **Method calls**: `0.method` stays `Int Dot Name` — radix fusion only matches `Int(0) Name(<radix>...)` adjacency.
+
+### Helpers added
+- `fuse_radix_integers` — single-step fusion pass.
+- `is_radix_integer_body(&str)` (module-scope) — validates that a `Name` lexeme matches one of the four radix-body shapes (prefix letter + at least one valid digit + optional `_` separators).
+
+### Tests (+9 new, total 142)
+- `lexes_hex_integer` (`0x1F`, `0xDEAD_BEEF`, `0Xff`)
+- `lexes_binary_integer` (`0b1010`, `0B1010_1100`)
+- `lexes_octal_integer` (`0o755`, `0O17`)
+- `lexes_decimal_explicit_radix` (`0d42`, `0D100_000`)
+- `invalid_hex_does_not_fuse` (`0xZZ` stays as two tokens)
+- `radix_integer_requires_no_whitespace` (`0 x1F` stays as two tokens)
+- `radix_does_not_swallow_method_call` (`0.method` stays `Int Dot Name`)
+- `radix_integers_lex_uniformly_across_all_eras` (pin across all 15 `ERA_VERSIONS`)
+- `is_radix_integer_body_smoke` (direct helper test)
+
+## [0.16.0] - 2026-05-24
+
+### Added (Phase 4k — float literals `1.5`, `1e10`, `1.5e-3`)
+
+Float literals have been in Ruby since 1.0 but were never lexed by the v0 state machine.  Implemented via a **post-pass fusion** (same pattern as Phase 4b's `->` arrow, Phase 4c's `&.`, Phase 4f's numeric suffixes, etc.) — keeps the state machine TOML simple and avoids the lookahead-then-unpeek dance that would be needed in the engine itself.
+
+#### Supported lexeme shapes
+
+| Source       | Pre-fusion tokens                   | Post-fusion Number    |
+|--------------|-------------------------------------|-----------------------|
+| `1.5`        | Int "1", Dot, Int "5"               | "1.5"                 |
+| `1e10`       | Int "1", Name "e10"                 | "1e10"                |
+| `1E5`        | Int "1", Name "E5"                  | "1E5"                 |
+| `1.5e10`     | Int, Dot, Int, Name "e10"           | "1.5e10"              |
+| `1.5e-3`     | Int, Dot, Int, Name "e", Minus, Int | "1.5e-3"              |
+| `1e+10`      | Int, Name "e", Plus, Int            | "1e+10"               |
+| `1_000.5`    | Int "1_000", Dot, Int "5"           | "1_000.5"             |
+
+#### What this is **not** doing
+
+- **Method calls**: `1.method` stays as `Int "1"`, `Dot`, `Name "method"` (the fusion only fires when the dot is flanked by integer-shaped tokens).
+- **Range operator**: `1..5` stays a range — `fuse_range_ops` runs before `fuse_float_literals` and consumes the two dots into `Name ".."` before float fusion sees the stream.
+- **Whitespace-separated**: `1 . 5` is three separate tokens — every fusion step checks `whitespace_before_token` and same-line.
+- **Sign-only exponent**: signed exponents (`1e+10`) need three additional tokens (Name "e", Plus/Minus, Int) — handled by the third fusion step.
+
+#### Why a post-pass, not a TOML state?
+
+The state machine would need lookahead to decide between `1.5` (one float token) and `1.method` (Int + Dot + Name).  Our TOML doesn't support multi-char lookahead cleanly — we'd have to consume the `.` and then somehow re-emit a Dot if the next char isn't a digit.  The post-pass approach is uniform with how `..` / `...` / `->` / `&.` / `2r` / `_1` already work and stays cleanly testable.
+
+### Helpers added
+- `fuse_float_literals` — three-step fusion: (1) `Int Dot Int`, (2) `Number Name(e<digits>)`, (3) `Number Name(e) (+|-) Int`.
+- `is_integer_lexeme` — true iff the lexeme is just digits and `_`.
+- `is_unsigned_exponent_lexeme` (module-scope) — true iff the lexeme is `[eE]<digit_or_underscore>+`.
+
+### Tests (+9 new, total 133)
+- `lexes_simple_float` — `1.5` → Number "1.5".
+- `lexes_float_in_assignment` — `x = 1.5` produces the full expected token stream.
+- `lexes_float_with_unsigned_exponent` — `1e10`, `2E5`, `1.5e10`.
+- `lexes_float_with_signed_exponent` — `1.5e-3`, `1e+10`.
+- `float_does_not_swallow_range_operator` — `1..5` stays a range.
+- `float_does_not_swallow_method_call` — `1.method` stays `Int Dot Name`.
+- `float_requires_no_whitespace` — `1 . 5` is three tokens.
+- `float_lexes_uniformly_across_all_eras` — pins float-Number stream across every era in `ERA_VERSIONS`.
+- `is_unsigned_exponent_lexeme_smoke` — direct helper test.
+
+## [0.15.0] - 2026-05-23
+
+### Added (Phase 4i / 4j — instance vars `@x`, class vars `@@x`, globals `$x`)
+
+Three sigil-prefixed variable shapes that have existed since Ruby 1.0 but were never lexed by the v0 state machine:
+
+- **Instance variables**: `@count`, `@_private`, `@foo_bar2`
+- **Class variables**: `@@all`, `@@cache_key`
+- **Global variables (regular form)**: `$LOAD_PATH`, `$stderr`, `$x`
+
+All three emit as `TokenType::Name` with the **full lexeme including the sigil** preserved in `value` (e.g. `@count`, `@@all`, `$LOAD_PATH`).  The parser and SIR lowerer dispatch by inspecting the leading character — the same trick the lexer already uses for `::` (encoded as `TokenType::Colon` with value `::`).
+
+#### TOML changes (`ruby-1.8.lexer.states.toml`)
+
+New states:
+- `after_at` — peek state after `@`; decides ivar vs cvar by checking for a second `@`.  Invalid follower (e.g. `@1`) records `invalid_ivar` and falls back to emitting `@` as a bare Op.
+- `ivar_body` — slurps `[a-zA-Z0-9_]*` after `@<starter>`.
+- `cvar_body` — slurps `[a-zA-Z0-9_]*` after `@@`.
+- `after_dollar` — peek state after `$`; requires an ident-starter first char.  Invalid follower records `invalid_gvar` and emits `$` as a bare Op.
+- `dollar_body` — slurps `[a-zA-Z0-9_]*` after `$<starter>`.
+
+New alphabet entries: `@`, `$`.
+
+New `data → ...` dispatcher transitions: `@` → `after_at`, `$` → `after_dollar`.
+
+#### Scope notes
+
+v0 deliberately does NOT handle Ruby's punctuation globals:
+- `$~` (last match), `$&` (matched string), `$_` (last read line)
+- `$0`..`$9` (regex capture groups)
+- `$$`, `$?`, `$!`, etc.
+
+These will land in a follow-up phase that splits `after_dollar` into per-char arms.  The v0 fallback (emit `$` as Op + diagnostic) keeps the token stream clean for the parser.
+
+#### No era gating
+
+All three sigils have been in Ruby since the beginning, so the lexing is era-invariant.  The `sigil_vars_unchanged_across_all_eras` test pins this across all 15 `ERA_VERSIONS`.
+
+### Tests (+8 new, total 124)
+- `lexes_instance_variable` — `@count` → one `Name` token with value `@count`.
+- `lexes_class_variable` — `@@all` → one `Name` token with value `@@all`.
+- `lexes_global_variable` — `$LOAD_PATH` → one `Name` token with value `$LOAD_PATH`.
+- `ivar_with_digits_and_underscore` — `@foo_bar2` is one ivar (digits/underscore allowed after first ident-starter).
+- `sigil_vars_in_assignment_context` — `@x = 1` lexes as `Name(@x) Equals Number(1)`.
+- `invalid_ivar_falls_back_to_op_with_diagnostic` — `@1` records `invalid_ivar` and emits `@` as Op.
+- `invalid_gvar_falls_back_to_op_with_diagnostic` — `$ x` records `invalid_gvar` and emits `$` as Op.
+- `sigil_vars_unchanged_across_all_eras` — `@a + @@b + $c` produces the identical Name-value stream across every era.
+
 ## [0.14.0] - 2026-05-22
 
 ### Added (Phase 4h — 1.9.1 hash shorthand `{a: 1}` — confirmation pass)

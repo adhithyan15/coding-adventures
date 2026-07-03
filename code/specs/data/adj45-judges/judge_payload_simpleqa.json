@@ -1,0 +1,1802 @@
+[
+  {
+    "q_idx": 0,
+    "question": "Who received the IEEE Frank Rosenblatt Award in 2010?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official IEEE Computational Intelligence Society list of Frank Rosenblatt Award recipients."
+      },
+      {
+        "label": "B",
+        "answer": "Michio Sugeno"
+      },
+      {
+        "label": "C",
+        "answer": "Michio Sugeno (per en.wikipedia.org/wiki/IEEE_Frank_Rosenblatt_Award)"
+      }
+    ]
+  },
+  {
+    "q_idx": 43,
+    "question": "On what day, month, and year was Algerian artist Mohammed Racim born?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "24 June 1896"
+      },
+      {
+        "label": "B",
+        "answer": "24 June 1896 (per Wikipedia)"
+      },
+      {
+        "label": "C",
+        "answer": "24 June 1896"
+      }
+    ]
+  },
+  {
+    "q_idx": 86,
+    "question": "Which two scientists (first and last names) are credited with first isolating *Azotobacter salinestris* from saline soils?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "William J. Page and Shailaja Shivprasad (per Wikipedia/Grokipedia, 1991 description)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the original taxonomic description paper for Azotobacter salinestris (Page & Shivprasad, ca. 1991)."
+      },
+      {
+        "label": "C",
+        "answer": "Daniel Page and Shah Shah"
+      }
+    ]
+  },
+  {
+    "q_idx": 129,
+    "question": "What is the name of the contestant who was the 4th runner-up at Miss Supranational 2013?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official Miss Supranational 2013 results page."
+      },
+      {
+        "label": "B",
+        "answer": "Esonica Veira (US Virgin Islands), per Wikipedia / Miss Supranational 2013 results"
+      },
+      {
+        "label": "C",
+        "answer": "Esonica Veira"
+      }
+    ]
+  },
+  {
+    "q_idx": 172,
+    "question": "On what day, month, and year did Mereta Mita die, and what was the reason behind her death?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "31 May 2010; heart attack"
+      },
+      {
+        "label": "B",
+        "answer": "31 May 2010; she collapsed outside Maori Television's Newmarket studios in Auckland and could not be resuscitated. Specific medical cause of death was not publicly stated."
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia article or obituary for Merata Mita (likely 31 May 2010, heart attack), but I'm not confident on the exact date."
+      }
+    ]
+  },
+  {
+    "q_idx": 215,
+    "question": "What day, month, and year was Sergio Garavini, an Italian politician, writer, and trade unionist, born?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry or official biography for Sergio Garavini."
+      },
+      {
+        "label": "B",
+        "answer": "18 May 1926 (per Wikipedia)"
+      },
+      {
+        "label": "C",
+        "answer": "26 July 1926"
+      }
+    ]
+  },
+  {
+    "q_idx": 258,
+    "question": "What is the name (first and last) of the 11th President of the University of Northern Iowa?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Mark Nook"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official UNI list of presidents."
+      },
+      {
+        "label": "C",
+        "answer": "Mark Nook (Mark A. Nook), per UNI/Iowa Board of Regents"
+      }
+    ]
+  },
+  {
+    "q_idx": 301,
+    "question": "Which year was the non-profit organization Prayas Nepal established?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "2003 (per Wikipedia)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official Prayas Nepal website or registration records."
+      },
+      {
+        "label": "C",
+        "answer": "2001"
+      }
+    ]
+  },
+  {
+    "q_idx": 344,
+    "question": "What month and year did the Large Hadron Collider reopen after it closed for maintenance and further upgrades at the end of 2018?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "April 2022 (specifically 22 April 2022), per CERN"
+      },
+      {
+        "label": "B",
+        "answer": "April 2022"
+      },
+      {
+        "label": "C",
+        "answer": "April 2022"
+      }
+    ]
+  },
+  {
+    "q_idx": 387,
+    "question": "In which year did Masatoshi G\u00fcnd\u00fcz Ikeda marry Emel Ardor, the Turkish research assistant whom he had met in Hamburg?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry for Masatoshi G\u00fcnd\u00fcz Ikeda."
+      },
+      {
+        "label": "B",
+        "answer": "1964 (per Wikipedia)"
+      },
+      {
+        "label": "C",
+        "answer": "1961"
+      }
+    ]
+  },
+  {
+    "q_idx": 430,
+    "question": "In what year was American music producer George Avakian appointed as head of the international department at Columbia Records?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "1948"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: George Avakian's biography or Columbia Records corporate history."
+      },
+      {
+        "label": "C",
+        "answer": "1948 (per Wikipedia)"
+      }
+    ]
+  },
+  {
+    "q_idx": 473,
+    "question": "In which patch was the classic version of the shaman class ability Totemic Focus removed in World of Warcraft?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Patch 4.0.1"
+      },
+      {
+        "label": "B",
+        "answer": "Patch 4.0.1 (Cataclysm pre-patch, 2010-10-12), per Warcraft wiki for the Classic Totemic Focus talent."
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the WoW patch notes / Wowpedia entry for Totemic Focus."
+      }
+    ]
+  },
+  {
+    "q_idx": 516,
+    "question": "What was the age range of the drivers whose EEG data was collected in the 2021 research paper titled \"EEG-Based Driving Fatigue Detection Using a Two-Level Learning Hierarchy Radial Basis Function\" by Ziwu Ren et al.?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "22-28 years"
+      },
+      {
+        "label": "B",
+        "answer": "23 to 27 years (per the published paper in Frontiers in Neurorobotics)"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the methods section of that specific Ren et al. 2021 paper."
+      }
+    ]
+  },
+  {
+    "q_idx": 559,
+    "question": "In the game Terraria, what update added the set bonus to the Robe item when worn with the Magic Hat?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Terraria Wiki entry for the Magic Hat / Robe set bonus."
+      },
+      {
+        "label": "B",
+        "answer": "1.4.4 (Labor of Love update)"
+      },
+      {
+        "label": "C",
+        "answer": "Desktop 1.2.3 (per Terraria wikis)"
+      }
+    ]
+  },
+  {
+    "q_idx": 602,
+    "question": "On what day, month, and year was Javier Zanetti's first daughter born?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical source on Javier Zanetti's family."
+      },
+      {
+        "label": "B",
+        "answer": "23 September 2005"
+      },
+      {
+        "label": "C",
+        "answer": "11 June 2005 (Sol Zanetti)"
+      }
+    ]
+  },
+  {
+    "q_idx": 645,
+    "question": "How many sons and daughters did former State President of South Africa, P.W. Botha, have with his wife Anna Elizabeth Rossouw?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Two sons and three daughters (five children total) \u2014 sons Piet and Rossouw; daughters Elanza, Amelia and Rozanne. (Per Wikipedia)"
+      },
+      {
+        "label": "B",
+        "answer": "Two sons and three daughters"
+      },
+      {
+        "label": "C",
+        "answer": "Two sons and three daughters"
+      }
+    ]
+  },
+  {
+    "q_idx": 688,
+    "question": "From which president did Yo-Yo Ma receive the Presidential Medal of Freedom?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Barack Obama"
+      },
+      {
+        "label": "B",
+        "answer": "Barack Obama"
+      },
+      {
+        "label": "C",
+        "answer": "President Barack Obama (in 2011)"
+      }
+    ]
+  },
+  {
+    "q_idx": 731,
+    "question": "What was Pankaj Mithal's position just before being appointed as a judge of the Supreme Court of India?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Chief Justice of the Rajasthan High Court"
+      },
+      {
+        "label": "B",
+        "answer": "Chief Justice of the Rajasthan High Court"
+      },
+      {
+        "label": "C",
+        "answer": "Chief Justice of the Rajasthan High Court"
+      }
+    ]
+  },
+  {
+    "q_idx": 774,
+    "question": "What were the names of the three announcers of the radio show \"The American Album of Familiar Music\"?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: an old-time radio reference (e.g., John Dunning's encyclopedia) entry on The American Album of Familiar Music."
+      },
+      {
+        "label": "B",
+        "answer": "Andr\u00e9 Baruch, Howard Claney, and Roger Krupp (per Wikipedia)"
+      },
+      {
+        "label": "C",
+        "answer": "Howard Claney, Andr\u00e9 Baruch, and Roger Krupp"
+      }
+    ]
+  },
+  {
+    "q_idx": 817,
+    "question": "Name the mission director of the Rohini Technology Payload (RTP) satellite launch in 1979.",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "S. Srinivasan"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: ISRO historical records on the SLV-3 E1 mission of 1979."
+      },
+      {
+        "label": "C",
+        "answer": "Searched ISRO official page, Wikipedia, and India Space Week documents; the mission director is not consistently stated. The SLV-3 project director was Dr. A.P.J. Abdul Kalam, who served as the mission director for the SLV-3E1/RTP launch. Reported as A.P.J. Abdul Kalam."
+      }
+    ]
+  },
+  {
+    "q_idx": 860,
+    "question": "Which Indian squash player won the 2017 Men\u2019s Makati Open Squash tournament?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Harinder Pal Sandhu"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the PSA tournament records for the 2017 Makati Open."
+      },
+      {
+        "label": "C",
+        "answer": "Harinder Pal Sandhu"
+      }
+    ]
+  },
+  {
+    "q_idx": 903,
+    "question": "On what month, day, and year did Noel Fielding receive an honorary master's degree from Buckinghamshire New University?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "6 September 2011 (per Wikipedia)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a Buckinghamshire New University press release or news article on the honorary degree."
+      },
+      {
+        "label": "C",
+        "answer": "19 July 2012"
+      }
+    ]
+  },
+  {
+    "q_idx": 946,
+    "question": "Who set the Guinness World Record by building the largest Nerf gun, measuring 3.81 meters (12 feet 6 inches), on October 15, 2021?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Michael Pick (USA), per Guinness World Records"
+      },
+      {
+        "label": "B",
+        "answer": "Michael Pick"
+      },
+      {
+        "label": "C",
+        "answer": "Michael Pick"
+      }
+    ]
+  },
+  {
+    "q_idx": 989,
+    "question": "From which date, month, and year to which date, month, and year did the Indian lawyer L. N. Sinha serve as Solicitor General of India?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "17 July 1972 to 5 April 1977 (per Wikipedia)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official Ministry of Law and Justice (India) list of Solicitors General with exact dates."
+      },
+      {
+        "label": "C",
+        "answer": "17 July 1972 to 5 April 1977"
+      }
+    ]
+  },
+  {
+    "q_idx": 1032,
+    "question": "From which Israeli university did Judith Feist Hemmendinger receive her master's degree?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical source on Judith Hemmendinger."
+      },
+      {
+        "label": "B",
+        "answer": "Bar-Ilan University"
+      },
+      {
+        "label": "C",
+        "answer": "Bar-Ilan University (per Wikipedia)"
+      }
+    ]
+  },
+  {
+    "q_idx": 1075,
+    "question": "What was P. V. Sanjay Kumar's position just before being appointed as a judge of the Supreme Court of India?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Chief Justice of the Manipur High Court"
+      },
+      {
+        "label": "B",
+        "answer": "Chief Justice of the Manipur High Court"
+      },
+      {
+        "label": "C",
+        "answer": "Chief Justice of the Manipur High Court"
+      }
+    ]
+  },
+  {
+    "q_idx": 1118,
+    "question": "What was the name of the award Mary Munson Runge received from the American Pharmacists Association in 1996?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the APhA award records or Mary Munson Runge biographical page."
+      },
+      {
+        "label": "B",
+        "answer": "Hugo H. Schaefer Award"
+      },
+      {
+        "label": "C",
+        "answer": "Remington Honor Medal"
+      }
+    ]
+  },
+  {
+    "q_idx": 1161,
+    "question": "On which date, month, and year was the municipality of Miraflores, Boyac\u00e1, Colombia, founded?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "29 December 1777 (per FamilySearch / municipal records)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official municipal records or Wikipedia entry for Miraflores, Boyac\u00e1."
+      },
+      {
+        "label": "C",
+        "answer": "16 March 1777"
+      }
+    ]
+  },
+  {
+    "q_idx": 1204,
+    "question": "What is the first and last name of the host who interviewed military pilot Eugene Bullard on NBC\u2019s \"Today Show\"?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Dave Garroway"
+      },
+      {
+        "label": "B",
+        "answer": "Dave Garroway (December 22, 1959)"
+      },
+      {
+        "label": "C",
+        "answer": "Dave Garroway"
+      }
+    ]
+  },
+  {
+    "q_idx": 1247,
+    "question": "What is the weight of the Sputnik 6 spacecraft in kilograms?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "4,563 kg (per NSSDCA)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: NASA NSSDC or Soviet space program records for Sputnik 6 / Korabl-Sputnik 3 (approximately 4,563 kg, but I'm not confident on the exact figure)."
+      },
+      {
+        "label": "C",
+        "answer": "4,563 kg"
+      }
+    ]
+  },
+  {
+    "q_idx": 1290,
+    "question": "What is the name of the member of the judging panel who crowned Reita Faria, the winner of Miss World 1966?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official Miss World 1966 records."
+      },
+      {
+        "label": "B",
+        "answer": "Svetlana Beriosova (Lithuanian ballerina, who was a judge at Miss World 1966)"
+      },
+      {
+        "label": "C",
+        "answer": "Jean Shrimpton"
+      }
+    ]
+  },
+  {
+    "q_idx": 1333,
+    "question": "Which valley is known as the \"Golden Crown of Kashmir\"?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Breng Valley"
+      },
+      {
+        "label": "B",
+        "answer": "Lolab Valley"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a regional Kashmir tourism reference."
+      }
+    ]
+  },
+  {
+    "q_idx": 1376,
+    "question": "In what year did Thomas D. Wilson (\"Big Tom\" Wilson) marry Niagara Ray, the daughter of Amos Ray?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "1852"
+      },
+      {
+        "label": "B",
+        "answer": "1852 (per NCpedia / Find A Grave)"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical entry on Big Tom Wilson of Mount Mitchell fame."
+      }
+    ]
+  },
+  {
+    "q_idx": 1419,
+    "question": "Who was awarded the V. M. Goldschmidt Award in 2015?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Richard Carlson"
+      },
+      {
+        "label": "B",
+        "answer": "Miriam Kastner (Scripps Institution of Oceanography), per Geochemical Society"
+      },
+      {
+        "label": "C",
+        "answer": "Richard Carlson"
+      }
+    ]
+  },
+  {
+    "q_idx": 1462,
+    "question": "In which year was George Nathaniel Curzon, 1st Marquess Curzon of Kedleston, elected to the House of Lords?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "1908"
+      },
+      {
+        "label": "B",
+        "answer": "1908 (elected as Irish representative peer, January 1908)"
+      },
+      {
+        "label": "C",
+        "answer": "1908"
+      }
+    ]
+  },
+  {
+    "q_idx": 1505,
+    "question": "During which of his three tenures in the National Assembly of Pakistan did Makhdum Khusro Bakhtyar (Pakistani politician) serve as the Minister of State for Foreign Affairs?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry or official records for Makhdum Khusro Bakhtyar."
+      },
+      {
+        "label": "B",
+        "answer": "His first tenure (2002\u20132008), during the Shaukat Aziz cabinet; he served as Minister of State for Foreign Affairs September 2004 to November 2007."
+      },
+      {
+        "label": "C",
+        "answer": "His second tenure (2002-2007)"
+      }
+    ]
+  },
+  {
+    "q_idx": 1548,
+    "question": "What was the first historically Black college to be accredited by the Southern Association of Colleges and Schools?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Fisk University (accredited 1930)"
+      },
+      {
+        "label": "B",
+        "answer": "Tuskegee Institute"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: SACS historical accreditation records (likely Hampton or a similar HBCU, but I'm not confident)."
+      }
+    ]
+  },
+  {
+    "q_idx": 1591,
+    "question": "In which month of 1996 did Puntsagiin Jasrai's tenure as Prime Minister of Mongolia end?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "July 1996"
+      },
+      {
+        "label": "B",
+        "answer": "July 1996 (19 July 1996)"
+      },
+      {
+        "label": "C",
+        "answer": "July 1996"
+      }
+    ]
+  },
+  {
+    "q_idx": 1634,
+    "question": "On what month, day, and year was the 1976 case of Estelle v. Gamble decided by the Supreme Court of the United States?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "November 30, 1976"
+      },
+      {
+        "label": "B",
+        "answer": "November 30, 1976"
+      },
+      {
+        "label": "C",
+        "answer": "November 30, 1976"
+      }
+    ]
+  },
+  {
+    "q_idx": 1677,
+    "question": "Who portrayed Jessica Simpson in Snatch Game (RuPaul's Drag Race, Season 4, Episode 5)?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Willam Belli"
+      },
+      {
+        "label": "B",
+        "answer": "Willam (Willam Belli)"
+      },
+      {
+        "label": "C",
+        "answer": "Willam Belli"
+      }
+    ]
+  },
+  {
+    "q_idx": 1720,
+    "question": "What day, month, and year did New Zealand's Prime Minister, Christopher Luxon, marry his wife Amanda?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "21 December 1991"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical source on Christopher Luxon's personal life."
+      },
+      {
+        "label": "C",
+        "answer": "8 January 1994"
+      }
+    ]
+  },
+  {
+    "q_idx": 1763,
+    "question": "The Visvim FBT's name is influenced by the name of what music group?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Bad Brains"
+      },
+      {
+        "label": "B",
+        "answer": "Bad Brains (FBT stands for 'Fila Brasileiro Type' \u2014 actually inspired by Brazilian samba/punk; the name references the band Bad Brains)"
+      },
+      {
+        "label": "C",
+        "answer": "Fun Boy Three (British new wave band)"
+      }
+    ]
+  },
+  {
+    "q_idx": 1806,
+    "question": "Who was the first transgender person in Argentina to get her name and gender on her government-issued ID legally changed?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: Argentine news coverage of the first legal gender identity change."
+      },
+      {
+        "label": "B",
+        "answer": "Mariela Mu\u00f1oz (in May 1997, by judicial order; first widely recognized case)"
+      },
+      {
+        "label": "C",
+        "answer": "Tania Luna"
+      }
+    ]
+  },
+  {
+    "q_idx": 1849,
+    "question": "Within plus or minus one minute, when was Marquinhos given a yellow card in the 2022 World Cup quarterfinals?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official FIFA match report for Croatia vs. Brazil, 2022 World Cup quarterfinal."
+      },
+      {
+        "label": "B",
+        "answer": "77th minute (Brazil vs Croatia QF, 9 December 2022)"
+      },
+      {
+        "label": "C",
+        "answer": "55th minute"
+      }
+    ]
+  },
+  {
+    "q_idx": 1892,
+    "question": "At which technology park in Liverpool was Psygnosis Limited headquartered starting in 1995?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Wavertree Technology Park"
+      },
+      {
+        "label": "B",
+        "answer": "Wavertree Technology Park"
+      },
+      {
+        "label": "C",
+        "answer": "Wavertree Technology Park"
+      }
+    ]
+  },
+  {
+    "q_idx": 1935,
+    "question": "In what year did Norodom Ranariddh join the FUNCINPEC?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "1983"
+      },
+      {
+        "label": "B",
+        "answer": "1983"
+      },
+      {
+        "label": "C",
+        "answer": "1983 (per Wikipedia)"
+      }
+    ]
+  },
+  {
+    "q_idx": 1978,
+    "question": "What band opened on Sunday, September 6, 1992, at Ieperfest Hardcore '92 festival?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Strength Of The Will (opened in the pub on Sunday 6 September 1992)"
+      },
+      {
+        "label": "B",
+        "answer": "Shortsight"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Ieperfest 1992 lineup records."
+      }
+    ]
+  },
+  {
+    "q_idx": 2021,
+    "question": "In what city and state is Richard Neutra's Slavin House located?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a Richard Neutra works catalogue entry for the Slavin House."
+      },
+      {
+        "label": "B",
+        "answer": "Santa Barbara, California"
+      },
+      {
+        "label": "C",
+        "answer": "Santa Barbara, California"
+      }
+    ]
+  },
+  {
+    "q_idx": 2064,
+    "question": "How many balls did Ishan Kishan play in the Indian Premier League 2019 final match between CSK and MI on May 12, 2019?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the ESPNcricinfo scorecard for IPL 2019 final."
+      },
+      {
+        "label": "B",
+        "answer": "0 balls (did not bat)"
+      },
+      {
+        "label": "C",
+        "answer": "Per ESPN Cricinfo scorecard, Ishan Kishan scored 23 off 17 balls (caught by Raina b Tahir)."
+      }
+    ]
+  },
+  {
+    "q_idx": 2107,
+    "question": "What was the name of the winner of the 1991 Scandinavian Masters golf tournament?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Colin Montgomerie"
+      },
+      {
+        "label": "B",
+        "answer": "Colin Montgomerie"
+      },
+      {
+        "label": "C",
+        "answer": "Colin Montgomerie"
+      }
+    ]
+  },
+  {
+    "q_idx": 2150,
+    "question": "In which year did a mouse eradication program first commence on the volcanic island called Gough Island in the South Atlantic Ocean?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "2021"
+      },
+      {
+        "label": "B",
+        "answer": "2021 (bait-drop operation commenced; the SA Agulhas II arrived 3 June 2021)"
+      },
+      {
+        "label": "C",
+        "answer": "2021"
+      }
+    ]
+  },
+  {
+    "q_idx": 2193,
+    "question": "Who was the maternal grandfather of the Russian stage actress and singer Baroness Olga Vadimovna von Root?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Karl Kazimirovich Kostsyushko-Valyuzhinich (founder of the Archaeological Museum in Chersonesus)"
+      },
+      {
+        "label": "B",
+        "answer": "Ivan Yakovlevich Krotkov"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a genealogical source on the von Root family."
+      }
+    ]
+  },
+  {
+    "q_idx": 2236,
+    "question": "What month, day, and year was Lori Vallow Daybell sentenced to prison?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "July 31, 2023"
+      },
+      {
+        "label": "B",
+        "answer": "July 31, 2023"
+      },
+      {
+        "label": "C",
+        "answer": "July 31, 2023 (Idaho sentencing \u2014 five life sentences without parole). She was also later sentenced in Arizona on July 25, 2025."
+      }
+    ]
+  },
+  {
+    "q_idx": 2279,
+    "question": "What day, month, and year did Panama decide to use DVB-T?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "12 May 2009 (presidential decree signed by Mart\u00edn Torrijos Espino)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: Panama government broadcasting regulator records on DTV standard adoption."
+      },
+      {
+        "label": "C",
+        "answer": "12 May 2009"
+      }
+    ]
+  },
+  {
+    "q_idx": 2322,
+    "question": "What is the first and last name of the sculptor who created the statue of Christopher Codrington at All Souls College?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Henry Cheere (Sir Henry Cheere)"
+      },
+      {
+        "label": "B",
+        "answer": "Henry Cheere"
+      },
+      {
+        "label": "C",
+        "answer": "Henry Cheere"
+      }
+    ]
+  },
+  {
+    "q_idx": 2365,
+    "question": "What was Gustav Arthur Cooper's Ph.D. dissertation titled?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Stratigraphy and Paleontology of the Hamilton Group of New York"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: Yale University dissertation records or G.A. Cooper's biographical entry."
+      },
+      {
+        "label": "C",
+        "answer": "'Stratigraphy of the Hamilton Group of New York' (Yale, 1929)"
+      }
+    ]
+  },
+  {
+    "q_idx": 2408,
+    "question": "From which constituency did Justice Mohammad Afzal Cheema, former Deputy Speaker of the National Assembly of Pakistan, become a member of the National Assembly of Pakistan in 1962?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Sargodha"
+      },
+      {
+        "label": "B",
+        "answer": "Toba Tek Singh (the largest constituency at the time); officially NW-35 Lyallpur-IV per NA records."
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the 1962 Pakistan National Assembly election records."
+      }
+    ]
+  },
+  {
+    "q_idx": 2451,
+    "question": "What is the forest cover area of Nagaland in square kilometers according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017-18?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the India State of Forest Report 2019."
+      },
+      {
+        "label": "B",
+        "answer": "12,486.40 sq km (per India State of Forest Report 2019)"
+      },
+      {
+        "label": "C",
+        "answer": "12,486 sq km"
+      }
+    ]
+  },
+  {
+    "q_idx": 2494,
+    "question": "On what day, month, and year was it announced that Les Dennis would guest host the British show Countdown due to Colin Murray testing positive for COVID-19?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "25 July 2022"
+      },
+      {
+        "label": "B",
+        "answer": "5 January 2022"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: UK press coverage of the Countdown guest host announcement."
+      }
+    ]
+  },
+  {
+    "q_idx": 2537,
+    "question": "What is the name of the entomologist who described the beetle species Conalia helva in 1862?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the original taxonomic description for Conalia helva (likely LeConte, but I'm not confident)."
+      },
+      {
+        "label": "B",
+        "answer": "John Lawrence LeConte (J. L. LeConte)"
+      },
+      {
+        "label": "C",
+        "answer": "John Lawrence LeConte"
+      }
+    ]
+  },
+  {
+    "q_idx": 2580,
+    "question": "In what month and year did New York State Representative Paul Tonko resign as CEO of the New York State Energy Research and Development Authority?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "April 2008"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: NYSERDA leadership records or Paul Tonko's biography."
+      },
+      {
+        "label": "C",
+        "answer": "April 2008 (he stepped down 25 April 2008)"
+      }
+    ]
+  },
+  {
+    "q_idx": 2623,
+    "question": "Which two architects built the Pizzurno Palace?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Carlos Adolfo Altgelt and Hans Altgelt (cousins)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry for Palacio Pizzurno in Buenos Aires."
+      },
+      {
+        "label": "C",
+        "answer": "Carlos Altgelt and Hans Altgelt"
+      }
+    ]
+  },
+  {
+    "q_idx": 2666,
+    "question": "The Community Hall (23 Grenville Street), purchased in 1935 by a group of residents in Burritts Rapids, Ontario, was built in 1840 as a general store by a man named what?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: local Burritts Rapids historical society records."
+      },
+      {
+        "label": "B",
+        "answer": "John Strahan French"
+      },
+      {
+        "label": "C",
+        "answer": "Henry Burritt"
+      }
+    ]
+  },
+  {
+    "q_idx": 2709,
+    "question": "Who preceded Eduardo Laurencena as President of the National Committee of the UCR?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Vicente Gallo"
+      },
+      {
+        "label": "B",
+        "answer": "Gabriel Oddone (Gabriel A. Oddone), 1942\u20131946"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the UCR (Uni\u00f3n C\u00edvica Radical) historical leadership list."
+      }
+    ]
+  },
+  {
+    "q_idx": 2752,
+    "question": "In which NYC borough was painter Benjamin Abramowitz born in 1917?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Brooklyn"
+      },
+      {
+        "label": "B",
+        "answer": "Manhattan"
+      },
+      {
+        "label": "C",
+        "answer": "Manhattan"
+      }
+    ]
+  },
+  {
+    "q_idx": 2795,
+    "question": "What day, month, and year was Terraria desktop version 1.4.3.2 released?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "16 December 2021"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Terraria Wiki version history page."
+      },
+      {
+        "label": "C",
+        "answer": "24 November 2021"
+      }
+    ]
+  },
+  {
+    "q_idx": 2838,
+    "question": "In Table 2 in the Transformer paper (2017), which two languages did they use for their translation results?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "English-to-German and English-to-French"
+      },
+      {
+        "label": "B",
+        "answer": "English-to-German and English-to-French"
+      },
+      {
+        "label": "C",
+        "answer": "English-to-German and English-to-French (WMT 2014)"
+      }
+    ]
+  },
+  {
+    "q_idx": 2881,
+    "question": "How tall exactly (in meters) is the outdoor kinetic sculpture 'Head of Franz Kafka' installed in Prague?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "11 meters"
+      },
+      {
+        "label": "B",
+        "answer": "11 meters"
+      },
+      {
+        "label": "C",
+        "answer": "10.6 meters"
+      }
+    ]
+  },
+  {
+    "q_idx": 2924,
+    "question": "In which month and year did Apple stop referring to Darwin by name on its website?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry for Darwin (operating system) with sourced citations."
+      },
+      {
+        "label": "B",
+        "answer": "May 2007"
+      },
+      {
+        "label": "C",
+        "answer": "January 2023 (per Wikipedia)"
+      }
+    ]
+  },
+  {
+    "q_idx": 2967,
+    "question": "On what day, month, and year was Kommunistisk Forbund founded?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "21 January 1973 (Communist League, Denmark; founded in Aarhus)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry on Kommunistisk Forbund (Danish or Norwegian)."
+      },
+      {
+        "label": "C",
+        "answer": "1 December 1968"
+      }
+    ]
+  },
+  {
+    "q_idx": 3010,
+    "question": "From which university did Louise M. Antony (American philosopher) receive her bachelor's degree in philosophy?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Syracuse University"
+      },
+      {
+        "label": "B",
+        "answer": "Syracuse University (BA 1975)"
+      },
+      {
+        "label": "C",
+        "answer": "Syracuse University"
+      }
+    ]
+  },
+  {
+    "q_idx": 3053,
+    "question": "What year was the chemist Katharine Burr Blodgett awarded the Photographic Society of America's Annual Achievement Award?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: PSA historical award records or Blodgett's biography."
+      },
+      {
+        "label": "B",
+        "answer": "1972"
+      },
+      {
+        "label": "C",
+        "answer": "1972"
+      }
+    ]
+  },
+  {
+    "q_idx": 3096,
+    "question": "Name the plant taxonomist who identified all the plant specimens collected for the study in the article \"The local medicinal plant knowledge in Kashmir Western Himalaya: A way to foster ecological transition via community-centred health-seeking strategies\"?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Akhtar Hussain Malik"
+      },
+      {
+        "label": "B",
+        "answer": "Dr. Mushtaq Ahmad (per the paper's Methods section)"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the acknowledgments section of that specific paper."
+      }
+    ]
+  },
+  {
+    "q_idx": 3139,
+    "question": "Which month and year did George Melly join Roy Hudd and others to unveil a statue of Miller in Brighton?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: news coverage of the Max Miller statue unveiling in Brighton."
+      },
+      {
+        "label": "B",
+        "answer": "May 2005"
+      },
+      {
+        "label": "C",
+        "answer": "May 2005 (1 May 2005, statue of Max Miller in Brighton)"
+      }
+    ]
+  },
+  {
+    "q_idx": 3182,
+    "question": "On what day, month, and year was the footballer Michael Anderson Pereira da Silva born?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "13 February 1986"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry for the specific footballer Michael Anderson Pereira da Silva."
+      },
+      {
+        "label": "C",
+        "answer": "16 February 1983"
+      }
+    ]
+  },
+  {
+    "q_idx": 3225,
+    "question": "What was the name of the first hip-hop album in South Africa?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "'Our World' by Prophets of Da City (1990)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a South African hip-hop history reference."
+      },
+      {
+        "label": "C",
+        "answer": "Our World by Prophets of da City"
+      }
+    ]
+  },
+  {
+    "q_idx": 3268,
+    "question": "In which year and month did El Cielo receive its first Michelin star in Miami?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "June 2022"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Michelin Guide Miami announcement records."
+      },
+      {
+        "label": "C",
+        "answer": "August 2022 (first Michelin Star in Florida)"
+      }
+    ]
+  },
+  {
+    "q_idx": 3311,
+    "question": "In what city and state was Jazzercise created in 1969?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Evanston, Illinois (per multiple sources; Judi Sheppard Missett founded Jazzercise there in 1969)"
+      },
+      {
+        "label": "B",
+        "answer": "Evanston, Illinois"
+      },
+      {
+        "label": "C",
+        "answer": "Evanston, Illinois"
+      }
+    ]
+  },
+  {
+    "q_idx": 3354,
+    "question": "What EP did Machine Girl release in 2016?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "MACHINE GIRL VS MACHINE GIRL (released 29 November 2016)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: Machine Girl's discography (possibly Gemini, but I'm not confident)."
+      },
+      {
+        "label": "C",
+        "answer": "Gemini"
+      }
+    ]
+  },
+  {
+    "q_idx": 3397,
+    "question": "What song is playing at the beginning of \"Full Leather Jacket\" of The Sopranos?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "'Baker Street' by Gerry Rafferty"
+      },
+      {
+        "label": "B",
+        "answer": "\"Looking for Love\" by Johnny Lee"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: The Sopranos soundtrack/episode music reference for Season 2 Episode 8."
+      }
+    ]
+  },
+  {
+    "q_idx": 3440,
+    "question": "In which year was the Bronze Wrangler first awarded?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "1961 (first Western Heritage Awards ceremony)"
+      },
+      {
+        "label": "B",
+        "answer": "1961"
+      },
+      {
+        "label": "C",
+        "answer": "1961"
+      }
+    ]
+  },
+  {
+    "q_idx": 3483,
+    "question": "What year did Bill Brown start teaching at the University of Chicago?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "1989 (per English department/Wikipedia)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the University of Chicago faculty records for Bill Brown (literary critic)."
+      },
+      {
+        "label": "C",
+        "answer": "1989"
+      }
+    ]
+  },
+  {
+    "q_idx": 3526,
+    "question": "Which interstate is located near Ramby Avenue, where the KTCZ-FM transmitter on the KMSP Tower is located?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Interstate 694 (Shoreview, Minnesota)"
+      },
+      {
+        "label": "B",
+        "answer": "Interstate 35W"
+      },
+      {
+        "label": "C",
+        "answer": "Interstate 35W"
+      }
+    ]
+  },
+  {
+    "q_idx": 3569,
+    "question": "What's the DOI of the paper \"On Two Mathematical Representations for Semantic Maps\"?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "10.3390/info14010036"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a direct lookup on Crossref or the journal page for that paper."
+      },
+      {
+        "label": "C",
+        "answer": "10.1515/zfs-2021-2040"
+      }
+    ]
+  },
+  {
+    "q_idx": 3612,
+    "question": "Who was born on 11 March 1957 and was a former Solicitor General for Scotland, a Senator of the College of Justice, and former Chairman of the Scottish Law Commission?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Lord Pentland (Paul Cullen)"
+      },
+      {
+        "label": "B",
+        "answer": "Colin Boyd, Lord Boyd of Duncansby"
+      },
+      {
+        "label": "C",
+        "answer": "Paul Cullen, Lord Pentland (Paul Benedict Cullen)"
+      }
+    ]
+  },
+  {
+    "q_idx": 3655,
+    "question": "At which university did the 24th Chief Justice of India, Lalit Mohan Sharma, study B.A. Hons.?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the official Supreme Court of India biographical entry for L. M. Sharma."
+      },
+      {
+        "label": "B",
+        "answer": "Patna University (B.A. Hons., 1946)"
+      },
+      {
+        "label": "C",
+        "answer": "Patna University"
+      }
+    ]
+  },
+  {
+    "q_idx": 3698,
+    "question": "How many siblings did Pauline LaFon Gore have?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical source on Pauline Gore's family."
+      },
+      {
+        "label": "B",
+        "answer": "Four"
+      },
+      {
+        "label": "C",
+        "answer": "Five siblings (she was one of six children). Per Wikipedia/Grokipedia."
+      }
+    ]
+  },
+  {
+    "q_idx": 3741,
+    "question": "Which year was Garc\u00eda Bernal cast in the lead role of Rodrigo de Souza in the series Mozart in the Jungle?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "2014"
+      },
+      {
+        "label": "B",
+        "answer": "2014"
+      },
+      {
+        "label": "C",
+        "answer": "2014 (the pilot premiered February 2014; series premiered December 2014)"
+      }
+    ]
+  },
+  {
+    "q_idx": 3784,
+    "question": "What was the first Nike running shoe?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Nike Cortez (1972)"
+      },
+      {
+        "label": "B",
+        "answer": "Nike Cortez"
+      },
+      {
+        "label": "C",
+        "answer": "Nike Cortez"
+      }
+    ]
+  },
+  {
+    "q_idx": 3827,
+    "question": "What is the forest cover area of Uttarakhand in square kilometers according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017-2018?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "24,303.04 sq km (per India State of Forest Report 2019)"
+      },
+      {
+        "label": "B",
+        "answer": "24,295 sq km"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the India State of Forest Report 2019."
+      }
+    ]
+  },
+  {
+    "q_idx": 3870,
+    "question": "In feet, what is the max depth of Dal Lake located in Srinagar?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "20 feet (per Simple Wikipedia / Mukerjee 1931 measurement)"
+      },
+      {
+        "label": "B",
+        "answer": "20 feet"
+      },
+      {
+        "label": "C",
+        "answer": "20 feet"
+      }
+    ]
+  },
+  {
+    "q_idx": 3913,
+    "question": "How many children did clarinetist Wally \"Trog\" Fawkes have?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Six children (four from his first marriage to Sandy Fawkes, three of whom survived, and two from his second marriage to Susan Clifford). Per Wikipedia."
+      },
+      {
+        "label": "B",
+        "answer": "Six"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical source on Wally Fawkes."
+      }
+    ]
+  },
+  {
+    "q_idx": 3956,
+    "question": "What is the developmental code for Firazorexton, an orally active, brain-permeable orexin type 2 receptor agonist?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "TAK-994"
+      },
+      {
+        "label": "B",
+        "answer": "TAK-861"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the pharmaceutical literature on this orexin receptor agonist (possibly TAK-861 or similar Takeda code, but I'm not confident)."
+      }
+    ]
+  },
+  {
+    "q_idx": 3999,
+    "question": "What is the surname of the individual who won the Faraday Medal, awarded by the Electrochemistry Group of the Royal Society of Chemistry in 1987?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the RSC Electrochemistry Group's Faraday Medal recipient list."
+      },
+      {
+        "label": "B",
+        "answer": "Bockris"
+      },
+      {
+        "label": "C",
+        "answer": "Gerischer (Heinz Gerischer)"
+      }
+    ]
+  },
+  {
+    "q_idx": 4042,
+    "question": "What was the last name of the senator from New York who presented Reverend Billy Graham with the Gold Award of the George Washington Carver Memorial Institute in 1964?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Javits"
+      },
+      {
+        "label": "B",
+        "answer": "Javits"
+      },
+      {
+        "label": "C",
+        "answer": "Javits (Senator Jacob Javits)"
+      }
+    ]
+  },
+  {
+    "q_idx": 4085,
+    "question": "What type of engine does the Japanese Type 89 torpedo, completed in 1984, use?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "Otto fuel II swash-plate piston engine"
+      },
+      {
+        "label": "B",
+        "answer": "Swash-plate piston engine (axial piston engine) using Otto Fuel II, driving a pumpjet"
+      },
+      {
+        "label": "C",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: the Wikipedia entry for the Japanese Type 89 torpedo (likely an Otto fuel II swash-plate engine, but I'm not confident)."
+      }
+    ]
+  },
+  {
+    "q_idx": 4128,
+    "question": "During which years did Margaret Hamburg work as a clinical instructor for Georgetown University School of Medicine?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: Margaret Hamburg's CV or biographical entry."
+      },
+      {
+        "label": "B",
+        "answer": "1988 to 1990"
+      },
+      {
+        "label": "C",
+        "answer": "1986 to 1990 (per Wikipedia)"
+      }
+    ]
+  },
+  {
+    "q_idx": 4171,
+    "question": "On which day, month, and year was the domain \"aajtak.in\" registered?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a WHOIS lookup record for aajtak.in."
+      },
+      {
+        "label": "B",
+        "answer": "6 January 2005 (per WHOIS records)"
+      },
+      {
+        "label": "C",
+        "answer": "18 February 2005"
+      }
+    ]
+  },
+  {
+    "q_idx": 4214,
+    "question": "On what date (day, month, year) did composer Sigrid Ingeborg Henriette Wienecke die?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "18 April 1907 (per Wikipedia)"
+      },
+      {
+        "label": "B",
+        "answer": "KICKBACK: I do not have a reliable enough source for this specific claim. To answer I would need: a biographical entry on the Danish composer Sigrid Wienecke."
+      },
+      {
+        "label": "C",
+        "answer": "30 March 1944"
+      }
+    ]
+  },
+  {
+    "q_idx": 4257,
+    "question": "In which month and year did American Vice-President Al Gore and Russian Prime Minister Viktor Chernomyrdin announce plans for a new space station, which eventually became the International Space Station?",
+    "candidates": [
+      {
+        "label": "A",
+        "answer": "September 1993"
+      },
+      {
+        "label": "B",
+        "answer": "September 1993"
+      },
+      {
+        "label": "C",
+        "answer": "September 1993"
+      }
+    ]
+  }
+]

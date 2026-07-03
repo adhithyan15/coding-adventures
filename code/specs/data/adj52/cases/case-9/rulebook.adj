@@ -1,0 +1,261 @@
+% ============================================================================
+% ADJ52 case-9 derived rulebook.
+% Clinical area: head_and_neck salivary-gland / nodal EOSINOPHILIC
+% LYMPHOPROLIFERATIVE pathology (the AREA, not a specific diagnosis).
+%
+% Differential built from the IR alone (no answer given), recursing into
+% subcategories of the eosinophilia + elevated-IgE head/neck-mass syndrome:
+%   - kimura_disease                         (allergic/Th2 angiolymphoid)
+%   - angiolymphoid_hyperplasia_eosinophilia (ALHE; vascular endothelial)
+%   - igg4_related_disease                   (fibroinflammatory, IgG4+)
+%   - langerhans_cell_histiocytosis          (CD1a+ histiocytic)
+%   - lymphoma                               (clonal lymphoproliferative)
+%   - warthin_tumour                         (benign oncocytic salivary neoplasm)
+%
+% Magnitudes are QUALITATIVE atoms to satisfy the adj-lang IDENT grammar
+% (lowercase, no leading digit, no uppercase). e.g. patient_age(years(33)) ->
+% age(under_40); eosinophil_fraction(percent(28)) -> eosinophilia(elevated);
+% serum_total_ige_elevated(...) -> serum_ige(markedly_elevated).
+%
+% CORRELATED EVIDENCE: peripheral eosinophilia and markedly elevated IgE are
+% NOT independent in Kimura disease — they are two readouts of one Th2/allergic
+% angiolymphoid mechanism (sources describe them as a unified triad with the
+% mass). They are grouped under ONE mechanism directive so the combined LR
+% fires ONCE, rather than double-counting two manifestations of one cause.
+% ============================================================================
+
+% ===== PRIORS (base rates within this eosinophilic head/neck-mass area) =====
+
+% rationale: Kimura is the prototypic chronic painless head/neck mass with blood
+% eosinophilia + raised IgE in young Asian men; the prior anchors the area.
+prior 0.22 for diagnosis(kimura_disease)
+  source "Comprehensive Review of Kimura Disease, Head Neck Pathol 2025 (PMC12185846)" trust authoritative
+
+% rationale: ALHE is the closest mimic — same eosinophilic angiolymphoid family
+% but a distinct (probably neoplastic vascular) entity.
+prior 0.15 for diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE clinical/histopathologic differences, J Am Acad Dermatol 1992 (PMID 1479100)" trust authoritative
+
+% rationale: IgG4-RD enters because it overlaps Kimura on salivary involvement,
+% eosinophilia and raised IgE, but is a separate fibroinflammatory entity.
+prior 0.12 for diagnosis(igg4_related_disease)
+  source "Kimura disease and IgG4-related disease: same spectrum or separate (OpenAccessJournals)" trust authoritative
+
+% rationale: LCH is a head/neck eosinophil-rich infiltrate to exclude, but it is
+% CD1a+ histiocytic with lytic bone, not a soft-tissue parotid mass.
+prior 0.06 for diagnosis(langerhans_cell_histiocytosis)
+  source "Pathology Outlines, Langerhans cell histiocytosis (mandible/maxilla)" trust authoritative
+
+% rationale: lymphoma must stay on a chronic head/neck nodal-mass differential;
+% excisional biopsy is partly to exclude it.
+prior 0.08 for diagnosis(lymphoma)
+  source "Kimura cytology differential incl. malignant lymphoma exclusion (CytoJournal PMC9479607)" trust authoritative
+
+% rationale: Warthin is the benign oncocytic salivary tumour the FNA was read as;
+% it is the FNA-driven decoy the chronic eosinophilic course argues against.
+prior 0.05 for diagnosis(warthin_tumour)
+  source "FNA oncocytic + ductal + lymphocyte background read as benign salivary tumour (IR f43-f46)" trust inferred
+
+% ============================================================================
+% LATENT MECHANISM — Th2 / allergic angiolymphoid response of Kimura disease.
+% Peripheral eosinophilia AND markedly elevated serum IgE are correlated
+% readouts of ONE underlying allergic/Th2 mechanism (the disease triad), so a
+% single combined LR fires once if EITHER is observed (anti-double-count).
+% ============================================================================
+% mechanism th2_eosinophil_ige_axis for diagnosis(kimura_disease) lr 9.0 : eosinophilia(elevated), serum_ige(markedly_elevated)
+
+% ===== KIMURA DISEASE =====
+
+% rationale: young adult (<40) male is the classic Kimura demographic (M:F ~4-7:1).
+contributes 2.2 from sex(male) to diagnosis(kimura_disease)
+  source "Comprehensive Review of Kimura Disease (PMC12185846); Kimura vs ALHE (PMID 1479100)" trust authoritative
+contributes 2.0 from age(under_40) to diagnosis(kimura_disease)
+  source "Comprehensive Review of Kimura Disease (PMC12185846)" trust authoritative
+
+% rationale: East/South-Asian ancestry is strongly over-represented in Kimura.
+contributes 3.0 from ethnicity(asian) to diagnosis(kimura_disease)
+  source "Kimura Disease detailed clinical/radiological series (PMC11129738)" trust authoritative
+
+% rationale: chronic, slowly enlarging, painless subcutaneous head/neck mass is
+% the cardinal Kimura presentation (>75% head and neck).
+contributes 3.0 from mass_quality(chronic_painless_subcutaneous) to diagnosis(kimura_disease)
+  source "Comprehensive Review of Kimura Disease (PMC12185846)" trust authoritative
+contributes 2.5 from mass_duration(years) to diagnosis(kimura_disease)
+  source "Kimura's Disease case report, slow-growing chronic swelling (PMC12444099)" trust authoritative
+
+% rationale: parotid + postauricular distribution is the highest-frequency Kimura site.
+contributes 3.0 from mass_site(parotid_and_postauricular) to diagnosis(kimura_disease)
+  source "Kimura Disease clinical/radiological series, postauricular+parotid ~74% (PMC11129738)" trust authoritative
+
+% rationale: associated regional lymphadenopathy is reported in 42-100% of Kimura.
+contributes 2.0 from regional_lymphadenopathy(present) to diagnosis(kimura_disease)
+  source "Kimura vs ALHE: lymphadenopathy 42-100% in Kimura (PMC8451002)" trust authoritative
+
+% rationale: a deep, ill-defined, ENLARGING parotid-region soft-tissue mass fits
+% the infiltrative Kimura lesion (and undercuts a circumscribed benign neoplasm).
+contributes 1.6 from imaging(ill_defined_infiltrative_soft_tissue) to diagnosis(kimura_disease)
+  source "Comprehensive Review of Kimura Disease, ill-defined mass-like lesions (PMC12185846)" trust authoritative
+
+% rationale: a hypervascular lesion with a prominent feeding superficial temporal
+% artery fits the angiolymphoid vascular proliferation of Kimura.
+contributes 1.5 from feeder_vessel(prominent) to diagnosis(kimura_disease)
+  source "Kimura is an angiolymphoid proliferation with vascular component (PMC12185846)" trust inferred
+
+% rationale: absence of B-symptoms (no fever/night sweats/weight loss) over a
+% 7-year benign course argues against lymphoma and is compatible with Kimura.
+contributes 1.3 from constitutional_symptoms(absent) to diagnosis(kimura_disease)
+  source "Kimura is a benign chronic inflammatory disease (PMC12444099)" trust authoritative
+
+% ===== ANGIOLYMPHOID HYPERPLASIA WITH EOSINOPHILIA (ALHE) — key mimic =====
+
+% rationale: ALHE shares the eosinophilic angiolymphoid family — eosinophilia
+% supports it (weaker than for Kimura; less consistently raised).
+contributes 1.8 from eosinophilia(elevated) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE: eosinophilia occasionally elevated in ALHE (PMC8451002)" trust authoritative
+
+% rationale: a hypervascular feeder-artery lesion fits ALHE's primary vascular
+% endothelial proliferation.
+contributes 1.8 from feeder_vessel(prominent) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "ALHE is a primary vascular endothelial proliferation (PMID 1479100)" trust authoritative
+
+% rationale: DISCRIMINATOR — ALHE is superficial dermal papules/nodules; a DEEP
+% ill-defined subcutaneous parotid mass argues AGAINST ALHE.
+contributes 0.4 from mass_quality(chronic_painless_subcutaneous) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE: ALHE lesions more superficial/dermal (PMC8451002)" trust authoritative
+contributes 0.4 from imaging(ill_defined_infiltrative_soft_tissue) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE: ALHE is superficial, not deep infiltrative (PMC8451002)" trust authoritative
+
+% rationale: DISCRIMINATOR — IgE is usually NORMAL in ALHE; markedly elevated IgE
+% argues strongly AGAINST ALHE and toward Kimura.
+contributes 0.25 from serum_ige(markedly_elevated) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE: serum IgE usually normal in ALHE (PMC8451002)" trust authoritative
+
+% rationale: DISCRIMINATOR — regional lymphadenopathy is uncommon in ALHE.
+contributes 0.5 from regional_lymphadenopathy(present) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE: lymphadenopathy uncommon in ALHE (PMC8451002)" trust authoritative
+
+% rationale: DISCRIMINATOR — ALHE predominates in women; male sex argues against.
+contributes 0.6 from sex(male) to diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+  source "Kimura vs ALHE: ALHE females 30-50, Kimura males 20-30s (PMC8451002)" trust authoritative
+
+% ===== IgG4-RELATED DISEASE =====
+
+% rationale: IgG4-RD can produce eosinophilia and raised IgE and involves salivary
+% glands — genuine overlap with Kimura.
+contributes 2.0 from eosinophilia(elevated) to diagnosis(igg4_related_disease)
+  source "IgG4-RD: elevated IgE and hypereosinophilia reported (PMC9740894)" trust authoritative
+contributes 2.0 from serum_ige(markedly_elevated) to diagnosis(igg4_related_disease)
+  source "IgG4-RD: elevated serum IgE reported (PMC9740894)" trust authoritative
+contributes 1.5 from mass_site(parotid_and_postauricular) to diagnosis(igg4_related_disease)
+  source "Salivary gland pathology in IgG4-RD (PMC5901485)" trust authoritative
+
+% rationale: DISCRIMINATOR — IgG4-RD salivary disease is typically BILATERAL,
+% multi-gland (submandibular/lacrimal); a unilateral dominant parotid mass with
+% skin/postauricular nodules favors Kimura over IgG4-RD.
+contributes 0.5 from mass_laterality(unilateral_dominant) to diagnosis(igg4_related_disease)
+  source "Kimura unilateral parotid + skin vs IgG4-RD bilateral multi-gland (PMC9740894)" trust authoritative
+
+% rationale: a discrete enlarging mass with prominent feeder artery is less typical
+% of the diffuse fibroinflammatory glandular enlargement of IgG4-RD.
+contributes 0.7 from feeder_vessel(prominent) to diagnosis(igg4_related_disease)
+  source "IgG4-RD is fibroinflammatory glandular enlargement (PMC5901485)" trust inferred
+
+% ===== LANGERHANS CELL HISTIOCYTOSIS =====
+
+% rationale: LCH lesions are eosinophil-rich, so peripheral/tissue eosinophilia is
+% compatible — weak support.
+contributes 1.5 from eosinophilia(elevated) to diagnosis(langerhans_cell_histiocytosis)
+  source "LCH microscopy: abundant eosinophils (PMC6997609)" trust authoritative
+
+% rationale: DISCRIMINATOR — LCH characteristically causes LYTIC BONE lesions; a
+% purely soft-tissue parotid mass with intact skin and no bone lysis argues against.
+contributes 0.5 from imaging(ill_defined_infiltrative_soft_tissue) to diagnosis(langerhans_cell_histiocytosis)
+  source "LCH: well-defined punched-out lytic bone lesions (Pathology Outlines)" trust authoritative
+
+% rationale: DISCRIMINATOR — a 7-year indolent course in an otherwise-well adult is
+% atypical for symptomatic LCH; supports the benign reactive entities instead.
+contributes 0.6 from mass_duration(years) to diagnosis(langerhans_cell_histiocytosis)
+  source "Adult LCH typically progressive bone-centred disease (PMC5649783)" trust inferred
+
+% ===== LYMPHOMA =====
+
+% rationale: chronic head/neck nodal mass keeps lymphoma on the differential.
+contributes 1.4 from regional_lymphadenopathy(present) to diagnosis(lymphoma)
+  source "Kimura cytology: exclude malignant lymphoma (CytoJournal PMC9479607)" trust authoritative
+
+% rationale: DISCRIMINATOR — absent B-symptoms over 7 years argues against an
+% active lymphoma.
+contributes 0.5 from constitutional_symptoms(absent) to diagnosis(lymphoma)
+  source "B-symptoms (fever/night sweats/weight loss) typify aggressive lymphoma" trust authoritative
+
+% rationale: DISCRIMINATOR — a markedly indolent 7-year painless course is atypical
+% for most clinically apparent lymphomas presenting as an enlarging mass.
+contributes 0.6 from mass_duration(years) to diagnosis(lymphoma)
+  source "Kimura is benign chronic; lymphoma usually shorter symptomatic course" trust inferred
+
+% rationale: marked eosinophilia + very high IgE point to a Th2/reactive process
+% rather than typical nodal lymphoma -> mild against.
+contributes 0.7 from serum_ige(markedly_elevated) to diagnosis(lymphoma)
+  source "Marked IgE/eosinophilia favor reactive Kimura over lymphoma (PMC12185846)" trust inferred
+
+% ===== WARTHIN TUMOUR (FNA-driven decoy) =====
+
+% rationale: oncocytic epithelial + ductal cells on a lymphocyte background is the
+% classic Warthin FNA picture — this is why FNA was read as benign salivary tumour.
+contributes 4.0 from cytology(oncocytic_ductal_lymphocyte_background) to diagnosis(warthin_tumour)
+  source "Warthin FNA: oncocytes + ductal cells + lymphoid background (IR f43-f46)" trust authoritative
+
+% rationale: parotid localization fits Warthin (a parotid-predilection neoplasm).
+contributes 1.5 from mass_site(parotid_and_postauricular) to diagnosis(warthin_tumour)
+  source "Warthin tumour predilects the parotid gland" trust authoritative
+
+% rationale: DISCRIMINATOR — Warthin does NOT cause systemic blood eosinophilia or
+% markedly raised IgE; these labs argue strongly AGAINST a simple Warthin tumour
+% (the discordance the team acted on). The reactive lymphoid background of an
+% infiltrative eosinophilic lesion can be mis-sampled as a Warthin-like smear.
+contributes 0.2 from eosinophilia(elevated) to diagnosis(warthin_tumour)
+  source "Peripheral eosinophilia is not a feature of Warthin tumour (IR discordance f47)" trust inferred
+contributes 0.2 from serum_ige(markedly_elevated) to diagnosis(warthin_tumour)
+  source "Markedly raised IgE is not a feature of Warthin tumour (IR discordance f47)" trust inferred
+
+% rationale: DISCRIMINATOR — Warthin is typically a discrete encapsulated nodule;
+% an ill-defined infiltrative mass with regional lymphadenopathy is against it.
+contributes 0.3 from imaging(ill_defined_infiltrative_soft_tissue) to diagnosis(warthin_tumour)
+  source "Warthin is a circumscribed benign neoplasm, not infiltrative" trust inferred
+
+% ===== NEXT STEP (definitive investigation) =====
+
+% rationale: EXCISIONAL/INCISIONAL BIOPSY for histology is the cornerstone of
+% Kimura diagnosis and is required to exclude lymphoma, LCH and ALHE; FNA is
+% insufficient because its features are non-specific and mimic Hodgkin/Warthin.
+prior 0.25 for next_step(excisional_biopsy_histology)
+  source "Excisional biopsy is the diagnostic cornerstone; excludes lymphoma/LCH/ALHE (CytoJournal PMC9479607)" trust authoritative
+contributes 4.0 from cytology(nonspecific_fna_discordant) to next_step(excisional_biopsy_histology)
+  source "FNA features non-specific, can mimic Hodgkin's; biopsy needed (PMID 8085555)" trust authoritative
+contributes 2.5 from regional_lymphadenopathy(present) to next_step(excisional_biopsy_histology)
+  source "Biopsy excludes malignant lymphoma/histiocytosis (CytoJournal PMC9479607)" trust authoritative
+contributes 2.0 from mass_quality(chronic_painless_subcutaneous) to next_step(excisional_biopsy_histology)
+  source "Tissue histology is cornerstone of Kimura diagnosis (PMC12185846)" trust authoritative
+
+% rationale: a serum IgG4 level helps separate Kimura from IgG4-RD when overlap
+% is suspected; secondary to tissue.
+prior 0.10 for next_step(serum_igg4_and_igg4_staining)
+  source "Kimura may show high IgG4; distinguish from IgG4-RD (PMC10786330)" trust authoritative
+contributes 2.0 from serum_ige(markedly_elevated) to next_step(serum_igg4_and_igg4_staining)
+  source "IgG4-RD/Kimura overlap on IgE/eosinophilia warrants IgG4 testing (PMC9740894)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u3: the FNA was read as a benign salivary neoplasm but tissue histology is not
+% yet available; the definitive readout discriminates Kimura from Warthin/ALHE/
+% lymphoma/LCH. Each candidate histology result carries its own LR for Kimura.
+contributes 60.0 from histology(follicular_hyperplasia_eosinophilic_infiltrate_ige_germinal) to diagnosis(kimura_disease)
+  source "Kimura histology: florid follicular hyperplasia, eosinophilic microabscesses, IgE+ germinal centres (PMC12185846)" trust authoritative
+contributes 0.02 from histology(oncocytic_epithelial_neoplasm) to diagnosis(kimura_disease)
+  source "Epithelial oncocytic neoplasm = Warthin, not Kimura (IR f43-f46)" trust authoritative
+contributes 0.05 from histology(monoclonal_lymphoid_proliferation) to diagnosis(kimura_disease)
+  source "Monoclonal lymphoid proliferation = lymphoma, excludes Kimura (CytoJournal PMC9479607)" trust authoritative
+contributes 0.05 from histology(cd1a_positive_histiocytes) to diagnosis(kimura_disease)
+  source "CD1a+ Langerhans histiocytes = LCH, not Kimura (Pathology Outlines)" trust authoritative
+uncertain { histology(follicular_hyperplasia_eosinophilic_infiltrate_ige_germinal), histology(oncocytic_epithelial_neoplasm), histology(monoclonal_lymphoid_proliferation), histology(cd1a_positive_histiocytes) } for diagnosis(kimura_disease)
+  source "Definitive histology not yet obtained; team proceeding to tissue (IR f48)"

@@ -1,0 +1,7 @@
+{
+ "idx": 1,
+ "id": "HEA-2",
+ "scenario": "James is 52 years old and received a covered colorectal cancer screening billed at $600. The recommended age band for this screening under the plan is 45 to 75.",
+ "policy": "Under the plan, a covered preventive screening is paid at 100% with no patient cost-sharing only if the patient is within the recommended age band of 45 to 75 for that screening. Patients outside the band owe 20% coinsurance.",
+ "question": "What amount does James owe for the screening?"
+}

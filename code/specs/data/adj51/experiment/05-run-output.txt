@@ -1,0 +1,242 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `target/debug/adj51`
+================================================================
+  ADJ51 — domain-agnostic pipeline run
+================================================================
+
+Inputs:
+  rulebook: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/admiring-goldberg-a988f4/code/specs/data/adj51/experiment/03-derived-rulebook.adj
+  vignette: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/admiring-goldberg-a988f4/code/specs/data/adj51/experiment/04-vignette.adj
+Observed facts in vignette: 58
+
+Queries to answer: 3
+  ? diagnosis(acute_coronary_syndrome)
+  ? diagnosis(stable_angina)
+  ? disposition(admit_for_further_cardiac_workup)
+
+================================================================
+Query 1/3: diagnosis(acute_coronary_syndrome)
+================================================================
+
+  Posterior:  P = 0.0375  (3.8%)   logodds = -3.2449
+
+  Fired clauses:
+    prior  -2.9444                                source: Pope JH et al. Missed diagnoses of acute cardiac ischemia...
+    +0.4000  age(middle_aged_adult)                       src: Diamond GA, Forrester JS. Analysis of...
+    +0.5000  sex(male)                                    src: Yusuf S et al. INTERHEART study. Lanc...
+    +0.5000  past_medical_history(hyperlipidemia)         src: Yusuf S et al. INTERHEART study. Lanc...
+    +0.3000  smoking_status(former)                       src: Yusuf S et al. INTERHEART study. Lanc...
+    -0.2000  family_history_cardiac_arrest(absent)        src: Lloyd-Jones DM et al. Parental cardio...
+    +1.0000  chest_pain(exertional_substernal_interm...   src: Swap CJ, Nagurney JT. Value and limit...
+    +0.5000  symptom_relief(rest)                         src: Swap CJ, Nagurney JT. JAMA 2005;294:2...
+    -0.5001  symptom_duration(months)                     src: Fihn SD et al. Circulation 2012;126:e...
+    +1.5000  symptom_progression(worsening)               src: Braunwald E. Unstable angina: a class...
+    +2.0000  recent_worsening_window(two_weeks)           src: Braunwald E. Circulation 1989;80:410-...
+    +1.5000  exertional_tolerance(severely_limited)       src: Canadian Cardiovascular Society gradi...
+    +0.8000  associated_symptom(dyspnea_on_exertion)      src: Swap CJ, Nagurney JT. JAMA 2005;294:2...
+    +0.6000  associated_symptom(chest_tightness)          src: Swap CJ, Nagurney JT. JAMA 2005;294:2...
+    -0.5001  denies_associated_symptoms(fever_chills...   src: Swap CJ, Nagurney JT. JAMA 2005;294:2...
+    -0.5001  prior_workup(cardiac_stress_test)            src: Greenwood JP et al. CE-MARC. Lancet 2...
+    -0.7000  prior_workup_result(normal)                  src: Greenwood JP et al. CE-MARC. Lancet 2...
+    +1.0000  coronary_artery_calcium_score_value(abo...   src: Hecht HS et al. Clinical indications ...
+    -0.3000  vital_signs(within_normal_limits)            src: Amsterdam EA et al. 2014 AHA/ACC NSTE...
+    -0.2000  heart_rate(low_normal)                       src: Amsterdam EA et al. Circulation 2014;...
+    -0.3000  physical_examination(unremarkable)           src: Amsterdam EA et al. Circulation 2014;...
+    -2.4998  cardiac_biomarkers(within_normal_limits)     src: Twerenbold R et al. NEJM 2019;380:252...
+    -2.0003  high_sensitivity_troponin_i_first(normal)    src: Twerenbold R et al. NEJM 2019;380:252...
+    -2.4998  high_sensitivity_troponin_i_second(normal)   src: Twerenbold R et al. NEJM 2019;380:252...
+    -0.5001  chest_xray(negative_for_pneumothorax_op...   src: Gulati M et al. 2021 AHA/ACC chest-pa...
+    -0.9999  electrocardiogram(no_acute_st_t_changes)     src: Pope JH et al. Missed diagnoses of ac...
+    -0.2000  electrocardiogram(sinus_bradycardia)         src: Amsterdam EA et al. Circulation 2014;...
+    +1.5000  [joint x2: symptom_progression(worsening) + recent_worsening_window(two_weeks)]
+    +1.5000  [joint x2: recent_worsening_window(two_weeks) + exertional_tolerance(severely_limited)]
+    -2.0003  [joint x2: high_sensitivity_troponin_i_first(normal) + high_sensitivity_troponin_i_secon...]
+
+  Coverage: 26/58 observed terms matched a clause for this query.
+  Unmatched observations (32):
+    - blood_pressure(normal)
+    - cardiac_exam(normal_s1_s2)
+    - cardiac_exam(regular_rate_and_rhythm)
+    - coagulation_studies(unremarkable)
+    - comprehensive_metabolic_panel(unremarkable)
+    - coronary_artery_calcium_score(elevated)
+    - creatine_kinase_mb(below_threshold)
+    - encounter_setting(emergency_department)
+    - facility_type(secondary_community_center)
+    - height(six_feet)
+    - hematocrit_value(mildly_low)
+    - hemoglobin_hematocrit(mildly_decreased)
+    - hemoglobin_value(mildly_low)
+    - medication(atorvastatin_moderate_intensity)
+    - medication(citalopram)
+    - medication(clonazepam)
+    - medication(pantoprazole)
+    - medication_regimen(as_needed)
+    - oxygen_saturation(normal)
+    - pack_years(low)
+    - past_medical_history(anxiety)
+    - past_medical_history(gerd)
+    - prior_cardiology_evaluation(six_months_prior)
+    - prior_specialist_seen(cardiologist)
+    - prior_workup(echocardiogram)
+    - pulmonary_exam(clear_to_auscultation_bilaterally)
+    - respiratory_rate(normal)
+    - review_of_systems(otherwise_unremarkable)
+    - smoking_period(twenties)
+    - supplemental_oxygen(none)
+    - temperature(afebrile)
+    - weight(normal_to_overweight)
+
+  Decision at 30%: BELOW threshold
+
+================================================================
+Query 2/3: diagnosis(stable_angina)
+================================================================
+
+  Posterior:  P = 1.0000  (100.0%)   logodds = +10.4555
+
+  Fired clauses:
+    prior  -2.9444                                source: Bhuiya FA et al. Emergency department visits for chest pa...
+    +0.5000  age(middle_aged_adult)                       src: Diamond GA, Forrester JS. NEJM 1979;3...
+    +0.7000  sex(male)                                    src: Diamond GA, Forrester JS. NEJM 1979;3...
+    +0.7000  past_medical_history(hyperlipidemia)         src: Yusuf S et al. INTERHEART study. Lanc...
+    +0.3000  smoking_status(former)                       src: Yusuf S et al. INTERHEART study. Lanc...
+    -0.2000  family_history_cardiac_arrest(absent)        src: Lloyd-Jones DM et al. JAMA 2004;291:2...
+    +1.5000  chest_pain(exertional_substernal_interm...   src: Diamond GA, Forrester JS. NEJM 1979;3...
+    +1.5000  symptom_relief(rest)                         src: Diamond GA, Forrester JS. NEJM 1979;3...
+    +1.0000  symptom_duration(months)                     src: Fihn SD et al. 2012 ACCF/AHA/ACP guid...
+    -0.5001  recent_worsening_window(two_weeks)           src: Fihn SD et al. Circulation 2012;126:e...
+    +0.5000  exertional_tolerance(severely_limited)       src: Fihn SD et al. Circulation 2012;126:e...
+    +0.8000  associated_symptom(dyspnea_on_exertion)      src: Fihn SD et al. Circulation 2012;126:e...
+    +0.6000  associated_symptom(chest_tightness)          src: Swap CJ, Nagurney JT. JAMA 2005;294:2...
+    -0.5001  prior_workup_result(normal)                  src: Greenwood JP et al. CE-MARC. Lancet 2...
+    +1.0000  coronary_artery_calcium_score(elevated)      src: Detrano R et al. Coronary calcium as ...
+    +2.0000  coronary_artery_calcium_score_value(abo...   src: Greenland P et al. CAC scoring and ri...
+    +0.5000  medication(atorvastatin_moderate_intens...   src: Grundy SM et al. 2018 AHA/ACC cholest...
+    +0.0000  high_sensitivity_troponin_i_second(normal)   src: Fihn SD et al. Circulation 2012;126:e...
+    +1.5000  [joint x2: chest_pain(exertional_substernal_intermittent) + symptom_relief(rest)]
+    +1.5000  [joint x2: coronary_artery_calcium_score_value(above_200) + chest_pain(exertional_subste...]
+
+  Coverage: 17/58 observed terms matched a clause for this query.
+  Unmatched observations (41):
+    - blood_pressure(normal)
+    - cardiac_biomarkers(within_normal_limits)
+    - cardiac_exam(normal_s1_s2)
+    - cardiac_exam(regular_rate_and_rhythm)
+    - chest_xray(negative_for_pneumothorax_opacities_free_air)
+    - coagulation_studies(unremarkable)
+    - comprehensive_metabolic_panel(unremarkable)
+    - creatine_kinase_mb(below_threshold)
+    - denies_associated_symptoms(fever_chills_nausea_vomiting_diaphoresis_leg_swelling_recent_travel)
+    - electrocardiogram(no_acute_st_t_changes)
+    - electrocardiogram(sinus_bradycardia)
+    - encounter_setting(emergency_department)
+    - facility_type(secondary_community_center)
+    - heart_rate(low_normal)
+    - height(six_feet)
+    - hematocrit_value(mildly_low)
+    - hemoglobin_hematocrit(mildly_decreased)
+    - hemoglobin_value(mildly_low)
+    - high_sensitivity_troponin_i_first(normal)
+    - medication(citalopram)
+    - medication(clonazepam)
+    - medication(pantoprazole)
+    - medication_regimen(as_needed)
+    - oxygen_saturation(normal)
+    - pack_years(low)
+    - past_medical_history(anxiety)
+    - past_medical_history(gerd)
+    - physical_examination(unremarkable)
+    - prior_cardiology_evaluation(six_months_prior)
+    - prior_specialist_seen(cardiologist)
+    - prior_workup(cardiac_stress_test)
+    - prior_workup(echocardiogram)
+    - pulmonary_exam(clear_to_auscultation_bilaterally)
+    - respiratory_rate(normal)
+    - review_of_systems(otherwise_unremarkable)
+    - smoking_period(twenties)
+    - supplemental_oxygen(none)
+    - symptom_progression(worsening)
+    - temperature(afebrile)
+    - vital_signs(within_normal_limits)
+    - weight(normal_to_overweight)
+
+  Decision at 30%: ABOVE threshold
+
+  Engine warnings:
+    DegenerateContribution { clause_id: ContributionClauseId(40) }
+
+================================================================
+Query 3/3: disposition(admit_for_further_cardiac_workup)
+================================================================
+
+  Posterior:  P = 0.9995  (100.0%)   logodds = +7.7028
+
+  Fired clauses:
+    prior  -2.1972                                source: Owens PL, Barrett ML, Gibson TB et al. Emergency departme...
+    +0.4000  encounter_setting(emergency_department)      src: Owens PL et al. Emergency department ...
+    +1.5000  chest_pain(exertional_substernal_interm...   src: Gulati M et al. Circulation 2021;144:...
+    +1.5000  symptom_progression(worsening)               src: Backus BE et al. Chest pain in the ED...
+    +2.0000  recent_worsening_window(two_weeks)           src: Amsterdam EA et al. Circulation 2014;...
+    +1.5000  exertional_tolerance(severely_limited)       src: Amsterdam EA et al. Circulation 2014;...
+    +1.0000  coronary_artery_calcium_score_value(abo...   src: Gulati M et al. Circulation 2021;144:...
+    -0.9999  cardiac_biomarkers(within_normal_limits)     src: Backus BE et al. Crit Pathw Cardiol 2...
+    -0.5001  electrocardiogram(no_acute_st_t_changes)     src: Backus BE et al. Crit Pathw Cardiol 2...
+    +2.0000  [joint x2: recent_worsening_window(two_weeks) + exertional_tolerance(severely_limited)]
+    +1.5000  [joint x2: coronary_artery_calcium_score_value(above_200) + symptom_progression(worsening)]
+
+  Coverage: 8/58 observed terms matched a clause for this query.
+  Unmatched observations (50):
+    - age(middle_aged_adult)
+    - associated_symptom(chest_tightness)
+    - associated_symptom(dyspnea_on_exertion)
+    - blood_pressure(normal)
+    - cardiac_exam(normal_s1_s2)
+    - cardiac_exam(regular_rate_and_rhythm)
+    - chest_xray(negative_for_pneumothorax_opacities_free_air)
+    - coagulation_studies(unremarkable)
+    - comprehensive_metabolic_panel(unremarkable)
+    - coronary_artery_calcium_score(elevated)
+    - creatine_kinase_mb(below_threshold)
+    - denies_associated_symptoms(fever_chills_nausea_vomiting_diaphoresis_leg_swelling_recent_travel)
+    - electrocardiogram(sinus_bradycardia)
+    - facility_type(secondary_community_center)
+    - family_history_cardiac_arrest(absent)
+    - heart_rate(low_normal)
+    - height(six_feet)
+    - hematocrit_value(mildly_low)
+    - hemoglobin_hematocrit(mildly_decreased)
+    - hemoglobin_value(mildly_low)
+    - high_sensitivity_troponin_i_first(normal)
+    - high_sensitivity_troponin_i_second(normal)
+    - medication(atorvastatin_moderate_intensity)
+    - medication(citalopram)
+    - medication(clonazepam)
+    - medication(pantoprazole)
+    - medication_regimen(as_needed)
+    - oxygen_saturation(normal)
+    - pack_years(low)
+    - past_medical_history(anxiety)
+    - past_medical_history(gerd)
+    - past_medical_history(hyperlipidemia)
+    - physical_examination(unremarkable)
+    - prior_cardiology_evaluation(six_months_prior)
+    - prior_specialist_seen(cardiologist)
+    - prior_workup(cardiac_stress_test)
+    - prior_workup(echocardiogram)
+    - prior_workup_result(normal)
+    - pulmonary_exam(clear_to_auscultation_bilaterally)
+    - respiratory_rate(normal)
+    - review_of_systems(otherwise_unremarkable)
+    - sex(male)
+    - smoking_period(twenties)
+    - smoking_status(former)
+    - supplemental_oxygen(none)
+    - symptom_duration(months)
+    - symptom_relief(rest)
+    - temperature(afebrile)
+    - vital_signs(within_normal_limits)
+    - weight(normal_to_overweight)
+
+  Decision at 30%: ABOVE threshold
+

@@ -1,0 +1,66 @@
+[package]
+name = "coding-adventures-closure-emitter"
+version = "0.22.1"
+edition = "2021"
+description = "JavaScript code emitter for the Closure Compiler clone. Per CLOC07's emit contract. Takes a finalized Program + sidecar and produces output JavaScript text + companion source map. Runs after every pass in the pipeline."
+
+[dependencies]
+coding-adventures-javascript-ast = { path = "../javascript-ast" }
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+coding-adventures-closure-source-map = { path = "../closure-source-map" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+# End-to-end pipeline tests: constant-fold + pipeline scheduler.
+coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
+coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file
+# needs an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_code_printer"
+path = "tests/upstream/code_printer_test.rs"
+
+[[test]]
+name = "upstream_code_printer_declarations"
+path = "tests/upstream/code_printer_declarations_test.rs"
+
+[[test]]
+name = "upstream_code_printer_trailing_comma"
+path = "tests/upstream/code_printer_trailing_comma_test.rs"
+
+[[test]]
+name = "upstream_code_printer_string_escape"
+path = "tests/upstream/code_printer_string_escape_test.rs"
+
+[[test]]
+name = "upstream_code_printer_numbers"
+path = "tests/upstream/code_printer_numbers_test.rs"
+
+[[test]]
+name = "upstream_code_printer_ascii_escape"
+path = "tests/upstream/code_printer_ascii_escape_test.rs"
+
+[[test]]
+name = "upstream_code_printer_object_literal"
+path = "tests/upstream/code_printer_object_literal_test.rs"
+
+[[test]]
+name = "upstream_code_printer_function"
+path = "tests/upstream/code_printer_function_test.rs"
+
+[[test]]
+name = "upstream_code_printer_arrow"
+path = "tests/upstream/code_printer_arrow_test.rs"
+
+[[test]]
+name = "upstream_code_printer_template"
+path = "tests/upstream/code_printer_template_test.rs"
+
+[[test]]
+name = "upstream_code_printer_update"
+path = "tests/upstream/code_printer_update_test.rs"

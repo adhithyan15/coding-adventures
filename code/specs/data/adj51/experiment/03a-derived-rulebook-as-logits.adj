@@ -1,0 +1,555 @@
+% ============================================================
+% Derived rulebook for ADJ51 ingestion 02-ingestion.json
+%
+% Queries:
+%   q1 diagnosis(acute_coronary_syndrome)
+%      — covers NSTEMI and unstable angina (no ST-elevation observed)
+%   q2 diagnosis(stable_angina)
+%   q3 disposition(admit_for_further_cardiac_workup)
+%
+% General weighting strategy (NOT case-specific):
+%   - Serial hs-troponin negativity is the single strongest rule-out signal
+%     for type-1 MI (NSTEMI), per the ESC 0/1h algorithm with NPV ~99.7-99.8%
+%     (Twerenbold et al., NEJM 2019; ESC 2023 NSTE-ACS guideline). It does
+%     NOT rule out unstable angina, since UA by definition is ischemia
+%     without troponin rise.
+%   - Diamond-Forrester typical-angina triad (substernal + exertional +
+%     relieved by rest) in a middle-aged man carries very high pretest
+%     probability of obstructive CAD (~87% age 40-49 male).
+%   - Elevated CACS (>100, especially >200) substantially raises the
+%     probability of obstructive CAD substrate (MESA, CONFIRM); useful
+%     prior for angina (stable or unstable) but does not on its own
+%     diagnose acute ischemia.
+%   - Crescendo pattern (Braunwald class I: new/worsening angina < 2 months
+%     with markedly less exertion required, no rest pain) is the clinical
+%     definition of unstable angina, which falls under ACS even with
+%     normal troponins and normal ECG.
+%   - Admission disposition is driven primarily by clinical risk
+%     stratification (HEART, EDACS) per 2021 AHA/ACC chest-pain guideline;
+%     intermediate-/high-risk patients with crescendo symptoms warrant
+%     admission for ischemic workup (CCTA, stress, or invasive angio)
+%     even when troponin and ECG are negative.
+% ============================================================
+
+
+% ---------- PRIORS ----------
+
+prior 0.05 for diagnosis(acute_coronary_syndrome)
+  % Base rate of ACS among adults presenting to a US ED with chest pain
+  % is approximately 5-10% (Goodacre et al., Heart 2005; Pope et al.,
+  % NEJM 2000 missed-MI study). We pick the lower end as the prior
+  % before any case-specific evidence is applied.
+  source "Pope JH et al. Missed diagnoses of acute cardiac ischemia in the emergency department. NEJM 2000;342:1163-1170."
+  trust authoritative
+
+prior 0.05 for diagnosis(stable_angina)
+  % Among unselected ED chest-pain presentations, chronic stable angina
+  % is a small minority diagnosis (most chest pain is non-cardiac).
+  % Base rate ~5% is a reasonable starting prior.
+  source "Bhuiya FA et al. Emergency department visits for chest pain and abdominal pain: United States, 1999-2008. NCHS Data Brief 2010;43."
+  trust empirical
+
+prior 0.10 for disposition(admit_for_further_cardiac_workup)
+  % ~10-15% of ED chest-pain patients in US community EDs are admitted
+  % or placed in observation for cardiac workup. Setting the prior at
+  % 0.10 reflects this base rate before risk-stratifying.
+  source "Owens PL, Barrett ML, Gibson TB et al. Emergency department care in the United States. Acad Emerg Med 2010."
+  trust empirical
+
+
+% ---------- DEMOGRAPHICS ----------
+
+contributes 0.4 from age(middle_aged_adult) to diagnosis(acute_coronary_syndrome)
+  % Mid-40s confers modestly elevated ACS risk vs younger adults but is
+  % well below the >65 risk band. LR ~1.5.
+  source "Diamond GA, Forrester JS. Analysis of probability as an aid in the clinical diagnosis of CAD. NEJM 1979;300:1350-8."
+  trust consensus
+
+contributes 0.5 from age(middle_aged_adult) to diagnosis(stable_angina)
+  % Stable CAD prevalence rises through middle age. Diamond-Forrester
+  % tables: 40-49 male typical angina ~87% PTP vs 30-39 ~76%.
+  source "Diamond GA, Forrester JS. NEJM 1979;300:1350-8."
+  trust consensus
+
+contributes 0.5 from sex(male) to diagnosis(acute_coronary_syndrome)
+  % Male sex roughly doubles ACS odds at middle age (Framingham, INTERHEART).
+  % LR ~1.6.
+  source "Yusuf S et al. INTERHEART study. Lancet 2004;364:937-952."
+  trust authoritative
+
+contributes 0.7 from sex(male) to diagnosis(stable_angina)
+  % Diamond-Forrester: at 40-49 with typical angina, male PTP ~87% vs
+  % female ~55%. Sex is a stronger modifier for stable CAD than acute MI.
+  source "Diamond GA, Forrester JS. NEJM 1979;300:1350-8."
+  trust authoritative
+
+
+% ---------- ATHEROSCLEROTIC RISK FACTORS ----------
+
+contributes 0.5 from past_medical_history(hyperlipidemia) to diagnosis(acute_coronary_syndrome)
+  % Dyslipidemia is an independent ASCVD risk factor; OR for MI ~1.5-2
+  % in INTERHEART after adjustment.
+  source "Yusuf S et al. INTERHEART study. Lancet 2004;364:937-952."
+  trust authoritative
+
+contributes 0.7 from past_medical_history(hyperlipidemia) to diagnosis(stable_angina)
+  % HLD is a stronger long-run predictor of obstructive CAD substrate
+  % than acute event. LR ~2.
+  source "Yusuf S et al. INTERHEART study. Lancet 2004;364:937-952."
+  trust authoritative
+
+% no rule: past_medical_history(gerd) — GERD is a competing non-cardiac
+% explanation for chest pain but not a strong differential signal once
+% the pain is characterized as exertional and rest-relieved; effect on
+% ACS/angina priors is small and well-captured by the symptom-pattern
+% contribs below.
+
+% no rule: past_medical_history(anxiety) — Anxiety is associated with
+% non-cardiac chest pain but does not meaningfully discriminate
+% ACS-vs-stable-angina given an exertional pattern; literature LRs are
+% small and bidirectional.
+
+contributes 0.3 from smoking_status(former) to diagnosis(acute_coronary_syndrome)
+  % Former smoking confers residual but markedly reduced risk vs current.
+  % Pooled OR ~1.3 for MI among former smokers.
+  source "Yusuf S et al. INTERHEART study. Lancet 2004;364:937-952."
+  trust authoritative
+
+contributes 0.3 from smoking_status(former) to diagnosis(stable_angina)
+  source "Yusuf S et al. INTERHEART study. Lancet 2004;364:937-952."
+  trust authoritative
+
+% no rule: pack_years(low) — Six pack-years is a low cumulative exposure;
+% in the absence of a published LR for this exact stratum we let the
+% smoking_status(former) contribution carry the signal and avoid double-
+% counting. Empirical magnitude would be near zero.
+
+% no rule: smoking_period(twenties) — Temporal detail of smoking history
+% does not add independent diagnostic weight beyond pack-years/former-vs-
+% current status.
+
+contributes -0.2 from family_history_cardiac_arrest(absent) to diagnosis(acute_coronary_syndrome)
+  % Absence of first-degree family premature CAD is a weak negative;
+  % its presence would be a much stronger positive (LR ~2). LR ~0.8.
+  source "Lloyd-Jones DM et al. Parental cardiovascular disease as a risk factor for cardiovascular disease in middle-aged adults. JAMA 2004;291:2204-2211."
+  trust empirical
+
+contributes -0.2 from family_history_cardiac_arrest(absent) to diagnosis(stable_angina)
+  source "Lloyd-Jones DM et al. JAMA 2004;291:2204-2211."
+  trust empirical
+
+
+% ---------- ENCOUNTER CONTEXT ----------
+
+contributes 0.4 from encounter_setting(emergency_department) to disposition(admit_for_further_cardiac_workup)
+  % An ED encounter (vs office) materially raises the prior for an
+  % admit-or-observe decision because ED selection itself enriches for
+  % higher-acuity presentations.
+  source "Owens PL et al. Emergency department care in the United States. Acad Emerg Med 2010."
+  trust empirical
+
+% no rule: facility_type(secondary_community_center) — Facility type
+% affects which workup is available but does not directly modify the
+% probability of the underlying diagnosis. It could shift admission
+% disposition via transfer-vs-admit decisions, but the magnitude is
+% poorly characterized in the literature.
+
+
+% ---------- CHEST-PAIN SEMIOLOGY (the Diamond-Forrester triad) ----------
+
+contributes 1.5 from chest_pain(exertional_substernal_intermittent) to diagnosis(stable_angina)
+  % Substernal + exertional pattern is two of the three Diamond-Forrester
+  % typical-angina criteria. Combined with rest-relief (separate
+  % observation), this triggers the typical-angina category with PTP
+  % ~87% in a 40-49 male. LR ~4.5 over the prior.
+  source "Diamond GA, Forrester JS. NEJM 1979;300:1350-8."
+  trust authoritative
+
+contributes 1.0 from chest_pain(exertional_substernal_intermittent) to diagnosis(acute_coronary_syndrome)
+  % Exertional substernal pain is a classic ischemic presentation;
+  % positive LR for ACS ~2.5-3 from ED chest-pain literature.
+  source "Swap CJ, Nagurney JT. Value and limitations of chest pain history in the evaluation of patients with suspected ACS. JAMA 2005;294:2623-2629."
+  trust authoritative
+
+contributes 1.5 from symptom_relief(rest) to diagnosis(stable_angina)
+  % Relief with rest completes the Diamond-Forrester typical-angina
+  % triad; this is one of the strongest single semiologic features
+  % for stable obstructive CAD. LR ~4.
+  source "Diamond GA, Forrester JS. NEJM 1979;300:1350-8."
+  trust authoritative
+
+contributes 0.5 from symptom_relief(rest) to diagnosis(acute_coronary_syndrome)
+  % Rest relief argues against an ongoing infarct but is compatible with
+  % unstable angina (still ACS). Net weakly positive for ACS as a
+  % category because it confirms ischemic semiology.
+  source "Swap CJ, Nagurney JT. JAMA 2005;294:2623-2629."
+  trust empirical
+
+contributes 1.0 from symptom_duration(months) to diagnosis(stable_angina)
+  % Symptoms over months are characteristic of chronic stable disease.
+  % LR ~2.7 vs acute presentations.
+  source "Fihn SD et al. 2012 ACCF/AHA/ACP guideline for stable ischemic heart disease. Circulation 2012;126:e354-471."
+  trust authoritative
+
+contributes -0.5 from symptom_duration(months) to diagnosis(acute_coronary_syndrome)
+  % A chronic symptom history makes pure-acute ACS less likely in
+  % isolation (though crescendo on top of chronic is the UA pattern,
+  % captured by the interaction below). LR ~0.6.
+  source "Fihn SD et al. Circulation 2012;126:e354-471."
+  trust empirical
+
+contributes 1.5 from symptom_progression(worsening) to diagnosis(acute_coronary_syndrome)
+  % Progressive worsening of anginal symptoms is the textbook crescendo
+  % pattern of unstable angina (Braunwald class I). LR ~4.5.
+  source "Braunwald E. Unstable angina: a classification. Circulation 1989;80:410-414."
+  trust authoritative
+
+contributes 2.0 from recent_worsening_window(two_weeks) to diagnosis(acute_coronary_syndrome)
+  % Marked acceleration within the prior 2 weeks (especially with new
+  % rest-limitation level of exertional intolerance) maps directly to
+  % Braunwald class I unstable angina, which IS a form of ACS. LR ~7.
+  source "Braunwald E. Circulation 1989;80:410-414; 2014 AHA/ACC NSTE-ACS Guideline (Amsterdam et al., Circulation 2014;130:e344)."
+  trust authoritative
+
+contributes -0.5 from recent_worsening_window(two_weeks) to diagnosis(stable_angina)
+  % By definition, recent crescendo pattern reclassifies symptoms OUT of
+  % the "stable" category and into unstable. LR ~0.6 for stable.
+  source "Fihn SD et al. Circulation 2012;126:e354-471."
+  trust authoritative
+
+contributes 1.5 from exertional_tolerance(severely_limited) to diagnosis(acute_coronary_syndrome)
+  % CCS class IV (symptoms with minimal activity) co-occurring with
+  % recent worsening strongly suggests unstable angina. LR ~4.
+  source "Canadian Cardiovascular Society grading; Braunwald E. Circulation 1989;80:410-414."
+  trust authoritative
+
+contributes 0.5 from exertional_tolerance(severely_limited) to diagnosis(stable_angina)
+  % High CCS class is compatible with severe stable angina too, but
+  % the recent-worsening interaction below pulls this toward unstable.
+  source "Fihn SD et al. Circulation 2012;126:e354-471."
+  trust empirical
+
+contributes 0.8 from associated_symptom(dyspnea_on_exertion) to diagnosis(acute_coronary_syndrome)
+  % Dyspnea is a recognized anginal equivalent; LR ~2 for cardiac
+  % ischemia in chest-pain populations.
+  source "Swap CJ, Nagurney JT. JAMA 2005;294:2623-2629."
+  trust authoritative
+
+contributes 0.8 from associated_symptom(dyspnea_on_exertion) to diagnosis(stable_angina)
+  source "Fihn SD et al. Circulation 2012;126:e354-471."
+  trust authoritative
+
+contributes 0.6 from associated_symptom(chest_tightness) to diagnosis(acute_coronary_syndrome)
+  % Tightness/pressure quality is more predictive of cardiac origin
+  % than sharp/stabbing. LR ~1.8.
+  source "Swap CJ, Nagurney JT. JAMA 2005;294:2623-2629."
+  trust authoritative
+
+contributes 0.6 from associated_symptom(chest_tightness) to diagnosis(stable_angina)
+  source "Swap CJ, Nagurney JT. JAMA 2005;294:2623-2629."
+  trust authoritative
+
+contributes -0.5 from denies_associated_symptoms(fever_chills_nausea_vomiting_diaphoresis_leg_swelling_recent_travel) to diagnosis(acute_coronary_syndrome)
+  % Absence of diaphoresis/nausea reduces but does not eliminate ACS
+  % (their LRs+ are ~2; their LR- are ~0.6-0.7). Also rules down
+  % competing differentials (PE: leg swelling/travel; infection: fever).
+  source "Swap CJ, Nagurney JT. JAMA 2005;294:2623-2629."
+  trust empirical
+
+% no rule: review_of_systems(otherwise_unremarkable) — Subsumed by the
+% denies_associated_symptoms term above; counting it separately would
+% double-count.
+
+
+% ---------- PRIOR CARDIAC WORKUP ----------
+
+% no rule: prior_cardiology_evaluation(six_months_prior) — Timing of the
+% prior evaluation is administrative context, not direct diagnostic signal.
+
+% no rule: prior_specialist_seen(cardiologist) — Selection bias is real
+% (sicker patients see cardiology) but not quantified with a defensible LR.
+
+contributes -0.5 from prior_workup(cardiac_stress_test) to diagnosis(acute_coronary_syndrome)
+  % Having had a stress test does not by itself change ACS probability;
+  % the RESULT does (captured below). Small negative because patients
+  % already in workup pathways tend to have prior reassurance documented.
+  source "Greenwood JP et al. CE-MARC. Lancet 2012;379:453-460."
+  trust empirical
+
+% no rule: prior_workup(echocardiogram) — Same logic; echocardiogram
+% existence is not informative without result. Result is captured in
+% prior_workup_result(normal) below.
+
+contributes -0.7 from prior_workup_result(normal) to diagnosis(acute_coronary_syndrome)
+  % A normal stress test 6 months ago has limited durability but does
+  % offer modest reassurance against fixed flow-limiting CAD; warning
+  % is that stress tests miss non-obstructive plaque that can rupture.
+  % LR ~0.5.
+  source "Greenwood JP et al. CE-MARC. Lancet 2012;379:453-460."
+  trust empirical
+
+contributes -0.5 from prior_workup_result(normal) to diagnosis(stable_angina)
+  % Negative stress 6 months prior modestly lowers probability of
+  % flow-limiting stable CAD, though progression in 6 months is possible.
+  source "Greenwood JP et al. CE-MARC. Lancet 2012;379:453-460."
+  trust empirical
+
+contributes 1.0 from coronary_artery_calcium_score(elevated) to diagnosis(stable_angina)
+  % Any elevated CACS materially raises probability of obstructive CAD
+  % vs CACS=0 (DLR for CAC=0 ruling out is ~0.4; converse direction).
+  source "Detrano R et al. Coronary calcium as a predictor of coronary events in four racial or ethnic groups (MESA). NEJM 2008;358:1336-1345."
+  trust authoritative
+
+contributes 2.0 from coronary_artery_calcium_score_value(above_200) to diagnosis(stable_angina)
+  % CACS >100 is "moderately high" and >300 puts a patient near the
+  % ~10x hazard tier in MESA. CACS >200 is solidly in the
+  % obstructive-CAD-likely zone for symptomatic patients. LR ~7.
+  source "Greenland P et al. CAC scoring and risk classification (MESA). JAMA 2004;291:210-215; Detrano et al. NEJM 2008;358:1336."
+  trust authoritative
+
+contributes 1.0 from coronary_artery_calcium_score_value(above_200) to diagnosis(acute_coronary_syndrome)
+  % CACS quantifies plaque burden, which is the substrate for plaque
+  % rupture / unstable angina. Indirect but meaningful for ACS. LR ~2.7.
+  source "Hecht HS et al. Clinical indications for coronary artery calcium scoring in asymptomatic patients. JACC Cardiovasc Imaging 2017;10:1187-1208."
+  trust empirical
+
+contributes 0.5 from medication(atorvastatin_moderate_intensity) to diagnosis(stable_angina)
+  % Being on a statin is a marker of recognized ASCVD risk; mildly
+  % positive signal for underlying CAD substrate.
+  source "Grundy SM et al. 2018 AHA/ACC cholesterol guideline. Circulation 2019;139:e1082."
+  trust empirical
+
+% no rule: medication(clonazepam) — Treats anxiety; no direct diagnostic
+% bearing on cardiac ischemia probability that isn't already captured by
+% the PMH(anxiety) skip above.
+
+% no rule: medication(citalopram) — Same as clonazepam: anxiety/depression
+% therapy; QT-prolongation risk irrelevant to current queries.
+
+% no rule: medication(pantoprazole) — Treats GERD; redundant with PMH(gerd) skip.
+
+% no rule: medication_regimen(as_needed) — Administrative dosing detail;
+% no diagnostic weight for queries.
+
+
+% ---------- VITAL SIGNS ----------
+
+contributes -0.3 from vital_signs(within_normal_limits) to diagnosis(acute_coronary_syndrome)
+  % Hemodynamic stability is reassuring against high-risk ACS subsets
+  % (Killip class >I, shock) but does not rule out NSTEMI / UA. LR ~0.7.
+  source "Amsterdam EA et al. 2014 AHA/ACC NSTE-ACS Guideline. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+% no rule: temperature(afebrile) — Subsumed by vital_signs(within_normal_limits).
+% no rule: blood_pressure(normal) — Subsumed.
+% no rule: respiratory_rate(normal) — Subsumed.
+% no rule: oxygen_saturation(normal) — Subsumed; would matter for PE differential.
+% no rule: supplemental_oxygen(none) — Subsumed by saturation/RR.
+
+contributes -0.2 from heart_rate(low_normal) to diagnosis(acute_coronary_syndrome)
+  % Sinus bradycardia is not a feature of acute ischemia (which usually
+  % drives sympathetic tachycardia); mild evidence against. LR ~0.8.
+  % Also consistent with beta-blocker effect or athletic conditioning.
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust empirical
+
+% no rule: weight(normal_to_overweight) — BMI ~25 is near neutral on CAD risk.
+% no rule: height(six_feet) — No diagnostic weight.
+
+
+% ---------- PHYSICAL EXAM ----------
+
+contributes -0.3 from physical_examination(unremarkable) to diagnosis(acute_coronary_syndrome)
+  % Absence of new murmur, gallop, JVD, rales modestly lowers
+  % probability of high-risk ACS / complicated MI. LR ~0.7.
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+% no rule: cardiac_exam(regular_rate_and_rhythm) — Subsumed by
+% physical_examination(unremarkable).
+% no rule: cardiac_exam(normal_s1_s2) — Subsumed.
+% no rule: pulmonary_exam(clear_to_auscultation_bilaterally) — Subsumed;
+% would matter to rule out CHF/pneumonia.
+
+
+% ---------- LABS ----------
+
+% no rule: comprehensive_metabolic_panel(unremarkable) — Renal function
+% affects troponin interpretation but normal CMP here just confirms no
+% confounder.
+
+% no rule: hemoglobin_hematocrit(mildly_decreased) — Mild anemia can be
+% an anginal trigger and modestly affects oxygen delivery, but the LR
+% for any of the queries is small and bidirectional.
+% no rule: hemoglobin_value(mildly_low) — Refines the term above; same logic.
+% no rule: hematocrit_value(mildly_low) — Same.
+% no rule: coagulation_studies(unremarkable) — Pre-procedural lab; no
+% diagnostic LR for the queries.
+
+contributes -2.5 from cardiac_biomarkers(within_normal_limits) to diagnosis(acute_coronary_syndrome)
+  % Normal cardiac biomarkers in the ED rule out NSTEMI with high NPV
+  % when serial measurements are negative. This aggregate term is
+  % reinforced by the more specific high-sensitivity troponin contribs
+  % below; we keep its magnitude moderate to avoid double-counting.
+  % LR ~0.08.
+  source "Twerenbold R et al. NEJM 2019;380:2529-2540 (APACE)."
+  trust authoritative
+
+% no rule: creatine_kinase_mb(below_threshold) — CK-MB is superseded by
+% hs-troponin per 2021 AHA/ACC chest-pain guideline; its independent
+% diagnostic value over normal hs-cTn is negligible.
+
+contributes -2.0 from high_sensitivity_troponin_i_first(normal) to diagnosis(acute_coronary_syndrome)
+  % First hs-cTnI below the 99th percentile contributes to the ESC 0h
+  % rule-out limb. Alone it is not sufficient; paired with a second
+  % normal value it achieves ~99.7% NPV. LR ~0.135.
+  source "Twerenbold R et al. NEJM 2019;380:2529-2540."
+  trust authoritative
+
+contributes -2.5 from high_sensitivity_troponin_i_second(normal) to diagnosis(acute_coronary_syndrome)
+  % Second normal hs-cTnI 3h later completes serial rule-out. Combined
+  % with the first measurement, the ESC 0/1h or 0/2h algorithm gives
+  % NPV ~99.7-99.8% for NSTEMI. LR ~0.08.
+  source "Twerenbold R et al. NEJM 2019;380:2529-2540; ESC 2023 NSTE-ACS Guideline."
+  trust authoritative
+
+contributes 0.0 from high_sensitivity_troponin_i_second(normal) to diagnosis(stable_angina)
+  % Normal troponin does NOT rule out stable angina; by definition
+  % stable angina has no myocyte necrosis. Net-zero diagnostic weight.
+  source "Fihn SD et al. Circulation 2012;126:e354-471."
+  trust consensus
+
+
+% ---------- IMAGING / ECG ----------
+
+contributes -0.5 from chest_xray(negative_for_pneumothorax_opacities_free_air) to diagnosis(acute_coronary_syndrome)
+  % CXR primarily rules out competing differentials (pneumothorax,
+  % pneumonia, perforation, aortic dissection signs); normal CXR
+  % modestly raises relative probability of cardiac etiology by
+  % eliminating alternatives.
+  source "Gulati M et al. 2021 AHA/ACC chest-pain guideline. Circulation 2021;144:e368-e454."
+  trust authoritative
+
+contributes -1.0 from electrocardiogram(no_acute_st_t_changes) to diagnosis(acute_coronary_syndrome)
+  % Normal/unchanged ECG halves the probability of ACS (especially
+  % STEMI is excluded). Does NOT rule out NSTEMI/UA: ~50% of NSTEMI
+  % present with non-diagnostic ECGs. LR ~0.37.
+  source "Pope JH et al. Missed diagnoses of acute cardiac ischemia in the ED. NEJM 2000;342:1163-1170."
+  trust authoritative
+
+contributes -0.2 from electrocardiogram(sinus_bradycardia) to diagnosis(acute_coronary_syndrome)
+  % Sinus bradycardia (vs sinus tach or new arrhythmia) is weakly
+  % against acute ischemia in the absence of inferior MI vagal pattern.
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust empirical
+
+
+% ---------- INTERACTIONS ----------
+
+interacts 1.5 when chest_pain(exertional_substernal_intermittent) and symptom_relief(rest)
+  for diagnosis(stable_angina)
+  % The Diamond-Forrester typical-angina triad is super-additive: each
+  % criterion alone is weakly to moderately positive, but the combination
+  % is what defines "typical angina" and drives PTP to ~87% in a 40-49
+  % male. The extra interaction term captures the non-linearity.
+  source "Diamond GA, Forrester JS. NEJM 1979;300:1350-8."
+  trust authoritative
+
+interacts 1.5 when symptom_progression(worsening) and recent_worsening_window(two_weeks)
+  for diagnosis(acute_coronary_syndrome)
+  % A chronic worsening trajectory PLUS marked acceleration in the last
+  % two weeks is the canonical Braunwald class I unstable-angina pattern,
+  % a form of ACS. Synergistic above each contrib alone.
+  source "Braunwald E. Circulation 1989;80:410-414; Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+interacts 1.5 when recent_worsening_window(two_weeks) and exertional_tolerance(severely_limited)
+  for diagnosis(acute_coronary_syndrome)
+  % Crescendo + new CCS-IV functional limitation is the high-risk UA
+  % phenotype that drives admission and invasive workup regardless of
+  % biomarkers.
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+interacts 1.5 when coronary_artery_calcium_score_value(above_200) and chest_pain(exertional_substernal_intermittent)
+  for diagnosis(stable_angina)
+  % Documented atherosclerotic substrate (CACS >200) in a patient with
+  % typical-angina semiology synergistically raises probability of
+  % obstructive CAD as the symptom etiology.
+  source "Hecht HS et al. JACC Cardiovasc Imaging 2017;10:1187-1208."
+  trust authoritative
+
+interacts -2.0 when high_sensitivity_troponin_i_first(normal) and high_sensitivity_troponin_i_second(normal)
+  for diagnosis(acute_coronary_syndrome)
+  % SERIAL negative hs-cTn — not just a single value — is what delivers
+  % the ESC 0/1h algorithm's 99.7-99.8% NPV for NSTEMI. The interaction
+  % captures the protocol effect beyond each measurement's marginal LR.
+  % Note: still does NOT rule out unstable angina, which is captured by
+  % keeping the UA-driving terms (crescendo, exertional limit) intact.
+  source "Twerenbold R et al. NEJM 2019;380:2529-2540; ESC 2023 NSTE-ACS Guideline."
+  trust authoritative
+
+
+% ---------- DISPOSITION RULES ----------
+
+contributes 1.5 from chest_pain(exertional_substernal_intermittent) to disposition(admit_for_further_cardiac_workup)
+  % Typical-angina semiology with intermediate-to-high pretest CAD
+  % probability is a class I indication for further workup (CCTA,
+  % functional stress, or invasive) per the 2021 AHA/ACC guideline.
+  source "Gulati M et al. Circulation 2021;144:e368-e454."
+  trust authoritative
+
+contributes 1.5 from symptom_progression(worsening) to disposition(admit_for_further_cardiac_workup)
+  % Worsening pattern shifts patient from low- to intermediate-risk
+  % HEART score / EDACS strata, triggering observation or admission.
+  source "Backus BE et al. Chest pain in the ED: the HEART score. Crit Pathw Cardiol 2010;9:164-169."
+  trust authoritative
+
+contributes 2.0 from recent_worsening_window(two_weeks) to disposition(admit_for_further_cardiac_workup)
+  % Crescendo angina (Braunwald class I unstable) is a class I indication
+  % for admission and early invasive evaluation per 2014 AHA/ACC NSTE-ACS
+  % guideline, even with negative biomarkers.
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+contributes 1.5 from exertional_tolerance(severely_limited) to disposition(admit_for_further_cardiac_workup)
+  % CCS class III-IV symptoms reaching threshold of inability to perform
+  % minimal exertion is a guideline indication for admission and
+  % expedited workup.
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+contributes 1.0 from coronary_artery_calcium_score_value(above_200) to disposition(admit_for_further_cardiac_workup)
+  % Documented obstructive-CAD-likely substrate in a symptomatic patient
+  % is an indication for downstream coronary imaging or invasive workup.
+  source "Gulati M et al. Circulation 2021;144:e368-e454."
+  trust authoritative
+
+contributes -1.0 from cardiac_biomarkers(within_normal_limits) to disposition(admit_for_further_cardiac_workup)
+  % Normal biomarkers shift many low-risk patients to discharge per HEART
+  % pathway, but do NOT override high clinical risk (crescendo + CCS IV +
+  % CACS >200). Moderate negative; the interaction below tempers it.
+  source "Backus BE et al. Crit Pathw Cardiol 2010;9:164-169."
+  trust authoritative
+
+contributes -0.5 from electrocardiogram(no_acute_st_t_changes) to disposition(admit_for_further_cardiac_workup)
+  % Non-ischemic ECG modestly lowers admission probability via HEART
+  % pathway scoring.
+  source "Backus BE et al. Crit Pathw Cardiol 2010;9:164-169."
+  trust authoritative
+
+interacts 2.0 when recent_worsening_window(two_weeks) and exertional_tolerance(severely_limited)
+  for disposition(admit_for_further_cardiac_workup)
+  % Crescendo + severe functional limitation is the prototypical
+  % high-risk UA presentation that mandates admission irrespective of
+  % initial troponin/ECG (guideline class I).
+  source "Amsterdam EA et al. Circulation 2014;130:e344-e426."
+  trust authoritative
+
+interacts 1.5 when coronary_artery_calcium_score_value(above_200) and symptom_progression(worsening)
+  for disposition(admit_for_further_cardiac_workup)
+  % Documented CAD substrate plus crescendo symptoms in a patient whose
+  % last functional test is 6 months stale: indication for invasive
+  % anatomic evaluation.
+  source "Gulati M et al. Circulation 2021;144:e368-e454."
+  trust authoritative

@@ -1,0 +1,113 @@
+{
+  "ir": {
+    "slots": {
+      "service_type": {
+        "value": "preventive_screening",
+        "span": "in-network screenings",
+        "type": "stated"
+      },
+      "panel_grade": {
+        "value": "grade_b",
+        "span": "Grade B",
+        "type": "stated"
+      },
+      "network_status": {
+        "value": "in_network",
+        "span": "in-network",
+        "type": "stated"
+      },
+      "within_age_range": {
+        "value": null,
+        "span": null,
+        "type": "inferred"
+      }
+    },
+    "uncertainties": []
+  },
+  "provenance": {
+    "service_type": "in-network screenings",
+    "panel_grade": "Grade B",
+    "network_status": "in-network",
+    "within_age_range": "computed from age='None' start='45'"
+  },
+  "result": {
+    "verdict": "UNSAFE(unverified-extraction)",
+    "answer": null,
+    "fired_rules": [
+      "standard"
+    ],
+    "missing_slots_that_block": [],
+    "span_report": {
+      "service_type": "HALLUCINATED-SPAN (value present, span not in input)",
+      "panel_grade": "verbatim-ok",
+      "network_status": "verbatim-ok",
+      "within_age_range": "inferred (not byte-grounded; justified)"
+    },
+    "hallucinated_slots": [
+      "service_type"
+    ],
+    "byte_accounting_ok": false,
+    "surfaced_uncertainties": [],
+    "proof": {
+      "slots": {
+        "service_type": {
+          "value": "preventive_screening",
+          "span": "in-network screenings",
+          "type": "stated"
+        },
+        "panel_grade": {
+          "value": "grade_b",
+          "span": "Grade B",
+          "type": "stated"
+        },
+        "network_status": {
+          "value": "in_network",
+          "span": "in-network",
+          "type": "stated"
+        },
+        "within_age_range": {
+          "value": null,
+          "span": null,
+          "type": "inferred"
+        }
+      },
+      "rules": [
+        {
+          "id": "prev_inrange",
+          "when": {
+            "service_type": "preventive_screening",
+            "panel_grade": "grade_b",
+            "within_age_range": "true"
+          },
+          "then": "100%",
+          "source_span": "Preventive screenings that receive a Grade A or Grade B recommendation from the National Preventive Services Panel are reimbursed at 100%, with the annual deductible waived.",
+          "provenance": "passage"
+        },
+        {
+          "id": "prev_outside",
+          "when": {
+            "service_type": "preventive_screening",
+            "within_age_range": "false"
+          },
+          "then": "80%",
+          "source_span": "However, a preventive screening ordered outside the panel's recommended age range is treated as a standard service and reverts to the 80% in-network rate.",
+          "provenance": "passage"
+        },
+        {
+          "id": "standard",
+          "when": {
+            "network_status": "in_network"
+          },
+          "then": "80%",
+          "source_span": "The MediCare-Plus plan reimburses most in-network medical services at 80% after the annual deductible is met.",
+          "provenance": "passage"
+        }
+      ],
+      "default": {
+        "then": "undetermined",
+        "source_span": "",
+        "provenance": "passage"
+      }
+    }
+  }
+}

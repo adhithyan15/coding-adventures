@@ -1,0 +1,47 @@
+{
+  "_doc": "MYCIN-2026 CAS registry. Each object is an importable adj-lang library, content-addressed by sha256[:16] of its source AFTER its imports are rewritten to dependency hashes (Merkle-style). A case imports objects/<hash>.adj to pull in the whole grounded graph.",
+  "domain": "bacterial_vs_viral_meningitis",
+  "names": {
+    "meningitis-vocab.adj": "9bb5d9645e2edb7e",
+    "bacterial-arm.adj": "08b1777d124b9dce",
+    "viral-arm.adj": "e7ccec85df7a92d9",
+    "meningitis.adj": "ad2f3e63f38b9f9b"
+  },
+  "root": "ad2f3e63f38b9f9b",
+  "objects": {
+    "9bb5d9645e2edb7e": {
+      "kind": "dictionary",
+      "source_name": "meningitis-vocab.adj",
+      "imports": [],
+      "flagged": []
+    },
+    "08b1777d124b9dce": {
+      "kind": "rulebook",
+      "source_name": "bacterial-arm.adj",
+      "imports": [
+        "9bb5d9645e2edb7e"
+      ],
+      "flagged": [
+        "bacterial_meningitis::csf_culture(positive)",
+        "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)"
+      ]
+    },
+    "e7ccec85df7a92d9": {
+      "kind": "rulebook",
+      "source_name": "viral-arm.adj",
+      "imports": [
+        "9bb5d9645e2edb7e"
+      ],
+      "flagged": []
+    },
+    "ad2f3e63f38b9f9b": {
+      "kind": "rulebook",
+      "source_name": "meningitis.adj",
+      "imports": [
+        "08b1777d124b9dce",
+        "e7ccec85df7a92d9"
+      ],
+      "flagged": []
+    }
+  }
+}

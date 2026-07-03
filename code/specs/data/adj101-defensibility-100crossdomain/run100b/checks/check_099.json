@@ -1,0 +1,8 @@
+{
+ "check_id": 99,
+ "idx": 40,
+ "slot": "cumulative_hours_out_of_temp",
+ "claimed_value": 5.17,
+ "scenario": "A diner's steam table holds cooked rice. A health inspector measures the rice at 122 degrees F. The manager's logs and the unit's continuous time-stamp recorder confirm the rice has been below 135 degrees F for 5 hours and 10 minutes.",
+ "cited_span": "below 135 degrees F for 5 hours and 10 minutes"
+}

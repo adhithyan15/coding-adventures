@@ -204,7 +204,85 @@ pub struct GrammarParser {
     /// [TRACE] rule 'factor' at token 2 (Plus "+") → fail
     /// ```
     trace: bool,
+
+    /// Current recursion depth of the recursive-descent parse.
+    ///
+    /// Incremented on entry to [`Self::parse_rule`] and decremented on exit.
+    /// Every nested rule reference deepens this counter by one. It exists
+    /// purely to bound the *native* call stack: the left-recursion guard
+    /// (`in_progress`) bounds left recursion, but does nothing for deep
+    /// *right* recursion / nesting like `((((…))))` or `[[[…]]]`, where each
+    /// extra layer of brackets is a fresh `(rule, pos)` pair the memo never
+    /// short-circuits. Such input recurses once per layer and overflows the
+    /// native stack — an *uncatchable* process abort.
+    depth: usize,
+
+    /// Maximum permitted recursion depth before [`Self::parse_rule`] bails
+    /// out with a recoverable failure instead of recursing deeper.
+    ///
+    /// See [`DEFAULT_MAX_RULE_DEPTH`] for the rationale behind the value.
+    max_depth: usize,
+
+    /// Sticky flag set the first time the depth cap is hit. `parse()` reads
+    /// it to surface a clear "input nests deeper than the supported limit"
+    /// [`GrammarParseError`] instead of the generic furthest-failure message,
+    /// so callers can tell a genuine syntax error apart from a depth refusal.
+    depth_exceeded: bool,
 }
+
+/// Default recursion-depth cap for the grammar-driven parser.
+///
+/// # Why a cap at all
+///
+/// `parse_rule` recurses through `match_element` back into `parse_rule` for
+/// every nested rule reference. Deeply-nested input — `((((…))))`, `[[[…]]]`,
+/// or any deep right-recursive rule — therefore recurses once per nesting
+/// level. Past a few hundred levels this overflows the *native* thread stack,
+/// which on most platforms is an **uncatchable** `SIGSEGV` / stack-overflow
+/// abort: it kills the whole process, so a `Result`-returning entry point
+/// like [`GrammarParser::parse`] cannot report it. Every SIR frontend
+/// (twig / ruby / python / javascript) reaches this parser through its public
+/// entry, so a ~300-deep nested literal would crash the host *before* the
+/// frontend's own source-level depth checks could fire.
+///
+/// # Why 128
+///
+/// This cap has to satisfy two opposing constraints, and 128 threads the
+/// needle:
+///
+/// * **Below the native-overflow point.** Each level of `group`-style nesting
+///   pushes several `parse_rule` / `match_element` frames, and those frames
+///   are large (token clones, `format!` memo keys, position computation). On a
+///   default ~2 MiB thread stack (the stack a default-spawned worker — and the
+///   Rust test runner — gets), this implementation overflows somewhere between
+///   depth ~192 and ~224 in a debug build; release frames are smaller, so the
+///   overflow point only rises. A cap of 128 trips the clean error with a
+///   comfortable margin *below* the worst-case (debug) overflow, on the
+///   default stack, with no special stack sizing required by callers. This was
+///   pinned empirically by binary-searching the cap that still returns `Err`
+///   instead of overflowing on a default-stack worker thread.
+///
+/// * **Above any real program's nesting — for JS-shaped grammars.** In a
+///   grammar whose expression rule-chain is shallow (like ECMAScript), each
+///   source-nesting level costs only a few `parse_rule` frames, so 128 frames
+///   is dozens of source levels — far beyond hand-written JS, which virtually
+///   never nests grouping even a few dozen deep. This is why closurec opts into
+///   this value: real JS parses identically and the guard fires *only* on
+///   pathological, DoS-shaped input.
+///
+/// # Why this is NOT a safe *global default*
+///
+/// Rule-chain depth ≠ source-nesting depth. A rich grammar (e.g. Wolfram)
+/// spends *dozens* of rule-frames per source-nesting level, so 128 frames is
+/// only a handful of real brackets — far too few for legitimate *moderate*
+/// nesting. And frontends that already guard themselves on an enlarged stack
+/// (python-to-semantic-ir / javascript-to-semantic-ir) rely on their own
+/// *lowerer's* depth check firing, which a parser cap would preempt. That is
+/// why [`GrammarParser::new`] defaults to *unlimited* and the guard is opt-in
+/// per caller — a single global cap cannot be both DoS-safe on the heaviest
+/// grammar's default stack *and* generous enough for every grammar's real
+/// input.
+pub const DEFAULT_MAX_RULE_DEPTH: usize = 128;
 
 impl GrammarParser {
     /// Create a new grammar-driven parser (trace disabled).
@@ -237,8 +315,8 @@ impl GrammarParser {
     ///
     /// let grammar = parse_parser_grammar("value = NUMBER ;").unwrap();
     /// let tokens = vec![
-    ///     Token { type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None, flags: None },
-    ///     Token { type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None, flags: None },
+    ///     Token { cv: None, type_: TokenType::Number, value: "42".into(), line: 1, column: 1, type_name: None, flags: None },
+    ///     Token { cv: None, type_: TokenType::Eof,    value: "".into(),   line: 1, column: 3, type_name: None, flags: None },
     /// ];
     /// let mut parser = GrammarParser::new_with_trace(tokens, grammar, true);
     /// let result = parser.parse();
@@ -269,7 +347,34 @@ impl GrammarParser {
             pre_parse_hooks: Vec::new(),
             post_parse_hooks: Vec::new(),
             trace,
+            depth: 0,
+            // The recursion-depth guard is OPT-IN: `new()` defaults to
+            // *unlimited*. A single global default cap is unsound because
+            // rule-chain depth ≠ source-nesting depth — a rich grammar (e.g.
+            // Wolfram) spends dozens of rule-frames per bracket, so any cap low
+            // enough to sit below the native-stack overflow point on the
+            // default stack (~200 frames) would reject legitimate *moderate*
+            // nesting (40 parens ≈ 1280 frames), and would also preempt
+            // frontends that already guard themselves on an enlarged stack
+            // (python-to-semantic-ir / javascript-to-semantic-ir run the parse
+            // on a big-stack worker and rely on their *lowerer's* own depth
+            // check firing). Callers that parse untrusted input on the default
+            // stack and want a DoS backstop opt in explicitly with
+            // `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)`.
+            max_depth: usize::MAX,
+            depth_exceeded: false,
         }
+    }
+
+    /// Override the recursion-depth cap (default [`DEFAULT_MAX_RULE_DEPTH`]).
+    ///
+    /// Lowering it makes the guard easier to exercise in tests without
+    /// building pathologically deep input; raising it is rarely needed since
+    /// the default already sits far above any real program's nesting and
+    /// below the native-stack overflow point. Returns `self` for chaining.
+    pub fn with_max_depth(mut self, max_depth: usize) -> Self {
+        self.max_depth = max_depth;
+        self
     }
 
     /// Whether newlines are treated as significant tokens in this grammar.
@@ -340,6 +445,21 @@ impl GrammarParser {
         match result {
             None => {
                 let tok = self.current().clone();
+                // A depth-cap refusal takes priority over the generic
+                // furthest-failure message: the parse did not fail because the
+                // input was syntactically wrong, but because it nested deeper
+                // than we are willing to recurse. Surface that explicitly so
+                // callers (and the SIR frontends) can distinguish a DoS-shaped
+                // input from an ordinary syntax error.
+                if self.depth_exceeded {
+                    return Err(GrammarParseError {
+                        message: format!(
+                            "input nests deeper than the supported limit ({})",
+                            self.max_depth
+                        ),
+                        token: tok,
+                    });
+                }
                 if !self.furthest_expected.is_empty() {
                     let expected = self.furthest_expected.join(" or ");
                     let furthest_tok = if self.furthest_pos < self.tokens.len() {
@@ -413,8 +533,40 @@ impl GrammarParser {
     // Rule parsing (with packrat memoization)
     // =========================================================================
 
-    /// Try to match a named grammar rule with memoization.
+    /// Try to match a named grammar rule.
+    ///
+    /// This is a thin depth-guarding wrapper around [`Self::parse_rule_inner`],
+    /// which holds the actual memoization + left-recursion logic. Every entry
+    /// into a (sub-)rule passes through here, so incrementing `depth` on the
+    /// way in and decrementing on the way out gives an exact running count of
+    /// the *native* recursion depth — regardless of which of the inner
+    /// function's several early-return paths is taken.
+    ///
+    /// If we are already at the cap, we refuse to recurse one level deeper:
+    /// we set the sticky `depth_exceeded` flag, record a failure for error
+    /// reporting, and return `None`. Returning `None` (a normal parse failure)
+    /// rather than panicking keeps the whole thing recoverable — it unwinds
+    /// back through the recursive-descent stack exactly like an ordinary
+    /// no-match, and `parse()` turns it into a clean `GrammarParseError`.
     fn parse_rule(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
+        if self.depth >= self.max_depth {
+            // Refuse to descend further. Mark the refusal so `parse()` can
+            // emit a precise message, and record a failure at the current
+            // position so any surrounding furthest-failure logic stays sane.
+            self.depth_exceeded = true;
+            self.record_failure("input within the supported nesting limit");
+            return None;
+        }
+
+        self.depth += 1;
+        let result = self.parse_rule_inner(rule_name);
+        self.depth -= 1;
+        result
+    }
+
+    /// Try to match a named grammar rule with memoization. The depth guard
+    /// lives in the [`Self::parse_rule`] wrapper; do not call this directly.
+    fn parse_rule_inner(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
         let rule = match self.rules.get(rule_name) {
             Some(r) => r.clone(),
             None => return None,
@@ -1016,7 +1168,7 @@ mod tests {
 
     /// Helper: create a token with default position.
     fn tok(type_: TokenType, value: &str) -> Token {
-        Token {
+        Token { cv: None,
             type_,
             value: value.to_string(),
             line: 1,
@@ -1027,7 +1179,7 @@ mod tests {
 
     /// Helper: create a token with a string type name.
     fn tok_named(type_: TokenType, value: &str, type_name: &str) -> Token {
-        Token {
+        Token { cv: None,
             type_,
             value: value.to_string(),
             line: 1,
@@ -1506,6 +1658,161 @@ term       = NUMBER | NAME ;
         // expression expands to: term + term = NUMBER "+" NUMBER
         // children: the NUMBER node, the Plus token, the NUMBER node.
         assert_eq!(result.children.len(), 3);
+    }
+
+    // -----------------------------------------------------------------------
+    // Recursion-depth guard (DoS protection)
+    // -----------------------------------------------------------------------
+
+    /// A right-recursive grouping grammar:
+    ///
+    /// ```text
+    /// group = "(" group ")" | NUMBER ;
+    /// ```
+    ///
+    /// Each `(` forces one more level of `group` recursion, so an input of
+    /// `N` open parens recurses `N` deep — exactly the nesting shape that
+    /// overflows the native stack without a depth guard.
+    fn nested_group_grammar() -> ParserGrammar {
+        ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "group".to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::Sequence {
+                            elements: vec![
+                                GrammarElement::Literal { value: "(".to_string() },
+                                GrammarElement::RuleReference { name: "group".to_string() },
+                                GrammarElement::Literal { value: ")".to_string() },
+                            ],
+                        },
+                        GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                    ],
+                },
+                line_number: 1,
+            }],
+            version: 0,
+        }
+    }
+
+    /// Build the token stream for `n` nested parens around a `0`:
+    /// `( ( … ( 0 ) … ) )`.
+    fn nested_paren_tokens(n: usize) -> Vec<Token> {
+        let mut tokens = Vec::with_capacity(2 * n + 2);
+        for _ in 0..n {
+            tokens.push(tok(TokenType::LParen, "("));
+        }
+        tokens.push(tok(TokenType::Number, "0"));
+        for _ in 0..n {
+            tokens.push(tok(TokenType::RParen, ")"));
+        }
+        tokens.push(tok(TokenType::Eof, ""));
+        tokens
+    }
+
+    /// Deeply-nested input must produce a recoverable `GrammarParseError`
+    /// ("input nests deeper than the supported limit") instead of overflowing
+    /// the native stack (an uncatchable abort).
+    ///
+    /// We build a few thousand nested parens — far past `DEFAULT_MAX_RULE_DEPTH`
+    /// — and parse on a worker thread with a generous 32 MiB stack. The large
+    /// stack is deliberate: it guarantees the *guard* is what stops the
+    /// recursion, not the stack running out, so the test is deterministic on
+    /// any default-stack test runner. (Without the guard this same input would
+    /// segfault even on this larger stack once it nested deep enough.)
+    #[test]
+    fn test_deeply_nested_input_returns_error_not_overflow() {
+        let handle = std::thread::Builder::new()
+            .name("parser-depth-guard-regression".to_string())
+            .stack_size(32 * 1024 * 1024)
+            .spawn(|| {
+                let grammar = nested_group_grammar();
+                let tokens = nested_paren_tokens(5000);
+                // The guard is opt-in (`new()` is unlimited), so a caller that
+                // wants the DoS backstop dials it in with `with_max_depth`.
+                let mut parser =
+                    GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH);
+                let result = parser.parse();
+                let err = result.expect_err(
+                    "deeply-nested input must fail with an error, not parse or crash",
+                );
+                assert!(
+                    err.message.contains("nests deeper than the supported limit"),
+                    "expected a depth-limit error, got: {err}"
+                );
+            })
+            .expect("failed to spawn worker thread");
+        handle
+            .join()
+            .expect("depth guard must keep the worker thread from crashing");
+    }
+
+    /// Input that nests *exactly up to* the cap still parses cleanly — the
+    /// guard only trips when we would recurse *past* the limit, so legal
+    /// not-quite-as-deep input is unaffected. Uses a lowered cap so the test
+    /// stays cheap. This is the no-regression half of the guard's contract.
+    #[test]
+    fn test_nesting_up_to_cap_still_parses() {
+        // group recursion depth for n parens is n+1 (n group→group steps plus
+        // the final NUMBER alternative is reached within the n-th group). With
+        // a cap of 64, 60 parens stays safely under the limit.
+        let grammar = nested_group_grammar();
+        let tokens = nested_paren_tokens(60);
+        let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(64);
+        let result = parser.parse();
+        assert!(
+            result.is_ok(),
+            "input within the depth cap must parse, got: {:?}",
+            result.err()
+        );
+        assert_eq!(result.unwrap().rule_name, "group");
+    }
+
+    /// Lowering the cap makes the guard trip on correspondingly shallower
+    /// input, and the error is the precise depth-limit message. This pins the
+    /// guard's behaviour without needing thousands of tokens or a big stack.
+    #[test]
+    fn test_low_cap_trips_depth_guard() {
+        let grammar = nested_group_grammar();
+        // 200 parens is well past a cap of 32.
+        let tokens = nested_paren_tokens(200);
+        let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(32);
+        let err = parser.parse().expect_err("nesting past the cap must error");
+        assert!(
+            err.message.contains("nests deeper than the supported limit"),
+            "expected depth-limit error, got: {err}"
+        );
+    }
+
+    /// A caller that opts into [`DEFAULT_MAX_RULE_DEPTH`] must have the guard
+    /// trip *before* the native stack overflows on a default-stack thread —
+    /// otherwise a production caller (e.g. closurec) on an ordinary thread
+    /// would still crash. We parse far-too-deep input on a worker thread with
+    /// **no** `stack_size` override (the same ~2 MiB a default thread / the
+    /// test runner gets). If the guard did not fire in time, the thread would
+    /// overflow and `join()` would return `Err`; a clean parse-`Err` here
+    /// proves the recommended opt-in cap sits safely below the overflow point
+    /// on the default stack. (Empirically this implementation overflows around
+    /// depth ~200 in a debug build on the default stack, so the cap of 128
+    /// leaves comfortable headroom.)
+    #[test]
+    fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+        let handle = std::thread::spawn(|| {
+            let grammar = nested_group_grammar();
+            let tokens = nested_paren_tokens(5000);
+            let mut parser =
+                GrammarParser::new(tokens, grammar).with_max_depth(DEFAULT_MAX_RULE_DEPTH);
+            let err = parser
+                .parse()
+                .expect_err("deeply-nested input must error, not crash");
+            assert!(
+                err.message.contains("nests deeper than the supported limit"),
+                "expected depth-limit error, got: {err}"
+            );
+        });
+        handle
+            .join()
+            .expect("opt-in cap must trip BEFORE native overflow on default stack");
     }
 
     #[test]

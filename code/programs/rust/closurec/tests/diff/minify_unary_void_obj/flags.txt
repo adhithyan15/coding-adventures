@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_unary_void_obj/input/a.js
+--compilation_level
+WHITESPACE_ONLY

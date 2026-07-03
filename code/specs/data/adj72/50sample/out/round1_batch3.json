@@ -1,0 +1,93 @@
+[
+  {
+    "id": "Q27",
+    "verbatim_source_passage": "Nel mezzo del cammin di nostra vita\nmi ritrovai per una selva oscura,\nché la diritta via era smarrita.",
+    "source_citation": "Dante Alighieri, Inferno, Canto I, lines 1–3 (original Italian)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q28",
+    "verbatim_source_passage": "And so, my fellow Americans: ask not what your country can do for you—ask what you can do for your country.",
+    "source_citation": "John F. Kennedy, Inaugural Address, January 20, 1961",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q29",
+    "verbatim_source_passage": "己所不欲，勿施於人。",
+    "source_citation": "Confucius, Analects (Lunyu), Book XV (Wei Ling Gong), chapter 24 — also appears in Book XII.2. Literally: 'Do not impose on others what you yourself do not desire.'",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.92
+  },
+  {
+    "id": "Q30",
+    "verbatim_source_passage": "Nasce da questo una disputa: se elli è meglio essere amato che temuto, o e converso. Rispondesi che si vorrebbe essere l'uno e l'altro; ma perché elli è difficile accozzarli insieme, è molto più sicuro essere temuto che amato, quando si abbia a mancare dell'uno de' dua.",
+    "source_citation": "Niccolò Machiavelli, Il Principe (The Prince), Chapter XVII (original Italian)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.82
+  },
+  {
+    "id": "Q31",
+    "verbatim_source_passage": "Longtemps, je me suis couché de bonne heure.",
+    "source_citation": "Marcel Proust, À la recherche du temps perdu, Vol. 1: Du côté de chez Swann (Swann's Way), opening sentence (original French)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q32",
+    "verbatim_source_passage": "道可道，非常道。名可名，非常名。",
+    "source_citation": "Laozi, Tao Te Ching (Daodejing), Chapter 1, opening lines (original Chinese)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.93
+  },
+  {
+    "id": "Q33",
+    "verbatim_source_passage": "εὕρηκα",
+    "source_citation": "Attributed to Archimedes ('Eureka!', meaning 'I have found it'). The anecdote is reported by Vitruvius (De architectura, Book IX, preface), but Vitruvius does not actually quote the Greek word; the word 'εὕρηκα' itself is the traditional/legendary form. The bath story and exclamation are widely considered apocryphal in their specifics.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.3
+  },
+  {
+    "id": "Q34",
+    "verbatim_source_passage": "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection, or the Survival of the Fittest.",
+    "source_citation": "Charles Darwin, On the Origin of Species — the phrase 'survival of the fittest' (coined by Herbert Spencer) was not in the 1st edition (1859); Darwin added it in the 5th edition (1869), Chapter IV.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.72
+  },
+  {
+    "id": "Q35",
+    "verbatim_source_passage": "That's one small step for man, one giant leap for mankind.",
+    "source_citation": "Neil Armstrong, July 20, 1969, upon stepping onto the lunar surface (Apollo 11). As transmitted/heard. Armstrong stated he intended to say 'one small step for a man'; the 'a' was not clearly audible in the transmission.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q36",
+    "verbatim_source_passage": null,
+    "source_citation": "The attribution to Marie Antoinette is apocryphal. The phrase 'Qu'ils mangent de la brioche' appears in Rousseau's Confessions (Book VI, written c. 1765–1767), attributed to 'a great princess,' before Marie Antoinette was prominent. There is no genuine record of Marie Antoinette saying it.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q37",
+    "verbatim_source_passage": null,
+    "source_citation": "This 'definition of insanity' quote is widely misattributed to Albert Einstein. There is no reliable source showing Einstein ever said or wrote it. Its origins are uncertain (variants appear in Narcotics Anonymous literature, 1981, and a Rita Mae Brown novel, 1983).",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q38",
+    "verbatim_source_passage": null,
+    "source_citation": "The exact line 'Elementary, my dear Watson' does not appear in any of Arthur Conan Doyle's original Sherlock Holmes stories or novels. The words 'Elementary' and 'my dear Watson' appear separately but never together in this phrasing in the canon. The phrase is popularly associated with the films/popular culture (notably the 1929 film 'The Return of Sherlock Holmes').",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.88
+  },
+  {
+    "id": "Q39",
+    "verbatim_source_passage": null,
+    "source_citation": "The exact line 'Play it again, Sam' is not spoken in the 1942 film Casablanca. Ilsa (Ingrid Bergman) says 'Play it once, Sam, for old times' sake... Play it, Sam. Play \"As Time Goes By.\"' and Rick (Humphrey Bogart) says 'You played it for her, you can play it for me... If she can stand it, I can. Play it!' The misquotation likely derives from the title of the 1972 Woody Allen film 'Play It Again, Sam.'",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  }
+]

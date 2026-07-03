@@ -77,8 +77,25 @@ pub const CONCRETE_TYPES: &[&str] = &[
     "u8", "u16", "u32", "u64",
     "i8", "i16", "i32", "i64",
     "f32", "f64",
-    "bool", "str",
+    "bool", STR_TYPE,
 ];
+
+/// The representation-agnostic string type hint (LANG-FULL E4).
+///
+/// Strings are immutable byte sequences at the IIR level; backends choose their
+/// representation (`Value::Str`, managed `String`, or length-prefixed bytes).
+pub const STR_TYPE: &str = "str";
+
+/// Return `true` if `type_hint` is the shared string scalar type.
+///
+/// ```
+/// use interpreter_ir::opcodes::{is_str_type, STR_TYPE};
+/// assert!(is_str_type(STR_TYPE));
+/// assert!(!is_str_type("array<u8>"));
+/// ```
+pub fn is_str_type(type_hint: &str) -> bool {
+    type_hint == STR_TYPE
+}
 
 // ---------------------------------------------------------------------------
 // Reference-type helpers (LANG16)
@@ -121,6 +138,95 @@ pub fn unwrap_ref_type(type_hint: &str) -> Option<String> {
 /// ```
 pub fn make_ref_type(inner: &str) -> String {
     format!("{REF_PREFIX}{inner}{REF_SUFFIX}")
+}
+
+// ---------------------------------------------------------------------------
+// Array-type helpers (LANG-FULL E5)
+// ---------------------------------------------------------------------------
+//
+// A bounded, indexable aggregate uses the `"array<T>"` encoding, mirroring
+// `ref<T>`.  The *element* type `T` is any scalar hint — v1 carries `i64` /
+// `f64`.  The model is representation-agnostic (see
+// `code/specs/lang-full-e5-arrays.md`): each backend lowers an `array<T>` to a
+// managed array (JVM/CLR/WasmGC) or a length-prefixed flat block
+// (LLVM/native/vm), but the IIR type string is the same.
+
+const ARRAY_PREFIX: &str = "array<";
+const ARRAY_SUFFIX: &str = ">";
+
+/// Return `true` if `type_hint` is an array type `"array<T>"`.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_array_type;
+/// assert!(is_array_type("array<i64>"));
+/// assert!(!is_array_type("ref<i64>"));
+/// assert!(!is_array_type("i64"));
+/// ```
+pub fn is_array_type(type_hint: &str) -> bool {
+    type_hint.starts_with(ARRAY_PREFIX) && type_hint.ends_with(ARRAY_SUFFIX)
+}
+
+/// Return `Some(T)` for `"array<T>"`, else `None`.
+///
+/// ```
+/// use interpreter_ir::opcodes::array_elem_type;
+/// assert_eq!(array_elem_type("array<i64>"), Some("i64".to_string()));
+/// assert_eq!(array_elem_type("array<array<f64>>"), Some("array<f64>".to_string()));
+/// assert_eq!(array_elem_type("i64"), None);
+/// ```
+pub fn array_elem_type(type_hint: &str) -> Option<String> {
+    if !is_array_type(type_hint) {
+        return None;
+    }
+    Some(type_hint[ARRAY_PREFIX.len()..type_hint.len() - ARRAY_SUFFIX.len()].to_string())
+}
+
+/// Wrap `elem` as an array type string.  Inverse of [`array_elem_type`].
+///
+/// ```
+/// use interpreter_ir::opcodes::make_array_type;
+/// assert_eq!(make_array_type("i64"), "array<i64>");
+/// assert_eq!(make_array_type("f64"), "array<f64>");
+/// ```
+pub fn make_array_type(elem: &str) -> String {
+    format!("{ARRAY_PREFIX}{elem}{ARRAY_SUFFIX}")
+}
+
+/// The four array opcodes (LANG-FULL E5).  `alloc_array`/`array_len`/`array_get`
+/// produce a value; `array_set` does not.  All indexing is bounds-checked —
+/// `array_get`/`array_set` trap on an out-of-range index.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_array_op;
+/// assert!(is_array_op("array_get"));
+/// assert!(!is_array_op("load_byte"));
+/// ```
+pub fn is_array_op(op: &str) -> bool {
+    matches!(op, "alloc_array" | "array_len" | "array_get" | "array_set")
+}
+
+// ---------------------------------------------------------------------------
+// String opcode helpers (LANG-FULL E4)
+// ---------------------------------------------------------------------------
+//
+// A v1 string is an immutable byte sequence. `str_index`, `str_slice`, and
+// `str_len` operate on byte positions/counts, `str_eq` returns an i64-style
+// truth value (1/0), `str_cmp` returns a normalized lexical ordering (-1/0/1),
+// and `print_str` is a side-effecting stdout primitive with no implicit newline.
+
+/// Return `true` if `op` is one of the LANG-FULL E4 string opcodes.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_string_op;
+/// assert!(is_string_op("str_concat"));
+/// assert!(!is_string_op("array_get"));
+/// ```
+pub fn is_string_op(op: &str) -> bool {
+    matches!(
+        op,
+        "str_const" | "str_len" | "str_index" | "str_concat" | "str_slice"
+            | "str_eq" | "str_cmp" | "print_str"
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -217,6 +323,28 @@ pub fn is_coercion(op: &str) -> bool {
     matches!(op, "cast" | "type_assert")
 }
 
+/// Numeric conversions between `integer` and `real` (LANG-FULL E8).
+///
+/// Unlike the width-masking `cast` (`is_coercion`), these change the numeric
+/// *representation*, and the `real → integer` direction traps (fail-closed) on
+/// a non-finite or out-of-range operand rather than wrapping.
+///
+/// | Opcode | Direction | Rounding |
+/// |--------|-----------|----------|
+/// | `int_to_real`       | `i64` → `f64` | exact (IEEE-754) |
+/// | `real_to_int_trunc` | `f64` → `i64` | toward zero (`INT()`) |
+/// | `real_to_int_floor` | `f64` → `i64` | toward −∞ (ALGOL `entier`) |
+///
+/// ```
+/// use interpreter_ir::opcodes::is_conversion;
+/// assert!(is_conversion("int_to_real"));
+/// assert!(is_conversion("real_to_int_floor"));
+/// assert!(!is_conversion("cast"));
+/// ```
+pub fn is_conversion(op: &str) -> bool {
+    matches!(op, "int_to_real" | "real_to_int_trunc" | "real_to_int_floor")
+}
+
 /// Heap / GC operations (LANG16).
 ///
 /// Programs that never allocate never emit these — GC overhead is zero.
@@ -277,8 +405,24 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "unbox"
                 | "field_load"
                 | "is_null"
+                // Array ops that produce a value (LANG-FULL E5)
+                | "alloc_array"
+                | "array_len"
+                | "array_get"
+                // String ops that produce a value (LANG-FULL E4)
+                | "str_const"
+                | "str_len"
+                | "str_index"
+                | "str_concat"
+                | "str_slice"
+                | "str_eq"
+                | "str_cmp"
                 // Global variable read (LANG32)
                 | "global_load"
+                // Numeric conversions integer↔real (LANG-FULL E8)
+                | "int_to_real"
+                | "real_to_int_trunc"
+                | "real_to_int_floor"
                 // Closure allocation and application (LANG34)
                 | "alloc_closure"
                 | "call_closure"
@@ -333,6 +477,8 @@ pub fn has_side_effects(op: &str) -> bool {
                 | "type_assert"
                 | "field_store"
                 | "safepoint"
+                // String output (LANG-FULL E4)
+                | "print_str"
                 // Global variable write (LANG32)
                 | "global_store"
                 // Concurrency ops with side effects but no dest (LANG28)
@@ -368,6 +514,11 @@ pub fn is_allocating(op: &str) -> bool {
     matches!(
         op,
         "alloc" | "box" | "safepoint"
+            // Runtime-built strings allocate a fresh immutable byte buffer.
+            | "str_concat"
+            | "str_slice"
+            // Array allocation (LANG-FULL E5)
+            | "alloc_array"
             // Closure allocation (LANG34)
             | "alloc_closure"
             // Concurrency allocators (LANG28)
@@ -729,6 +880,9 @@ pub fn is_known_op(op: &str) -> bool {
         || is_coercion(op)
         || is_heap(op)
         || is_global(op)
+        || is_array_op(op)
+        || is_conversion(op)
+        || is_string_op(op)
         || is_closure_op(op)
         || is_concurrency(op)
 }
@@ -788,12 +942,38 @@ mod tests {
             "load_reg", "call", "io_in", "cast", "alloc",
             // LANG32 global ops
             "global_load", "global_store",
+            // LANG-FULL aggregate/value ops
+            "alloc_array", "array_get", "int_to_real", "str_const", "print_str",
             // LANG34 closure ops
             "alloc_closure", "call_closure",
         ] {
             assert!(is_known_op(op), "{op}");
         }
         assert!(!is_known_op("tetrad.move"));
+    }
+
+    #[test]
+    fn string_ops_are_classified() {
+        for op in &[
+            "str_const",
+            "str_len",
+            "str_index",
+            "str_concat",
+            "str_slice",
+            "str_eq",
+            "str_cmp",
+        ] {
+            assert!(is_string_op(op), "{op}");
+            assert!(is_value_producing(op), "{op}");
+            assert!(is_known_op(op), "{op}");
+        }
+        assert!(is_string_op("print_str"));
+        assert!(has_side_effects("print_str"));
+        assert!(!is_value_producing("print_str"));
+        assert!(is_allocating("str_concat"));
+        assert!(is_allocating("str_slice"));
+        assert!(is_str_type(STR_TYPE));
+        assert!(!is_str_type("array<u8>"));
     }
 
     // ── LANG34 closure opcode tests ───────────────────────────────────────────

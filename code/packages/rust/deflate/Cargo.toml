@@ -1,6 +1,6 @@
 [package]
 name = "deflate"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "DEFLATE lossless compression algorithm (1996) — CMP05"
 license = "MIT"

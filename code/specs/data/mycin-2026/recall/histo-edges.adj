@@ -1,0 +1,149 @@
+% ============================================================================
+% histo-edges — the smear/histology-finding knowledge-graph (MYCIN-2026 HISTO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", pathology): the
+% pathognomonic peripheral-smear / histology findings and the conditions they point to.
+% "A blood smear shows Howell-Jolly bodies — what does that suggest?" becomes the
+% binding query  ? seen_in(howell_jolly_bodies, $Condition).
+%
+% Direction note: the relation is finding -> condition (`seen_in`), which is both how
+% the cited spans read ("Reed-Sternberg cells are the hallmark of Hodgkin lymphoma";
+% "Heinz bodies ... in G6PD deficiency") AND how the board question is posed (you SEE
+% the finding and must name the condition). A finding may point to several conditions,
+% so a query binds the full set — each with its own citation.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the seventh ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see histo-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only findings whose cited page states the association in a clean self-
+% contained span (both finding AND condition named) are included. Under the primary-
+% source-first, zero-deferral policy, two previously-deferred buzzwords are now GROUNDED:
+% Auer rods → acute promyelocytic leukemia (the AML page names abundant Auer rods as a
+% pathognomonic APL feature), psammoma bodies → meningioma (the meningioma page names
+% psammoma-body formation as a histopathological characteristic), and Negri bodies →
+% rabies (the Rabies page names them pathognomonic in one clean sentence).
+% Still deferred (re-checked): psammoma bodies → papillary thyroid carcinoma. NOTE the
+% blocker has narrowed: ADJ string literals now carry escaped double quotes (adj-lang
+% 0.16.1, PR #6330), so the "Orphan Annie eye" quotes are no longer the obstacle. The
+% remaining obstacle is that NO checked authoritative page states both endpoints in one
+% clean sentence — both dedicated PTC pages (NBK536943, NBK459299) name psammoma bodies
+% and papillary thyroid carcinoma only in SEPARATE sentences, and the sole both-endpoints
+% location (Thyroid-Gland histology, NBK551659) spans a citation-marker boundary
+% ([43][40]) between its two endpoint sentences. Honest absence beats a stitched span.
+% ============================================================================
+
+dictionary histo_vocab {
+    define finding   : entity   surface "histology finding", "smear finding", "inclusion"
+    define condition : entity   surface "condition", "disease"
+
+    define seen_in : relation from finding to condition  % the condition a finding points to
+}
+
+rulebook histo_facts {
+    use histo_vocab
+
+    % --- Reed-Sternberg cells -> Hodgkin lymphoma ------------------------
+    relate seen_in(reed_sternberg_cells, hodgkin_lymphoma)
+        source "Reed-Sternberg cells are the hallmark tumor cells of Hodgkin lymphoma."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542333/"
+        trust authoritative
+
+    % --- Howell-Jolly bodies -> asplenia / megaloblastic anemia (one span names both) ---
+    relate seen_in(howell_jolly_bodies, asplenia)
+        source "Howell-Jolly bodies are observed in patients with asplenia or splenic dysfunctions and in conditions with ineffective erythropoiesis, such as megaloblastic anemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557489/"
+        trust authoritative
+    relate seen_in(howell_jolly_bodies, megaloblastic_anemia)
+        source "Howell-Jolly bodies are observed in patients with asplenia or splenic dysfunctions and in conditions with ineffective erythropoiesis, such as megaloblastic anemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557489/"
+        trust authoritative
+
+    % --- Heinz bodies -> G6PD deficiency / methemoglobinemia (one span names both) ---
+    relate seen_in(heinz_bodies, g6pd_deficiency)
+        source "Heinz bodies may be present in patients with glucose-6-phosphate dehydrogenase (G6PD) deficiency and those with methemoglobinemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551622/"
+        trust authoritative
+    relate seen_in(heinz_bodies, methemoglobinemia)
+        source "Heinz bodies may be present in patients with glucose-6-phosphate dehydrogenase (G6PD) deficiency and those with methemoglobinemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551622/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): Auer rods -> acute promyelocytic leukemia ---
+    relate seen_in(auer_rods, acute_promyelocytic_leukemia)
+        source "Notably, a specific subtype of AML—acute promyelocytic leukemia (APL)—exhibits a distinctive and pathognomonic feature on peripheral blood morphology of abundant cytoplasmic Auer rods"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK507875/"
+        trust authoritative
+
+    % --- BACKFILL: psammoma bodies -> meningioma --------------------------------
+    relate seen_in(psammoma_bodies, meningioma)
+        source "One of the histopathological characteristics of meningiomas is the growth of meningothelial cells that eventually mineralize to form psammoma bodies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560538/"
+        trust authoritative
+
+    % --- EXPAND: Negri bodies -> rabies (pathognomonic) -------------------------
+    relate seen_in(negri_bodies, rabies)
+        source "Intracytoplasmic Negri bodies are pathognomonic for rabies but are only present in 20% to 60% of cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448076/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield histology buzzwords, each grounded to a self-contained
+    % verbatim NCBI Bookshelf span naming both the finding and the condition.
+    % (Several eponyms declined — their span lives only in a section heading or
+    % uses an abbreviation: Birbeck granules->LCH (abbrev "LCH"), Orphan-Annie-eye
+    % nuclei->papillary thyroid (heading), Councilman bodies->yellow fever
+    % (anaphoric "this"), Curschmann spirals->asthma (no NBK span). Left out, not
+    % stretched — backlog for a clean span.)
+    % ------------------------------------------------------------------------
+
+    % Lewy bodies — Parkinson disease (α-synuclein inclusions).
+    relate seen_in(lewy_bodies, parkinson_disease)
+        source "Parkinson disease (PD) is a progressive neurodegenerative disorder characterized by the degeneration of dopaminergic neurons in the substantia nigra and the accumulation of alpha-synuclein within Lewy bodies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470193/"
+        trust authoritative
+
+    % Neurofibrillary tangles — Alzheimer disease.
+    relate seen_in(neurofibrillary_tangles, alzheimer_disease)
+        source "Alzheimer disease is characterized pathologically by an accumulation of abnormal neuritic plaques and neurofibrillary tangles in the brain."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499922/"
+        trust authoritative
+
+    % Mallory (Mallory-Denk) bodies — alcoholic hepatitis.
+    relate seen_in(mallory_bodies, alcoholic_hepatitis)
+        source "In 1911, Frank Burr Mallory identified these histological structures in the hepatocytes of patients with alcoholic hepatitis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545300/"
+        trust authoritative
+
+    % Aschoff bodies — rheumatic fever.
+    relate seen_in(aschoff_bodies, rheumatic_fever)
+        source "Aschoff bodies are seen in nodules in the hearts affected with rheumatic fever."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538286/"
+        trust authoritative
+
+    % "Owl's eye" intranuclear inclusions — cytomegalovirus.
+    relate seen_in(owl_eye_inclusions, cytomegalovirus)
+        source "The identification of CMV disease in H&E-stained tissue sections relies on the characteristic presence of viral inclusions, often described as having an owl's eye appearance."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459185/"
+        trust authoritative
+
+    % Ferruginous (asbestos) bodies — asbestosis.
+    relate seen_in(ferruginous_bodies, asbestosis)
+        source "Microscopically, asbestosis is characterized by interstitial fibrosis with distinct asbestos and ferruginous bodies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK555985/"
+        trust authoritative
+
+    % Zellballen (nests of chromaffin cells) — pheochromocytoma.
+    relate seen_in(zellballen, pheochromocytoma)
+        source "Histopathological evaluation of pheochromocytomas typically reveals a zellballen pattern characterized by nests of chromaffin cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK589700/"
+        trust authoritative
+}

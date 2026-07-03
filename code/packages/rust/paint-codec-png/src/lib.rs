@@ -75,7 +75,7 @@
 //! There is no RGB or grayscale conversion path — callers who need those can
 //! post-process the `PixelContainer` before encoding.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use paint_instructions::{ImageCodec, PixelContainer};
 use std::io;
@@ -151,36 +151,21 @@ pub fn encode_png(pixels: &PixelContainer) -> Vec<u8> {
 
 /// Decode PNG bytes back to a [`PixelContainer`].
 ///
-/// ## Status
+/// Delegates to `png::decode_png_rgba`, which handles:
+/// 1. 8-byte magic validation
+/// 2. IHDR parsing (bit depth 8, RGB or RGBA, no interlacing)
+/// 3. Multi-IDAT reassembly and zlib decompression via `deflate::zlib_decompress`
+/// 4. All 5 PNG filter types (None, Sub, Up, Average, Paeth)
+/// 5. RGB→RGBA expansion (alpha=255 inserted for colour type 2)
 ///
-/// PNG decoding requires an inflate (zlib decompress) implementation.  The
-/// workspace `deflate` crate currently provides only compression.  Until an
-/// inflate counterpart is added, this function always returns `Err`.
-///
-/// When inflate support lands, this function will:
-/// 1. Validate the 8-byte PNG magic
-/// 2. Parse IHDR for dimensions and colour type
-/// 3. Decompress IDAT data with inflate
-/// 4. Strip per-row filter bytes to recover raw pixels
-/// 5. Return an RGBA8 `PixelContainer`
-///
-/// For now, callers that need round-trip decode should use an external PNG
-/// library (e.g. the `image` crate) or contribute inflate support to the
-/// workspace `deflate` crate.
+/// Returns `Err` with a descriptive message on any format violation.
 pub fn decode_png(bytes: &[u8]) -> Result<PixelContainer, String> {
-    // Basic length guard — give a clear error rather than panicking on indexing.
     if bytes.len() < 8 {
         return Err("PNG decode: input too short to be a valid PNG file".to_string());
     }
-    // Magic check
-    if &bytes[0..8] != &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A] {
-        return Err("PNG decode: input does not start with the PNG magic signature".to_string());
-    }
-    Err(concat!(
-        "PNG decode: not yet implemented. ",
-        "inflate support is needed in the workspace `deflate` crate. ",
-        "Encoding is fully supported."
-    ).to_string())
+    let (width, height, rgba) = png::decode_png_rgba(bytes)
+        .map_err(|e| format!("PNG decode: {}", e))?;
+    Ok(PixelContainer::from_data(width, height, rgba))
 }
 
 /// Encode a [`PixelContainer`] and write the PNG to a file.
@@ -206,7 +191,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     #[test]
@@ -284,20 +269,52 @@ mod tests {
         assert_eq!(&png_bytes[0..4], &[0x89, b'P', b'N', b'G']);
     }
 
-    // ─── Decode — currently returns Err (inflate not yet in workspace) ────────
-    //
-    // PNG decoding requires deflate inflation.  The workspace `deflate` crate
-    // currently provides only compression.  When inflate is added, these tests
-    // should be updated to assert round-trip correctness instead.
+    // ─── Decode — full round-trip now that inflate is in the workspace ────────
 
-    /// Decode of a valid PNG returns Err until inflate is implemented.
+    /// Encode then decode a 2×2 image — every pixel must survive losslessly.
     #[test]
-    fn decode_valid_png_returns_err_until_inflate_implemented() {
-        let pixels = PixelContainer::new(2, 2);
+    fn decode_roundtrip_rgba() {
+        let mut pixels = PixelContainer::new(2, 2);
+        pixels.set_pixel(0, 0, 255,   0,   0, 255);
+        pixels.set_pixel(1, 0,   0, 255,   0, 128);
+        pixels.set_pixel(0, 1,   0,   0, 255,  64);
+        pixels.set_pixel(1, 1, 128, 128, 128, 255);
         let png_bytes = PngCodec.encode(&pixels);
-        let result = PngCodec.decode(&png_bytes);
-        assert!(result.is_err());
-        assert!(result.unwrap_err().contains("not yet implemented"));
+        let decoded = PngCodec.decode(&png_bytes).expect("round-trip decode failed");
+        assert_eq!(decoded.width, 2);
+        assert_eq!(decoded.height, 2);
+        assert_eq!(decoded.pixel_at(0, 0), (255,   0,   0, 255));
+        assert_eq!(decoded.pixel_at(1, 0), (  0, 255,   0, 128));
+        assert_eq!(decoded.pixel_at(0, 1), (  0,   0, 255,  64));
+        assert_eq!(decoded.pixel_at(1, 1), (128, 128, 128, 255));
+    }
+
+    /// Round-trip convenience functions agree with trait methods.
+    #[test]
+    fn decode_convenience_fn_matches_trait() {
+        let mut pixels = PixelContainer::new(3, 3);
+        pixels.set_pixel(1, 1, 200, 100, 50, 255);
+        let png_bytes = PngCodec.encode(&pixels);
+        let via_trait = PngCodec.decode(&png_bytes).expect("trait decode failed");
+        let via_fn    = decode_png(&png_bytes).expect("fn decode failed");
+        assert_eq!(via_trait.width,  via_fn.width);
+        assert_eq!(via_trait.height, via_fn.height);
+        assert_eq!(via_trait.data,   via_fn.data);
+    }
+
+    /// Round-trip a 100×100 gradient image — checks no panics, correct size.
+    #[test]
+    fn decode_roundtrip_large() {
+        let mut pixels = PixelContainer::new(100, 100);
+        for y in 0..100u32 {
+            for x in 0..100u32 {
+                pixels.set_pixel(x, y, (x * 2) as u8, (y * 2) as u8, 128, 255);
+            }
+        }
+        let decoded = decode_png(&encode_png(&pixels)).expect("large round-trip failed");
+        assert_eq!(decoded.width, 100);
+        assert_eq!(decoded.height, 100);
+        assert_eq!(decoded.pixel_at(50, 50), (100, 100, 128, 255));
     }
 
     /// Garbage input returns a descriptive error, not a panic.
@@ -313,16 +330,5 @@ mod tests {
         let result = PngCodec.decode(&[]);
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("too short"));
-    }
-
-    /// Convenience function and trait method return the same Err.
-    #[test]
-    fn decode_convenience_fn_matches_trait() {
-        let pixels = PixelContainer::new(3, 3);
-        let png_bytes = PngCodec.encode(&pixels);
-        let via_trait = PngCodec.decode(&png_bytes);
-        let via_fn    = decode_png(&png_bytes);
-        assert_eq!(via_trait.is_err(), via_fn.is_err());
-        assert_eq!(via_trait.unwrap_err(), via_fn.unwrap_err());
     }
 }

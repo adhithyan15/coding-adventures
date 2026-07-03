@@ -1,0 +1,7 @@
+{
+ "idx": 45,
+ "id": "FOO-6",
+ "scenario": "Bella's Bistro operates from 11:00 AM to 10:00 PM daily. The owner, Marco, holds a valid CFPM certificate and is listed as the manager on record. The inspector arrives at 3:00 PM and confirms the restaurant is open and serving customers.",
+ "policy": "A food establishment must have at least one Certified Food Protection Manager (CFPM) present during all hours of operation. An establishment operating any hour without a CFPM present is assessed a 25-point demerit.",
+ "question": "Is Bella's Bistro assessed the 25-point demerit for this day?"
+}

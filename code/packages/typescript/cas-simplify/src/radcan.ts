@@ -110,8 +110,8 @@ function ruleSqrt(expr: IRNode, ctx: AssumptionContext | undefined): IRNode {
 function tryExtractFromSqrt(factor: IRNode, ctx: AssumptionContext | undefined): IRNode | undefined {
   if (isSquarePower(factor)) {
     const base = baseOf(factor);
-    if (base?.kind === "integer" && base.value > 0n) return base;
-    if (base?.kind === "symbol" && ctx?.isPositive(base.name) === true) return base;
+    if (base?.kind === "integer" && base.value >= 0n) return base;
+    if (base?.kind === "symbol" && ctx?.isNonneg(base.name) === true) return base;
     return undefined;
   }
 
@@ -151,8 +151,8 @@ function isSquarePower(node: IRNode): boolean {
 }
 
 function absOrPositive(base: IRNode, ctx: AssumptionContext | undefined): IRNode {
-  if (base.kind === "integer" && base.value > 0n) return base;
-  if (base.kind === "symbol" && ctx?.isPositive(base.name) === true) return base;
+  if (base.kind === "integer" && base.value >= 0n) return base;
+  if (base.kind === "symbol" && ctx?.isNonneg(base.name) === true) return base;
   return app(SQRT, [app(POW, [base, int(2)])]);
 }
 

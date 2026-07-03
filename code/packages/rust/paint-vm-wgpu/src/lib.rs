@@ -59,17 +59,13 @@ pub fn descriptor() -> PaintBackendDescriptor {
 }
 
 pub fn profile() -> GpuBackendProfile {
-    let mut profile = GpuBackendProfile::tier1_solid(
+    GpuBackendProfile::tier1_textured(
         "paint-vm-wgpu",
         GpuApiFamily::Wgpu,
         GpuRenderPath::GraphicsPipeline,
         "WGSL",
         GpuReadbackStrategy::TextureCopyToBuffer,
-    );
-    profile.supports_texture_sampling = true;
-    profile.supports_linear_gradients = true;
-    profile.supports_radial_gradients = true;
-    profile
+    )
 }
 
 pub fn renderer() -> WgpuPaintBackend {

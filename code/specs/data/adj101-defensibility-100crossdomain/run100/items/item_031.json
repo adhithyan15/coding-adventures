@@ -1,0 +1,7 @@
+{
+ "idx": 31,
+ "id": "BEN-2",
+ "scenario": "Maria applies for Childcare Assistance for her four children, aged 2, 5, 9, and 15. All are in her care.",
+ "policy": "Childcare Assistance pays $50 per child per week, for up to a maximum of 3 children. Payment is made only for children under the age of 13.",
+ "question": "What is Maria's weekly Childcare Assistance payment?"
+}

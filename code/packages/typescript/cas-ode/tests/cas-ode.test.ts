@@ -17,6 +17,7 @@ import {
   LEGENDRE_Q,
   LOG,
   MUL,
+  NEG,
   POW,
   SIN,
   SUB,
@@ -384,5 +385,118 @@ describe("Phase 21 — named variable-coefficient ODEs", () => {
     expect(display(result!)).toContain("Pow");
     expect(display(result!)).not.toContain("LegendreP");
     expect(display(result!)).not.toContain("BesselJ");
+  });
+});
+
+// ============================================================================
+// Track C2 — Frobenius / power-series ODE
+//
+// These mirror the Python `test_frobenius.py` end-to-end behaviour:
+//   1. Acceptance: Bessel ν=1/2 — Phase 21 catches it; Frobenius would bail.
+//   2. Acceptance: 2x²y'' + 3xy' − (1+x)y = 0 produces x^(1/2)·(1 + x/5 + …).
+//   3. Bail on integer-difference indicial roots (x²y'' − xy' = 0).
+//   4. Bail on equal indicial roots (x²y'' + xy' = 0).
+//   5. Bail on irregular singular point (x³y'' + y = 0).
+//   6. Regular point falls through (y'' + y = 0 — caught by const-coeff).
+// ============================================================================
+
+describe("Track C2 — Frobenius power-series", () => {
+  function findPowOfX(node: IRNode, target: IRNode): boolean {
+    if (node.kind !== "apply") return false;
+    if (headName(node.head) === POW.name && node.args.length === 2 &&
+        equals(node.args[0], x) && equals(node.args[1], target)) return true;
+    return node.args.some((arg) => findPowOfX(arg, target));
+  }
+
+  it("acceptance: Bessel ν=1/2 — Phase 21 catches BesselJ/Y before Frobenius", () => {
+    // x²y'' + xy' + (x² − 1/4)y = 0
+    const xSq = app(POW, [x, int(2)]);
+    const expr = app(ADD, [
+      app(ADD, [
+        app(MUL, [xSq, ypp]),
+        app(MUL, [x, yp]),
+      ]),
+      app(MUL, [app(SUB, [xSq, rational(1, 4)]), y]),
+    ]);
+    const result = solveOde(expr, y, x);
+    expect(result).not.toBeNull();
+    // Dispatcher's Phase 21 (Bessel) wins — Frobenius would have bailed
+    // because the indicial roots ±1/2 differ by an integer (1).
+    expect(display(result!)).toContain("BesselJ");
+    expect(display(result!)).toContain("BesselY");
+  });
+
+  it("acceptance: produces x^(1/2)·polynomial for 2x²y'' + 3xy' − (1+x)y = 0", () => {
+    // 2x²y'' + 3xy' − (1+x)y = 0:
+    //   p₀ = 3/2, q₀ = −1/2.  Indicial roots r₁=1/2, r₂=−1 (differ by 3/2).
+    //   a₀ = 1, a₁ = 1/5, a₂ = 1/70, ...  (matches Python reference).
+    const xSq = app(POW, [x, int(2)]);
+    const expr = app(ADD, [
+      app(ADD, [
+        app(MUL, [app(MUL, [int(2), xSq]), ypp]),
+        app(MUL, [app(MUL, [int(3), x]), yp]),
+      ]),
+      app(NEG, [app(MUL, [app(ADD, [int(1), x]), y])]),
+    ]);
+    const result = solveOde(expr, y, x);
+    expect(result).not.toBeNull();
+    // Solution shape: Equal(y, Mul(Pow(x, 1/2), polynomial))
+    expect(result!.kind).toBe("apply");
+    if (result!.kind === "apply") {
+      expect(headName(result!.head)).toBe(EQUAL.name);
+      const rhs = result!.args[1];
+      expect(findPowOfX(rhs, rational(1, 2))).toBe(true);
+    }
+    // Must NOT match any named family.
+    expect(display(result!)).not.toContain("BesselJ");
+    expect(display(result!)).not.toContain("LegendreP");
+    expect(display(result!)).not.toContain("HermiteH");
+    expect(display(result!)).not.toContain("ChebyshevT");
+    // a₁ = 1/5 should appear as Rational(1, 5).
+    expect(display(result!)).toContain('"numer":"1"');
+    expect(display(result!)).toContain('"denom":"5"');
+  });
+
+  it("bails on integer-difference indicial roots → falls through", () => {
+    // x²y'' − x·y' = 0 has F(r) = r² − 2r → roots r=2, r=0; differ by 2 (integer).
+    // Frobenius bails; Euler-Cauchy catches it.
+    const xSq = app(POW, [x, int(2)]);
+    const expr = app(SUB, [app(MUL, [xSq, ypp]), app(MUL, [x, yp])]);
+    const result = solveOde(expr, y, x);
+    // Euler-Cauchy should solve it; result should NOT be a Frobenius series
+    // (no x^(1/2) or other fractional exponent).
+    expect(result).not.toBeNull();
+    // No Bessel/Legendre named families either.
+    expect(display(result!)).not.toContain("BesselJ");
+  });
+
+  it("bails on equal indicial roots → falls through", () => {
+    // x²y'' + x·y' = 0 has F(r) = r² → repeated root r=0.
+    const xSq = app(POW, [x, int(2)]);
+    const expr = app(ADD, [app(MUL, [xSq, ypp]), app(MUL, [x, yp])]);
+    const result = solveOde(expr, y, x);
+    // Euler-Cauchy catches this with repeated root → %c1 + %c2·Log(x).
+    expect(result).not.toBeNull();
+    expect(display(result!)).toContain("Log");
+  });
+
+  it("bails on irregular singular point (order m > 2)", () => {
+    // x³y'' + y = 0: order of vanishing of P is 3 > 2 — irregular.
+    // No solver catches it; solveOde returns null.
+    const xCubed = app(POW, [x, int(3)]);
+    const expr = app(ADD, [app(MUL, [xCubed, ypp]), y]);
+    const result = solveOde(expr, y, x);
+    // Frobenius bails; named ODEs and others also bail.  Result is null.
+    expect(result).toBeNull();
+  });
+
+  it("regular point at x=0 falls through to constant-coefficient solver", () => {
+    // y'' + y = 0 — constant-coefficient ODE; x=0 is a regular (non-singular) point.
+    // Frobenius bails (P(0) ≠ 0), and the const-coeff solver catches it first.
+    const expr = app(ADD, [ypp, y]);
+    const result = solveOde(expr, y, x);
+    expect(result).not.toBeNull();
+    // sin and cos — no Frobenius series shape.
+    expect(display(result!)).toMatch(/Sin|Cos/);
   });
 });

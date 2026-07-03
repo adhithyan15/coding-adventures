@@ -76,10 +76,11 @@
 
 use std::collections::HashMap;
 
+use interpreter_ir::opcodes::{array_elem_type, is_array_type};
 use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use jvm_class_file::{
-    JvmClassFile, JvmClassVersion, JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute,
-    JvmMethodInfo, ACC_PUBLIC, ACC_STATIC, ACC_SUPER,
+    JvmClassFile, JvmClassVersion, JvmCodeAttribute, JvmConstantPoolEntry, JvmFieldInfo,
+    JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC, ACC_SUPER,
 };
 
 use crate::validate::validate_for_jvm;
@@ -110,6 +111,7 @@ const DCONST_1: u8 = 0x0F;  // push double 1.0
 const BIPUSH: u8 = 0x10;    // push byte (sign-extended to int)
 const SIPUSH: u8 = 0x11;    // push short (sign-extended to int)
 const LDC: u8 = 0x12;       // push constant from CP (1-byte index)
+const LDC_W: u8 = 0x13;     // push int/float constant from CP (2-byte index)
 const LDC2_W: u8 = 0x14;    // push long/double constant from CP (2-byte index)
 
 // ── Local variable loads ───────────────────────────────────────────────────
@@ -166,6 +168,37 @@ const LOR: u8 = 0x81;   // long bitwise OR
 const IXOR: u8 = 0x82;  // int bitwise XOR
 const LXOR: u8 = 0x83;  // long bitwise XOR
 
+// ── E8: numeric conversions (int ⇄ real) ────────────────────────────────────
+//
+// The JVM has dedicated single-byte opcodes for every primitive→primitive
+// numeric widening/narrowing.  We use four of them:
+//
+//   * `i2d` / `l2d` — widen an int / long to a double (exact for all int
+//     values; the IIR `int_to_real` op).
+//   * `d2i` / `d2l` — narrow a double to an int / long, **truncating toward
+//     zero** (drops the fraction).  This is exactly the IIR
+//     `real_to_int_trunc` semantics.
+//
+// `real_to_int_floor` (round toward −∞, ALGOL `entier`) has no single opcode:
+// we first call `java/lang/Math.floor(D)D` (which rounds toward −∞, returning
+// a double) and *then* `d2l`/`d2i` to land in the integer model.
+//
+// ⚠️ Trap divergence (documented — diverges from
+// `lang-full-e8-numeric-conversions.md` §7's uniform-trap recommendation,
+// recorded in that spec's footnote ²): the VM / LLVM / WASM backends
+// *trap* on NaN / ±∞ / out-of-i64-range inputs to `real_to_int_*`.  The JVM's
+// `d2i`/`d2l` instead **saturate** (NaN→0, +∞→MAX, −∞→MIN) and never throw.
+// For every *finite, in-range* value — which is all the `entier`/coercion
+// use case ever produces — the two agree bit-for-bit, so the matrix cells
+// (which exercise only such values) match.  The divergence is confined to
+// pathological inputs the matrix never feeds; emitting a JVM range-check +
+// `athrow` would require from-scratch exception bytecode with no reusable
+// precedent in this backend, so we take the documented-divergence path.
+const I2D: u8 = 0x87;  // int → double (widen, exact)
+const L2D: u8 = 0x8A;  // long → double (widen)
+const D2I: u8 = 0x8E;  // double → int (truncate toward zero, saturating)
+const D2L: u8 = 0x8F;  // double → long (truncate toward zero, saturating)
+
 // ── Returns ────────────────────────────────────────────────────────────────
 const IRETURN: u8 = 0xAC; // return int
 const LRETURN: u8 = 0xAD; // return long
@@ -176,9 +209,12 @@ const RETURN: u8 = 0xB1;  // return void
 // ── Method invocation ──────────────────────────────────────────────────────
 const INVOKESTATIC: u8 = 0xB8;   // invoke static method (2-byte CP index)
 const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
+const CHECKCAST: u8 = 0xC0;      // checkcast (2-byte CP class index)
+const INSTANCEOF: u8 = 0xC1;     // instanceof (2-byte CP class index) → push 0/1
 
 // ── Field access ────────────────────────────────────────────────────────────
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
+const PUTSTATIC: u8 = 0xB3; // set value of static field (2-byte CP index)
 
 // JVM byte-array access opcodes — used by Brainfuck `load_mem` / `store_mem`.
 // BALOAD pops [arrayref, index] and pushes the byte at that index, sign-extended
@@ -202,6 +238,24 @@ const BASTORE: u8 = 0x54;
 /// no `<clinit>` required on the BF side, and no per-program tape size baked
 /// into the bytecode — the host can dial that knob without recompiling.
 const BF_RUNTIME_CLASS: &str = "env/BFRuntime";
+
+/// Host class name for BASIC's `PRINT` builtin (and future BASIC I/O).
+///
+/// The host (Java runtime / launcher) must provide a class with this binary
+/// name (slash-separated) containing:
+///
+///   * `public static void println(long)` — print a 64-bit integer value
+///     followed by a newline to stdout.
+///
+/// We pick a dedicated class instead of overloading [`BF_RUNTIME_CLASS`]
+/// because BASIC's I/O model (line/value oriented, mostly numeric) differs
+/// from Brainfuck's (byte-stream oriented).  Keeping them separate lets a
+/// JVM launcher provide just one, or stub them independently.
+///
+/// This mirrors the wasm backend's `env.__print_i64` host import (see
+/// `iir-to-wasm` v0.8.0, gap G2): both let BASIC's `PRINT` reach real
+/// backend bytecode by deferring the actual write to the host.
+const BASIC_RUNTIME_CLASS: &str = "env/BasicRuntime";
 
 // ── Comparison and branching ───────────────────────────────────────────────
 const IFEQ: u8 = 0x99;      // branch if TOS int == 0
@@ -262,6 +316,12 @@ const NEWARRAY: u8 = 0xBC;
 /// Type code for `newarray T_LONG` — produces a `long[]`.
 const T_LONG: u8 = 0x0B;
 
+// Primitive-array type codes for `newarray` (JVMS Table 6.5.newarray-A), used by
+// the E5 array primitive (`alloc_array`) to pick the element width.
+const T_INT: u8 = 0x0A; //  int[]
+const T_FLOAT: u8 = 0x06; // float[]
+const T_DOUBLE: u8 = 0x07; // double[]
+
 /// `laload` (0x2F) — load a `long` element from a `long[]`.
 ///
 /// Stack: `arrayref, index (int)` → `long`
@@ -272,6 +332,18 @@ const LALOAD: u8 = 0x2F;
 /// Stack: `arrayref, index (int), value (long)` → (empty)
 const LASTORE: u8 = 0x50;
 
+// The remaining typed array load/store opcodes + `arraylength`, used by the E5
+// array ops (`array_get`/`array_set`/`array_len`). Each `*aload`/`*astore`
+// performs the JVM's **native bounds check** (a negative or `>= length` index
+// throws `ArrayIndexOutOfBoundsException`), which is exactly E5's trap semantics.
+const IALOAD: u8 = 0x2E; //  int[]   element load
+const IASTORE: u8 = 0x4F; //  int[]   element store
+const FALOAD: u8 = 0x30; //  float[]  element load
+const FASTORE: u8 = 0x51; //  float[]  element store
+const DALOAD: u8 = 0x31; //  double[] element load
+const DASTORE: u8 = 0x52; //  double[] element store
+const ARRAYLENGTH: u8 = 0xBE; // arrayref → length (int)
+
 /// `lcmp` (0x94) — compare two longs.
 ///
 /// Stack: `long1, long2` → `int` (-1, 0, or 1)
@@ -279,6 +351,8 @@ const LASTORE: u8 = 0x50;
 /// Used in `__callClosure` to dispatch on the function index:
 ///   `lload fn_idx_slot; ldc2_w target_idx; lcmp; ifeq case_N`
 const LCMP: u8 = 0x94;
+const DCMPL: u8 = 0x97; // compare two doubles → int -1/0/1 (NaN → -1)
+const DCMPG: u8 = 0x98; // compare two doubles → int -1/0/1 (NaN → +1)
 
 /// `l2i` (0x88) — narrow long to int (truncates to low 32 bits).
 ///
@@ -294,6 +368,25 @@ const L2I: u8 = 0x88;
 ///
 /// Used to box i32/bool captured values into the `long[]` closure array.
 const I2L: u8 = 0x85;
+
+fn checked_jvm_string_literal(ctx: &str, s: &str) -> Result<(), IIRJvmError> {
+    for ch in s.chars() {
+        match ch {
+            '\n' | '\r' | '\t' => {}
+            c if c.is_ascii_graphic() || c == ' ' => {}
+            c => {
+                return Err(IIRJvmError::InvalidOperand {
+                    function: ctx.to_string(),
+                    detail: format!(
+                        "str_const literal contains unsupported non-printable/non-ASCII character U+{:04X}",
+                        c as u32
+                    ),
+                })
+            }
+        }
+    }
+    Ok(())
+}
 
 // ---------------------------------------------------------------------------
 // IIRJvmError
@@ -578,7 +671,18 @@ impl JvmType {
 /// | anything else         | `None`   | Caller raises an error |
 fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(JvmType::Int),
+        // Narrow integer widths and `bool` use the JVM `int` model (LANG-FULL
+        // E2). A scalar program reaches this backend through
+        // `lang_aot::concretize_scalar_any_for_jvm`, which narrows `i64`→`i32`
+        // (the in-repo jvm-simulator is 32-bit and the entry must `ireturn`), so
+        // a narrow-unsigned op already meets `i32` operands — no `long` register
+        // model is needed. (The long model was tried in v0.13.0 and reverted: it
+        // left narrow ops `long` while concretize made the consts/return `int`,
+        // producing unverifiable bytecode — `istore` consts feeding an `lmul`,
+        // `lreturn` from an `int`-returning method.) The narrow-width WRAP is
+        // restored by masking the int result (see `emit_jvm_width_mask`). `u4`
+        // (Nib's nibble) is recognised so it gets an int slot.
+        "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool" => Some(JvmType::Int),
         "i64" | "u64" => Some(JvmType::Long),
         "f32" => Some(JvmType::Float),
         "f64" => Some(JvmType::Double),
@@ -587,11 +691,64 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // Any variable holding a pair (or nil) gets a Ref slot, which uses
         // aload/astore rather than iload/istore.
         "ref<LispyPair>" => Some(JvmType::Ref),
+        // McCarthy W3b: a boxed lisp value (`ref<any>`) is a `java.lang.Object`
+        // — an `Integer` for an atom, an `Object[]` for a cons cell. Uses
+        // aload/astore like any other reference.
+        "ref<any>" => Some(JvmType::Ref),
         // LANG36: A closure is a `long[]` array reference.
         // Variables holding closures use aload/astore (Ref = reference type).
         "closure" => Some(JvmType::Ref),
+        // LANG-FULL E4: first string foothold. A `str` value is a JVM reference
+        // local so `str_const` can materialise a `java.lang.String` and
+        // `print_str` can pass it to `PrintStream.print(String)`. Richer byte
+        // string ops remain unsupported by the validator.
+        "str" => Some(JvmType::Ref),
+        // LANG-FULL E5: an `array<T>` handle is a JVM primitive-array reference
+        // (`int[]`/`long[]`/`double[]`/…). Like every reference it occupies one
+        // local slot and uses aload/astore; the *element* opcode (iaload/laload/
+        // daload/…) is chosen per access from `T`. The element type must itself
+        // map to a JVM type (no nested or reference-element arrays yet).
+        h if is_array_type(h) => {
+            let elem = array_elem_type(h)?;
+            match iir_type_to_jvm(&elem)? {
+                JvmType::Int | JvmType::Long | JvmType::Float | JvmType::Double => Some(JvmType::Ref),
+                JvmType::Void | JvmType::Ref => None,
+            }
+        }
         // Catch-all: return None, let caller decide
         _ => None,
+    }
+}
+
+/// The `newarray` type code + typed load/store opcodes for an array whose
+/// **element** maps to `elem` ([`JvmType`]). Returns `None` for element types
+/// that can't be a primitive-array element here (`Void`, `Ref` — nested arrays
+/// are a future phase). The three opcodes are `(newarray atype, *aload, *astore)`.
+fn array_element_opcodes(elem: JvmType) -> Option<(u8, u8, u8)> {
+    match elem {
+        JvmType::Int => Some((T_INT, IALOAD, IASTORE)),
+        JvmType::Long => Some((T_LONG, LALOAD, LASTORE)),
+        JvmType::Float => Some((T_FLOAT, FALOAD, FASTORE)),
+        JvmType::Double => Some((T_DOUBLE, DALOAD, DASTORE)),
+        JvmType::Void | JvmType::Ref => None,
+    }
+}
+
+/// Extract `srcs[i]` of an array op as a variable name, with a clear error
+/// naming the op and the operand's role (`handle`/`idx`/`val`).
+fn array_var_operand(
+    instr: &interpreter_ir::IIRInstr,
+    i: usize,
+    op: &str,
+    role: &str,
+    fname: &str,
+) -> Result<String, IIRJvmError> {
+    match instr.srcs.get(i) {
+        Some(Operand::Var(s)) => Ok(s.clone()),
+        _ => Err(IIRJvmError::InvalidOperand {
+            function: fname.to_string(),
+            detail: format!("{op} requires Operand::Var({role}) as src[{i}]"),
+        }),
     }
 }
 
@@ -624,7 +781,9 @@ fn make_descriptor(params: &[(String, String)], return_type: &str) -> String {
 /// return-type descriptors.  Unknown types default to `"I"` (int).
 fn type_to_jvm_descriptor(hint: &str) -> &str {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => "I",
+        // Narrow integer widths and `bool` use the JVM `int` model (E2) — see
+        // `iir_type_to_jvm` — so their descriptor is `I`.
+        "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool" => "I",
         "i64" | "u64" => "J",
         "f32" => "F",
         "f64" => "D",
@@ -633,6 +792,10 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         // The JVM method descriptor for a reference parameter/return is
         // "Ljava/lang/Object;" (the erasure of the actual Object[] type).
         "ref<LispyPair>" => "Ljava/lang/Object;",
+        // McCarthy W3b: a boxed lisp value (`ref<any>`) erases to Object.
+        "ref<any>" => "Ljava/lang/Object;",
+        // LANG-FULL E4: string literals flow as java.lang.String.
+        "str" => "Ljava/lang/String;",
         // LANG36: A closure is a `long[]` — descriptor is "[J".
         "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
@@ -852,11 +1015,99 @@ fn emit_iconst(code: &mut Vec<u8>, value: i32) {
             code.extend_from_slice(&(v as i16).to_be_bytes());
         }
         _ => {
-            // Out of sipush range.  In v1 we emit ldc with a placeholder index.
-            // Tests that use large constants would need a proper CP builder.
-            code.push(LDC);
-            code.push(0); // placeholder CP index
+            // Out of sipush range: this path requires a constant-pool entry, so
+            // callers with an `int` literal beyond ±32767 MUST use
+            // `emit_iconst_cp` instead. Reaching here would emit an invalid `ldc`
+            // (placeholder index 0 → a JVM `constantTag` crash), so we refuse:
+            // a 0-byte no-op leaves the stack short, which the verifier/test
+            // catches loudly rather than corrupting a class. (McCarthy W5a fixed
+            // every user-constant call site to route large values through the CP.)
+            debug_assert!(
+                false,
+                "emit_iconst called with out-of-sipush-range value {value}; \
+                 use emit_iconst_cp (constant-pool ldc) instead"
+            );
         }
+    }
+}
+
+/// Push an `int` constant, using the **constant pool** (`ldc`/`ldc_w`) for values
+/// outside the `bipush`/`sipush` range. The constant-pool-aware companion of
+/// [`emit_iconst`]: every call site that emits a *user-controlled* integer
+/// literal (a `const`, a `mov`/`ret` immediate, a `call` argument) must use this,
+/// since an interned symbol id or any literal ≥ 2¹⁵ would otherwise hit the
+/// (now-`debug_assert`-guarded) invalid-`ldc` path. Structural indices (field
+/// numbers, slot counts, arg counts) stay on [`emit_iconst`] — they are always
+/// small (McCarthy W5a).
+fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) {
+    if (-32768..=32767).contains(&value) {
+        emit_iconst(code, value);
+        return;
+    }
+    let idx = cp.add_integer(value);
+    if idx <= 0xFF {
+        code.push(LDC);
+        code.push(idx as u8);
+    } else {
+        code.push(LDC_W);
+        code.extend_from_slice(&idx.to_be_bytes());
+    }
+}
+
+fn emit_ldc_index(code: &mut Vec<u8>, idx: u16) {
+    if idx <= 0xFF {
+        code.push(LDC);
+        code.push(idx as u8);
+    } else {
+        code.push(LDC_W);
+        code.extend_from_slice(&idx.to_be_bytes());
+    }
+}
+
+/// Mask the narrow-width `int` on top of the operand stack to its bit width
+/// (LANG-FULL E2).
+///
+/// JVM `int` arithmetic (`iadd`/`imul`/…) wraps mod-2³², so `u32`/`i32` are
+/// already correct.  The smaller widths (`u4`/`u8`/`u16`) need an explicit
+/// `iconst/sipush/ldc <mask>; iand` after the op so `200u8 + 100u8` becomes
+/// `44` and `~0u8` is `255` — mirroring vm-core's `mask_result`, jit-core's
+/// `MASK_WIDTH`, the wasm `i64.and`, and the byte-tape `baload`+mask precedent.
+/// We deliberately use a positive mask + `iand` rather than `i2b`/`i2s` (which
+/// sign-extend, giving a *signed* byte — wrong for the unsigned narrow types the
+/// LANG-FULL frontends use).  `i64`/`u64`/floats emit nothing.
+///
+/// The mask must match the **value model** of the op it follows: a scalar
+/// (exit-code) program is concretized to `i32`, so its narrow op runs on the
+/// `int` model and the mask is an `int` `iand`. But a **printing** program (Oct's
+/// `out`, Dartmouth BASIC's `PRINT`) keeps the `i64`/`long` model — there the op
+/// is e.g. `ladd`/`lxor` and the result on the stack is a `long`, so an `int`
+/// `iand` over it is unverifiable (operand-type mismatch). For the long model we
+/// therefore push the mask as a `long` (int mask + `i2l`; the masks are positive,
+/// so the widening zero-extends) and use `land`. `jtype` is the op's `instr_jtype`,
+/// so the mask is always operand-consistent with the value it narrows. (This is the
+/// principled version of the int-only mask reverted in v0.13.0 — keyed on the op's
+/// actual model, not assumed.) `i64`/`u64`/floats emit nothing.
+fn emit_jvm_width_mask(
+    code: &mut Vec<u8>,
+    cp: &mut ConstantPoolBuilder,
+    type_hint: &str,
+    jtype: JvmType,
+) {
+    let mask: i32 = match type_hint {
+        "u4" => 0xF,
+        "u8" => 0xFF,
+        "u16" => 0xFFFF,
+        _ => return,
+    };
+    emit_iconst_cp(code, cp, mask);
+    match jtype {
+        // long model (printing programs): widen the mask to a long, then `land`.
+        JvmType::Long => {
+            code.push(I2L);
+            code.push(LAND);
+        }
+        // int model (concretized scalar programs): plain `iand`.
+        _ => code.push(IAND),
     }
 }
 
@@ -906,12 +1157,56 @@ fn emit_lconst(code: &mut Vec<u8>, value: i64) {
             code.push(I2L);
         }
         _ => {
-            // Values outside i16 range need a real Long CP entry.
-            // This path is unreachable for Twig arithmetic programs.
-            // Emit a deliberate invalid sequence so the verifier surfaces it
-            // rather than producing silent wrong results.
+            // Values outside i16 range but within i32 range: push as int + i2l.
+            // This avoids a CP Long entry for the i32-range values.
+            if value >= i32::MIN as i64 && value <= i32::MAX as i64 {
+                code.push(LDC);
+                // Placeholder — callers that need CP must use emit_lconst_cp instead.
+                // This arm should not be reached for JvmType::Long const lowering.
+                code.extend_from_slice(&0xFFFFu16.to_be_bytes());
+            } else {
+                code.push(LDC2_W);
+                code.extend_from_slice(&0xFFFFu16.to_be_bytes());
+            }
+        }
+    }
+}
+
+/// Emit a long constant push, adding a `CONSTANT_Long` pool entry for values
+/// outside the i16 range that `emit_lconst` cannot handle inline.
+///
+/// JVM has 1-byte short forms for `0L` (`lconst_0`) and `1L` (`lconst_1`).
+/// For small values (−128 to 32767) we reuse the existing `bipush`/`sipush`/
+/// `iconst_*` + `i2l` tricks from `emit_lconst`. Larger values require an
+/// `ldc2_w <cp_index>` pointing at a `CONSTANT_Long` pool entry — the Long form
+/// of what `emit_iconst_cp` does for `int`.
+///
+/// This is the correct counterpart to `emit_dconst_cp` / `emit_iconst_cp`.
+/// Call this instead of `emit_lconst` whenever the constant can be an arbitrary
+/// i64 (e.g. the `"const"` IIR lowering path for `JvmType::Long` destinations).
+fn emit_lconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i64) {
+    match value {
+        0 => code.push(LCONST_0),
+        1 => code.push(LCONST_1),
+        2 => { code.push(ICONST_2); code.push(I2L); }
+        3 => { code.push(ICONST_3); code.push(I2L); }
+        4 => { code.push(ICONST_4); code.push(I2L); }
+        5 => { code.push(ICONST_5); code.push(I2L); }
+        -1 => { code.push(ICONST_M1); code.push(I2L); }
+        v if v >= -128 && v <= 127 => {
+            code.push(BIPUSH);
+            code.push(v as i8 as u8);
+            code.push(I2L);
+        }
+        v if v >= i16::MIN as i64 && v <= i16::MAX as i64 => {
+            code.push(SIPUSH);
+            code.extend_from_slice(&(v as i16).to_be_bytes());
+            code.push(I2L);
+        }
+        _ => {
+            let idx = cp.add_long(value);
             code.push(LDC2_W);
-            code.extend_from_slice(&0xFFFFu16.to_be_bytes()); // invalid CP index
+            code.extend_from_slice(&idx.to_be_bytes());
         }
     }
 }
@@ -935,19 +1230,51 @@ fn emit_fconst(code: &mut Vec<u8>, value: f32) {
     }
 }
 
-/// Emit a double constant push.
+/// Emit a double constant push, adding a `CONSTANT_Double` pool entry when one
+/// is needed (LANG-FULL E3).
 ///
-/// JVM has short forms for `0.0d` and `1.0d`.  Other double values need
-/// `ldc2_w`.  Placeholder for v1.
-fn emit_dconst(code: &mut Vec<u8>, value: f64) {
-    if value == 0.0f64 {
+/// JVM has 1-byte short forms for `0.0d` (`dconst_0`) and `1.0d` (`dconst_1`).
+/// Any *other* double must be loaded with `ldc2_w <cp_index>`, where the index
+/// points at a `CONSTANT_Double` pool entry. The old `emit_dconst` left a
+/// placeholder index `#0` (the unused phantom slot) — valid-looking bytecode
+/// that the verifier rejects, so an ALGOL `real` literal like `2.5` produced an
+/// unloadable class. `cp.add_double` interns the value (reserving the two pool
+/// slots a `Double` occupies) and we emit the real index.
+fn emit_dconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: f64) {
+    if value == 0.0f64 && value.is_sign_positive() {
         code.push(DCONST_0);
     } else if value == 1.0f64 {
         code.push(DCONST_1);
     } else {
+        let idx = cp.add_double(value);
         code.push(LDC2_W);
-        code.extend_from_slice(&0u16.to_be_bytes()); // placeholder CP index
+        code.extend_from_slice(&idx.to_be_bytes());
     }
+}
+
+/// Emit a "compare two doubles on the stack, push 1 if the condition holds,
+/// else 0" sequence — the `double` counterpart of [`emit_long_compare`]
+/// (LANG-FULL E3). The JVM has no `if_dcmpXX`; the idiom is a `dcmpl`/`dcmpg`
+/// (which leaves an `int` -1/0/1 on the stack) followed by a unary `ifXX`
+/// branch over that result, with the same negated-opcode table the long path
+/// uses.
+///
+/// `dcmp_opcode` is `DCMPL` (NaN → -1) or `DCMPG` (NaN → +1); `branch_opcode`
+/// is the negated unary branch (e.g. `IFNE` for `cmp_eq`). Stack on entry:
+/// `[…, double1, double2]`; on exit: `[…, 0_or_1]`.
+fn emit_double_compare(code: &mut Vec<u8>, dcmp_opcode: u8, branch_opcode: u8) {
+    code.push(dcmp_opcode); // 1 byte: compare doubles, push -1/0/1
+    // ifXX at current PC, offset to iconst_0 (7 bytes forward)
+    code.push(branch_opcode);
+    code.extend_from_slice(&7i16.to_be_bytes());
+    // True arm — condition held
+    code.push(ICONST_1);
+    // Jump past the false arm
+    code.push(GOTO);
+    code.extend_from_slice(&4i16.to_be_bytes());
+    // False arm
+    code.push(ICONST_0);
+    // 9 bytes total (1 for dcmp + 8 for the branch pattern)
 }
 
 // ---------------------------------------------------------------------------
@@ -997,6 +1324,36 @@ fn emit_dconst(code: &mut Vec<u8>, value: f64) {
 ///
 /// Stack state on entry: `[…, int1, int2]`
 /// Stack state on exit:  `[…, 0_or_1]`
+/// Extract a `call_builtin`'s dest register name, or a descriptive error
+/// (McCarthy W4 predicate lowering).
+fn builtin_dest<'a>(
+    instr: &'a interpreter_ir::IIRInstr,
+    fname: &str,
+    name: &str,
+) -> Result<&'a str, IIRJvmError> {
+    instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+        function: fname.to_string(),
+        detail: format!("call_builtin {name:?} requires a dest register"),
+    })
+}
+
+/// Extract a `call_builtin`'s `srcs[idx]` as a variable name (the builtin name
+/// is `srcs[0]`, so arguments start at `idx == 1`).
+fn builtin_arg(
+    instr: &interpreter_ir::IIRInstr,
+    fname: &str,
+    name: &str,
+    idx: usize,
+) -> Result<String, IIRJvmError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Var(s)) => Ok(s.clone()),
+        _ => Err(IIRJvmError::InvalidOperand {
+            function: fname.to_string(),
+            detail: format!("call_builtin {name:?} requires srcs[{idx}] = Operand::Var"),
+        }),
+    }
+}
+
 fn emit_int_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
     // if_icmpXX at current PC, offset to iconst_0 (7 bytes forward)
     code.push(cmp_opcode);
@@ -1155,6 +1512,52 @@ fn allocate_slots(
 /// `__callClosure(long[], long[])` dispatch method always returns `long`,
 /// so the receiving slot must be two-slot-wide even when the type_hint is
 /// the generic `"any"` string.
+/// A comparison op produces a 0/1 boolean `int`, whatever its operand width.
+/// Its dest slot must therefore be `int` on the JVM (see [`build_type_map`]).
+fn is_comparison_op(op: &str) -> bool {
+    matches!(
+        op,
+        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge"
+    )
+}
+
+/// A narrow unsigned width (`u4`/`u8`/`u16`) — one that rides the JVM `int`
+/// model by default and is brought back into range by [`emit_jvm_width_mask`].
+fn is_narrow_width(hint: &str) -> bool {
+    matches!(hint, "u4" | "u8" | "u16")
+}
+
+/// True when `instr` is a narrow-width arithmetic / bitwise / unary op whose
+/// operands ride the `long` value model.
+///
+/// Two value models reach this backend (see [`iir_type_to_jvm`]): an exit-code
+/// scalar program is concretized to `i32` (operands are `int`), but a **printing**
+/// program (Oct's `out`, Dartmouth BASIC's `PRINT`) keeps the `i64`/`long` model so
+/// its value can be passed to `print_i64`. Oct's only integer type is `u8`, so a
+/// printing Oct program emits a narrow-hinted `add`/`~`/… over `long` operands. By
+/// default the narrow hint maps the op to the `int` model (`iadd`), but the operands
+/// are loaded as `long` — an unverifiable mix. Such an op must therefore stay on the
+/// `long` model (`ladd`/`lxor`/…), with the narrow hint driving only the post-op width
+/// mask (`emit_jvm_width_mask` then emits `i2l; land`). Operand types come from
+/// `type_map`; a const/def always precedes its use, so they are already recorded.
+fn narrow_op_over_long(
+    instr: &interpreter_ir::IIRInstr,
+    type_map: &HashMap<String, JvmType>,
+) -> bool {
+    if !is_narrow_width(&instr.type_hint) {
+        return false;
+    }
+    if !matches!(
+        instr.op.as_str(),
+        "add" | "sub" | "mul" | "div" | "mod" | "and" | "or" | "xor" | "not" | "neg"
+    ) {
+        return false;
+    }
+    instr.srcs.iter().any(|s| {
+        matches!(s, Operand::Var(v) if type_map.get(v) == Some(&JvmType::Long))
+    })
+}
+
 fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
     let mut map: HashMap<String, JvmType> = HashMap::new();
 
@@ -1172,6 +1575,22 @@ fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
                 JvmType::Ref
             } else if instr.op == "call_closure" {
                 // __callClosure always returns long
+                JvmType::Long
+            } else if is_comparison_op(&instr.op) {
+                // A comparison ALWAYS produces a 0/1 `int` result (it is stored
+                // with a bare `istore`), regardless of its `type_hint` — which
+                // carries the *operand* width, not the result width. Typing the
+                // dest by the hint (e.g. `i64` → `Long`) for a comparison over
+                // `long` operands gives the slot a `Long` type, so a later
+                // `jmp_if_false` reads it with `lload` while the comparison wrote
+                // it with `istore` → the verifier rejects "uninitialized register
+                // pair" (BA-JVM-1: BASIC's `IF`/`FOR` over its i64 value model,
+                // which — unlike the concretized-to-i32 scalar path — keeps the
+                // operands `long`). Force the bool result to `Int`.
+                JvmType::Int
+            } else if narrow_op_over_long(instr, &map) {
+                // A narrow op over `long` operands (a printing program) keeps its
+                // result on the `long` model; the narrow hint only drives the mask.
                 JvmType::Long
             } else {
                 iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
@@ -1239,6 +1658,21 @@ impl ConstantPoolBuilder {
     fn add_utf8(&mut self, s: &str) -> u16 {
         let key = format!("Utf8:{}", s);
         self.add_entry(key, JvmConstantPoolEntry::Utf8(s.to_string()))
+    }
+
+    /// Add a `CONSTANT_String` entry for an `ldc` string literal.
+    fn add_string(&mut self, s: &str) -> u16 {
+        let string_idx = self.add_utf8(s);
+        let key = format!("String:{}", s);
+        self.add_entry(key, JvmConstantPoolEntry::String { string_index: string_idx })
+    }
+
+    /// Add a `CONSTANT_Integer` entry (deduplicated) and return its 1-based
+    /// index, for an `int` literal too large for `bipush`/`sipush` and so loaded
+    /// with `ldc`/`ldc_w` (McCarthy W5a — e.g. an interned symbol id ≥ 2²⁹).
+    fn add_integer(&mut self, value: i32) -> u16 {
+        let key = format!("Integer:{}", value);
+        self.add_entry(key, JvmConstantPoolEntry::Integer(value))
     }
 
     /// Add a Class entry referencing a UTF8 name.
@@ -1319,6 +1753,30 @@ impl ConstantPoolBuilder {
             "JVM constant pool overflow: too many entries (limit 65535)"
         );
         self.entries.push(Some(JvmConstantPoolEntry::Long(value)));
+        let idx = (self.entries.len() - 1) as u16;
+        self.index_map.insert(key, idx);
+        // Push the phantom slot (index N+1 is unusable per JVM spec §4.4.5).
+        self.entries.push(None);
+        idx
+    }
+
+    /// Add a `CONSTANT_Double` entry (deduplicated by exact bit pattern) and
+    /// return its 1-based index, for an `f64` literal loaded with `ldc2_w`
+    /// (LANG-FULL E3 — ALGOL `real` constants). Like `Long`, a `Double`
+    /// occupies **two** pool slots, so a phantom `None` follows it.
+    fn add_double(&mut self, value: f64) -> u16 {
+        // Key on the raw bits so `-0.0`/`0.0` and any NaN payloads dedup
+        // exactly and we never rely on `f64: Eq` (which doesn't hold).
+        let key = format!("Double:{:016X}", value.to_bits());
+        if let Some(&idx) = self.index_map.get(&key) {
+            return idx;
+        }
+        // We need two free slots.
+        assert!(
+            self.entries.len() + 1 < u16::MAX as usize,
+            "JVM constant pool overflow: too many entries (limit 65535)"
+        );
+        self.entries.push(Some(JvmConstantPoolEntry::Double(value)));
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
         // Push the phantom slot (index N+1 is unusable per JVM spec §4.4.5).
@@ -1438,6 +1896,7 @@ fn lower_function(
     module: &IIRModule,
     cp: &mut ConstantPoolBuilder,
     closure_dispatch: &HashMap<String, ClosureDispatchEntry>,
+    globals: &HashMap<String, String>,
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let fname = &func.name;
 
@@ -1491,9 +1950,391 @@ fn lower_function(
     while i < instrs.len() {
         let instr = &instrs[i];
         // Resolve the instruction's own JVM type (best effort; void is OK).
-        let instr_jtype = iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int);
+        // A narrow op over `long` operands stays on the `long` model (matching the
+        // `Long` slot `build_type_map` gave its dest), so the opcode (`ladd`/`lxor`/…)
+        // and the post-op mask (`i2l; land`) are operand-consistent.
+        let instr_jtype = if narrow_op_over_long(instr, &type_map) {
+            JvmType::Long
+        } else {
+            iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
+        };
 
         match instr.op.as_str() {
+            // ── LANG-FULL E4: string literal output foothold ────────────────
+            //
+            // Dartmouth BASIC `PRINT "..."` lowers to `str_const` +
+            // `print_str`; literal Twig `string-length`, `string=?`, `string<?` /
+            // `string>?`, and `string-append` lower to `str_len`, `str_eq`,
+            // `str_cmp`, and `str_concat`.
+            // Use Java's native `String` only for this literal foothold; richer
+            // byte-oriented string algebra remains rejected by the validator
+            // until the JVM representation owns those semantics explicitly.
+            "str_const" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_const instruction has no dest".to_string(),
+                })?;
+                let literal = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_const expects a string literal, got {other:?}"),
+                        })
+                    }
+                };
+                checked_jvm_string_literal(fname, literal)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let idx = cp.add_string(literal);
+                emit_ldc_index(&mut code, idx);
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_concat" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_concat instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_concat expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_concat expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref || dest_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let concat_ref = cp.add_methodref(
+                    "java/lang/String",
+                    "concat",
+                    "(Ljava/lang/String;)Ljava/lang/String;",
+                );
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&concat_ref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_slice" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_slice instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let start = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects a start variable, got {other:?}"),
+                        })
+                    }
+                };
+                let end = match instr.srcs.get(2) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_slice expects an end variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                let (start_slot, start_type) = lookup_var(start)?;
+                let (end_slot, end_type) = lookup_var(end)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if src_type != JvmType::Ref
+                    || dest_type != JvmType::Ref
+                    || (start_type != JvmType::Int && start_type != JvmType::Long)
+                    || (end_type != JvmType::Int && end_type != JvmType::Long)
+                {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str_slice".to_string(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                emit_typed_load(&mut code, start_slot, start_type);
+                if start_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, end_slot, end_type);
+                if end_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                let substring_ref =
+                    cp.add_methodref("java/lang/String", "substring", "(II)Ljava/lang/String;");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&substring_ref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            "str_len" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_len instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_len expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                if src_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                let length_ref = cp.add_methodref("java/lang/String", "length", "()I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&length_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_index" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_index instruction has no dest".to_string(),
+                })?;
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_index expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let idx = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_index expects an index variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                let (idx_slot, idx_type) = lookup_var(idx)?;
+                if src_type != JvmType::Ref || (idx_type != JvmType::Int && idx_type != JvmType::Long) {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str_index".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, src_slot);
+                emit_typed_load(&mut code, idx_slot, idx_type);
+                if idx_type == JvmType::Long {
+                    code.push(L2I);
+                }
+                let char_at_ref = cp.add_methodref("java/lang/String", "charAt", "(I)C");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&char_at_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_eq" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_eq instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_eq expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_eq expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let equals_ref =
+                    cp.add_methodref("java/lang/String", "equals", "(Ljava/lang/Object;)Z");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&equals_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "str_cmp" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "str_cmp instruction has no dest".to_string(),
+                })?;
+                let left = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_cmp expects left string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let right = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("str_cmp expects right string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (left_slot, left_type) = lookup_var(left)?;
+                let (right_slot, right_type) = lookup_var(right)?;
+                if left_type != JvmType::Ref || right_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: "str".to_string(),
+                    });
+                }
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                if dest_type != JvmType::Int && dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                emit_aload(&mut code, left_slot);
+                emit_aload(&mut code, right_slot);
+                let compare_ref =
+                    cp.add_methodref("java/lang/String", "compareTo", "(Ljava/lang/String;)I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&compare_ref.to_be_bytes());
+                let signum_ref = cp.add_methodref("java/lang/Integer", "signum", "(I)I");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&signum_ref.to_be_bytes());
+                if dest_type == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
+            }
+
+            "print_str" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "print_str is a side-effecting op and must not have a dest".to_string(),
+                    });
+                }
+                let src = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s,
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("print_str expects a string variable, got {other:?}"),
+                        })
+                    }
+                };
+                let (src_slot, src_type) = lookup_var(src)?;
+                if src_type != JvmType::Ref {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let out_ref = cp.add_fieldref(
+                    "java/lang/System",
+                    "out",
+                    "Ljava/io/PrintStream;",
+                );
+                code.push(GETSTATIC);
+                code.extend_from_slice(&out_ref.to_be_bytes());
+                emit_aload(&mut code, src_slot);
+                let print_ref = cp.add_methodref(
+                    "java/io/PrintStream",
+                    "print",
+                    "(Ljava/lang/String;)V",
+                );
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&print_ref.to_be_bytes());
+            }
+
             // ── label ───────────────────────────────────────────────────────
             //
             // `label` in IIR is simply a named marker.  On the JVM, labels are
@@ -1542,10 +2383,10 @@ fn lower_function(
                 match src {
                     Operand::Int(v) => {
                         match dest_type {
-                            JvmType::Long => emit_lconst(&mut code, *v),
+                            JvmType::Long => emit_lconst_cp(&mut code, cp, *v),
                             JvmType::Float => emit_fconst(&mut code, *v as f32),
-                            JvmType::Double => emit_dconst(&mut code, *v as f64),
-                            _ => emit_iconst(&mut code, *v as i32),
+                            JvmType::Double => emit_dconst_cp(&mut code, cp, *v as f64),
+                            _ => emit_iconst_cp(&mut code, cp, *v as i32),
                         }
                     }
                     Operand::Bool(b) => {
@@ -1555,11 +2396,11 @@ fn lower_function(
                     Operand::Float(f) => {
                         match dest_type {
                             JvmType::Float => emit_fconst(&mut code, *f as f32),
-                            JvmType::Double => emit_dconst(&mut code, *f),
+                            JvmType::Double => emit_dconst_cp(&mut code, cp, *f),
                             _ => {
                                 // Integer destination with float source — unusual
                                 // but not necessarily wrong (e.g. casting).
-                                emit_iconst(&mut code, *f as i32);
+                                emit_iconst_cp(&mut code, cp, *f as i32);
                             }
                         }
                     }
@@ -1653,6 +2494,9 @@ fn lower_function(
                     _ => IADD, // fallback
                 };
                 code.push(opcode);
+                // E2: wrap a narrow (u4/u8/u16) result; u32/i32 already wrap via
+                // the i32 op, i64 via the long op.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
 
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
@@ -1673,9 +2517,120 @@ fn lower_function(
                     _ => INEG,
                 };
                 code.push(opcode);
+                // E2: a narrow `neg` is `(0 - r)` mod-2ⁿ — mask it to the width.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
+                }
+            }
+
+            // ── E8: int_to_real ─────────────────────────────────────────────
+            //
+            // Widen an integer to a double.  We load the source with *its own*
+            // jtype (an integer is sometimes modelled as JVM `int`, sometimes
+            // as `long` — see the dual-value-model note) and pick `i2d` vs
+            // `l2d` to match, then store into the (double) destination slot.
+            "int_to_real" => {
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                code.push(match src.1 {
+                    JvmType::Long => L2D,
+                    _ => I2D,
+                });
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+
+            // ── E8: real_to_int_trunc ────────────────────────────────────────
+            //
+            // Narrow a double to an integer, truncating toward zero.  `d2i` /
+            // `d2l` *are* the truncate-toward-zero opcodes, so this is a single
+            // instruction; we pick the width from the destination slot's jtype.
+            "real_to_int_trunc" => {
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    code.push(match dest_jtype {
+                        JvmType::Long => D2L,
+                        _ => D2I,
+                    });
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+
+            // ── E8: real_to_int_floor (ALGOL `entier`) ──────────────────────
+            //
+            // Round toward −∞, then land in the integer model.  There is no
+            // single "floor-to-int" opcode, so we call `Math.floor(D)D` (rounds
+            // toward −∞, still a double) and *then* `d2l`/`d2i` (which now only
+            // drops a `.0` fraction, so the truncate direction no longer
+            // matters).  For 2.7 → floor → 2.0 → 2; for −2.7 → floor → −3.0 →
+            // −3 (vs −2 for a bare truncate), which is the `entier` contract.
+            "real_to_int_floor" => {
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                let mref = cp.add_methodref("java/lang/Math", "floor", "(D)D");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    code.push(match dest_jtype {
+                        JvmType::Long => D2L,
+                        _ => D2I,
+                    });
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+            // ── AL8 sqrt + transcendentals: java/lang/Math calls ─────────────
+            //
+            // `java/lang/Math.sqrt(D)D` is an intrinsic in every modern JVM —
+            // HotSpot lowers it directly to `sqrtsd` on x86_64 with no JNI
+            // overhead.  NaN propagates and negative inputs return NaN, matching
+            // IEEE-754 and the VM handler's `f64::sqrt()` contract.
+            //
+            // `sin`/`cos`/`exp` map directly to the Java method names; ALGOL's
+            // `ln` maps to `java/lang/Math.log(D)D` (Java's natural log).
+            "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
+            | "f64_atan" | "f64_tan" => {
+                let java_method = match instr.op.as_str() {
+                    "f64_sqrt" => "sqrt",
+                    "f64_sin"  => "sin",
+                    "f64_cos"  => "cos",
+                    "f64_ln"   => "log",
+                    "f64_exp"  => "exp",
+                    "f64_atan" => "atan",
+                    "f64_tan"  => "tan",
+                    _ => unreachable!(),
+                };
+                let src = one_src(func, instr, &slots)?;
+                emit_typed_load(&mut code, src.0, src.1);
+                let mref = cp.add_methodref("java/lang/Math", java_method, "(D)D");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
+                }
+            }
+            // ── BA-pow: two-argument pow(base, exp) via java/lang/Math.pow ───
+            //
+            // `Math.pow(DD)D` handles all IEEE-754 edge cases (NaN, ±inf,
+            // negative bases with fractional exponents → NaN) matching every
+            // other backend and the VM handler's `f64::powf` contract.
+            "f64_pow" => {
+                let (src0, src1) = two_srcs(func, instr, &slots)?;
+                emit_typed_load(&mut code, src0.0, src0.1); // base
+                emit_typed_load(&mut code, src1.0, src1.1); // exp
+                let mref = cp.add_methodref("java/lang/Math", "pow", "(DD)D");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                if let Some(dest) = &instr.dest {
+                    let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_typed_store(&mut code, dest_slot, dest_jtype);
                 }
             }
 
@@ -1696,6 +2651,8 @@ fn lower_function(
                     _ => IAND,
                 };
                 code.push(opcode);
+                // E2: keep a narrow bitwise result canonical for its width.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1718,6 +2675,9 @@ fn lower_function(
                     emit_iconst(&mut code, -1);
                     code.push(IXOR);
                 }
+                // E2: `~x` on a narrow width must flip only its low bits
+                // (`~0u8 == 255`, not `-1`) — mask after the XOR.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1740,6 +2700,9 @@ fn lower_function(
                     _ => ISHL,
                 };
                 code.push(opcode);
+                // E2: a narrow left-shift can push bits past the width
+                // (`1u8 << 8`), so mask the result.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint, instr_jtype);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1760,7 +2723,28 @@ fn lower_function(
             "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
 
-                if src0.1 == JvmType::Long {
+                if src0.1 == JvmType::Double {
+                    // Double comparison (LANG-FULL E3): dload both, `dcmpl`/`dcmpg`
+                    // to an int -1/0/1, then the same unary `ifXX` branch the long
+                    // path uses. Without this branch a `real` comparison fell into
+                    // the `else` int path, which `iload`ed a two-slot double as a
+                    // single int and used `if_icmpne` — the verifier rejected the
+                    // class (empty output). `dcmpg` is chosen for `>`/`>=` so a
+                    // NaN operand makes them false (NaN → +1); `dcmpl` for the
+                    // rest (NaN → -1) — matching javac's convention.
+                    emit_typed_load(&mut code, src0.0, JvmType::Double);
+                    emit_typed_load(&mut code, src1.0, JvmType::Double);
+                    let (dcmp, branch) = match instr.op.as_str() {
+                        "cmp_eq" => (DCMPL, IFNE), // skip true when result ≠ 0
+                        "cmp_ne" => (DCMPL, IFEQ), // skip true when result = 0
+                        "cmp_lt" => (DCMPL, IFGE), // skip true when result ≥ 0
+                        "cmp_le" => (DCMPL, IFGT), // skip true when result > 0
+                        "cmp_gt" => (DCMPG, IFLE), // skip true when result ≤ 0
+                        "cmp_ge" => (DCMPG, IFLT), // skip true when result < 0
+                        _ => (DCMPL, IFNE),
+                    };
+                    emit_double_compare(&mut code, dcmp, branch);
+                } else if src0.1 == JvmType::Long {
                     // Long comparison: lload both, lcmp, then unary ifXX.
                     emit_typed_load(&mut code, src0.0, JvmType::Long);
                     emit_typed_load(&mut code, src1.0, JvmType::Long);
@@ -1816,22 +2800,43 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "mov must have a dest".to_string(),
                 })?;
-                let (dest_slot, _dest_type) = lookup_var(dest_name)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
 
                 match instr.srcs.first() {
                     Some(Operand::Var(src_name)) => {
                         let (src_slot, src_type) = lookup_var(src_name)?;
                         emit_typed_load(&mut code, src_slot, src_type);
-                        emit_typed_store(&mut code, dest_slot, src_type);
+                        // The source and dest slots can differ in width — e.g. a
+                        // bool/int comparison result mov'd into a `long`
+                        // accumulator (Oct's short-circuit `&&`/`||` over its i64
+                        // value model, which — unlike the concretized-to-i32
+                        // scalar path — keeps values `long`). Storing with the
+                        // *source* type into a wider dest slot leaves the slot's
+                        // second half uninitialized, which a later `lload` trips
+                        // (`VerifyError: uninitialized register pair`). Bridge
+                        // int↔long so the store matches the dest slot's width.
+                        match (src_type, dest_type) {
+                            (JvmType::Int, JvmType::Long) => code.push(I2L),
+                            (JvmType::Long, JvmType::Int) => code.push(L2I),
+                            _ => {}
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     Some(Operand::Int(v)) => {
-                        // Constant mov — unusual but valid; emit iconst.
-                        emit_iconst(&mut code, *v as i32);
-                        emit_istore(&mut code, dest_slot);
+                        // Constant mov — unusual but valid; emit iconst, widening
+                        // to long if the dest slot is `long` (same width rule).
+                        emit_iconst_cp(&mut code, cp, *v as i32);
+                        if dest_type == JvmType::Long {
+                            code.push(I2L);
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     Some(Operand::Bool(b)) => {
                         emit_iconst(&mut code, if *b { 1 } else { 0 });
-                        emit_istore(&mut code, dest_slot);
+                        if dest_type == JvmType::Long {
+                            code.push(I2L);
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     _ => {
                         return Err(IIRJvmError::InvalidOperand {
@@ -1868,8 +2873,19 @@ fn lower_function(
             // Emits: `iload cond; ifne <label>`.
             "jmp_if_true" => {
                 let (cond_src, label) = cond_and_label(fname, instr)?;
-                let (cond_slot, _) = lookup_var(cond_src)?;
-                emit_iload(&mut code, cond_slot);
+                let (cond_slot, cond_ty) = lookup_var(cond_src)?;
+                // `ifne` tests an int != 0. An i64 condition (the widened
+                // Brainfuck loop guard, LANG-MATRIX LM-J) must first be reduced
+                // to an int: `lload; lconst_0; lcmp` pushes -1/0/+1, which `ifne`
+                // then branches on. `iload`ing a long would read only one of its
+                // two slots — a verify error.
+                if cond_ty == JvmType::Long {
+                    emit_lload(&mut code, cond_slot);
+                    code.push(LCONST_0);
+                    code.push(LCMP);
+                } else {
+                    emit_iload(&mut code, cond_slot);
+                }
                 let opcode_pos = code.len();
                 code.push(IFNE);
                 code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
@@ -1882,8 +2898,16 @@ fn lower_function(
             // Emits: `iload cond; ifeq <label>`.
             "jmp_if_false" => {
                 let (cond_src, label) = cond_and_label(fname, instr)?;
-                let (cond_slot, _) = lookup_var(cond_src)?;
-                emit_iload(&mut code, cond_slot);
+                let (cond_slot, cond_ty) = lookup_var(cond_src)?;
+                // "branch if zero" — same width handling as `jmp_if_true`: an
+                // i64 guard is reduced via `lload; lconst_0; lcmp` before `ifeq`.
+                if cond_ty == JvmType::Long {
+                    emit_lload(&mut code, cond_slot);
+                    code.push(LCONST_0);
+                    code.push(LCMP);
+                } else {
+                    emit_iload(&mut code, cond_slot);
+                }
                 let opcode_pos = code.len();
                 code.push(IFEQ);
                 code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
@@ -1922,11 +2946,11 @@ fn lower_function(
                         let ret_type = iir_type_to_jvm(&func.return_type).unwrap_or(JvmType::Int);
                         match ret_type {
                             JvmType::Long => {
-                                emit_lconst(&mut code, *v);
+                                emit_lconst_cp(&mut code, cp, *v);
                                 code.push(LRETURN);
                             }
                             _ => {
-                                emit_iconst(&mut code, *v as i32);
+                                emit_iconst_cp(&mut code, cp, *v as i32);
                                 code.push(IRETURN);
                             }
                         }
@@ -1943,11 +2967,11 @@ fn lower_function(
                                 code.push(FRETURN);
                             }
                             JvmType::Double => {
-                                emit_dconst(&mut code, *f);
+                                emit_dconst_cp(&mut code, cp, *f);
                                 code.push(DRETURN);
                             }
                             _ => {
-                                emit_iconst(&mut code, *f as i32);
+                                emit_iconst_cp(&mut code, cp, *f as i32);
                                 code.push(IRETURN);
                             }
                         }
@@ -2074,6 +3098,256 @@ fn lower_function(
                 code.push(BASTORE);
             }
 
+            // ── alloc_bytes (LANG-MATRIX LM-J Brainfuck) ─────────────────────
+            //
+            // `alloc_bytes  dest  <-  size`.  The JVM tape is the host class's
+            // pre-allocated static field `env/BFRuntime.__tape : [B`, so there
+            // is nothing to allocate at runtime — this is a no-op.  `dest` (the
+            // BF tape base, `__bf_tape`) is therefore never materialised: the
+            // `load_byte`/`store_byte` ops below `getstatic` the tape directly
+            // and ignore the base operand (it is always 0 in this pipeline).
+            // This mirrors the LLVM/WASM lowering's "tape at a fixed base," just
+            // with the base implicit in the static field rather than a pointer.
+            "alloc_bytes" => {
+                // Intentionally emits no bytecode.
+            }
+
+            // ── load_byte (LANG-MATRIX LM-J Brainfuck) ───────────────────────
+            //
+            // `load_byte  dest  <-  base, idx`.  Read one tape cell, unsigned.
+            // The lowered form of the BF `load_mem` above: same `getstatic
+            // __tape; <idx>; baload; & 0xFF` shape, but the operands may be
+            // `i64` (the widened BF value model) rather than `i32` — so we
+            // narrow an `i64` index to `int` with `l2i` for `baload`, and widen
+            // the masked `int` cell back to `i64` with `i2l` for an `i64` dest.
+            // The base operand is the static tape, so it is ignored.
+            "load_byte" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_byte must have a dest".to_string(),
+                    }
+                })?;
+                let idx_name = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_byte requires Operand::Var(idx) as src[1]".to_string(),
+                    }),
+                };
+                let (idx_slot, idx_ty) = lookup_var(&idx_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_typed_load(&mut code, idx_slot, idx_ty);
+                if idx_ty == JvmType::Long {
+                    code.push(L2I); // baload needs an int index
+                }
+                code.push(BALOAD);
+                // Mask the sign-extended byte back into an unsigned 0..=255 int.
+                code.push(SIPUSH);
+                code.extend_from_slice(&0x00FFi16.to_be_bytes());
+                code.push(IAND);
+                if dest_ty == JvmType::Long {
+                    code.push(I2L); // widen the cell to the i64 dest register
+                }
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
+            // ── store_byte (LANG-MATRIX LM-J Brainfuck) ──────────────────────
+            //
+            // `store_byte  base, idx, val`  (no dest).  Write the low byte of
+            // `val` into `tape[idx]`.  The lowered form of `store_mem`; `bastore`
+            // stores `val & 0xFF` (so BF's 8-bit cell wrap-around is free).  An
+            // `i64` index / value is narrowed with `l2i` before the array op.
+            // The base operand is the static tape, so it is ignored.
+            "store_byte" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte must not have a dest".to_string(),
+                    });
+                }
+                if instr.srcs.len() < 3 {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte requires 3 srcs: [base, idx, val]".to_string(),
+                    });
+                }
+                let idx_name = match &instr.srcs[1] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte src[1] must be Operand::Var(idx)".to_string(),
+                    }),
+                };
+                let val_name = match &instr.srcs[2] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte src[2] must be Operand::Var(val)".to_string(),
+                    }),
+                };
+                let (idx_slot, idx_ty) = lookup_var(&idx_name)?;
+                let (val_slot, val_ty) = lookup_var(&val_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_typed_load(&mut code, idx_slot, idx_ty);
+                if idx_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, val_slot, val_ty);
+                if val_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                code.push(BASTORE);
+            }
+
+            // ── alloc_array (LANG-FULL E5) ───────────────────────────────────
+            //
+            // `alloc_array  dest  <-  count`  (type_hint `array<T>`).  Allocate a
+            // fresh JVM primitive array `new T[count]` and bind `dest` to its
+            // reference.  `newarray` takes an **int** count and a one-byte element
+            // type code (T_INT/T_LONG/T_DOUBLE/…), so an `i64` count is narrowed
+            // with `l2i` first.  JVM arrays are zero-initialised, matching the
+            // reference VM's default-init.  `dest` is a `Ref` local → `astore`.
+            //
+            //   <count>; [l2i]; newarray <atype>; astore dest
+            "alloc_array" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "alloc_array must have a dest".to_string(),
+                    }
+                })?;
+                let count_name = match instr.srcs.first() {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "alloc_array requires Operand::Var(count) as src[0]".to_string(),
+                    }),
+                };
+                let elem_hint = array_elem_type(&instr.type_hint).ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
+                    }
+                })?;
+                let elem_ty = iir_type_to_jvm(&elem_hint).and_then(array_element_opcodes);
+                let (atype, _, _) = elem_ty.ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("alloc_array element type {elem_hint:?} is not a supported JVM array element"),
+                })?;
+                let (count_slot, count_ty) = lookup_var(&count_name)?;
+                let (dest_slot, _dest_ty) = lookup_var(dest_name)?;
+                emit_typed_load(&mut code, count_slot, count_ty);
+                if count_ty == JvmType::Long {
+                    code.push(L2I); // newarray count is an int
+                }
+                code.push(NEWARRAY);
+                code.push(atype);
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── array_get (LANG-FULL E5) ─────────────────────────────────────
+            //
+            // `array_get  dest  <-  handle, idx`  (type_hint = element `T`).  Read
+            // `handle[idx]`.  The handle is a `Ref` local (`aload`); the index is
+            // narrowed to `int` if it arrived as `i64`; the typed `*aload` does the
+            // **native bounds check** (OOB → `ArrayIndexOutOfBoundsException`, i.e.
+            // E5's trap).  `dest` shares `T` with the load, so no conversion.
+            //
+            //   aload handle; <idx>; [l2i]; <Taload>; store dest
+            "array_get" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "array_get must have a dest".to_string(),
+                    }
+                })?;
+                let handle_name = array_var_operand(instr, 0, "array_get", "handle", &fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_get", "idx", &fname)?;
+                let (_, aload_op, _) = iir_type_to_jvm(&instr.type_hint)
+                    .and_then(array_element_opcodes)
+                    .ok_or_else(|| IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("array_get element type {:?} is not a supported JVM array element", instr.type_hint),
+                    })?;
+                let (h_slot, _) = lookup_var(&handle_name)?;
+                let (i_slot, i_ty) = lookup_var(&idx_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+                emit_aload(&mut code, h_slot);
+                emit_typed_load(&mut code, i_slot, i_ty);
+                if i_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                code.push(aload_op);
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
+            // ── array_set (LANG-FULL E5) ─────────────────────────────────────
+            //
+            // `array_set  handle, idx, val`  (type_hint = element `T`, no dest).
+            // Write `handle[idx] = val`.  The typed `*astore` bounds-checks the
+            // index natively (OOB → AIOOBE).
+            //
+            //   aload handle; <idx>; [l2i]; <val>; <Tastore>
+            "array_set" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "array_set must not have a dest".to_string(),
+                    });
+                }
+                let handle_name = array_var_operand(instr, 0, "array_set", "handle", &fname)?;
+                let idx_name = array_var_operand(instr, 1, "array_set", "idx", &fname)?;
+                let val_name = array_var_operand(instr, 2, "array_set", "val", &fname)?;
+                let (_, _, astore_op) = iir_type_to_jvm(&instr.type_hint)
+                    .and_then(array_element_opcodes)
+                    .ok_or_else(|| IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("array_set element type {:?} is not a supported JVM array element", instr.type_hint),
+                    })?;
+                let (h_slot, _) = lookup_var(&handle_name)?;
+                let (i_slot, i_ty) = lookup_var(&idx_name)?;
+                let (v_slot, v_ty) = lookup_var(&val_name)?;
+                emit_aload(&mut code, h_slot);
+                emit_typed_load(&mut code, i_slot, i_ty);
+                if i_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, v_slot, v_ty);
+                code.push(astore_op);
+            }
+
+            // ── array_len (LANG-FULL E5) ─────────────────────────────────────
+            //
+            // `array_len  dest  <-  handle`.  `arraylength` yields an `int`; widen
+            // to `long` with `i2l` when the dest is `i64`.
+            //
+            //   aload handle; arraylength; [i2l]; store dest
+            "array_len" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "array_len must have a dest".to_string(),
+                    }
+                })?;
+                let handle_name = array_var_operand(instr, 0, "array_len", "handle", &fname)?;
+                let (h_slot, _) = lookup_var(&handle_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+                emit_aload(&mut code, h_slot);
+                code.push(ARRAYLENGTH);
+                if dest_ty == JvmType::Long {
+                    code.push(I2L);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
             // ── call_builtin (Brainfuck putchar / getchar) ───────────────────
             //
             // The validator (validate.rs) enforces that `srcs[0]` is in
@@ -2084,8 +3358,9 @@ fn lower_function(
             //
             // | Builtin   | Operand layout                          | Bytecode emitted |
             // |-----------|------------------------------------------|-------------------|
-            // | `putchar` | srcs = [Var("putchar"), Var(val)]; no dest | iload val; invokestatic env/BFRuntime.putchar(I)V |
-            // | `getchar` | srcs = [Var("getchar")]; dest = byte slot  | invokestatic env/BFRuntime.getchar()I; istore dest |
+            // | `putchar`   | srcs = [Var("putchar"), Var(val)]; no dest    | [l]load val [l2i]; invokestatic env/BFRuntime.putchar(I)V |
+            // | `getchar`   | srcs = [Var("getchar")]; dest = byte slot     | invokestatic env/BFRuntime.getchar()I; istore dest |
+            // | `print_i64` | srcs = [Var("print_i64"), Var(val:i64)]; no dest | lload val; invokestatic env/BasicRuntime.println(J)V |
             "call_builtin" => {
                 let builtin_name = match instr.srcs.first() {
                     Some(Operand::Var(s)) => s.clone(),
@@ -2097,6 +3372,14 @@ fn lower_function(
                 match builtin_name.as_str() {
                     "putchar" => {
                         // putchar takes one i32 arg and returns void.
+                        //
+                        // In the narrow i32 value model (expression programs, Brainfuck)
+                        // the char value is an `Int` slot → load with `iload`.
+                        //
+                        // In the wide i64 value model (BASIC `INPUT` + `PRINT`, where
+                        // `input_i64` forces i64 — see BA-JVM-INPUT in `lang-aot`) the
+                        // char value is a `Long` slot → load with `lload` then narrow
+                        // with `l2i` before handing it to `putchar(I)V`.
                         let val_name = match instr.srcs.get(1) {
                             Some(Operand::Var(s)) => s.clone(),
                             _ => return Err(IIRJvmError::InvalidOperand {
@@ -2104,8 +3387,13 @@ fn lower_function(
                                 detail: "call_builtin \"putchar\" requires srcs[1] = Operand::Var(val)".to_string(),
                             }),
                         };
-                        let (val_slot, _) = lookup_var(&val_name)?;
-                        emit_iload(&mut code, val_slot);
+                        let (val_slot, val_type) = lookup_var(&val_name)?;
+                        if val_type == JvmType::Long {
+                            emit_lload(&mut code, val_slot);
+                            code.push(L2I);
+                        } else {
+                            emit_iload(&mut code, val_slot);
+                        }
                         let mref = cp.add_methodref(BF_RUNTIME_CLASS, "putchar", "(I)V");
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
@@ -2123,6 +3411,106 @@ fn lower_function(
                         let mref = cp.add_methodref(BF_RUNTIME_CLASS, "getchar", "()I");
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "print_i64" => {
+                        // print_i64 takes one i64 (`long` on the JVM) arg and
+                        // returns void.  This is BASIC's `PRINT` lowered: the
+                        // value is loaded with `lload` (long load) and then
+                        // we invokestatic the host's `println(J)V` method on
+                        // [`BASIC_RUNTIME_CLASS`].  The host is responsible
+                        // for the actual write — we just hand the long to it.
+                        //
+                        // Mirrors the wasm backend (iir-to-wasm v0.8.0) which
+                        // routes the same builtin to `env.__print_i64`.
+                        let val_name = match instr.srcs.get(1) {
+                            Some(Operand::Var(s)) => s.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val:i64)".to_string(),
+                            }),
+                        };
+                        let (val_slot, _) = lookup_var(&val_name)?;
+                        emit_lload(&mut code, val_slot);
+                        let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "println", "(J)V");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                    }
+                    "input_i64" => {
+                        // input_i64 takes no arguments and returns one i64 (`long`).
+                        // This is BASIC's `INPUT X` lowered: we call the host's
+                        // `readLong()J` static method, which reads one line from stdin
+                        // and parses it as a `long` (0 on EOF / parse failure — the
+                        // same V1 permissive contract as `__twig_input_i64` in C).
+                        // The result sits on the JVM stack as a long; `lstore` moves
+                        // it into `dest`.
+                        let dest_name = builtin_dest(instr, fname, "input_i64")?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "readLong", "()J");
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
+                        emit_lstore(&mut code, dest_slot);
+                    }
+                    // ── McCarthy W4: the lisp predicates (F3–F5). ──
+                    //
+                    // The structural pass emits these as the *same* backend-agnostic
+                    // `call_builtin`s the wasm path uses (where they lower to
+                    // `ref.test`/`i32.eqz`/`i31.get_s`+`i32.eq`). On the JVM the
+                    // uniform-`Object` model makes them:
+                    //   pair?   → `instanceof Object[]`   (a cons is an Object[])
+                    //   not     → logical not of a 0/1 bool
+                    //   equal?  → unbox both Integers and `if_icmpeq`
+                    "pair?" => {
+                        // Is the (boxed) lisp value a cons cell? A cons is an
+                        // `Object[]`; an atom is an `Integer`; nil is `null`.
+                        let dest_name = builtin_dest(instr, fname, "pair?")?;
+                        let arg = builtin_arg(instr, fname, "pair?", 1)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (arg_slot, _) = lookup_var(&arg)?;
+                        emit_aload(&mut code, arg_slot);
+                        let cidx = cp.add_class("[Ljava/lang/Object;");
+                        code.push(INSTANCEOF);
+                        code.extend_from_slice(&cidx.to_be_bytes());
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "not" => {
+                        // Logical not of a 0/1 machine boolean: `arg ^ 1`.
+                        let dest_name = builtin_dest(instr, fname, "not")?;
+                        let arg = builtin_arg(instr, fname, "not", 1)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (arg_slot, _) = lookup_var(&arg)?;
+                        emit_iload(&mut code, arg_slot);
+                        code.push(ICONST_1);
+                        code.push(IXOR);
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "equal?" => {
+                        // `EQ` on atoms: unbox both `Integer`s and compare. The
+                        // structural pass guarantees both args are boxed atoms
+                        // (symbols interned to ints, integers as ints), so the
+                        // identity test reduces to integer equality.
+                        let dest_name = builtin_dest(instr, fname, "equal?")?;
+                        let a = builtin_arg(instr, fname, "equal?", 1)?;
+                        let b = builtin_arg(instr, fname, "equal?", 2)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (a_slot, _) = lookup_var(&a)?;
+                        let (b_slot, _) = lookup_var(&b)?;
+                        let int_cidx = cp.add_class("java/lang/Integer");
+                        let intval = cp.add_methodref("java/lang/Integer", "intValue", "()I");
+                        // unbox a
+                        emit_aload(&mut code, a_slot);
+                        code.push(CHECKCAST);
+                        code.extend_from_slice(&int_cidx.to_be_bytes());
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&intval.to_be_bytes());
+                        // unbox b
+                        emit_aload(&mut code, b_slot);
+                        code.push(CHECKCAST);
+                        code.extend_from_slice(&int_cidx.to_be_bytes());
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&intval.to_be_bytes());
+                        // a == b ? 1 : 0  (IF_ICMPNE skips the true arm when a≠b)
+                        emit_int_compare(&mut code, IF_ICMPNE);
                         emit_istore(&mut code, dest_slot);
                     }
                     _ => {
@@ -2163,7 +3551,7 @@ fn lower_function(
                             let (slot, jtype) = lookup_var(n)?;
                             emit_typed_load(&mut code, slot, jtype);
                         }
-                        Operand::Int(v) => emit_iconst(&mut code, *v as i32),
+                        Operand::Int(v) => emit_iconst_cp(&mut code, cp, *v as i32),
                         Operand::Bool(b) => emit_iconst(&mut code, if *b { 1 } else { 0 }),
                         Operand::Float(f) => emit_fconst(&mut code, *f as f32),
                         // LANG32: Str is a compile-time string literal — not
@@ -2743,6 +4131,68 @@ fn lower_function(
             //   `goto`  offset  = (P+8) - (P+4) = 4.           ✓ (lands on istore)
             //
             // This is 8 bytes of code (before istore), analogous to emit_int_compare.
+            // ── box — wrap an i32 atom as a `java.lang.Integer` (McCarthy W3b) ──
+            //
+            // The managed value model is uniform-reference: an atom stored in a
+            // cons cell (`Object[]`) or passed where a lisp value is expected is
+            // boxed. The wasm backend lowers `box` to `ref.i31`; the JVM lowers it
+            // to `Integer.valueOf(I)` — the same shared IIR op, a per-backend
+            // boxing. Bytecode:  iload src ; invokestatic Integer.valueOf ; astore dest.
+            "box" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "box has no dest".to_string(),
+                })?;
+                let src_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "box srcs[0] must be a Var".to_string(),
+                    }),
+                };
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (src_slot, _) = lookup_var(&src_name)?;
+                emit_iload(&mut code, src_slot);
+                let mref = cp.add_methodref(
+                    "java/lang/Integer",
+                    "valueOf",
+                    "(I)Ljava/lang/Integer;",
+                );
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── unbox — unwrap a `java.lang.Integer` reference to its i32 value ──
+            //
+            // The dual of `box`: `checkcast Integer ; Integer.intValue()`. Used at
+            // the entry/return boundary (the wasm backend lowers `unbox` to
+            // `i31.get_s`). Bytecode:  aload src ; checkcast Integer ; invokevirtual
+            // Integer.intValue ; istore dest.
+            "unbox" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "unbox has no dest".to_string(),
+                })?;
+                let src_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "unbox srcs[0] must be a Var".to_string(),
+                    }),
+                };
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (src_slot, _) = lookup_var(&src_name)?;
+                emit_aload(&mut code, src_slot);
+                let cidx = cp.add_class("java/lang/Integer");
+                code.push(CHECKCAST);
+                code.extend_from_slice(&cidx.to_be_bytes());
+                let mref = cp.add_methodref("java/lang/Integer", "intValue", "()I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_istore(&mut code, dest_slot);
+            }
+
             "is_null" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
@@ -2775,25 +4225,70 @@ fn lower_function(
                 emit_istore(&mut code, dest_slot);
             }
 
-            // ── global_load → UnsupportedOp (LANG32b) ───────────────────────
+            // ── global_load → getstatic <this>.G_N:J ; lstore (LANG-FULL E6) ─
             //
-            // Full JVM static-field globals require extending JvmClassFile with a
-            // `fields` table and emitting `getstatic`/`putstatic` bytecodes.
-            // That is implemented in LANG32b.  For now, return a descriptive error
-            // so the pipeline produces a clear message rather than a silent failure.
+            // A module global is a `public static long G_N` field of this class
+            // (collected in `globals`). `getstatic` pushes its value, `lstore`
+            // writes it into the dest's long slot.
             "global_load" => {
-                return Err(IIRJvmError::UnsupportedOp {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
-                    op: "global_load: JVM static-field globals not yet implemented — LANG32b".to_string(),
-                });
+                    detail: "global_load has no dest".to_string(),
+                })?;
+                let gname = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s,
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "global_load expects a string global name at srcs[0]".to_string(),
+                    }),
+                };
+                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("global_load: global {gname:?} was not collected (internal error)"),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+                let fref = cp.add_fieldref(class_name, field_name, "J");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&fref.to_be_bytes());
+                // `getstatic J` pushes a long.  The field is always 64-bit, but the
+                // dest local may be a narrower `int` (an `integer` program
+                // concretised to i32) — narrow the long with `l2i` before `istore`,
+                // the mirror of the `i2l` widen on `global_store`.
+                if dest_type != JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_store(&mut code, dest_slot, dest_type);
             }
 
-            // ── global_store → UnsupportedOp (LANG32b) ──────────────────────
+            // ── global_store → lload ; putstatic <this>.G_N:J (LANG-FULL E6) ──
             "global_store" => {
-                return Err(IIRJvmError::UnsupportedOp {
+                let gname = match instr.srcs.first() {
+                    Some(Operand::Str(s)) => s,
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "global_store expects a string global name at srcs[0]".to_string(),
+                    }),
+                };
+                let val_src = match instr.srcs.get(1) {
+                    Some(Operand::Var(v)) => v.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "global_store expects a Var value at srcs[1]".to_string(),
+                    }),
+                };
+                let field_name = globals.get(gname).ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
-                    op: "global_store: JVM static-field globals not yet implemented — LANG32b".to_string(),
-                });
+                    detail: format!("global_store: global {gname:?} was not collected (internal error)"),
+                })?;
+                let (val_slot, val_type) = lookup_var(&val_src)?;
+                emit_typed_load(&mut code, val_slot, val_type);
+                // The field is `J` (long); widen an i32 value to long first.
+                if val_type != JvmType::Long {
+                    code.push(I2L);
+                }
+                let fref = cp.add_fieldref(class_name, field_name, "J");
+                code.push(PUTSTATIC);
+                code.extend_from_slice(&fref.to_be_bytes());
             }
 
             // ── io_out → System.out.println(long) ───────────────────────────
@@ -3270,9 +4765,20 @@ pub fn serialize_jvm_class_file(class: &JvmClassFile) -> Vec<u8> {
     out.extend_from_slice(&this_idx.to_be_bytes());
     out.extend_from_slice(&super_idx.to_be_bytes());
 
-    // Interfaces and fields: both empty.
+    // Interfaces: none.
     out.extend_from_slice(&0u16.to_be_bytes()); // interfaces_count
-    out.extend_from_slice(&0u16.to_be_bytes()); // fields_count
+
+    // Fields (LANG-FULL E6 — module static globals). Each `field_info` is
+    // access_flags, name_index, descriptor_index, attributes_count=0. The name
+    // and descriptor Utf8 entries are already in the CP (added by the
+    // `add_fieldref` calls during lowering).
+    out.extend_from_slice(&(class.fields.len() as u16).to_be_bytes());
+    for field in &class.fields {
+        out.extend_from_slice(&field.access_flags.to_be_bytes());
+        out.extend_from_slice(&find_utf8_cp_index(&class.constant_pool, &field.name).to_be_bytes());
+        out.extend_from_slice(&find_utf8_cp_index(&class.constant_pool, &field.descriptor).to_be_bytes());
+        out.extend_from_slice(&0u16.to_be_bytes()); // attributes_count
+    }
 
     // Methods.
     out.extend_from_slice(&(class.methods.len() as u16).to_be_bytes());
@@ -3542,10 +5048,20 @@ pub fn lower_iir_to_jvm(
         cp.add_methodref(&config.class_name, "__callClosure", "([J[J)J");
     }
 
+    // ── Step 2b: collect module globals (LANG-FULL E6 layer 1) ────────────────
+    //
+    // Every distinct name read/written by `global_load`/`global_store` becomes a
+    // `public static long G_N` field of this class (first-seen order). The map
+    // (global name → JVM field name) is threaded into lowering so a
+    // `global_load`/`global_store` emits `getstatic`/`putstatic` of the right
+    // `Fieldref`. Field name is index-based (`G_0`, `G_1`, …) so an arbitrary
+    // source identifier can never form an invalid or colliding JVM field name.
+    let (globals, global_fields) = collect_global_fields(module);
+
     // ── Step 3: lower each function ───────────────────────────────────────────
     let mut methods: Vec<JvmMethodInfo> = Vec::new();
     for func in &module.functions {
-        let method = lower_function(func, &config.class_name, module, &mut cp, &closure_dispatch)?;
+        let method = lower_function(func, &config.class_name, module, &mut cp, &closure_dispatch, &globals)?;
         methods.push(method);
     }
 
@@ -3578,8 +5094,37 @@ pub fn lower_iir_to_jvm(
         this_class_name: config.class_name.clone(),
         super_class_name: "java/lang/Object".to_string(),
         constant_pool: cp.build(),
+        fields: global_fields,
         methods,
     })
+}
+
+/// Collect every distinct module-global name (read or written) into
+/// `(name → "G_N", [JvmFieldInfo])`, numbered in first-seen order across all
+/// functions (LANG-FULL E6 layer 1). Each global is a `public static long`
+/// field; the field name is index-based so an arbitrary source identifier can
+/// never form an invalid or colliding JVM field name.
+fn collect_global_fields(module: &IIRModule) -> (HashMap<String, String>, Vec<JvmFieldInfo>) {
+    let mut map: HashMap<String, String> = HashMap::new();
+    let mut fields: Vec<JvmFieldInfo> = Vec::new();
+    for f in &module.functions {
+        for i in &f.instructions {
+            if i.op == "global_load" || i.op == "global_store" {
+                if let Some(Operand::Str(name)) = i.srcs.first() {
+                    if !map.contains_key(name) {
+                        let field_name = format!("G_{}", fields.len());
+                        map.insert(name.clone(), field_name.clone());
+                        fields.push(JvmFieldInfo {
+                            access_flags: ACC_PUBLIC | ACC_STATIC,
+                            name: field_name,
+                            descriptor: "J".to_string(), // long
+                        });
+                    }
+                }
+            }
+        }
+    }
+    (map, fields)
 }
 
 // ---------------------------------------------------------------------------
@@ -3643,10 +5188,158 @@ mod tests {
     }
 
     #[test]
+    fn narrow_op_over_long_operands_stays_long() {
+        // LANG-FULL O2 / JVM long model. A *printing* program (Oct `out`) keeps the
+        // i64 model, so an Oct `200 + 100` (u8 hint) has `long` operands. The `add`
+        // must compute on the long model (`ladd` + a long mask), so its dest is typed
+        // `Long` — NOT the `Int` the bare u8 hint would give. An `iadd` over `long`
+        // operands would be unverifiable. This is what makes `200u8 + 100u8 = 44`
+        // (and `~0u8 = 255`) run on the JVM for a printing program.
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+                IIRInstr::new(
+                    "add",
+                    Some("c".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                    "u8",
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        let tm = build_type_map(&f);
+        assert_eq!(
+            tm.get("c"),
+            Some(&JvmType::Long),
+            "u8 add over long operands must stay Long; got {:?}",
+            tm.get("c")
+        );
+    }
+
+    #[test]
+    fn narrow_op_over_int_operands_stays_int() {
+        // The concretized (exit-code) path: operands are `i32`, so the narrow op uses
+        // the int model + an int mask, unchanged by the long-model fix.
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i32"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i32"),
+                IIRInstr::new(
+                    "add",
+                    Some("c".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                    "u8",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+            ],
+        );
+        let tm = build_type_map(&f);
+        assert_eq!(
+            tm.get("c"),
+            Some(&JvmType::Int),
+            "u8 add over int operands stays Int; got {:?}",
+            tm.get("c")
+        );
+    }
+
+    #[test]
     fn lower_class_name_from_config() {
         let module = make_module(void_fn("main"));
         let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("MyClass")).unwrap();
         assert_eq!(class.this_class_name, "MyClass");
+    }
+
+    // ── LANG-FULL E5 — array opcode lowering ────────────────────────────────
+
+    /// Extract the raw Code bytes of a single-method lowered class.
+    fn code_bytes(module: &IIRModule) -> Vec<u8> {
+        let class = lower_iir_to_jvm(module, &make_cfg()).expect("lowers");
+        let method = &class.methods[0];
+        for attr in &method.attributes {
+            if let JvmMethodAttribute::Code(c) = attr {
+                return c.code.clone();
+            }
+        }
+        panic!("method has no Code attribute");
+    }
+
+    #[test]
+    fn array_handle_maps_to_ref() {
+        // An `array<T>` handle occupies one local slot and uses aload/astore.
+        assert_eq!(iir_type_to_jvm("array<i32>"), Some(JvmType::Ref));
+        assert_eq!(iir_type_to_jvm("array<i64>"), Some(JvmType::Ref));
+        assert_eq!(iir_type_to_jvm("array<f64>"), Some(JvmType::Ref));
+        // A non-mappable element type is rejected (no nested/ref-element arrays).
+        assert_eq!(iir_type_to_jvm("array<str>"), None);
+    }
+
+    #[test]
+    fn array_element_opcodes_by_type() {
+        assert_eq!(array_element_opcodes(JvmType::Int), Some((T_INT, IALOAD, IASTORE)));
+        assert_eq!(array_element_opcodes(JvmType::Long), Some((T_LONG, LALOAD, LASTORE)));
+        assert_eq!(array_element_opcodes(JvmType::Double), Some((T_DOUBLE, DALOAD, DASTORE)));
+        assert_eq!(array_element_opcodes(JvmType::Ref), None);
+    }
+
+    /// `int[]` alloc/set/get/len lower to `newarray T_INT` + `iastore`/`iaload`
+    /// + `arraylength`. The JVM bounds-checks each `*aload`/`*astore` natively.
+    #[test]
+    fn int_array_emits_native_array_opcodes() {
+        // a := new int[3]; a[0] := 7; r := a[0]; n := len(a); ret r
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("c3".into()), vec![Operand::Int(3)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c3".into())], "array<i32>"),
+                IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v7".into()), vec![Operand::Int(7)], "i32"),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v7".into())], "i32"),
+                IIRInstr::new("array_get", Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i32"),
+                IIRInstr::new("array_len", Some("n".into()), vec![Operand::Var("a".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+            ],
+        );
+        let code = code_bytes(&make_module(f));
+        assert!(code.contains(&NEWARRAY) && code.contains(&T_INT), "newarray int[] expected");
+        assert!(code.contains(&IASTORE), "iastore (array_set) expected");
+        assert!(code.contains(&IALOAD), "iaload (array_get) expected");
+        assert!(code.contains(&ARRAYLENGTH), "arraylength (array_len) expected");
+    }
+
+    /// `double[]` uses `newarray T_DOUBLE` + `dastore`/`daload`.
+    #[test]
+    fn double_array_emits_double_opcodes() {
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "f64",
+            vec![
+                IIRInstr::new("const", Some("c2".into()), vec![Operand::Int(2)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("c2".into())], "array<f64>"),
+                IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+                IIRInstr::new("array_get", Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        );
+        let code = code_bytes(&make_module(f));
+        assert!(code.contains(&T_DOUBLE), "newarray double[] expected");
+        assert!(code.contains(&DASTORE), "dastore expected");
+        assert!(code.contains(&DALOAD), "daload expected");
     }
 
     #[test]

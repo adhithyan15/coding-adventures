@@ -1,0 +1,27 @@
+// Input.mil — interface for the toolkit's Input component.
+//
+// A styled single-line text input. Wraps the kernel HostInput with
+// toolkit-default theming (border, focus, padding). For richer
+// label/help/error patterns, use Field (which composes Input plus
+// the surrounding plumbing).
+
+component Input {
+  // Current text value. Required. Two-way: host's onChange handler
+  // typically updates the slot.
+  slot value : text ;
+
+  // Placeholder text shown when the input is empty.
+  slot placeholder : text ;
+
+  // Disabled flag. When true the input renders disabled and stops
+  // firing onChange.
+  slot disabled : bool ;
+
+  // Size keyword. One of: sm, md, lg. Default: md.
+  slot size : text ;
+
+  // Fired on every character change. Payload is the new text value.
+  emit onChange ( value : text ) ;
+  // Fired on Enter / commit. No payload.
+  emit onCommit ;
+}

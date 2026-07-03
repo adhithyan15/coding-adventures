@@ -1,0 +1,7 @@
+{
+ "idx": 81,
+ "id": "CON-2",
+ "scenario": "A complete production outage began at 09:00. The customer opened a ticket at 09:02. The provider sent an acknowledgment at 09:25 and a first substantive response at 09:40.",
+ "policy": "A Severity-1 incident is defined as a complete production outage. For Severity-1 incidents, the provider must acknowledge the ticket within 15 minutes and provide a first substantive response within 1 hour. Failure to meet the acknowledgment target triggers a $500 penalty.",
+ "question": "Is the provider liable for the acknowledgment penalty?"
+}

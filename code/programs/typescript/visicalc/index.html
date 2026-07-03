@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VisiCalc — Mosaic demo</title>
+    <style>
+      html, body, #root {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #1e1e1e;
+      }
+      body {
+        font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- The Rust spreadsheet-core engine, compiled to WASM (same bundle the HTML demo
+         ships). It sets window.__spreadsheetEngineReady + window.SpreadsheetEngine. -->
+    <script src="/spreadsheet-engine-wasm.js"></script>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>

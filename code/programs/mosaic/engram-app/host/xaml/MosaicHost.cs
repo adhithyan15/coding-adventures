@@ -1,0 +1,684 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using WinRT.Interop;
+
+namespace Mosaic.Generated;
+
+public sealed record MosaicHostIntent(string Type, string Json);
+
+public sealed record MosaicHostResult(string Status, MosaicHostIntent? HostIntent = null);
+
+public static class MosaicHost
+{
+    private const string NativeLibrary = "engram_capi";
+    private const string SnapshotPathEnvironmentVariable = "ENGRAM_SNAPSHOT_PATH";
+    private const string SnapshotFileName = "mosaic-snapshot.v1.json";
+    private static readonly object SessionLock = new();
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static IntPtr Session = IntPtr.Zero;
+    private static string? LoadError;
+
+    public static event EventHandler<MosaicHostIntent>? HostIntentReceived;
+
+    public static MosaicHostIntent? LastHostIntent { get; private set; }
+
+    static MosaicHost()
+    {
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => FreeSession();
+    }
+
+    public static async Task<MosaicHostResult> HandleHostIntent(
+        Window owner,
+        EngramApp component,
+        MosaicHostIntent hostIntent)
+    {
+        return hostIntent.Type switch
+        {
+            "importAnki" => await ImportAnkiPackage(owner, component, hostIntent),
+            "exportAnki" => await ExportAnkiPackage(owner, hostIntent),
+            _ => new MosaicHostResult($"Status: host intent captured: {hostIntent.Type}", hostIntent),
+        };
+    }
+
+    public static MosaicHostResult ApplyProps(EngramApp component)
+    {
+        lock (SessionLock)
+        {
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(
+                    Native.eg_engram_app_props(session, CurrentDeckId(), CurrentTimeMillis()));
+                return ApplyPropsFromJson(component, json, "Status: Engram host props loaded");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
+        }
+    }
+
+    public static MosaicHostResult HandleEvent(EngramApp component, EngramAppEvent ev)
+    {
+        var envelope = JsonSerializer.Serialize(ev.MosaicEnvelope, JsonOptions);
+        lock (SessionLock)
+        {
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(
+                    Native.eg_handle_engram_app_event(
+                        session,
+                        envelope,
+                        CurrentDeckId(),
+                        CurrentTimeMillis()));
+                using var document = JsonDocument.Parse(json);
+                var result = ApplyPropsFromRoot(
+                    component,
+                    document.RootElement,
+                    $"Status: Engram host handled {ev.MosaicName}");
+                if (!IsErrorRoot(document.RootElement))
+                {
+                    PersistSnapshot(session);
+                }
+                return result;
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
+        }
+    }
+
+    private static MosaicHostResult ApplyPropsFromJson(
+        EngramApp component,
+        string json,
+        string successStatus)
+    {
+        using var document = JsonDocument.Parse(json);
+        return ApplyPropsFromRoot(component, document.RootElement, successStatus);
+    }
+
+    private static MosaicHostResult ApplyPropsFromRoot(
+        EngramApp component,
+        JsonElement root,
+        string successStatus)
+    {
+        if (root.TryGetProperty("ok", out var ok) && ok.ValueKind == JsonValueKind.False)
+        {
+            return new MosaicHostResult(
+                $"Status: Engram host error: {JsonString(root, "error", "unknown error")}");
+        }
+
+        var hostIntent = CaptureHostIntent(root);
+        if (!root.TryGetProperty("props", out var props) || props.ValueKind != JsonValueKind.Object)
+        {
+            return WithHostIntentStatus(successStatus, hostIntent);
+        }
+
+        var applied = 0;
+        foreach (var prop in props.EnumerateObject())
+        {
+            if (TryApplySlot(component, prop.Name, prop.Value))
+            {
+                applied += 1;
+            }
+        }
+
+        return WithHostIntentStatus($"{successStatus} ({applied} props)", hostIntent);
+    }
+
+    private static bool TryApplySlot(EngramApp component, string slotName, JsonElement value)
+    {
+        var propertyName = SlotNameToPropertyName(slotName);
+        var property = typeof(EngramApp).GetProperty(
+            propertyName,
+            BindingFlags.Instance | BindingFlags.Public);
+        if (property is null || !property.CanWrite)
+        {
+            return false;
+        }
+
+        var converted = ConvertJsonValue(value, property.PropertyType);
+        property.SetValue(component, converted);
+        return true;
+    }
+
+    private static object? ConvertJsonValue(JsonElement value, Type targetType)
+    {
+        if (targetType == typeof(string))
+        {
+            return value.ValueKind switch
+            {
+                JsonValueKind.Null => "",
+                JsonValueKind.String => value.GetString() ?? "",
+                _ => value.ToString(),
+            };
+        }
+
+        if (targetType == typeof(double))
+        {
+            return value.ValueKind == JsonValueKind.Number
+                ? value.GetDouble()
+                : double.TryParse(value.ToString(), out var parsed) ? parsed : 0.0;
+        }
+
+        if (targetType == typeof(bool))
+        {
+            return value.ValueKind == JsonValueKind.True
+                || (value.ValueKind == JsonValueKind.String
+                    && bool.TryParse(value.GetString(), out var parsed)
+                    && parsed);
+        }
+
+        if (targetType.IsGenericType
+            && targetType.GetGenericTypeDefinition() == typeof(IReadOnlyList<>)
+            && value.ValueKind == JsonValueKind.Array)
+        {
+            var elementType = targetType.GetGenericArguments()[0];
+            var listType = typeof(List<>).MakeGenericType(elementType);
+            var list = (IList)Activator.CreateInstance(listType)!;
+            foreach (var item in value.EnumerateArray())
+            {
+                list.Add(ConvertJsonValue(item, elementType));
+            }
+            return list;
+        }
+
+        return JsonSerializer.Deserialize(value.GetRawText(), targetType, JsonOptions);
+    }
+
+    private static MosaicHostResult WithHostIntentStatus(
+        string status,
+        MosaicHostIntent? hostIntent)
+    {
+        return hostIntent is null
+            ? new MosaicHostResult(status)
+            : new MosaicHostResult($"{status}; host intent: {hostIntent.Type}", hostIntent);
+    }
+
+    private static MosaicHostIntent? CaptureHostIntent(JsonElement root)
+    {
+        if (!root.TryGetProperty("hostIntent", out var intent) || intent.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var type = JsonString(intent, "type", "host intent");
+        var hostIntent = new MosaicHostIntent(type, intent.GetRawText());
+        LastHostIntent = hostIntent;
+        HostIntentReceived?.Invoke(null, hostIntent);
+        return hostIntent;
+    }
+
+    private static string JsonString(JsonElement root, string property, string fallback)
+    {
+        return root.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String
+            ? value.GetString() ?? fallback
+            : fallback;
+    }
+
+    private static string SlotNameToPropertyName(string slotName)
+    {
+        var builder = new StringBuilder(slotName.Length);
+        var uppercaseNext = true;
+        foreach (var ch in slotName)
+        {
+            if (ch is '-' or '_' or ' ')
+            {
+                uppercaseNext = true;
+                continue;
+            }
+
+            builder.Append(uppercaseNext ? char.ToUpperInvariant(ch) : ch);
+            uppercaseNext = false;
+        }
+
+        return builder.ToString();
+    }
+
+    private static async Task<MosaicHostResult> ImportAnkiPackage(
+        Window owner,
+        EngramApp component,
+        MosaicHostIntent hostIntent)
+    {
+        var file = await PickAnkiImportFile(owner, hostIntent);
+        if (file is null)
+        {
+            return new MosaicHostResult("Status: Anki import cancelled", hostIntent);
+        }
+
+        var buffer = await FileIO.ReadBufferAsync(file);
+        var data = BufferToBytes(buffer);
+
+        lock (SessionLock)
+        {
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(
+                    Native.eg_merge_anki_apkg(session, data, (UIntPtr)data.LongLength));
+                using var document = JsonDocument.Parse(json);
+                if (IsErrorRoot(document.RootElement))
+                {
+                    return new MosaicHostResult(
+                        $"Status: Anki import failed: {JsonString(document.RootElement, "error", "unknown error")}",
+                        hostIntent);
+                }
+
+                PersistSnapshot(session);
+                var propsJson = Native.TakeString(
+                    Native.eg_engram_app_props(session, CurrentDeckId(), CurrentTimeMillis()));
+                return ApplyPropsFromJson(
+                    component,
+                    propsJson,
+                    $"Status: Imported Anki package {file.Name}");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
+        }
+    }
+
+    private static async Task<MosaicHostResult> ExportAnkiPackage(
+        Window owner,
+        MosaicHostIntent hostIntent)
+    {
+        var file = await PickAnkiExportFile(owner, hostIntent);
+        if (file is null)
+        {
+            return new MosaicHostResult("Status: Anki export cancelled", hostIntent);
+        }
+
+        byte[] data;
+        lock (SessionLock)
+        {
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(Native.eg_export_anki_apkg(session));
+                using var document = JsonDocument.Parse(json);
+                if (IsErrorRoot(document.RootElement))
+                {
+                    return new MosaicHostResult(
+                        $"Status: Anki export failed: {JsonString(document.RootElement, "error", "unknown error")}",
+                        hostIntent);
+                }
+
+                data = JsonByteArray(document.RootElement, "apkg");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
+        }
+
+        await FileIO.WriteBytesAsync(file, data);
+        return new MosaicHostResult($"Status: Exported Anki package {file.Name}");
+    }
+
+    private static async Task<StorageFile?> PickAnkiImportFile(Window owner, MosaicHostIntent hostIntent)
+    {
+        var picker = new FileOpenPicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+        };
+        foreach (var extension in HostIntentExtensions(
+            hostIntent,
+            "accept",
+            new List<string> { ".apkg", ".colpkg" }))
+        {
+            picker.FileTypeFilter.Add(extension);
+        }
+        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(owner));
+        return await picker.PickSingleFileAsync();
+    }
+
+    private static async Task<StorageFile?> PickAnkiExportFile(Window owner, MosaicHostIntent hostIntent)
+    {
+        var picker = new FileSavePicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            SuggestedFileName = SuggestedAnkiFileName(hostIntent),
+        };
+        picker.FileTypeChoices.Add(
+            "Anki package",
+            HostIntentExtensions(hostIntent, "extensions", new List<string> { ".apkg" }));
+        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(owner));
+        return await picker.PickSaveFileAsync();
+    }
+
+    private static IList<string> HostIntentExtensions(
+        MosaicHostIntent hostIntent,
+        string property,
+        IList<string> fallback)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(hostIntent.Json);
+            if (!document.RootElement.TryGetProperty(property, out var array)
+                || array.ValueKind != JsonValueKind.Array)
+            {
+                return fallback;
+            }
+
+            var values = new List<string>();
+            foreach (var item in array.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.String)
+                {
+                    continue;
+                }
+                var extension = item.GetString();
+                if (string.IsNullOrWhiteSpace(extension))
+                {
+                    continue;
+                }
+                values.Add(extension.StartsWith('.') ? extension : $".{extension}");
+            }
+            return values.Count == 0 ? fallback : values;
+        }
+        catch (JsonException)
+        {
+            return fallback;
+        }
+    }
+
+    private static string SuggestedAnkiFileName(MosaicHostIntent hostIntent)
+    {
+        var name = "engram-collection";
+        try
+        {
+            using var document = JsonDocument.Parse(hostIntent.Json);
+            name = JsonString(document.RootElement, "deckId", name);
+        }
+        catch (JsonException)
+        {
+        }
+
+        foreach (var ch in Path.GetInvalidFileNameChars())
+        {
+            name = name.Replace(ch, '-');
+        }
+        return string.IsNullOrWhiteSpace(name) ? "engram-collection" : name;
+    }
+
+    private static byte[] BufferToBytes(IBuffer buffer)
+    {
+        var data = new byte[checked((int)buffer.Length)];
+        using var reader = DataReader.FromBuffer(buffer);
+        reader.ReadBytes(data);
+        return data;
+    }
+
+    private static byte[] JsonByteArray(JsonElement root, string property)
+    {
+        if (!root.TryGetProperty(property, out var array) || array.ValueKind != JsonValueKind.Array)
+        {
+            throw new JsonException($"missing byte array property '{property}'");
+        }
+
+        var bytes = new byte[array.GetArrayLength()];
+        var index = 0;
+        foreach (var item in array.EnumerateArray())
+        {
+            bytes[index] = item.GetByte();
+            index += 1;
+        }
+        return bytes;
+    }
+
+    private static string CurrentDeckId()
+    {
+        return Environment.GetEnvironmentVariable("ENGRAM_DECK_ID") ?? "";
+    }
+
+    private static ulong CurrentTimeMillis()
+    {
+        return (ulong)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    }
+
+    private static bool TryGetSession(out IntPtr session, out string unavailable)
+    {
+        if (Session != IntPtr.Zero)
+        {
+            session = Session;
+            unavailable = "";
+            return true;
+        }
+
+        if (LoadError is not null)
+        {
+            session = IntPtr.Zero;
+            unavailable = LoadError;
+            return false;
+        }
+
+        try
+        {
+            Session = Native.eg_session_new_demo();
+        }
+        catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+        {
+            LoadError = Describe(ex);
+            session = IntPtr.Zero;
+            unavailable = LoadError;
+            return false;
+        }
+
+        if (Session == IntPtr.Zero)
+        {
+            LoadError = "eg_session_new_demo returned null";
+            session = IntPtr.Zero;
+            unavailable = LoadError;
+            return false;
+        }
+
+        session = Session;
+        HydrateSession(session);
+        unavailable = "";
+        return true;
+    }
+
+    private static void HydrateSession(IntPtr session)
+    {
+        var path = SnapshotPath();
+        if (File.Exists(path))
+        {
+            try
+            {
+                var snapshot = File.ReadAllText(path, Encoding.UTF8);
+                var json = Native.TakeString(Native.eg_load_snapshot(session, snapshot));
+                using var document = JsonDocument.Parse(json);
+                if (!IsErrorRoot(document.RootElement))
+                {
+                    return;
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+            {
+                Console.Error.WriteLine($"Engram could not read persisted snapshot: {ex.Message}");
+            }
+        }
+
+        PersistSnapshot(session);
+    }
+
+    private static void PersistSnapshot(IntPtr session)
+    {
+        try
+        {
+            var json = Native.TakeString(Native.eg_snapshot(session));
+            using var document = JsonDocument.Parse(json);
+            if (IsErrorRoot(document.RootElement)
+                || !document.RootElement.TryGetProperty("state", out var state)
+                || state.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null)
+            {
+                return;
+            }
+
+            var path = SnapshotPath();
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            File.WriteAllText(path, state.GetRawText(), Encoding.UTF8);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            Console.Error.WriteLine($"Engram could not persist snapshot: {ex.Message}");
+        }
+    }
+
+    private static bool IsErrorRoot(JsonElement root)
+    {
+        return root.TryGetProperty("ok", out var ok) && ok.ValueKind == JsonValueKind.False;
+    }
+
+    private static string SnapshotPath()
+    {
+        var configured = Environment.GetEnvironmentVariable(SnapshotPathEnvironmentVariable);
+        if (!string.IsNullOrWhiteSpace(configured))
+        {
+            return configured;
+        }
+
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return Path.Combine(home, ".engram", SnapshotFileName);
+    }
+
+    private static MosaicHostResult HostUnavailable(string reason)
+    {
+        return new MosaicHostResult($"Status: Engram native host unavailable: {reason}");
+    }
+
+    private static bool IsNativeAvailabilityFailure(Exception ex)
+    {
+        return ex is DllNotFoundException
+            or EntryPointNotFoundException
+            or BadImageFormatException
+            or MarshalDirectiveException;
+    }
+
+    private static string Describe(Exception ex)
+    {
+        return $"{ex.GetType().Name}: {ex.Message}";
+    }
+
+    private static void FreeSession()
+    {
+        lock (SessionLock)
+        {
+            if (Session == IntPtr.Zero)
+            {
+                return;
+            }
+
+            try
+            {
+                Native.eg_session_free(Session);
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+            }
+            Session = IntPtr.Zero;
+        }
+    }
+
+    private static class Native
+    {
+        [DllImport(NativeLibrary, EntryPoint = "eg_session_new_demo", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_session_new_demo();
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_session_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void eg_session_free(IntPtr session);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_string_free", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void eg_string_free(IntPtr value);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_snapshot", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_snapshot(IntPtr session);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_load_snapshot", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_load_snapshot(
+            IntPtr session,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string snapshotJson);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_engram_app_props", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_engram_app_props(
+            IntPtr session,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string deckId,
+            ulong now);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_handle_engram_app_event", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_handle_engram_app_event(
+            IntPtr session,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string eventJson,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string deckId,
+            ulong now);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_export_anki_apkg", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_export_anki_apkg(IntPtr session);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_merge_anki_apkg", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_merge_anki_apkg(
+            IntPtr session,
+            [In] byte[] data,
+            UIntPtr dataLen);
+
+        internal static string TakeString(IntPtr value)
+        {
+            if (value == IntPtr.Zero)
+            {
+                return "{\"ok\":false,\"error\":\"Engram native host returned null\"}";
+            }
+
+            try
+            {
+                return Marshal.PtrToStringUTF8(value) ?? "";
+            }
+            finally
+            {
+                eg_string_free(value);
+            }
+        }
+    }
+}

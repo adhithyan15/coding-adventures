@@ -1732,12 +1732,72 @@ def test_apart_two_simple_poles() -> None:
     assert val == IRRational(5, 6)
 
 
+def test_apart_irreducible_quadratic_returns_rational() -> None:
+    """Apart(1/(x^2 + 1), x) returns the already-apart rational."""
+    from symbolic_ir import DIV
+
+    vm, _ = make_vm()
+    den = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    inner = IRApply(DIV, (IRInteger(1), den))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+
+    assert not (isinstance(result, IRApply) and result.head == _APART)
+    assert _subst_at(vm, result, 0) == IRInteger(1)
+    assert _subst_at(vm, result, 1) == IRRational(1, 2)
+
+
+def test_apart_improper_irreducible_quadratic_splits_polynomial_part() -> None:
+    """Apart((x^2 + 2)/(x^2 + 1), x) -> 1 + 1/(x^2 + 1)."""
+    from symbolic_ir import DIV
+
+    vm, _ = make_vm()
+    x2 = IRApply(POW, (x, IRInteger(2)))
+    num = IRApply(ADD, (x2, IRInteger(2)))
+    den = IRApply(ADD, (x2, IRInteger(1)))
+    inner = IRApply(DIV, (num, den))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+
+    assert not (isinstance(result, IRApply) and result.head == _APART)
+    assert _subst_at(vm, result, 0) == IRInteger(2)
+    assert _subst_at(vm, result, 1) == IRRational(3, 2)
+
+
 def test_apart_already_polynomial() -> None:
     """Apart(x^2 + 1, x) → x^2 + 1 (no fraction to decompose)."""
     vm, _ = make_vm()
     inner = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
     result = vm.eval(IRApply(_APART, (inner, x)))
     assert _subst_at(vm, result, 2) == IRInteger(5)
+
+
+def test_apart_mixed_irreducible_and_linear_residual() -> None:
+    """Apart(1/((x^2 + 1)(x - 1)), x) keeps the irreducible residual."""
+    from symbolic_ir import DIV, MUL, SUB
+
+    vm, _ = make_vm()
+    quad = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    lin = IRApply(SUB, (x, IRInteger(1)))
+    inner = IRApply(DIV, (IRInteger(1), IRApply(MUL, (quad, lin))))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+
+    assert not (isinstance(result, IRApply) and result.head == _APART)
+    assert _subst_at(vm, result, 0) == IRInteger(-1)
+    assert _subst_at(vm, result, 2) == IRRational(1, 5)
+
+
+def test_apart_mixed_irreducible_and_repeated_root_residual() -> None:
+    """Apart(1/((x^2 + 1)(x - 1)^2), x) decomposes poles plus residual."""
+    from symbolic_ir import DIV, MUL, SUB
+
+    vm, _ = make_vm()
+    quad = IRApply(ADD, (IRApply(POW, (x, IRInteger(2))), IRInteger(1)))
+    lin_sq = IRApply(POW, (IRApply(SUB, (x, IRInteger(1))), IRInteger(2)))
+    inner = IRApply(DIV, (IRInteger(1), IRApply(MUL, (quad, lin_sq))))
+    result = vm.eval(IRApply(_APART, (inner, x)))
+
+    assert not (isinstance(result, IRApply) and result.head == _APART)
+    assert _subst_at(vm, result, 0) == IRInteger(1)
+    assert _subst_at(vm, result, 2) == IRRational(1, 5)
 
 
 def test_apart_wrong_arity_passthrough() -> None:

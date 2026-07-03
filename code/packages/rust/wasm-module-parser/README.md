@@ -11,6 +11,11 @@ A WebAssembly (WASM) binary file is a compact, structured sequence of bytes. Thi
 decodes those bytes — header, sections, and payloads — into the typed `WasmModule` struct
 from `wasm-types`, ready for validation, interpretation, or further analysis.
 
+As of 0.2.0 the type section also decodes **WasmGC struct types** (`0x50 … 0x5F …`)
+into `WasmModule.struct_types` — e.g. the `$LispyPair` cons cell emitted for
+McCarthy Lisp — alongside the usual function types, including `anyref` / `i31ref`
+/ concrete `structref` field types (LANG77 / McCarthy L3b-3a-3c).
+
 ## Where it fits in the stack
 
 ```

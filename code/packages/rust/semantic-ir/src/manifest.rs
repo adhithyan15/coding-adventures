@@ -25,6 +25,9 @@ use std::fmt;
 /// | `TailCalls`                | tail-call optimisation required       |
 /// | `Globals`                  | any top-level value `define`          |
 /// | `Intrinsics`               | any `Intrinsic` node                  |
+/// | `StringInterpolation`      | an `Expr::StrConcat` node             |
+/// | `DefaultParams`            | a param with `default = Some(_)`      |
+/// | `KeywordParams`            | a `Keyword` param or `KeywordArg`     |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -44,6 +47,72 @@ pub enum Feature {
     Sequences,
     Maps,
     ShortCircuit,
+    // ── SIR17 (object-oriented frontends) ────────────────────────────
+    /// Module contains at least one `Stmt::ClassDef`.  Phase 14a
+    /// (Ruby) introduces this feature with the empty-body form
+    /// `class Foo; end`.  Future Ruby phases extend the body shape
+    /// without renaming the feature.
+    Classes,
+    /// Module contains at least one `Stmt::ModuleDef`.  Phase 14d
+    /// (Ruby) introduces this feature with `module M … end`.
+    /// Distinct from `Classes`: a Ruby `module` is a namespace/mixin,
+    /// not an instantiable class.
+    Modules,
+    /// Module references an object instance variable
+    /// (`Scope::Instance`, Ruby `@x`).  Phase 15a (Ruby).  Instance
+    /// vars need no prior declaration and are scoped to the receiver
+    /// object, so they are distinct from `Local`/`Global` bindings.
+    InstanceVars,
+    /// Module references a class variable (`Scope::ClassVar`, Ruby
+    /// `@@x`).  Phase 15b (Ruby).  Like instance vars, class vars need
+    /// no prior declaration; they are shared across the class
+    /// hierarchy rather than per-object.
+    ClassVars,
+    /// Module references a constant (`Scope::Const`, Ruby `FOO` /
+    /// `MyClass` — any uppercase-initial name).  Phase 15c (Ruby).
+    /// Like instance/class vars, a constant reference needs no prior
+    /// `let` declaration; it resolves against the constant scope.
+    Constants,
+    /// Module uses structured exception handling (`Stmt::TryCatch`,
+    /// Ruby `begin/rescue/ensure/end`).  Phase 16a (Ruby).  Replaces the
+    /// earlier `__rescue_marker__`/`__ensure_marker__` placeholder
+    /// builtins with a first-class node.
+    Exceptions,
+    // ── SIR18 (rich string handling) ─────────────────────────────────
+    /// Module contains at least one `Expr::StrConcat` node — string
+    /// concatenation / interpolation (Ruby `"a#{x}b"`).  Phase 20b
+    /// (Ruby) introduces this feature, replacing the v0
+    /// `BuiltinCall("string_concat", ...)` marker with a first-class
+    /// node.  Distinct from `Strings` (a plain `StrLit`): a backend may
+    /// support string literals yet not (yet) know how to build a
+    /// concatenation natively, so the two capabilities are tracked
+    /// separately.
+    StringInterpolation,
+    // ── SIR19 (parameter defaults) ───────────────────────────────────
+    /// At least one function parameter carries a default-value
+    /// expression (`Param::default = Some(_)`, e.g. Ruby `def f(a = 1)`
+    /// and the Python / JS equivalents).  This is the core-IR
+    /// representation only: it is observed by the validator when any
+    /// param has a default, and is NOT yet accepted by any backend, so a
+    /// default-using module is correctly rejected by the capability
+    /// check until each backend gains support.  Emission (backends) and
+    /// lowering (frontends) land in follow-up PRs.
+    DefaultParams,
+    // ── KW1 (keyword parameters & arguments) ─────────────────────────
+    /// The module uses **named keyword parameters** (a `Param` with
+    /// `kind == ParamKind::Keyword`, e.g. Ruby `def f(x:)` / `def f(x: 1)`)
+    /// and/or **keyword arguments** at a call site (an `Expr::KeywordArg`,
+    /// e.g. Ruby `f(x: 1)` / Python `f(x=1)`).  Distinct from
+    /// `DefaultParams`: a keyword param is matched by *name*, not position,
+    /// and its default (when present) marks it *optional* rather than
+    /// *required* — a different axis from a positional trailing default.
+    /// Like `DefaultParams`, this is the core-IR representation only: it is
+    /// observed by the validator when a keyword param or argument appears
+    /// and is NOT yet accepted by any backend, so a keyword-using module is
+    /// correctly rejected by the capability check until each backend gains
+    /// support.  Emission (backends) and lowering (frontends) land in
+    /// follow-up PRs.
+    KeywordParams,
 }
 
 impl Feature {
@@ -65,6 +134,15 @@ impl Feature {
         Feature::Sequences,
         Feature::Maps,
         Feature::ShortCircuit,
+        Feature::Classes,
+        Feature::Modules,
+        Feature::InstanceVars,
+        Feature::ClassVars,
+        Feature::Constants,
+        Feature::Exceptions,
+        Feature::StringInterpolation,
+        Feature::DefaultParams,
+        Feature::KeywordParams,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -86,6 +164,15 @@ impl Feature {
             Feature::Sequences => "sequences",
             Feature::Maps => "maps",
             Feature::ShortCircuit => "short-circuit",
+            Feature::Classes => "classes",
+            Feature::Modules => "modules",
+            Feature::InstanceVars => "instance-vars",
+            Feature::ClassVars => "class-vars",
+            Feature::Constants => "constants",
+            Feature::Exceptions => "exceptions",
+            Feature::StringInterpolation => "string-interpolation",
+            Feature::DefaultParams => "default-params",
+            Feature::KeywordParams => "keyword-params",
         }
     }
 
@@ -187,6 +274,17 @@ mod tests {
         for f in Feature::ALL {
             assert_eq!(Feature::from_name(f.name()), Some(*f));
         }
+    }
+
+    #[test]
+    fn keyword_params_feature_name_and_round_trip() {
+        assert_eq!(Feature::KeywordParams.name(), "keyword-params");
+        assert_eq!(
+            Feature::from_name("keyword-params"),
+            Some(Feature::KeywordParams)
+        );
+        assert_eq!(format!("{}", Feature::KeywordParams), "keyword-params");
+        assert!(Feature::ALL.contains(&Feature::KeywordParams));
     }
 
     #[test]

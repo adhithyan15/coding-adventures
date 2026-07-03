@@ -7,7 +7,15 @@ This crate does not open sockets, touch radios, read files, or call cloud APIs.
 It gives future Hue, MQTT, Zigbee, Z-Wave, Thread, Matter, and runtime packages
 a shared way to build:
 
-- normalized bridge/device/entity fixtures
+- normalized bridge/device/entity/scene fixtures
+- normalized Hue discovery records, built through `hue-core` mDNS mapping, and
+  discovery-seeded runtime fixtures
+- deterministic Hue mDNS scan, scan-report, and discovery worker-run fixtures
+  that feed the runtime discovery catalog without opening network sockets
+- deterministic Hue discovery worker schedules that exercise runtime due-run
+  planning and scheduled ingest without opening network sockets
+- scripted mDNS worker scan executors that run runtime-produced scan plans into
+  deterministic reports without opening network sockets
 - registry seeding helpers for installing fixture records into
   `smart-home-registry`
 - confirmed, stale, and optimistic state snapshots
@@ -18,6 +26,8 @@ a shared way to build:
   scripts to both event-stream supervision state and `smart-home-runtime`
 - fake command buses with queued command/result pairs
 - fake local HTTP responses that can match planned requests without sockets
+- a deterministic Hue pairing fixture path from fake local HTTP response to
+  runtime pairing completion without raw secrets in audit metadata
 - non-consuming fake local HTTP server summaries for response-shape assertions
 - fake MQTT broker publications with retained-message and metadata markers
 - non-consuming fake MQTT broker summaries for publication-shape assertions
@@ -31,6 +41,8 @@ a shared way to build:
 ## Dependencies
 
 - `smart-home-core`
+- `hue-core`
+- `smart-home-discovery`
 - `smart-home-event-streams`
 - `smart-home-local-http`
 - `smart-home-registry`

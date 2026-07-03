@@ -1,0 +1,44 @@
+% ADJ52 case-1 — patient observations + queries.
+% Same vocabulary as rulebook.adj. Observations ONLY for what THIS patient
+% actually has; FDG-PET and pathology were NOT performed (they are the open
+% uncertainties / candidate next steps), so they are deliberately not observed.
+
+% --- presentation / constitutional ---
+observe symptom(dry_cough)
+observe symptom(intermittent_low_grade_fever)
+observe symptom(profound_fatigue)
+observe symptom(recurrent_haemoptysis)
+observe symptom(sharp_chest_pain)
+observe symptom(fever)
+
+% --- inflammatory / biomarkers ---
+observe inflammatory_markers(elevated)
+observe d_dimer(elevated)
+
+% --- VTE risk profile (all negatives -> documented red flag) ---
+observe vte_risk_factors(absent)
+observe venous_duplex(negative_for_dvt)
+
+% --- imaging ---
+observe imaging(migratory_pulmonary_consolidation)
+observe imaging(dilated_main_pulmonary_artery)
+observe imaging(expanded_pulmonary_artery)
+observe imaging(right_ventricular_hypertrophy)
+observe imaging(absent_perfusion_entire_lung)
+observe imaging(discrete_intraluminal_mass)
+
+% --- course ---
+observe obstruction_course(refractory_to_anticoagulation)
+
+% ===== QUERIES =====
+% q1/q2 — unifying diagnosis / thrombus vs tumour
+? diagnosis(pulmonary_artery_sarcoma)
+? diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+? diagnosis(acute_pulmonary_thromboembolism)
+? diagnosis(tumor_thrombus_from_extrapulmonary_malignancy)
+? diagnosis(infective_or_inflammatory_endovascular_process)
+
+% q3 — recommended next step
+? next_step(fdg_pet_ct)
+? next_step(surgical_resection_with_histology)
+? next_step(continue_anticoagulation_only)

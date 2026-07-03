@@ -932,13 +932,13 @@ impl LatticeTransformer {
                             // Add comma + new selector tokens
                             n.children.push(ASTNodeOrToken::Token(Token {
                                 type_: TokenType::Name,
-                                type_name: Some("Comma".to_string()), flags: None,
+                                type_name: Some("Comma".to_string()), flags: None, cv: None,
                                 value: ",".to_string(),
                                 line: 0, column: 0,
                             }));
                             n.children.push(ASTNodeOrToken::Token(Token {
                                 type_: TokenType::Name,
-                                type_name: None, flags: None,
+                                type_name: None, flags: None, cv: None,
                                 value: format!(" {}", sel),
                                 line: 0, column: 0,
                             }));
@@ -2352,7 +2352,7 @@ pub fn make_synthetic_token(value: &str, template: &Token) -> Token {
         value: value.to_string(),
         line: template.line,
         column: template.column,
-        flags: None,
+        flags: None, cv: None,
     }
 }
 
@@ -2361,7 +2361,7 @@ pub fn make_value_node(value: &str, _template: &GrammarASTNode) -> GrammarASTNod
     // Find a template token for position info
     let template_token = Token {
         type_: TokenType::Name,
-        type_name: None, flags: None,
+        type_name: None, flags: None, cv: None,
         value: value.to_string(),
         line: 0,
         column: 0,

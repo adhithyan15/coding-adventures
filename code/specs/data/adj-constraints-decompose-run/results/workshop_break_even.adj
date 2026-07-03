@@ -1,0 +1,3 @@
+symbol attendees : scalar
+constrain 2000 + 15 * attendees <= 65 * attendees
+solve for { attendees }

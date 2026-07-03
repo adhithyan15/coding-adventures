@@ -463,7 +463,7 @@ def solve_dc_with_aids(engine, max_attempts=4):
 
 | Standard / format | Coverage |
 |---|---|
-| **SPICE3 netlist syntax** | Subset (R, C, L, V, I, M, D, X, .tran, .dc, .ac, .op, .include, .subckt, .model, .param) |
+| **SPICE3 netlist syntax** | Subset (R, C, L, K, T, V, I, E, F, G, H, B, D, Q, J, M, X, .op, .tran, .dc, .ac, .tf, .sens, .mc, .noise, .four, .print, .plot, .temp, .options, .subckt, .model) |
 | **HSPICE extensions** | Out of scope |
 | **Berkeley SPICE3 I/O** | Output as text; binary `raw` format optional |
 | **PWL/PULSE/SIN/EXP source forms** | Full |
@@ -482,9 +482,18 @@ def solve_dc_with_aids(engine, max_attempts=4):
 
 - KLU bindings for production-quality sparse solver.
 - Verilog-A model support.
-- Mixed-signal coupling with `hardware-vm.md` for AMS simulation.
-- Multi-corner parallel sweep (one process per PVT corner).
-- Behavioral modeling sources (B-element).
-- Noise analysis (.noise).
-- S-parameter extraction.
-- Periodic steady-state (PSS) analysis for RF.
+- Mixed-signal coupling with `hardware-vm.md` for AMS simulation. A first
+  SPICE-side Rust helper surface converts binary digital event timelines and
+  named digital event streams into finite-edge PWL voltage sources, runs
+  direct, adaptive, and named-corner digital-input transient bridge fixtures,
+  and samples one or more transient probes back into thresholded named digital
+  event streams, with stable tab-separated bridge breakpoint schedules,
+  single-stream, named multi-signal, fixed-step, adaptive, and cornered bridge
+  event-stream text output; scheduler-level `hardware-vm` integration remains
+  future work.
+- Broader multi-corner parallel orchestration beyond the current Rust helper
+  set.
+- SPICE3-era `.control` language and binary raw-output compatibility.
+- BSIM3/BSIM4-era compact MOS model depth.
+- Richer nonlinear distortion accuracy beyond the constrained Phase 8
+  transient/Fourier projection footholds.

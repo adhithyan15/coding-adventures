@@ -1,0 +1,259 @@
+% ============================================================================
+% ADJ52 case-20 derived rulebook.
+% Clinical area: progressive young-adult neurodegeneration with a multisystem
+% (eye / tendon / gut / bone) signature, referred as an "adult ADHD" question
+% (behavioral neurology / inherited metabolic neurology cross-over).
+%
+% The diagnostic puzzle the IR poses (q1-q6): a 29-year-old man referred for
+% ADULT ADHD assessment who in fact has a 3-year PROGRESSIVE decline (forgetful,
+% disorganized, MMSE 27 -> low-20s) on a lifelong-"scattered" baseline (IQ ~67),
+% with NEW pyramidal signs (generalized hyperreflexia, BILATERAL extensor plantar
+% responses), a cerebellar/spastic gait, plus a striking MULTISYSTEM constellation:
+% BILATERAL ACHILLES TENDON SWELLINGS (tendon xanthomas), EARLY/juvenile bilateral
+% CATARACTS, LONGSTANDING INTERMITTENT DIARRHEA, and LOW BONE MINERAL DENSITY; with
+% symmetric T2/FLAIR signal centered on the DENTATE NUCLEI and cerebellar white
+% matter (extending to peduncles, posterior internal capsules, hypothalamus). An
+% autoimmune thyroid encephalopathy was considered and treated with high-dose
+% steroids -> NO benefit, then WORSENING. That whole picture is the textbook
+% description of CEREBROTENDINOUS XANTHOMATOSIS (CTX) — a CYP27A1 bile-acid-
+% synthesis defect causing cholestanol accumulation — which has a specific,
+% disease-modifying treatment (chenodeoxycholic acid). The elevated antithyroid
+% titres are an incidental coexisting autoimmune thyroiditis, NOT the cause.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (lowercase, no leading
+% digit, no uppercase). E.g. mri_finding(symmetric_dentate_t2_flair_hyperintensity),
+% steroid_trial(no_benefit_then_worsening).
+%
+% Anti-overfit note: every clause is added because a cited source supports the
+% DIRECTION of the likelihood ratio for that finding in that disease, NOT to make
+% this case land on a chosen answer. The tempting wrong answers are the REFERRAL
+% label (adult ADHD), the CONSIDERED label (Hashimoto/SREAT thyroid encephalopathy),
+% a STATIC intellectual disability (IQ 67), and a generic young-adult demyelinating
+% disease (MS). Discriminators that argue AGAINST each are included only where a
+% source supports the direction — most importantly the STEROID NON-RESPONSE, which
+% argues against SREAT (whose defining feature is steroid responsiveness), and the
+% PROGRESSIVE decline, which argues against both static intellectual disability and
+% primary ADHD.
+% ============================================================================
+
+% ===== PRIORS =====
+
+% rationale: among adults referred to a behavioral-health clinic for an ADHD-type
+% question, CTX is vanishingly rare; but conditioned on PROGRESSIVE decline PLUS
+% tendon swellings + early cataracts + chronic diarrhea + pyramidal/cerebellar signs
+% the pretest probability is materially higher. We set a modest prior and let the
+% engine EARN the conclusion from the multisystem + dentate-MRI + steroid-failure
+% discriminators.
+prior 0.18 for diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (CTX clinical synopsis); Frontiers Psychiatry 2025 PMC11832511 (CTX masquerading as adult ADHD)" trust authoritative
+
+% rationale: a steroid-responsive encephalopathy associated with autoimmune
+% thyroiditis (Hashimoto encephalopathy / SREAT) was the CONSIDERED diagnosis given
+% the elevated antithyroid antibodies, so it carries a substantial prior and must be
+% argued DOWN by the steroid non-response and the multisystem features.
+prior 0.20 for diagnosis(hashimoto_encephalopathy_sreat)
+  source "PMC5694982; Frontiers Immunol 2025 10.3389/fimmu.2025.1504967 (SREAT dx criteria; antithyroid antibodies)" trust authoritative
+
+% rationale: adult ADHD is the explicit REFERRAL question and the patient's lifelong
+% "scattered/inattentive" trait + positive self-report screen support it, so it
+% carries a meaningful prior; it must be argued DOWN by the new organic signs and the
+% progressive course.
+prior 0.18 for diagnosis(adult_adhd)
+  source "Frontiers Psychiatry 2025 PMC11832511 (ADHD-like presentation; ASRS self-report); ASRS v1.1 screener" trust authoritative
+
+% rationale: a longstanding static (developmental) borderline-to-mild intellectual
+% disability is suggested by the IQ ~67 and the lifelong scattered baseline; modest
+% prior, to be argued down by the documented DECLINE (MMSE 27 -> low-20s).
+prior 0.12 for diagnosis(static_intellectual_disability)
+  source "GeneReviews NBK1409 (lifelong vs acquired cognition); AAFP intellectual disability eval" trust authoritative
+
+% rationale: a generic young-adult demyelinating disease (multiple sclerosis) is the
+% default structural differential for a young adult with pyramidal + cerebellar signs
+% and symmetric white-matter T2/FLAIR signal; modest prior, argued down by the
+% systemic xanthomatosis features and the bland CSF.
+prior 0.12 for diagnosis(multiple_sclerosis)
+  source "Radiopaedia MS; AAN MS diagnostic criteria (young-adult pyramidal/cerebellar demyelination)" trust authoritative
+
+% ===== CORRELATED MULTISYSTEM XANTHOMATOSIS SIGNATURE (ONE mechanism -> fires ONCE)
+% rationale: the bilateral Achilles tendon swellings (tendon xanthomas), the early
+% bilateral cataracts, the longstanding intermittent diarrhea, and the reduced bone
+% mineral density are NOT independent facts — they are the single correlated
+% cholestanol-deposition syndrome that the CTX literature describes together (the
+% classic infantile diarrhea / juvenile cataract / tendon xanthoma / osteoporosis
+% tetrad). Counting a separate LR for each would double-count one mechanism and
+% saturate the posterior, so they are grouped under ONE mechanism directive that
+% fires a single combined LR if ANY manifestation is observed.
+% mechanism cholestanol_deposition for diagnosis(cerebrotendinous_xanthomatosis) lr 30.0 : exam_finding(bilateral_achilles_tendon_swellings), exam_finding(bilateral_early_cataracts), symptom(chronic_intermittent_diarrhea), test_result(reduced_bone_mineral_density)
+
+% rationale: the same multisystem (eye + tendon + gut + bone) signature is NOT a
+% feature of a primary thyroid autoimmune encephalopathy; its presence argues AGAINST
+% SREAT and toward a systemic storage/metabolic disorder. Fires once, negatively.
+% mechanism cholestanol_deposition for diagnosis(hashimoto_encephalopathy_sreat) lr 0.2 : exam_finding(bilateral_achilles_tendon_swellings), exam_finding(bilateral_early_cataracts), symptom(chronic_intermittent_diarrhea), test_result(reduced_bone_mineral_density)
+
+% rationale: tendon swellings, early cataracts, diarrhea and low bone density are
+% organic systemic disease — incompatible with primary ADHD as the explanation. Fires
+% once, negatively, against the referral label.
+% mechanism cholestanol_deposition for diagnosis(adult_adhd) lr 0.15 : exam_finding(bilateral_achilles_tendon_swellings), exam_finding(bilateral_early_cataracts), symptom(chronic_intermittent_diarrhea), test_result(reduced_bone_mineral_density)
+
+% rationale: the multisystem xanthomatosis signature is not explained by multiple
+% sclerosis; its presence argues against MS and toward a metabolic storage disorder.
+% Fires once, negatively, against MS.
+% mechanism cholestanol_deposition for diagnosis(multiple_sclerosis) lr 0.3 : exam_finding(bilateral_achilles_tendon_swellings), exam_finding(bilateral_early_cataracts), symptom(chronic_intermittent_diarrhea), test_result(reduced_bone_mineral_density)
+
+% ===== CEREBROTENDINOUS XANTHOMATOSIS (the unifying diagnosis) =====
+
+% rationale: KEY RADIOLOGICAL DISCRIMINATOR — symmetric T2/FLAIR hyperintensity
+% centered on the DENTATE NUCLEI and deep cerebellar white matter is the hallmark
+% neuroimaging signature of CTX. This is the single most specific imaging clue.
+contributes 9.0 from mri_finding(symmetric_dentate_t2_flair_hyperintensity) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PubMed 28324197 (MR spectrum of CTX); PMC7068097 (dentate-nucleus T2/FLAIR hyperintensity is the CTX hallmark)" trust authoritative
+
+% rationale: a PROGRESSIVE adult-onset neurologic decline (cognition falling MMSE 27
+% -> low-20s, with worsening over months) fits the adult-onset progressive phase of
+% CTX rather than a static or attentional disorder.
+contributes 3.0 from course(progressive_cognitive_decline) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (adult-onset progressive neurologic dysfunction in CTX)" trust authoritative
+
+% rationale: pyramidal signs — generalized hyperreflexia with BILATERAL extensor
+% plantar responses and a spastic/stiff gait — are characteristic of the CTX
+% pyramidal/cerebellar phase.
+contributes 2.5 from exam_finding(pyramidal_signs_with_bilateral_extensor_plantars) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409; StatPearls NBK564330 (pyramidal + cerebellar signs in CTX)" trust authoritative
+
+% rationale: a young-adult cerebellar/spastic ataxic gait is part of the CTX
+% cerebellar syndrome (independent neurologic axis from the pyramidal signs above).
+contributes 1.8 from exam_finding(cerebellar_spastic_gait) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC6857253 (cerebellar ataxia/gait disturbance in CTX)" trust authoritative
+
+% rationale: an ADHD-type behavioral/attentional presentation in a young adult is a
+% recognized PSYCHIATRIC MASQUERADE of CTX — weak on its own but consistent.
+contributes 1.4 from presenting_request(adhd_type_inattention) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "Frontiers Psychiatry 2025 PMC11832511 (CTX masquerading as adult ADHD); PMC3784765 (psychiatric manifestations of CTX)" trust authoritative
+
+% rationale: KEY SYNERGY — tendon xanthomas TOGETHER with the dentate-centered MRI
+% signature is the cerebro-TENDINOUS combination that names the disease; their
+% co-occurrence is more than the sum of the parts (the eponymous pairing).
+interacts 3.0 when exam_finding(bilateral_achilles_tendon_swellings) and mri_finding(symmetric_dentate_t2_flair_hyperintensity) for diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC7939202 (tendon xanthoma + dentate-nucleus MRI signal together define cerebrotendinous xanthomatosis)" trust authoritative
+
+% ===== HASHIMOTO ENCEPHALOPATHY / SREAT (the considered label — argued DOWN) =====
+
+% rationale: elevated antithyroid (antimicrosomal/antiperoxidase, antithyroglobulin)
+% titres are part of the SREAT diagnostic criteria, so the antibody result supports
+% the considered diagnosis.
+contributes 2.5 from test_result(elevated_antithyroid_antibodies) to diagnosis(hashimoto_encephalopathy_sreat)
+  source "Frontiers Immunol 2025 10.3389/fimmu.2025.1504967 (elevated antithyroid antibodies are a SREAT criterion)" trust authoritative
+
+% rationale: a subacute cognitive/behavioral encephalopathy is the clinical syndrome
+% in which SREAT is considered, so the cognitive decline gives modest support.
+contributes 1.5 from course(progressive_cognitive_decline) to diagnosis(hashimoto_encephalopathy_sreat)
+  source "PMC5694982 (SREAT presents with cognitive impairment / encephalopathy)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE, strong) — STEROID RESPONSIVENESS is
+% the defining ("sine qua non") feature of SREAT. This patient had NO benefit from
+% high-dose corticosteroid pulse therapy and then WORSENED, which argues strongly
+% against SREAT being the explanation.
+contributes 0.1 from steroid_trial(no_benefit_then_worsening) to diagnosis(hashimoto_encephalopathy_sreat)
+  source "Frontiers Immunol 2025 10.3389/fimmu.2025.1504967; PMC5694982 (response to corticosteroids is the sine qua non of SREAT)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — a CSF analysis unremarkable for
+% infection/inflammation/malignancy, combined with the failure to respond, does not
+% support an active autoimmune encephalitic process; weakly argues against SREAT.
+contributes 0.6 from test_result(csf_bland_noninflammatory) to diagnosis(hashimoto_encephalopathy_sreat)
+  source "PMC5694982 (SREAT is a diagnosis of exclusion; bland CSF without steroid response weakens it)" trust authoritative
+
+% ===== ADULT ADHD (the referral label — argued DOWN) =====
+
+% rationale: a lifelong "scattered, inattentive" trait plus a positive standardized
+% adult inattention self-report (ASRS-type) screen are the core supportive features
+% for an adult-ADHD label.
+contributes 2.0 from premorbid_trait(lifelong_inattentive) to diagnosis(adult_adhd)
+  source "ASRS v1.1 adult ADHD self-report; DSM-5 ADHD (childhood-onset inattentive trait)" trust authoritative
+contributes 1.6 from test_result(positive_adult_inattention_screen) to diagnosis(adult_adhd)
+  source "ASRS v1.1 (positive self-report items screen for adult ADHD)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — a NEW, PROGRESSIVE decline (recent
+% functional impairment on a previously non-disabling baseline, MMSE falling) is NOT
+% the stable lifelong pattern of ADHD and points to an acquired organic process.
+contributes 0.2 from course(progressive_cognitive_decline) to diagnosis(adult_adhd)
+  source "Frontiers Psychiatry 2025 PMC11832511 (progressive decline/organic signs argue against primary adult ADHD)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — objective pyramidal signs (bilateral
+% extensor plantar responses, hyperreflexia) are hard neurological findings that ADHD
+% does not produce; their presence argues against primary ADHD.
+contributes 0.2 from exam_finding(pyramidal_signs_with_bilateral_extensor_plantars) to diagnosis(adult_adhd)
+  source "Frontiers Psychiatry 2025 PMC11832511 (focal neurological signs mandate organic workup, not an ADHD label)" trust authoritative
+
+% ===== STATIC INTELLECTUAL DISABILITY (the IQ-67 confound — argued DOWN) =====
+
+% rationale: a measured full-scale IQ ~67 in the borderline-to-mild range on a
+% lifelong-scattered baseline is the finding that suggests a static developmental
+% intellectual disability.
+contributes 2.0 from test_result(full_scale_iq_borderline_mild) to diagnosis(static_intellectual_disability)
+  source "GeneReviews NBK1409 (borderline IQ may reflect longstanding vs acquired deficit); AAFP ID eval" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — a static intellectual disability is
+% by definition non-progressive; a DOCUMENTED DECLINE (MMSE 27 -> low-20s over months)
+% argues against a purely static condition and points to neurodegeneration.
+contributes 0.2 from course(progressive_cognitive_decline) to diagnosis(static_intellectual_disability)
+  source "GeneReviews NBK1409 (acquired progressive decline distinguishes neurodegeneration from static ID)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — new pyramidal signs are an acquired
+% neurological process, not a feature of a stable developmental intellectual disability.
+contributes 0.3 from exam_finding(pyramidal_signs_with_bilateral_extensor_plantars) to diagnosis(static_intellectual_disability)
+  source "StatPearls NBK564330 (acquired pyramidal/cerebellar signs indicate active disease, not static ID)" trust authoritative
+
+% ===== MULTIPLE SCLEROSIS (generic demyelinating differential — argued DOWN) =====
+
+% rationale: a young adult with pyramidal + cerebellar signs and symmetric
+% white-matter T2/FLAIR signal is the generic picture that first raises MS.
+contributes 1.8 from exam_finding(pyramidal_signs_with_bilateral_extensor_plantars) to diagnosis(multiple_sclerosis)
+  source "AAN MS criteria; Radiopaedia MS (pyramidal/cerebellar signs + white-matter T2 lesions raise MS)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — the CTX MRI pattern is SYMMETRIC and
+% DENTATE-centered, the opposite of the asymmetric, periventricular/ovoid, often
+% gadolinium-enhancing lesions of MS; the symmetric dentate signature argues against MS.
+contributes 0.3 from mri_finding(symmetric_dentate_t2_flair_hyperintensity) to diagnosis(multiple_sclerosis)
+  source "PMC7068097 (symmetric dentate-nucleus T2/FLAIR is a metabolic/CTX pattern, not the MS pattern)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — bland CSF unremarkable for inflammation
+% (no evidence of an inflammatory demyelinating process / oligoclonal activity) weakly
+% argues against active MS.
+contributes 0.6 from test_result(csf_bland_noninflammatory) to diagnosis(multiple_sclerosis)
+  source "AAN MS criteria (CSF-supported dissemination usual in MS; bland CSF weakens it)" trust authoritative
+
+% ===== NEXT STEP (biochemical / genetic confirmation -> disease-modifying therapy) =
+% rationale: the decisive next step is to confirm CTX by measuring SERUM CHOLESTANOL
+% (with bile-alcohol/CYP27A1 genetic testing), because a positive result both
+% confirms the diagnosis and unlocks a SPECIFIC disease-modifying therapy
+% (chenodeoxycholic acid) that can halt/reverse progression — directly answering why
+% the steroid trial failed and what to do instead.
+prior 0.22 for next_step(serum_cholestanol_then_cyp27a1_and_cdca)
+  source "PMC4175980 (multi-analyte blood test for CTX); GeneReviews NBK1409 (cholestanol + CYP27A1 confirm; CDCA treats)" trust authoritative
+contributes 9.0 from mri_finding(symmetric_dentate_t2_flair_hyperintensity) to next_step(serum_cholestanol_then_cyp27a1_and_cdca)
+  source "PMC7068097 (dentate-nucleus MRI signature -> measure cholestanol to confirm CTX)" trust authoritative
+contributes 7.0 from exam_finding(bilateral_achilles_tendon_swellings) to next_step(serum_cholestanol_then_cyp27a1_and_cdca)
+  source "GeneReviews NBK1409 (tendon xanthomas -> check plasma cholestanol for CTX)" trust authoritative
+contributes 4.0 from steroid_trial(no_benefit_then_worsening) to next_step(serum_cholestanol_then_cyp27a1_and_cdca)
+  source "GeneReviews NBK1409 (steroid-refractory progression mandates a metabolic CTX workup with specific therapy)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u-cholestanol: serum cholestanol has NOT been measured; an elevated level
+% near-confirms CTX, a normal level strongly argues against the classic disease.
+% Highest-value discriminator.
+contributes 30.0 from serum_cholestanol(elevated) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC4175980 (elevated serum cholestanol is the crucial CTX biomarker via GC-MS)" trust authoritative
+contributes 0.1 from serum_cholestanol(normal) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (a normal cholestanol makes classic CTX very unlikely)" trust authoritative
+uncertain { serum_cholestanol(elevated), serum_cholestanol(normal) } for diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC4175980 (cholestanol not yet measured; the decisive confirmatory biomarker)"
+
+% u-cyp27a1: CYP27A1 genetic testing has not been reported; biallelic pathogenic
+% variants confirm CTX, a negative result argues against it.
+contributes 20.0 from cyp27a1_testing(biallelic_pathogenic) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (biallelic CYP27A1 pathogenic variants are diagnostic of CTX)" trust authoritative
+contributes 0.2 from cyp27a1_testing(negative) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (no CYP27A1 variant argues against classic CTX)" trust authoritative
+uncertain { cyp27a1_testing(biallelic_pathogenic), cyp27a1_testing(negative) } for diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (CYP27A1 sequencing not yet reported; confirmatory genetic test)"

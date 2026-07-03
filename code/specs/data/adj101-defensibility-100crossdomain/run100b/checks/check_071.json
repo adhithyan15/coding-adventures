@@ -1,0 +1,8 @@
+{
+ "check_id": 71,
+ "idx": 31,
+ "slot": "transaction_in_equity_securities",
+ "claimed_value": true,
+ "scenario": "Reyes, a director of Vortex Inc., bought 1,000 shares of Vortex common stock on March 1 at $40 per share and sold all 1,000 shares on June 15 of the same year at $52 per share. No other Vortex transactions occurred.",
+ "cited_span": "bought 1,000 shares of Vortex common stock"
+}

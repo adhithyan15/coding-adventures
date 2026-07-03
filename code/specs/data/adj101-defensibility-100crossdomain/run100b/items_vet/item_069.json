@@ -1,0 +1,8 @@
+{
+ "idx": 69,
+ "policy": "A licensee must report any address change to the board within 30 days, except a licensee on inactive status, for whom no reporting deadline applies until the license is reactivated.",
+ "scenario": "A licensee currently on inactive status moved to a new address 60 days ago and has not notified the board.",
+ "question": "Has the licensee violated the 30-day address-change reporting requirement?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "no violation"
+}

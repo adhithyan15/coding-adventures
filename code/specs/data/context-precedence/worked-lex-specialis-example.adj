@@ -1,0 +1,59 @@
+% =====================================================================
+% worked-lex-specialis-example.adj — lex specialis, DERIVED (ADJ73 PR-B-4/5).
+%
+% THE CASE.  Two statutes both speak to whether a particular vehicle may use a
+% trail. A GENERAL traffic statute reads "motor vehicles permitted"; a SPECIFIC
+% wilderness-trail statute reads "motor vehicles prohibited". Both apply to the
+% same situation, so the readings CONFLICT. Which governs?
+%
+% The case supplies one primitive grounded fact — `more_specific(trail_statute,
+% traffic_statute)` (the wilderness-trail statute governs the narrower subject
+% matter) — and the LEX-SPECIALIS meta-rule (context-precedence-meta.adj, canon
+% 3) DERIVES the precedence edge `trail_statute > traffic_statute`. The specific
+% statute's reading governs:
+%
+%   rule_on(trail_access, prohibited)  status governing   context trail_statute
+%   rule_on(trail_access, permitted)   status defeated     context traffic_statute
+%
+% The trap (as throughout the arc): the GENERAL statute's "permitted" reading is
+% asserted at the highest `mandatory` tier, and the specific statute's reading at
+% the default tier — derived lex-specialis precedence still controls. 0
+% answer-time model calls; the edge is derived from a cited primitive by a cited
+% canon.
+%
+% (When lex specialis and lex superior point opposite ways — a general rule from
+% a higher authority vs a specific rule from a lower one — the orders conflict
+% and the engine surfaces it rather than guessing; the grounded tiebreaker for
+% that case is the next slice, see context-precedence-meta.adj canon-3 note.)
+% =====================================================================
+
+import "context-precedence-meta.adj"
+
+functional rule_on(topic, ruling)
+
+% PRIMITIVE grounded fact: the wilderness-trail statute is the more specific
+% provision on trail access (the traffic statute is the general one).
+relate more_specific(trail_statute, traffic_statute)
+  source "The wilderness-trail statute governs the specific subject matter (use of this trail); the traffic statute governs motor vehicles in general."
+  locator "statutory subject-matter comparison"
+  trust authoritative
+
+% The GENERAL statute's reading (permitted), at the highest tier — yet general.
+rule {
+  head: rule_on(trail_access, permitted)
+  when: traffic_statute_applies
+  priority: mandatory
+  context: traffic_statute
+}
+
+% The SPECIFIC statute's reading (prohibited), default tier — governs on lex specialis.
+rule {
+  head: rule_on(trail_access, prohibited)
+  when: trail_statute_applies
+  context: trail_statute
+}
+
+observe traffic_statute_applies
+observe trail_statute_applies
+
+? rule_on(trail_access, $ruling)

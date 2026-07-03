@@ -1,0 +1,7 @@
+{
+ "idx": 14,
+ "id": "STA-5",
+ "scenario": "A consumer was injured when a folding ladder collapsed beneath him, and an inspection confirmed the ladder had a manufacturing defect in its hinge. He was standing on the ladder when it gave way.",
+ "policy": "A product manufacturer is liable for injury from a defective product only if the product was being used for its intended purpose at the time of injury.",
+ "question": "Is the manufacturer liable for the injury?"
+}

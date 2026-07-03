@@ -358,6 +358,8 @@ impl Lowerer {
             params: lam.params.iter().map(|p| Param {
                 name: p.clone(),
                 sir_type: None,
+                kind: semantic_ir::ParamKind::Required,
+                default: None,
                 span: self.span_at(lam.line, lam.column),
             }).collect(),
             return_type: None,
@@ -627,6 +629,8 @@ impl Lowerer {
             params: lam.params.iter().map(|p| Param {
                 name: p.clone(),
                 sir_type: None,
+                kind: semantic_ir::ParamKind::Required,
+                default: None,
                 span: span.clone(),
             }).collect(),
             return_type: None,

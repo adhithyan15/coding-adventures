@@ -1,0 +1,97 @@
+{
+  "case_source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11521393/",
+  "candidate_diagnoses": [
+    "pheochromocytoma",
+    "hyperthyroidism",
+    "secondary_hypertension",
+    "primary_arrhythmia_ventricular_ectopy",
+    "paraganglioma",
+    "panic_disorder",
+    "carcinoid_syndrome"
+  ],
+  "coverage": {
+    "covered": true,
+    "clean": true,
+    "facts": 22,
+    "discards": 24,
+    "total_bytes": 1499,
+    "pct_in_facts": 57.5
+  },
+  "nodes": [
+    {
+      "finding": "blood_pressure(160/100) [sustained hypertension]",
+      "target": "pheochromocytoma",
+      "lr": 0.762,
+      "verdict": "grounded",
+      "reached_root": true,
+      "lr_formula": "LR+ reported directly by meta-analysis = 0.762 (95% CI 0.562-1.033). Equivalently LR+ = sens/(1-spec); pooled sensitivity of hypertension = 80.7%. The published LR+ < 1 because hypertension is nearly as common in the suspected-but-excluded control population, so its presence does NOT raise the probability of pheochromocytoma.",
+      "provenance": [
+        {
+          "hop": 1,
+          "cas": "3590a06efa59e9f8",
+          "span": [
+            165,
+            297
+          ],
+          "root": true,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4815191/"
+        }
+      ]
+    },
+    {
+      "finding": "night_sweats(present) [diaphoresis as diagnostic analog]",
+      "target": "pheochromocytoma",
+      "lr": 2.184,
+      "verdict": "grounded",
+      "reached_root": true,
+      "lr_formula": "LR+ reported directly by meta-analysis for diaphoresis = 2.184 (95% CI 1.411-3.382); pooled sensitivity 52.4%. NOTE: the diagnostic literature quantifies 'diaphoresis/sweating' generically, not 'night sweats' specifically; no separate LR exists for nocturnal sweating, so diaphoresis is used as the closest measured proxy.",
+      "provenance": [
+        {
+          "hop": 1,
+          "cas": "dc6c6b6ae14161b4",
+          "span": [
+            44,
+            169
+          ],
+          "root": false,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4797176/"
+        },
+        {
+          "hop": 2,
+          "cas": "51c8f2ae371fe4ac",
+          "span": [
+            323,
+            558
+          ],
+          "root": true,
+          "url": "https://pubmed.ncbi.nlm.nih.gov/1988766/"
+        }
+      ]
+    },
+    {
+      "finding": "weight_loss(5kg_unintended_weeks)",
+      "target": "pheochromocytoma",
+      "lr": 0,
+      "verdict": "direction_only",
+      "reached_root": false,
+      "lr_formula": "No likelihood ratio can be computed: the diagnostic literature provides NO sensitivity, specificity, LR, OR, or prevalence figure (with an N) for weight loss as a predictor of pheochromocytoma. Weight loss appears only as descriptive pathophysiology (catecholamine-driven hypermetabolism / raised resting energy expenditure). Direction is plausible (weight loss can occur) but there is no usable measured number to anchor an LR.",
+      "provenance": [
+        {
+          "hop": 1,
+          "cas": "3590a06efa59e9f8",
+          "error": "citation not verbatim in source: quote not found verbatim in source 3590a06efa59: 'Hypermetabolism caused by cate"
+        },
+        {
+          "hop": 2,
+          "cas": "68dbd8695b0a25c9",
+          "span": [
+            294,
+            414
+          ],
+          "root": false,
+          "url": "https://pubmed.ncbi.nlm.nih.gov/23436923/"
+        }
+      ]
+    }
+  ]
+}

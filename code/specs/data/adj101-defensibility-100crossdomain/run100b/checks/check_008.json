@@ -1,0 +1,8 @@
+{
+ "check_id": 8,
+ "idx": 4,
+ "slot": "visit_type",
+ "claimed_value": "emergency_room",
+ "scenario": "Tom went to an out-of-network hospital ER with chest pain and shortness of breath. The ER billed his plan. The claim is now being adjudicated for the correct cost-sharing level.",
+ "cited_span": "Tom went to an out-of-network hospital ER with chest pain and shortness of breath"
+}

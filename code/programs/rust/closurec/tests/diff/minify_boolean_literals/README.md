@@ -1,0 +1,4 @@
+# minify_boolean_literals
+
+Captured from upstream Google Closure Compiler **v20240317** under WHITESPACE_ONLY.
+closurec matches byte-for-byte. **PASS**.

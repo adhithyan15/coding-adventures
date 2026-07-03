@@ -46,6 +46,35 @@ for the architecture, component catalog, and phasing plan.
   `If open { Box[toast] { Column { Row[toast-header],
   Box[toast-body] } } }`. Slots: `title`, `message`, `variant`,
   `open`. Emit: `onClose`.
+- **`Pagination`** — Bootstrap's page-navigation row («prev | 1 2
+  3 | next »). Each chip wraps the UI29-4 `HostLink` primitive
+  (same convention as Nav/Breadcrumb). Slots: `pages: list<text>`,
+  `prev-label`, `next-label`, `active-index`. Emits: `onPrev`,
+  `onNext`, `onPageSelect(index: number)`.
+- **`InputGroup`** — Bootstrap's input-with-addons pattern. Text
+  input flanked by optional prefix and/or suffix text (e.g. `$`,
+  `.00`, `@username`). Slots: `prefix`, `suffix`, `value`,
+  `placeholder`, `disabled`. Emits: `onChange(value: text)`,
+  `onCommit`.
+- **`Accordion`** — vertical expand/collapse panel stack. Slots:
+  `headers: list<text>`, `bodies: list<text>`, `open-index`. Emit:
+  `onToggle(index: number)`. See CHANGELOG for the v0.7 always-
+  visible-body limitation (kernel `If` doesn't yet support
+  comparison).
+- **`Tabs`** — horizontal tab bar + single body panel. Host owns
+  the active-index → active-body mapping. Slots: `headers:
+  list<text>`, `active-body`, `active-index`. The active header
+  renders through a distinct `tabs-tab-active` part. Emit:
+  `onSelect(index: number)`.
+- **`DropdownMenu`** — toggle button + revealed item list. Host
+  owns the open flag. Slots: `label`, `items: list<text>`, `open`.
+  Emits: `onToggle`, `onSelect(index: number)`.
+- **`Navbar`** — top-of-page brand + HostLink row. Slots: `brand`,
+  `items: list<text>`, `active-index`. Emit: `onSelect(index)`.
+- **`Select`** — dropdown selector. Same toggle + If(open) pattern
+  as DropdownMenu, but onChange carries the selected option *text*.
+  Slots: `value`, `options: list<text>`, `placeholder`, `open`,
+  `disabled`. Emits: `onToggle`, `onChange(value: text)`.
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 

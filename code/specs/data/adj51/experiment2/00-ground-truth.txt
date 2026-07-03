@@ -1,0 +1,27 @@
+GROUND TRUTH (not given to ingester or deriver subagents):
+
+Final diagnosis: Primary Mediastinal Large B-cell Lymphoma (PMBCL).
+
+Confirmed by endobronchial ultrasound-guided biopsy with immunophenotype:
+CD20+, CD5-, CD10-, BCL1-, BCL6-, BCL2 equivocal, CD23 equivocal, high
+Ki-67 proliferative index. Anterior mediastinal mass in a young female.
+
+What the framework should ideally produce:
+- diagnosis(malignancy) — TRUE  (correct admit decision, biopsy pursuit)
+- diagnosis(infection) — FALSE  (despite surface presentation looking infectious;
+  actinomyces was colonization, not pathogen; antibiotics did not improve symptoms)
+- disposition(biopsy_for_tissue_diagnosis) — TRUE
+
+What an inexperienced reader / naive LLM would likely produce:
+- High P(infection) because of cough/sputum/leukocytosis/actinomyces growth
+- Low P(malignancy) because patient is young and presentation looks infectious
+- Disposition: continue/escalate antibiotics
+
+This case is interesting for the framework because the SAME observations support
+either category depending on which features the rulebook weights as load-bearing.
+A rulebook that weights infection signals (leukocytosis, sputum culture) ranks
+infection high; a rulebook that weights persistence and the mediastinal mass
+ranks malignancy high. The audit trail should make the choice visible.
+
+Source: PMC12914605 — Primary Mediastinal Large B-cell Lymphoma Masquerading as
+an Infection.

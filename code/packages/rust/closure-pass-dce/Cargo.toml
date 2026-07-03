@@ -1,0 +1,28 @@
+[package]
+name = "coding-adventures-closure-pass-dce"
+version = "0.20.1"
+edition = "2021"
+description = "Dead-code elimination pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Drops code after definite-terminator statements and removes EmptyStatement noise."
+
+[dependencies]
+coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+coding-adventures-javascript-ast = { path = "../javascript-ast" }
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde_json = "1"
+
+[dev-dependencies]
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
+coding-adventures-closure-pass-fold-control-flow = { path = "../closure-pass-fold-control-flow" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file
+# needs an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_peephole_remove_dead_code"
+path = "tests/upstream/peephole_remove_dead_code_test.rs"
+
+[[test]]
+name = "upstream_unreachable_code_elimination"
+path = "tests/upstream/unreachable_code_elimination_test.rs"

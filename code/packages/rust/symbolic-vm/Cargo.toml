@@ -1,10 +1,11 @@
 [package]
 name = "symbolic-vm"
-version = "0.12.0"
+version = "0.20.0"
 edition = "2021"
 description = "Generic symbolic expression evaluator over the symbolic-ir tree representation"
 license = "MIT"
 
 [dependencies]
 cas-factor = { path = "../cas-factor" }
+cas-simplify = { path = "../cas-simplify" }
 symbolic-ir = { path = "../symbolic-ir" }

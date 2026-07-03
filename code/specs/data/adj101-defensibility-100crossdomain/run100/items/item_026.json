@@ -1,0 +1,7 @@
+{
+ "idx": 26,
+ "id": "TAX-7",
+ "scenario": "A customer buys $50 worth of unprepared grocery food (raw vegetables and dried beans) at a supermarket.",
+ "policy": "Sales of tangible goods are subject to the standard 8% sales tax. However, notwithstanding the standard rate, sales of unprepared grocery food are exempt from sales tax and are taxed at 0%.",
+ "question": "How much sales tax is owed on this purchase?"
+}

@@ -1,0 +1,84 @@
+{
+  "hash": "ccf66a2721e88eb6",
+  "source_id": "https://academic.oup.com/cid/article/49/1/1/369414",
+  "title": "Clinical Practice Guidelines for the Diagnosis and Management of Intravascular Catheter-Related Infection: 2009 Update by the Infectious Diseases Society of America",
+  "resolved_url": "https://academic.oup.com/cid/article/49/1/1/369414",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "The four most common causes of CRBSI from percutaneous noncuffed catheters, in order of prevalence, are coagulase-negative staphylococci, S. aureus, Candida species, and enteric gram-negative bacilli.",
+      "byte_quote": "In order of prevalence, the 4 groups of microbes that most commonly cause CRBSI associated with percutaneously inserted, noncuffed catheters are as follows: coagulase-negative staphylococci, S. aureus, Candida species, and enteric gram-negative bacilli."
+    },
+    {
+      "id": "c2",
+      "text": "In children, coagulase-negative staphylococci cause 34% of CRBSIs and S. aureus 25%.",
+      "byte_quote": "Most CRBSIs among children are caused by coagulase-negative staphylococci (which account for 34% of cases), followed by S. aureus (25%)."
+    },
+    {
+      "id": "c3",
+      "text": "In neonates, coagulase-negative staphylococci account for 51% of CRBSIs, followed by Candida, enterococci, and gram-negative bacilli.",
+      "byte_quote": "Among neonates, coagulase-negative staphylococci account for 51% of CRBSIs, followed by Candida species, enterococci, and gram-negative bacilli."
+    },
+    {
+      "id": "c4",
+      "text": "Vancomycin is recommended for empirical CRBSI therapy in settings with elevated MRSA prevalence.",
+      "byte_quote": "Vancomycin is recommended for empirical therapy in heath care settings with an elevated prevalence of methicillin-resistant Staphylococcus aureus (MRSA)."
+    },
+    {
+      "id": "c5",
+      "text": "Where most MRSA isolates have vancomycin MIC >2 µg/mL, an alternative agent such as daptomycin should be used.",
+      "byte_quote": "for institutions in which the preponderance of MRSA isolates have vancomycin minimum inhibitory concentration (MIC) values >2 µg/mL, alternative agents, such as daptomycin, should be used."
+    },
+    {
+      "id": "c6",
+      "text": "Linezolid should not be used for empirical therapy of suspected (unproven) CRBSI.",
+      "byte_quote": "Linezolid should not be used for empirical therapy (i.e., for patients suspected but not proven to have CRBSI)."
+    },
+    {
+      "id": "c7",
+      "text": "Empirical gram-negative coverage should be guided by local susceptibility and disease severity (4th-gen cephalosporin, carbapenem, or beta-lactam/beta-lactamase combination, with or without an aminoglycoside).",
+      "byte_quote": "Empirical coverage for gram-negative bacilli should be based on local antimicrobial susceptibility data and the severity of disease (e.g., a fourth-generation cephalosporin, carbapenem, or β-lactam/β-lactamase combination, with or without an aminoglycoside)."
+    },
+    {
+      "id": "c8",
+      "text": "Empirical combination coverage for MDR gram-negative bacilli (e.g. Pseudomonas aeruginosa) should be used in neutropenic patients, severely ill septic patients, or those colonized with such pathogens.",
+      "byte_quote": "Empirical combination antibiotic coverage for multidrug-resistant (MDR) gram-negative bacilli, such as Pseudomonas aeruginosa, should be used when CRBSI is suspected in neutropenic patients, severely ill patients with sepsis, or patients known to be colonized with such pathogens."
+    },
+    {
+      "id": "c9",
+      "text": "For suspected CRBSI involving femoral catheters in critically ill patients, empirical therapy should add coverage for gram-negative bacilli and Candida species on top of gram-positive coverage.",
+      "byte_quote": "In addition to coverage for gram-positive pathogens, empirical therapy for suspected CRBSI involving femoral catheters in critically ill patients should include coverage for gram-negative bacilli and Candida species."
+    },
+    {
+      "id": "c10",
+      "text": "For suspected catheter-related candidemia, use an echinocandin, or fluconazole in selected patients.",
+      "byte_quote": "For empirical treatment of suspected catheter-related candidemia, use an echinocandin or, in selected patients, fluconazole."
+    },
+    {
+      "id": "c11",
+      "text": "4–6 weeks of antibiotic therapy is given for persistent fungemia or bacteremia occurring >72 h after catheter removal.",
+      "byte_quote": "Four to 6 weeks of antibiotic therapy should be administered to patients with persistent fungemia or bacteremia after catheter removal (i.e., occurring >72 h after catheter removal) (A-II for S. aureus infection; C-III for infection due to other pathogens)."
+    },
+    {
+      "id": "c12",
+      "text": "Osteomyelitis in adults is treated with 6–8 weeks of therapy.",
+      "byte_quote": "6–8 weeks of therapy should be used for the treatment of osteomyelitis in adults."
+    },
+    {
+      "id": "c13",
+      "text": "Long-term catheters should be removed for CRBSI with severe sepsis, suppurative thrombophlebitis, endocarditis, persistent infection >72 h despite susceptible therapy, or infection due to S. aureus, P. aeruginosa, fungi, or mycobacteria.",
+      "byte_quote": "Long-term catheters should be removed from patients with CRBSI associated with any of the following conditions: severe sepsis; suppurative thrombophlebitis; endocarditis; bloodstream infection that continues despite >72 h of antimicrobial therapy to which the infecting microbes are susceptible; or infections due to S. aureus, P. aeruginosa, fungi, or mycobacteria."
+    },
+    {
+      "id": "c14",
+      "text": "Short-term catheters should be removed for CRBSI due to gram-negative bacilli, S. aureus, enterococci, fungi, and mycobacteria.",
+      "byte_quote": "Short-term catheters should be removed from patients with CRBSI due to gram-negative bacilli, S. aureus, enterococci, fungi, and mycobacteria."
+    },
+    {
+      "id": "c15",
+      "text": "Vancomycin has a lower clinical success rate against MRSA bacteremia when the MIC is >=2 µg/mL.",
+      "byte_quote": "Vancomycin is associated with a lower clinical success rate in treating MRSA bacteremia if the MIC is ⩾2 µg/mL."
+    }
+  ],
+  "cites": []
+}

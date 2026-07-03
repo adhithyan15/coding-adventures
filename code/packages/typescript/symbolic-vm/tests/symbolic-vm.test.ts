@@ -427,6 +427,12 @@ describe("symbolic-vm", () => {
     expect(vm.eval(app(D, [app(SQRT, [sym("x")]), sym("x")]))).toEqual(
       app(DIV, [int(1), app(MUL, [int(2), app(SQRT, [sym("x")])])]),
     );
+    expect(vm.eval(app(D, [app(ASIN, [sym("x")]), sym("x")]))).toEqual(
+      app(DIV, [int(1), app(SQRT, [app(SUB, [int(1), app(POW, [sym("x"), int(2)])])])]),
+    );
+    expect(vm.eval(app(D, [app(ACOS, [sym("x")]), sym("x")]))).toEqual(
+      app(NEG, [app(DIV, [int(1), app(SQRT, [app(SUB, [int(1), app(POW, [sym("x"), int(2)])])])])]),
+    );
   });
 
   it("applies hyperbolic and inverse hyperbolic chain rules", () => {
@@ -540,6 +546,24 @@ describe("symbolic-vm", () => {
     expect(vm.eval(app(INTEGRATE, [app(POW, [int(2), sym("x")]), sym("x")]))).toEqual(
       app(DIV, [app(POW, [int(2), sym("x")]), numberNode(Math.log(2))]),
     );
+  });
+
+  it("closes Phase 23 erf/erfi quadratic exponential integrals", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+
+    const erfOut = vm.eval(app(INTEGRATE, [app(EXP, [app(NEG, [xsq])]), x]));
+    expect(containsHeadName(erfOut as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(erfOut as unknown as ReturnType<typeof sym>, "Erf")).toBe(true);
+
+    const erfiOut = vm.eval(app(INTEGRATE, [app(EXP, [xsq]), x]));
+    expect(containsHeadName(erfiOut as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(erfiOut as unknown as ReturnType<typeof sym>, "Erfi")).toBe(true);
+
+    const scaled = vm.eval(app(INTEGRATE, [app(EXP, [app(MUL, [int(-4), xsq])]), x]));
+    expect(containsHeadName(scaled as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(scaled as unknown as ReturnType<typeof sym>, "Erf")).toBe(true);
   });
 
   it("recognizes elliptic first-kind integrals", () => {
@@ -962,9 +986,24 @@ describe("symbolic-vm", () => {
     if (h === "Neg") return -evalIR28(args[0], xVal);
     if (h === "Pow") return Math.pow(evalIR28(args[0], xVal), evalIR28(args[1], xVal));
     if (h === "Log") return Math.log(evalIR28(args[0], xVal));
+    if (h === "Sqrt") return Math.sqrt(evalIR28(args[0], xVal));
     if (h === "Sin") return Math.sin(evalIR28(args[0], xVal));
     if (h === "Cos") return Math.cos(evalIR28(args[0], xVal));
+    if (h === "Asin") return Math.asin(evalIR28(args[0], xVal));
+    if (h === "Acos") return Math.acos(evalIR28(args[0], xVal));
     if (h === "Atan") return Math.atan(evalIR28(args[0], xVal));
+    if (h === "Sinh") return Math.sinh(evalIR28(args[0], xVal));
+    if (h === "Cosh") return Math.cosh(evalIR28(args[0], xVal));
+    if (h === "Tanh") return Math.tanh(evalIR28(args[0], xVal));
+    if (h === "Coth") {
+      const v = evalIR28(args[0], xVal);
+      return Math.cosh(v) / Math.sinh(v);
+    }
+    if (h === "Sech") return 1 / Math.cosh(evalIR28(args[0], xVal));
+    if (h === "Csch") return 1 / Math.sinh(evalIR28(args[0], xVal));
+    if (h === "Asinh") return Math.asinh(evalIR28(args[0], xVal));
+    if (h === "Acosh") return Math.acosh(evalIR28(args[0], xVal));
+    if (h === "Atanh") return Math.atanh(evalIR28(args[0], xVal));
     throw new Error(`evalIR28: unsupported head: ${h}`);
   }
 
@@ -973,6 +1012,11 @@ describe("symbolic-vm", () => {
     let total = 0.5 * (fn(a) + fn(b));
     for (let i = 1; i < n; i++) total += fn(a + i * h);
     return total * h;
+  }
+
+  function numericalDerivative28(node: ReturnType<typeof sym>, xVal: number): number {
+    const h = 1e-6;
+    return (evalIR28(node, xVal + h) - evalIR28(node, xVal - h)) / (2 * h);
   }
 
   it("Phase 28: ∫ log(x²+1) dx returns a closed form with LOG and ATAN", () => {
@@ -1093,15 +1137,339 @@ describe("symbolic-vm", () => {
     expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
   });
 
-  it("Phase 28: regression — ∫ atan(x) dx is not intercepted by Phase 28", () => {
-    // Phase 28 checks isLinearIn(Q, x); for atan(x), Q = x is linear (degree 1),
-    // so Phase 28 skips it.  TypeScript does not yet have Phase 11, so atan(x)
-    // remains unevaluated.  This test verifies that Phase 28 does NOT accidentally
-    // intercept or corrupt it.
+  it("Phase 11: ∫ atan(x) dx returns a closed form with ATAN and LOG", () => {
     const vm = new VM(new SymbolicBackend());
     const x = sym("x");
     const result = vm.eval(app(INTEGRATE, [app(ATAN, [x]), x]));
-    // Should remain unevaluated (Phase 11 is not implemented in TypeScript yet).
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+  });
+
+  it("Phase 11: ∫ atan(x+1) dx numerical correctness", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(ATAN, [app(ADD, [x, int(1)])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1)
+      - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => Math.atan(t + 1), 0, 1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 11: ∫ x·atan(x) dx numerical correctness", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ATAN, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1)
+      - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => t * Math.atan(t), 0, 1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ asin(x) dx closes and matches numerically", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const antideriv = vm.eval(app(INTEGRATE, [app(ASIN, [x]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0.5)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => Math.asin(t), 0, 0.5);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ x·asin(x) dx closes and matches numerically", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ASIN, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0.5)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => t * Math.asin(t), 0, 0.5);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ x·acos(x) dx closes and includes the asin residual", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ACOS, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Asin")).toBe(true);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0.5)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => t * Math.acos(t), 0, 0.5);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ asin(2x+1) dx handles linear arguments", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(ADD, [app(MUL, [int(2), x]), int(1)]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(ASIN, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, -0.1)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, -0.4);
+    const numerical = trapezoid28((t) => Math.asin(2 * t + 1), -0.4, -0.1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ asin(x²) dx stays unevaluated", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(ASIN, [app(POW, [x, int(2)])]), x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
+
+  it("Phase 13: integrates x*sinh(x) and differentiates back", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(SINH, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Cosh")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - xVal * Math.sinh(xVal))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 13: integrates x*cosh(x) and differentiates back", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(COSH, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Sinh")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - xVal * Math.cosh(xVal))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 13: integrates asinh(x) and differentiates back", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const antideriv = vm.eval(app(INTEGRATE, [app(ASINH, [x]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Sqrt")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - Math.asinh(xVal))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 13: integrates x*acosh(x) on the real domain", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ACOSH, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Sqrt")).toBe(true);
+    for (const xVal of [1.3, 1.7, 2.2]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - xVal * Math.acosh(xVal))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 13: integrates tanh(2x+1) as log(cosh)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(ADD, [app(MUL, [int(2), x]), int(1)]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(TANH, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    for (const xVal of [-0.4, 0.1, 0.5]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - Math.tanh(2 * xVal + 1))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 13: integrates atanh(x/2) and differentiates back", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [rational(1, 2), x]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(ATANH, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    for (const xVal of [-0.5, 0.2, 0.7]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - Math.atanh(xVal / 2))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 13: leaves x*tanh(x) deferred", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(MUL, [x, app(TANH, [x])]), x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
+
+  it("Phase 15: integrates coth(2x+1) as log(sinh)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(ADD, [app(MUL, [int(2), x]), int(1)]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(COTH, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Sinh")).toBe(true);
+    for (const xVal of [0.2, 0.6, 1.0]) {
+      const u = 2 * xVal + 1;
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - Math.cosh(u) / Math.sinh(u))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 15: integrates sech(3x) as atan(sinh)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [int(3), x]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(SECH, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Sinh")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.cosh(3 * xVal))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 15: integrates csch(x/2) as log(tanh half-argument)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [rational(1, 2), x]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(CSCH, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Tanh")).toBe(true);
+    for (const xVal of [0.6, 1.2, 2.0]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.sinh(xVal / 2))).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 15: leaves x*coth(x) deferred", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(MUL, [x, app(COTH, [x])]), x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
+
+  it("Phase 16: integrates sech^2(3x) as tanh(3x)/3", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [int(3), x]);
+    const integrand = app(POW, [app(SECH, [arg]), int(2)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Tanh")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.cosh(3 * xVal) ** 2)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates sech^3(x) via the odd-power recurrence", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(SECH, [x]), int(3)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.cosh(xVal) ** 3)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates csch^2(x/2) as -2*coth(x/2)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [rational(1, 2), x]);
+    const integrand = app(POW, [app(CSCH, [arg]), int(2)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Coth")).toBe(true);
+    for (const xVal of [0.6, 1.2, 2.0]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.sinh(xVal / 2) ** 2)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates csch^3(x) via the odd-power recurrence", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(CSCH, [x]), int(3)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    for (const xVal of [0.6, 1.2, 2.0]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.sinh(xVal) ** 3)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates coth powers through identity reduction", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    for (const power of [2, 3]) {
+      const integrand = app(POW, [app(COTH, [x]), int(power)]);
+      const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+      expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+      for (const xVal of [0.6, 1.2, 2.0]) {
+        const u = Math.cosh(xVal) / Math.sinh(xVal);
+        const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+        expect(Math.abs(got - u ** power)).toBeLessThan(1e-5);
+      }
+    }
+  });
+
+  it("Phase 16: leaves sech^2(x^2) deferred", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(SECH, [app(POW, [x, int(2)])]), int(2)]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
+
+  it("Phase 17: integrates tanh powers through identity reduction", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    for (const power of [2, 3, 4]) {
+      const integrand = app(POW, [app(TANH, [x]), int(power)]);
+      const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+      expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+      for (const xVal of [-0.4, 0.2, 0.8]) {
+        const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+        expect(Math.abs(got - Math.tanh(xVal) ** power)).toBeLessThan(1e-5);
+      }
+    }
+  });
+
+  it("Phase 17: integrates tanh^2(2x+1) with the chain-rule factor", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(ADD, [app(MUL, [int(2), x]), int(1)]);
+    const integrand = app(POW, [app(TANH, [arg]), int(2)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Tanh")).toBe(true);
+    for (const xVal of [-0.4, 0.1, 0.5]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - Math.tanh(2 * xVal + 1) ** 2)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 17: leaves tanh^2(x^2) deferred", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(TANH, [app(POW, [x, int(2)])]), int(2)]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
     expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
   });
 });

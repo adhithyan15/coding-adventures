@@ -1,0 +1,8 @@
+{
+ "check_id": 129,
+ "idx": 50,
+ "slot": "tenant_vacated_and_returned_keys",
+ "claimed_value": true,
+ "scenario": "Tomas vacated his apartment and returned the keys to the landlord on March 1. The landlord mailed the deposit refund check, postmarked April 5, 35 days later. The lease was a standard residential lease with no special clauses.",
+ "cited_span": "Tomas vacated his apartment and returned the keys to the landlord on March 1"
+}

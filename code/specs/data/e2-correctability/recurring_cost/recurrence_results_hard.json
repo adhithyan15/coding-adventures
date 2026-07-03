@@ -1,0 +1,146 @@
+{
+ "summary": {
+  "shared_fact": "destination_already_owned (the clause-8 Override) is dispositive in every override case and beats the clause-2 distance rule.",
+  "n_override_cases_M": 7,
+  "control_case_HO-2_not_owned": {
+   "id": "HO-2",
+   "kind": "control_not_owned",
+   "gold": "ENTITLED",
+   "framework": "ENTITLED",
+   "framework_ok": true,
+   "prose": "ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Theo relocated 90 miles closer (exceeds 50-mile threshold per clause 2) and rented the destination (did not own it pre-offer). The clause 8 override does not apply since destination_already_owned is false."
+  },
+  "framework": {
+   "policy_interpretation_cost": "paid ONCE (1 rulebook derivation; verbatim byte-verified)",
+   "answer_time_model_calls": 0,
+   "errors_on_override_cases": [],
+   "correct": "7/7"
+  },
+  "prose": {
+   "policy_interpretation_cost": "re-paid on EVERY case (stateless; no persistence layer)",
+   "model_calls": 7,
+   "errors_on_override_cases": [],
+   "miss_rate": 0.0,
+   "correct": "7/7"
+  },
+  "cost_to_correct_curve": {
+   "framework_total_corrections": 1,
+   "framework_recurrence_on_G_future": 0,
+   "prose_corrections_for_current_M": 0,
+   "prose_expected_recurrence_on_G_future": "~0.0 of 10 (miss-rate persists)",
+   "asymmetry": "framework O(1) paid once, non-recurring; prose O(miss_rate * (M+G)), recurs forever"
+  },
+  "persistence_note": "each prose call is stateless \u2014 correcting one answer cannot lower the miss-rate on the next independent case; the framework override, once written, makes the miss-rate 0 for all present and future cases."
+ },
+ "rows": [
+  {
+   "id": "OV-1",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Clause 8's self-owned-destination override expressly states it \"applies regardless of distance and takes precedence over the eligibility provisions above.\" Dana owns the destination property (since 2019), so the override precludes the bonus despite satisfying the 120-mile distance requirement in clause 2."
+  },
+  {
+   "id": "OV-2",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Marcus satisfied the distance (75 miles > 50-mile threshold) and timing (40 days < 180-day window) requirements. However, Clause 8's self-owned-destination override applies: he relocated into a condominium he already owned, which disqualifies him regardless of distance and takes precedence over all eligibility provisions."
+  },
+  {
+   "id": "OV-3",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Clause 8 Override states the bonus does not apply when the destination is already owned by the employee or spouse, taking precedence over distance. Priya's destination was jointly owned; she is excluded."
+  },
+  {
+   "id": "OV-4",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Lou meets the 50-mile distance threshold (95 miles) but is excluded by clause 8: the self-owned-destination override applies because he owned the cabin prior to the role offer. Clause 8 takes precedence over distance eligibility."
+  },
+  {
+   "id": "OV-5",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Clause 8 override applies: destination residence already owned by employee takes precedence over distance requirement, regardless of the 140-mile relocation distance."
+  },
+  {
+   "id": "OV-6",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Clause 8 override: destination residence was already owned by employee at offer time. Override takes precedence over distance eligibility regardless of distance met."
+  },
+  {
+   "id": "HO-1",
+   "kind": "held_out_override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Sofia's 80-mile relocation exceeds the 50-mile threshold in Clause 2, but Clause 8's override applies: destination residences already owned by the employee (or spouse) at the time of the offer are excluded \"regardless of distance\" and \"take precedence.\" Sofia owned the beach condominium she moved into at the time of the offer."
+  },
+  {
+   "id": "HO-2",
+   "kind": "control_not_owned",
+   "gold": "ENTITLED",
+   "framework": "ENTITLED",
+   "framework_ok": true,
+   "prose": "ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Theo relocated 90 miles closer (exceeds 50-mile threshold per clause 2) and rented the destination (did not own it pre-offer). The clause 8 override does not apply since destination_already_owned is false."
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+  "hash": "9a4a3cc739e10be0",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/16451418/",
+  "title": "Adults with spontaneous aerobic Gram-negative bacillary meningitis admitted to the intensive care unit",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16451418/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Escherichia coli was the most frequent pathogen in adult spontaneous aerobic Gram-negative bacillary meningitis, accounting for 57% of cases.",
+      "byte_quote": "Escherichia coli (57%) and Klebsiella pneumoniae (17%) were the most frequent pathogens."
+    },
+    {
+      "id": "c2",
+      "text": "Klebsiella pneumoniae was the second most frequent pathogen, accounting for 17% of adult spontaneous aerobic Gram-negative bacillary meningitis cases.",
+      "byte_quote": "Escherichia coli (57%) and Klebsiella pneumoniae (17%) were the most frequent pathogens."
+    },
+    {
+      "id": "c3",
+      "text": "The host population studied was adults admitted to the ICU with spontaneous aerobic Gram-negative bacillary meningitis (40 patients over 16 years across ten French hospitals).",
+      "byte_quote": "The study examined 40 adult ICU patients with spontaneous aerobic Gram-negative bacillary meningitis over 16 years across ten French hospitals."
+    },
+    {
+      "id": "c4",
+      "text": "Most patients had predisposing risk factors, primarily chronic alcoholism and immunocompromised status; three immunosuppressed patients developed disseminated strongyloidiasis.",
+      "byte_quote": "Most patients had predisposing factors, primarily chronic alcoholism and immunocompromised status. Three immunosuppressed patients developed disseminated strongyloidiasis."
+    },
+    {
+      "id": "c5",
+      "text": "CSF Gram's stain was positive in 85% of cases, CSF cultures positive in 98%, and blood cultures positive in 80%.",
+      "byte_quote": "Gram's stain, cerebrospinal fluid and blood cultures were positive for 85%, 98% and 80% of cases, respectively."
+    },
+    {
+      "id": "c6",
+      "text": "Spontaneous aerobic Gram-negative bacillary meningitis is a rare complication of bacteraemia in adults.",
+      "byte_quote": "Spontaneous AGNBM is a rare complication of bacteraemia in adults."
+    }
+  ],
+  "cites": []
+}

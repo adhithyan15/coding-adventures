@@ -1,5 +1,197 @@
 # Changelog
 
+## [0.75.0] — 2026-05-29
+
+**Track K1 — n-variate Hensel bridge in the ``Factor`` handler (PR #5590).**
+
+Bridges the newly-shipped ``cas_factor.try_n_variate_hensel`` (also
+PR #5590) into the symbolic-vm ``Factor`` handler so that
+``factor(x^3 + y^3 + z^3 - 3·x·y·z)`` and other tri-/higher-variate
+polynomials finally factor through the user-visible MACSYMA pipeline,
+not just from a direct cas-factor call.
+
+### What the bridge does
+
+Three new helpers in ``cas_handlers.py``:
+
+- ``_find_n_variables(node, max_vars=8)`` — generalises
+  ``_find_two_variables`` to return *all* distinct free symbols in
+  encounter order.  The first variable becomes Hensel's *main*
+  variable for the univariate-image specialisation step.  Bounded at
+  ``max_vars`` so a pathological input with hundreds of free symbols
+  can't make us allocate gigantic sparse-dict keys.
+- ``_ir_to_npoly(node, vars)`` — IR → ``NPoly`` (``dict[tuple[int, …], Fraction]``)
+  for the polynomial subset of IR (Add / Sub / Neg / Mul / Pow with
+  non-negative integer exponents, rationals, no floats, no
+  transcendentals, no foreign symbols).  Returns ``None`` on anything
+  outside ℚ[v_0, …, v_{n-1}].
+- ``_npoly_to_ir(p, vars)`` — round-trip back to IR with a stable
+  canonical monomial order (descending total degree, then lex on the
+  exponent tuple).
+
+These compose in ``_try_n_variate_hensel_ir(inner)``, which is hooked
+into ``factor_handler`` immediately after the existing bivariate path:
+
+```text
+factor(expr)
+├─ univariate over Z → rational-root + Kronecker
+├─ pattern handlers (perfect cube, cubic identity, …)
+├─ bivariate Hensel (Track D1)
+└─ NEW: n-variate Hensel (Track K1)   ← three or more free symbols
+```
+
+The bridge is ONE generic helper that serves ``n = 3, 4, 5, …`` — no
+per-arity copies.
+
+### Tests
+
+New file ``tests/test_n_variate_factor.py`` with end-to-end Factor
+pipeline tests:
+
+- ``x^3 + y^3 + z^3 - 3·x·y·z`` factors successfully; round-trip
+  verifies algebraic equality (the expanded result equals the input).
+- ``(x+y+z)·(x+2·y+3·z)`` — accepts either a successful factoring or
+  unevaluated fall-through, but if a factoring is returned it must
+  round-trip.
+- ``x^2 + y^2 + z^2 + 1`` (irreducible over Q) — must fall through
+  cleanly without producing a wrong factoring.
+- ``sin(x) + y + z`` (transcendental) — must not crash.
+
+### What this unblocks
+
+Track K2 (TS + Rust port) — the Python bridge defines the canonical
+shape the port will follow.  Track N (final spec closure) can mark
+n-variate factoring done across the matrix.
+
+## [0.74.0] — 2026-05-29
+
+**Track G1 — symbolic-coefficient Weierzstrass lift.**
+
+Generalises the Phase-34/35/36/37 Weierzstrass substitution
+``∫ c / (a + b·trig(α·x + β)) dx`` from concrete rational ``a, b`` to
+symbolic ones.  When the numeric pattern returns ``None`` because
+either coefficient is a free IR expression, the new helper consults
+``vm.assumptions`` for the sign of the discriminant ``a² − b²`` and,
+upon finding a declared inequality / equality, emits the matching
+arctan / log / degenerate closed form with symbolic ``Sqrt(a² − b²)``
+in the result.  When no assumption pins down the sign, the integral
+is left unevaluated.
+
+This depends on the compound-relation extension to
+``cas_simplify.AssumptionContext`` shipped in cas-simplify 0.4.0
+(same PR, Track G1).
+
+### Algorithm
+
+For ``∫ c / (a + b·sin(α·x+β)) dx`` with ``a, b`` non-numeric:
+
+1.  Parse ``a + b·trig(α·x+β)`` (any operand order, ADD or SUB) into
+    ``(a, b, head, α, β)`` keeping ``a, b`` as IR nodes (only ``α, β, c``
+    are required to be rational).
+2.  Fold ``1/α`` into the numerator scaling
+    (``c_scaled = c / α``).
+3.  Build ``arg = α·x + β`` via the shared linear-arg constructor.
+4.  Query ``vm.assumptions`` for the discriminant sign — accepts both
+    the natural surface form ``a² > b²`` and the canonical-against-zero
+    form ``a² − b² > 0``.
+5.  Emit the corresponding closed form:
+    - ``disc > 0`` → ``(2·c/√(a²−b²))·atan((a·tan(arg/2)+b)/√(a²−b²))``
+      (sin branch).  cos branch uses ``(a−b)·tan(arg/2) / √(a²−b²)`` in
+      the arctan argument.
+    - ``disc < 0`` → ``(c/√(b²−a²))·log|N/D|`` (log form).
+    - ``disc = 0`` → rational closed form in ``tan(arg/2)``.
+
+Linear-argument lifting (``α·x + β``) composes unchanged because the
+inner substitution ``u = tan(arg/2)`` depends only on ``α, β`` (which
+remain rational).
+
+### Added
+
+- `integrate._CURRENT_VM` — `ContextVar` that publishes the live VM to
+  Weierzstrass helpers without threading ``vm`` through every signature.
+- `integrate._try_weierstrass_symbolic_coefficients` — symbolic
+  dispatcher.
+- `integrate._parse_a_plus_b_sincos_symbolic` — symbolic sibling of
+  the numeric ``_parse_a_plus_b_sincos`` parser.
+- `integrate._try_weierstrass_{arctan,log,degenerate}_symbolic` — branch
+  closed-form emitters.
+
+### Regression
+
+The numeric Weierzstrass path is tried first and unchanged; the
+symbolic path explicitly bails out when both ``a`` and ``b`` are
+numeric, so concrete-coefficient integrals continue to use the
+arithmetic-folded ``Fraction`` closed forms.  All 38 existing
+``test_phase34_weierstrass`` tests still pass.
+
+## 0.73.0 — 2026-05-28
+
+**Track E1 — generic tabular integration-by-parts fallback.**
+
+Adds a last-ditch generic IBP handler that fires only after every
+shape-specific elementary / Phase 23 special-function / Elliptic
+handler has returned ``None``.  Closes the integration gap for
+``Mul``-shaped integrands that no per-shape recogniser matches but
+that admit the textbook tabular IBP factorisation
+``f = u(x) · w(x)`` with ``u`` polynomial and ``w`` integrable.
+
+### Algorithm
+
+For ``∫ u·w dx`` with ``u`` polynomial of degree ``N − 1`` and ``w``
+integrable, the antiderivative is the alternating sum
+
+```
+∫ u·w dx  =  Σ_{k=0}^{N-1}  (-1)^k · u^(k)(x) · I^(k+1)(w)
+```
+
+derived from N successive applications of IBP; the trailing remainder
+``(-1)^N · ∫ u^(N)·I^N(w) dx`` vanishes because ``u^(N) = 0``.  The
+implementation enumerates ``Mul`` factor partitions, picks the
+polynomial-on-one-side / integrable-on-the-other split, and assembles
+the table.  Bounded by ``_MAX_FACTORS = 5`` and ``_MAX_POLY_DEGREE =
+8`` so the search never explodes.
+
+### Added
+
+- ``ibp_tabular`` module with ``try_ibp_tabular(f, x, integrate_fn,
+  diff_fn, simplify_fn)`` — pure function, no VM dependency.
+- New test file ``tests/test_ibp.py`` exercising the three named
+  acceptance cases (``∫ x·sin(x) dx``, ``∫ x²·eˣ dx``,
+  ``∫ x³·cos(x) dx``), the new gap case
+  ``∫ x·sin(x)·cos(x) dx`` (three-factor Mul that per-shape
+  handlers don't recognise), and the two fallthroughs (``∫ 1/x dx``
+  via the elementary log rule; ``∫ sin(x²) dx`` via Phase 23
+  Fresnel — neither lets the generic IBP fabricate a closed form).
+
+### Changed
+
+- ``integrate.py`` — wires ``try_ibp_tabular`` into the
+  indefinite-integration outer handler **after** Phase 23
+  special-function and Elliptic fallbacks, as the final attempt
+  before returning unevaluated.
+- ``tests/test_phase16.py::test_poly_times_sech_squared_unevaluated``
+  → ``test_poly_times_sech_squared_via_ibp`` — Track E1 closes
+  ``∫ x·sech²(x) dx`` to ``x·tanh(x) − log(cosh(x))``, which the
+  earlier test asserted unevaluated.  Updated to check the new
+  closed form via numerical ``F'(x) ≈ f(x)``.
+- ``tests/test_phase17.py::test_poly_times_tanh_squared_unevaluated``
+  → ``test_poly_times_tanh_squared_via_ibp`` — same pattern; the
+  identity ``tanh²(x) = 1 − sech²(x)`` makes the integrand
+  elementary (the earlier docstring's "polylogarithm" label was
+  incorrect).  Track E1 produces ``x²/2 − x·tanh(x) + log(cosh(x))``.
+
+### Notes
+
+- Anti-pattern guard: this is ONE generic algorithm, not a
+  helper-per-shape.  The lesson check in
+  ``code/specs/macsyma-finish-plan.md`` forbids
+  ``_int_x_times_sin``-style additions; the new module's only
+  public entry is the single ``try_ibp_tabular`` function.
+- Termination: the D-column terminates at ``u^(N) = 0`` (guaranteed
+  for polynomial ``u``); the I-column terminates at ``N`` steps
+  (matched to D); the partition search is ``2^n − 2`` where
+  ``n ≤ 5`` factors.  No unbounded recursion.
+
 ## 0.72.0 — 2026-05-22
 
 **Phase 48 — Apart for repeated linear factors.**

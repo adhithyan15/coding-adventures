@@ -1,0 +1,27 @@
+{
+  "id": "11-error-unknown-table",
+  "description": "Querying an unknown table raises an OperationalError",
+  "level": 0,
+  "steps": [
+    {
+      "op": "expect_error",
+      "sql": "SELECT * FROM nonexistent_table",
+      "error_type": "OperationalError"
+    },
+    {
+      "op": "expect_error",
+      "sql": "INSERT INTO missing_table VALUES (1, 2)",
+      "error_type": "OperationalError"
+    },
+    {
+      "op": "expect_error",
+      "sql": "UPDATE ghost_table SET x = 1",
+      "error_type": "OperationalError"
+    },
+    {
+      "op": "expect_error",
+      "sql": "DELETE FROM phantom_table WHERE x = 1",
+      "error_type": "OperationalError"
+    }
+  ]
+}

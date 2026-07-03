@@ -1100,13 +1100,17 @@ class SqliteFileBackend(Backend):
         try:
             tree.insert(rowid, payload)
         except DuplicateRowidError:
-            # The IPK column value already exists → PRIMARY KEY violation.
+            # The IPK column value already exists.  SQLite reports this
+            # as a UNIQUE constraint violation (PRIMARY KEY implies
+            # UNIQUE; the error wording is unified) — older mini-sqlite
+            # said ``PRIMARY KEY constraint failed: …`` which sqlite3
+            # never emits.
             pk_cols = [c for c in columns if _is_ipk(c)]
             if pk_cols:
                 raise ConstraintViolation(
                     table=table,
                     column=pk_cols[0].name,
-                    message=f"PRIMARY KEY constraint failed: {table}.{pk_cols[0].name}",
+                    message=f"UNIQUE constraint failed: {table}.{pk_cols[0].name}",
                 ) from None
             raise  # Should not happen for non-IPK tables; propagate as-is.
 
@@ -1239,11 +1243,20 @@ class SqliteFileBackend(Backend):
         table: str,
         columns: list[ColumnDef],
         if_not_exists: bool,
+        *,
+        strict: bool = False,
     ) -> None:
         """Create a new table.
 
         Generates the ``CREATE TABLE`` SQL, stores it in ``sqlite_schema``,
         and allocates a fresh root page for the new B-tree.
+
+        The ``strict`` flag is accepted for interface conformance but the
+        on-disk SQLite backend stores rows verbatim — type enforcement
+        would require the byte-encoder to validate every value on the way
+        in.  For now the flag is forwarded to the SQL text via a trailing
+        ``STRICT`` keyword so the schema round-trips correctly, but
+        runtime enforcement is a TODO for this backend.
 
         For every column with ``effective_unique()`` (i.e. ``UNIQUE`` or
         non-IPK ``PRIMARY KEY``), a UNIQUE auto-index is also created with

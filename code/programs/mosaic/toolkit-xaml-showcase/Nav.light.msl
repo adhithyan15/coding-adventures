@@ -1,0 +1,15 @@
+// Nav.light.msl — default light-theme styling.
+
+style Nav {
+  part nav {
+    padding : 4 ;
+  }
+  part nav-link {
+    padding       : 8 ;
+    background    : "transparent" ;
+    color         : "#0d6efd" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 4 ;
+  }
+}

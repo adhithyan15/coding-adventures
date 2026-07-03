@@ -1,0 +1,201 @@
+{
+  "summary": "Blind defensibility judge over bare vs framework (unlabeled A/B).",
+  "agentCount": 24,
+  "logs": [],
+  "result": {
+    "verdicts": [
+      {
+        "id": "MED1-specialist",
+        "A_score": 0.9,
+        "A_flaw": "States bare \"70%\" with no shown linkage of the three policy conditions to scenario facts; verifiable but not self-justifying.",
+        "B_score": 0.9,
+        "B_flaw": "Labels cardiology as GROUNDED for \"specialist\" (really an entailment that cardiologist is a specialist) and adds the word \"coinsurance\" not in the policy.",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED1-specialist",
+        "A_score": 0.75,
+        "A_flaw": "Asserts \"a cardiologist is an in-network specialist\" as if entailed by the texts, silently importing outside knowledge to bridge the scenario's \"cardiologist\" to the policy's \"specialist\" without flagging that this step is an unverifiable inference.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED2-mri-priorauth",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "tie"
+      },
+      {
+        "id": "MED2-mri-priorauth",
+        "A_score": 1,
+        "A_flaw": "none — every claim (90% if authorized, denied/0% otherwise, missing fact, indeterminate outcome) traces directly to the policy and scenario; the \"0%\" gloss on \"denied\" is a faithful restatement, not an invention",
+        "B_score": 1,
+        "B_flaw": "none — correctly identifies prior_authorization_obtained as the unstated dispositive fact and quotes both policy rules verbatim; slightly less explicit about the 90%/denied branch outcomes but adds no unverifiable claims",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED3-specialty-tier",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED3-specialty-tier",
+        "A_score": 1,
+        "A_flaw": "none — every step (two rules, the \"regardless of whether it is generic\" override language, specialty-tier membership) is verbatim traceable to the policy and scenario",
+        "B_flaw": "Labels the 80% generic rule as \"applies\" then never resolves the conflict it creates; the conflict is settled only by the policy's \"regardless of whether it is generic\" clause, which B quotes but does not actually invoke as the controlling reason, leaving the override step unstated.",
+        "B_score": 0.9,
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED4-preventive-age",
+        "A_score": 0.85,
+        "A_flaw": "Overstates dependency: it labels the outcome as RESTING ON the ASSUMED screening_status, but the 80% result follows solely from age=32 being outside the 45+ range (grounded), so the assumption is not actually dispositive.",
+        "B_flaw": "Bare \"80%\" with no justification — no step or claim is traceable to the policy/scenario, so a reader cannot independently verify any reasoning.",
+        "B_score": 0.1,
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED4-preventive-age",
+        "A_score": 1,
+        "A_flaw": "none — every step (100% default, 80% out-of-range exception, recommended age 45+, member 32 is below 45 hence outside range) traces directly to the policy and scenario, with the dispositive comparison explicitly stated.",
+        "B_flaw": "Its labeled conditions never establish the dispositive fact — that age 32 is OUTSIDE the 45+ recommended range. It lists member_age=32 as GROUNDED but omits the 32<45 comparison that triggers the 80% exception, so the 80% determination is asserted, not justified. It also lists both the 100% rule and the 80% rule as 'applies' without resolving the contradiction.",
+        "B_score": 0.7,
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED5-er-copay",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.7,
+        "B_flaw": "Labels obligation_fulfilled as ASSUMED / \"needs outside knowledge, NOT entailed by the bytes\" and flags it for auditor verification, but the scenario explicitly states \"paid the $200 copay\" — paying the copay IS the fulfilled obligation, a GROUNDED fact. B manufactures a non-existent open assumption and an unverifiable outside-knowledge claim that the scenario bytes actually refute, injecting unwarranted doubt into a case where every dispositive fact is present.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED5-er-copay",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 1,
+        "B_flaw": "none — minor cosmetic typo (double period) but every grounding label is verifiable",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED6-oon-rider",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.9,
+        "B_flaw": "Names the dispositive fact as a synthetic token 'member_has_oon_rider' not drawn verbatim from the policy/scenario, a minor traceability friction (though it maps transparently to the policy's 'out-of-network rider').",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED6-oon-rider",
+        "A_score": 1,
+        "A_flaw": "none — every claim is traceable: it names the missing dispositive fact (rider purchase), quotes the policy rule verbatim, and declines to decide without assuming the unstated fact.",
+        "B_flaw": "none material — all claims trace to the texts; it spells out both conditional branches (rider → 50%, no rider → not covered) directly from the policy and correctly notes the scenario omits rider status. Slightly more prose but no unverifiable assertions.",
+        "B_score": 1,
+        "more_defensible": "tie"
+      },
+      {
+        "id": "LAW1-loadingzone",
+        "A_score": 0.9,
+        "A_flaw": "Labels the time condition GROUNDED on \"2pm\" but never makes the 9am-5pm comparison explicit — that step is ENTAILED, not GROUNDED; it conflates an inference with a quoted fact.",
+        "B_flaw": "No per-claim grounding labels and does not distinguish stated facts from the within-hours inference; verifiable but requires more reader reconstruction.",
+        "B_score": 0.85,
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW1-loadingzone",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0,
+        "B_flaw": "Falsely claims the dispositive facts are not stated; the scenario explicitly gives both the loading zone and the 2pm time, which falls within the posted 9am-5pm window, so this is an incorrect abstention contradicted by the text.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW2-eviction-notice",
+        "A_score": 0.25,
+        "A_flaw": "Reaches the right disposition (cannot determine) but justifies it with ungrounded self-referential meta-commentary (its own identity as a coding agent, domain boundaries, jurisdiction) rather than the policy's 14-day notice rule; only the passing mention of needing notice/filing dates is verifiable against the texts.",
+        "B_score": 0.95,
+        "B_flaw": "Essentially none; the only non-textual artifact is the machine-style fact labels (notice_served, notice_date_relative_to_filing), which still map transparently to the policy and scenario content.",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW2-eviction-notice",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "tie"
+      },
+      {
+        "id": "LAW3-minor-necessities",
+        "A_score": 1,
+        "A_flaw": "none — all four claims (voidability rule, necessities/shelter exception, apartment-as-shelter, binding conclusion) trace directly to policy and scenario text including \"to live in\"",
+        "B_score": 0.8,
+        "B_flaw": "The dispositive apartment→shelter/necessity bridge is never grounded; it labels \"apartment rental\" GROUNDED but asserts the necessities rule applies without connecting \"apartment\" to \"shelter,\" presenting an unbridged inferential leap on the deciding condition as if established",
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW3-minor-necessities",
+        "A_score": 0.5,
+        "A_flaw": "Wrongly abstains: claims the dispositive fact `is_necessity` is unstated, but the policy explicitly enumerates \"shelter\" as a necessity and the scenario specifies \"an apartment to live in\" (i.e., shelter for habitation), so the basis is supplied by the texts, not assumed.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW4-capgains-shortterm",
+        "A_score": 0.2,
+        "A_flaw": "Falsely asserts the dispositive fact is absent; the scenario states the holding period (four months), which is exactly what the rule needs. This is an unjustified refusal contradicted by the scenario — inventing absence of a fact that is present.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW4-capgains-shortterm",
+        "A_score": 1,
+        "A_flaw": "none — every claim (15% default, 32% exception for <1yr, four months held, four months < one year) is traceable to policy/scenario and the comparison is plain arithmetic entailed by the bytes",
+        "B_flaw": "Mislabels the dispositive fact holding_period_is_short=True as ASSUMED / \"needs outside knowledge, NOT entailed by the bytes\" and flags it for human verification. That four months is less than one year is pure arithmetic fully entailed by the scenario (\"four months\") and policy (\"less than one year\"). This is a verifiably false meta-claim about its own grounding and manufactures doubt where the texts are dispositive.",
+        "B_score": 0.85,
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW5-vendor-license",
+        "A_score": 0.75,
+        "A_flaw": "First bullet cites a truncated rule fragment (\"required for any food vendor\") as an operative rule, dropping the \">10 days\" condition — an unfaithful, fabricated standalone sub-rule not present in the policy.",
+        "B_flaw": "none — paraphrases \"more than 10 days\" as \"10-day threshold\" but the full conditioned rule, the day count, and the comparison are all traceable to the texts.",
+        "B_score": 1,
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW5-vendor-license",
+        "A_score": 0.9,
+        "A_flaw": "Labels facts GROUNDED but never explicitly performs the dispositive 25 > 10 threshold comparison; the rule is asserted to \"apply\" without showing the comparison step.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW6-books-duty",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.5,
+        "B_flaw": "Labels \"the 5% duty rule applies because shipment_action='imported'\" as GROUNDED, which both contradicts its own duty-free determination and is unverifiable — the books exception means the 5% rule does NOT apply to this shipment. One of its two cited conditions is false.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW6-books-duty",
+        "A_score": 0.9,
+        "A_flaw": "Introduces field-style tokens (transaction_type, goods_type, declared_value_usd) not present in the authoritative texts, though they map transparently to scenario words and invent no dispositive fact.",
+        "B_score": 0.9,
+        "B_flaw": "States the rate as \"0%\" though the policy only says \"duty-free\" and never equates it to 0% — a trivial entailment, not a withheld fact.",
+        "more_defensible": "tie"
+      }
+    ]
+  }
+}

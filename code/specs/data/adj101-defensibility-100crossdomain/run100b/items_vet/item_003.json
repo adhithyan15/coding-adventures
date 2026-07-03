@@ -1,0 +1,8 @@
+{
+ "idx": 3,
+ "policy": "For an in-network specialist visit, the patient owes a flat $40 copay if the deductible has already been met for the plan year; if the deductible has not been met, the patient owes the full negotiated rate until the deductible is satisfied.",
+ "scenario": "Priya has an in-network plan with a $40 specialist copay and a $1,500 annual deductible. In June she saw an in-network cardiologist; the negotiated rate for the visit was $180. She has had several other medical visits earlier in the year.",
+ "question": "What amount does Priya owe for the cardiologist visit?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "deductible status not stated"
+}

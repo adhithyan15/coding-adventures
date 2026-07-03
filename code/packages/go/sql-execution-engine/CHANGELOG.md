@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.1.2] - 2026-05-31
+
+### Fixed
+
+- Realigned the expression evaluator and `LIMIT` parser with the shared
+  `sql.grammar`, which had drifted ahead of this package. The grammar adopted
+  SQLite's operator-precedence ladder, inserting two new layers —
+  `collated` (`COLLATE` postfix) and `bitwise` (`& | << >>`) — between
+  `comparison` and `additive`. `evalExpr` had no cases for them, so it hit its
+  `default: return nil` branch *above* `column_ref`, making every column
+  reference resolve to NULL. Symptoms were `SELECT col` returning `<nil>`,
+  `WHERE` predicates matching nothing, and an out-of-range panic in
+  `TestWhereNumericComparison`. The package only surfaced the break when a
+  transitive dependency change made the build tool re-test it.
+  - Added `evalCollated` (value passthrough; collation affects compare/sort,
+    not the value) and `evalBitwise` (`&`, `|`, `<<`, `>>`, integer-only with
+    NULL propagation).
+  - Extended `evalAdditive` to handle `||` text concatenation and `evalUnary`
+    to handle the `~` (bitwise NOT) and `+` (identity) prefixes the grammar now
+    accepts.
+  - Rewrote `executeLimit` for the new `limit_clause` shape: values are now
+    wrapped in `signed_number` nodes, negative `LIMIT` means "unbounded"
+    (SQLite), and the MySQL-style `LIMIT offset, count` shorthand is supported.
+- Added tests covering each new operator and `LIMIT` form
+  (`TestBitwiseAnd/Or/Shift/Not`, `TestUnaryPlus`, `TestStringConcat`,
+  `TestCollatePassthrough`, `TestLimitMySQLStyle`, `TestLimitNegativeIsUnbounded`).
+
 ## [0.1.1] - 2026-03-31
 
 ### Fixed

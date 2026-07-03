@@ -320,6 +320,17 @@ mod imp {
             Ok(Self { fd })
         }
 
+        /// Duplicate this kqueue's descriptor, yielding a second handle to the
+        /// *same* kernel queue.  Because `apply` takes `&self` and the kernel's
+        /// `kevent` is thread-safe, the clone can be moved to another thread and
+        /// used to trigger an `EVFILT_USER` wakeup on a queue another thread is
+        /// blocked in `wait` on — the basis for a cross-thread reactor wakeup.
+        pub fn try_clone(&self) -> io::Result<Self> {
+            Ok(Self {
+                fd: self.fd.try_clone()?,
+            })
+        }
+
         pub fn apply(&self, change: KqueueChange) -> io::Result<()> {
             self.apply_all(&[change])
         }

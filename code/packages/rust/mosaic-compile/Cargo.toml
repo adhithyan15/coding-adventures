@@ -17,7 +17,16 @@ mosaic-emit-html = { path = "../mosaic-emit-html" }
 mosaic-emit-react = { path = "../mosaic-emit-react" }
 mosaic-emit-paint = { path = "../mosaic-emit-paint" }
 mosaic-emit-xaml = { path = "../mosaic-emit-xaml" }
+# UI30 — every per-backend emitter exposes pipeline::from_pipeline().
+# Wiring all of them into the CLI lets `mosaic-compile --backend <X>`
+# work with .mil/.mll/.msl triples for X in
+# {react, html, webcomponent, swiftui, qt, flutter, xaml}.
+mosaic-emit-swiftui = { path = "../mosaic-emit-swiftui" }
+mosaic-emit-qt = { path = "../mosaic-emit-qt" }
+mosaic-emit-flutter = { path = "../mosaic-emit-flutter" }
+mosaic-emit-compose = { path = "../mosaic-emit-compose" }
 mosaic-package-manifest = { path = "../mosaic-package-manifest" }
+mosaic-package-resolver = { path = "../mosaic-package-resolver" }
 mosmodel-compiler = { path = "../mosmodel-compiler" }
 moslayout-compiler = { path = "../moslayout-compiler" }
 mosstyle-compiler = { path = "../mosstyle-compiler" }

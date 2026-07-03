@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-array-runtime"
+version = "0.3.0"
+edition = "2021"
+description = "N-D numeric array substrate for array languages — lowers to matrix-ir for GPU-aware execution"
+
+[dependencies]
+matrix-ir = { path = "../matrix-ir" }
+matrix-runtime = { path = "../matrix-runtime" }
+compute-ir = { path = "../compute-ir" }
+executor-protocol = { path = "../executor-protocol" }
+matrix-cpu = { path = "../matrix-cpu" }

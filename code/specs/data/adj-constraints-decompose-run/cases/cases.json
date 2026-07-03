@@ -1,0 +1,35 @@
+{
+  "_comment": "Messy-prose constraint word problems for the live decompose->solve demonstration (ADJ constraints D2). The model decomposes each `prose` into an adj-lang program; the engine solves it. `gold` is the hand-computed answer, checked against the ENGINE output (never against the model). `answer_key` says which engine section carries the answer and how to read it.",
+  "cases": [
+    {
+      "id": "relief_allocation",
+      "prose": "A relief charity has a $12,000 budget this month to split between two programs: hot meals and emergency shelter (count the dollars in thousands). Every $1k put into meals delivers 4 units of relief; every $1k into shelter delivers 3 units. The kitchen can absorb at most $8k of meals funding. They want the split that delivers the most total relief. How many relief units can they deliver, and how should they allocate the budget?",
+      "solver_path": "maximize",
+      "gold": { "optimize_value": 44 },
+      "gold_assignment": { "meals": 8, "shelter": 4 },
+      "notes": "max 4*meals + 3*shelter s.t. meals+shelter<=12, meals<=8, meals>=0, shelter>=0 -> 44 at (8,4)."
+    },
+    {
+      "id": "workshop_break_even",
+      "prose": "Running a one-day workshop costs $2,000 in fixed overhead plus $15 for each attendee (materials and catering). Tickets sell for $65 each. How many attendees does the workshop need so that revenue exactly covers total cost (break even)?",
+      "solver_path": "solve",
+      "gold": { "solve_value": { "var": "attendees", "value": 40 } },
+      "notes": "65*attendees = 2000 + 15*attendees -> 50*attendees = 2000 -> 40."
+    },
+    {
+      "id": "schedule_feasibility",
+      "prose": "A project has two phases. The design phase cannot finish before day 28. The build phase cannot start until design is finished and then takes at least 20 days, and the whole project must be delivered (build finished) by day 45. Treat the day each phase finishes as an unknown. Is this schedule even possible?",
+      "solver_path": "check",
+      "gold": { "check_outcome": "unsat" },
+      "notes": "design_end >= 28 ; build_end >= design_end + 20 ; build_end <= 45 -> design_end <= 25, contradicts design_end >= 28 -> UNSAT."
+    },
+    {
+      "id": "production_cost",
+      "prose": "A small factory must produce at least 100 units of product A and at least 60 units of product B to meet contracts. Product A costs $5 per unit to make and product B costs $8 per unit. The factory wants to meet the contracts at the lowest possible total production cost. What is that minimum cost?",
+      "solver_path": "minimize",
+      "gold": { "optimize_value": 980 },
+      "gold_assignment": { "a": 100, "b": 60 },
+      "notes": "min 5*a + 8*b s.t. a>=100, b>=60 -> 5*100 + 8*60 = 980 at (100,60)."
+    }
+  ]
+}

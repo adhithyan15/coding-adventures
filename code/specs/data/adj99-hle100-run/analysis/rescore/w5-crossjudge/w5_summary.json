@@ -1,0 +1,61 @@
+{
+  "n_cells_both_judges": 395,
+  "per_arm": {
+    "plain-haiku": {
+      "n": 100,
+      "opus_mean_def": 1.9,
+      "sonnet_mean_def": 2.1,
+      "sonnet_pct_named": 0.31,
+      "sonnet_pct_flagged": 0.04,
+      "sonnet_pct_flip": 0.02
+    },
+    "plain-opus": {
+      "n": 98,
+      "opus_mean_def": 3.031,
+      "sonnet_mean_def": 3.112,
+      "sonnet_pct_named": 0.531,
+      "sonnet_pct_flagged": 0.184,
+      "sonnet_pct_flip": 0.092
+    },
+    "fw-haiku": {
+      "n": 99,
+      "opus_mean_def": 2.707,
+      "sonnet_mean_def": 2.758,
+      "sonnet_pct_named": 0.485,
+      "sonnet_pct_flagged": 0.121,
+      "sonnet_pct_flip": 0.02
+    },
+    "fw-opus": {
+      "n": 98,
+      "opus_mean_def": 3.48,
+      "sonnet_mean_def": 3.561,
+      "sonnet_pct_named": 0.816,
+      "sonnet_pct_flagged": 0.367,
+      "sonnet_pct_flip": 0.224
+    }
+  },
+  "fw_minus_plain_gap": {
+    "opus_judge": {
+      "haiku_fw_minus_plain": 0.807,
+      "opus_fw_minus_plain": 0.449
+    },
+    "sonnet_judge": {
+      "haiku_fw_minus_plain": 0.658,
+      "opus_fw_minus_plain": 0.449
+    }
+  },
+  "inter_judge_agreement": {
+    "exact_match_rate": 0.641,
+    "within_1_rate": 0.967,
+    "mean_abs_diff": 0.397,
+    "mean_signed_diff_sonnet_minus_opus": 0.104,
+    "pearson_r": 0.79,
+    "bool_agree_premise_named": 0.706,
+    "bool_agree_flagged_fallible": 0.927,
+    "bool_agree_would_flip": 0.932
+  },
+  "reproduces": {
+    "fw_beats_plain_haiku_both_judges": true,
+    "fw_beats_plain_opus_both_judges": true
+  }
+}

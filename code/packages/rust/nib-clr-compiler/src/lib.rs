@@ -589,7 +589,7 @@ mod tests {
     #[test]
     fn clr_simulator_runs_direct_arithmetic_bytecode() {
         use clr_simulator::{
-            CLRSimulator, OP_RET, OP_SUB, assemble_clr, encode_ldc_i4, encode_ldloc, encode_stloc,
+            CLRSimulator, Value, OP_RET, OP_SUB, assemble_clr, encode_ldc_i4, encode_ldloc, encode_stloc,
         };
 
         let prog = assemble_clr(&[
@@ -607,6 +607,6 @@ mod tests {
 
         assert!(!traces.is_empty(), "simulator should produce trace steps");
         assert!(sim.halted, "simulator should halt on ret");
-        assert_eq!(sim.locals[0], Some(5), "10 - 5 should equal 5");
+        assert_eq!(sim.locals[0], Some(Value::Int(5)), "10 - 5 should equal 5");
     }
 }

@@ -1,0 +1,56 @@
+{
+  "hash": "6e04cb84610431d7",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/",
+  "title": "Nosocomial Meningitis: Moving beyond Description to Prevention (editorial, Korean J Intern Med 2012)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In nosocomial meningitis, the most common organisms by rank were coagulase-negative staphylococci, Acinetobacter species, and Staphylococcus aureus.",
+      "byte_quote": "the most common organisms by rank were coagulase-negative staphylococci, *Acinetobacter* species, and *Staphylococcus aureus*"
+    },
+    {
+      "id": "c2",
+      "text": "Acinetobacter species are nosocomial pathogens of increasing importance.",
+      "byte_quote": "_Acinetobacter_ species are nosocomial pathogens of increasing importance"
+    },
+    {
+      "id": "c3",
+      "text": "Acinetobacter was the second most common cause of nosocomial meningitis in this cohort.",
+      "byte_quote": "_Acinetobacter_ was the second most common cause of nosocomial meningitis"
+    },
+    {
+      "id": "c4",
+      "text": "Most of the nosocomial meningitis infections (78/91, 86%) were related to placement of an external ventricular drain (EVD).",
+      "byte_quote": "Most (78/91, 86%) of the infections were related to the placement of an external ventricular drain (EVD)"
+    },
+    {
+      "id": "c5",
+      "text": "The incidence of EVD-related infections ranges from 2% to 27%.",
+      "byte_quote": "the incidence of EVD-related infections ranges from 2% to 27%"
+    },
+    {
+      "id": "c6",
+      "text": "26% of Acinetobacter isolates were resistant to imipenem and 27% of patients infected with them died.",
+      "byte_quote": "26% of _Acinetobacter_ species were resistant to imipenem and 27% of the patients infected with them died"
+    },
+    {
+      "id": "c7",
+      "text": "Invasive neurosurgical procedures are exposures predisposing to nosocomial meningitis: craniotomies, internal/external ventricular catheters, lumbar puncture, intrathecal medication infusions, and spinal anesthesia.",
+      "byte_quote": "invasive procedures (for examples, such as craniotomies, the placement of internal or external ventricular catheters, lumbar puncture, intrathecal infusions of medications, or spinal anesthesia)"
+    },
+    {
+      "id": "c8",
+      "text": "Risk factors for EVD-related infection include duration of catheterization, frequency of EVD manipulation, intraventricular hemorrhage, and insertion technique.",
+      "byte_quote": "Relevant risk factors have been identified as the duration of catheterization, frequency of EVD manipulation, intraventricular hemorrhage, and insertion techniques"
+    },
+    {
+      "id": "c9",
+      "text": "The epidemiology and outcomes described are drawn from Kim et al., a study of nosocomial meningitis.",
+      "byte_quote": "In this issue of the Korean J Intern Med, Kim et al. [3] described the epidemiology of nosocomial meningitis and its outcomes."
+    }
+  ],
+  "cites": [
+    "Kim HI, Kim SW, Park GY, et al. The causes and treatment outcomes of 91 patients with adult nosocomial meningitis. Korean J Intern Med. 2012;27:171-179."
+  ]
+}

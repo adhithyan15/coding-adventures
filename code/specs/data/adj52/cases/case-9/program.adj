@@ -1,0 +1,47 @@
+% ADJ52 case-9 program — THIS patient's observations + queries only.
+% Same vocabulary as cases/case-9/rulebook.adj. Numeric/unit facts from the IR
+% are mapped to the rulebook's qualitative atoms:
+%   patient_age(years(33))                 -> age(under_40)
+%   patient_sex(male)                      -> sex(male)
+%   ethnicity(south_asian)                 -> ethnicity(asian)
+%   firm_nontender_subcutaneous_mass +
+%     painless + 7-year duration           -> mass_quality(chronic_painless_subcutaneous), mass_duration(years)
+%   left parotid + post-auricular sites     -> mass_site(parotid_and_postauricular), mass_laterality(unilateral_dominant)
+%   occipital + jugular lymphadenopathy     -> regional_lymphadenopathy(present)
+%   eosinophil_fraction(percent(28)) /AEC   -> eosinophilia(elevated)
+%   serum_total_ige_elevated(480 IU/mL)     -> serum_ige(markedly_elevated)
+%   heterogeneous ill-defined parotid mass  -> imaging(ill_defined_infiltrative_soft_tissue)
+%   enlarged superficial temporal artery    -> feeder_vessel(prominent)
+%   denies fever/night sweats/weight loss   -> constitutional_symptoms(absent)
+%   FNA oncocytic + ductal + lymphocytes    -> cytology(oncocytic_ductal_lymphocyte_background),
+%                                              cytology(nonspecific_fna_discordant)
+% Histology is deliberately NOT observed: it is the open uncertainty driving the
+% next-step decision.
+
+observe age(under_40)
+observe sex(male)
+observe ethnicity(asian)
+observe mass_quality(chronic_painless_subcutaneous)
+observe mass_duration(years)
+observe mass_site(parotid_and_postauricular)
+observe mass_laterality(unilateral_dominant)
+observe regional_lymphadenopathy(present)
+observe eosinophilia(elevated)
+observe serum_ige(markedly_elevated)
+observe imaging(ill_defined_infiltrative_soft_tissue)
+observe feeder_vessel(prominent)
+observe constitutional_symptoms(absent)
+observe cytology(oncocytic_ductal_lymphocyte_background)
+observe cytology(nonspecific_fna_discordant)
+
+% q1/q2 — unifying diagnosis across the eosinophilic head/neck-mass differential
+? diagnosis(kimura_disease)
+? diagnosis(angiolymphoid_hyperplasia_eosinophilia)
+? diagnosis(igg4_related_disease)
+? diagnosis(langerhans_cell_histiocytosis)
+? diagnosis(lymphoma)
+? diagnosis(warthin_tumour)
+
+% q3 — definitive next step
+? next_step(excisional_biopsy_histology)
+? next_step(serum_igg4_and_igg4_staining)

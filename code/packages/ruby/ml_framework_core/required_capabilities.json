@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/ml_framework_core",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "MatrixRustRuby.run_graph_on_cpu (via coding_adventures_matrix_rust_ruby gem)",
+      "justification": "Forward dispatch of large-tensor (numel >= 10_000) ops routes through the matrix_rust_ruby gem's native extension, which delegates to c-bridge's pure-Rust matrix-cpu envelope runner. Small tensors stay in pure Ruby. The require is lazy (only fired on first dispatch) so pure-Ruby workflows don't load the native ext."
+    }
+  ],
+  "justification": "Mixed pure-Ruby / FFI-dispatch library. The single FFI surface is one call to MatrixRustRuby.run_graph_on_cpu with a JSON envelope string. No network, no filesystem, no process spawning. Pure-Ruby fallback covers every op below the threshold and several ops always."
+}

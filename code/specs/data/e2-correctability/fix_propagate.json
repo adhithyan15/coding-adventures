@@ -1,0 +1,43 @@
+{
+ "RQ2_fix_locality": {
+  "framework": "single local edit at the located locus (override one CAS fact / edit one clause)",
+  "prose": "no localized handle \u2014 the fix requires rewriting the derivation; not a fix of an artifact",
+  "worked_example": {
+   "fix": "one human override of the correlated CSF-chemistry facts (a single CAS edit)",
+   "edits_applied_as_one_override": 3,
+   "target_case_pre_culture": {
+    "base_P": 0.9999,
+    "edited_P": 0.7709,
+    "effect": "false-certainty de-saturated"
+   },
+   "regression_sibling_culture_positive": {
+    "base_P": 1.0,
+    "edited_P": 1.0,
+    "effect": "unchanged (no regression)"
+   },
+   "answer_time_model_calls": 0,
+   "base_corpus": "immutable; edit lives in versioned, attributed, cited overrides/"
+  }
+ },
+ "RQ3_persist_propagate": {
+  "framework": "re-derive from corrected CAS; one override propagates to every sibling citing the fact",
+  "prose": "nothing to propagate (no re-derivable artifact)",
+  "meningitis_regression_safe": {
+   "base_P": 1.0,
+   "edited_P": 1.0,
+   "effect": "unchanged (no regression)"
+  },
+  "tax_derive_once": {
+   "compiled_once": "TAX-1 rulebook (byte-verified) -> content-addressed library, no model",
+   "held_out_cases_decided_on_cpu": 3,
+   "verdicts": [
+    "REQUIRED_TO_FILE",
+    "NOT_REQUIRED_TO_FILE",
+    "REQUIRED_TO_FILE"
+   ],
+   "answer_time_model_calls": 0,
+   "every_verdict_carries_proof": "rule -> fact -> cited policy bytes"
+  },
+  "headline_number": "1 edit / 1 compiled library -> N sibling cases corrected, answer-time model calls = 0"
+ }
+}

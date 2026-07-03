@@ -1,9 +1,15 @@
 [package]
 name = "cas-summation"
-version = "0.8.0"
+version = "2.28.0"
 edition = "2021"
 description = "Symbolic summation and product evaluation over symbolic IR"
 license = "MIT"
 
 [dependencies]
 symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+# Track B2 — Apart-retry telescope chain tests need a real VM with the
+# Apart handler installed.  Dev-only — the published runtime does not
+# depend on symbolic-vm.
+symbolic-vm = { path = "../symbolic-vm" }

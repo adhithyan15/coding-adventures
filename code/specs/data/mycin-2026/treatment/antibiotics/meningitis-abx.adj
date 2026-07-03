@@ -1,0 +1,75 @@
+% ============================================================================
+% meningitis-abx — empiric antibiotic SELECTION for acute bacterial meningitis.
+% ============================================================================
+% MYCIN-2026 (therapy layer). This is MYCIN's original purpose — recommend the
+% therapy — rebuilt on the byte-provenance substrate: grounded, auditable, and
+% one-edit-correctable. Each REGIMEN COMPONENT is a hypothesis the engine decides
+% to INCLUDE, driven by the patient's factors as deterministic (saturating) rules.
+% Reading each component's posterior (independently) gives the empiric regimen.
+%
+% Grounded in IDSA practice guidelines for bacterial meningitis (Tunkel AR et al.,
+% Clin Infect Dis 2004;39:1267) + adjunctive dexamethasone (de Gans & van de Beek,
+% NEJM 2002). Citations are authored-from-guideline; spider byte-verification is a
+% follow-up (as for the diagnostic clauses). The renal dose + the door-to-
+% antibiotic time window are solved separately by the constraint solver (select_abx.py).
+
+dictionary abx_vocab {
+    % --- regimen components (the therapy decisions) ---
+    define give_vancomycin : hypothesis
+    define give_ceftriaxone : hypothesis
+    define give_ampicillin : hypothesis
+    define give_betalactam_sparing_alt : hypothesis
+    define give_dexamethasone : hypothesis
+
+    % --- patient factors (the rule inputs) ---
+    define meningitis_dx : finding values [empiric, confirmed]
+        surface "suspected bacterial meningitis", "empiric meningitis treatment"
+    define age_band : finding values [over_50, under_50]
+        surface "age over 50", "older adult", "younger adult"
+    define immunocompromised : finding values [yes, no]
+        surface "immunocompromised", "HIV", "transplant", "on immunosuppression"
+    define betalactam_allergy : finding values [severe, none]
+        surface "severe penicillin allergy", "anaphylaxis to beta-lactam", "no drug allergy"
+    define suspected_pneumococcal : finding values [yes, no]
+        surface "gram-positive diplococci", "pneumococcal", "S. pneumoniae"
+}
+
+rulebook meningitis_abx {
+    use abx_vocab
+
+    % VANCOMYCIN — always, empirically (covers penicillin-resistant S. pneumoniae).
+    prior 0.02 for give_vancomycin   source "IDSA Tunkel 2004 (empiric vancomycin)" trust authoritative
+    contributes 1000000 from meningitis_dx(empiric) to give_vancomycin
+        source "IDSA 2004: empiric vancomycin for resistant pneumococcus" trust authoritative
+
+    % CEFTRIAXONE (3rd-gen cephalosporin) — base coverage, UNLESS a severe
+    % beta-lactam allergy, which drags its inclusion back down (the exclusion).
+    prior 0.02 for give_ceftriaxone   source "IDSA Tunkel 2004 (3rd-gen cephalosporin)" trust authoritative
+    contributes 1000000 from meningitis_dx(empiric) to give_ceftriaxone
+        source "IDSA 2004: empiric 3rd-gen cephalosporin" trust authoritative
+    contributes 0.0000001 from betalactam_allergy(severe) to give_ceftriaxone
+        source "IDSA 2004: avoid beta-lactams in severe/anaphylactic allergy" trust authoritative
+
+    % AMPICILLIN — add for Listeria cover if age > 50 OR immunocompromised.
+    prior 0.02 for give_ampicillin   source "IDSA Tunkel 2004 (Listeria cover)" trust authoritative
+    contributes 1000000 from age_band(over_50) to give_ampicillin
+        source "IDSA 2004: add ampicillin (Listeria) for age >50" trust authoritative
+    contributes 1000000 from immunocompromised(yes) to give_ampicillin
+        source "IDSA 2004: add ampicillin (Listeria) if immunocompromised" trust authoritative
+
+    % BETA-LACTAM-SPARING ALTERNATIVE — when the cephalosporin is excluded by allergy.
+    prior 0.02 for give_betalactam_sparing_alt   source "IDSA Tunkel 2004 (alt regimen)" trust authoritative
+    contributes 1000000 from betalactam_allergy(severe) to give_betalactam_sparing_alt
+        source "IDSA 2004: moxifloxacin/aztreonam (+ TMP-SMX for Listeria) if severe beta-lactam allergy" trust authoritative
+
+    % DEXAMETHASONE — adjunct, with/before the first antibiotic dose, if pneumococcal.
+    prior 0.02 for give_dexamethasone   source "de Gans & van de Beek, NEJM 2002" trust authoritative
+    contributes 1000000 from suspected_pneumococcal(yes) to give_dexamethasone
+        source "NEJM 2002 / IDSA 2004: adjunct dexamethasone for suspected pneumococcal meningitis" trust authoritative
+}
+
+? give_vancomycin
+? give_ceftriaxone
+? give_ampicillin
+? give_betalactam_sparing_alt
+? give_dexamethasone

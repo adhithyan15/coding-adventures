@@ -1,0 +1,23 @@
+# irc_server_native — Ruby C extension wrapping the Rust IRC engine.
+#
+# All IRC + TCP logic lives in `irc-net-reactor` (Rust, on the home-grown
+# kqueue/epoll reactor).  This crate is a thin control surface: create the
+# server, run it (releasing the GVL around the blocking event loop), stop it.
+# There is NO per-message callback into Ruby — the host language only launches
+# and controls the server.
+#
+# crate-type = ["cdylib"]: emit a shared library Ruby can `require`.
+
+[package]
+name = "irc-server-native-ruby"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+name = "irc_server_native"
+
+[dependencies]
+irc-net-reactor = { path = "../../../../rust/irc-net-reactor" }
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }

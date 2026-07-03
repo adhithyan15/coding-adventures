@@ -1,0 +1,8 @@
+{
+ "check_id": 141,
+ "idx": 57,
+ "slot": "in_hillside_overlay_district",
+ "claimed_value": true,
+ "scenario": "A proposed single-family home measures 32 feet in height. The lot lies entirely within a mapped Hillside Overlay District.",
+ "cited_span": "The lot lies entirely within a mapped Hillside Overlay District."
+}

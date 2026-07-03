@@ -1,0 +1,287 @@
+{
+  "sample": "items_11_to_20",
+  "contamination_note": "Parent broad web search surfaced a HuggingFace HLE-style mirror for the Puntland item; it was not used as accepted evidence. Subagents were instructed not to use benchmark/dataset/solution sites.",
+  "blind_correct": 1,
+  "framework_mechanical_correct": 4,
+  "strict_accepted": 3,
+  "strict_correct": 3,
+  "wrong_accepted": 0,
+  "items": [
+    {
+      "id": "672e24f117",
+      "gold": "Y7960791205542063980",
+      "blind_answer": "N1",
+      "blind_correct": false,
+      "framework_answer": "N1",
+      "framework_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Rejected: C-standard provenance says the printf format trick is undefined/non-portable, while benchmark gold assumes contest/platform byte layout. This is an ambiguity fork, not a clean accepted answer."
+    },
+    {
+      "id": "673634d362",
+      "gold": "León Felipe. \"El niño de Vallecas\"",
+      "blind_answer": "Rafael Alberti; The Burial of the Count of Orgaz",
+      "blind_correct": false,
+      "framework_answer": "León Felipe; El niño de Vallecas",
+      "framework_correct": true,
+      "strict_accept": true,
+      "strict_reason": "Accepted: source quotes identify León Felipe and connect the poem to El niño de Vallecas; translation mismatch is tolerable because Spanish lines match."
+    },
+    {
+      "id": "6708c1dc2f",
+      "gold": "MV Celtic Horizon",
+      "blind_answer": "MV Sea Lion",
+      "blind_correct": false,
+      "framework_answer": "MV Celtic Horizon",
+      "framework_correct": true,
+      "strict_accept": false,
+      "strict_reason": "Rejected for strict provenance: framework answer matches gold and search snippets, but the parent could not fetch source bytes containing the vessel name without relying on benchmark/dataset mirror or unfetched snippet text."
+    },
+    {
+      "id": "66ecfd03e7",
+      "gold": "30",
+      "blind_answer": "26",
+      "blind_correct": false,
+      "framework_answer": "30",
+      "framework_correct": true,
+      "strict_accept": true,
+      "strict_reason": "Accepted: enumerator derives 30 from input assumptions; interpretation risk is documented but matches gold."
+    },
+    {
+      "id": "67253f2c13",
+      "gold": "O=c1cc(-c2ccc(O)cc2)oc2cc(O)cc(O)c12",
+      "blind_answer": "Oc1cc(O)c2oc(=C(c3cc(O)ccc3)O)cc2c1",
+      "blind_correct": false,
+      "framework_answer": "UNSUPPORTED: carbonyl-free SMILES not established; checked gold-like carbonyl candidate violates prompt",
+      "framework_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Rejected/unsupported: RDKit program verifies the gold-like C15H10O5 candidate has one carbonyl, violating explicit input bytes that say avoid carbonyls."
+    },
+    {
+      "id": "67572db350",
+      "gold": "1.4",
+      "blind_answer": "1.4",
+      "blind_correct": true,
+      "framework_answer": "1.4",
+      "framework_correct": true,
+      "strict_accept": true,
+      "strict_reason": "Accepted: one-vortex/mirror-image program gives 7/5=1.4; model assumptions are explicit and match the prompt wording closely enough."
+    },
+    {
+      "id": "66e8e473f5",
+      "gold": "8",
+      "blind_answer": "9",
+      "blind_correct": false,
+      "framework_answer": "9",
+      "framework_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Rejected: executable count gives 9, but gold is 8; likely hidden convention excludes the trivial singleton or another representation case. Framework should not accept without resolving convention."
+    },
+    {
+      "id": "671ec6d8a6",
+      "gold": "\\sum_F |\\sum_m \\O_F^m(t_p)d_F^m|^2",
+      "blind_answer": "first-order TDPT cross-section formula, not benchmark form",
+      "blind_correct": false,
+      "framework_answer": "sigma(t_p)=K*sum_j[d_j^2+nearest-neighbor interference...]",
+      "framework_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Rejected: source-derived formula family is plausible but prompt lacks enough constants/conventions; answer does not collapse to benchmark gold form."
+    },
+    {
+      "id": "6726425100",
+      "gold": "76",
+      "blind_answer": "-20",
+      "blind_correct": false,
+      "framework_answer": "-20",
+      "framework_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Rejected: nf4 codebook/rounding/saturation are missing from input bytes; program result -20 is assumption-heavy and gold is 76."
+    },
+    {
+      "id": "671683479e",
+      "gold": "Snow Block",
+      "blind_answer": "Glowstone",
+      "blind_correct": false,
+      "framework_answer": "Glowstone",
+      "framework_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Rejected: framework path assumes witch/glowstone route; gold is Snow Block, so the Minecraft world/version/mechanics are unresolved."
+    }
+  ],
+  "program_results": [
+    {
+      "id": "672e24f117",
+      "path": "/tmp/adj-hle10-run2/programs/672e24f117.py",
+      "returncode": 0,
+      "stdout": "7960791205542063980",
+      "stderr": "",
+      "output_sha256": "b8d9534c303960739beccbba9aec642d3489177d266930de75df2482560305ac"
+    },
+    {
+      "id": "66ecfd03e7",
+      "path": "/tmp/adj-hle10-run2/programs/66ecfd03e7.py",
+      "returncode": 0,
+      "stdout": "30\n['00000', '00001', '00010', '00011', '00100', '00101', '00110', '00111', '01000', '01001', '01011', '01100', '01101', '01110', '01111', '10000', '10001', '10010', '10011', '10100', '10110', '10111', '11000', '11001', '11010', '11011', '11100', '11101', '11110', '11111']",
+      "stderr": "",
+      "output_sha256": "1c89165307948d46a70c5a41a6ebbf8652fd313390586dd071bf15862f4e5de6"
+    },
+    {
+      "id": "67253f2c13",
+      "path": "/tmp/adj-hle10-run2/programs/67253f2c13.py",
+      "returncode": 0,
+      "stdout": "C15H10O5 270.05282342000004 20 0 0 100 3 5 1 3 3 1",
+      "stderr": "",
+      "output_sha256": "bd900dc6e5f439101ff0464d50530a6e4416f1a4c1cf4ead9aa9002f23dbb1b8"
+    },
+    {
+      "id": "67572db350",
+      "path": "/tmp/adj-hle10-run2/programs/67572db350.py",
+      "returncode": 0,
+      "stdout": "1.4 7/5",
+      "stderr": "",
+      "output_sha256": "33ca10fc74d9137fef3d26c7be3444c69c501811fc631263d4c6a4e8f4920c30"
+    },
+    {
+      "id": "66e8e473f5",
+      "path": "/tmp/adj-hle10-run2/programs/66e8e473f5.py",
+      "returncode": 0,
+      "stdout": "9 [(1,), (2,), (2, 3), (2, 9), (3,), (6,), (6, 9), (9,), (18,)]",
+      "stderr": "",
+      "output_sha256": "d4746d97a9836b8f9100ae77f1017ce145a3703949e094591fe1757d1ab7b1e1"
+    },
+    {
+      "id": "6726425100",
+      "path": "/tmp/adj-hle10-run2/programs/6726425100.py",
+      "returncode": 0,
+      "stdout": "2.0 56.75 56.8125 -20",
+      "stderr": "",
+      "output_sha256": "940694ede664900e9a7704964b1f79155bd80480887d16bdeea78cf0a68aa99e"
+    },
+    {
+      "id": "671683479e",
+      "path": "/tmp/adj-hle10-run2/programs/671683479e.py",
+      "returncode": 0,
+      "stdout": "{'assumed_route': 'witch drops glowstone dust -> craft glowstone', 'candidate': 'Glowstone', 'risk': 'version/world assumptions unresolved'}",
+      "stderr": "",
+      "output_sha256": "cd081dc6a4714a8a1f67e8ecd84f8055dcf7ce0bb7922a3afadeb5a6ad68d804"
+    }
+  ],
+  "source_results": [
+    {
+      "id": "673634d362",
+      "url": "https://www.fundacionsoycomotu.org/la-responsabilidad-humana-poema-pie-para-el-nino-de-vallecas-de-velazquez/",
+      "fetch_ok": true,
+      "quotes": [
+        {
+          "quote": "De aquí no se va nadie. Nadie.",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 104008
+        },
+        {
+          "quote": "Ni el místico ni el suicida.",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 104046
+        },
+        {
+          "quote": "León Felipe",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 102630
+        }
+      ],
+      "sha256": "f2850117df3d12602150d50bf3e6cd9e1270795e714dc59a8d67f36b484faac3",
+      "bytes": 168394
+    },
+    {
+      "id": "673634d362",
+      "url": "https://www.museodelprado.es/en/the-collection/art-work/the-boy-from-vallecas-francisco-lezcano/5a304c42-2eee-49da-b34e-3468b8cb7fb0",
+      "fetch_ok": true,
+      "quotes": [
+        {
+          "quote": "The Boy from Vallecas",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 56
+        },
+        {
+          "quote": "Diego Rodríguez de Silva y Velázquez",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 120742
+        }
+      ],
+      "sha256": "7fa7ef352d8eda8854fa5fae6dec1904b30989057c537f11dca3c1f1130feba4",
+      "bytes": 406294
+    },
+    {
+      "id": "6708c1dc2f",
+      "url": "https://dokumen.pub/private-anti-piracy-navies-how-warships-for-hire-are-changing-maritime-security-9780739173336-9780739173329.html",
+      "fetch_ok": false,
+      "quotes": [],
+      "error": "<HTTPError 403: 'Forbidden'>"
+    },
+    {
+      "id": "67572db350",
+      "url": "https://pressbooks.online.ucf.edu/aerodynamicstext/chapter/chapter-5-theory-of-airfoil-aerodynamics/",
+      "fetch_ok": true,
+      "quotes": [
+        {
+          "quote": "line vortex is positioned at the 1/4 chord",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 87005
+        },
+        {
+          "quote": "flow tangency is enforced at the 3/4 chord",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 87052
+        }
+      ],
+      "sha256": "6b96e998ff373e6891b3116ed02898a6662ad37d687d937e2928ffa12d74c918",
+      "bytes": 179439
+    },
+    {
+      "id": "67572db350",
+      "url": "https://mdolab-openaerostruct.readthedocs-hosted.com/en/latest/advanced_features/ground_effect.html",
+      "fetch_ok": true,
+      "quotes": [
+        {
+          "quote": "mirroring a second copy of the mesh across the ground plane",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 7838
+        }
+      ],
+      "sha256": "18849d2952d6e34b089b29afc8d2665aa850f8a677f77a79670a5014169a08b6",
+      "bytes": 28331
+    },
+    {
+      "id": "67253f2c13",
+      "url": "https://www.rdkit.org/docs/source/rdkit.Chem.Descriptors.html",
+      "fetch_ok": true,
+      "quotes": [
+        {
+          "quote": "The exact molecular weight of the molecule",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 5209
+        },
+        {
+          "quote": "The number of valence electrons the molecule has",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 16279
+        }
+      ],
+      "sha256": "dc2904db2c37dbace11002557eaeff796a3d59a610c38ec07ed07a4733dafbb7",
+      "bytes": 26563
+    },
+    {
+      "id": "6726425100",
+      "url": "https://docs.riscv.org/reference/isa/unpriv/bfloat16.html",
+      "fetch_ok": true,
+      "quotes": [
+        {
+          "quote": "round to nearest, ties to even",
+          "raw_byte_exact_casefold": true,
+          "byte_start": 41343
+        }
+      ],
+      "sha256": "d6733ee578f84804805f3af16e31e03923c81bfb563c975ef25a0b3e379a0800",
+      "bytes": 72475
+    }
+  ]
+}

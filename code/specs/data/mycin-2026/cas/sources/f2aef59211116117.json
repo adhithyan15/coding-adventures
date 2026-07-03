@@ -1,0 +1,69 @@
+{
+  "hash": "f2aef59211116117",
+  "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK549849/",
+  "title": "Meningococcal Disease (StatPearls, NCBI Bookshelf NBK549849)",
+  "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK549849/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "N. meningitidis is a common, significant cause of community-acquired bacterial meningitis in the US.",
+      "byte_quote": "N meningitidis_ is a common and significant cause of community-acquired bacterial meningitis in the US"
+    },
+    {
+      "id": "c2",
+      "text": "N. meningitidis is the second most common cause of community-acquired bacterial meningitis in adults, after Streptococcus pneumoniae.",
+      "byte_quote": "it is the second most common cause of community-acquired bacterial meningitis in adults after _Streptococcus pneumoniae_"
+    },
+    {
+      "id": "c3",
+      "text": "Meningococcal disease incidence fell from 1.2/100,000 in 1996 to 0.1/100,000 in 2018.",
+      "byte_quote": "The incidence has decreased from 1.2 cases per 100,000 individuals in 1996 to 0.1 cases per 100,000 individuals in 2018"
+    },
+    {
+      "id": "c4",
+      "text": "Highest meningococcal disease incidence is in infants younger than 1 year (2.45 cases per 100,000).",
+      "byte_quote": "The highest incidence of meningococcal disease appears in infants younger than 1 year of age, with 2.45 cases reported per 100,000 individuals"
+    },
+    {
+      "id": "c5",
+      "text": "Serotypes A, B, C, W, X, and Y are responsible for most meningococcal infections.",
+      "byte_quote": "serotypes A, B, C, W, X, and Y responsible for most meningococcal infections"
+    },
+    {
+      "id": "c6",
+      "text": "Serotypes B, C, and Y are the main disease-causing serotypes in Europe, the US, and Canada.",
+      "byte_quote": "Serotypes B, C, and Y are the main serotypes causing disease in Europe, the United States (US), and Canada"
+    },
+    {
+      "id": "c7",
+      "text": "Meningococcal disease primarily affects children and young adults.",
+      "byte_quote": "This condition primarily affects children and young adults"
+    },
+    {
+      "id": "c8",
+      "text": "Risk factors for meningococcal carriage include adolescence/young adulthood, male sex, living in a communal setting, and exposure to cigarette smoke.",
+      "byte_quote": "Risk factors for meningococcal carriage include adolescence and young adulthood, male sex, living in a communal setting, exposure to cigarette smoke"
+    },
+    {
+      "id": "c9",
+      "text": "Immunocompromising conditions raising meningococcal risk include HIV, AIDS, asplenia, and complement deficiencies.",
+      "byte_quote": "These conditions include human immunodeficiency virus infection, acquired immune deficiency syndrome, asplenia, and complement deficiencies"
+    },
+    {
+      "id": "c10",
+      "text": "Nasopharyngeal colonization raises transmission risk to close contacts such as family members, college roommates, and military recruits.",
+      "byte_quote": "Nasopharyngeal colonization increases the risk of transmission to individuals in close contact with infected patients, such as family members, college roommates, and military recruits"
+    },
+    {
+      "id": "c11",
+      "text": "N. meningitidis is an aerobic or facultative anaerobic gram-negative diplococcus.",
+      "byte_quote": "N meningitidis_ is an aerobic or facultative anaerobic, gram-negative diplococcus"
+    },
+    {
+      "id": "c12",
+      "text": "Gram staining is diagnostic in 85% of patients with meningococcal meningitis.",
+      "byte_quote": "Gram staining is diagnostic in 85% of patients with meningococcal meningitis"
+    }
+  ],
+  "cites": []
+}

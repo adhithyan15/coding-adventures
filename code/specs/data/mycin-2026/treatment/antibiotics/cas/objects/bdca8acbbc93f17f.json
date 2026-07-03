@@ -1,0 +1,466 @@
+{
+  "hash": "bdca8acbbc93f17f",
+  "kind": "formulary",
+  "domain": "Grounded antibiotic FORMULARY \u2014 drug FACTS, not regimens. Ea",
+  "source": "formulary-spider (coverage + CSF penetration) + adversarial gate; dose anchors spider-grounded per drug (dose_grounding); dose-window numeric model + tier structural.",
+  "drugs": {
+    "vancomycin": {
+      "covers_accepted": [
+        "mrsa"
+      ],
+      "covers_grounded": [
+        "mrsa"
+      ],
+      "covers_inferred": [],
+      "covers_dropped": [
+        "s_pneumoniae_resistant"
+      ],
+      "csf_penetrant": true,
+      "contraindications": [],
+      "betalactam": false,
+      "tier": 1,
+      "dose": {
+        "floor_mg_per_kg": 15,
+        "ceiling_base_mg_per_kg": 20,
+        "ceiling_penalty_mg_per_kg": {
+          "renal_severe": 6,
+          "nephrotoxin_interaction": 6,
+          "renal_moderate": 2
+        }
+      },
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "vancomycin should be administered to maintain serum vancomycin trough concentrations of approximately 15\u201320 \u00b5g/mL (B-III)",
+        "url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "value_found": "IV vancomycin dosed to maintain serum trough concentrations of approximately 15\u201320 \u00b5g/mL. (Table 6 specifies the weight-based dose, but that cell is an unreadable table image and is NOT verbatim-grounded here; current practice derived from the guideline cites ~30\u201345 (up to 60) mg/kg/day IV divided every 8\u201312 h titrated to that trough.)",
+        "source_title": "Tunkel AR et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA)"
+      }
+    },
+    "ceftriaxone": {
+      "covers_accepted": [
+        "n_meningitidis",
+        "h_influenzae",
+        "s_pneumoniae_susceptible"
+      ],
+      "covers_grounded": [
+        "n_meningitidis",
+        "h_influenzae",
+        "s_pneumoniae_susceptible"
+      ],
+      "covers_inferred": [],
+      "covers_dropped": [],
+      "csf_penetrant": true,
+      "contraindications": [
+        "betalactam_allergy_severe"
+      ],
+      "betalactam": true,
+      "tier": 1,
+      "dose": {
+        "floor_mg_per_kg": 25,
+        "ceiling_base_mg_per_kg": 50,
+        "ceiling_penalty_mg_per_kg": {}
+      },
+      "dose_grounding": {
+        "status": "refuted",
+        "note": "cited source did NOT confirm the adult CNS dose (debt remains)",
+        "byte_quote": "In the treatment of meningitis, it is recommended that the initial therapeutic dose be 100 mg/kg (not to exceed 4 grams). Thereafter, a total daily dose of 100 mg/kg/day (not to exceed 4 grams daily) is recommended. The daily dose may be administered once a day (or in equally divided doses every 12 hours).",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+        "value_found": "For meningitis: total daily dose 100 mg/kg/day, not to exceed 4 grams/day, given once daily or in equally divided doses every 12 hours (i.e., up to 2 g IV every 12 hours in an adult reaching the 4 g/day ceiling).",
+        "source_title": "CEFTRIAXONE FOR INJECTION, USP \u2014 FDA prescribing information (DailyMed / NLM)"
+      }
+    },
+    "ampicillin": {
+      "covers_accepted": [
+        "listeria"
+      ],
+      "covers_grounded": [
+        "listeria"
+      ],
+      "covers_inferred": [],
+      "covers_dropped": [
+        "e_coli"
+      ],
+      "csf_penetrant": true,
+      "contraindications": [
+        "betalactam_allergy_severe"
+      ],
+      "betalactam": true,
+      "tier": 1,
+      "dose": {
+        "floor_mg_per_kg": 25,
+        "ceiling_base_mg_per_kg": 50,
+        "ceiling_penalty_mg_per_kg": {}
+      },
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "12 g/day in divided doses every 4 h",
+        "url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "value_found": "Ampicillin 12 g/day IV in divided doses every 4 h (i.e., 2 g IV every 4 hours) for adults",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA)"
+      }
+    },
+    "cefepime": {
+      "covers_accepted": [
+        "pseudomonas",
+        "gram_negative",
+        "n_meningitidis",
+        "s_pneumoniae_susceptible"
+      ],
+      "covers_grounded": [
+        "pseudomonas",
+        "gram_negative"
+      ],
+      "covers_inferred": [
+        "n_meningitidis",
+        "s_pneumoniae_susceptible"
+      ],
+      "covers_dropped": [],
+      "csf_penetrant": true,
+      "contraindications": [
+        "betalactam_allergy_severe"
+      ],
+      "betalactam": true,
+      "tier": 2,
+      "dose": {
+        "floor_mg_per_kg": 25,
+        "ceiling_base_mg_per_kg": 50,
+        "ceiling_penalty_mg_per_kg": {
+          "renal_severe": 4
+        }
+      },
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "As mentioned previously, the dose of cefepime recommended in the IDSA guidelines for Gram-negative meningitis is 2 g every 8 h.",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+        "value_found": "2 g IV every 8 hours (adult bacterial/Gram-negative meningitis)",
+        "source_title": "Kim BN, Peleg AY, Lodise TP, Lipman J, Li J, Nation R, Paterson DL. Management of meningitis due to antibiotic-resistant Acinetobacter species. Lancet Infect Dis (PMC2760093)"
+      }
+    },
+    "meropenem": {
+      "covers_accepted": [
+        "n_meningitidis",
+        "listeria",
+        "pseudomonas",
+        "gram_negative",
+        "s_pneumoniae_susceptible"
+      ],
+      "covers_grounded": [
+        "n_meningitidis",
+        "listeria",
+        "pseudomonas",
+        "gram_negative",
+        "s_pneumoniae_susceptible"
+      ],
+      "covers_inferred": [],
+      "covers_dropped": [],
+      "csf_penetrant": true,
+      "contraindications": [
+        "betalactam_allergy_severe"
+      ],
+      "betalactam": true,
+      "tier": 3,
+      "dose": {
+        "floor_mg_per_kg": 20,
+        "ceiling_base_mg_per_kg": 40,
+        "ceiling_penalty_mg_per_kg": {
+          "renal_severe": 3
+        }
+      },
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "meropenem 2 g q8h",
+        "url": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+        "value_found": "2 g IV every 8 hours (q8h); total 6 g/day",
+        "source_title": "Initial management of acute bacterial meningitis in adults: summary of IDSA guidelines (Tunkel et al., IDSA Practice Guidelines for the Management of Bacterial Meningitis)"
+      }
+    },
+    "moxifloxacin": {
+      "covers_accepted": [
+        "n_meningitidis"
+      ],
+      "covers_grounded": [],
+      "covers_inferred": [
+        "n_meningitidis"
+      ],
+      "covers_dropped": [
+        "s_pneumoniae_resistant"
+      ],
+      "csf_penetrant": true,
+      "contraindications": [],
+      "betalactam": false,
+      "tier": 4,
+      "dose": {
+        "floor_mg_per_kg": 5,
+        "ceiling_base_mg_per_kg": 8,
+        "ceiling_penalty_mg_per_kg": {}
+      },
+      "dose_grounding": {
+        "status": "refuted",
+        "note": "cited source did NOT confirm the adult CNS dose (debt remains)",
+        "byte_quote": "The dose of AVELOX is 400 mg (orally or as an intravenous infusion) once every 24 hours.",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+        "value_found": "400 mg IV once every 24 hours",
+        "source_title": "AVELOX (moxifloxacin hydrochloride) FDA Prescribing Information \u2014 DailyMed (NLM mirror of the FDA-approved label)"
+      }
+    },
+    "aztreonam": {
+      "covers_accepted": [
+        "gram_negative",
+        "pseudomonas",
+        "n_meningitidis"
+      ],
+      "covers_grounded": [
+        "gram_negative",
+        "pseudomonas"
+      ],
+      "covers_inferred": [
+        "n_meningitidis"
+      ],
+      "covers_dropped": [],
+      "csf_penetrant": true,
+      "contraindications": [],
+      "betalactam": false,
+      "tier": 4,
+      "dose": {
+        "floor_mg_per_kg": 20,
+        "ceiling_base_mg_per_kg": 40,
+        "ceiling_penalty_mg_per_kg": {
+          "renal_severe": 4
+        }
+      },
+      "dose_grounding": {
+        "status": "refuted",
+        "note": "cited source did NOT confirm the adult CNS dose (debt remains)",
+        "byte_quote": "Severe Systemic or Life-Threatening Infections: 2 g [given every] 6 or 8 [hours]; maximum recommended daily dose is 8 g per day.",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+        "value_found": "2 g IV every 6 to 8 hours (maximum 8 g/day) \u2014 labeled for severe systemic/life-threatening infections, NOT specifically for meningitis",
+        "source_title": "AZACTAM (aztreonam for injection, USP) \u2014 FDA prescribing information, DailyMed"
+      }
+    },
+    "tmp_smx": {
+      "covers_accepted": [
+        "listeria"
+      ],
+      "covers_grounded": [
+        "listeria"
+      ],
+      "covers_inferred": [],
+      "covers_dropped": [],
+      "csf_penetrant": true,
+      "contraindications": [],
+      "betalactam": false,
+      "tier": 3,
+      "dose": {
+        "floor_mg_per_kg": 5,
+        "ceiling_base_mg_per_kg": 10,
+        "ceiling_penalty_mg_per_kg": {
+          "renal_severe": 3
+        }
+      },
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "Trimethoprim-sulfamethoxazole row, under header \"Total daily dose (dosing interval in hours)\": \"TMP-SMZ \u2026 10\u201320 mg/kg (6\u201312)\". Footnote: \"TMP-SMZ, trimethoprim-sulfamethoxazole.\"",
+        "url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "value_found": "Trimethoprim component 10-20 mg/kg per day IV, dosing interval every 6-12 hours (i.e., the claim's \"5 mg/kg every 6 hours\" corresponds to the upper end, 20 mg/kg/day q6h)",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA), Table 6: Recommended dosages of antimicrobial therapy in adults with bacterial meningitis"
+      }
+    }
+  },
+  "dose_grounding_summary": {
+    "grounded": 0,
+    "direction_only": 5,
+    "refuted": 3,
+    "pending": 0
+  },
+  "combinations": [
+    {
+      "drugs": [
+        "vancomycin",
+        "ceftriaxone"
+      ],
+      "covers": "s_pneumoniae_resistant",
+      "source": "IDSA Tunkel 2004 (via AAFP summary): for penicillin-/cephalosporin-resistant pneumococcus, vancomycin 'may be used in combination with a third-generation cephalosporin but should not be used alone (A-III)' \u2014 the spider REFUTED single-drug coverage and grounded this COMBINATION rule."
+    },
+    {
+      "drugs": [
+        "vancomycin",
+        "cefepime"
+      ],
+      "covers": "s_pneumoniae_resistant",
+      "source": "IDSA Tunkel 2004: vancomycin + a broad cephalosporin (cefepime) covers resistant pneumococcus in the nosocomial setting."
+    }
+  ],
+  "gate": {
+    "accepted_facts": 15,
+    "dropped": [
+      "covers(vancomycin,s_pneumoniae_resistant)",
+      "covers(ampicillin,e_coli)",
+      "covers(moxifloxacin,s_pneumoniae_resistant)"
+    ],
+    "flagged": [
+      "csf_penetrant(vancomycin)",
+      "covers(cefepime,n_meningitidis)",
+      "covers(cefepime,s_pneumoniae_susceptible)",
+      "csf_penetrant(meropenem)",
+      "covers(moxifloxacin,n_meningitidis)",
+      "covers(aztreonam,n_meningitidis)"
+    ]
+  },
+  "grounding": {
+    "vancomycin__covers__s_pneumoniae_resistant": {
+      "status": "refuted",
+      "byte_quote": "In patients with meningitis caused by penicillin- or cephalosporin-resistant strains it may be used in combination with a third-generation cephalosporin but should not be used alone (A-III).",
+      "url": "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html"
+    },
+    "vancomycin__covers__mrsa": {
+      "status": "grounded",
+      "byte_quote": "IV vancomycin for 2 weeks is recommended (B-II).",
+      "url": "https://academic.oup.com/cid/article/52/3/e18/306145"
+    },
+    "vancomycin__csf": {
+      "status": "unclear",
+      "byte_quote": "Vancomycin does not readily diffuse across normal meninges into the spinal fluid; but, when the meninges are inflamed, penetration into the spinal fluid occurs.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=06dcfd36-942f-4752-86ad-4c5a6fc3e48f"
+    },
+    "ceftriaxone__covers__n_meningitidis": {
+      "status": "grounded",
+      "byte_quote": "Empirical therapy for suspected meningococcal disease should include an extended-spectrum cephalosporin, such as cefotaxime or ceftriaxone.",
+      "url": "https://www.cdc.gov/meningococcal/hcp/clinical-guidance/index.html"
+    },
+    "ceftriaxone__covers__h_influenzae": {
+      "status": "grounded",
+      "byte_quote": "In patients with H. influenzae type b meningitis, the emergence of \u03b2-lactamase\u2014producing strains and resistance to chloramphenicol has made these agents the drugs of choice for empirical therapy for H. influenzae meningitis, pending results of in vitro susceptibility testing.",
+      "url": "https://academic.oup.com/cid/article/39/9/1267/402080"
+    },
+    "ceftriaxone__covers__s_pneumoniae_susceptible": {
+      "status": "grounded",
+      "byte_quote": "After S. pneumoniae is isolated and the penicillin susceptibility of the causative strain is confirmed, antibiotic treatment should be streamlined to either penicillin or ceftriaxone (or ampicillin, amoxicillin, or cefotaxime).",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10215215/"
+    },
+    "ceftriaxone__csf": {
+      "status": "grounded",
+      "byte_quote": "Ceftriaxone penetrated the inflamed meninges of infants and pediatric patients; CSF concentrations after a 50 mg/kg IV dose and after a 75 mg/kg IV dose are also shown in Table 3.",
+      "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/065169s022lbl.pdf"
+    },
+    "ampicillin__covers__listeria": {
+      "status": "grounded",
+      "byte_quote": "The cornerstone of treatment is high-dose beta-lactam antibiotics (typically ampicillin or penicillin), often combined with an aminoglycoside for synergy.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12738974/"
+    },
+    "ampicillin__covers__e_coli": {
+      "status": "refuted",
+      "byte_quote": "In 2020, ampicillin resistance among E. coli isolates rose to over 55%, confirming the persistent inefficacy of this agent.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12472492/"
+    },
+    "ampicillin__csf": {
+      "status": "grounded",
+      "byte_quote": "ampicillin was able to reach therapeutic CSF concentrations in healthy volunteers without the presence of inflammation",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9774927/"
+    },
+    "cefepime__covers__n_meningitidis": {
+      "status": "grounded_unstable",
+      "byte_quote": "A fourth-generation cephalosporin, cefepime, has been shown to be safe and therapeutically equivalent to cefotaxime in the treatment of bacterial meningitis in infants and children.",
+      "url": "https://academic.oup.com/cid/article/39/9/1267/402080"
+    },
+    "cefepime__covers__pseudomonas": {
+      "status": "grounded",
+      "byte_quote": "Similar to ceftazidime, cefepime, very importantly, can cover for P aeruginosa.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK551517/"
+    },
+    "cefepime__covers__gram_negative": {
+      "status": "grounded",
+      "byte_quote": "Cefepime is also a zwitterion, which has faster gram-negative bacteria cell wall penetration. This is also why it has broader gram-negative coverage than third-generation cephalosporins.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK542232/"
+    },
+    "cefepime__covers__s_pneumoniae_susceptible": {
+      "status": "grounded_unstable",
+      "byte_quote": "Cefepime Injection is indicated for pneumonia (moderate to severe) caused by Streptococcus pneumoniae, including cases associated with concurrent bacteremia, Pseudomonas aeruginosa, Klebsiella pneumoniae, or Enterobacter species.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921"
+    },
+    "cefepime__csf": {
+      "status": "grounded",
+      "byte_quote": "A fourth-generation cephalosporin, cefepime, has been shown to be safe and therapeutically equivalent to cefotaxime in the treatment of bacterial meningitis in infants and children.",
+      "url": "https://academic.oup.com/cid/article/39/9/1267/402080"
+    },
+    "meropenem__covers__n_meningitidis": {
+      "status": "grounded",
+      "byte_quote": "Meropenem for Injection is indicated for the treatment of bacterial meningitis caused by Haemophilus influenzae, Neisseria meningitidis and penicillin-susceptible isolates of Streptococcus pneumoniae, in pediatric patients 3 months of age and older.",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=240325ba-47a8-4ad1-bcab-6772069ee790"
+    },
+    "meropenem__covers__listeria": {
+      "status": "grounded",
+      "byte_quote": "It is recommended to use penicillin or meropenem as the initial regimen and not to use cephalosporins alone.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11422092/"
+    },
+    "meropenem__covers__pseudomonas": {
+      "status": "grounded",
+      "byte_quote": "Meropenem has been shown to be active against most isolates of the following bacteria, both in vitro and in clinical infections as described in the INDICATIONS AND USAGE section (1).\nGram-negative bacteria\nEscherichia coli\nHaemophilus influenzae\nKlebsiella pneumoniae\nNeisseria meningitidis\nPseudomonas aeruginosa\nProteus mirabilis",
+      "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2016/205883Orig1s000lbl.pdf"
+    },
+    "meropenem__covers__gram_negative": {
+      "status": "grounded",
+      "byte_quote": "Meropenem has been shown to be active against most isolates of the following microorganisms, both in vitro and in clinical infections",
+      "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=12714f80-d6e5-4453-b66c-62f57c16ddfc"
+    },
+    "meropenem__covers__s_pneumoniae_susceptible": {
+      "status": "grounded",
+      "byte_quote": "Although meropenem is effective in treating patients with pneumococcal meningitis caused by penicillin- or cephalosporin-resistant strains, the prevalence of strains with shared resistance may undermine its usefulness (D-II).",
+      "url": "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html"
+    },
+    "meropenem__csf": {
+      "status": "grounded_unstable",
+      "byte_quote": "Simulated and measured maximum concentrations and AUCcsf/AUCserum ratios were higher in patients suffering from sepsis/meningitis compared to relatively healthy individuals.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6592555/"
+    },
+    "moxifloxacin__covers__s_pneumoniae_resistant": {
+      "status": "refuted",
+      "byte_quote": "Pending results of ongoing trials, these agents (i.e., gatifloxacin and moxifloxacin) should only be used as alternative agents in patients with bacterial meningitis (B-II).",
+      "url": "https://academic.oup.com/cid/article/39/9/1267/402080"
+    },
+    "moxifloxacin__covers__n_meningitidis": {
+      "status": "grounded_unstable",
+      "byte_quote": "fluoroquinolones appear promising for the treatment of meningitis caused by gram-negative microorganisms, ie, Neisseria meningitidis and nosocomial gram-negative bacilli",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12866985/"
+    },
+    "moxifloxacin__csf": {
+      "status": "grounded",
+      "byte_quote": "The geometric mean ratio of the areas under the curve for CSF to plasma were 0.82 (range, 0.70\u20130.94) at 400 mg once per day and 0.71 (0.58\u20130.84) at 800 mg once per day.",
+      "url": "https://academic.oup.com/cid/article/49/7/1080/316132"
+    },
+    "aztreonam__covers__n_meningitidis": {
+      "status": "grounded_unstable",
+      "byte_quote": "It is effective only against aerobic gram-negative organisms but shows no activity against gram-positive bacteria or anaerobes.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK545311/"
+    },
+    "aztreonam__covers__gram_negative": {
+      "status": "grounded",
+      "byte_quote": "Aztreonam is selectively active against Gram-negative aerobic bacteria and inactive against Gram-positive bacteria.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/3512234/"
+    },
+    "aztreonam__covers__pseudomonas": {
+      "status": "grounded",
+      "byte_quote": "For Pseudomonas aeruginosa, a single 2 g intravenous dose produces serum levels that exceed the MIC90 for approximately 4 to 6 hours.",
+      "url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=16671"
+    },
+    "aztreonam__csf": {
+      "status": "grounded",
+      "byte_quote": "Aztreonam concentrations in cerebrospinal fluid in the presence of normal and inflamed meninges exceeded the inhibitory and bactericidal concentrations for most gram-negative bacteria.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/6542765/"
+    },
+    "tmp_smx__covers__listeria": {
+      "status": "grounded",
+      "byte_quote": "TMP/SMX is the preferred drug in patients who cannot take ampicillin. This combination has good in vitro activity and is bactericidal vs. Listeria.",
+      "url": "https://www.hopkinsguides.com/hopkins/view/Johns_Hopkins_ABX_Guide/540318/all/Listeria_Monocytogenes"
+    },
+    "tmp_smx__csf": {
+      "status": "grounded",
+      "byte_quote": "At doses of 20 mg/kg/day (based on TMP component) divided every 6\u201312 h, TMP-SMX is an agent qualified for use for CNS infections caused by susceptible bacterial pathogens.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9774927/"
+    }
+  }
+}

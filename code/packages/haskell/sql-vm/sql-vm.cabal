@@ -1,0 +1,39 @@
+cabal-version: 3.0
+name:          sql-vm
+version:       0.1.5.0
+synopsis:      Haskell stack-machine bytecode VM for Mini-SQLite Level 1
+description:
+    Executes a Program (produced by sql-codegen) against an InMemoryBackend
+    and returns a QueryResult.  Implements a classic stack machine with
+    three-valued SQL logic, aggregate accumulators, cursor iteration, and
+    post-processing (Sort, Distinct, Limit).
+    Part of the Mini-SQLite Level 1 pipeline:
+      sql-lexer → sql-parser → sql-planner → sql-optimizer → sql-codegen → sql-vm
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  SqlVm
+    build-depends:    base >=4.14
+                    , sql-backend
+                    , sql-codegen
+                    , sql-planner
+                    , containers
+                    , mtl
+    hs-source-dirs:   src
+    default-language: GHC2021
+
+test-suite sql-vm-test
+    type:             exitcode-stdio-1.0
+    main-is:          SqlVmSpec.hs
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , sql-vm
+                    , sql-backend
+                    , sql-codegen
+                    , sql-planner
+                    , containers
+                    , hspec == 2.*
+    default-language: GHC2021

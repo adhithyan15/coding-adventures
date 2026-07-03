@@ -24,11 +24,11 @@ Rules
 2. **Perfect-square extraction** — ``√(x² · b) = x · √b``
 
    When a Sqrt radicand is a Mul containing ``Pow(x, 2)`` for a
-   positive ``x`` (from context), pull ``x`` outside.
+   non-negative ``x`` (from context), pull ``x`` outside.
    For a positive integer radicand that is a perfect square, return
    the integer square root directly.
 
-3. **Sqrt(x²) → x** — ``√(x²) = x`` when x > 0
+3. **Sqrt(x²) → x** — ``√(x²) = x`` when x >= 0
 
    Handled as a special case of rule 2 with no remaining factor.
 
@@ -95,7 +95,7 @@ def radcan(
 
     Applies the five rules described in the module docstring in a single
     bottom-up pass.  The optional ``ctx`` parameter supplies sign facts
-    needed for rule 2 (``√(x²·b) = x·√b`` requires ``x > 0``).
+    needed for rule 2 (``√(x²·b) = x·√b`` requires ``x >= 0``).
 
     Parameters
     ----------
@@ -228,13 +228,13 @@ def _rule_sqrt(expr: IRApply, ctx: AssumptionContext | None) -> IRNode:
         if root is not None:
             return IRInteger(root)
 
-    # Sqrt(x²) → |x|, or → x when x > 0.
+    # Sqrt(x²) → x when x >= 0; otherwise leave sign-sensitive form intact.
     if _is_square_power(arg):
         base = _base_of(arg)
         if base is not None:
             return _abs_or_pos(base, ctx)
 
-    # Sqrt(Mul(...)) — extract Pow(x,2) factors when x > 0.
+    # Sqrt(Mul(...)) — extract Pow(x,2) factors when x >= 0.
     if isinstance(arg, IRApply) and arg.head == MUL:
         outer: list[IRNode] = []
         inner: list[IRNode] = []
@@ -262,21 +262,21 @@ def _try_extract_from_sqrt(
     """Return what to pull outside Sqrt(factor * ...), or None if not extractable.
 
     A factor is extractable when:
-    - It is ``Pow(x, 2)`` and either x is a positive integer literal or
-      x is a symbol known positive from ctx.
+    - It is ``Pow(x, 2)`` and either x is a non-negative integer literal or
+      x is a symbol known non-negative from ctx.
     - It is a positive integer that is a perfect square.
     """
-    # Pow(symbol, 2) with x > 0 from ctx.
+    # Pow(symbol, 2) with x >= 0 from ctx.
     if _is_square_power(factor):
         base = _base_of(factor)
         if base is None:
             return None
-        if isinstance(base, IRInteger) and base.value > 0:
+        if isinstance(base, IRInteger) and base.value >= 0:
             return base
         if (
             isinstance(base, IRSymbol)
             and ctx is not None
-            and ctx.is_positive(base.name) is True
+            and ctx.is_nonneg(base.name) is True
         ):
             return base
         return None
@@ -301,18 +301,18 @@ def _is_square_power(node: IRNode) -> bool:
 
 
 def _abs_or_pos(base: IRNode, ctx: AssumptionContext | None) -> IRNode:
-    """Return base when known positive, or Sqrt(base²) otherwise (leave unevaluated).
+    """Return base when known non-negative, or Sqrt(base²) otherwise.
 
-    Since we don't have an Abs head, we just return base when positivity is
+    Since we don't have an Abs head, we just return base when non-negativity is
     confirmed and leave the original Sqrt intact otherwise — the function's
     caller handles that case.
     """
-    if isinstance(base, IRInteger) and base.value > 0:
+    if isinstance(base, IRInteger) and base.value >= 0:
         return base
     if (
         isinstance(base, IRSymbol)
         and ctx is not None
-        and ctx.is_positive(base.name) is True
+        and ctx.is_nonneg(base.name) is True
     ):
         return base
     # Unknown sign — return the Sqrt unevaluated (caller returns expr as-is).

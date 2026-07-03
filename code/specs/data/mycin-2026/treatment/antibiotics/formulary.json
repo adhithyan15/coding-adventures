@@ -1,0 +1,50 @@
+{
+  "_doc": "Grounded antibiotic FORMULARY — drug FACTS, not regimens. Each drug carries what it COVERS, CSF penetration, contraindications, a preference TIER (first-line=1 … reserve=5; grounded + editable), and a dose WINDOW (a feasible-interval: a per-dose floor for efficacy and a ceiling that shrinks as renal/interaction risks stack). The regimen is DERIVED from these facts by minimum-cost SET-COVER + exclusion + a dose-window solve (derive_regimen.py) — so it generalizes to any organism/drug without new rules, and the dose can go UNSAT when no safe-and-effective dose exists. Coverage facts from IDSA Tunkel 2004 + Sanford. The tier weights encode clinical preference among VALID options (also grounded/editable). The dose-window numbers are an ILLUSTRATIVE feasibility model, not validated PK/PD (mechanism demo, not a dosing tool). domain: empiric bacterial meningitis. Note s_pneumoniae_resistant = ceftriaxone-nonsusceptible pneumococcus (the reason vancomycin is added empirically).",
+  "organisms_by_scenario": {
+    "adult_community": ["s_pneumoniae_resistant", "n_meningitidis"],
+    "over_50_or_immunocompromised": ["s_pneumoniae_resistant", "n_meningitidis", "listeria"],
+    "post_neurosurgical_or_shunt": ["s_pneumoniae_resistant", "mrsa", "pseudomonas", "gram_negative"]
+  },
+  "combinations": [
+    {"drugs": ["vancomycin", "ceftriaxone"], "covers": "s_pneumoniae_resistant",
+     "source": "IDSA Tunkel 2004 (via AAFP summary): for penicillin-/cephalosporin-resistant pneumococcus, vancomycin 'may be used in combination with a third-generation cephalosporin but should not be used alone (A-III)' — the spider REFUTED single-drug coverage and grounded this COMBINATION rule."},
+    {"drugs": ["vancomycin", "cefepime"], "covers": "s_pneumoniae_resistant",
+     "source": "IDSA Tunkel 2004: vancomycin + a broad cephalosporin (cefepime) covers resistant pneumococcus in the nosocomial setting."}
+  ],
+  "side_effects": {
+    "_doc": "CC-4 side-effect / toxicity burden weight per drug (relative integer, 0=benign … 3=high-monitoring/toxicity). Feeds the COST+SIDE-EFFECT objective minimize(w_cost·tier + w_tox·side_effects): a cheap-but-toxic drug can lose to a pricier-but-safer one when w_tox>0. AUTHORED-DEBT — illustrative clinical estimates pending CC-4b spider grounding (FDA label adverse-event / monitoring burden); not validated tox data. Default objective weights are (w_cost=1, w_tox=0), which reproduces the tier-only set-cover exactly, so this layer is inert until a chart/policy raises w_tox.",
+    "vancomycin": 3, "ceftriaxone": 1, "ampicillin": 1, "cefepime": 2,
+    "meropenem": 2, "moxifloxacin": 3, "aztreonam": 1, "tmp_smx": 3
+  },
+  "drugs": {
+    "vancomycin":   {"covers": ["s_pneumoniae_resistant", "mrsa"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 1,
+                     "dose": {"floor_mg_per_kg": 15, "ceiling_base_mg_per_kg": 20, "ceiling_penalty_mg_per_kg": {"renal_severe": 6, "nephrotoxin_interaction": 6, "renal_moderate": 2}},
+                     "dose_penalty_source": "FDA vancomycin label (DailyMed 75a6a873): renal dysfunction + concomitant nephrotoxins lower the safe ceiling — DIRECTION grounded in dose-window-grounding.json (dose_penalty_vancomycin_renal, dose_penalty_vancomycin_nephrotoxin); the per-kg magnitudes stay the illustrative feasibility model",
+                     "source": "IDSA Tunkel 2004 (empiric vancomycin for resistant pneumococcus)"},
+    "ceftriaxone":  {"covers": ["n_meningitidis", "h_influenzae", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 1,
+                     "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {"hepatorenal": 12}},
+                     "source": "IDSA Tunkel 2004 (3rd-gen cephalosporin)"},
+    "ampicillin":   {"covers": ["listeria", "e_coli"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 1,
+                     "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {}},
+                     "source": "IDSA Tunkel 2004 (ampicillin for Listeria)"},
+    "cefepime":     {"covers": ["n_meningitidis", "pseudomonas", "gram_negative", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 2,
+                     "dose": {"floor_mg_per_kg": 25, "ceiling_base_mg_per_kg": 50, "ceiling_penalty_mg_per_kg": {"renal_severe": 4}},
+                     "dose_penalty_source": "FDA cefepime label (DailyMed be5f8ca6): adjust dose at CrCl <= 60 mL/min, neurotoxicity if unadjusted in renal impairment — DIRECTION grounded in dose-window-grounding.json (dose_penalty_cefepime_renal); the per-kg magnitude stays the illustrative feasibility model",
+                     "source": "IDSA Tunkel 2004 (cefepime for Pseudomonas / nosocomial)"},
+    "meropenem":    {"covers": ["n_meningitidis", "listeria", "pseudomonas", "gram_negative", "s_pneumoniae_susceptible"], "csf_penetrant": true, "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 3,
+                     "dose": {"floor_mg_per_kg": 20, "ceiling_base_mg_per_kg": 40, "ceiling_penalty_mg_per_kg": {"renal_severe": 3}},
+                     "dose_penalty_source": "FDA meropenem label (DailyMed a456013b): reduce dose at CrCl <= 50 mL/min — DIRECTION grounded in dose-window-grounding.json (dose_penalty_meropenem_renal); per-kg magnitude is the illustrative feasibility model",
+                     "source": "IDSA Tunkel 2004 (meropenem; covers Listeria + Pseudomonas)"},
+    "moxifloxacin": {"covers": ["s_pneumoniae_resistant", "n_meningitidis"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 4,
+                     "dose": {"floor_mg_per_kg": 5, "ceiling_base_mg_per_kg": 8, "ceiling_penalty_mg_per_kg": {}},
+                     "source": "Beta-lactam-sparing pneumococcal/meningococcal option (IDSA 2004 alt)"},
+    "aztreonam":    {"covers": ["n_meningitidis", "gram_negative", "pseudomonas"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 4,
+                     "dose": {"floor_mg_per_kg": 20, "ceiling_base_mg_per_kg": 40, "ceiling_penalty_mg_per_kg": {"renal_severe": 4}},
+                     "dose_penalty_source": "FDA AZACTAM (aztreonam) label (DailyMed 9a105eaf): halve dose at CrCl 10-30 mL/min/1.73 m2 after a loading dose — DIRECTION grounded in dose-window-grounding.json (dose_penalty_aztreonam_renal); per-kg magnitude is the illustrative feasibility model",
+                     "source": "Monobactam; safe in penicillin allergy (no cross-reactivity)"},
+    "tmp_smx":      {"covers": ["listeria"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 3,
+                     "dose": {"floor_mg_per_kg": 5, "ceiling_base_mg_per_kg": 10, "ceiling_penalty_mg_per_kg": {"renal_severe": 3}},
+                     "dose_penalty_source": "FDA sulfamethoxazole-trimethoprim label (DailyMed 793c75eb): reduced dosage when renal function is impaired — DIRECTION grounded in dose-window-grounding.json (dose_penalty_tmp_smx_renal); per-kg magnitude is the illustrative feasibility model",
+                     "source": "TMP-SMX for Listeria when ampicillin contraindicated"}
+  }
+}

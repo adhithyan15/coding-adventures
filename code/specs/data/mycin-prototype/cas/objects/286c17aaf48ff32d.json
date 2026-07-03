@@ -1,0 +1,92 @@
+{
+ "hash": "286c17aaf48ff32d",
+ "domain": "meningitis_differential",
+ "accepted_clauses": [
+  {
+   "key": "bacterial_meningitis::prior",
+   "lr": 0.037,
+   "trust": "inferred",
+   "status": "FLAG"
+  },
+  {
+   "key": "bacterial_meningitis::csf_gram_stain(positive)",
+   "lr": 85,
+   "trust": "consensus",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)",
+   "lr": 15,
+   "trust": "authoritative",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::csf_glucose(low)",
+   "lr": 18,
+   "trust": "authoritative",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::csf_protein(elevated)",
+   "lr": 9.33,
+   "trust": "empirical",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::csf_lactate(elevated)",
+   "lr": 22.9,
+   "trust": "authoritative",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::serum_procalcitonin(elevated)",
+   "lr": 27.3,
+   "trust": "authoritative",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::seizure(present)",
+   "lr": 5.84,
+   "trust": "empirical",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "bacterial_meningitis::csf_culture(positive)",
+   "lr": 271,
+   "trust": "inferred",
+   "status": "FLAG"
+  },
+  {
+   "key": "viral_meningitis::prior",
+   "lr": 0.963,
+   "trust": "authoritative",
+   "status": "ACCEPT"
+  },
+  {
+   "key": "viral_meningitis::csf_glucose(normal)",
+   "lr": 4.9,
+   "trust": "inferred",
+   "status": "FLAG"
+  },
+  {
+   "key": "viral_meningitis::csf_lactate(normal)",
+   "lr": 13.7,
+   "trust": "inferred",
+   "status": "FLAG"
+  },
+  {
+   "key": "viral_meningitis::csf_lymphocytic_pleocytosis(high)",
+   "lr": 5.0,
+   "trust": "inferred",
+   "status": "FLAG"
+  },
+  {
+   "key": "viral_meningitis::enteroviral_pcr(positive)",
+   "lr": 50,
+   "trust": "inferred",
+   "status": "FLAG"
+  }
+ ],
+ "gate": "N-reader inference read x grounding discipline",
+ "rulebook_path": "rulebook/meningitis.adj"
+}

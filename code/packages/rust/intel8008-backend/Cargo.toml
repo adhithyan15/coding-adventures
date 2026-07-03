@@ -1,0 +1,14 @@
+[package]
+name = "intel8008-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8008 backend for jit-core / aot-core.  Lowers Vec<CIRInstr> to Intel 8008 machine code via intel8008-encoder.  Phase 6 of the historical-arch backend migration."
+
+[lib]
+name = "intel8008_backend"
+path = "src/lib.rs"
+
+[dependencies]
+intel8008-encoder = { path = "../intel8008-encoder" }
+jit-core          = { path = "../jit-core" }
+vm-core           = { path = "../vm-core" }

@@ -123,5 +123,5 @@ within the 8 MiB default thread stack.
 ```bash
 cargo test -p twigc --lib                                      # all 7 tests pass
 cargo build -p twigc --release                                 # binary compiles
-twigc --self-check code/twig/compiler                          # exit 0
+twigc --self-check code/packages/twig/compiler                          # exit 0
 ```

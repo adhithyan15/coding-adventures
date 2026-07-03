@@ -1,0 +1,7 @@
+{
+ "idx": 83,
+ "id": "CON-4",
+ "scenario": "The customer's invoice for the affected month totaled $9,000. Uptime fell below the guaranteed threshold, entitling the customer to a 15% credit. The invoice bundled charges into a single line item labeled 'Services - April'.",
+ "policy": "Service credits are calculated as a percentage of the monthly recurring fee for the affected service. Credits do not apply to one-time setup charges, professional-services fees, or usage-based overage charges.",
+ "question": "What is the dollar amount of the service credit?"
+}

@@ -1,0 +1,8 @@
+{
+ "idx": 70,
+ "policy": "An importer must pay an ad valorem customs duty equal to 5% of the declared customs value of the goods. The customs value is the price actually paid for the goods plus all international freight and insurance charges incurred to bring the goods to the port of entry.",
+ "scenario": "Delgado Trading imports a shipment of ceramic tiles. The price paid to the foreign seller was $40,000. International ocean freight to the port of entry cost $3,000, and marine insurance for the voyage cost $1,000.",
+ "question": "What customs duty does Delgado Trading owe on this shipment?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "$2,200"
+}

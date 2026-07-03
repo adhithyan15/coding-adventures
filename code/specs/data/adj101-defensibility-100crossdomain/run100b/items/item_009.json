@@ -1,0 +1,7 @@
+{
+ "idx": 9,
+ "id": "HEA-10",
+ "scenario": "Devon received a statement dated January 5 for a $400 balance. He filed a formal appeal of the charge through the plan's appeals process on January 20, and the appeal is still pending. It is now March 30, more than 60 days after the statement date, and the balance remains unpaid.",
+ "policy": "Late-payment interest of 1.5% is assessed on any patient balance not paid within 60 days of the statement date, except for balances that are under active dispute through the plan's formal appeals process, on which no interest accrues while the appeal is pending.",
+ "question": "Has late-payment interest accrued on Devon's $400 balance?"
+}

@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 33 \u2014 ventricular stroke work from paired chamber volumes and arterial pressures over one beat (a NEW panel: cardiovascular ventricular mechanics). From four stated quantities (end-diastolic volume EDV, end-systolic volume ESV, systolic pressure SBP, diastolic pressure DBP) compute the stroke work estimate ((EDV-ESV)*(SBP-DBP)), the stroke volume (EDV-ESV), or the pulse pressure (SBP-DBP). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a PRODUCT OF TWO DIFFERENCES ((EDV-ESV)*(SBP-DBP)), so one parenthesised difference is multiplied by another \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via -, * and + \u2014 no constant leaks (stroke work is a pure product of differences), and neither the stroke volume nor the pulse pressure ever appears as a literal (each is computed from the observed quantities) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the crossed product ((EDV-DBP)*(SBP-ESV), a volume and a pressure crossed into each difference) and the summed area ((EDV-ESV)+(SBP-DBP), the two differences added instead of multiplied). The core confusion tested is multiplying a volume difference by a pressure difference with each pairing correct.",
+  "items": [
+    {
+      "id": "r33stroke-01",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 124 mL and the end-systolic volume is 52 mL; the systolic pressure is 126 mmHg and the diastolic pressure is 78 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(124)\nobserve end_systolic_volume(52)\nobserve systolic_pressure(126)\nobserve diastolic_pressure(78)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3456,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3404,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r33stroke-02",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 124 mL and the end-systolic volume is 52 mL; the systolic pressure is 126 mmHg and the diastolic pressure is 78 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(124)\nobserve end_systolic_volume(52)\nobserve systolic_pressure(126)\nobserve diastolic_pressure(78)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3456,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3404,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r33stroke-03",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 124 mL and the end-systolic volume is 52 mL; the systolic pressure is 126 mmHg and the diastolic pressure is 78 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(124)\nobserve end_systolic_volume(52)\nobserve systolic_pressure(126)\nobserve diastolic_pressure(78)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3456,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3404,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r33stroke-04",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 135 mL and the end-systolic volume is 60 mL; the systolic pressure is 130 mmHg and the diastolic pressure is 85 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(135)\nobserve end_systolic_volume(60)\nobserve systolic_pressure(130)\nobserve diastolic_pressure(85)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r33stroke-05",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 135 mL and the end-systolic volume is 60 mL; the systolic pressure is 130 mmHg and the diastolic pressure is 85 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(135)\nobserve end_systolic_volume(60)\nobserve systolic_pressure(130)\nobserve diastolic_pressure(85)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3375,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r33stroke-06",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 135 mL and the end-systolic volume is 60 mL; the systolic pressure is 130 mmHg and the diastolic pressure is 85 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(135)\nobserve end_systolic_volume(60)\nobserve systolic_pressure(130)\nobserve diastolic_pressure(85)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3375,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3500,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r33stroke-07",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 150 mL and the end-systolic volume is 70 mL; the systolic pressure is 140 mmHg and the diastolic pressure is 90 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(150)\nobserve end_systolic_volume(70)\nobserve systolic_pressure(140)\nobserve diastolic_pressure(90)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r33stroke-08",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 150 mL and the end-systolic volume is 70 mL; the systolic pressure is 140 mmHg and the diastolic pressure is 90 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(150)\nobserve end_systolic_volume(70)\nobserve systolic_pressure(140)\nobserve diastolic_pressure(90)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r33stroke-09",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 150 mL and the end-systolic volume is 70 mL; the systolic pressure is 140 mmHg and the diastolic pressure is 90 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(150)\nobserve end_systolic_volume(70)\nobserve systolic_pressure(140)\nobserve diastolic_pressure(90)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 130,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r33stroke-10",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 128 mL and the end-systolic volume is 48 mL; the systolic pressure is 118 mmHg and the diastolic pressure is 74 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(128)\nobserve end_systolic_volume(48)\nobserve systolic_pressure(118)\nobserve diastolic_pressure(74)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3780,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 124,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3520,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r33stroke-11",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 128 mL and the end-systolic volume is 48 mL; the systolic pressure is 118 mmHg and the diastolic pressure is 74 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(128)\nobserve end_systolic_volume(48)\nobserve systolic_pressure(118)\nobserve diastolic_pressure(74)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3520,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3780,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 124,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r33stroke-12",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 128 mL and the end-systolic volume is 48 mL; the systolic pressure is 118 mmHg and the diastolic pressure is 74 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(128)\nobserve end_systolic_volume(48)\nobserve systolic_pressure(118)\nobserve diastolic_pressure(74)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3520,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3780,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 124,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r33stroke-13",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 142 mL and the end-systolic volume is 55 mL; the systolic pressure is 148 mmHg and the diastolic pressure is 88 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(142)\nobserve end_systolic_volume(55)\nobserve systolic_pressure(148)\nobserve diastolic_pressure(88)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 87,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5220,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5022,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 147,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r33stroke-14",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 142 mL and the end-systolic volume is 55 mL; the systolic pressure is 148 mmHg and the diastolic pressure is 88 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(142)\nobserve end_systolic_volume(55)\nobserve systolic_pressure(148)\nobserve diastolic_pressure(88)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5220,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5022,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 87,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 147,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r33stroke-15",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 142 mL and the end-systolic volume is 55 mL; the systolic pressure is 148 mmHg and the diastolic pressure is 88 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(142)\nobserve end_systolic_volume(55)\nobserve systolic_pressure(148)\nobserve diastolic_pressure(88)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5220,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 87,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5022,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 147,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r33stroke-16",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 118 mL and the end-systolic volume is 45 mL; the systolic pressure is 110 mmHg and the diastolic pressure is 66 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(118)\nobserve end_systolic_volume(45)\nobserve systolic_pressure(110)\nobserve diastolic_pressure(66)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3212,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 73,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3380,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 117,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r33stroke-17",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 118 mL and the end-systolic volume is 45 mL; the systolic pressure is 110 mmHg and the diastolic pressure is 66 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(118)\nobserve end_systolic_volume(45)\nobserve systolic_pressure(110)\nobserve diastolic_pressure(66)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3212,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 73,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3380,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 117,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r33stroke-18",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 118 mL and the end-systolic volume is 45 mL; the systolic pressure is 110 mmHg and the diastolic pressure is 66 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(118)\nobserve end_systolic_volume(45)\nobserve systolic_pressure(110)\nobserve diastolic_pressure(66)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3212,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 73,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3380,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 117,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r33stroke-19",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 155 mL and the end-systolic volume is 72 mL; the systolic pressure is 135 mmHg and the diastolic pressure is 82 mmHg. What is the patient's stroke work estimate?",
+      "program": "observe end_diastolic_volume(155)\nobserve end_systolic_volume(72)\nobserve systolic_pressure(135)\nobserve diastolic_pressure(82)\nlet answer = (end_diastolic_volume - end_systolic_volume) * (systolic_pressure - diastolic_pressure)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 83,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 53,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4599,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4399,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 136,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r33stroke-20",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 155 mL and the end-systolic volume is 72 mL; the systolic pressure is 135 mmHg and the diastolic pressure is 82 mmHg. What is the patient's stroke volume?",
+      "program": "observe end_diastolic_volume(155)\nobserve end_systolic_volume(72)\nobserve systolic_pressure(135)\nobserve diastolic_pressure(82)\nlet answer = end_diastolic_volume - end_systolic_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4399,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 53,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4599,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 136,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 83,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r33stroke-21",
+      "qtype": "stroke_work",
+      "stem": "A single cardiac cycle is characterised for one ventricle: the end-diastolic volume is 155 mL and the end-systolic volume is 72 mL; the systolic pressure is 135 mmHg and the diastolic pressure is 82 mmHg. What is the patient's pulse pressure?",
+      "program": "observe end_diastolic_volume(155)\nobserve end_systolic_volume(72)\nobserve systolic_pressure(135)\nobserve diastolic_pressure(82)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 53,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4399,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 83,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4599,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 136,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

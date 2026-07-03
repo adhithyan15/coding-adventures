@@ -24,6 +24,13 @@ const EXPRESSION_RULES = new Set([
   "eq_expr",
   "cmp_expr",
   "add_expr",
+  // The grammar's precedence cascade is add_expr → mul_expr → bitwise_expr,
+  // so multiplicative expressions sit *between* additive and bitwise levels.
+  // `mul_expr` must be recognised as an expression rule; otherwise
+  // `expressionChildren` filters mul_expr operands out of an enclosing
+  // add_expr, leaving it with zero operands and no inferred type (e.g.
+  // `a +% b` would never annotate its `u4` operands).
+  "mul_expr",
   "bitwise_expr",
   "unary_expr",
   "primary",
@@ -523,6 +530,10 @@ export class NibTypeChecker extends GenericTypeChecker<ASTNode> {
         result = this.checkPrimary(node, scope);
         break;
       case "add_expr":
+      // Multiplicative expressions share additive semantics — same-type
+      // operands, numeric result, BCD restricted to '+%'/'-' — so they reuse
+      // the additive checker rather than introducing a parallel code path.
+      case "mul_expr":
         result = this.checkAddExpression(node, scope);
         break;
       case "or_expr":

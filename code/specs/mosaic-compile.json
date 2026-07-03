@@ -52,7 +52,7 @@
     {
       "id": "layout",
       "long": "layout",
-      "description": "Path to a .mll moslayout file (three-file pipeline mode)",
+      "description": "Path to a .mll moslayout file (three-file pipeline mode). If this points at a DIRECTORY (UI30 multi-layout), the file is resolved as <Component>.<variant>.mll inside it, with fallback to bare <Component>.mll. The component name comes from the --interface file's component declaration; --variant picks the variant.",
       "type": "string",
       "required": false
     },
@@ -60,6 +60,13 @@
       "id": "style",
       "long": "style",
       "description": "Path to a .msl mosstyle file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "variant",
+      "long": "variant",
+      "description": "UI30 layout variant name (e.g. desktop, touch, tablet, tv, print). Only meaningful when --layout points at a directory — resolves <Component>.<variant>.mll inside. Falls back to bare <Component>.mll if the variant file isn't found. Omitting --variant is equivalent to --variant default (= bare <Component>.mll). Ignored with a warning when --layout points at a file.",
       "type": "string",
       "required": false
     },
@@ -74,6 +81,13 @@
       "id": "package-manifest",
       "long": "package-manifest",
       "description": "Optional path to a `mosaic-package.toml` that the current .mil/.mll/.msl belongs to. When set, the backend's component-reference resolver auto-registers every name in `[components].exports` so the .mll can reference sibling components from the same package (e.g. Field referencing Input).",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "package-search-path",
+      "long": "package-search-path",
+      "description": "UI34 — colon-separated list of directories to search for mosaic-package.toml manifests. Used by the package-reference resolver to locate packages named in `pkg::P::C` references. Defaults to `code/packages/` relative to the current working directory; set this when invoking mosaic-compile from a different root.",
       "type": "string",
       "required": false
     }
@@ -97,7 +111,7 @@
           "id": "backend",
           "long": "backend",
           "short": "b",
-          "description": "Backend to compile for: 'react', 'swiftui', 'qt' (webcomponent / html return UnsupportedBackend)",
+          "description": "Backend to compile for: 'react', 'electron', 'swiftui', 'qt', 'xaml', 'webcomponent', 'html', 'flutter', or 'compose'",
           "type": "string",
           "required": true
         },
@@ -108,6 +122,13 @@
           "description": "Directory under which <backend>/ is created (mkdir -p applied)",
           "type": "string",
           "required": true
+        },
+        {
+          "id": "emit-project",
+          "long": "emit-project",
+          "description": "Also emit the selected backend's runnable project shell alongside the package artifacts",
+          "type": "boolean",
+          "required": false
         }
       ],
       "arguments": [

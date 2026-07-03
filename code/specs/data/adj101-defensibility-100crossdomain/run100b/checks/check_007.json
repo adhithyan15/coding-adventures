@@ -1,0 +1,8 @@
+{
+ "check_id": 7,
+ "idx": 3,
+ "slot": "visit_type",
+ "claimed_value": "specialist",
+ "scenario": "Priya has an in-network plan with a $40 specialist copay and a $1,500 annual deductible. In June she saw an in-network cardiologist; the negotiated rate for the visit was $180. She has had several other medical visits earlier in the year.",
+ "cited_span": "she saw an in-network cardiologist"
+}

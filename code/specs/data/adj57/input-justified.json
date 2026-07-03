@@ -1,0 +1,532 @@
+{
+  "case_text_len": 1812,
+  "coverage": {
+    "covered": true,
+    "clean": true,
+    "facts": 27,
+    "discards": 3,
+    "bytes": 1812
+  },
+  "extraction": {
+    "n_facts": 49,
+    "n_grounded": 49,
+    "n_rejected": 0,
+    "by_kind": {
+      "extracted": 41,
+      "inferred": 8
+    },
+    "fully_grounded": true
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "n_facts": 49,
+      "n_rejected": 0
+    }
+  ],
+  "input_provenance_complete": true,
+  "facts": [
+    {
+      "claim": "The patient is forty years old.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "A forty-year Indian"
+      ],
+      "justification": "The bytes state 'forty-year', directly giving the patient's age."
+    },
+    {
+      "claim": "The patient is Indian (of Indian nationality/ethnicity).",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "A forty-year Indian"
+      ],
+      "justification": "The word 'Indian' directly states the patient's nationality/ethnicity."
+    },
+    {
+      "claim": "The patient is male.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "working in pharmaceutical company, had gone on a business trip",
+        "He had tachycardia",
+        "He took empirical antibiotics"
+      ],
+      "justification": "The text repeatedly uses the masculine pronoun 'He'/'his' for the patient, warranting the inference that the patient is male; sex is never stated outright as 'male'."
+    },
+    {
+      "claim": "The patient works in a pharmaceutical company.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "working in pharmaceutical company"
+      ],
+      "justification": "The bytes directly state the patient's occupation/employer type."
+    },
+    {
+      "claim": "The patient had gone on a business trip to Africa.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "had gone on a business trip to Africa"
+      ],
+      "justification": "The bytes directly state the purpose and destination of travel."
+    },
+    {
+      "claim": "The patient traveled through Uganda, Tanzania and Kenya.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "traveling through Uganda, Tanzania and Kenya"
+      ],
+      "justification": "The bytes directly list the specific countries traversed."
+    },
+    {
+      "claim": "Uganda, Tanzania and Kenya are countries in (East) Africa.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "business trip to Africa traveling through Uganda, Tanzania and Kenya"
+      ],
+      "justification": "The text frames the trip as 'to Africa' and names these countries as part of it; geographic knowledge that these are East African countries warrants the inference, though the text only says 'Africa' generically."
+    },
+    {
+      "claim": "While in Africa, the patient developed a swelling over the left ankle joint.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "While he was in Africa, he developed a swelling over the left ankle joint"
+      ],
+      "justification": "The bytes directly state the location and timing of the swelling."
+    },
+    {
+      "claim": "The swelling developed after an insect bite.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "he developed a swelling over the left ankle joint after an insect bite"
+      ],
+      "justification": "The bytes directly state the swelling followed an insect bite."
+    },
+    {
+      "claim": "The swelling was painful.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "This swelling was painful"
+      ],
+      "justification": "The bytes directly characterize the swelling as painful."
+    },
+    {
+      "claim": "The swelling was followed by high grade fever with chills and rigors after 3-4 days.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "followed by high grade fever with chills and rigors after 3-4 days"
+      ],
+      "justification": "The bytes directly state the fever, its severity, accompanying chills/rigors, and timing relative to the swelling."
+    },
+    {
+      "claim": "There was no history of any joint pain.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no history of any joint pain"
+      ],
+      "justification": "The bytes directly state the absence of joint pain."
+    },
+    {
+      "claim": "There was no historical clue to localize the cause of the fever.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no other clue on history to localize the cause of fever"
+      ],
+      "justification": "The bytes directly state that history provided no localizing clue for the fever."
+    },
+    {
+      "claim": "There was no history of high risk behavior.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no history of high risk behavior"
+      ],
+      "justification": "The bytes directly state the absence of high risk behavior."
+    },
+    {
+      "claim": "The patient had a past history of essential tremors for the last 6 years.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Patient had past history of essential tremors for last 6 years"
+      ],
+      "justification": "The bytes directly state the prior diagnosis of essential tremors and its 6-year duration."
+    },
+    {
+      "claim": "The essential tremors caused no functional disability.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "essential tremors for last 6 years, without any functional disability"
+      ],
+      "justification": "The bytes directly state the tremors were without functional disability."
+    },
+    {
+      "claim": "There was no past history of hypertension, diabetes, stroke, or tuberculosis.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no history of hypertension, diabetes, stroke, or tuberculosis in the past"
+      ],
+      "justification": "The bytes directly enumerate these conditions as absent from the past history."
+    },
+    {
+      "claim": "The patient took empirical antibiotics while in Africa.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "He took empirical antibiotics in Africa"
+      ],
+      "justification": "The bytes directly state the patient took empirical antibiotics in Africa."
+    },
+    {
+      "claim": "The empirical antibiotics resulted in minor relief in his symptoms.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "empirical antibiotics in Africa which resulted minor relief in his symptoms"
+      ],
+      "justification": "The bytes directly state the degree of symptom relief ('minor relief') from the antibiotics."
+    },
+    {
+      "claim": "The antibiotics produced only a partial / incomplete response.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "empirical antibiotics in Africa which resulted minor relief in his symptoms"
+      ],
+      "justification": "Characterizing 'minor relief' as a partial/incomplete response is an interpretation of the stated degree of relief, not a literal restatement; hence inferred."
+    },
+    {
+      "claim": "On examination, the patient was febrile.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "On examination, he was febrile with oral temperature of 102 F"
+      ],
+      "justification": "The bytes directly state the patient was febrile on examination."
+    },
+    {
+      "claim": "The patient's oral temperature was 102 F.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "oral temperature of 102 F"
+      ],
+      "justification": "The bytes directly give the measured oral temperature value."
+    },
+    {
+      "claim": "The patient had tachycardia.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "He had tachycardia with pulse rate of 116/min"
+      ],
+      "justification": "The bytes explicitly use the word 'tachycardia', so it is stated, not merely my interpretation of the pulse value."
+    },
+    {
+      "claim": "The patient's pulse rate was 116/min.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "pulse rate of 116/min"
+      ],
+      "justification": "The bytes directly give the measured pulse rate."
+    },
+    {
+      "claim": "The patient's blood pressure was 124/80 mm of Hg.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "blood pressure was 124/80 mm of Hg"
+      ],
+      "justification": "The bytes directly give the measured blood pressure value."
+    },
+    {
+      "claim": "There was an erythematous swelling over the left ankle.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was an erythematous swelling over the left ankle"
+      ],
+      "justification": "The bytes directly describe the erythematous swelling and its location."
+    },
+    {
+      "claim": "There were peri-lesional erythematous rashes around the swelling.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "with peri-lesional erythematous rashes"
+      ],
+      "justification": "The bytes directly state the presence of peri-lesional erythematous rashes."
+    },
+    {
+      "claim": "There was no other skin rash elsewhere on the body.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no other skin rash elsewhere"
+      ],
+      "justification": "The bytes directly state the absence of rash elsewhere."
+    },
+    {
+      "claim": "There was no pallor, icterus, or peripheral lymph node enlargement.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no pallor, icterus, or peripheral lymphnode enlargement"
+      ],
+      "justification": "The bytes directly enumerate these findings as absent."
+    },
+    {
+      "claim": "Examination of the respiratory and cardiovascular systems was normal.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Examination of respiratory and cardiovascular system was normal"
+      ],
+      "justification": "The bytes directly state both system examinations were normal."
+    },
+    {
+      "claim": "Abdominal examination revealed hepatomegaly of 3 cm below the costal margin.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Abdomen examination revealed hepatomegaly of 3 cm",
+        "below costal margin"
+      ],
+      "justification": "The bytes directly state hepatomegaly measured 3 cm, with the shared 'below costal margin' qualifier applying to it."
+    },
+    {
+      "claim": "Abdominal examination revealed splenomegaly of 3 cm below the costal margin.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "splenomegaly of 3 cm below costal margin"
+      ],
+      "justification": "The bytes directly state splenomegaly measured 3 cm below the costal margin."
+    },
+    {
+      "claim": "The patient has hepatosplenomegaly.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "hepatomegaly of 3 cm and splenomegaly of 3 cm below costal margin"
+      ],
+      "justification": "Combining the separately stated hepatomegaly and splenomegaly into the single composite term 'hepatosplenomegaly' is a derived reading, not a verbatim statement."
+    },
+    {
+      "claim": "Central nervous system examination revealed coarse tremors in bilateral hands.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Central nervous system examination revealed coarse tremors in bilateral hands"
+      ],
+      "justification": "The bytes directly state the CNS finding of bilateral coarse hand tremors."
+    },
+    {
+      "claim": "The bilateral coarse hand tremors are likely a manifestation of the patient's known essential tremors.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "past history of essential tremors for last 6 years",
+        "coarse tremors in bilateral hands"
+      ],
+      "justification": "Linking the examined coarse tremors to the pre-existing essential tremor diagnosis is a clinical interpretation correlating two separately stated facts; the text never asserts this connection."
+    },
+    {
+      "claim": "Blood smear for malaria parasite was negative.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Blood smear for malaria parasite was negative"
+      ],
+      "justification": "The bytes directly state the negative malaria smear result."
+    },
+    {
+      "claim": "Cultures from blood and urine were sterile.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Cultures from blood and urine were sterile"
+      ],
+      "justification": "The bytes directly state both blood and urine cultures were sterile."
+    },
+    {
+      "claim": "The Widal test showed normal titers.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Widal test showed normal titers"
+      ],
+      "justification": "The bytes directly state the Widal test result."
+    },
+    {
+      "claim": "Testing for viral markers was negative.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Testing for viral markers were negative"
+      ],
+      "justification": "The bytes directly state the viral marker testing was negative."
+    },
+    {
+      "claim": "Cerebrospinal fluid examination was acellular.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Cerebrospinal fluid examination was acellular"
+      ],
+      "justification": "The bytes directly state the CSF was acellular."
+    },
+    {
+      "claim": "The CSF glucose was normal.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "acellular with normal glucose"
+      ],
+      "justification": "The bytes directly state CSF glucose was normal."
+    },
+    {
+      "claim": "The CSF proteins were raised.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "The proteins were raised"
+      ],
+      "justification": "The bytes directly state the CSF proteins were elevated."
+    },
+    {
+      "claim": "The CSF picture shows albuminocytologic dissociation (raised protein with no cells).",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Cerebrospinal fluid examination was acellular",
+        "The proteins were raised"
+      ],
+      "justification": "Labeling the combination of acellularity plus raised protein as 'albuminocytologic dissociation' is a derived clinical interpretation, not a verbatim restatement."
+    },
+    {
+      "claim": "Bone biopsy showed a single ill-defined granuloma.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Bone biopsy showed single ill defined granuloma"
+      ],
+      "justification": "The bytes directly state the bone biopsy finding."
+    },
+    {
+      "claim": "MRI of the brain showed mild meningeal enhancement.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Magnetic resonance imaging of brain showed mild meningeal enhancement"
+      ],
+      "justification": "The bytes directly state the MRI brain finding of mild meningeal enhancement."
+    },
+    {
+      "claim": "Few small lesions were noticed in the pons.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Few small lesions noticed in pons"
+      ],
+      "justification": "The bytes directly state the presence of small lesions in the pons."
+    },
+    {
+      "claim": "The pontine lesions were hyperintense on T2-weighted and FLAIR images.",
+      "kind": "extracted",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "which were hyperintense on T2-weighted and FLAIR images"
+      ],
+      "justification": "The bytes directly state the signal characteristics of the pontine lesions."
+    },
+    {
+      "claim": "The patient has central nervous system / meningeal involvement.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "mild meningeal enhancement",
+        "Few small lesions noticed in pons",
+        "mild meningeal enhancement",
+        "The proteins were raised"
+      ],
+      "justification": "Concluding CNS/meningeal involvement synthesizes the meningeal enhancement, pontine lesions, and abnormal CSF; this is an interpretive aggregation rather than a single stated fact."
+    },
+    {
+      "claim": "The presentation includes a triad of skin/joint lesion at the bite site, fever, and hepatosplenomegaly with CNS findings, in a returning traveler from East Africa.",
+      "kind": "inferred",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "swelling over the left ankle joint after an insect bite",
+        "high grade fever with chills and rigors",
+        "hepatomegaly of 3 cm and splenomegaly of 3 cm",
+        "traveling through Uganda, Tanzania and Kenya"
+      ],
+      "justification": "Synthesizing these separate findings into a single 'traveler's syndrome' picture is an interpretive clinical summary, not a verbatim statement in the text."
+    }
+  ],
+  "rejected": []
+}

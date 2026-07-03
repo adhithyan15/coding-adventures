@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-emit-compose"
+version = "0.1.0"
+edition = "2021"
+description = "Jetpack Compose / Compose Multiplatform backend: emits @Composable Kotlin functions from the Mosaic three-language pipeline"
+license = "MIT"
+
+[dependencies]
+mosmodel-compiler = { path = "../mosmodel-compiler" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosstyle-compiler = { path = "../mosstyle-compiler" }

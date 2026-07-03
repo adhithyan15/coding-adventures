@@ -30,6 +30,26 @@ describe("nib-type-checker", () => {
     expect(findAnnotatedTypes(result.typedAst)).toContain("u4");
   });
 
+  it("infers types through multiplicative (mul_expr) operators", () => {
+    // Regression for the precedence cascade add_expr → mul_expr → bitwise_expr:
+    // before `mul_expr` was recognised as an expression rule, an enclosing
+    // add_expr filtered its mul_expr operands out and inferred no type, so a
+    // body like `a * b` annotated nothing.
+    const ast = parseNib("fn mul(a: u4, b: u4) -> u4 { return a * b; }");
+    const result = checkNib(ast);
+
+    expect(result.ok).toBe(true);
+    expect(findAnnotatedTypes(result.typedAst)).toContain("u4");
+  });
+
+  it("rejects mismatched operands of a multiplicative operator", () => {
+    const ast = parseNib("fn main() { let x: u4 = 1; let y: bool = true; let z: u4 = x * y; }");
+    const result = checkNib(ast);
+
+    expect(result.ok).toBe(false);
+    expect(result.errors.some((error) => error.message.includes("same type"))).toBe(true);
+  });
+
   it("rejects mismatched let bindings", () => {
     const ast = parseNib("fn main() { let flag: bool = 1; }");
     const result = checkNib(ast);

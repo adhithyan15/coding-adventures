@@ -1,5 +1,297 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
+
+### Added - XAML host intent extension point
+
+Generated WinUI project shells now preserve structured `HostIntent` values from
+optional `MosaicHost.HandleEvent` results and can delegate them to an
+app-provided asynchronous `MosaicHost.HandleHostIntent(Window, Component,
+HostIntent)` method. This lets app packages implement native file pickers or
+other platform-owned workflows without hand-patching generated `MainWindow`
+code.
+
+### Changed - XAML host build script reliability
+
+Generated `build.ps1` drivers now resolve `dotnet` from PATH or the standard
+`Program Files\dotnet\dotnet.exe` location before building, and fail with a
+non-zero exit code when the tool is unavailable. The `-Run` path also reports a
+missing executable or non-zero app exit instead of leaving the script looking
+green after a failed launch.
+
+The nested Windows Rust workspace config now uses the Rust-bundled `rust-lld`
+linker, matching the repo root and avoiding accidental resolution of Git/MSYS
+`link.exe` without requiring Visual Studio's `lld-link.exe` in local dev shells.
+
+### Added - Mosaic event envelopes for WinUI hosts
+
+Generated non-empty `{Component}.Event.cs` unions now expose `MosaicName`,
+`MosaicPayload`, and `MosaicEnvelope` on the base event record, with each nested
+record preserving its original Mosaic emit name and payload keys. WinUI hosts
+can use the envelope as the JSON-shaped event bridge into shared business logic.
+
+The VisiCalc `Grid` (from `mosaic-pkg-grid`, lowered through
+`HostTable` + nested `For` + `Cell`) regenerated into XAML that the
+WinUI 3 markup compiler would reject and that would block
+`dotnet build`. Four groups of fixes make it valid and
+spreadsheet-correct. The demo `code/programs/csharp/visicalc-xaml/` is rewired to
+mount the generated `<gen:Grid>` instead of its hand-written
+placeholder.
+
+> Verified on macOS via `cargo test -p mosaic-emit-xaml --lib`
+> (164 passing) + structural inspection of the generated XAML/C#.
+> Runtime / `dotnet build` verification needs Windows.
+
+### Group A — WinUI value translation (X5)
+
+`build_style_fragment` gained a value-translation layer
+(`translate_xaml_value`) below the X1 name-mapping and X4 color
+PascalCasing. `css_property_to_xaml_setter` now returns
+`Option<String>` so CSS-only properties can be dropped.
+
+- **px-strip** — length setters (`FontSize`, `Height`, `Width`,
+  `Padding`, `Margin`, `BorderThickness`, `CornerRadius`) emit bare
+  numbers / `Thickness`: `12px`→`12`, `0,0,0,1px`→`0,0,0,1`.
+- **drop CSS-only props** — `border-collapse`, `border-style`,
+  `outline`, `text-decoration`, `box-shadow` return `None` (omitted,
+  not emitted as invalid attrs / `<Setter>`s).
+- **drop `Width="100%"`** — WinUI `Width` is a `Double`, not a
+  percentage.
+- **`text-align` → `TextAlignment`** with a PascalCase value
+  (`center`→`Center`, `right`→`Right`, `left`→`Left`). The old output
+  emitted `<Setter Property="TextAlign" Value="center"/>` — invalid
+  on both the property name and the value.
+- **`font-weight`** → WinUI `FontWeights` constant
+  (`normal`→`Normal`, `bold`→`Bold`, `600`/`semibold`→`SemiBold`,
+  `500`/`medium`→`Medium`).
+- `{x:Bind …}` markup-extension values pass through unmangled (never
+  px-stripped or case-mangled).
+
+Tests: `x5_px_units_stripped_from_length_setters`,
+`x5_css_only_properties_are_dropped`,
+`x5_percentage_width_is_dropped`,
+`x5_text_align_maps_to_textalignment_pascalcase`,
+`x5_font_weight_maps_to_named_constant`,
+`x5_binding_value_passes_through_unmangled`,
+`x5_strip_px_units_preserves_thickness_shape`,
+`group_a_cell_style_is_valid_winui`. Updated
+`x4_non_color_setters_pass_through_unchanged` and
+`box_partitions_style_between_border_and_textblock_resource` which
+asserted the old (now-invalid) `FontWeight="normal"` / `"500"`.
+
+### Group B — nested-For inner value type (compile gate)
+
+The inner `For (each: row, as: v)` (UI29 §3.4, `each:` referencing
+the outer For's `as:` binding) inferred the cell value type as
+`IReadOnlyList<string>` instead of `string`, because `emit_for`'s
+Keyword arm used the enclosing binding's `element_type` verbatim
+(that is the type of `row` ITSELF). The cell then bound a `string`
+`<TextBlock Text="{x:Bind V}"/>` to a list field — a `dotnet build`
+blocker. Fixed by peeling exactly one `List<>` level
+(`inner_type_of_list(outer_type)`), so the inner value VM
+(`Grid_VVm`) types `V` as `string` while the outer `Grid_RowVm`
+keeps `IReadOnlyList<string> Row`.
+
+Test: `group_b_inner_value_vm_field_is_string_not_list`.
+
+### Group C — per-column fixed widths
+
+The per-column cell loop's value VM (`Grid_VVm`) now carries a
+`double Width` field, and the generated cell element binds
+`Width="{x:Bind Width}"` (injected via
+`inject_attr_into_first_element`). The host-side VM-builder that
+POPULATES the width (zipping cell value + column index → width) is
+host code the emitter doesn't generate — a `<remarks>` doc comment
+in the generated value-VM `.cs` tells the Windows dev exactly how
+(`new Grid_VVm(value, col, ColumnWidths[col])`).
+
+Tests: `group_c_value_vm_carries_width_and_cell_binds_it`.
+
+### Group D — demo rewired (no hand-written placeholder)
+
+`code/programs/csharp/visicalc-xaml/`: `scripts/build.sh` now runs a second
+`mosaic-compile --backend xaml` for the Grid (with
+`--package-search-path code/packages`); `MainWindow.xaml` mounts
+`<gen:Grid>`; `MainWindow.xaml.cs` feeds the generated control's
+dependency properties + a `Dispatch` handler; `VisiCalc.csproj`
+compiles the generated Grid files. The per-cell VM projection and
+the selected/editing background highlight remain for a Windows dev
+(see the demo README + `MainWindow.xaml.cs` TODO).
+
+## [Unreleased] — #4548 toolkit-demo regressions — three emitter gaps closed
+
+Three mosaic-emit-xaml code-gen bugs surfaced when compiling
+components from `mosaic-pkg-toolkit` (Button / Alert / Badge / Spinner
+demo, PR #4548) through the XAML backend. None of the existing
+demos (hello-dialog, mosaic-pkg-grid) exercised the affected style
+or naming surface. Each fix is a localised change with regression
+tests; the toolkit Button + Alert + Badge XAML now regenerates
+cleanly and builds without hand-patches.
+
+### X1 — `border-radius` lowered to invalid `BorderRadius`
+
+`css_property_to_xaml_setter` had no entry for `border-radius`, so
+the kebab-to-pascal fallback produced `BorderRadius` — which isn't
+a real WinUI 3 property. The XAML markup compiler rejected it
+silently (`XamlCompiler.exe` exits 1 with no diagnostic). Fixed
+by adding the explicit `"border-radius" => "CornerRadius"` mapping
+(`UIElement.CornerRadius` is the actual WinUI property).
+
+Regression test: `border_radius_lowers_to_corner_radius`.
+
+### X2 — `x:Name` collided with the enclosing class name
+
+Components where the pascal-cased part name equals the component
+name (e.g. `Button.mll`'s `HostButton [ button ]` inside the
+`Button` component) produced `<Button x:Name="Button">`. WinUI's
+XAML compiler auto-generates a `private Button Button;` field
+that triggers C# error CS0542 ("member names cannot be the same
+as their enclosing type"). Affected Button, Checkbox, Input,
+Radio.
+
+Fixed by detecting the collision in `host_x_name` and suffixing
+`Element` to the identifier. Event-handler stems are derived from
+`x_name` so both the XAML attribute (`Click="ButtonElement_Click"`)
+and the code-behind method (`private void ButtonElement_Click`)
+stay consistent automatically.
+
+Regression tests: `x_name_avoids_component_class_name_collision`,
+`x_name_unchanged_when_no_collision`.
+
+### X3 — text-style props on `<Border>` rejected by WinUI
+
+`<Border>` doesn't have `Foreground` / `FontSize` / `FontWeight` /
+`FontFamily` — those belong on the text content inside. The emitter
+was placing every part-style property on the wrapping `<Border>`
+unconditionally, so styled toolkit components like Alert and Badge
+emitted invalid markup that XamlCompiler silently rejected.
+
+Fixed in `emit_container` by partitioning the part-style fragment:
+container-paint props (Background, BorderBrush, BorderThickness,
+CornerRadius, Padding, Margin, Width, Height, *Alignment) stay on
+the opening tag; text-style props move into a scoped
+`<Border.Resources>` block as a `<Style TargetType="TextBlock">`
+implicit style. WinUI's implicit-style resolution then applies
+them to every `TextBlock` descendant inside the container.
+
+This change also applies to the other emit_container call sites
+(`Stack` → `<Grid>`), which have the same constraint.
+
+Regression tests:
+`box_partitions_style_between_border_and_textblock_resource`,
+`box_without_text_style_emits_no_resources_block`,
+`parse_style_fragment_round_trips_build_style_fragment`.
+
+## [Unreleased] — UI31-K-xaml — `HostTable` RTL contract
+
+The WinUI `HostTable` lowering (which produces a structural `<Grid>`
+with `<Grid.RowDefinitions>` per section) now honours the UI31 §3.2
+RTL contract via WinUI's `FrameworkElement.FlowDirection`:
+
+- `dir: rtl` → `FlowDirection="RightToLeft"` on the `<Grid>`; flips
+  column ordering of all descendant rows automatically.
+- `dir: ltr` → `FlowDirection="LeftToRight"` — explicit-LTR for
+  tables that should stay LTR inside an ambient-RTL `Page` (e.g.
+  number-heavy spreadsheets).
+- `dir: auto` → no attribute (spec semantic "let the host decide" =
+  WinUI default of inheriting from the `Page`'s `FlowDirection`,
+  typically set from `CultureInfo`).
+- `dir: slot: layout-direction` → `FlowDirection="{x:Bind LayoutDirection}"`.
+  The slot must evaluate to a `FlowDirection`; the slot name passes
+  through `kebab_to_pascal_case` + `is_safe_identifier` so it can't
+  smuggle malicious XAML through the binding path.
+- Unknown keywords drop silently — the allow-list is the security
+  gate. Test #6 feeds the literal payload `"RightToLeft\" Tag=\"pwn\""`
+  (specifically shaped to break out of the attribute-value quoting)
+  and asserts `Tag="pwn"` never reaches the output.
+
+7 new tests cover the a11y gate (structural `<Grid>` with
+`<Grid.RowDefinitions>` preserved — not a flat `<StackPanel>` mess),
+the three allow-listed keywords (incl. the no-emit `auto` case),
+the slot-ref binding through `{x:Bind PascalCase}`, the silent-drop
+with attribute-injection payload, and a no-`dir` regression guard.
+Total tests: 141 (was 134).
+
+## [Unreleased] — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-xaml)
+
+Three new UI29-4 kernel primitives lower to native WinUI 3 widgets:
+
+- **`HostLink` → `<HyperlinkButton NavigateUri="..." Content="..."/>`**.
+  WinUI 3 ships `HyperlinkButton` specifically for clickable
+  hyperlinks (vs `<Hyperlink>` which is the inline-text-flow
+  variant). When `external: false` + `onActivate` are both bound,
+  the lowering swaps to a `<Button Click="X_Click"/>` with a
+  code-behind handler that dispatches the named emit (`href` flows
+  into the dispatch payload as a string literal or `this.<Pascal>`
+  property reference) — host's in-app router takes over.
+- **`HostTooltip` → `<Border ToolTipService.ToolTip="text">child</Border>`**.
+  The attached property hooks the tooltip directly to the wrapped
+  element with native a11y wiring. `Border` is a layout pass-
+  through (no padding/margin/background by default).
+- **`HostNumberInput` → `<NumberBox Value="{x:Bind V, Mode=TwoWay}"
+  Minimum Maximum SmallChange PlaceholderText IsEnabled
+  ValueChanged>`**. WinUI 3's NumberBox is the native numeric
+  input with built-in ± stepper, min/max validation, and locale-
+  aware decimal parsing. `onChange` registers a `ValueChanged`
+  handler that dispatches `XEvent.X(args.NewValue)` — the standard
+  WinUI NumberBox event-arg shape (`args.NewValue` is the
+  validated `double`).
+
+6 new tests cover: HyperlinkButton with NavigateUri+Content, the
+external-false + onActivate Button swap with Click handler +
+href-in-payload dispatch, HostTooltip's Border + ToolTipService
+wrap, bare NumberBox emission, min/max/step → Minimum/Maximum/
+SmallChange mapping, and the ValueChanged code-behind handler
+emission.
+
+## [Unreleased] — UI29-2 `HostCheckbox` + `HostRadio` (U29-2-K-xaml)
+
+Both new UI29-2 primitives lower to native WinUI / WPF widgets:
+
+- `HostCheckbox` → `<CheckBox>` with `IsChecked` / `IsEnabled` / `Content`
+  / `IsThreeState` / `Checked` + `Unchecked` events.
+- `HostRadio`    → `<RadioButton>` with `IsChecked` / `IsEnabled` /
+  `Content` / `GroupName` / `Checked` event (only — `Unchecked` is
+  silent per UI29-2 §2.2's "onSelect = this radio was chosen").
+
+Detailed prop handling:
+
+- `checked: slot: c` → `IsChecked="{x:Bind C, Mode=OneWay}"`.
+- `checked: true|false` → `IsChecked="True"` / `IsChecked="False"`.
+- `disabled: slot: d` → `IsEnabled="{x:Bind Not(D)}"` (reuses
+  HostButton's shared `Not(bool)` helper).
+- `disabled: true|false` → `IsEnabled="False"` / `IsEnabled="True"`.
+- `label: str|slot` → `Content="..."` / `Content="{x:Bind Label}"`.
+- `HostCheckbox.indeterminate: slot|true` → `IsThreeState="True"`.
+  The actual `IsChecked = null` transition is the host's job (WinUI
+  doesn't have a "show as indeterminate" attribute, only the
+  three-state-enabled flag).
+- `HostCheckbox.onToggle: emit: onX` → registers TWO code-behind
+  handlers — `<x>_Checked` dispatches `XEvent.X(true)` and
+  `<x>_Unchecked` dispatches `XEvent.X(false)`. WinUI has no
+  combined "toggled" event; the pair satisfies the kernel-canonical
+  `onToggle(checked: bool)` signature exactly.
+- `HostRadio.group: str|slot` → `GroupName="..."` / `GroupName="{x:Bind G}"`.
+  WinUI auto-deselects siblings sharing `GroupName` when one
+  `IsChecked` goes true — true radio-group behavior at the XAML
+  level, no userland RadioGroup needed for v1.
+- `HostRadio.value: str|slot` → flows into the C# dispatch payload
+  as a string literal (escaped) or `this.<Pascal>` property ref.
+- `HostRadio.onSelect: emit: onX` → registers ONLY a `<x>_Checked`
+  handler that dispatches `XEvent.X(<value>)`. The `Unchecked` event
+  is intentionally not wired so sibling-caused deselects don't
+  trigger `onSelect`.
+
+10 new tests cover: bare CheckBox / RadioButton blocks, checked-slot
+binding, string label → Content, disabled → Not(bool) helper,
+onToggle's Checked + Unchecked pair with matching bool payloads,
+indeterminate → IsThreeState, bare RadioButton, group → GroupName,
+onSelect with string-literal value, onSelect with slot-typed value.
+
+Internal: added `escape_csharp_string` helper for embedding string
+literals inside C# code-behind handler bodies (separate from
+`escape_xaml_attr`, which is for XML-attribute contexts).
+
 ## [Unreleased] — `--emit-project` (B1, B2, B3 from demo catalog)
 
 ### Added — full WinUI 3 host shell generation
@@ -106,7 +398,7 @@ End-to-end Mosaic → XAML → on-screen dialog with **zero hand-patches**.
 ### Fixed — HostDialog now actually renders on WinUI 3
 
 Discovered while making the first end-to-end Mosaic → XAML → on-screen
-dialog demo run (see `demo/hello-dialog-xaml/ISSUES.md`). Five
+dialog demo run (see `code/programs/csharp/hello-dialog-xaml/ISSUES.md`). Five
 generator bugs that each blocked the dialog from displaying.
 
 **A1 — HostDialog at the moslayout root now hoists to a
@@ -177,11 +469,11 @@ converter is a separate type and ships as a sibling file.
 
 ### End-to-end verification
 
-Regenerated the `demo/hello-dialog-xaml/` artifacts from the unedited
+Regenerated the `code/programs/csharp/hello-dialog-xaml/` artifacts from the unedited
 `.mil`/`.mll`/`.msl` triple via `mosaic-compile --backend xaml`. The
 generated XAML, code-behind, and Event union are now byte-identical
 to the working hand-patched files in
-`demo/hello-dialog-xaml/winui/`. After PR-3 (`--emit-project`) and
+`code/programs/csharp/hello-dialog-xaml/winui/`. After PR-3 (`--emit-project`) and
 PR-4 (regenerate the demo) land, the demo will need zero hand-patches.
 
 ## [Unreleased] — U29-1-K-xaml — HostDialog kernel primitive
@@ -277,7 +569,7 @@ intact today.
 
 ### What's NOT in this PR (deferred to PR-7)
 
-- **VisiCalc Windows demo** (`demo/visicalc/windows/xaml/`) — the
+- **VisiCalc Windows demo** (`code/programs/typescript/visicalc/windows/xaml/`) — the
   full end-to-end app that consumes the compiled `mosaic-pkg-grid`
   package and a hand-written `FormulaBar` component. PR-7 lands
   this directory, the `windows/build.ps1` driver, and the

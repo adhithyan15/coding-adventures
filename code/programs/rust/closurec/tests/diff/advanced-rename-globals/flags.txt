@@ -1,0 +1,4 @@
+--compilation_level
+ADVANCED
+--js
+tests/diff/advanced-rename-globals/input/a.js

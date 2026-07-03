@@ -1,0 +1,7 @@
+{
+ "idx": 97,
+ "id": "ACA-8",
+ "scenario": "On a $500,000 award, a PI moved $20,000 (4% of the award) from the supplies category to establish a new subaward with a collaborating laboratory located in another country. The PI obtained no funder approval.",
+ "policy": "Funds in one budget category may be rebudgeted into another category without funder approval as long as the moved amount is under 10% of the total award. Override: any rebudgeting that creates a new foreign subaward requires prior funder approval regardless of the amount.",
+ "question": "Did this rebudgeting require prior funder approval?"
+}

@@ -1,0 +1,15 @@
+[package]
+name = "adj48-mycin-2026"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ48 — MYCIN-2026 ACS demo: runs all five vignettes against the canonical adj-lang rulebook and emits an audit document per case (posterior, fired contributions, uncertainties, kickback recommendation)."
+publish = false
+
+[dependencies]
+adj-lang = { path = "../../../packages/rust/adj-lang" }
+logic-core = { path = "../../../packages/rust/logic-core" }
+logic-engine = { path = "../../../packages/rust/logic-engine" }
+
+[[bin]]
+name = "adj48"
+path = "src/main.rs"

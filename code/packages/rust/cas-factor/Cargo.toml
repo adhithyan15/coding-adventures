@@ -1,6 +1,6 @@
 [package]
 name = "cas-factor"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "Univariate integer polynomial factoring over Z (rational-root, Kronecker, bounded BZH)"
 license = "MIT"

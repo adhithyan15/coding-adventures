@@ -763,6 +763,104 @@ func TestArithmeticAddition(t *testing.T) {
 	}
 }
 
+// wantInt64 fails the test unless val is an int64 equal to want.
+// Several operators (bitwise, integer arithmetic) must preserve int64 typing.
+func wantInt64(t *testing.T, val interface{}, want int64) {
+	t.Helper()
+	got, ok := val.(int64)
+	if !ok {
+		t.Errorf("value %v: got type %T, want int64", val, val)
+		return
+	}
+	if got != want {
+		t.Errorf("value: got %d, want %d", got, want)
+	}
+}
+
+// =============================================================================
+// Operators added by the SQLite-style precedence ladder (collated / bitwise /
+// concatenation / extra unary prefixes). These exercise the expression layers
+// between `comparison` and `additive` that the evaluator must pass through for
+// any column reference to resolve at all.
+// =============================================================================
+
+// TestBitwiseAnd verifies the & operator (and that bitwise ops sit below
+// comparison so "salary & 1 = 0" parses as "(salary & 1) = 0").
+func TestBitwiseAnd(t *testing.T) {
+	// 90000 & 16 = 16 (bit 4 is set in 90000).
+	result := mustExecute(t, "SELECT salary & 16 FROM employees WHERE name = 'Alice'")
+	assertRowCount(t, result, 1)
+	wantInt64(t, result.Rows[0][0], 90000&16)
+}
+
+// TestBitwiseOr verifies the | operator.
+func TestBitwiseOr(t *testing.T) {
+	result := mustExecute(t, "SELECT salary | 1 FROM employees WHERE name = 'Bob'")
+	assertRowCount(t, result, 1)
+	wantInt64(t, result.Rows[0][0], 75000|1)
+}
+
+// TestBitwiseShift verifies the << and >> operators.
+func TestBitwiseShift(t *testing.T) {
+	result := mustExecute(t, "SELECT id << 4, id >> 1 FROM employees WHERE id = 4")
+	assertRowCount(t, result, 1)
+	wantInt64(t, result.Rows[0][0], 4<<4)
+	wantInt64(t, result.Rows[0][1], 4>>1)
+}
+
+// TestBitwiseNot verifies the unary ~ (bitwise NOT) operator.
+func TestBitwiseNot(t *testing.T) {
+	result := mustExecute(t, "SELECT ~id FROM employees WHERE id = 1")
+	assertRowCount(t, result, 1)
+	wantInt64(t, result.Rows[0][0], ^int64(1))
+}
+
+// TestUnaryPlus verifies that the unary + prefix is an identity no-op.
+func TestUnaryPlus(t *testing.T) {
+	result := mustExecute(t, "SELECT +salary FROM employees WHERE name = 'Bob'")
+	assertRowCount(t, result, 1)
+	wantInt64(t, result.Rows[0][0], 75000)
+}
+
+// TestStringConcat verifies the || text-concatenation operator.
+func TestStringConcat(t *testing.T) {
+	result := mustExecute(t, "SELECT name || '!' FROM employees WHERE name = 'Alice'")
+	assertRowCount(t, result, 1)
+	if got := result.Rows[0][0]; got != "Alice!" {
+		t.Errorf("name || '!' = %v, want Alice!", got)
+	}
+}
+
+// TestCollatePassthrough verifies that a COLLATE postfix is accepted and does
+// not change the underlying value (collation only affects compare/sort order).
+func TestCollatePassthrough(t *testing.T) {
+	result := mustExecute(t, "SELECT name COLLATE NOCASE FROM employees WHERE id = 1")
+	assertRowCount(t, result, 1)
+	if got := result.Rows[0][0]; got != "Alice" {
+		t.Errorf("name COLLATE NOCASE = %v, want Alice", got)
+	}
+}
+
+// TestLimitMySQLStyle verifies the "LIMIT offset, count" shorthand, where the
+// first number is the offset and the second is the count (reversed from the
+// OFFSET form).
+func TestLimitMySQLStyle(t *testing.T) {
+	// Skip 1, take 2 → Bob, Carol.
+	result := mustExecute(t, "SELECT name FROM employees LIMIT 1, 2")
+	assertRowCount(t, result, 2)
+	assertRowValue(t, result, 0, 0, "Bob")
+	assertRowValue(t, result, 1, 0, "Carol")
+}
+
+// TestLimitNegativeIsUnbounded verifies SQLite semantics: a negative LIMIT
+// means "no limit", so "LIMIT -1 OFFSET 2" skips 2 rows and returns the rest.
+func TestLimitNegativeIsUnbounded(t *testing.T) {
+	result := mustExecute(t, "SELECT name FROM employees LIMIT -1 OFFSET 2")
+	assertRowCount(t, result, 2)
+	assertRowValue(t, result, 0, 0, "Carol")
+	assertRowValue(t, result, 1, 0, "Dave")
+}
+
 // TestQueryResultString verifies that QueryResult.String() produces output
 // without panicking. We don't check the exact format, just that it works.
 func TestQueryResultString(t *testing.T) {

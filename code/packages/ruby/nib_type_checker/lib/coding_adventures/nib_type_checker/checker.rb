@@ -192,7 +192,10 @@ module CodingAdventures
             else
               check_expr(first_expr_child, scope)
             end
-          when "add_expr"
+          when "add_expr", "mul_expr"
+            # mul_expr shares additive semantics: same-type numeric operands,
+            # numeric result (LITERAL if both operands are unresolved integer
+            # literals). Routing it through check_add_expr avoids a parallel path.
             check_add_expr(node, scope)
           when "call_expr"
             check_call_expr(node, scope)
@@ -308,7 +311,10 @@ module CodingAdventures
       end
 
       def expression_rule?(name)
-        %w[expr or_expr and_expr eq_expr cmp_expr add_expr bitwise_expr unary_expr primary call_expr].include?(name)
+        # mul_expr sits between add_expr and bitwise_expr in the precedence
+        # cascade (LANG-FULL N1). It must be here so expression_children does not
+        # filter it out when add_expr walks its operands.
+        %w[expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr].include?(name)
       end
 
       def unwrap_top_decl(node)

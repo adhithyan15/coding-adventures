@@ -1,0 +1,11 @@
+{
+  "language": "rust",
+  "requires": [
+    "cargo"
+  ],
+  "dependencies": [
+    "coding-adventures-sql-backend",
+    "coding-adventures-sql-parser",
+    "parser"
+  ]
+}

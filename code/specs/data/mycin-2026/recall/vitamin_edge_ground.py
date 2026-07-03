@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+"""vitamin_edge_ground.py — the write gate for the vitamin-deficiency edges (REL-10).
+
+A SECOND recall domain, proving the relational-recall harness generalises beyond
+inborn errors of metabolism. Same machinery as iem_edge_ground.py — it REUSES that
+gate's pure `_edge_block` renderer and the shared organism_id_ground gate/safe_status
+helpers — only the controlled vocabulary and the disease/finding edges differ:
+
+    deficiency_causes(vitamin, disease)   thiamine → beriberi, niacin → pellagra, …
+    classic_finding(vitamin, finding)     thiamine → wernicke_encephalopathy, …
+
+The gate owns vitamin-edges.adj: it consumes vitamin-edge-grounding.json (the
+spider's byte-provenanced output) and regenerates the file + manifest. A grounded
+edge lifts to `trust authoritative` with its byte-quote + URL; an ungrounded edge
+stays `trust consensus` + `% [FLAG: …]` (authored-debt visible). With no grounding
+JSON the gate regenerates byte-identically (all consensus), so `--check` is
+meaningful before the spider runs.
+
+Usage:  python3 vitamin_edge_ground.py            # regenerate vitamin-edges.adj + manifest
+        python3 vitamin_edge_ground.py --check    # verify the .adj matches the manifest
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ADJ = HERE / "vitamin-edges.adj"
+GROUNDING = HERE / "vitamin-edge-grounding.json"
+MANIFEST = HERE / "vitamin-edge-manifest.json"
+sys.path.insert(0, str(HERE))
+import iem_edge_ground as iem  # noqa: E402  (reuse the pure _edge_block renderer)
+
+# The vitamin knowledge graph, grouped by vitamin for the rendered `% ---` headers.
+# (relation, subject, object, AUTHORED fallback source). Board-classic deficiencies.
+GROUPS: list[tuple[str, list[tuple[str, str, str, str]]]] = [
+    ("Thiamine (B1)", [
+        ("deficiency_causes", "thiamine", "beriberi",
+         "Thiamine (vitamin B1) deficiency causes beriberi."),
+        ("classic_finding", "thiamine", "wernicke_encephalopathy",
+         "Thiamine deficiency causes Wernicke encephalopathy (confusion, ophthalmoplegia, ataxia)."),
+    ]),
+    ("Niacin (B3)", [
+        ("deficiency_causes", "niacin", "pellagra",
+         "Niacin (vitamin B3) deficiency causes pellagra."),
+        ("classic_finding", "niacin", "dermatitis_diarrhea_dementia",
+         "Pellagra (niacin deficiency) classically presents with the triad of dermatitis, diarrhea, and dementia."),
+    ]),
+    ("Cobalamin (B12)", [
+        ("deficiency_causes", "cobalamin", "megaloblastic_anemia",
+         "Cobalamin (vitamin B12) deficiency causes megaloblastic anemia."),
+        ("classic_finding", "cobalamin", "subacute_combined_degeneration",
+         "Vitamin B12 deficiency causes subacute combined degeneration of the spinal cord."),
+    ]),
+    ("Folate (B9)", [
+        ("deficiency_causes", "folate", "megaloblastic_anemia",
+         "Folate (vitamin B9) deficiency causes megaloblastic anemia (without neurologic deficits)."),
+        ("classic_finding", "folate", "neural_tube_defects",
+         "Periconceptional folate deficiency is associated with fetal neural tube defects."),
+    ]),
+    ("Vitamin C (ascorbate)", [
+        ("deficiency_causes", "vitamin_c", "scurvy",
+         "Vitamin C (ascorbic acid) deficiency causes scurvy."),
+        ("classic_finding", "vitamin_c", "impaired_collagen_synthesis",
+         "Vitamin C is a cofactor for collagen hydroxylation; its deficiency impairs collagen synthesis."),
+    ]),
+    ("Vitamin D", [
+        ("deficiency_causes", "vitamin_d", "rickets",
+         "Vitamin D deficiency causes rickets in children."),
+        ("classic_finding", "vitamin_d", "osteomalacia",
+         "Vitamin D deficiency causes osteomalacia in adults."),
+    ]),
+    ("Vitamin A", [
+        ("deficiency_causes", "vitamin_a", "night_blindness",
+         "Vitamin A deficiency causes night blindness (nyctalopia)."),
+        ("classic_finding", "vitamin_a", "xerophthalmia",
+         "Vitamin A deficiency causes xerophthalmia and corneal damage."),
+    ]),
+    ("Vitamin K", [
+        ("deficiency_causes", "vitamin_k", "coagulopathy",
+         "Vitamin K deficiency causes a bleeding diathesis (coagulopathy)."),
+        ("classic_finding", "vitamin_k", "prolonged_prothrombin_time",
+         "Vitamin K deficiency prolongs the prothrombin time (PT/INR)."),
+    ]),
+]
+
+HEADER = """\
+% ============================================================================
+% vitamin-edges — the vitamin-deficiency knowledge-graph (MYCIN-2026 REL-10).
+% ============================================================================
+% A SECOND recall domain proving the relational-recall harness generalises beyond
+% inborn errors of metabolism. "What does thiamine deficiency cause?" becomes the
+% binding query  ? deficiency_causes(thiamine, $Disease).
+%
+% GENERATED by recall/vitamin_edge_ground.py from recall/vitamin-edge-grounding.json
+% (the spider's byte-provenanced output). Do not hand-edit — re-ground and regenerate.
+% A grounded edge carries its byte-quote as `source` + `trust authoritative` (+ URL as
+% `locator`); an ungrounded edge stays `trust consensus`, tagged `% [FLAG: <status>]`,
+% so the authored-debt is visible and drives to zero. (See feedback_nothing_human_authored.)
+% ============================================================================
+
+dictionary vitamin_vocab {
+    define vitamin : entity   surface "vitamin", "micronutrient"
+    define disease : entity   surface "deficiency disease"
+    define finding : entity   surface "clinical finding", "classic finding"
+
+    define deficiency_causes : relation from vitamin to disease
+    define classic_finding   : relation from vitamin to finding
+}
+"""
+
+
+def build(check: bool = False) -> int:
+    recs = {}
+    if GROUNDING.exists():
+        recs = {r["id"]: r for r in json.loads(GROUNDING.read_text()).get("records", [])}
+
+    body = [HEADER, "rulebook vitamin_facts {", "    use vitamin_vocab"]
+    clauses: dict[str, dict] = {}
+    for label, edges in GROUPS:
+        body.append("")
+        body.append(f"    % --- {label} " + "-" * max(0, 64 - len(label)))
+        for rel, subj, obj, authored in edges:
+            eid = f"{rel}__{subj}"
+            block, entry = iem._edge_block(rel, subj, obj, authored, recs.get(eid))
+            body.append(block)
+            clauses[eid] = entry
+    body.append("}")
+    adj_text = "\n".join(body) + "\n"
+
+    accepted = sum(1 for c in clauses.values() if c["verdict"] == "ACCEPT")
+    flagged = sum(1 for c in clauses.values() if c["verdict"] != "ACCEPT")
+    manifest = {"kind": "vitamin-edge", "clauses": clauses,
+                "hash": hashlib.sha256(json.dumps(clauses, sort_keys=True).encode()).hexdigest()[:16]}
+
+    if check:
+        ok = ADJ.exists() and ADJ.read_text() == adj_text
+        mok = MANIFEST.exists() and json.loads(MANIFEST.read_text()).get("hash") == manifest["hash"]
+        print("vitamin_edge_ground --check:", "up to date" if (ok and mok) else "OUT OF DATE")
+        return 0 if (ok and mok) else 1
+
+    ADJ.write_text(adj_text)
+    MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+    print(f"vitamin_edge_ground: regenerated vitamin-edges.adj + vitamin-edge-manifest.json "
+          f"({accepted} ACCEPT grounded, {flagged} consensus/flagged authored-debt). "
+          f"Run grounding/ground_sources.py to rebuild the provenance ledger.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(build(check="--check" in sys.argv[1:]))

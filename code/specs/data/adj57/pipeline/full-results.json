@@ -1,0 +1,892 @@
+{
+  "ingest": {
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11724740/",
+    "ground_truth": "Kikuchi-Fujimoto Disease (KFD), also called histiocytic necrotizing lymphadenitis. Established by cervical lymph node excision biopsy showing necrotizing lymphadenitis with abundant karyorrhectic (apoptotic) debris, histiocytes, and a characteristic absence of neutrophils, with positive myeloperoxidase immunohistochemistry.",
+    "case_text": "A 32-year-old female patient with a past history of post-streptococcal glomerulonephritis presented with high-grade fever associated with arthralgia, myalgia, increased fatiguability, and malaise for a duration of two weeks. She had a significant loss of appetite and loss of weight as well. She did not reveal a past history of oral ulcers, alopecia, photosensitive rashes, any other cutaneous manifestations, or inflammatory-type arthritis. There was no history of chronic cough, hemoptysis, or past history of or close contact history of tuberculosis. She denied recent travel history, risky sexual encounters, intravenous drug abuse, or blood transfusions.\n\nExamination revealed that the patient was febrile and pale, with a body mass index of 23 kg/m2. There was non-tender cervical lymphadenopathy, with the largest being 2 cm in diameter in the left side level five lymph node group. Associated palpable inguinal or axillary lymphadenopathy was not there. There was no alopecia, peri-orbital puffiness, or ankle edema.\n\nThe cardiovascular system revealed blood pressure of 110/70 mmHg with a pulse rate of 100 bpm, which was of normal volume. She maintained the oxygen saturation at 98% in room air, with bilateral air entry being equal without added sounds. There was a palpable spleen up to 2 cm below the costal margin without associated hepatomegaly or free fluid in the abdomen. Neurological examination revealed no abnormality.\n\nFull blood count on admission showed a total white cell count of 1.35 \u00d7 109 cells/L, hemoglobin 10 g/dL, and platelet count of 84 \u00d7 109 cells/L. The blood picture revealed features that suggested acute viral infection or an autoimmune process. Her erythrocyte sedimentation rate was 75 mm at the first hour, while C-reactive protein was 35 mg/dL.",
+    "segments": [
+      {
+        "text": "A ",
+        "kind": "discard",
+        "reason": "article and whitespace, no diagnostic content"
+      },
+      {
+        "text": "32-year-old",
+        "kind": "fact",
+        "term": "age(32_years)"
+      },
+      {
+        "text": " ",
+        "kind": "discard",
+        "reason": "whitespace"
+      },
+      {
+        "text": "female",
+        "kind": "fact",
+        "term": "sex(female)"
+      },
+      {
+        "text": " patient with a past history of ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "post-streptococcal glomerulonephritis",
+        "kind": "fact",
+        "term": "past_history(post_streptococcal_glomerulonephritis)"
+      },
+      {
+        "text": " presented with ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "high-grade fever",
+        "kind": "fact",
+        "term": "fever(high_grade)"
+      },
+      {
+        "text": " associated with ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "arthralgia",
+        "kind": "fact",
+        "term": "arthralgia(present)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "myalgia",
+        "kind": "fact",
+        "term": "myalgia(present)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "increased fatiguability",
+        "kind": "fact",
+        "term": "fatigue(increased)"
+      },
+      {
+        "text": ", and ",
+        "kind": "discard",
+        "reason": "punctuation and conjunction"
+      },
+      {
+        "text": "malaise",
+        "kind": "fact",
+        "term": "malaise(present)"
+      },
+      {
+        "text": " for a duration of ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "two weeks",
+        "kind": "fact",
+        "term": "symptom_duration(two_weeks)"
+      },
+      {
+        "text": ". She had a significant ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "loss of appetite",
+        "kind": "fact",
+        "term": "appetite_loss(present)"
+      },
+      {
+        "text": " and ",
+        "kind": "discard",
+        "reason": "conjunction"
+      },
+      {
+        "text": "loss of weight",
+        "kind": "fact",
+        "term": "weight_loss(present)"
+      },
+      {
+        "text": " as well. She did not reveal a past history of ",
+        "kind": "discard",
+        "reason": "connective phrasing introducing negatives"
+      },
+      {
+        "text": "oral ulcers",
+        "kind": "fact",
+        "term": "oral_ulcers(absent)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "alopecia",
+        "kind": "fact",
+        "term": "alopecia(absent)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "photosensitive rashes",
+        "kind": "fact",
+        "term": "photosensitive_rash(absent)"
+      },
+      {
+        "text": ", any other ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "cutaneous manifestations",
+        "kind": "fact",
+        "term": "cutaneous_manifestations(absent)"
+      },
+      {
+        "text": ", or ",
+        "kind": "discard",
+        "reason": "punctuation and conjunction"
+      },
+      {
+        "text": "inflammatory-type arthritis",
+        "kind": "fact",
+        "term": "inflammatory_arthritis(absent)"
+      },
+      {
+        "text": ". There was no history of ",
+        "kind": "discard",
+        "reason": "connective phrasing introducing negatives"
+      },
+      {
+        "text": "chronic cough",
+        "kind": "fact",
+        "term": "chronic_cough(absent)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "hemoptysis",
+        "kind": "fact",
+        "term": "hemoptysis(absent)"
+      },
+      {
+        "text": ", or past history of or close contact history of ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "tuberculosis",
+        "kind": "fact",
+        "term": "tuberculosis_exposure(absent)"
+      },
+      {
+        "text": ". She denied recent ",
+        "kind": "discard",
+        "reason": "connective phrasing introducing negatives"
+      },
+      {
+        "text": "travel history",
+        "kind": "fact",
+        "term": "recent_travel(absent)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "risky sexual encounters",
+        "kind": "fact",
+        "term": "risky_sexual_exposure(absent)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "intravenous drug abuse",
+        "kind": "fact",
+        "term": "iv_drug_use(absent)"
+      },
+      {
+        "text": ", or ",
+        "kind": "discard",
+        "reason": "punctuation and conjunction"
+      },
+      {
+        "text": "blood transfusions",
+        "kind": "fact",
+        "term": "blood_transfusion(absent)"
+      },
+      {
+        "text": ".\n\nExamination revealed that the patient was ",
+        "kind": "discard",
+        "reason": "paragraph break and connective phrasing"
+      },
+      {
+        "text": "febrile",
+        "kind": "fact",
+        "term": "febrile(present)"
+      },
+      {
+        "text": " and ",
+        "kind": "discard",
+        "reason": "conjunction"
+      },
+      {
+        "text": "pale",
+        "kind": "fact",
+        "term": "pallor(present)"
+      },
+      {
+        "text": ", with a ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "body mass index of 23 kg/m2",
+        "kind": "fact",
+        "term": "bmi(23)"
+      },
+      {
+        "text": ". There was ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "non-tender cervical lymphadenopathy",
+        "kind": "fact",
+        "term": "cervical_lymphadenopathy(non_tender)"
+      },
+      {
+        "text": ", with the largest being ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "2 cm in diameter in the left side level five lymph node group",
+        "kind": "fact",
+        "term": "largest_node(2cm_left_level_five)"
+      },
+      {
+        "text": ". Associated palpable ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "inguinal or axillary lymphadenopathy was not there",
+        "kind": "fact",
+        "term": "inguinal_axillary_lymphadenopathy(absent)"
+      },
+      {
+        "text": ". There was no ",
+        "kind": "discard",
+        "reason": "connective phrasing introducing negatives"
+      },
+      {
+        "text": "alopecia",
+        "kind": "fact",
+        "term": "alopecia(absent_on_exam)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "peri-orbital puffiness",
+        "kind": "fact",
+        "term": "periorbital_puffiness(absent)"
+      },
+      {
+        "text": ", or ",
+        "kind": "discard",
+        "reason": "punctuation and conjunction"
+      },
+      {
+        "text": "ankle edema",
+        "kind": "fact",
+        "term": "ankle_edema(absent)"
+      },
+      {
+        "text": ".\n\nThe cardiovascular system revealed ",
+        "kind": "discard",
+        "reason": "paragraph break and connective phrasing"
+      },
+      {
+        "text": "blood pressure of 110/70 mmHg",
+        "kind": "fact",
+        "term": "blood_pressure(110_70)"
+      },
+      {
+        "text": " with a ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "pulse rate of 100 bpm",
+        "kind": "fact",
+        "term": "pulse(100_bpm)"
+      },
+      {
+        "text": ", which was of normal volume. She maintained the ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "oxygen saturation at 98% in room air",
+        "kind": "fact",
+        "term": "oxygen_saturation(98_room_air)"
+      },
+      {
+        "text": ", with ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "bilateral air entry being equal without added sounds",
+        "kind": "fact",
+        "term": "lung_exam(clear_equal)"
+      },
+      {
+        "text": ". There was a ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "palpable spleen up to 2 cm below the costal margin",
+        "kind": "fact",
+        "term": "splenomegaly(2cm)"
+      },
+      {
+        "text": " without associated ",
+        "kind": "discard",
+        "reason": "connective phrasing introducing negative"
+      },
+      {
+        "text": "hepatomegaly",
+        "kind": "fact",
+        "term": "hepatomegaly(absent)"
+      },
+      {
+        "text": " or ",
+        "kind": "discard",
+        "reason": "conjunction"
+      },
+      {
+        "text": "free fluid in the abdomen",
+        "kind": "fact",
+        "term": "ascites(absent)"
+      },
+      {
+        "text": ". ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "Neurological examination revealed no abnormality",
+        "kind": "fact",
+        "term": "neuro_exam(normal)"
+      },
+      {
+        "text": ".\n\nFull blood count on admission showed a ",
+        "kind": "discard",
+        "reason": "paragraph break and connective phrasing"
+      },
+      {
+        "text": "total white cell count of 1.35 \u00d7 109 cells/L",
+        "kind": "fact",
+        "term": "wbc(1_35_leukopenia)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "punctuation"
+      },
+      {
+        "text": "hemoglobin 10 g/dL",
+        "kind": "fact",
+        "term": "hemoglobin(10_anemia)"
+      },
+      {
+        "text": ", and ",
+        "kind": "discard",
+        "reason": "punctuation and conjunction"
+      },
+      {
+        "text": "platelet count of 84 \u00d7 109 cells/L",
+        "kind": "fact",
+        "term": "platelets(84_thrombocytopenia)"
+      },
+      {
+        "text": ". The blood picture revealed features that suggested ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "acute viral infection or an autoimmune process",
+        "kind": "fact",
+        "term": "blood_picture(viral_or_autoimmune)"
+      },
+      {
+        "text": ". Her ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "erythrocyte sedimentation rate was 75 mm at the first hour",
+        "kind": "fact",
+        "term": "esr(75_elevated)"
+      },
+      {
+        "text": ", while ",
+        "kind": "discard",
+        "reason": "connective phrasing"
+      },
+      {
+        "text": "C-reactive protein was 35 mg/dL",
+        "kind": "fact",
+        "term": "crp(35_elevated)"
+      },
+      {
+        "text": ".",
+        "kind": "discard",
+        "reason": "terminal punctuation"
+      }
+    ],
+    "candidate_diagnoses": [
+      "Kikuchi-Fujimoto disease (histiocytic necrotizing lymphadenitis)",
+      "Systemic lupus erythematosus",
+      "Lymphoma (Hodgkin or non-Hodgkin)",
+      "Tuberculous lymphadenitis",
+      "Acute viral infection (e.g., EBV/CMV)",
+      "Adult-onset Still's disease"
+    ]
+  },
+  "derived": {
+    "leading_diagnosis": "kikuchi_fujimoto_disease",
+    "prior_population": "young_women_presenting_with_febrile_cervical_lymphadenopathy_and_leukopenia",
+    "fact_dispositions": [
+      {
+        "fact": "age(32_years)",
+        "used": true,
+        "role": "sets_prior_population"
+      },
+      {
+        "fact": "sex(female)",
+        "used": true,
+        "role": "sets_prior_population"
+      },
+      {
+        "fact": "past_history(post_streptococcal_glomerulonephritis)",
+        "used": false,
+        "reason": "remote childhood-type renal comorbidity; no current renal findings (no edema, normal BP), does not bear on KFD"
+      },
+      {
+        "fact": "fever(high_grade)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "arthralgia(present)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "myalgia(present)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "fatigue(increased)",
+        "used": false,
+        "reason": "nonspecific constitutional symptom, no discriminating value among candidates"
+      },
+      {
+        "fact": "malaise(present)",
+        "used": false,
+        "reason": "nonspecific constitutional symptom, no discriminating value"
+      },
+      {
+        "fact": "symptom_duration(two_weeks)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "appetite_loss(present)",
+        "used": false,
+        "reason": "nonspecific constitutional symptom"
+      },
+      {
+        "fact": "weight_loss(present)",
+        "used": false,
+        "reason": "nonspecific B-symptom; present across multiple candidates, low discrimination for KFD"
+      },
+      {
+        "fact": "oral_ulcers(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "alopecia(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "photosensitive_rash(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "cutaneous_manifestations(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "inflammatory_arthritis(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "chronic_cough(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "hemoptysis(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "tuberculosis_exposure(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "recent_travel(absent)",
+        "used": false,
+        "reason": "travel/exposure context; argues against geographically-acquired infection but not specific to KFD discrimination"
+      },
+      {
+        "fact": "risky_sexual_exposure(absent)",
+        "used": false,
+        "reason": "lowers HIV/STI prior but not discriminating between remaining candidates"
+      },
+      {
+        "fact": "iv_drug_use(absent)",
+        "used": false,
+        "reason": "lowers blood-borne infection prior; not discriminating for KFD"
+      },
+      {
+        "fact": "blood_transfusion(absent)",
+        "used": false,
+        "reason": "lowers transfusion-borne infection prior; not discriminating"
+      },
+      {
+        "fact": "febrile(present)",
+        "used": false,
+        "reason": "duplicate of fever(high_grade) already counted; avoid double-counting"
+      },
+      {
+        "fact": "pallor(present)",
+        "used": false,
+        "reason": "physical correlate of anemia already captured by hemoglobin(10_anemia)"
+      },
+      {
+        "fact": "bmi(23)",
+        "used": false,
+        "reason": "normal body habitus, no diagnostic bearing"
+      },
+      {
+        "fact": "cervical_lymphadenopathy(non_tender)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "largest_node(2cm_left_level_five)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "inguinal_axillary_lymphadenopathy(absent)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "alopecia(absent_on_exam)",
+        "used": false,
+        "reason": "duplicate of alopecia(absent) already counted; avoid double-counting"
+      },
+      {
+        "fact": "periorbital_puffiness(absent)",
+        "used": false,
+        "reason": "absence of renal/nephrotic sign; no current bearing given remote PSGN excluded"
+      },
+      {
+        "fact": "ankle_edema(absent)",
+        "used": false,
+        "reason": "absence of renal/fluid-overload sign; no bearing on KFD"
+      },
+      {
+        "fact": "blood_pressure(110_70)",
+        "used": false,
+        "reason": "normal vital sign, no diagnostic discrimination"
+      },
+      {
+        "fact": "pulse(100_bpm)",
+        "used": false,
+        "reason": "mild tachycardia expected with fever; nonspecific"
+      },
+      {
+        "fact": "oxygen_saturation(98_room_air)",
+        "used": false,
+        "reason": "normal; argues against pulmonary process but already covered by clear lung exam"
+      },
+      {
+        "fact": "lung_exam(clear_equal)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "splenomegaly(2cm)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "hepatomegaly(absent)",
+        "used": false,
+        "reason": "absence; low discriminating value among candidates"
+      },
+      {
+        "fact": "ascites(absent)",
+        "used": false,
+        "reason": "absence of serositis/fluid; nonspecific here"
+      },
+      {
+        "fact": "neuro_exam(normal)",
+        "used": false,
+        "reason": "normal exam, no diagnostic bearing"
+      },
+      {
+        "fact": "wbc(1_35_leukopenia)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "hemoglobin(10_anemia)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "platelets(84_thrombocytopenia)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "blood_picture(viral_or_autoimmune)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "esr(75_elevated)",
+        "used": true,
+        "role": "evidence_for_leading"
+      },
+      {
+        "fact": "crp(35_elevated)",
+        "used": false,
+        "reason": "nonspecific acute-phase elevation; redundant with ESR and present across all inflammatory candidates"
+      }
+    ],
+    "finding_links": [
+      {
+        "finding": "cervical_lymphadenopathy(non_tender)",
+        "expected_metric": "LR+",
+        "decisive": true
+      },
+      {
+        "finding": "largest_node(2cm_left_level_five)",
+        "expected_metric": "LR+",
+        "decisive": true
+      },
+      {
+        "finding": "wbc(1_35_leukopenia)",
+        "expected_metric": "LR+",
+        "decisive": true
+      },
+      {
+        "finding": "sex(female)",
+        "expected_metric": "LR+",
+        "decisive": false
+      },
+      {
+        "finding": "age(32_years)",
+        "expected_metric": "LR+",
+        "decisive": false
+      },
+      {
+        "finding": "fever(high_grade)",
+        "expected_metric": "LR+",
+        "decisive": false
+      },
+      {
+        "finding": "oral_ulcers(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "photosensitive_rash(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "cutaneous_manifestations(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "inflammatory_arthritis(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "tuberculosis_exposure(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "chronic_cough(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "hemoptysis(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "inguinal_axillary_lymphadenopathy(absent)",
+        "expected_metric": "LR-",
+        "decisive": false
+      },
+      {
+        "finding": "esr(75_elevated)",
+        "expected_metric": "LR+",
+        "decisive": false
+      },
+      {
+        "finding": "platelets(84_thrombocytopenia)",
+        "expected_metric": "LR+",
+        "decisive": false
+      },
+      {
+        "finding": "hemoglobin(10_anemia)",
+        "expected_metric": "LR+",
+        "decisive": false
+      },
+      {
+        "finding": "splenomegaly(2cm)",
+        "expected_metric": "LR+",
+        "decisive": false
+      }
+    ]
+  },
+  "spidered": {
+    "prior": {
+      "value": 0.15,
+      "verdict": "direction_only",
+      "chain": [
+        {
+          "hop": 0,
+          "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8854556/",
+          "source_title": "Kikuchi-Fujimoto disease in the Eastern Mediterranean zone (Scientific Reports 2022)",
+          "content_excerpt": "Between 2006 and 2021, 1968 lymph node biopsies were submitted to the histopathology laboratory, with eleven cases (0.6%) having the diagnosis of KFD. The mean patient age was 32 years (range 4-59), and 73% were females.",
+          "cited_quote": "Between 2006 and 2021, 1968 lymph node biopsies were submitted to the histopathology laboratory, with eleven cases (0.6%) having the diagnosis of KFD.",
+          "gives_root_data": true,
+          "onward_citation": ""
+        }
+      ]
+    },
+    "grounded_findings": [
+      {
+        "finding": "cervical_lymphadenopathy(non_tender) LR+ for Kikuchi-Fujimoto disease",
+        "computed_lr": 1,
+        "lr_formula": "LR+ = sens/(1-spec); sens (P(non-tender|KFD)) ~ 0.5 derivable from root, but spec (P(non-tender|competing dx)) has NO primary data, so LR+ is not computable. Direction: non-tender is mildly ATYPICAL for KFD (KFD nodes are characteristically tender/painful in ~50%), so if anything LR+<1 for this finding favoring KFD.",
+        "reached_root": false,
+        "verdict": "direction_only",
+        "chain": [
+          {
+            "hop": 0,
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK430830/",
+            "source_title": "Kikuchi-Fujimoto Disease - StatPearls (NCBI Bookshelf)",
+            "content_excerpt": "The most prevalent manifestation is unilateral tender posterior cervical lymphadenopathy, observed in 60% to 90% of cases, with occasional involvement of the supraclavicular and axillary nodes. In approximately half of cases, the affected lymph nodes are typically mobile, solitary, nonsuppurative, and painful.",
+            "cited_quote": "In approximately half of cases, the affected lymph nodes are typically mobile, solitary, nonsuppurative, and painful.",
+            "gives_root_data": false,
+            "onward_citation": "StatPearls cites refs [4][30][31] (review/textbook sources); no primary specificity data for non-tender nodes among the competing differential (lymphoma, TB, SLE) exists. Sensitivity side (~50% painful, hence ~50% non-tender) is the only quantity traceable; LR+ requires specificity which is absent."
+          }
+        ]
+      },
+      {
+        "finding": "largest_node(2cm, left, level V / posterior cervical) LR+ for Kikuchi-Fujimoto disease",
+        "computed_lr": 1,
+        "lr_formula": "LR+ = sens/(1-spec). Root data give sens-side facts: node diameter typically 1-2 cm; posterior cervical (level V) involvement in 60-90%. NO primary specificity data (P(2cm posterior-cervical node|competing dx)). LR+ not computable. Direction: a ~2cm posterior-cervical (level V) node is CONCORDANT with KFD's typical presentation, mildly supportive (LR+ >1 plausible) but unquantifiable.",
+        "reached_root": false,
+        "verdict": "direction_only",
+        "chain": [
+          {
+            "hop": 0,
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK430830/",
+            "source_title": "Kikuchi-Fujimoto Disease - StatPearls (NCBI Bookshelf)",
+            "content_excerpt": "Generally, these nodes are enlarged to a diameter of 1 to 2 cm, although larger sizes of up to 7 cm have been reported. The most prevalent manifestation is unilateral tender posterior cervical lymphadenopathy, observed in 60% to 90% of cases, with occasional involvement of the supraclavicular and axillary nodes.",
+            "cited_quote": "Generally, these nodes are enlarged to a diameter of 1 to 2 cm, although larger sizes of up to 7 cm have been reported.",
+            "gives_root_data": false,
+            "onward_citation": "Node-size and posterior-cervical (level V) frequency are review statements [31][4][30]. A 2cm, left, level-V node matches the modal KFD presentation, but no primary study reports P(this node profile | competing diagnoses), so specificity and hence LR+ cannot be derived. Distribution-of-lymphadenopathy primary paper (S1684118219301525) was paywalled (403)."
+          }
+        ]
+      },
+      {
+        "finding": "wbc(1.35, leukopenia) LR+ for Kikuchi-Fujimoto disease",
+        "computed_lr": 1,
+        "lr_formula": "LR+ = sens/(1-spec). Root sensitivity = P(leukopenia|KFD) = 43% (105/244, Kucukardali 2006). Specificity (P(leukopenia|competing dx among young women with febrile cervical lymphadenopathy)) has NO primary data; lymphoma/TB/SLE can also cause leukopenia (esp. SLE), so spec is not ~1. LR+ not computable from root. Direction: leukopenia is moderately sensitive for KFD (~43%) and helps distinguish from reactive/infectious lymphadenitis (typically leukocytosis), so LR+ >1 plausible but unquantified.",
+        "reached_root": true,
+        "verdict": "direction_only",
+        "chain": [
+          {
+            "hop": 0,
+            "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1481509/",
+            "source_title": "Kikuchi-Fujimoto disease (review, Bosch & Guilabert) - PMC",
+            "content_excerpt": "Leukopenia can be found in up to 50% of the cases. Lymph node size has been found to range from 0.5 to 4 cm, but it may reach 5 to 6 cm and rarely larger than 6 cm.",
+            "cited_quote": "Leukopenia can be found in up to 50% of the cases.",
+            "gives_root_data": false,
+            "onward_citation": "Review borrows the leukopenia frequency; root primary measured number is Kucukardali et al, analysis of 244 cases (next hop)."
+          },
+          {
+            "hop": 1,
+            "source_url": "https://pubmed.ncbi.nlm.nih.gov/16538388/",
+            "source_title": "Kikuchi-Fujimoto Disease: analysis of 244 cases (Kucukardali et al., Clin Rheumatol 2006)",
+            "content_excerpt": "The disease was reported in 244 patients (33% males and 77% females). Mean age was 25 (1-64) and 70% was younger than 30. The most common clinical features were lymphadenomegaly (100%), fever (35%), and the most common laboratory features were leucopenia (43%), high erythrocyte sedimentation rate (40%) and anemia (23%).",
+            "cited_quote": "the most common laboratory features were leucopenia (43%)",
+            "gives_root_data": true,
+            "onward_citation": ""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -13,7 +13,11 @@ import {
   reverse,
   sortList,
 } from "@coding-adventures/cas-list-operations";
-import { AssumptionContext, simplify as simplifyCas } from "@coding-adventures/cas-simplify";
+import {
+  AssumptionContext,
+  radcan as radcanCas,
+  simplify as simplifyCas,
+} from "@coding-adventures/cas-simplify";
 import { MacsymaDialect, pretty } from "@coding-adventures/cas-pretty-printer";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import { subst } from "@coding-adventures/cas-substitution";
@@ -27,22 +31,31 @@ import {
   ASINH,
   ATAN,
   ATANH,
+  BESSEL_J,
+  BESSEL_Y,
+  CHEBYSHEV_T,
+  CHEBYSHEV_U,
   COS,
   COSH,
   D,
+  DIV,
   EXP,
   FACTOR,
   FALSE,
   FORGET,
   GREATER,
   GREATER_EQUAL,
+  HERMITE_H,
   INTEGRATE,
   IS,
+  LEGENDRE_P,
+  LEGENDRE_Q,
   LESS,
   LESS_EQUAL,
   LIST,
   LOG,
   MUL,
+  NEG,
   POW,
   SIN,
   SINH,
@@ -58,14 +71,26 @@ import {
   equals,
   int,
   numberNode,
+  rational,
   stringNode,
   sym,
   toDisplayString,
   type IRApply,
+  type IRFloat,
+  type IRInteger,
   type IRNode,
+  type IRRational,
   type IRSymbol,
 } from "@coding-adventures/symbolic-ir";
 import { SymbolicBackend, VM, type Handler } from "@coding-adventures/symbolic-vm";
+import {
+  chebyshevT,
+  chebyshevU,
+  hermiteH,
+  legendreP,
+  makeOrthopolyPassthroughHandler,
+  makeOrthopolyRecurrenceHandler,
+} from "./orthopoly.js";
 
 export const DISPLAY = sym("Display");
 export const SUPPRESS = sym("Suppress");
@@ -75,10 +100,43 @@ export const ALL_SYMBOL = sym("all");
 export const DECLARE = sym("Declare");
 export const PROPERTIES = sym("Properties");
 export const PROP_VARS = sym("PropVars");
+// Track M2 — runtime package loader.
+//
+// ``load("orthopoly")`` is a session-level directive that flips a
+// per-backend flag the orthopoly evaluators consult before firing.  The
+// list of packages that may be loaded is the compile-time-constant
+// allowlist :data:`LOAD_ALLOWLIST` below; the load handler has exactly
+// one dispatch arm per allowed name and never turns a user-supplied
+// string into a module reference or import path.
+export const LOAD = sym("Load");
+
+/**
+ * MACSYMA-surface error meant to be shown to the user verbatim.
+ *
+ * Distinguished from generic {@link Error} so REPL frontends can
+ * format it without leaking a host stack trace.
+ */
+export class MacsymaUserError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "MacsymaUserError";
+  }
+}
+
+/**
+ * Compile-time-constant allowlist consulted by {@link makeLoadHandler}.
+ *
+ * Adding a new entry is a deliberate two-line change: list the name
+ * here AND add a dispatch arm in {@link makeLoadHandler}.  The two are
+ * kept side-by-side on purpose so it is impossible to allowlist a
+ * name without also wiring its registration.
+ */
+const LOAD_ALLOWLIST: ReadonlySet<string> = new Set<string>(["orthopoly"]);
 
 export const SIMPLIFY = sym("Simplify");
 export const EXPAND = sym("Expand");
 export const RAT_SIMPLIFY = sym("RatSimplify");
+export const RADCAN = sym("Radcan");
 export const TRIG_SIMPLIFY = sym("TrigSimplify");
 export const TRIG_EXPAND = sym("TrigExpand");
 export const TRIG_REDUCE = sym("TrigReduce");
@@ -155,6 +213,14 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["zeromatrix", sym("ZeroMatrix")],
   ["rank", sym("Rank")],
   ["rowreduce", sym("RowReduce")],
+  ["eigenvalues", sym("Eigenvalues")],
+  ["eigenvectors", sym("Eigenvectors")],
+  ["charpoly", sym("CharPoly")],
+  ["nullspace", sym("NullSpace")],
+  ["columnspace", sym("ColumnSpace")],
+  ["rowspace", sym("RowSpace")],
+  ["norm", sym("Norm")],
+  ["lu", sym("LU")],
   ["gcd", sym("Gcd")],
   ["lcm", sym("Lcm")],
   ["mod", sym("Mod")],
@@ -204,7 +270,7 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["unit_step", sym("UnitStep")],
   ["fourier", sym("Fourier")],
   ["ifourier", sym("IFourier")],
-  ["ode2", sym("Ode2")],
+  ["ode2", sym("ODE2")],
   ["algfactor", sym("AlgFactor")],
   ["groebner", sym("Groebner")],
   ["poly_reduce", sym("PolyReduce")],
@@ -236,6 +302,24 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["fresnel_s", sym("FresnelS")],
   ["fresnel_c", sym("FresnelC")],
   ["lambert_w", sym("LambertW")],
+  // ---------------------------------------------------------------
+  // Track M2 — runtime package loader and orthogonal polynomials.
+  // ---------------------------------------------------------------
+  //
+  // `load("orthopoly")` is the session-level directive that turns
+  // on the orthogonal polynomial closed-form evaluators (see the
+  // `orthopoly` module).  Until that call the names below parse to
+  // their canonical IR head but the gated handler treats them as
+  // unknown, so they round-trip unevaluated.  This matches the
+  // Python runtime's surface contract (Track M1).
+  ["load", LOAD],
+  ["legendre_p", LEGENDRE_P],
+  ["legendre_q", LEGENDRE_Q],
+  ["chebyshev_t", CHEBYSHEV_T],
+  ["chebyshev_u", CHEBYSHEV_U],
+  ["hermite", HERMITE_H],
+  ["bessel_j", BESSEL_J],
+  ["bessel_y", BESSEL_Y],
 ]);
 
 const MACSYMA_HELP_TOPICS: Readonly<Record<string, string>> = Object.freeze({
@@ -244,7 +328,7 @@ const MACSYMA_HELP_TOPICS: Readonly<Record<string, string>> = Object.freeze({
   diff: "diff(expr, var) differentiates expr with respect to var. Example: diff(x^3, x);",
   integrate: "integrate(expr, var) computes an antiderivative when supported. Example: integrate(x^2, x);",
   solve: "solve(expr, var) solves equations or supported inequalities. Use linsolve([...], [...]) for linear systems and nsolve(poly, var) for numeric polynomial roots.",
-  matrix: "Matrix tools: matrix([...], ...), transpose, determinant, invert, dot, rank, rowreduce, ident, zeromatrix, and matrix_size.",
+  matrix: "Matrix tools: matrix([...], ...), transpose, determinant, invert, dot, rank, rowreduce, eigenvalues, eigenvectors, charpoly, nullspace, columnspace, rowspace, norm, lu, ident, zeromatrix, and matrix_size.",
   lists: "List tools: length, first, rest, last, append, reverse, range, map, apply, sublist, sort, part, flatten, join, and makelist.",
   assumptions: "Assumptions: assume(x > 0), declare(x, positive), is(x > 0), forget(), properties(x), and propvars().",
   properties: "properties(symbol) lists declared properties. propvars() lists symbols with declared properties.",
@@ -373,6 +457,16 @@ export class MacsymaBackend extends SymbolicBackend {
   numer = false;
   showtime = false;
   readonly assumptions = new AssumptionContext();
+  /**
+   * Track M2 — names that have been loaded via `load("name")`.
+   *
+   * Per-session: each backend owns its own set, so two parallel
+   * sessions stay independent.  The orthopoly evaluator handlers
+   * consult this set on every dispatch; if `"orthopoly"` is missing
+   * they return the expression unevaluated, mirroring the
+   * pre-`load` round-trip behaviour seen on the Python runtime.
+   */
+  readonly loadedPackages: Set<string> = new Set<string>();
   private readonly runtimeTable: ReadonlyMap<string, Handler>;
   private readonly runtimeHeld: ReadonlySet<string>;
 
@@ -391,10 +485,14 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(DECLARE.name, declareHandler);
     table.set(PROPERTIES.name, propertiesHandler);
     table.set(PROP_VARS.name, propvarsHandler);
+    table.set("Abs", makeAbsHandler(this));
+    table.set(SQRT.name, makeSqrtHandler(this));
+    table.set(LOG.name, makeLogHandler(this));
     table.set(SOLVE.name, solveHandler);
     table.set(SUBST.name, substHandler);
     table.set(SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
     table.set(RAT_SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
+    table.set(RADCAN.name, unaryHandler((value) => radcanCas(value, this.assumptions)));
     table.set(TRIG_SIMPLIFY.name, unaryHandler((value) => simplifyCas(trigSimplify(value))));
     table.set(TRIG_EXPAND.name, unaryHandler((value) => expandTrig(value)));
     table.set(TRIG_REDUCE.name, unaryHandler((value) => trigReduce(value)));
@@ -411,6 +509,22 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(SORT.name, listHandler(1, ([value]) => sortList(value)));
     table.set(PART.name, listHandler(2, ([value, index]) => part(value, integerArgument(index))));
     table.set(FLATTEN.name, listHandler(null, flattenHandler));
+    // Track M2 — runtime package loader + orthopoly evaluator stubs.
+    //
+    // The orthopoly handlers are *always* in the table, but each one
+    // checks `loadedPackages` before doing work; until `load("orthopoly")`
+    // fires they return the expression unevaluated.  Wiring them at
+    // construction means we never have to mutate `runtimeTable` after
+    // the fact (it can stay a `ReadonlyMap`), keeping the backend's
+    // public interface honest.
+    table.set(LOAD.name, makeLoadHandler(this));
+    table.set(LEGENDRE_P.name, makeOrthopolyRecurrenceHandler(this, legendreP));
+    table.set(CHEBYSHEV_T.name, makeOrthopolyRecurrenceHandler(this, chebyshevT));
+    table.set(CHEBYSHEV_U.name, makeOrthopolyRecurrenceHandler(this, chebyshevU));
+    table.set(HERMITE_H.name, makeOrthopolyRecurrenceHandler(this, hermiteH));
+    table.set(LEGENDRE_Q.name, makeOrthopolyPassthroughHandler(this));
+    table.set(BESSEL_J.name, makeOrthopolyPassthroughHandler(this));
+    table.set(BESSEL_Y.name, makeOrthopolyPassthroughHandler(this));
     this.runtimeTable = table;
     this.runtimeHeld = new Set([
       ...super.holdHeads(),
@@ -424,6 +538,7 @@ export class MacsymaBackend extends SymbolicBackend {
       PROP_VARS.name,
       SOLVE.name,
       SUBST.name,
+      RADCAN.name,
       FACTOR.name,
     ]);
   }
@@ -483,6 +598,145 @@ export class MacsymaBackend extends SymbolicBackend {
     this.bind("%i", sym("ImaginaryUnit"));
     this.bind("showtime", this.showtime ? TRUE : FALSE);
   }
+}
+
+function makeAbsHandler(backend: MacsymaBackend): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const inner = vm.eval(expr.args[0]);
+    const numeric = numericNodeAbs(inner);
+    if (numeric !== undefined) return numeric;
+    if (inner.kind === "symbol") {
+      if (backend.assumptions.isNonneg(inner.name) === true) return inner;
+      if (backend.assumptions.signOf(inner.name) === 0) return int(0);
+      if (backend.assumptions.isNegative(inner.name) === true) return app(NEG, [inner]);
+    }
+    if (inner.kind === "apply") {
+      if (equals(inner.head, sym("Abs"))) return inner;
+      if (equals(inner.head, NEG) && inner.args.length === 1) {
+        return vm.eval(app(sym("Abs"), [inner.args[0]]));
+      }
+      if (
+        equals(inner.head, MUL) &&
+        inner.args.length === 2 &&
+        inner.args[0].kind === "integer" &&
+        inner.args[0].value === -1n
+      ) {
+        return vm.eval(app(sym("Abs"), [inner.args[1]]));
+      }
+      if (equals(inner.head, POW) && inner.args.length === 2) {
+        const expNode = inner.args[1];
+        if (expNode.kind === "integer" && expNode.value >= 2n && expNode.value % 2n === 0n) {
+          return inner;
+        }
+      }
+    }
+    return app(expr.head, [inner]);
+  };
+}
+
+function makeSqrtHandler(backend: MacsymaBackend): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = vm.eval(expr.args[0]);
+    const numeric = sqrtNumericNode(arg);
+    if (numeric !== undefined) return numeric;
+    if (arg.kind === "apply" && equals(arg.head, POW) && arg.args.length === 2) {
+      const [base, expNode] = arg.args;
+      if (expNode.kind === "integer" && expNode.value > 0n && expNode.value % 2n === 0n) {
+        const k = expNode.value / 2n;
+        if (k === 1n && base.kind === "symbol" && backend.assumptions.isNonneg(base.name) === true) {
+          return base;
+        }
+        if (k % 2n === 0n) return app(POW, [base, int(k)]);
+        if (k === 1n) return app(sym("Abs"), [base]);
+        return app(sym("Abs"), [app(POW, [base, int(k)])]);
+      }
+    }
+    return app(expr.head, [arg]);
+  };
+}
+
+function makeLogHandler(backend: MacsymaBackend): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = vm.eval(expr.args[0]);
+    const numeric = logNumericNode(arg);
+    if (numeric !== undefined) return numeric;
+    if (arg.kind === "apply" && equals(arg.head, EXP) && arg.args.length === 1) {
+      return arg.args[0];
+    }
+    if (arg.kind === "apply" && equals(arg.head, POW) && arg.args.length === 2) {
+      const [base, expNode] = arg.args;
+      if (base.kind === "symbol" && backend.assumptions.isNonneg(base.name) === true) {
+        return app(MUL, [expNode, app(LOG, [base])]);
+      }
+    }
+    return app(expr.head, [arg]);
+  };
+}
+
+function numericNodeAbs(node: IRNode): IRInteger | IRRational | IRFloat | undefined {
+  if (node.kind === "integer") return int(node.value < 0n ? -node.value : node.value);
+  if (node.kind === "rational") {
+    const numer = node.numer < 0n ? -node.numer : node.numer;
+    return rational(numer, node.denom) as IRInteger | IRRational;
+  }
+  if (node.kind === "float") return numberNode(Math.abs(node.value));
+  return undefined;
+}
+
+function sqrtNumericNode(node: IRNode): IRNode | undefined {
+  if (node.kind === "integer") {
+    if (node.value < 0n) return undefined;
+    if (node.value === 0n) return int(0);
+    if (node.value === 1n) return int(1);
+    const root = bigIntSqrtExact(node.value);
+    if (root !== undefined) return int(root);
+    return numberNode(Math.sqrt(Number(node.value)));
+  }
+  if (node.kind === "rational") {
+    if (node.numer < 0n) return undefined;
+    if (node.numer === 0n) return int(0);
+    const numerRoot = bigIntSqrtExact(node.numer);
+    const denomRoot = bigIntSqrtExact(node.denom);
+    if (numerRoot !== undefined && denomRoot !== undefined) return rational(numerRoot, denomRoot);
+    return numberNode(Math.sqrt(Number(node.numer) / Number(node.denom)));
+  }
+  if (node.kind === "float") {
+    if (node.value < 0) return undefined;
+    return numberNode(Math.sqrt(node.value));
+  }
+  return undefined;
+}
+
+function logNumericNode(node: IRNode): IRNode | undefined {
+  const value = node.kind === "integer"
+    ? Number(node.value)
+    : node.kind === "rational"
+      ? Number(node.numer) / Number(node.denom)
+      : node.kind === "float"
+        ? node.value
+        : undefined;
+  if (value === undefined) return undefined;
+  if (value === 1) return int(0);
+  if (value <= 0) return undefined;
+  return numberNode(Math.log(value));
+}
+
+function bigIntSqrtExact(n: bigint): bigint | undefined {
+  if (n < 0n) return undefined;
+  if (n < 2n) return n;
+  let lo = 1n;
+  let hi = n;
+  while (lo <= hi) {
+    const mid = (lo + hi) / 2n;
+    const sq = mid * mid;
+    if (sq === n) return mid;
+    if (sq < n) lo = mid + 1n;
+    else hi = mid - 1n;
+  }
+  return undefined;
 }
 
 export class MacsymaSession {
@@ -693,6 +947,77 @@ function displayHandler(_vm: VM, expr: IRApply): IRNode {
 function suppressHandler(_vm: VM, expr: IRApply): IRNode {
   if (expr.args.length !== 1) throw new Error(`Suppress takes 1 arg, got ${expr.args.length}`);
   return expr.args[0];
+}
+
+/**
+ * Build a `Load("name")` handler bound to a particular backend.
+ *
+ * Mirrors the Python `make_load_handler`:
+ *
+ *   1. Validates arity (exactly one string-or-symbol argument).
+ *   2. Checks the name against the compile-time `LOAD_ALLOWLIST`.
+ *      Unknown names raise `MacsymaUserError` with a clear message
+ *      that advertises what *is* available so users self-correct.
+ *   3. Returns early (idempotent) if the package is already loaded.
+ *   4. Otherwise flips the per-package gate on `backend.loadedPackages`
+ *      via a *static* `switch` arm — there is no dynamic module
+ *      lookup, so a hostile name string can never be turned into an
+ *      executable code path.
+ *
+ * The return value is the same string the user passed (wrapped as an
+ * `IRString`) so `load("orthopoly")` prints cleanly in the REPL,
+ * matching Maxima's "return the path" convention.
+ */
+function makeLoadHandler(backend: MacsymaBackend): Handler {
+  return (_vm, expr) => {
+    if (expr.args.length !== 1) {
+      throw new MacsymaUserError(
+        `load takes 1 argument, got ${expr.args.length}`,
+      );
+    }
+    const nameNode = expr.args[0];
+    let name: string;
+    if (nameNode.kind === "string") {
+      name = nameNode.value;
+    } else if (nameNode.kind === "symbol") {
+      // Maxima's short form `load(orthopoly)` (bare symbol).  Accept
+      // either spelling.  The symbol is *not* looked up in the
+      // environment — only its name is consulted, so a hostile
+      // user can't shadow `orthopoly` with a binding.
+      name = nameNode.name;
+    } else {
+      throw new MacsymaUserError(
+        "load: argument must be a string or symbol",
+      );
+    }
+    if (!LOAD_ALLOWLIST.has(name)) {
+      const allowed = [...LOAD_ALLOWLIST].sort().join(", ");
+      throw new MacsymaUserError(
+        `load: unknown package '${name}'; available: ${allowed}`,
+      );
+    }
+    if (backend.loadedPackages.has(name)) {
+      // Idempotent: already loaded, nothing to do.
+      return stringNode(name);
+    }
+    // Static dispatch — exactly one arm per allowlist entry.  No
+    // dynamic `import()` lookup, so the name string can never escape
+    // the switch.
+    switch (name) {
+      case "orthopoly":
+        backend.loadedPackages.add("orthopoly");
+        break;
+      default:
+        // Defence in depth — this branch is unreachable because of
+        // the allowlist check above, but if a future contributor
+        // adds to `LOAD_ALLOWLIST` without adding a switch arm we
+        // want a loud failure rather than a silent no-op.
+        throw new MacsymaUserError(
+          `load: internal error — '${name}' in allowlist but not dispatched`,
+        );
+    }
+    return stringNode(name);
+  };
 }
 
 function makeKillHandler(backend: MacsymaBackend): Handler {

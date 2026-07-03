@@ -75,6 +75,13 @@ pub const OBJECT_ARRAY_TYPE_TOKEN: u32 = 0x0100_0001;
 /// and `stelem.i4`.
 pub const INT32_ARRAY_TYPE_TOKEN: u32 = 0x0100_0002;
 
+/// Metadata token for the **`System.Int32` value type** — the operand of
+/// `box`/`unbox.any` when boxing a McCarthy integer atom (row 2 by the same
+/// convention as [`INT32_ARRAY_TYPE_TOKEN`]). The in-repo `clr-simulator`
+/// ignores the operand (box/unbox.any are identity there); a full PE packager
+/// would resolve it to the real `System.Int32` `TypeRef`.
+pub const INT32_TYPE_TOKEN: u32 = 0x0100_0002;
+
 // ---------------------------------------------------------------------------
 // CILBuilderError
 // ---------------------------------------------------------------------------
@@ -209,6 +216,23 @@ pub enum CILOpcode {
     /// `array[index]`.  Used with `dup` to build cons cells in-place without
     /// a separate helper method.
     StElemRef = 0xA4,
+    /// `box <typeTok>` (0x8C) — box a value type into an object reference.
+    ///
+    /// Stack: `..., value → ..., obj`. McCarthy W6b: boxes an `int32` atom so it
+    /// can live in an `object[]` cons cell, the CLR counterpart of the wasm
+    /// `i31ref`. (The in-repo `clr-simulator` treats it as identity in its loose
+    /// model, like the wasm `i31`.)
+    Box       = 0x8C,
+    /// `unbox.any <typeTok>` (0xA5) — the dual of `box`.
+    ///
+    /// Stack: `..., obj → ..., value`. Unwraps a boxed `int32` at the
+    /// entry/return boundary.
+    UnboxAny  = 0xA5,
+    /// `isinst <typeTok>` (0x75) — McCarthy W7 `pair?`. Stack: `..., obj → ...,
+    /// result`, where `result` is `obj` if it is an instance of the token's type
+    /// (an `object[]` cons cell) else `null`. The CLR counterpart of the JVM
+    /// `instanceof` and the wasm `ref.test`.
+    IsInst    = 0x75,
     PrefixFe  = 0xFE,
 }
 
@@ -530,6 +554,23 @@ impl CILBytecodeBuilder {
     /// Emit `newarr <type_token>`.
     pub fn emit_newarr(&mut self, token: u32) {
         self.emit_token_instruction(CILOpcode::NewArr, token);
+    }
+
+    /// Emit `box <type_token>` (0x8C): box a value type into an object reference
+    /// (McCarthy W6b — wrap an `int32` atom for an `object[]` cons cell).
+    pub fn emit_box(&mut self, token: u32) {
+        self.emit_token_instruction(CILOpcode::Box, token);
+    }
+
+    /// Emit `unbox.any <type_token>` (0xA5): the dual of `box`.
+    pub fn emit_unbox_any(&mut self, token: u32) {
+        self.emit_token_instruction(CILOpcode::UnboxAny, token);
+    }
+
+    /// Emit `isinst <type_token>` (0x75): McCarthy W7 `pair?` — push the operand
+    /// if it is an instance of the token's type (`object[]`), else `null`.
+    pub fn emit_isinst(&mut self, token: u32) {
+        self.emit_token_instruction(CILOpcode::IsInst, token);
     }
 
     // ── Comparison opcodes (two-byte, 0xFE prefix) ────────────────────────

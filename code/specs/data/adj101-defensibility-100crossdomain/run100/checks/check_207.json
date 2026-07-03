@@ -1,0 +1,8 @@
+{
+ "check_id": 207,
+ "idx": 85,
+ "slot": "invoice_days_past_due",
+ "claimed_value": 19,
+ "scenario": "The customer experienced qualifying downtime in June and submitted a credit request on July 20. The customer had one outstanding invoice with a due date of July 1, which remained unpaid as of July 20. The customer had emailed the provider on July 3 stating it was withholding payment.",
+ "cited_span": "one outstanding invoice with a due date of July 1, which remained unpaid as of July 20"
+}

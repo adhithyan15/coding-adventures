@@ -484,6 +484,25 @@ def _pow_exp_log(
     return result
 
 
+def _is_bounded_at_infinity(node: IRNode, var: IRSymbol) -> bool:
+    """Return True for shapes known to stay bounded at infinity."""
+    if isinstance(node, (IRInteger, IRRational, IRFloat)):
+        return True
+    if isinstance(node, IRSymbol):
+        return node != var
+    if not isinstance(node, IRApply):
+        return False
+    if node.head == NEG and len(node.args) == 1:
+        return _is_bounded_at_infinity(node.args[0], var)
+    if node.head == ADD:
+        return all(_is_bounded_at_infinity(arg, var) for arg in node.args)
+    if node.head == MUL:
+        return all(_is_bounded_at_infinity(arg, var) for arg in node.args)
+    if node.head in {SIN, COS, TANH, ATAN} and len(node.args) == 1:
+        return True
+    return False
+
+
 # ---------------------------------------------------------------------------
 # Section 6 — Indeterminate form dispatcher
 # ---------------------------------------------------------------------------
@@ -530,10 +549,34 @@ def _handle_form(
         is_inf_inf = (math.isinf(n_val) or abs(n_val) > _INF_THRESHOLD) and (
             math.isinf(d_val) or abs(d_val) > _INF_THRESHOLD
         )
+        if (math.isinf(d_val) or abs(d_val) > _INF_THRESHOLD) and (
+            _is_bounded_at_infinity(numer, var)
+        ):
+            return IRInteger(0)
         if (is_zero_zero or is_inf_inf) and diff_fn is not None:
-            return _lhopital_step(
+            lh_result = _lhopital_step(
                 numer, denom, var, point, direction, diff_fn, eval_fn, depth
             )
+            # Track J1: if L'Hôpital came back unevaluated (recursion depth,
+            # simplifier-too-weak, etc.), try the Taylor-series fallback before
+            # giving up. Only applies to 0/0 forms at finite points.
+            if (
+                isinstance(lh_result, IRApply)
+                and lh_result.head == LIMIT
+                and is_zero_zero
+                and not (math.isinf(exact_pt) or math.isnan(exact_pt))
+            ):
+                from cas_limit_series.series_limit import try_series_limit
+                series_result = try_series_limit(expr, var, point)
+                if series_result is not None:
+                    return series_result
+            return lh_result
+        # 0/0 at a finite point but no diff_fn — try Taylor directly.
+        if is_zero_zero and not (math.isinf(exact_pt) or math.isnan(exact_pt)):
+            from cas_limit_series.series_limit import try_series_limit
+            series_result = try_series_limit(expr, var, point)
+            if series_result is not None:
+                return series_result
 
     # --- MUL(a, b): 0·∞ form ---
     if isinstance(expr, IRApply) and expr.head == MUL and len(expr.args) == 2:

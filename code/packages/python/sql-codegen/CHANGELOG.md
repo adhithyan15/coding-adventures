@@ -1,5 +1,165 @@
 # Changelog
 
+## [1.44.0] - 2026-06-19
+
+### Added
+
+- **`CreateTriggerDef.if_not_exists: bool`** — new field on the IR
+  instruction (default `False`).  When `True`, the VM silently skips a
+  duplicate-trigger error instead of propagating it.  The compiler
+  destructures the matching `CreateTrigger` plan-node field and forwards
+  it here.
+
+- `UpdateRows` IR node gains an `on_conflict: str | None` field (default
+  `None`).  The compiler's `_compile_update()` passes the value through from
+  the `Update` plan node so the VM can dispatch on the conflict-resolution
+  strategy at runtime.
+
+## [1.43.0] - 2026-06-16
+
+### Fixed
+
+- **Literal expressions now get SQLite-compatible column display names** —
+  `_column_display_name()` previously returned `None` for `Literal` nodes,
+  causing `_projection_name()` to fall back to `"?"` for every unnamed
+  constant expression.  When a single ``SELECT`` had two or more literal
+  columns (e.g. ``SELECT 1, 2``), both columns received the key ``"?"``,
+  and the VM's ``_do_run_subquery()`` converted rows to dicts via
+  ``dict(zip(cols, row))``, silently losing all but the last value.
+
+  Fix: ``_column_display_name`` now handles ``Literal`` by returning the
+  surface representation SQLite uses:
+
+  | Literal type | Display name example  |
+  |--------------|-----------------------|
+  | `int`        | `"1"`, `"42"`         |
+  | `float`      | `"1.5"`, `"3.14"`     |
+  | `str`        | `"'hello'"`           |
+  | `bytes`      | `"X'DEADBEEF'"`       |
+  | `None`       | `"NULL"`              |
+
+  This makes ``SELECT 1, 2`` produce column names ``("1", "2")`` instead
+  of ``("?", "?")``, fixing ``SELECT * FROM (SELECT 1, 2)`` which
+  previously returned ``(2,)`` instead of the correct ``(1, 2)``.
+
+- **RowIdRef now covered in ``_column_display_name``** — added unit tests
+  that exercise both the ``RowIdRef → "rowid"`` branch and the new
+  ``Literal`` branch, bringing overall package coverage to **80.48 %**.
+
+## [1.42.0] - 2026-06-16
+
+### Fixed
+
+- **Hidden-column injection now covers `PlanWindowAgg`** — ``ORDER BY``
+  expressions referencing columns absent from ``output_cols`` no longer
+  crash with ``ValueError: tuple.index(x): x not in tuple`` when the
+  inner plan is a window aggregation node.
+
+  Previously the hidden-column injection pass in ``_compile_read``
+  only activated for ``Project`` inner nodes.  When the inner node was
+  a ``PlanWindowAgg`` (e.g. ``SELECT grp, SUM(val) OVER (PARTITION BY
+  grp) … ORDER BY grp, val``), ``ComputeWindowFunctions`` had already
+  projected away ``val`` before ``SortResult`` tried to look it up.
+
+  Fix: a new ``elif isinstance(cur, PlanWindowAgg)`` branch extends
+  ``output_cols`` with the missing sort-key columns as hidden trailing
+  entries.  ``ComputeWindowFunctions`` passes them through; a
+  ``StripTrailingColumns`` instruction inserted right after
+  ``SortResult`` removes them so callers see only the original SELECT
+  columns.  No ``extended_schema`` override is needed — the window
+  codegen path manages its own ``SetResultSchema`` lifecycle.
+
+## [1.41.0] - 2026-05-24
+
+### Added
+
+- ``ColumnDef.check_expr_text: str`` — passes the source text of a
+  CHECK predicate through the IR so the VM can quote it verbatim in
+  ``CHECK constraint failed: <expr_text>`` error messages (matches
+  SQLite).  ``_to_ir_col`` reads the field off the planner-level
+  ``ColumnDef`` (which the adapter populates).  Defaults to ``""``
+  for back-compat — the VM falls back to the older ``<table>.<col>``
+  form when the text is unavailable.
+
+## [1.40.0] - 2026-05-23
+
+### Fixed
+
+- ``ORDER BY <expr>`` with arbitrary expressions (``a+b``,
+  ``UPPER(name)``, ``CASE WHEN … END``, …) no longer raises
+  ``ValueError: tuple.index(x): x not in tuple`` at SortResult time.
+
+  The hidden-column injection pass in ``_compile_read`` previously
+  short-circuited when the planner sort key's display name was ``"?"``
+  (the fallback for un-named expressions), so the VM ended up looking
+  up a non-existent ``"?"`` column in the result schema.  The pass now
+  recognises the expression case: each ``"?"``-named sort key is
+  projected as a hidden trailing column under a synthetic per-position
+  name (``__sortkey_0``, ``__sortkey_1``, …), and the corresponding
+  SortKey IR is rewritten to look up that synthetic name.
+  ``StripTrailingColumns`` removes the extras after the sort, so the
+  output shape is unchanged for the caller.
+
+  Position-local synthetic names are required because two ``ORDER BY``
+  terms with the same ``"?"`` display name would otherwise collide on
+  one hidden slot and silently sort by only the first expression.
+
+## [1.39.0] - 2026-05-23
+
+### Changed
+
+- ``_to_ir_col`` now uses the raw ``ColumnDef.not_null`` flag for the
+  IR's ``nullable`` field (was ``c.effective_not_null()`` which folded
+  in PRIMARY KEY's implicit NOT NULL).  Constraint enforcement at the
+  backend is unchanged — the backend's ``effective_not_null()``
+  reapplies the PK check at insert/update time.  Required for
+  ``PRAGMA table_info`` to distinguish explicit-vs-implicit NOT NULL
+  (matches sqlite3).
+
+## [1.38.0] - 2026-05-23
+
+### Added
+
+- IR ``ColumnDef`` gains an ``autoincrement: bool = False`` field
+  carrying SQLite's ``AUTOINCREMENT`` clause through to the VM.
+  The compiler forwards ``c.autoincrement`` from the planner-layer
+  ColumnDef unchanged.
+
+## [1.37.0] - 2026-05-23
+
+### Added
+
+- IR ``CreateTable`` gained a ``strict: bool = False`` field; the
+  compiler forwards ``PlanCreateTable.strict`` through unchanged so the
+  VM can forward it to ``Backend.create_table(strict=...)``.
+
+## [1.36.0] - 2026-05-23
+
+### Added
+
+- IR ``AlterTable`` gained three new optional fields —
+  ``rename_to``, ``rename_column``, ``drop_column`` — mirroring the
+  planner side.  The compiler dispatches on the plan node and
+  forwards whichever is set to the IR node.
+
+## [1.35.0] - 2026-05-23
+
+### Added
+
+- ``ColumnDef.collation: str | None`` IR field — carries the column's
+  declared COLLATE clause from CREATE TABLE through to the VM.  The
+  codegen's column-def builder forwards
+  ``planner_col.collation → ir_col.collation`` unchanged.
+
+## [1.34.0] - 2026-05-22
+
+### Added
+
+- ``SortKey.collation: str | None`` IR field, mirroring the planner
+  side.  ``_to_ir_sort_key`` forwards the collation name from the
+  plan SortKey to the IR SortKey unchanged.  ``None`` means BINARY
+  (the default).
+
 ## [1.33.0] - 2026-05-21
 
 ### Added

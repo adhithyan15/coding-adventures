@@ -1,0 +1,60 @@
+{
+  "summary": "Recursive byte-provenance coverage gate on the decomposed IR (Haiku only). Enumerate given inputs -> decompose -> audit unaccounted inputs -> force use-or-justified-discard -> adversarially test each discard -> if a discard fails, require the input and re-decompose -> repeat until every given input is represented or validly discarded -> solve. NO hand-tipping: the solver is never told the answer or which input matters; the gate only enforces coverage. Tests whether byte-provenance enforcement ALONE gets Haiku to the right answer on the Al(OH)3 solubility problem (it had silently dropped the given K_f).",
+  "agentCount": 7,
+  "logs": [],
+  "result": {
+    "plain": {
+      "work": "Two equilibria govern dissolution of Al(OH)3 in pure water:\n\n(1) Dissolution: Al(OH)3(s) ⇌ Al3+ + 3 OH-,  Ksp = 5.3e-27\n    → [Al3+] = Ksp / [OH-]^3\n\n(2) Complexation: Al3+ + 4 OH- ⇌ Al(OH)4-,  Kf = 1.1e31\n    Combined with (1): Al(OH)3(s) + OH- ⇌ Al(OH)4-\n    K = Ksp·Kf = (5.3e-27)(1.1e31) = 5.83e4\n    → [Al(OH)4-] = Ksp·Kf·[OH-]\n\nIn pure (neutral) water [OH-] ≈ 1.0e-7 mol/L:\n  [Al3+]     = 5.3e-27 / (1e-7)^3 = 5.3e-27 / 1e-21 = 5.3e-6 mol/L\n  [Al(OH)4-] = (5.83e4)(1e-7)     = 5.83e-3 mol/L\n\nTotal solubility S = [Al3+] + [Al(OH)4-]\n  = 5.3e-6 + 5.83e-3 ≈ 5.8e-3 mol/L\n\nThe aluminate complex dominates by ~1000x, so essentially all dissolved aluminum is Al(OH)4-.",
+      "answer": "Solubility of Al(OH)3 ≈ 5.8 × 10⁻³ mol L⁻¹ (about 0.0058 M).\n\nThis is set almost entirely by formation of the aluminate complex Al(OH)4⁻: combining the two equilibria gives Al(OH)3(s) + OH⁻ ⇌ Al(OH)4⁻ with K = Ksp·Kf = 5.83 × 10⁴, so at neutral [OH⁻] = 10⁻⁷ M, [Al(OH)4⁻] = 5.83 × 10⁻³ M. The free Al³⁺ contribution ([Al³⁺] = Ksp/[OH⁻]³ = 5.3 × 10⁻⁶ M) is ~1000× smaller and negligible. Total ≈ 5.8 × 10⁻³ mol L⁻¹.",
+      "grade": {
+        "grade": "incorrect",
+        "note": "Given answer is 5.8×10⁻³ mol/L; reference is 1.776×10⁻³ mol/L. These differ by ~3.3×. The given solution fixed [OH⁻]=10⁻⁷ M (neutral water) and computed [Al(OH)₄⁻]=Ksp·Kf·[OH⁻]=5.83×10⁻³, ignoring that solubility self-consistently perturbs [OH⁻]. The final numerical value does not match the reference, so it is graded incorrect."
+      }
+    },
+    "gated": {
+      "inputs": [
+        "K_sp of Al(OH)_3 = 5.3 * 10^(-27)",
+        "complex formation constant K_f of Al(OH)_4^(-) = 1.1 * 10^31"
+      ],
+      "iterations": 1,
+      "coverage_log": [
+        {
+          "iter": 1,
+          "facts": [
+            "Given data: K_sp of Al(OH)3 = 5.3 * 10^-27, and the formation constant K_f of Al(OH)4^- = 1.1 * 10^31.",
+            "Solubility equilibrium: Al(OH)3(s) <=> Al^3+ (aq) + 3 OH^- (aq), with K_sp = [Al^3+][OH^-]^3 = 5.3 * 10^-27.",
+            "Complex formation equilibrium: Al^3+ (aq) + 4 OH^- (aq) <=> Al(OH)4^- (aq), with K_f = [Al(OH)4^-] / ([Al^3+][OH^-]^4) = 1.1 * 10^31.",
+            "Total solubility S equals the total dissolved aluminum: S = [Al^3+] + [Al(OH)4^-].",
+            "Combined dissolution-to-complex equilibrium: Al(OH)3(s) + OH^- (aq) <=> Al(OH)4^- (aq), obtained by adding F2 and F3, with equilibrium constant K = K_sp * K_f = [Al(OH)4^-] / [OH^-].",
+            "Numerical value of the combined constant: K = K_sp * K_f = (5.3 * 10^-27)(1.1 * 10^31) = 5.83 * 10^4, so [Al(OH)4^-] = K * [OH^-] = 5.83 * 10^4 * [OH^-].",
+            "In pure water the water autoionization equilibrium holds: [H^+][OH^-] = K_w = 1.0 * 10^-14 at 25 C.",
+            "Charge balance / electroneutrality for the solution: 3[Al^3+] + [H^+] = [OH^-] + [Al(OH)4^-].",
+            "Mass/stoichiometry relation from dissolving Al(OH)3: each formula unit dissolved releases 3 OH^- into solution while consuming OH^- to form the complex; the net OH^- balance combined with charge balance and K_w determines [OH^-] (in practice [OH^-] is near 10^-7 because the species are dilute, so the complex dominates: S approximately equals [Al(OH)4^-] = 5.83 * 10^4 * [OH^-]).",
+            "Approximation typically used: because [Al^3+] is negligibly small compared to [Al(OH)4^-], solubility S approximately equals [Al(OH)4^-], and with [OH^-] approximately 1.0 * 10^-7 (pure water), S approximately equals 5.83 * 10^4 * 1.0 * 10^-7 mol/L."
+          ],
+          "unaccounted": []
+        }
+      ],
+      "final_facts": [
+        "Given data: K_sp of Al(OH)3 = 5.3 * 10^-27, and the formation constant K_f of Al(OH)4^- = 1.1 * 10^31.",
+        "Solubility equilibrium: Al(OH)3(s) <=> Al^3+ (aq) + 3 OH^- (aq), with K_sp = [Al^3+][OH^-]^3 = 5.3 * 10^-27.",
+        "Complex formation equilibrium: Al^3+ (aq) + 4 OH^- (aq) <=> Al(OH)4^- (aq), with K_f = [Al(OH)4^-] / ([Al^3+][OH^-]^4) = 1.1 * 10^31.",
+        "Total solubility S equals the total dissolved aluminum: S = [Al^3+] + [Al(OH)4^-].",
+        "Combined dissolution-to-complex equilibrium: Al(OH)3(s) + OH^- (aq) <=> Al(OH)4^- (aq), obtained by adding F2 and F3, with equilibrium constant K = K_sp * K_f = [Al(OH)4^-] / [OH^-].",
+        "Numerical value of the combined constant: K = K_sp * K_f = (5.3 * 10^-27)(1.1 * 10^31) = 5.83 * 10^4, so [Al(OH)4^-] = K * [OH^-] = 5.83 * 10^4 * [OH^-].",
+        "In pure water the water autoionization equilibrium holds: [H^+][OH^-] = K_w = 1.0 * 10^-14 at 25 C.",
+        "Charge balance / electroneutrality for the solution: 3[Al^3+] + [H^+] = [OH^-] + [Al(OH)4^-].",
+        "Mass/stoichiometry relation from dissolving Al(OH)3: each formula unit dissolved releases 3 OH^- into solution while consuming OH^- to form the complex; the net OH^- balance combined with charge balance and K_w determines [OH^-] (in practice [OH^-] is near 10^-7 because the species are dilute, so the complex dominates: S approximately equals [Al(OH)4^-] = 5.83 * 10^4 * [OH^-]).",
+        "Approximation typically used: because [Al^3+] is negligibly small compared to [Al(OH)4^-], solubility S approximately equals [Al(OH)4^-], and with [OH^-] approximately 1.0 * 10^-7 (pure water), S approximately equals 5.83 * 10^4 * 1.0 * 10^-7 mol/L."
+      ],
+      "solution": {
+        "work": "This is a chemistry equilibrium problem (no codebase changes needed). Solved using the supplied decomposition.\n\nGiven:\n- K_sp of Al(OH)3 = 5.3 x 10^-27\n- K_f of Al(OH)4^- = 1.1 x 10^31\n\nStep 1 — Combine the two equilibria (decomposition steps F2 + F3):\n  Al(OH)3(s) <=> Al3+ + 3 OH^-              K_sp = [Al3+][OH^-]^3\n  Al3+ + 4 OH^- <=> Al(OH)4^-               K_f  = [Al(OH)4^-]/([Al3+][OH^-]^4)\nAdding them cancels Al3+ and three OH^-:\n  Al(OH)3(s) + OH^- <=> Al(OH)4^-           K = K_sp * K_f = [Al(OH)4^-]/[OH^-]\n\nStep 2 — Combined constant:\n  K = (5.3 x 10^-27)(1.1 x 10^31) = 5.83 x 10^4\n  => [Al(OH)4^-] = 5.83 x 10^4 * [OH^-]\n\nStep 3 — In pure water, [OH^-] ~ 1.0 x 10^-7 M (autoionization, K_w = 1.0 x 10^-14).\n\nStep 4 — Total solubility S = [Al3+] + [Al(OH)4^-].\nCheck the free-ion term: [Al3+] = K_sp/[OH^-]^3 = 5.3 x 10^-27 / (1.0 x 10^-7)^3 = 5.3 x 10^-6 M, which is ~1000x smaller than the complex term, so it is negligible.\n\nStep 5 — Therefore:\n  S ~ [Al(OH)4^-] = 5.83 x 10^4 * 1.0 x 10^-7 = 5.83 x 10^-3 mol/L\n\n(Arithmetic verified numerically: K = 58300, S = 0.00583, [Al3+] = 5.3 x 10^-6.)",
+        "answer": "The solubility of Al(OH)3 in pure water is approximately S ≈ 5.8 x 10^-3 mol L^-1 (about 5.83 x 10^-3 mol/L).\n\nReasoning: Adding the dissolution equilibrium (K_sp) and the complex-formation equilibrium (K_f) gives the net reaction Al(OH)3(s) + OH^- ⇌ Al(OH)4^-, with combined constant K = K_sp × K_f = (5.3×10^-27)(1.1×10^31) = 5.83×10^4. This makes [Al(OH)4^-] = K × [OH^-]. In pure water [OH^-] ≈ 1.0×10^-7 M, and since free [Al3+] = K_sp/[OH^-]^3 ≈ 5.3×10^-6 M is negligible compared to the complex, the total dissolved aluminum is S ≈ [Al(OH)4^-] = 5.83×10^4 × 1.0×10^-7 = 5.8×10^-3 mol L^-1."
+      },
+      "grade": {
+        "grade": "incorrect",
+        "note": "Reference answer 1.776×10⁻³ mol/L is correct, verified by solving the full charge/mass-balance system (Ksp: [Al³⁺][OH⁻]³, K=Ksp·Kf=5.83×10⁴ for Al(OH)₃+OH⁻⇌Al(OH)₄⁻, plus water autoionization and electroneutrality). This yields [OH⁻]≈2.3×10⁻⁸, [Al³⁺]≈4.44×10⁻⁴, [Al(OH)₄⁻]≈1.33×10⁻³, total S≈1.776×10⁻³.\n\nThe given answer (5.8×10⁻³) is INCORRECT. Its flaw: it assumes [OH⁻] stays at the pure-water value of 1.0×10⁻⁷. But forming Al(OH)₄⁻ consumes OH⁻, so [OH⁻] cannot be fixed at 10⁻⁷ — it must be found self-consistently. The correct [OH⁻] is ~2.3×10⁻⁸, giving an answer about 3× smaller than the given 5.8×10⁻³. The numeric result does not match the reference."
+      }
+    }
+  }
+}

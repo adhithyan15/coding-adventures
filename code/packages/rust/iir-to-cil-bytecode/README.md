@@ -24,9 +24,25 @@ IIRModule
   → validate_iir_for_clr()      — pre-flight validation
   → lower_iir_to_cil()          — emit CIL body bytes per function
   → CILProgramArtifact          — structured multi-method artifact
-       ↓ (future) CLR packager  — wrap in PE/COFF .dll/.exe
-       ↓ CLR simulator          — run directly
+       ↓ CLR simulator          — run directly (fast, zero-dep)
+  → emit_il()                   — emit TEXTUAL CIL (.il)
+       ↓ real ilasm → PE → real dotnet   — run on REAL CoreCLR
 ```
+
+Two outputs from the same lowered program: binary method bodies for the in-repo
+`clr-simulator` (fast unit checks), and **textual `.il`** (`emit_il`) for the
+**real CoreCLR** path — assembled by real `ilasm`, run on real `dotnet`. This is
+the exact analog of how `iir-to-llvm` emits textual `.ll` for real `clang`; `ilasm`
+owns the PE/metadata so we don't hand-roll ECMA-335. (The full McCarthy F1–F7 set
+runs today — scalar, cons/car/cdr, **predicates + `COND`**, **symbols**, and
+**lambda / LABEL / recursion**. A cons is a 2-element `System.Object[]`, atoms
+`box`ed `System.Int32`; `pair?` is `isinst object[]`, `not` is `xor 1`, `equal?` is
+`unbox.any int32` ×2 + `ceq`, `COND` lowers to `label`/`br`/`brfalse`. Symbols need
+no new ops — `intern_symbols_structural` makes each `(QUOTE S)` a tagged-int boxed
+atom. Lambda/LABEL make the module **multi-method**: each hoisted function is its
+own static `.method`, application is a by-name `call`, params live in `ldarg`, and a
+`field_*` on an `object`-typed param is preceded by `castclass object[]` so real
+CoreCLR's `ldelem.ref` sees an array.)
 
 ## Quick start
 
@@ -89,7 +105,7 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | `EmptyFunction` | A function has no instructions |
 | `ClosureOpcode` | `alloc_closure` with i64/u64/f32/f64 capture — deferred to LANG38 |
 | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` (except `call_closure` which is exempt) |
-| `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` (except `ref<LispyPair>`) |
+| `UnsupportedType` | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 | `UnsupportedOp` | Any unsupported opcode (see below) |
 
 ## Supported IIR opcodes
@@ -107,6 +123,82 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | Heap | `alloc` (`ref<LispyPair>` only), `field_load`, `field_store`, `is_null` |
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
+| Strings | `str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`, `str_cmp`, `print_str` on the textual `.il` path (ASCII literal foothold) |
+
+As of 0.16.0 the **textual `.il`** emitter (`emit_il`, the `ilasm`/`dotnet` path) also
+covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`/`mul`/`div`/`rem`)
+and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with `ldc.i4.0; ceq`)
+rows above — previously only the binary codegen path emitted them, which is why running
+the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
+As of 0.19.0 the textual path likewise covers the **binary bitwise/shift** row
+(`and`/`or`/`xor`/`shl`/`shr` → the identically named CIL opcodes) — the same kind of
+bytecode-path-only gap, surfaced by running Nib `& | ^` on the real CLR (LANG-FULL N3).
+As of **0.21.0** it also covers the **unary `not`** op (Nib `~`) → the CIL `not` opcode
+(one's complement) + the E2 narrow mask, so `~0u8 = 255` / `~15u4 = 0` assemble on real
+CoreCLR — the last `not`-shaped gap (the bytecode path had it since the E2 work; the
+textual `.il` path had no `not` arm at all, only the lispy `call_builtin "not"`).
+
+As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's `PRINT`)
+as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that
+prints, the `Run()` launcher discards the entry method's result (`pop`) instead of
+`Console.WriteLine`-ing it, so the program prints exactly once.
+
+As of 0.29.0 the textual `.il` path emits the **E4 literal string** foothold:
+`str_const` lowers to `ldstr` into a `string` local, `print_str` lowers to
+`Console.Write(string)`, and direct-literal `str_len` calls
+`String::get_Length()` while direct-literal `str_index` calls
+`String::get_Chars(int32)`, direct-literal `str_eq` calls
+`String::Equals(string,string)`, direct-literal `str_cmp` calls
+`String::CompareOrdinal(string,string)` plus `Math::Sign(int32)`, and direct-literal `str_concat` calls
+`String::Concat(string,string)`. This proves Dartmouth BASIC `PRINT "HELLO"` plus
+Twig `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
+`(string=? "HELLO" "HELLO")`, `(string<? "ALPHA" "BETA")`, and
+`(string-length (string-append "AB" "CDE"))`
+on real CoreCLR while non-literal string values remain rejected until the CLR
+representation owns the shared UTF-8 byte semantics.
+
+As of 0.18.0 it emits the **Brainfuck byte-tape ops** (LANG-MATRIX LM-C Brainfuck — the
+last code-gen cell): `alloc_bytes` → `newarr [System.Runtime]System.Byte` into an
+`unsigned int8[]` local (the tape), `load_byte` → `ldelem.u1` (unsigned cell), `store_byte`
+→ `stelem.i1` (8-bit wrap-around), and `putchar`/`getchar` → `Console::Write(char)` /
+`Console::Read()`. `putchar` joins `print_i64` as a "this program prints" signal, so a
+Brainfuck program's launcher discards the entry result rather than re-printing it. CIL
+`brfalse`/`brtrue` test any integer width against zero, so the loop guard needs no
+special i64 handling (unlike the JVM's `lcmp` / wasm's `i64.eqz`).
+
+As of 0.23.0 the **textual `.il` emitter** lowers the **E5 array ops** (LANG-FULL
+enabler E5 — ALGOL 1-D arrays) to native single-dimensional CIL arrays:
+`alloc_array` → `newarr [System.Runtime]System.Int32` (or `…Double`/`…Single`) into
+an `int32[]`/`float64[]` handle local; `array_get` → `ldelem.i4`/`.r8`; `array_set` →
+`stelem.i4`/`.r8`; `array_len` → `ldlen; conv.i4`. CoreCLR bounds-checks every
+`ldelem`/`stelem` natively, so an out-of-range index throws
+`System.IndexOutOfRangeException` (E5's trap) with no explicit guard. `i64` elements
+collapse to `int32[]` (CIL stack ints are 32-bit here, like scalar `i64`). The binary
+`CILProgramArtifact` (`clr-simulator`) emitter doesn't lower the array ops yet.
+
+**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2, backend 5/6, v0.20.0).
+A CIL arithmetic/bitwise op runs on a full 32-bit `int32` slot, so a narrow unsigned
+value overflows its width unless masked. After a `u4`/`u8`/`u16` `add`/`sub`/`mul`/
+`div`/`mod`/`neg`/`and`/`or`/`xor`/`shl`/`shr`/`not`, **both** emitters append a
+`ldc.i4 <mask>; and` (`0xF`/`0xFF`/`0xFFFF`) so `200u8+100u8=44` and `~0u8=255`:
+
+```text
+  add ; ldc.i4 0xFF ; and      ←  (200 + 100) & 0xFF = 44
+```
+
+`u32`/`i32` already wrap mod-2³² via the 32-bit op (no mask). A positive mask + `and`
+is used — not `conv.u1`/`conv.i1`, which sign-extend — to keep the unsigned widths
+unsigned, exactly like the JVM `iand` and wasm `i32.and` masks. The narrow `type_hint`s
+that trigger the mask are wired into the Nib/Oct frontends in the E2 integration PR (6/6).
+
+As of v0.20.1 this is **verified to work for the i64 frontend value model**. A real
+frontend (Nib) materialises every `const`/`let` as `i64` and carries the narrow width
+only on the op. The wasm and jvm backends had to grow an i64/long register model so a
+narrow op wouldn't trap over those `i64` operands — but the CIL backend needs no such
+rework, because it is **uniformly int32**: `cil_local_type` maps every scalar (incl.
+`i64`) to `int32`, and `const` emits `ldc.i4`. So the `i64` consts collapse to `int32`
+and the mask stays int32-consistent. The `e2_u8_op_over_i64_operands_stays_int32`
+regression test asserts the emitted IL has no `int64`/`ldc.i8` and still masks.
 
 ## How CIL synthesis works for derived operations
 

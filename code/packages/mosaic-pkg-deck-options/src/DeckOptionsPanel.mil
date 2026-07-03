@@ -1,0 +1,81 @@
+// DeckOptionsPanel.mil - reusable Anki-style deck scheduler settings surface.
+//
+// Hosts can route changes through Engram's shared event facade, which persists
+// them with the shared `setDeckOptions` reducer command.
+
+component DeckOptionsPanel {
+  slot settings-label : text ;
+  slot learning-steps-label : text ;
+  slot learning-steps-value : text ;
+  slot relearning-steps-label : text ;
+  slot relearning-steps-value : text ;
+  slot new-cards-label : text ;
+  slot new-cards-value : number ;
+  slot reviews-label : text ;
+  slot reviews-value : number ;
+  slot graduating-interval-label : text ;
+  slot graduating-interval-value : number ;
+  slot easy-interval-label : text ;
+  slot easy-interval-value : number ;
+  slot initial-ease-label : text ;
+  slot initial-ease-value : number ;
+  slot maximum-interval-label : text ;
+  slot maximum-interval-value : number ;
+  slot interval-modifier-label : text ;
+  slot interval-modifier-value : number ;
+  slot hard-multiplier-label : text ;
+  slot hard-multiplier-value : number ;
+  slot easy-bonus-label : text ;
+  slot easy-bonus-value : number ;
+  slot lapse-multiplier-label : text ;
+  slot lapse-multiplier-value : number ;
+  slot leech-threshold-label : text ;
+  slot leech-threshold-value : number ;
+  slot desired-retention-label : text ;
+  slot desired-retention-value : number ;
+  slot fsrs-parameters-label : text ;
+  slot fsrs-parameters-value : text ;
+  slot fsrs-search-label : text ;
+  slot fsrs-search-value : text ;
+  slot ignore-review-history-before-label : text ;
+  slot ignore-review-history-before-value : text ;
+  slot historical-retention-label : text ;
+  slot historical-retention-value : number ;
+  slot easy-days-percentages-label : text ;
+  slot easy-days-percentages-value : text ;
+  slot leech-action-label : text ;
+  slot leech-action-suspend-label : text ;
+  slot leech-action-suspend-value : bool ;
+  slot leech-action-tag-only-label : text ;
+  slot leech-action-tag-only-value : bool ;
+  slot bury-new-siblings-label : text ;
+  slot bury-new-siblings-value : bool ;
+  slot bury-review-siblings-label : text ;
+  slot bury-review-siblings-value : bool ;
+  slot bury-interday-learning-siblings-label : text ;
+  slot bury-interday-learning-siblings-value : bool ;
+
+  emit onLearningStepsChange ( value : text ) ;
+  emit onRelearningStepsChange ( value : text ) ;
+  emit onNewCardsChange ( value : number ) ;
+  emit onReviewsChange ( value : number ) ;
+  emit onGraduatingIntervalChange ( value : number ) ;
+  emit onEasyIntervalChange ( value : number ) ;
+  emit onInitialEaseChange ( value : number ) ;
+  emit onMaximumIntervalChange ( value : number ) ;
+  emit onIntervalModifierChange ( value : number ) ;
+  emit onHardMultiplierChange ( value : number ) ;
+  emit onEasyBonusChange ( value : number ) ;
+  emit onLapseMultiplierChange ( value : number ) ;
+  emit onLeechThresholdChange ( value : number ) ;
+  emit onDesiredRetentionChange ( value : number ) ;
+  emit onFsrsParametersChange ( value : text ) ;
+  emit onFsrsSearchChange ( value : text ) ;
+  emit onIgnoreReviewHistoryBeforeChange ( value : text ) ;
+  emit onHistoricalRetentionChange ( value : number ) ;
+  emit onEasyDaysPercentagesChange ( value : text ) ;
+  emit onLeechActionChange ( value : text ) ;
+  emit onBuryNewSiblingsChange ( checked : bool ) ;
+  emit onBuryReviewSiblingsChange ( checked : bool ) ;
+  emit onBuryInterdayLearningSiblingsChange ( checked : bool ) ;
+}

@@ -1,0 +1,7 @@
+_build/
+deps/
+priv/*.so
+priv/*.dylib
+native/*/target/
+erl_crash.dump
+cover/

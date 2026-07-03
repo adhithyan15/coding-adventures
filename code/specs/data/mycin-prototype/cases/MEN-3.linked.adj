@@ -1,0 +1,70 @@
+% MYCIN-2026 — bacterial vs viral meningitis differential rulebook (adj-lang).
+%
+% Derived ONCE from byte-grounded literature (the grounded corpus at
+% ../../adj52/corpus/bacterial_meningitis/corpus.json). Each clause's `source` is
+% the short citation shown in the proof DAG; the verbatim byte_quote + the LR
+% computation the CAS-write gate verifies live in rulebook/provenance.json keyed
+% by (hypothesis, evidence). Trust tiers: consensus > authoritative > empirical >
+% inferred > unattributed.
+%
+% NOTE — this is the NAIVE first-pass derivation: the four correlated CSF-chemistry
+% findings (neutrophilic pleocytosis, low glucose, elevated protein, elevated
+% lactate) are encoded as INDEPENDENT `contributes`. They are manifestations of one
+% process, so multiplying their LRs over-counts and over-saturates the posterior
+% (the documented ADJ56 failure). That latent bug is intentional: proofs/cost_to_correct
+% localizes it from the proof DAG and fixes it with one explaining-away `interacts`.
+
+% ============================ BACTERIAL arm ============================
+prior 0.037 for bacterial_meningitis
+  source "Nigrovic 2007 JAMA (PMID 17200475), n=3295" trust authoritative
+
+contributes 85 from csf_gram_stain(positive) to bacterial_meningitis
+  source "WHO 2025 guideline NBK614844 (pooled Straus 2006); sens 85% spec 99%" trust consensus
+
+contributes 15 from csf_neutrophilic_pleocytosis(high) to bacterial_meningitis
+  source "Straus 2006 JAMA (PMID 17062865); CSF WBC >=500/uL LR 15" trust authoritative
+
+contributes 18 from csf_glucose(low) to bacterial_meningitis
+  source "Straus 2006 JAMA; CSF:blood glucose ratio <=0.4 LR 18" trust authoritative
+
+contributes 9.33 from csf_protein(elevated) to bacterial_meningitis
+  source "Viallon via PMC4886299; >=1.88 g/L sens 84% spec 91%" trust empirical
+
+contributes 22.9 from csf_lactate(elevated) to bacterial_meningitis
+  source "Sakushima 2011 J Infect (PMID 21382412), 33 studies; LR+ 22.9" trust authoritative
+
+contributes 27.3 from serum_procalcitonin(elevated) to bacterial_meningitis
+  source "Vikse 2015 Int J Infect Dis (PMID 26188130), 9 studies; LR+ 27.3" trust authoritative
+
+contributes 5.84 from seizure(present) to bacterial_meningitis
+  source "Nigrovic 2002 Pediatrics; seizure 22% bacterial vs 4% aseptic, LR+ 5.84" trust empirical
+
+contributes 271 from csf_culture(positive) to bacterial_meningitis
+  source "Wu 2013 BMC Infect Dis (PMC3558362) latent-class; sens 81.3% spec 99.7%" trust authoritative
+
+% ============================ VIRAL arm ============================
+prior 0.963 for viral_meningitis
+  source "Nigrovic 2007 JAMA complement; aseptic 3174/3295 = 96.3%" trust authoritative
+
+contributes 4.9 from csf_glucose(normal) to viral_meningitis
+  source "Straus 2006 JAMA, derived: normal glucose LR for aseptic = spec/(1-sens) = 0.98/0.20" trust authoritative
+
+contributes 13.7 from csf_lactate(normal) to viral_meningitis
+  source "Sakushima 2011, derived: normal lactate LR for aseptic = spec/(1-sens) = 0.96/0.07" trust authoritative
+
+contributes 5.0 from csf_lymphocytic_pleocytosis(high) to viral_meningitis
+  source "[inferred] lymphocyte predominance is characteristic of aseptic meningitis; LR not yet byte-grounded" trust inferred
+
+contributes 50 from enteroviral_pcr(positive) to viral_meningitis
+  source "[inferred] CSF enterovirus RT-PCR is near-diagnostic for enteroviral meningitis; LR not yet byte-grounded" trust inferred
+
+? bacterial_meningitis
+? viral_meningitis
+
+% case MEN-3 — observations only; the rulebook supplies the queries
+observe csf_lymphocytic_pleocytosis(high)
+observe csf_glucose(normal)
+observe csf_lactate(normal)
+observe csf_protein(elevated)
+observe enteroviral_pcr(positive)
+observe seizure(absent)

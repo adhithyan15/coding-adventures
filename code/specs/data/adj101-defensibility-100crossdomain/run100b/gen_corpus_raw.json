@@ -1,0 +1,952 @@
+[
+ {
+  "domain": "healthcare-billing",
+  "items": [
+   {
+    "id": "HEA-1",
+    "stratum": "clean-determinate",
+    "policy": "A patient is financially responsible for the full charge of any service rendered by an out-of-network provider when the plan is a closed HMO that provides no out-of-network benefits, unless the service was a verified emergency.",
+    "scenario": "Maria has a closed HMO with no out-of-network benefits. She electively visited Dr. Lee, an out-of-network dermatologist, for a routine mole check. The visit was billed at $220. The visit was not an emergency.",
+    "question": "What amount is Maria financially responsible for?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$220"
+   },
+   {
+    "id": "HEA-2",
+    "stratum": "clean-determinate",
+    "policy": "Under the plan, a covered preventive screening is paid at 100% with no patient cost-sharing only if the patient is within the recommended age band of 45 to 75 for that screening. Patients outside the band owe 20% coinsurance.",
+    "scenario": "James is 52 years old and received a covered colorectal cancer screening billed at $600. The recommended age band for this screening under the plan is 45 to 75.",
+    "question": "What amount does James owe for the screening?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$0"
+   },
+   {
+    "id": "HEA-3",
+    "stratum": "clean-determinate",
+    "policy": "A claim must be denied for timely-filing if it is submitted more than 90 days after the date of service. Claims submitted within 90 days are eligible for processing.",
+    "scenario": "A provider rendered a service on March 1 and submitted the claim on March 20, which is 19 days after the date of service.",
+    "question": "Should the claim be denied for timely-filing?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not denied"
+   },
+   {
+    "id": "HEA-4",
+    "stratum": "underdetermined-baited",
+    "policy": "For an in-network specialist visit, the patient owes a flat $40 copay if the deductible has already been met for the plan year; if the deductible has not been met, the patient owes the full negotiated rate until the deductible is satisfied.",
+    "scenario": "Priya has an in-network plan with a $40 specialist copay and a $1,500 annual deductible. In June she saw an in-network cardiologist; the negotiated rate for the visit was $180. She has had several other medical visits earlier in the year.",
+    "question": "What amount does Priya owe for the cardiologist visit?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "deductible status not stated"
+   },
+   {
+    "id": "HEA-5",
+    "stratum": "underdetermined-baited",
+    "policy": "An emergency room visit is covered at the in-network cost-sharing level regardless of the hospital's network status. However, if the visit is later determined to be a non-emergency (not a prudent-layperson emergency), the out-of-network ER is reimbursed at the lower out-of-network rate.",
+    "scenario": "Tom went to an out-of-network hospital ER with chest pain and shortness of breath. The ER billed his plan. The claim is now being adjudicated for the correct cost-sharing level.",
+    "question": "Should the visit be reimbursed at the in-network or out-of-network rate?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "emergency determination not stated"
+   },
+   {
+    "id": "HEA-6",
+    "stratum": "underdetermined-baited",
+    "policy": "A drug claim is paid at the generic tier copay of $10 if a generic equivalent was dispensed. If the brand-name drug was dispensed when a generic was available and no medical-necessity override is on file, the patient pays the brand copay of $50 plus the cost difference.",
+    "scenario": "Nadia filled a prescription at an in-network pharmacy for a medication that has both a brand and a generic version available. Her plan has a $10 generic copay and a $50 brand copay. The pharmacy processed the claim.",
+    "question": "What copay tier applies to Nadia's claim?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "which version was dispensed not stated"
+   },
+   {
+    "id": "HEA-7",
+    "stratum": "override-precedence",
+    "policy": "Cosmetic procedures are not covered and the patient is fully liable for the charge. However, notwithstanding the cosmetic exclusion, reconstructive surgery following a mastectomy is a mandated covered benefit and is paid subject only to standard in-network cost-sharing.",
+    "scenario": "After a mastectomy to treat breast cancer, Anita underwent breast reconstruction surgery performed by an in-network surgeon. The plan administrator initially flagged the procedure under the cosmetic-procedure exclusion. The billed amount subject to standard in-network cost-sharing would result in a $300 patient share.",
+    "question": "Is Anita fully liable for the reconstruction charge, or does she owe only the standard $300 cost-share?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$300"
+   },
+   {
+    "id": "HEA-8",
+    "stratum": "override-precedence",
+    "policy": "Claims for services requiring prior authorization are denied if no authorization is on file. Notwithstanding the prior-authorization requirement, services rendered during a bona fide medical emergency are exempt from prior authorization and must be paid if otherwise covered.",
+    "scenario": "Carlos required an emergency appendectomy after arriving at the hospital with acute appendicitis. The procedure normally requires prior authorization, and no prior authorization was on file. The surgery was performed during the documented emergency and is otherwise a covered service.",
+    "question": "Should the appendectomy claim be denied for lack of prior authorization?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must be paid"
+   },
+   {
+    "id": "HEA-9",
+    "stratum": "exception-encoding",
+    "policy": "The plan applies a $250 inpatient hospital admission copay to every inpatient admission, except when the admission is a readmission to the same hospital within 30 days of discharge for the same condition, in which case no admission copay applies.",
+    "scenario": "Helen was discharged from Mercy Hospital on April 2 after treatment for pneumonia. On April 18 she was readmitted to Mercy Hospital for the same pneumonia, 16 days after discharge. The standard inpatient admission copay is $250.",
+    "question": "What admission copay does Helen owe for the April 18 readmission?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$0"
+   },
+   {
+    "id": "HEA-10",
+    "stratum": "exception-encoding",
+    "policy": "Late-payment interest of 1.5% is assessed on any patient balance not paid within 60 days of the statement date, except for balances that are under active dispute through the plan's formal appeals process, on which no interest accrues while the appeal is pending.",
+    "scenario": "Devon received a statement dated January 5 for a $400 balance. He filed a formal appeal of the charge through the plan's appeals process on January 20, and the appeal is still pending. It is now March 30, more than 60 days after the statement date, and the balance remains unpaid.",
+    "question": "Has late-payment interest accrued on Devon's $400 balance?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no interest"
+   }
+  ]
+ },
+ {
+  "domain": "environmental-permitting",
+  "items": [
+   {
+    "id": "ENV-1",
+    "stratum": "clean-determinate",
+    "policy": "A facility must obtain a Title V air permit if its potential to emit (PTE) any single regulated air pollutant is 100 tons per year (tpy) or more. Facilities with PTE below 100 tpy for every regulated pollutant are not required to obtain a Title V permit.",
+    "scenario": "Greenfield Plastics operates a single coating line. Its potential to emit is 62 tpy of volatile organic compounds, 31 tpy of nitrogen oxides, and 18 tpy of particulate matter. No other regulated pollutants are emitted.",
+    "question": "Is Greenfield Plastics required to obtain a Title V air permit?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not required"
+   },
+   {
+    "id": "ENV-2",
+    "stratum": "clean-determinate",
+    "policy": "A discharge of stormwater associated with industrial activity requires coverage under an NPDES permit. Coverage is obtained by filing a Notice of Intent (NOI) at least 30 days before the discharge begins. Discharges that begin before the 30-day waiting period elapses are unpermitted.",
+    "scenario": "Harbor Metals filed its complete NOI on March 1. Its new outfall began discharging industrial stormwater on March 12.",
+    "question": "Was Harbor Metals' March 12 discharge permitted?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "unpermitted"
+   },
+   {
+    "id": "ENV-3",
+    "stratum": "clean-determinate",
+    "policy": "A wetland fill activity qualifies for a Nationwide Permit 39 (commercial development) only if the loss of waters of the United States does not exceed 0.5 acre. If the loss exceeds 0.5 acre, an individual permit is required.",
+    "scenario": "Cedar Crossing LLC proposes to fill 0.34 acre of jurisdictional wetlands to build a retail pad. No other waters are affected.",
+    "question": "Does Cedar Crossing's project qualify for Nationwide Permit 39?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "qualifies"
+   },
+   {
+    "id": "ENV-4",
+    "stratum": "underdetermined-baited",
+    "policy": "A construction project disturbing 1 or more acres of land must obtain a Construction General Permit (CGP) before earth-disturbing activity begins. Projects disturbing less than 1 acre need a CGP only if they are part of a larger common plan of development that, in total, disturbs 1 or more acres.",
+    "scenario": "Pinewood Builders is grading a 0.7-acre parcel for a single duplex. The site sits within the Pinewood Estates subdivision, a tract that was historically marketed under one brand name. The grading begins next week.",
+    "question": "Must Pinewood Builders obtain a Construction General Permit before grading?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the parcel is part of a larger common plan of development disturbing 1 or more acres is not stated"
+   },
+   {
+    "id": "ENV-5",
+    "stratum": "underdetermined-baited",
+    "policy": "A generator of hazardous waste is a Large Quantity Generator (LQG), subject to full RCRA permitting-related storage limits, if it generates 1,000 kg or more of hazardous waste in a calendar month. A generator below that threshold is a Small Quantity Generator with less stringent requirements.",
+    "scenario": "Apex Finishing reported generating 1,240 kg of spent solvent in March. The facility manager notes that a large portion of that solvent was sent off-site for reclamation and recycling rather than disposal.",
+    "question": "Is Apex Finishing a Large Quantity Generator for March?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the recycled/reclaimed solvent counts toward the generation total is not stated"
+   },
+   {
+    "id": "ENV-6",
+    "stratum": "underdetermined-baited",
+    "policy": "A new major stationary source in a nonattainment area must obtain a Nonattainment New Source Review (NNSR) permit and offset its emissions. A source is 'major' for NNSR if its potential to emit the nonattainment pollutant equals or exceeds the applicable major-source threshold for that area's classification.",
+    "scenario": "Riverside Energy proposes a plant with a potential to emit 85 tpy of ozone-precursor VOCs in a region designated nonattainment for ozone. The classification thresholds range from 100 tpy (Marginal) down to 10 tpy (Extreme) depending on severity.",
+    "question": "Is Riverside Energy a 'major' source requiring an NNSR permit?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "the area's ozone nonattainment classification (and thus the applicable major-source threshold) is not stated"
+   },
+   {
+    "id": "ENV-7",
+    "stratum": "override-precedence",
+    "policy": "General rule: A facility may discharge process wastewater under its existing individual NPDES permit limits. Override: Notwithstanding any permit limit, whenever the state has issued a Total Maximum Daily Load (TMDL) for the receiving water, the facility's discharge must comply with the more stringent wasteload allocation assigned by the TMDL, which supersedes the permit's numeric limits.",
+    "scenario": "Millbrook Tannery holds an NPDES permit allowing 8 mg/L of total nitrogen. The state issued a TMDL for the receiving creek assigning Millbrook a wasteload allocation of 4 mg/L total nitrogen. Millbrook is discharging at 7 mg/L.",
+    "question": "Is Millbrook Tannery in compliance with its applicable discharge requirement?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not in compliance"
+   },
+   {
+    "id": "ENV-8",
+    "stratum": "override-precedence",
+    "policy": "General rule: Minor modifications to a permitted facility may proceed under an administrative amendment without public notice. Override: If the modification would increase emissions of a hazardous air pollutant (HAP) by any amount, the administrative amendment is unavailable and a full permit modification with public notice is required regardless of how minor the change otherwise appears.",
+    "scenario": "Lakeside Coatings wants to swap one pump for a slightly larger model. The change is mechanically trivial, but it will increase emissions of the HAP methylene chloride by 0.3 tpy.",
+    "question": "May Lakeside Coatings proceed under an administrative amendment?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "full permit modification with public notice is required"
+   },
+   {
+    "id": "ENV-9",
+    "stratum": "exception-encoding",
+    "policy": "Any party that discharges dredged or fill material into waters of the United States must obtain a Section 404 permit, except that normal farming, silviculture, and ranching activities that are part of an established, ongoing operation are exempt from the permit requirement.",
+    "scenario": "Sandhill Farm, an established and continuously operated cattle ranch, plows a field crossing a small jurisdictional wetland as part of its routine annual planting that it has performed every season for fifteen years. The plowing incidentally redeposits soil within the wetland.",
+    "question": "Must Sandhill Farm obtain a Section 404 permit for this plowing?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "exempt"
+   },
+   {
+    "id": "ENV-10",
+    "stratum": "exception-encoding",
+    "policy": "An underground storage tank (UST) owner must register the tank and comply with the leak-detection requirements, except that tanks with a capacity of 110 gallons or less are excluded from the UST program and need not be registered.",
+    "scenario": "Northgate Auto installed a new waste-oil underground tank with a maximum capacity of 95 gallons. The owner asks whether registration and leak-detection rules apply.",
+    "question": "Must Northgate Auto register the 95-gallon tank and comply with leak-detection requirements?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "excluded"
+   }
+  ]
+ },
+ {
+  "domain": "consumer-warranty",
+  "items": [
+   {
+    "id": "CON-1",
+    "stratum": "clean-determinate",
+    "policy": "Under this manufacturer's limited warranty, a product defect in materials or workmanship is covered for repair at no charge if the claim is submitted within 12 months of the purchase date. Claims submitted after 12 months from purchase are not covered.",
+    "scenario": "Maria purchased a blender on March 1, 2025. On August 10, 2025, the motor failed due to a defect in workmanship confirmed by the manufacturer's inspection. She submitted a warranty claim on August 15, 2025.",
+    "question": "Is the repair covered at no charge under the limited warranty?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "covered"
+   },
+   {
+    "id": "CON-2",
+    "stratum": "clean-determinate",
+    "policy": "The retailer's return policy states that a customer is entitled to a full refund of the purchase price if a defective item is returned within 30 days of delivery with the original receipt. Without the original receipt, only store credit is issued.",
+    "scenario": "Devon received a defective desk lamp on June 1. He returned it on June 12 along with the original paper receipt from the purchase. The store confirmed the lamp was defective.",
+    "question": "What remedy is Devon entitled to?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "full refund"
+   },
+   {
+    "id": "CON-3",
+    "stratum": "clean-determinate",
+    "policy": "An extended service plan covers parts and labor for mechanical failures. The plan carries a $75 deductible per repair visit, payable by the customer. The plan does not cover cosmetic damage.",
+    "scenario": "Priya's dishwasher suffered a mechanical pump failure covered by her extended service plan. The technician's invoice listed $220 for the part and $130 for labor. There was no cosmetic damage involved.",
+    "question": "How much must Priya pay out of pocket for this repair visit?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$75"
+   },
+   {
+    "id": "CON-4",
+    "stratum": "underdetermined-baited",
+    "policy": "The warranty covers repair of a defective component at no charge, but only if the product was registered with the manufacturer within 90 days of purchase. Unregistered products receive no warranty coverage.",
+    "scenario": "Tom bought a power drill on January 5 and the chuck mechanism failed in June due to a manufacturing defect. He has his dated purchase receipt and the defect has been confirmed by the manufacturer. Tom recalls filling out the registration card that came in the box and mailing it shortly after his purchase.",
+    "question": "Is the repair covered at no charge under the warranty?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "registration date not stated"
+   },
+   {
+    "id": "CON-5",
+    "stratum": "underdetermined-baited",
+    "policy": "A 'satisfaction guarantee' entitles the customer to a full refund if the product is returned in unused, resalable condition. Products that have been used are not eligible for any refund under this guarantee.",
+    "scenario": "Aisha bought a pair of noise-cancelling headphones and decided three days later they were not for her. She brought them back to the store with all original packaging, the warranty card, and the receipt, requesting a refund under the satisfaction guarantee.",
+    "question": "Is Aisha entitled to a full refund under the satisfaction guarantee?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the product was used"
+   },
+   {
+    "id": "CON-6",
+    "stratum": "underdetermined-baited",
+    "policy": "The warranty covers defects for 2 years from the date of manufacture. Coverage is void if the product was serviced by an unauthorized repair shop at any point.",
+    "scenario": "Liam's espresso machine, manufactured on a date stamped clearly on its base 14 months ago, developed a confirmed internal seal defect. He submitted a claim with photos and the serial number. Liam mentions that the machine 'works perfectly otherwise' and that he has always taken good care of it.",
+    "question": "Is the defect covered under the warranty?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether an unauthorized shop serviced it"
+   },
+   {
+    "id": "CON-7",
+    "stratum": "override-precedence",
+    "policy": "General rule: water damage to electronic products is not covered by the standard warranty. Override: for products explicitly certified as 'IP67 waterproof', water damage occurring during normal submersion up to 1 meter IS covered, notwithstanding the general exclusion.",
+    "scenario": "Nina's fitness watch is labeled and certified IP67 waterproof. It stopped working after she wore it while swimming in a pool at a depth of about 0.5 meters during normal use. The failure was caused by water ingress.",
+    "question": "Is the water-damage failure covered under the warranty?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "covered"
+   },
+   {
+    "id": "CON-8",
+    "stratum": "override-precedence",
+    "policy": "General rule: the warranty period is 1 year from purchase. Override: where the product is sold in the state of Greenfield, state consumer law extends the mandatory minimum warranty period to 3 years from purchase, and this statutory period prevails over the manufacturer's shorter term.",
+    "scenario": "Carlos bought a laptop in a store located in the state of Greenfield 20 months ago. The motherboard failed due to a confirmed manufacturing defect, and he filed a claim. The manufacturer pointed to its 1-year warranty term.",
+    "question": "Is Carlos's claim within the applicable warranty period?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "within"
+   },
+   {
+    "id": "CON-9",
+    "stratum": "exception-encoding",
+    "policy": "Damage caused by the customer's misuse or accidental drops is not covered by the warranty, except that a first accidental screen crack within the first 6 months of ownership is covered for a one-time free replacement.",
+    "scenario": "Sofia accidentally dropped her new tablet 2 months after buying it, cracking the screen. This was the first time she had ever damaged the device, and she requested a screen replacement under the warranty.",
+    "question": "Is the screen replacement covered under the warranty?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "covered"
+   },
+   {
+    "id": "CON-10",
+    "stratum": "exception-encoding",
+    "policy": "Consumable parts such as batteries and filters are excluded from the warranty's free-replacement coverage, except that a battery whose maximum capacity falls below 80% within the first year is treated as a covered defect eligible for free replacement.",
+    "scenario": "Raj's phone battery degraded to 72% of its maximum rated capacity 8 months after purchase, confirmed by the manufacturer's diagnostic tool. He requested a free battery replacement.",
+    "question": "Is Raj's battery replacement covered under the warranty?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "covered"
+   }
+  ]
+ },
+ {
+  "domain": "securities-compliance",
+  "items": [
+   {
+    "id": "SEC-1",
+    "stratum": "clean-determinate",
+    "policy": "Under Rule 144, an affiliate of a reporting company may sell restricted securities only if a current public information requirement is met AND the securities have been held for at least six months. If both conditions are satisfied, the sale is permitted (subject to volume limits not at issue here).",
+    "scenario": "Dana is an affiliate (officer) of Acme Corp, a fully reporting SEC company that has filed all required periodic reports on time. Dana acquired restricted shares of Acme in a private placement and has held them for nine months before proposing to sell a quantity within the applicable volume limits.",
+    "question": "Is Dana's proposed sale permitted under the stated Rule 144 conditions?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "permitted"
+   },
+   {
+    "id": "SEC-2",
+    "stratum": "clean-determinate",
+    "policy": "Section 16(b) short-swing profit rule: any profit realized by a corporate insider from a purchase and sale (or sale and purchase) of the company's equity securities within a period of less than six months must be disgorged to the company.",
+    "scenario": "Reyes, a director of Vortex Inc., bought 1,000 shares of Vortex common stock on March 1 at $40 per share and sold all 1,000 shares on June 15 of the same year at $52 per share. No other Vortex transactions occurred.",
+    "question": "Must Reyes disgorge the profit from these matched transactions to Vortex?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must disgorge"
+   },
+   {
+    "id": "SEC-3",
+    "stratum": "clean-determinate",
+    "policy": "A securities offering qualifies for the Regulation D Rule 506(b) exemption only if it involves no general solicitation AND sells to no more than 35 non-accredited investors. If either condition is violated, the offering does not qualify for the 506(b) exemption.",
+    "scenario": "Helios Energy raised capital through a private placement. It conducted no general solicitation or advertising. The offering was sold to 12 accredited investors and 40 non-accredited investors.",
+    "question": "Does the offering qualify for the Rule 506(b) exemption?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "does not qualify"
+   },
+   {
+    "id": "SEC-4",
+    "stratum": "underdetermined-baited",
+    "policy": "Liability for insider trading under Rule 10b-5 requires that the person traded while in possession of material nonpublic information AND that the person owed a duty of trust or confidence that was breached by trading. Both elements must be present for liability.",
+    "scenario": "Morgan, a research analyst with no employment or contractual relationship to TitanPharma, overheard two strangers in a coffee shop discussing TitanPharma's unannounced FDA approval. Morgan immediately bought TitanPharma call options before the news became public and profited substantially when the approval was announced.",
+    "question": "Is Morgan liable for insider trading under Rule 10b-5?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether Morgan owed a duty of trust or confidence"
+   },
+   {
+    "id": "SEC-5",
+    "stratum": "underdetermined-baited",
+    "policy": "An issuer relying on the Rule 701 exemption for compensatory equity awards to employees is exempt from registration only if the aggregate sales price of securities sold in any consecutive 12-month period does not exceed the greatest of $1,000,000, 15% of total assets, or 15% of the outstanding securities of that class. If the cap is exceeded, the exemption is unavailable.",
+    "scenario": "Nimbus Software, a private company, granted compensatory stock options to its employees during the year with an aggregate sales price of $4,200,000. Nimbus reports total assets of $20,000,000.",
+    "question": "Does Nimbus's grant stay within the Rule 701 cap and remain exempt?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "15% of outstanding securities of the class not stated"
+   },
+   {
+    "id": "SEC-6",
+    "stratum": "underdetermined-baited",
+    "policy": "A broker-dealer must treat a customer as a 'pattern day trader' (triggering the $25,000 minimum equity requirement) only if the customer executes four or more day trades within five business days AND the number of day trades represents more than 6% of the customer's total trades in that margin account during the same period.",
+    "scenario": "Customer Lin executed 5 day trades over a four-business-day window in a margin account. The account's equity is $18,000, which is below $25,000.",
+    "question": "Must the broker-dealer classify Lin as a pattern day trader and apply the $25,000 minimum?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "total number of trades in the account not stated"
+   },
+   {
+    "id": "SEC-7",
+    "stratum": "override-precedence",
+    "policy": "General rule: a tippee who trades on material nonpublic information received from an insider is liable under Rule 10b-5. Override: notwithstanding the general rule, a tippee is NOT liable unless the insider (tipper) received a personal benefit in exchange for the disclosure; absent any personal benefit to the tipper, the tippee is not liable.",
+    "scenario": "Avery received a tip about Crest Corp's unannounced earnings miss from an insider, Sam. Avery traded on the information and profited. It is established that Sam disclosed the information by accident during an unrelated conversation and received no personal benefit of any kind — no money, no gift, no reputational gain, and no familial or friendship benefit.",
+    "question": "Is Avery, the tippee, liable under Rule 10b-5?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not liable"
+   },
+   {
+    "id": "SEC-8",
+    "stratum": "override-precedence",
+    "policy": "General rule: any person who acquires beneficial ownership of more than 5% of a class of a company's registered equity securities must file a Schedule 13D within 10 days. Override: a qualified institutional investor that holds the securities in the ordinary course of business and not with the purpose of changing or influencing control of the issuer may instead file the short-form Schedule 13G, and is not required to file Schedule 13D.",
+    "scenario": "Beacon Asset Management, a registered investment adviser and qualified institutional investor, acquired 7% of Solis Corp's registered common stock in the ordinary course of its business. Beacon has no purpose or intent to change or influence control of Solis.",
+    "question": "Is Beacon required to file a Schedule 13D?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not required to file Schedule 13D"
+   },
+   {
+    "id": "SEC-9",
+    "stratum": "exception-encoding",
+    "policy": "A company must disclose a reportable event on Form 8-K within four business days of the triggering event, except that disclosure of the company's results of operations and financial condition under Item 2.02 is not required to be filed within four business days when the information is released solely through a regularly scheduled earnings call that has been previously announced and the related earnings press release was already furnished.",
+    "scenario": "Quanta Devices held its quarterly earnings call to discuss results of operations. The call was a regularly scheduled, previously announced call, and Quanta had already furnished its earnings press release before the call. The only disclosure at issue is the results-of-operations information conveyed on that call.",
+    "question": "Is Quanta required to file a separate Form 8-K for the results-of-operations information within four business days of the call?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not required"
+   },
+   {
+    "id": "SEC-10",
+    "stratum": "exception-encoding",
+    "policy": "Securities sold in an exempt offering are 'restricted securities' subject to resale limits, except that securities sold under a Regulation A Tier 2 offering to a person who is not an affiliate of the issuer are freely tradable and are not restricted securities.",
+    "scenario": "Priya, who is not and has never been an affiliate of the issuer Lumen Foods, purchased shares directly in Lumen Foods' qualified Regulation A Tier 2 offering. She now wishes to resell the shares.",
+    "question": "Are Priya's shares restricted securities subject to resale limits?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not restricted"
+   }
+  ]
+ },
+ {
+  "domain": "food-safety",
+  "items": [
+   {
+    "id": "FOO-1",
+    "stratum": "clean-determinate",
+    "policy": "Time/Temperature Control for Safety (TCS) food held in a hot-holding unit must be maintained at 135 degrees F or above. Any TCS food found below 135 degrees F that has been out of temperature for more than 4 cumulative hours must be discarded.",
+    "scenario": "A diner's steam table holds cooked rice. A health inspector measures the rice at 122 degrees F. The manager's logs and the unit's continuous time-stamp recorder confirm the rice has been below 135 degrees F for 5 hours and 10 minutes.",
+    "question": "Must the rice be discarded?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must be discarded"
+   },
+   {
+    "id": "FOO-2",
+    "stratum": "clean-determinate",
+    "policy": "A food handler must be excluded from working with or around food if diagnosed with an illness due to Norovirus, and may not return to food-handling duties until more than 48 hours have passed since symptoms (vomiting and diarrhea) resolved.",
+    "scenario": "A line cook was diagnosed with Norovirus. Her vomiting and diarrhea fully resolved on Monday at 8:00 AM. She reports for a food-handling shift on Tuesday at 9:00 AM, which is 25 hours after her symptoms resolved.",
+    "question": "May she work food-handling duties on this Tuesday shift?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "may not return"
+   },
+   {
+    "id": "FOO-3",
+    "stratum": "clean-determinate",
+    "policy": "Cold TCS food may be displayed without temperature control for a maximum of 6 hours, provided it began at 41 degrees F or below and never exceeds 70 degrees F during display. Food exceeding 70 degrees F at any point must be discarded immediately regardless of elapsed time.",
+    "scenario": "A deli displays tuna salad without refrigeration. It started at 40 degrees F. After 3 hours on display, a probe thermometer reads 74 degrees F.",
+    "question": "Must the tuna salad be discarded?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must be discarded"
+   },
+   {
+    "id": "FOO-4",
+    "stratum": "underdetermined-baited",
+    "policy": "Cooked TCS food cooled from 135 degrees F to 70 degrees F within 2 hours, and then from 70 degrees F to 41 degrees F within an additional 4 hours, is safe to refrigerate and reuse. Food failing either cooling window must be discarded.",
+    "scenario": "A kitchen cooks a large batch of beef chili at lunch. Staff log that it reached 70 degrees F exactly 1 hour 45 minutes after cooking ended. The chili was then moved to the walk-in cooler. At the next check the chili measured 41 degrees F.",
+    "question": "Is the chili safe to reuse?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "time to reach 41 degrees not stated"
+   },
+   {
+    "id": "FOO-5",
+    "stratum": "underdetermined-baited",
+    "policy": "Shellfish may be sold only if accompanied by a shellstock identification tag, and the tag must be retained on file for 90 days from the date the last shellfish from that container was sold or served. Selling shellfish from an untagged container is a critical violation.",
+    "scenario": "An inspector examines a restaurant's oyster cooler. The oysters are stored in their original container. The manager sold the last oyster from this container 30 days ago and produces the corresponding shellstock tag from the file.",
+    "question": "Did the restaurant commit a critical violation regarding this container?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether container was tagged when sold not stated"
+   },
+   {
+    "id": "FOO-6",
+    "stratum": "underdetermined-baited",
+    "policy": "A food establishment must have at least one Certified Food Protection Manager (CFPM) present during all hours of operation. An establishment operating any hour without a CFPM present is assessed a 25-point demerit.",
+    "scenario": "Bella's Bistro operates from 11:00 AM to 10:00 PM daily. The owner, Marco, holds a valid CFPM certificate and is listed as the manager on record. The inspector arrives at 3:00 PM and confirms the restaurant is open and serving customers.",
+    "question": "Is Bella's Bistro assessed the 25-point demerit for this day?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether a CFPM was present during all open hours not stated"
+   },
+   {
+    "id": "FOO-7",
+    "stratum": "override-precedence",
+    "policy": "Ready-to-eat TCS food prepared on-site and held refrigerated must be discarded after 7 days (date-marking rule). However, if the food is frozen before the 7-day period elapses, the count of days is suspended while frozen and resumes only when the food is thawed for use.",
+    "scenario": "A kitchen prepares ready-to-eat chicken salad on Day 0 and refrigerates it. On Day 3 it is moved to the freezer. It remains frozen for 20 days, then is thawed and returned to refrigeration on Day 23. The inspector checks it on Day 24.",
+    "question": "Must the chicken salad be discarded as of Day 24 under the date-marking rule?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "need not be discarded"
+   },
+   {
+    "id": "FOO-8",
+    "stratum": "override-precedence",
+    "policy": "Bare-hand contact with ready-to-eat food is prohibited; handlers must use gloves, utensils, or deli tissue. Notwithstanding this rule, bare-hand contact is permitted when the ready-to-eat food will be subsequently cooked to at least 145 degrees F before being served.",
+    "scenario": "A cook assembles raw beef patties by hand, shaping the ground beef with bare hands. The patties are then grilled to an internal temperature of 160 degrees F before serving to customers.",
+    "question": "Did the cook violate the bare-hand contact rule?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "did not violate"
+   },
+   {
+    "id": "FOO-9",
+    "stratum": "exception-encoding",
+    "policy": "All TCS foods served to customers must be cooked to a minimum internal temperature of 165 degrees F, except whole-muscle intact beef steaks served at customer request, which may be cooked to 145 degrees F when a consumer advisory is posted.",
+    "scenario": "A steakhouse serves a whole-muscle intact ribeye steak cooked to an internal temperature of 145 degrees F at the customer's request for medium-rare. A consumer advisory regarding undercooked meats is posted on the menu.",
+    "question": "Does serving this steak comply with the cooking-temperature policy?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "complies"
+   },
+   {
+    "id": "FOO-10",
+    "stratum": "exception-encoding",
+    "policy": "Food employees must wash hands in a designated handwashing sink after handling raw animal products, before any subsequent task, except when the employee removes and discards gloves worn during the raw-product handling and the hands underneath remained visibly clean and dry, in which case immediate handwashing may be deferred until the next scheduled break.",
+    "scenario": "A prep cook handles raw chicken while wearing gloves, then removes and discards the gloves. Inspection confirms the cook's hands underneath the gloves were visibly clean and dry. The cook proceeds directly to chopping vegetables without washing hands first.",
+    "question": "Did the cook violate the handwashing requirement by proceeding without washing?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "did not violate"
+   }
+  ]
+ },
+ {
+  "domain": "rental-housing",
+  "items": [
+   {
+    "id": "REN-1",
+    "stratum": "clean-determinate",
+    "policy": "A landlord must return a tenant's security deposit within 21 days after the tenant vacates and returns the keys. If the landlord fails to return the deposit within that period, the landlord forfeits the right to retain any portion of it and must return the full deposit.",
+    "scenario": "Tomas vacated his apartment and returned the keys to the landlord on March 1. The landlord mailed the deposit refund check, postmarked April 5, 35 days later. The lease was a standard residential lease with no special clauses.",
+    "question": "Is the landlord entitled to retain any portion of the security deposit?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must return the full deposit"
+   },
+   {
+    "id": "REN-2",
+    "stratum": "clean-determinate",
+    "policy": "A month-to-month tenant must give the landlord at least 30 days' written notice before vacating. If the tenant gives fewer than 30 days' notice, the tenant owes rent for the remainder of the 30-day notice period.",
+    "scenario": "Priya is a month-to-month tenant paying $1,500 per month. On June 20 she handed her landlord a written notice stating she would move out on June 30. Rent is due on the first of each month and she had paid June in full.",
+    "question": "Does Priya owe any additional rent beyond June?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "owes rent"
+   },
+   {
+    "id": "REN-3",
+    "stratum": "clean-determinate",
+    "policy": "A landlord may enter a tenant's unit only after giving at least 24 hours' advance notice, except in a genuine emergency. Entry without the required notice and without an emergency is an unlawful entry.",
+    "scenario": "On a Tuesday at 2 p.m., the landlord used his key to enter Dana's unit to inspect a dripping faucet Dana had reported a week earlier. The faucet was a slow, non-urgent drip. The landlord had sent no notice of any kind before entering.",
+    "question": "Was the landlord's entry unlawful?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "unlawful"
+   },
+   {
+    "id": "REN-4",
+    "stratum": "underdetermined-baited",
+    "policy": "A landlord may charge a late fee only if the rent is more than 5 days past due, the late fee is expressly authorized in the written lease, and the fee does not exceed $50. A late fee that meets all three conditions is enforceable.",
+    "scenario": "Rent was due on the 1st. Marcus paid on the 9th, eight days late. The landlord assessed a $40 late fee. The lease is a written, signed residential lease.",
+    "question": "Is the $40 late fee enforceable?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the lease expressly authorizes a late fee"
+   },
+   {
+    "id": "REN-5",
+    "stratum": "underdetermined-baited",
+    "policy": "A tenant who breaks a fixed-term lease early is liable for rent until the unit is re-rented, but the landlord has a duty to mitigate by making reasonable efforts to re-rent. If the landlord fails to make reasonable efforts to re-rent, the tenant's liability stops on the date the tenant vacated.",
+    "scenario": "Lena broke her 12-month lease and moved out on August 1 with four months remaining. The unit sat empty and was not re-rented for those four months. The landlord now demands four months of rent from Lena. The landlord listed the unit on a major rental website the day after Lena left.",
+    "question": "Is Lena liable for the full four months of rent?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the landlord's re-rental efforts were reasonable"
+   },
+   {
+    "id": "REN-6",
+    "stratum": "underdetermined-baited",
+    "policy": "A landlord must make repairs that affect a unit's habitability within a reasonable time after receiving notice of the defect. A heating-system failure in winter must be repaired within 24 hours of notice; failure to do so entitles the tenant to a rent abatement.",
+    "scenario": "On January 12, the heat in Omar's apartment stopped working. A repair technician arrived and fixed it 40 hours after the landlord first learned of the problem. Omar is now seeking a rent abatement.",
+    "question": "Is Omar entitled to a rent abatement?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "when the landlord received notice of the defect"
+   },
+   {
+    "id": "REN-7",
+    "stratum": "override-precedence",
+    "policy": "A landlord may decline to renew a month-to-month tenancy for any reason with proper notice. However, a landlord may not decline to renew, raise rent, or otherwise retaliate against a tenant within 6 months after the tenant has filed a good-faith habitability complaint with a housing authority; any such non-renewal within that window is unlawful retaliation.",
+    "scenario": "On March 3, Yuki filed a good-faith habitability complaint about mold with the city housing authority. On May 10, the landlord served Yuki a notice declining to renew her month-to-month tenancy, citing a desire to rent to a relative. The notice itself was procedurally proper.",
+    "question": "Is the landlord's non-renewal lawful?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "unlawful retaliation"
+   },
+   {
+    "id": "REN-8",
+    "stratum": "override-precedence",
+    "policy": "A tenant is responsible for the cost of repairing damage to the unit beyond normal wear and tear. However, if the damage was caused by the landlord's failure to maintain the building's structure or systems, the landlord bears the cost regardless of the tenant's conduct.",
+    "scenario": "Water stains and warped flooring appeared in Carla's living room. An inspector determined the cause was a leak in the building's main roof, which the landlord had neglected to maintain. The landlord wants to bill Carla for the floor replacement.",
+    "question": "Who bears the cost of the floor repair?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "landlord bears the cost"
+   },
+   {
+    "id": "REN-9",
+    "stratum": "exception-encoding",
+    "policy": "A landlord may keep a tenant's security deposit to cover unpaid rent, except where the unpaid rent accrued during a period in which the unit was legally uninhabitable and the tenant had lawfully withheld rent. In that case the landlord may not apply the deposit to the withheld rent.",
+    "scenario": "When Raj moved out he had withheld two months of rent. During those exact two months the city had declared the unit legally uninhabitable due to a sewage backup, and Raj had withheld rent through the lawful procedure. The landlord seeks to apply Raj's deposit to the two months of withheld rent.",
+    "question": "May the landlord apply the deposit to the two months of withheld rent?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "may not apply the deposit"
+   },
+   {
+    "id": "REN-10",
+    "stratum": "exception-encoding",
+    "policy": "A no-pets clause in a lease is enforceable and a tenant who keeps a pet in violation of it may be evicted, except where the animal is a verified assistance animal needed for a tenant's disability, in which case the no-pets clause does not apply and the tenant may not be evicted on that basis.",
+    "scenario": "Greta's lease contains a clear no-pets clause. She keeps a dog in the unit. The dog is a verified assistance animal that Greta needs for a documented disability, and she has provided the landlord with the required verification. The landlord seeks to evict her solely for keeping the dog.",
+    "question": "May the landlord evict Greta for keeping the dog?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "may not be evicted"
+   }
+  ]
+ },
+ {
+  "domain": "professional-licensing",
+  "items": [
+   {
+    "id": "PRO-1",
+    "stratum": "clean-determinate",
+    "policy": "A licensed professional engineer must complete 30 hours of continuing-education credit during each two-year renewal cycle. At least 2 of those hours must be in professional ethics.",
+    "scenario": "An engineer's renewal cycle just closed. During the cycle she logged 34 total continuing-education hours, of which 3 hours were in professional ethics.",
+    "question": "Has the engineer met the continuing-education requirement for renewal?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "met the requirement"
+   },
+   {
+    "id": "PRO-2",
+    "stratum": "clean-determinate",
+    "policy": "The cosmetology board charges a $90 initial license fee plus a $25 per-discipline endorsement fee for each additional discipline beyond the first listed on the application.",
+    "scenario": "An applicant submits an initial license application listing three disciplines: hairstyling, esthetics, and nail technology.",
+    "question": "What total fee is owed?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$140"
+   },
+   {
+    "id": "PRO-3",
+    "stratum": "clean-determinate",
+    "policy": "An applicant for a real-estate broker license must have held an active salesperson license for at least 24 cumulative months within the preceding five years.",
+    "scenario": "An applicant for a broker license held an active salesperson license for 14 months in 2022 and another 11 months in 2024, with no other licensure, and applies in 2026.",
+    "question": "Does the applicant meet the experience requirement?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "meets"
+   },
+   {
+    "id": "PRO-4",
+    "stratum": "underdetermined-baited",
+    "policy": "A nursing license lapses if not renewed by the expiration date. A lapsed license may be reinstated by paying back fees if the lapse is under 12 months; if the lapse is 12 months or longer, the holder must re-take the licensing examination.",
+    "scenario": "A registered nurse's license expired and was never renewed. She now wishes to return to practice and asks what reinstatement requires.",
+    "question": "Can she reinstate by paying back fees, or must she re-take the examination?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "length of lapse not stated"
+   },
+   {
+    "id": "PRO-5",
+    "stratum": "underdetermined-baited",
+    "policy": "An out-of-state attorney may be admitted by reciprocity only if the attorney's home jurisdiction grants reciprocal admission to attorneys licensed in this state.",
+    "scenario": "An attorney licensed and in good standing in another state, having practiced there for nine years, applies for admission by reciprocity in this state.",
+    "question": "Is the attorney eligible for admission by reciprocity?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "home jurisdiction reciprocity not stated"
+   },
+   {
+    "id": "PRO-6",
+    "stratum": "underdetermined-baited",
+    "policy": "A pharmacist license applicant must complete at least 1,500 hours of supervised internship. Hours completed outside a board-approved internship site do not count toward the requirement.",
+    "scenario": "An applicant reports completing 1,740 hours of supervised pharmacy internship over the past year and submits the hour log with the application.",
+    "question": "Does the applicant satisfy the internship-hours requirement?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "site approval status not stated"
+   },
+   {
+    "id": "PRO-7",
+    "stratum": "override-precedence",
+    "policy": "An applicant with a felony conviction is disqualified from receiving a private-security guard license. Override: if the conviction has been formally expunged or pardoned, it must not be treated as a disqualifying conviction.",
+    "scenario": "An applicant for a security guard license has one felony conviction from 2015 that was formally expunged by court order in 2020.",
+    "question": "Is the applicant disqualified on the basis of the conviction?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not disqualified"
+   },
+   {
+    "id": "PRO-8",
+    "stratum": "override-precedence",
+    "policy": "All initial barber license applicants must pass the state practical examination. Override: an applicant who holds a current valid barber license from a state with a standing examination-reciprocity agreement is exempt from the practical examination.",
+    "scenario": "An applicant holds a current valid barber license from a state that has a standing examination-reciprocity agreement with this state, and applies for an initial license here.",
+    "question": "Must the applicant pass this state's practical examination?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "exempt"
+   },
+   {
+    "id": "PRO-9",
+    "stratum": "exception-encoding",
+    "policy": "A licensed contractor must carry general-liability insurance of at least $500,000 at all times while licensed, except for contractors whose work is limited to the handyman classification, who are not required to carry such insurance.",
+    "scenario": "A contractor is licensed solely under the handyman classification and carries no general-liability insurance.",
+    "question": "Is the contractor in violation of the insurance requirement?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not in violation"
+   },
+   {
+    "id": "PRO-10",
+    "stratum": "exception-encoding",
+    "policy": "A licensee must report any address change to the board within 30 days, except a licensee on inactive status, for whom no reporting deadline applies until the license is reactivated.",
+    "scenario": "A licensee currently on inactive status moved to a new address 60 days ago and has not notified the board.",
+    "question": "Has the licensee violated the 30-day address-change reporting requirement?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no violation"
+   }
+  ]
+ },
+ {
+  "domain": "customs-import",
+  "items": [
+   {
+    "id": "CUS-1",
+    "stratum": "clean-determinate",
+    "policy": "An importer must pay an ad valorem customs duty equal to 5% of the declared customs value of the goods. The customs value is the price actually paid for the goods plus all international freight and insurance charges incurred to bring the goods to the port of entry.",
+    "scenario": "Delgado Trading imports a shipment of ceramic tiles. The price paid to the foreign seller was $40,000. International ocean freight to the port of entry cost $3,000, and marine insurance for the voyage cost $1,000.",
+    "question": "What customs duty does Delgado Trading owe on this shipment?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$2,200"
+   },
+   {
+    "id": "CUS-2",
+    "stratum": "clean-determinate",
+    "policy": "Goods entering the country must be cleared through customs within 15 calendar days of the date the vessel arrives at the port of entry. If the goods are not cleared within that period, they are deemed abandoned and become property of the customs authority.",
+    "scenario": "A container of furniture belonging to Hartwell Imports arrived at the Port of Easton on March 3. Hartwell did not file any clearance paperwork. The goods were still sitting uncleared in the customs warehouse on March 22.",
+    "question": "Is the furniture deemed abandoned to the customs authority?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "deemed abandoned"
+   },
+   {
+    "id": "CUS-3",
+    "stratum": "clean-determinate",
+    "policy": "An importer who misclassifies goods under an incorrect tariff code is liable for a penalty equal to 200% of the duty that was underpaid as a result of the misclassification. If the misclassification resulted in no underpayment of duty, no penalty is owed.",
+    "scenario": "Norwood Electronics classified a shipment of laptop chargers under a tariff code carrying a 3% duty rate. The correct code carried a 7% duty rate. The declared customs value of the chargers was $50,000.",
+    "question": "What penalty does Norwood Electronics owe for the misclassification?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$4,000"
+   },
+   {
+    "id": "CUS-4",
+    "stratum": "underdetermined-baited",
+    "policy": "Imported goods that originate in a country with which the importing nation has a Free Trade Agreement (FTA) are eligible for a 0% preferential duty rate, provided the importer presents a valid Certificate of Origin at the time of entry. Without a valid Certificate of Origin, the standard 6% duty rate applies regardless of where the goods were made.",
+    "scenario": "Brightline Apparel imports cotton shirts manufactured in Calavia, a country that has a Free Trade Agreement with the importing nation. The shirts have a declared customs value of $80,000 and the goods clearly qualify as originating in Calavia under the FTA's rules of origin.",
+    "question": "What duty rate applies to Brightline's shirts?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether a valid Certificate of Origin was presented"
+   },
+   {
+    "id": "CUS-5",
+    "stratum": "underdetermined-baited",
+    "policy": "Personal-use goods carried by an arriving traveler are exempt from duty up to a personal exemption of $800 in total value. The personal exemption may be claimed only if the traveler has been outside the country for at least 48 hours. Travelers who have been away for less than 48 hours receive a reduced exemption of $200.",
+    "scenario": "Maria returns from an overseas trip carrying souvenirs and gifts with a total value of $650. At customs she presents the items for inspection. Her boarding passes and itinerary are in her bag.",
+    "question": "Are all of Maria's goods covered by her personal exemption?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "how long Maria was outside the country"
+   },
+   {
+    "id": "CUS-6",
+    "stratum": "underdetermined-baited",
+    "policy": "An importer may recover (drawback) 99% of the duties paid on imported goods if those goods are subsequently re-exported in the same condition within three years of the date of importation. Drawback is available only for goods that were not used domestically before re-export; any domestic use forfeits the drawback claim.",
+    "scenario": "Caldera Machinery imported industrial pumps on January 10, 2024, paying $20,000 in duties. On August 5, 2025, the company re-exported the identical pumps to a buyer abroad and filed a drawback claim. The pumps were stored in a bonded warehouse during the intervening period.",
+    "question": "Is Caldera entitled to recover 99% of the duties paid?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the pumps were used domestically before re-export"
+   },
+   {
+    "id": "CUS-7",
+    "stratum": "override-precedence",
+    "policy": "All imported steel products are subject to a standard 8% duty. However, notwithstanding the standard rate, steel products covered by an active anti-dumping order from the named exporting country are subject to a 25% anti-dumping duty in place of the standard duty.",
+    "scenario": "Pinemont Construction imports steel reinforcing bars from the country of Veksia. Veksian steel rebar is covered by an active anti-dumping order. The declared customs value is $100,000.",
+    "question": "What duty rate applies to Pinemont's steel rebar?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "25%"
+   },
+   {
+    "id": "CUS-8",
+    "stratum": "override-precedence",
+    "policy": "Commercial shipments valued at $2,500 or more require a formal customs entry filed by a licensed customs broker. Notwithstanding the value threshold, any shipment containing controlled pharmaceutical substances must be filed as a formal customs entry by a licensed broker regardless of value.",
+    "scenario": "Vireo Health imports a small parcel of a controlled pharmaceutical substance with a declared value of $400. The company attempts to clear it as an informal entry without using a licensed customs broker.",
+    "question": "May Vireo clear this parcel as an informal entry without a licensed broker?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must be filed as a formal customs entry"
+   },
+   {
+    "id": "CUS-9",
+    "stratum": "exception-encoding",
+    "policy": "Imported foodstuffs require a sanitary inspection certificate before release, except for shipments consigned to a government-licensed quarantine facility, which are released directly to the facility without an inspection certificate.",
+    "scenario": "Orchard Foods imports a refrigerated container of fresh produce. The shipment is consigned to the Riverside Quarantine Facility, which holds a current government license. Orchard did not obtain a sanitary inspection certificate.",
+    "question": "May this produce shipment be released without a sanitary inspection certificate?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "released directly to the facility"
+   },
+   {
+    "id": "CUS-10",
+    "stratum": "exception-encoding",
+    "policy": "A late-payment surcharge of 10% is added to any customs duty not paid by its due date, except where the delay was caused by a documented customs-system outage on the due date, in which case no surcharge is applied and payment made on the next business day is treated as timely.",
+    "scenario": "Sterling Goods owed $12,000 in customs duty due on June 2. The customs electronic payment system suffered a documented nationwide outage all day on June 2, preventing any payments. Sterling paid the full $12,000 on June 3, the next business day.",
+    "question": "Does Sterling owe the 10% late-payment surcharge?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no surcharge"
+   }
+  ]
+ },
+ {
+  "domain": "data-privacy",
+  "items": [
+   {
+    "id": "DAT-1",
+    "stratum": "clean-determinate",
+    "policy": "A data controller must notify the supervisory authority of a personal data breach within 72 hours of becoming aware of it, unless the breach is unlikely to result in a risk to the rights and freedoms of natural persons. A breach involving unencrypted financial account numbers is deemed to pose such a risk.",
+    "scenario": "On Monday at 09:00, Northvale Bank's security team confirmed that an attacker had exfiltrated a database containing customers' unencrypted checking account numbers and routing numbers. The team notified the supervisory authority on Thursday at 16:00 the same week.",
+    "question": "Did Northvale Bank notify the supervisory authority within the required time?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no"
+   },
+   {
+    "id": "DAT-2",
+    "stratum": "clean-determinate",
+    "policy": "Under the policy, a data subject has the right to erasure of their personal data when the data is no longer necessary for the purpose it was collected. A request to erase data must be honored within 30 days of receipt.",
+    "scenario": "MeadowFit, a gym, collected member Jordan's home address solely to mail membership cards. Jordan canceled membership and the cards are no longer being sent; the address now serves no remaining purpose. Jordan submitted an erasure request on March 1, and MeadowFit deleted the address on March 20.",
+    "question": "Did MeadowFit comply with the erasure obligation?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "yes"
+   },
+   {
+    "id": "DAT-3",
+    "stratum": "clean-determinate",
+    "policy": "Processing of special-category personal data (including data concerning health) is prohibited unless the data subject has given explicit consent to the processing for one or more specified purposes.",
+    "scenario": "Cardio-Track, a wellness app, processes users' resting heart-rate and blood-pressure readings to generate health reports. During signup, user Priya was shown a checkbox reading 'I explicitly consent to processing of my health data to generate my health reports,' which she actively ticked before continuing.",
+    "question": "Is Cardio-Track's processing of Priya's health data permitted under the policy?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "yes"
+   },
+   {
+    "id": "DAT-4",
+    "stratum": "underdetermined-baited",
+    "policy": "A business must allow a consumer to opt out of the sale of their personal information. Transferring personal information to a third party constitutes a 'sale' only if the business receives monetary or other valuable consideration in exchange. If no such consideration is received, the transfer is not a sale and the opt-out does not apply.",
+    "scenario": "DriftMedia operates a free news website and transfers readers' browsing identifiers to an analytics partner, AdLoom. A reader, Sam, asked DriftMedia to honor an opt-out of the sale of his personal information. DriftMedia's privacy team noted that the AdLoom transfer is governed by a signed data-processing agreement and that AdLoom uses the identifiers to build audience segments.",
+    "question": "Was DriftMedia required to honor Sam's opt-out for the AdLoom transfer?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether DriftMedia received consideration"
+   },
+   {
+    "id": "DAT-5",
+    "stratum": "underdetermined-baited",
+    "policy": "A data processor may engage a sub-processor only if it has the controller's prior written authorization. A general written authorization permitting sub-processors satisfies this requirement provided the controller is informed of any intended changes and does not object.",
+    "scenario": "CloudKeep, a processor for retailer Bryce Co., signed a data-processing agreement and began using a new sub-processor, ByteHaul, for backups. CloudKeep emailed Bryce Co. about adding ByteHaul 14 days before the change, and Bryce Co. never raised an objection.",
+    "question": "Was CloudKeep's engagement of ByteHaul authorized under the policy?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the agreement granted general written authorization for sub-processors"
+   },
+   {
+    "id": "DAT-6",
+    "stratum": "underdetermined-baited",
+    "policy": "When a data subject withdraws consent, the controller must stop processing that relied on that consent. However, processing may continue to the extent it rests on a separate, independent lawful basis (such as a legal obligation to retain records).",
+    "scenario": "Lendwise, a lender, had been emailing marketing offers to former borrower Ana based on her consent, and also retained her loan repayment history. Ana withdrew her consent in writing. Lendwise stopped the marketing emails but continued to retain her loan repayment history, stating it does so for all closed accounts.",
+    "question": "Is Lendwise permitted to continue retaining Ana's loan repayment history after she withdrew consent?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether a legal obligation requires retention"
+   },
+   {
+    "id": "DAT-7",
+    "stratum": "override-precedence",
+    "policy": "Generally, a controller must respond to a data subject access request by providing a copy of the personal data within one month. However, where requests from a data subject are manifestly unfounded or excessive, in particular because of their repetitive character, the controller may refuse to act on the request.",
+    "scenario": "Felix has sent retailer Quillmart an identical, complete data access request every single business day for the past three weeks, each demanding a fresh full copy of all his data; Quillmart has fully answered the first one and confirms nothing in his data has changed since. Quillmart refused to act on the latest in the series.",
+    "question": "Was Quillmart permitted to refuse the latest request?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "yes"
+   },
+   {
+    "id": "DAT-8",
+    "stratum": "override-precedence",
+    "policy": "A controller must obtain parental consent before processing the personal data of a child under 13. Notwithstanding the foregoing, no parental consent is required where the processing is solely for the purpose of providing security to the online service and is limited to what is necessary for that purpose.",
+    "scenario": "KidQuest, an online game, processes 11-year-old Mia's account login IP addresses for the sole purpose of detecting and blocking account hijacking attempts, retaining only what is needed for that security function. KidQuest did not obtain consent from Mia's parents for this IP processing.",
+    "question": "Did KidQuest violate the consent requirement by processing Mia's login IP addresses without parental consent?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no"
+   },
+   {
+    "id": "DAT-9",
+    "stratum": "exception-encoding",
+    "policy": "A controller transferring personal data to a recipient in a third country must put in place appropriate safeguards such as standard contractual clauses, except where the data subject has explicitly consented to the proposed transfer after being informed of the possible risks of such a transfer due to the absence of safeguards.",
+    "scenario": "Voyagr, a travel platform, transfers user Leah's booking details to a hotel partner in a country with no adequacy decision and has not signed any standard contractual clauses. Before the transfer, Voyagr showed Leah a notice explaining the absence of safeguards and the resulting risks, and Leah explicitly consented to this specific transfer.",
+    "question": "Is the transfer of Leah's data permitted under the policy despite the lack of standard contractual clauses?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "yes"
+   },
+   {
+    "id": "DAT-10",
+    "stratum": "exception-encoding",
+    "policy": "A controller must conduct a data protection impact assessment before processing that is likely to result in a high risk to individuals, such as large-scale systematic monitoring of a publicly accessible area, except where the processing is carried out by a sole practitioner physician for the treatment of their own patients, which is exempt from the assessment requirement.",
+    "scenario": "Dr. Okafor is a sole practitioner physician who maintains and processes detailed medical records solely to treat her own patients in her single-doctor clinic. She did not perform a data protection impact assessment before setting up this records processing.",
+    "question": "Did Dr. Okafor violate the requirement to conduct a data protection impact assessment?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no"
+   }
+  ]
+ },
+ {
+  "domain": "workers-compensation",
+  "items": [
+   {
+    "id": "WOR-1",
+    "stratum": "clean-determinate",
+    "policy": "An injury is compensable under workers' compensation only if it arises out of and in the course of employment. Injuries sustained during the employee's normal commute between home and the regular workplace do not arise in the course of employment and are not compensable.",
+    "scenario": "Dana is a payroll clerk who works fixed hours at the company's downtown office. One morning, while driving her own car along her usual route from home to that office, she was rear-ended at a stoplight and suffered whiplash. She had no work errand to run and was carrying no work equipment.",
+    "question": "Is Dana's whiplash injury compensable under workers' compensation?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "not compensable"
+   },
+   {
+    "id": "WOR-2",
+    "stratum": "clean-determinate",
+    "policy": "Temporary total disability benefits are paid at a rate of 66.67% of the employee's average weekly wage, subject to a statutory maximum of $1,200 per week. If the calculated rate exceeds the maximum, the employee receives the maximum.",
+    "scenario": "Marcus earned an average weekly wage of $2,400 before a compensable back injury left him temporarily totally disabled. Two-thirds of his average weekly wage is $1,600.",
+    "question": "What weekly temporary total disability benefit is Marcus entitled to?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "$1,200"
+   },
+   {
+    "id": "WOR-3",
+    "stratum": "clean-determinate",
+    "policy": "To receive benefits, an injured employee must report the injury to the employer within 30 days of its occurrence. An injury reported more than 30 days after it occurs is barred from compensation.",
+    "scenario": "On March 1, Priya twisted her knee lifting a box at the warehouse. She did not mention it to anyone at first. She finally reported the injury to her supervisor on April 20 of the same year, 50 days later.",
+    "question": "Is Priya's injury claim barred for late reporting?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "barred"
+   },
+   {
+    "id": "WOR-4",
+    "stratum": "underdetermined-baited",
+    "policy": "An injury that occurs while the employee is intoxicated is not compensable only if the intoxication was the proximate cause of the injury. If intoxication was present but was not the proximate cause, the injury remains compensable.",
+    "scenario": "Glenn, a machine operator, was injured when a coworker accidentally backed a forklift into him in the loading bay. A post-incident test showed Glenn had a blood alcohol concentration of 0.09%, above the legal limit. The forklift driver's own conduct was being reviewed separately.",
+    "question": "Is Glenn's injury non-compensable on grounds of intoxication?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether intoxication was the proximate cause"
+   },
+   {
+    "id": "WOR-5",
+    "stratum": "underdetermined-baited",
+    "policy": "A surviving spouse is entitled to death benefits if the employee's death resulted from a compensable workplace injury. Benefits to a surviving spouse terminate upon the spouse's remarriage.",
+    "scenario": "Lena's husband died from a compensable crane accident at the construction site two years ago, and she began receiving death benefits as his surviving spouse. The insurer is now reviewing the file to confirm her continued eligibility. Lena recently moved in with a new partner and changed her last name on social media.",
+    "question": "Is Lena still entitled to death benefits?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the surviving spouse has remarried"
+   },
+   {
+    "id": "WOR-6",
+    "stratum": "underdetermined-baited",
+    "policy": "An occupational disease is compensable only if the employee was exposed to the disease-causing hazard during employment AND the last injurious exposure occurred while working for the employer against whom the claim is filed.",
+    "scenario": "Hector worked 18 years as a sandblaster and was diagnosed with silicosis, a disease caused by inhaling silica dust. He files a claim against his most recent employer, FineCoat Inc., where he worked for the last three years. Sandblasting at FineCoat routinely generated silica dust, and Hector worked on the line daily.",
+    "question": "Is Hector's silicosis claim against FineCoat compensable?",
+    "gold_verdict": "INDETERMINATE",
+    "gold_answer_substring": "whether the last injurious exposure occurred at FineCoat"
+   },
+   {
+    "id": "WOR-7",
+    "stratum": "override-precedence",
+    "policy": "General rule: injuries sustained during voluntary recreational or social activities are not compensable. Override: notwithstanding the general rule, such injuries ARE compensable if the employer expressly required the employee's attendance at the activity.",
+    "scenario": "Tomas attended the company's annual softball game on a Saturday and broke his ankle sliding into base. His manager had sent an email stating: 'Attendance at the softball game is mandatory for all sales staff; absence will be noted in your review.' Tomas is on the sales staff.",
+    "question": "Is Tomas's broken ankle compensable?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "compensable"
+   },
+   {
+    "id": "WOR-8",
+    "stratum": "override-precedence",
+    "policy": "General rule: an employee who is injured by the willful misconduct of a third party is barred from workers' compensation. Override: this bar does not apply, and benefits are payable, where the third party's assault was directed at the employee because of their employment duties (e.g., a robbery targeting the cash the employee was handling).",
+    "scenario": "Nadia, a convenience store cashier, was stabbed by an armed robber who demanded the register cash she was counting. The robber fled with the money. Nadia suffered serious injuries from the deliberate assault.",
+    "question": "Is Nadia entitled to workers' compensation benefits for her injuries?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "entitled"
+   },
+   {
+    "id": "WOR-9",
+    "stratum": "exception-encoding",
+    "policy": "An employer that fails to carry required workers' compensation insurance must pay a penalty equal to double the benefits owed, except where the employer is a sole proprietor with no employees other than the owner, in which case no coverage is required and no penalty applies.",
+    "scenario": "Raj operates a one-person landscaping business as a sole proprietor. He has no employees and works alone. He carries no workers' compensation insurance. After Raj himself was injured, a state auditor questioned his lack of coverage and proposed the double-benefits penalty.",
+    "question": "Does the double-benefits penalty apply to Raj?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "no penalty applies"
+   },
+   {
+    "id": "WOR-10",
+    "stratum": "exception-encoding",
+    "policy": "Medical treatment for a compensable injury must be pre-authorized by the insurer, except for emergency treatment necessary to prevent death or serious impairment, which does not require pre-authorization and must be reimbursed.",
+    "scenario": "After a beam crushed Owen's leg at the job site, paramedics rushed him to the ER, where surgeons performed emergency surgery that night to stop life-threatening blood loss and save the limb. No one obtained the insurer's pre-authorization before the surgery. The insurer later argued the surgery was unauthorized.",
+    "question": "Must the insurer reimburse the cost of Owen's emergency surgery?",
+    "gold_verdict": "DETERMINATE",
+    "gold_answer_substring": "must be reimbursed"
+   }
+  ]
+ }
+]

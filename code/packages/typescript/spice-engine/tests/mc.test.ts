@@ -5,7 +5,10 @@ import {
   cccs,
   ccvs,
   currentSource,
+  formatCornerMcTable,
+  formatMcTable,
   mcDc,
+  mcDcCorners,
   resistor,
   vccs,
   voltageSource,
@@ -41,6 +44,47 @@ describe("mcDc", () => {
       expect(point.voltage("0")).toBe(0.0);
       expect(point.branchCurrent("Vin")).toBeDefined();
     }
+  });
+
+  it("formats stable text output tables for Monte Carlo results", () => {
+    const result = mcDc(divider(), "mid", 2, { seed: 7, tolerance: 0.0 });
+
+    expect(formatMcTable(result)).toBe(
+      "Trial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n" +
+        "0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n" +
+        "1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n",
+    );
+  });
+
+  it("runs Monte Carlo trials at each named corner and formats stable tables", () => {
+    const result = mcDcCorners(
+      divider(),
+      "mid",
+      [
+        { name: "nominal", overrides: [] },
+        {
+          name: "rbot-fast",
+          overrides: [{ elementName: "Rbot", parameter: "resistance", value: 500.0 }],
+        },
+      ],
+      2,
+      { seed: 7, tolerance: 0.0 },
+    );
+
+    expect(result.outputNode).toBe("mid");
+    expect(result.points.map((point) => point.cornerName)).toEqual([
+      "nominal",
+      "rbot-fast",
+    ]);
+    expect(result.points[0].result.mean).toBeCloseTo(5.0, 12);
+    expect(result.points[1].result.mean).toBeCloseTo(10.0 / 3.0, 12);
+    expect(formatCornerMcTable(result)).toBe(
+      "Corner\tTrial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n" +
+        "nominal\t0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n" +
+        "nominal\t1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n" +
+        "rbot-fast\t0\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n" +
+        "rbot-fast\t1\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n",
+    );
   });
 
   it("is reproducible with the same seed", () => {

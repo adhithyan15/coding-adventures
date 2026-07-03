@@ -1,0 +1,1520 @@
+[
+ {
+  "check_id": 0,
+  "idx": 0,
+  "id": "HEA-1",
+  "slot": "verified_emergency"
+ },
+ {
+  "check_id": 1,
+  "idx": 0,
+  "id": "HEA-1",
+  "slot": "closed_hmo_no_oon_benefits"
+ },
+ {
+  "check_id": 2,
+  "idx": 0,
+  "id": "HEA-1",
+  "slot": "out_of_network_provider"
+ },
+ {
+  "check_id": 3,
+  "idx": 1,
+  "id": "HEA-2",
+  "slot": "covered_screening"
+ },
+ {
+  "check_id": 4,
+  "idx": 1,
+  "id": "HEA-2",
+  "slot": "within_age_band"
+ },
+ {
+  "check_id": 5,
+  "idx": 2,
+  "id": "HEA-3",
+  "slot": "days_after_service"
+ },
+ {
+  "check_id": 6,
+  "idx": 3,
+  "id": "HEA-4",
+  "slot": "network_status"
+ },
+ {
+  "check_id": 7,
+  "idx": 3,
+  "id": "HEA-4",
+  "slot": "visit_type"
+ },
+ {
+  "check_id": 8,
+  "idx": 4,
+  "id": "HEA-5",
+  "slot": "visit_type"
+ },
+ {
+  "check_id": 9,
+  "idx": 4,
+  "id": "HEA-5",
+  "slot": "hospital_network_status"
+ },
+ {
+  "check_id": 10,
+  "idx": 5,
+  "id": "HEA-6",
+  "slot": "generic_available"
+ },
+ {
+  "check_id": 11,
+  "idx": 6,
+  "id": "HEA-7",
+  "slot": "procedure_type"
+ },
+ {
+  "check_id": 12,
+  "idx": 7,
+  "id": "HEA-8",
+  "slot": "requires_prior_authorization"
+ },
+ {
+  "check_id": 13,
+  "idx": 7,
+  "id": "HEA-8",
+  "slot": "rendered_during_emergency"
+ },
+ {
+  "check_id": 14,
+  "idx": 7,
+  "id": "HEA-8",
+  "slot": "prior_authorization_on_file"
+ },
+ {
+  "check_id": 15,
+  "idx": 7,
+  "id": "HEA-8",
+  "slot": "otherwise_covered"
+ },
+ {
+  "check_id": 16,
+  "idx": 8,
+  "id": "HEA-9",
+  "slot": "same_hospital"
+ },
+ {
+  "check_id": 17,
+  "idx": 8,
+  "id": "HEA-9",
+  "slot": "is_readmission"
+ },
+ {
+  "check_id": 18,
+  "idx": 8,
+  "id": "HEA-9",
+  "slot": "same_condition"
+ },
+ {
+  "check_id": 19,
+  "idx": 8,
+  "id": "HEA-9",
+  "slot": "days_since_discharge"
+ },
+ {
+  "check_id": 20,
+  "idx": 9,
+  "id": "HEA-10",
+  "slot": "days_since_statement"
+ },
+ {
+  "check_id": 21,
+  "idx": 9,
+  "id": "HEA-10",
+  "slot": "balance_unpaid"
+ },
+ {
+  "check_id": 22,
+  "idx": 9,
+  "id": "HEA-10",
+  "slot": "under_active_appeal"
+ },
+ {
+  "check_id": 23,
+  "idx": 10,
+  "id": "ENV-1",
+  "slot": "other_regulated_pollutants_emitted"
+ },
+ {
+  "check_id": 24,
+  "idx": 10,
+  "id": "ENV-1",
+  "slot": "pte_voc_tpy"
+ },
+ {
+  "check_id": 25,
+  "idx": 10,
+  "id": "ENV-1",
+  "slot": "pte_pm_tpy"
+ },
+ {
+  "check_id": 26,
+  "idx": 10,
+  "id": "ENV-1",
+  "slot": "pte_nox_tpy"
+ },
+ {
+  "check_id": 27,
+  "idx": 11,
+  "id": "ENV-2",
+  "slot": "noi_filed_complete"
+ },
+ {
+  "check_id": 28,
+  "idx": 11,
+  "id": "ENV-2",
+  "slot": "discharge_is_industrial_stormwater"
+ },
+ {
+  "check_id": 29,
+  "idx": 11,
+  "id": "ENV-2",
+  "slot": "days_between_filing_and_discharge"
+ },
+ {
+  "check_id": 30,
+  "idx": 12,
+  "id": "ENV-3",
+  "slot": "loss_of_waters_acres"
+ },
+ {
+  "check_id": 31,
+  "idx": 13,
+  "id": "ENV-4",
+  "slot": "acres_disturbed"
+ },
+ {
+  "check_id": 32,
+  "idx": 14,
+  "id": "ENV-5",
+  "slot": "hazardous_waste_kg_per_month"
+ },
+ {
+  "check_id": 33,
+  "idx": 15,
+  "id": "ENV-6",
+  "slot": "potential_to_emit_tpy"
+ },
+ {
+  "check_id": 34,
+  "idx": 15,
+  "id": "ENV-6",
+  "slot": "in_nonattainment_area"
+ },
+ {
+  "check_id": 35,
+  "idx": 16,
+  "id": "ENV-7",
+  "slot": "complies_with_permit_limit"
+ },
+ {
+  "check_id": 36,
+  "idx": 16,
+  "id": "ENV-7",
+  "slot": "complies_with_wasteload_allocation"
+ },
+ {
+  "check_id": 37,
+  "idx": 16,
+  "id": "ENV-7",
+  "slot": "tmdl_issued"
+ },
+ {
+  "check_id": 38,
+  "idx": 17,
+  "id": "ENV-8",
+  "slot": "is_minor_modification"
+ },
+ {
+  "check_id": 39,
+  "idx": 17,
+  "id": "ENV-8",
+  "slot": "increases_hap_emissions"
+ },
+ {
+  "check_id": 40,
+  "idx": 18,
+  "id": "ENV-9",
+  "slot": "discharges_fill_into_us_waters"
+ },
+ {
+  "check_id": 41,
+  "idx": 18,
+  "id": "ENV-9",
+  "slot": "is_normal_farming_silviculture_ranching"
+ },
+ {
+  "check_id": 42,
+  "idx": 18,
+  "id": "ENV-9",
+  "slot": "part_of_established_ongoing_operation"
+ },
+ {
+  "check_id": 43,
+  "idx": 19,
+  "id": "ENV-10",
+  "slot": "is_ust"
+ },
+ {
+  "check_id": 44,
+  "idx": 19,
+  "id": "ENV-10",
+  "slot": "capacity_gallons"
+ },
+ {
+  "check_id": 45,
+  "idx": 20,
+  "id": "CON-1",
+  "slot": "defect_type"
+ },
+ {
+  "check_id": 46,
+  "idx": 20,
+  "id": "CON-1",
+  "slot": "months_since_purchase"
+ },
+ {
+  "check_id": 47,
+  "idx": 21,
+  "id": "CON-2",
+  "slot": "item_defective"
+ },
+ {
+  "check_id": 48,
+  "idx": 21,
+  "id": "CON-2",
+  "slot": "days_since_delivery"
+ },
+ {
+  "check_id": 49,
+  "idx": 21,
+  "id": "CON-2",
+  "slot": "has_original_receipt"
+ },
+ {
+  "check_id": 50,
+  "idx": 22,
+  "id": "CON-3",
+  "slot": "covered_by_plan"
+ },
+ {
+  "check_id": 51,
+  "idx": 22,
+  "id": "CON-3",
+  "slot": "cosmetic_damage"
+ },
+ {
+  "check_id": 52,
+  "idx": 22,
+  "id": "CON-3",
+  "slot": "failure_type"
+ },
+ {
+  "check_id": 53,
+  "idx": 23,
+  "id": "CON-4",
+  "slot": "defective_component"
+ },
+ {
+  "check_id": 54,
+  "idx": 25,
+  "id": "CON-6",
+  "slot": "months_since_manufacture"
+ },
+ {
+  "check_id": 55,
+  "idx": 25,
+  "id": "CON-6",
+  "slot": "defect_present"
+ },
+ {
+  "check_id": 56,
+  "idx": 26,
+  "id": "CON-7",
+  "slot": "submersion_depth_meters"
+ },
+ {
+  "check_id": 57,
+  "idx": 26,
+  "id": "CON-7",
+  "slot": "normal_use"
+ },
+ {
+  "check_id": 58,
+  "idx": 26,
+  "id": "CON-7",
+  "slot": "failure_cause"
+ },
+ {
+  "check_id": 59,
+  "idx": 26,
+  "id": "CON-7",
+  "slot": "ip67_certified"
+ },
+ {
+  "check_id": 60,
+  "idx": 27,
+  "id": "CON-8",
+  "slot": "sold_in_greenfield"
+ },
+ {
+  "check_id": 61,
+  "idx": 27,
+  "id": "CON-8",
+  "slot": "months_since_purchase"
+ },
+ {
+  "check_id": 62,
+  "idx": 28,
+  "id": "CON-9",
+  "slot": "screen_crack"
+ },
+ {
+  "check_id": 63,
+  "idx": 28,
+  "id": "CON-9",
+  "slot": "accidental_drop"
+ },
+ {
+  "check_id": 64,
+  "idx": 28,
+  "id": "CON-9",
+  "slot": "first_occurrence"
+ },
+ {
+  "check_id": 65,
+  "idx": 28,
+  "id": "CON-9",
+  "slot": "months_of_ownership"
+ },
+ {
+  "check_id": 66,
+  "idx": 29,
+  "id": "CON-10",
+  "slot": "is_consumable_part"
+ },
+ {
+  "check_id": 67,
+  "idx": 29,
+  "id": "CON-10",
+  "slot": "max_capacity_percent"
+ },
+ {
+  "check_id": 68,
+  "idx": 29,
+  "id": "CON-10",
+  "slot": "within_first_year"
+ },
+ {
+  "check_id": 69,
+  "idx": 30,
+  "id": "SEC-1",
+  "slot": "current_public_information_met"
+ },
+ {
+  "check_id": 70,
+  "idx": 30,
+  "id": "SEC-1",
+  "slot": "holding_period_months"
+ },
+ {
+  "check_id": 71,
+  "idx": 31,
+  "id": "SEC-2",
+  "slot": "transaction_in_equity_securities"
+ },
+ {
+  "check_id": 72,
+  "idx": 31,
+  "id": "SEC-2",
+  "slot": "is_insider"
+ },
+ {
+  "check_id": 73,
+  "idx": 31,
+  "id": "SEC-2",
+  "slot": "profit_realized"
+ },
+ {
+  "check_id": 74,
+  "idx": 31,
+  "id": "SEC-2",
+  "slot": "matched_purchase_and_sale"
+ },
+ {
+  "check_id": 75,
+  "idx": 31,
+  "id": "SEC-2",
+  "slot": "within_six_months"
+ },
+ {
+  "check_id": 76,
+  "idx": 32,
+  "id": "SEC-3",
+  "slot": "general_solicitation"
+ },
+ {
+  "check_id": 77,
+  "idx": 32,
+  "id": "SEC-3",
+  "slot": "non_accredited_investor_count"
+ },
+ {
+  "check_id": 78,
+  "idx": 33,
+  "id": "SEC-4",
+  "slot": "possessed_material_nonpublic_info"
+ },
+ {
+  "check_id": 79,
+  "idx": 33,
+  "id": "SEC-4",
+  "slot": "owed_duty_of_trust_or_confidence"
+ },
+ {
+  "check_id": 80,
+  "idx": 33,
+  "id": "SEC-4",
+  "slot": "traded_while_in_possession"
+ },
+ {
+  "check_id": 81,
+  "idx": 34,
+  "id": "SEC-5",
+  "slot": "relying_on_rule_701"
+ },
+ {
+  "check_id": 82,
+  "idx": 34,
+  "id": "SEC-5",
+  "slot": "aggregate_sales_price"
+ },
+ {
+  "check_id": 83,
+  "idx": 35,
+  "id": "SEC-6",
+  "slot": "four_or_more_day_trades_in_five_business_days"
+ },
+ {
+  "check_id": 84,
+  "idx": 36,
+  "id": "SEC-7",
+  "slot": "tippee_traded_on_mnpi"
+ },
+ {
+  "check_id": 85,
+  "idx": 36,
+  "id": "SEC-7",
+  "slot": "received_from_insider"
+ },
+ {
+  "check_id": 86,
+  "idx": 36,
+  "id": "SEC-7",
+  "slot": "tipper_received_personal_benefit"
+ },
+ {
+  "check_id": 87,
+  "idx": 37,
+  "id": "SEC-8",
+  "slot": "purpose_to_change_or_influence_control"
+ },
+ {
+  "check_id": 88,
+  "idx": 37,
+  "id": "SEC-8",
+  "slot": "ordinary_course_of_business"
+ },
+ {
+  "check_id": 89,
+  "idx": 37,
+  "id": "SEC-8",
+  "slot": "ownership_percent"
+ },
+ {
+  "check_id": 90,
+  "idx": 37,
+  "id": "SEC-8",
+  "slot": "qualified_institutional_investor"
+ },
+ {
+  "check_id": 91,
+  "idx": 38,
+  "id": "SEC-9",
+  "slot": "earnings_call_regularly_scheduled"
+ },
+ {
+  "check_id": 92,
+  "idx": 38,
+  "id": "SEC-9",
+  "slot": "earnings_press_release_already_furnished"
+ },
+ {
+  "check_id": 93,
+  "idx": 38,
+  "id": "SEC-9",
+  "slot": "earnings_call_previously_announced"
+ },
+ {
+  "check_id": 94,
+  "idx": 38,
+  "id": "SEC-9",
+  "slot": "event_type"
+ },
+ {
+  "check_id": 95,
+  "idx": 38,
+  "id": "SEC-9",
+  "slot": "released_solely_through_earnings_call"
+ },
+ {
+  "check_id": 96,
+  "idx": 39,
+  "id": "SEC-10",
+  "slot": "is_affiliate"
+ },
+ {
+  "check_id": 97,
+  "idx": 39,
+  "id": "SEC-10",
+  "slot": "offering_type"
+ },
+ {
+  "check_id": 98,
+  "idx": 39,
+  "id": "SEC-10",
+  "slot": "exempt_offering"
+ },
+ {
+  "check_id": 99,
+  "idx": 40,
+  "id": "FOO-1",
+  "slot": "cumulative_hours_out_of_temp"
+ },
+ {
+  "check_id": 100,
+  "idx": 40,
+  "id": "FOO-1",
+  "slot": "below_135"
+ },
+ {
+  "check_id": 101,
+  "idx": 40,
+  "id": "FOO-1",
+  "slot": "is_tcs_food"
+ },
+ {
+  "check_id": 102,
+  "idx": 41,
+  "id": "FOO-2",
+  "slot": "diagnosed_norovirus"
+ },
+ {
+  "check_id": 103,
+  "idx": 41,
+  "id": "FOO-2",
+  "slot": "hours_since_symptoms_resolved"
+ },
+ {
+  "check_id": 104,
+  "idx": 42,
+  "id": "FOO-3",
+  "slot": "starting_temp_f"
+ },
+ {
+  "check_id": 105,
+  "idx": 42,
+  "id": "FOO-3",
+  "slot": "food_type"
+ },
+ {
+  "check_id": 106,
+  "idx": 42,
+  "id": "FOO-3",
+  "slot": "max_temp_f"
+ },
+ {
+  "check_id": 107,
+  "idx": 42,
+  "id": "FOO-3",
+  "slot": "elapsed_hours"
+ },
+ {
+  "check_id": 108,
+  "idx": 43,
+  "id": "FOO-4",
+  "slot": "window1_minutes"
+ },
+ {
+  "check_id": 109,
+  "idx": 44,
+  "id": "FOO-5",
+  "slot": "days_since_last_sold"
+ },
+ {
+  "check_id": 110,
+  "idx": 44,
+  "id": "FOO-5",
+  "slot": "tag_retained_on_file"
+ },
+ {
+  "check_id": 111,
+  "idx": 44,
+  "id": "FOO-5",
+  "slot": "container_tagged"
+ },
+ {
+  "check_id": 112,
+  "idx": 46,
+  "id": "FOO-7",
+  "slot": "counted_refrigerated_days"
+ },
+ {
+  "check_id": 113,
+  "idx": 46,
+  "id": "FOO-7",
+  "slot": "frozen_before_7_days_elapsed"
+ },
+ {
+  "check_id": 114,
+  "idx": 46,
+  "id": "FOO-7",
+  "slot": "prepared_on_site"
+ },
+ {
+  "check_id": 115,
+  "idx": 46,
+  "id": "FOO-7",
+  "slot": "food_is_rte_tcs"
+ },
+ {
+  "check_id": 116,
+  "idx": 47,
+  "id": "FOO-8",
+  "slot": "bare_hand_contact"
+ },
+ {
+  "check_id": 117,
+  "idx": 47,
+  "id": "FOO-8",
+  "slot": "cook_temperature_f"
+ },
+ {
+  "check_id": 118,
+  "idx": 47,
+  "id": "FOO-8",
+  "slot": "subsequently_cooked"
+ },
+ {
+  "check_id": 119,
+  "idx": 48,
+  "id": "FOO-9",
+  "slot": "food_type"
+ },
+ {
+  "check_id": 120,
+  "idx": 48,
+  "id": "FOO-9",
+  "slot": "served_at_customer_request"
+ },
+ {
+  "check_id": 121,
+  "idx": 48,
+  "id": "FOO-9",
+  "slot": "is_tcs_food"
+ },
+ {
+  "check_id": 122,
+  "idx": 48,
+  "id": "FOO-9",
+  "slot": "internal_temp_f"
+ },
+ {
+  "check_id": 123,
+  "idx": 48,
+  "id": "FOO-9",
+  "slot": "consumer_advisory_posted"
+ },
+ {
+  "check_id": 124,
+  "idx": 49,
+  "id": "FOO-10",
+  "slot": "removed_and_discarded_gloves"
+ },
+ {
+  "check_id": 125,
+  "idx": 49,
+  "id": "FOO-10",
+  "slot": "proceeded_to_subsequent_task_without_washing"
+ },
+ {
+  "check_id": 126,
+  "idx": 49,
+  "id": "FOO-10",
+  "slot": "handled_raw_animal_product"
+ },
+ {
+  "check_id": 127,
+  "idx": 49,
+  "id": "FOO-10",
+  "slot": "hands_visibly_clean_and_dry"
+ },
+ {
+  "check_id": 128,
+  "idx": 50,
+  "id": "REN-1",
+  "slot": "days_to_return"
+ },
+ {
+  "check_id": 129,
+  "idx": 50,
+  "id": "REN-1",
+  "slot": "tenant_vacated_and_returned_keys"
+ },
+ {
+  "check_id": 130,
+  "idx": 51,
+  "id": "REN-2",
+  "slot": "tenant_type"
+ },
+ {
+  "check_id": 131,
+  "idx": 51,
+  "id": "REN-2",
+  "slot": "gave_written_notice"
+ },
+ {
+  "check_id": 132,
+  "idx": 51,
+  "id": "REN-2",
+  "slot": "notice_days"
+ },
+ {
+  "check_id": 133,
+  "idx": 52,
+  "id": "REN-3",
+  "slot": "emergency"
+ },
+ {
+  "check_id": 134,
+  "idx": 52,
+  "id": "REN-3",
+  "slot": "advance_notice_given"
+ },
+ {
+  "check_id": 135,
+  "idx": 52,
+  "id": "REN-3",
+  "slot": "landlord_entered"
+ },
+ {
+  "check_id": 136,
+  "idx": 53,
+  "id": "REN-4",
+  "slot": "days_past_due"
+ },
+ {
+  "check_id": 137,
+  "idx": 53,
+  "id": "REN-4",
+  "slot": "late_fee_amount"
+ },
+ {
+  "check_id": 138,
+  "idx": 54,
+  "id": "REN-5",
+  "slot": "landlord_made_reasonable_efforts"
+ },
+ {
+  "check_id": 139,
+  "idx": 54,
+  "id": "REN-5",
+  "slot": "broke_fixed_term_lease_early"
+ },
+ {
+  "check_id": 140,
+  "idx": 54,
+  "id": "REN-5",
+  "slot": "unit_re_rented"
+ },
+ {
+  "check_id": 141,
+  "idx": 55,
+  "id": "REN-6",
+  "slot": "defect_type"
+ },
+ {
+  "check_id": 142,
+  "idx": 55,
+  "id": "REN-6",
+  "slot": "season_is_winter"
+ },
+ {
+  "check_id": 143,
+  "idx": 55,
+  "id": "REN-6",
+  "slot": "repair_hours_after_notice"
+ },
+ {
+  "check_id": 144,
+  "idx": 56,
+  "id": "REN-7",
+  "slot": "notice_procedurally_proper"
+ },
+ {
+  "check_id": 145,
+  "idx": 56,
+  "id": "REN-7",
+  "slot": "good_faith_habitability_complaint_filed"
+ },
+ {
+  "check_id": 146,
+  "idx": 56,
+  "id": "REN-7",
+  "slot": "action_is_non_renewal"
+ },
+ {
+  "check_id": 147,
+  "idx": 56,
+  "id": "REN-7",
+  "slot": "filed_with_housing_authority"
+ },
+ {
+  "check_id": 148,
+  "idx": 56,
+  "id": "REN-7",
+  "slot": "within_6_months_of_complaint"
+ },
+ {
+  "check_id": 149,
+  "idx": 57,
+  "id": "REN-8",
+  "slot": "caused_by_landlord_failure_to_maintain_structure"
+ },
+ {
+  "check_id": 150,
+  "idx": 57,
+  "id": "REN-8",
+  "slot": "damage_to_unit"
+ },
+ {
+  "check_id": 151,
+  "idx": 57,
+  "id": "REN-8",
+  "slot": "beyond_normal_wear_and_tear"
+ },
+ {
+  "check_id": 152,
+  "idx": 58,
+  "id": "REN-9",
+  "slot": "tenant_lawfully_withheld"
+ },
+ {
+  "check_id": 153,
+  "idx": 58,
+  "id": "REN-9",
+  "slot": "unpaid_rent"
+ },
+ {
+  "check_id": 154,
+  "idx": 58,
+  "id": "REN-9",
+  "slot": "unit_legally_uninhabitable"
+ },
+ {
+  "check_id": 155,
+  "idx": 58,
+  "id": "REN-9",
+  "slot": "accrued_during_uninhabitable_period"
+ },
+ {
+  "check_id": 156,
+  "idx": 59,
+  "id": "REN-10",
+  "slot": "is_verified_assistance_animal"
+ },
+ {
+  "check_id": 157,
+  "idx": 59,
+  "id": "REN-10",
+  "slot": "needed_for_disability"
+ },
+ {
+  "check_id": 158,
+  "idx": 59,
+  "id": "REN-10",
+  "slot": "has_no_pets_clause"
+ },
+ {
+  "check_id": 159,
+  "idx": 59,
+  "id": "REN-10",
+  "slot": "keeps_pet_in_violation"
+ },
+ {
+  "check_id": 160,
+  "idx": 60,
+  "id": "PRO-1",
+  "slot": "ethics_hours"
+ },
+ {
+  "check_id": 161,
+  "idx": 60,
+  "id": "PRO-1",
+  "slot": "total_ce_hours"
+ },
+ {
+  "check_id": 162,
+  "idx": 61,
+  "id": "PRO-2",
+  "slot": "application_type"
+ },
+ {
+  "check_id": 163,
+  "idx": 61,
+  "id": "PRO-2",
+  "slot": "additional_disciplines"
+ },
+ {
+  "check_id": 164,
+  "idx": 62,
+  "id": "PRO-3",
+  "slot": "cumulative_active_salesperson_months_within_preceding_five_years"
+ },
+ {
+  "check_id": 165,
+  "idx": 63,
+  "id": "PRO-4",
+  "slot": "license_lapsed"
+ },
+ {
+  "check_id": 166,
+  "idx": 64,
+  "id": "PRO-5",
+  "slot": "applies_reciprocity"
+ },
+ {
+  "check_id": 167,
+  "idx": 65,
+  "id": "PRO-6",
+  "slot": "internship_hours"
+ },
+ {
+  "check_id": 168,
+  "idx": 66,
+  "id": "PRO-7",
+  "slot": "has_felony_conviction"
+ },
+ {
+  "check_id": 169,
+  "idx": 66,
+  "id": "PRO-7",
+  "slot": "conviction_expunged_or_pardoned"
+ },
+ {
+  "check_id": 170,
+  "idx": 67,
+  "id": "PRO-8",
+  "slot": "holds_reciprocity_license"
+ },
+ {
+  "check_id": 171,
+  "idx": 67,
+  "id": "PRO-8",
+  "slot": "is_initial_applicant"
+ },
+ {
+  "check_id": 172,
+  "idx": 68,
+  "id": "PRO-9",
+  "slot": "is_licensed"
+ },
+ {
+  "check_id": 173,
+  "idx": 68,
+  "id": "PRO-9",
+  "slot": "carries_liability_insurance"
+ },
+ {
+  "check_id": 174,
+  "idx": 68,
+  "id": "PRO-9",
+  "slot": "work_limited_to_handyman"
+ },
+ {
+  "check_id": 175,
+  "idx": 69,
+  "id": "PRO-10",
+  "slot": "address_changed"
+ },
+ {
+  "check_id": 176,
+  "idx": 69,
+  "id": "PRO-10",
+  "slot": "notified_board"
+ },
+ {
+  "check_id": 177,
+  "idx": 69,
+  "id": "PRO-10",
+  "slot": "status"
+ },
+ {
+  "check_id": 178,
+  "idx": 69,
+  "id": "PRO-10",
+  "slot": "days_since_change"
+ },
+ {
+  "check_id": 179,
+  "idx": 70,
+  "id": "CUS-1",
+  "slot": "insurance"
+ },
+ {
+  "check_id": 180,
+  "idx": 70,
+  "id": "CUS-1",
+  "slot": "international_freight"
+ },
+ {
+  "check_id": 181,
+  "idx": 70,
+  "id": "CUS-1",
+  "slot": "customs_value"
+ },
+ {
+  "check_id": 182,
+  "idx": 70,
+  "id": "CUS-1",
+  "slot": "price_paid"
+ },
+ {
+  "check_id": 183,
+  "idx": 71,
+  "id": "CUS-2",
+  "slot": "cleared_within_period"
+ },
+ {
+  "check_id": 184,
+  "idx": 72,
+  "id": "CUS-3",
+  "slot": "misclassified"
+ },
+ {
+  "check_id": 185,
+  "idx": 72,
+  "id": "CUS-3",
+  "slot": "duty_underpaid"
+ },
+ {
+  "check_id": 186,
+  "idx": 73,
+  "id": "CUS-4",
+  "slot": "goods_originate_in_fta_country"
+ },
+ {
+  "check_id": 187,
+  "idx": 74,
+  "id": "CUS-5",
+  "slot": "is_arriving_traveler"
+ },
+ {
+  "check_id": 188,
+  "idx": 74,
+  "id": "CUS-5",
+  "slot": "total_value"
+ },
+ {
+  "check_id": 189,
+  "idx": 74,
+  "id": "CUS-5",
+  "slot": "goods_personal_use"
+ },
+ {
+  "check_id": 190,
+  "idx": 75,
+  "id": "CUS-6",
+  "slot": "domestic_use"
+ },
+ {
+  "check_id": 191,
+  "idx": 75,
+  "id": "CUS-6",
+  "slot": "within_three_years"
+ },
+ {
+  "check_id": 192,
+  "idx": 75,
+  "id": "CUS-6",
+  "slot": "re_exported"
+ },
+ {
+  "check_id": 193,
+  "idx": 75,
+  "id": "CUS-6",
+  "slot": "same_condition"
+ },
+ {
+  "check_id": 194,
+  "idx": 76,
+  "id": "CUS-7",
+  "slot": "is_imported"
+ },
+ {
+  "check_id": 195,
+  "idx": 76,
+  "id": "CUS-7",
+  "slot": "is_steel_product"
+ },
+ {
+  "check_id": 196,
+  "idx": 76,
+  "id": "CUS-7",
+  "slot": "covered_by_active_anti_dumping_order"
+ },
+ {
+  "check_id": 197,
+  "idx": 77,
+  "id": "CUS-8",
+  "slot": "is_commercial_shipment"
+ },
+ {
+  "check_id": 198,
+  "idx": 77,
+  "id": "CUS-8",
+  "slot": "contains_controlled_pharmaceutical"
+ },
+ {
+  "check_id": 199,
+  "idx": 77,
+  "id": "CUS-8",
+  "slot": "declared_value"
+ },
+ {
+  "check_id": 200,
+  "idx": 78,
+  "id": "CUS-9",
+  "slot": "consigned_to_quarantine_facility"
+ },
+ {
+  "check_id": 201,
+  "idx": 78,
+  "id": "CUS-9",
+  "slot": "has_sanitary_inspection_certificate"
+ },
+ {
+  "check_id": 202,
+  "idx": 78,
+  "id": "CUS-9",
+  "slot": "imported_foodstuff"
+ },
+ {
+  "check_id": 203,
+  "idx": 78,
+  "id": "CUS-9",
+  "slot": "facility_government_licensed"
+ },
+ {
+  "check_id": 204,
+  "idx": 79,
+  "id": "CUS-10",
+  "slot": "documented_outage_on_due_date"
+ },
+ {
+  "check_id": 205,
+  "idx": 79,
+  "id": "CUS-10",
+  "slot": "paid_by_due_date"
+ },
+ {
+  "check_id": 206,
+  "idx": 79,
+  "id": "CUS-10",
+  "slot": "paid_next_business_day"
+ },
+ {
+  "check_id": 207,
+  "idx": 80,
+  "id": "DAT-1",
+  "slot": "hours_to_notify"
+ },
+ {
+  "check_id": 208,
+  "idx": 80,
+  "id": "DAT-1",
+  "slot": "breach_involves_unencrypted_financial_account_numbers"
+ },
+ {
+  "check_id": 209,
+  "idx": 81,
+  "id": "DAT-2",
+  "slot": "erasure_requested"
+ },
+ {
+  "check_id": 210,
+  "idx": 81,
+  "id": "DAT-2",
+  "slot": "days_to_honor"
+ },
+ {
+  "check_id": 211,
+  "idx": 81,
+  "id": "DAT-2",
+  "slot": "data_no_longer_necessary"
+ },
+ {
+  "check_id": 212,
+  "idx": 82,
+  "id": "DAT-3",
+  "slot": "specified_purpose"
+ },
+ {
+  "check_id": 213,
+  "idx": 82,
+  "id": "DAT-3",
+  "slot": "is_special_category_health_data"
+ },
+ {
+  "check_id": 214,
+  "idx": 82,
+  "id": "DAT-3",
+  "slot": "explicit_consent_given"
+ },
+ {
+  "check_id": 215,
+  "idx": 83,
+  "id": "DAT-4",
+  "slot": "opt_out_requested"
+ },
+ {
+  "check_id": 216,
+  "idx": 83,
+  "id": "DAT-4",
+  "slot": "transfer_to_third_party"
+ },
+ {
+  "check_id": 217,
+  "idx": 84,
+  "id": "DAT-5",
+  "slot": "controller_informed_of_intended_change"
+ },
+ {
+  "check_id": 218,
+  "idx": 84,
+  "id": "DAT-5",
+  "slot": "controller_objected"
+ },
+ {
+  "check_id": 219,
+  "idx": 85,
+  "id": "DAT-6",
+  "slot": "consent_withdrawn"
+ },
+ {
+  "check_id": 220,
+  "idx": 85,
+  "id": "DAT-6",
+  "slot": "processing_relied_on_consent"
+ },
+ {
+  "check_id": 221,
+  "idx": 86,
+  "id": "DAT-7",
+  "slot": "request_repetitive"
+ },
+ {
+  "check_id": 222,
+  "idx": 86,
+  "id": "DAT-7",
+  "slot": "request_excessive"
+ },
+ {
+  "check_id": 223,
+  "idx": 87,
+  "id": "DAT-8",
+  "slot": "parental_consent_obtained"
+ },
+ {
+  "check_id": 224,
+  "idx": 87,
+  "id": "DAT-8",
+  "slot": "processing_solely_for_security"
+ },
+ {
+  "check_id": 225,
+  "idx": 87,
+  "id": "DAT-8",
+  "slot": "child_under_13"
+ },
+ {
+  "check_id": 226,
+  "idx": 87,
+  "id": "DAT-8",
+  "slot": "limited_to_necessary"
+ },
+ {
+  "check_id": 227,
+  "idx": 88,
+  "id": "DAT-9",
+  "slot": "appropriate_safeguards_in_place"
+ },
+ {
+  "check_id": 228,
+  "idx": 88,
+  "id": "DAT-9",
+  "slot": "informed_of_risks_due_to_absence_of_safeguards"
+ },
+ {
+  "check_id": 229,
+  "idx": 88,
+  "id": "DAT-9",
+  "slot": "data_subject_explicit_consent"
+ },
+ {
+  "check_id": 230,
+  "idx": 88,
+  "id": "DAT-9",
+  "slot": "transfer_to_third_country"
+ },
+ {
+  "check_id": 231,
+  "idx": 89,
+  "id": "DAT-10",
+  "slot": "is_controller"
+ },
+ {
+  "check_id": 232,
+  "idx": 89,
+  "id": "DAT-10",
+  "slot": "processing_for_treatment_of_own_patients"
+ },
+ {
+  "check_id": 233,
+  "idx": 89,
+  "id": "DAT-10",
+  "slot": "is_sole_practitioner_physician"
+ },
+ {
+  "check_id": 234,
+  "idx": 90,
+  "id": "WOR-1",
+  "slot": "between_home_and_regular_workplace"
+ },
+ {
+  "check_id": 235,
+  "idx": 90,
+  "id": "WOR-1",
+  "slot": "during_normal_commute"
+ },
+ {
+  "check_id": 236,
+  "idx": 91,
+  "id": "WOR-2",
+  "slot": "calculated_rate"
+ },
+ {
+  "check_id": 237,
+  "idx": 92,
+  "id": "WOR-3",
+  "slot": "days_to_report"
+ },
+ {
+  "check_id": 238,
+  "idx": 93,
+  "id": "WOR-4",
+  "slot": "intoxicated"
+ },
+ {
+  "check_id": 239,
+  "idx": 94,
+  "id": "WOR-5",
+  "slot": "death_compensable_workplace_injury"
+ },
+ {
+  "check_id": 240,
+  "idx": 94,
+  "id": "WOR-5",
+  "slot": "is_surviving_spouse"
+ },
+ {
+  "check_id": 241,
+  "idx": 95,
+  "id": "WOR-6",
+  "slot": "exposed_to_hazard_during_employment"
+ },
+ {
+  "check_id": 242,
+  "idx": 95,
+  "id": "WOR-6",
+  "slot": "last_injurious_exposure_at_claimed_employer"
+ },
+ {
+  "check_id": 243,
+  "idx": 96,
+  "id": "WOR-7",
+  "slot": "employer_required_attendance"
+ },
+ {
+  "check_id": 244,
+  "idx": 96,
+  "id": "WOR-7",
+  "slot": "activity_type"
+ },
+ {
+  "check_id": 245,
+  "idx": 97,
+  "id": "WOR-8",
+  "slot": "injured_by_third_party_willful_misconduct"
+ },
+ {
+  "check_id": 246,
+  "idx": 97,
+  "id": "WOR-8",
+  "slot": "assault_directed_due_to_employment_duties"
+ },
+ {
+  "check_id": 247,
+  "idx": 98,
+  "id": "WOR-9",
+  "slot": "is_sole_proprietor"
+ },
+ {
+  "check_id": 248,
+  "idx": 98,
+  "id": "WOR-9",
+  "slot": "has_employees_other_than_owner"
+ },
+ {
+  "check_id": 249,
+  "idx": 98,
+  "id": "WOR-9",
+  "slot": "fails_to_carry_required_wc_insurance"
+ },
+ {
+  "check_id": 250,
+  "idx": 99,
+  "id": "WOR-10",
+  "slot": "is_medical_treatment_for_compensable_injury"
+ },
+ {
+  "check_id": 251,
+  "idx": 99,
+  "id": "WOR-10",
+  "slot": "is_emergency_treatment_to_prevent_death_or_serious_impairment"
+ },
+ {
+  "check_id": 252,
+  "idx": 99,
+  "id": "WOR-10",
+  "slot": "pre_authorized"
+ }
+]

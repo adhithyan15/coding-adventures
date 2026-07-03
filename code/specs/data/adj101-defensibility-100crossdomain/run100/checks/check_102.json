@@ -1,0 +1,8 @@
+{
+ "check_id": 102,
+ "idx": 43,
+ "slot": "cause_of_death",
+ "claimed_value": "suicide",
+ "scenario": "An insured died by suicide. The claim file confirms the cause of death and that the policy was active and premiums fully paid at the time of death.",
+ "cited_span": "An insured died by suicide."
+}

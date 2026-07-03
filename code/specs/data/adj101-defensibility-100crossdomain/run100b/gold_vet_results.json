@@ -1,0 +1,602 @@
+[
+ {
+  "idx": 0,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes every dispositive fact: closed HMO, no OON benefits, OON provider, $220 charge, and explicitly not an emergency (negating the only exception). Full $220 owed. Gold is correct."
+ },
+ {
+  "idx": 1,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Age (52), age band (45-75), and covered-screening status are all explicitly stated. 52 is within band, so policy yields 100% paid / $0 owed. No dispositive fact is missing."
+ },
+ {
+  "idx": 2,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario explicitly establishes the only dispositive fact: 19 days elapsed between service and submission, well under the 90-day threshold. Claim is within window, so not denied. Gold is correct."
+ },
+ {
+  "idx": 3,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy branches on whether the $1,500 deductible is met. Scenario says only that Priya \"has had several other medical visits,\" which does not establish accrued spend reaching $1,500. Dispositive deductible status is genuinely withheld."
+ },
+ {
+  "idx": 4,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "The cost-sharing level turns on whether a non-emergency determination is made; scenario says the claim is still \"being adjudicated for the correct level\" and never states the outcome, so the dispositive fact is genuinely withheld."
+ },
+ {
+  "idx": 5,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy keys the tier on which version was dispensed; scenario states both versions are available and the claim processed, but never says generic or brand was actually dispensed. The dispositive fact is genuinely withheld."
+ },
+ {
+  "idx": 6,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all dispositive facts: reconstruction follows a mastectomy, performed in-network, $300 standard cost-share. The policy's explicit carve-out overrides the cosmetic exclusion, so Anita owes only $300. Gold is correct."
+ },
+ {
+  "idx": 7,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all dispositive facts: documented bona fide emergency, surgery rendered during it, and otherwise covered. Emergency exemption applies, so the claim must be paid. Gold DETERMINATE/\"must be paid\" is correct."
+ },
+ {
+  "idx": 8,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All three exception conditions are explicitly established: same hospital (Mercy), same condition (pneumonia), and 16 days after discharge (within 30). Exception applies, so copay is $0. Gold correct."
+ },
+ {
+  "idx": 9,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes the exception's dispositive facts: a formal appeal of the charge was filed through the plan's appeals process and is still pending. Thus no interest accrues regardless of the 60-day lapse. Gold is correct."
+ },
+ {
+  "idx": 10,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario enumerates all pollutants (62/31/18 tpy) and closes the set (\"no other regulated pollutants emitted\"). Every PTE is below 100 tpy, so the policy's not-required branch applies. Nothing dispositive is left to assumption."
+ },
+ {
+  "idx": 11,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes NOI filed Mar 1, discharge began Mar 12 — only 11 days, short of the required 30-day waiting period. The dispositive gap is computable from the dates; discharge is unpermitted."
+ },
+ {
+  "idx": 12,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy's sole criterion is loss not exceeding 0.5 acre. Scenario establishes 0.34 acre fill and no other waters affected, so the dispositive fact is fully given. 0.34 < 0.5 yields qualifies. Determinate is correct."
+ },
+ {
+  "idx": 13,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Parcel is 0.7 acre, so CGP turns on the common-plan exception. Scenario only says the tract was \"historically marketed under one brand name\" — not that it is a common plan totaling 1+ acres of disturbance. Dispositive fact genuinely withheld."
+ },
+ {
+  "idx": 14,
+  "gold_ok": false,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy defines LQG solely as generating >=1,000 kg/month; scenario states 1,240 kg generated in March. Policy doesn't exclude recycled/reclaimed volume, so the recycling note is a non-dispositive distractor. The threshold fact is established."
+ },
+ {
+  "idx": 15,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy needs the applicable threshold, set by the area's specific ozone classification. Scenario gives only a range (100 down to 10 tpy) and never states which class applies. PTE of 85 tpy straddles it: non-major if Marginal, major if more severe. Dispositive fact genuinely withheld."
+ },
+ {
+  "idx": 16,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All dispositive facts established: TMDL issued, WLA = 4 mg/L supersedes the 8 mg/L permit limit, and discharge is 7 mg/L. 7 > 4, so clearly not in compliance. No missing facts."
+ },
+ {
+  "idx": 17,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes both dispositive facts: methylene chloride is a HAP and emissions increase by 0.3 tpy (a positive amount). Override fires regardless of triviality; administrative amendment unavailable. Gold correct."
+ },
+ {
+  "idx": 18,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy as written exempts normal farming/ranching that is established and ongoing. Scenario explicitly establishes all three: routine annual plowing, established continuously-operated ranch, 15-year ongoing operation. No recapture clause in the given policy, so nothing dispositive is withheld. Exempt holds."
+ },
+ {
+  "idx": 19,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy keys exclusion solely on capacity ≤110 gal. Scenario establishes 95-gal max capacity, the one dispositive fact. Waste-oil type is irrelevant under this policy. Exclusion applies; correctly DETERMINATE."
+ },
+ {
+  "idx": 20,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both dispositive facts are explicit: confirmed defect in workmanship, and claim filed Aug 15 2025 vs purchase Mar 1 2025 (~5.5 months, well within 12). Covered. Gold is correct."
+ },
+ {
+  "idx": 21,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All three policy conditions are established: defective (store confirmed), within 30 days (June 1 to June 12 = 11 days), and original receipt present. Full refund follows."
+ },
+ {
+  "idx": 22,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Failure is mechanical (covered), parts+labor covered, no cosmetic damage, one repair visit, $75 deductible. Only out-of-pocket is the deductible. All dispositive facts established; $75 is correct."
+ },
+ {
+  "idx": 23,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy needs registration completed within 90 days. Scenario only says Tom \"recalls\" mailing the card \"shortly after\" — no confirmed registration date or manufacturer receipt. The dispositive fact is withheld, so INDETERMINATE is correct."
+ },
+ {
+  "idx": 24,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy turns on used vs. unused condition. Scenario shows return with packaging/card/receipt 3 days later, deciding \"not for her\" — but never states whether she actually used the headphones. The dispositive fact is genuinely withheld."
+ },
+ {
+  "idx": 25,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Defect is timely and confirmed, but the void condition—whether an unauthorized shop ever serviced it—is never stated. \"Took good care\" and \"works otherwise\" don't establish service history. Dispositive fact genuinely withheld."
+ },
+ {
+  "idx": 26,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy override needs IP67 certification and water damage during submersion up to 1m in normal use. Scenario establishes all three: IP67 certified, 0.5m depth (within 1m), water ingress, normal use. Override applies; covered is correct."
+ },
+ {
+  "idx": 27,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all dispositive facts: sold in Greenfield (triggering the 3-year override), 20 months elapsed, confirmed manufacturing defect. 20 months < 36 months, so the claim is within the applicable period. Determinate and \"within\" is correct."
+ },
+ {
+  "idx": 28,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Exception conditions all established: accidental screen crack (drop cracking screen), within first 6 months (2 months), first/one-time (first device damage ever). Exception applies, so covered. DETERMINATE is correct."
+ },
+ {
+  "idx": 29,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy's exception needs capacity below 80% within first year. Scenario establishes both: 72% (below 80%) at 8 months (within year), confirmed by diagnostic tool. Both dispositive facts present; battery is a covered defect, so \"covered\" is correct."
+ },
+ {
+  "idx": 30,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both dispositive facts are established: held nine months (≥6 mo) and issuer \"filed all required periodic reports on time\" satisfies current public information. Volume limits stipulated not at issue. Sale is permitted."
+ },
+ {
+  "idx": 31,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All dispositive facts are established: Reyes is a director (insider), bought then sold 1,000 shares (matched purchase/sale of equity), March 1 to June 15 is under six months, and $52 > $40 is a realized profit. Nothing only assumable."
+ },
+ {
+  "idx": 32,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes both dispositive facts: no general solicitation, and 40 non-accredited investors (>35 cap). Violation of the second condition makes the offering not qualify per the policy's explicit rule. Fully determinate."
+ },
+ {
+  "idx": 33,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Element 1 (trading on MNPI) is established, but the duty element is not affirmatively settled by the bytes. The scenario gives indicators (no relationship, overheard strangers) but does not establish whether a duty of trust/confidence existed."
+ },
+ {
+  "idx": 34,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Cap is the greatest of three thresholds. $1M and 15% of $20M assets ($3M) are below the $4.2M grant, but 15% of outstanding securities of the class is unstated and could exceed $4.2M. Dispositive fact withheld."
+ },
+ {
+  "idx": 35,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy needs two facts: 4+ day trades in 5 days (met: 5 trades) AND day trades >6% of total trades. Total trades in the account is never stated, so the 6% test cannot be evaluated. Genuinely indeterminate; gold correct."
+ },
+ {
+  "idx": 36,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all dispositive facts: insider tip, MNPI, trading, and exhaustively that Sam received no personal benefit of any kind. The override fires deterministically — tippee not liable. Nothing dispositive is merely assumable."
+ },
+ {
+  "idx": 37,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All override conditions are explicitly stated: qualified institutional investor, ordinary course, and no control purpose. With 7% (>5%), the override applies, so Beacon is not required to file 13D. No dispositive fact is missing."
+ },
+ {
+  "idx": 38,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All three exception conditions are explicitly established: regularly scheduled call, previously announced, earnings press release already furnished, and the call is the sole disclosure. Policy directly negates the four-day filing duty: not required. No missing fact."
+ },
+ {
+  "idx": 39,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both dispositive facts are explicit: shares bought in a qualified Reg A Tier 2 offering, and Priya is and always was a non-affiliate. The exception applies cleanly, so the shares are not restricted. Determinate is correct."
+ },
+ {
+  "idx": 40,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both dispositive facts are explicitly established: rice at 122F (below 135F) and continuous time-stamp recorder plus logs confirm 5h10m out of temp (>4 cumulative hours). Policy's discard condition is fully met; nothing is merely assumable."
+ },
+ {
+  "idx": 41,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes Norovirus diagnosis, resolution time (Mon 8AM), and elapsed 25 hours. 25 < 48-hour threshold, so policy clearly bars return. All dispositive facts present; DETERMINATE is correct."
+ },
+ {
+  "idx": 42,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes probe reads 74°F, exceeding the 70°F threshold. Policy rule 2 mandates immediate discard for any food exceeding 70°F regardless of elapsed time. Dispositive fact is established; verdict correctly DETERMINATE."
+ },
+ {
+  "idx": 43,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "First window (135→70 in 1h45m) is satisfied. But the second window depends on elapsed time from 70°F to 41°F, and \"at the next check\" gives no duration. That dispositive fact is withheld, so INDETERMINATE is correct."
+ },
+ {
+  "idx": 44,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Violation triggers on selling from an UNtagged container. Scenario shows a corresponding tag in the file now, but never states the container was tagged at time of sale — the dispositive fact is only inferable, not established."
+ },
+ {
+  "idx": 45,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy needs a CFPM present during ALL operating hours (11AM-10PM). Scenario only shows Marco holds a CFPM cert and is manager on record, plus open at 3PM. It never establishes CFPM presence throughout all hours. Dispositive fact withheld."
+ },
+ {
+  "idx": 46,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All dates given: prep Day 0, freeze Day 3 (before 7d), thaw Day 23, check Day 24. Suspension applies; accrued refrigerated count = ~3 + 1 = 4 days < 7. Robust to off-by-one. Need not discard. Gold correct."
+ },
+ {
+  "idx": 47,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Exception facts all established: bare-hand contact (shaping by hand), subsequent cooking to 160F (explicit) before serving. 160>=145 is derivable arithmetic. Exception satisfied, so no violation. Gold correct."
+ },
+ {
+  "idx": 48,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All exception conditions are explicitly established: whole-muscle intact beef steak, 145°F, at customer request, consumer advisory posted. Policy clearly permits this, so it complies. Nothing dispositive is left assumable."
+ },
+ {
+  "idx": 49,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All exception conditions are explicitly established: gloves worn during raw chicken handling, removed/discarded, and hands confirmed visibly clean and dry. The deferral exception applies, so the cook did not violate. No dispositive fact is missing."
+ },
+ {
+  "idx": 50,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Keys returned March 1; refund postmarked April 5 = 35 days, exceeding the 21-day deadline under any reading (mailing or receipt is already late). Policy triggers forfeiture; full deposit owed. All dispositive facts established."
+ },
+ {
+  "idx": 51,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Notice June 20 for June 30 move-out is only 10 days—fewer than 30. Policy then makes tenant owe rent for remainder of 30-day period (to ~July 20). All facts (notice date, June paid) established; gold DETERMINATE/\"owes rent\" correct."
+ },
+ {
+  "idx": 52,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both dispositive facts are established: landlord sent no notice, and the slow non-urgent drip is explicitly not an emergency. Policy maps no-notice + no-emergency directly to unlawful. Nothing is left to assumption."
+ },
+ {
+  "idx": 53,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Two conditions met (8 days late >5; $40 ≤$50). But \"written, signed lease\" does not establish the lease expressly authorizes a late fee—the third dispositive condition is withheld. Correctly INDETERMINATE."
+ },
+ {
+  "idx": 54,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy hinges on whether landlord's re-rental efforts were \"reasonable.\" Scenario shows one listing the next day, but a single listing doesn't conclusively establish the reasonableness standard; the dispositive fact stays genuinely unsettled. Gold INDETERMINATE is correct."
+ },
+ {
+  "idx": 55,
+  "gold_ok": false,
+  "corrected_verdict": "DETERMINATE",
+  "why": "\"Landlord first learned of the problem\" establishes notice; 40h to repair exceeds the 24h winter-heating deadline under any reading, since notice cannot precede learning. The \"notice timing unknown\" theory is a strained distinction; breach is dispositive."
+ },
+ {
+  "idx": 56,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All dispositive facts are established: good-faith habitability complaint filed with a housing authority March 3, non-renewal May 10 (within 6 months). Policy's bright-line rule makes landlord's stated reason irrelevant; non-renewal is unlawful retaliation."
+ },
+ {
+  "idx": 57,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario explicitly establishes the dispositive fact: inspector found the cause was the building's main roof leak the landlord neglected to maintain—a structural/system failure triggering the exception. Landlord bears cost. Gold correct."
+ },
+ {
+  "idx": 58,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All three exception facts are explicitly established: rent withheld, unit legally declared uninhabitable during those exact months, and withholding done through the lawful procedure. Policy bars applying deposit. Nothing dispositive is left to assumption."
+ },
+ {
+  "idx": 59,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes every dispositive fact for the exception: verified assistance animal, documented disability, required verification given to landlord, eviction sought solely for the dog. Exception applies; landlord may not evict. Gold correct."
+ },
+ {
+  "idx": 60,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both dispositive facts are explicit: 34 total hours satisfies the 30-hour rule, and 3 ethics hours satisfies the 2-hour ethics minimum. Requirement met; nothing missing or assumed."
+ },
+ {
+  "idx": 61,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy gives $90 base + $25 per additional discipline beyond first. Scenario states three disciplines (2 additional). $90 + 2×$25 = $140. All dispositive facts established; no missing fact."
+ },
+ {
+  "idx": 62,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "14 + 11 = 25 cumulative months, both periods (2022, 2024) fall within the preceding five years of a 2026 application. 25 >= 24 threshold. All facts established; DETERMINATE/meets is correct."
+ },
+ {
+  "idx": 63,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy hinges on lapse duration (under vs 12+ months). Scenario says license expired and was never renewed but never states how long ago, so the dispositive fact is genuinely withheld. INDETERMINATE is correct."
+ },
+ {
+  "idx": 64,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy hinges on whether the home jurisdiction grants reciprocal admission to this state's attorneys. Scenario gives licensure, good standing, and tenure but never states the home jurisdiction's reciprocity stance — the dispositive fact is withheld."
+ },
+ {
+  "idx": 65,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy only counts hours at a board-approved site. Scenario gives 1,740 supervised hours but never states the site's approval status — the dispositive fact is withheld, so the requirement can't be confirmed. INDETERMINATE is correct."
+ },
+ {
+  "idx": 66,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes the felony was \"formally expunged by court order in 2020,\" directly satisfying the override's expungement condition. Policy then mandates it not be treated as disqualifying. No dispositive fact missing; not disqualified."
+ },
+ {
+  "idx": 67,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all override facts: current valid barber license, from a state with a standing examination-reciprocity agreement, applying for initial license. Override fires; applicant is exempt. Nothing dispositive is missing."
+ },
+ {
+  "idx": 68,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes both dispositive facts: contractor licensed solely under handyman classification (triggering the exemption) and carries no insurance. Exemption applies cleanly, so \"not in violation\" is correctly determinate."
+ },
+ {
+  "idx": 69,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes licensee is \"currently on inactive status\" and not reactivated. Policy exception suspends the 30-day deadline for inactive licensees until reactivation, so the 60-day delay yields no violation. All dispositive facts present."
+ },
+ {
+  "idx": 70,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All inputs are explicit: price $40,000 + freight $3,000 + insurance $1,000 = $44,000 customs value; 5% = $2,200. Matches gold answer. No fact missing or assumable."
+ },
+ {
+  "idx": 71,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Arrival March 3, no clearance filed, still uncleared March 22 — 19 days, past the 15-day deadline under any inclusive/exclusive count. All dispositive facts established; goods deemed abandoned."
+ },
+ {
+  "idx": 72,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All dispositive facts are established: value $50,000, wrong rate 3%, correct rate 7%. Underpaid duty = 4% x $50,000 = $2,000; penalty = 200% = $4,000. Fully derivable, no missing fact."
+ },
+ {
+  "idx": 73,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy requires a valid Certificate of Origin presented at entry for the 0% rate. Scenario establishes FTA origin and qualification but never states whether a Certificate was presented—the dispositive fact is withheld. Correctly INDETERMINATE."
+ },
+ {
+  "idx": 74,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Outcome hinges on trip duration: ≥48hrs gives $800 exemption (covers $650), <48hrs gives $200 (does not). Scenario never states duration; \"boarding passes/itinerary in bag\" only hints, never establishes it. Withheld dispositive fact."
+ },
+ {
+  "idx": 75,
+  "gold_ok": false,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Bonded-warehouse storage throughout the intervening period establishes no domestic use (goods in bond cannot enter domestic commerce). With timing within 3 years and identical condition met, the only dispositive fact is established; not indeterminate."
+ },
+ {
+  "idx": 76,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes both dispositive facts: imported steel rebar, and that Veksian rebar is covered by an active anti-dumping order from the named exporting country (Veksia). Exception applies, yielding 25%. Nothing missing."
+ },
+ {
+  "idx": 77,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes the parcel contains a controlled pharmaceutical substance. The policy's override clause requires formal entry by a licensed broker for such substances regardless of value, so the $400 value is immaterial. All dispositive facts present; answer is No."
+ },
+ {
+  "idx": 78,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Exception's dispositive facts both established: shipment consigned to a quarantine facility AND that facility holds a current government license. Exception applies, release without certificate permitted. DETERMINATE correct."
+ },
+ {
+  "idx": 79,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All exception conditions are explicitly established: documented nationwide outage all day on the due date (June 2) preventing payments, and full payment on June 3, stated as the next business day. Policy maps cleanly to no surcharge."
+ },
+ {
+  "idx": 80,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "All dispositive facts are established: awareness (Mon 09:00), notification (Thu 16:00 = ~79h), and that unencrypted account numbers trigger the risk so the 72h duty applies. 79h > 72h, so \"no\" is correct."
+ },
+ {
+  "idx": 81,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes both dispositive facts: data no longer necessary (purpose ended, address serves no remaining purpose) triggering the right, and timing—request March 1, deleted March 20 (19 days, within 30). Compliance is fully derivable; gold \"yes\" correct."
+ },
+ {
+  "idx": 82,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all dispositive facts: health data (special-category), an explicit-consent checkbox naming a specified purpose (\"generate my health reports\"), and Priya's active affirmative tick. Policy's conditions are all satisfied; processing is permitted. Gold correct."
+ },
+ {
+  "idx": 83,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy hinges on whether DriftMedia received monetary/valuable consideration. Scenario gives a data-processing agreement and AdLoom's use (segments) but never states what, if anything, DriftMedia received. Dispositive fact genuinely withheld; not derivable."
+ },
+ {
+  "idx": 84,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Notice (14 days) and no objection are established, but the dispositive fact—whether the signed DPA actually contained a general written authorization permitting sub-processors—is never stated. Notice/no-objection only matters if that authorization exists. Correctly INDETERMINATE."
+ },
+ {
+  "idx": 85,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy permits continued retention only if it rests on a separate independent lawful basis. The scenario only says Lendwise retains records \"for all closed accounts\" — a practice, not an established legal obligation. The dispositive basis is withheld, so INDETERMINATE is correct."
+ },
+ {
+  "idx": 86,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Policy permits refusal for excessive/repetitive requests. Scenario establishes identical daily requests for three weeks, first already fully answered, data unchanged—squarely the named \"repetitive character\" ground. Refusal permitted; \"yes\" is established."
+ },
+ {
+  "idx": 87,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both exception prongs are established: processing is solely for security (sole purpose of detecting/blocking account hijacking) and limited to what's necessary (retaining only what's needed). Hijacking detection is plainly service security, so no consent required; \"no\" follows."
+ },
+ {
+  "idx": 88,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes every fact the consent exception needs: explicit consent, prior notice of risks from absence of safeguards, and that it was this specific transfer. No SCCs, but the exception applies, so \"yes, permitted\" is fully grounded."
+ },
+ {
+  "idx": 89,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Both exemption facts are explicitly established: she is a sole practitioner physician (single-doctor clinic) and processes records solely to treat her own patients. She falls squarely in the exemption, so \"no\" violation is determinate."
+ },
+ {
+  "idx": 90,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes the regular workplace, that this was a normal home-to-office commute on her usual route, and explicitly rules out exceptions (no work errand, no equipment). Policy directly yields not compensable. No dispositive fact missing."
+ },
+ {
+  "idx": 91,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes compensable injury, temporary total disability, AWW $2,400, and two-thirds = $1,600. Since $1,600 exceeds the $1,200 statutory max, policy dictates $1,200. All dispositive facts present."
+ },
+ {
+  "idx": 92,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes occurrence (Mar 1), report date (Apr 20), and the 50-day gap, exceeding the 30-day limit. All dispositive facts present; injury is barred. Gold correct."
+ },
+ {
+  "idx": 93,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy requires intoxication be the proximate cause for non-compensability. Scenario establishes intoxication (BAC 0.09%) but withholds proximate causation; injury was from a forklift, driver conduct under separate review. Dispositive fact unestablished."
+ },
+ {
+  "idx": 94,
+  "gold_ok": true,
+  "corrected_verdict": "INDETERMINATE",
+  "why": "Policy terminates benefits only on remarriage. Scenario shows cohabitation and a social-media name change, neither of which legally establishes remarriage. The dispositive fact (actual remarriage) is genuinely withheld, so INDETERMINATE is correct."
+ },
+ {
+  "idx": 95,
+  "gold_ok": false,
+  "corrected_verdict": "DETERMINATE",
+  "why": "FineCoat is the most recent employer with daily, routine silica exposure for the last 3 years. With no later employer, the last injurious exposure necessarily occurred at FineCoat. Both policy facts are established; not withheld."
+ },
+ {
+  "idx": 96,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Recreational injury triggers general rule; override requires express employer requirement of attendance. Manager's email expressly makes attendance mandatory for all sales staff, and Tomas is sales staff. All dispositive facts established; override fires; compensable."
+ },
+ {
+  "idx": 97,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all dispositive facts: third-party assault directed at Nadia because of her employment duty — robber demanded the register cash she was counting, matching the override exemplar verbatim. Override applies, benefits payable."
+ },
+ {
+  "idx": 98,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes Raj is a sole proprietor with no employees, working alone — exactly the exception's dispositive facts. Exception triggers: no coverage required, no penalty. Owner's injury is irrelevant. Gold DETERMINATE/\"no penalty applies\" is correct."
+ },
+ {
+  "idx": 99,
+  "gold_ok": true,
+  "corrected_verdict": "DETERMINATE",
+  "why": "Scenario establishes all exception facts: job-site beam injury (compensable), emergency surgery to stop life-threatening blood loss and save the limb (prevents death/serious impairment). Exception waives pre-auth and mandates reimbursement. DETERMINATE is correct."
+ }
+]

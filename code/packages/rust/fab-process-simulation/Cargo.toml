@@ -1,0 +1,7 @@
+[package]
+name = "fab-process-simulation"
+version = "0.1.0"
+edition = "2021"
+description = "1-D analytical CMOS process flow simulator: Deal-Grove oxidation, implant, diffusion, deposition, etch"
+
+[dependencies]

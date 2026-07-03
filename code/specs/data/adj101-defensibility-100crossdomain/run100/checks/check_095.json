@@ -1,0 +1,8 @@
+{
+ "check_id": 95,
+ "idx": 41,
+ "slot": "government_travel_advisory",
+ "claimed_value": false,
+ "scenario": "A traveler cancelled a booked trip because she found a cheaper flight to the same destination on a different airline and wanted to rebook. She submitted a claim for the original non-refundable booking.",
+ "cited_span": "cancelled a booked trip because she found a cheaper flight"
+}

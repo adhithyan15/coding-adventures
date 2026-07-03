@@ -42,7 +42,7 @@
 //! twigc src/main.tw
 //!
 //! # Fixed-point self-check (TW05 definition of done):
-//! twigc --self-check code/twig/compiler
+//! twigc --self-check code/packages/twig/compiler
 //!
 //! # Multi-module with explicit search path:
 //! twigc --search-path=stdlib src/main.tw

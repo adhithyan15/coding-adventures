@@ -1,0 +1,7 @@
+{
+ "idx": 89,
+ "id": "CON-10",
+ "scenario": "Qualifying downtime occurred in August. The provider never published the required August uptime report. The customer requested the credit on October 15, 76 days after the end of August.",
+ "policy": "A customer who misses the 30-day window to request a service credit forfeits that credit, except that the window is tolled (paused) for any period during which the provider has failed to deliver the monthly uptime report that the contract requires it to publish within 5 days of month-end.",
+ "question": "Is the customer's credit request timely?"
+}

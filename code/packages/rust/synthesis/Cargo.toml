@@ -1,0 +1,9 @@
+[package]
+name = "synthesis"
+version = "0.1.0"
+edition = "2021"
+description = "HIR → HNL synthesis: operator lowering, adder decomposition, width inference"
+
+[dependencies]
+hdl-ir = { path = "../hdl-ir" }
+gate-netlist-format = { path = "../gate-netlist-format" }

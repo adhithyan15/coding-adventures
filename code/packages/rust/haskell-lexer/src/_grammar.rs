@@ -320,6 +320,8 @@ mod v_1_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -614,6 +616,8 @@ mod v_1_1 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -908,6 +912,8 @@ mod v_1_2 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1202,6 +1208,8 @@ mod v_1_3 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1496,6 +1504,8 @@ mod v_1_4 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1790,6 +1800,8 @@ mod v_98 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2084,6 +2096,8 @@ mod v_2010 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![r#"let"#.to_string(), r#"where"#.to_string(), r#"do"#.to_string(), r#"of"#.to_string()],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }

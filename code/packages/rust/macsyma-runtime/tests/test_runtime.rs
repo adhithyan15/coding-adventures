@@ -6,7 +6,7 @@ use coding_adventures_macsyma_runtime::{
 use std::collections::HashMap;
 use symbolic_ir::{
     apply, int, rat, sym, ADD, AND, ASIN, COS, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
-    LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SUB,
+    LESS_EQUAL, LIST, LOG, MUL, NEG, POW, RULE, SIN, SQRT, SUB,
 };
 
 const SUBST: &str = "Subst";
@@ -71,6 +71,19 @@ fn parses_and_renders_question_mark_help() {
     assert!(results[0].output_text.contains("solve(expr, var)"));
     assert!(matches!(results[0].input, symbolic_ir::IRNode::Str(_)));
     assert!(matches!(results[0].output, symbolic_ir::IRNode::Str(_)));
+}
+
+#[test]
+fn canonicalizes_ode2_surface_name_to_ode2_head() {
+    let table = macsyma_name_table();
+    assert_eq!(table.get("ode2").map(String::as_str), Some("ODE2"));
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("ode2(foo, y, x);").unwrap();
+    let expected = apply(sym("ODE2"), vec![sym("foo"), sym("y"), sym("x")]);
+
+    assert_eq!(results[0].input, expected);
+    assert_eq!(results[0].output, expected);
 }
 
 #[test]
@@ -448,9 +461,7 @@ fn recognizes_complete_elliptic_third_kind_integrals_through_runtime() {
     // ∫₀^(π/2) 1/((1 + n*sin(theta)^2) * sqrt(1 - k^2*sin(theta)^2)) dtheta  →  EllipticPi(n, k)
     let mut session = MacsymaSession::new();
     let results = session
-        .eval_source(
-            "integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);",
-        )
+        .eval_source("integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);")
         .unwrap();
 
     assert_eq!(
@@ -609,6 +620,26 @@ fn exports_and_extends_runtime_name_table_idempotently() {
         Some(PROPERTIES)
     );
     assert_eq!(table.get("propvars").map(String::as_str), Some(PROP_VARS));
+    assert_eq!(
+        table.get("eigenvalues").map(String::as_str),
+        Some("Eigenvalues")
+    );
+    assert_eq!(
+        table.get("eigenvectors").map(String::as_str),
+        Some("Eigenvectors")
+    );
+    assert_eq!(table.get("charpoly").map(String::as_str), Some("CharPoly"));
+    assert_eq!(
+        table.get("nullspace").map(String::as_str),
+        Some("NullSpace")
+    );
+    assert_eq!(
+        table.get("columnspace").map(String::as_str),
+        Some("ColumnSpace")
+    );
+    assert_eq!(table.get("rowspace").map(String::as_str), Some("RowSpace"));
+    assert_eq!(table.get("norm").map(String::as_str), Some("Norm"));
+    assert_eq!(table.get("lu").map(String::as_str), Some("LU"));
 
     let mut target = HashMap::from([("custom".to_string(), "CustomHead".to_string())]);
     extend_macsyma_name_table(&mut target);
@@ -671,6 +702,59 @@ fn declare_feeds_properties_into_is_queries() {
     );
     assert_eq!(results[0].output, sym("done"));
     assert_eq!(results[1].output, sym("True"));
+}
+
+#[test]
+fn nonnegative_session_assumptions_feed_radcan() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x >= 0); radcan(sqrt(x^2));")
+        .unwrap();
+
+    assert_eq!(
+        results[1].input,
+        apply(
+            sym("Radcan"),
+            vec![apply(
+                sym(SQRT),
+                vec![apply(sym(POW), vec![sym("x"), int(2)])]
+            )]
+        )
+    );
+    assert_eq!(results[1].output, sym("x"));
+}
+
+#[test]
+fn declared_positivity_feeds_radcan() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(y, positive); radcan(sqrt(y^2));")
+        .unwrap();
+
+    assert_eq!(results[1].output, sym("y"));
+}
+
+#[test]
+fn assumptions_feed_elementary_abs_sqrt_log_simplification() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x >= 0); sqrt(x^2); log(x^3); abs(x);")
+        .unwrap();
+
+    assert_eq!(results[1].output, sym("x"));
+    assert_eq!(
+        results[2].output,
+        apply(sym(MUL), vec![int(3), apply(sym(LOG), vec![sym("x")])])
+    );
+    assert_eq!(results[3].output, sym("x"));
+}
+
+#[test]
+fn negative_assumptions_feed_abs() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("assume(y < 0); abs(y);").unwrap();
+
+    assert_eq!(results[1].output, apply(sym(NEG), vec![sym("y")]));
 }
 
 #[test]

@@ -1,0 +1,359 @@
+{
+ "summary": {
+  "framework_arm": {
+   "interpretation_paid": "ONCE (byte-verified rule); answer-time model calls = 0",
+   "override_correct": "7/7 + control (see recurrence_results_hard.json)"
+  },
+  "prose_arm_by_model": {
+   "qwen2.5:0.5b": {
+    "override_cases_M": 7,
+    "override_misses": [
+     "OV-1",
+     "OV-2",
+     "OV-5",
+     "OV-6"
+    ],
+    "override_miss_rate": 0.571,
+    "override_correct": "3/7",
+    "control_HO-2_ok": false
+   },
+   "qwen2.5:1.5b": {
+    "override_cases_M": 7,
+    "override_misses": [
+     "OV-1",
+     "OV-2",
+     "OV-3",
+     "OV-4",
+     "OV-5",
+     "OV-6",
+     "HO-1"
+    ],
+    "override_miss_rate": 1.0,
+    "override_correct": "0/7",
+    "control_HO-2_ok": true
+   },
+   "qwen2.5:3b": {
+    "override_cases_M": 7,
+    "override_misses": [],
+    "override_miss_rate": 0.0,
+    "override_correct": "7/7",
+    "control_HO-2_ok": true
+   },
+   "llama3.1:8b": {
+    "override_cases_M": 7,
+    "override_misses": [],
+    "override_miss_rate": 0.0,
+    "override_correct": "7/7",
+    "control_HO-2_ok": true
+   }
+  },
+  "finding": "recurring error appears as model capability drops: a small model misses the buried override and re-misses it on every case (stateless), so the prose miss-rate persists and the cost recurs over the same fact; the framework derived the override once and is 0-error on all cases at 0 answer-time model calls."
+ },
+ "by_model": {
+  "qwen2.5:0.5b": {
+   "override_cases_M": 7,
+   "override_misses": [
+    "OV-1",
+    "OV-2",
+    "OV-5",
+    "OV-6"
+   ],
+   "override_miss_rate": 0.571,
+   "override_correct": "3/7",
+   "control_HO-2_ok": false,
+   "rows": [
+    {
+     "id": "OV-1",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED"
+    },
+    {
+     "id": "OV-2",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED"
+    },
+    {
+     "id": "OV-3",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED"
+    },
+    {
+     "id": "OV-4",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED"
+    },
+    {
+     "id": "OV-5",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED"
+    },
+    {
+     "id": "OV-6",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED"
+    },
+    {
+     "id": "HO-1",
+     "kind": "held_out_override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED"
+    },
+    {
+     "id": "HO-2",
+     "kind": "control_not_owned",
+     "gold": "ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": false,
+     "raw": "NOT_ENTITLED"
+    }
+   ]
+  },
+  "qwen2.5:1.5b": {
+   "override_cases_M": 7,
+   "override_misses": [
+    "OV-1",
+    "OV-2",
+    "OV-3",
+    "OV-4",
+    "OV-5",
+    "OV-6",
+    "HO-1"
+   ],
+   "override_miss_rate": 1.0,
+   "override_correct": "0/7",
+   "control_HO-2_ok": true,
+   "rows": [
+    {
+     "id": "OV-1",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nDana is eligible for the relocation bonus because she relocated her primary residence more than 50 miles closer to her assigned work site (120 miles), and this move occurred within 180 days "
+    },
+    {
+     "id": "OV-2",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nMarcus is eligible for the relocation bonus because he relocated more than 50 miles closer to his assigned work site (75 miles) and completed the move within 180 days after starting the role"
+    },
+    {
+     "id": "OV-3",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nPriya qualifies for the relocation bonus because she relocated her primary residence more than 50 miles closer to her assigned work site within 180 days of the role's start date. The self-ow"
+    },
+    {
+     "id": "OV-4",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nLou is eligible for the relocation bonus because he moved 95 miles closer to his assigned work site, which exceeds the threshold of more than 50 miles as specified in Part VII, Section 1. Ad"
+    },
+    {
+     "id": "OV-5",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nYes, Aisha is entitled to the relocation bonus because she relocated her primary residence 140 miles closer to her new work site, which exceeds the 50-mile threshold specified in the eligibi"
+    },
+    {
+     "id": "OV-6",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nBen is eligible for the relocation bonus because his primary residence moved 60 miles closer than the minimum required (50 miles), and he owns the new residence. The self-owned-destination e"
+    },
+    {
+     "id": "HO-1",
+     "kind": "held_out_override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": false,
+     "raw": "ENTITLED\n\nSofia is eligible for the relocation bonus because she relocated her primary residence 80 miles closer to her assigned work site, which exceeds the threshold of more than 50 miles as specifi"
+    },
+    {
+     "id": "HO-2",
+     "kind": "control_not_owned",
+     "gold": "ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": true,
+     "raw": "ENTITLED\n\nTheo qualifies for the relocation bonus because he relocated his primary residence 90 miles closer to his assigned work site, which is more than 50 miles closer than required by the policy. "
+    }
+   ]
+  },
+  "qwen2.5:3b": {
+   "override_cases_M": 7,
+   "override_misses": [],
+   "override_miss_rate": 0.0,
+   "override_correct": "7/7",
+   "control_HO-2_ok": true,
+   "rows": [
+    {
+     "id": "OV-1",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\n\nThe self-owned-destination exclusion applies regardless of distance and takes precedence over the eligibility provisions above since Dana personally owned the destination residence (the "
+    },
+    {
+     "id": "OV-2",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\n\nThe destination residence is a property that Marcus (or their spouse) already owned at the time the role was offered, which triggers the self-owned-destination exclusion regardless of di"
+    },
+    {
+     "id": "OV-3",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\n\nThe self-owned-destination exclusion applies regardless of distance and takes precedence over the eligibility provisions above since Priya and her spouse already owned the destination re"
+    },
+    {
+     "id": "OV-4",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\n\nThe employee is not entitled to the relocation bonus because he moved more than 50 miles but did so by purchasing a property that he already owned at the time the role was offered, which"
+    },
+    {
+     "id": "OV-5",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\n\nThe self-owned-destination exclusion applies regardless of distance and takes precedence over the eligibility provisions above since Aisha's destination residence is a property she alrea"
+    },
+    {
+     "id": "OV-6",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "ENTITLED\n\nBen moved 60 miles closer to his assigned site and into a duplex that he owns, but since the destination residence is a property he already owned at the time the role was offered (self-owned"
+    },
+    {
+     "id": "HO-1",
+     "kind": "held_out_override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\n\nThe relocation destination (a property Sofia already owned) is excluded regardless of distance due to the self-owned-destination exclusion in policy 8."
+    },
+    {
+     "id": "HO-2",
+     "kind": "control_not_owned",
+     "gold": "ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": true,
+     "raw": "ENTITLED\n\nThe employee is entitled to the relocation bonus as he relocated more than 50 miles closer to his assigned work site and has submitted proof of the new primary residence (the lease). He also"
+    }
+   ]
+  },
+  "llama3.1:8b": {
+   "override_cases_M": 7,
+   "override_misses": [],
+   "override_miss_rate": 0.0,
+   "override_correct": "7/7",
+   "control_HO-2_ok": true,
+   "rows": [
+    {
+     "id": "OV-1",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nThe employee is not entitled to the relocation bonus because the destination residence is a property she (or her spouse) already owned at the time the role was offered, which triggers the"
+    },
+    {
+     "id": "OV-2",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nThe relocation bonus does not apply when the destination residence is a property the employee (or their spouse) already owned at the time the role was offered, which applies to Marcus's s"
+    },
+    {
+     "id": "OV-3",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nThe relocation bonus does not apply when the destination residence is a property the employee (or their spouse) already owned at the time the role was offered, which applies to Priya's si"
+    },
+    {
+     "id": "OV-4",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nThe employee is not entitled because the destination residence was a property he (or his spouse) already owned at the time the role was offered, which triggers the self-owned-destination "
+    },
+    {
+     "id": "OV-5",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nThe relocation bonus does not apply when the destination residence is a property the employee (or their spouse) already owned at the time the role was offered, which applies to Aisha's si"
+    },
+    {
+     "id": "OV-6",
+     "kind": "override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nThe employee is not entitled because the destination residence is a property he (or his spouse) already owned at the time the role was offered, which triggers the self-owned-destination e"
+    },
+    {
+     "id": "HO-1",
+     "kind": "held_out_override",
+     "gold": "NOT_ENTITLED",
+     "verdict": "NOT_ENTITLED",
+     "ok": true,
+     "raw": "NOT_ENTITLED\nSofia is not entitled to the relocation bonus because she moved into a property that she already owned at the time the role was offered, which triggers the self-owned-destination exclusio"
+    },
+    {
+     "id": "HO-2",
+     "kind": "control_not_owned",
+     "gold": "ENTITLED",
+     "verdict": "ENTITLED",
+     "ok": true,
+     "raw": "ENTITLED\nTheo is eligible for the relocation bonus because he relocated his primary residence more than 50 miles closer to his assigned work site and submitted proof of his new lease within 30 days of"
+    }
+   ]
+  }
+ }
+}

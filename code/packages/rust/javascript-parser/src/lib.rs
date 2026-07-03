@@ -27,6 +27,26 @@ use std::collections::HashMap;
 pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;
 
 mod _grammar;
+pub mod asi;
+pub mod bridge;
+
+/// Parse JavaScript source and return a fully typed [`Program`] AST
+/// (CLOC12.136 bridge).
+///
+/// Returns `Err` for:
+/// - Lexer / parser failures (malformed JavaScript).
+/// - Phase 2+ syntax not yet in the typed AST (async, generators, classes,
+///   for-in/of, try-catch, destructuring, template literals …).  Callers
+///   that handle this gracefully should match on
+///   [`bridge::BridgeError::UnsupportedSyntax`] and fall back to
+///   WHITESPACE_ONLY / identity output.
+pub fn parse_javascript_program(
+    source: &str,
+    version: EsVersion,
+) -> Result<coding_adventures_javascript_ast::Program, String> {
+    let node = parse_javascript_typed(source, version)?;
+    bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
+}
 
 fn validate_version(version: &str) -> Result<&str, String> {
     if _grammar::SUPPORTED_VERSIONS.contains(&version) {
@@ -75,10 +95,51 @@ pub fn parse_javascript_typed(
     source: &str,
     version: EsVersion,
 ) -> Result<GrammarASTNode, String> {
-    let mut parser = create_javascript_parser_typed(source, version)?;
-    parser
-        .parse()
-        .map_err(|e| format!("JavaScript parse failed: {e}"))
+    // Apply Phase-1 ASI: the parser requires explicit `SEMICOLON` terminals, so
+    // semicolon-light source (`{ a() }`, `return 1}`) would otherwise fail and
+    // closurec would degrade the whole program to WHITESPACE_ONLY. `parse_with_asi`
+    // only inserts a `;` before a `}`/EOF when parsing genuinely failed for lack
+    // of one, so it is a no-op on any input that already parses. See [`asi`].
+    let tokens = tokenize_javascript_typed(source, version)?;
+    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
+}
+
+/// CV-carrying twin of [`parse_javascript_typed`] (CLOC27 D3).
+///
+/// Routes through the correlation-vector tokenizer
+/// ([`tokenize_javascript_with_cv`]) so every token carries its own CvId
+/// (CLOC27 D2), then runs the identical Phase-1 ASI parse. The returned
+/// `GrammarASTNode` therefore holds tokens whose `cv` is `Some(..)`, and the
+/// bridge's leaf factory (`convert_primary_token`) stamps that id onto each
+/// leaf literal — giving the SIMPLE optimization path real per-token source
+/// provenance for its constant folds.
+///
+/// This is the entry the SIMPLE `--correlation_vector` path uses (CLOC27 D5);
+/// the plain [`parse_javascript_typed`] stays the zero-overhead default and is
+/// byte-identical to today on the non-CV path.
+///
+/// Unlike [`parse_javascript_with_cv`], this does *not* mint a program-root CV
+/// or append a "constructed" contribution: it is the typed-AST feeder for the
+/// optimizer, whose own passes (constant-fold) own the downstream CV records.
+pub fn parse_javascript_typed_with_cv(
+    source: &str,
+    source_file: &str,
+    version: EsVersion,
+    cv: &mut CVLog,
+) -> Result<GrammarASTNode, String> {
+    // Tokenize with CV plumbing, then stamp each token's CvId onto the token
+    // (CLOC27 D2) so it rides through the parser to the bridge unchanged.
+    let cv_tokens = tokenize_javascript_with_cv(source, source_file, version, cv)?;
+    let tokens: Vec<lexer::token::Token> = cv_tokens
+        .into_iter()
+        .map(|t| lexer::token::Token {
+            cv: Some(t.cv),
+            ..t.token
+        })
+        .collect();
+    // Identical Phase-1 ASI parse to `parse_javascript_typed` — only the token
+    // source differs (CV-stamped). See [`asi`].
+    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
 }
 
 /// A parsed program paired with the correlation-vector ID assigned to its
@@ -123,7 +184,19 @@ pub fn parse_javascript_with_cv(
     // 1. Tokenize with CV plumbing.
     let cv_tokens = tokenize_javascript_with_cv(source, source_file, version, cv)?;
     let token_cv_ids: Vec<String> = cv_tokens.iter().map(|t| t.cv.clone()).collect();
-    let tokens: Vec<lexer::token::Token> = cv_tokens.into_iter().map(|t| t.token).collect();
+    // CLOC27 D2: stamp each token's CvId onto the token itself instead of
+    // discarding it. The parser copies tokens into `GrammarASTNode` children
+    // unchanged, so the id rides through to the bridge's leaf factory
+    // (`convert_primary_token`), where it becomes the leaf literal's `cv`.
+    // Previously this stripped the id (`.map(|t| t.token)`), leaving every leaf
+    // with `cv: None` and dead-ending fold provenance at the bridge boundary.
+    let tokens: Vec<lexer::token::Token> = cv_tokens
+        .into_iter()
+        .map(|t| lexer::token::Token {
+            cv: Some(t.cv),
+            ..t.token
+        })
+        .collect();
 
     // 2. Parse via the existing GrammarParser.
     let grammar = _grammar::parser_grammar(version.as_str())
@@ -284,5 +357,125 @@ mod tests {
             .unwrap();
         assert_eq!(pwc.ast.rule_name, "program");
         assert!(!pwc.cv.is_empty());
+    }
+
+    // ===================================================================
+    // CLOC17 — assignment-expression parsing regression
+    // ===================================================================
+    //
+    // The `assignment_expression` PEG rule used to list `conditional_expression`
+    // BEFORE the `left_hand_side_expression assignment_operator
+    // assignment_expression` alternative. Ordered-choice PEG is first-match-
+    // wins: a bare identifier `a` is itself a valid `conditional_expression`,
+    // so the parser committed to that alternative, consumed only `a`, and left
+    // the `=` unconsumed — the assign-target alternative was never reached and
+    // `a = 1;` failed to parse. closurec then fell back to whitespace-only
+    // minification for the WHOLE program (see spec CLOC17). The fix reorders
+    // every es*.grammar so the assign-target alternative is tried first
+    // (function-likes ahead of it, `conditional_expression` last); when no
+    // assignment operator follows the left-hand side the sequence fails fast
+    // and falls through to `conditional_expression` exactly as before.
+    //
+    // The bug was identical across all 14 grammars, so these tests sweep
+    // `EsVersion::ALL` for the version-independent forms, and check the
+    // arrow/yield alternatives (which must stay AHEAD of assign-target) only
+    // on the versions that have them.
+
+    /// Assert `src` parses (grammar stage) under `version` and yields a
+    /// `program` root.
+    fn assert_parses(src: &str, version: EsVersion) {
+        let node = parse_javascript_typed(src, version)
+            .unwrap_or_else(|e| panic!("[{version:?}] expected `{src}` to parse, got: {e}"));
+        assert_eq!(node.rule_name, "program", "[{version:?}] `{src}`");
+    }
+
+    #[test]
+    fn cloc17_assignment_statements_parse_every_version() {
+        // The canonical forms the reorder unblocks: simple assignment,
+        // compound assignment, member-target assignment, a right-associative
+        // chain, and a ternary right-hand side. All 14 grammars shared the
+        // bug, so all 14 must now accept them.
+        for &version in EsVersion::ALL {
+            assert_parses("a = 1;", version);
+            assert_parses("a += 1;", version);
+            assert_parses("a.b = 1;", version);
+            assert_parses("a = b = c;", version); // right-associative chain
+            assert_parses("a = b ? c : d;", version); // ternary RHS
+        }
+    }
+
+    #[test]
+    fn cloc17_compound_assignment_operators_parse() {
+        // A representative spread of compound operators on a modern grammar —
+        // each is a distinct `assignment_operator` token, all of which now sit
+        // behind the reachable assign-target alternative.
+        for src in [
+            "a += 1;",
+            "a -= 1;",
+            "a *= 1;",
+            "a /= 1;",
+            "a %= 1;",
+            "a <<= 1;",
+            "a >>= 1;",
+            "a >>>= 1;",
+            "a &= 1;",
+            "a |= 1;",
+            "a ^= 1;",
+        ] {
+            assert_parses(src, EsVersion::Es2025);
+        }
+    }
+
+    #[test]
+    fn cloc17_non_assignment_forms_still_parse_every_version() {
+        // The reorder tries the assign-target alternative FIRST; when no
+        // assignment operator follows the left-hand side it must fail fast and
+        // fall through to `conditional_expression`. Pin that every common
+        // non-assignment expression statement (and the separate declarator
+        // path) still parses, on every version — i.e. the reorder is purely
+        // additive.
+        for &version in EsVersion::ALL {
+            assert_parses("a;", version); // bare identifier
+            assert_parses("a.b;", version); // member
+            assert_parses("f();", version); // call
+            assert_parses("a + b;", version); // binary
+            assert_parses("a ? b : c;", version); // ternary
+            assert_parses("var x = 1;", version); // declarator init (separate path)
+        }
+    }
+
+    #[test]
+    fn cloc17_arrow_and_yield_unaffected_on_modern_versions() {
+        // Arrow / yield alternatives stay AHEAD of the assign-target
+        // alternative in the reordered rule, so they must still parse where
+        // the version supports them (es2015+).
+        for &version in &[EsVersion::Es2015, EsVersion::Es2025] {
+            assert_parses("var f = x => x;", version);
+        }
+        // `yield` is only meaningful inside a generator body.
+        assert_parses("function* g() { yield 1; }", EsVersion::Es2025);
+    }
+
+    #[test]
+    fn cloc17_assignment_bridges_to_assignment_expression() {
+        // End-to-end through the bridge: the parsed assignment must produce an
+        // `AssignmentExpression` typed node (not a parse error / fallback),
+        // proving the fix unblocks the downstream optimization pipeline and
+        // not merely the parser.
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        use coding_adventures_javascript_ast::{Expression, ProgramItem, Statement};
+        let program = parse_javascript_program("a = 1;", EsVersion::Es2025)
+            .expect("assignment must bridge to a typed Program");
+        let item = program.body.first().expect("one program item");
+        match item {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(es))) => {
+                assert!(
+                    matches!(es.expression, Expression::AssignmentExpression(_)),
+                    "expected AssignmentExpression, got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected an expression statement, got {other:?}"),
+        }
     }
 }

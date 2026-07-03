@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_return_paren_expr/input/a.js
+--compilation_level
+WHITESPACE_ONLY

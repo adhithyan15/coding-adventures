@@ -1,0 +1,271 @@
+# Changelog — x86-simulator
+
+## 0.7.6 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
+
+Decode + execute the three SSE conversion opcodes, so the simulator can RUN
+x86_64 E8 codegen locally:
+
+| Opcode | Instr | Semantics |
+|--------|-------|-----------|
+| `F2 48 0F 2A /r` | `Cvtsi2sd` | signed i64 (GPR) → double (XMM) |
+| `F2 48 0F 2C /r` | `Cvttsd2si` | double (XMM) → i64 (GPR), truncate toward zero |
+| `66 0F 3A 0B /r ib` | `Roundsd` | round under `imm8 & 3` (0 nearest / 1 floor / 2 ceil / 3 trunc) |
+
+`roundsd` exercises the decoder's first **three-byte opcode** (`0F 3A`) path —
+the opcode-map escape plus a trailing `imm8`. `cvttsd2si` reproduces the silicon
+exactly: NaN / ±∞ / out-of-`i64`-range yield the **integer indefinite**
+`0x8000_0000_0000_0000` (no trap), rather than Rust's saturating `as i64`.
+
+Decode + execute unit tests, and the end-to-end matrix proof
+(`tests/sse_floats.rs`): real x86_64 codegen (`cvtsi2sd`→`subsd`→`roundsd`→
+`cvttsd2si`) executed in the simulator computes `floor(int_to_real(45) − 2.7) =
+42`, matching the other six backends.
+
+## 0.7.5 — 2026-06-22 — ALGOL `sign` cell (LANG-FULL AL8 follow-up)
+
+Adds an executed matrix cell `algol_sign_runs_on_x86_sim`: the ALGOL `sign`
+standard function (LANG-FULL AL8, merged) run as real x86_64 machine code on the
+simulator — `43 + sign(0 - 1)` ⇒ exit `42`. Where the `algol_abs` cell (0.7.4)
+merges a value out of **two** branch arms, `sign` lowers to a *nested* conditional
+(`if E>0 then 1 else if E<0 then -1 else 0`) and merges across **three** arms — so
+this is the first cell to run a three-way value-merge from native code. With the
+abs cell, both AL8 standard functions now execute locally on the x86_64 backend.
+Test-only; no library change.
+
+## 0.7.4 — 2026-06-22 — ALGOL `abs` cell (LANG-FULL AL8 follow-up)
+
+Adds an executed matrix cell `algol_abs_runs_on_x86_sim`: the ALGOL `abs`
+standard function (LANG-FULL AL8, merged) run as real x86_64 machine code on the
+simulator — `abs(0 - 42)` ⇒ exit `42`. This is the first cell to exercise the
+**compare-and-branch-into-a-merged-result** lowering (`cmp_lt` + `jmp_if_false`
++ negated/pass-through `mov` into one slot) from native code: existing ALGOL
+cells branch for `for`/`switch` control flow but never merge a *value* back out
+of two arms. Test-only; no library change.
+
+## 0.7.3 — 2026-06-22 — Dartmouth BASIC `DIM` array cell (LANG-FULL BA3 follow-up)
+
+Adds an executed matrix cell `basic_array_runs_on_x86_sim`: a Dartmouth BASIC
+`DIM A(3)` array (LANG-FULL BA3, merged) filled by `LET A(i) = …` and summed
+back via `A(i)` reads ⇒ stdout `42`. Runs the real BASIC frontend's x86_64
+output on the simulator, exercising the shared `alloc_array`/`array_set`/
+`array_get` ops (E5) through the **BASIC** lowering path — the BASIC counterpart
+to `algol_static_array_runs_on_x86_sim`. Test-only; no library change.
+
+## 0.7.2 — 2026-06-22 — ALGOL `own` global cell (LANG-FULL AL6 follow-up)
+
+Adds the executed matrix cell `algol_own_variable_runs_on_x86_sim`: an ALGOL
+`own integer n` (LANG-FULL AL6, merged) inside `bump` persists across calls —
+`bump(1)+bump(1)+bump(1)` accumulates 1+2+3 = 6 on the one `_twig_globals` slot
+(a non-`own` local gives 3) ⇒ exit `6`, run on the real x86_64 bytes. With the
+E6 (`algol_module_global_…`) and O3 (`oct_static_global_…`, 0.7.1) cells, all
+three module-global frontends now execute locally on the x86_64 backend via the
+S8 `_twig_globals` path. Test-only; no library change.
+
+## 0.7.1 — 2026-06-22 — Oct `static` global cell (LANG-FULL O3 follow-up)
+
+Adds an executed matrix cell `oct_static_global_runs_on_x86_sim`: an Oct
+top-level `static counter` (LANG-FULL O3, merged) shared across functions —
+`bump()` increments it twice, `main` prints it via `out` ⇒ stdout `42`. Runs
+the real Oct frontend's x86_64 output on the simulator, exercising the
+`_twig_globals` data-region support added in 0.7.0 (S8) from a second frontend
+(the Oct counterpart to the ALGOL E6 cell). Test-only; no library change.
+
+## 0.7.0 — 2026-06-22 — module globals (`_twig_globals`) run locally (x86-sim PR-S8)
+
+The harness now resolves the **`_twig_globals` data symbol**, so an x86_64
+program that reads/writes a module global runs on the simulator — closing the
+last gap before the `_twig_globals`-using programs (E6 captured scalars, O3 Oct
+`static`, AL6 ALGOL `own`) could only be executed on real Intel hardware / CI.
+
+- The x86_64 backend lowers `global_load`/`global_store` to `lea rax, [rip +
+  _twig_globals]` + a `mov` at `[rax + slot*8]`, recorded as a `PcRel32`
+  relocation against `_twig_globals`. The harness reserves a zeroed
+  **`_twig_globals` region** (512 × 8-byte slots) between the code and the heap
+  and patches that `PcRel32` to its base — the same PC-relative fixup the real
+  linker applies (`R_X86_64_PC32`), mirroring `code-packager`'s `.data` section.
+  Globals zero-init at load (the whole address space starts zeroed), which is
+  exactly the unwritten-global / `own` / `static` semantics.
+- The matrix harness (`lang_matrix_x86.rs`) now compiles each function with
+  `compile_function_with_globals` over a slot map collected from the module
+  (`collect_global_slots`, replicating `twig-aot`'s), instead of the
+  empty-global-map `compile_function_with_relocs`. Programs with no globals emit
+  no such reloc, so the pre-globals cells are unchanged.
+- **Executed proof:** the LANG-FULL **E6** program — a procedure `incr` sharing
+  an enclosing-block `counter` (`counter := 40; result := incr(2)`) — runs on
+  the **real x86_64 bytes** locally ⇒ exit **42**, the same value the matrix's
+  NativeAot column asserts. (Oct `static`/ALGOL `own` cells reuse this exact
+  path and can be added once their frontend PRs land on main.)
+
+## 0.6.0 — 2026-06-21 — stdin (`getchar`) + Brainfuck cat runs locally (x86-sim PR-S6)
+
+Completes the Brainfuck story: the stdin-driven `,` programs now run on the
+x86_64 column locally. No new opcode was needed — only a real `getchar`.
+
+### Added
+- **`getchar` reads a stdin buffer** — the `Simulator` gains an `input: Vec<u8>`
+  consumed front-to-back; `getchar` returns the next byte, or EOF (`-1`) once
+  drained. Returning `-1` (not `0`) matches the libc/native convention, so the
+  Brainfuck IIR's negative-`getchar`→0 clamp halts a `,[.,]` cat loop at
+  end-of-input exactly as it does on the real native backend.
+- **`MachineCodeHarness::stdin(&[u8])`** — supplies that buffer (defaults to
+  empty, i.e. immediate EOF, so existing programs are unchanged).
+- **3 stdin Brainfuck matrix cells**: `,+.` (input `A` ⇒ `B`), `,.,.` (echo
+  `Hi` ⇒ `Hi`), and `,[.,]` (cat `Hi` ⇒ `Hi`) — run on the x86_64 column
+  locally via a new `run_with_stdin` helper.
+
+### Verified
+- Cat (`,[.,]`) reads+prints until the simulator's EOF threads through the
+  backend's clamp and halts the loop. 53 tests (28 unit + 21 matrix + 4
+  lib/harness).
+
+## 0.5.0 — 2026-06-21 — byte-tape store + Brainfuck runs locally (x86-sim PR-S5)
+
+Continues the coverage-mining pattern (S4): running a **Brainfuck** program
+through the simulator surfaced two more gaps, now closed.
+
+### Added
+- **`mov r/m8, r8` (`0x88`)** — the 8-bit `store_byte` the byte-tape ops emit
+  (`mov [base], src8`), which S1–S4 never decoded (a Brainfuck `.` trapped with
+  `DecodeError { opcode: 0x88 }`). A register destination keeps its upper bytes;
+  a memory destination is a single-byte store.
+- **`__twig_putchar` / `__twig_getchar` host-shim aliases** — the backend emits
+  the runtime-prefixed symbols; the shims previously matched only the bare
+  `putchar`/`getchar` (so Brainfuck output trapped `UnresolvedExternal`).
+- **Brainfuck matrix cell** — `++++++++[>++++++++<-]>+.` ⇒ stdout `A`, run on the
+  x86_64 column locally. Exercises the byte-tape surface the arithmetic programs
+  never touched: `__twig_alloc_bytes` for the tape, the `[...]` loop, the 8-bit
+  store, and `putchar`. (Stdin-driven Brainfuck — `,[.,]` cat — still pends an
+  input-buffer in the harness; `getchar` returns EOF for now.)
+
+### Verified
+- Brainfuck runs end-to-end; `0x88` gets direct decode + execute unit tests
+  (register masked-write keeps upper bytes; memory single-byte store leaves the
+  neighbour untouched). 50 tests (28 unit + 18 matrix + 4 lib/harness).
+
+## 0.4.0 — 2026-06-21 — group-3 (`not`/`neg`/`div`/`idiv`) + broader matrix coverage (x86-sim PR-S4)
+
+Broadens the **local** LANG-FULL x86_64 coverage from S3's 7 cells to 17 by
+running more matrix programs through the simulator — which surfaced a real
+missing opcode and added it.
+
+### Added
+- **Group-3 `0xF7` + `cqo`** — the opcodes the `x86_64-backend` emits for the IIR
+  `not`/`neg`/division ops, which S1–S3 never decoded (a Nib `~0` / Oct
+  `out(1, ~0)` trapped with `DecodeError { opcode: 0xF7 }`):
+  - `not r/m64` (`0xF7 /2`) — bitwise complement, no flag effects;
+  - `neg r/m64` (`0xF7 /3`) — two's-complement negate, flags as `sub 0, dst`;
+  - `div`/`idiv r/m64` (`0xF7 /6` unsigned, `/7` signed) — divides the full
+    128-bit `rdx:rax` pair, quotient → `rax`, remainder → `rdx`;
+  - `cqo` (`0x48 0x99`) — sign-extend `rax` into `rdx:rax` (the `idiv` preamble).
+- **`Trap::DivideError`** — divide-by-zero **and** quotient-overflow (e.g.
+  `i64::MIN / -1`) raise the `#DE` analogue, fail-closed like every other fault.
+- **8 new matrix cells** in `tests/lang_matrix_x86.rs`, each a verbatim matrix
+  program run on the x86_64 column locally: Twig top-level `define`s; Nib u8
+  saturating-add wrap and `~` complement; ALGOL switch/computed-goto and the
+  `for`-loop sum-of-squares array; Dartmouth BASIC `PRINT` and `FOR`/`NEXT`
+  (stdout-captured via the host shims); Oct `out(1, ~0)` (the cell that exposed
+  the `0xF7` gap). New `run_capturing_stdout` helper for the print programs.
+- **Division end-to-end** — a Nib unsigned `84 / 2` (lowers to `xor rdx,rdx;
+  div rcx`) and an ALGOL signed `85 div 2` (`cqo; idiv rcx`), both ⇒ 42, so the
+  group-3 division path is exercised from real backend output, not just the unit
+  tests.
+
+### Verified
+- The `not` and `div`/`idiv` ops now run end-to-end (Nib + Oct + ALGOL);
+  `neg`/`cqo` and the division corner cases get direct decode + execute unit
+  tests (quotient/remainder, signed negatives, div-by-zero, signed-overflow, and
+  the crafted `i128::MIN / -1`). 42 tests (25 unit + 17 matrix).
+
+## 0.3.0 — 2026-06-21 — local LANG-FULL x86_64 matrix column (x86-sim PR-S3)
+
+Wires the simulator into the LANG-FULL matrix: a new integration test drives the
+**real** language frontends through the **real** AOT pipeline and *runs the
+emitted x86_64 machine code* on this simulator — so the matrix's `NativeAot`
+**x86_64** column is now exercised **locally, on aarch64**, with no Intel hardware
+and no CI round-trip.
+
+### Added
+- **`tests/lang_matrix_x86.rs`** — `compile_to_x86_functions` replicates
+  `twig-aot`'s native per-function pipeline (`compile_source_to_iir` →
+  `infer_types` → `aot_specialise` → `x86_64-backend::compile_function_with_relocs`),
+  hands the per-function blobs + relocations to `MachineCodeHarness`, and runs the
+  machine code. Seven cells, each a verbatim copy of a `lang_matrix.rs` `NativeAot`
+  program asserting the **same** exit code — but obtained by running the *x86_64*
+  bytes, not the host's aarch64 bytes:
+  - Twig `42` and `(+ 10 20 12)` ⇒ 42 (const/add, no relocs);
+  - ALGOL integer arithmetic ⇒ 2;
+  - ALGOL `procedure sq(x)` ⇒ 49 — the first **multi-function** program, exercising
+    the harness's internal `call` relocation patching (`main`→`sq`);
+  - ALGOL **E3 real** `2.5 * 2.0 == 5.0` ⇒ 42 and `7.0 / 2.0 < 4.0` ⇒ 1 — runs the
+    SSE2 (`movabs`/`movsd`/`mulsd`/`divsd`/`ucomisd`/`setcc`) output **locally**;
+  - ALGOL **E5 static array** `A[1]:=40; A[3]:=2; A[1]+A[3]` ⇒ 42 — runs the native
+    bump-heap `__twig_alloc_bytes` + bounds-`cmp`/`jb`-over-`ud2` array model.
+- **dev-deps**: `lang-aot` + `aot-core` (drive the frontends + AOT specialiser).
+
+### Verified
+- **Retro-verifies E3 native floats and E5 native arrays on the x86_64 backend,
+  on aarch64** — the two columns the matrix previously executed only on the Linux
+  x86 CI runner. 23 tests (16 unit + 7 matrix).
+
+## 0.2.0 — 2026-06-21 — SSE2 scalar doubles + `movabs`/`setcc` (x86-sim PR-S2)
+
+Runs the x86_64-backend's **floating-point** (ALGOL `real` / LANG-FULL E3) output
+locally, on top of the S1 integer core.
+
+### Added
+- **XMM scalar-double SSE2**: `movsd` (load `F2 0F 10` / store `F2 0F 11` / reg-reg),
+  `addsd`/`subsd`/`mulsd`/`divsd` (`F2 0F 58/5C/59/5E`), and `ucomisd`
+  (`66 0F 2E`) with the x86 ZF/PF/CF flag semantics (unordered/NaN → ZF=PF=CF=1).
+  Computed in `f64` over the low lane of the `xmm` register file.
+- **`movabs r64, imm64`** (`0xB8+rd` REX.W) — the full 64-bit immediate the backend
+  uses to materialise an `f64` constant's bit pattern before `movsd`-ing it into XMM
+  (missed by S1, which only handled the `imm32` `mov`).
+- **`setcc r/m8`** (`0F 90..9F`) — the byte-setting half of a comparison; an `f64`
+  `=` lowers to `ucomisd; sete; movzx; setnp; movzx; and` (ordered-equal), all of
+  which the simulator now executes.
+- The mandatory-prefix (`F2`/`F3`/`66`) decode path that precedes `0F` for SSE.
+
+### Verified
+- Decodes `movabs`/`movsd`/`mulsd`/`ucomisd`/`sete` from real backend bytes.
+- **End-to-end**: compiles `2.5 * 2.0 == 5.0` and `7.0 / 2.0 < 4.0` with the real
+  `x86_64-backend` and runs the SSE2 machine code → exit **1** (true), locally on
+  aarch64. 20 tests.
+
+## 0.1.0 — 2026-06-21 — integer core + MachineCodeHarness (x86-sim PR-S1)
+
+The first runnable slice: a Rust runtime simulator that decodes and executes the
+64-bit x86 integer subset the `x86_64-backend` emits, and a harness that runs the
+backend's compiled output locally — closing the gap where the x86_64 backend was
+verified locally only by byte tests and *executed* only on an x86 CI runner.
+
+### Added
+- **`state`** — `CpuState`: 16 GPRs (hardware numbering), `rip`, the RFLAGS
+  subset (CF/ZF/SF/OF/PF/AF) emitted code uses, and the XMM file (for the coming
+  SSE2 phase).
+- **`flags`** — `add_with_flags`/`sub_with_flags`/`logic_flags` and the 16
+  condition codes via `condition_holds`, per `07w-x86-64-simulator.md`.
+- **`memory`** — a flat, little-endian, **bounds-checked** address space (a
+  sandbox) with a monotonic bump heap backing `__twig_alloc_bytes`.
+- **`decode`** — a REX/ModRM/SIB decoder for the `x86_64-encoder` subset:
+  `push`/`pop`, `mov` (reg/mem/imm), `movzx`, `lea`, `add`/`sub`/`cmp`/`and`/
+  `or`/`xor`/`test` (reg + imm), `shl`/`shr`/`sar`, `imul`, `jmp`/`jcc`/`call`/
+  `ret`, `ud2`. Unknown opcodes → a clean `DecodeError` (fail-closed).
+- **`execute`** — per-instruction execution with full flag computation and a
+  `Flow` the step loop acts on.
+- **`Simulator`** (`lib`) — `step`/`run`; `ret` to a stack sentinel halts and
+  yields the exit code (`rax & 0xFF`); host-import shims for `__twig_alloc_bytes`
+  / `putchar` / `getchar` / `print_i64` (System V ABI), like `wasm-runtime`.
+- **`harness::MachineCodeHarness`** — load the backend's per-function byte blobs
+  + relocations, patch internal `call`s, route external calls to host shims, set
+  up the stack, and produce a ready-to-run `Simulator`.
+
+### Verified
+- Decodes the exact prologue/`const`/`ret` bytes the `x86_64-backend` emits.
+- **End-to-end**: compiles `const 42; ret` and `40 + 2` with the **real**
+  `x86_64-backend` and runs the machine code → exit **42**, locally (on an
+  aarch64 host). 15 tests (flags, decode, memory, execute, integration).
+
+### Next
+S2 — SSE2 scalar doubles (run E3 ALGOL `real` x86_64 output); S3 — wire a local
+`run_x86_sim` matrix path + retro-verify E5 native arrays / E3 floats; S4 —
+32-bit x86.

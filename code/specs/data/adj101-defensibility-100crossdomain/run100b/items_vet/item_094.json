@@ -1,0 +1,8 @@
+{
+ "idx": 94,
+ "policy": "A surviving spouse is entitled to death benefits if the employee's death resulted from a compensable workplace injury. Benefits to a surviving spouse terminate upon the spouse's remarriage.",
+ "scenario": "Lena's husband died from a compensable crane accident at the construction site two years ago, and she began receiving death benefits as his surviving spouse. The insurer is now reviewing the file to confirm her continued eligibility. Lena recently moved in with a new partner and changed her last name on social media.",
+ "question": "Is Lena still entitled to death benefits?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether the surviving spouse has remarried"
+}

@@ -1,0 +1,8 @@
+{
+ "idx": 58,
+ "policy": "A landlord may keep a tenant's security deposit to cover unpaid rent, except where the unpaid rent accrued during a period in which the unit was legally uninhabitable and the tenant had lawfully withheld rent. In that case the landlord may not apply the deposit to the withheld rent.",
+ "scenario": "When Raj moved out he had withheld two months of rent. During those exact two months the city had declared the unit legally uninhabitable due to a sewage backup, and Raj had withheld rent through the lawful procedure. The landlord seeks to apply Raj's deposit to the two months of withheld rent.",
+ "question": "May the landlord apply the deposit to the two months of withheld rent?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "may not apply the deposit"
+}

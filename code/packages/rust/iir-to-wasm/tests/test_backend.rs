@@ -17,7 +17,7 @@
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, validate_for_wasm, IIRWasmConfig, IIRWasmError};
-use wasm_types::{ExternalKind, ValueType};
+use wasm_types::{ExternalKind, ImportTypeInfo, ValueType};
 
 // ---------------------------------------------------------------------------
 // Helper builders
@@ -541,6 +541,50 @@ fn emit_f64_add_opcode() {
     assert!(wm.code[0].code.contains(&0xA0));
 }
 
+// Test 4.6b — f64 `mul`/`div` and ordered/equality comparisons select the
+// `f64.*` opcodes (LANG-FULL E3 — locks the op selection that lets ALGOL 60
+// reals run on WASM; the typed-local model already carries an `f64` variable in
+// an `F64` local, so no slot rework was needed unlike the LLVM backend).
+#[test]
+fn emit_f64_mul_div_opcodes() {
+    let mul = module_one("mulf", vec![("a", "f64"), ("b", "f64")], "f64", vec![
+        IIRInstr::new("mul", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+    ]);
+    let wm = lower_iir_to_wasm(&mul, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0xA2), "expected f64.mul (0xA2)");
+
+    let div = module_one("divf", vec![("a", "f64"), ("b", "f64")], "f64", vec![
+        IIRInstr::new("div", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
+    ]);
+    let wm = lower_iir_to_wasm(&div, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0xA3), "expected f64.div (0xA3)");
+}
+
+#[test]
+fn emit_f64_comparison_opcodes() {
+    // f64 equality → f64.eq (0x61).
+    let eq = module_one("eqf", vec![("a", "f64"), ("b", "f64")], "i64", vec![
+        IIRInstr::new("cmp_eq", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let wm = lower_iir_to_wasm(&eq, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0x61), "expected f64.eq (0x61)");
+
+    // f64 ordered `<` → f64.lt (0x63).
+    let lt = module_one("ltf", vec![("a", "f64"), ("b", "f64")], "i64", vec![
+        IIRInstr::new("cmp_lt", Some("v".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let wm = lower_iir_to_wasm(&lt, &IIRWasmConfig::default()).unwrap();
+    assert!(wm.code[0].code.contains(&0x63), "expected f64.lt (0x63)");
+}
+
 // Test 4.7 — i32.sub emitted
 #[test]
 fn emit_i32_sub_opcode() {
@@ -580,7 +624,10 @@ fn emit_i32_div_s_opcode() {
     assert!(wm.code[0].code.contains(&0x6D));
 }
 
-// Test 4.10 — i32.div_u emitted for unsigned i32
+// Test 4.10 — unsigned narrow div emits the UNSIGNED i64 div (LANG-FULL E2).
+// Narrow unsigned types ride the i64 register model, so a `u32` divide is
+// `i64.div_u` (0x80, not the old `i32.div_u` 0x6E) followed by the u32 wrap
+// mask — keeping it unsigned and operand-width-agnostic over i64 slots.
 #[test]
 fn emit_i32_div_u_opcode() {
     let m = module_one("divu", vec![("a", "u32"), ("b", "u32")], "u32", vec![
@@ -589,8 +636,8 @@ fn emit_i32_div_u_opcode() {
         IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "u32"),
     ]);
     let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
-    // 0x6E = i32.div_u
-    assert!(wm.code[0].code.contains(&0x6E));
+    // 0x80 = i64.div_u
+    assert!(wm.code[0].code.contains(&0x80), "u32 div → i64.div_u");
 }
 
 // Test 4.11 — i32.eq emitted
@@ -922,18 +969,21 @@ fn bool_param_maps_to_i32() {
     assert_eq!(wm.types[0].results, vec![ValueType::I32]);
 }
 
-// Test 9.2 — u8/u16/u32 map to I32
+// Test 9.2 — u4/u8/u16/u32 map to I64 (LANG-FULL E2). Narrow unsigned types ride
+// the i64 register model so their arithmetic never meets a width-mismatched
+// i64-slot operand (e.g. a const/let); the value is masked to width after each
+// op instead. (Was I32 before E2's compute-wide-and-mask rework.)
 #[test]
 fn unsigned_8_16_32_map_to_i32() {
-    for ty in &["u8", "u16", "u32"] {
+    for ty in &["u4", "u8", "u16", "u32"] {
         let m = module_one("f", vec![("x", ty)], ty, vec![
             IIRInstr::new("ret", None, vec![Operand::Var("x".into())], *ty),
         ]);
         let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
         assert_eq!(
             wm.types[0].params[0],
-            ValueType::I32,
-            "type {} should map to I32",
+            ValueType::I64,
+            "type {} should map to I64 (i64 register model)",
             ty
         );
     }
@@ -1419,4 +1469,559 @@ fn lang35_closure_opcode_error_not_untyped() {
         !errs.iter().any(|e| e.contains("UntypedInstruction")),
         "error must not say UntypedInstruction for closure ops; got: {errs:?}"
     );
+}
+
+// ===========================================================================
+// G1 — cmp_* opcode lowerings (BASIC / Nib / Oct emit `cmp_lt` etc.).
+//
+// The lower step pre-G1 only matched the bare `eq | ne | lt | le | gt | ge`
+// shape (the form Twig historically emitted).  Languages that prefix with
+// `cmp_` would lower to `UnsupportedOp` even though the validator accepted
+// them.  G1 extends the match to strip the prefix.
+// ===========================================================================
+
+/// Helper: build a module where `main(a: i64, b: i64) -> i64` runs `cmp_<op>`
+/// over its parameters and returns the result.  The dest's type at the IIR
+/// level is `bool` because that's how the BASIC/Nib/Oct frontends emit it,
+/// but the underlying wasm opcode produces i32, which we widen to i64 with a
+/// final `i64.extend_i32_u` step modeled by a separate `mov`-style helper
+/// in real frontends.  For this unit test we keep the return type `i32` so
+/// no widening is needed.
+fn cmp_i64_module(op: &str) -> IIRModule {
+    module_one("main", vec![("a", "i64"), ("b", "i64")], "i32", vec![
+        IIRInstr::new(op, Some("r".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())],
+            "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+    ])
+}
+
+#[test]
+fn g1_cmp_eq_i64_lowers_to_wasm() {
+    let m = cmp_i64_module("cmp_eq");
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "validator accepted cmp_eq before G1; got {errs:?}");
+    let _wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("G1: cmp_eq must lower; pre-G1 this would have returned UnsupportedOp");
+}
+
+#[test]
+fn g1_cmp_ne_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_ne"), &IIRWasmConfig::default())
+        .expect("G1: cmp_ne must lower");
+}
+
+#[test]
+fn g1_cmp_lt_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_lt"), &IIRWasmConfig::default())
+        .expect("G1: cmp_lt must lower");
+}
+
+#[test]
+fn g1_cmp_le_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_le"), &IIRWasmConfig::default())
+        .expect("G1: cmp_le must lower");
+}
+
+#[test]
+fn g1_cmp_gt_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_gt"), &IIRWasmConfig::default())
+        .expect("G1: cmp_gt must lower");
+}
+
+#[test]
+fn g1_cmp_ge_i64_lowers_to_wasm() {
+    let _ = lower_iir_to_wasm(&cmp_i64_module("cmp_ge"), &IIRWasmConfig::default())
+        .expect("G1: cmp_ge must lower");
+}
+
+/// Backwards-compatibility: Twig's existing bare `eq` / `lt` / etc.  must
+/// still lower.  The prefix-stripper passes the bare form through unchanged.
+#[test]
+fn g1_bare_eq_still_lowers_to_wasm() {
+    let m = module_one("main", vec![("a", "i64"), ("b", "i64")], "i32", vec![
+        IIRInstr::new("eq", Some("r".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())],
+            "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+    ]);
+    let _ = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("G1: bare `eq` (Twig form) must still lower");
+}
+
+// ===========================================================================
+// G2 — `call_builtin "print_i64"` reuses the `env.__print_i64` host import.
+//
+// BASIC's `PRINT` lowers to `call_builtin "print_i64"`.  Pre-G2 this was
+// rejected by the validator because `print_i64` wasn't in
+// `CALL_BUILTIN_SUPPORTED_NAMES`.  G2 adds it; the import is the SAME
+// one the `io_out` opcode injects (`env.__print_i64`), so a module that
+// already uses `io_out` and one that uses `print_i64` exclusively both
+// produce the same single import.
+// ===========================================================================
+
+#[test]
+fn g2_call_builtin_print_i64_validator_accepts() {
+    let m = module_one("main", vec![("x", "i64")], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("x".into())],
+            "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(),
+        "G2: validator must accept call_builtin print_i64; got {errs:?}");
+}
+
+#[test]
+fn g2_call_builtin_print_i64_lowers_to_wasm_bytes() {
+    let m = module_one("main", vec![("x", "i64")], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("x".into())],
+            "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("G2: lower must succeed for call_builtin print_i64");
+    let bytes = encode_module(&wm).expect("encode");
+    assert!(bytes.len() >= 8);
+    assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D], "wasm magic prefix");
+}
+
+#[test]
+fn g2_call_builtin_print_i64_injects_host_import() {
+    let m = module_one("main", vec![("x", "i64")], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("print_i64".into()), Operand::Var("x".into())],
+            "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("lower");
+    let has_print = wm.imports.iter().any(|i|
+        i.module_name == "env" && i.name == "__print_i64");
+    assert!(has_print,
+        "G2: print_i64 builtin must inject the env.__print_i64 host import; got imports {:?}",
+        wm.imports.iter().map(|i| (&i.module_name, &i.name)).collect::<Vec<_>>());
+}
+
+#[test]
+fn g2_unknown_builtin_still_rejected() {
+    // Defense-in-depth: a builtin name not in the whitelist must still
+    // be rejected (so G2 didn't accidentally widen the gate).
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("call_builtin", None,
+            vec![Operand::Var("does_not_exist".into())],
+            "void"),
+    ]);
+    let errs = validate_for_wasm(&m);
+    assert!(!errs.is_empty(),
+        "G2: unknown builtin must still be rejected; got no errors");
+}
+
+#[test]
+fn e4_string_print_lowers_to_data_memory_and_host_import() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("HELLO".into())],
+            "str",
+        ),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_const + print_str should lower");
+    let import = wm
+        .imports
+        .iter()
+        .find(|i| i.module_name == "env" && i.name == "__print_str")
+        .expect("E4: print_str must inject env.__print_str");
+    let ImportTypeInfo::Function(type_idx) = import.type_info else {
+        panic!("E4: __print_str import should be a function");
+    };
+    assert_eq!(wm.types[type_idx as usize].params, vec![ValueType::I32, ValueType::I32]);
+    assert_eq!(wm.types[type_idx as usize].results, Vec::<ValueType>::new());
+    assert_eq!(wm.memories.len(), 1, "E4: string bytes live in linear memory");
+    assert_eq!(wm.data.len(), 1, "E4: literal should be emitted as one data segment");
+    assert_eq!(wm.data[0].data, b"HELLO");
+    assert!(
+        wm.code[0].code.contains(&0x10),
+        "E4: function body should call env.__print_str"
+    );
+
+    let bytes = encode_module(&wm).expect("encode");
+    assert_eq!(&bytes[..4], &[0x00, 0x61, 0x73, 0x6D], "wasm magic prefix");
+}
+
+#[test]
+fn e4_string_concat_len_lowers_to_literal_length() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("a".into()),
+            vec![Operand::Str("AB".into())],
+            "str",
+        ),
+        IIRInstr::new(
+            "str_const",
+            Some("b".into()),
+            vec![Operand::Str("CDE".into())],
+            "str",
+        ),
+        IIRInstr::new("str_concat", Some("s".into()), vec![
+            Operand::Var("a".into()),
+            Operand::Var("b".into()),
+        ], "str"),
+        IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_concat + str_len should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_concat + str_len should lower");
+    assert_eq!(
+        wm.data[0].data,
+        b"ABCDEABCDE",
+        "E4: string data should include both literals plus the concatenated literal"
+    );
+    assert!(
+        wm.code[0].code.windows(2).any(|w| w == [0x42, 0x05]),
+        "E4: str_len over literal concat should emit i64.const 5"
+    );
+}
+
+#[test]
+fn e4_string_cmp_lowers_to_literal_ordering() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("a".into()),
+            vec![Operand::Str("ALPHA".into())],
+            "str",
+        ),
+        IIRInstr::new(
+            "str_const",
+            Some("b".into()),
+            vec![Operand::Str("BETA".into())],
+            "str",
+        ),
+        IIRInstr::new("str_cmp", Some("ord".into()), vec![
+            Operand::Var("a".into()),
+            Operand::Var("b".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_cmp should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("E4: str_cmp should lower");
+    assert!(
+        wm.code[0].code.windows(2).any(|w| w == [0x42, 0x7f]),
+        "E4: str_cmp over ALPHA/BETA should emit i64.const -1"
+    );
+}
+
+#[test]
+fn e4_string_slice_index_lowers_to_literal_byte_load() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("ABCDE".into())],
+            "str",
+        ),
+        IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new(
+            "str_slice",
+            Some("sub".into()),
+            vec![
+                Operand::Var("s".into()),
+                Operand::Var("start".into()),
+                Operand::Var("end".into()),
+            ],
+            "str",
+        ),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new(
+            "str_index",
+            Some("b".into()),
+            vec![Operand::Var("sub".into()), Operand::Var("i".into())],
+            "i64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.is_empty(),
+        "E4: str_slice + str_index should validate: {errs:?}"
+    );
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_slice + str_index should lower");
+    assert_eq!(
+        wm.data[0].data, b"ABCDEBCD",
+        "E4: string data should contain the source and sliced literal"
+    );
+    assert!(
+        wm.code[0].code.contains(&0x2D),
+        "E4: str_index over a slice should still emit i32.load8_u"
+    );
+}
+
+#[test]
+fn e4_string_index_lowers_to_literal_byte_load() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("ABC".into())],
+            "str",
+        ),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("str_index", Some("b".into()), vec![
+            Operand::Var("s".into()),
+            Operand::Var("i".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]);
+
+    let errs = validate_for_wasm(&m);
+    assert!(errs.is_empty(), "E4: str_index should validate: {errs:?}");
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: str_index should lower");
+    assert_eq!(wm.data[0].data, b"ABC", "E4: string data should contain ABC");
+    assert!(
+        wm.code[0].code.contains(&0x2D),
+        "E4: str_index should emit i32.load8_u"
+    );
+    assert!(
+        wm.code[0].code.contains(&0xAD),
+        "E4: i64 str_index result should zero-extend the loaded byte"
+    );
+}
+
+#[test]
+fn e4_string_print_coexists_with_putchar_newline_import() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new(
+            "str_const",
+            Some("s".into()),
+            vec![Operand::Str("HELLO".into())],
+            "str",
+        ),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("const", Some("nl".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("putchar".into()), Operand::Var("nl".into())],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default())
+        .expect("E4: string print plus putchar should lower");
+    assert!(
+        wm.imports.iter().any(|i| i.module_name == "env" && i.name == "__print_str"),
+        "expected env.__print_str import"
+    );
+    assert!(
+        wm.imports.iter().any(|i| i.module_name == "env" && i.name == "putchar"),
+        "expected env.putchar import"
+    );
+    assert_eq!(wm.data[0].data, b"HELLO");
+}
+
+// ---------------------------------------------------------------------------
+// ── Group: WasmGC i31ref box / unbox (LANG77 / McCarthy L3b-3a) ────────────
+//
+// The boxing primitives the uniform-anyref lisp value model needs: a lisp
+// integer atom is boxed into an `i31ref` (a WasmGC tagged 31-bit integer
+// reference) so it can live in a cons cell's `anyref` field, and unboxed back
+// to a machine `i32` at the numeric boundary.
+//
+// Verified at the opcode-byte level (the repo has no WasmGC runtime/validator
+// to execute the module — see the lang-aot wasm CHANGELOG):
+//   ref.i31   = 0xFB 0x1C   (GcInstruction::I31New)
+//   i31.get_s = 0xFB 0x1D   (GcInstruction::I31GetS)
+// ---------------------------------------------------------------------------
+
+/// True iff `needle` appears as a contiguous subsequence of `haystack`.
+fn contains_subseq(haystack: &[u8], needle: &[u8]) -> bool {
+    haystack.windows(needle.len()).any(|w| w == needle)
+}
+
+#[test]
+fn box_unbox_round_trip_lowers_and_emits_i31_opcodes() {
+    // fn main() -> i32 { unbox(box(const 7)) }
+    let m = module_one(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("box", Some("b".into()), vec![Operand::Var("v".into())], "ref<any>"),
+            IIRInstr::new("unbox", Some("u".into()), vec![Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("u".into())], "i32"),
+        ],
+    );
+    // lower_and_encode runs validation internally — its success proves box/unbox
+    // are now accepted (no longer in UNSUPPORTED_OPS).
+    let bytes = lower_and_encode(&m);
+    assert!(
+        contains_subseq(&bytes, &[0xFB, 0x1C]),
+        "box must emit ref.i31 (0xFB 0x1C)",
+    );
+    assert!(
+        contains_subseq(&bytes, &[0xFB, 0x1D]),
+        "unbox must emit i31.get_s (0xFB 0x1D)",
+    );
+}
+
+#[test]
+fn box_and_unbox_are_no_longer_rejected_by_validation() {
+    for (op, dest_ty) in [("box", "ref<any>"), ("unbox", "i32")] {
+        let m = module_one(
+            "main",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new(op, Some("d".into()), vec![Operand::Var("v".into())], dest_ty),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        let errs = validate_for_wasm(&m);
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "{op} must not be an UnsupportedOp anymore; got {errs:?}",
+        );
+    }
+}
+
+#[test]
+fn box_without_dest_is_rejected() {
+    let m = module_one(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("box", None, vec![Operand::Var("v".into())], "ref<any>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    assert!(lower_iir_to_wasm(&m, &IIRWasmConfig::default()).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// ── Group N: byte-tape ops + i64 conversions (LANG-MATRIX LM-W Brainfuck) ──
+// ---------------------------------------------------------------------------
+//
+// `lower_brainfuck_for_aot` widens Brainfuck's cell/pointer registers to i64
+// and rewrites the tape into `alloc_bytes` / `load_byte` / `store_byte`. These
+// tests cover the wasm lowering of those ops + the i64↔i32 conversions they and
+// the i64 loop guard need. Opcode bytes asserted: i32.load8_u=0x2D,
+// i32.store8=0x3A, i32.wrap_i64=0xA7, i64.extend_i32_u=0xAD, i64.eqz=0x50.
+
+/// `alloc_bytes`/`load_byte`/`store_byte` lower (the module validates, lowers,
+/// and encodes) and pull in a linear memory + the byte/conversion opcodes.
+#[test]
+fn byte_tape_ops_lower_with_memory_and_conversions() {
+    // A tape round-trip with i64 registers (the widened BF value model):
+    //   const tape_size = 8 (i64)
+    //   alloc_bytes tape <- tape_size       ; base offset 0
+    //   const idx = 0 (i64)
+    //   const val = 65 (i64)
+    //   store_byte tape, idx, val           ; mem[0] = 65
+    //   load_byte got <- tape, idx          ; got = 65 (zero-extended to i64)
+    //   ret got
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("tape_size".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("tape_size".into())], "i64"),
+        IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("val".into()), vec![Operand::Int(65)], "i64"),
+        IIRInstr::new("store_byte", None, vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("val".into()),
+        ], "i64"),
+        IIRInstr::new("load_byte", Some("got".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+    ]);
+
+    // Validates (no UnsupportedOp for the new ops).
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.iter().all(|e| !e.contains("UnsupportedOp")),
+        "byte-tape ops must not be UnsupportedOp; errs: {:?}", errs
+    );
+
+    // Lowers, and the module carries a linear memory for the tape.
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    assert!(!wm.memories.is_empty(), "byte-tape ops must add a linear memory");
+
+    // Encodes; the byte stream carries the memory ops + i64↔i32 conversions.
+    let bytes = encode_module(&wm).expect("encoding failed");
+    assert!(bytes.contains(&0x2Du8), "expected i32.load8_u (0x2D) for load_byte");
+    assert!(bytes.contains(&0x3Au8), "expected i32.store8 (0x3A) for store_byte");
+    assert!(bytes.contains(&0xA7u8), "expected i32.wrap_i64 (0xA7) narrowing an i64 addr/val");
+    assert!(bytes.contains(&0xADu8), "expected i64.extend_i32_u (0xAD) widening the loaded byte");
+}
+
+/// `store_byte` with a dest is rejected — it produces no value.
+#[test]
+fn store_byte_with_dest_is_rejected() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("t".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("t".into())], "i64"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("store_byte", Some("oops".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("i".into()), Operand::Var("v".into()),
+        ], "i64"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(
+        lower_iir_to_wasm(&m, &IIRWasmConfig::default()).is_err(),
+        "store_byte must not carry a dest"
+    );
+}
+
+/// An i64 comparison result is widened to i64 (so it matches its i64-declared
+/// local), and an i64 loop guard branches via `i64.eqz` — the dual fix that
+/// keeps the module well-typed once Brainfuck's cells became i64.
+#[test]
+fn i64_condition_uses_i64_eqz_and_widened_cmp() {
+    // c = (a == b)  with i64 operands → i64-declared `c`; then loop on it.
+    //   label L
+    //   c = cmp_eq a, b        ; i32 result widened to i64 (c is i64)
+    //   jmp_if_false c, End     ; i64.eqz (not i32.eqz)
+    //   jmp L
+    //   label End
+    //   ret a
+    let m = module_one("main", vec![("a", "i64"), ("b", "i64")], "i64", vec![
+        IIRInstr::new("label", None, vec![Operand::Var("L".into())], "void"),
+        IIRInstr::new("cmp_eq", Some("c".into()), vec![
+            Operand::Var("a".into()), Operand::Var("b".into()),
+        ], "i64"),
+        IIRInstr::new("jmp_if_false", None, vec![
+            Operand::Var("c".into()), Operand::Var("End".into()),
+        ], "void"),
+        IIRInstr::new("jmp", None, vec![Operand::Var("L".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("End".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    let bytes = encode_module(&wm).expect("encoding failed");
+    // i64.eqz (0x50) for the i64 guard; i64.extend_i32_u (0xAD) widening the
+    // i32 comparison boolean to the i64-declared `c`.
+    assert!(bytes.contains(&0x50u8), "expected i64.eqz (0x50) for an i64 loop guard");
+    assert!(bytes.contains(&0xADu8), "expected i64.extend_i32_u (0xAD) widening the i64 cmp result");
 }

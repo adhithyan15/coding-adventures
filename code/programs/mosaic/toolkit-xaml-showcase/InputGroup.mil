@@ -1,0 +1,33 @@
+// InputGroup.mil — interface for the toolkit's InputGroup (v0.6).
+//
+// A single-line text input with optional addons on the left and/or
+// right side. Bootstrap's `<div class="input-group">` equivalent.
+// Typical uses: prefix "$" before an amount, suffix ".00", or
+// attach a unit label like "@username".
+//
+// Both addons are plain text in v0.6. A future PR may allow button
+// addons (e.g. a search-icon button) once UI29-2 children pass-
+// through lands and lets us slot a Button reference into the addon
+// position.
+
+component InputGroup {
+  // Optional left-side addon text. Empty string hides the addon.
+  slot prefix : text ;
+
+  // Optional right-side addon text. Empty string hides the addon.
+  slot suffix : text ;
+
+  // Current text value of the inner input.
+  slot value : text ;
+
+  // Placeholder text shown when the input is empty.
+  slot placeholder : text ;
+
+  // Disabled flag. When true the input stops firing onChange.
+  slot disabled : bool ;
+
+  // Fired on every character change. Payload is the new text value.
+  emit onChange ( value : text ) ;
+  // Fired on Enter / commit. No payload.
+  emit onCommit ;
+}

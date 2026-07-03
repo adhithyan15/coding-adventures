@@ -1,0 +1,7 @@
+{
+ "idx": 46,
+ "id": "FOO-7",
+ "scenario": "A kitchen prepares ready-to-eat chicken salad on Day 0 and refrigerates it. On Day 3 it is moved to the freezer. It remains frozen for 20 days, then is thawed and returned to refrigeration on Day 23. The inspector checks it on Day 24.",
+ "policy": "Ready-to-eat TCS food prepared on-site and held refrigerated must be discarded after 7 days (date-marking rule). However, if the food is frozen before the 7-day period elapses, the count of days is suspended while frozen and resumes only when the food is thawed for use.",
+ "question": "Must the chicken salad be discarded as of Day 24 under the date-marking rule?"
+}

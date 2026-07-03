@@ -1,0 +1,8 @@
+{
+ "check_id": 5,
+ "idx": 2,
+ "slot": "days_after_service",
+ "claimed_value": 19,
+ "scenario": "A provider rendered a service on March 1 and submitted the claim on March 20, which is 19 days after the date of service.",
+ "cited_span": "which is 19 days after the date of service"
+}

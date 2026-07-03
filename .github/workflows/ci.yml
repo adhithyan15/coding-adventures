@@ -366,7 +366,11 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        if: needs.detect.outputs.needs_elixir == 'true'
+        # Elixir NIF packages skip Windows (BEAM import-library linkage isn't
+        # wired up — see each Elixir package's BUILD_windows), and
+        # erlef/setup-beam can't map newer Windows runner images (e.g.
+        # win25-vs2026), so don't install Elixir on Windows at all.
+        if: needs.detect.outputs.needs_elixir == 'true' && runner.os != 'Windows'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.18.4'
@@ -519,6 +523,41 @@ jobs:
           # actions/setup-dotnet@v4 works identically on Ubuntu, macOS, and Windows.
           dotnet-version: '9.0.x'
 
+      - name: Install ILAsm (real-CoreCLR assembler for the CLR-real conformance column)
+        # The W16 conformance suite's `CLR-real` backend assembles textual `.il`
+        # with `ilasm` and runs it on real `dotnet`. `ilasm` ships only in the
+        # RID-specific NuGet runtime pack `runtime.<rid>.Microsoft.NETCore.ILAsm`
+        # (the bare `Microsoft.NETCore.ILAsm` is ref-only, no binary). A
+        # `<PackageDownload>` restore drops the binary into `~/.nuget/packages`,
+        # exactly where the test harness's `find_ilasm()` searches — so the CLR
+        # column is verified on the *real* runtime, not just the simulator.
+        if: needs.detect.outputs.needs_dotnet == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rid=$(dotnet --info | sed -n 's/^[[:space:]]*RID:[[:space:]]*//p' | head -1)
+          echo "Host RID: ${rid:-<unknown>}"
+          if [ -z "${rid:-}" ]; then
+            echo "Could not determine RID; the CLR-real column will skip gracefully."
+            exit 0
+          fi
+          work=$(mktemp -d)
+          cat > "$work/ilasm.csproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+              <TargetFramework>net9.0</TargetFramework>
+            </PropertyGroup>
+            <ItemGroup>
+              <PackageDownload Include="runtime.$rid.Microsoft.NETCore.ILAsm" Version="[9.0.0]" />
+            </ItemGroup>
+          </Project>
+          EOF
+          # Non-fatal: if the pack is unavailable for this RID, the conformance
+          # CLR-real arm simply returns None (skip), leaving the simulator floor.
+          dotnet restore "$work/ilasm.csproj" || echo "ILAsm restore failed; CLR-real column will skip."
+          found=$(find "$HOME/.nuget/packages" -iname ilasm -type f 2>/dev/null | head -1 || true)
+          echo "ilasm binary: ${found:-<not found>}"
+
       - name: Install test runners
         shell: bash
         run: |
@@ -553,7 +592,7 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
             echo "Swift: $(swift --version | head -1)"
           fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi

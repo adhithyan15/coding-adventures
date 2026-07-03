@@ -31,8 +31,8 @@ use board_vm_language_core::{
 };
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{
-    decode_wire_frame, encode_wire_frame, ProtocolError, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST,
-    BOOT_STORE_ONLY,
+    decode_wire_frame, encode_wire_frame, ProgramFormat, ProtocolError, BOOT_RUN_AT_BOOT,
+    BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY,
 };
 use board_vm_serial::{
     available_ports, BoardSerialTransport, DataBits, FlowControl, Parity, SerialConfig, SerialPort,
@@ -334,6 +334,7 @@ pub enum ReplCommand {
     TimeNow {
         instruction_budget: Option<u32>,
     },
+    Ping,
     Stop,
     Quit,
 }
@@ -764,6 +765,7 @@ pub fn parse_repl_line(line: &str) -> Result<ReplCommand, CliError> {
         "time-now" | "time.now" | "now" => Ok(ReplCommand::TimeNow {
             instruction_budget: optional_repl_budget(words.next(), "time-now")?,
         }),
+        "ping" => Ok(ReplCommand::Ping),
         "stop" => Ok(ReplCommand::Stop),
         "quit" | "exit" => Ok(ReplCommand::Quit),
         other => Err(CliError::UnknownCommand(other.to_owned())),
@@ -872,12 +874,19 @@ pub struct SmokeReport {
     pub descriptor: BoardDescriptorInfo,
     pub upload: UploadReport,
     pub run: RunReportInfo,
+    pub ping: SmokePingReport,
+    pub stop: RunReportInfo,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BootloaderRebootReport {
     pub connection: SmokeConnectionReport,
     pub hello: HelloAckInfo,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SmokePingReport {
+    pub ok: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -918,6 +927,8 @@ pub enum SmokeStage {
     Capabilities,
     UploadBlink,
     RunBlink,
+    Ping,
+    StopBlink,
 }
 
 impl fmt::Display for SmokeStage {
@@ -927,6 +938,8 @@ impl fmt::Display for SmokeStage {
             Self::Capabilities => write!(f, "capabilities"),
             Self::UploadBlink => write!(f, "blink upload"),
             Self::RunBlink => write!(f, "blink run"),
+            Self::Ping => write!(f, "ping"),
+            Self::StopBlink => write!(f, "blink stop"),
         }
     }
 }
@@ -937,6 +950,11 @@ pub struct EjectReport {
     pub program_id: u16,
     pub slot: u8,
     pub boot_policy: u8,
+    pub program_format: ProgramFormat,
+    pub module_version: u8,
+    pub module_flags: u8,
+    pub max_stack: u8,
+    pub required_capabilities: Vec<u16>,
     pub module_len: usize,
     pub module_crc32: u32,
 }
@@ -1262,6 +1280,14 @@ where
             stage: SmokeStage::RunBlink,
             source,
         })?;
+    client.ping().map_err(|source| CliError::Smoke {
+        stage: SmokeStage::Ping,
+        source,
+    })?;
+    let stop = client.stop().map_err(|source| CliError::Smoke {
+        stage: SmokeStage::StopBlink,
+        source,
+    })?;
     Ok(SmokeReport {
         connection: SmokeConnectionReport {
             transport: connection_transport,
@@ -1272,6 +1298,8 @@ where
         descriptor,
         upload,
         run,
+        ping: SmokePingReport { ok: true },
+        stop,
     })
 }
 
@@ -1475,13 +1503,19 @@ pub fn render_blink_eject(options: &EjectBlinkOptions) -> Result<(String, EjectR
     write_embedded_rust_constants(&artifact, RustConstNames::board_vm_defaults(), &mut source)
         .map_err(|error| CliError::Eject(format!("{error:?}")))?;
 
+    let summary = artifact.summary();
     let report = EjectReport {
         output: options.output.clone(),
-        program_id: artifact.program_id,
-        slot: artifact.slot,
-        boot_policy: artifact.boot_policy,
-        module_len: artifact.module_len(),
-        module_crc32: artifact.module_crc32,
+        program_id: summary.program_id,
+        slot: summary.slot,
+        boot_policy: summary.boot_policy,
+        program_format: summary.program_format,
+        module_version: summary.module_version,
+        module_flags: summary.module_flags,
+        max_stack: summary.max_stack,
+        required_capabilities: artifact.required_capabilities.to_vec(),
+        module_len: summary.module_len,
+        module_crc32: summary.module_crc32,
     };
     Ok((source, report))
 }
@@ -1947,6 +1981,10 @@ where
             )?;
             write_run(output, &run)?;
         }
+        ReplCommand::Ping => {
+            client.ping()?;
+            writeln!(output, "pong")?;
+        }
         ReplCommand::Stop => {
             let run = client.stop()?;
             write_run(output, &run)?;
@@ -2128,7 +2166,44 @@ where
     write_hello(output, &report.hello)?;
     write_descriptor_summary(output, &report.descriptor)?;
     write_upload(output, &report.upload)?;
-    write_labeled_run(output, "blink", &report.run)
+    write_labeled_run(output, "blink", &report.run)?;
+    writeln!(output, "ping ok={}", report.ping.ok)?;
+    write_labeled_run(output, "stop", &report.stop)
+}
+
+pub fn write_eject_report<W>(output: &mut W, report: &EjectReport) -> Result<(), CliError>
+where
+    W: Write,
+{
+    writeln!(
+        output,
+        "eject output={} program_id={} slot={} boot_policy={} format=0x{:02X} module_version={} module_flags=0x{:02X} max_stack={} required_capability_count={} required_capabilities={} bytes={} crc32=0x{:08X}",
+        report.output,
+        report.program_id,
+        report.slot,
+        report.boot_policy,
+        report.program_format.as_u8(),
+        report.module_version,
+        report.module_flags,
+        report.max_stack,
+        report.required_capabilities.len(),
+        format_capability_ids(&report.required_capabilities),
+        report.module_len,
+        report.module_crc32
+    )?;
+    Ok(())
+}
+
+fn format_capability_ids(capabilities: &[u16]) -> String {
+    let mut out = String::from("[");
+    for (index, capability) in capabilities.iter().enumerate() {
+        if index > 0 {
+            out.push(',');
+        }
+        out.push_str(&format!("0x{capability:04X}"));
+    }
+    out.push(']');
+    out
 }
 
 fn format_run_values(values: &[RunValue]) -> String {
@@ -2162,7 +2237,7 @@ where
 {
     writeln!(
         output,
-        "commands: hello, caps, upload-blink, upload-gpio-read <pin> [mode], upload-time-now, run [budget], blink [budget], gpio-read <pin> [mode] [budget], time-now [budget], stop, help, quit"
+        "commands: hello, caps, upload-blink, upload-gpio-read <pin> [mode], upload-time-now, run [budget], blink [budget], gpio-read <pin> [mode] [budget], time-now [budget], ping, stop, help, quit"
     )?;
     Ok(())
 }
@@ -3012,6 +3087,11 @@ mod tests {
                 program_id: 7,
                 slot: 2,
                 boot_policy: BOOT_RUN_IF_NO_HOST,
+                program_format: ProgramFormat::BvmModule,
+                module_version: 1,
+                module_flags: 1,
+                max_stack: 4,
+                required_capabilities: vec![0x0001, 0x0002, 0x0010],
                 module_len: BLINK_MODULE_LEN,
                 module_crc32: 0xBAD6_949E,
             }
@@ -3020,6 +3100,8 @@ mod tests {
         assert!(source.contains("pub const BOARD_VM_PROGRAM_ID: u16 = 7;"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM_SLOT: u8 = 2;"));
         assert!(source.contains("pub const BOARD_VM_BOOT_POLICY: u8 = 2;"));
+        assert!(source.contains("pub const BOARD_VM_REQUIRED_CAPABILITIES: [u16; 3] = ["));
+        assert!(source.contains("0x0001, 0x0002, 0x0010,"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM: [u8; 36] = ["));
     }
 
@@ -3044,6 +3126,31 @@ mod tests {
 
         assert_eq!(report.output, options.output);
         assert!(source.contains("pub const BOARD_VM_PROGRAM_ID: u16 = 1;"));
+    }
+
+    #[test]
+    fn write_eject_report_surfaces_artifact_metadata() {
+        let report = EjectReport {
+            output: "blink.rs".to_owned(),
+            program_id: 7,
+            slot: 2,
+            boot_policy: BOOT_RUN_IF_NO_HOST,
+            program_format: ProgramFormat::BvmModule,
+            module_version: 1,
+            module_flags: 1,
+            max_stack: 4,
+            required_capabilities: vec![0x0001, 0x0002, 0x0010],
+            module_len: BLINK_MODULE_LEN,
+            module_crc32: 0xBAD6_949E,
+        };
+        let mut output = Vec::new();
+
+        write_eject_report(&mut output, &report).unwrap();
+
+        assert_eq!(
+            String::from_utf8(output).unwrap(),
+            "eject output=blink.rs program_id=7 slot=2 boot_policy=2 format=0x01 module_version=1 module_flags=0x01 max_stack=4 required_capability_count=3 required_capabilities=[0x0001,0x0002,0x0010] bytes=36 crc32=0xBAD6949E\n"
+        );
     }
 
     #[test]
@@ -3134,6 +3241,7 @@ mod tests {
                 instruction_budget: Some(24)
             }
         );
+        assert_eq!(parse_repl_line("ping").unwrap(), ReplCommand::Ping);
         assert_eq!(parse_repl_line("stop").unwrap(), ReplCommand::Stop);
         assert_eq!(parse_repl_line("quit").unwrap(), ReplCommand::Quit);
         assert_eq!(parse_repl_line("exit").unwrap(), ReplCommand::Quit);
@@ -3175,6 +3283,10 @@ mod tests {
         assert!(report.run.instructions_executed > 0);
         assert_eq!(report.run.open_handles, 1);
         assert!(report.run.returns.is_empty());
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.program_id, 7);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
     }
 
     #[test]
@@ -3249,6 +3361,16 @@ mod tests {
                 open_handles: 0,
                 returns: vec![RunValue::U32(99)],
             },
+            ping: SmokePingReport { ok: true },
+            stop: RunReportInfo {
+                program_id: 3,
+                status: RunStatus::Stopped,
+                instructions_executed: 0,
+                elapsed_ms: 250,
+                stack_depth: 0,
+                open_handles: 0,
+                returns: vec![],
+            },
         };
         let mut out = Vec::new();
 
@@ -3260,7 +3382,9 @@ mod tests {
 hello board=loopback-uno-r4 runtime=board-vm-loopback protocol=1 host_nonce=0x1234ABCD board_nonce=0xAABBCCDD\n\
 caps board=loopback-uno-r4 runtime=board-vm-loopback max_program_bytes=512 stack=8 handles=4 store=true capabilities=1\n\
 upload program_id=3 bytes=42 crc32=0xCAFEBABE\n\
-blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n"
+blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 open_handles=0 returns=[99]\n\
+ping ok=true\n\
+stop program_id=3 status=Stopped instructions=0 elapsed_ms=250 stack_depth=0 open_handles=0\n"
         );
     }
 
@@ -3326,6 +3450,9 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_eq!(report.run.program_id, 8);
         assert_eq!(report.run.status, RunStatus::Running);
         assert_eq!(report.run.open_handles, 1);
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
     }
 
     #[test]
@@ -3364,11 +3491,14 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_eq!(report.run.program_id, 10);
         assert_eq!(report.run.status, RunStatus::Running);
         assert_eq!(report.run.open_handles, 1);
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
     }
 
     #[test]
     fn smoke_endpoint_runs_over_tcp_loopback_transport() {
-        let (endpoint, server) = spawn_loopback_tcp_board(6);
+        let (endpoint, server) = spawn_loopback_tcp_board(8);
         let options = SmokeOptions {
             port: None,
             endpoint: Some(endpoint.clone()),
@@ -3398,6 +3528,9 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert_ne!(report.upload.program_crc32, 0);
         assert_eq!(report.run.program_id, 9);
         assert_eq!(report.run.status, RunStatus::Running);
+        assert!(report.ping.ok);
+        assert_eq!(report.stop.status, RunStatus::Stopped);
+        assert_eq!(report.stop.open_handles, 0);
         assert!(event_count > 0);
     }
 
@@ -3418,7 +3551,7 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
             endpoint,
             LoopbackBluetoothWireTransactor::new(),
         );
-        let input = std::io::Cursor::new(b"caps\nblink 24\nquit\n".to_vec());
+        let input = std::io::Cursor::new(b"caps\nblink 24\nping\nquit\n".to_vec());
         let mut out = Vec::new();
 
         run_repl_with_transport(&options, transport, input, &mut out).unwrap();
@@ -3434,6 +3567,7 @@ blink program_id=3 status=Halted instructions=7 elapsed_ms=250 stack_depth=1 ope
         assert!(output.contains("upload program_id=13 bytes="));
         assert!(output.contains("run program_id=13 status=Running"));
         assert!(output.contains("open_handles=1"));
+        assert!(output.contains("pong\n"));
     }
 
     #[test]

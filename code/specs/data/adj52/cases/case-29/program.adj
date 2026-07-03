@@ -1,0 +1,36 @@
+% ADJ52 case-29 — patient observations + queries.
+% Same vocabulary as rulebook.adj. Observations ONLY for what THIS patient
+% actually has. Histology has NOT yet been performed (it is the open
+% uncertainty / candidate next step), so no histology(...) term is observed.
+
+% --- the mass itself ---
+observe mass_location(interatrial_septum)
+observe mass_attenuation(fatty_composition)
+observe mass_morphology(well_circumscribed)
+observe mass_effect(abuts_and_narrows_svc)
+
+% --- MRI (benign-fat signature) ---
+observe mri_signal(t2_bright_suppresses_on_fat_sat)
+observe gadolinium_enhancement(mild)
+
+% --- FDG-PET pair (the brown-fat behaviour) ---
+observe pet_initial_uptake(markedly_elevated)
+observe pet_repeat_on_cardiac_prep(markedly_lower)
+
+% --- the imaging discordance that frames the dilemma ---
+observe diagnostic_discordance(pet_avid_vs_mri_benign)
+
+% --- ECG / rhythm ---
+observe ecg_finding(ectopic_atrial_rhythm)
+
+% ===== QUERIES =====
+% q3/q4 — characterise the fatty interatrial septal mass (benign vs malignant)
+? diagnosis(lipomatous_hypertrophy_interatrial_septum)
+? diagnosis(cardiac_lipoma)
+? diagnosis(cardiac_liposarcoma)
+? diagnosis(other_or_metastatic_fatty_tumour)
+
+% q4 — recommended next step
+? next_step(tissue_diagnosis_histology)
+? next_step(repeat_cardiac_prep_pet)
+? next_step(imaging_surveillance_only)

@@ -1,0 +1,54 @@
+{
+  "hash": "3c7e98beb4f2623a",
+  "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+  "title": "Ceftriaxone for Injection, USP — FDA Prescribing Information (Hikma Pharmaceuticals USA Inc.) [DailyMed]",
+  "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Ceftriaxone is FDA-indicated for meningitis caused by Haemophilus influenzae, Neisseria meningitidis, or Streptococcus pneumoniae.",
+      "byte_quote": "MENINGITIS caused by Haemophilus influenzae, Neisseria meningitidis or Streptococcus pneumoniae."
+    },
+    {
+      "id": "c2",
+      "text": "Ceftriaxone has also been used successfully in a limited number of meningitis and shunt-infection cases caused by Staphylococcus epidermidis and Escherichia coli.",
+      "byte_quote": "Ceftriaxone for Injection, USP has also been used successfully in a limited number of cases of meningitis and shunt infection caused by Staphylococcus epidermidis 1 and Escherichia coli. 1"
+    },
+    {
+      "id": "c3",
+      "text": "Pediatric meningitis dosing: initial therapeutic dose 100 mg/kg (max 4 g), then 100 mg/kg/day (max 4 g/day), once daily or divided every 12 hours, for a usual duration of 7 to 14 days.",
+      "byte_quote": "In the treatment of meningitis, it is recommended that the initial therapeutic dose be 100 mg/kg (not to exceed 4 grams). Thereafter, a total daily dose of 100 mg/‌kg/‌day (not to exceed 4 grams daily) is recommended. The daily dose may be administered once a day (or in equally divided doses every 12 hours). The usual duration of therapy is 7 to 14 days."
+    },
+    {
+      "id": "c4",
+      "text": "For serious non-meningitis pediatric infections, the recommended total daily dose is 50 to 75 mg/kg in divided doses every 12 hours, not to exceed 2 g/day — distinguishing the higher meningitis (CNS) dose from the general indication.",
+      "byte_quote": "For the treatment of serious miscellaneous infections other than meningitis, the recommended total daily dose is 50 to 75 mg/kg, given in divided doses every 12 hours. The total daily dose should not exceed 2 grams."
+    },
+    {
+      "id": "c5",
+      "text": "Usual adult daily dose is 1 to 2 g once daily (or divided twice daily) depending on infection type and severity, not to exceed 4 g/day (general adult indication, not meningitis-specific).",
+      "byte_quote": "The usual adult daily dose is 1 to 2 grams given once a day (or in equally divided doses twice a day) depending on the type and severity of infection. The total daily dose should not exceed 4 grams."
+    },
+    {
+      "id": "c6",
+      "text": "Ceftriaxone penetrates the inflamed meninges of infants and pediatric patients; CSF concentrations were measured after 50 mg/kg and 75 mg/kg IV doses.",
+      "byte_quote": "Ceftriaxone penetrated the inflamed meninges of infants and pediatric patients; CSF concentrations after a 50 mg/kg IV dose and after a 75 mg/kg IV dose are also shown in Table 3 ."
+    },
+    {
+      "id": "c7",
+      "text": "Measured CSF concentration through inflamed meninges was 5.6 mcg/mL after the 50 mg/kg IV dose and 6.4 mcg/mL after the 75 mg/kg IV dose.",
+      "byte_quote": "CSF Concentration - inflamed meninges (mcg/mL) 5.6 6.4"
+    },
+    {
+      "id": "c8",
+      "text": "In neonates, intravenous ceftriaxone doses should be given over 60 minutes to reduce the risk of bilirubin encephalopathy (neonate-specific host/administration factor).",
+      "byte_quote": "Intravenous doses should be given over 60 minutes in neonates to reduce the risk of bilirubin encephalopathy."
+    },
+    {
+      "id": "c9",
+      "text": "Ceftriaxone is bactericidal, acting by inhibition of bacterial cell wall synthesis, with activity in the presence of some beta-lactamases of both Gram-negative and Gram-positive bacteria.",
+      "byte_quote": "Ceftriaxone is a bactericidal agent that acts by inhibition of bacterial cell wall synthesis. Ceftriaxone has activity in the presence of some beta-lactamases, both penicillinases and cephalosporinases, of Gram-negative and Gram-positive bacteria."
+    }
+  ],
+  "cites": []
+}

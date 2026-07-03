@@ -1,0 +1,8 @@
+{
+ "idx": 12,
+ "policy": "A wetland fill activity qualifies for a Nationwide Permit 39 (commercial development) only if the loss of waters of the United States does not exceed 0.5 acre. If the loss exceeds 0.5 acre, an individual permit is required.",
+ "scenario": "Cedar Crossing LLC proposes to fill 0.34 acre of jurisdictional wetlands to build a retail pad. No other waters are affected.",
+ "question": "Does Cedar Crossing's project qualify for Nationwide Permit 39?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "qualifies"
+}

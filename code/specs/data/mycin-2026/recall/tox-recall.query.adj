@@ -1,0 +1,21 @@
+% ============================================================================
+% tox-recall.query.adj — a worked recall query over the toxidrome library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this toxidrome is caused
+% by which agent class?" question: it states no toxicology fact — it only `import`s
+% the grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the citing
+% clause's source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli tox-recall.query.adj
+% ============================================================================
+
+import "tox-edges.adj"
+
+? toxidrome_caused_by(cholinergic_toxidrome, $Agent)        % expect organophosphates
+? toxidrome_caused_by(anticholinergic_toxidrome, $Agent)    % expect tricyclic_antidepressants
+? toxidrome_caused_by(sympathomimetic_toxidrome, $Agent)    % expect cocaine_amphetamines
+? toxidrome_caused_by(opioid_toxidrome, $Agent)             % expect opioids
+? toxidrome_caused_by(serotonin_syndrome, $Agent)           % expect monoamine_oxidase_inhibitors
+? toxidrome_caused_by(sedative_hypnotic_toxidrome, $Agent)  % expect benzodiazepines

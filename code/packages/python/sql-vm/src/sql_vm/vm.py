@@ -281,17 +281,31 @@ class _VmState:
     # Handle returned by backend.begin_transaction(); None when no explicit
     # transaction is active.
     transaction_handle: TransactionHandle | None = None
-    # Per-table CHECK constraint registry: table → [(col_name, instrs)].
-    # Populated at CreateTable time; consulted before every INSERT/UPDATE.
-    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = field(
-        default_factory=dict
-    )
+    # Per-table CHECK constraint registry:
+    #   table → [(col_name, expr_text, instrs)]
+    # ``col_name`` identifies the column for the legacy fallback error;
+    # ``expr_text`` is the original predicate source so the error
+    # message can mirror SQLite (``CHECK constraint failed: a > 0``);
+    # ``instrs`` is the compiled bytecode.  The handler also accepts
+    # the older 2-tuple shape ``(col_name, instrs)`` for external test
+    # fixtures that haven't been migrated.
+    check_registry: dict[
+        str, list[tuple[str, str, tuple[Instruction, ...]]]
+    ] = field(default_factory=dict)
     # FOREIGN KEY registries — both populated at CreateTable time.
     # fk_child: child_table → [(child_col, parent_table, parent_col_or_None)]
     # fk_parent: parent_table → [(child_table, child_col, parent_col_or_None)]
     # parent_col=None means "the parent's PRIMARY KEY column".
     fk_child: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
     fk_parent: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
+    # Master switch for FOREIGN KEY enforcement.  When False, all
+    # ``_check_fk_child`` / ``_check_fk_parent`` calls short-circuit
+    # to a no-op.  Mirrors SQLite's ``PRAGMA foreign_keys = OFF``.
+    # Defaults to True (mini-sqlite enforces FKs by default — a
+    # documented deviation from SQLite's OFF default).  The mini-sqlite
+    # engine consults its per-connection PRAGMA state and forwards the
+    # value here on each ``execute()`` call.
+    fk_enabled: bool = True
     # Working-set rows for recursive CTEs.  Populated by _execute_with_cursors
     # before running the recursive sub-program; read by OpenWorkingSetScan to
     # create a fresh _SubqueryCursor on each loop entry (handles JOIN context).
@@ -380,9 +394,12 @@ def execute(
     program: Program,
     backend: Backend,
     *,
-    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] | None = None,
+    check_registry: dict[
+        str, list[tuple[str, str, tuple[Instruction, ...]]]
+    ] | None = None,
     fk_child: dict[str, list[tuple[str, str, str | None]]] | None = None,
     fk_parent: dict[str, list[tuple[str, str, str | None]]] | None = None,
+    fk_enabled: bool = True,
     event_cb: Callable[[QueryEvent], None] | None = None,
     filtered_columns: list[str] | None = None,
     trigger_executor: Callable | None = None,
@@ -433,6 +450,7 @@ def execute(
         check_registry=registry,
         fk_child=fk_c,
         fk_parent=fk_p,
+        fk_enabled=fk_enabled,
         trigger_executor=trigger_executor,
         trigger_depth=trigger_depth,
         user_functions=user_functions,
@@ -1501,6 +1519,23 @@ def _do_sort(ins: SortResult, st: _VmState) -> None:
             # wrong results for ORDER BY 2, 3, …
             idx = k.column_idx if k.column_idx is not None else columns.index(k.column)
             v = row[idx]
+            # Apply COLLATE transform before the comparator sees the value.
+            # SQLite's three built-in collations:
+            #   * BINARY (default, or k.collation is None): pass through
+            #   * NOCASE: ASCII case-insensitive — lowercase strings
+            #   * RTRIM:  strip trailing spaces, then compare BINARY
+            # The transform only applies to strings; non-string values
+            # (ints, floats, blobs, NULL) pass through unchanged because
+            # SQLite's collations only affect TEXT comparison.
+            if isinstance(v, str) and k.collation is not None:
+                coll = k.collation.upper()
+                if coll == "NOCASE":
+                    v = v.lower()
+                elif coll == "RTRIM":
+                    v = v.rstrip(" ")
+                # Unknown collation names fall through unchanged, matching
+                # SQLite's "validate lazily" approach (the user might have
+                # registered a custom collation; we don't error here).
             is_null = v is None
             # NULL placement is *independent* of direction.  We encode it as a
             # rank prefix where 0=first / 2=last, with non-null=1 in the middle.
@@ -1624,13 +1659,25 @@ def _frame_slice(
 
     When an explicit ``spec.frame`` is given, it overrides the default.
 
-    Implementation notes
-    --------------------
-    ``RANGE`` and ``GROUPS`` modes peer-group semantics are approximated as
-    ``ROWS`` physical positions — correct when all ORDER BY keys are distinct
-    (the common case).  For ``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT
-    ROW``, the approximation is exact regardless of ties because the cumulative
-    default stops at the current physical row position.
+    RANGE mode and peer groups
+    --------------------------
+    In ``RANGE`` mode ``CURRENT ROW`` does **not** mean the physical row at
+    position ``i``; it means all rows that are *peers* of row ``i`` — i.e.
+    every row whose ORDER BY key values equal those of row ``i``.
+
+    Example: ``COUNT(*) OVER (ORDER BY a)`` with data ``(1, 2, 2, 3)``
+
+    Under ROWS semantics (incorrect default):
+        row 0 (a=1) → frame [0..0], count=1
+        row 1 (a=2) → frame [0..1], count=2  ← wrong
+        row 2 (a=2) → frame [0..2], count=3
+        row 3 (a=3) → frame [0..3], count=4
+
+    Under RANGE semantics (correct, matching SQLite):
+        row 0 (a=1) → frame [0..0], count=1
+        row 1 (a=2) → frame [0..2], count=3  ← both a=2 rows are in the frame
+        row 2 (a=2) → frame [0..2], count=3
+        row 3 (a=3) → frame [0..3], count=4
 
     Args:
         partition: The sorted list of row dicts for this partition.
@@ -1644,14 +1691,44 @@ def _frame_slice(
     n = len(partition)
     frame = spec.frame
 
+    # ── Peer-group helpers (used for RANGE CURRENT ROW bounds) ───────────────
+    # In RANGE mode the ORDER BY key of row i is compared against its
+    # neighbours to determine the peer group boundaries.
+
+    def _order_key(row: dict[str, SqlValue]) -> tuple[object, ...]:  # type: ignore[type-arg]
+        return tuple(row.get(col) for col, _ in spec.order_cols)
+
+    def _peer_group_start() -> int:
+        """Inclusive index of the first row in the peer group of row i."""
+        if not spec.order_cols:
+            return 0
+        k = _order_key(partition[i])
+        j = i
+        while j > 0 and _order_key(partition[j - 1]) == k:
+            j -= 1
+        return j
+
+    def _peer_group_end() -> int:
+        """Exclusive index past the last row in the peer group of row i."""
+        if not spec.order_cols:
+            return n
+        k = _order_key(partition[i])
+        j = i + 1
+        while j < n and _order_key(partition[j]) == k:
+            j += 1
+        return j
+
     if frame is None:
         # Apply SQL-standard defaults.
         if not spec.order_cols:
-            return partition          # full-partition frame
-        return partition[:i + 1]      # cumulative (UNBOUNDED PRECEDING → CURRENT ROW)
+            return partition          # full-partition (RANGE UNBOUNDED PRECEDING/FOLLOWING)
+        # Default: RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+        # In RANGE mode CURRENT ROW = end of the peer group.
+        return partition[: _peer_group_end()]
 
     # --- Explicit frame ---------------------------------------------------
-    # Convert a FrameBound to an inclusive start index or exclusive end index.
+    # In RANGE mode, CURRENT ROW bounds expand to peer-group boundaries.
+    is_range = getattr(frame, "unit", "ROWS") == "RANGE"
 
     def _start(bound: object) -> int:  # type: ignore[return]
         """Inclusive start index."""
@@ -1660,7 +1737,7 @@ def _frame_slice(
         if k == "UNBOUNDED_PRECEDING":
             return 0
         if k == "CURRENT_ROW":
-            return i
+            return _peer_group_start() if is_range else i
         if k == "PRECEDING":
             return max(0, i - off)
         if k == "FOLLOWING":
@@ -1676,7 +1753,7 @@ def _frame_slice(
         if k == "UNBOUNDED_PRECEDING":
             return min(n, 1)           # only first row
         if k == "CURRENT_ROW":
-            return i + 1
+            return _peer_group_end() if is_range else i + 1
         if k == "PRECEDING":
             return max(0, i - off + 1)
         if k == "FOLLOWING":
@@ -2480,13 +2557,94 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"update: cursor {ins.cursor_id} not open")
+    if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
+        raise InternalError(
+            message=f"invalid on_conflict action {ins.on_conflict!r}; "
+            f"expected one of {sorted(_VALID_ON_CONFLICT)}"
+        )
     # Evaluate CHECK and FK constraints against the post-update row.
     # Copy current row so the AFTER trigger sees the pre-update snapshot in old_row,
     # even after st.current_row is mutated below.
     current = dict(st.current_row.get(ins.cursor_id, {}))
     merged = {**current, **assignments}
-    _check_constraints(ins.table, merged, st)
-    _check_fk_child(ins.table, merged, st)
+    # UPDATE OR REPLACE: delete OTHER rows that conflict on unique/PK columns,
+    # then update the current row in place.
+    #
+    # Why not delete-then-reinsert?
+    # Appending the merged row at the list tail causes the outer scan cursor to
+    # eventually reach and re-process it (infinite update loop).  Updating in
+    # place avoids this entirely — the row stays at its original position.
+    #
+    # Skipping the current row:
+    # ``_replace_delete_conflicts`` would also delete the current row (its
+    # unique values match the merged row's values).  We use content comparison
+    # (``row == current``) to skip it: since the update hasn't been applied yet
+    # the backend row still carries the original values stored in ``current``.
+    #
+    # Cursor-index correction:
+    # Deleting a conflict at index J < cursor._idx shifts the backend list left
+    # so cursor now points one element too high.  We read tmp_cur._idx (a
+    # duck-typed attribute on InMemory-family cursors) just before the delete
+    # to know J and decrement cursor._idx accordingly.
+    #
+    # CHECK and FK constraints still apply for REPLACE — only uniqueness
+    # violations are resolved by pre-deletion, not structural errors.
+    if ins.on_conflict == "REPLACE":
+        _check_constraints(ins.table, merged, st)
+        _check_fk_child(ins.table, merged, st)
+        try:
+            col_defs = st.backend.columns(ins.table)
+        except (NotImplementedError, AttributeError):
+            col_defs = []
+        unique_cols: list[str] = [
+            cd.name
+            for cd in col_defs
+            if (cd.primary_key or cd.unique) and merged.get(cd.name) is not None
+        ]
+        if unique_cols:
+            opener = getattr(st.backend, "_open_cursor", None)
+            tmp_cur = opener(ins.table) if opener is not None else st.backend.scan(ins.table)
+            try:
+                while True:
+                    row = tmp_cur.next()
+                    if row is None:
+                        break
+                    if row == current:
+                        # This is the current row — leave it for the in-place update.
+                        continue
+                    for col in unique_cols:
+                        if row.get(col) == merged[col]:
+                            tmp_idx_before = getattr(tmp_cur, "_idx", None)
+                            st.backend.delete(ins.table, tmp_cur)
+                            # Correct the outer scan cursor for the list shift.
+                            if (
+                                tmp_idx_before is not None
+                                and hasattr(cursor, "_idx")
+                                and tmp_idx_before < cursor._idx
+                            ):
+                                cursor._idx -= 1
+                            break
+            finally:
+                tmp_cur.close()
+        try:
+            st.backend.update(ins.table, cursor, assignments)
+        except be.BackendError as e:
+            raise _translate_backend_error(e) from e
+        if ins.cursor_id in st.current_row:
+            st.current_row[ins.cursor_id].update(assignments)
+        st.result.rows_affected = (st.result.rows_affected or 0) + 1
+        return
+    try:
+        _check_constraints(ins.table, merged, st)
+        _check_fk_child(ins.table, merged, st)
+    except ConstraintViolation:
+        if ins.on_conflict == "IGNORE":
+            # Ensure rows_affected is 0 rather than None so rowcount reports 0,
+            # matching SQLite's behaviour when all rows are skipped.
+            if st.result.rows_affected is None:
+                st.result.rows_affected = 0
+            return  # skip this row silently; do not increment rows_affected
+        raise
     # Fire BEFORE UPDATE triggers.
     before_triggers = [
         t for t in st.backend.list_triggers(ins.table)
@@ -2496,6 +2654,12 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
         _fire_trigger(defn, merged, current, st)
     try:
         st.backend.update(ins.table, cursor, assignments)
+    except be.ConstraintViolation as e:
+        if ins.on_conflict == "IGNORE":
+            if st.result.rows_affected is None:
+                st.result.rows_affected = 0
+            return  # backend-level violation (e.g. UNIQUE): skip silently
+        raise _translate_backend_error(e) from e
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     # Keep the local current_row in sync so subsequent LoadColumn in the loop
@@ -2552,20 +2716,36 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
             type_name=c.type,
             not_null=not c.nullable,
             primary_key=c.primary_key,
+            autoincrement=c.autoincrement,
             unique=c.unique,
             # Convert the IR-layer sentinel back to the backend-layer sentinel.
             # Any other value (including None = SQL NULL) is a literal default
             # that passes through unchanged.
             default=_BE_NO_DEFAULT if c.default is _IR_NO_DEFAULT else c.default,
+            collation=c.collation,
         )
         for c in ins.columns
     ]
     try:
-        st.backend.create_table(ins.table, col_defs, ins.if_not_exists)
+        st.backend.create_table(
+            ins.table,
+            col_defs,
+            ins.if_not_exists,
+            strict=ins.strict,
+        )
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
-    # Register CHECK constraints.
-    checks = [(c.name, c.check_instrs) for c in ins.columns if c.check_instrs]
+    # Register CHECK constraints.  Each entry is
+    # ``(col_name, expr_text, instrs)``: ``col_name`` identifies the
+    # column for the legacy fallback error form, ``expr_text`` carries
+    # the original predicate source for the SQLite-compatible
+    # ``CHECK constraint failed: <expr_text>`` message, and ``instrs``
+    # is the compiled bytecode that yields the predicate's truth value.
+    checks = [
+        (c.name, getattr(c, "check_expr_text", "") or "", c.check_instrs)
+        for c in ins.columns
+        if c.check_instrs
+    ]
     if checks:
         st.check_registry[ins.table] = checks
     # Register FOREIGN KEY constraints — both child (forward) and parent (reverse).
@@ -2587,23 +2767,40 @@ def _check_constraints(table: str, row: dict[str, SqlValue], st: _VmState) -> No
     synthetic cursor so ``LoadColumn`` can resolve column names.  NULL
     result is treated as passing (standard SQL behaviour).  ``False`` raises
     :class:`ConstraintViolation`.
+
+    The error message format follows SQLite — ``CHECK constraint failed:
+    <expr_text>`` — so users see the predicate that rejected the row
+    instead of a column reference.  We fall back to the legacy
+    ``<table>.<col>`` form when ``expr_text`` is empty (older IR
+    constructions, or expressions the adapter couldn't reconstruct).
     """
     constraints = st.check_registry.get(table)
     if not constraints:
         return
     st.current_row[CHECK_CURSOR_ID] = row
     try:
-        for col_name, instrs in constraints:
+        for entry in constraints:
+            # Support both the new 3-tuple (col_name, expr_text, instrs)
+            # and the legacy 2-tuple (col_name, instrs) so externally
+            # built check_registries (e.g. test fixtures) keep working.
+            if len(entry) == 3:
+                col_name, expr_text, instrs = entry
+            else:  # pragma: no cover — backward-compat for legacy callers
+                col_name, instrs = entry
+                expr_text = ""
             depth_before = len(st.stack)
             for instr in instrs:
                 _dispatch(instr, st)
             result = st.pop()
             assert len(st.stack) == depth_before, "CHECK expr left extra values on stack"
             if result is False:
+                # Prefer the predicate text (matches SQLite).  Fall back
+                # to the older table.col form when text is unavailable.
+                detail = expr_text if expr_text else f"{table}.{col_name}"
                 raise ConstraintViolation(
                     table=table,
                     column=col_name,
-                    message=f"CHECK constraint failed: {table}.{col_name}",
+                    message=f"CHECK constraint failed: {detail}",
                 )
     finally:
         st.current_row.pop(CHECK_CURSOR_ID, None)
@@ -2640,7 +2837,12 @@ def _check_fk_child(table: str, row: dict, st: _VmState) -> None:
 
     NULL FK values pass unconditionally (SQL standard: unknown reference is
     not an error).  Non-NULL values must have a matching row in the parent.
+
+    Honours :attr:`_VmState.fk_enabled` — when False (mirrors SQLite's
+    ``PRAGMA foreign_keys = OFF``), all FK checks are skipped.
     """
+    if not st.fk_enabled:
+        return
     fks = st.fk_child.get(table)
     if not fks:
         return
@@ -2666,7 +2868,13 @@ def _check_fk_parent(table: str, row: dict, st: _VmState) -> None:
     Only the columns registered in ``fk_parent`` are checked.  NULL values in
     the parent's referenced column cannot be referenced by any child (because
     child NULL passes unconditionally in :func:`_check_fk_child`), so we skip.
+
+    Honours :attr:`_VmState.fk_enabled` — when False (mirrors SQLite's
+    ``PRAGMA foreign_keys = OFF``), DELETE is permitted even when child
+    rows reference the deleted parent.
     """
+    if not st.fk_enabled:
+        return
     refs = st.fk_parent.get(table)
     if not refs:
         return
@@ -2743,6 +2951,9 @@ def _do_create_trigger(ins: CreateTriggerDef, st: _VmState) -> None:
     )
     try:
         st.backend.create_trigger(defn)
+    except be.TriggerAlreadyExists as e:
+        if not ins.if_not_exists:
+            raise _translate_backend_error(e) from e
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     st.result.rows_affected = 0
@@ -2758,16 +2969,48 @@ def _do_drop_trigger(ins: DropTriggerDef, st: _VmState) -> None:
 
 
 def _do_alter_table(ins: AlterTable, st: _VmState) -> None:
-    """Add a column to an existing table via ALTER TABLE … ADD COLUMN."""
+    """Dispatch one of the four ALTER TABLE forms.
+
+    The IR ``AlterTable`` instruction carries optional fields for each
+    flavour — exactly one of ``column`` / ``rename_to`` / ``rename_column``
+    / ``drop_column`` is set per instruction.  We check them in order
+    and call the matching backend method.
+    """
     from sql_backend.schema import ColumnDef as BackendColumnDef
 
-    col = BackendColumnDef(
-        name=ins.column.name,
-        type_name=ins.column.type,
-        not_null=not ins.column.nullable,
-    )
     try:
-        st.backend.add_column(ins.table, col)
+        if ins.column is not None:
+            # ALTER TABLE t ADD [COLUMN] col_def
+            from sql_backend.schema import NO_DEFAULT as _BE_NO_DEFAULT
+            from sql_codegen.ir import NO_COLUMN_DEFAULT as _IR_NO_DEFAULT
+
+            col = BackendColumnDef(
+                name=ins.column.name,
+                type_name=ins.column.type,
+                not_null=not ins.column.nullable,
+                # Convert the IR-layer sentinel to the backend-layer one so
+                # ``ALTER TABLE … ADD COLUMN x TEXT DEFAULT 'foo'`` backfills
+                # existing rows with 'foo' rather than NULL.
+                default=(
+                    _BE_NO_DEFAULT
+                    if ins.column.default is _IR_NO_DEFAULT
+                    else ins.column.default
+                ),
+                collation=ins.column.collation,
+            )
+            st.backend.add_column(ins.table, col)
+        elif ins.rename_to is not None:
+            # ALTER TABLE old RENAME TO new
+            st.backend.rename_table(ins.table, ins.rename_to)
+        elif ins.rename_column is not None:
+            # ALTER TABLE t RENAME [COLUMN] old TO new
+            old, new = ins.rename_column
+            st.backend.rename_column(ins.table, old, new)
+        elif ins.drop_column is not None:
+            # ALTER TABLE t DROP [COLUMN] c
+            st.backend.drop_column(ins.table, ins.drop_column)
+        else:
+            raise be.Unsupported(operation="ALTER TABLE with no operation field set")
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     st.result.rows_affected = 0

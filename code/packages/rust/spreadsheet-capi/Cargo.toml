@@ -1,0 +1,15 @@
+[package]
+name = "spreadsheet-capi"
+version = "0.13.0"
+edition = "2021"
+description = "Stable C ABI over the spreadsheet engine, for the native VisiCalc demos (Swift/Kotlin-JNI/Dart-FFI/.NET/C++)"
+license = "MIT"
+
+[lib]
+# cdylib   → .dylib/.so/.dll for dynamic linking (Dart FFI, P/Invoke, JNI).
+# staticlib → .a for static linking (Swift / mobile).
+# rlib     → so the crate's own host tests can call the ABI.
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+spreadsheet-core-wasm = { path = "../spreadsheet-core-wasm" }

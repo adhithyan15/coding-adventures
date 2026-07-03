@@ -1,0 +1,159 @@
+{
+  "applicant": "Jae",
+  "case_id": "case_010_exception_claimed",
+  "coverage": [
+    {
+      "end": 98,
+      "field": "no_exception_claimed",
+      "kind": "represented",
+      "length": 98,
+      "role": "fact",
+      "start": 0
+    },
+    {
+      "end": 164,
+      "field": "lpr",
+      "kind": "represented",
+      "length": 66,
+      "role": "fact",
+      "start": 98
+    },
+    {
+      "end": 283,
+      "field": "continuous_residence_years",
+      "kind": "represented",
+      "length": 119,
+      "role": "fact",
+      "start": 164
+    },
+    {
+      "end": 404,
+      "field": "physical_presence_months",
+      "kind": "represented",
+      "length": 121,
+      "role": "fact",
+      "start": 283
+    },
+    {
+      "end": 478,
+      "field": "state_district_residence_months",
+      "kind": "represented",
+      "length": 74,
+      "role": "fact",
+      "start": 404
+    },
+    {
+      "end": 584,
+      "field": "continuous_until_admission",
+      "kind": "represented",
+      "length": 106,
+      "role": "fact",
+      "start": 478
+    },
+    {
+      "end": 624,
+      "field": "good_moral_character",
+      "kind": "represented",
+      "length": 40,
+      "role": "fact",
+      "start": 584
+    },
+    {
+      "end": 710,
+      "field": "attached_constitution",
+      "kind": "represented",
+      "length": 86,
+      "role": "fact",
+      "start": 624
+    },
+    {
+      "end": 795,
+      "field": "well_disposed",
+      "kind": "represented",
+      "length": 85,
+      "role": "fact",
+      "start": 710
+    },
+    {
+      "end": 893,
+      "kind": "represented",
+      "length": 98,
+      "query": "eligible_under_8usc1427a_ordinary_five_year_path",
+      "role": "query",
+      "start": 795
+    }
+  ],
+  "coverage_summary": {
+    "discarded_bytes": 0,
+    "input_bytes": 893,
+    "represented_bytes": 893
+  },
+  "fact_refs": {
+    "attached_constitution": {
+      "end": 710,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 624,
+      "text": "Applicant Jae is attached to the principles of the Constitution of the United States.\n"
+    },
+    "continuous_residence_years": {
+      "end": 283,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 164,
+      "text": "Applicant Jae has resided continuously in the United States after LPR admission for 3 years immediately before filing.\n"
+    },
+    "continuous_until_admission": {
+      "end": 584,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 478,
+      "text": "Applicant Jae has resided continuously in the United States from application to admission to citizenship.\n"
+    },
+    "good_moral_character": {
+      "end": 624,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 584,
+      "text": "Applicant Jae has good moral character.\n"
+    },
+    "lpr": {
+      "end": 164,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 98,
+      "text": "Applicant Jae has been lawfully admitted for permanent residence.\n"
+    },
+    "no_exception_claimed": {
+      "end": 98,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 0,
+      "text": "Applicant Jae claims a statutory exception to the ordinary five-year naturalization requirements.\n"
+    },
+    "physical_presence_months": {
+      "end": 404,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 283,
+      "text": "Applicant Jae was physically present in the United States for 20 months during the five years immediately before filing.\n"
+    },
+    "state_district_residence_months": {
+      "end": 478,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 404,
+      "text": "Applicant Jae resided in the filing state or USCIS district for 1 months.\n"
+    },
+    "well_disposed": {
+      "end": 795,
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "start": 710,
+      "text": "Applicant Jae is well disposed to the good order and happiness of the United States.\n"
+    }
+  },
+  "facts": {
+    "attached_constitution": true,
+    "continuous_residence_years": 3.0,
+    "continuous_until_admission": true,
+    "good_moral_character": true,
+    "lpr": true,
+    "no_exception_claimed": false,
+    "physical_presence_months": 20.0,
+    "state_district_residence_months": 1.0,
+    "well_disposed": true
+  },
+  "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+}

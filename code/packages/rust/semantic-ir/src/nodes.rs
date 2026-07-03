@@ -124,11 +124,180 @@ pub struct Function {
     pub span: Span,
 }
 
+impl Function {
+    /// Number of *required* leading parameters — the call-arity floor.
+    ///
+    /// SIR adopts a Ruby/JS default-parameter model (SIR10 "Default
+    /// parameters and call arity"): a default may be omitted by the
+    /// caller, but only from the **trailing** edge of the positional
+    /// list.  So the required count is the length of the longest leading
+    /// run of plain positional params that have **no** default.  The
+    /// first defaulted param (or the first `*rest` / `**opts` variadic,
+    /// or the synthetic trailing block param) ends that run.
+    ///
+    /// ```text
+    ///   def f(a, b, c = 1, d = 2)   →  required_param_count() == 2
+    ///   def g(a, b)                 →  required_param_count() == 2
+    ///   def h(a = 1, b = 2)         →  required_param_count() == 0
+    /// ```
+    ///
+    /// Worked reasoning for the first example: `a` and `b` have no
+    /// default, so the leading required run is `[a, b]` (length 2); `c`
+    /// has a default and terminates the run.  A caller must therefore
+    /// pass at least 2 positional arguments.
+    ///
+    /// Note: only an unbroken *leading* run counts.  A required param
+    /// that follows a defaulted one (a "hole", e.g. `def f(a = 1, b)`)
+    /// does **not** extend the required count — the validator forbids a
+    /// caller from omitting `a` while passing `b`, so `b` is not freely
+    /// omissible and `a` is not freely required.  Such a definition is
+    /// legal (the callee always receives a `b`), but its arity floor is
+    /// the leading run length (here `0`); the trailing-default rule in
+    /// [`Self::missing_defaults`] handles the rest.
+    pub fn required_param_count(&self) -> usize {
+        self.params
+            .iter()
+            .take_while(|p| p.kind == ParamKind::Required && p.default.is_none())
+            .count()
+    }
+
+    /// The trailing parameters a caller has **omitted** when it supplies
+    /// `n_args` positional arguments — i.e. the params at positions
+    /// `n_args .. params.len()`.
+    ///
+    /// Backends use this to know which trailing params they must fill
+    /// with their default expressions at the call site (the per-backend
+    /// default-param emission, a follow-up PR).  For a call the validator
+    /// has accepted, every returned param is guaranteed to carry a
+    /// `default` (that is precisely the arity rule), so a backend can
+    /// emit each one's default unconditionally.
+    ///
+    /// ```text
+    ///   f = def f(a, b, c = 1, d = 2)
+    ///   f.missing_defaults(4)  →  []            // all args passed
+    ///   f.missing_defaults(3)  →  [d]           // d omitted
+    ///   f.missing_defaults(2)  →  [c, d]        // c, d omitted
+    /// ```
+    ///
+    /// If `n_args >= params.len()` the slice is empty.  The method never
+    /// panics on over-supply: it clamps to the param count.
+    pub fn missing_defaults(&self, n_args: usize) -> &[Param] {
+        let n = n_args.min(self.params.len());
+        &self.params[n..]
+    }
+
+    /// The callee's *keyword* parameters — those with `kind == Keyword`
+    /// (KW1).  Unlike positionals, a keyword param is matched by **name**
+    /// at the call site, so the validator's call-side resolution consults
+    /// this list (rather than a positional index) to decide whether a
+    /// `KeywordArg` is accepted and which required keywords were supplied.
+    ///
+    /// ```text
+    ///   def f(a, x:, y: 1, **rest)   →  keyword_params() == [x, y]
+    /// ```
+    ///
+    /// (`a` is positional, `**rest` is `KwRest` — neither is a `Keyword`.)
+    pub fn keyword_params(&self) -> Vec<&Param> {
+        self.params
+            .iter()
+            .filter(|p| p.kind == ParamKind::Keyword)
+            .collect()
+    }
+
+    /// The `Keyword` params whose name is **not** in `supplied` — i.e. the
+    /// keyword parameters a caller left out (KW1).
+    ///
+    /// Backends use this the way [`Self::missing_defaults`] is used for
+    /// trailing positionals: for a call the validator has **accepted**,
+    /// every returned param is guaranteed to carry a `default`.  That is
+    /// precisely the required-keyword rule: a *required* keyword (kind
+    /// `Keyword`, `default == None`) that the caller omits is a validation
+    /// error, so it can never survive into this list.  A backend may
+    /// therefore emit each returned param's default unconditionally.
+    ///
+    /// ```text
+    ///   def f(x:, y: 1, z: 2)
+    ///   f.missing_keywords(&["x", "y"])  →  [z]        // z omitted, has default
+    ///   f.missing_keywords(&["x"])       →  [y, z]     // y, z omitted, both have defaults
+    /// ```
+    pub fn missing_keywords(&self, supplied: &[&str]) -> Vec<&Param> {
+        self.params
+            .iter()
+            .filter(|p| p.kind == ParamKind::Keyword)
+            .filter(|p| !supplied.contains(&p.name.as_str()))
+            .collect()
+    }
+}
+
+/// How a parameter binds its arguments (M3 — see
+/// `code/specs/sir-variadic-params.md`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum ParamKind {
+    /// An ordinary positional parameter (`x`). The default for every
+    /// parameter that is not a splat.
+    #[default]
+    Required,
+    /// A rest parameter (`*rest`) — collects trailing positional arguments
+    /// into a sequence.
+    Rest,
+    /// A named keyword parameter (`x:` / `x: 1` in Ruby, `x` / `x=1` after
+    /// `*` in Python) — bound by *name* at the call site, never by
+    /// position (KW1 — see `code/specs/sir-keyword-params.md`).
+    ///
+    /// Required-vs-optional rides on the **existing** `Param.default`
+    /// field, exactly as a positional optional does — there is no separate
+    /// "is-required" flag:
+    ///
+    /// ```text
+    ///   Param { kind: Keyword, default: None    }  →  REQUIRED keyword: `def f(x:)`
+    ///   Param { kind: Keyword, default: Some(e) }  →  OPTIONAL keyword: `def f(x: 1)`
+    /// ```
+    ///
+    /// Why reuse `default` rather than add a flag?  Because the two axes
+    /// (how the argument is *matched* — position vs. name — and whether it
+    /// may be *omitted*) are orthogonal.  `ParamKind` already answers the
+    /// first for the positional/`Rest`/`KwRest` cases; `default` already
+    /// answers the second for positionals.  A `Keyword` param simply
+    /// combines the name-matched axis with the same omissibility rule, so
+    /// no new field (and, because `ParamKind` is `Copy` with
+    /// `#[default] = Required`, no existing `Param { .. }` construction)
+    /// changes.
+    Keyword,
+    /// A keyword-rest parameter (`**opts`) — collects trailing keyword
+    /// arguments into a map.
+    KwRest,
+}
+
 /// A function parameter.
-#[derive(Debug, Clone, PartialEq, Eq)]
+///
+/// The optional `default` carries a parameter's default-value
+/// expression, e.g. the `1` in Ruby `def f(a = 1)` (and the Python /
+/// JS equivalents).  `None` means an ordinary parameter with no
+/// default; `Some(expr)` means the parameter binds to `expr` when the
+/// caller omits the corresponding argument.
+///
+/// The default is boxed (`Option<Box<Expr>>`) to break the otherwise
+/// infinitely-sized recursive type `Param → Expr → Function → Param`:
+/// a default expression may contain a closure whose own parameters may
+/// themselves have defaults.  `Box` puts the `Expr` behind a pointer so
+/// the struct has a fixed size.
+///
+/// Note: because `Expr` contains an `f64` (`FloatLit`) it cannot derive
+/// `Eq`, so neither can `Param` once it holds an `Expr`.  `Param`
+/// therefore derives only `PartialEq` (structural equality is still
+/// available; total `Eq` is not — consistent with `Expr`/`Block`).
+#[derive(Debug, Clone, PartialEq)]
 pub struct Param {
     pub name: String,
     pub sir_type: Option<SirType>,
+    /// The binding kind (`Required` by default; `Rest`/`KwRest` for the
+    /// `*rest`/`**opts` variadic forms — M3).
+    pub kind: ParamKind,
+    /// The default-value expression, if any.  `None` for an ordinary
+    /// parameter; `Some(expr)` for `name = expr` (Ruby/Python/JS).
+    /// Boxed to keep `Param` a fixed size despite the `Param → Expr →
+    /// Function → Param` cycle.
+    pub default: Option<Box<Expr>>,
     pub span: Span,
 }
 
@@ -155,6 +324,28 @@ pub struct Capture {
 pub struct Block {
     pub stmts: Vec<Stmt>,
     pub value: Expr,
+    pub span: Span,
+}
+
+/// One `rescue` clause of a [`Stmt::TryCatch`] (SIR17, Ruby Phase 16a).
+///
+/// A `begin … rescue … end` may carry several `rescue` clauses, each
+/// matching a (possibly empty) set of exception classes and optionally
+/// binding the caught exception to a local.
+#[derive(Debug, Clone, PartialEq)]
+pub struct RescueClause {
+    /// Exception class names this clause matches (`rescue Foo, Bar`).
+    /// **Empty** means a bare `rescue` (catch-all).  These are advisory
+    /// names only: SIR v0 has no exception-class symbol table, so the
+    /// validator does not resolve them (mirroring `ClassDef.superclass`).
+    pub exception_types: Vec<String>,
+    /// Optional binding for the caught exception (`rescue … => e`).
+    /// When `Some`, the name is in scope as a `Scope::Local` within
+    /// `body` only.
+    pub binding: Option<String>,
+    /// The clause body, a bare statement list (no trailing value slot,
+    /// like `ClassDef.body`).
+    pub body: Vec<Stmt>,
     pub span: Span,
 }
 
@@ -233,6 +424,90 @@ pub enum Stmt {
         value: Expr,
         span: Span,
     },
+
+    // ── SIR17: class declarations ──────────────────────────────────
+    /// `class Name; body; end` — a class declaration.
+    ///
+    /// SIR v0 represents a class as a named declaration whose body is
+    /// itself a list of statements.  Phase 14a (Ruby frontend) lands
+    /// the *empty-body* case: `class Foo; end` lowers to
+    /// `ClassDef { name: "Foo", body: vec![], span }`.  Method bodies
+    /// are *not* nested here yet — they continue to be hoisted to
+    /// top-level `Function`s by the Ruby lowerer's existing pass
+    /// (see ruby-to-semantic-ir Phase 6f).  Later Ruby phases (14b)
+    /// will populate `body` directly so methods nest under their
+    /// owning class.
+    ///
+    /// Why a `Vec<Stmt>` body rather than `Block`?  A class body
+    /// produces no value — it is a declaration, not an expression —
+    /// so the per-Block trailing `value` field doesn't apply.
+    /// Backends emit each statement in source order.
+    ///
+    /// `superclass` (SIR17, Ruby Phase 14c) carries the parent class
+    /// name for `class Foo < Bar` — `Some("Bar")` — and is `None` for
+    /// a base class (`class Foo`).  It is an advisory name only: SIR v0
+    /// has no class symbol table, so the validator does not resolve it
+    /// (mirroring how the class's own `name` is not bound as a local).
+    ClassDef {
+        name: String,
+        superclass: Option<String>,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    /// `module Name; body; end` — a module (namespace / mixin)
+    /// declaration.  Structurally a `ClassDef` without inheritance:
+    /// a named declaration whose `body` is a list of statements.
+    ///
+    /// Introduced by the Ruby frontend's Phase 14d.  Like `ClassDef`,
+    /// method `def`s inside the body are hoisted to top-level
+    /// `Function`s by the lowerer (SIR v0 has no method-as-statement
+    /// node); the `body` carries the module's *non-def* statements in
+    /// source order.  A module has no superclass, so there is no
+    /// `superclass` field.
+    ModuleDef {
+        name: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    /// `class << receiver; body; end` — a singleton-class (metaclass)
+    /// declaration.  Introduced by the Ruby frontend's Phase 14e.
+    ///
+    /// `target` is the receiver whose singleton class is opened — the
+    /// dominant idiom is `class << self` (`target = "self"`), but a
+    /// bare object name is also accepted (`class << obj`).  Like
+    /// `ClassDef`/`ModuleDef`, method `def`s inside the body are
+    /// hoisted to top-level `Function`s by the lowerer; `body` carries
+    /// the non-`def` statements.  Triggers `Feature::Classes` (a
+    /// singleton class is a class-opening construct, not a new
+    /// feature).
+    SingletonClassDef {
+        target: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    // ── SIR17: exception handling ──────────────────────────────────
+    /// `begin; body; rescue …; ensure …; end` — structured exception
+    /// handling.  Introduced by the Ruby frontend's Phase 16a, which
+    /// replaces the earlier `__rescue_marker__` / `__ensure_marker__`
+    /// inline `BuiltinCall` placeholders with this first-class node.
+    ///
+    /// - `body` runs first (a bare statement list, like `ClassDef.body`).
+    /// - `rescues` are tried in order if `body` raises; each
+    ///   [`RescueClause`] matches a set of exception classes and may
+    ///   bind the exception.
+    /// - `ensure_body`, when `Some`, runs unconditionally afterwards.
+    ///
+    /// Gated by `Feature::Exceptions`; backends that don't accept it
+    /// reject the module at the capability check before emit.
+    TryCatch {
+        body: Vec<Stmt>,
+        rescues: Vec<RescueClause>,
+        ensure_body: Option<Vec<Stmt>>,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -247,6 +522,10 @@ impl Stmt {
             Stmt::ForEach { span, .. } => span,
             Stmt::SeqSet { span, .. } => span,
             Stmt::MapSet { span, .. } => span,
+            Stmt::ClassDef { span, .. } => span,
+            Stmt::ModuleDef { span, .. } => span,
+            Stmt::SingletonClassDef { span, .. } => span,
+            Stmt::TryCatch { span, .. } => span,
         }
     }
 }
@@ -265,6 +544,28 @@ pub enum Scope {
     Global,
     /// Language built-in (`+`, `cons`, etc.).
     Builtin,
+    /// Object instance variable (Ruby `@x`).  Unlike `Local`, an
+    /// instance variable needs **no prior declaration**: reading an
+    /// unset `@x` yields nil in Ruby, so the validator performs no
+    /// scope-existence check for this kind.  The leading `@` sigil is
+    /// preserved in the `VarRef` / `Assign` name.  Introduced by the
+    /// Ruby frontend's Phase 15a; gated by `Feature::InstanceVars`.
+    Instance,
+    /// Class variable (Ruby `@@x`).  Like `Instance`, it needs **no
+    /// prior declaration** (the validator performs no scope-existence
+    /// check) — but it is shared across the class hierarchy rather than
+    /// per-object.  The leading `@@` sigil is preserved in the name.
+    /// Introduced by the Ruby frontend's Phase 15b; gated by
+    /// `Feature::ClassVars`.
+    ClassVar,
+    /// Constant (Ruby `FOO`, `MyClass` — any name whose first letter is
+    /// uppercase).  Like `Instance`/`ClassVar`, it needs **no prior
+    /// declaration** in the SIR sense (the validator performs no
+    /// scope-existence check): a constant is resolved against the
+    /// enclosing lexical/constant scope at runtime, not against a `let`
+    /// binding.  The name is preserved verbatim.  Introduced by the
+    /// Ruby frontend's Phase 15c; gated by `Feature::Constants`.
+    Const,
 }
 
 impl Scope {
@@ -276,6 +577,9 @@ impl Scope {
             Scope::Capture => "capture",
             Scope::Global => "global",
             Scope::Builtin => "builtin",
+            Scope::Instance => "instance",
+            Scope::ClassVar => "class-var",
+            Scope::Const => "const",
         }
     }
 
@@ -287,6 +591,9 @@ impl Scope {
             "capture" => Scope::Capture,
             "global" => Scope::Global,
             "builtin" => Scope::Builtin,
+            "instance" => Scope::Instance,
+            "class-var" => Scope::ClassVar,
+            "const" => Scope::Const,
             _ => return None,
         })
     }
@@ -405,6 +712,46 @@ pub enum Expr {
         rhs: Box<Expr>,
         span: Span,
     },
+
+    // ── SIR18: string interpolation ────────────────────────────────
+    /// String concatenation of two or more `parts`, evaluated left to
+    /// right and joined into a single string.  This is the first-class
+    /// replacement for the v0 `BuiltinCall("string_concat", parts)`
+    /// marker that Ruby's `"a#{x}b"` interpolation used to lower to —
+    /// the same relationship `SeqLen` has to `BuiltinCall("len", ...)`
+    /// or `TryCatch` has to the old `__rescue_marker__` builtin.
+    ///
+    /// Giving concatenation a dedicated node lets a backend emit native
+    /// string building (`format!` / template literals / f-strings)
+    /// instead of routing through a runtime helper, and lets the
+    /// validator track interpolation usage via
+    /// `Feature::StringInterpolation` distinctly from a plain `StrLit`.
+    ///
+    /// Invariant: `parts.len() >= 2`.  A zero- or one-part concat is
+    /// degenerate — frontends emit a bare `StrLit` (empty string) or the
+    /// single part directly rather than wrapping it.
+    StrConcat { parts: Vec<Expr>, span: Span },
+
+    // ── KW1: keyword arguments ─────────────────────────────────────
+    /// A keyword argument at a call site: `name: value` (Ruby `f(a: 1)`,
+    /// Python `f(a=1)`).  Appears ONLY inside a call's `args` vec, and only
+    /// AFTER all positional arguments.  The validator enforces both rules.
+    ///
+    /// Design note — why a `KeywordArg` *inside* `args` rather than a
+    /// separate `kwargs` field on each call node?  Three call nodes
+    /// (`DirectCall`, `IndirectCall`, `MakeClosure`) all take arguments;
+    /// threading a parallel `kwargs: Vec<(String, Expr)>` through every one
+    /// (plus the walker, printer, and every backend `match`) would triple
+    /// the surface area.  Instead a keyword argument is just another
+    /// `Expr` variant that may sit in the *existing* `args` vec, so
+    /// `f(1, a: 2)` lowers to `args: [IntLit(1), KeywordArg { name: "a",
+    /// value: IntLit(2) }]`.  Positional args stay bare; the validator
+    /// guarantees every `KeywordArg` trails all positionals, so a backend
+    /// can split `args` at the first `KeywordArg` without ambiguity.
+    ///
+    /// `value` is boxed for the same fixed-size reason as the other
+    /// single-child expression variants (`SeqLen`, `MapGet`, …).
+    KeywordArg { name: String, value: Box<Expr>, span: Span },
 }
 
 /// A single capture provided to `MakeClosure`.  The `name` matches a
@@ -448,6 +795,8 @@ impl Expr {
             Expr::MapGet { span, .. } => span,
             Expr::LogicalAnd { span, .. } => span,
             Expr::LogicalOr { span, .. } => span,
+            Expr::StrConcat { span, .. } => span,
+            Expr::KeywordArg { span, .. } => span,
         }
     }
 
@@ -476,6 +825,8 @@ impl Expr {
             Expr::MapGet { .. } => "map-get",
             Expr::LogicalAnd { .. } => "and",
             Expr::LogicalOr { .. } => "or",
+            Expr::StrConcat { .. } => "str-concat",
+            Expr::KeywordArg { .. } => "keyword-arg",
         }
     }
 }
@@ -625,6 +976,16 @@ mod tests {
                 },
                 "or",
             ),
+            (
+                Expr::StrConcat {
+                    parts: vec![
+                        Expr::StrLit { value: "a".into(), span: span.clone() },
+                        Expr::StrLit { value: "b".into(), span: span.clone() },
+                    ],
+                    span: span.clone(),
+                },
+                "str-concat",
+            ),
         ];
         for (e, expected) in &cases {
             assert_eq!(e.kind_name(), *expected);
@@ -643,6 +1004,105 @@ mod tests {
         let c = Expr::FloatLit { value: 3.14, span: s() };
         let d = Expr::FloatLit { value: 3.14, span: s() };
         assert_eq!(c, d);
+    }
+
+    // ── KW1: keyword parameters & arguments ────────────────────────
+
+    #[test]
+    fn keyword_arg_span_and_kind_name() {
+        let e = Expr::KeywordArg {
+            name: "a".into(),
+            value: Box::new(Expr::IntLit { value: 1, span: s() }),
+            span: s(),
+        };
+        assert_eq!(e.span(), &s());
+        assert_eq!(e.kind_name(), "keyword-arg");
+    }
+
+    /// A `Keyword` param with `default == None` is REQUIRED; with
+    /// `default == Some(_)` it is OPTIONAL.  This test pins the truth table
+    /// documented on `ParamKind::Keyword`.
+    #[test]
+    fn keyword_param_required_vs_optional_via_default() {
+        let required = Param {
+            name: "x".into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: None,
+            span: s(),
+        };
+        let optional = Param {
+            name: "y".into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+            span: s(),
+        };
+        assert_eq!(required.kind, ParamKind::Keyword);
+        assert!(required.default.is_none(), "kw with no default = required");
+        assert!(optional.default.is_some(), "kw with default = optional");
+    }
+
+    fn kw_param(name: &str, default: Option<i64>) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: default.map(|v| Box::new(Expr::IntLit { value: v, span: s() })),
+            span: s(),
+        }
+    }
+
+    fn fn_with_params(params: Vec<Param>) -> Function {
+        Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn keyword_params_helper_selects_only_keyword_kind() {
+        // def f(a, x:, y: 1, **rest) → keyword_params() == [x, y].
+        let f = fn_with_params(vec![
+            Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            kw_param("x", None),
+            kw_param("y", Some(1)),
+            Param { name: "rest".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+        ]);
+        let kws: Vec<&str> = f.keyword_params().iter().map(|p| p.name.as_str()).collect();
+        assert_eq!(kws, vec!["x", "y"]);
+    }
+
+    #[test]
+    fn missing_keywords_returns_unsupplied_keyword_params() {
+        // def f(x:, y: 1, z: 2)
+        let f = fn_with_params(vec![
+            kw_param("x", None),
+            kw_param("y", Some(1)),
+            kw_param("z", Some(2)),
+        ]);
+        // Supplying x and y leaves z omitted.
+        let missing: Vec<&str> = f
+            .missing_keywords(&["x", "y"])
+            .iter()
+            .map(|p| p.name.as_str())
+            .collect();
+        assert_eq!(missing, vec!["z"]);
+        // Supplying only x leaves y and z omitted (both carry defaults).
+        let missing2: Vec<&str> = f
+            .missing_keywords(&["x"])
+            .iter()
+            .map(|p| p.name.as_str())
+            .collect();
+        assert_eq!(missing2, vec!["y", "z"]);
+        // Supplying all leaves nothing.
+        assert!(f.missing_keywords(&["x", "y", "z"]).is_empty());
     }
 
     #[test]

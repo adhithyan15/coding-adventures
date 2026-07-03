@@ -38,6 +38,7 @@
  * | `__twig_print_string` | Write `len` bytes from `ptr` to stdout.      |
  * | `__twig_input_i64`    | Read a line and parse it as a signed int64.  |
  * | `__twig_exit`         | Terminate the program with the given code.   |
+ * | `__twig_str_eq`       | LANG-STR-RT: byte-equal two length-prefixed strings. |
  *
  * Adding new runtime helpers
  * ─────────────────────────
@@ -148,6 +149,32 @@ __declspec(noreturn)
 #endif
 void __twig_exit(int32_t code) {
     exit((int)code);
+}
+
+/* __twig_str_eq — compare two LANG-STR-RT strings for equality (LANG-STR-RT).
+ *
+ * Every native-AOT string buffer has the layout:
+ *   offset 0  : int64_t length
+ *   offset 8  : char bytes[0..length)
+ *
+ * Returns 1 (true) when the strings have equal length and identical bytes,
+ * 0 (false) otherwise.  Both pointers must be non-null and valid (callers
+ * are responsible for ensuring this — V1 does not null-check).
+ */
+int64_t __twig_str_eq(int64_t a, int64_t b) {
+    /* Null-pointer guard: a 0 value means the caller passed an uninitialized
+     * slot (e.g. from a compiler bug).  Treat as "not equal" rather than
+     * crashing on the dereference below. */
+    if (a == 0 || b == 0) return 0;
+    int64_t len_a = *(int64_t *)a;
+    int64_t len_b = *(int64_t *)b;
+    /* Negative-length guard: if the header is negative (corrupt buffer or
+     * adversarial write), casting to size_t would produce a huge value and
+     * cause memcmp to over-read the heap.  Treat as "not equal". */
+    if (len_a < 0 || len_b < 0) return 0;
+    if (len_a != len_b) return 0;
+    if (len_a == 0) return 1;
+    return memcmp((const char *)a + 8, (const char *)b + 8, (size_t)len_a) == 0 ? 1 : 0;
 }
 
 /* __twig_alloc_bytes — allocate `n` zero-initialised bytes on the heap

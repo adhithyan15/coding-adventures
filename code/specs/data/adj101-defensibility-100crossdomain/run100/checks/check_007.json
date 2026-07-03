@@ -1,0 +1,8 @@
+{
+ "check_id": 7,
+ "idx": 3,
+ "slot": "on_metformin",
+ "claimed_value": true,
+ "scenario": "Mrs. Adeyemi, a type 2 diabetic on metformin, is scheduled for a contrast-enhanced CT scan this afternoon. Her chart notes long-standing hypertension and stage 3 chronic kidney disease, and her most recent labs were drawn this morning.",
+ "cited_span": "a type 2 diabetic on metformin"
+}

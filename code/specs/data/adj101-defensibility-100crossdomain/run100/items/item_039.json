@@ -1,0 +1,7 @@
+{
+ "idx": 39,
+ "id": "BEN-10",
+ "scenario": "Lena attended only 40% of her scheduled Job Training sessions last month because she was hospitalized for three weeks, which she documented with hospital records. She requests her monthly stipend.",
+ "policy": "Recipients of the Job Training Stipend must attend at least 80% of scheduled sessions to receive their monthly payment, except where a recipient's absence is due to a documented hospitalization, in which case the attendance requirement is waived and the payment is issued in full.",
+ "question": "Does Lena receive her monthly Job Training Stipend payment?"
+}

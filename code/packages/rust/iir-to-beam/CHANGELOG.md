@@ -1,5 +1,18 @@
 # Changelog — iir-to-beam
 
+## [0.5.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W10, F3–F5)
+
+Lower the McCarthy predicate `call_builtin`s to native Erlang type/equality
+guards, each producing a 0/1 boolean via the same synthesis the `cmp_*` ops use
+(preload 0 → test that branches to a synth label on FALSE → move 1 → label):
+- `pair?`  → `is_nonempty_list` (opcode 56) — a McCarthy cons IS a list cell `[H|T]`.
+- `equal?` → `is_eq_exact` (`=:=`).
+- `not`    → `is_eq_exact x 0` (logical `x == 0`).
+`COND` reuses the existing `jmp_if_true`/`jmp_if_false`. Removed `call_builtin`
+from `UNSUPPORTED_OPS`; the lowering arm returns `UnsupportedOp` for any builtin
+outside the predicate set. The native-Erlang twins of the JVM instanceof/ixor/
+if_icmpeq and the CLR isinst/xor/ceq.
+
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 

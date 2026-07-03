@@ -1,0 +1,2 @@
+var DEBUG_FLAG=false;if(false)console.log("dev mode");
+

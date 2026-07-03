@@ -175,6 +175,15 @@ impl IphcTrafficClassFlowLabel {
             Self::Elided => 3,
         }
     }
+
+    pub fn inline_len(self) -> usize {
+        match self {
+            Self::Inline => 4,
+            Self::FlowLabelInline => 3,
+            Self::TrafficClassInline => 1,
+            Self::Elided => 0,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -202,6 +211,10 @@ impl IphcHopLimit {
             Self::SixtyFour => 2,
             Self::TwoHundredFiftyFive => 3,
         }
+    }
+
+    pub fn inline_len(self) -> usize {
+        usize::from(matches!(self, Self::Inline))
     }
 }
 
@@ -279,6 +292,44 @@ impl IphcEncoding {
                 | self.destination_address_mode.bits(),
         ]
     }
+
+    pub fn fixed_inline_fields_len(self) -> usize {
+        self.traffic_class_flow_label.inline_len()
+            + usize::from(!self.next_header_compressed)
+            + self.hop_limit.inline_len()
+    }
+
+    pub fn source_address_inline_len(self) -> usize {
+        iphc_unicast_address_inline_len(
+            self.source_address_compression,
+            self.source_address_mode,
+            true,
+        )
+        .expect("all IPHC source address modes have a deterministic inline length")
+    }
+
+    pub fn destination_address_inline_len(self) -> Option<usize> {
+        if self.multicast_destination {
+            iphc_multicast_address_inline_len(
+                self.destination_address_compression,
+                self.destination_address_mode,
+            )
+        } else {
+            iphc_unicast_address_inline_len(
+                self.destination_address_compression,
+                self.destination_address_mode,
+                false,
+            )
+        }
+    }
+
+    pub fn inline_fields_len(self) -> Option<usize> {
+        Some(
+            self.fixed_inline_fields_len()
+                + self.source_address_inline_len()
+                + self.destination_address_inline_len()?,
+        )
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -318,6 +369,22 @@ pub struct IphcHeader {
     pub payload: Vec<u8>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcPayloadSlices<'a> {
+    pub inline_fields: &'a [u8],
+    pub carried_payload: &'a [u8],
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcInlineFieldSlices<'a> {
+    pub traffic_class_flow_label: &'a [u8],
+    pub next_header: Option<u8>,
+    pub hop_limit: Option<u8>,
+    pub source_address: &'a [u8],
+    pub destination_address: &'a [u8],
+    pub carried_payload: &'a [u8],
+}
+
 impl IphcHeader {
     pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
         if bytes.len() < 2 {
@@ -344,6 +411,73 @@ impl IphcHeader {
         2 + usize::from(self.context_identifier.is_some())
     }
 
+    pub fn inline_fields_len(&self) -> Option<usize> {
+        self.encoding.inline_fields_len()
+    }
+
+    pub fn split_payload(&self) -> Result<Option<IphcPayloadSlices<'_>>, SixlowpanError> {
+        let Some(inline_len) = self.inline_fields_len() else {
+            return Ok(None);
+        };
+        if self.payload.len() < inline_len {
+            return Err(SixlowpanError::Truncated {
+                needed: inline_len,
+                remaining: self.payload.len(),
+            });
+        }
+        Ok(Some(IphcPayloadSlices {
+            inline_fields: &self.payload[..inline_len],
+            carried_payload: &self.payload[inline_len..],
+        }))
+    }
+
+    pub fn split_inline_fields(&self) -> Result<Option<IphcInlineFieldSlices<'_>>, SixlowpanError> {
+        let Some(destination_address_len) = self.encoding.destination_address_inline_len() else {
+            return Ok(None);
+        };
+        let inline_len = self.encoding.fixed_inline_fields_len()
+            + self.encoding.source_address_inline_len()
+            + destination_address_len;
+        if self.payload.len() < inline_len {
+            return Err(SixlowpanError::Truncated {
+                needed: inline_len,
+                remaining: self.payload.len(),
+            });
+        }
+
+        let mut pos = 0;
+        let traffic_class_flow_label = take_slice(
+            &self.payload,
+            &mut pos,
+            self.encoding.traffic_class_flow_label.inline_len(),
+        )?;
+        let next_header = if self.encoding.next_header_compressed {
+            None
+        } else {
+            Some(read_u8(&self.payload, &mut pos)?)
+        };
+        let hop_limit = if self.encoding.hop_limit == IphcHopLimit::Inline {
+            Some(read_u8(&self.payload, &mut pos)?)
+        } else {
+            None
+        };
+        let source_address = take_slice(
+            &self.payload,
+            &mut pos,
+            self.encoding.source_address_inline_len(),
+        )?;
+        let destination_address = take_slice(&self.payload, &mut pos, destination_address_len)?;
+
+        Ok(Some(IphcInlineFieldSlices {
+            traffic_class_flow_label,
+            next_header,
+            hop_limit,
+            source_address,
+            destination_address,
+            carried_payload: &self.payload[pos..],
+        }))
+    }
+
     pub fn encode_prefix(&self) -> Result<Vec<u8>, SixlowpanError> {
         let mut out = Vec::with_capacity(self.encoded_header_len());
         let mut encoding = self.encoding;
@@ -359,6 +493,40 @@ impl IphcHeader {
         let mut out = self.encode_prefix()?;
         out.extend_from_slice(&self.payload);
         Ok(out)
+    }
+}
+
+fn iphc_unicast_address_inline_len(
+    stateful_context: bool,
+    mode: IphcAddressMode,
+    source: bool,
+) -> Option<usize> {
+    match (stateful_context, mode, source) {
+        (false, IphcAddressMode::Inline128, _) => Some(16),
+        (false, IphcAddressMode::Compressed64, _) => Some(8),
+        (false, IphcAddressMode::Compressed16, _) => Some(2),
+        (false, IphcAddressMode::Elided, _) => Some(0),
+        (true, IphcAddressMode::Inline128, true) => Some(0),
+        (true, IphcAddressMode::Inline128, false) => None,
+        (true, IphcAddressMode::Compressed64, _) => Some(8),
+        (true, IphcAddressMode::Compressed16, _) => Some(2),
+        (true, IphcAddressMode::Elided, _) => Some(0),
+    }
+}
+
+fn iphc_multicast_address_inline_len(
+    stateful_context: bool,
+    mode: IphcAddressMode,
+) -> Option<usize> {
+    match (stateful_context, mode) {
+        (false, IphcAddressMode::Inline128) => Some(16),
+        (false, IphcAddressMode::Compressed64) => Some(6),
+        (false, IphcAddressMode::Compressed16) => Some(4),
+        (false, IphcAddressMode::Elided) => Some(1),
+        (true, IphcAddressMode::Inline128) => Some(6),
+        (true, IphcAddressMode::Compressed64)
+        | (true, IphcAddressMode::Compressed16)
+        | (true, IphcAddressMode::Elided) => None,
     }
 }
 
@@ -976,6 +1144,23 @@ fn read_u8(bytes: &[u8], pos: &mut usize) -> Result<u8, SixlowpanError> {
     Ok(read_array::<1>(bytes, pos)?[0])
 }
 
+fn take_slice<'a>(
+    bytes: &'a [u8],
+    pos: &mut usize,
+    len: usize,
+) -> Result<&'a [u8], SixlowpanError> {
+    let remaining = bytes.len().saturating_sub(*pos);
+    if remaining < len {
+        return Err(SixlowpanError::Truncated {
+            needed: len,
+            remaining,
+        });
+    }
+    let out = &bytes[*pos..*pos + len];
+    *pos += len;
+    Ok(out)
+}
+
 fn read_array<const N: usize>(bytes: &[u8], pos: &mut usize) -> Result<[u8; N], SixlowpanError> {
     let remaining = bytes.len().saturating_sub(*pos);
     if remaining < N {
@@ -1182,6 +1367,138 @@ mod tests {
         assert_eq!(
             IphcContextIdentifier::new(16, 0),
             Err(SixlowpanError::InvalidContextIdentifier(16))
+        );
+    }
+
+    #[test]
+    fn iphc_encoding_reports_inline_field_lengths() {
+        let encoding = IphcEncoding {
+            traffic_class_flow_label: IphcTrafficClassFlowLabel::TrafficClassInline,
+            next_header_compressed: false,
+            hop_limit: IphcHopLimit::Inline,
+            context_identifier_extension: false,
+            source_address_compression: false,
+            source_address_mode: IphcAddressMode::Compressed16,
+            multicast_destination: true,
+            destination_address_compression: false,
+            destination_address_mode: IphcAddressMode::Elided,
+        };
+
+        assert_eq!(encoding.fixed_inline_fields_len(), 3);
+        assert_eq!(encoding.source_address_inline_len(), 2);
+        assert_eq!(encoding.destination_address_inline_len(), Some(1));
+        assert_eq!(encoding.inline_fields_len(), Some(6));
+    }
+
+    #[test]
+    fn iphc_header_splits_inline_fields_from_carried_payload() {
+        let header = IphcHeader {
+            encoding: IphcEncoding {
+                traffic_class_flow_label: IphcTrafficClassFlowLabel::TrafficClassInline,
+                next_header_compressed: false,
+                hop_limit: IphcHopLimit::Inline,
+                context_identifier_extension: false,
+                source_address_compression: false,
+                source_address_mode: IphcAddressMode::Compressed16,
+                multicast_destination: true,
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Elided,
+            },
+            context_identifier: None,
+            payload: vec![0x00, 0x11, 0x40, 0xaa, 0xbb, 0x02, 0xf0, 0x12],
+        };
+
+        let split = header.split_payload().unwrap().unwrap();
+
+        assert_eq!(split.inline_fields, &[0x00, 0x11, 0x40, 0xaa, 0xbb, 0x02]);
+        assert_eq!(split.carried_payload, &[0xf0, 0x12]);
+    }
+
+    #[test]
+    fn iphc_header_splits_structured_inline_fields() {
+        let header = IphcHeader {
+            encoding: IphcEncoding {
+                traffic_class_flow_label: IphcTrafficClassFlowLabel::Inline,
+                next_header_compressed: false,
+                hop_limit: IphcHopLimit::Inline,
+                context_identifier_extension: false,
+                source_address_compression: false,
+                source_address_mode: IphcAddressMode::Compressed64,
+                multicast_destination: false,
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Compressed16,
+            },
+            context_identifier: None,
+            payload: vec![
+                0xaa, 0xbb, 0xcc, 0xdd, 0x11, 0x40, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                0xfe, 0xed, 0xf0, 0x12,
+            ],
+        };
+
+        let fields = header.split_inline_fields().unwrap().unwrap();
+
+        assert_eq!(fields.traffic_class_flow_label, &[0xaa, 0xbb, 0xcc, 0xdd]);
+        assert_eq!(fields.next_header, Some(0x11));
+        assert_eq!(fields.hop_limit, Some(0x40));
+        assert_eq!(
+            fields.source_address,
+            &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
+        );
+        assert_eq!(fields.destination_address, &[0xfe, 0xed]);
+        assert_eq!(fields.carried_payload, &[0xf0, 0x12]);
+    }
+
+    #[test]
+    fn iphc_inline_lengths_flag_reserved_address_modes() {
+        let encoding = IphcEncoding {
+            traffic_class_flow_label: IphcTrafficClassFlowLabel::Elided,
+            next_header_compressed: true,
+            hop_limit: IphcHopLimit::SixtyFour,
+            context_identifier_extension: false,
+            source_address_compression: true,
+            source_address_mode: IphcAddressMode::Elided,
+            multicast_destination: false,
+            destination_address_compression: true,
+            destination_address_mode: IphcAddressMode::Inline128,
+        };
+        let truncated = IphcHeader {
+            encoding: IphcEncoding {
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Inline128,
+                ..encoding
+            },
+            context_identifier: None,
+            payload: vec![0xaa],
+        };
+
+        assert_eq!(encoding.destination_address_inline_len(), None);
+        assert_eq!(encoding.inline_fields_len(), None);
+        assert_eq!(
+            IphcHeader {
+                encoding,
+                context_identifier: None,
+                payload: Vec::new()
+            }
+            .split_payload()
+            .unwrap(),
+            None
+        );
+        assert_eq!(
+            truncated.split_payload(),
+            Err(SixlowpanError::Truncated {
+                needed: 16,
+                remaining: 1
+            })
+        );
+        assert_eq!(
+            IphcHeader {
+                encoding,
+                context_identifier: None,
+                payload: Vec::new()
+            }
+            .split_inline_fields()
+            .unwrap(),
+            None
         );
     }
 

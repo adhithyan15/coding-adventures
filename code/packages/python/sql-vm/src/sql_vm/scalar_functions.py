@@ -58,7 +58,6 @@ import json as _json
 import math
 import os
 import re
-import struct
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 
@@ -350,17 +349,43 @@ def _cast_fn(x: SqlValue, target_type: SqlValue) -> SqlValue:
                  "varying character", "nchar", "native character",
                  "clob"):
             if isinstance(x, bytes):
-                return x.hex()
+                # SQLite's BLOB→TEXT cast UTF-8-decodes the bytes
+                # (treating them as the encoded text representation),
+                # NOT hex-encodes them.  So ``CAST(x'48656c6c6f' AS
+                # TEXT)`` is ``'Hello'`` and ``CAST(CAST(42 AS BLOB)
+                # AS TEXT)`` round-trips to ``'42'``.  Invalid UTF-8
+                # bytes are replaced with U+FFFD via ``errors="replace"``
+                # so a malformed blob can never raise UnicodeDecodeError
+                # mid-query (matches SQLite's lenient decoding).
+                return x.decode("utf-8", errors="replace")
+            # SQLite has no native boolean type — TRUE / FALSE round-trip
+            # as integers 1 / 0.  ``CAST(TRUE AS TEXT)`` must therefore
+            # yield ``'1'``, not Python's ``'True'``.  Check ``bool``
+            # before the generic ``str`` path because ``bool`` is a
+            # subclass of ``int`` and would otherwise be caught by it
+            # under the existing INTEGER affinity path.
+            if isinstance(x, bool):
+                return str(int(x))
             return str(x)
         if t in ("blob", "none"):
             if isinstance(x, bytes):
                 return x
             if isinstance(x, str):
                 return x.encode("utf-8")
+            # SQLite's numeric→BLOB cast goes through the TEXT
+            # representation first: ``CAST(1 AS BLOB)`` yields
+            # ``b'1'`` (one byte) — the UTF-8 encoding of the
+            # integer's decimal string — not an 8-byte big-endian
+            # packed int.  The same applies to floats (``b'1.5'``)
+            # and booleans (``CAST(TRUE AS BLOB)`` → ``b'1'``).
+            # Check ``bool`` before ``int`` because Python's
+            # ``bool`` is a subclass of ``int``.
+            if isinstance(x, bool):
+                return str(int(x)).encode("utf-8")
             if isinstance(x, int):
-                return struct.pack(">q", x)
+                return str(x).encode("utf-8")
             if isinstance(x, float):
-                return struct.pack(">d", x)
+                return str(x).encode("utf-8")
             return bytes(x)  # type: ignore[call-overload]
         if t in ("boolean", "bool"):
             return bool(x)

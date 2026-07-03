@@ -1,0 +1,45 @@
+% ADJ52 case-17 — patient observations + queries.
+% Same vocabulary as rulebook.adj. Observations ONLY for what THIS patient
+% actually has. The MNGIE-confirmatory biochemistry (plasma thymidine/
+% deoxyuridine + thymidine phosphorylase activity) and brain MRI for
+% leukoencephalopathy were NOT performed — they are the open uncertainties /
+% candidate next steps — so they are deliberately NOT observed.
+
+% --- demographics ---
+observe age(under_30)
+
+% --- gut dysmotility (gastroparesis + retained food + small-bowel ileus) ---
+observe finding(severe_gut_dysmotility)
+
+% --- wasting / cachexia ---
+observe finding(profound_cachexia)
+observe exam(profoundly_cachectic_appearance)
+observe finding(bitemporal_generalized_muscle_wasting)
+observe finding(poor_dentition)
+observe finding(generalized_weakness)
+
+% --- neuropathy stigmata (fixed flexion contracture + distal wasting + weakness) ---
+observe finding(peripheral_neuropathy_stigmata)
+
+% --- the unexplained metabolic disturbance ---
+observe lactate(persistently_elevated)
+
+% --- course / prior management ---
+observe course(refractory_to_gastroparesis_treatment)
+observe workup(negative_structural_infectious_autoimmune_neoplastic)
+
+% --- psychiatric history ---
+observe history(prior_psychiatric_label)
+
+% ===== QUERIES =====
+% q1 — the single unifying diagnosis
+? unifying_diagnosis(mngie)
+? unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+? unifying_diagnosis(eating_disorder)
+? unifying_diagnosis(systemic_sclerosis_gut_disease)
+? unifying_diagnosis(paraneoplastic_autoimmune_dysmotility)
+
+% q2/q3/q4/q5 — recommended next step (must explain lactate + refractoriness + contracture)
+? next_step(plasma_thymidine_deoxyuridine_and_tp_activity)
+? next_step(brain_mri_for_leukoencephalopathy)
+? next_step(continue_gastroparesis_directed_therapy_only)

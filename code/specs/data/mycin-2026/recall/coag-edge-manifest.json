@@ -1,0 +1,156 @@
+{
+  "kind": "coag-edge",
+  "clauses": {
+    "factor_deficiency__hemophilia_a": {
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_a",
+      "object": "factor_viii",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hemophilia A and B result from factor VIII and factor IX protein deficiency or dysfunction, respectively, and are characterized by prolonged and excessive bleeding after minor trauma or sometimes even spontaneously.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK551607/"
+    },
+    "coag_inheritance__hemophilia_a": {
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_a",
+      "object": "x_linked_recessive",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "An X-linked, recessive hemorrhagic trait or gene induces Hemophilia A.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK470265/"
+    },
+    "prolonged_test__hemophilia_a": {
+      "relation": "prolonged_test",
+      "subject": "hemophilia_a",
+      "object": "aptt",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hemophiliacs have an elevated aPTT and a normal PT/INR, as well as normal bleeding time and platelet count.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK541050/"
+    },
+    "factor_deficiency__hemophilia_b": {
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_b",
+      "object": "factor_ix",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hemophilia B, also known as Christmas disease, is the second most prevalent form of hemophilia. A defect in the F9 gene causes hemophilia B, leading to inadequate production of factor IX.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK560792/"
+    },
+    "coag_inheritance__hemophilia_b": {
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_b",
+      "object": "x_linked_recessive",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hemophilia B primarily follows an X-linked recessive pattern of inheritance.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK560792/"
+    },
+    "prolonged_test__hemophilia_b": {
+      "relation": "prolonged_test",
+      "subject": "hemophilia_b",
+      "object": "aptt",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Patients with hemophilia B will exhibit a prolonged aPTT, a normal PT, and normal platelet levels, indicating an intrinsic pathway disruption.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK560792/"
+    },
+    "factor_deficiency__von_willebrand_disease": {
+      "relation": "factor_deficiency",
+      "subject": "von_willebrand_disease",
+      "object": "von_willebrand_factor",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Von Willebrand disease is a bleeding disorder caused by the qualitative or quantitative deficiency of the pro-von Willebrand factor.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK459222/"
+    },
+    "coag_inheritance__von_willebrand_disease": {
+      "relation": "coag_inheritance",
+      "subject": "von_willebrand_disease",
+      "object": "autosomal_dominant",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Type 1: This is an autosomal dominant disease (AD, incomplete penetrance approximately 60%) and is caused by a partial quantitative deficiency of von Willebrand factor.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK459222/"
+    },
+    "prolonged_test__von_willebrand_disease": {
+      "relation": "prolonged_test",
+      "subject": "von_willebrand_disease",
+      "object": "bleeding_time",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Lab findings include decreased vWF, normal platelet count, increased bleeding time, normal prothrombin time, and normal or decreased factor VIII corresponding with normal or increased partial thromboplastin time, depending on which domain is affected.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK559062/"
+    },
+    "factor_deficiency__factor_vii_deficiency": {
+      "relation": "factor_deficiency",
+      "subject": "factor_vii_deficiency",
+      "object": "factor_vii",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Factor VII deficiency is a bleeding disorder characterized by a lack in the production of factor VII",
+      "url": "https://en.wikipedia.org/wiki/Factor_VII_deficiency"
+    },
+    "coag_inheritance__factor_vii_deficiency": {
+      "relation": "coag_inheritance",
+      "subject": "factor_vii_deficiency",
+      "object": "autosomal_recessive",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Inherited Factor VII deficiency is the most common among rare autosomal recessive bleeding disorders.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5406770/"
+    },
+    "prolonged_test__factor_vii_deficiency": {
+      "relation": "prolonged_test",
+      "subject": "factor_vii_deficiency",
+      "object": "pt",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Inherited deficiency of factor VII is a rare bleeding disorder characterized by a prolonged PT and a normal aPTT.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK265/"
+    },
+    "factor_deficiency__hemophilia_c": {
+      "relation": "factor_deficiency",
+      "subject": "hemophilia_c",
+      "object": "factor_xi",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "There is hemophilia C as well, which occurs due to deficiency of clotting factor XI but is rare.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK551607/"
+    },
+    "coag_inheritance__hemophilia_c": {
+      "relation": "coag_inheritance",
+      "subject": "hemophilia_c",
+      "object": "autosomal_recessive",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hereditary FXI deficiency (also known as hemophilia C) was first described as a hemophilia-like syndrome by Rosenthal et al. ... It is inherited as an autosomal recessive trait that may arise because of a wide range of mutations, including missense, nonsense, splice-site, insertion, and deletion mutations, within the F11 gene.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3190010/"
+    },
+    "prolonged_test__hemophilia_c": {
+      "relation": "prolonged_test",
+      "subject": "hemophilia_c",
+      "object": "aptt",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Factor XI deficiency may prolong the aPTT, though a normal aPTT does not exclude mild deficiency and can result in false negative results. Typically, the aPTT becomes prolonged when the factor XI level is significantly reduced to the range of < 15%.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7153668/"
+    }
+  },
+  "hash": "3e4d4e682667c8ab"
+}

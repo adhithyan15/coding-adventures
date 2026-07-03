@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-maxima-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `maxima` binary for the Maxima CAS"
+license = "MIT"
+
+[dependencies]
+coding-adventures-maxima-runtime = { path = "../maxima-runtime" }
+
+[[bin]]
+name = "maxima"
+path = "src/main.rs"

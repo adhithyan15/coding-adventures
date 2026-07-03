@@ -1,0 +1,42 @@
+{
+  "final_translation": "Regina, the freedwoman of Barates, alas.",
+  "per_token_final": [
+    {
+      "token": "t1",
+      "surface": "RGYNᵓ",
+      "final_gloss": "Regina (personal name of the deceased woman)",
+      "source": "closed_book"
+    },
+    {
+      "token": "t2",
+      "surface": "BT",
+      "final_gloss": "construct-state marker heading the phrase BT ḤRY 'freedwoman of' (not a genealogical 'daughter of' here); corresponds to Latin liberta",
+      "source": "open_book_grounded"
+    },
+    {
+      "token": "t3",
+      "surface": "ḤRY",
+      "final_gloss": "common noun 'freed(woman)' (root ḥrr 'to be free'), forming BT ḤRY = 'freedwoman of' — NOT a personal name 'Ḥari'",
+      "source": "open_book_grounded"
+    },
+    {
+      "token": "t4",
+      "surface": "BR",
+      "final_gloss": "part of the Palmyrene spelling of the dedicator's name BR ᶜTᵓ = 'Barates' (not a separate genealogical 'son of')",
+      "source": "open_book_grounded"
+    },
+    {
+      "token": "t5",
+      "surface": "ᶜTᵓ",
+      "final_gloss": "Barates (Palmyrene ʿAtē/ʿAtā), the name of the man who set up the stone — NOT a grandfather 'ʿAttā'",
+      "source": "open_book_grounded"
+    },
+    {
+      "token": "t6",
+      "surface": "ḤBL",
+      "final_gloss": "'alas!' — the standard Palmyrene funerary lament closing the epitaph",
+      "source": "closed_book"
+    }
+  ],
+  "notes": "Open-book grounding overturned the closed-book three-generation genealogy: ḤRY (t3) is the common noun 'freed(woman)', not the name 'Ḥari', so the adjacent BT (t2) re-reads as the construct head of BT ḤRY = 'freedwoman of' (Latin liberta) rather than 'daughter of'; likewise ᶜTᵓ (t5) is the dedicator Barates, so the preceding BR (t4) is part of his name BR ᶜTᵓ = 'Barates' rather than a genealogical 'son of'. Only ḤBL ('alas') and the name Regina survive from the closed-book reading."
+}

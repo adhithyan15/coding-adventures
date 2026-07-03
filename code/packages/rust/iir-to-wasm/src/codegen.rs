@@ -114,6 +114,13 @@ pub const I32_CONST: u8 = 0x41;
 /// `i32.eqz` (0x45) — test if i32 == 0; push i32 result.
 pub const I32_EQZ: u8 = 0x45;
 
+/// `i64.eqz` (0x50) — test if i64 == 0; push **i32** result (1 if zero, else 0).
+///
+/// Used by the control-flow lowering to test an i64 branch condition (the
+/// Brainfuck loop guard is an i64 cell value after `lower_brainfuck_for_aot`
+/// widening) and produce the i32 boolean that `if`/`br_if` require.
+pub const I64_EQZ: u8 = 0x50;
+
 /// `i32.eq` (0x46) — i32 == i32; push i32 (1 or 0).
 pub const I32_EQ: u8 = 0x46;
 
@@ -205,6 +212,41 @@ pub const I64_LE_S: u8 = 0x57;
 
 /// `i64.ge_s` (0x59) — signed i64 >=.
 pub const I64_GE_S: u8 = 0x59;
+
+/// `i64.ge_u` (0x5A) — **unsigned** i64 >=. Used by the E5 array bounds check:
+/// `idx >=u len` traps on both a `>= len` index and a negative one (a negative
+/// i64 reinterpreted as unsigned is huge), exactly like LLVM's `icmp uge`.
+pub const I64_GE_U: u8 = 0x5A;
+
+/// `i64.load` (0x29) — load an i64 from linear memory at `address + offset`,
+/// with an `align` hint. Used by the E5 array length header + `i64` elements.
+/// `align = 0` (1-byte) is always valid; the interpreter ignores it.
+pub fn encode_i64_load(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x29u8, 0x00u8]; // i64.load, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
+/// `i64.store` (0x37) — store an i64 to `address + offset`. Stack: `[addr, val]`.
+pub fn encode_i64_store(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x37u8, 0x00u8]; // i64.store, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
+/// `f64.load` (0x2B) — load an f64 from `address + offset` (E5 `array<f64>`).
+pub fn encode_f64_load(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x2Bu8, 0x00u8]; // f64.load, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
+
+/// `f64.store` (0x39) — store an f64 to `address + offset`. Stack: `[addr, val]`.
+pub fn encode_f64_store(offset: u32) -> Vec<u8> {
+    let mut b = vec![0x39u8, 0x00u8]; // f64.store, align = 0
+    b.extend(encode_unsigned(offset as u64));
+    b
+}
 
 /// `i64.add` (0x7C) — i64 addition.
 pub const I64_ADD: u8 = 0x7C;
@@ -320,6 +362,29 @@ pub const F64_DIV: u8 = 0xA3;
 
 /// `f64.neg` (0x9A) — f64 negation.
 pub const F64_NEG: u8 = 0x9A;
+
+// ── numeric conversions integer↔real (LANG-FULL E8) ───────────────────────
+//
+// All three are wasm MVP opcodes (no feature gate). The **non-saturating**
+// `i64.trunc_f64_s` is deliberate: it **traps** on NaN / ±∞ / out-of-`i64`-range,
+// which matches vm-core's `real_to_i64_checked` fail-closed contract exactly —
+// no explicit range guard needed (unlike the saturating `i64.trunc_sat_f64_s`,
+// which would clamp and silently diverge from the VM).
+
+/// `f64.floor` (0x9C) — round a double toward −∞ (for `real_to_int_floor`).
+pub const F64_FLOOR: u8 = 0x9C;
+
+/// `f64.sqrt` (0x9F) — IEEE-754 square root (hardware; no libm call).
+/// Adjacent ops in the spec: abs=0x99, neg=0x9A, ceil=0x9B, floor=0x9C,
+/// trunc=0x9D, nearest=0x9E, **sqrt=0x9F**.
+pub const F64_SQRT: u8 = 0x9F;
+
+/// `i64.trunc_f64_s` (0xB0) — truncate a double toward zero to a signed i64,
+/// **trapping** on NaN/±∞/out-of-range.
+pub const I64_TRUNC_F64_S: u8 = 0xB0;
+
+/// `f64.convert_i64_s` (0xB9) — convert a signed i64 to a double (IEEE-754).
+pub const F64_CONVERT_I64_S: u8 = 0xB9;
 
 // ── drop (stack cleanup) ──────────────────────────────────────────────────
 

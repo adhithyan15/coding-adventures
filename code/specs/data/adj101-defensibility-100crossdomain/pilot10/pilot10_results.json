@@ -1,0 +1,250 @@
+{
+ "aggregate": {
+  "n_items": 10,
+  "programs_emitted": "10/10",
+  "programs_executed": "9/10",
+  "auditable": "10/10",
+  "provenance_clean_breakdown": {
+   "no_fabrications": "10/10",
+   "no_magic_numbers": "10/10",
+   "coverage_complete": "10/10"
+  },
+  "correct_informational": "9/10",
+  "not_clean": "1/10",
+  "not_clean_AND_localized": "1/10"
+ },
+ "rows": [
+  {
+   "id": "PHYS1",
+   "domain": "physics",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 5.102040816326528,
+   "gold": 5.102,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 3,
+   "n_discarded": 1
+  },
+  {
+   "id": "MATH1",
+   "domain": "mathematics",
+   "emitted": true,
+   "exec_ok": false,
+   "result": null,
+   "gold": 2.095,
+   "correct": null,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": "Traceback (most recent call last):\n  File \"/var/folders/bc/p7d6ysvx3rq6b7qg43qbyk780000gn/T/tmpg5w8qb1n.py\", line 17, in <module>\n    real_root = sp.Float(sp.re(real_roots[0]))\n                               ~~~~~~~~~~^^^\nIndexError: list index out of range"
+   },
+   "stderr": "Traceback (most recent call last):\n  File \"/var/folders/bc/p7d6ysvx3rq6b7qg43qbyk780000gn/T/tmpg5w8qb1n.py\", line 17, in <module>\n    real_root = sp.Float(sp.re(real_roots[0]))\n                               ~~~~~~~~~~^^^\nIndexError: list index out of range",
+   "n_facts": 1,
+   "n_discarded": 0
+  },
+  {
+   "id": "UNIT1",
+   "domain": "units-physics",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 27.77777777777778,
+   "gold": 27.778,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 2,
+   "n_discarded": 0
+  },
+  {
+   "id": "CHEM1",
+   "domain": "chemistry",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 180.15899999999996,
+   "gold": 180.16,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 1,
+   "n_discarded": 0
+  },
+  {
+   "id": "CHEM2",
+   "domain": "chemistry",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 0.0,
+   "gold": 0,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 2,
+   "n_discarded": 1
+  },
+  {
+   "id": "FIN1",
+   "domain": "finance-math",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 5624.32,
+   "gold": 5624.32,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 3,
+   "n_discarded": 1
+  },
+  {
+   "id": "CHEM3",
+   "domain": "chemistry",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 68.57975441002307,
+   "gold": 68.58,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [
+     "stoich_ratio_co2_per_ch4"
+    ],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 4,
+   "n_discarded": 1
+  },
+  {
+   "id": "GEO1",
+   "domain": "geometry",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 26.832815729997478,
+   "gold": 26.833,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 3,
+   "n_discarded": 0
+  },
+  {
+   "id": "PHYS2",
+   "domain": "physics",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 2.8384537902274576,
+   "gold": 2.838,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 2,
+   "n_discarded": 0
+  },
+  {
+   "id": "CHEM4",
+   "domain": "chemistry",
+   "emitted": true,
+   "exec_ok": true,
+   "result": 88.80932556203165,
+   "gold": 88.81,
+   "correct": true,
+   "auditable": true,
+   "fabrications": [],
+   "unfaithful_facts": [],
+   "missing_coverage": [],
+   "magic_numbers": [],
+   "error_locus": {
+    "unfaithful_facts": [],
+    "fabrications": [],
+    "surfaced_assumptions": [],
+    "exec_error": null
+   },
+   "stderr": "",
+   "n_facts": 1,
+   "n_discarded": 0
+  }
+ ]
+}

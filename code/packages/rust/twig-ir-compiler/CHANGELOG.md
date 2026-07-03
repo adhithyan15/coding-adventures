@@ -1,5 +1,413 @@
 # Changelog — twig-ir-compiler
 
+## [0.37.0] — 2026-06-28 (LANG-FULL E4 — direct-call string parameter inference)
+
+Top-level Twig functions can now infer `str` for otherwise-unannotated
+parameters from conservative `main`-level direct-call evidence:
+
+```scheme
+(define (strlen s) (string-length s)) (strlen "HELLO")
+```
+
+The prepass only considers direct top-level calls from `main` expressions or
+non-lambda define RHSs. A parameter becomes `str` only when observed direct-call
+arguments are static E4 string expressions with no conflicting evidence. The
+callee body then emits `str_len [i64]`, the caller materialises the string
+argument through E4 string ops, and no refinement annotations are synthesized.
+Unobserved, conflicting, closure-derived, captured, or reassigned parameter
+paths remain dynamic.
+
+## [0.36.0] — 2026-06-28 (LANG-FULL E4 — annotated string parameters)
+
+Bare `str` / `string` parameter annotations on top-level Twig functions now seed
+the compiler's static IIR type map. A function body can therefore lower
+parameter-derived string operations through E4:
+
+```scheme
+(define (strlen (s : str)) (string-length s)) (strlen "HELLO")
+```
+
+The callee parameter is `str`, the body emits `str_len [i64]`, and direct callers
+with known string arguments materialise those arguments through E4 string ops
+instead of raw `const [str]`.
+
+## [0.35.0] — 2026-06-28 (LANG-FULL E4 — top-level string function returns)
+
+Direct calls to top-level Twig functions now inherit the function's statically
+known return type when the function body already lowers to typed IIR. This lets a
+function-wrapped E4 string operation run through the code-gen backends:
+
+```scheme
+(define (strlen) (string-length "HELLO")) (strlen)
+```
+
+The function body emits `str_len [i64]`, its `ret` carries `i64`, and the caller's
+`call` result is typed `i64` rather than `any`.
+
+## [0.34.0] — 2026-06-28 (LANG-FULL E4 — lexical string ordering predicates)
+
+Literal and known local `string<?` / `string>?` expressions now lower through
+the shared `str_cmp` op followed by typed integer comparison against zero.
+
+## [0.33.0] — 2026-06-28 (LANG-FULL E4 — substring feeds string-ref proof)
+
+Lexical string bindings can now feed `substring`, and the resulting string can
+feed `string-ref` through shared E4 ops:
+
+```scheme
+(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))
+```
+
+The compiler emits `str_slice` for `substring` when the source is a known E4
+string expression and both bounds are known E4 index expressions. The indexed
+byte is `67` (`C` in `BCD`), with no dynamic string builtin fallback.
+
+## [0.32.0] — 2026-06-28 (LANG-FULL E4 — computed string index proof)
+
+Lexical string bindings can now compute a `string-ref` index with typed integer
+arithmetic over `string-length`:
+
+```scheme
+(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))
+```
+
+The E4 recognizer accepts this statically-typed index expression, so the
+compiler emits `str_len`, typed `sub`, and `str_index` without falling back to
+dynamic `string-length`, `-`, or `string-ref` builtins. The indexed byte is
+`69` (`E` in `ABCDE`).
+
+## [0.31.0] — 2026-06-28 (LANG-FULL E4 — local concat indexing proof)
+
+Lexical string bindings now have an explicit compiler proof that the result of
+`string-append` can feed `string-ref` through E4 without falling back to dynamic
+string builtins:
+
+```scheme
+(let ((a "AB") (b "CDE") (i 3)) (string-ref (string-append a b) i))
+```
+
+The compiler lowers the local strings to typed `str_const` registers, emits
+`str_concat` for the append result, then consumes that temporary with
+`str_index`. The indexed byte is `68` (`D` in `ABCDE`).
+
+## [0.30.0] — 2026-06-27 (LANG-FULL E4 — lexical string equality branch proof)
+
+Lexical string bindings now have an explicit compiler proof for `string=?`
+driving control flow:
+
+```scheme
+(let ((s "OK") (t "OK")) (if (string=? s t) 42 0))
+```
+
+The compiler lowers both locals to typed `str_const` registers, feeds them to
+E4 `str_eq`, and branches on the resulting i64 boolean without using the
+dynamic `call_builtin` path.
+
+## [0.29.0] — 2026-06-27 (LANG-FULL E4 — lexical string concat proof)
+
+Lexical string bindings now have an explicit compiler proof for non-literal E4
+concat: `(let ((a "AB") (b "CDE")) (string-length (string-append a b)))`
+lowers to direct `str_const` locals, `str_concat`, and `str_len`, with no
+dynamic `call_builtin` path.
+
+This does not widen the representation boundary: captured/reassigned strings
+and broader dynamic string values remain follow-up E4 work.
+
+## [0.28.0] — 2026-06-27 (LANG-FULL E4 — lexical string locals)
+
+Lexical `let` and `let*` string literal bindings now materialize as typed
+`str_const` registers instead of legacy dynamic `const Operand::Str` values when
+they feed the E4 string-op path. The E4 recognizer now accepts known local
+typed `str` registers and local integer index registers, so `(let ((s "ABC")
+(i 2)) (string-ref s i))` lowers to shared `str_index` without `call_builtin`.
+
+This proves local string slots for the current literal-value foothold while still
+leaving captured/reassigned strings and broader dynamic string values to the
+future byte-string representation work.
+
+## [0.27.0] — 2026-06-27 (LANG-FULL E4 — named string values)
+
+Immutable top-level string value defines now lower to `str_const` registers when
+they are not captured by a lambda or forced through a forward reference. Reads of
+those names stay in `main`, so `string-length`, `string-append`, `string=?`, and
+`string-ref` can lower to the shared E4 `str_len`/`str_concat`/`str_eq`/
+`str_index` ops over named string values instead of falling back to dynamic
+globals or `call_builtin`.
+
+This deliberately does not claim full string variable semantics: `let`/reassignable
+string slots, captured strings, and dynamic string values still stay on their
+existing paths until the broader E4 string representation lands.
+
+Verified by compiler tests for named string length, concat length, equality in a
+branch, and indexing, plus new `lang-aot` matrix rows across all seven backends.
+
+## [0.26.0] — 2026-06-27 (LANG-FULL E4 — literal string index)
+
+Literal `(string-ref "..." i)` now lowers to the shared E4 `str_index` path:
+`str_const` for the direct literal, an integer `const` for the index, then
+`str_index` for the typed byte result. This adds the direct ASCII indexing
+foothold to the existing literal string metadata paths while preserving the
+dynamic `call_builtin` path for non-literal string values.
+
+Verified by a compiler test asserting the exact `str_const` + `const` +
+`str_index` + `ret` shape and by the cross-backend `lang-aot` matrix row.
+
+## [0.25.0] — 2026-06-27 (LANG-FULL E4 — literal string metadata)
+
+Literal `(string-length "...")`, `(string=? "..." "...")`, and
+`(string-length (string-append "..." "..."))` now lower to the shared E4 VM
+string ops: `str_const` for each direct literal, then `str_len`, `str_eq`, or
+`str_concat` for the typed result path. This gives the code-gen backends typed,
+language-neutral string-length, string-equality, and literal-append-length proofs
+while preserving the existing dynamic `call_builtin` paths for non-literal
+string values.
+
+Verified by compiler tests asserting the exact `str_const` +
+`str_len`/`str_eq`/`str_concat` + `ret` shapes and by the cross-backend
+`lang-aot` matrix rows.
+
+## [0.24.0] — 2026-06-14 (Path A increment 4 — top-level value `define`, LANG-FULL TW2)
+
+### Added — a `main`-only value `define` lowers to a typed local
+
+A top-level value `define` previously lowered to `call_builtin "global_set" name
+value`, and every read to `call_builtin "global_get" name` — both carrying
+`type_hint = "any"`, which every IIR-to-{llvm,wasm,jvm,clr} backend validator
+rejects.  So a program as simple as `(define x 40) (define y 2) (+ x y)` ran only
+on the VM.
+
+This increment adds a small **escape analysis** (`free_vars::lambda_captured_globals`):
+a value `define` that is **not captured by any lambda** is read only from `main`,
+so the compiler keeps its statically-typed (`i64` / `bool`) value in a `main`
+register and resolves reads to that register directly.  No `global_set` /
+`global_get` is emitted, so `main` stays fully typed and clears every backend
+validator.  Verified by RUNNING: `lang-aot`'s `lang_matrix.rs` executes
+`(define x 40) (define y 2) (+ x y)` ⇒ exit 42 across native / LLVM / WASM / JVM
+/ CLR / VM / JIT.
+
+A value captured by a closure (read inside a lambda body) still compiles to a
+separate function with no access to `main`'s registers, so it stays on the host
+global table (`global_set` / `global_get`) exactly as before.  A top-level
+forward reference (a read before the matching `define`) likewise stays on the
+global table, keeping behaviour byte-identical to the pre-TW2 dynamic path.
+
+## [0.23.0] — 2026-06-14 (Path A increment 3 — typed variadic arithmetic, LANG-FULL TW1)
+
+### Added — n-ary `(+ a b c …)` folds to a typed binary chain
+
+Scheme arithmetic is variadic, but only the binary form `(+ a b)` lowered to a
+typed CIR `add`; a three-or-more-argument call (`(+ 10 20 12)`) fell back to the
+legacy `call_builtin "+"` path with `type_hint = "any"`, which every
+IIR-to-{llvm,wasm,jvm,clr} backend validator rejects — so variadic Twig
+arithmetic ran only on the dynamic VM path.
+
+This increment folds an all-`i64` arithmetic call (`+`, `-`, `*`, `/`) into a
+**left-associated chain of typed binary mnemonics**:
+
+```text
+(+ 10 20 12)   →   r1 = add 10, 20  [i64]
+                   r2 = add r1, 12  [i64]      ⇒ result r2
+```
+
+so the call now clears every backend validator. Verified by RUNNING:
+`lang-aot`'s `lang_matrix.rs` executes `(+ 10 20 12)` ⇒ exit 42 across
+native / LLVM / WASM / JVM / CLR / VM / JIT.
+
+Comparisons are deliberately excluded: variadic `(< a b c)` is a chained
+predicate (`a<b ∧ b<c`), not a fold, so it stays on the dynamic path. Unary /
+nullary forms (`(+)`, `(- a)`) also stay on the fallback; this increment targets
+the `n ≥ 2` arithmetic fold (the `n == 2` case was already typed). A call with
+any dynamically-typed argument continues to use `call_builtin`.
+
+## [0.22.0] — 2026-05-26 (Path A increment 6c — typed `car` / `cdr`)
+
+### Added — `car` / `cdr` emit `field_load [ref<any>]`
+
+Increment 6c — the closing piece of Twig's list-handling vocabulary.
+Replaces every `call_builtin "car" pair [any]` / `call_builtin "cdr" pair [any]`
+with the typed Phase 2 form `field_load dest, pair, idx [ref<any>]`
+(idx 0 = car, idx 1 = cdr).
+
+After this PR, **zero `call_builtin "car"` / `"cdr"` emission sites**
+remain in twig-ir-compiler.  Combined with 6a (typed `make_nil`) and
+6b (typed `cons`), the entire cons-cell vocabulary is now typed and
+Twig record / union constructors + accessors flow through every
+backend.
+
+#### Sites converted (8 total)
+
+| Site | Function context |
+|------|------------------|
+| `(car matched)` for variant tag extraction | `compile_match` |
+| `(cdr cur_cdr)` step in variant field binding | `compile_match` |
+| `(car cur_cdr)` to extract field after cdr chain | `compile_match` |
+| `(cdr cur)` step in record accessor body | `compile_record_constructor` (record accessor) |
+| `(car cur)` to extract field in record accessor | `compile_record_constructor` (record accessor) |
+| `(car v)` for union variant tag extraction | `compile_record_constructor` (variant predicate) |
+| `(cdr cur)` step in union variant accessor | `compile_record_constructor` (variant accessor) |
+| `(car cur)` to extract field in variant accessor | `compile_record_constructor` (variant accessor) |
+
+#### Companion changes
+
+- **twig-vm 0.22.0**: new `exec_field_load` dispatch arm.  Reads
+  `car` (idx 0) or `cdr` (idx 1) from a cons cell via
+  `lispy_runtime::heap::car` / `cdr`.  Surfaces non-cons input as
+  `RuntimeError::TypeError`.
+- **iir-to-wasm 0.6.0**: validator accepts `ref<any>` in addition to
+  `ref<LispyPair>` for `field_load` results.  WasmGC lowering already
+  uses `anyref` for cons-cell fields, so this matches the actual code
+  shape.
+- **iir-to-jvm-class-file 0.6.0**: validator accepts `ref<any>` for
+  `field_load` results (lowers to `Object`).
+- **iir-to-cil-bytecode 0.6.0**: validator accepts `ref<any>` (lowers
+  to `System.Object`) and adds `mov` to the supported-ops list for
+  reference types.
+
+#### What this unlocks
+
+- Record programs like `(record Point (x : int) (y : int))` now flow
+  end-to-end through wasm/jvm/clr/beam (constructor + accessors).
+- Union variant programs (constructor + accessor + variant predicate
+  body) similarly accept-after-6c (the `pair?` predicate still uses
+  `call_builtin "pair?"`, which is out of scope for Path A).
+
+#### Tests
+
+- 1 new backend acceptance test
+  (`twig_full_record_program_accepted_by_every_backend`) — asserts
+  the constructor + both accessors validate cleanly on every backend.
+- All 73 lib + 14 backend e2e + 179 twig-vm + 88 iir-to-wasm +
+  86 iir-to-jvm + 83 iir-to-cil + 65 iir-to-beam tests pass.
+
+## [0.21.0] — 2026-05-24 (Path A increment 6b — typed `cons`)
+
+### Added — `cons` cells emit `alloc` + `field_store` triples
+
+Increment 6b of the Twig → IIR-to-* end-to-end story.  Replaces every
+`call_builtin "cons" head tail [any]` emission site with the typed
+three-instruction triple:
+
+```
+alloc cell [ref<LispyPair>]
+field_store cell, 0, head [void]   -- car
+field_store cell, 1, tail [void]   -- cdr
+```
+
+matching the Phase 2 heap-lowering convention used by every IIR-to-*
+backend and the iir-builtin-lowering pass.  Record and union
+constructors — which build cons chains internally — now emit IR that
+every backend accepts.
+
+#### Sites converted (3 total)
+
+| Site                                | Function context             |
+|-------------------------------------|------------------------------|
+| Record constructor cons-chain       | `compile_record_constructor` (record) |
+| Union variant cons-chain            | `compile_record_constructor` (union variant) |
+| Union variant tag prepend           | `compile_record_constructor` (variant tag head) |
+
+#### Companion changes
+
+- **twig-vm 0.21.0**: new `exec_alloc` and `exec_field_store` dispatch
+  arms that allocate a fresh `(NIL,NIL)` cons cell and mutate fields
+  in place via `lispy_runtime::heap::set_field_unchecked`.
+- **lispy-runtime 0.5.0**: new `unsafe fn set_field_unchecked(pair,
+  index, value)` that mutates `car` or `cdr` of a live ConsCell.  The
+  function re-validates the class id internally so misuse on
+  non-cons heap values surfaces as Err rather than memory corruption.
+- **iir-to-wasm validator**: now accepts `field_store [void]` (the
+  canonical Phase 2 form) in addition to `field_store [ref<*>]`.  CLR,
+  JVM, BEAM already accepted the void form.
+
+#### What this unlocks
+
+- Twig record constructors (e.g. `(record Point (x : int) (y : int))`)
+  now emit backend-valid IR (new test
+  `twig_record_constructor_emits_typed_alloc_and_field_store`).
+- Full-module backend acceptance for record / union programs is still
+  bottlenecked on `car`/`cdr` accessors — that's increment 6c.
+
+#### What's not in this PR
+
+- `car` / `cdr` → typed `field_load [ref<any>]` (increment 6c, 8 sites)
+- `pair?` predicate (later)
+
+After 6c, no list-handling op in twig-ir-compiler emits an untyped
+`call_builtin`, and Twig programs that build / traverse lists flow
+end-to-end through every backend.
+
+#### Tests
+
+- 1 new backend acceptance test
+  (`twig_record_constructor_emits_typed_alloc_and_field_store`).
+- All 73 lib + 13 backend e2e + 179 twig-vm tests pass.
+
+## [0.20.0] — 2026-05-23 (Path A increment 6a — typed `make_nil`)
+
+### Added — `nil` literal emits `const 0 [ref<LispyPair>]`
+
+Increment 6a of the Twig → IIR-to-* end-to-end story.  Replaces
+every `call_builtin "make_nil" [any]` emission site with a typed
+`const 0 [ref<LispyPair>]`, matching the Phase 2 heap-lowering
+convention used by the IIR-to-{wasm,jvm,clr,beam} backends.
+
+Nil is encoded as the null `LispyPair` reference — represented as
+`0` — which is exactly how `iir-builtin-lowering/src/heap.rs:288`
+produces it from the legacy `call_builtin "make_nil"` form.  Every
+backend already accepts the typed const for `ref<*>` types.
+
+#### Sites converted (5 total)
+
+| Site                                | Function                       | Where                                |
+|-------------------------------------|--------------------------------|--------------------------------------|
+| Empty program return-nil            | `compile_program`              | Implicit `nil` when no final expr    |
+| `nil` literal                       | `compile_expr_inner`           | `Expr::NilLit` match arm             |
+| `match` fallthrough init            | `compile_match`                | Initial `result` register value      |
+| Record constructor cons-chain tail  | `compile_record_constructor`   | Fold-right base for record fields    |
+| Union variant cons-chain tail       | `compile_record_constructor`   | Fold-right base for variant fields   |
+
+#### What this unlocks
+
+- `nil` literal flows through every backend (new test
+  `twig_nil_literal_accepted_by_every_backend`).
+- Empty Twig program flows through every backend (new test
+  `twig_empty_program_accepted_by_every_backend`).
+- `match` programs whose arms all have known types now have a
+  typed fallthrough register, removing the last untyped `mov`
+  source in `compile_match`.
+
+#### twig-vm dispatch wrapper (companion change)
+
+twig-vm's `exec_const` now special-cases `const … [ref<LispyPair>]`
+with `Operand::Int(0)` to produce `LispyValue::NIL` (instead of the
+plain `LispyValue::int(0)` it would otherwise emit).  Without this,
+HOF builtins like `map` / `filter` / `fold-*` would see `Int(0)`
+where they expect the NIL sentinel and bail out with
+`"list tail 0 is not a cons cell"`.
+
+This is the symmetric companion to the increment 2 dispatch wrapper
+that synthesised `call_builtin "+"` from typed `add`.
+
+#### What's not in this PR
+
+Still pending for increment 6:
+
+- `cons` → typed `alloc` + `field_store` (increment 6b, 3 sites)
+- `car` / `cdr` → typed `field_load` (increment 6c, 8 sites)
+
+After 6b and 6c, no list-handling op in twig-ir-compiler emits an
+untyped `call_builtin`, and Twig programs that build / traverse
+lists flow end-to-end through every backend.
+
+#### Tests
+
+- 2 new backend acceptance tests (`nil`, empty program).
+- Lib test `nil_literal_emits_make_nil_builtin` renamed to
+  `nil_literal_emits_typed_const_ref_lispy_pair` and updated.
+- Lib test `empty_program_returns_nil` renamed to
+  `empty_program_returns_typed_nil_const` and updated.
+- All 73 lib + 12 backend e2e + 179 twig-vm tests pass.
+
 ## [0.19.0] — 2026-05-22 (Path A — typed `match` arm merges)
 
 ### Added — Typed `mov` for the 7 remaining `compile_match` sites
@@ -340,7 +748,7 @@ control flow.
   `(number->string 42)` as user-function calls, which then failed with
   "unbound name" when no top-level define existed.  Adding them makes
   string↔number↔symbol conversions usable from any Twig source file,
-  including the new `code/twig/compiler/` data model modules.
+  including the new `code/packages/twig/compiler/` data model modules.
 
 - **`extern_fns` in `compile_module_tree` now covers record/union generated
   names** — the `twig-module-driver` Phase 3 pre-pass was extended to

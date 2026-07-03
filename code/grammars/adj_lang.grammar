@@ -1,0 +1,293 @@
+# @version 1
+
+# Adj-Lang parser grammar — compiles the surface DSL into a parse
+# tree the adj-lang crate's lowerer translates into a
+# `logic-engine` KnowledgeBase.
+#
+# Notation (from grammar-tools):
+#   |     alternation
+#   { }   zero or more
+#   [ ]   zero or one
+#   ( )   grouping
+#   "x"   literal keyword match (token IDENT whose value equals x)
+#   UPPERCASE = token reference
+#   lowercase = rule reference
+
+# ----------------------------------------------------------------
+# program — the start symbol.
+# ----------------------------------------------------------------
+
+program     = { statement } EOF ;
+
+statement   = prior_decl
+            | contributes_decl
+            | interacts_decl
+            | uncertain_decl
+            | observe_decl
+            | relate_decl
+            | rule_decl
+            | functional_decl
+            | context_order_decl
+            | query_decl
+            | let_decl
+            | symbol_decl
+            | constrain_latex_decl
+            | constrain_decl
+            | solve_decl
+            | check_decl
+            | optimize_decl
+            | dictionary_decl
+            | define_decl
+            | rulebook_decl
+            | use_decl
+            | import_decl
+            ;
+
+# ----------------------------------------------------------------
+# Clause kinds — one production per Statement variant in the
+# Adj-Lang AST.
+# ----------------------------------------------------------------
+
+prior_decl       = "prior" NUMBER "for" term { annotation } ;
+
+contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation } ;
+
+# Evidence is either a numeric PREDICATE over a valued slot
+# (`gross_income >= 14600`, `answer == 3 / 10`) or an ordinary term
+# (`pmh(hypertension)`).
+# The predicate alternative is tried first; because both start with an
+# IDENT, the parser relies on full backtracking — `predicate` consumes
+# the IDENT, fails when it does not find a comparison operator, and the
+# alternation falls back to `term`. A predicate-gated contribution
+# lowers to a saturating likelihood ratio: "deterministic" is just a
+# very large LR over a CPU-evaluated comparison, not a second engine.
+evidence  = predicate | term ;
+
+predicate = IDENT ( GE | LE | GT | LT | EQEQ ) expr ;
+
+interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation } ;
+
+uncertain_decl   = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { annotation } ;
+
+observe_decl     = "observe" term ;
+
+# ----------------------------------------------------------------
+# `relate <rel>(<a>, <b>)` — a ground RELATIONAL EDGE (MYCIN-2026 REL-2),
+# the first-class fact type behind relational recall. It asserts a typed edge
+# in a knowledge graph (`relate deficient_in(tay_sachs, hexosaminidase_a)`),
+# carrying the same source/locator/trust annotations every grounded clause
+# carries — so the edge is byte-provenanced and one CAS edit from correctable.
+# The edge is just a `term` whose functor is the relation; the lowerer turns it
+# into a logic-engine Fact, and a binding query (`? deficient_in(tay_sachs,
+# $E)`) resolves it via the existing SLD/unification machinery. `relate` is an
+# IDENT-matched literal (like `rulebook`/`define`) — no lexer keyword.
+# ----------------------------------------------------------------
+relate_decl      = "relate" term { annotation } ;
+
+# ----------------------------------------------------------------
+# `rule { head: <term>  when: <lit> , <lit> … }` — a DERIVATION RULE
+# with a body (a Horn clause / Datalog rule). Where `relate` asserts a
+# GROUND edge, a `rule` lets the ENGINE DERIVE a head when its body
+# literals hold under the current substitution: e.g.
+#
+#   rule { head: contraindicated(D)  when: pregnancy(present), pregnancy_excludes(D) }
+#
+# binds `D` across head and body and lets `? contraindicated($X)` enumerate
+# every derivable answer via the logic-engine's existing rule machinery
+# (`Rule { head, body }` + `enumerate_all`, with negation-as-failure for
+# `not <lit>`). This is the keystone for moving DOMAIN RULES out of host-code
+# and into ADJ: durable rules (contraindications, step-therapy, …) are authored
+# once as `rule { … }` clauses, byte-provenanced + gated into the CAS, and the
+# engine derives the consequences from per-case facts. The block form mirrors
+# `rulebook { … }`; `head`/`when`/`not` are IDENT-matched literals (no lexer
+# keywords), and the clause carries the same source/locator/trust annotations
+# every grounded clause carries. A body literal prefixed with `not` is
+# negation-as-failure.
+# ----------------------------------------------------------------
+rule_decl        = "rule" LBRACE "head" COLON term "when" COLON body_literal { COMMA body_literal } { annotation } [ "priority" COLON IDENT ] [ "context" COLON IDENT ] RBRACE ;
+
+body_literal     = [ "not" ] term ;
+
+# ----------------------------------------------------------------
+# `context_order { higher > lower , … }` — ADJ73 PR-B: a grounded CONTEXT
+# precedence order. Each edge `a > b` asserts "a rule grounded in context `a`
+# outranks a conflicting rule in context `b`" (federal > state, ninth_circuit >
+# district_court, idsa_2024 > idsa_2004). Lowers to
+# `KnowledgeBase::add_context_outranks`; the resolver consults it BEFORE the
+# priority tier (lex superior). `context_order`/`context` are IDENT-matched
+# literals — no lexer keywords; `>` is the existing GT operator.
+# ----------------------------------------------------------------
+context_order_decl = "context_order" LBRACE IDENT GT IDENT { COMMA IDENT GT IDENT } RBRACE ;
+
+# ----------------------------------------------------------------
+# `functional <pred>(<arg>, …)` — ADJ73 defeasible precedence (PR-C): declare a
+# predicate FUNCTIONAL on its last argument (at most one value per key = the
+# preceding args). The arg names are placeholders for readability; only the
+# functor + arity are used (→ `KnowledgeBase::declare_functional`). Two
+# derivations sharing the key but differing on the last arg then CONFLICT, and a
+# rule's `priority:` tier picks the governing one. `functional`/`priority` are
+# IDENT-matched literals — no lexer keywords.
+# ----------------------------------------------------------------
+functional_decl  = "functional" term ;
+
+query_decl       = QUESTION term ;
+
+# ----------------------------------------------------------------
+# `let <name> = <expr>` — a COMPUTED value (ADJ expansion step 3).
+# The model writes only the formula; the engine evaluates it on the
+# CPU into a derivation tree (see logic-engine `compute`). A derived
+# value is then usable in any predicate exactly like an observed slot.
+#
+# Standard precedence cascade: `expr` (+, -) is looser than
+# `term_expr` (*, /), which is looser than `factor` (atom / paren /
+# aggregation). Left-associativity falls out of the `{ }` repetition.
+# Aggregations reduce every observation of a slot.
+# ----------------------------------------------------------------
+
+let_decl  = "let" IDENT EQUALS expr ;
+
+expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
+
+term_expr = factor { ( STAR | SLASH ) factor } ;
+
+factor    = latex_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+
+agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
+
+# Native LaTeX math input. The model may write `latex "$5 \times 12$"` anywhere
+# an ADJ arithmetic expression is accepted; the adj-lang frontend parses the
+# string with the repo's LaTeX MathFrontend and lowers the arithmetic subset to
+# the same ExprAst used by ASCII formulas. Unsupported math is a compile error,
+# not a host-language fallback.
+latex_expr = "latex" STRING ;
+
+# ----------------------------------------------------------------
+# Constraint sublanguage (ADJ constraints track B1). The model
+# extracts the policy's unknowns + constraints; the engine SOLVES
+# them (the solver backends are wired in B2). A `constrain`'s
+# operands reuse the `let` arithmetic `expr`, so they may reference
+# observed slots, earlier `let`s, AND declared symbols.
+# ----------------------------------------------------------------
+
+symbol_decl    = "symbol" IDENT COLON term ;
+
+constrain_latex_decl = "constrain" latex_relation ;
+
+constrain_decl = "constrain" expr relop expr ;
+
+latex_relation = "latex" STRING ;
+
+relop          = GE | LE | GT | LT | EQEQ | EQUALS | NE ;
+
+solve_decl     = "solve" "for" LBRACE IDENT { COMMA IDENT } RBRACE ;
+
+check_decl     = "check" ;
+
+# `minimize <expr>` / `maximize <expr>` — a linear-programming objective over
+# the declared symbols (ADJ constraints track C2). The solver finds the optimal
+# value of the objective subject to the accumulated `constrain` half-planes,
+# the achieving assignment, and the binding constraints. Like `solve`/`check`,
+# `minimize`/`maximize` are IDENT-matched keyword literals (not lexer keywords).
+optimize_decl  = ( "minimize" | "maximize" ) expr ;
+
+# ----------------------------------------------------------------
+# Dictionary + define (MYCIN-2026 — the controlled vocabulary as a
+# first-class, named grammar construct). A `dictionary <name> { … }` groups
+# `define` clauses into a named, reusable vocabulary; a rulebook `use`s it (M2)
+# and the compiler rejects any clause naming a term not defined here. `define`
+# may also appear bare at top level. Like the other structural keywords
+# (`solve`/`check`/`symbol`/`minimize`), `dictionary`/`define`/`hypothesis`/
+# `finding`/`values`/`surface` are IDENT-matched literals — no lexer keywords.
+# ----------------------------------------------------------------
+
+dictionary_decl = "dictionary" IDENT LBRACE { define_decl } RBRACE ;
+
+define_decl    = "define" IDENT COLON define_kind { surface_clause } ;
+
+define_kind    = "hypothesis"
+               | "finding" [ "values" LBRACK IDENT { COMMA IDENT } RBRACK ]
+               | "entity"
+               | "relation" "from" IDENT "to" IDENT
+               ;
+
+surface_clause = "surface" STRING { COMMA STRING } ;
+
+# ----------------------------------------------------------------
+# Rulebook + use (MYCIN-2026 M2 — the rulebook as a first-class, named,
+# reusable block). A `rulebook <name> { … }` groups the clauses
+# (prior/contributes/interacts/uncertain) that constitute a body of
+# adjudicatable knowledge under one name, so it can be written once,
+# checked in as code, and imported (M3). A `use <dictionary>` inside a
+# rulebook (or at top level) BINDS the controlled vocabulary the rulebook's
+# clauses are checked against: every term the rulebook names must be
+# `define`d in the `use`d dictionary, else a clean compile error. A rulebook
+# with no `use` is unchecked (backward-compatible, like a program with no
+# dictionary). `rulebook`/`use` are IDENT-matched literals — no lexer
+# keywords. The body is `{ statement }` so a rulebook may also carry its own
+# `use` (and nested structure); the lowerer flattens clauses into one KB.
+# ----------------------------------------------------------------
+
+rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE ;
+
+use_decl      = "use" IDENT ;
+
+# ----------------------------------------------------------------
+# Import (MYCIN-2026 M3 — composition across files). `import "<path>"`
+# parses a sibling `.adj` file and splices its `dictionary` / `define` /
+# `rulebook` declarations (and any bare clauses) into the importing program,
+# so a dictionary and a rulebook can live in separate checked-in files and a
+# case file imports both. Resolution is RELATIVE to the importing file,
+# IDEMPOTENT (a file imported twice is included once, by canonical path),
+# ACYCLIC (a cycle is a clean compile error), and depth/fan-out bounded. The
+# `adj-lang` library stays filesystem-free: the import GRAPH logic lives in
+# `resolve.rs` driven by an injected `ImportProvider`; the CLI supplies the
+# real, sandbox-checked filesystem provider. `import` is an IDENT-matched
+# literal; the path is a STRING.
+# ----------------------------------------------------------------
+
+import_decl   = "import" STRING ;
+
+# ----------------------------------------------------------------
+# Annotations attach a citation / locator / trust tier to the
+# preceding clause. The lowerer accepts at most one of each of
+# source / locator / trust per statement. `cites` (ADJ-A9) is the
+# exception: it is REPEATABLE — each one records a corroborating
+# citation (a co-equal source for the same fact) with its own
+# required locator, reusing the `locator` keyword as the separator
+# so no new short keyword (`at`) has to be reserved.
+# ----------------------------------------------------------------
+
+annotation = source_annotation
+           | locator_annotation
+           | trust_annotation
+           | cites_annotation
+           ;
+
+source_annotation  = "source" STRING ;
+locator_annotation = "locator" STRING ;
+trust_annotation   = "trust" trust_tier ;
+cites_annotation   = "cites" STRING "locator" STRING ;
+
+trust_tier = "consensus"
+           | "authoritative"
+           | "empirical"
+           | "inferred"
+           | "unattributed"
+           ;
+
+# ----------------------------------------------------------------
+# term — atom or compound. Compound terms allow one or more
+# comma-separated argument terms.
+#
+# Recursive on the argument side: each argument is itself a term.
+# Depth of recursion is bounded by the parser engine's input length
+# in practice; the parser crate provides a separate guard for
+# adversarial nesting.
+#
+# An argument may also be a VAR (`$Enzyme`) — a logic variable used in a
+# binding query goal (MYCIN-2026 REL-2). The functor itself is always an
+# IDENT; only arguments may be variables, which covers every recall shape
+# (`? deficient_in(tay_sachs, $E)`, reverse `? deficient_in($D, hexa)`).
+# ----------------------------------------------------------------
+
+term = IDENT [ LPAREN ( term | NUMBER | VAR ) { COMMA ( term | NUMBER | VAR ) } RPAREN ] ;

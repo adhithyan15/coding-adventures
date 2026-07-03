@@ -1,0 +1,8 @@
+{
+ "idx": 0,
+ "policy": "A patient is financially responsible for the full charge of any service rendered by an out-of-network provider when the plan is a closed HMO that provides no out-of-network benefits, unless the service was a verified emergency.",
+ "scenario": "Maria has a closed HMO with no out-of-network benefits. She electively visited Dr. Lee, an out-of-network dermatologist, for a routine mole check. The visit was billed at $220. The visit was not an emergency.",
+ "question": "What amount is Maria financially responsible for?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "$220"
+}

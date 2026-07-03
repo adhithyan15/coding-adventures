@@ -1,0 +1,6 @@
+--isolation_mode
+IIFE
+--js
+tests/diff/isolation-iife/input/a.js
+--compilation_level
+WHITESPACE_ONLY

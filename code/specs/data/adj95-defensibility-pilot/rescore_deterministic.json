@@ -1,0 +1,106 @@
+{
+ "aggregate": {
+  "plain-haiku": {
+   "mean_defensibility": 2.1,
+   "correct": 1,
+   "partial": 0,
+   "incorrect": 9
+  },
+  "plain-opus": {
+   "mean_defensibility": 3.9,
+   "correct": 2,
+   "partial": 0,
+   "incorrect": 8
+  },
+  "fw-haiku": {
+   "mean_defensibility": 3.4,
+   "correct": 1,
+   "partial": 0,
+   "incorrect": 9
+  },
+  "fw-haiku-opuscas": {
+   "mean_defensibility": 3.6,
+   "correct": 1,
+   "partial": 1,
+   "incorrect": 8
+  },
+  "fw-opus": {
+   "mean_defensibility": 3.5,
+   "correct": 1,
+   "partial": 1,
+   "incorrect": 8
+  }
+ },
+ "grid": {
+  "672895e428": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "67208aa056": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "66f4491ee4": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "6722a65a27": {
+   "plain-haiku": "C",
+   "plain-opus": "C",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "C",
+   "fw-opus": "C"
+  },
+  "6713a2ac02": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "672562d698": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "66f402add1": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "6738cefd95": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "P",
+   "fw-opus": "P"
+  },
+  "672065bcff": {
+   "plain-haiku": "I",
+   "plain-opus": "I",
+   "fw-haiku": "I",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  },
+  "6728cbe9a6": {
+   "plain-haiku": "I",
+   "plain-opus": "C",
+   "fw-haiku": "C",
+   "fw-haiku-opuscas": "I",
+   "fw-opus": "I"
+  }
+ }
+}

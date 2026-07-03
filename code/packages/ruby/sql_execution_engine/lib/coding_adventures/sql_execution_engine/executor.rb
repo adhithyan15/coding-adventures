@@ -289,7 +289,7 @@ module CodingAdventures
       # layers of expression rules before we reach it.
       PASS_THROUGH_RULES = %w[
         expr or_expr and_expr not_expr comparison
-        additive multiplicative unary primary
+        collated bitwise additive multiplicative unary primary
       ].freeze
 
       def infer_col_name(node)
@@ -407,26 +407,51 @@ module CodingAdventures
 
       # ---- Phase 9: LIMIT -------------------------------------------------
 
+      # Grammar: limit_clause  = "LIMIT" signed_number
+      #                          [ "OFFSET" signed_number | "," signed_number ]
+      #          signed_number = [ "-" ] NUMBER
+      #
+      # The count/offset are `signed_number` *nodes* (not bare NUMBER tokens),
+      # so we strip the LIMIT/OFFSET keyword tokens and interpret what remains.
       def apply_limit(rows, limit_clause)
-        limit  = nil
-        offset = 0
-        children = limit_clause.children
-        i = 0
-        while i < children.size
-          child = children[i]
-          if child.is_a?(Token)
-            if child.value.upcase == "LIMIT"
-              i += 1
-              limit = children[i].value.to_i if i < children.size
-            elsif child.value.upcase == "OFFSET"
-              i += 1
-              offset = children[i].value.to_i if i < children.size
-            end
-          end
-          i += 1
+        operands = limit_clause.children.reject do |c|
+          c.is_a?(Token) && %w[LIMIT OFFSET].include?(c.value.upcase)
         end
 
-        limit ? rows[offset, limit] || [] : rows[offset..]
+        limit  = nil
+        offset = 0
+
+        if operands.any? { |c| c.is_a?(Token) && c.value == "," }
+          # SQLite shorthand `LIMIT offset, count` — the value before the comma
+          # is the OFFSET, the value after is the row count.
+          nums = operands.reject { |c| c.is_a?(Token) && c.value == "," }
+          offset = signed_number_value(nums[0])
+          limit  = signed_number_value(nums[1])
+        else
+          # `LIMIT count` or `LIMIT count OFFSET offset`.
+          limit  = signed_number_value(operands[0]) if operands[0]
+          offset = signed_number_value(operands[1]) if operands[1]
+        end
+
+        # A nil or negative LIMIT means "no limit" in SQLite — return every row
+        # from the offset onward (rows[offset..] is nil when offset overruns).
+        if limit.nil? || limit.negative?
+          rows[offset..] || []
+        else
+          rows[offset, limit] || []
+        end
+      end
+
+      # Reduce a `signed_number` node (or a bare NUMBER token) to an Integer.
+      def signed_number_value(node)
+        return node.value.to_i if node.is_a?(Token)
+
+        children = node.children
+        if children.length == 2 && children[0].is_a?(Token) && children[0].value == "-"
+          -children[1].value.to_i
+        else
+          children[0].value.to_i
+        end
       end
 
       # ---- DISTINCT qualifier ---------------------------------------------

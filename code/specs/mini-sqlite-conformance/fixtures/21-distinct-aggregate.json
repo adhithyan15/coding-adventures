@@ -1,0 +1,64 @@
+{
+  "id": "21-distinct-aggregate",
+  "description": "COUNT(DISTINCT col) counts unique non-null values",
+  "level": 1,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE vals (id INTEGER, v INTEGER)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO vals VALUES (1, 1)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO vals VALUES (2, 1)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO vals VALUES (3, 2)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO vals VALUES (4, 2)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO vals VALUES (5, NULL)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(DISTINCT v) AS cnt FROM vals",
+      "expected_columns": ["cnt"],
+      "expected_rows": [[2]],
+      "note": "Values 1,1,2,2,NULL — distinct non-null = 2"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS all_rows, COUNT(v) AS non_null_rows, COUNT(DISTINCT v) AS distinct_vals FROM vals",
+      "expected_columns": ["all_rows", "non_null_rows", "distinct_vals"],
+      "expected_rows": [[5, 4, 2]],
+      "note": "Compare COUNT(*), COUNT(col), and COUNT(DISTINCT col)"
+    },
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE all_nulls (v INTEGER)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO all_nulls VALUES (NULL)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO all_nulls VALUES (NULL)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(DISTINCT v) AS cnt FROM all_nulls",
+      "expected_columns": ["cnt"],
+      "expected_rows": [[0]],
+      "note": "COUNT(DISTINCT col) over all-NULL column returns 0"
+    }
+  ]
+}

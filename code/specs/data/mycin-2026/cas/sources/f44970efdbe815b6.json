@@ -1,0 +1,98 @@
+{
+  "hash": "f44970efdbe815b6",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/",
+  "title": "Bacterial Meningitis in Patients using Immunosuppressive Medication: a Population-based Prospective Nationwide Study",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Community-acquired bacterial meningitis is most commonly caused by Streptococcus pneumoniae (general-population background statement).",
+      "byte_quote": "Community-acquired bacterial meningitis is a severe infectious disease with high morbidity and mortality rates (Brouwer et al. 2010 ), and is most commonly caused by Streptococcus pneumoniae (van de Beek et al. 2004b )."
+    },
+    {
+      "id": "c2",
+      "text": "In the immunosuppressed cohort, CSF cultures revealed S. pneumoniae in 41% and L. monocytogenes in 40% of episodes.",
+      "byte_quote": "CSF cultures revealed S. pneumoniae in 41 % and L. monocytogenes in 40 % of episodes."
+    },
+    {
+      "id": "c3",
+      "text": "Detailed organism breakdown in immunosuppressed patients: S. pneumoniae 36 (41%), L. monocytogenes 35 (40%), H. influenzae 6 (7%), N. meningitidis 2 (2%).",
+      "byte_quote": "CSF cultures revealed S. pneumoniae in 36 episodes (41 %), L. monocytogenes in 35 episodes (40 %), Haemophilus influenzae in six episodes (7 %), and Neisseria meningitidis in two episodes (2 %)."
+    },
+    {
+      "id": "c4",
+      "text": "Other (rarer) causative organisms in the immunosuppressed cohort: E. coli (2), Nocardia farcinica, Streptococcus anginosus, Streptococcus mitis, Pseudomonas aeruginosa (1 each).",
+      "byte_quote": "Other causative organisms were Escherichia coli in two episodes and Nocardia farcinica , Streptococcus anginosus , Streptococcus mitis , and Pseudomonas aeruginosa in one episode each."
+    },
+    {
+      "id": "c5",
+      "text": "Immunosuppression shifts epidemiology: pneumococcal and meningococcal meningitis less common (43% vs 73%; 2% vs 11%) and listerial meningitis more common (40% vs 3%) than in non-immunosuppressed patients.",
+      "byte_quote": "Pneumococcal and meningococcal meningitis occurred less often in patients using immunosuppressive medication compared to those who did not (37 of 87 [43 %] vs. 981 of 1348 [73 %], P = <0.0001 and 2 of 87 [2 %] vs. 147 of 1348 [11 %], P  = 0.006), whilst listerial meningitis was encountered more frequently (35 of 87 [40 %] vs. 43 of 1348 [3 %], P  < 0.0001)."
+    },
+    {
+      "id": "c6",
+      "text": "Overall, 6% (87 of 1447) of bacterial meningitis episodes occurred in patients on immunosuppressive medication, mostly corticosteroids (82%).",
+      "byte_quote": "Eighty-seven of 1447 episodes (6 %) of bacterial meningitis occurred in patients using immunosuppressive medication, and consisted of corticosteroids in 82 %."
+    },
+    {
+      "id": "c7",
+      "text": "Bacterial meningitis in immunosuppressed patients is often caused by atypical bacteria, mainly L. monocytogenes.",
+      "byte_quote": "is often caused by atypical bacteria, mainly L. monocytogenes ."
+    },
+    {
+      "id": "c8",
+      "text": "HOST FACTOR: use of immunosuppressive medication is an important predisposing factor for Listeria monocytogenes infection.",
+      "byte_quote": "The use of immunosuppressive medication has been reported to be an important predisposing factor for infections with Listeria monocytogenes (Yildiz et al. 2007 )."
+    },
+    {
+      "id": "c9",
+      "text": "HOST FACTOR: acquired immunodeficiency (incl. immunosuppressive drugs/corticosteroids) raises overall risk of bacterial meningitis.",
+      "byte_quote": "Acquired immunodeficiency previously has been associated with an increased risk of bacterial meningitis (Adriani et al. 2013 ; van Veen et al. 2016 ; Weisfelt et al. 2010 )."
+    },
+    {
+      "id": "c10",
+      "text": "HOST FACTOR (mechanism): Listeria's predilection for immunocompromised hosts reflects its intracellular life cycle; resistance is cell-mediated (T lymphocytes).",
+      "byte_quote": "The predilection for immunocompromised hosts may be explained by the intracellular life cycle of L. monocytogenes by which it avoids host bactericidal mechanisms. Resistance to infection is predominantly mediated by cellular immunity and their elimination requires T lymphocytes mediated cytotoxicity (Horta-Baas et al. 2013 )."
+    },
+    {
+      "id": "c11",
+      "text": "HOST FACTOR (age band): median age of immunosuppressed bacterial-meningitis patients was 65 years (range 19-91).",
+      "byte_quote": "The median age of patients using immunosuppressive medication at the time of the episode of bacterial meningitis was 65 years (range 19–91 years; Table 2 )."
+    },
+    {
+      "id": "c12",
+      "text": "HOST FACTORS (other comorbidities raising meningitis risk): diabetes mellitus, alcoholism, and splenectomy.",
+      "byte_quote": "Other co-existing conditions increasing the risk of meningitis were diabetes mellitus (in 16 episodes), alcoholism (in six episodes), and splenectomy (in four episodes)."
+    },
+    {
+      "id": "c13",
+      "text": "EXCLUSION (CSF device / neurosurgery): patients with a neurosurgical device, neurosurgical operation/procedure, or neurotrauma within one month were excluded — i.e. this is a community-acquired cohort, device/post-neurosurgical organisms are out of scope.",
+      "byte_quote": "Patients with a neurosurgical device, neurosurgical operation or procedure and patients with neurotrauma within one month of the onset of meningitis were excluded from the cohort."
+    },
+    {
+      "id": "c14",
+      "text": "Empiric coverage implication: high L. monocytogenes frequency in immunosuppressed patients warrants adding ampicillin/amoxicillin to an extended-spectrum cephalosporin.",
+      "byte_quote": "empiric treatment for patients using immunosuppressive medication should be broad and include ampicillin or amoxicillin for listeria coverage in combination with an extended spectrum cephalosporin."
+    }
+  ],
+  "cites": [
+    "van de Beek et al. 2004b",
+    "Brouwer et al. 2010",
+    "Yildiz et al. 2007",
+    "Adriani et al. 2013",
+    "van Veen et al. 2016",
+    "Weisfelt et al. 2010",
+    "Horta-Baas et al. 2013 (Reumatol Clin)",
+    "Hooper, Pruitt, Rubin 1982",
+    "Stuck, Minder, Frey 1989",
+    "Fardet et al. 2007",
+    "Spanos et al. 1989",
+    "Bijlsma et al. 2016",
+    "Koopmans et al. 2013 (Clin Infect Dis)",
+    "Selby et al. 1997",
+    "de Gans and van de Beek 2002",
+    "Tunkel et al. 2004",
+    "Chaudhuri et al. 2008",
+    "Halloran 2004 (NEJM)"
+  ]
+}

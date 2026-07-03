@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-matlab-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for the MATLAB language (the array frontend on array-runtime)"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-matlab-lexer = { path = "../matlab-lexer" }

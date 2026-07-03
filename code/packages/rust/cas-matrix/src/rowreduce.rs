@@ -131,6 +131,10 @@ impl Frac {
         Self { numer: 0, denom: 1 }
     }
 
+    pub(crate) fn one() -> Self {
+        Self { numer: 1, denom: 1 }
+    }
+
     pub(crate) fn new(numer: i128, denom: i128) -> Self {
         assert!(denom != 0, "Frac denominator must not be zero");
         if numer == 0 {

@@ -1,0 +1,8 @@
+[package]
+name = "tech-mapping"
+version = "0.1.0"
+edition = "2021"
+description = "Generic HNL → Sky130-style stdcell HNL: rule-based rename, bubble pushing, pin remapping"
+
+[dependencies]
+gate-netlist-format = { path = "../gate-netlist-format" }

@@ -1,0 +1,29 @@
+% ============================================================================
+% derm-recall.query.adj — a worked recall query over the dermatology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "this lesion looks like X — what
+% is the diagnosis?" question: it states no derm fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli derm-recall.query.adj
+% ============================================================================
+
+import "derm-edges.adj"
+
+? skin_finding_in(target_lesions, $Disease)       % expect erythema_multiforme
+? skin_finding_in(silvery_scales, $Disease)       % expect psoriasis
+? skin_finding_in(umbilicated_papules, $Disease)  % expect molluscum_contagiosum
+? skin_finding_in(herald_patch, $Disease)         % expect pityriasis_rosea
+? skin_finding_in(nikolsky_sign, $Disease)        % expect pemphigus_vulgaris (expand)
+? skin_finding_in(sandpaper_rash, $Disease)       % expect scarlet_fever (expand)
+? skin_finding_in(erythema_migrans, $Disease)     % expect lyme_disease (expand)
+% --- BATCH: high-yield dermatology skin findings ---
+? skin_finding_in(heliotrope_rash, $Disease)      % expect dermatomyositis (expand)
+? skin_finding_in(gottron_papules, $Disease)      % expect dermatomyositis (expand)
+? skin_finding_in(shawl_sign, $Disease)           % expect dermatomyositis (expand)
+? skin_finding_in(cafe_au_lait_macules, $Disease) % expect neurofibromatosis_type_1 (expand)
+? skin_finding_in(ash_leaf_spots, $Disease)       % expect tuberous_sclerosis (expand)
+? skin_finding_in(koplik_spots, $Disease)         % expect measles (expand)

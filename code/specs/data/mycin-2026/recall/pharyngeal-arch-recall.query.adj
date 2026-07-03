@@ -1,0 +1,22 @@
+% ============================================================================
+% pharyngeal-arch-recall.query.adj — a worked recall query over the
+% pharyngeal-arch library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "which nerve goes with
+% arch X?" question: it states no embryology fact — it only `import`s the
+% grounded library and asks binding queries. The native adj-lang engine resolves
+% each `?` against the imported `relate` edges and returns the binding + the
+% citing clause's source/locator/trust. All knowledge is in the library; none is
+% here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pharyngeal-arch-recall.query.adj
+% ============================================================================
+
+import "pharyngeal-arch-edges.adj"
+
+? innervated_by(first_pharyngeal_arch, $Nerve)    % expect trigeminal_nerve
+? innervated_by(second_pharyngeal_arch, $Nerve)   % expect facial_nerve
+? innervated_by(third_pharyngeal_arch, $Nerve)    % expect glossopharyngeal_nerve
+? innervated_by(fourth_pharyngeal_arch, $Nerve)   % expect superior_laryngeal_nerve
+? innervated_by(sixth_pharyngeal_arch, $Nerve)    % expect recurrent_laryngeal_nerve

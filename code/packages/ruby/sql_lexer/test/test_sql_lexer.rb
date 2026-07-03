@@ -387,8 +387,16 @@ class TestSqlLexer < Minitest::Test
   end
 
   def test_string_with_escape
-    tokens = non_eof("'it\\'s'")
+    # SQLite escapes an embedded single quote by *doubling* it (''),
+    # not with a backslash — sql.tokens declares `escapes: none`, so a
+    # backslash is just a literal character.  The string 'it''s' is a
+    # single STRING token; the lexer leaves the contents alone (the
+    # doubled quote is preserved verbatim and collapsed to a single
+    # quote later, by the parser/value layer).
+    tokens = non_eof("'it''s'")
+    assert_equal 1, tokens.length
     assert_equal TT::STRING, tokens[0].type
+    assert_equal "it''s", tokens[0].value
   end
 
   # ------------------------------------------------------------------

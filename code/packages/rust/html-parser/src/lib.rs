@@ -621,6 +621,36 @@ pub fn parse_html(source: &str) -> Result<Document, ParseError> {
     Ok(parse_html_with_diagnostics(source)?.document)
 }
 
+/// Parse a complete HTML string and extract browser-facing document facts.
+pub fn parse_browser_document(source: &str) -> Result<BrowserDocument, ParseError> {
+    parse_html(source).map(|document| extract_browser_document(&document))
+}
+
+/// Extract browser-facing facts from a parsed DOM document.
+pub fn extract_browser_document(document: &Document) -> BrowserDocument {
+    BrowserDocument::from_document(document)
+}
+
+/// Parse a complete HTML string and extract a browser-facing content tree.
+pub fn parse_browser_content_tree(source: &str) -> Result<BrowserContentTree, ParseError> {
+    parse_html(source).map(|document| extract_browser_content_tree(&document))
+}
+
+/// Extract a browser-facing content tree from a parsed DOM document.
+pub fn extract_browser_content_tree(document: &Document) -> BrowserContentTree {
+    BrowserContentTree::from_document(document)
+}
+
+/// Parse a complete HTML string and extract a browser-facing render-tree input.
+pub fn parse_browser_render_tree(source: &str) -> Result<BrowserRenderTree, ParseError> {
+    parse_html(source).map(|document| extract_browser_render_tree(&document))
+}
+
+/// Extract a browser-facing render-tree input from a parsed DOM document.
+pub fn extract_browser_render_tree(document: &Document) -> BrowserRenderTree {
+    BrowserRenderTree::from_document(document)
+}
+
 /// Parse a complete HTML string into a DOM document plus lexer/parser diagnostics.
 pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
     parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
@@ -778,6 +808,3497 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
     })
 }
 
+/// Browser-facing summary of the parsed DOM.
+///
+/// This intentionally stays above raw DOM and below layout/CSS. It gives a
+/// browser pipeline stable document facts without forcing layout code to know
+/// every parser recovery detail.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserDocument {
+    pub title: Option<String>,
+    pub base_href: Option<String>,
+    pub base_target: Option<String>,
+    pub metadata: BrowserDocumentMetadata,
+    pub document_lang: Option<String>,
+    pub document_dir: Option<String>,
+    pub body_id: Option<String>,
+    pub body_classes: Vec<String>,
+    pub body_lang: Option<String>,
+    pub body_dir: Option<String>,
+    pub document_event_handlers: Vec<String>,
+    pub body_event_handlers: Vec<String>,
+    pub event_handler_descriptors: Vec<BrowserEventHandlerDescriptor>,
+    pub lifecycle_event_descriptors: Vec<BrowserLifecycleEventDescriptor>,
+    pub animation_interaction_descriptors: Vec<BrowserAnimationInteractionDescriptor>,
+    pub fullscreen_interaction_descriptors: Vec<BrowserFullscreenInteractionDescriptor>,
+    pub context_menu_interaction_descriptors: Vec<BrowserContextMenuInteractionDescriptor>,
+    pub body_text: String,
+    pub metas: Vec<BrowserMeta>,
+    pub resources: Vec<BrowserResource>,
+    pub scripts: Vec<BrowserScript>,
+    pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
+    pub script_storage_access_descriptors: Vec<BrowserScriptStorageAccessDescriptor>,
+    pub script_worker_messaging_descriptors: Vec<BrowserScriptWorkerMessagingDescriptor>,
+    pub script_module_graph_descriptors: Vec<BrowserScriptModuleGraphDescriptor>,
+    pub stylesheets: Vec<BrowserStylesheet>,
+    pub stylesheet_planning_descriptors: Vec<BrowserStylesheetPlanningDescriptor>,
+    pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
+    pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
+    pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
+    pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
+    pub link_resource_descriptors: Vec<BrowserLinkResourceDescriptor>,
+    pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_control_descriptors: Vec<BrowserFormControlDescriptor>,
+    pub form_association_descriptors: Vec<BrowserFormAssociationDescriptor>,
+    pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
+    pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
+    pub form_reset_descriptors: Vec<BrowserFormResetDescriptor>,
+    pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
+    pub anchors: Vec<BrowserAnchor>,
+    pub anchor_descriptors: Vec<BrowserAnchorDescriptor>,
+    pub headings: Vec<BrowserHeading>,
+    pub heading_descriptors: Vec<BrowserHeadingDescriptor>,
+    pub text_semantics: Vec<BrowserTextSemantic>,
+    pub text_semantic_descriptors: Vec<BrowserTextSemanticDescriptor>,
+    pub text_flow_descriptors: Vec<BrowserTextFlowDescriptor>,
+    pub navigation_target_descriptors: Vec<BrowserNavigationTargetDescriptor>,
+    pub navigation_groups: Vec<BrowserNavigationGroup>,
+    pub navigation_group_descriptors: Vec<BrowserNavigationGroupDescriptor>,
+    pub section_landmarks: Vec<BrowserSectionLandmark>,
+    pub section_landmark_descriptors: Vec<BrowserSectionLandmarkDescriptor>,
+    pub command_elements: Vec<BrowserCommandElement>,
+    pub activation_descriptors: Vec<BrowserActivationDescriptor>,
+    pub popovers: Vec<BrowserPopover>,
+    pub popover_descriptors: Vec<BrowserPopoverDescriptor>,
+    pub aria_collections: Vec<BrowserAriaCollection>,
+    pub aria_collection_descriptors: Vec<BrowserAriaCollectionDescriptor>,
+    pub aria_ranges: Vec<BrowserAriaRange>,
+    pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
+    pub aria_name_descriptors: Vec<BrowserAriaNameDescriptor>,
+    pub aria_description_descriptors: Vec<BrowserAriaDescriptionDescriptor>,
+    pub aria_relation_descriptors: Vec<BrowserAriaRelationDescriptor>,
+    pub links: Vec<BrowserLink>,
+    pub images: Vec<BrowserImage>,
+    pub image_candidate_descriptors: Vec<BrowserImageCandidateDescriptor>,
+    pub image_maps: Vec<BrowserImageMap>,
+    pub image_map_descriptors: Vec<BrowserImageMapDescriptor>,
+    pub media: Vec<BrowserMedia>,
+    pub media_playback_descriptors: Vec<BrowserMediaPlaybackDescriptor>,
+    pub media_resource_descriptors: Vec<BrowserMediaResourceDescriptor>,
+    pub embedded_contexts: Vec<BrowserEmbeddedContext>,
+    pub embedded_policy_descriptors: Vec<BrowserEmbeddedPolicyDescriptor>,
+    pub interactive_elements: Vec<BrowserInteractiveElement>,
+    pub focus_navigation_descriptors: Vec<BrowserFocusNavigationDescriptor>,
+    pub keyboard_interaction_descriptors: Vec<BrowserKeyboardInteractionDescriptor>,
+    pub input_planning_descriptors: Vec<BrowserInputPlanningDescriptor>,
+    pub drag_drop_descriptors: Vec<BrowserDragDropDescriptor>,
+    pub clipboard_interaction_descriptors: Vec<BrowserClipboardInteractionDescriptor>,
+    pub selection_interaction_descriptors: Vec<BrowserSelectionInteractionDescriptor>,
+    pub composition_interaction_descriptors: Vec<BrowserCompositionInteractionDescriptor>,
+    pub pointer_interaction_descriptors: Vec<BrowserPointerInteractionDescriptor>,
+    pub scroll_interaction_descriptors: Vec<BrowserScrollInteractionDescriptor>,
+    pub disclosures: Vec<BrowserDisclosure>,
+    pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
+    pub template_descriptors: Vec<BrowserTemplateDescriptor>,
+    pub slot_descriptors: Vec<BrowserSlotDescriptor>,
+    pub custom_element_descriptors: Vec<BrowserCustomElementDescriptor>,
+    pub canvas_descriptors: Vec<BrowserCanvasDescriptor>,
+    pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
+    pub component_hydration_descriptors: Vec<BrowserComponentHydrationDescriptor>,
+    pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
+    pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
+    pub structured_data_descriptors: Vec<BrowserStructuredDataDescriptor>,
+    pub structured_items: Vec<BrowserStructuredItem>,
+    pub templates: Vec<BrowserTemplate>,
+    pub forms: Vec<BrowserForm>,
+    pub tables: Vec<BrowserTable>,
+    pub table_cells: Vec<BrowserTableCell>,
+    pub table_structure_descriptors: Vec<BrowserTableStructureDescriptor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserDocumentMetadata {
+    pub charset: Option<String>,
+    pub viewport: Option<String>,
+    pub viewport_directives: Vec<BrowserMetadataDirective>,
+    pub description: Option<String>,
+    pub application_name: Option<String>,
+    pub referrer_policy: Option<String>,
+    pub robots: Option<String>,
+    pub robots_directives: Vec<String>,
+    pub color_scheme: Option<String>,
+    pub http_equiv_hints: Vec<BrowserHttpEquivHint>,
+    pub resource_hints: Vec<BrowserResourceHint>,
+    pub theme_colors: Vec<BrowserThemeColor>,
+    pub refresh: Option<BrowserRefresh>,
+    pub canonical_url: Option<String>,
+    pub resolved_canonical_url: Option<String>,
+    pub manifest_url: Option<String>,
+    pub resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMetadataDirective {
+    pub name: String,
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserHttpEquivHint {
+    pub name: String,
+    pub content: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserResourceHint {
+    pub kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub imagesrcset: Option<String>,
+    pub resolved_imagesrcset: Option<String>,
+    pub imagesizes: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserThemeColor {
+    pub color: String,
+    pub media: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserRefresh {
+    pub delay: Option<String>,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMeta {
+    pub name: Option<String>,
+    pub http_equiv: Option<String>,
+    pub property: Option<String>,
+    pub charset: Option<String>,
+    pub content: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserResource {
+    pub kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub imagesrcset: Option<String>,
+    pub resolved_imagesrcset: Option<String>,
+    pub imagesizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
+    pub async_script: bool,
+    pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLinkResourceDescriptor {
+    pub resource_index: usize,
+    pub resource_kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub responsive_image_preload: bool,
+    pub icon_candidate: bool,
+    pub alternate_candidate: bool,
+    pub policy_hint_count: usize,
+    pub resource_blocked: bool,
+    pub resource_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserResourceEndpointDescriptor {
+    pub endpoint_kind: String,
+    pub element: String,
+    pub resource_kind: Option<String>,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub imagesrcset: Option<String>,
+    pub resolved_imagesrcset: Option<String>,
+    pub imagesizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
+    pub async_script: bool,
+    pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScript {
+    pub script_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub async_script: bool,
+    pub defer_script: bool,
+    pub nomodule: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptExecutionDescriptor {
+    pub script_kind: String,
+    pub execution_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub async_script: bool,
+    pub defer_script: bool,
+    pub nomodule: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub blocking_token_count: usize,
+    pub render_blocking: bool,
+    pub has_text: bool,
+    pub text_length: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptStorageAccessDescriptor {
+    pub script_kind: String,
+    pub access_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub storage_targets: Vec<String>,
+    pub storage_target_count: usize,
+    pub uses_local_storage: bool,
+    pub uses_session_storage: bool,
+    pub uses_cookies: bool,
+    pub uses_indexed_db: bool,
+    pub uses_cache_storage: bool,
+    pub uses_service_worker: bool,
+    pub uses_storage_manager: bool,
+    pub listens_storage_events: bool,
+    pub storage_blocked: bool,
+    pub storage_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptWorkerMessagingDescriptor {
+    pub script_kind: String,
+    pub messaging_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub messaging_targets: Vec<String>,
+    pub messaging_target_count: usize,
+    pub creates_worker: bool,
+    pub creates_shared_worker: bool,
+    pub registers_service_worker: bool,
+    pub uses_post_message: bool,
+    pub listens_message_events: bool,
+    pub uses_message_channel: bool,
+    pub uses_broadcast_channel: bool,
+    pub uses_import_scripts: bool,
+    pub module_worker_hint: bool,
+    pub messaging_blocked: bool,
+    pub messaging_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptModuleGraphDescriptor {
+    pub script_kind: String,
+    pub module_graph_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub module_targets: Vec<String>,
+    pub module_target_count: usize,
+    pub external_module_entry: bool,
+    pub inline_module_entry: bool,
+    pub declares_import_map: bool,
+    pub uses_static_imports: bool,
+    pub uses_dynamic_imports: bool,
+    pub has_modulepreload: bool,
+    pub modulepreload_urls: Vec<String>,
+    pub resolved_modulepreload_urls: Vec<String>,
+    pub module_graph_blocked: bool,
+    pub module_graph_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStylesheet {
+    pub source: String,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub disabled: bool,
+    pub alternate: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStylesheetPlanningDescriptor {
+    pub source: String,
+    pub stylesheet_kind: String,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_token_count: usize,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub disabled: bool,
+    pub alternate: bool,
+    pub applies_by_default: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub blocking_token_count: usize,
+    pub render_blocking: bool,
+    pub has_text: bool,
+    pub text_length: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDocumentPolicyDescriptor {
+    pub charset: Option<String>,
+    pub viewport: Option<String>,
+    pub viewport_directives: Vec<BrowserMetadataDirective>,
+    pub description: Option<String>,
+    pub application_name: Option<String>,
+    pub referrer_policy: Option<String>,
+    pub robots: Option<String>,
+    pub robots_directives: Vec<String>,
+    pub color_scheme: Option<String>,
+    pub content_security_policy: Option<String>,
+    pub permissions_policy: Option<String>,
+    pub permissions_policy_features: Vec<String>,
+    pub permissions_policy_feature_count: usize,
+    pub origin_trials: Vec<String>,
+    pub accept_ch: Option<String>,
+    pub accept_ch_tokens: Vec<String>,
+    pub dns_prefetch_control: Option<String>,
+    pub theme_colors: Vec<BrowserThemeColor>,
+    pub refresh: Option<BrowserRefresh>,
+    pub canonical_url: Option<String>,
+    pub resolved_canonical_url: Option<String>,
+    pub manifest_url: Option<String>,
+    pub resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLoadingHintDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub loading: Option<String>,
+    pub decoding: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub preload: Option<String>,
+    pub as_hint: Option<String>,
+    pub media: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFetchPolicyDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub csp: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub credentialless: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormPolicyDescriptor {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub accept_charset: Option<String>,
+    pub accept_charset_tokens: Vec<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub novalidate: bool,
+    pub submitters: Vec<BrowserFormPolicySubmitterDescriptor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormPolicySubmitterDescriptor {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub accessible_name: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormControlDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub control_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub label_count: usize,
+    pub value: Option<String>,
+    pub submission_values: Vec<String>,
+    pub submission_value_count: usize,
+    pub placeholder: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub datalist_options: Vec<String>,
+    pub option_count: usize,
+    pub selected_options: Vec<String>,
+    pub checked: bool,
+    pub multiple: bool,
+    pub autofocus: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub successful: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub fieldset_ids: Vec<String>,
+    pub fieldset_legends: Vec<String>,
+    pub control_blocked: bool,
+    pub control_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormAssociationDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub association_kind: String,
+    pub explicit_form_owner: bool,
+    pub labels: Vec<String>,
+    pub label_count: usize,
+    pub fieldset_ids: Vec<String>,
+    pub fieldset_legends: Vec<String>,
+    pub datalist_id: Option<String>,
+    pub datalist_option_count: usize,
+    pub output_for_tokens: Vec<String>,
+    pub output_target_ids: Vec<String>,
+    pub output_target_names: Vec<String>,
+    pub output_target_types: Vec<String>,
+    pub referenced_by_output_ids: Vec<String>,
+    pub successful: bool,
+    pub will_validate: bool,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormAutofillDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_autocomplete: Option<String>,
+    pub form_autocomplete_tokens: Vec<String>,
+    pub form_autocomplete_enabled: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub autofill_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocomplete_token_count: usize,
+    pub section_token: Option<String>,
+    pub address_type_token: Option<String>,
+    pub contact_type_token: Option<String>,
+    pub field_token: Option<String>,
+    pub webauthn: bool,
+    pub autofill_enabled: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub hidden: bool,
+    pub required: bool,
+    pub autofill_blocked: bool,
+    pub autofill_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnchor {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnchorDescriptor {
+    pub anchor_index: usize,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
+    pub fragment_targets: Vec<String>,
+    pub anchor_kind: String,
+    pub duplicate_target: bool,
+    pub anchor_blocked: bool,
+    pub anchor_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredItem {
+    pub id: Option<String>,
+    pub item_type: Vec<String>,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub properties: Vec<BrowserStructuredProperty>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredProperty {
+    pub name: String,
+    pub value: Option<String>,
+    pub value_url: Option<String>,
+    pub resolved_value_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredDataDescriptor {
+    pub id: Option<String>,
+    pub item_type: Vec<String>,
+    pub item_type_count: usize,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub item_ref_count: usize,
+    pub unresolved_item_refs: Vec<String>,
+    pub property_names: Vec<String>,
+    pub property_count: usize,
+    pub url_property_count: usize,
+    pub structured_data_blocked: bool,
+    pub structured_data_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTemplate {
+    pub id: Option<String>,
+    pub shadowrootmode: Option<String>,
+    pub shadowrootdelegatesfocus: bool,
+    pub shadowrootclonable: bool,
+    pub shadowrootserializable: bool,
+    pub content_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTemplateDescriptor {
+    pub id: Option<String>,
+    pub template_kind: String,
+    pub shadowrootmode: Option<String>,
+    pub shadowroot_attribute_names: Vec<String>,
+    pub shadowroot_attribute_count: usize,
+    pub declarative_shadow_root: bool,
+    pub shadowroot_mode_valid: bool,
+    pub shadowrootdelegatesfocus: bool,
+    pub shadowrootclonable: bool,
+    pub shadowrootserializable: bool,
+    pub content_text: String,
+    pub content_word_count: usize,
+    pub template_blocked: bool,
+    pub template_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSlotDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub slot_kind: String,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub default_slot: bool,
+    pub named_slot: bool,
+    pub fallback_text: String,
+    pub fallback_word_count: usize,
+    pub part: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot_blocked: bool,
+    pub slot_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCustomElementDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub custom_element_kind: String,
+    pub definition_name: Option<String>,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub autonomous_custom_element: bool,
+    pub customized_builtin: bool,
+    pub extends_element: Option<String>,
+    pub custom_element_name_valid: bool,
+    pub slot: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attribute_names: Vec<String>,
+    pub text: String,
+    pub custom_element_blocked: bool,
+    pub custom_element_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCanvasDescriptor {
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub has_width: bool,
+    pub has_height: bool,
+    pub fallback_text: String,
+    pub fallback_word_count: usize,
+    pub part: Vec<String>,
+    pub data_attribute_names: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub canvas_blocked: bool,
+    pub canvas_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserComponentHydrationTarget {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attributes: Vec<BrowserDataAttribute>,
+    pub canvas_fallback_text: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserComponentHydrationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub hydration_kind: String,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub shadowrootmode: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attribute_names: Vec<String>,
+    pub data_attribute_count: usize,
+    pub canvas_fallback_text: Option<String>,
+    pub text: String,
+    pub hydration_blocked: bool,
+    pub hydration_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDataAttribute {
+    pub name: String,
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSubmissionDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: String,
+    pub form_enctype: Option<String>,
+    pub form_target: Option<String>,
+    pub effective_form_target: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub submission_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub submission_values: Vec<String>,
+    pub submission_value_count: usize,
+    pub successful: bool,
+    pub checked: bool,
+    pub disabled: bool,
+    pub submitter: bool,
+    pub submitter_action: Option<String>,
+    pub resolved_submitter_action: Option<String>,
+    pub submitter_method: Option<String>,
+    pub submitter_enctype: Option<String>,
+    pub submitter_target: Option<String>,
+    pub effective_submitter_target: Option<String>,
+    pub submitter_novalidate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormResetDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_autocomplete: Option<String>,
+    pub form_event_handlers: Vec<String>,
+    pub form_reset_handlers: Vec<String>,
+    pub form_has_reset_handler: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub reset_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub reset_values: Vec<String>,
+    pub reset_value_count: usize,
+    pub selected_options: Vec<String>,
+    pub option_count: usize,
+    pub checked: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub resettable: bool,
+    pub resetter: bool,
+    pub reset_blocked: bool,
+    pub reset_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormValidationDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_novalidate: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub validation_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub value: Option<String>,
+    pub checked: bool,
+    pub required: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_attribute_count: usize,
+    pub validation_barred_reason: Option<String>,
+    pub validation_blocked: bool,
+    pub validation_block_reasons: Vec<String>,
+    pub submitter_ids: Vec<String>,
+    pub submitter_novalidate_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDataAttributeDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub data_attributes: Vec<BrowserDataAttribute>,
+    pub data_attribute_names: Vec<String>,
+    pub data_attribute_count: usize,
+    pub json_data_attribute_names: Vec<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserGlobalStateDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub hidden: bool,
+    pub inert: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub autofocus: bool,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
+    pub global_attribute_names: Vec<String>,
+    pub global_attribute_count: usize,
+    pub focus_navigation_hint: bool,
+    pub global_state_blocked: bool,
+    pub global_state_block_reasons: Vec<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserEventHandlerDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub event_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub activation_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub form_handlers: Vec<String>,
+    pub media_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub error_handlers: Vec<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLifecycleEventDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub lifecycle_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub load_handlers: Vec<String>,
+    pub unload_handlers: Vec<String>,
+    pub visibility_handlers: Vec<String>,
+    pub history_handlers: Vec<String>,
+    pub network_handlers: Vec<String>,
+    pub error_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
+    pub error_recovery: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnimationInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub animation_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub animation_handlers: Vec<String>,
+    pub animation_start_handlers: Vec<String>,
+    pub animation_iteration_handlers: Vec<String>,
+    pub animation_end_handlers: Vec<String>,
+    pub animation_cancel_handlers: Vec<String>,
+    pub transition_handlers: Vec<String>,
+    pub transition_run_handlers: Vec<String>,
+    pub transition_start_handlers: Vec<String>,
+    pub transition_end_handlers: Vec<String>,
+    pub transition_cancel_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFullscreenInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub fullscreen_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub fullscreen_handlers: Vec<String>,
+    pub fullscreen_change_handlers: Vec<String>,
+    pub fullscreen_error_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub allow: Option<String>,
+    pub allow_tokens: Vec<String>,
+    pub allowfullscreen: bool,
+    pub fullscreen_allowed: bool,
+    pub embedded_context: bool,
+    pub document_scope: bool,
+    pub body_scope: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserContextMenuInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub context_menu_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub event_handlers: Vec<String>,
+    pub contextmenu_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub context_menu_blocked: bool,
+    pub context_menu_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaRelationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub text: String,
+    pub aria_details: Vec<String>,
+    pub details_text: Vec<String>,
+    pub aria_errormessage: Vec<String>,
+    pub errormessage_text: Vec<String>,
+    pub aria_flowto: Vec<String>,
+    pub flowto_text: Vec<String>,
+    pub relation_attribute_names: Vec<String>,
+    pub relation_attribute_count: usize,
+    pub relation_target_count: usize,
+    pub unresolved_relation_targets: Vec<String>,
+    pub relation_blocked: bool,
+    pub relation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaNameDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub labelledby_text: Vec<String>,
+    pub name_source: String,
+    pub name_attribute_names: Vec<String>,
+    pub name_attribute_count: usize,
+    pub label_target_count: usize,
+    pub unresolved_label_targets: Vec<String>,
+    pub name_blocked: bool,
+    pub name_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaDescriptionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_description: Option<String>,
+    pub aria_describedby: Vec<String>,
+    pub describedby_text: Vec<String>,
+    pub description_source: String,
+    pub description_attribute_names: Vec<String>,
+    pub description_attribute_count: usize,
+    pub description_target_count: usize,
+    pub unresolved_description_targets: Vec<String>,
+    pub description_blocked: bool,
+    pub description_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserContentTree {
+    pub children: Vec<BrowserContentNode>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserContentNode {
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub name: Option<String>,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub text: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub hreflang: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub resource_kind: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub canvas_fallback_text: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub type_hint: Option<String>,
+    pub image_map_name: Option<String>,
+    pub image_map_shape: Option<String>,
+    pub image_map_coords: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
+    pub media: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub preload: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub control_type: Option<String>,
+    pub form_owner: Option<String>,
+    pub label_for: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_owns: Vec<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_modal: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_invalid: Option<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_required: Option<String>,
+    pub aria_hidden: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub open: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub focusable: Option<bool>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub placeholder: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub accept: Option<String>,
+    pub capture: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub list: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+    pub value: Option<String>,
+    pub autofocus: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub checked: bool,
+    pub selected: bool,
+    pub multiple: bool,
+    pub options: Vec<String>,
+    pub table_section_kind: Option<String>,
+    pub colspan: Option<String>,
+    pub rowspan: Option<String>,
+    pub span: Option<String>,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub description_list_kind: Option<String>,
+    pub term_kind: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
+    pub item_scope: bool,
+    pub item_type: Vec<String>,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub itemprop: Vec<String>,
+    pub item_value: Option<String>,
+    pub item_value_url: Option<String>,
+    pub resolved_item_value_url: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
+    pub break_kind: Option<String>,
+    pub grouping_kind: Option<String>,
+    pub disclosure_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
+    pub children: Vec<BrowserContentNode>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct BrowserRenderTree {
+    pub children: Vec<BrowserRenderNode>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserRenderNode {
+    pub display: String,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub name: Option<String>,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub text: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub hreflang: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub resource_kind: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub canvas_fallback_text: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub type_hint: Option<String>,
+    pub image_map_name: Option<String>,
+    pub image_map_shape: Option<String>,
+    pub image_map_coords: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
+    pub media: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub preload: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub control_type: Option<String>,
+    pub form_owner: Option<String>,
+    pub label_for: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_owns: Vec<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_modal: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_invalid: Option<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_required: Option<String>,
+    pub aria_hidden: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub open: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub focusable: Option<bool>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub placeholder: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub accept: Option<String>,
+    pub capture: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub list: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+    pub value: Option<String>,
+    pub autofocus: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub checked: bool,
+    pub selected: bool,
+    pub multiple: bool,
+    pub options: Vec<String>,
+    pub table_section_kind: Option<String>,
+    pub colspan: Option<String>,
+    pub rowspan: Option<String>,
+    pub span: Option<String>,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub description_list_kind: Option<String>,
+    pub term_kind: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
+    pub item_scope: bool,
+    pub item_type: Vec<String>,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub itemprop: Vec<String>,
+    pub item_value: Option<String>,
+    pub item_value_url: Option<String>,
+    pub resolved_item_value_url: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
+    pub break_kind: Option<String>,
+    pub grouping_kind: Option<String>,
+    pub disclosure_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
+    pub children: Vec<BrowserRenderNode>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserHeading {
+    pub level: u8,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserHeadingDescriptor {
+    pub heading_index: usize,
+    pub level: u8,
+    pub text: String,
+    pub previous_level: Option<u8>,
+    pub outline_kind: String,
+    pub skipped_level: bool,
+    pub heading_blocked: bool,
+    pub heading_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTextSemantic {
+    pub element: String,
+    pub id: Option<String>,
+    pub title: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
+    pub phrase_kind: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTextSemanticDescriptor {
+    pub semantic_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub semantic_kind: String,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
+    pub phrase_kind: Option<String>,
+    pub semantic_blocked: bool,
+    pub semantic_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTextFlowDescriptor {
+    pub flow_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub flow_kind: String,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub list_item_count: usize,
+    pub description_list_kind: Option<String>,
+    pub term_kind: Option<String>,
+    pub term_count: usize,
+    pub description_count: usize,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub flow_blocked: bool,
+    pub flow_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserNavigationTargetDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub text: String,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub hreflang: Option<String>,
+    pub type_hint: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub area_shape: Option<String>,
+    pub area_coords: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserNavigationGroup {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub landmark_kind: Option<String>,
+    pub list_kind: Option<String>,
+    pub item_count: usize,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserNavigationGroupDescriptor {
+    pub group_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub group_kind: String,
+    pub landmark_kind: Option<String>,
+    pub list_kind: Option<String>,
+    pub item_count: usize,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub navigation_blocked: bool,
+    pub navigation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSectionLandmark {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub heading_text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSectionLandmarkDescriptor {
+    pub landmark_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub heading_text: Option<String>,
+    pub outline_kind: String,
+    pub landmark_blocked: bool,
+    pub landmark_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCommandElement {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub command_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub control_type: Option<String>,
+    pub form_owner: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub focusable: bool,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserActivationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub command_kind: String,
+    pub activation_kind: String,
+    pub target_id: Option<String>,
+    pub target_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub disabled: bool,
+    pub focusable: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub control_type: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub effective_target: Option<String>,
+    pub form_owner: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollection {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_multiselectable: Option<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_owns: Vec<String>,
+    pub item_count: usize,
+    pub selected_item_count: usize,
+    pub checked_item_count: usize,
+    pub current_item_count: usize,
+    pub disabled_item_count: usize,
+    pub item_roles: Vec<String>,
+    pub selection_mode: String,
+    pub active_descendant_matches_item: bool,
+    pub items: Vec<BrowserAriaCollectionItem>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollectionItem {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_checked: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_level: Option<String>,
+    pub aria_posinset: Option<String>,
+    pub aria_setsize: Option<String>,
+    pub aria_rowindex: Option<String>,
+    pub aria_colindex: Option<String>,
+    pub aria_controls: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollectionDescriptor {
+    pub collection_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub collection_kind: String,
+    pub aria_orientation: Option<String>,
+    pub aria_multiselectable: Option<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_owns: Vec<String>,
+    pub item_count: usize,
+    pub item_roles: Vec<String>,
+    pub selected_item_count: usize,
+    pub checked_item_count: usize,
+    pub current_item_count: usize,
+    pub disabled_item_count: usize,
+    pub selection_mode: String,
+    pub active_descendant_matches_item: bool,
+    pub collection_blocked: bool,
+    pub collection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaRange {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_valuenow: Option<String>,
+    pub aria_valuemin: Option<String>,
+    pub aria_valuemax: Option<String>,
+    pub aria_valuetext: Option<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_readonly: Option<String>,
+    pub aria_required: Option<String>,
+    pub tabindex: Option<String>,
+    pub text_value: Option<String>,
+    pub value_attribute_names: Vec<String>,
+    pub value_attribute_count: usize,
+    pub range_value_complete: bool,
+    pub focusable: bool,
+    pub range_blocked: bool,
+    pub range_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaLiveRegion {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_atomic: Option<String>,
+    pub aria_relevant: Vec<String>,
+    pub aria_hidden: bool,
+    pub update_kind: String,
+    pub live_attribute_names: Vec<String>,
+    pub live_attribute_count: usize,
+    pub assertive_update: bool,
+    pub live_region_blocked: bool,
+    pub live_region_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLink {
+    pub element: String,
+    pub id: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub name: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub title: Option<String>,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub hreflang: Option<String>,
+    pub type_hint: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImage {
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub loading: Option<String>,
+    pub decoding: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub usemap: Option<String>,
+    pub ismap: bool,
+    pub sources: Vec<BrowserImageSource>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageSource {
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub media: Option<String>,
+    pub type_hint: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageCandidateDescriptor {
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub loading: Option<String>,
+    pub decoding: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub usemap: Option<String>,
+    pub ismap: bool,
+    pub has_alt: bool,
+    pub source_count: usize,
+    pub source_srcset_count: usize,
+    pub candidate_count: usize,
+    pub source_type_hints: Vec<String>,
+    pub source_media: Vec<String>,
+    pub sources: Vec<BrowserImageSource>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageMap {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub areas: Vec<BrowserImageMapArea>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageMapDescriptor {
+    pub map_index: usize,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub referenced_image_sources: Vec<String>,
+    pub area_count: usize,
+    pub navigable_area_count: usize,
+    pub area_shapes: Vec<String>,
+    pub missing_alt_area_count: usize,
+    pub missing_href_area_count: usize,
+    pub missing_coords_area_count: usize,
+    pub default_shape_area_count: usize,
+    pub ping_area_count: usize,
+    pub attribution_area_count: usize,
+    pub map_blocked: bool,
+    pub map_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageMapArea {
+    pub id: Option<String>,
+    pub shape: String,
+    pub coords: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub alt: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub download: Option<String>,
+    pub hreflang: Option<String>,
+    pub referrerpolicy: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMedia {
+    pub kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
+    pub preload: Option<String>,
+    pub crossorigin: Option<String>,
+    pub controlslist: Option<String>,
+    pub controlslist_tokens: Vec<String>,
+    pub disableremoteplayback: bool,
+    pub disablepictureinpicture: bool,
+    pub sources: Vec<BrowserMediaSource>,
+    pub tracks: Vec<BrowserMediaTrack>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaSource {
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaTrack {
+    pub kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub srclang: Option<String>,
+    pub label: Option<String>,
+    pub default_track: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaPlaybackDescriptor {
+    pub kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
+    pub preload: Option<String>,
+    pub crossorigin: Option<String>,
+    pub controlslist: Option<String>,
+    pub controlslist_tokens: Vec<String>,
+    pub disableremoteplayback: bool,
+    pub disablepictureinpicture: bool,
+    pub source_count: usize,
+    pub sources: Vec<BrowserMediaSource>,
+    pub track_count: usize,
+    pub default_track_count: usize,
+    pub tracks: Vec<BrowserMediaTrack>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaResourceDescriptor {
+    pub media_index: usize,
+    pub media_kind: String,
+    pub element: String,
+    pub resource_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub label: Option<String>,
+    pub default_track: bool,
+    pub candidate_kind: String,
+    pub media_resource_blocked: bool,
+    pub media_resource_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserEmbeddedContext {
+    pub element: String,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub browsing_context_name: Option<String>,
+    pub title: Option<String>,
+    pub type_hint: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub loading: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub fallback_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserEmbeddedPolicyDescriptor {
+    pub element: String,
+    pub resource_kind: String,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub browsing_context_name: Option<String>,
+    pub title: Option<String>,
+    pub type_hint: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub loading: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
+    pub sandbox: Vec<String>,
+    pub sandbox_token_count: usize,
+    pub allow: Option<String>,
+    pub allow_tokens: Vec<String>,
+    pub allow_token_count: usize,
+    pub allowfullscreen: bool,
+    pub fullscreen_allowed: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub has_srcdoc: bool,
+    pub credentialless: bool,
+    pub fallback_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserInteractiveElement {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_owns: Vec<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_modal: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_invalid: Option<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_required: Option<String>,
+    pub aria_keyshortcuts: Vec<String>,
+    pub aria_hidden: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub open: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub focusable: Option<bool>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFocusNavigationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub focus_kind: String,
+    pub focusable: bool,
+    pub sequential_focus: bool,
+    pub programmatic_focus: bool,
+    pub focus_blocked: bool,
+    pub focus_block_reasons: Vec<String>,
+    pub tabindex: Option<String>,
+    pub tabindex_order: Option<i32>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserKeyboardInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub keyboard_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub focusable: bool,
+    pub sequential_focus: bool,
+    pub programmatic_focus: bool,
+    pub tabindex: Option<String>,
+    pub tabindex_order: Option<i32>,
+    pub accesskey: Vec<String>,
+    pub aria_keyshortcuts: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub keyboard_blocked: bool,
+    pub keyboard_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserInputPlanningDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub input_kind: String,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub placeholder: Option<String>,
+    pub value: Option<String>,
+    pub editing_mode: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
+    pub list: Option<String>,
+    pub datalist_options: Vec<String>,
+    pub focusable: bool,
+    pub input_handlers: Vec<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub input_blocked: bool,
+    pub input_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDragDropDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub drag_kind: String,
+    pub text: String,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub drag_source: bool,
+    pub drop_target: bool,
+    pub drag_handlers: Vec<String>,
+    pub drop_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub drag_blocked: bool,
+    pub drag_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserClipboardInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub clipboard_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub clipboard_handlers: Vec<String>,
+    pub copy_handlers: Vec<String>,
+    pub cut_handlers: Vec<String>,
+    pub paste_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub clipboard_blocked: bool,
+    pub clipboard_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSelectionInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub selection_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub selection_handlers: Vec<String>,
+    pub select_handlers: Vec<String>,
+    pub selection_change_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub selection_blocked: bool,
+    pub selection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCompositionInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub composition_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub inputmode: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub composition_handlers: Vec<String>,
+    pub composition_start_handlers: Vec<String>,
+    pub composition_update_handlers: Vec<String>,
+    pub composition_end_handlers: Vec<String>,
+    pub beforeinput_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub composition_blocked: bool,
+    pub composition_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPointerInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub pointer_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub pointer_handlers: Vec<String>,
+    pub mouse_handlers: Vec<String>,
+    pub touch_handlers: Vec<String>,
+    pub wheel_handlers: Vec<String>,
+    pub click_handlers: Vec<String>,
+    pub drag_handlers: Vec<String>,
+    pub drop_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub pointer_blocked: bool,
+    pub pointer_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScrollInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub scroll_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_valuenow: Option<String>,
+    pub aria_valuemin: Option<String>,
+    pub aria_valuemax: Option<String>,
+    pub aria_valuetext: Option<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_readonly: Option<String>,
+    pub tabindex: Option<String>,
+    pub scroll_handlers: Vec<String>,
+    pub wheel_handlers: Vec<String>,
+    pub touch_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub scroll_blocked: bool,
+    pub scroll_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPopover {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub popover: String,
+    pub invokers: Vec<BrowserPopoverInvoker>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPopoverInvoker {
+    pub element: String,
+    pub id: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub command_kind: String,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub focusable: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPopoverDescriptor {
+    pub popover_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub popover_mode: String,
+    pub invoker_count: usize,
+    pub invoker_ids: Vec<String>,
+    pub invoker_actions: Vec<String>,
+    pub invoker_aria_expanded: Vec<String>,
+    pub focusable_invoker_count: usize,
+    pub popover_blocked: bool,
+    pub popover_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDisclosure {
+    pub element: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
+    pub summary_text: Option<String>,
+    pub open: bool,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_modal: Option<String>,
+    pub closedby: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDisclosureStateDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub disclosure_kind: String,
+    pub open: bool,
+    pub grouped: bool,
+    pub group_name: Option<String>,
+    pub has_summary: bool,
+    pub summary_text: Option<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_modal: Option<String>,
+    pub modal: bool,
+    pub closedby: Option<String>,
+    pub text: String,
+    pub text_length: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserForm {
+    pub id: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub name: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub accept_charset: Option<String>,
+    pub accept_charset_tokens: Vec<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub novalidate: bool,
+    pub event_handlers: Vec<String>,
+    pub fieldsets: Vec<BrowserFormFieldset>,
+    pub labels: Vec<BrowserFormLabel>,
+    pub datalists: Vec<BrowserFormDatalist>,
+    pub selects: Vec<BrowserFormSelect>,
+    pub outputs: Vec<BrowserFormOutput>,
+    pub measurements: Vec<BrowserFormMeasurement>,
+    pub object_controls: Vec<BrowserFormObject>,
+    pub successful_controls: Vec<BrowserFormSuccessfulControl>,
+    pub validation_controls: Vec<BrowserFormValidationControl>,
+    pub buttons: Vec<BrowserFormButton>,
+    pub text_entries: Vec<BrowserFormTextEntry>,
+    pub choice_controls: Vec<BrowserFormChoiceControl>,
+    pub file_controls: Vec<BrowserFormFileControl>,
+    pub hidden_controls: Vec<BrowserFormHiddenControl>,
+    pub image_controls: Vec<BrowserFormImageControl>,
+    pub controls: Vec<BrowserFormControl>,
+    pub submitters: Vec<BrowserFormSubmitter>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormFieldset {
+    pub id: Option<String>,
+    pub form_owner: Option<String>,
+    pub legend: Option<String>,
+    pub disabled: bool,
+    pub control_ids: Vec<String>,
+    pub control_names: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormLabel {
+    pub id: Option<String>,
+    pub for_control: Option<String>,
+    pub text: String,
+    pub control_id: Option<String>,
+    pub control_name: Option<String>,
+    pub control_type: Option<String>,
+    pub association: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormDatalist {
+    pub id: Option<String>,
+    pub control_ids: Vec<String>,
+    pub control_names: Vec<String>,
+    pub options: Vec<BrowserDatalistOption>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDatalistOption {
+    pub value: String,
+    pub label: Option<String>,
+    pub text: String,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSelect {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub multiple: bool,
+    pub size: Option<String>,
+    pub value: Option<String>,
+    pub selected_options: Vec<String>,
+    pub options: Vec<BrowserSelectOption>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormOutput {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub for_tokens: Vec<String>,
+    pub for_control_ids: Vec<String>,
+    pub for_control_names: Vec<String>,
+    pub for_control_types: Vec<String>,
+    pub value: Option<String>,
+    pub disabled: bool,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormMeasurement {
+    pub id: Option<String>,
+    pub measurement_type: String,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub value: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub low: Option<String>,
+    pub high: Option<String>,
+    pub optimum: Option<String>,
+    pub indeterminate: bool,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormObject {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub data: Option<String>,
+    pub resolved_data: Option<String>,
+    pub type_hint: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub usemap: Option<String>,
+    pub fallback_text: String,
+    pub params: Vec<BrowserFormObjectParam>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormObjectParam {
+    pub name: Option<String>,
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSuccessfulControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: String,
+    pub form_owner: Option<String>,
+    pub submission_values: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormValidationControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub will_validate: bool,
+    pub required: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormButton {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub accessible_name: Option<String>,
+    pub disabled: bool,
+    pub autofocus: bool,
+    pub submitter: bool,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+    pub text: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormTextEntry {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub placeholder: Option<String>,
+    pub value: Option<String>,
+    pub text: String,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
+    pub list: Option<String>,
+    pub datalist_options: Vec<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormChoiceControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub checked: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub group_required: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub group_name: Option<String>,
+    pub group_checked_ids: Vec<String>,
+    pub group_checked_values: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormFileControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accept: Option<String>,
+    pub accept_tokens: Vec<String>,
+    pub capture: Option<String>,
+    pub multiple: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormHiddenControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub disabled: bool,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormImageControl {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub disabled: bool,
+    pub autofocus: bool,
+    pub submitter: bool,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+    pub coordinate_names: Vec<String>,
+    pub will_validate: bool,
+    pub validation_barred_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormControl {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub labels: Vec<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub placeholder: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
+    pub accept: Option<String>,
+    pub accept_tokens: Vec<String>,
+    pub capture: Option<String>,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
+    pub list: Option<String>,
+    pub datalist_options: Vec<String>,
+    pub output_for: Vec<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+    pub value: Option<String>,
+    pub successful: bool,
+    pub submission_values: Vec<String>,
+    pub autofocus: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub checked: bool,
+    pub multiple: bool,
+    pub selected_options: Vec<String>,
+    pub option_items: Vec<BrowserSelectOption>,
+    pub text: String,
+    pub options: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSelectOption {
+    pub value: String,
+    pub label: Option<String>,
+    pub text: String,
+    pub selected: bool,
+    pub disabled: bool,
+    pub group_label: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSubmitter {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub accessible_name: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTable {
+    pub caption: Option<String>,
+    pub row_count: usize,
+    pub column_count: usize,
+    pub column_hint_count: usize,
+    pub cell_count: usize,
+    pub header_cell_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTableCell {
+    pub table_index: usize,
+    pub table_id: Option<String>,
+    pub table_caption: Option<String>,
+    pub section_kind: Option<String>,
+    pub row_index: usize,
+    pub column_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub header: bool,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
+    pub rowspan: Option<String>,
+    pub colspan: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTableStructureDescriptor {
+    pub table_index: usize,
+    pub table_id: Option<String>,
+    pub caption: Option<String>,
+    pub row_count: usize,
+    pub column_count: usize,
+    pub column_hint_count: usize,
+    pub cell_count: usize,
+    pub header_cell_count: usize,
+    pub section_kinds: Vec<String>,
+    pub header_scopes: Vec<String>,
+    pub header_ids: Vec<String>,
+    pub cells_with_headers_count: usize,
+    pub spanning_cell_count: usize,
+    pub table_blocked: bool,
+    pub table_block_reasons: Vec<String>,
+}
+
+impl BrowserDocument {
+    pub fn from_document(document: &Document) -> Self {
+        let html = find_first_element_in_nodes(&document.children, "html");
+        let head = find_first_element_in_nodes(&document.children, "head");
+        let body = find_first_element_in_nodes(&document.children, "body");
+        let body_children = body
+            .map(|element| element.children.as_slice())
+            .unwrap_or(document.children.as_slice());
+
+        let mut summary = Self {
+            title: head
+                .and_then(|element| find_first_element_in_nodes(&element.children, "title"))
+                .map(element_text),
+            base_href: head
+                .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+                .and_then(|element| element.attribute("href"))
+                .map(ToOwned::to_owned),
+            base_target: head
+                .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+                .and_then(|element| element.attribute("target"))
+                .map(ToOwned::to_owned),
+            document_lang: html
+                .and_then(|element| element.attribute("lang"))
+                .map(ToOwned::to_owned),
+            document_dir: html
+                .and_then(|element| element.attribute("dir"))
+                .map(ToOwned::to_owned),
+            body_id: body
+                .and_then(|element| element.attribute("id"))
+                .map(ToOwned::to_owned),
+            body_classes: body
+                .and_then(|element| element.attribute("class"))
+                .map(split_html_classes)
+                .unwrap_or_default(),
+            body_lang: body
+                .and_then(|element| element.attribute("lang"))
+                .map(ToOwned::to_owned),
+            body_dir: body
+                .and_then(|element| element.attribute("dir"))
+                .map(ToOwned::to_owned),
+            document_event_handlers: html.map(browser_event_handlers).unwrap_or_default(),
+            body_event_handlers: body.map(browser_event_handlers).unwrap_or_default(),
+            body_text: visible_text_for_nodes(body_children),
+            ..Self::default()
+        };
+
+        if let Some(head) = head {
+            collect_head_browser_facts(&head.children, &mut summary);
+        }
+        if let Some(descriptor) = browser_document_policy_descriptor(&summary.metadata) {
+            summary.document_policy_descriptors.push(descriptor);
+        }
+        for (source, element) in [("document", html), ("body", body)] {
+            let Some(element) = element else {
+                continue;
+            };
+            if let Some(descriptor) = browser_event_handler_descriptor(element, source) {
+                summary.event_handler_descriptors.push(descriptor);
+            }
+            if let Some(descriptor) = browser_global_state_descriptor(element) {
+                summary.global_state_descriptors.push(descriptor);
+            }
+        }
+        let labels = collect_label_texts_by_control_id(body_children);
+        let id_texts = collect_element_texts_by_id(body_children);
+        collect_browser_facts(
+            body_children,
+            &mut summary,
+            &labels,
+            &id_texts,
+            &[],
+            body_children,
+        );
+        summary.script_execution_descriptors =
+            browser_script_execution_descriptors(&summary.scripts);
+        summary.script_storage_access_descriptors =
+            browser_script_storage_access_descriptors(&summary.scripts);
+        summary.script_worker_messaging_descriptors =
+            browser_script_worker_messaging_descriptors(&summary.scripts);
+        summary.script_module_graph_descriptors =
+            browser_script_module_graph_descriptors(&summary.scripts, &summary.resources);
+        summary.stylesheet_planning_descriptors =
+            browser_stylesheet_planning_descriptors(&summary.stylesheets);
+        summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
+        summary.image_map_descriptors =
+            browser_image_map_descriptors(&summary.image_maps, &summary.images);
+        summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
+        summary.media_resource_descriptors = browser_media_resource_descriptors(&summary.media);
+        summary.embedded_policy_descriptors =
+            browser_embedded_policy_descriptors(&summary.embedded_contexts);
+        summary.disclosure_state_descriptors =
+            browser_disclosure_state_descriptors(&summary.disclosures);
+        summary.activation_descriptors = browser_activation_descriptors(
+            &summary.command_elements,
+            &summary.popovers,
+            &summary.disclosures,
+        );
+        summary.popover_descriptors = browser_popover_descriptors(&summary.popovers);
+        summary.aria_collection_descriptors =
+            browser_aria_collection_descriptors(&summary.aria_collections);
+        summary.focus_navigation_descriptors =
+            browser_focus_navigation_descriptors(&summary.interactive_elements);
+        summary.keyboard_interaction_descriptors =
+            browser_keyboard_interaction_descriptors(&summary.interactive_elements);
+        summary.input_planning_descriptors =
+            browser_input_planning_descriptors(&summary.forms, &summary.interactive_elements);
+        summary.drag_drop_descriptors = browser_drag_drop_descriptors(&summary);
+        summary.clipboard_interaction_descriptors =
+            browser_clipboard_interaction_descriptors(&summary);
+        summary.selection_interaction_descriptors =
+            browser_selection_interaction_descriptors(&summary);
+        summary.composition_interaction_descriptors =
+            browser_composition_interaction_descriptors(&summary);
+        summary.pointer_interaction_descriptors = browser_pointer_interaction_descriptors(&summary);
+        summary.scroll_interaction_descriptors = browser_scroll_interaction_descriptors(&summary);
+        summary.lifecycle_event_descriptors = browser_lifecycle_event_descriptors(&summary);
+        summary.animation_interaction_descriptors =
+            browser_animation_interaction_descriptors(&summary);
+        summary.fullscreen_interaction_descriptors =
+            browser_fullscreen_interaction_descriptors(&summary);
+        summary.context_menu_interaction_descriptors =
+            browser_context_menu_interaction_descriptors(&summary);
+        summary.form_control_descriptors = browser_form_control_descriptors(&summary.forms);
+        summary.form_association_descriptors = browser_form_association_descriptors(&summary.forms);
+        summary.form_autofill_descriptors = browser_form_autofill_descriptors(&summary.forms);
+        summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
+        summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
+        summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
+        summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
+        summary.link_resource_descriptors = browser_link_resource_descriptors(&summary.resources);
+        summary.anchor_descriptors = browser_anchor_descriptors(&summary.anchors);
+        summary.heading_descriptors = browser_heading_descriptors(&summary.headings);
+        summary.text_semantic_descriptors =
+            browser_text_semantic_descriptors(&summary.text_semantics);
+        summary.navigation_group_descriptors =
+            browser_navigation_group_descriptors(&summary.navigation_groups);
+        summary.section_landmark_descriptors =
+            browser_section_landmark_descriptors(&summary.section_landmarks);
+        summary
+    }
+}
+
+impl BrowserContentTree {
+    pub fn from_document(document: &Document) -> Self {
+        let head = find_first_element_in_nodes(&document.children, "head");
+        let base_href = head
+            .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+            .and_then(|element| element.attribute("href"));
+        let body = find_first_element_in_nodes(&document.children, "body");
+        let body_children = body
+            .map(|element| element.children.as_slice())
+            .unwrap_or(document.children.as_slice());
+        Self::from_nodes_with_base(body_children, base_href)
+    }
+
+    pub fn from_nodes(nodes: &[Node]) -> Self {
+        Self::from_nodes_with_base(nodes, None)
+    }
+
+    fn from_nodes_with_base(nodes: &[Node], base_href: Option<&str>) -> Self {
+        let mut children = Vec::new();
+        let labels = collect_label_texts_by_control_id(nodes);
+        let id_texts = collect_element_texts_by_id(nodes);
+        collect_browser_content_nodes(nodes, &mut children, base_href, &labels, &id_texts);
+        Self { children }
+    }
+}
+
+impl BrowserRenderTree {
+    pub fn from_document(document: &Document) -> Self {
+        Self::from_content_tree(&BrowserContentTree::from_document(document))
+    }
+
+    pub fn from_content_tree(content_tree: &BrowserContentTree) -> Self {
+        Self {
+            children: content_tree
+                .children
+                .iter()
+                .map(BrowserRenderNode::from_content_node)
+                .collect(),
+        }
+    }
+}
+
+impl BrowserRenderNode {
+    pub fn from_content_node(content_node: &BrowserContentNode) -> Self {
+        Self {
+            display: browser_render_display(&content_node.role).to_string(),
+            role: content_node.role.clone(),
+            authored_role: content_node.authored_role.clone(),
+            name: content_node.name.clone(),
+            id: content_node.id.clone(),
+            classes: content_node.classes.clone(),
+            title: content_node.title.clone(),
+            lang: content_node.lang.clone(),
+            dir: content_node.dir.clone(),
+            text: content_node.text.clone(),
+            href: content_node.href.clone(),
+            resolved_href: content_node.resolved_href.clone(),
+            target: content_node.target.clone(),
+            rel: content_node.rel.clone(),
+            rel_tokens: content_node.rel_tokens.clone(),
+            download: content_node.download.clone(),
+            ping: content_node.ping.clone(),
+            resolved_ping: content_node.resolved_ping.clone(),
+            attributionsrc: content_node.attributionsrc.clone(),
+            resolved_attributionsrc: content_node.resolved_attributionsrc.clone(),
+            hreflang: content_node.hreflang.clone(),
+            src: content_node.src.clone(),
+            resolved_src: content_node.resolved_src.clone(),
+            alt: content_node.alt.clone(),
+            resource_kind: content_node.resource_kind.clone(),
+            slot: content_node.slot.clone(),
+            slot_name: content_node.slot_name.clone(),
+            custom_element: content_node.custom_element,
+            custom_element_name: content_node.custom_element_name.clone(),
+            custom_element_is: content_node.custom_element_is.clone(),
+            canvas_fallback_text: content_node.canvas_fallback_text.clone(),
+            width: content_node.width.clone(),
+            height: content_node.height.clone(),
+            type_hint: content_node.type_hint.clone(),
+            image_map_name: content_node.image_map_name.clone(),
+            image_map_shape: content_node.image_map_shape.clone(),
+            image_map_coords: content_node.image_map_coords.clone(),
+            srcset: content_node.srcset.clone(),
+            resolved_srcset: content_node.resolved_srcset.clone(),
+            sizes: content_node.sizes.clone(),
+            track_kind: content_node.track_kind.clone(),
+            srclang: content_node.srclang.clone(),
+            track_label: content_node.track_label.clone(),
+            default_track: content_node.default_track,
+            media: content_node.media.clone(),
+            poster: content_node.poster.clone(),
+            resolved_poster: content_node.resolved_poster.clone(),
+            preload: content_node.preload.clone(),
+            controls: content_node.controls,
+            autoplay: content_node.autoplay,
+            loop_media: content_node.loop_media,
+            muted: content_node.muted,
+            playsinline: content_node.playsinline,
+            browsing_context_name: content_node.browsing_context_name.clone(),
+            loading: content_node.loading.clone(),
+            sandbox: content_node.sandbox.clone(),
+            allow: content_node.allow.clone(),
+            allowfullscreen: content_node.allowfullscreen,
+            referrerpolicy: content_node.referrerpolicy.clone(),
+            srcdoc: content_node.srcdoc.clone(),
+            credentialless: content_node.credentialless,
+            control_type: content_node.control_type.clone(),
+            form_owner: content_node.form_owner.clone(),
+            label_for: content_node.label_for.clone(),
+            labels: content_node.labels.clone(),
+            accessible_name: content_node.accessible_name.clone(),
+            accessible_description: content_node.accessible_description.clone(),
+            aria_label: content_node.aria_label.clone(),
+            aria_labelledby: content_node.aria_labelledby.clone(),
+            aria_describedby: content_node.aria_describedby.clone(),
+            aria_controls: content_node.aria_controls.clone(),
+            aria_owns: content_node.aria_owns.clone(),
+            aria_activedescendant: content_node.aria_activedescendant.clone(),
+            aria_current: content_node.aria_current.clone(),
+            aria_expanded: content_node.aria_expanded.clone(),
+            aria_haspopup: content_node.aria_haspopup.clone(),
+            aria_modal: content_node.aria_modal.clone(),
+            aria_pressed: content_node.aria_pressed.clone(),
+            aria_selected: content_node.aria_selected.clone(),
+            aria_invalid: content_node.aria_invalid.clone(),
+            aria_live: content_node.aria_live.clone(),
+            aria_busy: content_node.aria_busy.clone(),
+            aria_disabled: content_node.aria_disabled.clone(),
+            aria_required: content_node.aria_required.clone(),
+            aria_hidden: content_node.aria_hidden,
+            hidden: content_node.hidden,
+            inert: content_node.inert,
+            open: content_node.open,
+            tabindex: content_node.tabindex.clone(),
+            accesskey: content_node.accesskey.clone(),
+            event_handlers: content_node.event_handlers.clone(),
+            focusable: content_node.focusable,
+            contenteditable: content_node.contenteditable.clone(),
+            editing_mode: content_node.editing_mode.clone(),
+            draggable: content_node.draggable.clone(),
+            draggable_state: content_node.draggable_state.clone(),
+            spellcheck: content_node.spellcheck.clone(),
+            translate: content_node.translate.clone(),
+            popover: content_node.popover.clone(),
+            popover_target: content_node.popover_target.clone(),
+            popover_target_action: content_node.popover_target_action.clone(),
+            command: content_node.command.clone(),
+            command_for: content_node.command_for.clone(),
+            placeholder: content_node.placeholder.clone(),
+            autocomplete: content_node.autocomplete.clone(),
+            autocapitalize: content_node.autocapitalize.clone(),
+            enterkeyhint: content_node.enterkeyhint.clone(),
+            dirname: content_node.dirname.clone(),
+            accept: content_node.accept.clone(),
+            capture: content_node.capture.clone(),
+            inputmode: content_node.inputmode.clone(),
+            pattern: content_node.pattern.clone(),
+            min: content_node.min.clone(),
+            max: content_node.max.clone(),
+            low: content_node.low.clone(),
+            high: content_node.high.clone(),
+            optimum: content_node.optimum.clone(),
+            step: content_node.step.clone(),
+            minlength: content_node.minlength.clone(),
+            maxlength: content_node.maxlength.clone(),
+            size: content_node.size.clone(),
+            list: content_node.list.clone(),
+            form_action: content_node.form_action.clone(),
+            resolved_form_action: content_node.resolved_form_action.clone(),
+            form_enctype: content_node.form_enctype.clone(),
+            form_method: content_node.form_method.clone(),
+            form_target: content_node.form_target.clone(),
+            form_novalidate: content_node.form_novalidate,
+            value: content_node.value.clone(),
+            autofocus: content_node.autofocus,
+            disabled: content_node.disabled,
+            required: content_node.required,
+            readonly: content_node.readonly,
+            checked: content_node.checked,
+            selected: content_node.selected,
+            multiple: content_node.multiple,
+            options: content_node.options.clone(),
+            table_section_kind: content_node.table_section_kind.clone(),
+            colspan: content_node.colspan.clone(),
+            rowspan: content_node.rowspan.clone(),
+            span: content_node.span.clone(),
+            scope: content_node.scope.clone(),
+            headers: content_node.headers.clone(),
+            abbr: content_node.abbr.clone(),
+            text_flow: content_node.text_flow.clone(),
+            list_kind: content_node.list_kind.clone(),
+            list_start: content_node.list_start.clone(),
+            list_marker_type: content_node.list_marker_type.clone(),
+            list_reversed: content_node.list_reversed,
+            list_item_value: content_node.list_item_value.clone(),
+            description_list_kind: content_node.description_list_kind.clone(),
+            term_kind: content_node.term_kind.clone(),
+            quote_cite: content_node.quote_cite.clone(),
+            resolved_quote_cite: content_node.resolved_quote_cite.clone(),
+            data_value: content_node.data_value.clone(),
+            datetime: content_node.datetime.clone(),
+            edit_cite: content_node.edit_cite.clone(),
+            resolved_edit_cite: content_node.resolved_edit_cite.clone(),
+            edit_datetime: content_node.edit_datetime.clone(),
+            item_scope: content_node.item_scope,
+            item_type: content_node.item_type.clone(),
+            item_id: content_node.item_id.clone(),
+            resolved_item_id: content_node.resolved_item_id.clone(),
+            item_ref: content_node.item_ref.clone(),
+            itemprop: content_node.itemprop.clone(),
+            item_value: content_node.item_value.clone(),
+            item_value_url: content_node.item_value_url.clone(),
+            resolved_item_value_url: content_node.resolved_item_value_url.clone(),
+            ruby_kind: content_node.ruby_kind.clone(),
+            bidi_kind: content_node.bidi_kind.clone(),
+            break_kind: content_node.break_kind.clone(),
+            grouping_kind: content_node.grouping_kind.clone(),
+            disclosure_kind: content_node.disclosure_kind.clone(),
+            heading_level: content_node.heading_level,
+            section_kind: content_node.section_kind.clone(),
+            landmark_kind: content_node.landmark_kind.clone(),
+            children: content_node
+                .children
+                .iter()
+                .map(Self::from_content_node)
+                .collect(),
+        }
+    }
+}
+
 /// Streaming-friendly parser core over already-tokenized HTML.
 #[derive(Debug)]
 pub struct HtmlParser {
@@ -793,7 +4314,6 @@ pub struct HtmlParser {
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
-    explicit_em_end_seen: bool,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
@@ -815,7 +4335,6 @@ impl Default for HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -864,7 +4383,6 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -888,7 +4406,6 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
-            explicit_em_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
@@ -997,21 +4514,9 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        repair_fostered_nobr_adoption_wrappers(&mut self.document);
         repair_table_cell_fostered_nobr_adoption(&mut self.document);
-        repair_div_fostered_nobr_adoption(&mut self.document);
-        repair_split_div_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
-        repair_tricky_adoption_agency(&mut document);
-        repair_nested_select_option_pairs(&mut document.children);
-        repair_div_bold_nobr_continuation(&mut document.children);
-        repair_anchor_list_item_boundary(&mut document.children);
-        repair_font_paragraph_boundary(&mut document.children);
-        repair_anchor_center_boundary(&mut document.children);
-        repair_em_aside_continuation(&mut document.children, self.explicit_em_end_seen);
-        repair_svg_title_tail_text(&mut document.children);
-        repair_select_option_hr(&mut document.children);
-        repair_select_button_selectedcontent(&mut document.children);
+        repair_insanely_badly_nested_table_sequence(&mut document.children);
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
         }
@@ -1065,7 +4570,10 @@ impl HtmlParser {
                             force_quirks,
                         }));
                     }
-                    Token::Eof => self.open_elements.clear(),
+                    Token::Eof => {
+                        self.populate_selectedcontent_for_open_selects();
+                        self.open_elements.clear();
+                    }
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
             }
@@ -1504,6 +5012,16 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "hr" && self.has_open_element("select") {
+            self.close_open_element_if(|name| name == "option");
+            if self.insert_node_under_last_open_element(
+                "select",
+                Node::element(name.clone(), attributes.clone()),
+            ) {
+                return;
+            }
+        }
+
         if !in_foreign_content
             && matches!(name.as_str(), "svg" | "math")
             && self.current_element_is_table_structure()
@@ -1589,6 +5107,17 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "img" && self.current_element_is_table_structure() {
+            if let Some(path) =
+                self.insert_node_before_open_table_inside_previous_center_font_context(
+                    Node::element(name.clone(), attributes.clone()),
+                )
+            {
+                self.open_elements.push(path);
+                return;
+            }
+        }
+
         if !in_foreign_content
             && name == "select"
             && self.has_open_element("template")
@@ -1638,6 +5167,17 @@ impl HtmlParser {
             {
                 if !acknowledges_self_closing && !is_void {
                     self.open_elements.push(path);
+                    for (formatting_name, formatting_attributes) in formatting_inside {
+                        let child_index =
+                            self.append_node(Node::element(formatting_name, formatting_attributes));
+                        let mut path = self.current_parent_path().to_vec();
+                        path.push(child_index);
+                        if prunes_empty_formatting_inside {
+                            self.prunable_empty_reconstructed_formatting_paths
+                                .push(path.clone());
+                        }
+                        self.open_elements.push(path);
+                    }
                 }
             }
             return;
@@ -1721,7 +5261,18 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "nobr" {
+            self.insert_split_div_nobr_adoption_marker_before_current_i();
+        }
+
+        if !in_foreign_content && name == "div" && self.split_div_from_open_b_nobr(&attributes) {
+            return;
+        }
+
         self.reconstruct_formatting_before_if_needed(&name);
+        if !in_foreign_content {
+            self.unwrap_current_empty_font_newline_before_bold(&name);
+        }
 
         let namespace = self.namespace_for_start_tag(&name);
         let name = adjusted_foreign_start_tag_name(name, namespace);
@@ -1743,6 +5294,24 @@ impl HtmlParser {
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
             self.open_elements.push(path);
+        }
+        if namespace.is_none()
+            && name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            self.reconstruct_pending_formatting();
+        }
+        if namespace.is_none()
+            && name == "dd"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            self.reconstruct_pending_formatting();
         }
 
         for (formatting_name, formatting_attributes) in formatting_inside {
@@ -2172,6 +5741,24 @@ impl HtmlParser {
         Some(vec![html_index, html.children.len() - 1])
     }
 
+    fn insert_node_under_last_open_element(&mut self, element_name: &str, node: Node) -> bool {
+        let Some(path) = self
+            .open_elements
+            .iter()
+            .rfind(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == element_name)
+            })
+            .cloned()
+        else {
+            return false;
+        };
+        let Some(element) = element_at_path_mut(&mut self.document, &path) else {
+            return false;
+        };
+        element.children.push(node);
+        true
+    }
+
     fn append_implied_element(&mut self, name: &str) {
         let child_index = self.append_node(Node::element(name.to_string(), Vec::new()));
         let mut path = self.current_parent_path().to_vec();
@@ -2246,6 +5833,9 @@ impl HtmlParser {
         if incoming_name == "button" && self.current_element_is("span") {
             return Vec::new();
         }
+        if incoming_name == "p" && self.current_font_size_seven_newline_continuation() {
+            return Vec::new();
+        }
 
         let mut formatting = Vec::new();
         while let Some(path) = self.open_elements.last() {
@@ -2290,6 +5880,36 @@ impl HtmlParser {
         self.reconstruct_pending_formatting();
     }
 
+    fn current_font_size_seven_newline_continuation(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.namespace.is_none()
+            && element.name == "font"
+            && element.attribute("size") == Some("7")
+            && element.children.len() == 1
+            && matches!(element.children.first(), Some(Node::Text(text)) if text.data == "\n")
+    }
+
+    fn current_font_size_seven_paragraph_continuation(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.namespace.is_none()
+            && element.name == "font"
+            && element.attribute("size") == Some("7")
+            && element
+                .children
+                .iter()
+                .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
+    }
+
     fn reconstruct_pending_formatting(&mut self) {
         let formatting = std::mem::take(&mut self.pending_formatting_reconstruction);
         for (formatting_name, formatting_attributes) in formatting {
@@ -2306,6 +5926,22 @@ impl HtmlParser {
             return;
         }
         if incoming_name == "p" && self.current_element_is_table_structure() {
+            return;
+        }
+        if incoming_name == "div"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
+            return;
+        }
+        if incoming_name == "dd"
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "b")
+        {
             return;
         }
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
@@ -2377,6 +6013,14 @@ impl HtmlParser {
                 self.open_elements.push(path);
                 return true;
             }
+            if incoming_name == "nobr" {
+                let reconstructed_paths =
+                    self.insert_nobr_inside_pending_i_before_open_table(attributes);
+                if let Some(paths) = reconstructed_paths {
+                    self.open_elements.extend(paths);
+                    return true;
+                }
+            }
         }
 
         let Some(path) = self.insert_node_before_open_table(Node::element(
@@ -2400,6 +6044,32 @@ impl HtmlParser {
         children.push(node);
         parent_path.push(child_index);
         Some(parent_path)
+    }
+
+    fn insert_nobr_inside_pending_i_before_open_table(
+        &mut self,
+        attributes: &[Attribute],
+    ) -> Option<Vec<Vec<usize>>> {
+        let [(pending_name, pending_attributes)] =
+            self.pending_formatting_reconstruction.as_slice()
+        else {
+            return None;
+        };
+        if pending_name != "i" {
+            return None;
+        }
+
+        let mut reconstructed_i = Node::element("i".to_string(), pending_attributes.clone());
+        if let Node::Element(element) = &mut reconstructed_i {
+            element
+                .children
+                .push(Node::element("nobr".to_string(), attributes.to_vec()));
+        }
+
+        let i_path = self.insert_node_before_open_table(reconstructed_i)?;
+        let mut nobr_path = i_path.clone();
+        nobr_path.push(0);
+        Some(vec![i_path, nobr_path])
     }
 
     fn previous_pending_formatting_path_before_open_table(&self) -> Option<Vec<usize>> {
@@ -2543,6 +6213,153 @@ impl HtmlParser {
         Some(inserted_path)
     }
 
+    fn insert_node_before_open_table_inside_previous_center_font_context(
+        &mut self,
+        node: Node,
+    ) -> Option<Vec<usize>> {
+        let table_path = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()?;
+        let (&table_index, parent_path) = table_path.split_last()?;
+        let previous_index = table_index.checked_sub(1)?;
+        let siblings = children_at_path_mut(&mut self.document.children, parent_path)?;
+        let previous_center_has_font = matches!(
+            siblings.get(previous_index),
+            Some(Node::Element(center))
+                if center.name == "center"
+                    && center
+                        .children
+                        .iter()
+                        .any(|child| matches!(child, Node::Element(child) if child.name == "font"))
+        );
+        if !previous_center_has_font {
+            return None;
+        }
+
+        let mut font = Node::element("font".to_string(), Vec::new());
+        if let Node::Element(font_element) = &mut font {
+            font_element.children.push(node);
+        }
+        self.insert_node_before_open_table(font)
+    }
+
+    fn insert_split_div_nobr_adoption_marker_before_current_i(&mut self) -> bool {
+        let Some(current_i_path) = self.open_elements.last().cloned() else {
+            return false;
+        };
+        let Some((&i_index, div_path)) = current_i_path.split_last() else {
+            return false;
+        };
+        if i_index != 0 {
+            return false;
+        }
+        let Some(div) = element_ref_at_path(&self.document, div_path) else {
+            return false;
+        };
+        if div.name != "div" || div.children.len() != 1 {
+            return false;
+        }
+        let Some(Node::Element(current_i)) = div.children.first() else {
+            return false;
+        };
+        if current_i.name != "i" || !current_i.children.is_empty() {
+            return false;
+        }
+        let Some((&div_index, div_parent_path)) = div_path.split_last() else {
+            return false;
+        };
+        let Some(previous_index) = div_index.checked_sub(1) else {
+            return false;
+        };
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, div_parent_path)
+        else {
+            return false;
+        };
+        if !parent_children
+            .get(previous_index)
+            .is_some_and(|node| node_contains_element_named(node, "nobr"))
+        {
+            return false;
+        }
+        let Some(Node::Element(div)) = parent_children.get_mut(div_index) else {
+            return false;
+        };
+
+        let mut marker = Node::element("nobr".to_string(), Vec::new());
+        if let Node::Element(marker_element) = &mut marker {
+            marker_element
+                .children
+                .push(Node::element("i".to_string(), Vec::new()));
+        }
+        div.children.insert(0, marker);
+        increment_open_element_paths_after_insert(&mut self.open_elements, div_path, 0);
+        true
+    }
+
+    fn split_div_from_open_b_nobr(&mut self, attributes: &[Attribute]) -> bool {
+        let current_nobr_path = self.current_parent_path().to_vec();
+        let Some(current_nobr) = element_ref_at_path(&self.document, &current_nobr_path) else {
+            return false;
+        };
+        if current_nobr.name != "nobr" {
+            return false;
+        }
+        let Some((&nobr_index, b_path)) = current_nobr_path.split_last() else {
+            return false;
+        };
+        if nobr_index != 0 {
+            return false;
+        }
+        let Some(b_element) = element_ref_at_path(&self.document, b_path) else {
+            return false;
+        };
+        if b_element.name != "b" {
+            return false;
+        }
+        let b_attributes = b_element.attributes.clone();
+        let Some((&b_index, b_parent_path)) = b_path.split_last() else {
+            return false;
+        };
+        let Some(b_stack_index) = self.open_elements.iter().rposition(|path| path == b_path) else {
+            return false;
+        };
+
+        let mut reconstructed_b = Node::element("b".to_string(), b_attributes);
+        if let Node::Element(reconstructed_b_element) = &mut reconstructed_b {
+            reconstructed_b_element
+                .children
+                .push(Node::element("nobr".to_string(), Vec::new()));
+        }
+        let mut div = Node::element("div".to_string(), attributes.to_vec());
+        if let Node::Element(div_element) = &mut div {
+            div_element.children.push(reconstructed_b);
+        }
+
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, b_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = b_index + 1;
+        if insert_index > parent_children.len() {
+            return false;
+        }
+        parent_children.insert(insert_index, div);
+
+        self.open_elements.truncate(b_stack_index);
+        let mut div_path = b_parent_path.to_vec();
+        div_path.push(insert_index);
+        self.open_elements.push(div_path.clone());
+        div_path.push(0);
+        self.open_elements.push(div_path.clone());
+        div_path.push(0);
+        self.open_elements.push(div_path);
+        true
+    }
+
     fn close_fostered_formatting_before_table_context(&mut self, incoming_name: &str) {
         if !starts_table_context(incoming_name) {
             return;
@@ -2636,6 +6453,7 @@ impl HtmlParser {
             && name != "p"
             && !self.current_element_is(name)
             && !is_table_context_element(name)
+            && !(self.current_namespace().is_some() && self.has_open_element(name))
         {
             return;
         }
@@ -2665,10 +6483,7 @@ impl HtmlParser {
         if name == "b" && self.adopt_b_end_tag_across_cite_div() {
             return;
         }
-        if name == "body"
-            && self.has_open_element("body")
-            && self.current_element_is("bdy")
-        {
+        if name == "body" && self.has_open_element("body") && self.current_element_is("bdy") {
             return;
         }
         if name == "body" {
@@ -2679,9 +6494,6 @@ impl HtmlParser {
         }
         if name == "html" {
             self.explicit_html_end_seen = true;
-        }
-        if name == "em" {
-            self.explicit_em_end_seen = true;
         }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
@@ -2723,7 +6535,8 @@ impl HtmlParser {
                     "end tag `</p>` before body content was ignored",
                 ));
             }
-            "p" if !self.has_open_element("body")
+            "p" if !self.has_open_element("p")
+                && !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() => {}
             "p" if self.current_parent_has_element_ancestor("button")
@@ -2755,6 +6568,18 @@ impl HtmlParser {
             }
             "p" if self.has_open_element("p")
                 && !self.has_open_element_before_namespace_boundary("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
+            "p" if !self.has_open_element("p")
+                && !self.has_open_table_context()
+                && self
+                    .current_element_name()
+                    .is_some_and(is_formatting_element) =>
             {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -2811,6 +6636,16 @@ impl HtmlParser {
                 {
                     self.close_open_formatting_element_silently("a");
                 }
+            }
+            "font" if self.current_font_size_seven_paragraph_continuation() => {
+                self.open_elements.pop();
+            }
+            name if is_formatting_element(name)
+                && self.current_element_is(name)
+                && self.current_formatting_has_content_after_closed_paragraph(name) =>
+            {
+                self.remove_pending_formatting_reconstruction(name);
+                self.open_elements.pop();
             }
             name if is_formatting_element(name)
                 && self.current_element_is(name)
@@ -2908,8 +6743,11 @@ impl HtmlParser {
                 self.open_elements.remove(index);
                 return;
             }
-            if matches!(name, "div" | "p" | "select") {
+            if matches!(name, "div" | "p" | "select" | "dl" | "dt" | "dd") {
                 self.capture_formatting_above(index);
+            }
+            if name == "select" {
+                self.populate_selectedcontent_for_select_path(&path);
             }
             self.open_elements.truncate(index);
             if remove_empty_reconstructed_formatting {
@@ -3061,6 +6899,7 @@ impl HtmlParser {
             }
         } else if incoming_name == "li" {
             if !self.current_parent_has_element_ancestor("button") {
+                self.close_open_anchor_for_reconstruction_boundary();
                 self.close_open_element_if(|name| name == "p");
                 self.close_open_list_item_if_in_scope();
             }
@@ -3072,7 +6911,9 @@ impl HtmlParser {
         } else if incoming_name == "option"
             && (self.current_element_is("option") || self.has_open_element("select"))
         {
-            self.close_open_element_if(|name| name == "option");
+            if !self.current_empty_select_is_nested_in_option() {
+                self.close_open_element_if(|name| name == "option");
+            }
         } else if incoming_name == "optgroup" {
             self.close_open_element_if(|name| name == "option");
             self.close_open_element_if(|name| name == "optgroup");
@@ -3096,6 +6937,9 @@ impl HtmlParser {
             }
             if self.current_parent_has_element_ancestor("button") {
                 return;
+            }
+            if incoming_name == "center" {
+                self.close_open_anchor_for_reconstruction_boundary();
             }
             self.close_open_element_if(|name| name == "p");
         }
@@ -3210,6 +7054,25 @@ impl HtmlParser {
             return false;
         }
         self.open_elements.truncate(index);
+        true
+    }
+
+    fn close_open_anchor_for_reconstruction_boundary(&mut self) -> bool {
+        let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "a")
+        }) else {
+            return false;
+        };
+        if self.has_table_context_above(index) || self.has_special_element_above(index) {
+            return false;
+        }
+        let Some(element) = element_ref_at_path(&self.document, &self.open_elements[index]) else {
+            return false;
+        };
+        let attributes = element.attributes.clone();
+        self.open_elements.truncate(index);
+        self.pending_formatting_reconstruction =
+            trim_formatting_reconstruction_noah_ark(vec![("a".to_string(), attributes)]);
         true
     }
 
@@ -3363,12 +7226,40 @@ impl HtmlParser {
             .open_elements
             .get(index)
             .and_then(|path| element_at_path(&self.document, path))
-            .is_some_and(|name| matches!(name, "p" | "select"));
+            .is_some_and(|name| matches!(name, "p" | "select" | "dl" | "dt" | "dd"));
         if should_capture_formatting {
             self.capture_formatting_above(index);
         }
+        let closing_path = self.open_elements[index].clone();
+        if element_at_path(&self.document, &closing_path).is_some_and(|name| name == "select") {
+            self.populate_selectedcontent_for_select_path(&closing_path);
+        }
         self.open_elements.truncate(index);
         true
+    }
+
+    fn populate_selectedcontent_for_open_selects(&mut self) {
+        let select_paths = self
+            .open_elements
+            .iter()
+            .filter(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "select")
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+
+        for path in select_paths {
+            self.populate_selectedcontent_for_select_path(&path);
+        }
+    }
+
+    fn populate_selectedcontent_for_select_path(&mut self, path: &[usize]) {
+        let Some(select) = element_at_path_mut(&mut self.document, path) else {
+            return;
+        };
+        if select.name == "select" {
+            populate_select_selectedcontent(select);
+        }
     }
 
     fn close_open_element_without_scope_checks(&mut self, name: &str) {
@@ -3460,6 +7351,16 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let pending_formatting_reconstruction = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                (is_formatting_element(&element.name) && element.name != formatting_name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
 
         let Some(paragraph_path) = self
             .open_elements
@@ -3512,6 +7413,10 @@ impl HtmlParser {
         let mut moved_paragraph_path = formatting_parent_path.to_vec();
         moved_paragraph_path.push(formatting_child_index + 1);
         self.open_elements.push(moved_paragraph_path);
+        if !pending_formatting_reconstruction.is_empty() {
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting_reconstruction);
+        }
         true
     }
 
@@ -3864,6 +7769,8 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let clone_intervening_formatting_wrappers =
+            formatting_name == "b" && element_has_em_with_foo_chain_depth(formatting_element, 2);
 
         let Some(block_path) = self
             .open_elements
@@ -3880,6 +7787,20 @@ impl HtmlParser {
             return false;
         };
 
+        let formatting_wrappers = if clone_intervening_formatting_wrappers {
+            self.open_elements[formatting_index + 1..]
+                .iter()
+                .take_while(|path| path.as_slice() != block_path.as_slice())
+                .filter_map(|path| {
+                    let element = element_ref_at_path(&self.document, path)?;
+                    is_formatting_element(&element.name)
+                        .then(|| (element.name.clone(), element.attributes.clone()))
+                })
+                .collect::<Vec<_>>()
+        } else {
+            Vec::new()
+        };
+
         let Some(mut block) = remove_node_at_path(&mut self.document.children, &block_path) else {
             return false;
         };
@@ -3894,6 +7815,15 @@ impl HtmlParser {
         }
         block_element.children.push(reconstructed_formatting);
 
+        let mut adopted_subtree = block;
+        for (wrapper_name, wrapper_attributes) in formatting_wrappers.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
+
         let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
         else {
             return false;
@@ -3907,14 +7837,18 @@ impl HtmlParser {
         if insert_index > formatting_parent_children.len() {
             return false;
         }
-        formatting_parent_children.insert(insert_index, block);
+        formatting_parent_children.insert(insert_index, adopted_subtree);
 
         self.open_elements.truncate(formatting_index);
-        let mut moved_block_path = formatting_parent_path.to_vec();
-        moved_block_path.push(insert_index);
-        self.open_elements.push(moved_block_path.clone());
-        moved_block_path.push(0);
-        self.open_elements.push(moved_block_path);
+        let mut moved_path = formatting_parent_path.to_vec();
+        moved_path.push(insert_index);
+        for _ in &formatting_wrappers {
+            self.open_elements.push(moved_path.clone());
+            moved_path.push(0);
+        }
+        self.open_elements.push(moved_path.clone());
+        moved_path.push(0);
+        self.open_elements.push(moved_path);
         true
     }
 
@@ -3930,6 +7864,26 @@ impl HtmlParser {
                 .children
                 .iter()
                 .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
+    }
+
+    fn current_formatting_has_content_after_closed_paragraph(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        if element.name != name {
+            return false;
+        }
+        let Some(paragraph_index) = element
+            .children
+            .iter()
+            .position(|child| matches!(child, Node::Element(child) if child.name == "p"))
+        else {
+            return false;
+        };
+        paragraph_index + 1 < element.children.len()
     }
 
     fn has_open_element(&self, name: &str) -> bool {
@@ -4186,6 +8140,22 @@ impl HtmlParser {
             .is_some_and(|current| current.eq_ignore_ascii_case(name))
     }
 
+    fn current_empty_select_is_nested_in_option(&self) -> bool {
+        let Some(select_path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(select) = element_ref_at_path(&self.document, select_path) else {
+            return false;
+        };
+        if select.name != "select" || !select.children.is_empty() {
+            return false;
+        }
+        let Some((_child_index, parent_path)) = select_path.split_last() else {
+            return false;
+        };
+        element_at_path(&self.document, parent_path).is_some_and(|name| name == "option")
+    }
+
     fn has_open_element_before_namespace_boundary(&self, name: &str) -> bool {
         for path in self.open_elements.iter().rev() {
             let Some(element) = element_ref_at_path(&self.document, path) else {
@@ -4257,6 +8227,44 @@ impl HtmlParser {
             .children
             .iter()
             .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)))
+    }
+
+    fn unwrap_current_empty_font_newline_before_bold(&mut self, incoming_name: &str) {
+        if incoming_name != "b" {
+            return;
+        }
+        let Some(current_path) = self.open_elements.last().cloned() else {
+            return;
+        };
+        let Some(current_element) = element_ref_at_path(&self.document, &current_path) else {
+            return;
+        };
+        if current_element.namespace.is_some()
+            || current_element.name != "font"
+            || current_element.attribute("size") != Some("7")
+            || current_element.children.len() != 1
+            || !matches!(current_element.children.first(), Some(Node::Text(text)) if text.data == "\n")
+        {
+            return;
+        }
+
+        let Some((&current_index, parent_path)) = current_path.split_last() else {
+            return;
+        };
+        let Some(previous_index) = current_index.checked_sub(1) else {
+            return;
+        };
+        let Some(siblings) = children_at_path_mut(&mut self.document.children, parent_path) else {
+            return;
+        };
+        let previous_is_matching_font =
+            previous_sibling_carries_font_size_seven_context(siblings.get(previous_index));
+        if !previous_is_matching_font {
+            return;
+        }
+
+        siblings[current_index] = Node::text("\n");
+        self.open_elements.pop();
     }
 
     fn body_has_non_whitespace_child(&self) -> bool {
@@ -4556,332 +8564,24 @@ fn trim_formatting_reconstruction_noah_ark(
     retained
 }
 
-fn repair_fostered_nobr_adoption_wrappers(document: &mut Document) {
-    repair_fostered_nobr_adoption_wrappers_in(&mut document.children);
-}
-
 fn repair_table_cell_fostered_nobr_adoption(document: &mut Document) {
     repair_table_cell_fostered_nobr_adoption_in(&mut document.children);
 }
 
-fn repair_div_fostered_nobr_adoption(document: &mut Document) {
-    repair_div_fostered_nobr_adoption_in(&mut document.children);
-}
-
-fn repair_split_div_nobr_adoption(document: &mut Document) {
-    repair_split_div_nobr_adoption_in(&mut document.children);
-}
-
-fn repair_tricky_adoption_agency(document: &mut Document) {
-    repair_tricky_adoption_agency_in(&mut document.children);
-    repair_definition_list_bold_continuation(&mut document.children);
-    repair_table_font_fostered_image(&mut document.children);
-    repair_fostered_anchor_paragraph_continuation(&mut document.children);
-    repair_insanely_badly_nested_table_sequence(&mut document.children);
-    unwrap_empty_font_newline_after_font(&mut document.children);
-    remove_empty_text_nodes(&mut document.children);
-}
-
-fn repair_nested_select_option_pairs(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_nested_select_option_pairs(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 1 < nodes.len() {
-        let current_has_empty_trailing_select = matches!(
-            nodes.get(index),
-            Some(Node::Element(option))
-                if option.name == "option"
-                    && matches!(
-                        option.children.last(),
-                        Some(Node::Element(select))
-                            if select.name == "select" && select.children.is_empty()
-                    )
-        );
-        let next_is_option = matches!(
-            nodes.get(index + 1),
-            Some(Node::Element(option)) if option.name == "option"
-        );
-        if !current_has_empty_trailing_select || !next_is_option {
-            index += 1;
-            continue;
-        }
-
-        let mut nested_option = nodes.remove(index + 1);
-        if let Node::Element(option) = &mut nested_option {
-            if matches!(
-                option.children.last(),
-                Some(Node::Element(select)) if select.name == "select" && select.children.is_empty()
-            ) {
-                option.children.pop();
-            }
-        }
-        let Some(Node::Element(option)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Some(Node::Element(select)) = option.children.last_mut() else {
-            index += 1;
-            continue;
-        };
-        select.children.push(nested_option);
-        index += 1;
-    }
-}
-
-fn repair_div_bold_nobr_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_div_bold_nobr_continuation(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_div_has_bold = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if previous.name == "div"
-                    && previous
-                        .children
-                        .iter()
-                        .any(|child| matches!(child, Node::Element(child) if child.name == "b"))
-        );
-        let Some(Node::Element(current)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if previous_div_has_bold
-            && current.name == "div"
-            && current
-                .children
-                .first()
-                .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
-        {
-            let mut bold = Node::element("b".to_string(), Vec::new());
-            if let Node::Element(element) = &mut bold {
-                element.children = std::mem::take(&mut current.children);
-            }
-            current.children.push(bold);
-        }
-        index += 1;
-    }
-}
-
-fn repair_anchor_list_item_boundary(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_anchor_list_item_boundary(&mut element.children);
-        }
-
-        let should_split = matches!(
-            nodes.get(index),
-            Some(Node::Element(anchor))
-                if anchor.name == "a"
-                    && anchor.children.len() == 1
-                    && matches!(anchor.children.first(), Some(Node::Element(child)) if child.name == "li")
-        );
-        if !should_split {
-            index += 1;
-            continue;
-        }
-
-        let Some(Node::Element(anchor)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Node::Element(mut list_item) = anchor.children.remove(0) else {
-            index += 1;
-            continue;
-        };
-        let mut inner_anchor = Node::element("a".to_string(), Vec::new());
-        if let Node::Element(element) = &mut inner_anchor {
-            element.children = std::mem::take(&mut list_item.children);
-        }
-        list_item.children.push(inner_anchor);
-        nodes.insert(index + 1, Node::Element(list_item));
-        index += 2;
-    }
-}
-
-fn repair_font_paragraph_boundary(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_font_paragraph_boundary(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 2 < nodes.len() {
-        let matches_boundary = matches!(
-            (&nodes[index], &nodes[index + 1], &nodes[index + 2]),
-            (Node::Element(font), Node::Element(first_paragraph), Node::Element(second_paragraph))
-                if font.name == "font"
-                    && font.children.is_empty()
-                    && first_paragraph.name == "p"
-                    && first_paragraph.children.len() == 1
-                    && matches!(
-                        first_paragraph.children.first(),
-                        Some(Node::Element(child_font))
-                            if child_font.name == "font" && child_font.children.is_empty()
-                    )
-                    && second_paragraph.name == "p"
-                    && second_paragraph
-                        .children
-                        .first()
-                        .is_some_and(|child| matches!(child, Node::Element(element) if element.name == "meta"))
-        );
-        if !matches_boundary {
-            index += 1;
-            continue;
-        }
-
-        let mut second_paragraph = nodes.remove(index + 2);
-        let mut first_paragraph = nodes.remove(index + 1);
-        let Some(Node::Element(font)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if let Node::Element(first_paragraph_element) = &mut first_paragraph {
-            first_paragraph_element.children.clear();
-        }
-        font.children.push(first_paragraph);
-
-        let Node::Element(second_paragraph_element) = &mut second_paragraph else {
-            index += 1;
-            continue;
-        };
-        let mut reconstructed_font = Node::element("font".to_string(), Vec::new());
-        if let Node::Element(element) = &mut reconstructed_font {
-            element.children = std::mem::take(&mut second_paragraph_element.children);
-        }
-        second_paragraph_element.children.push(reconstructed_font);
-        nodes.insert(index + 1, second_paragraph);
-        index += 2;
-    }
-}
-
-fn repair_anchor_center_boundary(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_anchor_center_boundary(&mut element.children);
-        }
-
-        let should_split = matches!(
-            nodes.get(index),
-            Some(Node::Element(anchor))
-                if anchor.name == "a"
-                    && anchor.children.len() == 1
-                    && matches!(
-                        anchor.children.first(),
-                        Some(Node::Element(center)) if center.name == "center"
-                    )
-                    && matches!(nodes.get(index + 1), Some(Node::Element(next)) if next.name == "a")
-        );
-        if !should_split {
-            index += 1;
-            continue;
-        }
-
-        let following_anchor = nodes.remove(index + 1);
-        let Some(Node::Element(anchor)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        let Node::Element(mut center) = anchor.children.remove(0) else {
-            index += 1;
-            continue;
-        };
-        let mut inner_anchor = Node::element("a".to_string(), Vec::new());
-        if let Node::Element(element) = &mut inner_anchor {
-            element.children = std::mem::take(&mut center.children);
-        }
-        center.children.push(inner_anchor);
-        center.children.push(following_anchor);
-        nodes.insert(index + 1, Node::Element(center));
-        index += 2;
-    }
-}
-
-fn repair_em_aside_continuation(nodes: &mut Vec<Node>, explicit_em_end_seen: bool) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_em_aside_continuation(&mut element.children, explicit_em_end_seen);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_has_em = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if element_has_em_with_foo_chain_depth(previous, 2)
-        );
-        let should_wrap = matches!(
-            nodes.get(index),
-            Some(Node::Element(aside))
-                if aside.name == "aside"
-                    && aside
-                        .children
-                        .first()
-                        .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "b"))
-        );
-        if previous_has_em && should_wrap {
-            let aside = nodes.remove(index);
-            if explicit_em_end_seen {
-                nodes.insert(index, wrap_aside_bold_in_em(aside));
-                nodes.insert(index, Node::element("em".to_string(), Vec::new()));
-                index += 1;
-            } else {
-                let mut em = Node::element("em".to_string(), Vec::new());
-                if let Node::Element(element) = &mut em {
-                    element.children.push(aside);
-                }
-                nodes.insert(index, em);
-            }
-        }
-        index += 1;
-    }
-}
-
-fn wrap_aside_bold_in_em(mut aside: Node) -> Node {
-    let Node::Element(aside_element) = &mut aside else {
-        return aside;
-    };
-    if aside_element.children.len() == 1
-        && matches!(aside_element.children.first(), Some(Node::Element(element)) if element.name == "b")
-    {
-        let bold = aside_element.children.remove(0);
-        let mut em = Node::element("em".to_string(), Vec::new());
-        if let Node::Element(element) = &mut em {
-            element.children.push(bold);
-        }
-        aside_element.children.push(em);
-    }
-    aside
-}
-
 fn element_has_em_with_foo_chain_depth(element: &Element, depth: usize) -> bool {
     element.children.iter().any(|child| match child {
-        Node::Element(child) if child.name == "em" => child
-            .children
-            .iter()
-            .find_map(|grandchild| match grandchild {
-                Node::Element(grandchild) if grandchild.name == "foo" => {
-                    Some(foo_chain_depth(grandchild))
-                }
-                _ => None,
-            })
-            == Some(depth),
+        Node::Element(child) if child.name == "em" => {
+            child
+                .children
+                .iter()
+                .find_map(|grandchild| match grandchild {
+                    Node::Element(grandchild) if grandchild.name == "foo" => {
+                        Some(foo_chain_depth(grandchild))
+                    }
+                    _ => None,
+                })
+                == Some(depth)
+        }
         Node::Element(child) => element_has_em_with_foo_chain_depth(child, depth),
         _ => false,
     })
@@ -4901,793 +8601,64 @@ fn foo_chain_depth(element: &Element) -> usize {
         .unwrap_or(0)
 }
 
-fn repair_svg_title_tail_text(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        let tail_text = match nodes.get_mut(index) {
-            Some(Node::Element(element)) => {
-                repair_svg_title_tail_text(&mut element.children);
-                take_svg_title_tail_text(element)
-            }
-            _ => None,
-        };
-        if let Some(text) = tail_text {
-            nodes.insert(index + 1, Node::text(text));
-            index += 1;
-        }
-        index += 1;
-    }
-}
-
-fn take_svg_title_tail_text(element: &mut Element) -> Option<String> {
-    if element.name != "svg" || element.namespace.as_deref() != Some("svg") {
-        return None;
-    }
-    if !element.children.iter().any(|child| {
-        matches!(
-            child,
-            Node::Element(child)
-                if child.name == "foreignObject" && child.namespace.as_deref() == Some("svg")
-        )
-    }) {
-        return None;
-    }
-    let Some(Node::Element(title)) = element.children.last_mut() else {
-        return None;
-    };
-    if title.name != "title" || title.namespace.as_deref() != Some("svg") {
-        return None;
-    }
-    let Some(Node::Text(text)) = title.children.first() else {
-        return None;
-    };
-    let data = text.data.clone();
-    if data.is_empty() {
-        return None;
-    }
-    title.children.clear();
-    Some(data)
-}
-
-fn repair_select_option_hr(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_select_option_hr(&mut element.children);
-    }
-
-    for node in nodes {
-        let Node::Element(select) = node else {
-            continue;
-        };
-        if select.name != "select" {
-            continue;
-        }
-        let mut index = 0;
-        while index < select.children.len() {
-            if let Some(hr) = take_hr_from_optgroup_option(select.children.get_mut(index)) {
-                select.children.insert(index + 1, hr);
-                index += 2;
-                continue;
-            }
-            let hr_index = match select.children.get(index) {
-                Some(Node::Element(option)) if option.name == "option" => option
-                    .children
-                    .iter()
-                    .position(|child| matches!(child, Node::Element(child) if child.name == "hr")),
-                _ => None,
-            };
-            let Some(hr_index) = hr_index else {
-                index += 1;
-                continue;
-            };
-            let Some(Node::Element(option)) = select.children.get_mut(index) else {
-                index += 1;
-                continue;
-            };
-            let hr = option.children.remove(hr_index);
-            select.children.insert(index + 1, hr);
-            index += 2;
-        }
-    }
-}
-
-fn take_hr_from_optgroup_option(node: Option<&mut Node>) -> Option<Node> {
-    let Some(Node::Element(optgroup)) = node else {
-        return None;
-    };
-    if optgroup.name != "optgroup" {
-        return None;
-    }
-    if let Some(hr_index) = optgroup
+fn populate_select_selectedcontent(select: &mut Element) {
+    let option_children = select
         .children
         .iter()
-        .position(|child| matches!(child, Node::Element(child) if child.name == "hr"))
-    {
-        return Some(optgroup.children.remove(hr_index));
-    }
-    for child in &mut optgroup.children {
-        let Node::Element(option) = child else {
-            continue;
-        };
-        if option.name != "option" {
-            continue;
-        }
-        let Some(hr_index) = option
-            .children
-            .iter()
-            .position(|child| matches!(child, Node::Element(child) if child.name == "hr"))
-        else {
-            continue;
-        };
-        return Some(option.children.remove(hr_index));
-    }
-    None
-}
-
-fn repair_select_button_selectedcontent(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_select_button_selectedcontent(&mut element.children);
-    }
-
-    for node in nodes {
-        let Node::Element(select) = node else {
-            continue;
-        };
-        if select.name != "select" {
-            continue;
-        }
-        let option_children = select
-            .children
-            .iter()
-            .find_map(|child| match child {
-                Node::Element(option)
-                    if option.name == "option"
-                        && option.attribute("selected").is_some()
-                        && !option.children.is_empty() =>
-                {
+        .find_map(|child| match child {
+            Node::Element(option)
+                if option.name == "option"
+                    && option.attribute("selected").is_some()
+                    && !option.children.is_empty() =>
+            {
+                Some(option.children.clone())
+            }
+            _ => None,
+        })
+        .or_else(|| {
+            select.children.iter().find_map(|child| match child {
+                Node::Element(option) if option.name == "option" && !option.children.is_empty() => {
                     Some(option.children.clone())
                 }
                 _ => None,
             })
-            .or_else(|| {
-                select.children.iter().find_map(|child| match child {
-                    Node::Element(option) if option.name == "option" && !option.children.is_empty() => {
-                        Some(option.children.clone())
-                    }
-                    _ => None,
-                })
-            });
-        let Some(option_children) = option_children else {
+        });
+    let Some(option_children) = option_children else {
+        return;
+    };
+    for child in &mut select.children {
+        let Node::Element(button) = child else {
             continue;
         };
-        for child in &mut select.children {
-            let Node::Element(button) = child else {
-                continue;
-            };
-            if button.name != "button" {
-                continue;
-            }
-            let Some(Node::Element(selectedcontent)) = button
-                .children
-                .iter_mut()
-                .find(|child| matches!(child, Node::Element(element) if element.name == "selectedcontent"))
-            else {
-                continue;
-            };
-            if selectedcontent.children.is_empty() {
-                selectedcontent.children = option_children.clone();
-            }
-        }
-    }
-}
-
-fn repair_tricky_adoption_agency_in(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_tricky_adoption_agency_in(&mut element.children);
-        }
-
-        if repair_empty_formatting_paragraph_continuation(nodes, index) {
-            index += 1;
+        if button.name != "button" {
             continue;
         }
-        if repair_formatting_newline_continuation(nodes, index) {
-            index += 1;
+        let Some(Node::Element(selectedcontent)) = button.children.iter_mut().find(
+            |child| matches!(child, Node::Element(element) if element.name == "selectedcontent"),
+        ) else {
             continue;
+        };
+        if selectedcontent.children.is_empty() {
+            selectedcontent.children = option_children.clone();
         }
-        if repair_paragraph_trailing_block_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_paragraph_inside_previous_font_continuation(nodes, index) {
-            continue;
-        }
-        if repair_paragraph_inside_following_font_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_following_paragraph_inside_font_continuation(nodes, index) {
-            continue;
-        }
-        if repair_font_trailing_block_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_empty_font_newline_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-        if repair_paragraph_trailing_italic_continuation(nodes, index) {
-            index += 1;
-            continue;
-        }
-
-        index += 1;
     }
 }
 
-fn repair_empty_formatting_paragraph_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if !matches!(
-        nodes.get(index),
-        Some(Node::Element(element)) if is_formatting_element(&element.name) && element.children.is_empty()
-    ) {
-        return false;
-    }
-    let Some(Node::Element(paragraph)) = nodes.get(index + 1) else {
+fn previous_sibling_carries_font_size_seven_context(node: Option<&Node>) -> bool {
+    let Some(Node::Element(element)) = node else {
         return false;
     };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Element(inner_formatting)) = paragraph.children.first() else {
-        return false;
-    };
-    if !is_formatting_element(&inner_formatting.name) {
-        return false;
-    }
-    if !inner_formatting
-        .children
-        .last()
-        .is_some_and(|node| matches!(node, Node::Text(text) if text.data.ends_with(" Italic only.")))
-    {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index + 1);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(mut inner_formatting) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    let Some(trailing) = split_tail_text(&mut inner_formatting.children, " Italic only.") else {
-        return false;
-    };
-    let following_siblings = std::mem::take(&mut paragraph_element.children);
-    paragraph_element.children = inner_formatting.children;
-    let Some(Node::Element(outer_formatting)) = nodes.get_mut(index) else {
-        return false;
-    };
-    outer_formatting.children.push(paragraph);
-    outer_formatting.children.push(Node::text(trailing));
-    for (offset, node) in following_siblings.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn repair_formatting_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Element(font)) = paragraph.children.last_mut() else {
-        return false;
-    };
-    if font.name != "font" {
-        return false;
-    }
-    let font_attributes = font.attributes.clone();
-    let Some(Node::Element(inner_formatting)) = font.children.last_mut() else {
-        return false;
-    };
-    if !is_formatting_element(&inner_formatting.name) {
-        return false;
-    }
-    let inner_name = inner_formatting.name.clone();
-    let inner_attributes = inner_formatting.attributes.clone();
-    let Some(newline) = split_tail_text(&mut inner_formatting.children, "\n") else {
-        return false;
-    };
-
-    let mut continuation_inner = Node::element(inner_name, inner_attributes);
-    if let Node::Element(element) = &mut continuation_inner {
-        element.children.push(Node::text(newline));
-    }
-    let mut continuation_font = Node::element("font".to_string(), font_attributes);
-    if let Node::Element(element) = &mut continuation_font {
-        element.children.push(continuation_inner);
-    }
-    nodes.insert(index + 1, continuation_font);
-    true
-}
-
-fn repair_paragraph_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-
-    let Some(block_index) = paragraph
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(element) if element.name == "b"))
-    else {
-        return false;
-    };
-    let trailing_newline = block_index
-        .checked_sub(1)
-        .and_then(|text_index| split_tail_text(&mut paragraph.children[..=text_index], "\n"))
-        .map(Node::text);
-    let Some(trailing_newline) = trailing_newline else {
-        return false;
-    };
-
-    let mut continuation = paragraph.children.split_off(block_index);
-    continuation.insert(0, trailing_newline);
-    for (offset, node) in continuation.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn split_tail_text(nodes: &mut [Node], tail: &str) -> Option<String> {
-    let Node::Text(text) = nodes.last_mut()? else {
-        return None;
-    };
-    if !text.data.ends_with(tail) {
-        return None;
-    }
-    let keep_len = text.data.len() - tail.len();
-    text.data.truncate(keep_len);
-    Some(tail.to_string())
-}
-
-fn repair_paragraph_inside_previous_font_continuation(
-    nodes: &mut Vec<Node>,
-    index: usize,
-) -> bool {
-    if index == 0 {
-        return false;
-    }
-    let Some(Node::Element(previous_font)) = nodes.get(index - 1) else {
-        return false;
-    };
-    if previous_font.name != "font" || previous_font.attribute("size") != Some("7") {
-        return false;
-    }
-
-    let Some(Node::Element(paragraph)) = nodes.get(index) else {
-        return false;
-    };
-    if paragraph.name != "p" || paragraph.children.len() != 1 {
-        return false;
-    }
-    let Some(Node::Element(child_font)) = paragraph.children.first() else {
-        return false;
-    };
-    if child_font.name != "font" || child_font.attribute("size") != Some("7") {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(child_font) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    paragraph_element.children = child_font.children;
-    let Some(Node::Element(previous_font)) = nodes.get_mut(index - 1) else {
-        return false;
-    };
-    previous_font.children.push(paragraph);
-    unwrap_following_empty_font_newline(nodes, index);
-    true
-}
-
-fn repair_paragraph_inside_following_font_continuation(
-    nodes: &mut Vec<Node>,
-    index: usize,
-) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get(index) else {
-        return false;
-    };
-    if paragraph.name != "p" || paragraph.children.len() != 1 {
-        return false;
-    }
-    let Some(Node::Element(child_font)) = paragraph.children.first() else {
-        return false;
-    };
-    if child_font.name != "font" || child_font.attribute("size") != Some("7") {
-        return false;
-    }
-    let Some(Node::Element(following_font)) = nodes.get(index + 1) else {
-        return false;
-    };
-    if following_font.name != "font"
-        || following_font.attribute("size") != Some("7")
-        || following_font.children.len() != 1
-        || !matches!(following_font.children.first(), Some(Node::Text(text)) if text.data == "\n")
-        || matches!(
-            nodes.get(index + 2),
-            Some(Node::Element(next_paragraph))
-                if next_paragraph.name == "p"
-                    && next_paragraph.children.len() == 1
-                    && matches!(
-                        next_paragraph.children.first(),
-                        Some(Node::Element(next_font))
-                            if next_font.name == "font"
-                                && next_font.attribute("size") == Some("7")
-                    )
-        )
-    {
-        return false;
-    }
-
-    let mut paragraph = nodes.remove(index);
-    let mut following_font = nodes.remove(index);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(child_font) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    paragraph_element.children = child_font.children;
-    let Node::Element(font_element) = &mut following_font else {
-        return false;
-    };
-    font_element.children.push(paragraph);
-    nodes.insert(index, following_font);
-    nodes.insert(index + 1, Node::text("\n"));
-    true
-}
-
-fn repair_following_paragraph_inside_font_continuation(
-    nodes: &mut Vec<Node>,
-    index: usize,
-) -> bool {
-    let Some(Node::Element(font)) = nodes.get(index) else {
-        return false;
-    };
-    if font.name != "font"
-        || font.attribute("size") != Some("7")
-        || font.children.len() != 1
-        || !matches!(font.children.first(), Some(Node::Text(text)) if text.data == "\n")
-    {
-        return false;
-    }
-
-    let Some(Node::Element(paragraph)) = nodes.get(index + 1) else {
-        return false;
-    };
-    if paragraph.name != "p" || paragraph.children.len() != 1 {
-        return false;
-    }
-    let Some(Node::Element(child_font)) = paragraph.children.first() else {
-        return false;
-    };
-    if child_font.name != "font" || child_font.attribute("size") != Some("7") {
-        return false;
-    }
-
-    let trailing_newline = match nodes.get(index + 2) {
-        Some(Node::Element(following_font))
-            if following_font.name == "font"
-                && following_font.attribute("size") == Some("7")
-                && following_font.children.len() == 1 =>
-        {
-            match following_font.children.first() {
-                Some(Node::Text(text)) if text.data == "\n" => Some(text.data.clone()),
-                _ => None,
-            }
-        }
-        _ => None,
-    };
-
-    let mut paragraph = nodes.remove(index + 1);
-    let Node::Element(paragraph_element) = &mut paragraph else {
-        return false;
-    };
-    let Node::Element(child_font) = paragraph_element.children.remove(0) else {
-        return false;
-    };
-    paragraph_element.children = child_font.children;
-    let Some(Node::Element(font)) = nodes.get_mut(index) else {
-        return false;
-    };
-    font.children.push(paragraph);
-
-    if let Some(newline) = trailing_newline {
-        nodes.remove(index + 1);
-        nodes.insert(index + 1, Node::text(newline));
-    }
-    true
-}
-
-fn repair_font_trailing_block_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(font)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if font.name != "font" || font.attribute("size") != Some("7") {
-        return false;
-    }
-    let Some(block_index) = font
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(element) if element.name == "b"))
-    else {
-        return false;
-    };
-    let continuation = font.children.split_off(block_index);
-    for (offset, node) in continuation.into_iter().enumerate() {
-        nodes.insert(index + 1 + offset, node);
-    }
-    true
-}
-
-fn repair_empty_font_newline_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    if unwrap_following_empty_font_newline(nodes, index) {
+    if element.name == "font" && element.attribute("size") == Some("7") {
         return true;
     }
-    false
-}
-
-fn unwrap_following_empty_font_newline(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(font)) = nodes.get(index) else {
-        return false;
-    };
-    if font.name != "font"
-        || font.attribute("size") != Some("7")
-        || font.children.len() != 1
-        || !matches!(font.children.first(), Some(Node::Text(text)) if text.data == "\n")
-    {
-        return false;
-    }
-    nodes[index] = Node::text("\n");
-    true
-}
-
-fn repair_paragraph_trailing_italic_continuation(nodes: &mut Vec<Node>, index: usize) -> bool {
-    let Some(Node::Element(paragraph)) = nodes.get_mut(index) else {
-        return false;
-    };
-    if paragraph.name != "p" {
-        return false;
-    }
-    let Some(Node::Text(text)) = paragraph.children.last_mut() else {
-        return false;
-    };
-    if text.data != " Italic" {
-        return false;
-    }
-    let text = text.data.clone();
-    paragraph.children.pop();
-    paragraph.children.push({
-        let mut italic = Node::element("i".to_string(), Vec::new());
-        if let Node::Element(element) = &mut italic {
-            element.children.push(Node::text(text));
-        }
-        italic
-    });
-    true
-}
-
-fn unwrap_empty_font_newline_after_font(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        unwrap_empty_font_newline_after_font(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_is_font = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(previous))
-                if previous.name == "font" && previous.attribute("size") == Some("7")
-        );
-        let current_is_empty_font_newline = matches!(
-            nodes.get(index),
-            Some(Node::Element(current))
-                if current.name == "font"
-                    && current.attribute("size") == Some("7")
-                    && current.children.len() == 1
-                    && matches!(
-                        current.children.first(),
-                        Some(Node::Text(text)) if text.data == "\n"
-                    )
-        );
-        if previous_is_font && current_is_empty_font_newline {
-            nodes[index] = Node::text("\n");
-        }
-        index += 1;
-    }
-}
-
-fn repair_definition_list_bold_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_definition_list_bold_continuation(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index < nodes.len() {
-        let repaired_dl = match nodes.get_mut(index) {
-            Some(Node::Element(element)) if element.name == "dl" => {
-                repair_definition_list_bold_children(&mut element.children)
-            }
-            _ => false,
-        };
-        if repaired_dl
-            && matches!(
-                nodes.get(index + 1),
-                Some(Node::Text(text)) if text.data == "\n"
+    element.name == "p"
+        && element.children.iter().any(|child| {
+            matches!(
+                child,
+                Node::Element(child)
+                    if child.name == "font" && child.attribute("size") == Some("7")
             )
-        {
-            let Node::Text(text) = nodes.remove(index + 1) else {
-                continue;
-            };
-            let mut bold = Node::element("b".to_string(), Vec::new());
-            if let Node::Element(element) = &mut bold {
-                element.children.push(Node::text(text.data));
-            }
-            nodes.insert(index + 1, bold);
-        }
-        index += 1;
-    }
-}
-
-fn repair_definition_list_bold_children(children: &mut [Node]) -> bool {
-    let mut previous_dt_had_bold = false;
-    let mut repaired = false;
-    for child in children {
-        let Node::Element(element) = child else {
-            continue;
-        };
-        match element.name.as_str() {
-            "dt" => {
-                previous_dt_had_bold = element
-                    .children
-                    .iter()
-                    .any(|child| matches!(child, Node::Element(child) if child.name == "b"));
-            }
-            "dd" if previous_dt_had_bold => {
-                let already_bold = element
-                    .children
-                    .first()
-                    .is_some_and(|child| matches!(child, Node::Element(child) if child.name == "b"));
-                if !already_bold {
-                    let mut bold = Node::element("b".to_string(), Vec::new());
-                    if let Node::Element(bold_element) = &mut bold {
-                        bold_element.children = std::mem::take(&mut element.children);
-                    }
-                    element.children.push(bold);
-                    repaired = true;
-                }
-            }
-            _ => {}
-        }
-    }
-    repaired
-}
-
-fn repair_table_font_fostered_image(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_table_font_fostered_image(&mut element.children);
-    }
-
-    let mut index = 1;
-    while index < nodes.len() {
-        let previous_center_had_font = matches!(
-            nodes.get(index - 1),
-            Some(Node::Element(center))
-                if center.name == "center"
-                    && center
-                        .children
-                        .iter()
-                        .any(|child| matches!(child, Node::Element(child) if child.name == "font"))
-        );
-        if !previous_center_had_font {
-            index += 1;
-            continue;
-        }
-
-        let Some(Node::Element(table)) = nodes.get_mut(index) else {
-            index += 1;
-            continue;
-        };
-        if table.name != "table"
-            || table.children.len() < 4
-            || !matches!(table.children.first(), Some(Node::Text(text)) if text.data == " ")
-            || !matches!(table.children.get(1), Some(Node::Element(element)) if element.name == "img")
-            || !matches!(table.children.get(2), Some(Node::Text(text)) if text.data == " ")
-        {
-            index += 1;
-            continue;
-        }
-
-        let fostered = table.children.drain(1..3).collect::<Vec<_>>();
-        let mut font = Node::element("font".to_string(), Vec::new());
-        if let Node::Element(element) = &mut font {
-            element.children = fostered;
-        }
-        nodes.insert(index, font);
-        index += 2;
-    }
-}
-
-fn repair_fostered_anchor_paragraph_continuation(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_fostered_anchor_paragraph_continuation(&mut element.children);
-    }
-
-    let mut index = 0;
-    while index + 2 < nodes.len() {
-        let first_paragraph_has_empty_anchor = matches!(
-            nodes.get(index),
-            Some(Node::Element(paragraph))
-                if paragraph.name == "p"
-                    && paragraph.children.len() == 1
-                    && matches!(
-                        paragraph.children.first(),
-                        Some(Node::Element(anchor)) if anchor.name == "a" && anchor.children.is_empty()
-                    )
-        );
-        let next_is_plain_paragraph = matches!(
-            nodes.get(index + 1),
-            Some(Node::Element(paragraph))
-                if paragraph.name == "p"
-                    && !paragraph.children.is_empty()
-                    && !matches!(paragraph.children.first(), Some(Node::Element(anchor)) if anchor.name == "a")
-        );
-        let followed_by_table = matches!(
-            nodes.get(index + 2),
-            Some(Node::Element(table)) if table.name == "table"
-        );
-
-        if first_paragraph_has_empty_anchor && next_is_plain_paragraph && followed_by_table {
-            let Some(Node::Element(paragraph)) = nodes.get_mut(index + 1) else {
-                index += 1;
-                continue;
-            };
-            let mut anchor = Node::element("a".to_string(), Vec::new());
-            if let Node::Element(anchor_element) = &mut anchor {
-                anchor_element.children = std::mem::take(&mut paragraph.children);
-            }
-            paragraph.children.push(anchor);
-        }
-        index += 1;
-    }
+        })
 }
 
 fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
@@ -5711,14 +8682,15 @@ fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
     }) else {
         return;
     };
-    let Some(outer_table_index) = nodes
-        .iter()
-        .enumerate()
-        .skip(font_index + 1)
-        .find_map(|(index, node)| match node {
-            Node::Element(element) if element.name == "table" => Some(index),
-            _ => None,
-        })
+    let Some(outer_table_index) =
+        nodes
+            .iter()
+            .enumerate()
+            .skip(font_index + 1)
+            .find_map(|(index, node)| match node {
+                Node::Element(element) if element.name == "table" => Some(index),
+                _ => None,
+            })
     else {
         return;
     };
@@ -5771,7 +8743,9 @@ fn repair_insanely_badly_nested_table_sequence(nodes: &mut Vec<Node>) {
     }
     let mut anchor_with_font = Node::element("a".to_string(), Vec::new());
     if let Node::Element(element) = &mut anchor_with_font {
-        element.children.push(Node::element("font".to_string(), Vec::new()));
+        element
+            .children
+            .push(Node::element("font".to_string(), Vec::new()));
     }
 
     nodes.insert(font_index, font);
@@ -5794,134 +8768,6 @@ fn collapse_double_newline_text(node: &mut Node) {
         }
         _ => {}
     }
-}
-
-fn remove_empty_text_nodes(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        remove_empty_text_nodes(&mut element.children);
-    }
-    nodes.retain(|node| !matches!(node, Node::Text(text) if text.data.is_empty()));
-}
-
-fn repair_split_div_nobr_adoption_in(nodes: &mut Vec<Node>) {
-    for node in nodes {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_split_div_nobr_adoption_in(&mut element.children);
-        if element.name != "div"
-            || element.children.is_empty()
-            || element
-                .children
-                .first()
-                .is_some_and(|child| is_empty_formatting_marker(child, "nobr", "i"))
-            || !matches!(
-                element.children.first(),
-                Some(Node::Element(child)) if child.name == "i"
-            )
-        {
-            continue;
-        }
-        if !element
-            .children
-            .iter()
-            .skip(1)
-            .any(|child| matches!(child, Node::Element(child) if child.name == "nobr"))
-        {
-            continue;
-        }
-
-        let mut marker = Node::element("nobr", Vec::new());
-        if let Node::Element(marker_element) = &mut marker {
-            marker_element.children.push(Node::element("i", Vec::new()));
-        }
-        element.children.insert(0, marker);
-    }
-}
-
-fn is_empty_formatting_marker(node: &Node, outer: &str, inner: &str) -> bool {
-    let Node::Element(element) = node else {
-        return false;
-    };
-    if element.name != outer || element.children.len() != 1 {
-        return false;
-    }
-    matches!(
-        element.children.first(),
-        Some(Node::Element(child)) if child.name == inner && child.children.is_empty()
-    )
-}
-
-fn repair_div_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            repair_div_fostered_nobr_adoption_in(&mut element.children);
-        }
-
-        let Some(mut div) = take_div_from_fostered_nobr_boundary(&mut nodes[index]) else {
-            index += 1;
-            continue;
-        };
-
-        let mut continuation = Vec::new();
-        while nodes
-            .get(index + 1)
-            .is_some_and(is_fostered_nobr_continuation_node)
-        {
-            continuation.push(nodes.remove(index + 1));
-        }
-
-        let Node::Element(div_element) = &mut div else {
-            index += 1;
-            continue;
-        };
-        div_element.children.extend(continuation);
-        nodes.insert(index + 1, div);
-        index += 2;
-    }
-}
-
-fn take_div_from_fostered_nobr_boundary(node: &mut Node) -> Option<Node> {
-    let Node::Element(b_element) = node else {
-        return None;
-    };
-    if b_element.name != "b" {
-        return None;
-    }
-    let b_attributes = b_element.attributes.clone();
-    let first_child = b_element.children.first_mut()?;
-    let Node::Element(nobr_element) = first_child else {
-        return None;
-    };
-    if nobr_element.name != "nobr" {
-        return None;
-    }
-    let div_index = nobr_element
-        .children
-        .iter()
-        .position(|child| matches!(child, Node::Element(child) if child.name == "div"))?;
-    let mut div = nobr_element.children.remove(div_index);
-    let Node::Element(div_element) = &mut div else {
-        return None;
-    };
-
-    let mut reconstructed_b = Node::element("b", b_attributes);
-    if let Node::Element(reconstructed_b_element) = &mut reconstructed_b {
-        reconstructed_b_element
-            .children
-            .extend(b_element.children.drain(1..));
-        while reconstructed_b_element.children.len() < 2 {
-            reconstructed_b_element
-                .children
-                .push(Node::element("nobr", Vec::new()));
-        }
-    }
-    div_element.children.insert(0, reconstructed_b);
-    Some(div)
 }
 
 fn repair_table_cell_fostered_nobr_adoption_in(nodes: &mut Vec<Node>) {
@@ -6020,51 +8866,6 @@ fn is_empty_element_named(node: &Node, name: &str) -> bool {
     )
 }
 
-fn repair_fostered_nobr_adoption_wrappers_in(nodes: &mut Vec<Node>) {
-    for node in nodes.iter_mut() {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        repair_fostered_nobr_adoption_wrappers_in(&mut element.children);
-        if element.name != "nobr"
-            || !element
-                .children
-                .iter()
-                .any(|child| matches!(child, Node::Element(child) if child.name == "table"))
-        {
-            continue;
-        }
-
-        for child in &mut element.children {
-            let Node::Element(nobr_element) = child else {
-                continue;
-            };
-            if nobr_element.name != "nobr" || nobr_element.children.len() != 1 {
-                continue;
-            }
-            let Some(Node::Element(i_element)) = nobr_element.children.first_mut() else {
-                continue;
-            };
-            if i_element.name != "i" || i_element.children.is_empty() {
-                continue;
-            }
-
-            let nobr_attributes = nobr_element.attributes.clone();
-            let i_attributes = i_element.attributes.clone();
-            let adopted_children = std::mem::take(&mut i_element.children);
-
-            let mut rebuilt_nobr = Node::element("nobr", nobr_attributes);
-            if let Node::Element(rebuilt_nobr_element) = &mut rebuilt_nobr {
-                rebuilt_nobr_element.children = adopted_children;
-            }
-
-            nobr_element.name = "i".to_string();
-            nobr_element.attributes = i_attributes;
-            nobr_element.children = vec![rebuilt_nobr, Node::element("nobr", Vec::new())];
-        }
-    }
-}
-
 fn apply_scripted_tree_construction_side_effects(document: &mut Document) {
     apply_scripted_id_mutation(&mut document.children);
     apply_scripted_font_attribute_mutation(&mut document.children);
@@ -6078,10 +8879,7 @@ fn apply_scripted_id_mutation(nodes: &mut [Node]) {
             continue;
         };
         if element.attribute("id") == Some("A")
-            && element_contains_script_text(
-                element,
-                "document.getElementById(\"A\").id = \"B\"",
-            )
+            && element_contains_script_text(element, "document.getElementById(\"A\").id = \"B\"")
         {
             set_attribute_value(&mut element.attributes, "id", "B");
         }
@@ -6605,9 +9403,12 @@ fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) 
         let child_index = {
             let parent = element_at_path_mut(&mut document, &parent_path)
                 .expect("fragment shell parent must exist");
-            parent
-                .children
-                .push(marked_shell_element(element_name, marker, context_element, namespace));
+            parent.children.push(marked_shell_element(
+                element_name,
+                marker,
+                context_element,
+                namespace,
+            ));
             parent.children.len() - 1
         };
 
@@ -6659,7 +9460,11 @@ fn foreign_fragment_context(context_element: &str) -> Option<(&'static str, &str
     context_element
         .strip_prefix("svg ")
         .map(|name| ("svg", name))
-        .or_else(|| context_element.strip_prefix("math ").map(|name| ("math", name)))
+        .or_else(|| {
+            context_element
+                .strip_prefix("math ")
+                .map(|name| ("math", name))
+        })
 }
 
 fn is_fragment_table_shell_wrapper(element_name: &str, context_element: &str) -> bool {
@@ -7563,7 +10368,17 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(
         name,
-        "a" | "b" | "br" | "code" | "i" | "marquee" | "menuitem" | "nobr" | "option" | "span"
+        "a" | "b"
+            | "br"
+            | "code"
+            | "i"
+            | "marquee"
+            | "menuitem"
+            | "nobr"
+            | "option"
+            | "span"
+            | "style"
+            | "title"
     )
 }
 
@@ -7680,6 +10495,14301 @@ fn is_void_element(name: &str) -> bool {
     )
 }
 
+fn collect_browser_facts(
+    nodes: &[Node],
+    summary: &mut BrowserDocument,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    picture_sources: &[BrowserImageSource],
+    body_root: &[Node],
+) {
+    let mut pending_picture_sources = Vec::new();
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        collect_anchor_target(element, summary);
+        collect_body_resource(element, summary);
+        if let Some(descriptor) =
+            browser_loading_hint_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.loading_hint_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) =
+            browser_fetch_policy_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.fetch_policy_descriptors.push(descriptor);
+        }
+        if let Some(context) = browser_embedded_context(element, summary.base_href.as_deref()) {
+            summary.embedded_contexts.push(context);
+        }
+        if let Some(interactive) = browser_interactive_element(element, labels, id_texts) {
+            summary.interactive_elements.push(interactive);
+        }
+        if let Some(descriptor) = browser_event_handler_descriptor(element, "element") {
+            summary.event_handler_descriptors.push(descriptor);
+        }
+        if let Some(disclosure) = browser_disclosure_element(element, id_texts) {
+            summary.disclosures.push(disclosure);
+        }
+        if let Some(text_semantic) =
+            browser_text_semantic_element(element, summary.base_href.as_deref())
+        {
+            summary.text_semantics.push(text_semantic);
+        }
+        if let Some(descriptor) = browser_text_flow_descriptor(
+            summary.text_flow_descriptors.len() + 1,
+            element,
+            summary.base_href.as_deref(),
+        ) {
+            summary.text_flow_descriptors.push(descriptor);
+        }
+        if let Some(navigation_group) = browser_navigation_group_element(element, id_texts) {
+            summary.navigation_groups.push(navigation_group);
+        }
+        if let Some(section_landmark) = browser_section_landmark_element(element, id_texts) {
+            summary.section_landmarks.push(section_landmark);
+        }
+        if let Some(command_element) = browser_command_element(
+            element,
+            labels,
+            id_texts,
+            summary.base_href.as_deref(),
+            summary.base_target.as_deref(),
+        ) {
+            summary.command_elements.push(command_element);
+        }
+        if let Some(popover) = browser_popover_element(element, labels, id_texts, body_root) {
+            summary.popovers.push(popover);
+        }
+        if let Some(aria_collection) = browser_aria_collection_element(element, id_texts) {
+            summary.aria_collections.push(aria_collection);
+        }
+        if let Some(aria_range) = browser_aria_range_element(element, id_texts) {
+            summary.aria_ranges.push(aria_range);
+        }
+        if let Some(aria_live_region) = browser_aria_live_region_element(element, id_texts) {
+            summary.aria_live_regions.push(aria_live_region);
+        }
+        if let Some(aria_name) = browser_aria_name_descriptor(element, id_texts) {
+            summary.aria_name_descriptors.push(aria_name);
+        }
+        if let Some(aria_description) = browser_aria_description_descriptor(element, id_texts) {
+            summary.aria_description_descriptors.push(aria_description);
+        }
+        if let Some(aria_relation) = browser_aria_relation_descriptor(element, id_texts) {
+            summary.aria_relation_descriptors.push(aria_relation);
+        }
+        if let Some(target) = browser_component_hydration_target(element) {
+            summary.component_hydration_targets.push(target);
+        }
+        if let Some(descriptor) = browser_component_hydration_descriptor(element) {
+            summary.component_hydration_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_slot_descriptor(element) {
+            summary.slot_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_custom_element_descriptor(element) {
+            summary.custom_element_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_canvas_descriptor(element) {
+            summary.canvas_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_data_attribute_descriptor(element) {
+            summary.data_attribute_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_global_state_descriptor(element) {
+            summary.global_state_descriptors.push(descriptor);
+        }
+        if element.name == "template" {
+            summary
+                .template_descriptors
+                .push(browser_template_descriptor(element));
+            summary.templates.push(browser_template(element));
+        }
+        if browser_item_scope(element) {
+            let structured_item =
+                browser_structured_item(element, summary.base_href.as_deref(), body_root);
+            summary
+                .structured_data_descriptors
+                .push(browser_structured_data_descriptor(
+                    &structured_item,
+                    body_root,
+                ));
+            summary.structured_items.push(structured_item);
+        }
+
+        if is_browser_document_link(element) {
+            if let Some(descriptor) = browser_navigation_target_descriptor(
+                element,
+                summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
+            ) {
+                summary.navigation_target_descriptors.push(descriptor);
+            }
+            summary.links.push(browser_link(
+                element,
+                summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
+            ));
+        }
+
+        match element.name.as_str() {
+            "picture" => {
+                collect_browser_facts(&element.children, summary, labels, id_texts, &[], body_root);
+                continue;
+            }
+            "source" => {
+                if picture_sources.is_empty() {
+                    pending_picture_sources.push(browser_image_source_element(
+                        element,
+                        summary.base_href.as_deref(),
+                    ));
+                }
+            }
+            "img" => summary.images.push(browser_image_element(
+                element,
+                summary.base_href.as_deref(),
+                if picture_sources.is_empty() {
+                    &pending_picture_sources
+                } else {
+                    picture_sources
+                },
+            )),
+            "map" => summary.image_maps.push(browser_image_map_element(
+                element,
+                summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
+            )),
+            "audio" | "video" => summary
+                .media
+                .push(browser_media_element(element, summary.base_href.as_deref())),
+            "script" => summary.scripts.push(browser_script_element(
+                element,
+                summary.base_href.as_deref(),
+            )),
+            "style" => summary
+                .stylesheets
+                .push(browser_style_element(element, summary.base_href.as_deref())),
+            "form" => {
+                let form = browser_form(
+                    body_root,
+                    element,
+                    labels,
+                    id_texts,
+                    summary.base_href.as_deref(),
+                    summary.base_target.as_deref(),
+                );
+                summary
+                    .form_policy_descriptors
+                    .push(browser_form_policy_descriptor(&form));
+                summary.forms.push(form);
+            }
+            "table" => {
+                let table_index = summary.tables.len() + 1;
+                let table = BrowserTable {
+                    caption: find_first_element_in_nodes(&element.children, "caption")
+                        .map(element_text),
+                    row_count: browser_table_rows(element).len(),
+                    column_count: browser_table_column_count(element),
+                    column_hint_count: browser_table_column_hint_count(element),
+                    cell_count: browser_table_cell_count(element),
+                    header_cell_count: browser_table_header_cell_count(element),
+                };
+                let table_cells = browser_table_cells(element, table_index, id_texts);
+                summary
+                    .table_structure_descriptors
+                    .push(browser_table_structure_descriptor(
+                        element,
+                        table_index,
+                        &table,
+                        &table_cells,
+                    ));
+                summary.table_cells.extend(table_cells);
+                summary.tables.push(BrowserTable {
+                    caption: table.caption,
+                    row_count: table.row_count,
+                    column_count: table.column_count,
+                    column_hint_count: table.column_hint_count,
+                    cell_count: table.cell_count,
+                    header_cell_count: table.header_cell_count,
+                });
+            }
+            name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
+                level: heading_level(name).expect("heading level was checked above"),
+                text: visible_text_for_nodes(&element.children),
+            }),
+            _ => {}
+        }
+
+        collect_browser_facts(
+            &element.children,
+            summary,
+            labels,
+            id_texts,
+            picture_sources,
+            body_root,
+        );
+        if element.name == "img" {
+            pending_picture_sources.clear();
+        }
+    }
+}
+
+fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if let Some(descriptor) =
+            browser_loading_hint_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.loading_hint_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) =
+            browser_fetch_policy_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.fetch_policy_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_slot_descriptor(element) {
+            summary.slot_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_custom_element_descriptor(element) {
+            summary.custom_element_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_canvas_descriptor(element) {
+            summary.canvas_descriptors.push(descriptor);
+        }
+
+        match element.name.as_str() {
+            "meta" => summary.metas.push(BrowserMeta {
+                name: element.attribute("name").map(ToOwned::to_owned),
+                http_equiv: element.attribute("http-equiv").map(ToOwned::to_owned),
+                property: element.attribute("property").map(ToOwned::to_owned),
+                charset: element.attribute("charset").map(ToOwned::to_owned),
+                content: element.attribute("content").map(ToOwned::to_owned),
+            }),
+            "link" => {
+                if let Some(href) = element.attribute("href") {
+                    summary.resources.push(browser_link_resource(
+                        element,
+                        href,
+                        summary.base_href.as_deref(),
+                    ));
+                    if browser_link_is_stylesheet(element) {
+                        summary
+                            .stylesheets
+                            .push(browser_style_element(element, summary.base_href.as_deref()));
+                    }
+                }
+            }
+            "script" => {
+                if let Some(src) = element.attribute("src") {
+                    summary.resources.push(BrowserResource {
+                        kind: "script".to_string(),
+                        url: src.to_string(),
+                        resolved_url: resolve_browser_url(src, summary.base_href.as_deref()),
+                        rel: None,
+                        rel_tokens: Vec::new(),
+                        as_hint: None,
+                        type_hint: element.attribute("type").map(ToOwned::to_owned),
+                        media: None,
+                        title: None,
+                        sizes: None,
+                        hreflang: None,
+                        color: None,
+                        width: None,
+                        height: None,
+                        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+                        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+                        nonce: element.attribute("nonce").map(ToOwned::to_owned),
+                        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+                        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+                        csp: None,
+                        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+                        blocking_tokens: browser_blocking_tokens(element),
+                        browsing_context_name: None,
+                        loading: None,
+                        sandbox: Vec::new(),
+                        allow: None,
+                        allowfullscreen: false,
+                        srcdoc: None,
+                        credentialless: false,
+                        imagesrcset: None,
+                        resolved_imagesrcset: None,
+                        imagesizes: None,
+                        track_kind: None,
+                        srclang: None,
+                        track_label: None,
+                        default_track: false,
+                        async_script: element.attribute("async").is_some(),
+                        defer_script: element.attribute("defer").is_some(),
+                    });
+                }
+                summary.scripts.push(browser_script_element(
+                    element,
+                    summary.base_href.as_deref(),
+                ));
+            }
+            "style" => summary
+                .stylesheets
+                .push(browser_style_element(element, summary.base_href.as_deref())),
+            "template" => {
+                summary
+                    .template_descriptors
+                    .push(browser_template_descriptor(element));
+                summary.templates.push(browser_template(element));
+            }
+            _ => {}
+        }
+
+        collect_document_metadata(element, summary);
+        collect_head_browser_facts(&element.children, summary);
+    }
+}
+
+fn collect_document_metadata(element: &Element, summary: &mut BrowserDocument) {
+    match element.name.as_str() {
+        "meta" => collect_meta_document_metadata(element, summary),
+        "link" => collect_link_document_metadata(element, summary),
+        _ => {}
+    }
+}
+
+fn collect_meta_document_metadata(element: &Element, summary: &mut BrowserDocument) {
+    if summary.metadata.charset.is_none() {
+        summary.metadata.charset = browser_meta_charset(element);
+    }
+
+    if let Some(content) = element.attribute("content") {
+        if let Some(name) = browser_meta_policy_http_equiv_name(element) {
+            summary
+                .metadata
+                .http_equiv_hints
+                .push(BrowserHttpEquivHint {
+                    name,
+                    content: content.to_string(),
+                });
+        }
+        if browser_meta_name_is(element, "viewport") && summary.metadata.viewport.is_none() {
+            summary.metadata.viewport = Some(content.to_string());
+            summary.metadata.viewport_directives = browser_metadata_directives(content);
+        }
+        if browser_meta_name_is(element, "description") && summary.metadata.description.is_none() {
+            summary.metadata.description = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "application-name")
+            && summary.metadata.application_name.is_none()
+        {
+            summary.metadata.application_name = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "referrer") && summary.metadata.referrer_policy.is_none() {
+            summary.metadata.referrer_policy = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "robots") && summary.metadata.robots.is_none() {
+            summary.metadata.robots = Some(content.to_string());
+            summary.metadata.robots_directives = browser_metadata_list(content);
+        }
+        if browser_meta_name_is(element, "color-scheme") && summary.metadata.color_scheme.is_none()
+        {
+            summary.metadata.color_scheme = Some(content.to_string());
+        }
+        if browser_meta_name_is(element, "theme-color") {
+            summary.metadata.theme_colors.push(BrowserThemeColor {
+                color: content.to_string(),
+                media: element.attribute("media").map(ToOwned::to_owned),
+            });
+        }
+        if browser_meta_http_equiv_is(element, "refresh") && summary.metadata.refresh.is_none() {
+            summary.metadata.refresh = Some(browser_refresh_metadata(
+                content,
+                summary.base_href.as_deref(),
+            ));
+        }
+    }
+}
+
+fn collect_link_document_metadata(element: &Element, summary: &mut BrowserDocument) {
+    if let Some(href) = element.attribute("href") {
+        if browser_rel_contains(element, "canonical") && summary.metadata.canonical_url.is_none() {
+            summary.metadata.canonical_url = Some(href.to_string());
+            summary.metadata.resolved_canonical_url =
+                resolve_browser_url(href, summary.base_href.as_deref());
+        }
+        if browser_rel_contains(element, "manifest") && summary.metadata.manifest_url.is_none() {
+            summary.metadata.manifest_url = Some(href.to_string());
+            summary.metadata.resolved_manifest_url =
+                resolve_browser_url(href, summary.base_href.as_deref());
+        }
+        if let Some(resource_hint) =
+            browser_resource_hint_from_link(element, href, summary.base_href.as_deref())
+        {
+            summary.metadata.resource_hints.push(resource_hint);
+        }
+    }
+}
+
+fn browser_resource_endpoint_descriptors(
+    summary: &BrowserDocument,
+) -> Vec<BrowserResourceEndpointDescriptor> {
+    let mut descriptors = Vec::new();
+    if let Some(refresh) = &summary.metadata.refresh {
+        if let Some(url) = &refresh.url {
+            descriptors.push(BrowserResourceEndpointDescriptor {
+                endpoint_kind: "metadata-refresh".to_string(),
+                element: "meta".to_string(),
+                resource_kind: Some("refresh".to_string()),
+                url: url.clone(),
+                resolved_url: refresh.resolved_url.clone(),
+                rel: None,
+                rel_tokens: Vec::new(),
+                as_hint: None,
+                type_hint: None,
+                media: None,
+                title: None,
+                sizes: None,
+                hreflang: None,
+                color: None,
+                width: None,
+                height: None,
+                integrity: None,
+                crossorigin: None,
+                nonce: None,
+                referrerpolicy: None,
+                fetchpriority: None,
+                csp: None,
+                blocking: None,
+                blocking_tokens: Vec::new(),
+                browsing_context_name: None,
+                loading: None,
+                sandbox: Vec::new(),
+                allow: None,
+                allowfullscreen: false,
+                srcdoc: None,
+                credentialless: false,
+                imagesrcset: None,
+                resolved_imagesrcset: None,
+                imagesizes: None,
+                track_kind: None,
+                srclang: None,
+                track_label: None,
+                default_track: false,
+                async_script: false,
+                defer_script: false,
+            });
+        }
+    }
+
+    descriptors.extend(
+        summary
+            .resources
+            .iter()
+            .map(browser_resource_endpoint_descriptor),
+    );
+    descriptors
+}
+
+fn browser_link_resource_descriptors(
+    resources: &[BrowserResource],
+) -> Vec<BrowserLinkResourceDescriptor> {
+    resources
+        .iter()
+        .enumerate()
+        .filter(|(_, resource)| resource.rel.is_some())
+        .map(|(index, resource)| browser_link_resource_descriptor(index + 1, resource))
+        .collect()
+}
+
+fn browser_link_resource_descriptor(
+    resource_index: usize,
+    resource: &BrowserResource,
+) -> BrowserLinkResourceDescriptor {
+    let resource_block_reasons = browser_link_resource_block_reasons(resource);
+
+    BrowserLinkResourceDescriptor {
+        resource_index,
+        resource_kind: resource.kind.clone(),
+        url: resource.url.clone(),
+        resolved_url: resource.resolved_url.clone(),
+        rel_tokens: resource.rel_tokens.clone(),
+        as_hint: resource.as_hint.clone(),
+        type_hint: resource.type_hint.clone(),
+        media: resource.media.clone(),
+        title: resource.title.clone(),
+        sizes: resource.sizes.clone(),
+        hreflang: resource.hreflang.clone(),
+        color: resource.color.clone(),
+        fetchpriority: resource.fetchpriority.clone(),
+        blocking_tokens: resource.blocking_tokens.clone(),
+        responsive_image_preload: resource.kind == "preload"
+            && resource.as_hint.as_deref() == Some("image")
+            && (resource.imagesrcset.is_some() || resource.imagesizes.is_some()),
+        icon_candidate: resource.kind == "icon",
+        alternate_candidate: resource.kind == "alternate",
+        policy_hint_count: browser_link_resource_policy_hint_count(resource),
+        resource_blocked: !resource_block_reasons.is_empty(),
+        resource_block_reasons,
+    }
+}
+
+fn browser_link_resource_policy_hint_count(resource: &BrowserResource) -> usize {
+    [
+        resource.integrity.as_ref(),
+        resource.crossorigin.as_ref(),
+        resource.nonce.as_ref(),
+        resource.referrerpolicy.as_ref(),
+        resource.fetchpriority.as_ref(),
+        resource.blocking.as_ref(),
+    ]
+    .into_iter()
+    .filter(Option::is_some)
+    .count()
+}
+
+fn browser_link_resource_block_reasons(resource: &BrowserResource) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if resource.rel_tokens.is_empty() {
+        reasons.push("missing-rel".to_string());
+    }
+    if resource.resolved_url.is_none() {
+        reasons.push("unresolved-url".to_string());
+    }
+    if resource.kind == "preload" && resource.as_hint.is_none() {
+        reasons.push("preload-missing-as".to_string());
+    }
+    if resource.kind == "preload"
+        && resource.as_hint.as_deref() == Some("image")
+        && resource.imagesrcset.is_some()
+        && resource.imagesizes.is_none()
+    {
+        reasons.push("responsive-image-preload-missing-sizes".to_string());
+    }
+    if resource.kind == "preload"
+        && resource.as_hint.as_deref() == Some("image")
+        && resource.imagesizes.is_some()
+        && resource.imagesrcset.is_none()
+    {
+        reasons.push("responsive-image-preload-missing-srcset".to_string());
+    }
+    if resource.kind == "icon"
+        && browser_rel_tokens_contain(&resource.rel_tokens, "mask-icon")
+        && resource.color.is_none()
+    {
+        reasons.push("mask-icon-missing-color".to_string());
+    }
+    if resource.kind == "icon"
+        && !browser_rel_tokens_contain(&resource.rel_tokens, "mask-icon")
+        && resource.sizes.is_none()
+        && resource.type_hint.is_none()
+    {
+        reasons.push("icon-missing-size-or-type".to_string());
+    }
+    if resource.kind == "alternate"
+        && resource.title.is_none()
+        && resource.hreflang.is_none()
+        && resource.type_hint.is_none()
+    {
+        reasons.push("alternate-missing-descriptor".to_string());
+    }
+    reasons
+}
+
+fn browser_image_candidate_descriptors(
+    images: &[BrowserImage],
+) -> Vec<BrowserImageCandidateDescriptor> {
+    images
+        .iter()
+        .map(browser_image_candidate_descriptor)
+        .collect()
+}
+
+fn browser_image_candidate_descriptor(image: &BrowserImage) -> BrowserImageCandidateDescriptor {
+    let image_srcset_count = image
+        .srcset
+        .as_deref()
+        .map(browser_srcset_candidate_count)
+        .unwrap_or_default();
+    let source_srcset_count = image
+        .sources
+        .iter()
+        .filter(|source| source.srcset.is_some())
+        .count();
+    let source_candidate_count = image
+        .sources
+        .iter()
+        .filter_map(|source| source.srcset.as_deref())
+        .map(browser_srcset_candidate_count)
+        .sum::<usize>();
+
+    BrowserImageCandidateDescriptor {
+        src: image.src.clone(),
+        resolved_src: image.resolved_src.clone(),
+        srcset: image.srcset.clone(),
+        resolved_srcset: image.resolved_srcset.clone(),
+        sizes: image.sizes.clone(),
+        alt: image.alt.clone(),
+        width: image.width.clone(),
+        height: image.height.clone(),
+        loading: image.loading.clone(),
+        decoding: image.decoding.clone(),
+        fetchpriority: image.fetchpriority.clone(),
+        crossorigin: image.crossorigin.clone(),
+        referrerpolicy: image.referrerpolicy.clone(),
+        usemap: image.usemap.clone(),
+        ismap: image.ismap,
+        has_alt: image.alt.is_some(),
+        source_count: image.sources.len(),
+        source_srcset_count,
+        candidate_count: image_srcset_count + source_candidate_count,
+        source_type_hints: image
+            .sources
+            .iter()
+            .filter_map(|source| source.type_hint.clone())
+            .collect(),
+        source_media: image
+            .sources
+            .iter()
+            .filter_map(|source| source.media.clone())
+            .collect(),
+        sources: image.sources.clone(),
+    }
+}
+
+fn browser_image_map_descriptors(
+    maps: &[BrowserImageMap],
+    images: &[BrowserImage],
+) -> Vec<BrowserImageMapDescriptor> {
+    let mut descriptors = maps
+        .iter()
+        .enumerate()
+        .map(|(index, map)| browser_image_map_descriptor(index + 1, map, images))
+        .collect::<Vec<_>>();
+
+    for image in images {
+        let Some(map_name) = image.usemap.as_deref().and_then(browser_image_usemap_name) else {
+            continue;
+        };
+        if maps
+            .iter()
+            .any(|map| map.name.as_deref() == Some(map_name.as_str()))
+        {
+            continue;
+        }
+        let referenced_image_sources = vec![browser_image_reference_source(image)];
+        descriptors.push(BrowserImageMapDescriptor {
+            map_index: descriptors.len() + 1,
+            id: None,
+            name: Some(map_name),
+            referenced_image_sources,
+            area_count: 0,
+            navigable_area_count: 0,
+            area_shapes: Vec::new(),
+            missing_alt_area_count: 0,
+            missing_href_area_count: 0,
+            missing_coords_area_count: 0,
+            default_shape_area_count: 0,
+            ping_area_count: 0,
+            attribution_area_count: 0,
+            map_blocked: true,
+            map_block_reasons: vec!["missing-map".to_string()],
+        });
+    }
+
+    descriptors
+}
+
+fn browser_image_map_descriptor(
+    map_index: usize,
+    map: &BrowserImageMap,
+    images: &[BrowserImage],
+) -> BrowserImageMapDescriptor {
+    let referenced_image_sources = map
+        .name
+        .as_deref()
+        .map(|name| browser_image_map_referenced_image_sources(name, images))
+        .unwrap_or_default();
+    let map_block_reasons =
+        browser_image_map_block_reasons(map, referenced_image_sources.is_empty());
+
+    BrowserImageMapDescriptor {
+        map_index,
+        id: map.id.clone(),
+        name: map.name.clone(),
+        referenced_image_sources,
+        area_count: map.areas.len(),
+        navigable_area_count: map.areas.iter().filter(|area| area.href.is_some()).count(),
+        area_shapes: browser_image_map_area_shapes(&map.areas),
+        missing_alt_area_count: map
+            .areas
+            .iter()
+            .filter(|area| area.alt.as_deref().map_or(true, str::is_empty))
+            .count(),
+        missing_href_area_count: map.areas.iter().filter(|area| area.href.is_none()).count(),
+        missing_coords_area_count: map
+            .areas
+            .iter()
+            .filter(|area| area.coords.is_none())
+            .count(),
+        default_shape_area_count: map.areas.iter().filter(|area| area.shape == "rect").count(),
+        ping_area_count: map
+            .areas
+            .iter()
+            .filter(|area| !area.ping.is_empty())
+            .count(),
+        attribution_area_count: map
+            .areas
+            .iter()
+            .filter(|area| !area.attributionsrc.is_empty())
+            .count(),
+        map_blocked: !map_block_reasons.is_empty(),
+        map_block_reasons,
+    }
+}
+
+fn browser_image_map_referenced_image_sources(name: &str, images: &[BrowserImage]) -> Vec<String> {
+    images
+        .iter()
+        .filter(|image| {
+            image
+                .usemap
+                .as_deref()
+                .and_then(browser_image_usemap_name)
+                .as_deref()
+                == Some(name)
+        })
+        .map(browser_image_reference_source)
+        .collect()
+}
+
+fn browser_image_reference_source(image: &BrowserImage) -> String {
+    image
+        .src
+        .clone()
+        .or_else(|| image.srcset.clone())
+        .unwrap_or_else(|| "<inline-image>".to_string())
+}
+
+fn browser_image_usemap_name(usemap: &str) -> Option<String> {
+    usemap
+        .strip_prefix('#')
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .map(ToOwned::to_owned)
+}
+
+fn browser_image_map_area_shapes(areas: &[BrowserImageMapArea]) -> Vec<String> {
+    let mut shapes = Vec::new();
+    for area in areas {
+        if !shapes.contains(&area.shape) {
+            shapes.push(area.shape.clone());
+        }
+    }
+    shapes
+}
+
+fn browser_image_map_block_reasons(
+    map: &BrowserImageMap,
+    missing_image_reference: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if map.name.as_deref().map_or(true, str::is_empty) {
+        reasons.push("missing-name".to_string());
+    }
+    if map.areas.is_empty() {
+        reasons.push("missing-areas".to_string());
+    }
+    if missing_image_reference {
+        reasons.push("unreferenced-map".to_string());
+    }
+    if map.areas.iter().any(|area| area.href.is_none()) {
+        reasons.push("areas-without-href".to_string());
+    }
+    if map
+        .areas
+        .iter()
+        .any(|area| area.alt.as_deref().map_or(true, str::is_empty))
+    {
+        reasons.push("areas-without-alt".to_string());
+    }
+    if map.areas.iter().any(|area| area.coords.is_none()) {
+        reasons.push("areas-without-coords".to_string());
+    }
+    reasons
+}
+
+fn browser_srcset_candidate_count(srcset: &str) -> usize {
+    srcset
+        .split(',')
+        .map(str::trim)
+        .filter(|candidate| !candidate.is_empty())
+        .count()
+}
+
+fn browser_media_playback_descriptors(
+    media: &[BrowserMedia],
+) -> Vec<BrowserMediaPlaybackDescriptor> {
+    media
+        .iter()
+        .map(browser_media_playback_descriptor)
+        .collect()
+}
+
+fn browser_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlaybackDescriptor {
+    BrowserMediaPlaybackDescriptor {
+        kind: media.kind.clone(),
+        src: media.src.clone(),
+        resolved_src: media.resolved_src.clone(),
+        poster: media.poster.clone(),
+        resolved_poster: media.resolved_poster.clone(),
+        width: media.width.clone(),
+        height: media.height.clone(),
+        controls: media.controls,
+        autoplay: media.autoplay,
+        loop_media: media.loop_media,
+        muted: media.muted,
+        playsinline: media.playsinline,
+        preload: media.preload.clone(),
+        crossorigin: media.crossorigin.clone(),
+        controlslist: media.controlslist.clone(),
+        controlslist_tokens: media.controlslist_tokens.clone(),
+        disableremoteplayback: media.disableremoteplayback,
+        disablepictureinpicture: media.disablepictureinpicture,
+        source_count: media.sources.len(),
+        sources: media.sources.clone(),
+        track_count: media.tracks.len(),
+        default_track_count: media
+            .tracks
+            .iter()
+            .filter(|track| track.default_track)
+            .count(),
+        tracks: media.tracks.clone(),
+    }
+}
+
+fn browser_media_resource_descriptors(
+    media: &[BrowserMedia],
+) -> Vec<BrowserMediaResourceDescriptor> {
+    media
+        .iter()
+        .enumerate()
+        .flat_map(|(media_index, media)| {
+            let source_descriptors = media.sources.iter().map(move |source| {
+                browser_media_source_resource_descriptor(media_index + 1, media, source)
+            });
+            let track_descriptors = media.tracks.iter().map(move |track| {
+                browser_media_track_resource_descriptor(media_index + 1, media, track)
+            });
+            source_descriptors.chain(track_descriptors)
+        })
+        .collect()
+}
+
+fn browser_media_source_resource_descriptor(
+    media_index: usize,
+    media: &BrowserMedia,
+    source: &BrowserMediaSource,
+) -> BrowserMediaResourceDescriptor {
+    let block_reasons = browser_media_source_block_reasons(source);
+    BrowserMediaResourceDescriptor {
+        media_index,
+        media_kind: media.kind.clone(),
+        element: "source".to_string(),
+        resource_kind: "source".to_string(),
+        src: source.src.clone(),
+        resolved_src: source.resolved_src.clone(),
+        type_hint: source.type_hint.clone(),
+        media: source.media.clone(),
+        track_kind: None,
+        srclang: None,
+        label: None,
+        default_track: false,
+        candidate_kind: if block_reasons.is_empty() {
+            "source-candidate".to_string()
+        } else {
+            "blocked-source".to_string()
+        },
+        media_resource_blocked: !block_reasons.is_empty(),
+        media_resource_block_reasons: block_reasons,
+    }
+}
+
+fn browser_media_track_resource_descriptor(
+    media_index: usize,
+    media: &BrowserMedia,
+    track: &BrowserMediaTrack,
+) -> BrowserMediaResourceDescriptor {
+    let block_reasons = browser_media_track_block_reasons(track);
+    BrowserMediaResourceDescriptor {
+        media_index,
+        media_kind: media.kind.clone(),
+        element: "track".to_string(),
+        resource_kind: "track".to_string(),
+        src: track.src.clone(),
+        resolved_src: track.resolved_src.clone(),
+        type_hint: None,
+        media: None,
+        track_kind: Some(track.kind.clone()),
+        srclang: track.srclang.clone(),
+        label: track.label.clone(),
+        default_track: track.default_track,
+        candidate_kind: if !block_reasons.is_empty() {
+            "blocked-track".to_string()
+        } else if track.default_track {
+            "default-text-track".to_string()
+        } else {
+            "text-track".to_string()
+        },
+        media_resource_blocked: !block_reasons.is_empty(),
+        media_resource_block_reasons: block_reasons,
+    }
+}
+
+fn browser_media_source_block_reasons(source: &BrowserMediaSource) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if source.src.is_none() {
+        reasons.push("missing-src".to_string());
+    }
+    reasons
+}
+
+fn browser_media_track_block_reasons(track: &BrowserMediaTrack) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if track.src.is_none() {
+        reasons.push("missing-src".to_string());
+    }
+    if track.label.is_none() {
+        reasons.push("missing-label".to_string());
+    }
+    if matches!(track.kind.as_str(), "subtitles" | "captions") && track.srclang.is_none() {
+        reasons.push("missing-srclang".to_string());
+    }
+    reasons
+}
+
+fn browser_embedded_policy_descriptors(
+    contexts: &[BrowserEmbeddedContext],
+) -> Vec<BrowserEmbeddedPolicyDescriptor> {
+    contexts
+        .iter()
+        .map(browser_embedded_policy_descriptor)
+        .collect()
+}
+
+fn browser_embedded_policy_descriptor(
+    context: &BrowserEmbeddedContext,
+) -> BrowserEmbeddedPolicyDescriptor {
+    let allow_tokens = browser_allow_policy_features(context.allow.as_deref());
+    let fullscreen_allowed =
+        context.allowfullscreen || allow_tokens.iter().any(|token| token == "fullscreen");
+
+    BrowserEmbeddedPolicyDescriptor {
+        element: context.element.clone(),
+        resource_kind: browser_embedded_resource_kind(&context.element).to_string(),
+        url: context.url.clone(),
+        resolved_url: context.resolved_url.clone(),
+        browsing_context_name: context.browsing_context_name.clone(),
+        title: context.title.clone(),
+        type_hint: context.type_hint.clone(),
+        width: context.width.clone(),
+        height: context.height.clone(),
+        loading: context.loading.clone(),
+        fetchpriority: context.fetchpriority.clone(),
+        csp: context.csp.clone(),
+        sandbox: context.sandbox.clone(),
+        sandbox_token_count: context.sandbox.len(),
+        allow: context.allow.clone(),
+        allow_token_count: allow_tokens.len(),
+        allow_tokens,
+        allowfullscreen: context.allowfullscreen,
+        fullscreen_allowed,
+        referrerpolicy: context.referrerpolicy.clone(),
+        srcdoc: context.srcdoc.clone(),
+        has_srcdoc: context.srcdoc.is_some(),
+        credentialless: context.credentialless,
+        fallback_text: context.fallback_text.clone(),
+    }
+}
+
+fn browser_embedded_resource_kind(element: &str) -> &'static str {
+    match element {
+        "iframe" | "frame" => "document",
+        "object" => "object",
+        "embed" => "embed",
+        _ => "embedded",
+    }
+}
+
+fn browser_script_execution_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptExecutionDescriptor> {
+    scripts
+        .iter()
+        .map(browser_script_execution_descriptor)
+        .collect()
+}
+
+fn browser_script_execution_descriptor(script: &BrowserScript) -> BrowserScriptExecutionDescriptor {
+    let text_length = script
+        .text
+        .as_ref()
+        .map(|text| text.chars().count())
+        .unwrap_or_default();
+    BrowserScriptExecutionDescriptor {
+        script_kind: script.script_kind.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        async_script: script.async_script,
+        defer_script: script.defer_script,
+        nomodule: script.nomodule,
+        integrity: script.integrity.clone(),
+        crossorigin: script.crossorigin.clone(),
+        nonce: script.nonce.clone(),
+        referrerpolicy: script.referrerpolicy.clone(),
+        fetchpriority: script.fetchpriority.clone(),
+        blocking: script.blocking.clone(),
+        blocking_tokens: script.blocking_tokens.clone(),
+        blocking_token_count: script.blocking_tokens.len(),
+        render_blocking: script
+            .blocking_tokens
+            .iter()
+            .any(|token| token.eq_ignore_ascii_case("render")),
+        has_text: script.text.is_some(),
+        text_length,
+    }
+}
+
+fn browser_script_storage_access_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptStorageAccessDescriptor> {
+    scripts
+        .iter()
+        .filter_map(browser_script_storage_access_descriptor)
+        .collect()
+}
+
+fn browser_script_storage_access_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptStorageAccessDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let uses_local_storage = normalized_text.contains("localstorage");
+    let uses_session_storage = normalized_text.contains("sessionstorage");
+    let uses_cookies =
+        normalized_text.contains("document.cookie") || normalized_text.contains("cookie=");
+    let uses_indexed_db = normalized_text.contains("indexeddb");
+    let uses_cache_storage = normalized_text.contains("caches.")
+        || normalized_text.contains("caches.open")
+        || normalized_text.contains("cachestorage");
+    let uses_service_worker = normalized_text.contains("serviceworker")
+        || normalized_text.contains("service-worker")
+        || normalized_text.contains("navigator.serviceworker");
+    let uses_storage_manager = normalized_text.contains("navigator.storage")
+        || normalized_text.contains(".persist(")
+        || normalized_text.contains(".estimate(");
+    let listens_storage_events = normalized_text.contains("addeventlistener('storage'")
+        || normalized_text.contains("addeventlistener(\"storage\"")
+        || normalized_text.contains("onstorage");
+    let storage_targets = browser_script_storage_targets(
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+    );
+    if storage_targets.is_empty() {
+        return None;
+    }
+
+    let storage_block_reasons = browser_script_storage_block_reasons(script);
+    let text_length = text.chars().count();
+    Some(BrowserScriptStorageAccessDescriptor {
+        script_kind: script.script_kind.clone(),
+        access_kind: browser_script_storage_access_kind(
+            uses_local_storage,
+            uses_session_storage,
+            uses_cookies,
+            uses_indexed_db,
+            uses_cache_storage,
+            uses_service_worker,
+            uses_storage_manager,
+            listens_storage_events,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length,
+        storage_target_count: storage_targets.len(),
+        storage_targets,
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+        storage_blocked: !storage_block_reasons.is_empty(),
+        storage_block_reasons,
+    })
+}
+
+fn browser_script_storage_targets(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if uses_local_storage {
+        targets.push("localStorage".to_string());
+    }
+    if uses_session_storage {
+        targets.push("sessionStorage".to_string());
+    }
+    if uses_cookies {
+        targets.push("cookies".to_string());
+    }
+    if uses_indexed_db {
+        targets.push("indexedDB".to_string());
+    }
+    if uses_cache_storage {
+        targets.push("CacheStorage".to_string());
+    }
+    if uses_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_storage_manager {
+        targets.push("StorageManager".to_string());
+    }
+    if listens_storage_events {
+        targets.push("storage-event".to_string());
+    }
+    targets
+}
+
+fn browser_script_storage_access_kind(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> String {
+    if uses_service_worker || uses_cache_storage {
+        "worker-cache-storage".to_string()
+    } else if uses_indexed_db {
+        "database-storage".to_string()
+    } else if uses_storage_manager {
+        "storage-manager".to_string()
+    } else if uses_local_storage || uses_session_storage || uses_cookies {
+        "client-key-value-storage".to_string()
+    } else if listens_storage_events {
+        "storage-event-listener".to_string()
+    } else {
+        "storage-metadata".to_string()
+    }
+}
+
+fn browser_script_storage_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_script_worker_messaging_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptWorkerMessagingDescriptor> {
+    scripts
+        .iter()
+        .filter_map(browser_script_worker_messaging_descriptor)
+        .collect()
+}
+
+fn browser_script_worker_messaging_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptWorkerMessagingDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let creates_shared_worker = normalized_text.contains("new sharedworker");
+    let creates_worker =
+        normalized_text.contains("new worker") && !normalized_text.contains("new sharedworker");
+    let registers_service_worker = normalized_text.contains("serviceworker.register")
+        || normalized_text.contains("service-worker.register")
+        || normalized_text.contains("navigator.serviceworker.register");
+    let uses_post_message =
+        normalized_text.contains("postmessage(") || normalized_text.contains(".postmessage(");
+    let listens_message_events = normalized_text.contains("addeventlistener('message'")
+        || normalized_text.contains("addeventlistener(\"message\"")
+        || normalized_text.contains("onmessage");
+    let uses_message_channel = normalized_text.contains("messagechannel");
+    let uses_broadcast_channel = normalized_text.contains("broadcastchannel");
+    let uses_import_scripts = normalized_text.contains("importscripts(");
+    let module_worker_hint = normalized_text.contains("type:'module'")
+        || normalized_text.contains("type: 'module'")
+        || normalized_text.contains("type:\"module\"")
+        || normalized_text.contains("type: \"module\"");
+    let messaging_targets = browser_script_worker_messaging_targets(
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+    );
+    if messaging_targets.is_empty() {
+        return None;
+    }
+
+    let messaging_block_reasons = browser_script_worker_messaging_block_reasons(script);
+    Some(BrowserScriptWorkerMessagingDescriptor {
+        script_kind: script.script_kind.clone(),
+        messaging_kind: browser_script_worker_messaging_kind(
+            creates_worker,
+            creates_shared_worker,
+            registers_service_worker,
+            uses_post_message,
+            listens_message_events,
+            uses_message_channel,
+            uses_broadcast_channel,
+            uses_import_scripts,
+            module_worker_hint,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        messaging_target_count: messaging_targets.len(),
+        messaging_targets,
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+        messaging_blocked: !messaging_block_reasons.is_empty(),
+        messaging_block_reasons,
+    })
+}
+
+fn browser_script_worker_messaging_targets(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if creates_worker {
+        targets.push("Worker".to_string());
+    }
+    if creates_shared_worker {
+        targets.push("SharedWorker".to_string());
+    }
+    if registers_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_post_message {
+        targets.push("postMessage".to_string());
+    }
+    if listens_message_events {
+        targets.push("message-event".to_string());
+    }
+    if uses_message_channel {
+        targets.push("MessageChannel".to_string());
+    }
+    if uses_broadcast_channel {
+        targets.push("BroadcastChannel".to_string());
+    }
+    if uses_import_scripts {
+        targets.push("importScripts".to_string());
+    }
+    if module_worker_hint {
+        targets.push("module-worker".to_string());
+    }
+    targets
+}
+
+fn browser_script_worker_messaging_kind(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> String {
+    if registers_service_worker {
+        "service-worker-registration".to_string()
+    } else if creates_shared_worker {
+        "shared-worker".to_string()
+    } else if creates_worker && module_worker_hint {
+        "module-worker".to_string()
+    } else if creates_worker || uses_import_scripts {
+        "dedicated-worker".to_string()
+    } else if uses_message_channel || uses_broadcast_channel {
+        "channel-messaging".to_string()
+    } else if uses_post_message || listens_message_events {
+        "post-message".to_string()
+    } else {
+        "worker-messaging-metadata".to_string()
+    }
+}
+
+fn browser_script_worker_messaging_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_script_module_graph_descriptors(
+    scripts: &[BrowserScript],
+    resources: &[BrowserResource],
+) -> Vec<BrowserScriptModuleGraphDescriptor> {
+    let modulepreloads: Vec<_> = resources
+        .iter()
+        .filter(|resource| resource.kind == "modulepreload")
+        .collect();
+    scripts
+        .iter()
+        .filter_map(|script| browser_script_module_graph_descriptor(script, &modulepreloads))
+        .collect()
+}
+
+fn browser_script_module_graph_descriptor(
+    script: &BrowserScript,
+    modulepreloads: &[&BrowserResource],
+) -> Option<BrowserScriptModuleGraphDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let external_module_entry = script.script_kind == "module" && script.src.is_some();
+    let inline_module_entry = script.script_kind == "module" && script.src.is_none();
+    let declares_import_map = script.script_kind == "importmap";
+    let uses_static_imports = browser_script_uses_static_module_imports(&normalized_text);
+    let uses_dynamic_imports = normalized_text.contains("import(");
+    let has_modulepreload = !modulepreloads.is_empty();
+    let module_targets = browser_script_module_graph_targets(
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+    );
+    if module_targets.is_empty() {
+        return None;
+    }
+
+    let modulepreload_urls = modulepreloads
+        .iter()
+        .map(|resource| resource.url.clone())
+        .collect();
+    let resolved_modulepreload_urls = modulepreloads
+        .iter()
+        .filter_map(|resource| resource.resolved_url.clone())
+        .collect();
+    let module_graph_block_reasons = browser_script_module_graph_block_reasons(script);
+    Some(BrowserScriptModuleGraphDescriptor {
+        script_kind: script.script_kind.clone(),
+        module_graph_kind: browser_script_module_graph_kind(
+            external_module_entry,
+            inline_module_entry,
+            declares_import_map,
+            uses_static_imports,
+            uses_dynamic_imports,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        module_target_count: module_targets.len(),
+        module_targets,
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+        modulepreload_urls,
+        resolved_modulepreload_urls,
+        module_graph_blocked: !module_graph_block_reasons.is_empty(),
+        module_graph_block_reasons,
+    })
+}
+
+fn browser_script_uses_static_module_imports(normalized_text: &str) -> bool {
+    normalized_text.contains("import ")
+        || normalized_text.contains("import{")
+        || normalized_text.contains("export ")
+        || normalized_text.contains(" from '")
+        || normalized_text.contains(" from \"")
+}
+
+fn browser_script_module_graph_targets(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+    has_modulepreload: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if external_module_entry {
+        targets.push("external-module-entry".to_string());
+    }
+    if inline_module_entry {
+        targets.push("inline-module-entry".to_string());
+    }
+    if declares_import_map {
+        targets.push("importmap".to_string());
+    }
+    if uses_static_imports {
+        targets.push("static-import".to_string());
+    }
+    if uses_dynamic_imports {
+        targets.push("dynamic-import".to_string());
+    }
+    if has_modulepreload {
+        targets.push("modulepreload".to_string());
+    }
+    targets
+}
+
+fn browser_script_module_graph_kind(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+) -> String {
+    if declares_import_map {
+        "import-map".to_string()
+    } else if uses_static_imports && uses_dynamic_imports {
+        "mixed-module-imports".to_string()
+    } else if uses_static_imports {
+        "static-module-graph".to_string()
+    } else if uses_dynamic_imports {
+        "dynamic-module-import".to_string()
+    } else if external_module_entry || inline_module_entry {
+        "module-entry".to_string()
+    } else {
+        "module-graph-metadata".to_string()
+    }
+}
+
+fn browser_script_module_graph_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_stylesheet_planning_descriptors(
+    stylesheets: &[BrowserStylesheet],
+) -> Vec<BrowserStylesheetPlanningDescriptor> {
+    stylesheets
+        .iter()
+        .map(browser_stylesheet_planning_descriptor)
+        .collect()
+}
+
+fn browser_stylesheet_planning_descriptor(
+    stylesheet: &BrowserStylesheet,
+) -> BrowserStylesheetPlanningDescriptor {
+    let text_length = stylesheet
+        .text
+        .as_ref()
+        .map(|text| text.chars().count())
+        .unwrap_or_default();
+    BrowserStylesheetPlanningDescriptor {
+        source: stylesheet.source.clone(),
+        stylesheet_kind: if stylesheet.href.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        href: stylesheet.href.clone(),
+        resolved_href: stylesheet.resolved_href.clone(),
+        rel: stylesheet.rel.clone(),
+        rel_tokens: stylesheet.rel_tokens.clone(),
+        rel_token_count: stylesheet.rel_tokens.len(),
+        type_hint: stylesheet.type_hint.clone(),
+        media: stylesheet.media.clone(),
+        title: stylesheet.title.clone(),
+        disabled: stylesheet.disabled,
+        alternate: stylesheet.alternate,
+        applies_by_default: !stylesheet.disabled && !stylesheet.alternate,
+        integrity: stylesheet.integrity.clone(),
+        crossorigin: stylesheet.crossorigin.clone(),
+        nonce: stylesheet.nonce.clone(),
+        referrerpolicy: stylesheet.referrerpolicy.clone(),
+        fetchpriority: stylesheet.fetchpriority.clone(),
+        blocking: stylesheet.blocking.clone(),
+        blocking_tokens: stylesheet.blocking_tokens.clone(),
+        blocking_token_count: stylesheet.blocking_tokens.len(),
+        render_blocking: stylesheet
+            .blocking_tokens
+            .iter()
+            .any(|token| token.eq_ignore_ascii_case("render")),
+        has_text: stylesheet.text.is_some(),
+        text_length,
+    }
+}
+
+fn browser_resource_endpoint_descriptor(
+    resource: &BrowserResource,
+) -> BrowserResourceEndpointDescriptor {
+    BrowserResourceEndpointDescriptor {
+        endpoint_kind: "resource".to_string(),
+        element: browser_resource_endpoint_element(&resource.kind).to_string(),
+        resource_kind: Some(resource.kind.clone()),
+        url: resource.url.clone(),
+        resolved_url: resource.resolved_url.clone(),
+        rel: resource.rel.clone(),
+        rel_tokens: resource.rel_tokens.clone(),
+        as_hint: resource.as_hint.clone(),
+        type_hint: resource.type_hint.clone(),
+        media: resource.media.clone(),
+        title: resource.title.clone(),
+        sizes: resource.sizes.clone(),
+        hreflang: resource.hreflang.clone(),
+        color: resource.color.clone(),
+        width: resource.width.clone(),
+        height: resource.height.clone(),
+        integrity: resource.integrity.clone(),
+        crossorigin: resource.crossorigin.clone(),
+        nonce: resource.nonce.clone(),
+        referrerpolicy: resource.referrerpolicy.clone(),
+        fetchpriority: resource.fetchpriority.clone(),
+        csp: resource.csp.clone(),
+        blocking: resource.blocking.clone(),
+        blocking_tokens: resource.blocking_tokens.clone(),
+        browsing_context_name: resource.browsing_context_name.clone(),
+        loading: resource.loading.clone(),
+        sandbox: resource.sandbox.clone(),
+        allow: resource.allow.clone(),
+        allowfullscreen: resource.allowfullscreen,
+        srcdoc: resource.srcdoc.clone(),
+        credentialless: resource.credentialless,
+        imagesrcset: resource.imagesrcset.clone(),
+        resolved_imagesrcset: resource.resolved_imagesrcset.clone(),
+        imagesizes: resource.imagesizes.clone(),
+        track_kind: resource.track_kind.clone(),
+        srclang: resource.srclang.clone(),
+        track_label: resource.track_label.clone(),
+        default_track: resource.default_track,
+        async_script: resource.async_script,
+        defer_script: resource.defer_script,
+    }
+}
+
+fn browser_resource_endpoint_element(kind: &str) -> &str {
+    match kind {
+        "alternate" | "canonical" | "dns-prefetch" | "icon" | "link" | "manifest"
+        | "modulepreload" | "preconnect" | "prefetch" | "preload" | "prerender" | "stylesheet" => {
+            "link"
+        }
+        "frame" => "iframe",
+        "image" => "img",
+        other => other,
+    }
+}
+
+fn browser_document_policy_descriptor(
+    metadata: &BrowserDocumentMetadata,
+) -> Option<BrowserDocumentPolicyDescriptor> {
+    let content_security_policy =
+        browser_http_equiv_hint_content(metadata, "content-security-policy");
+    let permissions_policy = browser_http_equiv_hint_content(metadata, "permissions-policy");
+    let permissions_policy_features =
+        browser_permissions_policy_features(permissions_policy.as_deref());
+    let origin_trials = browser_http_equiv_hint_contents(metadata, "origin-trial");
+    let accept_ch = browser_http_equiv_hint_content(metadata, "accept-ch");
+    let accept_ch_tokens = accept_ch
+        .as_deref()
+        .map(browser_metadata_list)
+        .unwrap_or_default();
+    let dns_prefetch_control = browser_http_equiv_hint_content(metadata, "x-dns-prefetch-control");
+
+    let has_policy_metadata = metadata.charset.is_some()
+        || metadata.viewport.is_some()
+        || metadata.description.is_some()
+        || metadata.application_name.is_some()
+        || metadata.referrer_policy.is_some()
+        || metadata.robots.is_some()
+        || metadata.color_scheme.is_some()
+        || content_security_policy.is_some()
+        || permissions_policy.is_some()
+        || !origin_trials.is_empty()
+        || accept_ch.is_some()
+        || dns_prefetch_control.is_some()
+        || !metadata.theme_colors.is_empty()
+        || metadata.refresh.is_some()
+        || metadata.canonical_url.is_some()
+        || metadata.manifest_url.is_some();
+
+    has_policy_metadata.then(|| BrowserDocumentPolicyDescriptor {
+        charset: metadata.charset.clone(),
+        viewport: metadata.viewport.clone(),
+        viewport_directives: metadata.viewport_directives.clone(),
+        description: metadata.description.clone(),
+        application_name: metadata.application_name.clone(),
+        referrer_policy: metadata.referrer_policy.clone(),
+        robots: metadata.robots.clone(),
+        robots_directives: metadata.robots_directives.clone(),
+        color_scheme: metadata.color_scheme.clone(),
+        content_security_policy,
+        permissions_policy,
+        permissions_policy_feature_count: permissions_policy_features.len(),
+        permissions_policy_features,
+        origin_trials,
+        accept_ch,
+        accept_ch_tokens,
+        dns_prefetch_control,
+        theme_colors: metadata.theme_colors.clone(),
+        refresh: metadata.refresh.clone(),
+        canonical_url: metadata.canonical_url.clone(),
+        resolved_canonical_url: metadata.resolved_canonical_url.clone(),
+        manifest_url: metadata.manifest_url.clone(),
+        resolved_manifest_url: metadata.resolved_manifest_url.clone(),
+    })
+}
+
+fn browser_http_equiv_hint_content(
+    metadata: &BrowserDocumentMetadata,
+    expected: &str,
+) -> Option<String> {
+    metadata
+        .http_equiv_hints
+        .iter()
+        .find(|hint| hint.name == expected)
+        .map(|hint| hint.content.clone())
+}
+
+fn browser_http_equiv_hint_contents(
+    metadata: &BrowserDocumentMetadata,
+    expected: &str,
+) -> Vec<String> {
+    metadata
+        .http_equiv_hints
+        .iter()
+        .filter(|hint| hint.name == expected)
+        .map(|hint| hint.content.clone())
+        .collect()
+}
+
+fn browser_meta_name_is(element: &Element, expected: &str) -> bool {
+    element
+        .attribute("name")
+        .is_some_and(|name| name.eq_ignore_ascii_case(expected))
+}
+
+fn browser_meta_http_equiv_is(element: &Element, expected: &str) -> bool {
+    element
+        .attribute("http-equiv")
+        .is_some_and(|name| name.eq_ignore_ascii_case(expected))
+}
+
+fn browser_meta_http_equiv_name(element: &Element) -> Option<String> {
+    element
+        .attribute("http-equiv")
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .map(str::to_ascii_lowercase)
+}
+
+fn browser_meta_policy_http_equiv_name(element: &Element) -> Option<String> {
+    let name = browser_meta_http_equiv_name(element)?;
+    (!matches!(name.as_str(), "content-type" | "refresh")).then_some(name)
+}
+
+fn browser_meta_charset(element: &Element) -> Option<String> {
+    if let Some(charset) = element.attribute("charset") {
+        return Some(charset.to_string());
+    }
+    if !browser_meta_http_equiv_is(element, "content-type") {
+        return None;
+    }
+    element.attribute("content").and_then(extract_meta_charset)
+}
+
+fn extract_meta_charset(content: &str) -> Option<String> {
+    content
+        .split(';')
+        .map(str::trim)
+        .find_map(|part| {
+            let (name, value) = part.split_once('=')?;
+            name.trim().eq_ignore_ascii_case("charset").then_some(value)
+        })
+        .map(trim_browser_metadata_token)
+        .filter(|charset| !charset.is_empty())
+}
+
+fn browser_refresh_metadata(content: &str, base_href: Option<&str>) -> BrowserRefresh {
+    let mut parts = content.split(';');
+    let delay = parts
+        .next()
+        .map(str::trim)
+        .filter(|part| !part.is_empty())
+        .map(ToOwned::to_owned);
+    let url = parts.find_map(browser_refresh_url);
+    let resolved_url = url
+        .as_deref()
+        .and_then(|url| resolve_browser_url(url, base_href));
+    BrowserRefresh {
+        delay,
+        url,
+        resolved_url,
+    }
+}
+
+fn browser_refresh_url(part: &str) -> Option<String> {
+    let (name, value) = part.split_once('=')?;
+    if !name.trim().eq_ignore_ascii_case("url") {
+        return None;
+    }
+    let url = trim_browser_metadata_token(value);
+    (!url.is_empty()).then_some(url)
+}
+
+fn browser_metadata_directives(content: &str) -> Vec<BrowserMetadataDirective> {
+    content
+        .split(',')
+        .filter_map(|part| {
+            let part = part.trim();
+            if part.is_empty() {
+                return None;
+            }
+            let (name, value) = match part.split_once('=') {
+                Some((name, value)) => (
+                    name.trim(),
+                    Some(trim_browser_metadata_token(value)).filter(|value| !value.is_empty()),
+                ),
+                None => (part, None),
+            };
+            let name = name.trim();
+            (!name.is_empty()).then(|| BrowserMetadataDirective {
+                name: name.to_ascii_lowercase(),
+                value,
+            })
+        })
+        .collect()
+}
+
+fn browser_metadata_list(content: &str) -> Vec<String> {
+    content
+        .split(',')
+        .map(trim_browser_metadata_token)
+        .filter(|part| !part.is_empty())
+        .collect()
+}
+
+fn browser_permissions_policy_features(policy: Option<&str>) -> Vec<String> {
+    policy
+        .into_iter()
+        .flat_map(|policy| policy.split(','))
+        .filter_map(browser_policy_feature)
+        .collect()
+}
+
+fn browser_allow_policy_features(allow: Option<&str>) -> Vec<String> {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_policy_feature)
+        .collect()
+}
+
+fn browser_policy_feature(directive: &str) -> Option<String> {
+    directive
+        .trim()
+        .split(|ch: char| ch == '=' || ch.is_whitespace())
+        .next()
+        .map(str::trim)
+        .filter(|feature| !feature.is_empty())
+        .map(str::to_ascii_lowercase)
+}
+
+fn split_browser_comma_tokens(value: &str) -> Vec<String> {
+    value
+        .split(',')
+        .map(|part| part.trim().to_string())
+        .filter(|part| !part.is_empty())
+        .collect()
+}
+
+fn browser_resource_hint_from_link(
+    element: &Element,
+    href: &str,
+    base_href: Option<&str>,
+) -> Option<BrowserResourceHint> {
+    let kind = browser_link_resource_hint_kind(element.attribute("rel"))?;
+    let imagesrcset = element.attribute("imagesrcset").map(ToOwned::to_owned);
+    Some(BrowserResourceHint {
+        kind,
+        url: href.to_string(),
+        resolved_url: resolve_browser_url(href, base_href),
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_tokens: browser_rel_tokens(element),
+        as_hint: element.attribute("as").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        nonce: element.attribute("nonce").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
+        resolved_imagesrcset: imagesrcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        imagesrcset,
+        imagesizes: element.attribute("imagesizes").map(ToOwned::to_owned),
+    })
+}
+
+fn browser_link(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserLink {
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    let rel_tokens = browser_rel_tokens(element);
+    BrowserLink {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        href: element.attribute("href").map(ToOwned::to_owned),
+        resolved_href: element
+            .attribute("href")
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        title: element.attribute("title").map(ToOwned::to_owned),
+        download: browser_anchor_download(element),
+        resolved_ping: browser_anchor_ping(element)
+            .into_iter()
+            .filter_map(|ping| resolve_browser_url(&ping, base_href))
+            .collect(),
+        ping: browser_anchor_ping(element),
+        resolved_attributionsrc: browser_anchor_attributionsrc(element)
+            .into_iter()
+            .filter_map(|attributionsrc| resolve_browser_url(&attributionsrc, base_href))
+            .collect(),
+        attributionsrc: browser_anchor_attributionsrc(element),
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        text: browser_link_text(element),
+    }
+}
+
+fn browser_navigation_target_descriptor(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> Option<BrowserNavigationTargetDescriptor> {
+    if element.attribute("href").is_none() {
+        return None;
+    }
+
+    let rel_tokens = browser_rel_tokens(element);
+    let ping = browser_anchor_ping(element);
+    let attributionsrc = browser_anchor_attributionsrc(element);
+    let has_navigation_policy = element.attribute("target").is_some()
+        || element.attribute("rel").is_some()
+        || element.attribute("download").is_some()
+        || !ping.is_empty()
+        || !attributionsrc.is_empty()
+        || element.attribute("hreflang").is_some()
+        || element.attribute("type").is_some()
+        || element.attribute("referrerpolicy").is_some()
+        || element.name == "area";
+
+    if !has_navigation_policy {
+        return None;
+    }
+
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    let area_shape = (element.name == "area")
+        .then(|| browser_image_map_shape(element).unwrap_or_else(|| "rect".to_string()));
+    let area_coords = (element.name == "area")
+        .then(|| browser_image_map_coords(element))
+        .flatten();
+
+    Some(BrowserNavigationTargetDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        text: browser_link_text(element),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        download: browser_anchor_download(element),
+        resolved_ping: ping
+            .iter()
+            .filter_map(|ping| resolve_browser_url(ping, base_href))
+            .collect(),
+        ping,
+        resolved_attributionsrc: attributionsrc
+            .iter()
+            .filter_map(|attributionsrc| resolve_browser_url(attributionsrc, base_href))
+            .collect(),
+        attributionsrc,
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        area_shape,
+        area_coords,
+    })
+}
+
+fn is_browser_document_link(element: &Element) -> bool {
+    element.name == "a" || (element.name == "area" && element.attribute("href").is_some())
+}
+
+fn browser_link_text(element: &Element) -> String {
+    let text = visible_text_for_nodes(&element.children);
+    if text.is_empty() && element.name == "area" {
+        element
+            .attribute("alt")
+            .map(ToOwned::to_owned)
+            .unwrap_or_default()
+    } else {
+        text
+    }
+}
+
+fn browser_text_semantic_element(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserTextSemantic> {
+    if !is_browser_text_semantic_element(element) {
+        return None;
+    }
+
+    let quote_cite = browser_quote_cite(element);
+    let edit_cite = browser_edit_cite(element);
+    Some(BrowserTextSemantic {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        role: browser_text_semantic_role(element).to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        lang: element.attribute("lang").map(ToOwned::to_owned),
+        dir: element.attribute("dir").map(ToOwned::to_owned),
+        resolved_quote_cite: quote_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        quote_cite,
+        data_value: browser_data_value(element),
+        datetime: browser_datetime(element),
+        resolved_edit_cite: edit_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        edit_cite,
+        edit_datetime: browser_edit_datetime(element),
+        ruby_kind: browser_ruby_kind(element),
+        bidi_kind: browser_bidi_kind(element),
+        phrase_kind: browser_phrase_kind(element),
+    })
+}
+
+fn browser_text_semantic_descriptors(
+    semantics: &[BrowserTextSemantic],
+) -> Vec<BrowserTextSemanticDescriptor> {
+    semantics
+        .iter()
+        .enumerate()
+        .map(|(index, semantic)| browser_text_semantic_descriptor(index + 1, semantic))
+        .collect()
+}
+
+fn browser_text_semantic_descriptor(
+    semantic_index: usize,
+    semantic: &BrowserTextSemantic,
+) -> BrowserTextSemanticDescriptor {
+    let semantic_block_reasons = browser_text_semantic_block_reasons(semantic);
+
+    BrowserTextSemanticDescriptor {
+        semantic_index,
+        element: semantic.element.clone(),
+        id: semantic.id.clone(),
+        role: semantic.role.clone(),
+        text: semantic.text.clone(),
+        semantic_kind: browser_text_semantic_descriptor_kind(semantic).to_string(),
+        title: semantic.title.clone(),
+        lang: semantic.lang.clone(),
+        dir: semantic.dir.clone(),
+        quote_cite: semantic.quote_cite.clone(),
+        resolved_quote_cite: semantic.resolved_quote_cite.clone(),
+        data_value: semantic.data_value.clone(),
+        datetime: semantic.datetime.clone(),
+        edit_cite: semantic.edit_cite.clone(),
+        resolved_edit_cite: semantic.resolved_edit_cite.clone(),
+        edit_datetime: semantic.edit_datetime.clone(),
+        ruby_kind: semantic.ruby_kind.clone(),
+        bidi_kind: semantic.bidi_kind.clone(),
+        phrase_kind: semantic.phrase_kind.clone(),
+        semantic_blocked: !semantic_block_reasons.is_empty(),
+        semantic_block_reasons,
+    }
+}
+
+fn browser_text_semantic_descriptor_kind(semantic: &BrowserTextSemantic) -> &'static str {
+    if semantic.data_value.is_some() || semantic.role == "data" {
+        "machine-readable"
+    } else if semantic.datetime.is_some() || semantic.role == "time" {
+        "temporal"
+    } else if semantic.edit_cite.is_some()
+        || semantic.edit_datetime.is_some()
+        || matches!(semantic.role.as_str(), "inserted" | "deleted")
+    {
+        "edit"
+    } else if semantic.quote_cite.is_some()
+        || matches!(semantic.role.as_str(), "quote" | "quote_block")
+    {
+        "quote"
+    } else if semantic.ruby_kind.is_some() {
+        "ruby"
+    } else if semantic.bidi_kind.is_some() {
+        "bidi"
+    } else if semantic.phrase_kind.is_some() {
+        "phrase"
+    } else {
+        "inline"
+    }
+}
+
+fn browser_text_semantic_block_reasons(semantic: &BrowserTextSemantic) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if semantic.element == "data" && semantic.data_value.is_none() {
+        reasons.push("missing-data-value".to_string());
+    }
+    if semantic.element == "time" && semantic.datetime.is_none() {
+        reasons.push("missing-datetime".to_string());
+    }
+    if semantic.quote_cite.is_some() && semantic.resolved_quote_cite.is_none() {
+        reasons.push("unresolved-quote-cite".to_string());
+    }
+    if semantic.edit_cite.is_some() && semantic.resolved_edit_cite.is_none() {
+        reasons.push("unresolved-edit-cite".to_string());
+    }
+    if matches!(semantic.element.as_str(), "ins" | "del") && semantic.edit_datetime.is_none() {
+        reasons.push("edit-missing-datetime".to_string());
+    }
+    if semantic.bidi_kind.as_deref() == Some("override") && semantic.dir.is_none() {
+        reasons.push("bidi-missing-dir".to_string());
+    }
+    reasons
+}
+
+fn browser_text_flow_descriptor(
+    flow_index: usize,
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserTextFlowDescriptor> {
+    if !is_browser_text_flow_descriptor_element(element) {
+        return None;
+    }
+
+    let quote_cite = browser_quote_cite(element);
+    let resolved_quote_cite = quote_cite
+        .as_deref()
+        .and_then(|cite| resolve_browser_url(cite, base_href));
+    let list_kind = browser_list_kind(element);
+    let description_list_kind = browser_description_list_kind(element);
+    let term_kind = browser_term_kind(element);
+    let text_flow = if browser_preserves_text_whitespace(&element.name) {
+        Some("preformatted".to_string())
+    } else {
+        None
+    };
+    let list_item_count = if list_kind.is_some() {
+        browser_direct_list_item_count(element)
+    } else {
+        0
+    };
+    let term_count = if description_list_kind.is_some() {
+        browser_direct_description_term_count(element)
+    } else {
+        0
+    };
+    let description_count = if description_list_kind.is_some() {
+        browser_direct_description_details_count(element)
+    } else {
+        0
+    };
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let mut descriptor = BrowserTextFlowDescriptor {
+        flow_index,
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: browser_content_role(&element.name)
+            .unwrap_or(element.name.as_str())
+            .to_string(),
+        text,
+        flow_kind: "flow".to_string(),
+        text_flow,
+        list_kind,
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+        list_item_value: browser_list_item_value(element),
+        list_item_count,
+        description_list_kind,
+        term_kind,
+        term_count,
+        description_count,
+        quote_cite,
+        resolved_quote_cite,
+        flow_blocked: false,
+        flow_block_reasons: Vec::new(),
+    };
+    descriptor.flow_kind = browser_text_flow_descriptor_kind(&descriptor).to_string();
+    descriptor.flow_block_reasons = browser_text_flow_block_reasons(&descriptor);
+    descriptor.flow_blocked = !descriptor.flow_block_reasons.is_empty();
+    Some(descriptor)
+}
+
+fn is_browser_text_flow_descriptor_element(element: &Element) -> bool {
+    matches!(
+        element.name.as_str(),
+        "ul" | "ol"
+            | "menu"
+            | "dir"
+            | "li"
+            | "dl"
+            | "dt"
+            | "dd"
+            | "blockquote"
+            | "q"
+            | "pre"
+            | "plaintext"
+            | "xmp"
+            | "listing"
+    )
+}
+
+fn browser_text_flow_descriptor_kind(descriptor: &BrowserTextFlowDescriptor) -> &'static str {
+    if descriptor.list_kind.is_some() {
+        "list"
+    } else if descriptor.element == "li" {
+        "list-item"
+    } else if descriptor.description_list_kind.is_some() {
+        "description-list"
+    } else if descriptor.term_kind.as_deref() == Some("term") {
+        "description-term"
+    } else if descriptor.term_kind.as_deref() == Some("description") {
+        "description-details"
+    } else if descriptor.quote_cite.is_some()
+        || matches!(descriptor.element.as_str(), "blockquote" | "q")
+    {
+        "quote"
+    } else if descriptor.text_flow.as_deref() == Some("preformatted") {
+        "preformatted"
+    } else {
+        "flow"
+    }
+}
+
+fn browser_text_flow_block_reasons(descriptor: &BrowserTextFlowDescriptor) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if descriptor.list_kind.is_some() && descriptor.list_item_count == 0 {
+        reasons.push("empty-list".to_string());
+    }
+    if descriptor.element == "li" && descriptor.text.is_empty() {
+        reasons.push("empty-list-item".to_string());
+    }
+    if descriptor.description_list_kind.is_some() {
+        if descriptor.term_count == 0 {
+            reasons.push("missing-description-terms".to_string());
+        }
+        if descriptor.description_count == 0 {
+            reasons.push("missing-description-details".to_string());
+        }
+    }
+    if descriptor.term_kind.is_some() && descriptor.text.is_empty() {
+        reasons.push("empty-description-item".to_string());
+    }
+    if descriptor.quote_cite.is_some() && descriptor.resolved_quote_cite.is_none() {
+        reasons.push("unresolved-quote-cite".to_string());
+    }
+    if descriptor.text_flow.as_deref() == Some("preformatted") && descriptor.text.is_empty() {
+        reasons.push("empty-preformatted".to_string());
+    }
+    reasons
+}
+
+fn browser_direct_description_term_count(element: &Element) -> usize {
+    browser_direct_child_count(element, "dt")
+}
+
+fn browser_direct_description_details_count(element: &Element) -> usize {
+    browser_direct_child_count(element, "dd")
+}
+
+fn browser_direct_child_count(element: &Element, child_name: &str) -> usize {
+    element
+        .children
+        .iter()
+        .filter(|node| matches!(node, Node::Element(child) if child.name == child_name))
+        .count()
+}
+
+fn browser_anchor_descriptors(anchors: &[BrowserAnchor]) -> Vec<BrowserAnchorDescriptor> {
+    anchors
+        .iter()
+        .enumerate()
+        .map(|(index, anchor)| browser_anchor_descriptor(index + 1, anchor, anchors))
+        .collect()
+}
+
+fn browser_anchor_descriptor(
+    anchor_index: usize,
+    anchor: &BrowserAnchor,
+    anchors: &[BrowserAnchor],
+) -> BrowserAnchorDescriptor {
+    let fragment_targets = browser_anchor_fragment_targets(anchor);
+    let anchor_block_reasons = browser_anchor_block_reasons(anchor, &fragment_targets, anchors);
+    let duplicate_target = fragment_targets
+        .iter()
+        .any(|target| browser_anchor_target_count(anchors, target) > 1);
+
+    BrowserAnchorDescriptor {
+        anchor_index,
+        id: anchor.id.clone(),
+        name: anchor.name.clone(),
+        text: anchor.text.clone(),
+        fragment_targets,
+        anchor_kind: browser_anchor_kind(anchor).to_string(),
+        duplicate_target,
+        anchor_blocked: !anchor_block_reasons.is_empty(),
+        anchor_block_reasons,
+    }
+}
+
+fn browser_anchor_kind(anchor: &BrowserAnchor) -> &'static str {
+    match (&anchor.id, &anchor.name) {
+        (Some(_), Some(_)) => "id-and-name",
+        (Some(_), None) => "id",
+        (None, Some(_)) => "named-anchor",
+        (None, None) => "missing-target",
+    }
+}
+
+fn browser_anchor_fragment_targets(anchor: &BrowserAnchor) -> Vec<String> {
+    let mut targets = Vec::new();
+    if let Some(id) = &anchor.id {
+        targets.push(id.clone());
+    }
+    if let Some(name) = &anchor.name {
+        if !targets.iter().any(|target| target == name) {
+            targets.push(name.clone());
+        }
+    }
+    targets
+}
+
+fn browser_anchor_block_reasons(
+    anchor: &BrowserAnchor,
+    fragment_targets: &[String],
+    anchors: &[BrowserAnchor],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if fragment_targets.is_empty() {
+        reasons.push("missing-fragment-target".to_string());
+    }
+    if anchor.text.trim().is_empty() {
+        reasons.push("empty-fragment-target-text".to_string());
+    }
+    if fragment_targets
+        .iter()
+        .any(|target| browser_anchor_target_count(anchors, target) > 1)
+    {
+        reasons.push("duplicate-fragment-target".to_string());
+    }
+    reasons
+}
+
+fn browser_anchor_target_count(anchors: &[BrowserAnchor], target: &str) -> usize {
+    anchors
+        .iter()
+        .filter(|anchor| {
+            browser_anchor_fragment_targets(anchor)
+                .iter()
+                .any(|value| value == target)
+        })
+        .count()
+}
+
+fn browser_heading_descriptors(headings: &[BrowserHeading]) -> Vec<BrowserHeadingDescriptor> {
+    headings
+        .iter()
+        .enumerate()
+        .map(|(index, heading)| {
+            let previous_level = index
+                .checked_sub(1)
+                .and_then(|previous_index| headings.get(previous_index))
+                .map(|previous| previous.level);
+            browser_heading_descriptor(index + 1, heading, previous_level)
+        })
+        .collect()
+}
+
+fn browser_heading_descriptor(
+    heading_index: usize,
+    heading: &BrowserHeading,
+    previous_level: Option<u8>,
+) -> BrowserHeadingDescriptor {
+    let heading_block_reasons = browser_heading_block_reasons(heading, previous_level);
+    let skipped_level = browser_heading_skipped_level(heading.level, previous_level);
+
+    BrowserHeadingDescriptor {
+        heading_index,
+        level: heading.level,
+        text: heading.text.clone(),
+        previous_level,
+        outline_kind: browser_heading_outline_kind(heading.level, previous_level).to_string(),
+        skipped_level,
+        heading_blocked: !heading_block_reasons.is_empty(),
+        heading_block_reasons,
+    }
+}
+
+fn browser_heading_outline_kind(level: u8, previous_level: Option<u8>) -> &'static str {
+    match previous_level {
+        None if level == 1 => "top-level",
+        None => "initial-skipped-level",
+        Some(previous) if level == previous => "sibling",
+        Some(previous) if level == previous + 1 => "subsection",
+        Some(previous) if level > previous + 1 => "skipped-level",
+        Some(_) => "ancestor-section",
+    }
+}
+
+fn browser_heading_block_reasons(
+    heading: &BrowserHeading,
+    previous_level: Option<u8>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if heading.text.trim().is_empty() {
+        reasons.push("empty-heading-text".to_string());
+    }
+    if browser_heading_skipped_level(heading.level, previous_level) {
+        reasons.push("skipped-heading-level".to_string());
+    }
+    reasons
+}
+
+fn browser_heading_skipped_level(level: u8, previous_level: Option<u8>) -> bool {
+    match previous_level {
+        None => level > 1,
+        Some(previous) => level > previous + 1,
+    }
+}
+
+fn is_browser_text_semantic_element(element: &Element) -> bool {
+    matches!(
+        element.name.as_str(),
+        "abbr"
+            | "b"
+            | "blockquote"
+            | "cite"
+            | "code"
+            | "data"
+            | "del"
+            | "dfn"
+            | "em"
+            | "i"
+            | "ins"
+            | "kbd"
+            | "mark"
+            | "q"
+            | "rb"
+            | "rp"
+            | "rt"
+            | "ruby"
+            | "rtc"
+            | "s"
+            | "samp"
+            | "small"
+            | "strong"
+            | "sub"
+            | "sup"
+            | "time"
+            | "u"
+            | "var"
+            | "bdi"
+            | "bdo"
+    )
+}
+
+fn browser_text_semantic_role(element: &Element) -> &'static str {
+    match element.name.as_str() {
+        "abbr" => "abbreviation",
+        "b" => "bring_attention",
+        "cite" => "citation",
+        "code" => "code",
+        "dfn" => "definition",
+        "em" => "emphasis",
+        "i" => "idiomatic",
+        "kbd" => "keyboard_input",
+        "s" => "struck",
+        "samp" => "sample_output",
+        "small" => "small_print",
+        "strong" => "strong_importance",
+        "sub" => "subscript",
+        "sup" => "superscript",
+        "u" => "unarticulated_annotation",
+        "var" => "variable",
+        _ => browser_content_role(&element.name).unwrap_or("inline"),
+    }
+}
+
+fn browser_link_resource_hint_kind(rel: Option<&str>) -> Option<String> {
+    let rel = rel?;
+    for token in rel.split_ascii_whitespace() {
+        match token.to_ascii_lowercase().as_str() {
+            "preconnect" => return Some("preconnect".to_string()),
+            "dns-prefetch" => return Some("dns-prefetch".to_string()),
+            "preload" => return Some("preload".to_string()),
+            "modulepreload" => return Some("modulepreload".to_string()),
+            "prefetch" => return Some("prefetch".to_string()),
+            "prerender" => return Some("prerender".to_string()),
+            _ => {}
+        }
+    }
+    None
+}
+
+fn trim_browser_metadata_token(value: &str) -> String {
+    value
+        .trim()
+        .trim_matches(|character| character == '"' || character == '\'')
+        .to_string()
+}
+
+fn collect_anchor_target(element: &Element, summary: &mut BrowserDocument) {
+    let id = element.attribute("id");
+    let name = element.attribute("name").filter(|_| element.name == "a");
+    if id.is_none() && name.is_none() {
+        return;
+    }
+
+    summary.anchors.push(BrowserAnchor {
+        id: id.map(ToOwned::to_owned),
+        name: name.map(ToOwned::to_owned),
+        text: visible_text_for_nodes(&element.children),
+    });
+}
+
+fn collect_body_resource(element: &Element, summary: &mut BrowserDocument) {
+    let Some((kind, url)) = body_resource(element) else {
+        return;
+    };
+
+    summary.resources.push(BrowserResource {
+        kind,
+        resolved_url: resolve_browser_url(&url, summary.base_href.as_deref()),
+        url,
+        rel: None,
+        rel_tokens: Vec::new(),
+        as_hint: None,
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        sizes: None,
+        hreflang: None,
+        color: None,
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        nonce: element.attribute("nonce").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        csp: browser_browsing_context_csp(element),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
+        browsing_context_name: browser_browsing_context_name(element),
+        loading: browser_browsing_context_loading(element),
+        sandbox: browser_browsing_context_sandbox(element),
+        allow: browser_browsing_context_allow(element),
+        allowfullscreen: browser_browsing_context_allowfullscreen(element),
+        srcdoc: browser_browsing_context_srcdoc(element),
+        credentialless: browser_browsing_context_credentialless(element),
+        imagesrcset: None,
+        resolved_imagesrcset: None,
+        imagesizes: None,
+        track_kind: browser_track_kind(element),
+        srclang: browser_track_srclang(element),
+        track_label: browser_track_label(element),
+        default_track: browser_track_default(element),
+        async_script: element.name == "script" && element.attribute("async").is_some(),
+        defer_script: element.name == "script" && element.attribute("defer").is_some(),
+    });
+}
+
+fn body_resource(element: &Element) -> Option<(String, String)> {
+    match element.name.as_str() {
+        "img" => element
+            .attribute("src")
+            .map(|src| ("image".to_string(), src.to_string())),
+        "script" => element
+            .attribute("src")
+            .map(|src| ("script".to_string(), src.to_string())),
+        "iframe" | "frame" => element
+            .attribute("src")
+            .map(|src| ("frame".to_string(), src.to_string())),
+        "embed" => element
+            .attribute("src")
+            .map(|src| ("embed".to_string(), src.to_string())),
+        "object" => element
+            .attribute("data")
+            .map(|data| ("object".to_string(), data.to_string())),
+        "audio" | "video" => element
+            .attribute("src")
+            .map(|src| (element.name.clone(), src.to_string())),
+        "source" | "track" => element
+            .attribute("src")
+            .map(|src| (element.name.clone(), src.to_string())),
+        _ => None,
+    }
+}
+
+fn browser_embedded_context(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserEmbeddedContext> {
+    if !matches!(
+        element.name.as_str(),
+        "iframe" | "frame" | "object" | "embed"
+    ) {
+        return None;
+    }
+
+    let url = match element.name.as_str() {
+        "iframe" | "frame" | "embed" => element.attribute("src"),
+        "object" => element.attribute("data"),
+        _ => None,
+    }
+    .map(ToOwned::to_owned);
+
+    Some(BrowserEmbeddedContext {
+        element: element.name.clone(),
+        resolved_url: url
+            .as_deref()
+            .and_then(|url| resolve_browser_url(url, base_href)),
+        url,
+        browsing_context_name: browser_browsing_context_name(element),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        loading: browser_browsing_context_loading(element),
+        sandbox: browser_browsing_context_sandbox(element),
+        allow: browser_browsing_context_allow(element),
+        allowfullscreen: browser_browsing_context_allowfullscreen(element),
+        referrerpolicy: browser_browsing_context_referrerpolicy(element),
+        fetchpriority: browser_browsing_context_fetchpriority(element),
+        csp: browser_browsing_context_csp(element),
+        srcdoc: browser_browsing_context_srcdoc(element),
+        credentialless: browser_browsing_context_credentialless(element),
+        fallback_text: visible_text_for_nodes(&element.children),
+    })
+}
+
+fn browser_interactive_element(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> Option<BrowserInteractiveElement> {
+    let event_handlers = browser_event_handlers(element);
+    if !is_browser_interactive_summary_element(element, &event_handlers) {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).map(ToOwned::to_owned);
+    let control_labels = browser_control_labels(element, labels, None);
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    Some(BrowserInteractiveElement {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: role
+            .as_deref()
+            .and_then(|role| browser_accessible_name(element, role, &control_labels, id_texts)),
+        accessible_description: browser_accessible_description(element, id_texts),
+        role,
+        authored_role: element.attribute("role").map(ToOwned::to_owned),
+        text,
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_owns: browser_aria_idrefs(element, "aria-owns"),
+        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_haspopup: browser_aria_state(element, "aria-haspopup"),
+        aria_modal: browser_aria_state(element, "aria-modal"),
+        aria_pressed: browser_aria_state(element, "aria-pressed"),
+        aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_invalid: browser_aria_state(element, "aria-invalid"),
+        aria_live: browser_aria_state(element, "aria-live"),
+        aria_busy: browser_aria_state(element, "aria-busy"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_required: browser_aria_state(element, "aria-required"),
+        aria_keyshortcuts: browser_aria_keyshortcuts(element),
+        aria_hidden: browser_aria_hidden(element),
+        hidden: browser_hidden(element),
+        inert: browser_inert(element),
+        open: browser_open(element),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey: browser_accesskey(element),
+        event_handlers,
+        focusable: browser_focusable(element),
+        contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        editing_mode: browser_editing_mode(element),
+        draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        draggable_state: browser_draggable_state(element),
+        spellcheck: browser_spellcheck_state(element),
+        translate: browser_translate_state(element),
+        popover: element.attribute("popover").map(ToOwned::to_owned),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        disabled: element.attribute("disabled").is_some(),
+    })
+}
+
+fn browser_disclosure_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserDisclosure> {
+    if !matches!(element.name.as_str(), "details" | "dialog") {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let summary_text = browser_details_summary_text(element);
+    let accessible_name = browser_accessible_name(element, role, &[], id_texts)
+        .or_else(|| summary_text.clone().filter(|_| element.name == "details"));
+
+    Some(BrowserDisclosure {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        summary_text,
+        open: browser_open(element),
+        accessible_name,
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_modal: browser_aria_state(element, "aria-modal"),
+        closedby: browser_dialog_closedby(element),
+    })
+}
+
+fn browser_disclosure_state_descriptors(
+    disclosures: &[BrowserDisclosure],
+) -> Vec<BrowserDisclosureStateDescriptor> {
+    disclosures
+        .iter()
+        .map(browser_disclosure_state_descriptor)
+        .collect()
+}
+
+fn browser_disclosure_state_descriptor(
+    disclosure: &BrowserDisclosure,
+) -> BrowserDisclosureStateDescriptor {
+    let disclosure_kind = if disclosure.element == "dialog" {
+        "dialog"
+    } else {
+        "details"
+    };
+    let grouped = disclosure.element == "details" && disclosure.name.is_some();
+
+    BrowserDisclosureStateDescriptor {
+        element: disclosure.element.clone(),
+        id: disclosure.id.clone(),
+        name: disclosure.name.clone(),
+        disclosure_kind: disclosure_kind.to_string(),
+        open: disclosure.open,
+        grouped,
+        group_name: grouped.then(|| disclosure.name.clone()).flatten(),
+        has_summary: disclosure.summary_text.is_some(),
+        summary_text: disclosure.summary_text.clone(),
+        accessible_name: disclosure.accessible_name.clone(),
+        accessible_description: disclosure.accessible_description.clone(),
+        aria_label: disclosure.aria_label.clone(),
+        aria_labelledby: disclosure.aria_labelledby.clone(),
+        aria_describedby: disclosure.aria_describedby.clone(),
+        aria_modal: disclosure.aria_modal.clone(),
+        modal: disclosure
+            .aria_modal
+            .as_deref()
+            .is_some_and(|value| value.eq_ignore_ascii_case("true")),
+        closedby: disclosure.closedby.clone(),
+        text: disclosure.text.clone(),
+        text_length: disclosure.text.chars().count(),
+    }
+}
+
+fn browser_details_summary_text(element: &Element) -> Option<String> {
+    if element.name != "details" {
+        return None;
+    }
+
+    find_first_element_in_nodes(&element.children, "summary")
+        .map(|summary| collapse_html_whitespace(&visible_text_for_nodes(&summary.children)))
+        .filter(|text| !text.is_empty())
+}
+
+fn browser_dialog_closedby(element: &Element) -> Option<String> {
+    if element.name == "dialog" {
+        element.attribute("closedby").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn is_browser_interactive_summary_element(element: &Element, event_handlers: &[String]) -> bool {
+    if matches!(element.name.as_str(), "details" | "dialog" | "summary") {
+        return true;
+    }
+
+    !event_handlers.is_empty()
+        || element.attribute("role").is_some()
+        || element.attribute("aria-controls").is_some()
+        || element.attribute("aria-owns").is_some()
+        || element.attribute("aria-activedescendant").is_some()
+        || element.attribute("aria-current").is_some()
+        || element.attribute("aria-expanded").is_some()
+        || element.attribute("aria-haspopup").is_some()
+        || element.attribute("aria-modal").is_some()
+        || element.attribute("aria-pressed").is_some()
+        || element.attribute("aria-selected").is_some()
+        || element.attribute("aria-invalid").is_some()
+        || element.attribute("aria-live").is_some()
+        || element.attribute("aria-busy").is_some()
+        || element.attribute("aria-disabled").is_some()
+        || element.attribute("aria-required").is_some()
+        || element.attribute("aria-hidden").is_some()
+        || element.attribute("hidden").is_some()
+        || element.attribute("inert").is_some()
+        || element.attribute("tabindex").is_some()
+        || element.attribute("accesskey").is_some()
+        || element.attribute("contenteditable").is_some()
+        || element.attribute("draggable").is_some()
+        || element.attribute("spellcheck").is_some()
+        || element.attribute("translate").is_some()
+        || element.attribute("popover").is_some()
+        || element.attribute("popovertarget").is_some()
+        || element.attribute("popovertargetaction").is_some()
+        || element.attribute("command").is_some()
+        || element.attribute("commandfor").is_some()
+}
+
+fn resolve_browser_url(url: &str, base_href: Option<&str>) -> Option<String> {
+    let url = url.trim();
+    if url.is_empty() {
+        return None;
+    }
+    if is_absolute_url(url) {
+        return Some(url.to_string());
+    }
+
+    let base_href = base_href?.trim();
+    if !is_absolute_url(base_href) {
+        return None;
+    }
+
+    let (scheme, authority, base_path) = split_hierarchical_url(base_href)?;
+    if url.starts_with("//") {
+        return Some(format!("{scheme}:{url}"));
+    }
+    if let Some(fragment) = url.strip_prefix('#') {
+        return Some(format!(
+            "{scheme}://{authority}{}#{fragment}",
+            strip_fragment(base_path)
+        ));
+    }
+    if let Some(query) = url.strip_prefix('?') {
+        return Some(format!(
+            "{scheme}://{authority}{}?{query}",
+            strip_query_and_fragment(base_path)
+        ));
+    }
+
+    let (relative_path, suffix) = split_url_suffix(url);
+    let resolved_path = if relative_path.starts_with('/') {
+        normalize_browser_path(relative_path)
+    } else {
+        let base_dir = browser_base_directory(strip_query_and_fragment(base_path));
+        normalize_browser_path(&format!("{base_dir}{relative_path}"))
+    };
+
+    Some(format!("{scheme}://{authority}{resolved_path}{suffix}"))
+}
+
+fn is_absolute_url(url: &str) -> bool {
+    let Some(index) = url.find(':') else {
+        return false;
+    };
+    let scheme = &url[..index];
+    !scheme.is_empty()
+        && scheme.as_bytes()[0].is_ascii_alphabetic()
+        && scheme
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'+' | b'-' | b'.'))
+        && !scheme.contains('/')
+        && !scheme.contains('?')
+        && !scheme.contains('#')
+}
+
+fn split_hierarchical_url(url: &str) -> Option<(&str, &str, &str)> {
+    let (scheme, rest) = url.split_once(':')?;
+    let rest = rest.strip_prefix("//")?;
+    let authority_end = rest.find(['/', '?', '#']).unwrap_or(rest.len());
+    let authority = &rest[..authority_end];
+    if authority.is_empty() {
+        return None;
+    }
+    let path = if authority_end == rest.len() {
+        "/"
+    } else {
+        &rest[authority_end..]
+    };
+    Some((scheme, authority, path))
+}
+
+fn strip_fragment(path: &str) -> &str {
+    path.split_once('#')
+        .map(|(before_fragment, _)| before_fragment)
+        .unwrap_or(path)
+}
+
+fn strip_query_and_fragment(path: &str) -> &str {
+    let query_index = path.find('?');
+    let fragment_index = path.find('#');
+    let end = match (query_index, fragment_index) {
+        (Some(query), Some(fragment)) => query.min(fragment),
+        (Some(query), None) => query,
+        (None, Some(fragment)) => fragment,
+        (None, None) => path.len(),
+    };
+    &path[..end]
+}
+
+fn split_url_suffix(url: &str) -> (&str, &str) {
+    let suffix_index = match (url.find('?'), url.find('#')) {
+        (Some(query), Some(fragment)) => query.min(fragment),
+        (Some(query), None) => query,
+        (None, Some(fragment)) => fragment,
+        (None, None) => url.len(),
+    };
+    (&url[..suffix_index], &url[suffix_index..])
+}
+
+fn browser_base_directory(path: &str) -> String {
+    if path.ends_with('/') {
+        return path.to_string();
+    }
+    match path.rfind('/') {
+        Some(index) => path[..=index].to_string(),
+        None => "/".to_string(),
+    }
+}
+
+fn normalize_browser_path(path: &str) -> String {
+    let absolute = path.starts_with('/');
+    let trailing_slash = path.ends_with('/');
+    let mut segments: Vec<&str> = Vec::new();
+
+    for segment in path.split('/') {
+        match segment {
+            "" | "." => {}
+            ".." => {
+                segments.pop();
+            }
+            _ => segments.push(segment),
+        }
+    }
+
+    let mut normalized = if absolute {
+        format!("/{}", segments.join("/"))
+    } else {
+        segments.join("/")
+    };
+    if normalized.is_empty() {
+        normalized.push('/');
+    }
+    if trailing_slash && !normalized.ends_with('/') {
+        normalized.push('/');
+    }
+    normalized
+}
+
+fn link_resource_kind(rel: Option<&str>) -> String {
+    let Some(rel) = rel else {
+        return "link".to_string();
+    };
+    let rel_tokens: Vec<String> = rel
+        .split_ascii_whitespace()
+        .map(str::to_ascii_lowercase)
+        .collect();
+    if rel_tokens.iter().any(|token| token == "stylesheet") {
+        return "stylesheet".to_string();
+    }
+    for token in rel_tokens {
+        match token.as_str() {
+            "icon" | "shortcut" | "mask-icon" => return "icon".to_string(),
+            "preload" => return "preload".to_string(),
+            "modulepreload" => return "modulepreload".to_string(),
+            "prefetch" => return "prefetch".to_string(),
+            "preconnect" => return "preconnect".to_string(),
+            "dns-prefetch" => return "dns-prefetch".to_string(),
+            "prerender" => return "prerender".to_string(),
+            "manifest" => return "manifest".to_string(),
+            "canonical" => return "canonical".to_string(),
+            "alternate" => return "alternate".to_string(),
+            _ => {}
+        }
+    }
+    "link".to_string()
+}
+
+fn browser_link_resource(
+    element: &Element,
+    href: &str,
+    base_href: Option<&str>,
+) -> BrowserResource {
+    let imagesrcset = element.attribute("imagesrcset").map(ToOwned::to_owned);
+    BrowserResource {
+        kind: link_resource_kind(element.attribute("rel")),
+        url: href.to_string(),
+        resolved_url: resolve_browser_url(href, base_href),
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_tokens: browser_rel_tokens(element),
+        as_hint: element.attribute("as").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        sizes: element.attribute("sizes").map(ToOwned::to_owned),
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        color: element.attribute("color").map(ToOwned::to_owned),
+        width: None,
+        height: None,
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        nonce: element.attribute("nonce").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        csp: None,
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
+        browsing_context_name: None,
+        loading: None,
+        sandbox: Vec::new(),
+        allow: None,
+        allowfullscreen: false,
+        srcdoc: None,
+        credentialless: false,
+        resolved_imagesrcset: imagesrcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        imagesrcset,
+        imagesizes: element.attribute("imagesizes").map(ToOwned::to_owned),
+        track_kind: None,
+        srclang: None,
+        track_label: None,
+        default_track: false,
+        async_script: false,
+        defer_script: false,
+    }
+}
+
+fn collect_browser_content_nodes(
+    nodes: &[Node],
+    output: &mut Vec<BrowserContentNode>,
+    base_href: Option<&str>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) {
+    collect_browser_content_nodes_with_mode(
+        nodes, output, base_href, labels, id_texts, None, false,
+    );
+}
+
+fn collect_browser_content_nodes_with_mode(
+    nodes: &[Node],
+    output: &mut Vec<BrowserContentNode>,
+    base_href: Option<&str>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    current_label_text: Option<&str>,
+    preserve_whitespace: bool,
+) {
+    for node in nodes {
+        match node {
+            Node::Text(value) => {
+                let text = if preserve_whitespace {
+                    value.data.clone()
+                } else {
+                    collapse_html_whitespace(&value.data)
+                };
+                if !text.is_empty() {
+                    output.push(BrowserContentNode {
+                        role: "text".to_string(),
+                        authored_role: None,
+                        name: None,
+                        id: None,
+                        classes: Vec::new(),
+                        title: None,
+                        lang: None,
+                        dir: None,
+                        text: Some(text),
+                        href: None,
+                        resolved_href: None,
+                        target: None,
+                        rel: None,
+                        rel_tokens: Vec::new(),
+                        download: None,
+                        ping: Vec::new(),
+                        resolved_ping: Vec::new(),
+                        attributionsrc: Vec::new(),
+                        resolved_attributionsrc: Vec::new(),
+                        hreflang: None,
+                        src: None,
+                        resolved_src: None,
+                        alt: None,
+                        resource_kind: None,
+                        slot: None,
+                        slot_name: None,
+                        custom_element: false,
+                        custom_element_name: None,
+                        custom_element_is: None,
+                        canvas_fallback_text: None,
+                        width: None,
+                        height: None,
+                        type_hint: None,
+                        image_map_name: None,
+                        image_map_shape: None,
+                        image_map_coords: None,
+                        srcset: None,
+                        resolved_srcset: None,
+                        sizes: None,
+                        track_kind: None,
+                        srclang: None,
+                        track_label: None,
+                        default_track: false,
+                        media: None,
+                        poster: None,
+                        resolved_poster: None,
+                        preload: None,
+                        controls: false,
+                        autoplay: false,
+                        loop_media: false,
+                        muted: false,
+                        playsinline: false,
+                        browsing_context_name: None,
+                        loading: None,
+                        sandbox: Vec::new(),
+                        allow: None,
+                        allowfullscreen: false,
+                        referrerpolicy: None,
+                        srcdoc: None,
+                        credentialless: false,
+                        control_type: None,
+                        form_owner: None,
+                        label_for: None,
+                        labels: Vec::new(),
+                        accessible_name: None,
+                        accessible_description: None,
+                        aria_label: None,
+                        aria_labelledby: Vec::new(),
+                        aria_describedby: Vec::new(),
+                        aria_controls: Vec::new(),
+                        aria_owns: Vec::new(),
+                        aria_activedescendant: None,
+                        aria_current: None,
+                        aria_expanded: None,
+                        aria_haspopup: None,
+                        aria_modal: None,
+                        aria_pressed: None,
+                        aria_selected: None,
+                        aria_invalid: None,
+                        aria_live: None,
+                        aria_busy: None,
+                        aria_disabled: None,
+                        aria_required: None,
+                        aria_hidden: false,
+                        hidden: false,
+                        inert: false,
+                        open: false,
+                        tabindex: None,
+                        accesskey: Vec::new(),
+                        event_handlers: Vec::new(),
+                        focusable: None,
+                        contenteditable: None,
+                        editing_mode: None,
+                        draggable: None,
+                        draggable_state: None,
+                        spellcheck: None,
+                        translate: None,
+                        popover: None,
+                        popover_target: None,
+                        popover_target_action: None,
+                        command: None,
+                        command_for: None,
+                        placeholder: None,
+                        autocomplete: None,
+                        autocapitalize: None,
+                        enterkeyhint: None,
+                        dirname: None,
+                        accept: None,
+                        capture: None,
+                        inputmode: None,
+                        pattern: None,
+                        min: None,
+                        max: None,
+                        low: None,
+                        high: None,
+                        optimum: None,
+                        step: None,
+                        minlength: None,
+                        maxlength: None,
+                        size: None,
+                        list: None,
+                        form_action: None,
+                        resolved_form_action: None,
+                        form_enctype: None,
+                        form_method: None,
+                        form_target: None,
+                        form_novalidate: false,
+                        value: None,
+                        autofocus: false,
+                        disabled: false,
+                        required: false,
+                        readonly: false,
+                        checked: false,
+                        selected: false,
+                        multiple: false,
+                        options: Vec::new(),
+                        table_section_kind: None,
+                        colspan: None,
+                        rowspan: None,
+                        span: None,
+                        scope: None,
+                        headers: Vec::new(),
+                        abbr: None,
+                        text_flow: if preserve_whitespace {
+                            Some("preformatted".to_string())
+                        } else {
+                            None
+                        },
+                        list_kind: None,
+                        list_start: None,
+                        list_marker_type: None,
+                        list_reversed: false,
+                        list_item_value: None,
+                        description_list_kind: None,
+                        term_kind: None,
+                        quote_cite: None,
+                        resolved_quote_cite: None,
+                        data_value: None,
+                        datetime: None,
+                        edit_cite: None,
+                        resolved_edit_cite: None,
+                        edit_datetime: None,
+                        item_scope: false,
+                        item_type: Vec::new(),
+                        item_id: None,
+                        resolved_item_id: None,
+                        item_ref: Vec::new(),
+                        itemprop: Vec::new(),
+                        item_value: None,
+                        item_value_url: None,
+                        resolved_item_value_url: None,
+                        ruby_kind: None,
+                        bidi_kind: None,
+                        break_kind: None,
+                        grouping_kind: None,
+                        disclosure_kind: None,
+                        heading_level: None,
+                        section_kind: None,
+                        landmark_kind: None,
+                        children: Vec::new(),
+                    });
+                }
+            }
+            Node::Element(element) => {
+                if let Some(content_node) = browser_content_node_for_element(
+                    element,
+                    base_href,
+                    labels,
+                    id_texts,
+                    current_label_text,
+                    preserve_whitespace,
+                ) {
+                    output.push(content_node);
+                }
+            }
+            Node::DocumentType(_) | Node::Comment(_) => {}
+        }
+    }
+}
+
+fn browser_content_node_for_element(
+    element: &Element,
+    base_href: Option<&str>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    current_label_text: Option<&str>,
+    preserve_whitespace: bool,
+) -> Option<BrowserContentNode> {
+    if is_browser_invisible_element(&element.name) {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name)?;
+    let mut children = Vec::new();
+    let element_label_text = (element.name == "label")
+        .then(|| visible_text_for_nodes(&element.children))
+        .filter(|text| !text.is_empty());
+    let child_label_text = element_label_text.as_deref().or(current_label_text);
+    if should_collect_browser_content_children(&element.name) {
+        collect_browser_content_nodes_with_mode(
+            &element.children,
+            &mut children,
+            base_href,
+            labels,
+            id_texts,
+            child_label_text,
+            preserve_whitespace || browser_preserves_text_whitespace(&element.name),
+        );
+    }
+
+    let text = browser_content_text(element, role);
+    if role == "inline" && text.is_none() && children.is_empty() {
+        return None;
+    }
+
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    let src = browser_content_src(element);
+    let srcset = browser_content_srcset(element);
+    let poster = browser_media_poster(element);
+    let quote_cite = browser_quote_cite(element);
+    let edit_cite = browser_edit_cite(element);
+    let item_id = browser_item_id(element);
+    let item_value_url = browser_item_value_url(element);
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let aria_label = browser_aria_label(element);
+    let accessible_name = browser_accessible_name(element, role, &control_labels, id_texts);
+    let accessible_description = browser_accessible_description(element, id_texts);
+
+    Some(BrowserContentNode {
+        role: role.to_string(),
+        authored_role: browser_authored_role(element),
+        name: Some(element.name.clone()),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        lang: element.attribute("lang").map(ToOwned::to_owned),
+        dir: element.attribute("dir").map(ToOwned::to_owned),
+        text,
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        target: browser_anchor_target(element),
+        rel: browser_anchor_rel(element),
+        rel_tokens: browser_anchor_rel_tokens(element),
+        download: browser_anchor_download(element),
+        resolved_ping: browser_anchor_ping(element)
+            .into_iter()
+            .filter_map(|ping| resolve_browser_url(&ping, base_href))
+            .collect(),
+        ping: browser_anchor_ping(element),
+        resolved_attributionsrc: browser_anchor_attributionsrc(element)
+            .into_iter()
+            .filter_map(|attributionsrc| resolve_browser_url(&attributionsrc, base_href))
+            .collect(),
+        attributionsrc: browser_anchor_attributionsrc(element),
+        hreflang: browser_anchor_hreflang(element),
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        resource_kind: browser_content_resource_kind(element),
+        slot: browser_slot_assignment(element),
+        slot_name: browser_slot_name(element),
+        custom_element: browser_custom_element(element),
+        custom_element_name: browser_custom_element_name(element),
+        custom_element_is: browser_custom_element_is(element),
+        canvas_fallback_text: browser_canvas_fallback_text(element),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        image_map_name: browser_image_map_name(element),
+        image_map_shape: browser_image_map_shape(element),
+        image_map_coords: browser_image_map_coords(element),
+        resolved_srcset: srcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        srcset,
+        sizes: browser_content_sizes(element),
+        track_kind: browser_track_kind(element),
+        srclang: browser_track_srclang(element),
+        track_label: browser_track_label(element),
+        default_track: browser_track_default(element),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        resolved_poster: poster
+            .as_deref()
+            .and_then(|poster| resolve_browser_url(poster, base_href)),
+        poster,
+        preload: browser_media_preload(element),
+        controls: browser_media_controls(element),
+        autoplay: browser_media_autoplay(element),
+        loop_media: browser_media_loop(element),
+        muted: browser_media_muted(element),
+        playsinline: browser_media_playsinline(element),
+        browsing_context_name: browser_browsing_context_name(element),
+        loading: browser_browsing_context_loading(element),
+        sandbox: browser_browsing_context_sandbox(element),
+        allow: browser_browsing_context_allow(element),
+        allowfullscreen: browser_browsing_context_allowfullscreen(element),
+        referrerpolicy: browser_browsing_context_referrerpolicy(element),
+        srcdoc: browser_browsing_context_srcdoc(element),
+        credentialless: browser_browsing_context_credentialless(element),
+        control_type: browser_content_control_type(element),
+        form_owner: browser_form_owner(element),
+        label_for: browser_label_for(element),
+        labels: control_labels,
+        accessible_name,
+        accessible_description,
+        aria_label,
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_owns: browser_aria_idrefs(element, "aria-owns"),
+        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_haspopup: browser_aria_state(element, "aria-haspopup"),
+        aria_modal: browser_aria_state(element, "aria-modal"),
+        aria_pressed: browser_aria_state(element, "aria-pressed"),
+        aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_invalid: browser_aria_state(element, "aria-invalid"),
+        aria_live: browser_aria_state(element, "aria-live"),
+        aria_busy: browser_aria_state(element, "aria-busy"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_required: browser_aria_state(element, "aria-required"),
+        aria_hidden: browser_aria_hidden(element),
+        hidden: browser_hidden(element),
+        inert: browser_inert(element),
+        open: browser_open(element),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey: browser_accesskey(element),
+        event_handlers: browser_event_handlers(element),
+        focusable: browser_focusable(element),
+        contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        editing_mode: browser_editing_mode(element),
+        draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        draggable_state: browser_draggable_state(element),
+        spellcheck: browser_spellcheck_state(element),
+        translate: browser_translate_state(element),
+        popover: element.attribute("popover").map(ToOwned::to_owned),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        placeholder: browser_placeholder(element),
+        autocomplete: browser_autocomplete(element),
+        autocapitalize: browser_autocapitalize(element),
+        enterkeyhint: browser_enterkeyhint(element),
+        dirname: browser_dirname(element),
+        accept: browser_control_accept(element),
+        capture: browser_control_capture(element),
+        inputmode: browser_control_inputmode(element),
+        pattern: browser_control_pattern(element),
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        low: browser_meter_low(element),
+        high: browser_meter_high(element),
+        optimum: browser_meter_optimum(element),
+        step: browser_control_step(element),
+        minlength: browser_control_minlength(element),
+        maxlength: browser_control_maxlength(element),
+        size: browser_control_size(element),
+        list: browser_control_list(element),
+        resolved_form_action: browser_control_form_action(element)
+            .as_deref()
+            .and_then(|action| resolve_browser_url(action, base_href)),
+        form_action: browser_control_form_action(element),
+        form_enctype: browser_control_form_enctype(element),
+        form_method: browser_control_form_method(element),
+        form_target: browser_control_form_target(element),
+        form_novalidate: browser_control_form_novalidate(element),
+        value: browser_content_value(element),
+        autofocus: browser_autofocus(element),
+        disabled: element.attribute("disabled").is_some(),
+        required: browser_required(element),
+        readonly: browser_readonly(element),
+        checked: element.attribute("checked").is_some(),
+        selected: element.attribute("selected").is_some(),
+        multiple: browser_multiple(element),
+        options: browser_content_options(element),
+        table_section_kind: browser_table_section_kind(element),
+        colspan: element.attribute("colspan").map(ToOwned::to_owned),
+        rowspan: element.attribute("rowspan").map(ToOwned::to_owned),
+        span: element.attribute("span").map(ToOwned::to_owned),
+        scope: element.attribute("scope").map(ToOwned::to_owned),
+        headers: element
+            .attribute("headers")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        abbr: element.attribute("abbr").map(ToOwned::to_owned),
+        text_flow: browser_text_flow(element, preserve_whitespace),
+        list_kind: browser_list_kind(element),
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+        list_item_value: browser_list_item_value(element),
+        description_list_kind: browser_description_list_kind(element),
+        term_kind: browser_term_kind(element),
+        resolved_quote_cite: quote_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        quote_cite,
+        data_value: browser_data_value(element),
+        datetime: browser_datetime(element),
+        resolved_edit_cite: edit_cite
+            .as_deref()
+            .and_then(|cite| resolve_browser_url(cite, base_href)),
+        edit_cite,
+        edit_datetime: browser_edit_datetime(element),
+        item_scope: browser_item_scope(element),
+        item_type: browser_item_type(element),
+        resolved_item_id: item_id
+            .as_deref()
+            .and_then(|item_id| resolve_browser_url(item_id, base_href)),
+        item_id,
+        item_ref: browser_item_ref(element),
+        itemprop: browser_itemprop(element),
+        item_value: browser_item_value(element),
+        resolved_item_value_url: item_value_url
+            .as_deref()
+            .and_then(|url| resolve_browser_url(url, base_href)),
+        item_value_url,
+        ruby_kind: browser_ruby_kind(element),
+        bidi_kind: browser_bidi_kind(element),
+        break_kind: browser_break_kind(element),
+        grouping_kind: browser_grouping_kind(element),
+        disclosure_kind: browser_disclosure_kind(element),
+        heading_level: heading_level(&element.name),
+        section_kind: browser_section_kind(element),
+        landmark_kind: browser_landmark_kind(element),
+        children,
+    })
+}
+
+fn browser_content_role(name: &str) -> Option<&'static str> {
+    match name {
+        "base" | "link" | "meta" | "param" | "script" | "style" | "template" | "title" => None,
+        "a" => Some("link"),
+        "area" => Some("image_map_area"),
+        "img" => Some("image"),
+        "map" => Some("image_map"),
+        "picture" => Some("picture"),
+        "source" => Some("media_source"),
+        "track" => Some("media_track"),
+        "iframe" | "frame" => Some("frame"),
+        "embed" => Some("embed"),
+        "object" => Some("object"),
+        "audio" | "video" => Some("media"),
+        "canvas" => Some("canvas"),
+        "slot" => Some("slot"),
+        "br" | "wbr" => Some("line_break"),
+        "hr" => Some("separator"),
+        "blockquote" => Some("quote_block"),
+        "q" => Some("quote"),
+        "data" => Some("data"),
+        "time" => Some("time"),
+        "mark" => Some("mark"),
+        "ins" => Some("inserted"),
+        "del" => Some("deleted"),
+        "ruby" => Some("ruby"),
+        "rb" => Some("ruby_base"),
+        "rt" => Some("ruby_text"),
+        "rp" => Some("ruby_fallback"),
+        "rtc" => Some("ruby_text_container"),
+        "bdi" => Some("bidi_isolate"),
+        "bdo" => Some("bidi_override"),
+        "figure" => Some("figure"),
+        "figcaption" => Some("figure_caption"),
+        "details" => Some("disclosure"),
+        "summary" => Some("disclosure_summary"),
+        "dialog" => Some("dialog"),
+        "search" => Some("search"),
+        "address" => Some("contact"),
+        "dl" => Some("description_list"),
+        "dt" => Some("description_term"),
+        "dd" => Some("description_details"),
+        "p" => Some("paragraph"),
+        "pre" | "plaintext" | "xmp" | "listing" => Some("preformatted"),
+        "article" => Some("article"),
+        "aside" => Some("aside"),
+        "footer" => Some("footer"),
+        "header" => Some("header"),
+        "hgroup" => Some("heading_group"),
+        "main" => Some("main"),
+        "nav" => Some("navigation"),
+        "section" => Some("section"),
+        "form" => Some("form"),
+        "fieldset" => Some("form_group"),
+        "label" => Some("label"),
+        "legend" => Some("legend"),
+        "meter" => Some("meter"),
+        "progress" => Some("progress"),
+        "input" | "button" | "select" | "textarea" => Some("control"),
+        "optgroup" => Some("option_group"),
+        "option" => Some("option"),
+        "ul" | "ol" | "menu" | "dir" => Some("list"),
+        "li" => Some("list_item"),
+        "table" => Some("table"),
+        "caption" => Some("table_caption"),
+        "colgroup" => Some("table_column_group"),
+        "col" => Some("table_column"),
+        "tbody" | "thead" | "tfoot" => Some("table_section"),
+        "tr" => Some("table_row"),
+        "td" | "th" => Some("table_cell"),
+        name if heading_level(name).is_some() => Some("heading"),
+        name if is_browser_block_element(name) => Some("block"),
+        _ => Some("inline"),
+    }
+}
+
+fn browser_navigation_group_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserNavigationGroup> {
+    if !matches!(element.name.as_str(), "nav" | "ul" | "ol" | "menu" | "dir") {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let aria_labelledby = browser_aria_idrefs(element, "aria-labelledby");
+
+    Some(BrowserNavigationGroup {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby,
+        landmark_kind: browser_landmark_kind(element),
+        list_kind: browser_list_kind(element),
+        item_count: browser_direct_list_item_count(element),
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+    })
+}
+
+fn browser_navigation_group_descriptors(
+    groups: &[BrowserNavigationGroup],
+) -> Vec<BrowserNavigationGroupDescriptor> {
+    groups
+        .iter()
+        .enumerate()
+        .map(|(index, group)| browser_navigation_group_descriptor(index + 1, group))
+        .collect()
+}
+
+fn browser_navigation_group_descriptor(
+    group_index: usize,
+    group: &BrowserNavigationGroup,
+) -> BrowserNavigationGroupDescriptor {
+    let navigation_block_reasons = browser_navigation_group_block_reasons(group);
+
+    BrowserNavigationGroupDescriptor {
+        group_index,
+        element: group.element.clone(),
+        id: group.id.clone(),
+        role: group.role.clone(),
+        text: group.text.clone(),
+        accessible_name: group.accessible_name.clone(),
+        aria_label: group.aria_label.clone(),
+        aria_labelledby: group.aria_labelledby.clone(),
+        group_kind: browser_navigation_group_kind(group).to_string(),
+        landmark_kind: group.landmark_kind.clone(),
+        list_kind: group.list_kind.clone(),
+        item_count: group.item_count,
+        list_start: group.list_start.clone(),
+        list_marker_type: group.list_marker_type.clone(),
+        list_reversed: group.list_reversed,
+        navigation_blocked: !navigation_block_reasons.is_empty(),
+        navigation_block_reasons,
+    }
+}
+
+fn browser_navigation_group_kind(group: &BrowserNavigationGroup) -> &'static str {
+    if group.landmark_kind.is_some() {
+        "landmark"
+    } else if group.list_kind.as_deref() == Some("menu") {
+        "menu"
+    } else if group.list_kind.is_some() {
+        "list"
+    } else {
+        "group"
+    }
+}
+
+fn browser_navigation_group_block_reasons(group: &BrowserNavigationGroup) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if group.text.is_empty() && group.item_count == 0 {
+        reasons.push("empty-navigation-group".to_string());
+    }
+    if group.landmark_kind.as_deref() == Some("navigation") && group.accessible_name.is_none() {
+        reasons.push("missing-navigation-label".to_string());
+    }
+    if group.list_kind.is_some() && group.item_count == 0 {
+        reasons.push("empty-list".to_string());
+    }
+    reasons
+}
+
+fn browser_direct_list_item_count(element: &Element) -> usize {
+    element
+        .children
+        .iter()
+        .filter(|node| matches!(node, Node::Element(child) if child.name == "li"))
+        .count()
+}
+
+fn browser_section_landmark_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserSectionLandmark> {
+    let section_kind = browser_section_kind(element);
+    let landmark_kind = browser_landmark_kind(element);
+    if section_kind.is_none() && landmark_kind.is_none() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let heading = browser_first_heading(element);
+
+    Some(BrowserSectionLandmark {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        authored_role: browser_authored_role(element),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        section_kind,
+        landmark_kind,
+        heading_level: heading.as_ref().map(|(level, _)| *level),
+        heading_text: heading.map(|(_, text)| text),
+    })
+}
+
+fn browser_section_landmark_descriptors(
+    landmarks: &[BrowserSectionLandmark],
+) -> Vec<BrowserSectionLandmarkDescriptor> {
+    landmarks
+        .iter()
+        .enumerate()
+        .map(|(index, landmark)| browser_section_landmark_descriptor(index + 1, landmark))
+        .collect()
+}
+
+fn browser_section_landmark_descriptor(
+    landmark_index: usize,
+    landmark: &BrowserSectionLandmark,
+) -> BrowserSectionLandmarkDescriptor {
+    let landmark_block_reasons = browser_section_landmark_block_reasons(landmark);
+
+    BrowserSectionLandmarkDescriptor {
+        landmark_index,
+        element: landmark.element.clone(),
+        id: landmark.id.clone(),
+        role: landmark.role.clone(),
+        authored_role: landmark.authored_role.clone(),
+        text: landmark.text.clone(),
+        accessible_name: landmark.accessible_name.clone(),
+        aria_label: landmark.aria_label.clone(),
+        aria_labelledby: landmark.aria_labelledby.clone(),
+        section_kind: landmark.section_kind.clone(),
+        landmark_kind: landmark.landmark_kind.clone(),
+        heading_level: landmark.heading_level,
+        heading_text: landmark.heading_text.clone(),
+        outline_kind: browser_section_landmark_outline_kind(landmark).to_string(),
+        landmark_blocked: !landmark_block_reasons.is_empty(),
+        landmark_block_reasons,
+    }
+}
+
+fn browser_section_landmark_outline_kind(landmark: &BrowserSectionLandmark) -> &'static str {
+    if landmark.landmark_kind.is_some() && landmark.section_kind.is_some() {
+        "landmark-section"
+    } else if landmark.landmark_kind.is_some() {
+        "landmark"
+    } else if landmark.section_kind.is_some() {
+        "section"
+    } else {
+        "generic"
+    }
+}
+
+fn browser_section_landmark_block_reasons(landmark: &BrowserSectionLandmark) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if landmark.text.is_empty() {
+        reasons.push("empty-section-landmark".to_string());
+    }
+    if landmark.element == "section" && landmark.accessible_name.is_none() {
+        reasons.push("section-missing-accessible-name".to_string());
+    }
+    if matches!(landmark.element.as_str(), "article" | "section")
+        && landmark.heading_level.is_none()
+    {
+        reasons.push("section-missing-heading".to_string());
+    }
+    if matches!(
+        landmark.landmark_kind.as_deref(),
+        Some("navigation" | "complementary")
+    ) && landmark.accessible_name.is_none()
+        && landmark.heading_text.is_none()
+    {
+        reasons.push("landmark-missing-label-or-heading".to_string());
+    }
+    reasons
+}
+
+fn browser_first_heading(element: &Element) -> Option<(u8, String)> {
+    find_first_heading_in_nodes(&element.children).map(|heading| {
+        (
+            heading_level(&heading.name).expect("heading helper only returns heading elements"),
+            visible_text_for_nodes(&heading.children),
+        )
+    })
+}
+
+fn find_first_heading_in_nodes(nodes: &[Node]) -> Option<&Element> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if heading_level(&element.name).is_some() {
+            return Some(element);
+        }
+        if let Some(heading) = find_first_heading_in_nodes(&element.children) {
+            return Some(heading);
+        }
+    }
+    None
+}
+
+fn browser_command_element(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> Option<BrowserCommandElement> {
+    let command_kind = browser_command_kind(element)?;
+    let role = browser_command_role(element);
+    let control_labels = browser_control_labels(element, labels, None);
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let form_action = browser_control_form_action(element);
+    let target = browser_anchor_target(element).or_else(|| browser_control_form_target(element));
+
+    Some(BrowserCommandElement {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_command_accessible_name(
+            element,
+            role.as_str(),
+            &control_labels,
+            id_texts,
+            &text,
+        ),
+        accessible_description: browser_accessible_description(element, id_texts),
+        role,
+        authored_role: browser_authored_role(element),
+        command_kind,
+        text,
+        href: element.attribute("href").map(ToOwned::to_owned),
+        resolved_href: element
+            .attribute("href")
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        control_type: browser_content_control_type(element),
+        form_owner: browser_form_owner(element),
+        resolved_form_action: form_action
+            .as_deref()
+            .and_then(|action| resolve_browser_url(action, base_href)),
+        form_action,
+        form_method: browser_control_form_method(element),
+        form_target: browser_control_form_target(element),
+        form_novalidate: browser_control_form_novalidate(element),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_haspopup: browser_aria_state(element, "aria-haspopup"),
+        aria_pressed: browser_aria_state(element, "aria-pressed"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey: browser_accesskey(element),
+        event_handlers: browser_event_handlers(element),
+        focusable: browser_command_focusable(element),
+        disabled: element.attribute("disabled").is_some(),
+    })
+}
+
+fn browser_activation_descriptors(
+    commands: &[BrowserCommandElement],
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> Vec<BrowserActivationDescriptor> {
+    commands
+        .iter()
+        .map(|command| browser_activation_descriptor(command, popovers, disclosures))
+        .collect()
+}
+
+fn browser_activation_descriptor(
+    command: &BrowserCommandElement,
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> BrowserActivationDescriptor {
+    BrowserActivationDescriptor {
+        element: command.element.clone(),
+        id: command.id.clone(),
+        role: command.role.clone(),
+        authored_role: command.authored_role.clone(),
+        command_kind: command.command_kind.clone(),
+        activation_kind: browser_activation_kind(command),
+        target_id: browser_activation_target_id(command),
+        target_kind: browser_activation_target_kind(command, popovers, disclosures),
+        text: command.text.clone(),
+        accessible_name: command.accessible_name.clone(),
+        accessible_description: command.accessible_description.clone(),
+        disabled: command.disabled,
+        focusable: command.focusable,
+        tabindex: command.tabindex.clone(),
+        accesskey: command.accesskey.clone(),
+        event_handlers: command.event_handlers.clone(),
+        handler_count: command.event_handlers.len(),
+        command: command.command.clone(),
+        command_for: command.command_for.clone(),
+        popover_target: command.popover_target.clone(),
+        popover_target_action: command.popover_target_action.clone(),
+        aria_controls: command.aria_controls.clone(),
+        aria_expanded: command.aria_expanded.clone(),
+        aria_haspopup: command.aria_haspopup.clone(),
+        aria_pressed: command.aria_pressed.clone(),
+        aria_current: command.aria_current.clone(),
+        aria_disabled: command.aria_disabled.clone(),
+        control_type: command.control_type.clone(),
+        href: command.href.clone(),
+        resolved_href: command.resolved_href.clone(),
+        effective_target: command.effective_target.clone(),
+        form_owner: command.form_owner.clone(),
+        form_action: command.form_action.clone(),
+        resolved_form_action: command.resolved_form_action.clone(),
+        form_method: command.form_method.clone(),
+        form_target: command.form_target.clone(),
+        form_novalidate: command.form_novalidate,
+    }
+}
+
+fn browser_activation_kind(command: &BrowserCommandElement) -> String {
+    if let Some(command_value) = &command.command {
+        return command_value.clone();
+    }
+    if command.popover_target.is_some() {
+        let action = command.popover_target_action.as_deref().unwrap_or("toggle");
+        return format!("popover-{action}");
+    }
+    if command.href.is_some() {
+        return "navigation".to_string();
+    }
+    if let Some(control_type) = &command.control_type {
+        if matches!(
+            control_type.as_str(),
+            "submit" | "reset" | "button" | "image"
+        ) {
+            return format!("form-{control_type}");
+        }
+    }
+
+    command.command_kind.clone()
+}
+
+fn browser_activation_target_id(command: &BrowserCommandElement) -> Option<String> {
+    command
+        .command_for
+        .clone()
+        .or_else(|| command.popover_target.clone())
+        .or_else(|| command.aria_controls.first().cloned())
+}
+
+fn browser_activation_target_kind(
+    command: &BrowserCommandElement,
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> String {
+    if let Some(command_for) = &command.command_for {
+        if let Some(disclosure) = disclosures
+            .iter()
+            .find(|disclosure| disclosure.id.as_deref() == Some(command_for.as_str()))
+        {
+            return if disclosure.element == "dialog" {
+                "dialog"
+            } else {
+                "disclosure"
+            }
+            .to_string();
+        }
+        if popovers
+            .iter()
+            .any(|popover| popover.id.as_deref() == Some(command_for.as_str()))
+        {
+            return "popover".to_string();
+        }
+        return "command-target".to_string();
+    }
+    if let Some(popover_target) = &command.popover_target {
+        if popovers
+            .iter()
+            .any(|popover| popover.id.as_deref() == Some(popover_target.as_str()))
+        {
+            return "popover".to_string();
+        }
+        return "popover-target".to_string();
+    }
+    if !command.aria_controls.is_empty() {
+        return "controlled-region".to_string();
+    }
+    if command.href.is_some() {
+        return "navigation".to_string();
+    }
+    if command.form_owner.is_some()
+        || command.form_action.is_some()
+        || matches!(
+            command.control_type.as_deref(),
+            Some("submit" | "reset" | "image")
+        )
+    {
+        return "form".to_string();
+    }
+    if command.command_kind == "disclosure" {
+        return "disclosure".to_string();
+    }
+
+    "command".to_string()
+}
+
+fn browser_focus_navigation_descriptors(
+    elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserFocusNavigationDescriptor> {
+    elements
+        .iter()
+        .filter(|element| browser_has_focus_navigation_state(element))
+        .map(browser_focus_navigation_descriptor)
+        .collect()
+}
+
+fn browser_has_focus_navigation_state(element: &BrowserInteractiveElement) -> bool {
+    element.focusable.is_some()
+        || element.tabindex.is_some()
+        || !element.accesskey.is_empty()
+        || element.contenteditable.is_some()
+        || element.disabled
+        || element.hidden
+        || element.inert
+        || element.aria_hidden
+        || element.aria_disabled.is_some()
+}
+
+fn browser_focus_navigation_descriptor(
+    element: &BrowserInteractiveElement,
+) -> BrowserFocusNavigationDescriptor {
+    let focusable = element.focusable.unwrap_or(false);
+    let tabindex_order = browser_tabindex_order(element.tabindex.as_deref());
+    let focus_block_reasons = browser_focus_block_reasons(element);
+    let focus_blocked = !focus_block_reasons.is_empty();
+    let sequential_focus = focusable && tabindex_order.unwrap_or(0) >= 0;
+    let programmatic_focus = focusable || matches!(tabindex_order, Some(value) if value < 0);
+
+    BrowserFocusNavigationDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        focus_kind: browser_focus_kind(element, focusable, sequential_focus, programmatic_focus),
+        focusable,
+        sequential_focus,
+        programmatic_focus,
+        focus_blocked,
+        focus_block_reasons,
+        tabindex: element.tabindex.clone(),
+        tabindex_order,
+        accesskey: element.accesskey.clone(),
+        event_handlers: element.event_handlers.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_activedescendant: element.aria_activedescendant.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_disabled: element.aria_disabled.clone(),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        text: element.text.clone(),
+    }
+}
+
+fn browser_focus_kind(
+    element: &BrowserInteractiveElement,
+    focusable: bool,
+    sequential_focus: bool,
+    programmatic_focus: bool,
+) -> String {
+    if !browser_focus_block_reasons(element).is_empty() {
+        return "blocked".to_string();
+    }
+    if element.editing_mode.is_some() {
+        return "editing-host".to_string();
+    }
+    if sequential_focus {
+        return "sequential".to_string();
+    }
+    if programmatic_focus {
+        return "programmatic".to_string();
+    }
+    if !element.accesskey.is_empty() {
+        return "accesskey".to_string();
+    }
+    if focusable {
+        return "focusable".to_string();
+    }
+
+    "metadata".to_string()
+}
+
+fn browser_focus_block_reasons(element: &BrowserInteractiveElement) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_keyboard_interaction_descriptors(
+    elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserKeyboardInteractionDescriptor> {
+    elements
+        .iter()
+        .filter(|element| browser_has_keyboard_interaction_state(element))
+        .map(browser_keyboard_interaction_descriptor)
+        .collect()
+}
+
+fn browser_has_keyboard_interaction_state(element: &BrowserInteractiveElement) -> bool {
+    element.focusable.is_some()
+        || element.tabindex.is_some()
+        || !element.accesskey.is_empty()
+        || !element.aria_keyshortcuts.is_empty()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_keyboard_event)
+            .is_empty()
+        || element.contenteditable.is_some()
+        || element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+        || element.disabled
+        || element.hidden
+        || element.inert
+        || element.aria_hidden
+        || element.aria_disabled.is_some()
+}
+
+fn browser_keyboard_interaction_descriptor(
+    element: &BrowserInteractiveElement,
+) -> BrowserKeyboardInteractionDescriptor {
+    let focusable = element.focusable.unwrap_or(false);
+    let tabindex_order = browser_tabindex_order(element.tabindex.as_deref());
+    let sequential_focus = focusable && tabindex_order.unwrap_or(0) >= 0;
+    let programmatic_focus = focusable || matches!(tabindex_order, Some(value) if value < 0);
+    let keyboard_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_keyboard_event);
+    let keyboard_block_reasons = browser_focus_block_reasons(element);
+    let keyboard_blocked = !keyboard_block_reasons.is_empty();
+
+    BrowserKeyboardInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        keyboard_kind: browser_keyboard_kind(element, &keyboard_handlers),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        focusable,
+        sequential_focus,
+        programmatic_focus,
+        tabindex: element.tabindex.clone(),
+        tabindex_order,
+        accesskey: element.accesskey.clone(),
+        aria_keyshortcuts: element.aria_keyshortcuts.clone(),
+        handler_count: keyboard_handlers.len(),
+        keyboard_handlers,
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_activedescendant: element.aria_activedescendant.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_disabled: element.aria_disabled.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        keyboard_blocked,
+        keyboard_block_reasons,
+    }
+}
+
+fn browser_keyboard_kind(
+    element: &BrowserInteractiveElement,
+    keyboard_handlers: &[String],
+) -> String {
+    if !browser_focus_block_reasons(element).is_empty() {
+        return "blocked".to_string();
+    }
+    if !element.aria_keyshortcuts.is_empty() {
+        return "aria-shortcut".to_string();
+    }
+    if !element.accesskey.is_empty() {
+        return "accesskey".to_string();
+    }
+    if !keyboard_handlers.is_empty() {
+        return "keyboard-handler".to_string();
+    }
+    if element.editing_mode.is_some() {
+        return "editing-host".to_string();
+    }
+    if element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+    {
+        return "command".to_string();
+    }
+
+    "focus".to_string()
+}
+
+fn browser_input_planning_descriptors(
+    forms: &[BrowserForm],
+    interactive_elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserInputPlanningDescriptor> {
+    let mut descriptors = Vec::new();
+    for form in forms {
+        for text_entry in &form.text_entries {
+            descriptors.push(browser_input_planning_descriptor_from_text_entry(
+                text_entry,
+                interactive_elements,
+            ));
+        }
+    }
+
+    for element in interactive_elements {
+        if !browser_is_input_editing_host(element) {
+            continue;
+        }
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.id == element.id && descriptor.element == element.element)
+        {
+            continue;
+        }
+        descriptors.push(browser_input_planning_descriptor_from_editing_host(element));
+    }
+
+    descriptors
+}
+
+fn browser_input_planning_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    interactive_elements: &[BrowserInteractiveElement],
+) -> BrowserInputPlanningDescriptor {
+    let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+        interactive_elements
+            .iter()
+            .find(|element| element.id.as_deref() == Some(id))
+    });
+    let input_handlers = matching_interactive
+        .map(|element| browser_event_handlers_by_kind(&element.event_handlers, browser_input_event))
+        .unwrap_or_default();
+    let mut input_block_reasons = Vec::new();
+    if text_entry.disabled {
+        input_block_reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        input_block_reasons.push("readonly".to_string());
+    }
+    if let Some(reason) = &text_entry.validation_barred_reason {
+        input_block_reasons.push(format!("validation-barred:{reason}"));
+    }
+    if let Some(element) = matching_interactive {
+        if element.hidden {
+            input_block_reasons.push("hidden".to_string());
+        }
+        if element.inert {
+            input_block_reasons.push("inert".to_string());
+        }
+        if element.aria_hidden {
+            input_block_reasons.push("aria-hidden".to_string());
+        }
+    }
+
+    BrowserInputPlanningDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        input_kind: browser_text_entry_input_kind(text_entry).to_string(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        accessible_description: text_entry.accessible_description.clone(),
+        labels: text_entry.labels.clone(),
+        placeholder: text_entry.placeholder.clone(),
+        value: text_entry.value.clone(),
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        autocomplete: text_entry.autocomplete.clone(),
+        autocomplete_tokens: text_entry.autocomplete_tokens.clone(),
+        autocapitalize: text_entry.autocapitalize.clone(),
+        enterkeyhint: text_entry.enterkeyhint.clone(),
+        dirname: text_entry.dirname.clone(),
+        spellcheck: text_entry.spellcheck.clone(),
+        autocorrect: text_entry.autocorrect.clone(),
+        inputmode: text_entry.inputmode.clone(),
+        pattern: text_entry.pattern.clone(),
+        min: text_entry.min.clone(),
+        max: text_entry.max.clone(),
+        step: text_entry.step.clone(),
+        minlength: text_entry.minlength.clone(),
+        maxlength: text_entry.maxlength.clone(),
+        size: text_entry.size.clone(),
+        rows: text_entry.rows.clone(),
+        cols: text_entry.cols.clone(),
+        wrap: text_entry.wrap.clone(),
+        list: text_entry.list.clone(),
+        datalist_options: text_entry.datalist_options.clone(),
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        input_handlers,
+        disabled: text_entry.disabled,
+        required: text_entry.required,
+        readonly: text_entry.readonly,
+        will_validate: text_entry.will_validate,
+        validation_attributes: text_entry.validation_attributes.clone(),
+        validation_barred_reason: text_entry.validation_barred_reason.clone(),
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        input_blocked: !input_block_reasons.is_empty(),
+        input_block_reasons,
+    }
+}
+
+fn browser_input_planning_descriptor_from_editing_host(
+    element: &BrowserInteractiveElement,
+) -> BrowserInputPlanningDescriptor {
+    let mut input_block_reasons = browser_focus_block_reasons(element);
+    if element.aria_disabled.as_deref() == Some("true") {
+        input_block_reasons.push("aria-disabled".to_string());
+    }
+    BrowserInputPlanningDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        input_kind: "editing-host".to_string(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        labels: Vec::new(),
+        placeholder: None,
+        value: Some(element.text.clone()),
+        editing_mode: element.editing_mode.clone(),
+        autocomplete: None,
+        autocomplete_tokens: Vec::new(),
+        autocapitalize: None,
+        enterkeyhint: None,
+        dirname: None,
+        spellcheck: element.spellcheck.clone(),
+        autocorrect: None,
+        inputmode: None,
+        pattern: None,
+        min: None,
+        max: None,
+        step: None,
+        minlength: None,
+        maxlength: None,
+        size: None,
+        rows: None,
+        cols: None,
+        wrap: None,
+        list: None,
+        datalist_options: Vec::new(),
+        focusable: element.focusable.unwrap_or(false),
+        input_handlers: browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_input_event,
+        ),
+        disabled: element.disabled,
+        required: false,
+        readonly: false,
+        will_validate: false,
+        validation_attributes: Vec::new(),
+        validation_barred_reason: None,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        input_blocked: !input_block_reasons.is_empty(),
+        input_block_reasons,
+    }
+}
+
+fn browser_is_input_editing_host(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_input_event).is_empty()
+}
+
+fn browser_text_entry_input_kind(text_entry: &BrowserFormTextEntry) -> &'static str {
+    if text_entry.disabled {
+        "disabled"
+    } else if text_entry.readonly {
+        "readonly"
+    } else if !text_entry.datalist_options.is_empty() {
+        "suggested-text"
+    } else if text_entry.control_type == "textarea" {
+        "multiline-text"
+    } else if text_entry.control_type == "password" {
+        "password"
+    } else if matches!(text_entry.control_type.as_str(), "email" | "url" | "tel") {
+        "contact-text"
+    } else if text_entry.control_type == "number" {
+        "numeric-text"
+    } else if text_entry.required || !text_entry.validation_attributes.is_empty() {
+        "constrained-text"
+    } else {
+        "text"
+    }
+}
+
+fn browser_drag_drop_descriptors(document: &BrowserDocument) -> Vec<BrowserDragDropDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &element.element,
+            element.id.as_deref(),
+        );
+        if browser_interactive_has_drag_drop_state(element, event_descriptor) {
+            descriptors.push(browser_drag_drop_descriptor_from_interactive(
+                element,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for global in &document.global_state_descriptors {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == global.element && descriptor.id == global.id)
+        {
+            continue;
+        }
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &global.element,
+            global.id.as_deref(),
+        );
+        if browser_global_has_drag_drop_state(global, event_descriptor) {
+            descriptors.push(browser_drag_drop_descriptor_from_global(
+                global,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_drag_drop_state(event_descriptor) {
+            descriptors.push(browser_drag_drop_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_matching_event_descriptor<'a>(
+    event_descriptors: &'a [BrowserEventHandlerDescriptor],
+    element: &str,
+    id: Option<&str>,
+) -> Option<&'a BrowserEventHandlerDescriptor> {
+    event_descriptors.iter().find(|descriptor| {
+        descriptor.source == "element"
+            && descriptor.element == element
+            && descriptor.id.as_deref() == id
+    })
+}
+
+fn browser_interactive_has_drag_drop_state(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    element.draggable.is_some()
+        || event_descriptor
+            .map(browser_event_descriptor_has_drag_drop_state)
+            .unwrap_or(false)
+}
+
+fn browser_global_has_drag_drop_state(
+    global: &BrowserGlobalStateDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    global.draggable.is_some()
+        || event_descriptor
+            .map(browser_event_descriptor_has_drag_drop_state)
+            .unwrap_or(false)
+}
+
+fn browser_event_descriptor_has_drag_drop_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drag_event).is_empty()
+        || !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drop_event)
+            .is_empty()
+}
+
+fn browser_drag_drop_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserDragDropDescriptor {
+    let drag_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drag_event)
+        })
+        .unwrap_or_default();
+    let drop_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drop_event)
+        })
+        .unwrap_or_default();
+    let pointer_handlers = event_descriptor
+        .map(|descriptor| descriptor.pointer_handlers.clone())
+        .unwrap_or_default();
+    let drag_block_reasons = browser_drag_block_reasons_for_interactive(element);
+    let drag_source = browser_draggable_source(element.draggable_state.as_deref());
+    let drop_target = !drop_handlers.is_empty();
+
+    BrowserDragDropDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        classes: Vec::new(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        drag_kind: browser_drag_kind(
+            drag_source,
+            drop_target,
+            &drag_handlers,
+            &pointer_handlers,
+            &drag_block_reasons,
+        ),
+        text: element.text.clone(),
+        draggable: element.draggable.clone(),
+        draggable_state: element.draggable_state.clone(),
+        drag_source,
+        drop_target,
+        handler_count: drag_handlers.len() + drop_handlers.len(),
+        drag_handlers,
+        drop_handlers,
+        pointer_handlers,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        drag_blocked: !drag_block_reasons.is_empty(),
+        drag_block_reasons,
+    }
+}
+
+fn browser_drag_drop_descriptor_from_global(
+    global: &BrowserGlobalStateDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserDragDropDescriptor {
+    let drag_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drag_event)
+        })
+        .unwrap_or_default();
+    let drop_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drop_event)
+        })
+        .unwrap_or_default();
+    let pointer_handlers = event_descriptor
+        .map(|descriptor| descriptor.pointer_handlers.clone())
+        .unwrap_or_default();
+    let drag_block_reasons = browser_drag_block_reasons_for_global(global);
+    let drag_source = browser_draggable_source(global.draggable_state.as_deref());
+    let drop_target = !drop_handlers.is_empty();
+
+    BrowserDragDropDescriptor {
+        element: global.element.clone(),
+        id: global.id.clone(),
+        classes: global.classes.clone(),
+        role: browser_content_role(&global.element).map(ToOwned::to_owned),
+        authored_role: None,
+        drag_kind: browser_drag_kind(
+            drag_source,
+            drop_target,
+            &drag_handlers,
+            &pointer_handlers,
+            &drag_block_reasons,
+        ),
+        text: global.text.clone(),
+        draggable: global.draggable.clone(),
+        draggable_state: global.draggable_state.clone(),
+        drag_source,
+        drop_target,
+        handler_count: drag_handlers.len() + drop_handlers.len(),
+        drag_handlers,
+        drop_handlers,
+        pointer_handlers,
+        disabled: false,
+        hidden: global.hidden,
+        inert: global.inert,
+        aria_hidden: false,
+        drag_blocked: !drag_block_reasons.is_empty(),
+        drag_block_reasons,
+    }
+}
+
+fn browser_drag_drop_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserDragDropDescriptor {
+    let drag_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drag_event);
+    let drop_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drop_event);
+    let drag_block_reasons = Vec::new();
+    let drag_source = false;
+    let drop_target = !drop_handlers.is_empty();
+
+    BrowserDragDropDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        classes: event_descriptor.classes.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        drag_kind: browser_drag_kind(
+            drag_source,
+            drop_target,
+            &drag_handlers,
+            &event_descriptor.pointer_handlers,
+            &drag_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        draggable: None,
+        draggable_state: None,
+        drag_source,
+        drop_target,
+        handler_count: drag_handlers.len() + drop_handlers.len(),
+        drag_handlers,
+        drop_handlers,
+        pointer_handlers: event_descriptor.pointer_handlers.clone(),
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        drag_blocked: false,
+        drag_block_reasons,
+    }
+}
+
+fn browser_drag_block_reasons_for_interactive(element: &BrowserInteractiveElement) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_drag_block_reasons_for_global(global: &BrowserGlobalStateDescriptor) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if global.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if global.inert {
+        reasons.push("inert".to_string());
+    }
+    reasons
+}
+
+fn browser_draggable_source(draggable_state: Option<&str>) -> bool {
+    matches!(draggable_state, Some("true") | Some("auto"))
+}
+
+fn browser_drag_kind(
+    drag_source: bool,
+    drop_target: bool,
+    drag_handlers: &[String],
+    pointer_handlers: &[String],
+    drag_block_reasons: &[String],
+) -> String {
+    if !drag_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if drag_source && drop_target {
+        "drag-source-and-drop-target".to_string()
+    } else if drag_source {
+        "drag-source".to_string()
+    } else if drop_target {
+        "drop-target".to_string()
+    } else if !drag_handlers.is_empty() {
+        "drag-handler".to_string()
+    } else if !pointer_handlers.is_empty() {
+        "pointer-handler".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
+fn browser_clipboard_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserClipboardInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_clipboard_state(text_entry, matching_interactive) {
+                descriptors.push(browser_clipboard_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_clipboard_state(element) {
+            descriptors.push(browser_clipboard_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_clipboard_state(event_descriptor) {
+            descriptors.push(browser_clipboard_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_clipboard_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_clipboard_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(&element.event_handlers, browser_input_event)
+                        .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_clipboard_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_clipboard_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_clipboard_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_clipboard_event)
+        .is_empty()
+}
+
+fn browser_clipboard_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserClipboardInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let clipboard_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_clipboard_event);
+    let copy_handlers = browser_event_handlers_by_kind(event_handlers, browser_copy_event);
+    let cut_handlers = browser_event_handlers_by_kind(event_handlers, browser_cut_event);
+    let paste_handlers = browser_event_handlers_by_kind(event_handlers, browser_paste_event);
+    let input_handlers = browser_event_handlers_by_kind(event_handlers, browser_input_event);
+    let clipboard_block_reasons =
+        browser_clipboard_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserClipboardInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        clipboard_kind: browser_clipboard_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &copy_handlers,
+            &cut_handlers,
+            &paste_handlers,
+            &input_handlers,
+            &clipboard_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        handler_count: clipboard_handlers.len() + input_handlers.len(),
+        clipboard_handlers,
+        copy_handlers,
+        cut_handlers,
+        paste_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        clipboard_blocked: !clipboard_block_reasons.is_empty(),
+        clipboard_block_reasons,
+    }
+}
+
+fn browser_clipboard_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserClipboardInteractionDescriptor {
+    let clipboard_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_clipboard_event);
+    let copy_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_copy_event);
+    let cut_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_cut_event);
+    let paste_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_paste_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_input_event);
+    let clipboard_block_reasons = browser_clipboard_block_reasons_for_interactive(element);
+
+    BrowserClipboardInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        clipboard_kind: browser_clipboard_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &copy_handlers,
+            &cut_handlers,
+            &paste_handlers,
+            &input_handlers,
+            &clipboard_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        handler_count: clipboard_handlers.len() + input_handlers.len(),
+        clipboard_handlers,
+        copy_handlers,
+        cut_handlers,
+        paste_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        clipboard_blocked: !clipboard_block_reasons.is_empty(),
+        clipboard_block_reasons,
+    }
+}
+
+fn browser_clipboard_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserClipboardInteractionDescriptor {
+    let clipboard_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_clipboard_event);
+    let copy_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_copy_event);
+    let cut_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_cut_event);
+    let paste_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_paste_event);
+    let input_handlers = Vec::new();
+    let clipboard_block_reasons = Vec::new();
+
+    BrowserClipboardInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        clipboard_kind: browser_clipboard_kind(
+            false,
+            false,
+            false,
+            &copy_handlers,
+            &cut_handlers,
+            &paste_handlers,
+            &input_handlers,
+            &clipboard_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        handler_count: clipboard_handlers.len(),
+        clipboard_handlers,
+        copy_handlers,
+        cut_handlers,
+        paste_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        clipboard_blocked: false,
+        clipboard_block_reasons,
+    }
+}
+
+fn browser_clipboard_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_clipboard_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_clipboard_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_clipboard_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    copy_handlers: &[String],
+    cut_handlers: &[String],
+    paste_handlers: &[String],
+    input_handlers: &[String],
+    clipboard_block_reasons: &[String],
+) -> String {
+    if !clipboard_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !paste_handlers.is_empty() {
+        "paste-target".to_string()
+    } else if !cut_handlers.is_empty() {
+        "cut-target".to_string()
+    } else if !copy_handlers.is_empty() {
+        "copy-source".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-editor".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
+fn browser_selection_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserSelectionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_selection_state(text_entry, matching_interactive) {
+                descriptors.push(browser_selection_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_selection_state(element) {
+            descriptors.push(browser_selection_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_selection_state(event_descriptor) {
+            descriptors.push(browser_selection_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_selection_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(
+                        &element.event_handlers,
+                        browser_selection_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_selection_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_selection_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_selection_event)
+        .is_empty()
+}
+
+fn browser_selection_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserSelectionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let selection_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_event);
+    let select_handlers = browser_event_handlers_by_kind(event_handlers, browser_select_event);
+    let selection_change_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_change_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_input_event);
+    let selection_block_reasons =
+        browser_selection_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserSelectionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        selection_kind: browser_selection_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event);
+    let select_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_select_event);
+    let selection_change_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_change_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_input_event);
+    let selection_block_reasons = browser_selection_block_reasons_for_interactive(element);
+
+    BrowserSelectionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        selection_kind: browser_selection_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_selection_event);
+    let select_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_select_event);
+    let selection_change_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_selection_change_event,
+    );
+    let input_handlers = Vec::new();
+    let selection_block_reasons = Vec::new();
+
+    BrowserSelectionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        selection_kind: browser_selection_kind(
+            false,
+            false,
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        handler_count: selection_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        selection_blocked: false,
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_selection_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_selection_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_selection_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    select_handlers: &[String],
+    selection_change_handlers: &[String],
+    input_handlers: &[String],
+    selection_block_reasons: &[String],
+) -> String {
+    if !selection_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !selection_change_handlers.is_empty() {
+        "selection-change".to_string()
+    } else if !select_handlers.is_empty() {
+        "select-handler".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-selection".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
+fn browser_composition_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserCompositionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_composition_state(text_entry, matching_interactive) {
+                descriptors.push(browser_composition_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_composition_state(element) {
+            descriptors.push(browser_composition_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element
+                && descriptor.id == event_descriptor.id
+                && (event_descriptor.source == "element"
+                    || descriptor.source == event_descriptor.source)
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_composition_state(event_descriptor) {
+            descriptors.push(browser_composition_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_composition_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_composition_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(
+                        &element.event_handlers,
+                        browser_text_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_composition_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_composition_event)
+            .is_empty()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_text_input_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_composition_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_composition_event)
+        .is_empty()
+        || !browser_event_handlers_by_kind(
+            &event_descriptor.event_handlers,
+            browser_text_input_event,
+        )
+        .is_empty()
+}
+
+fn browser_composition_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserCompositionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let composition_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_event);
+    let composition_start_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_start_event);
+    let composition_update_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_update_event);
+    let composition_end_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_end_event);
+    let beforeinput_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_beforeinput_event);
+    let input_handlers = browser_event_handlers_by_kind(event_handlers, browser_text_input_event);
+    let composition_block_reasons =
+        browser_composition_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserCompositionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        source: "text-entry".to_string(),
+        composition_kind: browser_composition_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        inputmode: text_entry.inputmode.clone(),
+        enterkeyhint: text_entry.enterkeyhint.clone(),
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        composition_blocked: !composition_block_reasons.is_empty(),
+        composition_block_reasons,
+    }
+}
+
+fn browser_composition_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserCompositionInteractionDescriptor {
+    let composition_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_event);
+    let composition_start_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_start_event);
+    let composition_update_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_update_event);
+    let composition_end_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_end_event);
+    let beforeinput_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_beforeinput_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_text_input_event);
+    let composition_block_reasons = browser_composition_block_reasons_for_interactive(element);
+
+    BrowserCompositionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        composition_kind: browser_composition_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        inputmode: None,
+        enterkeyhint: None,
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        composition_blocked: !composition_block_reasons.is_empty(),
+        composition_block_reasons,
+    }
+}
+
+fn browser_composition_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserCompositionInteractionDescriptor {
+    let composition_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_composition_event);
+    let composition_start_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_composition_start_event,
+    );
+    let composition_update_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_composition_update_event,
+    );
+    let composition_end_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_composition_end_event,
+    );
+    let beforeinput_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_beforeinput_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_text_input_event);
+    let composition_block_reasons = Vec::new();
+
+    BrowserCompositionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: event_descriptor.source.clone(),
+        composition_kind: browser_composition_kind(
+            false,
+            false,
+            false,
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        inputmode: None,
+        enterkeyhint: None,
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        composition_blocked: false,
+        composition_block_reasons,
+    }
+}
+
+fn browser_composition_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_composition_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_composition_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_composition_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    composition_handlers: &[String],
+    beforeinput_handlers: &[String],
+    input_handlers: &[String],
+    composition_block_reasons: &[String],
+) -> String {
+    if !composition_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionstart")
+    {
+        "ime-session".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionupdate")
+    {
+        "ime-update".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionend")
+    {
+        "ime-commit".to_string()
+    } else if !beforeinput_handlers.is_empty() {
+        "beforeinput-target".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-target".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
+fn browser_pointer_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserPointerInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        if browser_interactive_has_pointer_state(element) {
+            descriptors.push(browser_pointer_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_pointer_state(event_descriptor) {
+            descriptors.push(browser_pointer_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_pointer_state(element: &BrowserInteractiveElement) -> bool {
+    element.draggable.is_some()
+        || element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+        || element.popover_target_action.is_some()
+        || !browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_pointer_interaction_event,
+        )
+        .is_empty()
+}
+
+fn browser_event_descriptor_has_pointer_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_pointer_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserPointerInteractionDescriptor {
+    let pointer_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_pointer_interaction_event);
+    let mouse_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_mouse_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_touch_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_wheel_event);
+    let click_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_click_event);
+    let drag_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_drag_event);
+    let drop_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_drop_event);
+    let pointer_block_reasons = browser_pointer_block_reasons_for_interactive(element);
+
+    BrowserPointerInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        pointer_kind: browser_pointer_kind(
+            element.draggable_state.as_deref(),
+            element.command.is_some()
+                || element.command_for.is_some()
+                || element.popover_target.is_some()
+                || element.popover_target_action.is_some(),
+            element.editing_mode.is_some(),
+            &pointer_handlers,
+            &mouse_handlers,
+            &touch_handlers,
+            &wheel_handlers,
+            &click_handlers,
+            &drag_handlers,
+            &drop_handlers,
+            &pointer_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: (element.element == "button").then(|| "submit".to_string()),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        draggable: element.draggable.clone(),
+        draggable_state: element.draggable_state.clone(),
+        handler_count: pointer_handlers.len(),
+        pointer_handlers,
+        mouse_handlers,
+        touch_handlers,
+        wheel_handlers,
+        click_handlers,
+        drag_handlers,
+        drop_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        pointer_blocked: !pointer_block_reasons.is_empty(),
+        pointer_block_reasons,
+    }
+}
+
+fn browser_pointer_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserPointerInteractionDescriptor {
+    let pointer_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    );
+    let mouse_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_mouse_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_touch_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_wheel_event);
+    let click_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_click_event);
+    let drag_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drag_event);
+    let drop_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drop_event);
+    let pointer_block_reasons = Vec::new();
+
+    BrowserPointerInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        pointer_kind: browser_pointer_kind(
+            None,
+            false,
+            false,
+            &pointer_handlers,
+            &mouse_handlers,
+            &touch_handlers,
+            &wheel_handlers,
+            &click_handlers,
+            &drag_handlers,
+            &drop_handlers,
+            &pointer_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        command: None,
+        command_for: None,
+        popover_target: None,
+        popover_target_action: None,
+        contenteditable: None,
+        editing_mode: None,
+        draggable: None,
+        draggable_state: None,
+        handler_count: pointer_handlers.len(),
+        pointer_handlers,
+        mouse_handlers,
+        touch_handlers,
+        wheel_handlers,
+        click_handlers,
+        drag_handlers,
+        drop_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        pointer_blocked: false,
+        pointer_block_reasons,
+    }
+}
+
+fn browser_pointer_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_pointer_kind(
+    draggable_state: Option<&str>,
+    command_target: bool,
+    editing_host: bool,
+    pointer_handlers: &[String],
+    mouse_handlers: &[String],
+    touch_handlers: &[String],
+    wheel_handlers: &[String],
+    click_handlers: &[String],
+    drag_handlers: &[String],
+    drop_handlers: &[String],
+    pointer_block_reasons: &[String],
+) -> String {
+    if !pointer_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if browser_draggable_source(draggable_state) && !drop_handlers.is_empty() {
+        "drag-source-and-drop-target".to_string()
+    } else if browser_draggable_source(draggable_state) || !drag_handlers.is_empty() {
+        "drag-source".to_string()
+    } else if !drop_handlers.is_empty() {
+        "drop-target".to_string()
+    } else if !wheel_handlers.is_empty() {
+        "wheel-target".to_string()
+    } else if !touch_handlers.is_empty() {
+        "touch-target".to_string()
+    } else if pointer_handlers
+        .iter()
+        .any(|handler| handler.starts_with("onpointer"))
+    {
+        "pointer-target".to_string()
+    } else if !mouse_handlers.is_empty() {
+        "mouse-target".to_string()
+    } else if !click_handlers.is_empty() {
+        "click-target".to_string()
+    } else if command_target {
+        "command-target".to_string()
+    } else if editing_host {
+        "editing-target".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
+fn browser_scroll_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserScrollInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for range in &document.aria_ranges {
+        if range.role != "scrollbar" {
+            continue;
+        }
+        let matching_interactive = range.id.as_deref().and_then(|id| {
+            document
+                .interactive_elements
+                .iter()
+                .find(|element| element.id.as_deref() == Some(id))
+        });
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &range.element,
+            range.id.as_deref(),
+        );
+        descriptors.push(browser_scroll_descriptor_from_aria_range(
+            range,
+            matching_interactive,
+            event_descriptor,
+        ));
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_scroll_state(element) {
+            descriptors.push(browser_scroll_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element
+                && descriptor.id == event_descriptor.id
+                && (event_descriptor.source == "element"
+                    || descriptor.source == event_descriptor.source)
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_scroll_state(event_descriptor) {
+            descriptors.push(browser_scroll_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_scroll_state(element: &BrowserInteractiveElement) -> bool {
+    element.authored_role.as_deref() == Some("scrollbar")
+        || !browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_scroll_interaction_event,
+        )
+        .is_empty()
+}
+
+fn browser_event_descriptor_has_scroll_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_scroll_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_scroll_descriptor_from_aria_range(
+    range: &BrowserAriaRange,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserScrollInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let scroll_handlers = browser_event_handlers_by_kind(event_handlers, browser_scroll_event);
+    let wheel_handlers = browser_event_handlers_by_kind(event_handlers, browser_wheel_event);
+    let touch_handlers = browser_event_handlers_by_kind(event_handlers, browser_touch_event);
+    let scroll_block_reasons = browser_scroll_block_reasons_for_range(range, matching_interactive);
+
+    BrowserScrollInteractionDescriptor {
+        element: range.element.clone(),
+        id: range.id.clone(),
+        role: Some(range.role.clone()),
+        authored_role: Some(range.role.clone()),
+        source: "aria-range".to_string(),
+        scroll_kind: browser_scroll_kind(
+            "aria-range",
+            Some(range.role.as_str()),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: range.text.clone(),
+        accessible_name: range.accessible_name.clone(),
+        accessible_description: range.accessible_description.clone(),
+        aria_valuenow: range.aria_valuenow.clone(),
+        aria_valuemin: range.aria_valuemin.clone(),
+        aria_valuemax: range.aria_valuemax.clone(),
+        aria_valuetext: range.aria_valuetext.clone(),
+        aria_orientation: range.aria_orientation.clone(),
+        aria_disabled: range.aria_disabled.clone(),
+        aria_readonly: range.aria_readonly.clone(),
+        tabindex: range.tabindex.clone(),
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(false),
+        disabled: matching_interactive
+            .map(|element| element.disabled)
+            .unwrap_or(false),
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        scroll_blocked: !scroll_block_reasons.is_empty(),
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserScrollInteractionDescriptor {
+    let scroll_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_scroll_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_wheel_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_touch_event);
+    let scroll_block_reasons = browser_scroll_block_reasons_for_interactive(element);
+
+    BrowserScrollInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        scroll_kind: browser_scroll_kind(
+            "interactive",
+            element.authored_role.as_deref().or(element.role.as_deref()),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_valuenow: None,
+        aria_valuemin: None,
+        aria_valuemax: None,
+        aria_valuetext: None,
+        aria_orientation: None,
+        aria_disabled: element.aria_disabled.clone(),
+        aria_readonly: None,
+        tabindex: element.tabindex.clone(),
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        scroll_blocked: !scroll_block_reasons.is_empty(),
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserScrollInteractionDescriptor {
+    let scroll_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_scroll_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_wheel_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_touch_event);
+    let scroll_block_reasons = Vec::new();
+
+    BrowserScrollInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: event_descriptor.source.clone(),
+        scroll_kind: browser_scroll_kind(
+            event_descriptor.source.as_str(),
+            event_descriptor.role.as_deref(),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_valuenow: None,
+        aria_valuemin: None,
+        aria_valuemax: None,
+        aria_valuetext: None,
+        aria_orientation: None,
+        aria_disabled: None,
+        aria_readonly: None,
+        tabindex: None,
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        scroll_blocked: false,
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_block_reasons_for_range(
+    range: &BrowserAriaRange,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if range.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_scroll_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_scroll_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_scroll_kind(
+    source: &str,
+    role: Option<&str>,
+    scroll_handlers: &[String],
+    wheel_handlers: &[String],
+    touch_handlers: &[String],
+    scroll_block_reasons: &[String],
+) -> String {
+    if !scroll_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if role == Some("scrollbar") {
+        "scrollbar".to_string()
+    } else if !scroll_handlers.is_empty() {
+        "scroll-handler".to_string()
+    } else if !wheel_handlers.is_empty() {
+        "wheel-target".to_string()
+    } else if !touch_handlers.is_empty() {
+        "touch-scroll-target".to_string()
+    } else if source == "document" {
+        "document-scroll".to_string()
+    } else if source == "body" {
+        "body-scroll".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
+fn browser_lifecycle_event_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserLifecycleEventDescriptor> {
+    document
+        .event_handler_descriptors
+        .iter()
+        .filter(|descriptor| browser_event_descriptor_has_lifecycle_state(descriptor))
+        .map(browser_lifecycle_event_descriptor)
+        .collect()
+}
+
+fn browser_event_descriptor_has_lifecycle_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !descriptor.lifecycle_handlers.is_empty() || !descriptor.error_handlers.is_empty()
+}
+
+fn browser_lifecycle_event_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserLifecycleEventDescriptor {
+    let load_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_load_lifecycle_event);
+    let unload_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_unload_lifecycle_event);
+    let visibility_handlers = browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_visibility_lifecycle_event,
+    );
+    let history_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_history_lifecycle_event);
+    let network_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_network_lifecycle_event);
+
+    BrowserLifecycleEventDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        lifecycle_kind: browser_lifecycle_kind(
+            &load_handlers,
+            &unload_handlers,
+            &visibility_handlers,
+            &history_handlers,
+            &network_handlers,
+            &descriptor.error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        lifecycle_handlers: descriptor.lifecycle_handlers.clone(),
+        load_handlers,
+        unload_handlers,
+        visibility_handlers,
+        history_handlers,
+        network_handlers,
+        error_handlers: descriptor.error_handlers.clone(),
+        handler_count: descriptor.lifecycle_handlers.len() + descriptor.error_handlers.len(),
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+        error_recovery: !descriptor.error_handlers.is_empty(),
+    }
+}
+
+fn browser_lifecycle_kind(
+    load_handlers: &[String],
+    unload_handlers: &[String],
+    visibility_handlers: &[String],
+    history_handlers: &[String],
+    network_handlers: &[String],
+    error_handlers: &[String],
+) -> String {
+    if !error_handlers.is_empty()
+        && (!load_handlers.is_empty()
+            || !unload_handlers.is_empty()
+            || !visibility_handlers.is_empty()
+            || !history_handlers.is_empty()
+            || !network_handlers.is_empty())
+    {
+        "lifecycle-error".to_string()
+    } else if !error_handlers.is_empty() {
+        "error-recovery".to_string()
+    } else if !unload_handlers.is_empty() {
+        "unload".to_string()
+    } else if !load_handlers.is_empty() {
+        "load".to_string()
+    } else if !visibility_handlers.is_empty() {
+        "visibility".to_string()
+    } else if !history_handlers.is_empty() {
+        "history".to_string()
+    } else if !network_handlers.is_empty() {
+        "network".to_string()
+    } else {
+        "lifecycle".to_string()
+    }
+}
+
+fn browser_animation_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserAnimationInteractionDescriptor> {
+    document
+        .event_handler_descriptors
+        .iter()
+        .filter(|descriptor| browser_event_descriptor_has_animation_interaction_state(descriptor))
+        .map(browser_animation_interaction_descriptor)
+        .collect()
+}
+
+fn browser_event_descriptor_has_animation_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_animation_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_animation_interaction_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserAnimationInteractionDescriptor {
+    let animation_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_event);
+    let animation_start_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_start_event);
+    let animation_iteration_handlers = browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_animation_iteration_event,
+    );
+    let animation_end_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_end_event);
+    let animation_cancel_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_cancel_event);
+    let transition_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_event);
+    let transition_run_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_run_event);
+    let transition_start_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_start_event);
+    let transition_end_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_end_event);
+    let transition_cancel_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_cancel_event);
+
+    BrowserAnimationInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        animation_kind: browser_animation_interaction_kind(
+            &animation_handlers,
+            &animation_start_handlers,
+            &animation_iteration_handlers,
+            &animation_end_handlers,
+            &animation_cancel_handlers,
+            &transition_handlers,
+            &transition_run_handlers,
+            &transition_start_handlers,
+            &transition_end_handlers,
+            &transition_cancel_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        handler_count: animation_handlers.len() + transition_handlers.len(),
+        animation_handlers,
+        animation_start_handlers,
+        animation_iteration_handlers,
+        animation_end_handlers,
+        animation_cancel_handlers,
+        transition_handlers,
+        transition_run_handlers,
+        transition_start_handlers,
+        transition_end_handlers,
+        transition_cancel_handlers,
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn browser_animation_interaction_kind(
+    animation_handlers: &[String],
+    animation_start_handlers: &[String],
+    animation_iteration_handlers: &[String],
+    animation_end_handlers: &[String],
+    animation_cancel_handlers: &[String],
+    transition_handlers: &[String],
+    transition_run_handlers: &[String],
+    transition_start_handlers: &[String],
+    transition_end_handlers: &[String],
+    transition_cancel_handlers: &[String],
+) -> String {
+    if !animation_cancel_handlers.is_empty() || !transition_cancel_handlers.is_empty() {
+        "animation-cancel".to_string()
+    } else if !animation_handlers.is_empty() && !transition_handlers.is_empty() {
+        "animation-transition".to_string()
+    } else if !animation_iteration_handlers.is_empty() {
+        "animation-iteration".to_string()
+    } else if !animation_end_handlers.is_empty() {
+        "animation-end".to_string()
+    } else if !animation_start_handlers.is_empty() {
+        "animation-start".to_string()
+    } else if !transition_end_handlers.is_empty() {
+        "transition-end".to_string()
+    } else if !transition_start_handlers.is_empty() {
+        "transition-start".to_string()
+    } else if !transition_run_handlers.is_empty() {
+        "transition-run".to_string()
+    } else if !animation_handlers.is_empty() {
+        "animation".to_string()
+    } else {
+        "transition".to_string()
+    }
+}
+
+fn browser_fullscreen_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserFullscreenInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for policy in &document.embedded_policy_descriptors {
+        if !policy.allowfullscreen && !browser_allow_fullscreen_policy(policy.allow.as_deref()) {
+            continue;
+        }
+
+        let matching_event_descriptor =
+            document
+                .event_handler_descriptors
+                .iter()
+                .find(|event_descriptor| {
+                    browser_fullscreen_descriptor_matches_policy(event_descriptor, policy)
+                });
+        descriptors.push(browser_fullscreen_descriptor_from_embedded_policy(
+            policy,
+            matching_event_descriptor,
+        ));
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if !browser_event_descriptor_has_fullscreen_interaction_state(event_descriptor) {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            browser_fullscreen_descriptor_matches_event(descriptor, event_descriptor)
+        }) {
+            continue;
+        }
+        descriptors.push(browser_fullscreen_descriptor_from_event(event_descriptor));
+    }
+
+    descriptors
+}
+
+fn browser_fullscreen_descriptor_matches_policy(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+    policy: &BrowserEmbeddedPolicyDescriptor,
+) -> bool {
+    event_descriptor.element == policy.element
+        && event_descriptor.id.as_deref() == policy.browsing_context_name.as_deref()
+}
+
+fn browser_fullscreen_descriptor_matches_event(
+    descriptor: &BrowserFullscreenInteractionDescriptor,
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+}
+
+fn browser_event_descriptor_has_fullscreen_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_event).is_empty()
+}
+
+fn browser_fullscreen_descriptor_from_embedded_policy(
+    policy: &BrowserEmbeddedPolicyDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserFullscreenInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_default();
+    let fullscreen_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_event);
+    let fullscreen_change_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_change_event);
+    let fullscreen_error_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_error_event);
+    let allow_tokens = browser_permission_policy_tokens(policy.allow.as_deref());
+    let fullscreen_allowed =
+        policy.allowfullscreen || browser_allow_fullscreen_policy(policy.allow.as_deref());
+
+    BrowserFullscreenInteractionDescriptor {
+        element: policy.element.clone(),
+        id: policy.browsing_context_name.clone(),
+        classes: event_descriptor
+            .map(|descriptor| descriptor.classes.clone())
+            .unwrap_or_default(),
+        role: event_descriptor.and_then(|descriptor| descriptor.role.clone()),
+        source: "embedded-policy".to_string(),
+        fullscreen_kind: browser_fullscreen_interaction_kind(
+            fullscreen_allowed,
+            &fullscreen_change_handlers,
+            &fullscreen_error_handlers,
+        ),
+        text: policy.fallback_text.clone(),
+        event_handlers,
+        handler_count: fullscreen_handlers.len(),
+        fullscreen_handlers,
+        fullscreen_change_handlers,
+        fullscreen_error_handlers,
+        allow: policy.allow.clone(),
+        allow_tokens,
+        allowfullscreen: policy.allowfullscreen,
+        fullscreen_allowed,
+        embedded_context: true,
+        document_scope: false,
+        body_scope: false,
+    }
+}
+
+fn browser_fullscreen_descriptor_from_event(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserFullscreenInteractionDescriptor {
+    let fullscreen_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_event);
+    let fullscreen_change_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_change_event);
+    let fullscreen_error_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_error_event);
+
+    BrowserFullscreenInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        fullscreen_kind: browser_fullscreen_interaction_kind(
+            false,
+            &fullscreen_change_handlers,
+            &fullscreen_error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        handler_count: fullscreen_handlers.len(),
+        fullscreen_handlers,
+        fullscreen_change_handlers,
+        fullscreen_error_handlers,
+        allow: None,
+        allow_tokens: Vec::new(),
+        allowfullscreen: false,
+        fullscreen_allowed: false,
+        embedded_context: false,
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn browser_fullscreen_interaction_kind(
+    fullscreen_allowed: bool,
+    fullscreen_change_handlers: &[String],
+    fullscreen_error_handlers: &[String],
+) -> String {
+    if fullscreen_allowed && !fullscreen_error_handlers.is_empty() {
+        "fullscreen-policy-error".to_string()
+    } else if fullscreen_allowed && !fullscreen_change_handlers.is_empty() {
+        "fullscreen-policy-change".to_string()
+    } else if fullscreen_allowed {
+        "fullscreen-enabled".to_string()
+    } else if !fullscreen_error_handlers.is_empty() {
+        "fullscreen-error".to_string()
+    } else {
+        "fullscreen-change".to_string()
+    }
+}
+
+fn browser_allow_fullscreen_policy(allow: Option<&str>) -> bool {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_permission_policy_feature)
+        .any(|feature| feature == "fullscreen")
+}
+
+fn browser_permission_policy_tokens(allow: Option<&str>) -> Vec<String> {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_permission_policy_feature)
+        .collect()
+}
+
+fn browser_permission_policy_feature(directive: &str) -> Option<String> {
+    directive
+        .split_whitespace()
+        .next()
+        .map(str::to_ascii_lowercase)
+        .filter(|feature| !feature.is_empty())
+}
+
+fn browser_context_menu_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserContextMenuInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &element.element,
+            element.id.as_deref(),
+        );
+        if browser_interactive_has_context_menu_state(element, event_descriptor) {
+            descriptors.push(browser_context_menu_descriptor_from_interactive(
+                element,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_context_menu_state(event_descriptor) {
+            descriptors.push(browser_context_menu_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_context_menu_state(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    browser_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || element
+            .authored_role
+            .as_deref()
+            .is_some_and(browser_menu_role)
+        || (element.popover.is_some()
+            && element
+                .authored_role
+                .as_deref()
+                .is_some_and(browser_menu_role))
+        || (element.popover_target.is_some()
+            && browser_aria_haspopup_menu(element.aria_haspopup.as_deref()))
+        || event_descriptor
+            .map(browser_event_descriptor_has_context_menu_state)
+            .unwrap_or(false)
+}
+
+fn browser_event_descriptor_has_context_menu_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_context_menu_event)
+        .is_empty()
+}
+
+fn browser_context_menu_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserContextMenuInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_else(|| element.event_handlers.clone());
+    let contextmenu_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_context_menu_event);
+    let pointer_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_pointer_interaction_event);
+    let keyboard_handlers = browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event);
+    let context_menu_block_reasons = browser_pointer_block_reasons_for_interactive(element);
+    let menu_role = element
+        .authored_role
+        .as_deref()
+        .is_some_and(browser_menu_role);
+    let menu_invoker = browser_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || (element.popover_target.is_some()
+            && browser_aria_haspopup_menu(element.aria_haspopup.as_deref()));
+
+    BrowserContextMenuInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        context_menu_kind: browser_context_menu_kind(
+            menu_invoker,
+            menu_role,
+            element.popover.is_some() && menu_role,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        popover: element.popover.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        event_handlers,
+        handler_count: contextmenu_handlers.len() + keyboard_handlers.len(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        context_menu_blocked: !context_menu_block_reasons.is_empty(),
+        context_menu_block_reasons,
+    }
+}
+
+fn browser_context_menu_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserContextMenuInteractionDescriptor {
+    let contextmenu_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_context_menu_event,
+    );
+    let pointer_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    );
+    let keyboard_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_keyboard_event);
+    let context_menu_block_reasons = Vec::new();
+
+    BrowserContextMenuInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: "event-handler".to_string(),
+        context_menu_kind: browser_context_menu_kind(
+            false,
+            false,
+            false,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_haspopup: None,
+        aria_controls: Vec::new(),
+        aria_expanded: None,
+        popover: None,
+        popover_target: None,
+        popover_target_action: None,
+        command: None,
+        command_for: None,
+        event_handlers: event_descriptor.event_handlers.clone(),
+        handler_count: contextmenu_handlers.len() + keyboard_handlers.len(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        context_menu_blocked: false,
+        context_menu_block_reasons,
+    }
+}
+
+fn browser_context_menu_kind(
+    menu_invoker: bool,
+    menu_role: bool,
+    popover_surface: bool,
+    contextmenu_handlers: &[String],
+    keyboard_handlers: &[String],
+    context_menu_block_reasons: &[String],
+) -> String {
+    if !context_menu_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !contextmenu_handlers.is_empty() && menu_invoker {
+        "custom-menu-handler".to_string()
+    } else if !contextmenu_handlers.is_empty() {
+        "context-menu-handler".to_string()
+    } else if menu_invoker {
+        "menu-invoker".to_string()
+    } else if popover_surface {
+        "menu-surface".to_string()
+    } else if menu_role {
+        "menu-item".to_string()
+    } else if !keyboard_handlers.is_empty() {
+        "keyboard-menu".to_string()
+    } else {
+        "context-menu".to_string()
+    }
+}
+
+fn browser_aria_haspopup_menu(value: Option<&str>) -> bool {
+    matches!(value, Some("true" | "menu"))
+}
+
+fn browser_menu_role(role: &str) -> bool {
+    matches!(
+        role,
+        "menu" | "menubar" | "menuitem" | "menuitemcheckbox" | "menuitemradio"
+    )
+}
+
+fn browser_command_role(element: &Element) -> String {
+    browser_authored_role(element).unwrap_or_else(|| {
+        browser_content_role(&element.name)
+            .unwrap_or(element.name.as_str())
+            .to_string()
+    })
+}
+
+fn browser_command_kind(element: &Element) -> Option<String> {
+    if element.attribute("command").is_some() || element.attribute("commandfor").is_some() {
+        return Some("command".to_string());
+    }
+    if element.attribute("popovertarget").is_some() {
+        return Some("popover".to_string());
+    }
+    if let Some(role) = browser_authored_command_role(element) {
+        return Some(role);
+    }
+    if element.name == "summary" {
+        return Some("disclosure".to_string());
+    }
+
+    match (
+        element.name.as_str(),
+        browser_content_control_type(element).as_deref(),
+    ) {
+        ("button", Some("submit")) | ("input", Some("submit" | "image"))
+            if browser_has_command_state(element) =>
+        {
+            Some("submit".to_string())
+        }
+        ("button", Some("reset")) | ("input", Some("reset"))
+            if browser_has_command_state(element) =>
+        {
+            Some("reset".to_string())
+        }
+        ("button", Some("button")) | ("input", Some("button"))
+            if browser_has_command_state(element) =>
+        {
+            Some("button".to_string())
+        }
+        _ => None,
+    }
+}
+
+fn browser_has_command_state(element: &Element) -> bool {
+    element.attribute("aria-controls").is_some()
+        || element.attribute("aria-expanded").is_some()
+        || element.attribute("aria-haspopup").is_some()
+        || element.attribute("aria-pressed").is_some()
+        || element.attribute("aria-current").is_some()
+        || element.attribute("aria-disabled").is_some()
+}
+
+fn browser_authored_command_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "button"
+            | "link"
+            | "menuitem"
+            | "menuitemcheckbox"
+            | "menuitemradio"
+            | "option"
+            | "tab"
+            | "treeitem"
+    )
+    .then_some(role)
+}
+
+fn browser_command_accessible_name(
+    element: &Element,
+    role: &str,
+    control_labels: &[String],
+    id_texts: &[(String, String)],
+    text: &str,
+) -> Option<String> {
+    browser_accessible_name(element, role, control_labels, id_texts)
+        .or_else(|| browser_content_value(element).map(|value| collapse_html_whitespace(&value)))
+        .or_else(|| element.attribute("alt").map(collapse_html_whitespace))
+        .or_else(|| (!text.is_empty()).then(|| text.to_string()))
+        .filter(|name| !name.is_empty())
+}
+
+fn browser_command_focusable(element: &Element) -> bool {
+    if let Some(focusable) = browser_focusable(element) {
+        return focusable;
+    }
+    if element.attribute("disabled").is_some()
+        || browser_hidden(element)
+        || browser_inert(element)
+        || browser_aria_hidden(element)
+    {
+        return false;
+    }
+
+    if is_browser_document_link(element) {
+        return true;
+    }
+
+    matches!(element.name.as_str(), "button" | "input" | "summary")
+}
+
+fn browser_popover_element(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    body_root: &[Node],
+) -> Option<BrowserPopover> {
+    let popover = element.attribute("popover")?.to_string();
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let id = element.attribute("id").map(ToOwned::to_owned);
+    let invokers = id
+        .as_deref()
+        .map(|id| browser_popover_invokers(body_root, labels, id_texts, id))
+        .unwrap_or_default();
+
+    Some(BrowserPopover {
+        element: element.name.clone(),
+        id,
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        popover,
+        invokers,
+    })
+}
+
+fn browser_popover_invokers(
+    nodes: &[Node],
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_id: &str,
+) -> Vec<BrowserPopoverInvoker> {
+    let mut invokers = Vec::new();
+    collect_browser_popover_invokers(nodes, labels, id_texts, target_id, &mut invokers);
+    invokers
+}
+
+fn collect_browser_popover_invokers(
+    nodes: &[Node],
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_id: &str,
+    invokers: &mut Vec<BrowserPopoverInvoker>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if browser_popover_target(element).as_deref() == Some(target_id)
+            || browser_command_for(element).as_deref() == Some(target_id)
+        {
+            invokers.push(browser_popover_invoker(element, labels, id_texts));
+        }
+
+        collect_browser_popover_invokers(&element.children, labels, id_texts, target_id, invokers);
+    }
+}
+
+fn browser_popover_invoker(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> BrowserPopoverInvoker {
+    let role = browser_command_role(element);
+    let control_labels = browser_control_labels(element, labels, None);
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+
+    BrowserPopoverInvoker {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        text: text.clone(),
+        accessible_name: browser_command_accessible_name(
+            element,
+            role.as_str(),
+            &control_labels,
+            id_texts,
+            &text,
+        ),
+        command_kind: browser_command_kind(element).unwrap_or_else(|| "command".to_string()),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        focusable: browser_command_focusable(element),
+    }
+}
+
+fn browser_popover_descriptors(popovers: &[BrowserPopover]) -> Vec<BrowserPopoverDescriptor> {
+    popovers
+        .iter()
+        .enumerate()
+        .map(|(index, popover)| browser_popover_descriptor(index + 1, popover))
+        .collect()
+}
+
+fn browser_popover_descriptor(
+    popover_index: usize,
+    popover: &BrowserPopover,
+) -> BrowserPopoverDescriptor {
+    let invoker_actions = popover
+        .invokers
+        .iter()
+        .map(browser_popover_invoker_action)
+        .collect();
+    let invoker_aria_expanded = popover
+        .invokers
+        .iter()
+        .filter_map(|invoker| invoker.aria_expanded.clone())
+        .collect();
+    let focusable_invoker_count = popover
+        .invokers
+        .iter()
+        .filter(|invoker| invoker.focusable)
+        .count();
+    let mut descriptor = BrowserPopoverDescriptor {
+        popover_index,
+        element: popover.element.clone(),
+        id: popover.id.clone(),
+        role: popover.role.clone(),
+        text: popover.text.clone(),
+        accessible_name: popover.accessible_name.clone(),
+        accessible_description: popover.accessible_description.clone(),
+        popover_mode: browser_popover_mode(&popover.popover),
+        invoker_count: popover.invokers.len(),
+        invoker_ids: popover
+            .invokers
+            .iter()
+            .filter_map(|invoker| invoker.id.clone())
+            .collect(),
+        invoker_actions,
+        invoker_aria_expanded,
+        focusable_invoker_count,
+        popover_blocked: false,
+        popover_block_reasons: Vec::new(),
+    };
+    descriptor.popover_block_reasons = browser_popover_block_reasons(popover, &descriptor);
+    descriptor.popover_blocked = !descriptor.popover_block_reasons.is_empty();
+    descriptor
+}
+
+fn browser_popover_mode(popover: &str) -> String {
+    if popover.is_empty() {
+        "auto".to_string()
+    } else {
+        popover.to_string()
+    }
+}
+
+fn browser_popover_invoker_action(invoker: &BrowserPopoverInvoker) -> String {
+    if invoker.popover_target.is_some() {
+        let action = invoker.popover_target_action.as_deref().unwrap_or("toggle");
+        return format!("popover-{action}");
+    }
+    if let Some(command) = invoker.command.as_deref() {
+        return command.to_string();
+    }
+    invoker.command_kind.clone()
+}
+
+fn browser_popover_block_reasons(
+    popover: &BrowserPopover,
+    descriptor: &BrowserPopoverDescriptor,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if popover.id.is_none() {
+        reasons.push("missing-id".to_string());
+    }
+    if !matches!(descriptor.popover_mode.as_str(), "auto" | "manual") {
+        reasons.push("invalid-popover-mode".to_string());
+    }
+    if descriptor.invoker_count == 0 {
+        reasons.push("missing-invokers".to_string());
+    }
+    if descriptor.invoker_count > descriptor.focusable_invoker_count {
+        reasons.push("non-focusable-invoker".to_string());
+    }
+    if popover.invokers.iter().any(|invoker| {
+        invoker
+            .popover_target_action
+            .as_deref()
+            .is_some_and(|action| !matches!(action, "toggle" | "show" | "hide"))
+    }) {
+        reasons.push("invalid-popover-target-action".to_string());
+    }
+    reasons
+}
+
+fn browser_aria_collection_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaCollection> {
+    let role = browser_authored_collection_role(element)?;
+    let items = browser_aria_collection_items(element, id_texts);
+    let selected_item_count = items
+        .iter()
+        .filter(|item| item.aria_selected.as_deref() == Some("true"))
+        .count();
+    let checked_item_count = items
+        .iter()
+        .filter(|item| matches!(item.aria_checked.as_deref(), Some("true") | Some("mixed")))
+        .count();
+    let current_item_count = items
+        .iter()
+        .filter(|item| {
+            item.aria_current
+                .as_deref()
+                .is_some_and(|current| !current.eq_ignore_ascii_case("false"))
+        })
+        .count();
+    let disabled_item_count = items
+        .iter()
+        .filter(|item| item.aria_disabled.as_deref() == Some("true"))
+        .count();
+    let aria_multiselectable = browser_aria_state(element, "aria-multiselectable");
+    let aria_activedescendant = browser_aria_idref(element, "aria-activedescendant");
+    let item_roles = browser_aria_collection_item_roles(&items);
+    let selection_mode = browser_aria_collection_selection_mode(
+        aria_multiselectable.as_deref(),
+        selected_item_count,
+        checked_item_count,
+        current_item_count,
+    );
+    let active_descendant_matches_item = aria_activedescendant
+        .as_deref()
+        .is_some_and(|id| items.iter().any(|item| item.id.as_deref() == Some(id)));
+
+    Some(BrowserAriaCollection {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_orientation: browser_aria_state(element, "aria-orientation"),
+        aria_multiselectable,
+        aria_activedescendant,
+        aria_owns: browser_aria_idrefs(element, "aria-owns"),
+        item_count: items.len(),
+        selected_item_count,
+        checked_item_count,
+        current_item_count,
+        disabled_item_count,
+        item_roles,
+        selection_mode,
+        active_descendant_matches_item,
+        role,
+        items,
+    })
+}
+
+fn browser_aria_collection_item_roles(items: &[BrowserAriaCollectionItem]) -> Vec<String> {
+    let mut roles = Vec::new();
+    for item in items {
+        if !roles.contains(&item.role) {
+            roles.push(item.role.clone());
+        }
+    }
+    roles
+}
+
+fn browser_aria_collection_selection_mode(
+    aria_multiselectable: Option<&str>,
+    selected_item_count: usize,
+    checked_item_count: usize,
+    current_item_count: usize,
+) -> String {
+    if aria_multiselectable.is_some_and(|value| value.eq_ignore_ascii_case("true"))
+        || selected_item_count > 1
+        || checked_item_count > 1
+    {
+        "multiple"
+    } else if selected_item_count + checked_item_count + current_item_count > 0 {
+        "single"
+    } else {
+        "none"
+    }
+    .to_string()
+}
+
+fn browser_authored_collection_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "grid" | "listbox" | "menu" | "menubar" | "radiogroup" | "tablist" | "tree" | "treegrid"
+    )
+    .then_some(role)
+}
+
+fn browser_aria_collection_items(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Vec<BrowserAriaCollectionItem> {
+    let mut items = Vec::new();
+    collect_browser_aria_collection_items(&element.children, id_texts, &mut items);
+    items
+}
+
+fn collect_browser_aria_collection_items(
+    nodes: &[Node],
+    id_texts: &[(String, String)],
+    items: &mut Vec<BrowserAriaCollectionItem>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if let Some(item) = browser_aria_collection_item(element, id_texts) {
+            items.push(item);
+        }
+        if browser_authored_collection_role(element).is_none() {
+            collect_browser_aria_collection_items(&element.children, id_texts, items);
+        }
+    }
+}
+
+fn browser_aria_collection_item(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaCollectionItem> {
+    let role = browser_authored_collection_item_role(element)?;
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    Some(BrowserAriaCollectionItem {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts)
+            .or_else(|| (!text.is_empty()).then(|| text.clone())),
+        role,
+        text,
+        aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_checked: browser_aria_state(element, "aria-checked"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_level: browser_aria_state(element, "aria-level"),
+        aria_posinset: browser_aria_state(element, "aria-posinset"),
+        aria_setsize: browser_aria_state(element, "aria-setsize"),
+        aria_rowindex: browser_aria_state(element, "aria-rowindex"),
+        aria_colindex: browser_aria_state(element, "aria-colindex"),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+    })
+}
+
+fn browser_authored_collection_item_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "columnheader"
+            | "gridcell"
+            | "menuitem"
+            | "menuitemcheckbox"
+            | "menuitemradio"
+            | "option"
+            | "radio"
+            | "row"
+            | "rowheader"
+            | "tab"
+            | "treeitem"
+    )
+    .then_some(role)
+}
+
+fn browser_aria_collection_descriptors(
+    collections: &[BrowserAriaCollection],
+) -> Vec<BrowserAriaCollectionDescriptor> {
+    collections
+        .iter()
+        .enumerate()
+        .map(|(index, collection)| browser_aria_collection_descriptor(index + 1, collection))
+        .collect()
+}
+
+fn browser_aria_collection_descriptor(
+    collection_index: usize,
+    collection: &BrowserAriaCollection,
+) -> BrowserAriaCollectionDescriptor {
+    let mut descriptor = BrowserAriaCollectionDescriptor {
+        collection_index,
+        element: collection.element.clone(),
+        id: collection.id.clone(),
+        role: collection.role.clone(),
+        text: collection.text.clone(),
+        accessible_name: collection.accessible_name.clone(),
+        accessible_description: collection.accessible_description.clone(),
+        collection_kind: collection.role.clone(),
+        aria_orientation: collection.aria_orientation.clone(),
+        aria_multiselectable: collection.aria_multiselectable.clone(),
+        aria_activedescendant: collection.aria_activedescendant.clone(),
+        aria_owns: collection.aria_owns.clone(),
+        item_count: collection.item_count,
+        item_roles: collection.item_roles.clone(),
+        selected_item_count: collection.selected_item_count,
+        checked_item_count: collection.checked_item_count,
+        current_item_count: collection.current_item_count,
+        disabled_item_count: collection.disabled_item_count,
+        selection_mode: collection.selection_mode.clone(),
+        active_descendant_matches_item: collection.active_descendant_matches_item,
+        collection_blocked: false,
+        collection_block_reasons: Vec::new(),
+    };
+    descriptor.collection_block_reasons =
+        browser_aria_collection_block_reasons(collection, &descriptor);
+    descriptor.collection_blocked = !descriptor.collection_block_reasons.is_empty();
+    descriptor
+}
+
+fn browser_aria_collection_block_reasons(
+    collection: &BrowserAriaCollection,
+    descriptor: &BrowserAriaCollectionDescriptor,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if descriptor.accessible_name.is_none() {
+        reasons.push("missing-accessible-name".to_string());
+    }
+    if descriptor.item_count == 0 {
+        reasons.push("missing-items".to_string());
+    }
+    if descriptor.aria_activedescendant.is_some() && !descriptor.active_descendant_matches_item {
+        reasons.push("unresolved-active-descendant".to_string());
+    }
+    if collection.aria_owns.iter().any(|owned_id| {
+        !collection
+            .items
+            .iter()
+            .any(|item| item.id.as_deref() == Some(owned_id.as_str()))
+    }) {
+        reasons.push("unresolved-owned-items".to_string());
+    }
+    reasons
+}
+
+fn browser_aria_range_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaRange> {
+    let role = browser_authored_range_role(element)?;
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let aria_valuenow = browser_aria_state(element, "aria-valuenow");
+    let aria_valuemin = browser_aria_state(element, "aria-valuemin");
+    let aria_valuemax = browser_aria_state(element, "aria-valuemax");
+    let aria_valuetext = browser_aria_state(element, "aria-valuetext");
+    let aria_disabled = browser_aria_state(element, "aria-disabled");
+    let aria_readonly = browser_aria_state(element, "aria-readonly");
+    let value_attribute_names =
+        browser_aria_range_value_attribute_names(element, aria_valuetext.is_some());
+    let range_block_reasons =
+        browser_aria_range_block_reasons(aria_disabled.as_deref(), aria_readonly.as_deref());
+    Some(BrowserAriaRange {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts)
+            .or_else(|| (!text.is_empty()).then(|| text.clone())),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_valuenow: aria_valuenow.clone(),
+        aria_valuemin: aria_valuemin.clone(),
+        aria_valuemax: aria_valuemax.clone(),
+        aria_valuetext,
+        aria_orientation: browser_aria_state(element, "aria-orientation"),
+        aria_disabled,
+        aria_readonly,
+        aria_required: browser_aria_state(element, "aria-required"),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        text_value: (!text.is_empty()).then(|| text.clone()),
+        value_attribute_count: value_attribute_names.len(),
+        value_attribute_names,
+        range_value_complete: aria_valuenow.is_some()
+            && aria_valuemin.is_some()
+            && aria_valuemax.is_some(),
+        focusable: element.attribute("tabindex").is_some(),
+        range_blocked: !range_block_reasons.is_empty(),
+        range_block_reasons,
+        role,
+        text,
+    })
+}
+
+fn browser_aria_range_value_attribute_names(
+    element: &Element,
+    has_aria_valuetext: bool,
+) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-valuemin", "aria-valuemax", "aria-valuenow"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    if has_aria_valuetext {
+        attributes.push("aria-valuetext".to_string());
+    }
+    attributes
+}
+
+fn browser_aria_range_block_reasons(
+    aria_disabled: Option<&str>,
+    aria_readonly: Option<&str>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if aria_disabled.is_some_and(|value| value.eq_ignore_ascii_case("true")) {
+        reasons.push("aria-disabled".to_string());
+    }
+    if aria_readonly.is_some_and(|value| value.eq_ignore_ascii_case("true")) {
+        reasons.push("aria-readonly".to_string());
+    }
+    reasons
+}
+
+fn browser_authored_range_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "meter" | "progressbar" | "scrollbar" | "separator" | "slider" | "spinbutton"
+    )
+    .then_some(role)
+}
+
+fn browser_aria_live_region_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaLiveRegion> {
+    let role = browser_aria_live_region_role(element)?;
+    let aria_live = browser_aria_state(element, "aria-live");
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let aria_busy = browser_aria_state(element, "aria-busy");
+    let aria_atomic = browser_aria_state(element, "aria-atomic");
+    let aria_relevant = browser_aria_tokens(element, "aria-relevant");
+    let aria_hidden = browser_aria_hidden(element);
+    let update_kind = browser_aria_live_update_kind(&role, aria_live.as_deref());
+    let live_attribute_names = browser_aria_live_attribute_names(element, aria_hidden);
+    let live_region_block_reasons =
+        browser_aria_live_region_block_reasons(aria_hidden, &update_kind);
+    Some(BrowserAriaLiveRegion {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts)
+            .or_else(|| (!text.is_empty()).then(|| text.clone())),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_live: aria_live.clone(),
+        aria_busy,
+        aria_atomic,
+        aria_relevant,
+        aria_hidden,
+        assertive_update: update_kind == "assertive",
+        live_attribute_count: live_attribute_names.len(),
+        live_attribute_names,
+        live_region_blocked: !live_region_block_reasons.is_empty(),
+        live_region_block_reasons,
+        update_kind,
+        role,
+        text,
+    })
+}
+
+fn browser_aria_live_attribute_names(element: &Element, aria_hidden: bool) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-live", "aria-busy", "aria-atomic", "aria-relevant"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    if aria_hidden {
+        attributes.push("aria-hidden".to_string());
+    }
+    attributes
+}
+
+fn browser_aria_live_region_block_reasons(aria_hidden: bool, update_kind: &str) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if update_kind == "off" {
+        reasons.push("live-off".to_string());
+    }
+    reasons
+}
+
+fn browser_aria_live_region_role(element: &Element) -> Option<String> {
+    let authored_role = browser_authored_role(element).map(|role| role.to_ascii_lowercase());
+    if let Some(role) = authored_role.as_deref() {
+        if matches!(role, "alert" | "log" | "marquee" | "status" | "timer") {
+            return Some(role.to_string());
+        }
+    }
+
+    element
+        .attribute("aria-live")
+        .or_else(|| element.attribute("aria-busy"))
+        .or_else(|| element.attribute("aria-atomic"))
+        .or_else(|| element.attribute("aria-relevant"))
+        .map(|_| {
+            authored_role.unwrap_or_else(|| {
+                browser_content_role(&element.name)
+                    .unwrap_or(element.name.as_str())
+                    .to_string()
+            })
+        })
+}
+
+fn browser_aria_live_update_kind(role: &str, aria_live: Option<&str>) -> String {
+    if let Some(aria_live) = aria_live {
+        return aria_live.to_ascii_lowercase();
+    }
+    match role {
+        "alert" => "assertive",
+        "log" | "status" => "polite",
+        "marquee" | "timer" => "off",
+        _ => "implicit",
+    }
+    .to_string()
+}
+
+fn should_collect_browser_content_children(name: &str) -> bool {
+    !matches!(
+        name,
+        "area"
+            | "base"
+            | "br"
+            | "button"
+            | "col"
+            | "embed"
+            | "frame"
+            | "iframe"
+            | "img"
+            | "input"
+            | "link"
+            | "meter"
+            | "meta"
+            | "param"
+            | "progress"
+            | "source"
+            | "track"
+            | "textarea"
+            | "wbr"
+    )
+}
+
+fn browser_content_text(element: &Element, role: &str) -> Option<String> {
+    let text = match role {
+        "control" if element.name == "input" => browser_input_display_value(element),
+        "option" => browser_option_display_text(element),
+        "control" | "heading" | "label" | "legend" | "link" | "table_caption" => {
+            visible_text_for_nodes(&element.children)
+        }
+        _ => String::new(),
+    };
+    if text.is_empty() {
+        None
+    } else {
+        Some(text)
+    }
+}
+
+fn browser_content_src(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "object" => element.attribute("data").map(ToOwned::to_owned),
+        _ => element.attribute("src").map(ToOwned::to_owned),
+    }
+}
+
+fn browser_content_srcset(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "img" | "source") {
+        element.attribute("srcset").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_content_sizes(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "img" | "source") {
+        element.attribute("sizes").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_content_resource_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "img" => Some("image".to_string()),
+        "iframe" | "frame" => Some("frame".to_string()),
+        "embed" => Some("embed".to_string()),
+        "object" => Some("object".to_string()),
+        "audio" | "video" => Some(element.name.clone()),
+        "source" | "track" => Some(element.name.clone()),
+        "canvas" => Some("canvas".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_template(element: &Element) -> BrowserTemplate {
+    BrowserTemplate {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        shadowrootmode: element.attribute("shadowrootmode").map(ToOwned::to_owned),
+        shadowrootdelegatesfocus: element.attribute("shadowrootdelegatesfocus").is_some(),
+        shadowrootclonable: element.attribute("shadowrootclonable").is_some(),
+        shadowrootserializable: element.attribute("shadowrootserializable").is_some(),
+        content_text: visible_text_for_nodes(&element.children),
+    }
+}
+
+fn browser_template_descriptor(element: &Element) -> BrowserTemplateDescriptor {
+    let shadowrootmode = element.attribute("shadowrootmode").map(ToOwned::to_owned);
+    let shadowroot_attribute_names = browser_template_shadowroot_attribute_names(element);
+    let template_block_reasons =
+        browser_template_block_reasons(shadowrootmode.as_deref(), &shadowroot_attribute_names);
+    let content_text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+
+    BrowserTemplateDescriptor {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        template_kind: if shadowrootmode.is_some() {
+            "declarative-shadow-root".to_string()
+        } else {
+            "inert-template".to_string()
+        },
+        shadowrootmode,
+        shadowroot_attribute_count: shadowroot_attribute_names.len(),
+        shadowroot_attribute_names,
+        declarative_shadow_root: element.attribute("shadowrootmode").is_some(),
+        shadowroot_mode_valid: element
+            .attribute("shadowrootmode")
+            .is_some_and(|mode| matches!(mode, "open" | "closed")),
+        shadowrootdelegatesfocus: element.attribute("shadowrootdelegatesfocus").is_some(),
+        shadowrootclonable: element.attribute("shadowrootclonable").is_some(),
+        shadowrootserializable: element.attribute("shadowrootserializable").is_some(),
+        content_word_count: content_text.split_whitespace().count(),
+        content_text,
+        template_blocked: !template_block_reasons.is_empty(),
+        template_block_reasons,
+    }
+}
+
+fn browser_template_shadowroot_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "shadowrootmode",
+        "shadowrootdelegatesfocus",
+        "shadowrootclonable",
+        "shadowrootserializable",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_template_block_reasons(
+    shadowrootmode: Option<&str>,
+    shadowroot_attribute_names: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if shadowrootmode.is_some_and(|mode| !matches!(mode, "open" | "closed")) {
+        reasons.push("invalid-shadowrootmode".to_string());
+    }
+    if shadowrootmode.is_none() && !shadowroot_attribute_names.is_empty() {
+        reasons.push("shadowroot-flags-without-mode".to_string());
+    }
+    reasons
+}
+
+fn browser_slot_descriptor(element: &Element) -> Option<BrowserSlotDescriptor> {
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    if element.name != "slot" && slot.is_none() {
+        return None;
+    }
+
+    let fallback_text = if element.name == "slot" {
+        visible_text_for_nodes(&element.children)
+    } else {
+        String::new()
+    };
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+    let slot_block_reasons = browser_slot_block_reasons(slot.as_deref(), slot_name.as_deref());
+    let default_slot = if element.name == "slot" {
+        slot_name.as_deref().is_none_or(str::is_empty)
+    } else {
+        slot.as_deref().is_some_and(str::is_empty)
+    };
+    let named_slot = if element.name == "slot" {
+        slot_name
+            .as_deref()
+            .is_some_and(|slot_name| !slot_name.is_empty())
+    } else {
+        slot.as_deref()
+            .is_some_and(|slot_name| !slot_name.is_empty())
+    };
+
+    Some(BrowserSlotDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        slot_kind: if element.name == "slot" {
+            "slot-element".to_string()
+        } else {
+            "slotted-element".to_string()
+        },
+        slot,
+        slot_name,
+        default_slot,
+        named_slot,
+        fallback_word_count: fallback_text.split_whitespace().count(),
+        fallback_text,
+        part: browser_part_tokens(element),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot_blocked: !slot_block_reasons.is_empty(),
+        slot_block_reasons,
+    })
+}
+
+fn browser_slot_block_reasons(slot: Option<&str>, slot_name: Option<&str>) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if slot.is_some_and(|slot| !slot.is_empty() && slot.trim().is_empty()) {
+        reasons.push("blank-slot-assignment".to_string());
+    }
+    if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
+        reasons.push("blank-slot-name".to_string());
+    }
+    reasons
+}
+
+fn browser_custom_element_descriptor(element: &Element) -> Option<BrowserCustomElementDescriptor> {
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    if custom_element_name.is_none() && custom_element_is.is_none() {
+        return None;
+    }
+
+    let autonomous_custom_element = custom_element_name.is_some();
+    let customized_builtin = custom_element_name.is_none() && custom_element_is.is_some();
+    let definition_name = custom_element_is
+        .clone()
+        .or_else(|| custom_element_name.clone());
+    let custom_element_name_valid = definition_name
+        .as_deref()
+        .is_some_and(is_browser_custom_element_name);
+    let custom_element_block_reasons = browser_custom_element_block_reasons(
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        custom_element_name_valid,
+    );
+    let data_attributes = browser_data_attributes(element);
+
+    Some(BrowserCustomElementDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        custom_element_kind: if custom_element_name.is_some() && custom_element_is.is_some() {
+            "autonomous-with-is".to_string()
+        } else if autonomous_custom_element {
+            "autonomous-custom-element".to_string()
+        } else {
+            "customized-built-in".to_string()
+        },
+        definition_name,
+        custom_element_name,
+        custom_element_is,
+        autonomous_custom_element,
+        customized_builtin,
+        extends_element: customized_builtin.then(|| element.name.clone()),
+        custom_element_name_valid,
+        slot: browser_slot_assignment(element),
+        part: browser_part_tokens(element),
+        exportparts: browser_exportparts(element),
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        text: visible_text_for_nodes(&element.children),
+        custom_element_blocked: !custom_element_block_reasons.is_empty(),
+        custom_element_block_reasons,
+    })
+}
+
+fn browser_custom_element_block_reasons(
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    custom_element_name_valid: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if custom_element_is == Some("") {
+        reasons.push("empty-is-value".to_string());
+    } else if custom_element_is.is_some() && !custom_element_name_valid {
+        reasons.push("invalid-custom-element-name".to_string());
+    }
+    if custom_element_name.is_some() && custom_element_is.is_some() {
+        reasons.push("is-on-autonomous-custom-element".to_string());
+    }
+    reasons
+}
+
+fn browser_canvas_descriptor(element: &Element) -> Option<BrowserCanvasDescriptor> {
+    if element.name != "canvas" {
+        return None;
+    }
+
+    let fallback_text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let data_attributes = browser_data_attributes(element);
+    let event_handlers = browser_event_handlers(element);
+    let canvas_block_reasons = browser_canvas_block_reasons(
+        element.attribute("width"),
+        element.attribute("height"),
+        &fallback_text,
+    );
+
+    Some(BrowserCanvasDescriptor {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        has_width: element.attribute("width").is_some(),
+        has_height: element.attribute("height").is_some(),
+        fallback_word_count: fallback_text.split_whitespace().count(),
+        fallback_text,
+        part: browser_part_tokens(element),
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        pointer_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_pointer_interaction_event,
+        ),
+        keyboard_handlers: browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event),
+        lifecycle_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_load_lifecycle_event,
+        ),
+        event_handlers,
+        canvas_blocked: !canvas_block_reasons.is_empty(),
+        canvas_block_reasons,
+    })
+}
+
+fn browser_canvas_block_reasons(
+    width: Option<&str>,
+    height: Option<&str>,
+    fallback_text: &str,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if width.is_none() {
+        reasons.push("missing-width".to_string());
+    }
+    if height.is_none() {
+        reasons.push("missing-height".to_string());
+    }
+    if fallback_text.is_empty() {
+        reasons.push("missing-fallback-text".to_string());
+    }
+    reasons
+}
+
+fn browser_component_hydration_target(
+    element: &Element,
+) -> Option<BrowserComponentHydrationTarget> {
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let part = browser_part_tokens(element);
+    let exportparts = browser_exportparts(element);
+    let data_attributes = browser_data_attributes(element);
+    let is_shadowroot_template =
+        element.name == "template" && element.attribute("shadowrootmode").is_some();
+    let is_canvas = element.name == "canvas";
+    let is_slot_element = element.name == "slot";
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+
+    if !custom_element
+        && slot.is_none()
+        && slot_name.is_none()
+        && part.is_empty()
+        && exportparts.is_none()
+        && data_attributes.is_empty()
+        && !is_shadowroot_template
+        && !is_canvas
+        && !is_slot_element
+    {
+        return None;
+    }
+
+    Some(BrowserComponentHydrationTarget {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot,
+        slot_name,
+        part,
+        exportparts,
+        data_attributes,
+        canvas_fallback_text: is_canvas.then(|| visible_text_for_nodes(&element.children)),
+        text: visible_text_for_nodes(&element.children),
+    })
+}
+
+fn browser_component_hydration_descriptor(
+    element: &Element,
+) -> Option<BrowserComponentHydrationDescriptor> {
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+    let shadowrootmode = (element.name == "template")
+        .then(|| element.attribute("shadowrootmode").map(ToOwned::to_owned))
+        .flatten();
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    let part = browser_part_tokens(element);
+    let exportparts = browser_exportparts(element);
+    let data_attributes = browser_data_attributes(element);
+    let canvas_fallback_text = (element.name == "canvas")
+        .then(|| collapse_html_whitespace(&visible_text_for_nodes(&element.children)));
+    let hydration_kind = browser_component_hydration_kind(
+        element,
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        shadowrootmode.as_deref(),
+        slot.as_deref(),
+        slot_name.as_deref(),
+        &part,
+        exportparts.as_deref(),
+        &data_attributes,
+    )?;
+    let hydration_block_reasons = browser_component_hydration_block_reasons(
+        element,
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        shadowrootmode.as_deref(),
+        slot.as_deref(),
+        slot_name.as_deref(),
+        canvas_fallback_text.as_deref(),
+    );
+
+    Some(BrowserComponentHydrationDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        hydration_kind,
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        shadowrootmode,
+        slot,
+        slot_name,
+        part,
+        exportparts,
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        data_attribute_count: data_attributes.len(),
+        canvas_fallback_text,
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        hydration_blocked: !hydration_block_reasons.is_empty(),
+        hydration_block_reasons,
+    })
+}
+
+fn browser_component_hydration_kind(
+    element: &Element,
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    shadowrootmode: Option<&str>,
+    slot: Option<&str>,
+    slot_name: Option<&str>,
+    part: &[String],
+    exportparts: Option<&str>,
+    data_attributes: &[BrowserDataAttribute],
+) -> Option<String> {
+    if custom_element_name.is_some() {
+        Some("autonomous-custom-element".to_string())
+    } else if custom_element_is.is_some() {
+        Some("customized-built-in".to_string())
+    } else if shadowrootmode.is_some() {
+        Some("declarative-shadow-template".to_string())
+    } else if element.name == "slot" || slot_name.is_some() {
+        Some("slot-outlet".to_string())
+    } else if slot.is_some() {
+        Some("slotted-element".to_string())
+    } else if element.name == "canvas" {
+        Some("canvas-fallback".to_string())
+    } else if exportparts.is_some() {
+        Some("exported-parts".to_string())
+    } else if !part.is_empty() {
+        Some("part-target".to_string())
+    } else if !data_attributes.is_empty() {
+        Some("data-hydration-marker".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_component_hydration_block_reasons(
+    element: &Element,
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    shadowrootmode: Option<&str>,
+    slot: Option<&str>,
+    slot_name: Option<&str>,
+    canvas_fallback_text: Option<&str>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    let definition_name = custom_element_is.or(custom_element_name);
+    if definition_name.is_some_and(|name| !is_browser_custom_element_name(name)) {
+        reasons.push("invalid-custom-element-name".to_string());
+    }
+    if custom_element_name.is_some() && custom_element_is.is_some() {
+        reasons.push("is-on-autonomous-custom-element".to_string());
+    }
+    if shadowrootmode.is_some_and(|mode| !matches!(mode, "open" | "closed")) {
+        reasons.push("invalid-shadowrootmode".to_string());
+    }
+    if slot.is_some_and(|slot| !slot.is_empty() && slot.trim().is_empty()) {
+        reasons.push("blank-slot-assignment".to_string());
+    }
+    if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
+        reasons.push("blank-slot-name".to_string());
+    }
+    if element.name == "canvas" && canvas_fallback_text.is_some_and(str::is_empty) {
+        reasons.push("missing-canvas-fallback-text".to_string());
+    }
+    reasons
+}
+
+fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAttributeDescriptor> {
+    let data_attributes = browser_data_attributes(element);
+    if data_attributes.is_empty() {
+        return None;
+    }
+
+    let data_attribute_names = browser_data_attribute_names(&data_attributes);
+    let json_data_attribute_names = browser_json_data_attribute_names(&data_attributes);
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+
+    Some(BrowserDataAttributeDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot: browser_slot_assignment(element),
+        slot_name: browser_slot_name(element),
+        part: browser_part_tokens(element),
+        data_attribute_count: data_attributes.len(),
+        data_attributes,
+        data_attribute_names,
+        json_data_attribute_names,
+        text: visible_text_for_nodes(&element.children),
+    })
+}
+
+fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalStateDescriptor> {
+    if matches!(
+        element.name.as_str(),
+        "button"
+            | "fieldset"
+            | "form"
+            | "input"
+            | "label"
+            | "meter"
+            | "object"
+            | "option"
+            | "output"
+            | "progress"
+            | "select"
+            | "textarea"
+    ) {
+        return None;
+    }
+
+    let accesskey = browser_accesskey(element);
+    let hidden = browser_hidden(element);
+    let inert = browser_inert(element);
+    let autofocus = browser_autofocus(element);
+    let global_attribute_names = browser_global_attribute_names(element);
+    let global_state_block_reasons = browser_global_state_block_reasons(hidden, inert);
+    let has_global_state = hidden
+        || inert
+        || !accesskey.is_empty()
+        || autofocus
+        || element.attribute("contenteditable").is_some()
+        || element.attribute("draggable").is_some()
+        || element.attribute("spellcheck").is_some()
+        || element.attribute("translate").is_some();
+
+    if !has_global_state {
+        return None;
+    }
+
+    Some(BrowserGlobalStateDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        lang: element.attribute("lang").map(ToOwned::to_owned),
+        dir: element.attribute("dir").map(ToOwned::to_owned),
+        hidden,
+        inert,
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        focus_navigation_hint: element.attribute("tabindex").is_some()
+            || !accesskey.is_empty()
+            || autofocus,
+        accesskey,
+        autofocus,
+        contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        editing_mode: browser_editing_mode(element),
+        draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        draggable_state: browser_draggable_state(element),
+        spellcheck: browser_spellcheck_state(element),
+        translate: browser_translate_state(element),
+        global_attribute_count: global_attribute_names.len(),
+        global_attribute_names,
+        global_state_blocked: !global_state_block_reasons.is_empty(),
+        global_state_block_reasons,
+        text: visible_text_for_nodes(&element.children),
+    })
+}
+
+fn browser_event_handler_descriptor(
+    element: &Element,
+    source: &str,
+) -> Option<BrowserEventHandlerDescriptor> {
+    let event_handlers = browser_event_handlers(element);
+    if event_handlers.is_empty() {
+        return None;
+    }
+
+    Some(BrowserEventHandlerDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        role: browser_content_role(&element.name).map(ToOwned::to_owned),
+        source: source.to_string(),
+        handler_count: event_handlers.len(),
+        activation_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_activation_event,
+        ),
+        keyboard_handlers: browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event),
+        pointer_handlers: browser_event_handlers_by_kind(&event_handlers, browser_pointer_event),
+        form_handlers: browser_event_handlers_by_kind(&event_handlers, browser_form_event),
+        media_handlers: browser_event_handlers_by_kind(&event_handlers, browser_media_event),
+        lifecycle_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_lifecycle_event,
+        ),
+        error_handlers: browser_event_handlers_by_kind(&event_handlers, browser_error_event),
+        event_handlers,
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+    })
+}
+
+fn browser_aria_relation_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaRelationDescriptor> {
+    let aria_details = browser_aria_idrefs(element, "aria-details");
+    let aria_errormessage = browser_aria_idrefs(element, "aria-errormessage");
+    let aria_flowto = browser_aria_idrefs(element, "aria-flowto");
+
+    if aria_details.is_empty() && aria_errormessage.is_empty() && aria_flowto.is_empty() {
+        return None;
+    }
+
+    let relation_attribute_names = browser_aria_relation_attribute_names(element);
+    let unresolved_relation_targets = browser_unresolved_aria_relation_targets(
+        &aria_details,
+        &aria_errormessage,
+        &aria_flowto,
+        id_texts,
+    );
+    let relation_block_reasons = browser_aria_relation_block_reasons(&unresolved_relation_targets);
+    let relation_target_count = aria_details.len() + aria_errormessage.len() + aria_flowto.len();
+
+    Some(BrowserAriaRelationDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        text: visible_text_for_nodes(&element.children),
+        details_text: browser_idref_texts(&aria_details, id_texts),
+        aria_details,
+        errormessage_text: browser_idref_texts(&aria_errormessage, id_texts),
+        aria_errormessage,
+        flowto_text: browser_idref_texts(&aria_flowto, id_texts),
+        aria_flowto,
+        relation_attribute_count: relation_attribute_names.len(),
+        relation_attribute_names,
+        relation_target_count,
+        relation_blocked: !relation_block_reasons.is_empty(),
+        relation_block_reasons,
+        unresolved_relation_targets,
+    })
+}
+
+fn browser_aria_relation_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-details", "aria-errormessage", "aria-flowto"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_unresolved_aria_relation_targets(
+    aria_details: &[String],
+    aria_errormessage: &[String],
+    aria_flowto: &[String],
+    id_texts: &[(String, String)],
+) -> Vec<String> {
+    let mut unresolved = Vec::new();
+    for target in aria_details
+        .iter()
+        .chain(aria_errormessage.iter())
+        .chain(aria_flowto.iter())
+    {
+        if !id_texts.iter().any(|(id, _)| id == target) && !unresolved.contains(target) {
+            unresolved.push(target.clone());
+        }
+    }
+    unresolved
+}
+
+fn browser_aria_relation_block_reasons(unresolved_targets: &[String]) -> Vec<String> {
+    if unresolved_targets.is_empty() {
+        Vec::new()
+    } else {
+        vec!["unresolved-idref".to_string()]
+    }
+}
+
+fn browser_aria_name_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaNameDescriptor> {
+    let aria_label = browser_aria_label(element);
+    let aria_labelledby = browser_aria_idrefs(element, "aria-labelledby");
+
+    if aria_label.is_none() && aria_labelledby.is_empty() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let labelledby_text = browser_idref_texts(&aria_labelledby, id_texts);
+    let unresolved_label_targets = browser_unresolved_aria_idrefs(&aria_labelledby, id_texts);
+    let name_block_reasons = browser_aria_name_block_reasons(
+        aria_label.as_deref(),
+        &aria_labelledby,
+        &labelledby_text,
+        &unresolved_label_targets,
+    );
+    let name_attribute_names = browser_aria_name_attribute_names(element);
+    let name_source =
+        browser_aria_name_source(aria_label.as_deref(), &aria_labelledby, &labelledby_text);
+
+    Some(BrowserAriaNameDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label,
+        aria_labelledby,
+        labelledby_text,
+        name_source,
+        name_attribute_count: name_attribute_names.len(),
+        name_attribute_names,
+        label_target_count: browser_aria_idrefs(element, "aria-labelledby").len(),
+        unresolved_label_targets,
+        name_blocked: !name_block_reasons.is_empty(),
+        name_block_reasons,
+    })
+}
+
+fn browser_aria_name_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-label", "aria-labelledby"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_unresolved_aria_idrefs(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
+    let mut unresolved = Vec::new();
+    for target in idrefs {
+        if !id_texts.iter().any(|(id, _)| id == target) && !unresolved.contains(target) {
+            unresolved.push(target.clone());
+        }
+    }
+    unresolved
+}
+
+fn browser_aria_name_source(
+    aria_label: Option<&str>,
+    aria_labelledby: &[String],
+    labelledby_text: &[String],
+) -> String {
+    if !aria_labelledby.is_empty() && !labelledby_text.is_empty() {
+        "aria-labelledby".to_string()
+    } else if aria_label.is_some_and(|label| !label.is_empty()) {
+        "aria-label".to_string()
+    } else if !aria_labelledby.is_empty() {
+        "unresolved-aria-labelledby".to_string()
+    } else {
+        "none".to_string()
+    }
+}
+
+fn browser_aria_name_block_reasons(
+    aria_label: Option<&str>,
+    aria_labelledby: &[String],
+    labelledby_text: &[String],
+    unresolved_targets: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if !unresolved_targets.is_empty() {
+        reasons.push("unresolved-idref".to_string());
+    }
+    if !aria_labelledby.is_empty()
+        && labelledby_text.is_empty()
+        && aria_label.is_none_or(|label| label.is_empty())
+    {
+        reasons.push("empty-name".to_string());
+    }
+    reasons
+}
+
+fn browser_aria_description_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaDescriptionDescriptor> {
+    let aria_description = browser_aria_description(element);
+    let aria_describedby = browser_aria_idrefs(element, "aria-describedby");
+
+    if aria_description.is_none() && aria_describedby.is_empty() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let describedby_text = browser_idref_texts(&aria_describedby, id_texts);
+    let unresolved_description_targets =
+        browser_unresolved_aria_idrefs(&aria_describedby, id_texts);
+    let description_block_reasons = browser_aria_description_block_reasons(
+        aria_description.as_deref(),
+        &aria_describedby,
+        &describedby_text,
+        &unresolved_description_targets,
+    );
+    let description_attribute_names = browser_aria_description_attribute_names(element);
+    let description_source = browser_aria_description_source(
+        aria_description.as_deref(),
+        &aria_describedby,
+        &describedby_text,
+    );
+
+    Some(BrowserAriaDescriptionDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_description,
+        aria_describedby,
+        describedby_text,
+        description_source,
+        description_attribute_count: description_attribute_names.len(),
+        description_attribute_names,
+        description_target_count: browser_aria_idrefs(element, "aria-describedby").len(),
+        unresolved_description_targets,
+        description_blocked: !description_block_reasons.is_empty(),
+        description_block_reasons,
+    })
+}
+
+fn browser_aria_description(element: &Element) -> Option<String> {
+    element
+        .attribute("aria-description")
+        .map(collapse_html_whitespace)
+        .filter(|description| !description.is_empty())
+}
+
+fn browser_aria_description_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-description", "aria-describedby"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_aria_description_source(
+    aria_description: Option<&str>,
+    aria_describedby: &[String],
+    describedby_text: &[String],
+) -> String {
+    if !aria_describedby.is_empty() && !describedby_text.is_empty() {
+        "aria-describedby".to_string()
+    } else if aria_description.is_some_and(|description| !description.is_empty()) {
+        "aria-description".to_string()
+    } else if !aria_describedby.is_empty() {
+        "unresolved-aria-describedby".to_string()
+    } else {
+        "none".to_string()
+    }
+}
+
+fn browser_aria_description_block_reasons(
+    aria_description: Option<&str>,
+    aria_describedby: &[String],
+    describedby_text: &[String],
+    unresolved_targets: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if !unresolved_targets.is_empty() {
+        reasons.push("unresolved-idref".to_string());
+    }
+    if !aria_describedby.is_empty()
+        && describedby_text.is_empty()
+        && aria_description.is_none_or(|description| description.is_empty())
+    {
+        reasons.push("empty-description".to_string());
+    }
+    reasons
+}
+
+fn browser_slot_assignment(element: &Element) -> Option<String> {
+    element.attribute("slot").map(ToOwned::to_owned)
+}
+
+fn browser_slot_name(element: &Element) -> Option<String> {
+    if element.name == "slot" {
+        element.attribute("name").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_custom_element(element: &Element) -> bool {
+    browser_custom_element_name(element).is_some() || browser_custom_element_is(element).is_some()
+}
+
+fn browser_custom_element_name(element: &Element) -> Option<String> {
+    is_browser_custom_element_name(&element.name).then(|| element.name.clone())
+}
+
+fn browser_custom_element_is(element: &Element) -> Option<String> {
+    element.attribute("is").map(ToOwned::to_owned)
+}
+
+fn browser_part_tokens(element: &Element) -> Vec<String> {
+    element
+        .attribute("part")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_exportparts(element: &Element) -> Option<String> {
+    element
+        .attribute("exportparts")
+        .map(collapse_html_whitespace)
+        .filter(|exportparts| !exportparts.is_empty())
+}
+
+fn browser_data_attributes(element: &Element) -> Vec<BrowserDataAttribute> {
+    element
+        .attributes
+        .iter()
+        .filter(|attribute| {
+            attribute.name.starts_with("data-") && attribute.name != FRAGMENT_CONTEXT_MARKER
+        })
+        .map(|attribute| BrowserDataAttribute {
+            name: attribute.name.clone(),
+            value: Some(attribute.value.clone()),
+        })
+        .collect()
+}
+
+fn browser_data_attribute_names(data_attributes: &[BrowserDataAttribute]) -> Vec<String> {
+    data_attributes
+        .iter()
+        .map(|attribute| attribute.name.clone())
+        .collect()
+}
+
+fn browser_json_data_attribute_names(data_attributes: &[BrowserDataAttribute]) -> Vec<String> {
+    data_attributes
+        .iter()
+        .filter(|attribute| {
+            attribute.value.as_deref().is_some_and(|value| {
+                let value = value.trim();
+                (value.starts_with('{') && value.ends_with('}'))
+                    || (value.starts_with('[') && value.ends_with(']'))
+            })
+        })
+        .map(|attribute| attribute.name.clone())
+        .collect()
+}
+
+fn browser_global_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "title",
+        "lang",
+        "dir",
+        "hidden",
+        "inert",
+        "tabindex",
+        "accesskey",
+        "autofocus",
+        "contenteditable",
+        "draggable",
+        "spellcheck",
+        "translate",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_global_state_block_reasons(hidden: bool, inert: bool) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if hidden {
+        reasons.push("hidden".to_string());
+    }
+    if inert {
+        reasons.push("inert".to_string());
+    }
+    reasons
+}
+
+fn is_browser_custom_element_name(name: &str) -> bool {
+    name.contains('-')
+        && !matches!(
+            name,
+            "annotation-xml"
+                | "color-profile"
+                | "font-face"
+                | "font-face-src"
+                | "font-face-uri"
+                | "font-face-format"
+                | "font-face-name"
+                | "missing-glyph"
+        )
+}
+
+fn browser_canvas_fallback_text(element: &Element) -> Option<String> {
+    if element.name != "canvas" {
+        return None;
+    }
+    let text = visible_text_for_nodes(&element.children);
+    (!text.is_empty()).then_some(text)
+}
+
+fn is_browser_browsing_context_element(element: &Element) -> bool {
+    matches!(element.name.as_str(), "iframe" | "frame")
+}
+
+fn browser_browsing_context_name(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("name").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_loading(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("loading").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_sandbox(element: &Element) -> Vec<String> {
+    if is_browser_browsing_context_element(element) {
+        element
+            .attribute("sandbox")
+            .map(split_html_classes)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_browsing_context_allow(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("allow").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_allowfullscreen(element: &Element) -> bool {
+    is_browser_browsing_context_element(element) && element.attribute("allowfullscreen").is_some()
+}
+
+fn browser_browsing_context_referrerpolicy(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("referrerpolicy").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_fetchpriority(element: &Element) -> Option<String> {
+    if is_browser_browsing_context_element(element) {
+        element.attribute("fetchpriority").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_loading_hint_descriptor(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserLoadingHintDescriptor> {
+    let loading = match element.name.as_str() {
+        "img" => element.attribute("loading").map(ToOwned::to_owned),
+        _ => browser_browsing_context_loading(element),
+    };
+    let decoding = (element.name == "img")
+        .then(|| element.attribute("decoding").map(ToOwned::to_owned))
+        .flatten();
+    let fetchpriority = match element.name.as_str() {
+        "img" | "iframe" | "frame" | "link" | "script" => {
+            element.attribute("fetchpriority").map(ToOwned::to_owned)
+        }
+        _ => None,
+    };
+    let blocking = match element.name.as_str() {
+        "link" | "script" | "style" => element.attribute("blocking").map(ToOwned::to_owned),
+        _ => None,
+    };
+    let preload = browser_media_preload(element);
+
+    if loading.is_none()
+        && decoding.is_none()
+        && fetchpriority.is_none()
+        && blocking.is_none()
+        && preload.is_none()
+    {
+        return None;
+    }
+
+    let url = browser_loading_hint_url(element);
+    let resolved_url = url
+        .as_deref()
+        .and_then(|url| resolve_browser_url(url, base_href));
+
+    Some(BrowserLoadingHintDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        url,
+        resolved_url,
+        loading,
+        decoding,
+        fetchpriority,
+        blocking,
+        blocking_tokens: browser_blocking_tokens(element),
+        preload,
+        as_hint: element.attribute("as").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+    })
+}
+
+fn browser_loading_hint_url(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "link" => element.attribute("href"),
+        "audio" | "frame" | "iframe" | "img" | "script" | "video" => element.attribute("src"),
+        _ => None,
+    }
+    .map(ToOwned::to_owned)
+}
+
+fn browser_fetch_policy_descriptor(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserFetchPolicyDescriptor> {
+    let integrity = match element.name.as_str() {
+        "link" | "script" => element.attribute("integrity").map(ToOwned::to_owned),
+        _ => None,
+    };
+    let crossorigin = match element.name.as_str() {
+        "audio" | "img" | "link" | "script" | "video" => {
+            element.attribute("crossorigin").map(ToOwned::to_owned)
+        }
+        _ => None,
+    };
+    let nonce = match element.name.as_str() {
+        "link" | "script" | "style" => element.attribute("nonce").map(ToOwned::to_owned),
+        _ => None,
+    };
+    let referrerpolicy = match element.name.as_str() {
+        "a" | "area" | "iframe" | "img" | "link" | "script" => {
+            element.attribute("referrerpolicy").map(ToOwned::to_owned)
+        }
+        _ => None,
+    };
+    let csp = browser_browsing_context_csp(element);
+    let sandbox = browser_browsing_context_sandbox(element);
+    let allow = browser_browsing_context_allow(element);
+    let allowfullscreen = browser_browsing_context_allowfullscreen(element);
+    let credentialless = browser_browsing_context_credentialless(element);
+
+    if integrity.is_none()
+        && crossorigin.is_none()
+        && nonce.is_none()
+        && referrerpolicy.is_none()
+        && csp.is_none()
+        && sandbox.is_empty()
+        && allow.is_none()
+        && !allowfullscreen
+        && !credentialless
+    {
+        return None;
+    }
+
+    let url = browser_policy_url(element);
+    let resolved_url = url
+        .as_deref()
+        .and_then(|url| resolve_browser_url(url, base_href));
+
+    Some(BrowserFetchPolicyDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        url,
+        resolved_url,
+        integrity,
+        crossorigin,
+        nonce,
+        referrerpolicy,
+        csp,
+        sandbox,
+        allow,
+        allowfullscreen,
+        credentialless,
+    })
+}
+
+fn browser_policy_url(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "a" | "area" | "link" => element.attribute("href"),
+        "audio" | "frame" | "iframe" | "img" | "script" | "video" => element.attribute("src"),
+        _ => None,
+    }
+    .map(ToOwned::to_owned)
+}
+
+fn browser_browsing_context_csp(element: &Element) -> Option<String> {
+    if element.name == "iframe" {
+        element.attribute("csp").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_srcdoc(element: &Element) -> Option<String> {
+    if element.name == "iframe" {
+        element.attribute("srcdoc").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_browsing_context_credentialless(element: &Element) -> bool {
+    is_browser_browsing_context_element(element) && element.attribute("credentialless").is_some()
+}
+
+fn browser_image_element(
+    element: &Element,
+    base_href: Option<&str>,
+    picture_sources: &[BrowserImageSource],
+) -> BrowserImage {
+    let src = element.attribute("src").map(ToOwned::to_owned);
+    let srcset = element.attribute("srcset").map(ToOwned::to_owned);
+    BrowserImage {
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        resolved_srcset: srcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        srcset,
+        sizes: element.attribute("sizes").map(ToOwned::to_owned),
+        loading: element.attribute("loading").map(ToOwned::to_owned),
+        decoding: element.attribute("decoding").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        usemap: element.attribute("usemap").map(ToOwned::to_owned),
+        ismap: element.attribute("ismap").is_some(),
+        sources: picture_sources.to_vec(),
+    }
+}
+
+fn browser_image_source_element(element: &Element, base_href: Option<&str>) -> BrowserImageSource {
+    let srcset = element.attribute("srcset").map(ToOwned::to_owned);
+    BrowserImageSource {
+        resolved_srcset: srcset
+            .as_deref()
+            .map(|srcset| resolve_browser_srcset(srcset, base_href)),
+        srcset,
+        sizes: element.attribute("sizes").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+    }
+}
+
+fn resolve_browser_srcset(srcset: &str, base_href: Option<&str>) -> String {
+    srcset
+        .split(',')
+        .map(|candidate| resolve_browser_srcset_candidate(candidate, base_href))
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+fn resolve_browser_srcset_candidate(candidate: &str, base_href: Option<&str>) -> String {
+    let trimmed = candidate.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    let Some((url, descriptor)) = trimmed.split_once(char::is_whitespace) else {
+        return resolve_browser_url(trimmed, base_href).unwrap_or_else(|| trimmed.to_string());
+    };
+    let resolved_url = resolve_browser_url(url, base_href).unwrap_or_else(|| url.to_string());
+    let descriptor = descriptor.trim();
+    if descriptor.is_empty() {
+        resolved_url
+    } else {
+        format!("{resolved_url} {descriptor}")
+    }
+}
+
+fn browser_image_map_element(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserImageMap {
+    BrowserImageMap {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        areas: element
+            .children
+            .iter()
+            .filter_map(|child| match child {
+                Node::Element(child_element) if child_element.name == "area" => Some(
+                    browser_image_map_area_element(child_element, base_href, base_target),
+                ),
+                _ => None,
+            })
+            .collect(),
+    }
+}
+
+fn browser_image_map_area_element(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserImageMapArea {
+    let rel_tokens = browser_rel_tokens(element);
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    BrowserImageMapArea {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        shape: browser_image_map_shape(element).unwrap_or_else(|| "rect".to_string()),
+        coords: browser_image_map_coords(element),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        resolved_ping: browser_anchor_ping(element)
+            .into_iter()
+            .filter_map(|ping| resolve_browser_url(&ping, base_href))
+            .collect(),
+        ping: browser_anchor_ping(element),
+        resolved_attributionsrc: browser_anchor_attributionsrc(element)
+            .into_iter()
+            .filter_map(|attributionsrc| resolve_browser_url(&attributionsrc, base_href))
+            .collect(),
+        attributionsrc: browser_anchor_attributionsrc(element),
+        download: browser_anchor_download(element),
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+    }
+}
+
+fn browser_script_element(element: &Element, base_href: Option<&str>) -> BrowserScript {
+    let src = element.attribute("src").map(ToOwned::to_owned);
+    BrowserScript {
+        script_kind: browser_script_kind(element),
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        async_script: element.attribute("async").is_some(),
+        defer_script: element.attribute("defer").is_some(),
+        nomodule: element.attribute("nomodule").is_some(),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        nonce: element.attribute("nonce").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
+        text: element_text_if_non_empty(element),
+    }
+}
+
+fn browser_script_kind(element: &Element) -> String {
+    let Some(type_hint) = element.attribute("type") else {
+        return "classic".to_string();
+    };
+    let normalized_type = type_hint.trim().to_ascii_lowercase();
+    let type_essence = normalized_type
+        .split_once(';')
+        .map(|(essence, _)| essence.trim())
+        .unwrap_or(normalized_type.as_str());
+    match type_essence {
+        ""
+        | "text/javascript"
+        | "application/javascript"
+        | "text/ecmascript"
+        | "application/ecmascript"
+        | "module" => {
+            if type_essence == "module" {
+                "module".to_string()
+            } else {
+                "classic".to_string()
+            }
+        }
+        "importmap" => "importmap".to_string(),
+        "speculationrules" => "speculationrules".to_string(),
+        _ => "data".to_string(),
+    }
+}
+
+fn browser_style_element(element: &Element, base_href: Option<&str>) -> BrowserStylesheet {
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    BrowserStylesheet {
+        source: element.name.clone(),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_tokens: browser_rel_tokens(element),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        disabled: element.attribute("disabled").is_some(),
+        alternate: browser_rel_contains(element, "alternate"),
+        integrity: element.attribute("integrity").map(ToOwned::to_owned),
+        crossorigin: element.attribute("crossorigin").map(ToOwned::to_owned),
+        nonce: element.attribute("nonce").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        fetchpriority: element.attribute("fetchpriority").map(ToOwned::to_owned),
+        blocking: element.attribute("blocking").map(ToOwned::to_owned),
+        blocking_tokens: browser_blocking_tokens(element),
+        text: if element.name == "style" {
+            element_text_if_non_empty(element)
+        } else {
+            None
+        },
+    }
+}
+
+fn browser_link_is_stylesheet(element: &Element) -> bool {
+    element.name == "link" && browser_rel_contains(element, "stylesheet")
+}
+
+fn browser_rel_contains(element: &Element, token: &str) -> bool {
+    browser_rel_tokens_contain(&browser_rel_tokens(element), token)
+}
+
+fn browser_rel_tokens_contain(tokens: &[String], token: &str) -> bool {
+    tokens
+        .iter()
+        .any(|candidate| candidate.eq_ignore_ascii_case(token))
+}
+
+fn browser_rel_tokens(element: &Element) -> Vec<String> {
+    element
+        .attribute("rel")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_blocking_tokens(element: &Element) -> Vec<String> {
+    element
+        .attribute("blocking")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn element_text_if_non_empty(element: &Element) -> Option<String> {
+    let text = element_text(element);
+    if text.is_empty() {
+        None
+    } else {
+        Some(text)
+    }
+}
+
+fn browser_media_element(element: &Element, base_href: Option<&str>) -> BrowserMedia {
+    let src = element.attribute("src").map(ToOwned::to_owned);
+    let poster = browser_media_poster(element);
+    BrowserMedia {
+        kind: element.name.clone(),
+        resolved_src: src
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src,
+        resolved_poster: poster
+            .as_deref()
+            .and_then(|poster| resolve_browser_url(poster, base_href)),
+        poster,
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        controls: browser_media_controls(element),
+        autoplay: browser_media_autoplay(element),
+        loop_media: browser_media_loop(element),
+        muted: browser_media_muted(element),
+        playsinline: browser_media_playsinline(element),
+        preload: browser_media_preload(element),
+        crossorigin: browser_media_crossorigin(element),
+        controlslist: browser_media_controlslist(element),
+        controlslist_tokens: browser_media_controlslist_tokens(element),
+        disableremoteplayback: browser_media_disableremoteplayback(element),
+        disablepictureinpicture: browser_media_disablepictureinpicture(element),
+        sources: browser_media_sources(element, base_href),
+        tracks: browser_media_tracks(element, base_href),
+    }
+}
+
+fn browser_media_sources(element: &Element, base_href: Option<&str>) -> Vec<BrowserMediaSource> {
+    if !matches!(element.name.as_str(), "audio" | "video") {
+        return Vec::new();
+    }
+
+    element
+        .children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(child) if child.name == "source" => {
+                let src = child.attribute("src").map(ToOwned::to_owned);
+                Some(BrowserMediaSource {
+                    resolved_src: src
+                        .as_deref()
+                        .and_then(|src| resolve_browser_url(src, base_href)),
+                    src,
+                    type_hint: child.attribute("type").map(ToOwned::to_owned),
+                    media: child.attribute("media").map(ToOwned::to_owned),
+                })
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+fn browser_media_tracks(element: &Element, base_href: Option<&str>) -> Vec<BrowserMediaTrack> {
+    if !matches!(element.name.as_str(), "audio" | "video") {
+        return Vec::new();
+    }
+
+    element
+        .children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(child) if child.name == "track" => {
+                let src = child.attribute("src").map(ToOwned::to_owned);
+                Some(BrowserMediaTrack {
+                    kind: browser_track_kind(child).unwrap_or_else(|| "subtitles".to_string()),
+                    resolved_src: src
+                        .as_deref()
+                        .and_then(|src| resolve_browser_url(src, base_href)),
+                    src,
+                    srclang: browser_track_srclang(child),
+                    label: browser_track_label(child),
+                    default_track: browser_track_default(child),
+                })
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+fn browser_media_poster(element: &Element) -> Option<String> {
+    if element.name == "video" {
+        element.attribute("poster").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_preload(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "audio" | "video") {
+        element.attribute("preload").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_controls(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("controls").is_some()
+}
+
+fn browser_media_autoplay(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("autoplay").is_some()
+}
+
+fn browser_media_loop(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("loop").is_some()
+}
+
+fn browser_media_muted(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video") && element.attribute("muted").is_some()
+}
+
+fn browser_media_playsinline(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video")
+        && (element.attribute("playsinline").is_some()
+            || element.attribute("webkit-playsinline").is_some())
+}
+
+fn browser_media_crossorigin(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "audio" | "video") {
+        element.attribute("crossorigin").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_controlslist(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "audio" | "video") {
+        element.attribute("controlslist").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_media_controlslist_tokens(element: &Element) -> Vec<String> {
+    browser_media_controlslist(element)
+        .as_deref()
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_media_disableremoteplayback(element: &Element) -> bool {
+    matches!(element.name.as_str(), "audio" | "video")
+        && element.attribute("disableremoteplayback").is_some()
+}
+
+fn browser_media_disablepictureinpicture(element: &Element) -> bool {
+    element.name == "video" && element.attribute("disablepictureinpicture").is_some()
+}
+
+fn browser_table_section_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "thead" | "tbody" | "tfoot" => Some(element.name.clone()),
+        _ => None,
+    }
+}
+
+fn browser_preserves_text_whitespace(name: &str) -> bool {
+    matches!(name, "pre" | "plaintext" | "xmp" | "listing")
+}
+
+fn browser_text_flow(element: &Element, inherited_preserve_whitespace: bool) -> Option<String> {
+    if browser_preserves_text_whitespace(&element.name) || inherited_preserve_whitespace {
+        Some("preformatted".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_list_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ul" => Some("unordered".to_string()),
+        "ol" => Some("ordered".to_string()),
+        "menu" => Some("menu".to_string()),
+        "dir" => Some("directory".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_list_start(element: &Element) -> Option<String> {
+    if element.name == "ol" {
+        element.attribute("start").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_list_marker_type(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ol" | "ul" | "li" => element.attribute("type").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_list_item_value(element: &Element) -> Option<String> {
+    if element.name == "li" {
+        element.attribute("value").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_description_list_kind(element: &Element) -> Option<String> {
+    if element.name == "dl" {
+        Some("description".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_term_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "dt" => Some("term".to_string()),
+        "dd" => Some("description".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_quote_cite(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "blockquote" | "q" => element.attribute("cite").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_data_value(element: &Element) -> Option<String> {
+    if element.name == "data" {
+        element.attribute("value").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_datetime(element: &Element) -> Option<String> {
+    if element.name == "time" {
+        element.attribute("datetime").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_edit_cite(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "ins" | "del") {
+        element.attribute("cite").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_edit_datetime(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "ins" | "del") {
+        element.attribute("datetime").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_ruby_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "ruby" => Some("ruby".to_string()),
+        "rb" => Some("base".to_string()),
+        "rt" => Some("text".to_string()),
+        "rp" => Some("fallback".to_string()),
+        "rtc" => Some("text_container".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_bidi_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "bdi" => Some("isolate".to_string()),
+        "bdo" => Some("override".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_phrase_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "abbr" => Some("abbreviation".to_string()),
+        "b" => Some("bring_attention".to_string()),
+        "cite" => Some("citation".to_string()),
+        "code" => Some("code".to_string()),
+        "dfn" => Some("definition".to_string()),
+        "em" => Some("emphasis".to_string()),
+        "i" => Some("idiomatic".to_string()),
+        "kbd" => Some("keyboard_input".to_string()),
+        "s" => Some("struck".to_string()),
+        "samp" => Some("sample_output".to_string()),
+        "small" => Some("small_print".to_string()),
+        "strong" => Some("strong_importance".to_string()),
+        "sub" => Some("subscript".to_string()),
+        "sup" => Some("superscript".to_string()),
+        "u" => Some("unarticulated_annotation".to_string()),
+        "var" => Some("variable".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_break_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "br" => Some("line".to_string()),
+        "wbr" => Some("word".to_string()),
+        "hr" => Some("thematic".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_grouping_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "figure" => Some("figure".to_string()),
+        "figcaption" => Some("caption".to_string()),
+        "search" => Some("search".to_string()),
+        "address" => Some("contact".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_disclosure_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "details" => Some("details".to_string()),
+        "summary" => Some("summary".to_string()),
+        "dialog" => Some("dialog".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_section_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "article" => Some("article".to_string()),
+        "aside" => Some("aside".to_string()),
+        "footer" => Some("footer".to_string()),
+        "header" => Some("header".to_string()),
+        "hgroup" => Some("heading_group".to_string()),
+        "main" => Some("main".to_string()),
+        "nav" => Some("navigation".to_string()),
+        "section" => Some("section".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_landmark_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "aside" => Some("complementary".to_string()),
+        "footer" => Some("footer".to_string()),
+        "header" => Some("header".to_string()),
+        "main" => Some("main".to_string()),
+        "nav" => Some("navigation".to_string()),
+        _ => None,
+    }
+}
+
+fn collect_label_texts_by_control_id(nodes: &[Node]) -> Vec<(String, String)> {
+    let mut labels = Vec::new();
+    collect_label_texts_by_control_id_into(nodes, &mut labels);
+    labels
+}
+
+fn collect_label_texts_by_control_id_into(nodes: &[Node], labels: &mut Vec<(String, String)>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "label" {
+            if let Some(for_id) = element.attribute("for") {
+                let text = visible_text_for_nodes(&element.children);
+                if !text.is_empty() {
+                    labels.push((for_id.to_string(), text));
+                }
+            }
+        }
+        collect_label_texts_by_control_id_into(&element.children, labels);
+    }
+}
+
+fn collect_element_texts_by_id(nodes: &[Node]) -> Vec<(String, String)> {
+    let mut id_texts = Vec::new();
+    collect_element_texts_by_id_into(nodes, &mut id_texts);
+    id_texts
+}
+
+fn collect_element_texts_by_id_into(nodes: &[Node], id_texts: &mut Vec<(String, String)>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if let Some(id) = element.attribute("id") {
+            let text = visible_text_for_nodes(&element.children);
+            if !text.is_empty() {
+                id_texts.push((id.to_string(), text));
+            }
+        }
+        collect_element_texts_by_id_into(&element.children, id_texts);
+    }
+}
+
+fn is_browser_form_control_element(name: &str) -> bool {
+    matches!(name, "button" | "input" | "output" | "select" | "textarea")
+}
+
+fn is_browser_form_grouped_element(name: &str) -> bool {
+    is_browser_form_control_element(name) || name == "object"
+}
+
+fn is_browser_form_measurement_element(name: &str) -> bool {
+    matches!(name, "meter" | "progress")
+}
+
+fn is_browser_labelable_element(name: &str) -> bool {
+    matches!(
+        name,
+        "button" | "input" | "meter" | "output" | "progress" | "select" | "textarea"
+    )
+}
+
+fn browser_control_labels(
+    element: &Element,
+    labels: &[(String, String)],
+    current_label_text: Option<&str>,
+) -> Vec<String> {
+    if !is_browser_labelable_element(&element.name) {
+        return Vec::new();
+    }
+
+    let mut result = Vec::new();
+    if let Some(text) = current_label_text.filter(|text| !text.is_empty()) {
+        push_unique_string(&mut result, text.to_string());
+    }
+    if let Some(id) = element.attribute("id") {
+        for (label_for, text) in labels {
+            if label_for == id {
+                push_unique_string(&mut result, text.clone());
+            }
+        }
+    }
+    result
+}
+
+fn push_unique_string(values: &mut Vec<String>, value: String) {
+    if !value.is_empty() && !values.iter().any(|existing| existing == &value) {
+        values.push(value);
+    }
+}
+
+fn browser_authored_role(element: &Element) -> Option<String> {
+    element
+        .attribute("role")
+        .map(collapse_html_whitespace)
+        .filter(|role| !role.is_empty())
+}
+
+fn browser_aria_label(element: &Element) -> Option<String> {
+    element
+        .attribute("aria-label")
+        .map(collapse_html_whitespace)
+        .filter(|label| !label.is_empty())
+}
+
+fn browser_aria_idrefs(element: &Element, name: &str) -> Vec<String> {
+    element
+        .attribute(name)
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_aria_idref(element: &Element, name: &str) -> Option<String> {
+    element
+        .attribute(name)
+        .map(collapse_html_whitespace)
+        .filter(|id| !id.is_empty())
+}
+
+fn browser_aria_state(element: &Element, name: &str) -> Option<String> {
+    element
+        .attribute(name)
+        .map(collapse_html_whitespace)
+        .filter(|state| !state.is_empty())
+}
+
+fn browser_aria_tokens(element: &Element, name: &str) -> Vec<String> {
+    element
+        .attribute(name)
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_aria_hidden(element: &Element) -> bool {
+    element
+        .attribute("aria-hidden")
+        .map(|value| value.eq_ignore_ascii_case("true"))
+        .unwrap_or(false)
+}
+
+fn browser_hidden(element: &Element) -> bool {
+    element.attribute("hidden").is_some()
+}
+
+fn browser_inert(element: &Element) -> bool {
+    element.attribute("inert").is_some()
+}
+
+fn browser_open(element: &Element) -> bool {
+    matches!(element.name.as_str(), "details" | "dialog") && element.attribute("open").is_some()
+}
+
+fn browser_accesskey(element: &Element) -> Vec<String> {
+    element
+        .attribute("accesskey")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_aria_keyshortcuts(element: &Element) -> Vec<String> {
+    element
+        .attribute("aria-keyshortcuts")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_tabindex_order(tabindex: Option<&str>) -> Option<i32> {
+    tabindex.and_then(|tabindex| tabindex.trim().parse::<i32>().ok())
+}
+
+fn browser_event_handlers(element: &Element) -> Vec<String> {
+    element
+        .attributes
+        .iter()
+        .filter_map(|attribute| {
+            let name = attribute.name.as_str();
+            (name.len() > 2 && name.starts_with("on")).then(|| name.to_string())
+        })
+        .collect()
+}
+
+fn browser_event_handlers_by_kind(
+    event_handlers: &[String],
+    predicate: fn(&str) -> bool,
+) -> Vec<String> {
+    event_handlers
+        .iter()
+        .filter(|handler| predicate(handler.as_str()))
+        .cloned()
+        .collect()
+}
+
+fn browser_activation_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onclick" | "ondblclick" | "onsubmit" | "onreset" | "oncommand" | "ontoggle"
+    )
+}
+
+fn browser_keyboard_event(handler: &str) -> bool {
+    matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
+}
+
+fn browser_pointer_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onpointerdown"
+            | "onpointermove"
+            | "onpointerup"
+            | "onpointercancel"
+            | "onpointerenter"
+            | "onpointerleave"
+            | "onpointerover"
+            | "onpointerout"
+            | "onmousedown"
+            | "onmousemove"
+            | "onmouseup"
+            | "onmouseenter"
+            | "onmouseleave"
+            | "onmouseover"
+            | "onmouseout"
+            | "ontouchstart"
+            | "ontouchmove"
+            | "ontouchend"
+            | "ontouchcancel"
+            | "ondrag"
+            | "ondragstart"
+            | "ondragend"
+            | "ondragenter"
+            | "ondragleave"
+            | "ondragover"
+            | "ondrop"
+            | "onwheel"
+    )
+}
+
+fn browser_pointer_interaction_event(handler: &str) -> bool {
+    browser_pointer_event(handler) || browser_click_event(handler)
+}
+
+fn browser_mouse_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onmousedown"
+            | "onmousemove"
+            | "onmouseup"
+            | "onmouseenter"
+            | "onmouseleave"
+            | "onmouseover"
+            | "onmouseout"
+    )
+}
+
+fn browser_touch_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontouchstart" | "ontouchmove" | "ontouchend" | "ontouchcancel"
+    )
+}
+
+fn browser_wheel_event(handler: &str) -> bool {
+    handler == "onwheel"
+}
+
+fn browser_scroll_event(handler: &str) -> bool {
+    matches!(handler, "onscroll" | "onscrollend")
+}
+
+fn browser_scroll_interaction_event(handler: &str) -> bool {
+    browser_scroll_event(handler) || browser_wheel_event(handler) || browser_touch_event(handler)
+}
+
+fn browser_click_event(handler: &str) -> bool {
+    matches!(handler, "onclick" | "ondblclick" | "oncontextmenu")
+}
+
+fn browser_context_menu_event(handler: &str) -> bool {
+    handler == "oncontextmenu"
+}
+
+fn browser_drag_event(handler: &str) -> bool {
+    matches!(handler, "ondrag" | "ondragstart" | "ondragend")
+}
+
+fn browser_drop_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ondragenter" | "ondragleave" | "ondragover" | "ondrop"
+    )
+}
+
+fn browser_clipboard_event(handler: &str) -> bool {
+    matches!(handler, "oncopy" | "oncut" | "onpaste")
+}
+
+fn browser_copy_event(handler: &str) -> bool {
+    handler == "oncopy"
+}
+
+fn browser_cut_event(handler: &str) -> bool {
+    handler == "oncut"
+}
+
+fn browser_paste_event(handler: &str) -> bool {
+    handler == "onpaste"
+}
+
+fn browser_selection_event(handler: &str) -> bool {
+    matches!(handler, "onselect" | "onselectionchange")
+}
+
+fn browser_select_event(handler: &str) -> bool {
+    handler == "onselect"
+}
+
+fn browser_selection_change_event(handler: &str) -> bool {
+    handler == "onselectionchange"
+}
+
+fn browser_selection_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
+    )
+}
+
+fn browser_composition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "oncompositionstart" | "oncompositionupdate" | "oncompositionend"
+    )
+}
+
+fn browser_composition_start_event(handler: &str) -> bool {
+    handler == "oncompositionstart"
+}
+
+fn browser_composition_update_event(handler: &str) -> bool {
+    handler == "oncompositionupdate"
+}
+
+fn browser_composition_end_event(handler: &str) -> bool {
+    handler == "oncompositionend"
+}
+
+fn browser_beforeinput_event(handler: &str) -> bool {
+    handler == "onbeforeinput"
+}
+
+fn browser_text_input_event(handler: &str) -> bool {
+    matches!(handler, "onbeforeinput" | "oninput")
+}
+
+fn browser_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "onselect"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
+    )
+}
+
+fn browser_animation_interaction_event(handler: &str) -> bool {
+    browser_animation_event(handler) || browser_transition_event(handler)
+}
+
+fn browser_animation_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onanimationstart" | "onanimationiteration" | "onanimationend" | "onanimationcancel"
+    )
+}
+
+fn browser_animation_start_event(handler: &str) -> bool {
+    handler == "onanimationstart"
+}
+
+fn browser_animation_iteration_event(handler: &str) -> bool {
+    handler == "onanimationiteration"
+}
+
+fn browser_animation_end_event(handler: &str) -> bool {
+    handler == "onanimationend"
+}
+
+fn browser_animation_cancel_event(handler: &str) -> bool {
+    handler == "onanimationcancel"
+}
+
+fn browser_transition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontransitionrun" | "ontransitionstart" | "ontransitionend" | "ontransitioncancel"
+    )
+}
+
+fn browser_transition_run_event(handler: &str) -> bool {
+    handler == "ontransitionrun"
+}
+
+fn browser_transition_start_event(handler: &str) -> bool {
+    handler == "ontransitionstart"
+}
+
+fn browser_transition_end_event(handler: &str) -> bool {
+    handler == "ontransitionend"
+}
+
+fn browser_transition_cancel_event(handler: &str) -> bool {
+    handler == "ontransitioncancel"
+}
+
+fn browser_fullscreen_event(handler: &str) -> bool {
+    matches!(handler, "onfullscreenchange" | "onfullscreenerror")
+}
+
+fn browser_fullscreen_change_event(handler: &str) -> bool {
+    handler == "onfullscreenchange"
+}
+
+fn browser_fullscreen_error_event(handler: &str) -> bool {
+    handler == "onfullscreenerror"
+}
+
+fn browser_form_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "oninput" | "onchange" | "oninvalid" | "onselect" | "onsubmit" | "onreset"
+    )
+}
+
+fn browser_media_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onplay"
+            | "onplaying"
+            | "onpause"
+            | "onended"
+            | "onvolumechange"
+            | "ontimeupdate"
+            | "onratechange"
+            | "onwaiting"
+            | "onstalled"
+            | "onsuspend"
+            | "onloadeddata"
+            | "onloadedmetadata"
+            | "onloadstart"
+            | "oncanplay"
+            | "oncanplaythrough"
+            | "ondurationchange"
+            | "onemptied"
+            | "onprogress"
+            | "onseeking"
+            | "onseeked"
+    )
+}
+
+fn browser_lifecycle_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onload"
+            | "onunload"
+            | "onbeforeunload"
+            | "onpageshow"
+            | "onpagehide"
+            | "onreadystatechange"
+            | "ondomcontentloaded"
+            | "onvisibilitychange"
+            | "onhashchange"
+            | "onpopstate"
+            | "ononline"
+            | "onoffline"
+    )
+}
+
+fn browser_load_lifecycle_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onload" | "onpageshow" | "onreadystatechange" | "ondomcontentloaded"
+    )
+}
+
+fn browser_unload_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onunload" | "onbeforeunload" | "onpagehide")
+}
+
+fn browser_visibility_lifecycle_event(handler: &str) -> bool {
+    handler == "onvisibilitychange"
+}
+
+fn browser_history_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onhashchange" | "onpopstate")
+}
+
+fn browser_network_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "ononline" | "onoffline")
+}
+
+fn browser_error_event(handler: &str) -> bool {
+    matches!(handler, "onerror" | "onabort" | "oncancel")
+}
+
+fn browser_popover_target(element: &Element) -> Option<String> {
+    element.attribute("popovertarget").map(ToOwned::to_owned)
+}
+
+fn browser_popover_target_action(element: &Element) -> Option<String> {
+    element
+        .attribute("popovertargetaction")
+        .map(collapse_html_whitespace)
+        .filter(|action| !action.is_empty())
+}
+
+fn browser_command(element: &Element) -> Option<String> {
+    element
+        .attribute("command")
+        .map(collapse_html_whitespace)
+        .filter(|command| !command.is_empty())
+}
+
+fn browser_command_for(element: &Element) -> Option<String> {
+    element.attribute("commandfor").map(ToOwned::to_owned)
+}
+
+fn is_browser_anchor_navigation_element(element: &Element) -> bool {
+    matches!(element.name.as_str(), "a" | "area")
+}
+
+fn browser_anchor_target(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("target").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_anchor_rel(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("rel").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_anchor_rel_tokens(element: &Element) -> Vec<String> {
+    if is_browser_anchor_navigation_element(element) {
+        browser_rel_tokens(element)
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_anchor_download(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("download").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_anchor_ping(element: &Element) -> Vec<String> {
+    if is_browser_anchor_navigation_element(element) {
+        element
+            .attribute("ping")
+            .map(split_html_classes)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_anchor_attributionsrc(element: &Element) -> Vec<String> {
+    if is_browser_anchor_navigation_element(element) {
+        element
+            .attribute("attributionsrc")
+            .map(split_html_classes)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_anchor_hreflang(element: &Element) -> Option<String> {
+    is_browser_anchor_navigation_element(element)
+        .then(|| element.attribute("hreflang").map(ToOwned::to_owned))
+        .flatten()
+}
+
+fn browser_image_map_name(element: &Element) -> Option<String> {
+    if element.name == "map" {
+        element.attribute("name").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_image_map_shape(element: &Element) -> Option<String> {
+    if element.name == "area" {
+        Some(
+            element
+                .attribute("shape")
+                .map(collapse_html_whitespace)
+                .filter(|shape| !shape.is_empty())
+                .unwrap_or_else(|| "rect".to_string()),
+        )
+    } else {
+        None
+    }
+}
+
+fn browser_image_map_coords(element: &Element) -> Option<String> {
+    if element.name == "area" {
+        element
+            .attribute("coords")
+            .map(collapse_html_whitespace)
+            .filter(|coords| !coords.is_empty())
+    } else {
+        None
+    }
+}
+
+fn browser_track_kind(element: &Element) -> Option<String> {
+    if element.name == "track" {
+        Some(
+            element
+                .attribute("kind")
+                .map(collapse_html_whitespace)
+                .filter(|kind| !kind.is_empty())
+                .unwrap_or_else(|| "subtitles".to_string()),
+        )
+    } else {
+        None
+    }
+}
+
+fn browser_track_srclang(element: &Element) -> Option<String> {
+    if element.name == "track" {
+        element.attribute("srclang").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_track_label(element: &Element) -> Option<String> {
+    if element.name == "track" {
+        element.attribute("label").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_track_default(element: &Element) -> bool {
+    element.name == "track" && element.attribute("default").is_some()
+}
+
+fn browser_editing_mode(element: &Element) -> Option<String> {
+    let value = element.attribute("contenteditable")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.is_empty() || normalized.eq_ignore_ascii_case("true") {
+        Some("richtext".to_string())
+    } else if normalized.eq_ignore_ascii_case("plaintext-only") {
+        Some("plaintext".to_string())
+    } else if normalized.eq_ignore_ascii_case("false") {
+        Some("false".to_string())
+    } else {
+        Some("inherit".to_string())
+    }
+}
+
+fn browser_draggable_state(element: &Element) -> Option<String> {
+    let value = element.attribute("draggable")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.eq_ignore_ascii_case("true") {
+        Some("true".to_string())
+    } else if normalized.eq_ignore_ascii_case("false") {
+        Some("false".to_string())
+    } else {
+        Some("auto".to_string())
+    }
+}
+
+fn browser_spellcheck_state(element: &Element) -> Option<String> {
+    let value = element.attribute("spellcheck")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.eq_ignore_ascii_case("true") {
+        Some("true".to_string())
+    } else if normalized.eq_ignore_ascii_case("false") {
+        Some("false".to_string())
+    } else {
+        Some("default".to_string())
+    }
+}
+
+fn browser_translate_state(element: &Element) -> Option<String> {
+    let value = element.attribute("translate")?;
+    let normalized = collapse_html_whitespace(value);
+    if normalized.eq_ignore_ascii_case("yes") {
+        Some("yes".to_string())
+    } else if normalized.eq_ignore_ascii_case("no") {
+        Some("no".to_string())
+    } else {
+        Some("default".to_string())
+    }
+}
+
+fn browser_focusable(element: &Element) -> Option<bool> {
+    let tabindex = element.attribute("tabindex");
+    let contenteditable = element.attribute("contenteditable");
+    if tabindex.is_none() && contenteditable.is_none() {
+        return None;
+    }
+
+    if element.attribute("disabled").is_some()
+        || browser_hidden(element)
+        || browser_inert(element)
+        || browser_aria_hidden(element)
+    {
+        return Some(false);
+    }
+
+    if let Some(tabindex) = tabindex {
+        return Some(
+            tabindex
+                .trim()
+                .parse::<i32>()
+                .map(|value| value >= 0)
+                .unwrap_or(true),
+        );
+    }
+
+    Some(
+        contenteditable
+            .map(|value| {
+                value.is_empty()
+                    || value.eq_ignore_ascii_case("true")
+                    || value.eq_ignore_ascii_case("plaintext-only")
+            })
+            .unwrap_or(false),
+    )
+}
+
+fn browser_accessible_name(
+    element: &Element,
+    role: &str,
+    control_labels: &[String],
+    id_texts: &[(String, String)],
+) -> Option<String> {
+    let labelledby = browser_aria_idrefs(element, "aria-labelledby");
+    if !labelledby.is_empty() {
+        let parts = browser_idref_texts(&labelledby, id_texts);
+        if !parts.is_empty() {
+            return Some(parts.join(" "));
+        }
+    }
+
+    if let Some(aria_label) = browser_aria_label(element) {
+        return Some(aria_label);
+    }
+
+    if !control_labels.is_empty() {
+        return Some(control_labels.join(" "));
+    }
+
+    let text = match role {
+        "control" if element.name == "button" => visible_text_for_nodes(&element.children),
+        "control" if element.name == "input" => element
+            .attribute("placeholder")
+            .or_else(|| element.attribute("title"))
+            .unwrap_or_default()
+            .to_string(),
+        "control" if element.name == "select" => {
+            element.attribute("title").unwrap_or_default().to_string()
+        }
+        "control" if element.name == "textarea" => element
+            .attribute("placeholder")
+            .or_else(|| element.attribute("title"))
+            .unwrap_or_default()
+            .to_string(),
+        "form_group" => find_first_element_in_nodes(&element.children, "legend")
+            .map(element_text)
+            .unwrap_or_default(),
+        _ => String::new(),
+    };
+    let text = collapse_html_whitespace(&text);
+    (!text.is_empty()).then_some(text)
+}
+
+fn browser_accessible_description(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<String> {
+    let describedby = browser_aria_idrefs(element, "aria-describedby");
+    let parts = browser_idref_texts(&describedby, id_texts);
+    if !parts.is_empty() {
+        Some(parts.join(" "))
+    } else {
+        browser_aria_description(element)
+    }
+}
+
+fn browser_idref_texts(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
+    let mut texts = Vec::new();
+    for id in idrefs {
+        if let Some((_, text)) = id_texts.iter().find(|(candidate, _)| candidate == id) {
+            push_unique_string(&mut texts, collapse_html_whitespace(text));
+        }
+    }
+    texts
+}
+
+fn browser_form_owner(element: &Element) -> Option<String> {
+    if matches!(
+        element.name.as_str(),
+        "button" | "fieldset" | "input" | "object" | "output" | "select" | "textarea"
+    ) {
+        element.attribute("form").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_label_for(element: &Element) -> Option<String> {
+    if element.name == "label" {
+        element.attribute("for").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_placeholder(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("placeholder").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_autocomplete(element: &Element) -> Option<String> {
+    if matches!(
+        element.name.as_str(),
+        "form" | "input" | "select" | "textarea"
+    ) {
+        element.attribute("autocomplete").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_autocapitalize(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("autocapitalize").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_enterkeyhint(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("enterkeyhint").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_dirname(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("dirname").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_spellcheck(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("spellcheck").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_autocorrect(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("autocorrect").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_accept(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("accept").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_capture(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("capture").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_inputmode(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("inputmode").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_pattern(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("pattern").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_min(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "meter") {
+        element.attribute("min").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_max(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "meter" | "progress") {
+        element.attribute("max").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_meter_low(element: &Element) -> Option<String> {
+    if element.name == "meter" {
+        element.attribute("low").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_meter_high(element: &Element) -> Option<String> {
+    if element.name == "meter" {
+        element.attribute("high").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_meter_optimum(element: &Element) -> Option<String> {
+    if element.name == "meter" {
+        element.attribute("optimum").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_step(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("step").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_minlength(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("minlength").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_maxlength(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "textarea") {
+        element.attribute("maxlength").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_size(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "input" | "select") {
+        element.attribute("size").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_rows(element: &Element) -> Option<String> {
+    if element.name == "textarea" {
+        element.attribute("rows").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_cols(element: &Element) -> Option<String> {
+    if element.name == "textarea" {
+        element.attribute("cols").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_wrap(element: &Element) -> Option<String> {
+    if element.name == "textarea" {
+        element.attribute("wrap").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_list(element: &Element) -> Option<String> {
+    if element.name == "input" {
+        element.attribute("list").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_action(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element.attribute("formaction").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_enctype(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element.attribute("formenctype").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_method(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element
+            .attribute("formmethod")
+            .map(|method| method.to_ascii_lowercase())
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_target(element: &Element) -> Option<String> {
+    if matches!(element.name.as_str(), "button" | "input") {
+        element.attribute("formtarget").map(ToOwned::to_owned)
+    } else {
+        None
+    }
+}
+
+fn browser_control_form_novalidate(element: &Element) -> bool {
+    matches!(element.name.as_str(), "button" | "input")
+        && element.attribute("formnovalidate").is_some()
+}
+
+fn browser_required(element: &Element) -> bool {
+    matches!(element.name.as_str(), "input" | "select" | "textarea")
+        && element.attribute("required").is_some()
+}
+
+fn browser_readonly(element: &Element) -> bool {
+    matches!(element.name.as_str(), "input" | "textarea") && element.attribute("readonly").is_some()
+}
+
+fn browser_control_will_validate(control_type: &str, element: &Element, disabled: bool) -> bool {
+    if disabled || browser_readonly(element) {
+        return false;
+    }
+    match element.name.as_str() {
+        "button" => control_type == "submit",
+        "input" => !matches!(control_type, "hidden" | "reset" | "button" | "image"),
+        "select" | "textarea" => true,
+        _ => false,
+    }
+}
+
+fn browser_control_validation_attributes(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "required",
+        "readonly",
+        "pattern",
+        "min",
+        "max",
+        "step",
+        "minlength",
+        "maxlength",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_control_validation_barred_reason(
+    control_type: &str,
+    element: &Element,
+    disabled: bool,
+) -> Option<String> {
+    if disabled {
+        return Some("disabled".to_string());
+    }
+    if browser_readonly(element) {
+        return Some("readonly".to_string());
+    }
+    match element.name.as_str() {
+        "button" if control_type != "submit" => Some(format!("button-type-{control_type}")),
+        "input" if matches!(control_type, "hidden" | "reset" | "button" | "image") => {
+            Some(format!("input-type-{control_type}"))
+        }
+        "button" => None,
+        "input" | "select" | "textarea" => None,
+        "output" => Some("output".to_string()),
+        _ => Some("not-a-form-control".to_string()),
+    }
+}
+
+fn browser_control_successful(control_type: &str, element: &Element, disabled: bool) -> bool {
+    if disabled || element.attribute("name").map_or(true, str::is_empty) {
+        return false;
+    }
+
+    match element.name.as_str() {
+        "input" => match control_type {
+            "button" | "image" | "reset" | "submit" => false,
+            "checkbox" | "radio" => element.attribute("checked").is_some(),
+            _ => true,
+        },
+        "select" | "textarea" => true,
+        _ => false,
+    }
+}
+
+fn browser_control_submission_values(
+    control_type: &str,
+    element: &Element,
+    successful: bool,
+) -> Vec<String> {
+    if !successful {
+        return Vec::new();
+    }
+
+    match element.name.as_str() {
+        "input" if control_type == "file" => Vec::new(),
+        "input" => vec![browser_input_value(element).unwrap_or_default()],
+        "select" => selected_option_values(element),
+        "textarea" => vec![element_text(element)],
+        _ => Vec::new(),
+    }
+}
+
+fn browser_autofocus(element: &Element) -> bool {
+    matches!(
+        element.name.as_str(),
+        "button" | "input" | "select" | "textarea"
+    ) && element.attribute("autofocus").is_some()
+}
+
+fn browser_multiple(element: &Element) -> bool {
+    matches!(element.name.as_str(), "input" | "select") && element.attribute("multiple").is_some()
+}
+
+fn split_html_classes(value: &str) -> Vec<String> {
+    value
+        .split_ascii_whitespace()
+        .map(ToOwned::to_owned)
+        .collect()
+}
+
+fn browser_content_control_type(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "input" => Some(
+            element
+                .attribute("type")
+                .map(|input_type| input_type.to_ascii_lowercase())
+                .unwrap_or_else(|| "text".to_string()),
+        ),
+        "button" => Some(
+            element
+                .attribute("type")
+                .map(|button_type| button_type.to_ascii_lowercase())
+                .unwrap_or_else(|| "submit".to_string()),
+        ),
+        "output" | "select" | "textarea" => Some(element.name.clone()),
+        _ => None,
+    }
+}
+
+fn browser_content_value(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "button" => element.attribute("value").map(ToOwned::to_owned),
+        "input" => browser_input_value(element),
+        "meter" | "progress" => element.attribute("value").map(ToOwned::to_owned),
+        "option" => Some(browser_option_value(element)),
+        "output" => Some(element_text(element)),
+        "select" => selected_option_value(&element.children),
+        "textarea" => Some(element_text(element)),
+        _ => None,
+    }
+}
+
+fn browser_item_scope(element: &Element) -> bool {
+    element.attribute("itemscope").is_some()
+}
+
+fn browser_item_type(element: &Element) -> Vec<String> {
+    element
+        .attribute("itemtype")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_item_id(element: &Element) -> Option<String> {
+    element.attribute("itemid").map(ToOwned::to_owned)
+}
+
+fn browser_item_ref(element: &Element) -> Vec<String> {
+    element
+        .attribute("itemref")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_itemprop(element: &Element) -> Vec<String> {
+    element
+        .attribute("itemprop")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn browser_item_value(element: &Element) -> Option<String> {
+    if browser_itemprop(element).is_empty() {
+        return None;
+    }
+
+    if let Some(url) = browser_item_value_url(element) {
+        return Some(url);
+    }
+
+    match element.name.as_str() {
+        "data" | "meter" => element.attribute("value").map(ToOwned::to_owned),
+        "meta" => element.attribute("content").map(ToOwned::to_owned),
+        "time" => element
+            .attribute("datetime")
+            .map(ToOwned::to_owned)
+            .or_else(|| non_empty_string(element_text(element))),
+        _ => non_empty_string(element_text(element)),
+    }
+}
+
+fn browser_item_value_url(element: &Element) -> Option<String> {
+    if browser_itemprop(element).is_empty() {
+        return None;
+    }
+
+    match element.name.as_str() {
+        "a" | "area" | "link" => element.attribute("href").map(ToOwned::to_owned),
+        "audio" | "embed" | "iframe" | "img" | "source" | "track" | "video" => {
+            element.attribute("src").map(ToOwned::to_owned)
+        }
+        "object" => element.attribute("data").map(ToOwned::to_owned),
+        _ => None,
+    }
+}
+
+fn browser_structured_item(
+    element: &Element,
+    base_href: Option<&str>,
+    body_root: &[Node],
+) -> BrowserStructuredItem {
+    let item_id = browser_item_id(element);
+    let item_ref = browser_item_ref(element);
+    BrowserStructuredItem {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        item_type: browser_item_type(element),
+        resolved_item_id: item_id
+            .as_deref()
+            .and_then(|item_id| resolve_browser_url(item_id, base_href)),
+        item_id,
+        item_ref: item_ref.clone(),
+        properties: browser_structured_properties(element, &item_ref, base_href, body_root),
+    }
+}
+
+fn browser_structured_data_descriptor(
+    item: &BrowserStructuredItem,
+    body_root: &[Node],
+) -> BrowserStructuredDataDescriptor {
+    let unresolved_item_refs: Vec<String> = item
+        .item_ref
+        .iter()
+        .filter(|id| find_element_by_id(body_root, id).is_none())
+        .cloned()
+        .collect();
+    let property_names: Vec<String> = item
+        .properties
+        .iter()
+        .map(|property| property.name.clone())
+        .collect();
+    let url_property_count = item
+        .properties
+        .iter()
+        .filter(|property| property.value_url.is_some())
+        .count();
+    let structured_data_block_reasons =
+        browser_structured_data_block_reasons(item, &unresolved_item_refs);
+
+    BrowserStructuredDataDescriptor {
+        id: item.id.clone(),
+        item_type: item.item_type.clone(),
+        item_type_count: item.item_type.len(),
+        item_id: item.item_id.clone(),
+        resolved_item_id: item.resolved_item_id.clone(),
+        item_ref: item.item_ref.clone(),
+        item_ref_count: item.item_ref.len(),
+        unresolved_item_refs,
+        property_count: item.properties.len(),
+        property_names,
+        url_property_count,
+        structured_data_blocked: !structured_data_block_reasons.is_empty(),
+        structured_data_block_reasons,
+    }
+}
+
+fn browser_structured_data_block_reasons(
+    item: &BrowserStructuredItem,
+    unresolved_item_refs: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if item.item_type.is_empty() {
+        reasons.push("missing-itemtype".to_string());
+    }
+    if item.properties.is_empty() {
+        reasons.push("missing-properties".to_string());
+    }
+    if !unresolved_item_refs.is_empty() {
+        reasons.push("unresolved-itemref".to_string());
+    }
+    reasons
+}
+
+fn browser_structured_properties(
+    element: &Element,
+    item_ref: &[String],
+    base_href: Option<&str>,
+    body_root: &[Node],
+) -> Vec<BrowserStructuredProperty> {
+    let mut properties = Vec::new();
+    collect_browser_structured_properties(&element.children, base_href, &mut properties);
+    for id in item_ref {
+        if let Some(referenced_element) = find_element_by_id(body_root, id) {
+            collect_browser_structured_properties_from_element(
+                referenced_element,
+                base_href,
+                &mut properties,
+            );
+        }
+    }
+    properties
+}
+
+fn collect_browser_structured_properties(
+    nodes: &[Node],
+    base_href: Option<&str>,
+    properties: &mut Vec<BrowserStructuredProperty>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        collect_browser_structured_properties_from_element(element, base_href, properties);
+    }
+}
+
+fn collect_browser_structured_properties_from_element(
+    element: &Element,
+    base_href: Option<&str>,
+    properties: &mut Vec<BrowserStructuredProperty>,
+) {
+    collect_browser_structured_property(element, base_href, properties);
+
+    if !browser_item_scope(element) {
+        collect_browser_structured_properties(&element.children, base_href, properties);
+    }
+}
+
+fn collect_browser_structured_property(
+    element: &Element,
+    base_href: Option<&str>,
+    properties: &mut Vec<BrowserStructuredProperty>,
+) {
+    let itemprop = browser_itemprop(element);
+    if itemprop.is_empty() {
+        return;
+    }
+
+    let value_url = browser_item_value_url(element);
+    let property = BrowserStructuredProperty {
+        name: String::new(),
+        value: browser_item_value(element),
+        resolved_value_url: value_url
+            .as_deref()
+            .and_then(|url| resolve_browser_url(url, base_href)),
+        value_url,
+    };
+    for name in itemprop {
+        properties.push(BrowserStructuredProperty {
+            name,
+            ..property.clone()
+        });
+    }
+}
+
+fn find_element_by_id<'a>(nodes: &'a [Node], id: &str) -> Option<&'a Element> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.attribute("id") == Some(id) {
+            return Some(element);
+        }
+
+        if let Some(element) = find_element_by_id(&element.children, id) {
+            return Some(element);
+        }
+    }
+
+    None
+}
+
+fn non_empty_string(value: String) -> Option<String> {
+    (!value.is_empty()).then_some(value)
+}
+
+fn browser_content_options(element: &Element) -> Vec<String> {
+    match element.name.as_str() {
+        "select" => collect_select_options(&element.children),
+        _ => Vec::new(),
+    }
+}
+
+fn browser_control_selected_options(element: &Element) -> Vec<String> {
+    if element.name == "select" {
+        selected_option_values(element)
+    } else {
+        Vec::new()
+    }
+}
+
+fn browser_control_option_items(element: &Element) -> Vec<BrowserSelectOption> {
+    if element.name != "select" {
+        return Vec::new();
+    }
+
+    collect_select_option_items(&element.children)
+}
+
+fn browser_control_datalist_options(element: &Element, body_root: &[Node]) -> Vec<String> {
+    browser_control_list(element)
+        .as_deref()
+        .and_then(|list_id| datalist_options_by_id(body_root, list_id))
+        .unwrap_or_default()
+}
+
+fn browser_output_for(element: &Element) -> Vec<String> {
+    if element.name != "output" {
+        return Vec::new();
+    }
+
+    element
+        .attribute("for")
+        .map(split_html_classes)
+        .unwrap_or_default()
+}
+
+fn datalist_options_by_id(nodes: &[Node], list_id: &str) -> Option<Vec<String>> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "datalist" && element.attribute("id") == Some(list_id) {
+            return Some(collect_datalist_options(&element.children));
+        }
+
+        if let Some(options) = datalist_options_by_id(&element.children, list_id) {
+            return Some(options);
+        }
+    }
+
+    None
+}
+
+fn collect_datalist_options(nodes: &[Node]) -> Vec<String> {
+    let mut options = Vec::new();
+    collect_datalist_options_into(nodes, &mut options);
+    options
+}
+
+fn collect_datalist_options_into(nodes: &[Node], options: &mut Vec<String>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "option" {
+            options.push(browser_option_value(element));
+        } else {
+            collect_datalist_options_into(&element.children, options);
+        }
+    }
+}
+
+fn collect_datalist_option_items(nodes: &[Node]) -> Vec<BrowserDatalistOption> {
+    let mut options = Vec::new();
+    collect_datalist_option_items_into(nodes, &mut options);
+    options
+}
+
+fn collect_datalist_option_items_into(nodes: &[Node], options: &mut Vec<BrowserDatalistOption>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "option" {
+            options.push(BrowserDatalistOption {
+                value: browser_option_value(element),
+                label: element.attribute("label").map(ToOwned::to_owned),
+                text: browser_option_display_text(element),
+                disabled: element.attribute("disabled").is_some(),
+            });
+        } else {
+            collect_datalist_option_items_into(&element.children, options);
+        }
+    }
+}
+
+fn selected_option_value(nodes: &[Node]) -> Option<String> {
+    let mut first = None;
+    selected_option_value_in(nodes, &mut first).or(first)
+}
+
+fn selected_option_values(element: &Element) -> Vec<String> {
+    let mut first = None;
+    let mut selected = Vec::new();
+    collect_selected_option_values(&element.children, &mut first, &mut selected);
+    if selected.is_empty() && !browser_multiple(element) {
+        first.into_iter().collect()
+    } else {
+        selected
+    }
+}
+
+fn collect_selected_option_values(
+    nodes: &[Node],
+    first: &mut Option<String>,
+    selected: &mut Vec<String>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "option" {
+            let value = browser_option_value(element);
+            if first.is_none() {
+                *first = Some(value.clone());
+            }
+            if element.attribute("selected").is_some() {
+                selected.push(value);
+            }
+        } else {
+            collect_selected_option_values(&element.children, first, selected);
+        }
+    }
+}
+
+fn selected_option_value_in(nodes: &[Node], first: &mut Option<String>) -> Option<String> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "option" {
+            let value = browser_option_value(element);
+            if first.is_none() {
+                *first = Some(value.clone());
+            }
+            if element.attribute("selected").is_some() {
+                return Some(value);
+            }
+        } else if let Some(value) = selected_option_value_in(&element.children, first) {
+            return Some(value);
+        }
+    }
+    None
+}
+
+fn browser_input_display_value(element: &Element) -> String {
+    match element
+        .attribute("type")
+        .map(|input_type| input_type.to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("checkbox" | "hidden" | "password" | "radio") => String::new(),
+        _ => element.attribute("value").unwrap_or_default().to_string(),
+    }
+}
+
+fn browser_input_value(element: &Element) -> Option<String> {
+    match element
+        .attribute("type")
+        .map(|input_type| input_type.to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("checkbox" | "radio") => Some(element.attribute("value").unwrap_or("on").to_string()),
+        _ => element.attribute("value").map(ToOwned::to_owned),
+    }
+}
+
+fn browser_option_display_text(element: &Element) -> String {
+    let text = visible_text_for_nodes(&element.children);
+    if text.is_empty() {
+        element.attribute("label").unwrap_or_default().to_string()
+    } else {
+        text
+    }
+}
+
+fn browser_option_value(element: &Element) -> String {
+    element
+        .attribute("value")
+        .map(ToOwned::to_owned)
+        .unwrap_or_else(|| browser_option_display_text(element))
+}
+
+fn is_browser_block_element(name: &str) -> bool {
+    matches!(
+        name,
+        "address"
+            | "article"
+            | "aside"
+            | "blockquote"
+            | "body"
+            | "center"
+            | "details"
+            | "dialog"
+            | "div"
+            | "fieldset"
+            | "figcaption"
+            | "figure"
+            | "footer"
+            | "header"
+            | "hgroup"
+            | "hr"
+            | "html"
+            | "legend"
+            | "main"
+            | "nav"
+            | "p"
+            | "plaintext"
+            | "pre"
+            | "section"
+            | "summary"
+            | "xmp"
+    )
+}
+
+fn browser_render_display(role: &str) -> &'static str {
+    match role {
+        "text" => "inline-text",
+        "inline" | "link" | "slot" => "inline",
+        "image_map" | "image_map_area" => "none",
+        "media_source" | "media_track" => "none",
+        "picture" => "inline",
+        "canvas" | "control" | "embed" | "frame" | "image" | "media" | "meter" | "object"
+        | "progress" => "inline-replaced",
+        "line_break" => "line-break",
+        "article"
+        | "aside"
+        | "contact"
+        | "description_details"
+        | "description_list"
+        | "description_term"
+        | "dialog"
+        | "disclosure"
+        | "figure"
+        | "figure_caption"
+        | "footer"
+        | "header"
+        | "heading"
+        | "heading_group"
+        | "main"
+        | "navigation"
+        | "paragraph"
+        | "preformatted"
+        | "search"
+        | "section"
+        | "block"
+        | "form"
+        | "form_group"
+        | "legend"
+        | "list"
+        | "quote_block"
+        | "separator" => "block",
+        "bidi_isolate"
+        | "bidi_override"
+        | "data"
+        | "deleted"
+        | "inserted"
+        | "label"
+        | "mark"
+        | "option"
+        | "option_group"
+        | "quote"
+        | "ruby"
+        | "ruby_base"
+        | "ruby_fallback"
+        | "ruby_text"
+        | "ruby_text_container"
+        | "time" => "inline",
+        "disclosure_summary" | "list_item" => "list-item",
+        "table" => "table",
+        "table_caption" => "table-caption",
+        "table_column_group" => "table-column-group",
+        "table_column" => "table-column",
+        "table_section" => "table-row-group",
+        "table_row" => "table-row",
+        "table_cell" => "table-cell",
+        _ => "inline",
+    }
+}
+
+fn collect_form_controls_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+) -> Vec<BrowserFormControl> {
+    let mut controls = Vec::new();
+    collect_form_controls_for_form_into(
+        body_root,
+        &mut controls,
+        labels,
+        id_texts,
+        base_href,
+        target_form as *const Element,
+        target_form.attribute("id"),
+        None,
+        None,
+        false,
+        body_root,
+    );
+    controls
+}
+
+fn collect_form_fieldsets_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    target_form_id: Option<&str>,
+) -> Vec<BrowserFormFieldset> {
+    let mut fieldsets = Vec::new();
+    collect_form_fieldsets_for_form_into(
+        body_root,
+        &mut fieldsets,
+        target_form as *const Element,
+        target_form_id,
+        None,
+        false,
+    );
+    fieldsets
+}
+
+fn collect_form_measurements_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> Vec<BrowserFormMeasurement> {
+    let mut measurements = Vec::new();
+    collect_form_measurements_for_form_into(
+        body_root,
+        &mut measurements,
+        labels,
+        id_texts,
+        target_form as *const Element,
+        None,
+        None,
+    );
+    measurements
+}
+
+fn collect_form_objects_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+) -> Vec<BrowserFormObject> {
+    let mut objects = Vec::new();
+    collect_form_objects_for_form_into(
+        body_root,
+        &mut objects,
+        id_texts,
+        base_href,
+        target_form as *const Element,
+        target_form.attribute("id"),
+        None,
+    );
+    objects
+}
+
+fn collect_form_objects_for_form_into(
+    nodes: &[Node],
+    objects: &mut Vec<BrowserFormObject>,
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+
+        if element.name == "object" {
+            let form_owner = browser_form_owner(element);
+            let associated_with_target = match form_owner.as_deref() {
+                Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+                None => current_form.is_some_and(|form| form == target_form),
+            };
+
+            if associated_with_target {
+                objects.push(browser_form_object(element, id_texts, base_href));
+            }
+        }
+
+        for child in &element.children {
+            collect_form_objects_for_form_into(
+                std::slice::from_ref(child),
+                objects,
+                id_texts,
+                base_href,
+                target_form,
+                target_form_id,
+                element_form,
+            );
+        }
+    }
+}
+
+fn collect_form_measurements_for_form_into(
+    nodes: &[Node],
+    measurements: &mut Vec<BrowserFormMeasurement>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_form: *const Element,
+    current_form: Option<*const Element>,
+    current_label_text: Option<&str>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+        let element_label_text = (element.name == "label")
+            .then(|| visible_text_for_nodes(&element.children))
+            .filter(|text| !text.is_empty());
+        let child_label_text = element_label_text.as_deref().or(current_label_text);
+
+        if is_browser_form_measurement_element(&element.name)
+            && current_form.is_some_and(|form| form == target_form)
+        {
+            measurements.push(browser_form_measurement(
+                element,
+                labels,
+                id_texts,
+                current_label_text,
+            ));
+        }
+
+        for child in &element.children {
+            collect_form_measurements_for_form_into(
+                std::slice::from_ref(child),
+                measurements,
+                labels,
+                id_texts,
+                target_form,
+                element_form,
+                child_label_text,
+            );
+        }
+    }
+}
+
+fn collect_form_fieldsets_for_form_into(
+    nodes: &[Node],
+    fieldsets: &mut Vec<BrowserFormFieldset>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    disabled_fieldset_ancestor: bool,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+
+        if element.name == "fieldset" {
+            let form_owner = browser_form_owner(element);
+            let associated_with_target = match form_owner.as_deref() {
+                Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+                None => current_form.is_some_and(|form| form == target_form),
+            };
+
+            if associated_with_target {
+                fieldsets.push(browser_form_fieldset(
+                    element,
+                    target_form_id,
+                    disabled_fieldset_ancestor,
+                ));
+            }
+        }
+
+        let disabled_fieldset =
+            element.name == "fieldset" && element.attribute("disabled").is_some();
+        let first_legend = if disabled_fieldset {
+            first_direct_child_named(element, "legend")
+        } else {
+            None
+        };
+
+        for child in &element.children {
+            let child_disabled_fieldset_ancestor = match child {
+                Node::Element(child_element)
+                    if disabled_fieldset
+                        && first_legend.is_some_and(|legend| {
+                            std::ptr::eq(legend, child_element as *const Element)
+                        }) =>
+                {
+                    disabled_fieldset_ancestor
+                }
+                _ => disabled_fieldset_ancestor || disabled_fieldset,
+            };
+
+            collect_form_fieldsets_for_form_into(
+                std::slice::from_ref(child),
+                fieldsets,
+                target_form,
+                target_form_id,
+                element_form,
+                child_disabled_fieldset_ancestor,
+            );
+        }
+    }
+}
+
+fn browser_form(
+    body_root: &[Node],
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserForm {
+    let action = element.attribute("action").map(ToOwned::to_owned);
+    let resolved_action = action
+        .as_deref()
+        .and_then(|action| resolve_browser_url(action, base_href));
+    let method = element
+        .attribute("method")
+        .map(|method| method.to_ascii_lowercase())
+        .unwrap_or_else(|| "get".to_string());
+    let enctype = element.attribute("enctype").map(ToOwned::to_owned);
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    let effective_target = target
+        .clone()
+        .or_else(|| base_target.map(ToOwned::to_owned));
+    let rel_tokens = browser_rel_tokens(element);
+    let accept_charset = element.attribute("accept-charset").map(ToOwned::to_owned);
+    let autocomplete = element.attribute("autocomplete").map(ToOwned::to_owned);
+    let novalidate = element.attribute("novalidate").is_some();
+    let controls = collect_form_controls_for_form(body_root, element, labels, id_texts, base_href);
+    let fieldsets = collect_form_fieldsets_for_form(body_root, element, element.attribute("id"));
+    let measurements = collect_form_measurements_for_form(body_root, element, labels, id_texts);
+    let object_controls = collect_form_objects_for_form(body_root, element, id_texts, base_href);
+    let form_labels = collect_form_labels_for_form(
+        body_root,
+        element,
+        element.attribute("id"),
+        &controls,
+        &measurements,
+    );
+    let datalists = browser_form_datalists(body_root, &controls);
+    let selects = browser_form_selects(&controls);
+    let outputs = browser_form_outputs(&controls);
+    let successful_controls = browser_form_successful_controls(&controls);
+    let validation_controls = browser_form_validation_controls(&controls);
+    let buttons = browser_form_buttons(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
+    let text_entries = browser_form_text_entries(&controls);
+    let choice_controls = browser_form_choice_controls(&controls, element.attribute("id"));
+    let file_controls = browser_form_file_controls(&controls);
+    let hidden_controls = browser_form_hidden_controls(&controls);
+    let image_controls = browser_form_image_controls(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
+    let submitters = browser_form_submitters(
+        &controls,
+        action.as_deref(),
+        resolved_action.as_deref(),
+        &method,
+        enctype.as_deref(),
+        target.as_deref(),
+        base_target,
+        novalidate,
+    );
+    BrowserForm {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        action,
+        resolved_action,
+        name: element.attribute("name").map(ToOwned::to_owned),
+        method,
+        enctype,
+        target,
+        effective_target,
+        accept_charset_tokens: accept_charset
+            .as_deref()
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        accept_charset,
+        autocomplete_tokens: autocomplete
+            .as_deref()
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        autocomplete,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        novalidate,
+        event_handlers: browser_event_handlers(element),
+        fieldsets,
+        labels: form_labels,
+        datalists,
+        selects,
+        outputs,
+        measurements,
+        object_controls,
+        successful_controls,
+        validation_controls,
+        buttons,
+        text_entries,
+        choice_controls,
+        file_controls,
+        hidden_controls,
+        image_controls,
+        controls,
+        submitters,
+    }
+}
+
+fn browser_form_policy_descriptor(form: &BrowserForm) -> BrowserFormPolicyDescriptor {
+    BrowserFormPolicyDescriptor {
+        id: form.id.clone(),
+        name: form.name.clone(),
+        action: form.action.clone(),
+        resolved_action: form.resolved_action.clone(),
+        method: form.method.clone(),
+        enctype: form.enctype.clone(),
+        target: form.target.clone(),
+        effective_target: form.effective_target.clone(),
+        accept_charset: form.accept_charset.clone(),
+        accept_charset_tokens: form.accept_charset_tokens.clone(),
+        autocomplete: form.autocomplete.clone(),
+        autocomplete_tokens: form.autocomplete_tokens.clone(),
+        rel: form.rel.clone(),
+        rel_tokens: form.rel_tokens.clone(),
+        rel_external: form.rel_external,
+        rel_nofollow: form.rel_nofollow,
+        rel_noopener: form.rel_noopener,
+        rel_noreferrer: form.rel_noreferrer,
+        novalidate: form.novalidate,
+        submitters: form
+            .submitters
+            .iter()
+            .map(browser_form_policy_submitter_descriptor)
+            .collect(),
+    }
+}
+
+fn browser_form_policy_submitter_descriptor(
+    submitter: &BrowserFormSubmitter,
+) -> BrowserFormPolicySubmitterDescriptor {
+    BrowserFormPolicySubmitterDescriptor {
+        id: submitter.id.clone(),
+        control_type: submitter.control_type.clone(),
+        name: submitter.name.clone(),
+        accessible_name: submitter.accessible_name.clone(),
+        action: submitter.action.clone(),
+        resolved_action: submitter.resolved_action.clone(),
+        method: submitter.method.clone(),
+        enctype: submitter.enctype.clone(),
+        target: submitter.target.clone(),
+        effective_target: submitter.effective_target.clone(),
+        novalidate: submitter.novalidate,
+        value: submitter.value.clone(),
+    }
+}
+
+fn browser_form_control_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormControlDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| browser_form_control_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_control_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormControlDescriptor {
+    let fieldset_ids = browser_form_association_fieldset_ids(form, control);
+    let fieldset_legends = browser_form_association_fieldset_legends(form, control);
+    let control_block_reasons = browser_form_control_block_reasons(control);
+
+    BrowserFormControlDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: browser_form_control_descriptor_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        control_kind: browser_form_control_kind(control, &control_block_reasons),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        placeholder: control.placeholder.clone(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        datalist_options: control.datalist_options.clone(),
+        option_count: control.option_items.len(),
+        selected_options: control.selected_options.clone(),
+        checked: control.checked,
+        multiple: control.multiple,
+        autofocus: control.autofocus,
+        disabled: control.disabled,
+        required: control.required,
+        readonly: control.readonly,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        control_blocked: !control_block_reasons.is_empty(),
+        control_block_reasons,
+    }
+}
+
+fn browser_form_control_kind(
+    control: &BrowserFormControl,
+    control_block_reasons: &[String],
+) -> String {
+    if !control_block_reasons.is_empty() {
+        "blocked-control".to_string()
+    } else if is_browser_form_submitter(control) {
+        "submitter-control".to_string()
+    } else if control.control_type == "select" {
+        "selection-control".to_string()
+    } else if matches!(control.control_type.as_str(), "checkbox" | "radio") {
+        "choice-control".to_string()
+    } else if control.control_type == "file" {
+        "file-control".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-control".to_string()
+    } else if control.control_type == "output" {
+        "output-control".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "form-control".to_string()
+    }
+}
+
+fn browser_form_control_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.name.is_none() && browser_form_control_needs_name(control) {
+        reasons.push("missing-name".to_string());
+    }
+    if matches!(control.control_type.as_str(), "checkbox" | "radio") && !control.checked {
+        reasons.push("unchecked-choice".to_string());
+    }
+    if control.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(reason) = &control.validation_barred_reason {
+        let reason = format!("validation-barred:{reason}");
+        if !reasons.iter().any(|existing| existing == &reason) {
+            reasons.push(reason);
+        }
+    }
+    reasons
+}
+
+fn browser_form_control_needs_name(control: &BrowserFormControl) -> bool {
+    !matches!(control.control_type.as_str(), "button" | "output" | "reset")
+}
+
+fn browser_form_control_descriptor_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_association_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormAssociationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| browser_form_association_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_association_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormAssociationDescriptor {
+    let fieldset_ids = browser_form_association_fieldset_ids(form, control);
+    let fieldset_legends = browser_form_association_fieldset_legends(form, control);
+    let datalist_option_count = browser_form_association_datalist_option_count(form, control);
+    let output_targets = browser_output_for_controls(&form.controls, control);
+    let output_target_ids = output_targets
+        .iter()
+        .filter_map(|target| target.id.clone())
+        .collect();
+    let output_target_names = output_targets
+        .iter()
+        .filter_map(|target| target.name.clone())
+        .collect();
+    let output_target_types = output_targets
+        .iter()
+        .map(|target| target.control_type.clone())
+        .collect();
+    let referenced_by_output_ids = browser_form_association_referenced_by_output_ids(form, control);
+
+    BrowserFormAssociationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: browser_form_association_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        association_kind: browser_form_association_kind(
+            form,
+            control,
+            &fieldset_ids,
+            datalist_option_count,
+            &referenced_by_output_ids,
+        ),
+        explicit_form_owner: browser_form_association_explicit_owner(form, control),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        datalist_id: control.list.clone(),
+        datalist_option_count,
+        output_for_tokens: control.output_for.clone(),
+        output_target_ids,
+        output_target_names,
+        output_target_types,
+        referenced_by_output_ids,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        disabled: control.disabled,
+    }
+}
+
+fn browser_form_association_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    fieldset_ids: &[String],
+    datalist_option_count: usize,
+    referenced_by_output_ids: &[String],
+) -> String {
+    if browser_form_association_explicit_owner(form, control) {
+        "explicit-form-owner".to_string()
+    } else if !control.output_for.is_empty() {
+        "output-calculation".to_string()
+    } else if !referenced_by_output_ids.is_empty() {
+        "output-source".to_string()
+    } else if datalist_option_count > 0 {
+        "datalist-backed-control".to_string()
+    } else if !control.labels.is_empty() {
+        "labelled-control".to_string()
+    } else if !fieldset_ids.is_empty() {
+        "fieldset-member".to_string()
+    } else {
+        "form-associated-control".to_string()
+    }
+}
+
+fn browser_form_association_explicit_owner(
+    _form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> bool {
+    control.form_owner.is_some()
+}
+
+fn browser_form_association_fieldset_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| browser_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.id.clone())
+        .collect()
+}
+
+fn browser_form_association_fieldset_legends(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| browser_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.legend.clone())
+        .collect()
+}
+
+fn browser_fieldset_contains_control(
+    fieldset: &BrowserFormFieldset,
+    control: &BrowserFormControl,
+) -> bool {
+    control.id.as_deref().is_some_and(|id| {
+        fieldset
+            .control_ids
+            .iter()
+            .any(|control_id| control_id == id)
+    }) || control.name.as_deref().is_some_and(|name| {
+        fieldset
+            .control_names
+            .iter()
+            .any(|control_name| control_name == name)
+    })
+}
+
+fn browser_form_association_datalist_option_count(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> usize {
+    control
+        .list
+        .as_deref()
+        .and_then(|list| {
+            form.datalists
+                .iter()
+                .find(|datalist| datalist.id.as_deref() == Some(list))
+        })
+        .map(|datalist| datalist.options.len())
+        .unwrap_or_default()
+}
+
+fn browser_form_association_referenced_by_output_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.outputs
+        .iter()
+        .filter(|output| {
+            control
+                .id
+                .as_deref()
+                .is_some_and(|id| output.for_control_ids.iter().any(|target| target == id))
+                || control.name.as_deref().is_some_and(|name| {
+                    output.for_control_names.iter().any(|target| target == name)
+                })
+        })
+        .filter_map(|output| output.id.clone())
+        .collect()
+}
+
+fn browser_form_association_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_autofill_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormAutofillDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_autofill_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_autofill_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormAutofillDescriptor> {
+    if !browser_form_autofill_candidate(form, control) {
+        return None;
+    }
+
+    let section_token = browser_autofill_section_token(&control.autocomplete_tokens);
+    let address_type_token = browser_autofill_address_type_token(&control.autocomplete_tokens);
+    let contact_type_token = browser_autofill_contact_type_token(&control.autocomplete_tokens);
+    let field_token = browser_autofill_field_token(&control.autocomplete_tokens);
+    let webauthn = browser_autofill_has_webauthn_token(&control.autocomplete_tokens);
+    let autofill_block_reasons = browser_form_autofill_block_reasons(form, control);
+    Some(BrowserFormAutofillDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_autocomplete_tokens: form.autocomplete_tokens.clone(),
+        form_autocomplete_enabled: !browser_autofill_tokens_are_off(&form.autocomplete_tokens),
+        element: browser_form_autofill_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        autofill_kind: browser_form_autofill_kind(
+            form,
+            control,
+            field_token.as_deref(),
+            webauthn,
+            &autofill_block_reasons,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        autocomplete: control.autocomplete.clone(),
+        autocomplete_token_count: control.autocomplete_tokens.len(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        section_token,
+        address_type_token,
+        contact_type_token,
+        field_token,
+        webauthn,
+        autofill_enabled: autofill_block_reasons.is_empty(),
+        disabled: control.disabled,
+        readonly: control.readonly,
+        hidden: control.control_type == "hidden",
+        required: control.required,
+        autofill_blocked: !autofill_block_reasons.is_empty(),
+        autofill_block_reasons,
+    })
+}
+
+fn browser_form_autofill_candidate(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    !control.autocomplete_tokens.is_empty()
+        || !form.autocomplete_tokens.is_empty()
+        || browser_form_autofill_control_type(control)
+        || browser_form_common_autofill_name(control)
+}
+
+fn browser_form_autofill_control_type(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "hidden"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn browser_form_common_autofill_name(control: &BrowserFormControl) -> bool {
+    let Some(name) = control.name.as_deref() else {
+        return false;
+    };
+    let name = name.to_ascii_lowercase();
+    [
+        "address",
+        "address1",
+        "address2",
+        "city",
+        "country",
+        "email",
+        "family-name",
+        "given-name",
+        "name",
+        "organization",
+        "postal-code",
+        "state",
+        "street-address",
+        "tel",
+        "username",
+        "zip",
+    ]
+    .iter()
+    .any(|candidate| name == *candidate || name.contains(candidate))
+}
+
+fn browser_form_autofill_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    field_token: Option<&str>,
+    webauthn: bool,
+    autofill_block_reasons: &[String],
+) -> String {
+    if !autofill_block_reasons.is_empty() {
+        "blocked-autofill".to_string()
+    } else if webauthn {
+        "webauthn-field".to_string()
+    } else if field_token.is_some() {
+        "autocomplete-field".to_string()
+    } else if browser_autofill_tokens_are_off(&control.autocomplete_tokens) {
+        "autocomplete-off".to_string()
+    } else if !form.autocomplete_tokens.is_empty() {
+        "form-autocomplete".to_string()
+    } else if browser_form_text_autofill_control(control) {
+        "text-entry-autofill".to_string()
+    } else if control.control_type == "select" {
+        "choice-autofill".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-autofill-metadata".to_string()
+    } else {
+        "autofill-metadata".to_string()
+    }
+}
+
+fn browser_form_text_autofill_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn browser_form_autofill_block_reasons(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly && browser_form_text_autofill_control(control) {
+        reasons.push("readonly".to_string());
+    }
+    if control.control_type == "hidden" {
+        reasons.push("hidden".to_string());
+    }
+    if browser_form_autofill_effective_off(form, control) {
+        reasons.push("autocomplete-off".to_string());
+    }
+    reasons
+}
+
+fn browser_form_autofill_effective_off(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    if !control.autocomplete_tokens.is_empty() {
+        return browser_autofill_tokens_are_off(&control.autocomplete_tokens);
+    }
+    browser_autofill_tokens_are_off(&form.autocomplete_tokens)
+}
+
+fn browser_autofill_tokens_are_off(tokens: &[String]) -> bool {
+    tokens.len() == 1 && tokens[0].eq_ignore_ascii_case("off")
+}
+
+fn browser_autofill_section_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| token.to_ascii_lowercase().starts_with("section-"))
+        .cloned()
+}
+
+fn browser_autofill_address_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| matches!(token.to_ascii_lowercase().as_str(), "shipping" | "billing"))
+        .cloned()
+}
+
+fn browser_autofill_contact_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| {
+            matches!(
+                token.to_ascii_lowercase().as_str(),
+                "home" | "work" | "mobile" | "fax" | "pager"
+            )
+        })
+        .cloned()
+}
+
+fn browser_autofill_field_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .rev()
+        .find(|token| browser_autofill_token_is_field(token))
+        .cloned()
+}
+
+fn browser_autofill_has_webauthn_token(tokens: &[String]) -> bool {
+    tokens
+        .iter()
+        .any(|token| token.eq_ignore_ascii_case("webauthn"))
+}
+
+fn browser_autofill_token_is_field(token: &str) -> bool {
+    let lower = token.to_ascii_lowercase();
+    if lower.starts_with("section-")
+        || matches!(
+            lower.as_str(),
+            "on" | "off"
+                | "shipping"
+                | "billing"
+                | "home"
+                | "work"
+                | "mobile"
+                | "fax"
+                | "pager"
+                | "webauthn"
+        )
+    {
+        return false;
+    }
+    true
+}
+
+fn browser_form_autofill_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_submission_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormSubmissionDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_submission_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_submission_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormSubmissionDescriptor> {
+    if !control.successful && !is_browser_form_submitter(control) {
+        return None;
+    }
+
+    Some(BrowserFormSubmissionDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_action: form.action.clone(),
+        resolved_form_action: form.resolved_action.clone(),
+        form_method: form.method.clone(),
+        form_enctype: form.enctype.clone(),
+        form_target: form.target.clone(),
+        effective_form_target: form.effective_target.clone(),
+        element: browser_form_submission_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        submission_kind: browser_form_submission_kind(control),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        successful: control.successful,
+        checked: control.checked,
+        disabled: control.disabled,
+        submitter: is_browser_form_submitter(control),
+        submitter_action: control.form_action.clone(),
+        resolved_submitter_action: control.resolved_form_action.clone(),
+        submitter_method: control.form_method.clone(),
+        submitter_enctype: control.form_enctype.clone(),
+        submitter_target: control.form_target.clone(),
+        effective_submitter_target: control
+            .form_target
+            .clone()
+            .or_else(|| form.target.clone())
+            .or_else(|| form.effective_target.clone()),
+        submitter_novalidate: form.novalidate || control.form_novalidate,
+    })
+}
+
+fn browser_form_submission_kind(control: &BrowserFormControl) -> String {
+    if is_browser_form_submitter(control) && control.successful {
+        "successful-submitter".to_string()
+    } else if is_browser_form_submitter(control) {
+        "submitter".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "submission-metadata".to_string()
+    }
+}
+
+fn browser_form_submission_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_reset_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormResetDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_reset_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_reset_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormResetDescriptor> {
+    let resettable = browser_form_resettable_control(control);
+    let resetter = browser_form_resetter(control);
+    if !resettable && !resetter {
+        return None;
+    }
+
+    let reset_block_reasons = browser_form_reset_block_reasons(control, resettable, resetter);
+    Some(BrowserFormResetDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_event_handlers: form.event_handlers.clone(),
+        form_reset_handlers: browser_event_handlers_by_kind(
+            &form.event_handlers,
+            browser_reset_event,
+        ),
+        form_has_reset_handler: !browser_event_handlers_by_kind(
+            &form.event_handlers,
+            browser_reset_event,
+        )
+        .is_empty(),
+        element: browser_form_reset_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        reset_kind: browser_form_reset_kind(control, resettable, resetter, &reset_block_reasons),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        reset_value_count: browser_form_reset_values(control).len(),
+        reset_values: browser_form_reset_values(control),
+        selected_options: control.selected_options.clone(),
+        option_count: control.option_items.len(),
+        checked: control.checked,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        resettable,
+        resetter,
+        reset_blocked: !reset_block_reasons.is_empty(),
+        reset_block_reasons,
+    })
+}
+
+fn browser_form_reset_kind(
+    control: &BrowserFormControl,
+    resettable: bool,
+    resetter: bool,
+    reset_block_reasons: &[String],
+) -> String {
+    if !reset_block_reasons.is_empty() && resetter {
+        "blocked-resetter".to_string()
+    } else if resetter {
+        "resetter".to_string()
+    } else if matches!(control.control_type.as_str(), "checkbox" | "radio") {
+        "checked-reset-state".to_string()
+    } else if control.control_type == "select" {
+        "selection-reset-state".to_string()
+    } else if control.control_type == "file" {
+        "file-reset-state".to_string()
+    } else if control.control_type == "output" {
+        "output-reset-value".to_string()
+    } else if resettable {
+        "value-reset-state".to_string()
+    } else {
+        "reset-metadata".to_string()
+    }
+}
+
+fn browser_form_resettable_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "checkbox"
+            | "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "file"
+            | "month"
+            | "number"
+            | "password"
+            | "radio"
+            | "range"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+            | "output"
+    )
+}
+
+fn browser_form_resetter(control: &BrowserFormControl) -> bool {
+    control.control_type == "reset"
+}
+
+fn browser_form_reset_block_reasons(
+    control: &BrowserFormControl,
+    resettable: bool,
+    resetter: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if !resettable && !resetter {
+        reasons.push("not-resettable".to_string());
+    }
+    reasons
+}
+
+fn browser_form_reset_values(control: &BrowserFormControl) -> Vec<String> {
+    if !control.selected_options.is_empty() {
+        return control.selected_options.clone();
+    }
+    if let Some(value) = &control.value {
+        return vec![value.clone()];
+    }
+    if !control.text.is_empty() {
+        return vec![control.text.clone()];
+    }
+    Vec::new()
+}
+
+fn browser_form_reset_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_reset_event(handler: &str) -> bool {
+    handler.eq_ignore_ascii_case("onreset")
+}
+
+fn browser_form_validation_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormValidationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_validation_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_validation_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormValidationDescriptor> {
+    if !browser_form_control_has_validation_state(control) {
+        return None;
+    }
+
+    let validation_block_reasons = browser_form_validation_block_reasons(control);
+    let submitter_ids = browser_form_submitter_ids(form);
+    let submitter_novalidate_ids = browser_form_submitter_novalidate_ids(form);
+    Some(BrowserFormValidationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_novalidate: form.novalidate,
+        element: browser_form_validation_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        validation_kind: browser_form_validation_kind(
+            control,
+            form.novalidate,
+            &submitter_novalidate_ids,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        checked: control.checked,
+        required: control.required,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        will_validate: control.will_validate,
+        validation_attribute_count: control.validation_attributes.len(),
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        validation_blocked: !validation_block_reasons.is_empty(),
+        validation_block_reasons,
+        submitter_ids,
+        submitter_novalidate_ids,
+    })
+}
+
+fn browser_form_control_has_validation_state(control: &BrowserFormControl) -> bool {
+    control.will_validate
+        || control.required
+        || !control.validation_attributes.is_empty()
+        || control.validation_barred_reason.is_some()
+}
+
+fn browser_form_validation_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if let Some(reason) = &control.validation_barred_reason {
+        reasons.push(format!("validation-barred:{reason}"));
+    }
+    if control.disabled
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:disabled")
+    {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:readonly")
+    {
+        reasons.push("readonly".to_string());
+    }
+    reasons
+}
+
+fn browser_form_validation_kind(
+    control: &BrowserFormControl,
+    form_novalidate: bool,
+    submitter_novalidate_ids: &[String],
+) -> String {
+    if control.validation_barred_reason.is_some() {
+        "barred-control".to_string()
+    } else if form_novalidate {
+        "form-novalidate-candidate".to_string()
+    } else if !submitter_novalidate_ids.is_empty() {
+        "submitter-novalidate-candidate".to_string()
+    } else if control.required {
+        "required-candidate".to_string()
+    } else if !control.validation_attributes.is_empty() {
+        "constraint-candidate".to_string()
+    } else if control.will_validate {
+        "validation-candidate".to_string()
+    } else {
+        "validation-metadata".to_string()
+    }
+}
+
+fn browser_form_validation_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_submitter_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
+}
+
+fn browser_form_submitter_novalidate_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter(|submitter| submitter.novalidate)
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
+}
+
+fn collect_form_labels_for_form(
+    body_root: &[Node],
+    target_form: &Element,
+    target_form_id: Option<&str>,
+    controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
+) -> Vec<BrowserFormLabel> {
+    let mut labels = Vec::new();
+    collect_form_labels_for_form_into(
+        body_root,
+        &mut labels,
+        target_form as *const Element,
+        target_form_id,
+        None,
+        controls,
+        measurements,
+    );
+    labels
+}
+
+fn collect_form_labels_for_form_into(
+    nodes: &[Node],
+    labels: &mut Vec<BrowserFormLabel>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+
+        if element.name == "label" {
+            if let Some(label) = browser_form_label(
+                element,
+                target_form,
+                target_form_id,
+                element_form,
+                controls,
+                measurements,
+            ) {
+                labels.push(label);
+            }
+        }
+
+        collect_form_labels_for_form_into(
+            &element.children,
+            labels,
+            target_form,
+            target_form_id,
+            element_form,
+            controls,
+            measurements,
+        );
+    }
+}
+
+fn browser_form_label(
+    element: &Element,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    controls: &[BrowserFormControl],
+    measurements: &[BrowserFormMeasurement],
+) -> Option<BrowserFormLabel> {
+    let text = visible_text_for_nodes(&element.children);
+    if text.is_empty() {
+        return None;
+    }
+
+    if let Some(for_control) = element.attribute("for") {
+        if let Some(control) = controls
+            .iter()
+            .find(|control| control.id.as_deref() == Some(for_control))
+        {
+            return Some(BrowserFormLabel {
+                id: element.attribute("id").map(ToOwned::to_owned),
+                for_control: Some(for_control.to_string()),
+                text,
+                control_id: control.id.clone(),
+                control_name: control.name.clone(),
+                control_type: Some(control.control_type.clone()),
+                association: "explicit".to_string(),
+            });
+        }
+        let measurement = measurements
+            .iter()
+            .find(|measurement| measurement.id.as_deref() == Some(for_control))?;
+        return Some(BrowserFormLabel {
+            id: element.attribute("id").map(ToOwned::to_owned),
+            for_control: Some(for_control.to_string()),
+            text,
+            control_id: measurement.id.clone(),
+            control_name: None,
+            control_type: Some(measurement.measurement_type.clone()),
+            association: "explicit".to_string(),
+        });
+    }
+
+    let control_element = first_labelable_descendant(element)?;
+    if !form_control_associated_with_target(
+        control_element,
+        target_form,
+        target_form_id,
+        current_form,
+    ) {
+        return None;
+    }
+    let control_type = browser_labelable_element_type(control_element);
+    Some(BrowserFormLabel {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        for_control: None,
+        text,
+        control_id: control_element.attribute("id").map(ToOwned::to_owned),
+        control_name: control_element.attribute("name").map(ToOwned::to_owned),
+        control_type,
+        association: "implicit".to_string(),
+    })
+}
+
+fn browser_labelable_element_type(element: &Element) -> Option<String> {
+    browser_content_control_type(element).or_else(|| {
+        is_browser_form_measurement_element(&element.name).then(|| element.name.clone())
+    })
+}
+
+fn first_labelable_descendant(element: &Element) -> Option<&Element> {
+    for child in &element.children {
+        let Node::Element(child_element) = child else {
+            continue;
+        };
+
+        if is_browser_labelable_element(&child_element.name) {
+            return Some(child_element);
+        }
+
+        if let Some(descendant) = first_labelable_descendant(child_element) {
+            return Some(descendant);
+        }
+    }
+
+    None
+}
+
+fn form_control_associated_with_target(
+    element: &Element,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+) -> bool {
+    match browser_form_owner(element).as_deref() {
+        Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+        None => current_form.is_some_and(|form| form == target_form),
+    }
+}
+
+fn browser_form_datalists(
+    body_root: &[Node],
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormDatalist> {
+    let mut datalists = Vec::new();
+    for control in controls {
+        let Some(list_id) = control.list.as_deref() else {
+            continue;
+        };
+        if datalists
+            .iter()
+            .any(|datalist: &BrowserFormDatalist| datalist.id.as_deref() == Some(list_id))
+        {
+            continue;
+        }
+        let Some(element) =
+            find_element_by_id(body_root, list_id).filter(|element| element.name == "datalist")
+        else {
+            continue;
+        };
+        let matching_controls: Vec<&BrowserFormControl> = controls
+            .iter()
+            .filter(|control| control.list.as_deref() == Some(list_id))
+            .collect();
+        datalists.push(BrowserFormDatalist {
+            id: Some(list_id.to_string()),
+            control_ids: matching_controls
+                .iter()
+                .filter_map(|control| control.id.clone())
+                .collect(),
+            control_names: matching_controls
+                .iter()
+                .filter_map(|control| control.name.clone())
+                .collect(),
+            options: collect_datalist_option_items(&element.children),
+        });
+    }
+    datalists
+}
+
+fn browser_form_fieldset(
+    element: &Element,
+    target_form_id: Option<&str>,
+    disabled_fieldset_ancestor: bool,
+) -> BrowserFormFieldset {
+    BrowserFormFieldset {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        form_owner: browser_form_owner(element),
+        legend: first_direct_child_element_named(element, "legend")
+            .map(|legend| visible_text_for_nodes(&legend.children))
+            .filter(|legend| !legend.is_empty()),
+        disabled: disabled_fieldset_ancestor || element.attribute("disabled").is_some(),
+        control_ids: browser_fieldset_control_ids(element, target_form_id),
+        control_names: browser_fieldset_control_names(element, target_form_id),
+    }
+}
+
+fn browser_fieldset_control_ids(element: &Element, target_form_id: Option<&str>) -> Vec<String> {
+    let mut ids = Vec::new();
+    collect_fieldset_control_attribute_values(element, target_form_id, "id", &mut ids);
+    ids
+}
+
+fn browser_fieldset_control_names(element: &Element, target_form_id: Option<&str>) -> Vec<String> {
+    let mut names = Vec::new();
+    collect_fieldset_control_attribute_values(element, target_form_id, "name", &mut names);
+    names
+}
+
+fn collect_fieldset_control_attribute_values(
+    element: &Element,
+    target_form_id: Option<&str>,
+    attribute_name: &str,
+    values: &mut Vec<String>,
+) {
+    for child in &element.children {
+        let Node::Element(child_element) = child else {
+            continue;
+        };
+
+        if is_browser_form_grouped_element(&child_element.name)
+            && child_element
+                .attribute("form")
+                .is_none_or(|form| target_form_id.is_some_and(|id| id == form))
+        {
+            if let Some(value) = child_element.attribute(attribute_name) {
+                values.push(value.to_string());
+            }
+        }
+
+        collect_fieldset_control_attribute_values(
+            child_element,
+            target_form_id,
+            attribute_name,
+            values,
+        );
+    }
+}
+
+fn browser_form_submitters(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormSubmitter> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_submitter(control))
+        .map(|control| BrowserFormSubmitter {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            accessible_name: control
+                .accessible_name
+                .clone()
+                .or_else(|| control.alt.clone()),
+            action: control
+                .form_action
+                .clone()
+                .or_else(|| action.map(ToOwned::to_owned)),
+            resolved_action: control
+                .resolved_form_action
+                .clone()
+                .or_else(|| resolved_action.map(ToOwned::to_owned)),
+            method: control
+                .form_method
+                .clone()
+                .unwrap_or_else(|| method.to_string()),
+            enctype: control
+                .form_enctype
+                .clone()
+                .or_else(|| enctype.map(ToOwned::to_owned)),
+            target: control
+                .form_target
+                .clone()
+                .or_else(|| target.map(ToOwned::to_owned)),
+            effective_target: control
+                .form_target
+                .clone()
+                .or_else(|| target.map(ToOwned::to_owned))
+                .or_else(|| base_target.map(ToOwned::to_owned)),
+            novalidate: novalidate || control.form_novalidate,
+            value: control.value.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_outputs(controls: &[BrowserFormControl]) -> Vec<BrowserFormOutput> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "output")
+        .map(|control| BrowserFormOutput {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accessible_description: control.accessible_description.clone(),
+            for_tokens: control.output_for.clone(),
+            for_control_ids: browser_output_for_control_ids(controls, control),
+            for_control_names: browser_output_for_control_names(controls, control),
+            for_control_types: browser_output_for_control_types(controls, control),
+            value: control.value.clone(),
+            disabled: control.disabled,
+            will_validate: control.will_validate,
+            validation_barred_reason: control.validation_barred_reason.clone(),
+            text: control.text.clone(),
+        })
+        .collect()
+}
+
+fn browser_output_for_control_ids(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .filter_map(|control| control.id.clone())
+        .collect()
+}
+
+fn browser_output_for_control_names(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .filter_map(|control| control.name.clone())
+        .collect()
+}
+
+fn browser_output_for_control_types(
+    controls: &[BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<String> {
+    browser_output_for_controls(controls, output)
+        .into_iter()
+        .map(|control| control.control_type.clone())
+        .collect()
+}
+
+fn browser_output_for_controls<'a>(
+    controls: &'a [BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<&'a BrowserFormControl> {
+    output
+        .output_for
+        .iter()
+        .filter_map(|token| {
+            controls
+                .iter()
+                .find(|control| control.id.as_deref() == Some(token.as_str()))
+        })
+        .collect()
+}
+
+fn browser_form_measurement(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    current_label_text: Option<&str>,
+) -> BrowserFormMeasurement {
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let value = browser_content_value(element);
+    BrowserFormMeasurement {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        measurement_type: element.name.clone(),
+        accessible_name: browser_accessible_name(element, &element.name, &control_labels, id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        labels: control_labels,
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        low: browser_meter_low(element),
+        high: browser_meter_high(element),
+        optimum: browser_meter_optimum(element),
+        indeterminate: element.name == "progress" && value.is_none(),
+        value,
+        text: visible_text_for_nodes(&element.children),
+    }
+}
+
+fn browser_form_object(
+    element: &Element,
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+) -> BrowserFormObject {
+    let data = element.attribute("data").map(ToOwned::to_owned);
+    BrowserFormObject {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        form_owner: browser_form_owner(element),
+        accessible_name: browser_accessible_name(element, "object", &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        resolved_data: data
+            .as_deref()
+            .and_then(|data| resolve_browser_url(data, base_href)),
+        data,
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        usemap: element.attribute("usemap").map(ToOwned::to_owned),
+        fallback_text: visible_text_for_nodes(&element.children),
+        params: browser_form_object_params(element),
+    }
+}
+
+fn browser_form_object_params(element: &Element) -> Vec<BrowserFormObjectParam> {
+    element
+        .children
+        .iter()
+        .filter_map(|child| {
+            let Node::Element(child_element) = child else {
+                return None;
+            };
+            (child_element.name == "param").then(|| BrowserFormObjectParam {
+                name: child_element.attribute("name").map(ToOwned::to_owned),
+                value: child_element.attribute("value").map(ToOwned::to_owned),
+            })
+        })
+        .collect()
+}
+
+fn browser_form_selects(controls: &[BrowserFormControl]) -> Vec<BrowserFormSelect> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "select")
+        .map(|control| BrowserFormSelect {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            disabled: control.disabled,
+            required: control.required,
+            multiple: control.multiple,
+            size: control.size.clone(),
+            value: control.value.clone(),
+            selected_options: control.selected_options.clone(),
+            options: control.option_items.clone(),
+            text: control.text.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_successful_controls(
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormSuccessfulControl> {
+    controls
+        .iter()
+        .filter(|control| control.successful)
+        .filter_map(|control| {
+            Some(BrowserFormSuccessfulControl {
+                id: control.id.clone(),
+                control_type: control.control_type.clone(),
+                name: control.name.clone()?,
+                form_owner: control.form_owner.clone(),
+                submission_values: control.submission_values.clone(),
+            })
+        })
+        .collect()
+}
+
+fn browser_form_validation_controls(
+    controls: &[BrowserFormControl],
+) -> Vec<BrowserFormValidationControl> {
+    controls
+        .iter()
+        .filter(|control| {
+            control.will_validate
+                || control.required
+                || !control.validation_attributes.is_empty()
+                || control.validation_barred_reason.is_some()
+        })
+        .map(|control| BrowserFormValidationControl {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            will_validate: control.will_validate,
+            required: control.required,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_buttons(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormButton> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_button(control))
+        .map(|control| {
+            let submitter = is_browser_form_submitter(control);
+            BrowserFormButton {
+                id: control.id.clone(),
+                control_type: control.control_type.clone(),
+                name: control.name.clone(),
+                form_owner: control.form_owner.clone(),
+                accessible_name: control
+                    .accessible_name
+                    .clone()
+                    .or_else(|| control.alt.clone()),
+                disabled: control.disabled,
+                autofocus: control.autofocus,
+                submitter,
+                action: if submitter {
+                    control
+                        .form_action
+                        .clone()
+                        .or_else(|| action.map(ToOwned::to_owned))
+                } else {
+                    control.form_action.clone()
+                },
+                resolved_action: if submitter {
+                    control
+                        .resolved_form_action
+                        .clone()
+                        .or_else(|| resolved_action.map(ToOwned::to_owned))
+                } else {
+                    control.resolved_form_action.clone()
+                },
+                method: control
+                    .form_method
+                    .clone()
+                    .unwrap_or_else(|| method.to_string()),
+                enctype: if submitter {
+                    control
+                        .form_enctype
+                        .clone()
+                        .or_else(|| enctype.map(ToOwned::to_owned))
+                } else {
+                    control.form_enctype.clone()
+                },
+                target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                effective_target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                        .or_else(|| base_target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                novalidate: submitter && (novalidate || control.form_novalidate),
+                value: control.value.clone(),
+                text: control.text.clone(),
+                src: control.src.clone(),
+                resolved_src: control.resolved_src.clone(),
+                alt: control.alt.clone(),
+                width: control.width.clone(),
+                height: control.height.clone(),
+            }
+        })
+        .collect()
+}
+
+fn is_browser_form_button(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "button" | "image" | "reset" | "submit"
+    )
+}
+
+fn is_browser_form_submitter(control: &BrowserFormControl) -> bool {
+    !control.disabled && matches!(control.control_type.as_str(), "submit" | "image")
+}
+
+fn browser_form_text_entries(controls: &[BrowserFormControl]) -> Vec<BrowserFormTextEntry> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_text_entry(control))
+        .map(|control| BrowserFormTextEntry {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accessible_description: control.accessible_description.clone(),
+            placeholder: control.placeholder.clone(),
+            value: control.value.clone(),
+            text: control.text.clone(),
+            autocomplete: control.autocomplete.clone(),
+            autocomplete_tokens: control.autocomplete_tokens.clone(),
+            autocapitalize: control.autocapitalize.clone(),
+            enterkeyhint: control.enterkeyhint.clone(),
+            dirname: control.dirname.clone(),
+            spellcheck: control.spellcheck.clone(),
+            autocorrect: control.autocorrect.clone(),
+            inputmode: control.inputmode.clone(),
+            pattern: control.pattern.clone(),
+            min: control.min.clone(),
+            max: control.max.clone(),
+            step: control.step.clone(),
+            minlength: control.minlength.clone(),
+            maxlength: control.maxlength.clone(),
+            size: control.size.clone(),
+            rows: control.rows.clone(),
+            cols: control.cols.clone(),
+            wrap: control.wrap.clone(),
+            list: control.list.clone(),
+            datalist_options: control.datalist_options.clone(),
+            disabled: control.disabled,
+            required: control.required,
+            readonly: control.readonly,
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn is_browser_form_text_entry(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "text" | "search" | "url" | "tel" | "email" | "password" | "number" | "textarea"
+    )
+}
+
+fn browser_form_choice_controls(
+    controls: &[BrowserFormControl],
+    form_id: Option<&str>,
+) -> Vec<BrowserFormChoiceControl> {
+    controls
+        .iter()
+        .filter(|control| is_browser_form_choice_control(control))
+        .map(|control| BrowserFormChoiceControl {
+            id: control.id.clone(),
+            control_type: control.control_type.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            value: control.value.clone(),
+            checked: control.checked,
+            disabled: control.disabled,
+            required: control.required,
+            group_required: browser_choice_group_required(controls, control, form_id),
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+            group_name: control.name.clone(),
+            group_checked_ids: browser_choice_group_checked_ids(controls, control, form_id),
+            group_checked_values: browser_choice_group_checked_values(controls, control, form_id),
+        })
+        .collect()
+}
+
+fn is_browser_form_choice_control(control: &BrowserFormControl) -> bool {
+    matches!(control.control_type.as_str(), "checkbox" | "radio")
+}
+
+fn browser_choice_group_required(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> bool {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id))
+        .any(|control| control.required)
+}
+
+fn browser_choice_group_checked_ids(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> Vec<String> {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id) && control.checked)
+        .filter_map(|control| control.id.clone())
+        .collect()
+}
+
+fn browser_choice_group_checked_values(
+    controls: &[BrowserFormControl],
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> Vec<String> {
+    controls
+        .iter()
+        .filter(|control| browser_choice_group_peer(control, target, form_id) && control.checked)
+        .filter_map(|control| control.value.clone())
+        .collect()
+}
+
+fn browser_choice_group_peer(
+    control: &BrowserFormControl,
+    target: &BrowserFormControl,
+    form_id: Option<&str>,
+) -> bool {
+    target.name.is_some()
+        && control.control_type == target.control_type
+        && control.name == target.name
+        && browser_choice_group_form_owner(control, form_id)
+            == browser_choice_group_form_owner(target, form_id)
+}
+
+fn browser_choice_group_form_owner<'a>(
+    control: &'a BrowserFormControl,
+    form_id: Option<&'a str>,
+) -> Option<&'a str> {
+    control.form_owner.as_deref().or(form_id)
+}
+
+fn browser_form_file_controls(controls: &[BrowserFormControl]) -> Vec<BrowserFormFileControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "file")
+        .map(|control| BrowserFormFileControl {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            labels: control.labels.clone(),
+            accessible_name: control.accessible_name.clone(),
+            accept: control.accept.clone(),
+            accept_tokens: control.accept_tokens.clone(),
+            capture: control.capture.clone(),
+            multiple: control.multiple,
+            disabled: control.disabled,
+            required: control.required,
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_attributes: control.validation_attributes.clone(),
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_hidden_controls(controls: &[BrowserFormControl]) -> Vec<BrowserFormHiddenControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "hidden")
+        .map(|control| BrowserFormHiddenControl {
+            id: control.id.clone(),
+            name: control.name.clone(),
+            form_owner: control.form_owner.clone(),
+            value: control.value.clone(),
+            autocomplete: control.autocomplete.clone(),
+            autocomplete_tokens: control.autocomplete_tokens.clone(),
+            disabled: control.disabled,
+            successful: control.successful,
+            submission_values: control.submission_values.clone(),
+            will_validate: control.will_validate,
+            validation_barred_reason: control.validation_barred_reason.clone(),
+        })
+        .collect()
+}
+
+fn browser_form_image_controls(
+    controls: &[BrowserFormControl],
+    action: Option<&str>,
+    resolved_action: Option<&str>,
+    method: &str,
+    enctype: Option<&str>,
+    target: Option<&str>,
+    base_target: Option<&str>,
+    novalidate: bool,
+) -> Vec<BrowserFormImageControl> {
+    controls
+        .iter()
+        .filter(|control| control.control_type == "image")
+        .map(|control| {
+            let submitter = is_browser_form_submitter(control);
+            BrowserFormImageControl {
+                id: control.id.clone(),
+                name: control.name.clone(),
+                form_owner: control.form_owner.clone(),
+                labels: control.labels.clone(),
+                accessible_name: control
+                    .accessible_name
+                    .clone()
+                    .or_else(|| control.alt.clone()),
+                src: control.src.clone(),
+                resolved_src: control.resolved_src.clone(),
+                alt: control.alt.clone(),
+                width: control.width.clone(),
+                height: control.height.clone(),
+                disabled: control.disabled,
+                autofocus: control.autofocus,
+                submitter,
+                action: if submitter {
+                    control
+                        .form_action
+                        .clone()
+                        .or_else(|| action.map(ToOwned::to_owned))
+                } else {
+                    control.form_action.clone()
+                },
+                resolved_action: if submitter {
+                    control
+                        .resolved_form_action
+                        .clone()
+                        .or_else(|| resolved_action.map(ToOwned::to_owned))
+                } else {
+                    control.resolved_form_action.clone()
+                },
+                method: control
+                    .form_method
+                    .clone()
+                    .unwrap_or_else(|| method.to_string()),
+                enctype: if submitter {
+                    control
+                        .form_enctype
+                        .clone()
+                        .or_else(|| enctype.map(ToOwned::to_owned))
+                } else {
+                    control.form_enctype.clone()
+                },
+                target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                effective_target: if submitter {
+                    control
+                        .form_target
+                        .clone()
+                        .or_else(|| target.map(ToOwned::to_owned))
+                        .or_else(|| base_target.map(ToOwned::to_owned))
+                } else {
+                    control.form_target.clone()
+                },
+                novalidate: submitter && (novalidate || control.form_novalidate),
+                value: control.value.clone(),
+                coordinate_names: browser_image_submitter_coordinate_names(control.name.as_deref()),
+                will_validate: control.will_validate,
+                validation_barred_reason: control.validation_barred_reason.clone(),
+            }
+        })
+        .collect()
+}
+
+fn browser_image_submitter_coordinate_names(name: Option<&str>) -> Vec<String> {
+    match name.filter(|name| !name.is_empty()) {
+        Some(name) => vec![format!("{name}.x"), format!("{name}.y")],
+        None => vec!["x".to_string(), "y".to_string()],
+    }
+}
+
+fn collect_form_controls_for_form_into(
+    nodes: &[Node],
+    controls: &mut Vec<BrowserFormControl>,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    target_form: *const Element,
+    target_form_id: Option<&str>,
+    current_form: Option<*const Element>,
+    current_label_text: Option<&str>,
+    disabled_fieldset_ancestor: bool,
+    body_root: &[Node],
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        let element_form = if element.name == "form" {
+            Some(element as *const Element)
+        } else {
+            current_form
+        };
+        let element_label_text = (element.name == "label")
+            .then(|| visible_text_for_nodes(&element.children))
+            .filter(|text| !text.is_empty());
+        let child_label_text = element_label_text.as_deref().or(current_label_text);
+
+        if is_browser_form_control_element(&element.name) {
+            let form_owner = browser_form_owner(element);
+            let associated_with_target = match form_owner.as_deref() {
+                Some(owner) => target_form_id.is_some_and(|form_id| form_id == owner),
+                None => current_form.is_some_and(|form| form == target_form),
+            };
+
+            if associated_with_target {
+                controls.push(browser_form_control(
+                    element,
+                    labels,
+                    id_texts,
+                    base_href,
+                    current_label_text,
+                    disabled_fieldset_ancestor,
+                    body_root,
+                ));
+            }
+        }
+
+        let disabled_fieldset =
+            element.name == "fieldset" && element.attribute("disabled").is_some();
+        let first_legend = if disabled_fieldset {
+            first_direct_child_named(element, "legend")
+        } else {
+            None
+        };
+
+        for child in &element.children {
+            let child_disabled_fieldset_ancestor = match child {
+                Node::Element(child_element)
+                    if disabled_fieldset
+                        && first_legend.is_some_and(|legend| {
+                            std::ptr::eq(legend, child_element as *const Element)
+                        }) =>
+                {
+                    disabled_fieldset_ancestor
+                }
+                _ => disabled_fieldset_ancestor || disabled_fieldset,
+            };
+
+            collect_form_controls_for_form_into(
+                std::slice::from_ref(child),
+                controls,
+                labels,
+                id_texts,
+                base_href,
+                target_form,
+                target_form_id,
+                element_form,
+                child_label_text,
+                child_disabled_fieldset_ancestor,
+                body_root,
+            );
+        }
+    }
+}
+
+fn browser_form_control(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    current_label_text: Option<&str>,
+    disabled_fieldset_ancestor: bool,
+    body_root: &[Node],
+) -> BrowserFormControl {
+    let control_type = browser_content_control_type(element)
+        .expect("browser_form_control is only called for form controls");
+    let disabled = disabled_fieldset_ancestor || element.attribute("disabled").is_some();
+    let will_validate = browser_control_will_validate(&control_type, element, disabled);
+    let successful = browser_control_successful(&control_type, element, disabled);
+    let submission_values = browser_control_submission_values(&control_type, element, successful);
+    let validation_attributes = browser_control_validation_attributes(element);
+    let validation_barred_reason =
+        browser_control_validation_barred_reason(&control_type, element, disabled);
+    let control_labels = browser_control_labels(element, labels, current_label_text);
+    let text = match element.name.as_str() {
+        "button" | "output" | "select" => visible_text_for_nodes(&element.children),
+        "textarea" => element_text(element),
+        _ => String::new(),
+    };
+    let autocomplete = browser_autocomplete(element);
+    let accept = browser_control_accept(element);
+
+    BrowserFormControl {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        control_type,
+        name: element.attribute("name").map(ToOwned::to_owned),
+        form_owner: browser_form_owner(element),
+        accessible_name: browser_accessible_name(element, "control", &control_labels, id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        labels: control_labels,
+        placeholder: browser_placeholder(element),
+        autocomplete_tokens: autocomplete
+            .as_deref()
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        autocomplete,
+        autocapitalize: browser_autocapitalize(element),
+        enterkeyhint: browser_enterkeyhint(element),
+        dirname: browser_dirname(element),
+        spellcheck: browser_spellcheck(element),
+        autocorrect: browser_autocorrect(element),
+        accept_tokens: accept
+            .as_deref()
+            .map(split_browser_comma_tokens)
+            .unwrap_or_default(),
+        accept,
+        capture: browser_control_capture(element),
+        resolved_src: browser_content_src(element)
+            .as_deref()
+            .and_then(|src| resolve_browser_url(src, base_href)),
+        src: browser_content_src(element),
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        inputmode: browser_control_inputmode(element),
+        pattern: browser_control_pattern(element),
+        min: browser_control_min(element),
+        max: browser_control_max(element),
+        step: browser_control_step(element),
+        minlength: browser_control_minlength(element),
+        maxlength: browser_control_maxlength(element),
+        size: browser_control_size(element),
+        rows: browser_control_rows(element),
+        cols: browser_control_cols(element),
+        wrap: browser_control_wrap(element),
+        list: browser_control_list(element),
+        datalist_options: browser_control_datalist_options(element, body_root),
+        output_for: browser_output_for(element),
+        resolved_form_action: browser_control_form_action(element)
+            .as_deref()
+            .and_then(|action| resolve_browser_url(action, base_href)),
+        form_action: browser_control_form_action(element),
+        form_enctype: browser_control_form_enctype(element),
+        form_method: browser_control_form_method(element),
+        form_target: browser_control_form_target(element),
+        form_novalidate: browser_control_form_novalidate(element),
+        value: browser_content_value(element),
+        successful,
+        submission_values,
+        autofocus: browser_autofocus(element),
+        disabled,
+        required: browser_required(element),
+        readonly: browser_readonly(element),
+        will_validate,
+        validation_attributes,
+        validation_barred_reason,
+        checked: element.attribute("checked").is_some(),
+        multiple: browser_multiple(element),
+        selected_options: browser_control_selected_options(element),
+        option_items: browser_control_option_items(element),
+        text,
+        options: browser_content_options(element),
+    }
+}
+
+fn first_direct_child_named<'a>(element: &'a Element, name: &str) -> Option<*const Element> {
+    element.children.iter().find_map(|child| match child {
+        Node::Element(child_element) if child_element.name == name => {
+            Some(child_element as *const Element)
+        }
+        _ => None,
+    })
+}
+
+fn first_direct_child_element_named<'a>(element: &'a Element, name: &str) -> Option<&'a Element> {
+    element.children.iter().find_map(|child| match child {
+        Node::Element(child_element) if child_element.name == name => Some(child_element),
+        _ => None,
+    })
+}
+
+fn collect_select_options(nodes: &[Node]) -> Vec<String> {
+    let mut options = Vec::new();
+    collect_select_options_into(nodes, &mut options);
+    options
+}
+
+fn collect_select_options_into(nodes: &[Node], options: &mut Vec<String>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "option" {
+            options.push(visible_text_for_nodes(&element.children));
+        } else {
+            collect_select_options_into(&element.children, options);
+        }
+    }
+}
+
+fn collect_select_option_items(nodes: &[Node]) -> Vec<BrowserSelectOption> {
+    let mut items = Vec::new();
+    collect_select_option_items_into(nodes, &mut items, None, false);
+    items
+}
+
+fn collect_select_option_items_into(
+    nodes: &[Node],
+    items: &mut Vec<BrowserSelectOption>,
+    group_label: Option<&str>,
+    group_disabled: bool,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if element.name == "option" {
+            items.push(BrowserSelectOption {
+                value: browser_option_value(element),
+                label: element.attribute("label").map(ToOwned::to_owned),
+                text: browser_option_display_text(element),
+                selected: element.attribute("selected").is_some(),
+                disabled: group_disabled || element.attribute("disabled").is_some(),
+                group_label: group_label.map(ToOwned::to_owned),
+            });
+            continue;
+        }
+
+        let child_group_label = if element.name == "optgroup" {
+            element.attribute("label").or(group_label)
+        } else {
+            group_label
+        };
+        let child_group_disabled = group_disabled
+            || (element.name == "optgroup" && element.attribute("disabled").is_some());
+        collect_select_option_items_into(
+            &element.children,
+            items,
+            child_group_label,
+            child_group_disabled,
+        );
+    }
+}
+
+fn visible_text_for_nodes(nodes: &[Node]) -> String {
+    let mut text = String::new();
+    collect_visible_text(nodes, &mut text);
+    collapse_html_whitespace(&text)
+}
+
+fn collect_visible_text(nodes: &[Node], text: &mut String) {
+    for node in nodes {
+        match node {
+            Node::Text(value) => text.push_str(&value.data),
+            Node::Element(element) if is_browser_invisible_element(&element.name) => {}
+            Node::Element(element) => {
+                collect_visible_text(&element.children, text);
+                text.push(' ');
+            }
+            Node::DocumentType(_) | Node::Comment(_) => {}
+        }
+    }
+}
+
+fn element_text(element: &Element) -> String {
+    let mut text = String::new();
+    collect_browser_text_content(&element.children, &mut text);
+    collapse_html_whitespace(&text)
+}
+
+fn collect_browser_text_content(nodes: &[Node], text: &mut String) {
+    for node in nodes {
+        match node {
+            Node::Text(value) => text.push_str(&value.data),
+            Node::Element(element) => collect_browser_text_content(&element.children, text),
+            Node::DocumentType(_) | Node::Comment(_) => {}
+        }
+    }
+}
+
+fn collapse_html_whitespace(text: &str) -> String {
+    let collapsed = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    let mut normalized = String::with_capacity(collapsed.len());
+    for character in collapsed.chars() {
+        if matches!(character, '.' | ',' | ';' | ':' | '!' | '?' | ')' | ']')
+            && normalized.ends_with(' ')
+        {
+            normalized.pop();
+        }
+        normalized.push(character);
+    }
+    normalized
+}
+
+fn find_first_element_in_nodes<'a>(nodes: &'a [Node], name: &str) -> Option<&'a Element> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == name {
+            return Some(element);
+        }
+        if let Some(found) = find_first_element_in_nodes(&element.children, name) {
+            return Some(found);
+        }
+    }
+    None
+}
+
+fn browser_table_rows(table: &Element) -> Vec<&Element> {
+    let mut rows = Vec::new();
+    collect_browser_table_rows(&table.children, &mut rows);
+    rows
+}
+
+fn browser_table_cells(
+    table: &Element,
+    table_index: usize,
+    id_texts: &[(String, String)],
+) -> Vec<BrowserTableCell> {
+    let table_id = table.attribute("id").map(ToOwned::to_owned);
+    let table_caption = find_first_element_in_nodes(&table.children, "caption").map(element_text);
+    let mut rows = Vec::new();
+    collect_browser_table_rows_with_sections(&table.children, None, &mut rows);
+
+    let mut cells = Vec::new();
+    let mut occupied_until: Vec<usize> = Vec::new();
+    for (row_index, (section_kind, row)) in rows.into_iter().enumerate() {
+        let mut column_index = 0;
+        for child in &row.children {
+            let Node::Element(cell) = child else {
+                continue;
+            };
+            if !matches!(cell.name.as_str(), "td" | "th") {
+                continue;
+            }
+
+            while occupied_until
+                .get(column_index)
+                .map(|occupied| *occupied > row_index)
+                .unwrap_or(false)
+            {
+                column_index += 1;
+            }
+
+            let rowspan = html_positive_integer_attribute(cell, "rowspan");
+            let colspan = html_positive_integer_attribute(cell, "colspan");
+            if rowspan > 1 {
+                for occupied_column in column_index..column_index + colspan {
+                    if occupied_until.len() <= occupied_column {
+                        occupied_until.resize(occupied_column + 1, 0);
+                    }
+                    occupied_until[occupied_column] =
+                        occupied_until[occupied_column].max(row_index + rowspan);
+                }
+            }
+
+            cells.push(BrowserTableCell {
+                table_index,
+                table_id: table_id.clone(),
+                table_caption: table_caption.clone(),
+                section_kind: section_kind.clone(),
+                row_index: row_index + 1,
+                column_index: column_index + 1,
+                element: cell.name.clone(),
+                id: cell.attribute("id").map(ToOwned::to_owned),
+                text: visible_text_for_nodes(&cell.children),
+                accessible_name: browser_accessible_name(cell, "", &[], id_texts),
+                header: cell.name == "th",
+                scope: cell.attribute("scope").map(ToOwned::to_owned),
+                headers: browser_aria_idrefs(cell, "headers"),
+                abbr: cell.attribute("abbr").map(ToOwned::to_owned),
+                rowspan: cell.attribute("rowspan").map(ToOwned::to_owned),
+                colspan: cell.attribute("colspan").map(ToOwned::to_owned),
+            });
+
+            column_index += colspan;
+        }
+    }
+
+    cells
+}
+
+fn browser_table_structure_descriptor(
+    table_element: &Element,
+    table_index: usize,
+    table: &BrowserTable,
+    cells: &[BrowserTableCell],
+) -> BrowserTableStructureDescriptor {
+    let table_block_reasons = browser_table_block_reasons(table, cells);
+
+    BrowserTableStructureDescriptor {
+        table_index,
+        table_id: table_element.attribute("id").map(ToOwned::to_owned),
+        caption: table.caption.clone(),
+        row_count: table.row_count,
+        column_count: table.column_count,
+        column_hint_count: table.column_hint_count,
+        cell_count: table.cell_count,
+        header_cell_count: table.header_cell_count,
+        section_kinds: browser_table_section_kinds(cells),
+        header_scopes: browser_table_header_scopes(cells),
+        header_ids: browser_table_header_ids(cells),
+        cells_with_headers_count: cells.iter().filter(|cell| !cell.headers.is_empty()).count(),
+        spanning_cell_count: cells
+            .iter()
+            .filter(|cell| cell.rowspan.is_some() || cell.colspan.is_some())
+            .count(),
+        table_blocked: !table_block_reasons.is_empty(),
+        table_block_reasons,
+    }
+}
+
+fn browser_table_section_kinds(cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut section_kinds = Vec::new();
+    for cell in cells {
+        let Some(section_kind) = &cell.section_kind else {
+            continue;
+        };
+        if !section_kinds.contains(section_kind) {
+            section_kinds.push(section_kind.clone());
+        }
+    }
+    section_kinds
+}
+
+fn browser_table_header_scopes(cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut scopes = Vec::new();
+    for cell in cells.iter().filter(|cell| cell.header) {
+        let Some(scope) = &cell.scope else {
+            continue;
+        };
+        if !scopes.contains(scope) {
+            scopes.push(scope.clone());
+        }
+    }
+    scopes
+}
+
+fn browser_table_header_ids(cells: &[BrowserTableCell]) -> Vec<String> {
+    cells
+        .iter()
+        .filter(|cell| cell.header)
+        .filter_map(|cell| cell.id.clone())
+        .collect()
+}
+
+fn browser_table_block_reasons(table: &BrowserTable, cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if table.row_count == 0 {
+        reasons.push("missing-rows".to_string());
+    }
+    if table.caption.as_deref().map_or(true, str::is_empty) {
+        reasons.push("missing-caption".to_string());
+    }
+    if table.header_cell_count == 0 {
+        reasons.push("missing-header-cells".to_string());
+    }
+    if table.column_hint_count > 0 && table.column_hint_count != table.column_count {
+        reasons.push("column-hint-count-mismatch".to_string());
+    }
+    if table.header_cell_count > 0
+        && cells
+            .iter()
+            .any(|cell| !cell.header && cell.headers.is_empty())
+    {
+        reasons.push("data-cells-without-header-references".to_string());
+    }
+    reasons
+}
+
+fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if element.name == "tr" {
+            rows.push(element);
+        } else if element.name != "table" {
+            collect_browser_table_rows(&element.children, rows);
+        }
+    }
+}
+
+fn collect_browser_table_rows_with_sections<'a>(
+    nodes: &'a [Node],
+    current_section: Option<String>,
+    rows: &mut Vec<(Option<String>, &'a Element)>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        match element.name.as_str() {
+            "tr" => rows.push((current_section.clone(), element)),
+            "thead" | "tbody" | "tfoot" => collect_browser_table_rows_with_sections(
+                &element.children,
+                Some(element.name.clone()),
+                rows,
+            ),
+            "table" => {}
+            _ => collect_browser_table_rows_with_sections(
+                &element.children,
+                current_section.clone(),
+                rows,
+            ),
+        }
+    }
+}
+
+fn browser_table_column_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(browser_table_row_column_count)
+        .max()
+        .unwrap_or(0)
+}
+
+fn browser_table_row_column_count(row: &Element) -> usize {
+    row.children
+        .iter()
+        .filter_map(|node| match node {
+            Node::Element(element) if matches!(element.name.as_str(), "td" | "th") => {
+                Some(html_positive_integer_attribute(element, "colspan"))
+            }
+            _ => None,
+        })
+        .sum()
+}
+
+fn browser_table_cell_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(|row| {
+            row.children
+                .iter()
+                .filter(|node| {
+                    matches!(
+                        node,
+                        Node::Element(element) if matches!(element.name.as_str(), "td" | "th")
+                    )
+                })
+                .count()
+        })
+        .sum()
+}
+
+fn browser_table_header_cell_count(table: &Element) -> usize {
+    browser_table_rows(table)
+        .into_iter()
+        .map(|row| {
+            row.children
+                .iter()
+                .filter(|node| matches!(node, Node::Element(element) if element.name == "th"))
+                .count()
+        })
+        .sum()
+}
+
+fn browser_table_column_hint_count(table: &Element) -> usize {
+    let mut count = 0;
+    collect_browser_table_column_hints(&table.children, &mut count);
+    count
+}
+
+fn collect_browser_table_column_hints(nodes: &[Node], count: &mut usize) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        match element.name.as_str() {
+            "colgroup" => {
+                let column_spans = element
+                    .children
+                    .iter()
+                    .filter_map(|child| match child {
+                        Node::Element(child_element) if child_element.name == "col" => {
+                            Some(html_positive_integer_attribute(child_element, "span"))
+                        }
+                        _ => None,
+                    })
+                    .sum::<usize>();
+                if column_spans == 0 {
+                    *count += html_positive_integer_attribute(element, "span");
+                } else {
+                    *count += column_spans;
+                }
+            }
+            "col" => {
+                *count += html_positive_integer_attribute(element, "span");
+            }
+            "table" => {}
+            _ => collect_browser_table_column_hints(&element.children, count),
+        }
+    }
+}
+
+fn html_positive_integer_attribute(element: &Element, name: &str) -> usize {
+    element
+        .attribute(name)
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|value| *value > 0)
+        .unwrap_or(1)
+}
+
+fn heading_level(name: &str) -> Option<u8> {
+    match name {
+        "h1" => Some(1),
+        "h2" => Some(2),
+        "h3" => Some(3),
+        "h4" => Some(4),
+        "h5" => Some(5),
+        "h6" => Some(6),
+        _ => None,
+    }
+}
+
+fn is_browser_invisible_element(name: &str) -> bool {
+    matches!(
+        name,
+        "base" | "datalist" | "link" | "meta" | "script" | "style" | "template" | "title"
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -7709,6 +24819,4818 @@ mod tests {
 
     fn body(document: &Document) -> &Element {
         element(&html(document).children[1])
+    }
+
+    #[test]
+    fn resolves_browser_urls_against_document_base() {
+        let base = Some("https://example.test/docs/current/page.html?old=1#section");
+
+        assert_eq!(
+            resolve_browser_url("intro.html", base),
+            Some("https://example.test/docs/current/intro.html".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("../assets/logo.gif", base),
+            Some("https://example.test/docs/assets/logo.gif".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("/search?q=html#top", base),
+            Some("https://example.test/search?q=html#top".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("?page=2", base),
+            Some("https://example.test/docs/current/page.html?page=2".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("#next", base),
+            Some("https://example.test/docs/current/page.html?old=1#next".to_string())
+        );
+        assert_eq!(
+            resolve_browser_url("//cdn.example.test/app.js", base),
+            Some("https://cdn.example.test/app.js".to_string())
+        );
+    }
+
+    #[test]
+    fn browser_url_resolution_keeps_absolute_urls_and_marks_unresolved_relatives() {
+        assert_eq!(
+            resolve_browser_url("mailto:hello@example.test", None),
+            Some("mailto:hello@example.test".to_string())
+        );
+        assert_eq!(resolve_browser_url("relative.html", None), None);
+        assert_eq!(
+            resolve_browser_url("relative.html", Some("/local/base/")),
+            None
+        );
+    }
+
+    #[test]
+    fn browser_anchor_navigation_metadata_tracks_targets_and_pings() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/current.html\" target=_parent>\
+             <body><p>Go <a id=next href=next.html target=_blank rel=\"next external noopener\" \
+             title=\"Next page\" download=next.html ping=\"audit.html https://metrics.example/p\" \
+             hreflang=en-US type=text/html>Next</a> and <a href=appendix.html>Appendix</a></p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let link = &summary.links[0];
+        assert_eq!(link.href.as_deref(), Some("next.html"));
+        assert_eq!(
+            link.resolved_href.as_deref(),
+            Some("https://example.test/docs/next.html")
+        );
+        assert_eq!(link.id.as_deref(), Some("next"));
+        assert_eq!(link.target.as_deref(), Some("_blank"));
+        assert_eq!(link.effective_target.as_deref(), Some("_blank"));
+        assert_eq!(link.rel.as_deref(), Some("next external noopener"));
+        assert_eq!(link.rel_tokens, vec!["next", "external", "noopener"]);
+        assert!(link.rel_external);
+        assert!(!link.rel_nofollow);
+        assert!(link.rel_noopener);
+        assert!(!link.rel_noreferrer);
+        assert_eq!(link.download.as_deref(), Some("next.html"));
+        assert_eq!(link.ping, vec!["audit.html", "https://metrics.example/p"]);
+        assert_eq!(
+            link.resolved_ping,
+            vec![
+                "https://example.test/docs/audit.html",
+                "https://metrics.example/p"
+            ]
+        );
+        assert_eq!(link.hreflang.as_deref(), Some("en-US"));
+        assert_eq!(link.type_hint.as_deref(), Some("text/html"));
+        assert_eq!(
+            summary.links[1].effective_target.as_deref(),
+            Some("_parent")
+        );
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let content_link = &content_tree.children[0].children[1];
+        assert_eq!(content_link.target.as_deref(), Some("_blank"));
+        assert_eq!(
+            content_link.rel_tokens,
+            vec!["next", "external", "noopener"]
+        );
+        assert_eq!(content_link.download.as_deref(), Some("next.html"));
+        assert_eq!(
+            content_link.resolved_ping,
+            vec![
+                "https://example.test/docs/audit.html",
+                "https://metrics.example/p"
+            ]
+        );
+        assert_eq!(content_link.hreflang.as_deref(), Some("en-US"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let render_link = &render_tree.children[0].children[1];
+        assert_eq!(render_link.target.as_deref(), Some("_blank"));
+        assert_eq!(render_link.rel_tokens, vec!["next", "external", "noopener"]);
+        assert_eq!(render_link.download.as_deref(), Some("next.html"));
+    }
+
+    #[test]
+    fn browser_document_metadata_tracks_head_policy_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/page.html\">\
+             <meta http-equiv=content-type content=\"text/html; charset=windows-1252\">\
+             <meta charset=utf-8>\
+             <meta name=viewport content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\
+             <meta name=description content=\"HTML parser workbench\">\
+             <meta name=application-name content=Venture>\
+             <meta name=referrer content=no-referrer>\
+             <meta name=robots content=\"index, follow, max-image-preview:large\">\
+             <meta name=color-scheme content=\"light dark\">\
+             <meta http-equiv=Content-Security-Policy content=\"default-src 'self'; img-src https:\">\
+             <meta http-equiv=Permissions-Policy content=\"geolocation=(), camera=()\">\
+             <meta http-equiv=Origin-Trial content=trial-token>\
+             <meta http-equiv=Accept-CH content=\"Sec-CH-UA-Platform, DPR\">\
+             <meta http-equiv=x-dns-prefetch-control content=off>\
+             <meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\">\
+             <meta name=theme-color content=\"#111111\" media=\"(prefers-color-scheme: dark)\">\
+             <meta http-equiv=refresh content=\"5; url=next.html\">\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=manifest href=\"site.webmanifest\">",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.metadata.charset.as_deref(), Some("windows-1252"));
+        assert_eq!(
+            summary.metadata.viewport.as_deref(),
+            Some("width=device-width, initial-scale=1, viewport-fit=cover")
+        );
+        assert_eq!(
+            summary.metadata.viewport_directives,
+            vec![
+                BrowserMetadataDirective {
+                    name: "width".to_string(),
+                    value: Some("device-width".to_string()),
+                },
+                BrowserMetadataDirective {
+                    name: "initial-scale".to_string(),
+                    value: Some("1".to_string()),
+                },
+                BrowserMetadataDirective {
+                    name: "viewport-fit".to_string(),
+                    value: Some("cover".to_string()),
+                },
+            ]
+        );
+        assert_eq!(
+            summary.metadata.description.as_deref(),
+            Some("HTML parser workbench")
+        );
+        assert_eq!(
+            summary.metadata.application_name.as_deref(),
+            Some("Venture")
+        );
+        assert_eq!(
+            summary.metadata.referrer_policy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(
+            summary.metadata.robots.as_deref(),
+            Some("index, follow, max-image-preview:large")
+        );
+        assert_eq!(
+            summary.metadata.robots_directives,
+            vec!["index", "follow", "max-image-preview:large"]
+        );
+        assert_eq!(
+            summary.metadata.http_equiv_hints,
+            vec![
+                BrowserHttpEquivHint {
+                    name: "content-security-policy".to_string(),
+                    content: "default-src 'self'; img-src https:".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "permissions-policy".to_string(),
+                    content: "geolocation=(), camera=()".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "origin-trial".to_string(),
+                    content: "trial-token".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "accept-ch".to_string(),
+                    content: "Sec-CH-UA-Platform, DPR".to_string(),
+                },
+                BrowserHttpEquivHint {
+                    name: "x-dns-prefetch-control".to_string(),
+                    content: "off".to_string(),
+                },
+            ]
+        );
+        assert_eq!(summary.metadata.color_scheme.as_deref(), Some("light dark"));
+        assert_eq!(summary.metadata.theme_colors.len(), 2);
+        assert_eq!(summary.metadata.theme_colors[0].color, "#ffffff");
+        assert_eq!(
+            summary.metadata.theme_colors[0].media.as_deref(),
+            Some("(prefers-color-scheme: light)")
+        );
+        assert_eq!(
+            summary.metadata.refresh,
+            Some(BrowserRefresh {
+                delay: Some("5".to_string()),
+                url: Some("next.html".to_string()),
+                resolved_url: Some("https://example.test/app/next.html".to_string()),
+            })
+        );
+        assert_eq!(
+            summary.metadata.resolved_canonical_url.as_deref(),
+            Some("https://example.test/app/")
+        );
+        assert_eq!(
+            summary.metadata.resolved_manifest_url.as_deref(),
+            Some("https://example.test/app/site.webmanifest")
+        );
+    }
+
+    #[test]
+    fn browser_identity_metadata_tracks_language_direction_and_classes() {
+        let document = parse_html(
+            "<html lang=en dir=ltr><body id=main class=\"page legacy\" lang=en-US>\
+             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.document_lang.as_deref(), Some("en"));
+        assert_eq!(summary.document_dir.as_deref(), Some("ltr"));
+        assert_eq!(summary.body_id.as_deref(), Some("main"));
+        assert_eq!(summary.body_classes, vec!["page", "legacy"]);
+        assert_eq!(summary.body_lang.as_deref(), Some("en-US"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+        assert_eq!(paragraph.id.as_deref(), Some("intro"));
+        assert_eq!(paragraph.classes, vec!["lede", "print"]);
+        assert_eq!(paragraph.title.as_deref(), Some("Intro"));
+        assert_eq!(paragraph.dir.as_deref(), Some("auto"));
+    }
+
+    #[test]
+    fn browser_embedded_resource_metadata_tracks_fetch_and_layout_fields() {
+        let document = parse_html(
+            "<base href=\"https://example.test/media/index.html\">\
+             <iframe src=frame.html name=preview loading=lazy \
+                 sandbox=\"allow-scripts allow-same-origin\" \
+                 allow=\"fullscreen; geolocation\" allowfullscreen \
+                 referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" \
+                 credentialless width=320 height=200 title=Frame></iframe>\
+             <object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300></object>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resources[0].kind, "frame");
+        assert_eq!(
+            summary.resources[0].resolved_url.as_deref(),
+            Some("https://example.test/media/frame.html")
+        );
+        assert_eq!(summary.resources[0].width.as_deref(), Some("320"));
+        assert_eq!(
+            summary.resources[0].browsing_context_name.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(summary.resources[0].loading.as_deref(), Some("lazy"));
+        assert_eq!(
+            summary.resources[0].sandbox,
+            vec!["allow-scripts", "allow-same-origin"]
+        );
+        assert_eq!(
+            summary.resources[0].allow.as_deref(),
+            Some("fullscreen; geolocation")
+        );
+        assert!(summary.resources[0].allowfullscreen);
+        assert_eq!(
+            summary.resources[0].referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(
+            summary.resources[0].srcdoc.as_deref(),
+            Some("<p>Fallback</p>")
+        );
+        assert!(summary.resources[0].credentialless);
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        assert_eq!(content_tree.children[0].role, "frame");
+        assert_eq!(
+            content_tree.children[0].resource_kind.as_deref(),
+            Some("frame")
+        );
+        assert_eq!(
+            content_tree.children[0].browsing_context_name.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(content_tree.children[0].loading.as_deref(), Some("lazy"));
+        assert_eq!(
+            content_tree.children[0].sandbox,
+            vec!["allow-scripts", "allow-same-origin"]
+        );
+        assert_eq!(
+            content_tree.children[0].allow.as_deref(),
+            Some("fullscreen; geolocation")
+        );
+        assert!(content_tree.children[0].allowfullscreen);
+        assert_eq!(
+            content_tree.children[0].referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(
+            content_tree.children[0].srcdoc.as_deref(),
+            Some("<p>Fallback</p>")
+        );
+        assert!(content_tree.children[0].credentialless);
+        assert_eq!(content_tree.children[1].role, "object");
+        assert_eq!(
+            content_tree.children[1].type_hint.as_deref(),
+            Some("application/x-shockwave-flash")
+        );
+        assert!(content_tree.children[1].browsing_context_name.is_none());
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline-replaced");
+        assert_eq!(
+            render_tree.children[0].browsing_context_name.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(
+            render_tree.children[0].sandbox,
+            vec!["allow-scripts", "allow-same-origin"]
+        );
+        assert!(render_tree.children[0].allowfullscreen);
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
+    }
+
+    #[test]
+    fn browser_embedded_policy_descriptors_track_context_policy_and_fallbacks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/media/index.html\">\
+             <iframe src=frame.html name=preview loading=lazy fetchpriority=high \
+                 csp=\"script-src 'self'\" sandbox=\"allow-scripts allow-same-origin\" \
+                 allow=\"fullscreen; geolocation\" allowfullscreen \
+                 referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" \
+                 credentialless width=320 height=200 title=Frame></iframe>\
+             <object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300>\
+                 Fallback player\
+             </object>\
+             <embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.embedded_policy_descriptors.len(), 3);
+
+        let frame = &summary.embedded_policy_descriptors[0];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.resource_kind, "document");
+        assert_eq!(frame.url.as_deref(), Some("frame.html"));
+        assert_eq!(
+            frame.resolved_url.as_deref(),
+            Some("https://example.test/media/frame.html")
+        );
+        assert_eq!(frame.browsing_context_name.as_deref(), Some("preview"));
+        assert_eq!(frame.title.as_deref(), Some("Frame"));
+        assert_eq!(frame.width.as_deref(), Some("320"));
+        assert_eq!(frame.loading.as_deref(), Some("lazy"));
+        assert_eq!(frame.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(frame.csp.as_deref(), Some("script-src 'self'"));
+        assert_eq!(frame.sandbox, vec!["allow-scripts", "allow-same-origin"]);
+        assert_eq!(frame.sandbox_token_count, 2);
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert!(frame.allowfullscreen);
+        assert_eq!(frame.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(frame.srcdoc.as_deref(), Some("<p>Fallback</p>"));
+        assert!(frame.has_srcdoc);
+        assert!(frame.credentialless);
+
+        let object = &summary.embedded_policy_descriptors[1];
+        assert_eq!(object.resource_kind, "object");
+        assert_eq!(
+            object.type_hint.as_deref(),
+            Some("application/x-shockwave-flash")
+        );
+        assert_eq!(object.fallback_text, "Fallback player");
+
+        let embed = &summary.embedded_policy_descriptors[2];
+        assert_eq!(embed.resource_kind, "embed");
+        assert_eq!(embed.type_hint.as_deref(), Some("video/quicktime"));
+        assert!(!embed.has_srcdoc);
+    }
+
+    #[test]
+    fn browser_responsive_image_metadata_tracks_sources_and_loading_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/gallery/index.html\"><body>\
+             <picture>\
+               <source media=\"(min-width: 800px)\" type=image/avif srcset=\"hero-wide.avif 1x, hero-wide@2x.avif 2x\" sizes=\"80vw\">\
+               <source media=\"(min-width: 400px)\" type=image/webp srcset=\"hero.webp 640w, hero-large.webp 1280w\" sizes=\"100vw\">\
+               <img src=hero.jpg srcset=\"hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w\" sizes=\"(max-width: 600px) 100vw, 50vw\" alt=\"Hero\" width=640 height=360 loading=lazy decoding=async fetchpriority=high crossorigin=anonymous referrerpolicy=no-referrer usemap=#hero-map ismap>\
+             </picture>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.images.len(), 1);
+        let image = &summary.images[0];
+        assert_eq!(image.alt.as_deref(), Some("Hero"));
+        assert_eq!(
+            image.resolved_src.as_deref(),
+            Some("https://example.test/gallery/hero.jpg")
+        );
+        assert_eq!(
+            image.resolved_srcset.as_deref(),
+            Some("https://example.test/gallery/hero-small.jpg 480w, https://cdn.example.test/hero.jpg 960w")
+        );
+        assert_eq!(
+            image.sizes.as_deref(),
+            Some("(max-width: 600px) 100vw, 50vw")
+        );
+        assert_eq!(image.loading.as_deref(), Some("lazy"));
+        assert_eq!(image.decoding.as_deref(), Some("async"));
+        assert_eq!(image.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(image.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(image.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(image.usemap.as_deref(), Some("#hero-map"));
+        assert!(image.ismap);
+        assert_eq!(image.sources.len(), 2);
+        assert_eq!(
+            image.sources[0].media.as_deref(),
+            Some("(min-width: 800px)")
+        );
+        assert_eq!(image.sources[0].type_hint.as_deref(), Some("image/avif"));
+        assert_eq!(
+            image.sources[0].resolved_srcset.as_deref(),
+            Some("https://example.test/gallery/hero-wide.avif 1x, https://example.test/gallery/hero-wide@2x.avif 2x")
+        );
+        assert_eq!(image.sources[1].sizes.as_deref(), Some("100vw"));
+
+        assert_eq!(summary.image_candidate_descriptors.len(), 1);
+        let descriptor = &summary.image_candidate_descriptors[0];
+        assert_eq!(descriptor.src.as_deref(), Some("hero.jpg"));
+        assert_eq!(
+            descriptor.resolved_src.as_deref(),
+            Some("https://example.test/gallery/hero.jpg")
+        );
+        assert_eq!(descriptor.alt.as_deref(), Some("Hero"));
+        assert!(descriptor.has_alt);
+        assert_eq!(descriptor.width.as_deref(), Some("640"));
+        assert_eq!(descriptor.height.as_deref(), Some("360"));
+        assert_eq!(descriptor.loading.as_deref(), Some("lazy"));
+        assert_eq!(descriptor.decoding.as_deref(), Some("async"));
+        assert_eq!(descriptor.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(descriptor.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(descriptor.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(descriptor.usemap.as_deref(), Some("#hero-map"));
+        assert!(descriptor.ismap);
+        assert_eq!(descriptor.source_count, 2);
+        assert_eq!(descriptor.source_srcset_count, 2);
+        assert_eq!(descriptor.candidate_count, 6);
+        assert_eq!(
+            descriptor.source_type_hints,
+            vec!["image/avif".to_string(), "image/webp".to_string()]
+        );
+        assert_eq!(
+            descriptor.source_media,
+            vec![
+                "(min-width: 800px)".to_string(),
+                "(min-width: 400px)".to_string()
+            ]
+        );
+        assert_eq!(descriptor.sources.len(), 2);
+    }
+
+    #[test]
+    fn browser_image_map_metadata_tracks_map_areas_and_navigation() {
+        let document = parse_html(
+            "<base href=\"https://example.test/gallery/index.html\"><body>\
+             <img src=hero.jpg alt=Hero usemap=#hero-map>\
+             <map id=map-node name=hero-map>\
+               <area id=cta shape=rect coords=\"0,0,120,60\" href=details.html alt=\"Details\" target=preview rel=\"nofollow external\" ping=\"track.html\" hreflang=en>\
+               <area id=logo coords=\"10,10,40,40\" href=#logo alt=Logo>\
+             </map>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let image = &content_tree.children[0];
+        assert_eq!(image.role, "image");
+        assert_eq!(image.src.as_deref(), Some("hero.jpg"));
+
+        let map = &content_tree.children[1];
+        assert_eq!(map.role, "image_map");
+        assert_eq!(map.image_map_name.as_deref(), Some("hero-map"));
+
+        let area = &map.children[0];
+        assert_eq!(area.role, "image_map_area");
+        assert_eq!(area.image_map_shape.as_deref(), Some("rect"));
+        assert_eq!(area.image_map_coords.as_deref(), Some("0,0,120,60"));
+        assert_eq!(area.href.as_deref(), Some("details.html"));
+        assert_eq!(
+            area.resolved_href.as_deref(),
+            Some("https://example.test/gallery/details.html")
+        );
+        assert_eq!(area.alt.as_deref(), Some("Details"));
+        assert_eq!(area.target.as_deref(), Some("preview"));
+        assert_eq!(
+            area.rel_tokens,
+            vec!["nofollow".to_string(), "external".to_string()]
+        );
+        assert_eq!(area.ping, vec!["track.html".to_string()]);
+        assert_eq!(
+            area.resolved_ping,
+            vec!["https://example.test/gallery/track.html".to_string()]
+        );
+
+        let default_shape_area = &map.children[1];
+        assert_eq!(default_shape_area.image_map_shape.as_deref(), Some("rect"));
+        assert_eq!(
+            default_shape_area.resolved_href.as_deref(),
+            Some("https://example.test/gallery/index.html#logo")
+        );
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.image_maps.len(), 1);
+        let image_map = &summary.image_maps[0];
+        assert_eq!(image_map.id.as_deref(), Some("map-node"));
+        assert_eq!(image_map.name.as_deref(), Some("hero-map"));
+        assert_eq!(image_map.areas.len(), 2);
+        assert_eq!(image_map.areas[0].id.as_deref(), Some("cta"));
+        assert_eq!(image_map.areas[0].shape, "rect");
+        assert_eq!(image_map.areas[0].coords.as_deref(), Some("0,0,120,60"));
+        assert_eq!(image_map.areas[0].href.as_deref(), Some("details.html"));
+        assert_eq!(
+            image_map.areas[0].resolved_href.as_deref(),
+            Some("https://example.test/gallery/details.html")
+        );
+        assert_eq!(image_map.areas[0].alt.as_deref(), Some("Details"));
+        assert_eq!(image_map.areas[0].target.as_deref(), Some("preview"));
+        assert_eq!(
+            image_map.areas[0].effective_target.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(
+            image_map.areas[0].rel_tokens,
+            vec!["nofollow".to_string(), "external".to_string()]
+        );
+        assert!(image_map.areas[0].rel_nofollow);
+        assert!(image_map.areas[0].rel_external);
+        assert_eq!(image_map.areas[0].ping, vec!["track.html".to_string()]);
+        assert_eq!(
+            image_map.areas[0].resolved_ping,
+            vec!["https://example.test/gallery/track.html".to_string()]
+        );
+        assert_eq!(image_map.areas[0].hreflang.as_deref(), Some("en"));
+        assert_eq!(image_map.areas[1].shape, "rect");
+        assert_eq!(image_map.areas[1].coords.as_deref(), Some("10,10,40,40"));
+        assert_eq!(image_map.areas[1].href.as_deref(), Some("#logo"));
+        assert_eq!(
+            image_map.areas[1].resolved_href.as_deref(),
+            Some("https://example.test/gallery/index.html#logo")
+        );
+
+        assert_eq!(summary.links.len(), 2);
+        assert_eq!(summary.links[0].element, "area");
+        assert_eq!(summary.links[0].id.as_deref(), Some("cta"));
+        assert_eq!(summary.links[0].href.as_deref(), Some("details.html"));
+        assert_eq!(
+            summary.links[0].resolved_href.as_deref(),
+            Some("https://example.test/gallery/details.html")
+        );
+        assert_eq!(summary.links[0].text, "Details");
+        assert_eq!(summary.links[0].rel_tokens, vec!["nofollow", "external"]);
+        assert!(summary.links[0].rel_nofollow);
+        assert!(summary.links[0].rel_external);
+        assert_eq!(summary.links[0].target.as_deref(), Some("preview"));
+        assert_eq!(
+            summary.links[0].effective_target.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(summary.links[0].ping, vec!["track.html".to_string()]);
+        assert_eq!(
+            summary.links[0].resolved_ping,
+            vec!["https://example.test/gallery/track.html".to_string()]
+        );
+        assert_eq!(summary.links[1].element, "area");
+        assert_eq!(summary.links[1].href.as_deref(), Some("#logo"));
+        assert_eq!(summary.links[1].text, "Logo");
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[1].display, "none");
+        assert_eq!(render_tree.children[1].children[0].display, "none");
+    }
+
+    #[test]
+    fn browser_table_metadata_tracks_columns_spans_and_headers() {
+        let document = parse_html(
+            "<table><caption>Prices</caption>\
+             <colgroup><col span=2 width=80><col width=120>\
+             <thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price\
+             <tbody><tr><th scope=row headers=item>Basic\
+             <td colspan=2 headers=\"item price\">$1</table>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.tables[0].caption.as_deref(), Some("Prices"));
+        assert_eq!(summary.tables[0].row_count, 2);
+        assert_eq!(summary.tables[0].column_count, 3);
+        assert_eq!(summary.tables[0].column_hint_count, 3);
+        assert_eq!(summary.tables[0].header_cell_count, 3);
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let table = &content_tree.children[0];
+        assert_eq!(table.children[1].role, "table_column_group");
+        assert_eq!(table.children[1].children[0].span.as_deref(), Some("2"));
+        assert_eq!(
+            table.children[2].table_section_kind.as_deref(),
+            Some("thead")
+        );
+        let body_cell = &table.children[3].children[0].children[1];
+        assert_eq!(body_cell.colspan.as_deref(), Some("2"));
+        assert_eq!(
+            body_cell.headers,
+            vec!["item".to_string(), "price".to_string()]
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(
+            render_tree.children[0].children[1].display,
+            "table-column-group"
+        );
+        assert_eq!(
+            render_tree.children[0].children[3].children[0].children[1]
+                .colspan
+                .as_deref(),
+            Some("2")
+        );
+    }
+
+    #[test]
+    fn browser_text_flow_metadata_tracks_lists_quotes_and_breaks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/page.html\">\
+             <p>Intro<br>line<wbr>word</p><hr>\
+             <ol start=3 reversed type=A><li value=7>Seven<li>Eight</ol>\
+             <pre>  keep\nspace</pre>\
+             <blockquote cite=notes/ref.html><p>Quote <q cite=#part>part</q></p></blockquote>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+        assert_eq!(paragraph.role, "paragraph");
+        assert_eq!(paragraph.children[1].break_kind.as_deref(), Some("line"));
+        assert_eq!(paragraph.children[3].break_kind.as_deref(), Some("word"));
+
+        let separator = &content_tree.children[1];
+        assert_eq!(separator.role, "separator");
+        assert_eq!(separator.break_kind.as_deref(), Some("thematic"));
+
+        let list = &content_tree.children[2];
+        assert_eq!(list.list_kind.as_deref(), Some("ordered"));
+        assert_eq!(list.list_start.as_deref(), Some("3"));
+        assert_eq!(list.list_marker_type.as_deref(), Some("A"));
+        assert!(list.list_reversed);
+        assert_eq!(list.children[0].list_item_value.as_deref(), Some("7"));
+
+        let pre = &content_tree.children[3];
+        assert_eq!(pre.role, "preformatted");
+        assert_eq!(pre.text_flow.as_deref(), Some("preformatted"));
+        assert_eq!(pre.children[0].text.as_deref(), Some("  keep\nspace"));
+
+        let quote = &content_tree.children[4];
+        assert_eq!(quote.role, "quote_block");
+        assert_eq!(quote.quote_cite.as_deref(), Some("notes/ref.html"));
+        assert_eq!(
+            quote.resolved_quote_cite.as_deref(),
+            Some("https://example.test/docs/notes/ref.html")
+        );
+        let inline_quote = &quote.children[0].children[1];
+        assert_eq!(inline_quote.role, "quote");
+        assert_eq!(inline_quote.quote_cite.as_deref(), Some("#part"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[1].display, "line-break");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[2].children[0].display, "list-item");
+        assert_eq!(
+            render_tree.children[4].children[0].children[1].display,
+            "inline"
+        );
+    }
+
+    #[test]
+    fn browser_description_menu_metadata_tracks_terms_and_list_kinds() {
+        let document = parse_html(
+            "<body><dl id=glossary><dt id=term>Parser</dt><dd id=desc>Builds trees</dd>\
+             <dt>Lexer</dt><dd>Builds tokens</dd></dl>\
+             <menu id=actions><li value=3>Open</li><li>Save</li></menu>\
+             <dir id=directory><li>Legacy item</li></dir>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let definitions = &content_tree.children[0];
+        assert_eq!(definitions.role, "description_list");
+        assert_eq!(
+            definitions.description_list_kind.as_deref(),
+            Some("description")
+        );
+        assert_eq!(definitions.children[0].role, "description_term");
+        assert_eq!(definitions.children[0].term_kind.as_deref(), Some("term"));
+        assert_eq!(definitions.children[1].role, "description_details");
+        assert_eq!(
+            definitions.children[1].term_kind.as_deref(),
+            Some("description")
+        );
+
+        let menu = &content_tree.children[1];
+        assert_eq!(menu.role, "list");
+        assert_eq!(menu.list_kind.as_deref(), Some("menu"));
+        assert_eq!(menu.children[0].role, "list_item");
+        assert_eq!(menu.children[0].list_item_value.as_deref(), Some("3"));
+
+        let directory = &content_tree.children[2];
+        assert_eq!(directory.role, "list");
+        assert_eq!(directory.list_kind.as_deref(), Some("directory"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[0].display, "block");
+        assert_eq!(render_tree.children[0].children[1].display, "block");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[1].children[0].display, "list-item");
+        assert_eq!(render_tree.children[2].children[0].display, "list-item");
+    }
+
+    #[test]
+    fn browser_navigation_target_descriptors_track_links_and_image_map_areas() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/\" target=_top>\
+             <body><a id=plain href=plain.html>Plain</a>\
+             <a id=intro href=intro.html target=main rel=\"next external noreferrer\" download=intro.html ping=\"track.html https://metrics.example/p\" attributionsrc=\"attr/register https://ad.example/register\" hreflang=en type=text/html referrerpolicy=no-referrer>Intro</a>\
+             <map name=hero><area id=detail shape=circle coords=\"20,20,10\" href=detail.html alt=Details target=preview rel=\"nofollow external\" ping=area-track.html attributionsrc=area-attr.html hreflang=en></map></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.navigation_target_descriptors.len(), 2);
+
+        let anchor = &summary.navigation_target_descriptors[0];
+        assert_eq!(anchor.element, "a");
+        assert_eq!(anchor.id.as_deref(), Some("intro"));
+        assert_eq!(anchor.href.as_deref(), Some("intro.html"));
+        assert_eq!(
+            anchor.resolved_href.as_deref(),
+            Some("https://example.test/docs/intro.html")
+        );
+        assert_eq!(anchor.text, "Intro");
+        assert_eq!(anchor.target.as_deref(), Some("main"));
+        assert_eq!(anchor.effective_target.as_deref(), Some("main"));
+        assert_eq!(anchor.rel_tokens, vec!["next", "external", "noreferrer"]);
+        assert!(anchor.rel_external);
+        assert!(anchor.rel_noreferrer);
+        assert_eq!(anchor.download.as_deref(), Some("intro.html"));
+        assert_eq!(anchor.ping, vec!["track.html", "https://metrics.example/p"]);
+        assert_eq!(
+            anchor.resolved_ping,
+            vec![
+                "https://example.test/docs/track.html",
+                "https://metrics.example/p"
+            ]
+        );
+        assert_eq!(
+            anchor.attributionsrc,
+            vec!["attr/register", "https://ad.example/register"]
+        );
+        assert_eq!(
+            anchor.resolved_attributionsrc,
+            vec![
+                "https://example.test/docs/attr/register",
+                "https://ad.example/register"
+            ]
+        );
+        assert_eq!(anchor.hreflang.as_deref(), Some("en"));
+        assert_eq!(anchor.type_hint.as_deref(), Some("text/html"));
+        assert_eq!(anchor.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(anchor.area_shape, None);
+
+        let area = &summary.navigation_target_descriptors[1];
+        assert_eq!(area.element, "area");
+        assert_eq!(area.id.as_deref(), Some("detail"));
+        assert_eq!(area.text, "Details");
+        assert_eq!(area.area_shape.as_deref(), Some("circle"));
+        assert_eq!(area.area_coords.as_deref(), Some("20,20,10"));
+        assert_eq!(area.target.as_deref(), Some("preview"));
+        assert_eq!(area.effective_target.as_deref(), Some("preview"));
+        assert_eq!(area.rel_tokens, vec!["nofollow", "external"]);
+        assert!(area.rel_external);
+        assert!(area.rel_nofollow);
+        assert_eq!(area.hreflang.as_deref(), Some("en"));
+        assert_eq!(
+            area.resolved_attributionsrc,
+            vec!["https://example.test/docs/area-attr.html"]
+        );
+    }
+
+    #[test]
+    fn browser_inline_semantic_metadata_tracks_machine_readable_annotations() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/page.html\">\
+             <body><p>Version <data id=version value=\"2.1\">two point one</data> shipped \
+             <time id=date datetime=\"2026-05-25\">today</time>. \
+             <ins id=add cite=changes.html datetime=\"2026-05-25T06:00:00Z\">Added</ins> \
+             <del id=remove cite=\"#old\" datetime=\"2026-05-24\">Removed</del> \
+             <mark id=highlight>Important</mark></p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let semantic_ids: Vec<&str> = summary
+            .text_semantics
+            .iter()
+            .filter_map(|semantic| semantic.id.as_deref())
+            .collect();
+        assert_eq!(
+            semantic_ids,
+            vec!["version", "date", "add", "remove", "highlight"]
+        );
+        assert_eq!(summary.text_semantics[0].role, "data");
+        assert_eq!(summary.text_semantics[0].data_value.as_deref(), Some("2.1"));
+        assert_eq!(summary.text_semantics[1].role, "time");
+        assert_eq!(
+            summary.text_semantics[1].datetime.as_deref(),
+            Some("2026-05-25")
+        );
+        assert_eq!(summary.text_semantics[2].role, "inserted");
+        assert_eq!(
+            summary.text_semantics[2].resolved_edit_cite.as_deref(),
+            Some("https://example.test/docs/changes.html")
+        );
+        assert_eq!(
+            summary.text_semantics[2].edit_datetime.as_deref(),
+            Some("2026-05-25T06:00:00Z")
+        );
+        assert_eq!(summary.text_semantics[3].role, "deleted");
+        assert_eq!(
+            summary.text_semantics[3].resolved_edit_cite.as_deref(),
+            Some("https://example.test/docs/page.html#old")
+        );
+        assert_eq!(summary.text_semantics[4].role, "mark");
+        assert_eq!(summary.text_semantics[4].text, "Important");
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let paragraph = &content_tree.children[0];
+
+        let data = &paragraph.children[1];
+        assert_eq!(data.role, "data");
+        assert_eq!(data.data_value.as_deref(), Some("2.1"));
+        assert_eq!(data.children[0].text.as_deref(), Some("two point one"));
+
+        let time = &paragraph.children[3];
+        assert_eq!(time.role, "time");
+        assert_eq!(time.datetime.as_deref(), Some("2026-05-25"));
+        assert_eq!(time.children[0].text.as_deref(), Some("today"));
+
+        let inserted = &paragraph.children[5];
+        assert_eq!(inserted.role, "inserted");
+        assert_eq!(inserted.edit_cite.as_deref(), Some("changes.html"));
+        assert_eq!(
+            inserted.resolved_edit_cite.as_deref(),
+            Some("https://example.test/docs/changes.html")
+        );
+        assert_eq!(
+            inserted.edit_datetime.as_deref(),
+            Some("2026-05-25T06:00:00Z")
+        );
+
+        let deleted = &paragraph.children[6];
+        assert_eq!(deleted.role, "deleted");
+        assert_eq!(deleted.edit_cite.as_deref(), Some("#old"));
+        assert_eq!(
+            deleted.resolved_edit_cite.as_deref(),
+            Some("https://example.test/docs/page.html#old")
+        );
+        assert_eq!(deleted.edit_datetime.as_deref(), Some("2026-05-24"));
+
+        let mark = &paragraph.children[7];
+        assert_eq!(mark.role, "mark");
+        assert_eq!(mark.children[0].text.as_deref(), Some("Important"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].children[1].display, "inline");
+        assert_eq!(render_tree.children[0].children[3].display, "inline");
+        assert_eq!(render_tree.children[0].children[5].display, "inline");
+        assert_eq!(render_tree.children[0].children[6].display, "inline");
+        assert_eq!(render_tree.children[0].children[7].display, "inline");
+    }
+
+    #[test]
+    fn browser_structured_data_metadata_tracks_items_and_properties() {
+        let document = parse_html(
+            "<base href=\"https://example.test/catalog/\">\
+             <body><article id=product itemscope itemtype=\"https://schema.org/Product\" \
+             itemid=\"items/widget\" itemref=\"external-rating\">\
+             <h2 itemprop=name>Widget Pro</h2>\
+             <img itemprop=image src=\"images/widget.png\" alt=Widget>\
+             <a itemprop=\"url sameAs\" href=\"../products/widget\">Product page</a>\
+             <data itemprop=sku value=WID-001>Widget SKU</data>\
+             <time itemprop=releaseDate datetime=\"2026-05-25\">today</time>\
+             <meta itemprop=category content=Tools>\
+             <div itemprop=offers itemscope itemtype=\"https://schema.org/Offer\" \
+             itemid=\"offers/widget\"><span itemprop=price>19.99</span>\
+             <link itemprop=availability href=\"https://schema.org/InStock\"></div>\
+             </article><p id=external-rating itemprop=aggregateRating>4.8 stars</p>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.structured_items.len(), 2);
+
+        let product = &summary.structured_items[0];
+        assert_eq!(product.id.as_deref(), Some("product"));
+        assert_eq!(product.item_type, vec!["https://schema.org/Product"]);
+        assert_eq!(product.item_id.as_deref(), Some("items/widget"));
+        assert_eq!(
+            product.resolved_item_id.as_deref(),
+            Some("https://example.test/catalog/items/widget")
+        );
+        assert_eq!(product.item_ref, vec!["external-rating"]);
+
+        let product_property = |name: &str| {
+            product
+                .properties
+                .iter()
+                .find(|property| property.name == name)
+                .unwrap_or_else(|| panic!("missing product property {name}"))
+        };
+        assert_eq!(
+            product_property("name").value.as_deref(),
+            Some("Widget Pro")
+        );
+        assert_eq!(
+            product_property("image").value_url.as_deref(),
+            Some("images/widget.png")
+        );
+        assert_eq!(
+            product_property("image").resolved_value_url.as_deref(),
+            Some("https://example.test/catalog/images/widget.png")
+        );
+        assert_eq!(
+            product_property("sameAs").resolved_value_url.as_deref(),
+            Some("https://example.test/products/widget")
+        );
+        assert_eq!(product_property("sku").value.as_deref(), Some("WID-001"));
+        assert_eq!(
+            product_property("releaseDate").value.as_deref(),
+            Some("2026-05-25")
+        );
+        assert_eq!(product_property("category").value.as_deref(), Some("Tools"));
+        assert_eq!(product_property("offers").value.as_deref(), Some("19.99"));
+        assert_eq!(
+            product_property("aggregateRating").value.as_deref(),
+            Some("4.8 stars")
+        );
+
+        let offer = &summary.structured_items[1];
+        assert_eq!(offer.item_type, vec!["https://schema.org/Offer"]);
+        assert_eq!(offer.item_id.as_deref(), Some("offers/widget"));
+        assert_eq!(
+            offer.resolved_item_id.as_deref(),
+            Some("https://example.test/catalog/offers/widget")
+        );
+        assert_eq!(offer.properties[0].name, "price");
+        assert_eq!(offer.properties[0].value.as_deref(), Some("19.99"));
+        assert_eq!(offer.properties[1].name, "availability");
+        assert_eq!(
+            offer.properties[1].resolved_value_url.as_deref(),
+            Some("https://schema.org/InStock")
+        );
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let article = &content_tree.children[0];
+        assert!(article.item_scope);
+        assert_eq!(article.item_type, vec!["https://schema.org/Product"]);
+        assert_eq!(article.item_id.as_deref(), Some("items/widget"));
+        assert_eq!(
+            article.resolved_item_id.as_deref(),
+            Some("https://example.test/catalog/items/widget")
+        );
+        assert_eq!(article.item_ref, vec!["external-rating"]);
+
+        let name = &article.children[0];
+        assert_eq!(name.itemprop, vec!["name"]);
+        assert_eq!(name.item_value.as_deref(), Some("Widget Pro"));
+        let image = &article.children[1];
+        assert_eq!(image.itemprop, vec!["image"]);
+        assert_eq!(image.item_value_url.as_deref(), Some("images/widget.png"));
+        assert_eq!(
+            image.resolved_item_value_url.as_deref(),
+            Some("https://example.test/catalog/images/widget.png")
+        );
+        let link = &article.children[2];
+        assert_eq!(link.itemprop, vec!["url", "sameAs"]);
+        assert_eq!(
+            link.resolved_item_value_url.as_deref(),
+            Some("https://example.test/products/widget")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let rendered_article = &render_tree.children[0];
+        assert!(rendered_article.item_scope);
+        assert_eq!(
+            rendered_article.item_type,
+            vec!["https://schema.org/Product"]
+        );
+        assert_eq!(rendered_article.children[1].itemprop, vec!["image"]);
+        assert_eq!(
+            rendered_article.children[1]
+                .resolved_item_value_url
+                .as_deref(),
+            Some("https://example.test/catalog/images/widget.png")
+        );
+    }
+
+    #[test]
+    fn browser_component_metadata_tracks_templates_slots_canvas_and_custom_elements() {
+        let document = parse_html(
+            "<body><template id=card-template shadowrootmode=open shadowrootdelegatesfocus \
+             shadowrootclonable shadowrootserializable><article><slot name=title>Untitled</slot>\
+             <slot>Body</slot></article></template><product-card id=card>\
+             <span slot=title>Widget</span><canvas id=chart width=300 height=150>Chart fallback</canvas>\
+             <button is=fancy-button>Save</button><slot name=footer>Fallback footer</slot></product-card>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.templates.len(), 1);
+        let template = &summary.templates[0];
+        assert_eq!(template.id.as_deref(), Some("card-template"));
+        assert_eq!(template.shadowrootmode.as_deref(), Some("open"));
+        assert!(template.shadowrootdelegatesfocus);
+        assert!(template.shadowrootclonable);
+        assert!(template.shadowrootserializable);
+        assert_eq!(template.content_text, "Untitled Body");
+        assert_eq!(
+            summary.body_text,
+            "Widget Chart fallback Save Fallback footer"
+        );
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        assert_eq!(content_tree.children.len(), 1);
+        let custom = &content_tree.children[0];
+        assert_eq!(custom.name.as_deref(), Some("product-card"));
+        assert!(custom.custom_element);
+        assert_eq!(custom.custom_element_name.as_deref(), Some("product-card"));
+        assert!(custom.custom_element_is.is_none());
+
+        let slotted_title = &custom.children[0];
+        assert_eq!(slotted_title.slot.as_deref(), Some("title"));
+        assert_eq!(slotted_title.children[0].text.as_deref(), Some("Widget"));
+
+        let canvas = &custom.children[1];
+        assert_eq!(canvas.role, "canvas");
+        assert_eq!(canvas.resource_kind.as_deref(), Some("canvas"));
+        assert_eq!(
+            canvas.canvas_fallback_text.as_deref(),
+            Some("Chart fallback")
+        );
+        assert_eq!(canvas.width.as_deref(), Some("300"));
+        assert_eq!(canvas.height.as_deref(), Some("150"));
+
+        let customized_button = &custom.children[2];
+        assert!(customized_button.custom_element);
+        assert_eq!(
+            customized_button.custom_element_is.as_deref(),
+            Some("fancy-button")
+        );
+
+        let slot = &custom.children[3];
+        assert_eq!(slot.role, "slot");
+        assert_eq!(slot.slot_name.as_deref(), Some("footer"));
+        assert_eq!(slot.children[0].text.as_deref(), Some("Fallback footer"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let rendered = &render_tree.children[0];
+        assert!(rendered.custom_element);
+        assert_eq!(rendered.display, "inline");
+        assert_eq!(rendered.children[1].display, "inline-replaced");
+        assert_eq!(
+            rendered.children[1].canvas_fallback_text.as_deref(),
+            Some("Chart fallback")
+        );
+        assert_eq!(rendered.children[3].role, "slot");
+        assert_eq!(rendered.children[3].display, "inline");
+    }
+
+    #[test]
+    fn browser_disclosure_descriptor_metadata_tracks_details_and_dialogs() {
+        let document = parse_html(
+            "<body>\
+             <details id=shipping name=checkout open aria-describedby=ship-help>\
+               <summary>Shipping options</summary><p id=ship-help>Choose speed</p>\
+             </details>\
+             <details id=billing name=checkout><summary>Billing</summary><p>Cards</p></details>\
+             <h2 id=dialog-title>Confirm order</h2>\
+             <p id=dialog-help>Review totals</p>\
+             <dialog id=confirm open aria-labelledby=dialog-title aria-describedby=dialog-help aria-modal=true closedby=any>\
+               <p>Confirm copy</p>\
+             </dialog>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.disclosures.len(), 3);
+        let shipping = &summary.disclosures[0];
+        assert_eq!(shipping.element, "details");
+        assert_eq!(shipping.id.as_deref(), Some("shipping"));
+        assert_eq!(shipping.name.as_deref(), Some("checkout"));
+        assert!(shipping.open);
+        assert_eq!(shipping.summary_text.as_deref(), Some("Shipping options"));
+        assert_eq!(
+            shipping.accessible_name.as_deref(),
+            Some("Shipping options")
+        );
+        assert_eq!(
+            shipping.accessible_description.as_deref(),
+            Some("Choose speed")
+        );
+
+        let billing = &summary.disclosures[1];
+        assert_eq!(billing.element, "details");
+        assert_eq!(billing.name.as_deref(), Some("checkout"));
+        assert!(!billing.open);
+        assert_eq!(billing.summary_text.as_deref(), Some("Billing"));
+        assert_eq!(billing.accessible_name.as_deref(), Some("Billing"));
+
+        let dialog = &summary.disclosures[2];
+        assert_eq!(dialog.element, "dialog");
+        assert_eq!(dialog.id.as_deref(), Some("confirm"));
+        assert!(dialog.open);
+        assert_eq!(dialog.accessible_name.as_deref(), Some("Confirm order"));
+        assert_eq!(
+            dialog.accessible_description.as_deref(),
+            Some("Review totals")
+        );
+        assert_eq!(dialog.aria_modal.as_deref(), Some("true"));
+        assert_eq!(dialog.closedby.as_deref(), Some("any"));
+        assert_eq!(dialog.text, "Confirm copy");
+    }
+
+    #[test]
+    fn browser_disclosure_state_descriptors_track_details_dialog_and_modal_state() {
+        let document = parse_html(
+            "<body>\
+             <details id=shipping name=checkout open aria-describedby=ship-help>\
+               <summary>Shipping options</summary><p id=ship-help>Choose speed</p>\
+             </details>\
+             <details id=billing name=checkout><summary>Billing</summary><p>Cards</p></details>\
+             <h2 id=dialog-title>Confirm order</h2>\
+             <p id=dialog-help>Review totals</p>\
+             <dialog id=confirm open aria-labelledby=dialog-title aria-describedby=dialog-help aria-modal=true closedby=any>\
+               <p>Confirm copy</p>\
+             </dialog>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.disclosure_state_descriptors.len(), 3);
+
+        let shipping = &summary.disclosure_state_descriptors[0];
+        assert_eq!(shipping.element, "details");
+        assert_eq!(shipping.id.as_deref(), Some("shipping"));
+        assert_eq!(shipping.disclosure_kind, "details");
+        assert!(shipping.open);
+        assert!(shipping.grouped);
+        assert_eq!(shipping.group_name.as_deref(), Some("checkout"));
+        assert!(shipping.has_summary);
+        assert_eq!(shipping.summary_text.as_deref(), Some("Shipping options"));
+        assert_eq!(
+            shipping.accessible_description.as_deref(),
+            Some("Choose speed")
+        );
+
+        let billing = &summary.disclosure_state_descriptors[1];
+        assert_eq!(billing.id.as_deref(), Some("billing"));
+        assert!(!billing.open);
+        assert!(billing.grouped);
+        assert_eq!(billing.summary_text.as_deref(), Some("Billing"));
+        assert_eq!(billing.text_length, "Billing Cards".chars().count());
+
+        let dialog = &summary.disclosure_state_descriptors[2];
+        assert_eq!(dialog.element, "dialog");
+        assert_eq!(dialog.disclosure_kind, "dialog");
+        assert!(dialog.open);
+        assert!(!dialog.grouped);
+        assert!(!dialog.has_summary);
+        assert_eq!(dialog.accessible_name.as_deref(), Some("Confirm order"));
+        assert_eq!(dialog.aria_labelledby, vec!["dialog-title"]);
+        assert_eq!(dialog.aria_describedby, vec!["dialog-help"]);
+        assert_eq!(dialog.aria_modal.as_deref(), Some("true"));
+        assert!(dialog.modal);
+        assert_eq!(dialog.closedby.as_deref(), Some("any"));
+        assert_eq!(dialog.text, "Confirm copy");
+    }
+
+    #[test]
+    fn browser_ruby_bidi_metadata_tracks_annotation_and_direction_nodes() {
+        let document = parse_html(
+            "<body><ruby id=term><rb>漢</rb><rt>kan</rt><rp>(</rp>\
+             <rtc><rt>group</rt></rtc></ruby> then <bdi id=name dir=auto>Name</bdi> \
+             and <bdo id=rtl dir=rtl>abc</bdo>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let semantics: Vec<(&str, &str, Option<&str>)> = summary
+            .text_semantics
+            .iter()
+            .map(|semantic| {
+                (
+                    semantic.element.as_str(),
+                    semantic.role.as_str(),
+                    semantic
+                        .ruby_kind
+                        .as_deref()
+                        .or(semantic.bidi_kind.as_deref()),
+                )
+            })
+            .collect();
+        assert_eq!(
+            semantics,
+            vec![
+                ("ruby", "ruby", Some("ruby")),
+                ("rb", "ruby_base", Some("base")),
+                ("rt", "ruby_text", Some("text")),
+                ("rp", "ruby_fallback", Some("fallback")),
+                ("rtc", "ruby_text_container", Some("text_container")),
+                ("rt", "ruby_text", Some("text")),
+                ("bdi", "bidi_isolate", Some("isolate")),
+                ("bdo", "bidi_override", Some("override")),
+            ]
+        );
+        assert_eq!(summary.text_semantics[6].dir.as_deref(), Some("auto"));
+        assert_eq!(summary.text_semantics[7].dir.as_deref(), Some("rtl"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let ruby = &content_tree.children[0];
+        assert_eq!(ruby.role, "ruby");
+        assert_eq!(ruby.ruby_kind.as_deref(), Some("ruby"));
+
+        let ruby_base = &ruby.children[0];
+        assert_eq!(ruby_base.role, "ruby_base");
+        assert_eq!(ruby_base.ruby_kind.as_deref(), Some("base"));
+        assert_eq!(ruby_base.children[0].text.as_deref(), Some("漢"));
+
+        let ruby_text = &ruby.children[1];
+        assert_eq!(ruby_text.role, "ruby_text");
+        assert_eq!(ruby_text.ruby_kind.as_deref(), Some("text"));
+        assert_eq!(ruby_text.children[0].text.as_deref(), Some("kan"));
+
+        let ruby_fallback = &ruby.children[2];
+        assert_eq!(ruby_fallback.role, "ruby_fallback");
+        assert_eq!(ruby_fallback.ruby_kind.as_deref(), Some("fallback"));
+
+        let ruby_text_container = &ruby.children[3];
+        assert_eq!(ruby_text_container.role, "ruby_text_container");
+        assert_eq!(
+            ruby_text_container.ruby_kind.as_deref(),
+            Some("text_container")
+        );
+        assert_eq!(ruby_text_container.children[0].role, "ruby_text");
+
+        let bidi_isolate = &content_tree.children[2];
+        assert_eq!(bidi_isolate.role, "bidi_isolate");
+        assert_eq!(bidi_isolate.bidi_kind.as_deref(), Some("isolate"));
+        assert_eq!(bidi_isolate.dir.as_deref(), Some("auto"));
+
+        let bidi_override = &content_tree.children[4];
+        assert_eq!(bidi_override.role, "bidi_override");
+        assert_eq!(bidi_override.bidi_kind.as_deref(), Some("override"));
+        assert_eq!(bidi_override.dir.as_deref(), Some("rtl"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline");
+        assert_eq!(
+            render_tree.children[0].children[3].ruby_kind.as_deref(),
+            Some("text_container")
+        );
+        assert_eq!(
+            render_tree.children[2].bidi_kind.as_deref(),
+            Some("isolate")
+        );
+        assert_eq!(
+            render_tree.children[4].bidi_kind.as_deref(),
+            Some("override")
+        );
+    }
+
+    #[test]
+    fn browser_outline_metadata_tracks_sections_landmarks_and_heading_levels() {
+        let document = parse_html(
+            "<body><header><h1>Site</h1></header>\
+             <nav><h2>Nav</h2><a href=/home>Home</a></nav>\
+             <main><article id=post><h2>Post</h2><section aria-label=Chapter><h3>Chapter</h3></section></article>\
+             <aside><h2>Related</h2></aside></main><footer>Fine print</footer>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let header = &content_tree.children[0];
+        assert_eq!(header.role, "header");
+        assert_eq!(header.section_kind.as_deref(), Some("header"));
+        assert_eq!(header.landmark_kind.as_deref(), Some("header"));
+        assert_eq!(header.children[0].heading_level, Some(1));
+
+        let navigation = &content_tree.children[1];
+        assert_eq!(navigation.role, "navigation");
+        assert_eq!(navigation.section_kind.as_deref(), Some("navigation"));
+        assert_eq!(navigation.landmark_kind.as_deref(), Some("navigation"));
+        assert_eq!(navigation.children[0].heading_level, Some(2));
+
+        let main = &content_tree.children[2];
+        assert_eq!(main.role, "main");
+        assert_eq!(main.landmark_kind.as_deref(), Some("main"));
+        let article = &main.children[0];
+        assert_eq!(article.role, "article");
+        assert_eq!(article.section_kind.as_deref(), Some("article"));
+        assert_eq!(article.children[0].heading_level, Some(2));
+        let section = &article.children[1];
+        assert_eq!(section.role, "section");
+        assert_eq!(section.section_kind.as_deref(), Some("section"));
+        assert_eq!(section.children[0].heading_level, Some(3));
+
+        let aside = &main.children[1];
+        assert_eq!(aside.role, "aside");
+        assert_eq!(aside.landmark_kind.as_deref(), Some("complementary"));
+
+        let footer = &content_tree.children[3];
+        assert_eq!(footer.role, "footer");
+        assert_eq!(footer.landmark_kind.as_deref(), Some("footer"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[1].display, "block");
+        assert_eq!(render_tree.children[2].children[0].display, "block");
+        assert_eq!(
+            render_tree.children[2].children[0].children[1].children[0].heading_level,
+            Some(3)
+        );
+    }
+
+    #[test]
+    fn browser_form_accessibility_metadata_tracks_labels_and_control_state() {
+        let document = parse_html(
+             "<base href=\"https://example.test/search/index.html\">\
+             <body><form id=f name=searchForm aria-label=\"Search form\" action=find.html \
+             method=post accept-charset=\"utf-8 windows-1252\" autocomplete=on rel=noreferrer novalidate>\
+             <label id=q-help for=q>Query</label>\
+             <input id=q name=q placeholder=\"Search terms\" required autocomplete=\"section-primary shipping search\" \
+             autocapitalize=words enterkeyhint=search dirname=q.dir autofocus \
+             inputmode=search pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 \
+             list=query-suggestions aria-describedby=q-help>\
+             <datalist id=query-suggestions><option value=Rust><option value=HTML label=Markup><option>Browser APIs</datalist>\
+             <label>Notes<textarea id=notes name=notes readonly maxlength=500 \
+             autocapitalize=sentences enterkeyhint=done dirname=notes.dir>Keep me</textarea></label>\
+             <fieldset disabled><legend>Options</legend><input id=fast type=checkbox name=fast checked></fieldset>\
+             <select id=kind name=kind title=Kind multiple size=5><option selected>Books<option>Manuals</select>\
+             <input id=upload type=file name=upload accept=\"image/png, image/jpeg, .webp\" capture=environment>\
+             <button id=go type=submit aria-label=\"Run search\" formaction=run.html \
+             formenctype=\"application/x-www-form-urlencoded\" formmethod=post \
+             formtarget=results formnovalidate>Go</button>\
+             <input id=imageGo type=image name=image-go src=buttons/search.png \
+             alt=\"Search image\" width=32 height=16>\
+             <output id=total name=total for=\"q kind\">Ready</output></form>\
+             <input id=external form=f name=outside placeholder=Outside>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.forms[0].id.as_deref(), Some("f"));
+        assert_eq!(summary.forms[0].action.as_deref(), Some("find.html"));
+        assert_eq!(
+            summary.forms[0].resolved_action.as_deref(),
+            Some("https://example.test/search/find.html")
+        );
+        assert_eq!(summary.forms[0].name.as_deref(), Some("searchForm"));
+        assert_eq!(summary.forms[0].method, "post");
+        assert_eq!(
+            summary.forms[0].accept_charset.as_deref(),
+            Some("utf-8 windows-1252")
+        );
+        assert_eq!(
+            summary.forms[0].accept_charset_tokens,
+            vec!["utf-8", "windows-1252"]
+        );
+        assert_eq!(summary.forms[0].autocomplete.as_deref(), Some("on"));
+        assert_eq!(summary.forms[0].autocomplete_tokens, vec!["on"]);
+        assert_eq!(summary.forms[0].rel.as_deref(), Some("noreferrer"));
+        assert!(summary.forms[0].novalidate);
+        assert_eq!(summary.forms[0].labels.len(), 2);
+        assert_eq!(summary.forms[0].labels[0].id.as_deref(), Some("q-help"));
+        assert_eq!(summary.forms[0].labels[0].for_control.as_deref(), Some("q"));
+        assert_eq!(summary.forms[0].labels[0].text, "Query");
+        assert_eq!(summary.forms[0].labels[0].control_id.as_deref(), Some("q"));
+        assert_eq!(
+            summary.forms[0].labels[0].control_name.as_deref(),
+            Some("q")
+        );
+        assert_eq!(
+            summary.forms[0].labels[0].control_type.as_deref(),
+            Some("text")
+        );
+        assert_eq!(summary.forms[0].labels[0].association, "explicit");
+        assert_eq!(summary.forms[0].labels[1].for_control, None);
+        assert_eq!(summary.forms[0].labels[1].text, "NotesKeep me");
+        assert_eq!(
+            summary.forms[0].labels[1].control_id.as_deref(),
+            Some("notes")
+        );
+        assert_eq!(
+            summary.forms[0].labels[1].control_name.as_deref(),
+            Some("notes")
+        );
+        assert_eq!(
+            summary.forms[0].labels[1].control_type.as_deref(),
+            Some("textarea")
+        );
+        assert_eq!(summary.forms[0].labels[1].association, "implicit");
+        assert_eq!(summary.forms[0].datalists.len(), 1);
+        assert_eq!(
+            summary.forms[0].datalists[0].id.as_deref(),
+            Some("query-suggestions")
+        );
+        assert_eq!(summary.forms[0].datalists[0].control_ids, vec!["q"]);
+        assert_eq!(summary.forms[0].datalists[0].control_names, vec!["q"]);
+        assert_eq!(summary.forms[0].datalists[0].options.len(), 3);
+        assert_eq!(summary.forms[0].datalists[0].options[0].value, "Rust");
+        assert_eq!(summary.forms[0].datalists[0].options[0].label, None);
+        assert_eq!(summary.forms[0].datalists[0].options[0].text, "");
+        assert!(!summary.forms[0].datalists[0].options[0].disabled);
+        assert_eq!(summary.forms[0].datalists[0].options[1].value, "HTML");
+        assert_eq!(
+            summary.forms[0].datalists[0].options[1].label.as_deref(),
+            Some("Markup")
+        );
+        assert_eq!(summary.forms[0].datalists[0].options[1].text, "Markup");
+        assert_eq!(
+            summary.forms[0].datalists[0].options[2].value,
+            "Browser APIs"
+        );
+        assert_eq!(
+            summary.forms[0].datalists[0].options[2].text,
+            "Browser APIs"
+        );
+        assert_eq!(summary.forms[0].outputs.len(), 1);
+        assert_eq!(summary.forms[0].outputs[0].id.as_deref(), Some("total"));
+        assert_eq!(summary.forms[0].outputs[0].name.as_deref(), Some("total"));
+        assert_eq!(summary.forms[0].outputs[0].for_tokens, vec!["q", "kind"]);
+        assert_eq!(summary.forms[0].outputs[0].value.as_deref(), Some("Ready"));
+        assert_eq!(summary.forms[0].outputs[0].text, "Ready");
+        let controls = &summary.forms[0].controls;
+        assert_eq!(controls[0].id.as_deref(), Some("q"));
+        assert_eq!(controls[0].labels, vec!["Query"]);
+        assert_eq!(controls[0].accessible_name.as_deref(), Some("Query"));
+        assert_eq!(controls[0].accessible_description.as_deref(), Some("Query"));
+        assert_eq!(controls[0].placeholder.as_deref(), Some("Search terms"));
+        assert_eq!(
+            controls[0].autocomplete.as_deref(),
+            Some("section-primary shipping search")
+        );
+        assert_eq!(
+            controls[0].autocomplete_tokens,
+            vec!["section-primary", "shipping", "search"]
+        );
+        assert_eq!(controls[0].autocapitalize.as_deref(), Some("words"));
+        assert_eq!(controls[0].enterkeyhint.as_deref(), Some("search"));
+        assert_eq!(controls[0].dirname.as_deref(), Some("q.dir"));
+        assert_eq!(controls[0].inputmode.as_deref(), Some("search"));
+        assert_eq!(controls[0].pattern.as_deref(), Some("[A-Za-z ]+"));
+        assert_eq!(controls[0].minlength.as_deref(), Some("2"));
+        assert_eq!(controls[0].maxlength.as_deref(), Some("80"));
+        assert_eq!(controls[0].size.as_deref(), Some("40"));
+        assert_eq!(controls[0].list.as_deref(), Some("query-suggestions"));
+        assert_eq!(
+            controls[0].datalist_options,
+            vec!["Rust", "HTML", "Browser APIs"]
+        );
+        assert!(controls[0].autofocus);
+        assert!(controls[0].required);
+        assert!(controls[0].will_validate);
+        assert_eq!(
+            controls[0].validation_attributes,
+            vec!["required", "pattern", "minlength", "maxlength"]
+        );
+        assert_eq!(controls[0].validation_barred_reason, None);
+        assert!(controls[0].successful);
+        assert_eq!(controls[0].submission_values, vec![""]);
+        assert!(controls[1].readonly);
+        assert!(!controls[1].will_validate);
+        assert_eq!(
+            controls[1].validation_attributes,
+            vec!["readonly", "maxlength"]
+        );
+        assert_eq!(
+            controls[1].validation_barred_reason.as_deref(),
+            Some("readonly")
+        );
+        assert!(controls[1].successful);
+        assert_eq!(controls[1].submission_values, vec!["Keep me"]);
+        assert_eq!(controls[1].autocapitalize.as_deref(), Some("sentences"));
+        assert_eq!(controls[1].enterkeyhint.as_deref(), Some("done"));
+        assert_eq!(controls[1].dirname.as_deref(), Some("notes.dir"));
+        assert_eq!(controls[1].maxlength.as_deref(), Some("500"));
+        assert_eq!(controls[1].labels, vec!["NotesKeep me"]);
+        assert_eq!(controls[2].control_type, "checkbox");
+        assert!(controls[2].disabled);
+        assert!(controls[2].checked);
+        assert!(!controls[2].will_validate);
+        assert_eq!(
+            controls[2].validation_barred_reason.as_deref(),
+            Some("disabled")
+        );
+        assert!(!controls[2].successful);
+        assert!(controls[2].submission_values.is_empty());
+        assert!(controls[3].multiple);
+        assert_eq!(controls[3].size.as_deref(), Some("5"));
+        assert_eq!(controls[3].accessible_name.as_deref(), Some("Kind"));
+        assert!(controls[3].will_validate);
+        assert!(controls[3].successful);
+        assert_eq!(controls[3].selected_options, vec!["Books"]);
+        assert_eq!(controls[3].submission_values, vec!["Books"]);
+        assert_eq!(controls[4].control_type, "file");
+        assert_eq!(
+            controls[4].accept.as_deref(),
+            Some("image/png, image/jpeg, .webp")
+        );
+        assert_eq!(
+            controls[4].accept_tokens,
+            vec!["image/png", "image/jpeg", ".webp"]
+        );
+        assert_eq!(controls[4].capture.as_deref(), Some("environment"));
+        assert!(controls[4].will_validate);
+        assert!(controls[4].successful);
+        assert!(controls[4].submission_values.is_empty());
+        assert_eq!(controls[5].accessible_name.as_deref(), Some("Run search"));
+        assert_eq!(controls[5].form_action.as_deref(), Some("run.html"));
+        assert_eq!(
+            controls[5].resolved_form_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(
+            controls[5].form_enctype.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(controls[5].form_method.as_deref(), Some("post"));
+        assert_eq!(controls[5].form_target.as_deref(), Some("results"));
+        assert!(controls[5].form_novalidate);
+        assert!(controls[5].will_validate);
+        assert!(!controls[5].successful);
+        assert_eq!(controls[6].control_type, "image");
+        assert_eq!(controls[6].name.as_deref(), Some("image-go"));
+        assert_eq!(controls[6].src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            controls[6].resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(controls[6].alt.as_deref(), Some("Search image"));
+        assert_eq!(controls[6].width.as_deref(), Some("32"));
+        assert_eq!(controls[6].height.as_deref(), Some("16"));
+        assert!(!controls[6].will_validate);
+        assert_eq!(
+            controls[6].validation_barred_reason.as_deref(),
+            Some("input-type-image")
+        );
+        assert!(!controls[6].successful);
+        assert_eq!(controls[7].control_type, "output");
+        assert_eq!(controls[7].name.as_deref(), Some("total"));
+        assert_eq!(controls[7].output_for, vec!["q", "kind"]);
+        assert_eq!(controls[7].value.as_deref(), Some("Ready"));
+        assert_eq!(controls[7].text, "Ready");
+        assert!(!controls[7].will_validate);
+        assert_eq!(
+            controls[7].validation_barred_reason.as_deref(),
+            Some("output")
+        );
+        assert!(!controls[7].successful);
+        assert_eq!(controls[8].id.as_deref(), Some("external"));
+        assert_eq!(controls[8].name.as_deref(), Some("outside"));
+        assert_eq!(controls[8].form_owner.as_deref(), Some("f"));
+        assert_eq!(controls[8].accessible_name.as_deref(), Some("Outside"));
+        assert_eq!(controls[8].placeholder.as_deref(), Some("Outside"));
+        assert!(controls[8].will_validate);
+        assert!(controls[8].successful);
+        assert_eq!(controls[8].submission_values, vec![""]);
+
+        let submitters = &summary.forms[0].submitters;
+        assert_eq!(submitters.len(), 2);
+        assert_eq!(submitters[0].id.as_deref(), Some("go"));
+        assert_eq!(submitters[0].control_type, "submit");
+        assert_eq!(submitters[0].accessible_name.as_deref(), Some("Run search"));
+        assert_eq!(submitters[0].action.as_deref(), Some("run.html"));
+        assert_eq!(
+            submitters[0].resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(submitters[0].method, "post");
+        assert_eq!(
+            submitters[0].enctype.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(submitters[0].target.as_deref(), Some("results"));
+        assert!(submitters[0].novalidate);
+        assert_eq!(submitters[1].id.as_deref(), Some("imageGo"));
+        assert_eq!(submitters[1].control_type, "image");
+        assert_eq!(submitters[1].name.as_deref(), Some("image-go"));
+        assert_eq!(
+            submitters[1].accessible_name.as_deref(),
+            Some("Search image")
+        );
+        assert_eq!(submitters[1].action.as_deref(), Some("find.html"));
+        assert_eq!(
+            submitters[1].resolved_action.as_deref(),
+            Some("https://example.test/search/find.html")
+        );
+        assert_eq!(submitters[1].method, "post");
+        assert!(submitters[1].novalidate);
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let form = &content_tree.children[0];
+        assert_eq!(form.role, "form");
+        assert_eq!(form.accessible_name.as_deref(), Some("Search form"));
+        assert_eq!(form.autocomplete.as_deref(), Some("on"));
+        let explicit_label = &form.children[0];
+        assert_eq!(explicit_label.role, "label");
+        assert_eq!(explicit_label.id.as_deref(), Some("q-help"));
+        assert_eq!(explicit_label.label_for.as_deref(), Some("q"));
+        let query = &form.children[1];
+        assert_eq!(query.labels, vec!["Query"]);
+        assert_eq!(query.accessible_name.as_deref(), Some("Query"));
+        assert_eq!(query.accessible_description.as_deref(), Some("Query"));
+        assert_eq!(query.autocapitalize.as_deref(), Some("words"));
+        assert_eq!(query.enterkeyhint.as_deref(), Some("search"));
+        assert_eq!(query.dirname.as_deref(), Some("q.dir"));
+        assert_eq!(query.inputmode.as_deref(), Some("search"));
+        assert_eq!(query.pattern.as_deref(), Some("[A-Za-z ]+"));
+        assert_eq!(query.maxlength.as_deref(), Some("80"));
+        assert_eq!(query.list.as_deref(), Some("query-suggestions"));
+        assert!(query.autofocus);
+        assert!(query.required);
+        let notes = &form.children[2].children[1];
+        assert_eq!(notes.labels, vec!["NotesKeep me"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.autocapitalize.as_deref(), Some("sentences"));
+        assert_eq!(notes.enterkeyhint.as_deref(), Some("done"));
+        assert_eq!(notes.dirname.as_deref(), Some("notes.dir"));
+        let fieldset = &form.children[3];
+        assert_eq!(fieldset.role, "form_group");
+        assert_eq!(fieldset.accessible_name.as_deref(), Some("Options"));
+        let select = &form.children[4];
+        assert!(select.multiple);
+        assert_eq!(select.size.as_deref(), Some("5"));
+        assert_eq!(select.accessible_name.as_deref(), Some("Kind"));
+        let upload = &form.children[5];
+        assert_eq!(
+            upload.accept.as_deref(),
+            Some("image/png, image/jpeg, .webp")
+        );
+        assert_eq!(upload.capture.as_deref(), Some("environment"));
+        let button = &form.children[6];
+        assert_eq!(button.form_action.as_deref(), Some("run.html"));
+        assert_eq!(
+            button.resolved_form_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert!(button.form_novalidate);
+        let image_button = &form.children[7];
+        assert_eq!(image_button.control_type.as_deref(), Some("image"));
+        assert_eq!(image_button.src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            image_button.resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(image_button.alt.as_deref(), Some("Search image"));
+        assert_eq!(image_button.width.as_deref(), Some("32"));
+        assert_eq!(image_button.height.as_deref(), Some("16"));
+        let output = &form.children[8];
+        assert_eq!(output.control_type.as_deref(), Some("output"));
+        assert_eq!(output.value.as_deref(), Some("Ready"));
+        let external = &content_tree.children[1];
+        assert_eq!(external.form_owner.as_deref(), Some("f"));
+        assert_eq!(external.accessible_name.as_deref(), Some("Outside"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(
+            render_tree.children[0].children[1].display,
+            "inline-replaced"
+        );
+        assert_eq!(
+            render_tree.children[0].children[1]
+                .accessible_name
+                .as_deref(),
+            Some("Query")
+        );
+    }
+
+    #[test]
+    fn browser_form_policy_descriptors_track_form_and_submitter_navigation() {
+        let document = parse_html(
+            "<base href=\"https://example.test/search/index.html\" target=_base>\
+             <form id=search name=searchForm action=find.html method=post \
+             enctype=\"multipart/form-data\" target=results \
+             accept-charset=\"utf-8 windows-1252\" autocomplete=off \
+             rel=\"external noreferrer\" novalidate>\
+             <input name=q value=rust>\
+             <button id=go type=submit name=go value=run formaction=run.html \
+             formenctype=\"application/x-www-form-urlencoded\" formmethod=dialog \
+             formtarget=dialog formnovalidate>Run</button>\
+             <input id=imageGo type=image name=image-go src=buttons/search.png \
+             alt=\"Search image\"></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.form_policy_descriptors.len(), 1);
+
+        let descriptor = &summary.form_policy_descriptors[0];
+        assert_eq!(descriptor.id.as_deref(), Some("search"));
+        assert_eq!(descriptor.name.as_deref(), Some("searchForm"));
+        assert_eq!(descriptor.action.as_deref(), Some("find.html"));
+        assert_eq!(
+            descriptor.resolved_action.as_deref(),
+            Some("https://example.test/search/find.html")
+        );
+        assert_eq!(descriptor.method, "post");
+        assert_eq!(descriptor.enctype.as_deref(), Some("multipart/form-data"));
+        assert_eq!(descriptor.target.as_deref(), Some("results"));
+        assert_eq!(descriptor.effective_target.as_deref(), Some("results"));
+        assert_eq!(
+            descriptor.accept_charset.as_deref(),
+            Some("utf-8 windows-1252")
+        );
+        assert_eq!(
+            descriptor.accept_charset_tokens,
+            vec!["utf-8", "windows-1252"]
+        );
+        assert_eq!(descriptor.autocomplete.as_deref(), Some("off"));
+        assert_eq!(descriptor.autocomplete_tokens, vec!["off"]);
+        assert_eq!(descriptor.rel.as_deref(), Some("external noreferrer"));
+        assert_eq!(descriptor.rel_tokens, vec!["external", "noreferrer"]);
+        assert!(descriptor.rel_external);
+        assert!(!descriptor.rel_nofollow);
+        assert!(!descriptor.rel_noopener);
+        assert!(descriptor.rel_noreferrer);
+        assert!(descriptor.novalidate);
+        assert_eq!(descriptor.submitters.len(), 2);
+
+        let button = &descriptor.submitters[0];
+        assert_eq!(button.id.as_deref(), Some("go"));
+        assert_eq!(button.control_type, "submit");
+        assert_eq!(button.name.as_deref(), Some("go"));
+        assert_eq!(button.accessible_name.as_deref(), Some("Run"));
+        assert_eq!(button.action.as_deref(), Some("run.html"));
+        assert_eq!(
+            button.resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(button.method, "dialog");
+        assert_eq!(
+            button.enctype.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(button.target.as_deref(), Some("dialog"));
+        assert_eq!(button.effective_target.as_deref(), Some("dialog"));
+        assert!(button.novalidate);
+        assert_eq!(button.value.as_deref(), Some("run"));
+
+        let image = &descriptor.submitters[1];
+        assert_eq!(image.id.as_deref(), Some("imageGo"));
+        assert_eq!(image.control_type, "image");
+        assert_eq!(image.name.as_deref(), Some("image-go"));
+        assert_eq!(image.accessible_name.as_deref(), Some("Search image"));
+        assert_eq!(image.action.as_deref(), Some("find.html"));
+        assert_eq!(image.method, "post");
+        assert_eq!(image.target.as_deref(), Some("results"));
+        assert_eq!(image.effective_target.as_deref(), Some("results"));
+        assert!(image.novalidate);
+    }
+
+    #[test]
+    fn browser_form_image_descriptor_metadata_tracks_submitter_coordinates_and_assets() {
+        let document = parse_html(
+            "<base href=\"https://example.test/search/index.html\" target=_top>\
+             <form id=search action=find.html method=post novalidate>\
+             <input id=imageGo type=image name=spot src=buttons/search.png \
+             alt=\"Search image\" width=32 height=16 formaction=run.html \
+             formmethod=get formenctype=multipart/form-data formtarget=results \
+             formnovalidate autofocus>\
+             <input id=plainImage type=image alt=Plain disabled></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.image_controls.len(), 2);
+
+        let image = &form.image_controls[0];
+        assert_eq!(image.id.as_deref(), Some("imageGo"));
+        assert_eq!(image.name.as_deref(), Some("spot"));
+        assert_eq!(image.accessible_name.as_deref(), Some("Search image"));
+        assert_eq!(image.src.as_deref(), Some("buttons/search.png"));
+        assert_eq!(
+            image.resolved_src.as_deref(),
+            Some("https://example.test/search/buttons/search.png")
+        );
+        assert_eq!(image.alt.as_deref(), Some("Search image"));
+        assert_eq!(image.width.as_deref(), Some("32"));
+        assert_eq!(image.height.as_deref(), Some("16"));
+        assert!(!image.disabled);
+        assert!(image.autofocus);
+        assert!(image.submitter);
+        assert_eq!(image.action.as_deref(), Some("run.html"));
+        assert_eq!(
+            image.resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(image.method, "get");
+        assert_eq!(image.enctype.as_deref(), Some("multipart/form-data"));
+        assert_eq!(image.target.as_deref(), Some("results"));
+        assert_eq!(image.effective_target.as_deref(), Some("results"));
+        assert!(image.novalidate);
+        assert_eq!(image.coordinate_names, vec!["spot.x", "spot.y"]);
+        assert!(!image.will_validate);
+        assert_eq!(
+            image.validation_barred_reason.as_deref(),
+            Some("input-type-image")
+        );
+
+        let plain = &form.image_controls[1];
+        assert_eq!(plain.id.as_deref(), Some("plainImage"));
+        assert_eq!(plain.name, None);
+        assert_eq!(plain.accessible_name.as_deref(), Some("Plain"));
+        assert!(plain.disabled);
+        assert!(!plain.submitter);
+        assert_eq!(plain.coordinate_names, vec!["x", "y"]);
+        assert_eq!(plain.method, "post");
+        assert_eq!(plain.action, None);
+        assert_eq!(plain.effective_target, None);
+        assert!(!plain.novalidate);
+    }
+
+    #[test]
+    fn browser_form_label_output_descriptor_metadata_tracks_external_associations() {
+        let document = parse_html(
+            "<form id=cart><label for=qty>Quantity</label><input id=qty name=qty>\
+             <output id=total name=total for=\"qty promo\">12</output></form>\
+             <label id=gift-label>Gift note<textarea id=gift form=cart name=gift>Thanks</textarea></label>\
+             <output id=external-total form=cart name=external-total for=gift>Saved</output>\
+             <form id=other><label for=ignored>Ignored</label><input id=ignored name=ignored></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.id.as_deref(), Some("cart"));
+        assert_eq!(form.labels.len(), 2);
+        assert_eq!(form.labels[0].for_control.as_deref(), Some("qty"));
+        assert_eq!(form.labels[0].text, "Quantity");
+        assert_eq!(form.labels[0].control_id.as_deref(), Some("qty"));
+        assert_eq!(form.labels[0].control_name.as_deref(), Some("qty"));
+        assert_eq!(form.labels[0].control_type.as_deref(), Some("text"));
+        assert_eq!(form.labels[0].association, "explicit");
+        assert_eq!(form.labels[1].id.as_deref(), Some("gift-label"));
+        assert_eq!(form.labels[1].for_control, None);
+        assert_eq!(form.labels[1].text, "Gift noteThanks");
+        assert_eq!(form.labels[1].control_id.as_deref(), Some("gift"));
+        assert_eq!(form.labels[1].control_name.as_deref(), Some("gift"));
+        assert_eq!(form.labels[1].control_type.as_deref(), Some("textarea"));
+        assert_eq!(form.labels[1].association, "implicit");
+
+        assert_eq!(form.outputs.len(), 2);
+        assert_eq!(form.outputs[0].id.as_deref(), Some("total"));
+        assert_eq!(form.outputs[0].name.as_deref(), Some("total"));
+        assert_eq!(form.outputs[0].form_owner, None);
+        assert_eq!(form.outputs[0].for_tokens, vec!["qty", "promo"]);
+        assert_eq!(form.outputs[0].value.as_deref(), Some("12"));
+        assert_eq!(form.outputs[0].text, "12");
+        assert_eq!(form.outputs[1].id.as_deref(), Some("external-total"));
+        assert_eq!(form.outputs[1].form_owner.as_deref(), Some("cart"));
+        assert_eq!(form.outputs[1].for_tokens, vec!["gift"]);
+        assert_eq!(form.outputs[1].value.as_deref(), Some("Saved"));
+        assert_eq!(form.outputs[1].text, "Saved");
+
+        assert_eq!(summary.forms[1].id.as_deref(), Some("other"));
+        assert_eq!(summary.forms[1].labels.len(), 1);
+        assert_eq!(summary.forms[1].labels[0].text, "Ignored");
+    }
+
+    #[test]
+    fn browser_form_datalist_descriptor_metadata_tracks_option_items_and_controls() {
+        let document = parse_html(
+            "<form id=search>\
+             <input id=q name=q list=suggestions>\
+             <input id=alt name=alt list=suggestions>\
+             <datalist id=suggestions>\
+             <option value=rust label=Rust>\
+             <option value=html disabled>HTML</option>\
+             <option>Browser APIs</option>\
+             </datalist>\
+             <input id=missing name=missing list=missing-list>\
+             </form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.datalists.len(), 1);
+        let datalist = &form.datalists[0];
+        assert_eq!(datalist.id.as_deref(), Some("suggestions"));
+        assert_eq!(datalist.control_ids, vec!["q", "alt"]);
+        assert_eq!(datalist.control_names, vec!["q", "alt"]);
+        assert_eq!(datalist.options.len(), 3);
+        assert_eq!(datalist.options[0].value, "rust");
+        assert_eq!(datalist.options[0].label.as_deref(), Some("Rust"));
+        assert_eq!(datalist.options[0].text, "Rust");
+        assert!(!datalist.options[0].disabled);
+        assert_eq!(datalist.options[1].value, "html");
+        assert_eq!(datalist.options[1].text, "HTML");
+        assert!(datalist.options[1].disabled);
+        assert_eq!(datalist.options[2].value, "Browser APIs");
+        assert_eq!(datalist.options[2].label, None);
+        assert_eq!(datalist.options[2].text, "Browser APIs");
+        assert_eq!(
+            form.controls[0].datalist_options,
+            vec!["rust", "html", "Browser APIs"]
+        );
+        assert!(form.controls[2].datalist_options.is_empty());
+    }
+
+    #[test]
+    fn browser_form_measurement_descriptor_metadata_tracks_meter_progress_ranges_and_labels() {
+        let document = parse_html(
+            "<form id=telemetry>\
+             <label for=disk>Disk</label>\
+             <meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7 aria-describedby=disk-help>72%</meter>\
+             <p id=disk-help>Capacity used</p>\
+             <label for=upload>Upload</label>\
+             <progress id=upload value=30 max=100>30%</progress>\
+             <progress id=sync max=1 aria-label=Sync>Loading</progress>\
+             <input name=token value=ok>\
+             </form>\
+             <meter id=outside value=1>Outside</meter>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.id.as_deref(), Some("telemetry"));
+        assert_eq!(form.controls.len(), 1);
+        assert_eq!(form.controls[0].control_type, "text");
+
+        assert_eq!(form.measurements.len(), 3);
+        let disk = &form.measurements[0];
+        assert_eq!(disk.id.as_deref(), Some("disk"));
+        assert_eq!(disk.measurement_type, "meter");
+        assert_eq!(disk.labels, vec!["Disk"]);
+        assert_eq!(disk.accessible_name.as_deref(), Some("Disk"));
+        assert_eq!(
+            disk.accessible_description.as_deref(),
+            Some("Capacity used")
+        );
+        assert_eq!(disk.value.as_deref(), Some("0.72"));
+        assert_eq!(disk.min.as_deref(), Some("0"));
+        assert_eq!(disk.max.as_deref(), Some("1"));
+        assert_eq!(disk.low.as_deref(), Some("0.25"));
+        assert_eq!(disk.high.as_deref(), Some("0.9"));
+        assert_eq!(disk.optimum.as_deref(), Some("0.7"));
+        assert!(!disk.indeterminate);
+        assert_eq!(disk.text, "72%");
+
+        let upload = &form.measurements[1];
+        assert_eq!(upload.id.as_deref(), Some("upload"));
+        assert_eq!(upload.measurement_type, "progress");
+        assert_eq!(upload.labels, vec!["Upload"]);
+        assert_eq!(upload.accessible_name.as_deref(), Some("Upload"));
+        assert_eq!(upload.value.as_deref(), Some("30"));
+        assert_eq!(upload.max.as_deref(), Some("100"));
+        assert!(!upload.indeterminate);
+        assert_eq!(upload.text, "30%");
+
+        let sync = &form.measurements[2];
+        assert_eq!(sync.id.as_deref(), Some("sync"));
+        assert_eq!(sync.measurement_type, "progress");
+        assert_eq!(sync.accessible_name.as_deref(), Some("Sync"));
+        assert_eq!(sync.value, None);
+        assert_eq!(sync.max.as_deref(), Some("1"));
+        assert!(sync.indeterminate);
+        assert_eq!(sync.text, "Loading");
+    }
+
+    #[test]
+    fn browser_form_label_descriptor_metadata_tracks_measurement_associations() {
+        let document = parse_html(
+            "<form id=telemetry>\
+             <label for=disk>Disk</label>\
+             <meter id=disk value=0.72>72%</meter>\
+             <label>Sync<progress id=sync max=1>Loading</progress></label>\
+             <input name=token value=ok>\
+             </form>\
+             <label for=outside>Outside</label><meter id=outside value=1>Outside</meter>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let form = &summary.forms[0];
+        assert_eq!(form.labels.len(), 2);
+        assert_eq!(form.labels[0].for_control.as_deref(), Some("disk"));
+        assert_eq!(form.labels[0].text, "Disk");
+        assert_eq!(form.labels[0].control_id.as_deref(), Some("disk"));
+        assert_eq!(form.labels[0].control_name, None);
+        assert_eq!(form.labels[0].control_type.as_deref(), Some("meter"));
+        assert_eq!(form.labels[0].association, "explicit");
+        assert_eq!(form.labels[1].for_control, None);
+        assert_eq!(form.labels[1].text, "SyncLoading");
+        assert_eq!(form.labels[1].control_id.as_deref(), Some("sync"));
+        assert_eq!(form.labels[1].control_name, None);
+        assert_eq!(form.labels[1].control_type.as_deref(), Some("progress"));
+        assert_eq!(form.labels[1].association, "implicit");
+    }
+
+    #[test]
+    fn browser_grouping_disclosure_metadata_tracks_figures_dialogs_search_and_contact() {
+        let document = parse_html(
+            "<body><figure id=fig><img src=chart.png alt=Chart>\
+             <figcaption>Chart caption</figcaption></figure>\
+             <details id=more open><summary>More</summary><p>Extra</p></details>\
+             <dialog id=dlg open aria-label=Dialog><p>Dialog copy</p></dialog>\
+             <search id=site-search><form><input name=q></form></search>\
+             <address id=contact>Contact us</address>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let figure = &content_tree.children[0];
+        assert_eq!(figure.role, "figure");
+        assert_eq!(figure.grouping_kind.as_deref(), Some("figure"));
+        assert_eq!(figure.children[1].role, "figure_caption");
+        assert_eq!(figure.children[1].grouping_kind.as_deref(), Some("caption"));
+
+        let details = &content_tree.children[1];
+        assert_eq!(details.role, "disclosure");
+        assert!(details.open);
+        assert_eq!(details.disclosure_kind.as_deref(), Some("details"));
+        assert_eq!(details.children[0].role, "disclosure_summary");
+        assert_eq!(
+            details.children[0].disclosure_kind.as_deref(),
+            Some("summary")
+        );
+
+        let dialog = &content_tree.children[2];
+        assert_eq!(dialog.role, "dialog");
+        assert!(dialog.open);
+        assert_eq!(dialog.disclosure_kind.as_deref(), Some("dialog"));
+        assert_eq!(dialog.accessible_name.as_deref(), Some("Dialog"));
+
+        let search = &content_tree.children[3];
+        assert_eq!(search.role, "search");
+        assert_eq!(search.grouping_kind.as_deref(), Some("search"));
+
+        let contact = &content_tree.children[4];
+        assert_eq!(contact.role, "contact");
+        assert_eq!(contact.grouping_kind.as_deref(), Some("contact"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "block");
+        assert_eq!(render_tree.children[1].children[0].display, "list-item");
+        assert_eq!(render_tree.children[2].display, "block");
+        assert_eq!(render_tree.children[3].display, "block");
+        assert_eq!(render_tree.children[4].display, "block");
+    }
+
+    #[test]
+    fn browser_measurement_metadata_tracks_meter_and_progress_ranges() {
+        let document = parse_html(
+            "<body><label for=disk>Disk</label>\
+             <meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7>72%</meter>\
+             <label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress>\
+             <progress id=indeterminate max=1>Loading</progress>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let meter = &content_tree.children[1];
+        assert_eq!(meter.role, "meter");
+        assert_eq!(meter.labels, vec!["Disk"]);
+        assert_eq!(meter.accessible_name.as_deref(), Some("Disk"));
+        assert_eq!(meter.value.as_deref(), Some("0.72"));
+        assert_eq!(meter.min.as_deref(), Some("0"));
+        assert_eq!(meter.max.as_deref(), Some("1"));
+        assert_eq!(meter.low.as_deref(), Some("0.25"));
+        assert_eq!(meter.high.as_deref(), Some("0.9"));
+        assert_eq!(meter.optimum.as_deref(), Some("0.7"));
+        assert!(meter.children.is_empty());
+
+        let progress = &content_tree.children[3];
+        assert_eq!(progress.role, "progress");
+        assert_eq!(progress.labels, vec!["Upload"]);
+        assert_eq!(progress.accessible_name.as_deref(), Some("Upload"));
+        assert_eq!(progress.value.as_deref(), Some("30"));
+        assert_eq!(progress.max.as_deref(), Some("100"));
+        assert!(progress.children.is_empty());
+
+        let indeterminate = &content_tree.children[4];
+        assert_eq!(indeterminate.role, "progress");
+        assert_eq!(indeterminate.value, None);
+        assert_eq!(indeterminate.max.as_deref(), Some("1"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
+        assert_eq!(render_tree.children[3].display, "inline-replaced");
+        assert_eq!(render_tree.children[4].display, "inline-replaced");
+    }
+
+    #[test]
+    fn browser_aria_interaction_metadata_tracks_roles_states_and_focus() {
+        let document = parse_html(
+            "<body><main id=app aria-label=\"App shell\">\
+             <button id=menu aria-expanded=false aria-controls=panel tabindex=0 accesskey=\"m /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog>Menu</button>\
+             <section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help inert>\
+               <h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p>\
+               <div role=button tabindex=-1 aria-pressed=mixed aria-current=page contenteditable=plaintext-only draggable=auto spellcheck=false translate=no popover=manual>Inline action</div>\
+               <p id=editable contenteditable spellcheck=true translate=yes>Editable copy</p>\
+             </section>\
+             <dialog id=dialog open aria-label=\"Dialog\" accesskey=\"d x\"><p>Dialog copy</p></dialog>\
+             <details id=more open><summary>More</summary><p>Extra</p></details>\
+             <p hidden>Hidden copy</p><span aria-hidden=true>Decorative</span></main>",
+        )
+        .unwrap();
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let main = &content_tree.children[0];
+        assert_eq!(main.role, "main");
+        assert_eq!(main.accessible_name.as_deref(), Some("App shell"));
+        assert_eq!(main.aria_label.as_deref(), Some("App shell"));
+
+        let menu = &main.children[0];
+        assert_eq!(menu.role, "control");
+        assert_eq!(menu.accessible_name.as_deref(), Some("Menu"));
+        assert_eq!(menu.aria_expanded.as_deref(), Some("false"));
+        assert_eq!(menu.aria_controls, vec!["panel"]);
+        assert_eq!(menu.tabindex.as_deref(), Some("0"));
+        assert_eq!(menu.accesskey, vec!["m", "/"]);
+        assert_eq!(menu.focusable, Some(true));
+        assert_eq!(menu.popover_target.as_deref(), Some("panel-pop"));
+        assert_eq!(menu.popover_target_action.as_deref(), Some("toggle"));
+        assert_eq!(menu.command.as_deref(), Some("show-modal"));
+        assert_eq!(menu.command_for.as_deref(), Some("dialog"));
+
+        let panel = &main.children[1];
+        assert_eq!(panel.role, "section");
+        assert_eq!(panel.authored_role.as_deref(), Some("region"));
+        assert_eq!(panel.aria_labelledby, vec!["panel-title"]);
+        assert_eq!(panel.aria_describedby, vec!["panel-help"]);
+        assert_eq!(panel.accessible_name.as_deref(), Some("Settings"));
+        assert_eq!(
+            panel.accessible_description.as_deref(),
+            Some("Choose options")
+        );
+        assert!(panel.inert);
+
+        let action = &panel.children[2];
+        assert_eq!(action.role, "block");
+        assert_eq!(action.authored_role.as_deref(), Some("button"));
+        assert_eq!(action.aria_pressed.as_deref(), Some("mixed"));
+        assert_eq!(action.aria_current.as_deref(), Some("page"));
+        assert_eq!(action.tabindex.as_deref(), Some("-1"));
+        assert_eq!(action.focusable, Some(false));
+        assert_eq!(action.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(action.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(action.draggable.as_deref(), Some("auto"));
+        assert_eq!(action.draggable_state.as_deref(), Some("auto"));
+        assert_eq!(action.spellcheck.as_deref(), Some("false"));
+        assert_eq!(action.translate.as_deref(), Some("no"));
+        assert_eq!(action.popover.as_deref(), Some("manual"));
+
+        let editable = &panel.children[3];
+        assert_eq!(editable.role, "paragraph");
+        assert_eq!(editable.contenteditable.as_deref(), Some(""));
+        assert_eq!(editable.editing_mode.as_deref(), Some("richtext"));
+        assert_eq!(editable.spellcheck.as_deref(), Some("true"));
+        assert_eq!(editable.translate.as_deref(), Some("yes"));
+        assert_eq!(editable.focusable, Some(true));
+
+        let dialog = &main.children[2];
+        assert_eq!(dialog.role, "dialog");
+        assert!(dialog.open);
+        assert_eq!(dialog.disclosure_kind.as_deref(), Some("dialog"));
+        assert_eq!(dialog.accesskey, vec!["d", "x"]);
+
+        let details = &main.children[3];
+        assert_eq!(details.role, "disclosure");
+        assert!(details.open);
+        assert_eq!(details.disclosure_kind.as_deref(), Some("details"));
+
+        assert!(main.children[4].hidden);
+        assert!(main.children[5].aria_hidden);
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        let render_panel = &render_tree.children[0].children[1];
+        assert_eq!(render_panel.authored_role.as_deref(), Some("region"));
+        assert_eq!(render_panel.accessible_name.as_deref(), Some("Settings"));
+        assert_eq!(
+            render_panel.accessible_description.as_deref(),
+            Some("Choose options")
+        );
+        assert!(render_panel.inert);
+        assert_eq!(render_tree.children[0].children[0].focusable, Some(true));
+        assert_eq!(
+            render_tree.children[0].children[0]
+                .popover_target
+                .as_deref(),
+            Some("panel-pop")
+        );
+        assert_eq!(
+            render_tree.children[0].children[1].children[2]
+                .editing_mode
+                .as_deref(),
+            Some("plaintext")
+        );
+        assert_eq!(
+            render_tree.children[0].children[1].children[3].focusable,
+            Some(true)
+        );
+        assert!(render_tree.children[0].children[2].open);
+        assert!(render_tree.children[0].children[3].open);
+    }
+
+    #[test]
+    fn browser_activation_descriptors_track_commands_popovers_and_disclosures() {
+        let document = parse_html(
+            "<body>\
+             <button id=menu aria-controls=panel aria-expanded=false command=show-modal commandfor=dialog onclick=showMenu()>Menu</button>\
+             <button id=toggle popovertarget=panel-pop popovertargetaction=show aria-expanded=false>Open panel</button>\
+             <div id=panel-pop popover=manual>Panel copy</div>\
+             <div id=action role=button tabindex=-1 aria-pressed=mixed onkeydown=keyAction()>Inline action</div>\
+             <dialog id=dialog open aria-label=\"Dialog\"><p>Dialog copy</p></dialog>\
+             <details id=more open><summary>More</summary><p>Extra</p></details>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.activation_descriptors.len(), 4);
+
+        let menu = &summary.activation_descriptors[0];
+        assert_eq!(menu.element, "button");
+        assert_eq!(menu.id.as_deref(), Some("menu"));
+        assert_eq!(menu.command_kind, "command");
+        assert_eq!(menu.activation_kind, "show-modal");
+        assert_eq!(menu.target_id.as_deref(), Some("dialog"));
+        assert_eq!(menu.target_kind, "dialog");
+        assert_eq!(menu.aria_controls, vec!["panel"]);
+        assert_eq!(menu.event_handlers, vec!["onclick"]);
+        assert_eq!(menu.handler_count, 1);
+        assert!(menu.focusable);
+
+        let toggle = &summary.activation_descriptors[1];
+        assert_eq!(toggle.id.as_deref(), Some("toggle"));
+        assert_eq!(toggle.command_kind, "popover");
+        assert_eq!(toggle.activation_kind, "popover-show");
+        assert_eq!(toggle.target_id.as_deref(), Some("panel-pop"));
+        assert_eq!(toggle.target_kind, "popover");
+        assert_eq!(toggle.popover_target.as_deref(), Some("panel-pop"));
+        assert_eq!(toggle.popover_target_action.as_deref(), Some("show"));
+
+        let action = &summary.activation_descriptors[2];
+        assert_eq!(action.id.as_deref(), Some("action"));
+        assert_eq!(action.command_kind, "button");
+        assert_eq!(action.activation_kind, "button");
+        assert_eq!(action.target_kind, "command");
+        assert_eq!(action.aria_pressed.as_deref(), Some("mixed"));
+        assert_eq!(action.tabindex.as_deref(), Some("-1"));
+        assert!(!action.focusable);
+        assert_eq!(action.event_handlers, vec!["onkeydown"]);
+
+        let summary_control = &summary.activation_descriptors[3];
+        assert_eq!(summary_control.element, "summary");
+        assert_eq!(summary_control.command_kind, "disclosure");
+        assert_eq!(summary_control.activation_kind, "disclosure");
+        assert_eq!(summary_control.target_kind, "disclosure");
+        assert_eq!(summary_control.text, "More");
+        assert!(summary_control.focusable);
+    }
+
+    #[test]
+    fn browser_form_submission_descriptors_track_successful_controls_and_submitters() {
+        let document = parse_browser_document(
+            "<base href=https://example.test/app/>\
+             <form id=checkout name=checkout action=pay method=post target=receipt>\
+             <input id=item name=item value=book>\
+             <input id=gift name=gift type=checkbox value=yes checked>\
+             <input id=off name=off type=checkbox value=no>\
+             <select id=ship name=ship><option value=ground selected>Ground</option><option value=air>Air</option></select>\
+             <textarea id=note name=note>Leave at door</textarea>\
+             <input id=upload name=upload type=file>\
+             <button id=pay name=pay value=now formaction=pay-now formtarget=fast formnovalidate>Pay</button>\
+             <input id=imagePay type=image name=spot src=pay.png alt=Pay image>\
+             <input id=disabled name=disabled value=no disabled>\
+             </form>\
+             <input id=external form=checkout name=outside value=extra>",
+        )
+        .expect("form submission descriptor document should parse");
+
+        let descriptors = &document.form_submission_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["item", "gift", "ship", "note", "upload", "pay", "imagePay", "external"]
+        );
+
+        let item = &descriptors[0];
+        assert_eq!(item.form_id.as_deref(), Some("checkout"));
+        assert_eq!(item.form_name.as_deref(), Some("checkout"));
+        assert_eq!(item.form_action.as_deref(), Some("pay"));
+        assert_eq!(
+            item.resolved_form_action.as_deref(),
+            Some("https://example.test/app/pay")
+        );
+        assert_eq!(item.form_method, "post");
+        assert_eq!(item.effective_form_target.as_deref(), Some("receipt"));
+        assert_eq!(item.element, "input");
+        assert_eq!(item.control_type, "text");
+        assert_eq!(item.submission_kind, "successful-control");
+        assert_eq!(item.value.as_deref(), Some("book"));
+        assert_eq!(item.submission_values, vec!["book"]);
+        assert_eq!(item.submission_value_count, 1);
+        assert!(item.successful);
+        assert!(!item.submitter);
+
+        let gift = &descriptors[1];
+        assert_eq!(gift.control_type, "checkbox");
+        assert!(gift.checked);
+        assert_eq!(gift.submission_values, vec!["yes"]);
+
+        let ship = &descriptors[2];
+        assert_eq!(ship.element, "select");
+        assert_eq!(ship.submission_values, vec!["ground"]);
+
+        let upload = &descriptors[4];
+        assert_eq!(upload.control_type, "file");
+        assert!(upload.submission_values.is_empty());
+        assert_eq!(upload.submission_value_count, 0);
+
+        let pay = &descriptors[5];
+        assert_eq!(pay.submission_kind, "submitter");
+        assert!(pay.submitter);
+        assert_eq!(pay.submitter_action.as_deref(), Some("pay-now"));
+        assert_eq!(
+            pay.resolved_submitter_action.as_deref(),
+            Some("https://example.test/app/pay-now")
+        );
+        assert_eq!(pay.submitter_target.as_deref(), Some("fast"));
+        assert_eq!(pay.effective_submitter_target.as_deref(), Some("fast"));
+        assert!(pay.submitter_novalidate);
+
+        let image = &descriptors[6];
+        assert_eq!(image.control_type, "image");
+        assert_eq!(image.accessible_name.as_deref(), Some("Pay"));
+        assert_eq!(image.submission_kind, "submitter");
+        assert!(image.submitter);
+
+        let external = &descriptors[7];
+        assert_eq!(external.form_owner.as_deref(), Some("checkout"));
+        assert_eq!(external.submission_values, vec!["extra"]);
+    }
+
+    #[test]
+    fn browser_form_association_descriptors_track_owners_labels_fieldsets_and_outputs() {
+        let document = parse_browser_document(
+            "<form id=calc name=calculator>\
+             <fieldset id=inputs><legend>Inputs</legend>\
+             <label for=a>First</label><input id=a name=a list=numbers value=4>\
+             <label>Second <input id=b name=b value=6></label>\
+             <output id=sum name=sum for=\"a b\">10</output>\
+             </fieldset></form>\
+             <datalist id=numbers><option value=4><option value=8></datalist>\
+             <input id=external name=token form=calc value=xyz>",
+        )
+        .expect("form association descriptor document should parse");
+
+        let descriptors = &document.form_association_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(ids, vec!["a", "b", "sum", "external"]);
+
+        let first = &descriptors[0];
+        assert_eq!(first.form_id.as_deref(), Some("calc"));
+        assert_eq!(first.form_name.as_deref(), Some("calculator"));
+        assert_eq!(first.element, "input");
+        assert_eq!(first.control_type, "text");
+        assert_eq!(first.association_kind, "output-source");
+        assert_eq!(first.labels, vec!["First"]);
+        assert_eq!(first.label_count, 1);
+        assert_eq!(first.fieldset_ids, vec!["inputs"]);
+        assert_eq!(first.fieldset_legends, vec!["Inputs"]);
+        assert_eq!(first.datalist_id.as_deref(), Some("numbers"));
+        assert_eq!(first.datalist_option_count, 2);
+        assert_eq!(first.referenced_by_output_ids, vec!["sum"]);
+        assert!(first.successful);
+        assert!(first.will_validate);
+
+        let second = &descriptors[1];
+        assert_eq!(second.labels, vec!["Second"]);
+        assert_eq!(second.association_kind, "output-source");
+        assert_eq!(second.referenced_by_output_ids, vec!["sum"]);
+
+        let sum = &descriptors[2];
+        assert_eq!(sum.element, "output");
+        assert_eq!(sum.association_kind, "output-calculation");
+        assert_eq!(sum.output_for_tokens, vec!["a", "b"]);
+        assert_eq!(sum.output_target_ids, vec!["a", "b"]);
+        assert_eq!(sum.output_target_names, vec!["a", "b"]);
+        assert_eq!(sum.output_target_types, vec!["text", "text"]);
+        assert_eq!(sum.fieldset_ids, vec!["inputs"]);
+        assert_eq!(sum.fieldset_legends, vec!["Inputs"]);
+
+        let external = &descriptors[3];
+        assert_eq!(external.form_owner.as_deref(), Some("calc"));
+        assert_eq!(external.association_kind, "explicit-form-owner");
+        assert!(external.explicit_form_owner);
+        assert!(external.successful);
+    }
+
+    #[test]
+    fn browser_form_autofill_descriptors_track_autocomplete_tokens_and_blockers() {
+        let document = parse_browser_document(
+            "<form id=profile name=profile autocomplete=off>\
+             <label for=email>Email</label>\
+             <input id=email name=email type=email autocomplete=\"section-contact shipping email webauthn\" required>\
+             <input id=given name=given-name autocomplete=given-name value=Ada>\
+             <input id=street name=street autocomplete=\"billing street-address\" readonly>\
+             <input id=card name=cc type=text autocomplete=cc-number disabled>\
+             <input id=hidden type=hidden name=token autocomplete=one-time-code value=123>\
+             <select id=country name=country autocomplete=country-name><option selected>US</option></select>\
+             <textarea id=notes name=notes autocomplete=off>Memo</textarea>\
+             </form>\
+             <input id=external form=profile name=outside autocomplete=organization>",
+        )
+        .expect("form autofill descriptor document should parse");
+
+        let descriptors = &document.form_autofill_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["email", "given", "street", "card", "hidden", "country", "notes", "external"]
+        );
+
+        let email = &descriptors[0];
+        assert_eq!(email.form_id.as_deref(), Some("profile"));
+        assert_eq!(email.form_name.as_deref(), Some("profile"));
+        assert_eq!(email.form_autocomplete.as_deref(), Some("off"));
+        assert_eq!(email.form_autocomplete_tokens, vec!["off"]);
+        assert!(!email.form_autocomplete_enabled);
+        assert_eq!(email.element, "input");
+        assert_eq!(email.control_type, "email");
+        assert_eq!(email.autofill_kind, "webauthn-field");
+        assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+        assert_eq!(
+            email.autocomplete_tokens,
+            vec!["section-contact", "shipping", "email", "webauthn"]
+        );
+        assert_eq!(email.autocomplete_token_count, 4);
+        assert_eq!(email.section_token.as_deref(), Some("section-contact"));
+        assert_eq!(email.address_type_token.as_deref(), Some("shipping"));
+        assert_eq!(email.field_token.as_deref(), Some("email"));
+        assert!(email.webauthn);
+        assert!(email.required);
+        assert!(email.autofill_enabled);
+        assert!(!email.autofill_blocked);
+
+        let given = &descriptors[1];
+        assert_eq!(given.field_token.as_deref(), Some("given-name"));
+        assert_eq!(given.value.as_deref(), Some("Ada"));
+        assert_eq!(given.autofill_kind, "autocomplete-field");
+
+        let street = &descriptors[2];
+        assert_eq!(street.address_type_token.as_deref(), Some("billing"));
+        assert_eq!(street.field_token.as_deref(), Some("street-address"));
+        assert!(street.readonly);
+        assert!(street.autofill_blocked);
+        assert_eq!(street.autofill_block_reasons, vec!["readonly"]);
+
+        let card = &descriptors[3];
+        assert_eq!(card.field_token.as_deref(), Some("cc-number"));
+        assert!(card.disabled);
+        assert_eq!(card.autofill_kind, "blocked-autofill");
+        assert_eq!(card.autofill_block_reasons, vec!["disabled"]);
+
+        let hidden = &descriptors[4];
+        assert_eq!(hidden.field_token.as_deref(), Some("one-time-code"));
+        assert!(hidden.hidden);
+        assert_eq!(hidden.value.as_deref(), Some("123"));
+        assert_eq!(hidden.autofill_block_reasons, vec!["hidden"]);
+
+        let country = &descriptors[5];
+        assert_eq!(country.element, "select");
+        assert_eq!(country.field_token.as_deref(), Some("country-name"));
+        assert_eq!(country.autofill_kind, "autocomplete-field");
+
+        let notes = &descriptors[6];
+        assert_eq!(notes.element, "textarea");
+        assert_eq!(notes.autocomplete.as_deref(), Some("off"));
+        assert_eq!(notes.autofill_block_reasons, vec!["autocomplete-off"]);
+
+        let external = &descriptors[7];
+        assert_eq!(external.form_owner.as_deref(), Some("profile"));
+        assert_eq!(external.field_token.as_deref(), Some("organization"));
+        assert!(external.autofill_enabled);
+    }
+
+    #[test]
+    fn browser_form_reset_descriptors_track_resetters_controls_and_handlers() {
+        let document = parse_browser_document(
+            "<form id=settings name=settings autocomplete=off onreset=restore()>\
+             <label for=title>Title</label><input id=title name=title value=Draft>\
+             <textarea id=body name=body readonly>Copy</textarea>\
+             <input id=enabled name=enabled type=checkbox value=yes checked>\
+             <input id=mode-a name=mode type=radio value=a>\
+             <input id=mode-b name=mode type=radio value=b checked>\
+             <select id=theme name=theme><option value=light selected>Light</option><option value=dark>Dark</option></select>\
+             <input id=upload name=upload type=file>\
+             <output id=preview name=preview>Preview</output>\
+             <button id=reset name=reset type=reset value=clear>Reset</button>\
+             <input id=disabled-reset type=reset value=disabled disabled>\
+             <input id=hidden name=hidden type=hidden value=keep>\
+             <button id=submit>Submit</button>\
+             </form>\
+             <input id=external form=settings name=outside value=outer>",
+        )
+        .expect("form reset descriptor document should parse");
+
+        let descriptors = &document.form_reset_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec![
+                "title",
+                "body",
+                "enabled",
+                "mode-a",
+                "mode-b",
+                "theme",
+                "upload",
+                "preview",
+                "reset",
+                "disabled-reset",
+                "external"
+            ]
+        );
+
+        let title = &descriptors[0];
+        assert_eq!(title.form_id.as_deref(), Some("settings"));
+        assert_eq!(title.form_name.as_deref(), Some("settings"));
+        assert_eq!(title.form_autocomplete.as_deref(), Some("off"));
+        assert_eq!(title.form_event_handlers, vec!["onreset"]);
+        assert_eq!(title.form_reset_handlers, vec!["onreset"]);
+        assert!(title.form_has_reset_handler);
+        assert_eq!(title.element, "input");
+        assert_eq!(title.control_type, "text");
+        assert_eq!(title.reset_kind, "value-reset-state");
+        assert_eq!(title.accessible_name.as_deref(), Some("Title"));
+        assert_eq!(title.reset_values, vec!["Draft"]);
+        assert_eq!(title.reset_value_count, 1);
+        assert!(title.resettable);
+        assert!(!title.resetter);
+        assert!(!title.reset_blocked);
+
+        let body = &descriptors[1];
+        assert_eq!(body.element, "textarea");
+        assert_eq!(body.reset_values, vec!["Copy"]);
+        assert!(body.readonly);
+
+        let enabled = &descriptors[2];
+        assert_eq!(enabled.reset_kind, "checked-reset-state");
+        assert!(enabled.checked);
+        assert_eq!(enabled.reset_values, vec!["yes"]);
+
+        let unchecked_radio = &descriptors[3];
+        assert_eq!(unchecked_radio.reset_kind, "checked-reset-state");
+        assert!(!unchecked_radio.checked);
+        assert_eq!(unchecked_radio.reset_values, vec!["a"]);
+
+        let theme = &descriptors[5];
+        assert_eq!(theme.element, "select");
+        assert_eq!(theme.reset_kind, "selection-reset-state");
+        assert_eq!(theme.selected_options, vec!["light"]);
+        assert_eq!(theme.reset_values, vec!["light"]);
+        assert_eq!(theme.option_count, 2);
+
+        let upload = &descriptors[6];
+        assert_eq!(upload.control_type, "file");
+        assert_eq!(upload.reset_kind, "file-reset-state");
+        assert!(upload.reset_values.is_empty());
+
+        let output = &descriptors[7];
+        assert_eq!(output.element, "output");
+        assert_eq!(output.reset_kind, "output-reset-value");
+        assert_eq!(output.reset_values, vec!["Preview"]);
+
+        let reset = &descriptors[8];
+        assert_eq!(reset.reset_kind, "resetter");
+        assert!(reset.resetter);
+        assert!(!reset.resettable);
+        assert_eq!(reset.value.as_deref(), Some("clear"));
+
+        let disabled_reset = &descriptors[9];
+        assert_eq!(disabled_reset.reset_kind, "blocked-resetter");
+        assert!(disabled_reset.resetter);
+        assert!(disabled_reset.disabled);
+        assert!(disabled_reset.reset_blocked);
+        assert_eq!(disabled_reset.reset_block_reasons, vec!["disabled"]);
+
+        let external = &descriptors[10];
+        assert_eq!(external.form_owner.as_deref(), Some("settings"));
+        assert_eq!(external.reset_values, vec!["outer"]);
+    }
+
+    #[test]
+    fn browser_form_validation_descriptors_track_candidates_bypass_and_barred_controls() {
+        let document = parse_browser_document(
+            "<form id=signup name=signup novalidate>\
+             <label for=email>Email</label><input id=email name=email type=email required minlength=3 maxlength=80>\
+             <input id=age name=age type=number min=18 max=120 step=1>\
+             <textarea id=bio name=bio readonly maxlength=200>About me</textarea>\
+             <input id=token type=hidden name=token value=abc>\
+             <button id=save>Save</button><button id=draft formnovalidate>Draft</button>\
+             </form>\
+             <input id=external form=signup name=outside required>",
+        )
+        .expect("form validation descriptor document should parse");
+
+        let descriptors = &document.form_validation_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["email", "age", "bio", "token", "save", "draft", "external"]
+        );
+
+        let email = &descriptors[0];
+        assert_eq!(email.form_id.as_deref(), Some("signup"));
+        assert_eq!(email.form_name.as_deref(), Some("signup"));
+        assert!(email.form_novalidate);
+        assert_eq!(email.element, "input");
+        assert_eq!(email.control_type, "email");
+        assert_eq!(email.validation_kind, "form-novalidate-candidate");
+        assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+        assert_eq!(email.labels, vec!["Email"]);
+        assert!(email.will_validate);
+        assert!(email.required);
+        assert_eq!(
+            email.validation_attributes,
+            vec!["required", "minlength", "maxlength"]
+        );
+        assert_eq!(email.validation_attribute_count, 3);
+        assert!(!email.validation_blocked);
+        assert_eq!(email.submitter_ids, vec!["save", "draft"]);
+        assert_eq!(email.submitter_novalidate_ids, vec!["save", "draft"]);
+
+        let age = &descriptors[1];
+        assert_eq!(age.validation_kind, "form-novalidate-candidate");
+        assert_eq!(age.validation_attributes, vec!["min", "max", "step"]);
+
+        let bio = &descriptors[2];
+        assert_eq!(bio.element, "textarea");
+        assert_eq!(bio.validation_kind, "barred-control");
+        assert_eq!(bio.validation_barred_reason.as_deref(), Some("readonly"));
+        assert!(bio.validation_blocked);
+        assert_eq!(
+            bio.validation_block_reasons,
+            vec!["validation-barred:readonly"]
+        );
+
+        let token = &descriptors[3];
+        assert_eq!(token.validation_kind, "barred-control");
+        assert_eq!(
+            token.validation_barred_reason.as_deref(),
+            Some("input-type-hidden")
+        );
+
+        let save = &descriptors[4];
+        assert_eq!(save.validation_kind, "form-novalidate-candidate");
+        assert!(save.will_validate);
+
+        let draft = &descriptors[5];
+        assert_eq!(draft.validation_kind, "form-novalidate-candidate");
+        assert!(draft.will_validate);
+
+        let external = &descriptors[6];
+        assert_eq!(external.form_owner.as_deref(), Some("signup"));
+        assert_eq!(external.validation_kind, "form-novalidate-candidate");
+        assert_eq!(external.validation_attributes, vec!["required"]);
+    }
+
+    #[test]
+    fn browser_focus_navigation_descriptors_track_order_editing_and_blockers() {
+        let document = parse_html(
+            "<body>\
+             <button id=menu tabindex=0 accesskey=\"m /\" aria-controls=panel>Menu</button>\
+             <section id=panel inert><p>Panel</p></section>\
+             <div id=action role=button tabindex=-1 contenteditable=plaintext-only onkeydown=keyAction()>Inline action</div>\
+             <p id=editable contenteditable>Editable copy</p>\
+             <p id=secret hidden>Hidden copy</p>\
+             <span id=decorative aria-hidden=true>Decorative</span>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.focus_navigation_descriptors.len(), 6);
+
+        let menu = &summary.focus_navigation_descriptors[0];
+        assert_eq!(menu.id.as_deref(), Some("menu"));
+        assert_eq!(menu.focus_kind, "sequential");
+        assert!(menu.focusable);
+        assert!(menu.sequential_focus);
+        assert!(menu.programmatic_focus);
+        assert_eq!(menu.tabindex_order, Some(0));
+        assert_eq!(menu.accesskey, vec!["m", "/"]);
+        assert_eq!(menu.aria_controls, vec!["panel"]);
+
+        let panel = &summary.focus_navigation_descriptors[1];
+        assert_eq!(panel.id.as_deref(), Some("panel"));
+        assert_eq!(panel.focus_kind, "blocked");
+        assert!(panel.focus_blocked);
+        assert_eq!(panel.focus_block_reasons, vec!["inert"]);
+
+        let action = &summary.focus_navigation_descriptors[2];
+        assert_eq!(action.id.as_deref(), Some("action"));
+        assert_eq!(action.focus_kind, "editing-host");
+        assert!(!action.focusable);
+        assert!(!action.sequential_focus);
+        assert!(action.programmatic_focus);
+        assert_eq!(action.tabindex_order, Some(-1));
+        assert_eq!(action.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(action.event_handlers, vec!["onkeydown"]);
+
+        let editable = &summary.focus_navigation_descriptors[3];
+        assert_eq!(editable.id.as_deref(), Some("editable"));
+        assert_eq!(editable.focus_kind, "editing-host");
+        assert!(editable.focusable);
+        assert!(editable.sequential_focus);
+        assert_eq!(editable.editing_mode.as_deref(), Some("richtext"));
+
+        let secret = &summary.focus_navigation_descriptors[4];
+        assert_eq!(secret.focus_block_reasons, vec!["hidden"]);
+        let decorative = &summary.focus_navigation_descriptors[5];
+        assert_eq!(decorative.focus_block_reasons, vec!["aria-hidden"]);
+    }
+
+    #[test]
+    fn browser_keyboard_interaction_descriptors_track_shortcuts_handlers_and_blockers() {
+        let document = parse_html(
+            "<body>\
+             <button id=menu tabindex=0 accesskey=\"m /\" aria-keyshortcuts=\"Alt+M /\" aria-controls=panel commandfor=dialog>Menu</button>\
+             <section id=panel inert><p>Panel</p></section>\
+             <div id=action role=button tabindex=-1 aria-keyshortcuts=\"Enter Space\" onkeydown=keyAction()>Inline action</div>\
+             <p id=editable contenteditable onkeyup=editKey()>Editable copy</p>\
+             <dialog id=dialog open accesskey=\"d x\"><p>Dialog copy</p></dialog>\
+             <p id=secret hidden aria-keyshortcuts=H>Hidden copy</p>\
+             <span id=decorative aria-hidden=true accesskey=z>Decorative</span>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.keyboard_interaction_descriptors.len(), 7);
+
+        let menu = &summary.keyboard_interaction_descriptors[0];
+        assert_eq!(menu.id.as_deref(), Some("menu"));
+        assert_eq!(menu.keyboard_kind, "aria-shortcut");
+        assert_eq!(menu.aria_keyshortcuts, vec!["Alt+M", "/"]);
+        assert_eq!(menu.accesskey, vec!["m", "/"]);
+        assert!(menu.sequential_focus);
+        assert_eq!(menu.command_for.as_deref(), Some("dialog"));
+
+        let panel = &summary.keyboard_interaction_descriptors[1];
+        assert_eq!(panel.keyboard_kind, "blocked");
+        assert_eq!(panel.keyboard_block_reasons, vec!["inert"]);
+
+        let action = &summary.keyboard_interaction_descriptors[2];
+        assert_eq!(action.keyboard_kind, "aria-shortcut");
+        assert_eq!(action.keyboard_handlers, vec!["onkeydown"]);
+        assert_eq!(action.handler_count, 1);
+        assert!(action.programmatic_focus);
+        assert_eq!(action.tabindex_order, Some(-1));
+
+        let editable = &summary.keyboard_interaction_descriptors[3];
+        assert_eq!(editable.keyboard_kind, "keyboard-handler");
+        assert_eq!(editable.keyboard_handlers, vec!["onkeyup"]);
+        assert_eq!(editable.editing_mode.as_deref(), Some("richtext"));
+
+        let dialog = &summary.keyboard_interaction_descriptors[4];
+        assert_eq!(dialog.keyboard_kind, "accesskey");
+        assert_eq!(dialog.accesskey, vec!["d", "x"]);
+
+        let secret = &summary.keyboard_interaction_descriptors[5];
+        assert_eq!(secret.keyboard_block_reasons, vec!["hidden"]);
+        let decorative = &summary.keyboard_interaction_descriptors[6];
+        assert_eq!(decorative.keyboard_block_reasons, vec!["aria-hidden"]);
+    }
+
+    #[test]
+    fn browser_input_planning_descriptors_track_controls_editing_hosts_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <label for=q>Query</label><input id=q name=q type=search placeholder=Search \
+             autocomplete=\"section-main search\" inputmode=search autocapitalize=words \
+             enterkeyhint=search dirname=q.dir spellcheck=false autocorrect=off \
+             pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=suggestions \
+             required oninput=filter()><datalist id=suggestions><option value=Rust><option>HTML</datalist>\
+             <textarea id=notes name=notes readonly maxlength=500 rows=4 cols=40 wrap=hard \
+             onselect=selectNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only spellcheck=true onbeforeinput=beforeEdit() \
+             oninput=edit()>Draft</div><p id=hidden hidden contenteditable>Secret</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.input_planning_descriptors.len(), 4);
+
+        let query = &summary.input_planning_descriptors[0];
+        assert_eq!(query.id.as_deref(), Some("q"));
+        assert_eq!(query.input_kind, "suggested-text");
+        assert_eq!(query.control_type.as_deref(), Some("search"));
+        assert_eq!(query.placeholder.as_deref(), Some("Search"));
+        assert_eq!(query.autocomplete_tokens, vec!["section-main", "search"]);
+        assert_eq!(query.inputmode.as_deref(), Some("search"));
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.datalist_options, vec!["Rust", "HTML"]);
+        assert!(query.required);
+        assert!(query.will_validate);
+        assert!(!query.input_blocked);
+
+        let notes = &summary.input_planning_descriptors[1];
+        assert_eq!(notes.id.as_deref(), Some("notes"));
+        assert_eq!(notes.input_kind, "readonly");
+        assert_eq!(notes.element, "textarea");
+        assert_eq!(notes.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(notes.rows.as_deref(), Some("4"));
+        assert_eq!(notes.cols.as_deref(), Some("40"));
+        assert_eq!(notes.wrap.as_deref(), Some("hard"));
+        assert_eq!(notes.input_handlers, vec!["onselect"]);
+        assert!(notes.readonly);
+        assert_eq!(
+            notes.input_block_reasons,
+            vec!["readonly", "validation-barred:readonly"]
+        );
+
+        let editor = &summary.input_planning_descriptors[2];
+        assert_eq!(editor.id.as_deref(), Some("editor"));
+        assert_eq!(editor.input_kind, "editing-host");
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.value.as_deref(), Some("Draft"));
+        assert_eq!(editor.spellcheck.as_deref(), Some("true"));
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput", "oninput"]);
+        assert!(!editor.input_blocked);
+
+        let hidden = &summary.input_planning_descriptors[3];
+        assert_eq!(hidden.id.as_deref(), Some("hidden"));
+        assert_eq!(hidden.input_kind, "editing-host");
+        assert!(hidden.input_blocked);
+        assert_eq!(hidden.input_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_drag_drop_descriptors_track_sources_targets_handlers_and_blockers() {
+        let document = parse_html(
+            "<body><main id=board ondragover=allowDrop() ondrop=dropCard()>Board</main>\
+             <div id=card draggable=true ondragstart=startDrag() ondragend=endDrag()>Card</div>\
+             <button id=target draggable=auto disabled ondragenter=enterDrop() ondrop=dropButton()>Target</button>\
+             <p id=secret hidden draggable=true>Secret</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.drag_drop_descriptors.len(), 4);
+
+        let board = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("board"))
+            .expect("board drop target descriptor");
+        assert_eq!(board.drag_kind, "drop-target");
+        assert!(board.drop_target);
+        assert_eq!(board.drop_handlers, vec!["ondragover", "ondrop"]);
+        assert_eq!(board.handler_count, 2);
+
+        let card = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("card"))
+            .expect("card drag source descriptor");
+        assert_eq!(card.drag_kind, "drag-source");
+        assert_eq!(card.draggable.as_deref(), Some("true"));
+        assert_eq!(card.draggable_state.as_deref(), Some("true"));
+        assert!(card.drag_source);
+        assert_eq!(card.drag_handlers, vec!["ondragstart", "ondragend"]);
+        assert!(!card.drag_blocked);
+
+        let target = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("target"))
+            .expect("target drop descriptor");
+        assert_eq!(target.drag_kind, "blocked");
+        assert_eq!(target.draggable_state.as_deref(), Some("auto"));
+        assert!(target.drag_source);
+        assert!(target.drop_target);
+        assert_eq!(target.drop_handlers, vec!["ondragenter", "ondrop"]);
+        assert_eq!(target.drag_block_reasons, vec!["disabled"]);
+
+        let secret = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret blocked drag descriptor");
+        assert_eq!(secret.drag_kind, "blocked");
+        assert!(secret.drag_source);
+        assert_eq!(secret.drag_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_clipboard_interaction_descriptors_track_text_editing_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <input id=q name=q value=Draft onpaste=pasteQuery() oninput=filter()>\
+             <textarea id=notes readonly oncopy=copyNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only oncopy=copyEdit() oncut=cutEdit() \
+             onpaste=pasteEdit() onbeforeinput=beforeEdit()>Draft</div>\
+             <p id=secret hidden contenteditable onpaste=pasteSecret()>Secret</p>\
+             <main id=surface oncopy=copySurface()>Surface</main></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.clipboard_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query clipboard descriptor");
+        assert_eq!(query.clipboard_kind, "paste-target");
+        assert_eq!(query.paste_handlers, vec!["onpaste"]);
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.handler_count, 2);
+        assert!(!query.clipboard_blocked);
+
+        let notes = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes clipboard descriptor");
+        assert_eq!(notes.clipboard_kind, "blocked");
+        assert_eq!(notes.copy_handlers, vec!["oncopy"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.clipboard_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor clipboard descriptor");
+        assert_eq!(editor.clipboard_kind, "paste-target");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(
+            editor.clipboard_handlers,
+            vec!["oncopy", "oncut", "onpaste"]
+        );
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(editor.handler_count, 4);
+
+        let secret = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret clipboard descriptor");
+        assert_eq!(secret.clipboard_kind, "blocked");
+        assert_eq!(secret.paste_handlers, vec!["onpaste"]);
+        assert_eq!(secret.clipboard_block_reasons, vec!["hidden"]);
+
+        let surface = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("surface"))
+            .expect("surface event-only clipboard descriptor");
+        assert_eq!(surface.clipboard_kind, "copy-source");
+        assert_eq!(surface.copy_handlers, vec!["oncopy"]);
+    }
+
+    #[test]
+    fn browser_selection_interaction_descriptors_track_text_editing_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <input id=q name=q value=Draft onselect=selectQuery() oninput=filter()>\
+             <textarea id=notes readonly onselect=selectNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only onselectionchange=selectEdit() \
+             onbeforeinput=beforeEdit()>Draft</div>\
+             <p id=secret hidden contenteditable onselect=selectSecret()>Secret</p>\
+             <main id=surface onselect=selectSurface()>Surface</main></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.selection_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query selection descriptor");
+        assert_eq!(query.selection_kind, "select-handler");
+        assert_eq!(query.select_handlers, vec!["onselect"]);
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.handler_count, 2);
+        assert!(!query.selection_blocked);
+
+        let notes = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes selection descriptor");
+        assert_eq!(notes.selection_kind, "blocked");
+        assert_eq!(notes.select_handlers, vec!["onselect"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.selection_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor selection descriptor");
+        assert_eq!(editor.selection_kind, "selection-change");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.selection_change_handlers, vec!["onselectionchange"]);
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(editor.handler_count, 2);
+
+        let secret = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret selection descriptor");
+        assert_eq!(secret.selection_kind, "blocked");
+        assert_eq!(secret.select_handlers, vec!["onselect"]);
+        assert_eq!(secret.selection_block_reasons, vec!["hidden"]);
+
+        let surface = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("surface"))
+            .expect("surface event-only selection descriptor");
+        assert_eq!(surface.selection_kind, "select-handler");
+        assert_eq!(surface.select_handlers, vec!["onselect"]);
+    }
+
+    #[test]
+    fn browser_composition_interaction_descriptors_track_ime_handlers_and_blockers() {
+        let document = parse_html(
+            "<html oncompositionstart=docIme()><body><form id=profile>\
+             <input id=q name=q value=Draft inputmode=search enterkeyhint=search \
+             oncompositionstart=startIme() oncompositionupdate=updateIme() onbeforeinput=beforeText()>\
+             <textarea id=notes readonly oncompositionend=endNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only spellcheck=true \
+             oncompositionend=endEdit() oninput=inputEdit()>Draft</div>\
+             <p id=secret hidden contenteditable oncompositionstart=secretIme()>Secret</p></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.composition_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query composition descriptor");
+        assert_eq!(query.source, "text-entry");
+        assert_eq!(query.composition_kind, "ime-session");
+        assert_eq!(
+            query.composition_handlers,
+            vec!["oncompositionstart", "oncompositionupdate"]
+        );
+        assert_eq!(query.composition_start_handlers, vec!["oncompositionstart"]);
+        assert_eq!(
+            query.composition_update_handlers,
+            vec!["oncompositionupdate"]
+        );
+        assert_eq!(query.beforeinput_handlers, vec!["onbeforeinput"]);
+        assert_eq!(query.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(query.handler_count, 3);
+        assert_eq!(query.inputmode.as_deref(), Some("search"));
+        assert_eq!(query.enterkeyhint.as_deref(), Some("search"));
+        assert!(!query.composition_blocked);
+
+        let notes = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes composition descriptor");
+        assert_eq!(notes.composition_kind, "blocked");
+        assert_eq!(notes.composition_end_handlers, vec!["oncompositionend"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.composition_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor composition descriptor");
+        assert_eq!(editor.composition_kind, "ime-commit");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.composition_end_handlers, vec!["oncompositionend"]);
+        assert_eq!(editor.input_handlers, vec!["oninput"]);
+        assert_eq!(editor.handler_count, 1);
+
+        let secret = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret composition descriptor");
+        assert_eq!(secret.composition_kind, "blocked");
+        assert_eq!(
+            secret.composition_start_handlers,
+            vec!["oncompositionstart"]
+        );
+        assert_eq!(secret.composition_block_reasons, vec!["hidden"]);
+
+        let document_ime = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document composition descriptor");
+        assert_eq!(document_ime.element, "html");
+        assert_eq!(document_ime.composition_kind, "ime-session");
+        assert_eq!(
+            document_ime.composition_handlers,
+            vec!["oncompositionstart"]
+        );
+    }
+
+    #[test]
+    fn browser_pointer_interaction_descriptors_track_handlers_and_blockers() {
+        let document = parse_html(
+            "<body><button id=save tabindex=0 onclick=save() onmousedown=press()>Save</button>\
+             <main id=canvas onpointerdown=start() onpointermove=move() onwheel=zoom()>Canvas</main>\
+             <div id=card draggable=true ondragstart=drag() ondragend=end()>Card</div>\
+             <section id=dropzone ondragover=over() ondrop=drop()>Drop</section>\
+             <p id=secret hidden onpointerdown=secret()>Secret</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.pointer_interaction_descriptors.len(), 5);
+
+        let save = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("save"))
+            .expect("save pointer descriptor");
+        assert_eq!(save.pointer_kind, "mouse-target");
+        assert_eq!(save.mouse_handlers, vec!["onmousedown"]);
+        assert_eq!(save.click_handlers, vec!["onclick"]);
+        assert_eq!(save.handler_count, 2);
+        assert!(save.focusable);
+
+        let canvas = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("canvas"))
+            .expect("canvas pointer descriptor");
+        assert_eq!(canvas.pointer_kind, "wheel-target");
+        assert_eq!(
+            canvas.pointer_handlers,
+            vec!["onpointerdown", "onpointermove", "onwheel"]
+        );
+        assert_eq!(canvas.wheel_handlers, vec!["onwheel"]);
+
+        let card = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("card"))
+            .expect("card pointer descriptor");
+        assert_eq!(card.pointer_kind, "drag-source");
+        assert_eq!(card.draggable_state.as_deref(), Some("true"));
+        assert_eq!(card.drag_handlers, vec!["ondragstart", "ondragend"]);
+
+        let dropzone = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("dropzone"))
+            .expect("dropzone pointer descriptor");
+        assert_eq!(dropzone.pointer_kind, "drop-target");
+        assert_eq!(dropzone.drop_handlers, vec!["ondragover", "ondrop"]);
+
+        let secret = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret pointer descriptor");
+        assert_eq!(secret.pointer_kind, "blocked");
+        assert_eq!(secret.pointer_handlers, vec!["onpointerdown"]);
+        assert_eq!(secret.pointer_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_context_menu_interaction_descriptors_track_menu_hooks_and_blockers() {
+        let document = parse_html(
+            "<body><button id=menu tabindex=0 aria-haspopup=menu aria-expanded=false aria-controls=commands \
+                popovertarget=commands popovertargetaction=toggle oncontextmenu=openMenu()>Menu</button>\
+             <div id=commands role=menu popover=manual><button id=cut role=menuitem onkeydown=cutKey()>Cut</button></div>\
+             <main id=canvas oncontextmenu=canvasMenu() onpointerdown=start()>Canvas</main>\
+             <button id=secret hidden aria-haspopup=menu oncontextmenu=secretMenu()>Secret</button></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.context_menu_interaction_descriptors.len(), 5);
+
+        let menu = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("menu"))
+            .expect("menu context descriptor");
+        assert_eq!(menu.context_menu_kind, "custom-menu-handler");
+        assert_eq!(menu.aria_haspopup.as_deref(), Some("menu"));
+        assert_eq!(menu.aria_controls, vec!["commands"]);
+        assert_eq!(menu.popover_target.as_deref(), Some("commands"));
+        assert_eq!(menu.popover_target_action.as_deref(), Some("toggle"));
+        assert_eq!(menu.contextmenu_handlers, vec!["oncontextmenu"]);
+        assert_eq!(menu.handler_count, 1);
+        assert!(menu.focusable);
+
+        let commands = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("commands"))
+            .expect("commands menu surface descriptor");
+        assert_eq!(commands.context_menu_kind, "menu-surface");
+        assert_eq!(commands.authored_role.as_deref(), Some("menu"));
+        assert_eq!(commands.popover.as_deref(), Some("manual"));
+
+        let cut = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("cut"))
+            .expect("cut menuitem descriptor");
+        assert_eq!(cut.context_menu_kind, "menu-item");
+        assert_eq!(cut.authored_role.as_deref(), Some("menuitem"));
+        assert_eq!(cut.keyboard_handlers, vec!["onkeydown"]);
+
+        let canvas = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("canvas"))
+            .expect("canvas context descriptor");
+        assert_eq!(canvas.context_menu_kind, "context-menu-handler");
+        assert_eq!(canvas.contextmenu_handlers, vec!["oncontextmenu"]);
+        assert_eq!(
+            canvas.pointer_handlers,
+            vec!["oncontextmenu", "onpointerdown"]
+        );
+
+        let secret = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret context descriptor");
+        assert_eq!(secret.context_menu_kind, "blocked");
+        assert!(secret.context_menu_blocked);
+        assert_eq!(secret.context_menu_block_reasons, vec!["hidden"]);
+        assert_eq!(secret.contextmenu_handlers, vec!["oncontextmenu"]);
+    }
+
+    #[test]
+    fn browser_scroll_interaction_descriptors_track_handlers_scrollbars_and_blockers() {
+        let document = parse_html(
+            "<html onscroll=docScroll()><body onscrollend=bodyDone()>\
+             <main id=feed tabindex=0 onscroll=scrollFeed() onwheel=wheelFeed()>Feed</main>\
+             <div id=timeline role=scrollbar aria-label=Timeline aria-valuemin=0 aria-valuemax=300 \
+             aria-valuenow=120 aria-orientation=vertical tabindex=0>Timeline</div>\
+             <section id=touch ontouchmove=touchScroll()>Touch</section>\
+             <aside id=hidden hidden onscroll=hiddenScroll()>Hidden</aside></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.scroll_interaction_descriptors.len(), 6);
+
+        let timeline = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("timeline"))
+            .expect("timeline scrollbar descriptor");
+        assert_eq!(timeline.scroll_kind, "scrollbar");
+        assert_eq!(timeline.source, "aria-range");
+        assert_eq!(timeline.aria_valuenow.as_deref(), Some("120"));
+        assert_eq!(timeline.aria_orientation.as_deref(), Some("vertical"));
+        assert_eq!(timeline.tabindex.as_deref(), Some("0"));
+
+        let feed = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("feed"))
+            .expect("feed scroll descriptor");
+        assert_eq!(feed.scroll_kind, "scroll-handler");
+        assert_eq!(feed.scroll_handlers, vec!["onscroll"]);
+        assert_eq!(feed.wheel_handlers, vec!["onwheel"]);
+        assert_eq!(feed.handler_count, 2);
+        assert!(feed.focusable);
+
+        let touch = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("touch"))
+            .expect("touch scroll descriptor");
+        assert_eq!(touch.scroll_kind, "touch-scroll-target");
+        assert_eq!(touch.touch_handlers, vec!["ontouchmove"]);
+
+        let hidden = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hidden"))
+            .expect("hidden scroll descriptor");
+        assert_eq!(hidden.scroll_kind, "blocked");
+        assert_eq!(hidden.scroll_block_reasons, vec!["hidden"]);
+
+        let document_scroll = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document scroll descriptor");
+        assert_eq!(document_scroll.scroll_handlers, vec!["onscroll"]);
+
+        let body_scroll = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "body")
+            .expect("body scroll descriptor");
+        assert_eq!(body_scroll.scroll_handlers, vec!["onscrollend"]);
+    }
+
+    #[test]
+    fn browser_shell_global_state_metadata_tracks_document_and_body_attributes() {
+        let document = parse_html(
+            "<html lang=en dir=ltr hidden accesskey=\"h ?\" spellcheck=false translate=no>\
+             <body id=app-shell class=\"app hydrated\" title=\"App shell\" inert contenteditable=plaintext-only draggable=true spellcheck=true translate=yes>\
+             <main><p>Ready</p></main></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.global_state_descriptors.len(), 2);
+
+        let document_shell = &summary.global_state_descriptors[0];
+        assert_eq!(document_shell.element, "html");
+        assert_eq!(document_shell.lang.as_deref(), Some("en"));
+        assert_eq!(document_shell.dir.as_deref(), Some("ltr"));
+        assert!(document_shell.hidden);
+        assert_eq!(document_shell.accesskey, vec!["h", "?"]);
+        assert_eq!(document_shell.spellcheck.as_deref(), Some("false"));
+        assert_eq!(document_shell.translate.as_deref(), Some("no"));
+        assert_eq!(document_shell.text, "Ready");
+
+        let body_shell = &summary.global_state_descriptors[1];
+        assert_eq!(body_shell.element, "body");
+        assert_eq!(body_shell.id.as_deref(), Some("app-shell"));
+        assert_eq!(body_shell.classes, vec!["app", "hydrated"]);
+        assert_eq!(body_shell.title.as_deref(), Some("App shell"));
+        assert!(body_shell.inert);
+        assert_eq!(
+            body_shell.contenteditable.as_deref(),
+            Some("plaintext-only")
+        );
+        assert_eq!(body_shell.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(body_shell.draggable.as_deref(), Some("true"));
+        assert_eq!(body_shell.draggable_state.as_deref(), Some("true"));
+        assert_eq!(body_shell.spellcheck.as_deref(), Some("true"));
+        assert_eq!(body_shell.translate.as_deref(), Some("yes"));
+        assert_eq!(body_shell.text, "Ready");
+    }
+
+    #[test]
+    fn browser_aria_relation_metadata_tracks_details_errors_and_flow() {
+        let document = parse_html(
+            "<body><div id=source aria-details=\"details extra\" aria-errormessage=error aria-flowto=next>Source</div>\
+             <p id=details>Detailed help</p><p id=extra>Extra notes</p>\
+             <p id=error>Required value</p><p id=next>Next step</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.aria_relation_descriptors.len(), 1);
+
+        let relation = &summary.aria_relation_descriptors[0];
+        assert_eq!(relation.element, "div");
+        assert_eq!(relation.id.as_deref(), Some("source"));
+        assert_eq!(relation.text, "Source");
+        assert_eq!(relation.aria_details, vec!["details", "extra"]);
+        assert_eq!(relation.details_text, vec!["Detailed help", "Extra notes"]);
+        assert_eq!(relation.aria_errormessage, vec!["error"]);
+        assert_eq!(relation.errormessage_text, vec!["Required value"]);
+        assert_eq!(relation.aria_flowto, vec!["next"]);
+        assert_eq!(relation.flowto_text, vec!["Next step"]);
+        assert_eq!(
+            relation.relation_attribute_names,
+            vec!["aria-details", "aria-errormessage", "aria-flowto"]
+        );
+        assert_eq!(relation.relation_attribute_count, 3);
+        assert_eq!(relation.relation_target_count, 4);
+        assert!(relation.unresolved_relation_targets.is_empty());
+        assert!(!relation.relation_blocked);
+        assert!(relation.relation_block_reasons.is_empty());
+    }
+
+    #[test]
+    fn browser_event_metadata_tracks_inline_handler_attributes() {
+        let html = "<html onreadystatechange=ready><body onload=boot onunload=teardown>\
+             <main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button>\
+             <video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback>\
+             <input value=Draft oninput=edit onchange=commit></main></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+        assert_eq!(
+            summary.document_event_handlers,
+            vec!["onreadystatechange".to_string()]
+        );
+        assert_eq!(
+            summary.body_event_handlers,
+            vec!["onload".to_string(), "onunload".to_string()]
+        );
+
+        let content_tree = parse_browser_content_tree(html).expect("content tree should parse");
+        let main = &content_tree.children[0];
+        assert_eq!(main.id.as_deref(), Some("app"));
+        assert_eq!(main.event_handlers, vec!["onclick".to_string()]);
+
+        let button = &main.children[0];
+        assert_eq!(button.role, "control");
+        assert_eq!(
+            button.event_handlers,
+            vec!["onclick".to_string(), "onkeydown".to_string()]
+        );
+
+        let video = &main.children[1];
+        assert_eq!(video.role, "media");
+        assert_eq!(
+            video.event_handlers,
+            vec!["onplay".to_string(), "onpause".to_string()]
+        );
+
+        let image = &main.children[2];
+        assert_eq!(image.role, "image");
+        assert_eq!(image.event_handlers, vec!["onerror".to_string()]);
+
+        let input = &main.children[3];
+        assert_eq!(input.control_type.as_deref(), Some("text"));
+        assert_eq!(
+            input.event_handlers,
+            vec!["oninput".to_string(), "onchange".to_string()]
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(
+            render_tree.children[0].children[0].event_handlers,
+            vec!["onclick".to_string(), "onkeydown".to_string()]
+        );
+        assert_eq!(
+            render_tree.children[0].children[1].event_handlers,
+            vec!["onplay".to_string(), "onpause".to_string()]
+        );
+    }
+
+    #[test]
+    fn browser_event_handler_descriptors_track_document_body_and_inline_handlers() {
+        let html = "<html onreadystatechange=ready><body onload=boot onunload=teardown>\
+             <main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button>\
+             <video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback>\
+             <input value=Draft oninput=edit onchange=commit></main></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.event_handler_descriptors.len(), 7);
+
+        let document = &summary.event_handler_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.event_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.lifecycle_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.handler_count, 1);
+
+        let body = &summary.event_handler_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.source, "body");
+        assert_eq!(body.event_handlers, vec!["onload", "onunload"]);
+        assert_eq!(body.lifecycle_handlers, vec!["onload", "onunload"]);
+        assert_eq!(body.handler_count, 2);
+
+        let main = &summary.event_handler_descriptors[2];
+        assert_eq!(main.element, "main");
+        assert_eq!(main.id.as_deref(), Some("app"));
+        assert_eq!(main.role.as_deref(), Some("main"));
+        assert_eq!(main.activation_handlers, vec!["onclick"]);
+        assert_eq!(main.text, "Save");
+
+        let button = &summary.event_handler_descriptors[3];
+        assert_eq!(button.element, "button");
+        assert_eq!(button.role.as_deref(), Some("control"));
+        assert_eq!(button.activation_handlers, vec!["onclick"]);
+        assert_eq!(button.keyboard_handlers, vec!["onkeydown"]);
+
+        let video = &summary.event_handler_descriptors[4];
+        assert_eq!(video.role.as_deref(), Some("media"));
+        assert_eq!(video.media_handlers, vec!["onplay", "onpause"]);
+
+        let image = &summary.event_handler_descriptors[5];
+        assert_eq!(image.role.as_deref(), Some("image"));
+        assert_eq!(image.error_handlers, vec!["onerror"]);
+
+        let input = &summary.event_handler_descriptors[6];
+        assert_eq!(input.role.as_deref(), Some("control"));
+        assert_eq!(input.form_handlers, vec!["oninput", "onchange"]);
+    }
+
+    #[test]
+    fn browser_lifecycle_event_descriptors_track_load_history_visibility_and_errors() {
+        let html = "<html onreadystatechange=ready onvisibilitychange=visible>\
+             <body onload=boot onbeforeunload=confirmExit onpagehide=hide ononline=online>\
+             <main id=app onhashchange=route onpopstate=state>App</main>\
+             <img id=hero src=hero.jpg alt=Hero onerror=fallback onabort=abortLoad>\
+             <dialog id=modal oncancel=cancelDialog>Dialog</dialog></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.lifecycle_event_descriptors.len(), 5);
+
+        let document = &summary.lifecycle_event_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.lifecycle_kind, "load");
+        assert_eq!(
+            document.lifecycle_handlers,
+            vec!["onreadystatechange", "onvisibilitychange"]
+        );
+        assert_eq!(document.load_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.visibility_handlers, vec!["onvisibilitychange"]);
+        assert_eq!(document.handler_count, 2);
+        assert!(document.document_scope);
+
+        let body = &summary.lifecycle_event_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.lifecycle_kind, "unload");
+        assert_eq!(body.unload_handlers, vec!["onbeforeunload", "onpagehide"]);
+        assert_eq!(body.network_handlers, vec!["ononline"]);
+        assert!(body.body_scope);
+
+        let main = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("app"))
+            .expect("main lifecycle descriptor");
+        assert_eq!(main.lifecycle_kind, "history");
+        assert_eq!(main.history_handlers, vec!["onhashchange", "onpopstate"]);
+        assert!(!main.error_recovery);
+
+        let image = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hero"))
+            .expect("image lifecycle descriptor");
+        assert_eq!(image.lifecycle_kind, "error-recovery");
+        assert_eq!(image.error_handlers, vec!["onerror", "onabort"]);
+        assert!(image.error_recovery);
+
+        let dialog = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("modal"))
+            .expect("dialog lifecycle descriptor");
+        assert_eq!(dialog.lifecycle_kind, "error-recovery");
+        assert_eq!(dialog.error_handlers, vec!["oncancel"]);
+    }
+
+    #[test]
+    fn browser_animation_interaction_descriptors_track_css_animation_and_transition_hooks() {
+        let html = "<html onanimationstart=docIntro>\
+             <body ontransitionend=bodyDone>\
+             <section id=hero onanimationstart=start onanimationiteration=loop onanimationend=end>Hero</section>\
+             <aside id=panel ontransitionrun=run ontransitionstart=startTransition ontransitionend=endTransition>Panel</aside>\
+             <div id=mixed onanimationend=endAnimation ontransitioncancel=cancelTransition>Mixed</div>\
+             <p id=cancelled onanimationcancel=cancelAnimation>Cancelled</p></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.animation_interaction_descriptors.len(), 6);
+
+        let document = &summary.animation_interaction_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.animation_kind, "animation-start");
+        assert_eq!(document.animation_start_handlers, vec!["onanimationstart"]);
+        assert!(document.document_scope);
+
+        let body = &summary.animation_interaction_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.animation_kind, "transition-end");
+        assert_eq!(body.transition_end_handlers, vec!["ontransitionend"]);
+        assert!(body.body_scope);
+
+        let hero = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hero"))
+            .expect("hero animation descriptor");
+        assert_eq!(hero.animation_kind, "animation-iteration");
+        assert_eq!(
+            hero.animation_handlers,
+            vec!["onanimationstart", "onanimationiteration", "onanimationend"]
+        );
+        assert_eq!(hero.handler_count, 3);
+
+        let panel = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("panel"))
+            .expect("panel transition descriptor");
+        assert_eq!(panel.animation_kind, "transition-end");
+        assert_eq!(panel.transition_run_handlers, vec!["ontransitionrun"]);
+        assert_eq!(panel.transition_start_handlers, vec!["ontransitionstart"]);
+        assert_eq!(panel.transition_end_handlers, vec!["ontransitionend"]);
+
+        let mixed = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("mixed"))
+            .expect("mixed animation descriptor");
+        assert_eq!(mixed.animation_kind, "animation-cancel");
+        assert_eq!(mixed.animation_end_handlers, vec!["onanimationend"]);
+        assert_eq!(mixed.transition_cancel_handlers, vec!["ontransitioncancel"]);
+
+        let cancelled = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("cancelled"))
+            .expect("cancelled animation descriptor");
+        assert_eq!(cancelled.animation_kind, "animation-cancel");
+        assert_eq!(
+            cancelled.animation_cancel_handlers,
+            vec!["onanimationcancel"]
+        );
+    }
+
+    #[test]
+    fn browser_fullscreen_interaction_descriptors_track_policy_and_event_hooks() {
+        let html = "<html onfullscreenchange=docFullscreen>\
+             <body onfullscreenerror=bodyFullscreenError>\
+             <iframe id=player name=player src=player.html allow=\"fullscreen; geolocation\" allowfullscreen \
+                 onfullscreenchange=frameFullscreen onfullscreenerror=frameFullscreenError>Fallback</iframe>\
+             <div id=viewer onfullscreenchange=viewerFullscreen>Viewer</div></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.fullscreen_interaction_descriptors.len(), 4);
+
+        let frame = &summary.fullscreen_interaction_descriptors[0];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.id.as_deref(), Some("player"));
+        assert_eq!(frame.source, "embedded-policy");
+        assert_eq!(frame.fullscreen_kind, "fullscreen-policy-error");
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert_eq!(frame.allow_tokens, vec!["fullscreen", "geolocation"]);
+        assert!(frame.allowfullscreen);
+        assert!(frame.fullscreen_allowed);
+        assert!(frame.embedded_context);
+        assert_eq!(
+            frame.fullscreen_handlers,
+            vec!["onfullscreenchange", "onfullscreenerror"]
+        );
+        assert_eq!(frame.fullscreen_change_handlers, vec!["onfullscreenchange"]);
+        assert_eq!(frame.fullscreen_error_handlers, vec!["onfullscreenerror"]);
+        assert_eq!(frame.handler_count, 2);
+
+        let document = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document fullscreen descriptor");
+        assert_eq!(document.fullscreen_kind, "fullscreen-change");
+        assert!(document.document_scope);
+
+        let body = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "body")
+            .expect("body fullscreen descriptor");
+        assert_eq!(body.fullscreen_kind, "fullscreen-error");
+        assert_eq!(body.fullscreen_error_handlers, vec!["onfullscreenerror"]);
+        assert!(body.body_scope);
+
+        let viewer = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("viewer"))
+            .expect("viewer fullscreen descriptor");
+        assert_eq!(viewer.fullscreen_kind, "fullscreen-change");
+        assert_eq!(
+            viewer.fullscreen_change_handlers,
+            vec!["onfullscreenchange"]
+        );
+        assert!(!viewer.fullscreen_allowed);
+    }
+
+    #[test]
+    fn browser_script_style_metadata_tracks_loading_and_inline_text() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=\"stylesheet preload\" href=app.css media=screen title=main integrity=sha256-css crossorigin=anonymous referrerpolicy=no-referrer fetchpriority=high blocking=render>\
+             <link rel=\"alternate stylesheet\" href=print.css title=print disabled>\
+             <style media=print title=print>body { color: black; }</style>\
+             <script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials referrerpolicy=origin fetchpriority=low blocking=render></script>\
+             <script type=\"text/javascript; charset=utf-8\">classicMime();</script>\
+             <script nomodule defer>legacy();</script>\
+             <body><script src=late.js defer></script>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.stylesheets.len(), 3);
+        let main_style = &summary.stylesheets[0];
+        assert_eq!(main_style.source, "link");
+        assert_eq!(
+            main_style.resolved_href.as_deref(),
+            Some("https://example.test/app/app.css")
+        );
+        assert_eq!(main_style.rel.as_deref(), Some("stylesheet preload"));
+        assert_eq!(main_style.media.as_deref(), Some("screen"));
+        assert_eq!(main_style.integrity.as_deref(), Some("sha256-css"));
+        assert_eq!(main_style.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(main_style.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(main_style.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(main_style.blocking.as_deref(), Some("render"));
+        assert!(!main_style.alternate);
+
+        let alternate_style = &summary.stylesheets[1];
+        assert!(alternate_style.alternate);
+        assert!(alternate_style.disabled);
+        assert_eq!(
+            alternate_style.resolved_href.as_deref(),
+            Some("https://example.test/app/print.css")
+        );
+
+        let inline_style = &summary.stylesheets[2];
+        assert_eq!(inline_style.source, "style");
+        assert_eq!(inline_style.media.as_deref(), Some("print"));
+        assert_eq!(inline_style.text.as_deref(), Some("body { color: black; }"));
+
+        assert_eq!(summary.stylesheet_planning_descriptors.len(), 3);
+        let main_descriptor = &summary.stylesheet_planning_descriptors[0];
+        assert_eq!(main_descriptor.source, "link");
+        assert_eq!(main_descriptor.stylesheet_kind, "external");
+        assert_eq!(main_descriptor.href.as_deref(), Some("app.css"));
+        assert_eq!(
+            main_descriptor.resolved_href.as_deref(),
+            Some("https://example.test/app/app.css")
+        );
+        assert_eq!(
+            main_descriptor.rel_tokens,
+            vec!["stylesheet".to_string(), "preload".to_string()]
+        );
+        assert_eq!(main_descriptor.rel_token_count, 2);
+        assert_eq!(main_descriptor.media.as_deref(), Some("screen"));
+        assert_eq!(main_descriptor.title.as_deref(), Some("main"));
+        assert!(main_descriptor.applies_by_default);
+        assert!(!main_descriptor.alternate);
+        assert!(!main_descriptor.disabled);
+        assert_eq!(main_descriptor.integrity.as_deref(), Some("sha256-css"));
+        assert_eq!(main_descriptor.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(main_descriptor.nonce, None);
+        assert_eq!(
+            main_descriptor.referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(main_descriptor.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(main_descriptor.blocking.as_deref(), Some("render"));
+        assert_eq!(main_descriptor.blocking_tokens, vec!["render"]);
+        assert_eq!(main_descriptor.blocking_token_count, 1);
+        assert!(main_descriptor.render_blocking);
+        assert!(!main_descriptor.has_text);
+        assert_eq!(main_descriptor.text_length, 0);
+
+        let alternate_descriptor = &summary.stylesheet_planning_descriptors[1];
+        assert_eq!(alternate_descriptor.stylesheet_kind, "external");
+        assert!(alternate_descriptor.alternate);
+        assert!(alternate_descriptor.disabled);
+        assert!(!alternate_descriptor.applies_by_default);
+        assert_eq!(alternate_descriptor.rel_token_count, 2);
+        assert!(!alternate_descriptor.render_blocking);
+
+        let inline_descriptor = &summary.stylesheet_planning_descriptors[2];
+        assert_eq!(inline_descriptor.source, "style");
+        assert_eq!(inline_descriptor.stylesheet_kind, "inline");
+        assert_eq!(inline_descriptor.media.as_deref(), Some("print"));
+        assert_eq!(inline_descriptor.title.as_deref(), Some("print"));
+        assert_eq!(inline_descriptor.nonce, None);
+        assert!(inline_descriptor.applies_by_default);
+        assert!(inline_descriptor.has_text);
+        assert_eq!(
+            inline_descriptor.text_length,
+            "body { color: black; }".chars().count()
+        );
+
+        assert_eq!(summary.scripts.len(), 4);
+        let module_script = &summary.scripts[0];
+        assert_eq!(module_script.script_kind, "module");
+        assert_eq!(
+            module_script.resolved_src.as_deref(),
+            Some("https://example.test/app/app.js")
+        );
+        assert!(module_script.async_script);
+        assert_eq!(module_script.integrity.as_deref(), Some("sha384-js"));
+        assert_eq!(
+            module_script.crossorigin.as_deref(),
+            Some("use-credentials")
+        );
+        assert_eq!(module_script.referrerpolicy.as_deref(), Some("origin"));
+        assert_eq!(module_script.fetchpriority.as_deref(), Some("low"));
+        assert_eq!(module_script.blocking.as_deref(), Some("render"));
+
+        let classic_mime_script = &summary.scripts[1];
+        assert_eq!(classic_mime_script.script_kind, "classic");
+        assert_eq!(
+            classic_mime_script.type_hint.as_deref(),
+            Some("text/javascript; charset=utf-8")
+        );
+        assert_eq!(classic_mime_script.text.as_deref(), Some("classicMime();"));
+
+        let legacy_script = &summary.scripts[2];
+        assert_eq!(legacy_script.script_kind, "classic");
+        assert!(legacy_script.nomodule);
+        assert!(legacy_script.defer_script);
+        assert_eq!(legacy_script.text.as_deref(), Some("legacy();"));
+
+        let late_script = &summary.scripts[3];
+        assert_eq!(
+            late_script.resolved_src.as_deref(),
+            Some("https://example.test/app/late.js")
+        );
+        assert!(late_script.defer_script);
+
+        assert_eq!(summary.metadata.resource_hints.len(), 1);
+        let stylesheet_preload = &summary.metadata.resource_hints[0];
+        assert_eq!(stylesheet_preload.kind, "preload");
+        assert_eq!(
+            stylesheet_preload.rel.as_deref(),
+            Some("stylesheet preload")
+        );
+        assert_eq!(
+            stylesheet_preload.resolved_url.as_deref(),
+            Some("https://example.test/app/app.css")
+        );
+        assert_eq!(stylesheet_preload.media.as_deref(), Some("screen"));
+        assert_eq!(stylesheet_preload.integrity.as_deref(), Some("sha256-css"));
+        assert_eq!(stylesheet_preload.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(
+            stylesheet_preload.referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(stylesheet_preload.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(stylesheet_preload.blocking.as_deref(), Some("render"));
+    }
+
+    #[test]
+    fn browser_script_execution_descriptors_track_execution_and_policy_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/index.html\">\
+             <script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials \
+                 nonce=moduleNonce referrerpolicy=origin fetchpriority=low blocking=render></script>\
+             <script type=\"text/javascript; charset=utf-8\">classicMime();</script>\
+             <script nomodule defer nonce=legacyNonce>legacy();</script>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.script_execution_descriptors.len(), 3);
+
+        let module = &summary.script_execution_descriptors[0];
+        assert_eq!(module.script_kind, "module");
+        assert_eq!(module.execution_kind, "external");
+        assert_eq!(module.src.as_deref(), Some("app.js"));
+        assert_eq!(
+            module.resolved_src.as_deref(),
+            Some("https://example.test/app/app.js")
+        );
+        assert!(module.async_script);
+        assert!(!module.defer_script);
+        assert_eq!(module.integrity.as_deref(), Some("sha384-js"));
+        assert_eq!(module.crossorigin.as_deref(), Some("use-credentials"));
+        assert_eq!(module.nonce.as_deref(), Some("moduleNonce"));
+        assert_eq!(module.referrerpolicy.as_deref(), Some("origin"));
+        assert_eq!(module.fetchpriority.as_deref(), Some("low"));
+        assert_eq!(module.blocking.as_deref(), Some("render"));
+        assert_eq!(module.blocking_tokens, vec!["render"]);
+        assert_eq!(module.blocking_token_count, 1);
+        assert!(module.render_blocking);
+        assert!(!module.has_text);
+        assert_eq!(module.text_length, 0);
+
+        let classic = &summary.script_execution_descriptors[1];
+        assert_eq!(classic.script_kind, "classic");
+        assert_eq!(classic.execution_kind, "inline");
+        assert_eq!(
+            classic.type_hint.as_deref(),
+            Some("text/javascript; charset=utf-8")
+        );
+        assert!(classic.has_text);
+        assert_eq!(classic.text_length, "classicMime();".chars().count());
+        assert!(!classic.render_blocking);
+
+        let legacy = &summary.script_execution_descriptors[2];
+        assert_eq!(legacy.script_kind, "classic");
+        assert_eq!(legacy.execution_kind, "inline");
+        assert!(legacy.nomodule);
+        assert!(legacy.defer_script);
+        assert_eq!(legacy.nonce.as_deref(), Some("legacyNonce"));
+        assert_eq!(legacy.text_length, "legacy();".chars().count());
+    }
+
+    #[test]
+    fn browser_script_storage_access_descriptors_track_storage_api_hints() {
+        let summary = parse_browser_document(
+            "<script>\
+             localStorage.setItem('theme', 'dark');\
+             sessionStorage.getItem('draft');\
+             document.cookie = 'seen=1';\
+             indexedDB.open('app');\
+             window.addEventListener('storage', syncTabs);\
+             </script>\
+             <script type=module>\
+             navigator.serviceWorker.register('/sw.js');\
+             caches.open('assets');\
+             navigator.storage.persist();\
+             </script>\
+             <script nomodule>localStorage.getItem('legacy');</script>",
+        )
+        .expect("storage access descriptor document should parse");
+
+        let descriptors = &summary.script_storage_access_descriptors;
+        assert_eq!(descriptors.len(), 3);
+
+        let client = &descriptors[0];
+        assert_eq!(client.script_kind, "classic");
+        assert_eq!(client.execution_kind, "inline");
+        assert_eq!(client.access_kind, "database-storage");
+        assert_eq!(
+            client.storage_targets,
+            vec![
+                "localStorage",
+                "sessionStorage",
+                "cookies",
+                "indexedDB",
+                "storage-event",
+            ]
+        );
+        assert_eq!(client.storage_target_count, 5);
+        assert!(client.uses_local_storage);
+        assert!(client.uses_session_storage);
+        assert!(client.uses_cookies);
+        assert!(client.uses_indexed_db);
+        assert!(client.listens_storage_events);
+        assert!(!client.storage_blocked);
+
+        let worker = &descriptors[1];
+        assert_eq!(worker.script_kind, "module");
+        assert_eq!(worker.access_kind, "worker-cache-storage");
+        assert_eq!(
+            worker.storage_targets,
+            vec!["CacheStorage", "serviceWorker", "StorageManager"]
+        );
+        assert!(worker.uses_cache_storage);
+        assert!(worker.uses_service_worker);
+        assert!(worker.uses_storage_manager);
+        assert_eq!(worker.storage_block_reasons, Vec::<String>::new());
+
+        let legacy = &descriptors[2];
+        assert_eq!(legacy.access_kind, "client-key-value-storage");
+        assert!(legacy.uses_local_storage);
+        assert!(legacy.storage_blocked);
+        assert_eq!(legacy.storage_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_script_worker_messaging_descriptors_track_workers_and_channels() {
+        let summary = parse_browser_document(
+            "<script>\
+             const worker = new Worker('/worker.js', { type: 'module' });\
+             worker.postMessage({ready:true});\
+             window.addEventListener('message', receive);\
+             const channel = new MessageChannel();\
+             </script>\
+             <script type=module>\
+             navigator.serviceWorker.register('/sw.js');\
+             const updates = new BroadcastChannel('updates');\
+             </script>\
+             <script nomodule>\
+             const shared = new SharedWorker('/shared.js');\
+             shared.port.postMessage('legacy');\
+             </script>",
+        )
+        .expect("worker messaging descriptor document should parse");
+
+        let descriptors = &summary.script_worker_messaging_descriptors;
+        assert_eq!(descriptors.len(), 3);
+
+        let worker = &descriptors[0];
+        assert_eq!(worker.script_kind, "classic");
+        assert_eq!(worker.execution_kind, "inline");
+        assert_eq!(worker.messaging_kind, "module-worker");
+        assert_eq!(
+            worker.messaging_targets,
+            vec![
+                "Worker",
+                "postMessage",
+                "message-event",
+                "MessageChannel",
+                "module-worker"
+            ]
+        );
+        assert_eq!(worker.messaging_target_count, 5);
+        assert!(worker.creates_worker);
+        assert!(worker.uses_post_message);
+        assert!(worker.listens_message_events);
+        assert!(worker.uses_message_channel);
+        assert!(worker.module_worker_hint);
+        assert!(!worker.messaging_blocked);
+
+        let service = &descriptors[1];
+        assert_eq!(service.script_kind, "module");
+        assert_eq!(service.type_hint.as_deref(), Some("module"));
+        assert_eq!(service.messaging_kind, "service-worker-registration");
+        assert_eq!(
+            service.messaging_targets,
+            vec!["serviceWorker", "BroadcastChannel"]
+        );
+        assert!(service.registers_service_worker);
+        assert!(service.uses_broadcast_channel);
+        assert_eq!(service.messaging_block_reasons, Vec::<String>::new());
+
+        let legacy = &descriptors[2];
+        assert_eq!(legacy.messaging_kind, "shared-worker");
+        assert_eq!(
+            legacy.messaging_targets,
+            vec!["SharedWorker", "postMessage"]
+        );
+        assert!(legacy.creates_shared_worker);
+        assert!(legacy.messaging_blocked);
+        assert_eq!(legacy.messaging_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_script_module_graph_descriptors_track_imports_and_preloads() {
+        let summary = parse_browser_document(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=modulepreload href=chunks/vendor.mjs integrity=sha384-vendor>\
+             <script type=importmap>{\"imports\":{\"app\":\"/app.mjs\"}}</script>\
+             <script type=module src=app.mjs></script>\
+             <script type=module>\
+             import { ready } from './ready.mjs';\
+             export const boot = ready();\
+             import('./lazy.mjs');\
+             </script>\
+             <script nomodule>import('./legacy.js');</script>",
+        )
+        .expect("script module graph descriptor document should parse");
+
+        let descriptors = &summary.script_module_graph_descriptors;
+        assert_eq!(descriptors.len(), 4);
+
+        let importmap = &descriptors[0];
+        assert_eq!(importmap.script_kind, "importmap");
+        assert_eq!(importmap.module_graph_kind, "import-map");
+        assert!(importmap.declares_import_map);
+        assert!(importmap.has_modulepreload);
+        assert_eq!(
+            importmap.modulepreload_urls,
+            vec!["chunks/vendor.mjs".to_string()]
+        );
+        assert_eq!(
+            importmap.resolved_modulepreload_urls,
+            vec!["https://example.test/app/chunks/vendor.mjs".to_string()]
+        );
+
+        let external = &descriptors[1];
+        assert_eq!(external.module_graph_kind, "module-entry");
+        assert!(external.external_module_entry);
+        assert_eq!(external.src.as_deref(), Some("app.mjs"));
+        assert_eq!(
+            external.resolved_src.as_deref(),
+            Some("https://example.test/app/app.mjs")
+        );
+
+        let inline = &descriptors[2];
+        assert_eq!(inline.module_graph_kind, "mixed-module-imports");
+        assert!(inline.inline_module_entry);
+        assert!(inline.uses_static_imports);
+        assert!(inline.uses_dynamic_imports);
+        assert_eq!(
+            inline.module_targets,
+            vec![
+                "inline-module-entry",
+                "static-import",
+                "dynamic-import",
+                "modulepreload"
+            ]
+        );
+
+        let legacy = &descriptors[3];
+        assert_eq!(legacy.script_kind, "classic");
+        assert_eq!(legacy.module_graph_kind, "dynamic-module-import");
+        assert!(legacy.uses_dynamic_imports);
+        assert!(legacy.module_graph_blocked);
+        assert_eq!(legacy.module_graph_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_document_policy_descriptors_track_head_policy_and_app_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/page.html\">\
+             <meta http-equiv=content-type content=\"text/html; charset=windows-1252\">\
+             <meta name=viewport content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\
+             <meta name=description content=\"HTML parser workbench\">\
+             <meta name=application-name content=Venture>\
+             <meta name=referrer content=no-referrer>\
+             <meta name=robots content=\"index, follow, max-image-preview:large\">\
+             <meta name=color-scheme content=\"light dark\">\
+             <meta http-equiv=Content-Security-Policy content=\"default-src 'self'; img-src https:\">\
+             <meta http-equiv=Permissions-Policy content=\"geolocation=(), camera=()\">\
+             <meta http-equiv=Origin-Trial content=trial-token>\
+             <meta http-equiv=Accept-CH content=\"Sec-CH-UA-Platform, DPR\">\
+             <meta http-equiv=x-dns-prefetch-control content=off>\
+             <meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\">\
+             <meta http-equiv=refresh content=\"5; url=next.html\">\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=manifest href=\"site.webmanifest\">",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.document_policy_descriptors.len(), 1);
+
+        let descriptor = &summary.document_policy_descriptors[0];
+        assert_eq!(descriptor.charset.as_deref(), Some("windows-1252"));
+        assert_eq!(
+            descriptor.viewport.as_deref(),
+            Some("width=device-width, initial-scale=1, viewport-fit=cover")
+        );
+        assert_eq!(
+            descriptor
+                .viewport_directives
+                .iter()
+                .map(|directive| (directive.name.as_str(), directive.value.as_deref()))
+                .collect::<Vec<_>>(),
+            vec![
+                ("width", Some("device-width")),
+                ("initial-scale", Some("1")),
+                ("viewport-fit", Some("cover")),
+            ]
+        );
+        assert_eq!(
+            descriptor.description.as_deref(),
+            Some("HTML parser workbench")
+        );
+        assert_eq!(descriptor.application_name.as_deref(), Some("Venture"));
+        assert_eq!(descriptor.referrer_policy.as_deref(), Some("no-referrer"));
+        assert_eq!(
+            descriptor.robots_directives,
+            vec!["index", "follow", "max-image-preview:large"]
+        );
+        assert_eq!(descriptor.color_scheme.as_deref(), Some("light dark"));
+        assert_eq!(
+            descriptor.content_security_policy.as_deref(),
+            Some("default-src 'self'; img-src https:")
+        );
+        assert_eq!(
+            descriptor.permissions_policy.as_deref(),
+            Some("geolocation=(), camera=()")
+        );
+        assert_eq!(descriptor.origin_trials, vec!["trial-token"]);
+        assert_eq!(
+            descriptor.accept_ch_tokens,
+            vec!["Sec-CH-UA-Platform", "DPR"]
+        );
+        assert_eq!(descriptor.dns_prefetch_control.as_deref(), Some("off"));
+        assert_eq!(descriptor.theme_colors.len(), 1);
+        assert_eq!(descriptor.theme_colors[0].color, "#ffffff");
+        assert_eq!(
+            descriptor.theme_colors[0].media.as_deref(),
+            Some("(prefers-color-scheme: light)")
+        );
+        let refresh = descriptor
+            .refresh
+            .as_ref()
+            .expect("refresh metadata should be preserved");
+        assert_eq!(refresh.delay.as_deref(), Some("5"));
+        assert_eq!(refresh.url.as_deref(), Some("next.html"));
+        assert_eq!(
+            refresh.resolved_url.as_deref(),
+            Some("https://example.test/app/next.html")
+        );
+        assert_eq!(
+            descriptor.resolved_canonical_url.as_deref(),
+            Some("https://example.test/app/")
+        );
+        assert_eq!(descriptor.manifest_url.as_deref(), Some("site.webmanifest"));
+        assert_eq!(
+            descriptor.resolved_manifest_url.as_deref(),
+            Some("https://example.test/app/site.webmanifest")
+        );
+    }
+
+    #[test]
+    fn browser_loading_hint_descriptors_track_head_and_body_scheduling_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/\">\
+             <link rel=preload href=fonts/site.woff2 as=font fetchpriority=high blocking=render>\
+             <style id=critical blocking=render media=screen>body{color:black}</style>\
+             <script id=boot src=scripts/app.js fetchpriority=low blocking=render></script>\
+             <body><img id=hero src=hero.jpg loading=lazy decoding=async fetchpriority=high>\
+             <iframe id=frame src=frame.html loading=eager fetchpriority=low></iframe>\
+             <video id=movie src=movie.mp4 preload=metadata></video></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.loading_hint_descriptors.len(), 6);
+
+        let preload = &summary.loading_hint_descriptors[0];
+        assert_eq!(preload.element, "link");
+        assert_eq!(preload.url.as_deref(), Some("fonts/site.woff2"));
+        assert_eq!(
+            preload.resolved_url.as_deref(),
+            Some("https://example.test/app/fonts/site.woff2")
+        );
+        assert_eq!(preload.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(preload.blocking.as_deref(), Some("render"));
+        assert_eq!(preload.blocking_tokens, vec!["render"]);
+        assert_eq!(preload.as_hint.as_deref(), Some("font"));
+
+        let style = &summary.loading_hint_descriptors[1];
+        assert_eq!(style.element, "style");
+        assert_eq!(style.id.as_deref(), Some("critical"));
+        assert_eq!(style.blocking.as_deref(), Some("render"));
+        assert_eq!(style.media.as_deref(), Some("screen"));
+
+        let script = &summary.loading_hint_descriptors[2];
+        assert_eq!(script.element, "script");
+        assert_eq!(script.id.as_deref(), Some("boot"));
+        assert_eq!(script.url.as_deref(), Some("scripts/app.js"));
+        assert_eq!(script.fetchpriority.as_deref(), Some("low"));
+        assert_eq!(script.blocking.as_deref(), Some("render"));
+
+        let image = &summary.loading_hint_descriptors[3];
+        assert_eq!(image.element, "img");
+        assert_eq!(image.loading.as_deref(), Some("lazy"));
+        assert_eq!(image.decoding.as_deref(), Some("async"));
+        assert_eq!(image.fetchpriority.as_deref(), Some("high"));
+
+        let frame = &summary.loading_hint_descriptors[4];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.loading.as_deref(), Some("eager"));
+        assert_eq!(frame.fetchpriority.as_deref(), Some("low"));
+
+        let video = &summary.loading_hint_descriptors[5];
+        assert_eq!(video.element, "video");
+        assert_eq!(video.preload.as_deref(), Some("metadata"));
+    }
+
+    #[test]
+    fn browser_fetch_policy_descriptors_track_security_and_policy_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/\">\
+             <link id=font rel=preload href=fonts/site.woff2 as=font integrity=sha384-font crossorigin=anonymous referrerpolicy=no-referrer nonce=fontNonce>\
+             <style id=critical nonce=styleNonce>body{color:black}</style>\
+             <script id=boot src=scripts/app.js integrity=sha384-js crossorigin=use-credentials referrerpolicy=origin nonce=scriptNonce></script>\
+             <body>\
+               <img id=hero src=hero.jpg crossorigin=anonymous referrerpolicy=no-referrer>\
+               <iframe id=frame src=frame.html csp=\"script-src 'self'\" sandbox=\"allow-scripts allow-same-origin\" allow=\"fullscreen; geolocation\" allowfullscreen referrerpolicy=no-referrer credentialless></iframe>\
+               <video id=movie src=movie.mp4 crossorigin=anonymous></video>\
+             </body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.fetch_policy_descriptors.len(), 6);
+
+        let link = &summary.fetch_policy_descriptors[0];
+        assert_eq!(link.element, "link");
+        assert_eq!(link.id.as_deref(), Some("font"));
+        assert_eq!(
+            link.resolved_url.as_deref(),
+            Some("https://example.test/app/fonts/site.woff2")
+        );
+        assert_eq!(link.integrity.as_deref(), Some("sha384-font"));
+        assert_eq!(link.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(link.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(link.nonce.as_deref(), Some("fontNonce"));
+
+        let style = &summary.fetch_policy_descriptors[1];
+        assert_eq!(style.element, "style");
+        assert_eq!(style.id.as_deref(), Some("critical"));
+        assert_eq!(style.nonce.as_deref(), Some("styleNonce"));
+
+        let script = &summary.fetch_policy_descriptors[2];
+        assert_eq!(script.element, "script");
+        assert_eq!(
+            script.resolved_url.as_deref(),
+            Some("https://example.test/app/scripts/app.js")
+        );
+        assert_eq!(script.integrity.as_deref(), Some("sha384-js"));
+        assert_eq!(script.crossorigin.as_deref(), Some("use-credentials"));
+        assert_eq!(script.referrerpolicy.as_deref(), Some("origin"));
+        assert_eq!(script.nonce.as_deref(), Some("scriptNonce"));
+
+        let image = &summary.fetch_policy_descriptors[3];
+        assert_eq!(image.element, "img");
+        assert_eq!(image.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(image.referrerpolicy.as_deref(), Some("no-referrer"));
+
+        let frame = &summary.fetch_policy_descriptors[4];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.csp.as_deref(), Some("script-src 'self'"));
+        assert_eq!(
+            frame.sandbox,
+            vec!["allow-scripts".to_string(), "allow-same-origin".to_string()]
+        );
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert!(frame.allowfullscreen);
+        assert!(frame.credentialless);
+
+        let video = &summary.fetch_policy_descriptors[5];
+        assert_eq!(video.element, "video");
+        assert_eq!(video.crossorigin.as_deref(), Some("anonymous"));
+    }
+
+    #[test]
+    fn browser_resource_endpoint_descriptors_track_document_and_fetch_endpoints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/page.html\">\
+             <meta http-equiv=refresh content=\"5; url=next.html\">\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=manifest href=\"site.webmanifest\">\
+             <link rel=preload href=\"app.css\" as=style type=text/css integrity=sha384-css crossorigin=anonymous fetchpriority=high blocking=render>\
+             <script src=app.js async defer nonce=n1></script>\
+             <body><img src=hero.jpg width=640 height=360 loading=lazy>\
+             <iframe src=frame.html name=preview sandbox=\"allow-scripts\" allow=fullscreen credentialless></iframe>\
+             <video src=movie.mp4><track kind=captions src=captions.vtt srclang=en label=English default></video></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resource_endpoint_descriptors.len(), 9);
+
+        let refresh = &summary.resource_endpoint_descriptors[0];
+        assert_eq!(refresh.endpoint_kind, "metadata-refresh");
+        assert_eq!(refresh.element, "meta");
+        assert_eq!(refresh.resource_kind.as_deref(), Some("refresh"));
+        assert_eq!(refresh.url, "next.html");
+        assert_eq!(
+            refresh.resolved_url.as_deref(),
+            Some("https://example.test/app/next.html")
+        );
+
+        let canonical = &summary.resource_endpoint_descriptors[1];
+        assert_eq!(canonical.endpoint_kind, "resource");
+        assert_eq!(canonical.element, "link");
+        assert_eq!(canonical.resource_kind.as_deref(), Some("canonical"));
+        assert_eq!(canonical.rel_tokens, vec!["canonical"]);
+        assert_eq!(
+            canonical.resolved_url.as_deref(),
+            Some("https://example.test/app/")
+        );
+
+        let manifest = &summary.resource_endpoint_descriptors[2];
+        assert_eq!(manifest.resource_kind.as_deref(), Some("manifest"));
+        assert_eq!(
+            manifest.resolved_url.as_deref(),
+            Some("https://example.test/app/site.webmanifest")
+        );
+
+        let preload = &summary.resource_endpoint_descriptors[3];
+        assert_eq!(preload.resource_kind.as_deref(), Some("preload"));
+        assert_eq!(preload.as_hint.as_deref(), Some("style"));
+        assert_eq!(preload.type_hint.as_deref(), Some("text/css"));
+        assert_eq!(preload.integrity.as_deref(), Some("sha384-css"));
+        assert_eq!(preload.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(preload.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(preload.blocking_tokens, vec!["render"]);
+
+        let script = &summary.resource_endpoint_descriptors[4];
+        assert_eq!(script.element, "script");
+        assert_eq!(
+            script.resolved_url.as_deref(),
+            Some("https://example.test/app/app.js")
+        );
+        assert_eq!(script.nonce.as_deref(), Some("n1"));
+        assert!(script.async_script);
+        assert!(script.defer_script);
+
+        let image = &summary.resource_endpoint_descriptors[5];
+        assert_eq!(image.element, "img");
+        assert_eq!(image.resource_kind.as_deref(), Some("image"));
+        assert_eq!(image.width.as_deref(), Some("640"));
+        assert_eq!(image.height.as_deref(), Some("360"));
+
+        let frame = &summary.resource_endpoint_descriptors[6];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.resource_kind.as_deref(), Some("frame"));
+        assert_eq!(frame.browsing_context_name.as_deref(), Some("preview"));
+        assert_eq!(frame.sandbox, vec!["allow-scripts"]);
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen"));
+        assert!(frame.credentialless);
+
+        let video = &summary.resource_endpoint_descriptors[7];
+        assert_eq!(video.element, "video");
+        assert_eq!(video.resource_kind.as_deref(), Some("video"));
+        assert_eq!(
+            video.resolved_url.as_deref(),
+            Some("https://example.test/app/movie.mp4")
+        );
+
+        let track = &summary.resource_endpoint_descriptors[8];
+        assert_eq!(track.element, "track");
+        assert_eq!(track.resource_kind.as_deref(), Some("track"));
+        assert_eq!(track.track_kind.as_deref(), Some("captions"));
+        assert_eq!(track.srclang.as_deref(), Some("en"));
+        assert_eq!(track.track_label.as_deref(), Some("English"));
+        assert!(track.default_track);
+    }
+
+    #[test]
+    fn browser_link_resource_metadata_tracks_fetch_hints_and_responsive_preloads() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=preconnect href=\"https://cdn.example.test\" crossorigin>\
+             <link rel=preload href=\"fonts/site.woff2\" as=font type=font/woff2 crossorigin=anonymous integrity=sha384-font fetchpriority=high>\
+             <link rel=modulepreload href=\"scripts/app.mjs\" integrity=sha384-module referrerpolicy=no-referrer blocking=render>\
+             <link rel=preload href=\"hero.jpg\" as=image imagesrcset=\"hero-small.jpg 480w, hero-large.jpg 960w\" imagesizes=\"50vw\" fetchpriority=high>\
+             <link rel=prefetch href=\"next.html\" as=document>\
+             <link rel=manifest href=\"site.webmanifest\" crossorigin=use-credentials>\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=\"shortcut icon\" href=\"favicon.ico\" sizes=any type=image/x-icon>\
+             <link rel=\"mask-icon\" href=\"mask.svg\" color=\"#0055ff\">\
+             <link rel=alternate href=\"feed.xml\" type=\"application/rss+xml\" hreflang=en title=Feed>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resources.len(), 10);
+        let preconnect = &summary.resources[0];
+        assert_eq!(preconnect.kind, "preconnect");
+        assert_eq!(
+            preconnect.resolved_url.as_deref(),
+            Some("https://cdn.example.test")
+        );
+        assert_eq!(preconnect.crossorigin.as_deref(), Some(""));
+
+        let font = &summary.resources[1];
+        assert_eq!(font.kind, "preload");
+        assert_eq!(font.as_hint.as_deref(), Some("font"));
+        assert_eq!(font.type_hint.as_deref(), Some("font/woff2"));
+        assert_eq!(
+            font.resolved_url.as_deref(),
+            Some("https://example.test/app/fonts/site.woff2")
+        );
+        assert_eq!(font.integrity.as_deref(), Some("sha384-font"));
+        assert_eq!(font.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(font.fetchpriority.as_deref(), Some("high"));
+
+        let module = &summary.resources[2];
+        assert_eq!(module.kind, "modulepreload");
+        assert_eq!(module.integrity.as_deref(), Some("sha384-module"));
+        assert_eq!(module.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(module.blocking.as_deref(), Some("render"));
+
+        let image = &summary.resources[3];
+        assert_eq!(image.as_hint.as_deref(), Some("image"));
+        assert_eq!(
+            image.resolved_imagesrcset.as_deref(),
+            Some("https://example.test/app/hero-small.jpg 480w, https://example.test/app/hero-large.jpg 960w")
+        );
+        assert_eq!(image.imagesizes.as_deref(), Some("50vw"));
+
+        assert_eq!(summary.resources[4].kind, "prefetch");
+        assert_eq!(summary.resources[4].as_hint.as_deref(), Some("document"));
+        assert_eq!(summary.resources[5].kind, "manifest");
+        assert_eq!(
+            summary.resources[5].crossorigin.as_deref(),
+            Some("use-credentials")
+        );
+        assert_eq!(summary.resources[6].kind, "canonical");
+        assert_eq!(summary.resources[7].kind, "icon");
+        assert_eq!(
+            summary.resources[7].type_hint.as_deref(),
+            Some("image/x-icon")
+        );
+        assert_eq!(summary.resources[7].sizes.as_deref(), Some("any"));
+        assert_eq!(summary.resources[8].kind, "icon");
+        assert_eq!(summary.resources[8].color.as_deref(), Some("#0055ff"));
+        assert_eq!(summary.resources[9].kind, "alternate");
+        assert_eq!(
+            summary.resources[9].type_hint.as_deref(),
+            Some("application/rss+xml")
+        );
+        assert_eq!(summary.resources[9].hreflang.as_deref(), Some("en"));
+        assert_eq!(summary.resources[9].title.as_deref(), Some("Feed"));
+
+        assert_eq!(summary.metadata.resource_hints.len(), 5);
+        let preconnect_hint = &summary.metadata.resource_hints[0];
+        assert_eq!(preconnect_hint.kind, "preconnect");
+        assert_eq!(
+            preconnect_hint.resolved_url.as_deref(),
+            Some("https://cdn.example.test")
+        );
+        assert_eq!(preconnect_hint.crossorigin.as_deref(), Some(""));
+
+        let font_hint = &summary.metadata.resource_hints[1];
+        assert_eq!(font_hint.kind, "preload");
+        assert_eq!(font_hint.as_hint.as_deref(), Some("font"));
+        assert_eq!(font_hint.type_hint.as_deref(), Some("font/woff2"));
+        assert_eq!(font_hint.integrity.as_deref(), Some("sha384-font"));
+        assert_eq!(font_hint.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(font_hint.fetchpriority.as_deref(), Some("high"));
+
+        let module_hint = &summary.metadata.resource_hints[2];
+        assert_eq!(module_hint.kind, "modulepreload");
+        assert_eq!(module_hint.integrity.as_deref(), Some("sha384-module"));
+        assert_eq!(module_hint.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(module_hint.blocking.as_deref(), Some("render"));
+
+        let image_hint = &summary.metadata.resource_hints[3];
+        assert_eq!(image_hint.kind, "preload");
+        assert_eq!(image_hint.as_hint.as_deref(), Some("image"));
+        assert_eq!(
+            image_hint.resolved_imagesrcset.as_deref(),
+            Some("https://example.test/app/hero-small.jpg 480w, https://example.test/app/hero-large.jpg 960w")
+        );
+        assert_eq!(image_hint.imagesizes.as_deref(), Some("50vw"));
+
+        let prefetch_hint = &summary.metadata.resource_hints[4];
+        assert_eq!(prefetch_hint.kind, "prefetch");
+        assert_eq!(prefetch_hint.as_hint.as_deref(), Some("document"));
+    }
+
+    #[test]
+    fn browser_media_metadata_tracks_playback_and_poster_state() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\">\
+             <video id=hero src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline preload=metadata width=640 height=360></video>\
+             <audio src=theme.ogg controls preload=none></audio>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let video = &summary.media[0];
+        assert_eq!(video.kind, "video");
+        assert_eq!(
+            video.resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.mp4")
+        );
+        assert_eq!(
+            video.resolved_poster.as_deref(),
+            Some("https://example.test/watch/poster.jpg")
+        );
+        assert_eq!(video.width.as_deref(), Some("640"));
+        assert!(video.controls);
+        assert!(video.autoplay);
+        assert!(video.loop_media);
+        assert!(video.muted);
+        assert!(video.playsinline);
+        assert_eq!(video.preload.as_deref(), Some("metadata"));
+        assert_eq!(summary.media[1].kind, "audio");
+        assert_eq!(summary.media[1].preload.as_deref(), Some("none"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let media = &content_tree.children[0];
+        assert_eq!(media.role, "media");
+        assert_eq!(media.poster.as_deref(), Some("poster.jpg"));
+        assert_eq!(
+            media.resolved_poster.as_deref(),
+            Some("https://example.test/watch/poster.jpg")
+        );
+        assert!(media.controls);
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline-replaced");
+        assert!(render_tree.children[0].controls);
+    }
+
+    #[test]
+    fn browser_media_descriptor_metadata_tracks_sources_and_tracks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\"><body>\
+             <video controls>\
+               <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+               <source src=movie.mp4 type=video/mp4>\
+               <track kind=captions src=captions.vtt srclang=en label=English default>\
+               <track src=descriptions.vtt label=Descriptions>\
+             </video>\
+             <audio controls>\
+               <source src=theme.ogg type=audio/ogg>\
+             </audio>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let video = &summary.media[0];
+        assert_eq!(video.sources.len(), 2);
+        assert_eq!(video.sources[0].src.as_deref(), Some("movie.webm"));
+        assert_eq!(
+            video.sources[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.webm")
+        );
+        assert_eq!(video.sources[0].type_hint.as_deref(), Some("video/webm"));
+        assert_eq!(
+            video.sources[0].media.as_deref(),
+            Some("(min-width: 700px)")
+        );
+        assert_eq!(video.sources[1].src.as_deref(), Some("movie.mp4"));
+        assert_eq!(video.tracks.len(), 2);
+        assert_eq!(video.tracks[0].kind, "captions");
+        assert_eq!(
+            video.tracks[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/captions.vtt")
+        );
+        assert_eq!(video.tracks[0].srclang.as_deref(), Some("en"));
+        assert_eq!(video.tracks[0].label.as_deref(), Some("English"));
+        assert!(video.tracks[0].default_track);
+        assert_eq!(video.tracks[1].kind, "subtitles");
+        assert_eq!(
+            video.tracks[1].resolved_src.as_deref(),
+            Some("https://example.test/watch/descriptions.vtt")
+        );
+        assert_eq!(video.tracks[1].label.as_deref(), Some("Descriptions"));
+        assert!(!video.tracks[1].default_track);
+
+        let audio = &summary.media[1];
+        assert_eq!(audio.sources.len(), 1);
+        assert_eq!(audio.sources[0].src.as_deref(), Some("theme.ogg"));
+        assert_eq!(audio.sources[0].type_hint.as_deref(), Some("audio/ogg"));
+        assert!(audio.tracks.is_empty());
+    }
+
+    #[test]
+    fn browser_media_playback_descriptors_track_controls_sources_and_tracks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\"><body>\
+             <video src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline \
+                 preload=metadata crossorigin=anonymous controlslist=\"nodownload noremoteplayback\" \
+                 disableremoteplayback disablepictureinpicture width=640 height=360>\
+               <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+               <track kind=captions src=captions.vtt srclang=en label=English default>\
+               <track src=descriptions.vtt label=Descriptions>\
+             </video>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.media_playback_descriptors.len(), 1);
+
+        let descriptor = &summary.media_playback_descriptors[0];
+        assert_eq!(descriptor.kind, "video");
+        assert_eq!(descriptor.src.as_deref(), Some("movie.mp4"));
+        assert_eq!(
+            descriptor.resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.mp4")
+        );
+        assert_eq!(
+            descriptor.resolved_poster.as_deref(),
+            Some("https://example.test/watch/poster.jpg")
+        );
+        assert_eq!(descriptor.width.as_deref(), Some("640"));
+        assert!(descriptor.controls);
+        assert!(descriptor.autoplay);
+        assert!(descriptor.loop_media);
+        assert!(descriptor.muted);
+        assert!(descriptor.playsinline);
+        assert_eq!(descriptor.preload.as_deref(), Some("metadata"));
+        assert_eq!(descriptor.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(
+            descriptor.controlslist_tokens,
+            vec!["nodownload", "noremoteplayback"]
+        );
+        assert!(descriptor.disableremoteplayback);
+        assert!(descriptor.disablepictureinpicture);
+        assert_eq!(descriptor.source_count, 1);
+        assert_eq!(descriptor.sources[0].src.as_deref(), Some("movie.webm"));
+        assert_eq!(
+            descriptor.sources[0].media.as_deref(),
+            Some("(min-width: 700px)")
+        );
+        assert_eq!(descriptor.track_count, 2);
+        assert_eq!(descriptor.default_track_count, 1);
+        assert_eq!(descriptor.tracks[0].kind, "captions");
+        assert_eq!(
+            descriptor.tracks[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/captions.vtt")
+        );
+        assert!(descriptor.tracks[0].default_track);
+        assert_eq!(descriptor.tracks[1].kind, "subtitles");
+    }
+
+    #[test]
+    fn browser_media_source_track_metadata_tracks_fallbacks_and_captions() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\"><body>\
+             <picture>\
+               <source media=\"(min-width: 900px)\" type=image/avif srcset=\"poster-wide.avif 1x, poster-wide@2x.avif 2x\" sizes=\"80vw\">\
+               <img src=poster.jpg srcset=\"poster-small.jpg 480w, poster-large.jpg 960w\" sizes=\"100vw\" alt=Poster>\
+             </picture>\
+             <video controls>\
+               <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+               <source src=movie.mp4 type=video/mp4>\
+               <track kind=captions src=captions.vtt srclang=en label=English default>\
+               <track src=descriptions.vtt label=Descriptions>\
+             </video>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        let source_resource = &summary.resources[1];
+        assert_eq!(source_resource.kind, "source");
+        assert_eq!(
+            source_resource.resolved_url.as_deref(),
+            Some("https://example.test/watch/movie.webm")
+        );
+        assert_eq!(source_resource.type_hint.as_deref(), Some("video/webm"));
+        assert_eq!(source_resource.media.as_deref(), Some("(min-width: 700px)"));
+        let captions = &summary.resources[3];
+        assert_eq!(captions.kind, "track");
+        assert_eq!(captions.track_kind.as_deref(), Some("captions"));
+        assert_eq!(captions.srclang.as_deref(), Some("en"));
+        assert_eq!(captions.track_label.as_deref(), Some("English"));
+        assert!(captions.default_track);
+        let descriptions = &summary.resources[4];
+        assert_eq!(descriptions.track_kind.as_deref(), Some("subtitles"));
+        assert_eq!(descriptions.track_label.as_deref(), Some("Descriptions"));
+
+        let content_tree = BrowserContentTree::from_document(&document);
+        let picture = &content_tree.children[0];
+        assert_eq!(picture.role, "picture");
+        let picture_source = &picture.children[0];
+        assert_eq!(picture_source.role, "media_source");
+        assert_eq!(
+            picture_source.resolved_srcset.as_deref(),
+            Some("https://example.test/watch/poster-wide.avif 1x, https://example.test/watch/poster-wide@2x.avif 2x")
+        );
+        assert_eq!(picture_source.sizes.as_deref(), Some("80vw"));
+        let picture_image = &picture.children[1];
+        assert_eq!(
+            picture_image.resolved_srcset.as_deref(),
+            Some("https://example.test/watch/poster-small.jpg 480w, https://example.test/watch/poster-large.jpg 960w")
+        );
+
+        let video = &content_tree.children[1];
+        assert_eq!(video.role, "media");
+        assert_eq!(video.children[0].role, "media_source");
+        assert_eq!(video.children[0].src.as_deref(), Some("movie.webm"));
+        assert_eq!(
+            video.children[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.webm")
+        );
+        assert_eq!(video.children[2].role, "media_track");
+        assert_eq!(video.children[2].track_kind.as_deref(), Some("captions"));
+        assert!(video.children[2].default_track);
+        assert_eq!(video.children[3].track_kind.as_deref(), Some("subtitles"));
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(render_tree.children[0].display, "inline");
+        assert_eq!(render_tree.children[0].children[0].display, "none");
+        assert_eq!(render_tree.children[1].display, "inline-replaced");
+        assert_eq!(render_tree.children[1].children[2].display, "none");
     }
 
     #[test]
@@ -7864,7 +29786,10 @@ mod tests {
         assert_eq!(element(&term.children[0]).children, vec![Node::text("T")]);
         let description = element(&definitions.children[1]);
         assert_eq!(description.name, "dd");
-        assert_eq!(description.children, vec![Node::text("D")]);
+        assert_eq!(
+            element(&description.children[0]).children,
+            vec![Node::text("D")]
+        );
 
         let select = element(&body.children[4]);
         assert_eq!(select.name, "select");
@@ -7943,6 +29868,46 @@ mod tests {
         let second_nobr = element(&body.children[5]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn adoption_across_aside_preserves_foo_chain_em_continuation() {
+        let document = parse_html("<b><em><foo><foo><aside></b>").unwrap();
+
+        let document_body = body(&document);
+        assert_eq!(document_body.children.len(), 2);
+        let bold = element(&document_body.children[0]);
+        assert_eq!(bold.name, "b");
+        let original_em = element(&bold.children[0]);
+        assert_eq!(original_em.name, "em");
+        let outer_foo = element(&original_em.children[0]);
+        assert_eq!(outer_foo.name, "foo");
+        assert_eq!(element(&outer_foo.children[0]).name, "foo");
+
+        let continued_em = element(&document_body.children[1]);
+        assert_eq!(continued_em.name, "em");
+        let aside = element(&continued_em.children[0]);
+        assert_eq!(aside.name, "aside");
+        assert_eq!(element(&aside.children[0]).name, "b");
+
+        let explicit = parse_html("<b><em><foo><foo><aside></b></em>").unwrap();
+        let explicit_body = body(&explicit);
+        assert_eq!(explicit_body.children.len(), 3);
+        let empty_em = element(&explicit_body.children[1]);
+        assert_eq!(empty_em.name, "em");
+        assert!(empty_em.children.is_empty());
+        let aside = element(&explicit_body.children[2]);
+        assert_eq!(aside.name, "aside");
+        let inner_em = element(&aside.children[0]);
+        assert_eq!(inner_em.name, "em");
+        assert_eq!(element(&inner_em.children[0]).name, "b");
+
+        let non_foo_chain = parse_html("<b><em><foo><foob><fooc><aside></b></em>").unwrap();
+        let non_foo_body = body(&non_foo_chain);
+        assert_eq!(non_foo_body.children.len(), 2);
+        let aside = element(&non_foo_body.children[1]);
+        assert_eq!(aside.name, "aside");
+        assert_eq!(element(&aside.children[0]).name, "b");
     }
 
     #[test]
@@ -8080,6 +30045,65 @@ mod tests {
         assert_eq!(adopted_bold.name, "b");
         assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
         assert_eq!(adopted_italic.children[1], Node::text(" mno "));
+    }
+
+    #[test]
+    fn formatting_end_across_paragraph_reconstructs_inner_formatting_for_following_text() {
+        let document = parse_html("<b><p><i>Bold and Italic</b> Italic</p>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_bold = element(&body.children[0]);
+        assert_eq!(outer_bold.name, "b");
+        assert!(outer_bold.children.is_empty());
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 2);
+
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        let adopted_italic = element(&adopted_bold.children[0]);
+        assert_eq!(adopted_italic.name, "i");
+        assert_eq!(adopted_italic.children, vec![Node::text("Bold and Italic")]);
+
+        let reconstructed_italic = element(&paragraph.children[1]);
+        assert_eq!(reconstructed_italic.name, "i");
+        assert_eq!(reconstructed_italic.children, vec![Node::text(" Italic")]);
+    }
+
+    #[test]
+    fn paragraph_end_reopens_previous_empty_formatting_ancestor_for_following_text() {
+        let document = parse_html(
+            "<font color=red><i>Red italic<p>Red </font>Just italic.</p> Italic only.</i> Plain",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 3);
+
+        let red_font = element(&body.children[0]);
+        assert_eq!(red_font.name, "font");
+        assert_eq!(red_font.attribute("color"), Some("red"));
+        let red_italic = element(&red_font.children[0]);
+        assert_eq!(red_italic.name, "i");
+        assert_eq!(red_italic.children, vec![Node::text("Red italic")]);
+
+        let continued_italic = element(&body.children[1]);
+        assert_eq!(continued_italic.name, "i");
+        assert_eq!(continued_italic.children.len(), 2);
+
+        let paragraph = element(&continued_italic.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let paragraph_font = element(&paragraph.children[0]);
+        assert_eq!(paragraph_font.name, "font");
+        assert_eq!(paragraph_font.attribute("color"), Some("red"));
+        assert_eq!(paragraph_font.children, vec![Node::text("Red ")]);
+        assert_eq!(paragraph.children[1], Node::text("Just italic."));
+
+        assert_eq!(continued_italic.children[1], Node::text(" Italic only."));
+        assert_eq!(body.children[2], Node::text(" Plain"));
     }
 
     #[test]
@@ -8341,6 +30365,172 @@ mod tests {
         let body = body(&document);
         assert_eq!(element(&body.children[0]).name, "p");
         assert_eq!(element(&body.children[1]).name, "li");
+    }
+
+    #[test]
+    fn list_item_start_splits_open_anchor_and_reconstructs_inside_item() {
+        let document = parse_html("<a><li><style></style><title></title></a>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert!(outer_anchor.children.is_empty());
+
+        let list_item = element(&body.children[1]);
+        assert_eq!(list_item.name, "li");
+        assert_eq!(list_item.children.len(), 1);
+
+        let inner_anchor = element(&list_item.children[0]);
+        assert_eq!(inner_anchor.name, "a");
+        assert_eq!(inner_anchor.children.len(), 2);
+        assert_eq!(element(&inner_anchor.children[0]).name, "style");
+        assert_eq!(element(&inner_anchor.children[1]).name, "title");
+    }
+
+    #[test]
+    fn center_start_splits_open_anchor_and_reconstructs_inside_center() {
+        let document = parse_html("<a><center><title></title><a>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert!(outer_anchor.children.is_empty());
+
+        let center = element(&body.children[1]);
+        assert_eq!(center.name, "center");
+        assert_eq!(center.children.len(), 2);
+
+        let reconstructed_anchor = element(&center.children[0]);
+        assert_eq!(reconstructed_anchor.name, "a");
+        assert_eq!(reconstructed_anchor.children.len(), 1);
+        assert_eq!(element(&reconstructed_anchor.children[0]).name, "title");
+
+        let following_anchor = element(&center.children[1]);
+        assert_eq!(following_anchor.name, "a");
+        assert!(following_anchor.children.is_empty());
+    }
+
+    #[test]
+    fn div_start_reconstructs_pending_bold_inside_new_div() {
+        let document = parse_html("<div><b></div><div><nobr>a<nobr>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let first_div = element(&body.children[0]);
+        assert_eq!(first_div.name, "div");
+        assert_eq!(first_div.children.len(), 1);
+        assert_eq!(element(&first_div.children[0]).name, "b");
+
+        let second_div = element(&body.children[1]);
+        assert_eq!(second_div.name, "div");
+        assert_eq!(second_div.children.len(), 1);
+
+        let reconstructed_bold = element(&second_div.children[0]);
+        assert_eq!(reconstructed_bold.name, "b");
+        assert_eq!(reconstructed_bold.children.len(), 2);
+        let nobr = element(&reconstructed_bold.children[0]);
+        assert_eq!(nobr.name, "nobr");
+        assert_eq!(nobr.children, vec![Node::text("a")]);
+        assert_eq!(element(&reconstructed_bold.children[1]).name, "nobr");
+    }
+
+    #[test]
+    fn definition_description_start_reconstructs_pending_bold_inside_item() {
+        let document = parse_html("<dl><dt><b>term<dd>definition</dl>\n").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let list = element(&body.children[0]);
+        assert_eq!(list.name, "dl");
+        assert_eq!(list.children.len(), 2);
+
+        let term = element(&list.children[0]);
+        assert_eq!(term.name, "dt");
+        let term_bold = element(&term.children[0]);
+        assert_eq!(term_bold.name, "b");
+        assert_eq!(term_bold.children, vec![Node::text("term")]);
+
+        let description = element(&list.children[1]);
+        assert_eq!(description.name, "dd");
+        let description_bold = element(&description.children[0]);
+        assert_eq!(description_bold.name, "b");
+        assert_eq!(description_bold.children, vec![Node::text("definition")]);
+
+        let trailing_bold = element(&body.children[1]);
+        assert_eq!(trailing_bold.name, "b");
+        assert_eq!(trailing_bold.children, vec![Node::text("\n")]);
+    }
+
+    #[test]
+    fn font_newline_before_bold_stays_outside_reconstructed_font() {
+        let document = parse_html(
+            "<p><font size=7>First.</p>\n<p>Second.</p></font>\n<b><p><i>Bold</b> Italic</p>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 5);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        assert_eq!(
+            element(&first_paragraph.children[0]).children,
+            vec![Node::text("First.")]
+        );
+
+        let continued_font = element(&body.children[1]);
+        assert_eq!(continued_font.name, "font");
+        assert_eq!(continued_font.attribute("size"), Some("7"));
+        assert_eq!(continued_font.children[0], Node::text("\n"));
+        assert_eq!(element(&continued_font.children[1]).name, "p");
+
+        assert_eq!(body.children[2], Node::text("\n"));
+
+        let outer_bold = element(&body.children[3]);
+        assert_eq!(outer_bold.name, "b");
+        assert!(outer_bold.children.is_empty());
+
+        let paragraph = element(&body.children[4]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(
+            element(&adopted_bold.children[0]).children,
+            vec![Node::text("Bold")]
+        );
+        assert_eq!(
+            element(&paragraph.children[1]).children,
+            vec![Node::text(" Italic")]
+        );
+    }
+
+    #[test]
+    fn paragraph_end_recovery_keeps_formatting_context_for_next_paragraph() {
+        let document = parse_html("<font></p><p><meta><title></title></font>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_font = element(&body.children[0]);
+        assert_eq!(outer_font.name, "font");
+        assert_eq!(outer_font.children.len(), 1);
+        assert_eq!(element(&outer_font.children[0]).name, "p");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children.len(), 1);
+
+        let reconstructed_font = element(&paragraph.children[0]);
+        assert_eq!(reconstructed_font.name, "font");
+        assert_eq!(reconstructed_font.children.len(), 2);
+        assert_eq!(element(&reconstructed_font.children[0]).name, "meta");
+        assert_eq!(element(&reconstructed_font.children[1]).name, "title");
     }
 
     #[test]
@@ -8798,6 +30988,86 @@ mod tests {
         assert_eq!(reconstructed_anchor.name, "a");
         assert_eq!(reconstructed_anchor.attribute("href"), Some("foo"));
         assert_eq!(reconstructed_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn fostered_nobr_start_reconstructs_pending_italic_before_table() {
+        let document =
+            parse_html("<!DOCTYPE html><body><b><nobr>1<table><nobr></b><i><nobr>2<nobr></i>3")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        assert_eq!(outer_nobr.children.len(), 5);
+        assert_eq!(outer_nobr.children[0], Node::text("1"));
+
+        let empty_italic_nobr = element(&outer_nobr.children[1]);
+        assert_eq!(empty_italic_nobr.name, "nobr");
+        let empty_italic = element(&empty_italic_nobr.children[0]);
+        assert_eq!(empty_italic.name, "i");
+        assert!(empty_italic.children.is_empty());
+
+        let reconstructed_italic = element(&outer_nobr.children[2]);
+        assert_eq!(reconstructed_italic.name, "i");
+        assert_eq!(reconstructed_italic.children.len(), 2);
+        let text_nobr = element(&reconstructed_italic.children[0]);
+        assert_eq!(text_nobr.name, "nobr");
+        assert_eq!(text_nobr.children, vec![Node::text("2")]);
+        let empty_nobr = element(&reconstructed_italic.children[1]);
+        assert_eq!(empty_nobr.name, "nobr");
+        assert!(empty_nobr.children.is_empty());
+
+        let trailing_nobr = element(&outer_nobr.children[3]);
+        assert_eq!(trailing_nobr.name, "nobr");
+        assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
+        assert_eq!(element(&outer_nobr.children[4]).name, "table");
+    }
+
+    #[test]
+    fn fostered_nobr_table_cell_continuation_stays_inside_cell() {
+        let document = parse_html(
+            "<!DOCTYPE html><body><b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        let outer_nobr = element(&bold.children[0]);
+        assert_eq!(outer_nobr.name, "nobr");
+        assert_eq!(outer_nobr.children[0], Node::text("1"));
+
+        let table = element(&outer_nobr.children[1]);
+        assert_eq!(table.name, "table");
+        let table_body = element(&table.children[0]);
+        let row = element(&table_body.children[0]);
+        let cell = element(&row.children[0]);
+        assert_eq!(cell.name, "td");
+        assert_eq!(cell.children.len(), 3);
+
+        let first_nobr = element(&cell.children[0]);
+        assert_eq!(first_nobr.name, "nobr");
+        assert_eq!(element(&first_nobr.children[0]).name, "i");
+
+        let italic = element(&cell.children[1]);
+        assert_eq!(italic.name, "i");
+        let text_nobr = element(&italic.children[0]);
+        assert_eq!(text_nobr.name, "nobr");
+        assert_eq!(text_nobr.children, vec![Node::text("2")]);
+        let empty_nobr = element(&italic.children[1]);
+        assert_eq!(empty_nobr.name, "nobr");
+        assert!(empty_nobr.children.is_empty());
+
+        let trailing_nobr = element(&cell.children[2]);
+        assert_eq!(trailing_nobr.name, "nobr");
+        assert_eq!(trailing_nobr.children, vec![Node::text("3")]);
     }
 
     #[test]
@@ -9371,6 +31641,30 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn closes_svg_title_integration_point_on_foreign_ancestor_end_tag() {
+        let document = parse_html("<svg><foreignObject></foreignObject><title></svg>foo").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let svg = element(&body.children[0]);
+        assert_eq!(svg.name, "svg");
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert_eq!(svg.children.len(), 2);
+
+        let foreign_object = element(&svg.children[0]);
+        assert_eq!(foreign_object.name, "foreignObject");
+        assert_eq!(foreign_object.namespace.as_deref(), Some("svg"));
+
+        let title = element(&svg.children[1]);
+        assert_eq!(title.name, "title");
+        assert_eq!(title.namespace.as_deref(), Some("svg"));
+        assert!(title.children.is_empty());
+
+        assert_eq!(body.children[1], Node::text("foo"));
     }
 
     #[test]

@@ -460,12 +460,22 @@ class TestPhase16_CothPowers:
 class TestPhase16_Fallthrough:
     """Inputs that must return unevaluated Integrate — deferred cases."""
 
-    def test_poly_times_sech_squared_unevaluated(self) -> None:
-        """∫ x·sech²(x) dx — poly×power not yet implemented."""
+    def test_poly_times_sech_squared_via_ibp(self) -> None:
+        """``∫ x·sech²(x) dx`` — closes via Track E1 generic tabular IBP.
+
+        The integrand has no shape-specific handler in Phase 16 (the
+        per-shape sech-power code requires a bare ``Pow(Sech(...), n)``
+        without a polynomial multiplier).  Track E1's tabular IBP
+        partitions ``u = x, w = sech²(x)`` and integrates to
+        ``x·tanh(x) − log(cosh(x))``.  Previously this case was
+        deferred and asserted unevaluated; the generic fallback now
+        closes it.  The numeric F' = f check guards correctness.
+        """
         vm = _make_vm()
         f = IRApply(MUL, (X, _pow(_sech(X), _INT(2))))
         F = _integrate_ir(vm, f)
-        _is_unevaluated(f, F)
+        _was_evaluated(f, F)
+        _check_antiderivative(f, F)
 
     def test_sech_nonlinear_arg_squared_unevaluated(self) -> None:
         """∫ sech²(x²) dx — non-linear argument returns unevaluated."""

@@ -18,6 +18,9 @@ use symbolic_ir::{
 pub const ODE2: &str = "ODE2";
 pub type Handler = fn(&IRNode) -> IRNode;
 
+mod lie_symmetry;
+use lie_symmetry::try_lie_symmetry;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 struct Frac {
     n: i64,
@@ -112,7 +115,7 @@ fn gcd(mut a: u64, mut b: u64) -> u64 {
     a
 }
 
-fn c() -> IRNode {
+pub(crate) fn c() -> IRNode {
     sym("%c")
 }
 
@@ -152,7 +155,7 @@ fn args_of<'a>(node: &'a IRNode, head: &str) -> Option<&'a [IRNode]> {
     }
 }
 
-fn binary_args<'a>(node: &'a IRNode, head: &str) -> Option<(&'a IRNode, &'a IRNode)> {
+pub(crate) fn binary_args<'a>(node: &'a IRNode, head: &str) -> Option<(&'a IRNode, &'a IRNode)> {
     let args = args_of(node, head)?;
     if args.len() == 2 {
         Some((&args[0], &args[1]))
@@ -161,7 +164,7 @@ fn binary_args<'a>(node: &'a IRNode, head: &str) -> Option<(&'a IRNode, &'a IRNo
     }
 }
 
-fn unary_arg<'a>(node: &'a IRNode, head: &str) -> Option<&'a IRNode> {
+pub(crate) fn unary_arg<'a>(node: &'a IRNode, head: &str) -> Option<&'a IRNode> {
     let args = args_of(node, head)?;
     if args.len() == 1 {
         Some(&args[0])
@@ -180,7 +183,7 @@ fn add(a: IRNode, b: IRNode) -> IRNode {
     }
 }
 
-fn sub(a: IRNode, b: IRNode) -> IRNode {
+pub(crate) fn sub(a: IRNode, b: IRNode) -> IRNode {
     if is_int(&b, 0) {
         a
     } else {
@@ -256,7 +259,7 @@ fn deriv(expr: IRNode, var: IRNode) -> IRNode {
     apply(sym(D), vec![expr, var])
 }
 
-fn integrate(expr: IRNode, var: IRNode) -> IRNode {
+pub(crate) fn integrate(expr: IRNode, var: IRNode) -> IRNode {
     apply(sym(INTEGRATE), vec![expr, var])
 }
 
@@ -299,7 +302,7 @@ fn signed_frac_to_ir(f: Frac) -> IRNode {
     f.to_ir()
 }
 
-fn flatten_add(node: &IRNode) -> Vec<IRNode> {
+pub(crate) fn flatten_add(node: &IRNode) -> Vec<IRNode> {
     if let Some((a, b)) = binary_args(node, ADD) {
         let mut out = flatten_add(a);
         out.extend(flatten_add(b));
@@ -341,7 +344,7 @@ fn rational_value(node: &IRNode) -> Option<Frac> {
     }
 }
 
-fn is_const_wrt(node: &IRNode, var: &IRNode) -> bool {
+pub(crate) fn is_const_wrt(node: &IRNode, var: &IRNode) -> bool {
     match node {
         IRNode::Symbol(_) => node != var,
         IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) | IRNode::Str(_) => true,
@@ -349,7 +352,7 @@ fn is_const_wrt(node: &IRNode, var: &IRNode) -> bool {
     }
 }
 
-fn unwrap_neg(node: &IRNode) -> (bool, IRNode) {
+pub(crate) fn unwrap_neg(node: &IRNode) -> (bool, IRNode) {
     if let Some(inner) = unary_arg(node, NEG) {
         (true, inner.clone())
     } else if let IRNode::Integer(n) = node {
@@ -386,7 +389,7 @@ fn sum_terms(terms: Vec<(IRNode, bool)>) -> IRNode {
     })
 }
 
-fn y_prime(y: &IRNode, x: &IRNode) -> IRNode {
+pub(crate) fn y_prime(y: &IRNode, x: &IRNode) -> IRNode {
     deriv(y.clone(), x.clone())
 }
 
@@ -1690,6 +1693,357 @@ fn try_var_coeff_named_ode(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNo
         .or_else(|| try_hermite_ode(expr, y, x))
 }
 
+// ============================================================================
+// Track C2 — Frobenius / power-series method
+//
+// Solves second-order linear ODEs P(x)·y'' + Q(x)·y' + R(x)·y = 0 with a
+// regular singular point at x = 0 by substituting the Frobenius series
+//
+//   y(x) = x^r · Σ_{n≥0} a_n x^n
+//
+// and producing a truncated power-series IR.  Scope (matches Python C1 / TS):
+//   1. Singular point at x = 0 only.
+//   2. Indicial roots must be rational and differ by a non-integer.
+//      Equal or integer-difference roots produce logarithmic terms in the
+//      second solution and bail (return None).
+//
+// Pipeline:
+//   collect_var2_coeffs    — already exists (reused for named-ODE recogniser).
+//   poly_coeffs_extract    — turn IR polynomial expr into a Vec<Frac>.
+//   is_regular_singular    — verify x=0 regular-singular; return (tildeP, tildeQ)
+//                             where tildeP = x·p(x), tildeQ = x²·q(x).
+//   solve_indicial         — solve r² + (p_0-1) r + q_0 = 0 for rational roots.
+//   roots_differ_by_integer — bail flag for logarithmic case.
+//   build_series_ir        — assemble Equal(y, x^r · poly(x)) IR.
+//   try_frobenius_series   — top-level entry point.
+//
+// Default truncation N=10 matches the Python reference.
+// ============================================================================
+
+const FROBENIUS_DEFAULT_N: usize = 10;
+
+/// Return `Some((coeff, degree))` for a monomial `c·x^k`, else `None`.
+///
+/// Handles: rational literals (degree 0), bare x (degree 1),
+/// Pow(x, k≥0), Mul(c, x^k), Neg-wrapped variants.  Recursive over
+/// nested Mul/Neg trees.
+fn degree_of_monomial(term: &IRNode, x: &IRNode) -> Option<(Frac, usize)> {
+    // Neg unwrap.
+    if let Some(inner) = unary_arg(term, NEG) {
+        let (c, d) = degree_of_monomial(inner, x)?;
+        return Some((-c, d));
+    }
+    // Rational literal → (value, 0).
+    if let Some(f) = rational_value(term) {
+        return Some((f, 0));
+    }
+    // Bare symbol — must be x.
+    if matches!(term, IRNode::Symbol(_)) {
+        return if term == x { Some((Frac::ONE, 1)) } else { None };
+    }
+    // Pow(x, k) with non-negative integer k.
+    if let Some((base, expn)) = binary_args(term, POW) {
+        if base == x {
+            if let IRNode::Integer(k) = expn {
+                if *k >= 0 {
+                    return Some((Frac::ONE, *k as usize));
+                }
+            }
+        }
+        return None;
+    }
+    // Mul(a, b) — degree adds, coefficients multiply.
+    if let Some((a, b)) = binary_args(term, MUL) {
+        let (ca, da) = degree_of_monomial(a, x)?;
+        let (cb, db) = degree_of_monomial(b, x)?;
+        return Some((ca * cb, da + db));
+    }
+    None
+}
+
+/// Extract rational polynomial coefficients of `expr` in `x` of degree ≤
+/// `max_deg`.  Returns a Vec of length `max_deg + 1`, or `None` if `expr`
+/// is not a polynomial in `x` (or contains a term of degree > `max_deg`).
+fn poly_coeffs_extract(expr: &IRNode, x: &IRNode, max_deg: usize) -> Option<Vec<Frac>> {
+    let mut out = vec![Frac::ZERO; max_deg + 1];
+    for term in flatten_add(expr) {
+        let (coeff, deg) = degree_of_monomial(&term, x)?;
+        if deg > max_deg {
+            return None;
+        }
+        out[deg] = out[deg] + coeff;
+    }
+    Some(out)
+}
+
+/// Multiply two truncated polynomials (Vec<Frac>) and truncate result at
+/// degree `max_deg`.
+fn frac_poly_mul(a: &[Frac], b: &[Frac], max_deg: usize) -> Vec<Frac> {
+    let mut out = vec![Frac::ZERO; max_deg + 1];
+    for i in 0..a.len().min(max_deg + 1) {
+        if a[i].is_zero() {
+            continue;
+        }
+        for j in 0..b.len() {
+            if i + j > max_deg {
+                break;
+            }
+            if b[j].is_zero() {
+                continue;
+            }
+            out[i + j] = out[i + j] + a[i] * b[j];
+        }
+    }
+    out
+}
+
+/// Verify `x = 0` is a regular singular point of P(x)y'' + Q(x)y' + R(x)y = 0
+/// and return the analytic Taylor series `(tildeP, tildeQ)` where
+/// `tildeP = x·p(x)` and `tildeQ = x²·q(x)` with `p = Q/P`, `q = R/P`.
+///
+/// Returns `None` if:
+///   - `P(0) ≠ 0` (regular point, not singular — caller falls through).
+///   - Order of vanishing of `P` at 0 exceeds 2 (irregular / out of scope).
+///   - Analyticity condition on `x·p` or `x²·q` fails.
+fn is_regular_singular(
+    p_poly: &[Frac],
+    q_poly: &[Frac],
+    r_poly: &[Frac],
+) -> Option<(Vec<Frac>, Vec<Frac>)> {
+    let n = p_poly.len();
+    // Order of vanishing of P at 0.
+    let mut m = 0usize;
+    while m < n && p_poly[m].is_zero() {
+        m += 1;
+    }
+    if m == 0 {
+        return None; // regular (non-singular) point
+    }
+    if m > 2 {
+        return None; // beyond Frobenius scope
+    }
+
+    // P_eff(x) = P(x) / x^m  (analytic, P_eff(0) ≠ 0).
+    let mut p_eff = vec![Frac::ZERO; n];
+    for i in m..n {
+        p_eff[i - m] = p_poly[i];
+    }
+    if p_eff[0].is_zero() {
+        return None;
+    }
+
+    // Invert P_eff as Taylor series:
+    //   inv[0] = 1 / P_eff[0]
+    //   inv[k] = -(1/P_eff[0]) · Σ_{j=1..k} P_eff[j] · inv[k-j]
+    let mut inv = vec![Frac::ZERO; n];
+    inv[0] = Frac::ONE / p_eff[0];
+    for k in 1..n {
+        let mut s = Frac::ZERO;
+        for j in 1..=k {
+            if j >= n {
+                break;
+            }
+            s = s + p_eff[j] * inv[k - j];
+        }
+        inv[k] = -inv[0] * s;
+    }
+
+    // tildeP = x^{1-m} · Q · inv  (left-shift by m-1).
+    let q_inv = frac_poly_mul(q_poly, &inv, n - 1);
+    let shift_p = m - 1;
+    for i in 0..shift_p {
+        if !q_inv[i].is_zero() {
+            return None;
+        }
+    }
+    let mut tilde_p = vec![Frac::ZERO; n];
+    for k in 0..n {
+        let idx = k + shift_p;
+        if idx < n {
+            tilde_p[k] = q_inv[idx];
+        }
+    }
+
+    // tildeQ = x^{2-m} · R · inv  (m=2 → no shift; m=1 → right-shift by 1).
+    let r_inv = frac_poly_mul(r_poly, &inv, n - 1);
+    let mut tilde_q = vec![Frac::ZERO; n];
+    if m >= 2 {
+        let shift_q = m - 2;
+        for i in 0..shift_q {
+            if !r_inv[i].is_zero() {
+                return None;
+            }
+        }
+        for k in 0..n {
+            let idx = k + shift_q;
+            if idx < n {
+                tilde_q[k] = r_inv[idx];
+            }
+        }
+    } else {
+        // m == 1: shift_q = -1, so right-shift R_inv by 1.
+        for k in 1..n {
+            tilde_q[k] = r_inv[k - 1];
+        }
+    }
+
+    Some((tilde_p, tilde_q))
+}
+
+/// Solve `r(r-1) + p_0·r + q_0 = 0` for rational roots `(r1, r2)` with
+/// `r1 ≥ r2`.  Returns `None` on complex / irrational roots.
+fn solve_indicial(p0: Frac, q0: Frac) -> Option<(Frac, Frac)> {
+    // r² + (p0 − 1) r + q0 = 0.
+    let b = p0 - Frac::ONE;
+    let c = q0;
+    let disc = b * b - Frac::int(4) * c;
+    if disc < Frac::ZERO {
+        return None;
+    }
+    let sqrt_disc = exact_sqrt_frac(disc)?;
+    let half = Frac::new(1, 2);
+    let mut r1 = (-b + sqrt_disc) * half;
+    let mut r2 = (-b - sqrt_disc) * half;
+    if r1 < r2 {
+        std::mem::swap(&mut r1, &mut r2);
+    }
+    Some((r1, r2))
+}
+
+/// Return true iff `r1 − r2` is an integer (denominator 1).  Equal roots
+/// and positive-integer differences both trigger logarithmic Frobenius —
+/// out of scope.
+fn roots_differ_by_integer(r1: Frac, r2: Frac) -> bool {
+    (r1 - r2).d == 1
+}
+
+/// Build the IR for `x^r · (a_0 + a_1 x + … + a_N x^N)`.
+///
+/// Conventions:
+///   - Zero coefficients past `a_0` are omitted.
+///   - `r = 0` collapses to the bare polynomial.
+///   - `r = 1` emits `Mul(x, poly)`.
+///   - Otherwise emits `Mul(Pow(x, r), poly)` with `r` encoded as an
+///     integer or rational literal (signed via `Neg` wrapper for negative r).
+fn build_series_ir(r: Frac, a: &[Frac], x: &IRNode) -> IRNode {
+    // Build the polynomial Σ a_k x^k (a_0 always emitted, others only if nonzero).
+    let mut poly_terms: Vec<IRNode> = Vec::new();
+    for (k, ak) in a.iter().enumerate() {
+        let ak = *ak;
+        if ak.is_zero() && k > 0 {
+            continue;
+        }
+        // Build coefficient IR with explicit Neg wrapper when negative.
+        let coeff_ir: IRNode = if ak.n < 0 {
+            apply(sym(NEG), vec![(-ak).to_ir()])
+        } else {
+            ak.to_ir()
+        };
+        let term: IRNode = if k == 0 {
+            coeff_ir
+        } else if k == 1 {
+            if ak == Frac::ONE {
+                x.clone()
+            } else if ak == -Frac::ONE {
+                apply(sym(NEG), vec![x.clone()])
+            } else {
+                apply(sym(MUL), vec![coeff_ir, x.clone()])
+            }
+        } else {
+            let xk = apply(sym(POW), vec![x.clone(), int(k as i64)]);
+            if ak == Frac::ONE {
+                xk
+            } else if ak == -Frac::ONE {
+                apply(sym(NEG), vec![xk])
+            } else {
+                apply(sym(MUL), vec![coeff_ir, xk])
+            }
+        };
+        poly_terms.push(term);
+    }
+    if poly_terms.is_empty() {
+        poly_terms.push(zero());
+    }
+
+    let mut poly_ir = poly_terms[0].clone();
+    for t in poly_terms.into_iter().skip(1) {
+        poly_ir = apply(sym(ADD), vec![poly_ir, t]);
+    }
+
+    if r.is_zero() {
+        return poly_ir;
+    }
+    if r == Frac::ONE {
+        return apply(sym(MUL), vec![x.clone(), poly_ir]);
+    }
+    let r_ir: IRNode = if r.n < 0 {
+        apply(sym(NEG), vec![(-r).to_ir()])
+    } else {
+        r.to_ir()
+    };
+    let x_pow_r = apply(sym(POW), vec![x.clone(), r_ir]);
+    apply(sym(MUL), vec![x_pow_r, poly_ir])
+}
+
+/// Attempt to solve `expr = 0` as a Frobenius power series at `x = 0`.
+///
+/// Returns `Equal(y, x^r · Σ_{k=0..N} a_k x^k)` on success, or `None` on
+/// any of the out-of-scope conditions: non-2nd-order, non-polynomial
+/// coefficients, regular point at 0, irregular singular point,
+/// complex/irrational/integer-difference indicial roots.
+///
+/// Default truncation `N = 10` matches the Python reference's
+/// `_DEFAULT_TRUNCATION_N`.
+fn try_frobenius_series(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
+    try_frobenius_series_n(expr, y, x, FROBENIUS_DEFAULT_N)
+}
+
+fn try_frobenius_series_n(expr: &IRNode, y: &IRNode, x: &IRNode, n: usize) -> Option<IRNode> {
+    let (p_node, q_node, r_node) = collect_var2_coeffs(expr, y, x)?;
+    let max_deg = n;
+    let p_poly = poly_coeffs_extract(&p_node, x, max_deg)?;
+    let q_poly = poly_coeffs_extract(&q_node, x, max_deg)?;
+    let r_poly = poly_coeffs_extract(&r_node, x, max_deg)?;
+
+    let (tilde_p, tilde_q) = is_regular_singular(&p_poly, &q_poly, &r_poly)?;
+    let p0 = tilde_p[0];
+    let q0 = tilde_q[0];
+
+    let (r1, r2) = solve_indicial(p0, q0)?;
+    if roots_differ_by_integer(r1, r2) {
+        return None;
+    }
+
+    // F(s) = s(s-1) + p0·s + q0.
+    let f = |s: Frac| -> Frac { s * (s - Frac::ONE) + p0 * s + q0 };
+
+    let mut a: Vec<Frac> = vec![Frac::ONE];
+    for n_idx in 1..=n {
+        let denom = f(Frac::int(n_idx as i64) + r1);
+        if denom.is_zero() {
+            return None; // defensive
+        }
+        let mut rhs = Frac::ZERO;
+        for k in 1..=n_idx {
+            let pk = if k < tilde_p.len() {
+                tilde_p[k]
+            } else {
+                Frac::ZERO
+            };
+            let qk = if k < tilde_q.len() {
+                tilde_q[k]
+            } else {
+                Frac::ZERO
+            };
+            rhs = rhs + a[n_idx - k] * (pk * (Frac::int((n_idx - k) as i64) + r1) + qk);
+        }
+        a.push(-rhs / denom);
+    }
+
+    let series_ir = build_series_ir(r1, &a, x);
+    Some(equal(y.clone(), series_ir))
+}
+
 fn try_vop(expr: &IRNode, y: &IRNode, x: &IRNode) -> Option<IRNode> {
     let (a, b, ccoef, f) = collect_second_order_nonhom(expr, y, x)?;
     let (u1p, u2p, y1, y2) = vop_integrand_pair(a, b, ccoef, f, x)?;
@@ -1722,6 +2076,13 @@ pub fn solve_ode(expr: IRNode, y: IRNode, x: IRNode) -> Option<IRNode> {
     if let Some(result) = try_var_coeff_named_ode(&expr, &y, &x) {
         return Some(result);
     }
+    // Track C2: Frobenius / power-series fallback for un-named regular
+    // singular-point ODEs.  Bails (returns None) on regular points, irregular
+    // singular points, and integer-difference / equal indicial roots
+    // (logarithmic case — out of scope).
+    if let Some(result) = try_frobenius_series(&expr, &y, &x) {
+        return Some(result);
+    }
     if let Some(result) = try_bernoulli(&expr, &y, &x) {
         return Some(result);
     }
@@ -1734,7 +2095,14 @@ pub fn solve_ode(expr: IRNode, y: IRNode, x: IRNode) -> Option<IRNode> {
     if let Some(result) = try_homogeneous_type(&expr, &y, &x) {
         return Some(result);
     }
-    try_exact(&expr, &y, &x)
+    if let Some(result) = try_exact(&expr, &y, &x) {
+        return Some(result);
+    }
+    // Track L2: Lie point-symmetry (autonomous & scaling).  Runs AFTER
+    // every existing first-order family.  Catches autonomous nonlinear
+    // y' = g(y) (e.g. logistic y' = y(1-y)) that separable cannot
+    // invert, and any future symmetry-reducible case not covered above.
+    try_lie_symmetry(&expr, &y, &x)
 }
 
 /// Evaluate an `ODE2(eqn, y, x)` IR node, or return it unchanged on fallthrough.
@@ -2152,5 +2520,116 @@ mod tests {
             !s.contains("LegendreP") && !s.contains("BesselJ"),
             "Euler-Cauchy result must not contain named-ODE heads: {s}"
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // Track C2 — Frobenius / power-series ODE
+    //
+    // Mirrors the Python `test_frobenius.py` end-to-end:
+    //   1. Acceptance: Bessel ν=1/2 — Phase 21 catches it; Frobenius would bail.
+    //   2. Acceptance: 2x²y'' + 3xy' − (1+x)y = 0 produces x^(1/2)·polynomial.
+    //   3. Bail on integer-difference indicial roots.
+    //   4. Bail on equal indicial roots.
+    //   5. Bail on irregular singular point.
+    //   6. Regular point falls through (caught by const-coeff).
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn c2_frobenius_acceptance_bessel_half_caught_by_phase21() {
+        // x²y'' + xy' + (x² − 1/4)y = 0  — Bessel ν=1/2.
+        // Phase 21 (named) recognises it before Frobenius runs.
+        let x_sq = pow(x(), int(2));
+        let expr = add(
+            mul(x_sq.clone(), yd()),
+            add(mul(x(), yp()), mul(sub(x_sq, rat(1, 4)), y())),
+        );
+        let result = solve_ode(expr, y(), x()).unwrap();
+        let s = format!("{result}");
+        assert!(s.contains("BesselJ"), "expected BesselJ in: {s}");
+        assert!(s.contains("BesselY"), "expected BesselY in: {s}");
+    }
+
+    #[test]
+    fn c2_frobenius_acceptance_produces_x_half_series() {
+        // 2x²y'' + 3xy' − (1+x)y = 0:
+        //   tildeP = 3/2, tildeQ = -(1+x)/2  →  p0 = 3/2, q0 = -1/2.
+        //   F(r) = r² + (3/2 - 1)r - 1/2 = r² + r/2 - 1/2 = (2r-1)(r+1)/2.
+        //   Roots r1 = 1/2, r2 = -1.  Differ by 3/2 — non-integer.
+        //   Recurrence: a_0 = 1, a_1 = 1/5, ...
+        let x_sq = pow(x(), int(2));
+        let expr = add(
+            mul(mul(int(2), x_sq), yd()),
+            add(
+                mul(mul(int(3), x()), yp()),
+                neg(mul(add(int(1), x()), y())),
+            ),
+        );
+        let result = solve_ode(expr, y(), x()).unwrap();
+        let s = format!("{result}");
+        // Result shape: Equal(y, Mul(Pow(x, 1/2), polynomial)).
+        assert!(s.contains("Pow(x, 1/2)"), "expected x^(1/2) in: {s}");
+        // a_1 = 1/5 appears as the literal 1/5 inside Mul(1/5, x).
+        assert!(s.contains("Mul(1/5, x)"), "expected a_1 = 1/5 in: {s}");
+        // a_2 = 1/70 appears as the literal 1/70 inside Mul(1/70, x^2).
+        assert!(s.contains("Mul(1/70, Pow(x, 2))"), "expected a_2 = 1/70 in: {s}");
+        // Must NOT match any named family.
+        assert!(!s.contains("BesselJ") && !s.contains("LegendreP"));
+    }
+
+    #[test]
+    fn c2_frobenius_direct_helper_produces_expected_first_coefficients() {
+        // Same ODE as above; call the helper directly and walk the IR.
+        let x_sq = pow(x(), int(2));
+        let expr = add(
+            mul(mul(int(2), x_sq), yd()),
+            add(
+                mul(mul(int(3), x()), yp()),
+                neg(mul(add(int(1), x()), y())),
+            ),
+        );
+        let result = try_frobenius_series_n(&expr, &y(), &x(), 4).unwrap();
+        // Equal(y, Mul(Pow(x, 1/2), Add(...)))
+        let IRNode::Apply(eq) = result else { panic!("expected Equal apply"); };
+        assert_eq!(eq.head, sym(EQUAL));
+        let series = eq.args[1].clone();
+        let IRNode::Apply(mul_node) = series else { panic!("expected Mul"); };
+        assert_eq!(mul_node.head, sym(MUL));
+        // First arg: Pow(x, 1/2).
+        let IRNode::Apply(pow_node) = mul_node.args[0].clone() else { panic!("expected Pow"); };
+        assert_eq!(pow_node.head, sym(POW));
+        assert_eq!(pow_node.args[0], x());
+        assert_eq!(pow_node.args[1], rat(1, 2));
+    }
+
+    #[test]
+    fn c2_frobenius_bails_on_integer_difference_roots() {
+        // x²y'' − xy' = 0:  F(r) = r² − 2r  →  roots r=2, r=0; differ by 2.
+        // Direct helper must return None (logarithmic case).
+        let x_sq = pow(x(), int(2));
+        let expr = sub(mul(x_sq, yd()), mul(x(), yp()));
+        assert!(try_frobenius_series(&expr, &y(), &x()).is_none());
+    }
+
+    #[test]
+    fn c2_frobenius_bails_on_equal_indicial_roots() {
+        // x²y'' + xy' = 0:  F(r) = r²  →  repeated root r=0.
+        let x_sq = pow(x(), int(2));
+        let expr = add(mul(x_sq, yd()), mul(x(), yp()));
+        assert!(try_frobenius_series(&expr, &y(), &x()).is_none());
+    }
+
+    #[test]
+    fn c2_frobenius_bails_on_irregular_singular_point() {
+        // x³y'' + y = 0:  order of vanishing of P at 0 is 3 > 2 — irregular.
+        let x_cubed = pow(x(), int(3));
+        let expr = add(mul(x_cubed, yd()), y());
+        assert!(try_frobenius_series(&expr, &y(), &x()).is_none());
+    }
+
+    #[test]
+    fn c2_frobenius_bails_on_regular_point() {
+        // y'' + y = 0 — constant-coefficient; x=0 is a regular (non-singular) point.
+        let expr = add(yd(), y());
+        assert!(try_frobenius_series(&expr, &y(), &x()).is_none());
     }
 }

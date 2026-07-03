@@ -1,0 +1,7 @@
+{
+ "idx": 78,
+ "id": "IMM-9",
+ "scenario": "Rosa is 58 years old at the time she files for naturalization and has been a lawful permanent resident for 22 years.",
+ "policy": "Every applicant for naturalization must pass an English language and U.S. civics examination, except an applicant who is over 50 years of age at the time of filing AND has lived as a lawful permanent resident in the country for at least 20 years, who is exempt from the English requirement.",
+ "question": "Is Rosa required to take the English language examination?"
+}

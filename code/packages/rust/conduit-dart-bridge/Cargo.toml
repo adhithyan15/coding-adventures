@@ -1,0 +1,17 @@
+[package]
+name = "conduit-dart-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Dart FFI bridge for conduit-capi: enables safe cross-thread callbacks via Dart_PostCObject_DL"
+publish = false
+
+[lib]
+# cdylib   — loaded by Dart at runtime via dart:ffi
+# staticlib — for Haskell c2hs or C-level linking if needed
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+conduit-capi = { path = "../conduit-capi" }
+
+[build-dependencies]
+cc = "1"

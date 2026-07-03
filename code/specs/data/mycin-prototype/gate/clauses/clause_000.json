@@ -1,0 +1,7 @@
+{
+ "idx": 0,
+ "key": "bacterial_meningitis::prior",
+ "lr": 0.037,
+ "computed": "prevalence = n_bacterial/n_pleocytosis = 121/3295 = 0.037",
+ "byte_quote": "Among 3295 patients with CSF pleocytosis, 121 (3.7%; 95% confidence interval [CI], 3.1%-4.4%) had bacterial meningitis and 3174 (96.3%; 95% CI, 95.5%-96.9%) had aseptic meningitis."
+}

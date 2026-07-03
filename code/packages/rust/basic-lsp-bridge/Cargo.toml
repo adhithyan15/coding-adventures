@@ -1,0 +1,14 @@
+[package]
+name = "basic-lsp-bridge"
+version = "0.2.0"
+edition = "2021"
+description = "BASIC-LSP01 + BASIC-FMT01 — Dartmouth BASIC instantiation of grammar-lsp-bridge; provides basic_language_spec() and the basic-lsp-server binary.  v0.2.0 wires basic-formatter so textDocument/formatting becomes a real LSP capability."
+
+[dependencies]
+grammar-lsp-bridge      = { path = "../grammar-lsp-bridge" }
+coding-adventures-ls00  = { path = "../ls00" }
+basic-formatter         = { path = "../basic-formatter" }
+
+[[bin]]
+name = "basic-lsp-server"
+path = "bin/basic_lsp_server.rs"

@@ -6,6 +6,14 @@ use std::collections::{BTreeMap, HashMap};
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
 const WHATWG_HEAD_BODY_AUDIT: &str = include_str!("fixtures/whatwg-head-body-audit.json");
+const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
+    ("scripted-adoption01-dat-1", "head-text-mode"),
+    ("scripted-webkit01-dat-1", "head-text-mode"),
+    ("scripted-webkit01-dat-2", "head-text-mode"),
+    ("tests26-dat-4", "body-boundary"),
+    ("tests26-dat-1251", "body-boundary"),
+    ("tricky01-dat-3", "body-boundary"),
+];
 
 #[derive(Debug, Deserialize)]
 struct HeadBodyAuditSuite {
@@ -67,6 +75,46 @@ fn whatwg_head_body_audit_cases_match_parser_dom_dump() {
             actual, source_case.document,
             "case `{}` ({}) failed for input {:?}",
             case.id, case.axis, source_case.data
+        );
+    }
+}
+
+#[test]
+fn whatwg_head_body_audit_tracks_post_parse_repair_evidence() {
+    let suite = load_suite();
+    let audit_cases = suite
+        .cases
+        .iter()
+        .map(|case| (case.id.as_str(), case))
+        .collect::<HashMap<_, _>>();
+    let smoke_cases = parse_tree_construction_cases(TREE_CONSTRUCTION_SMOKE)
+        .into_iter()
+        .map(|case| (case.source.clone(), case))
+        .collect::<HashMap<_, _>>();
+
+    for (case_id, expected_axis) in POST_PARSE_REPAIR_EVIDENCE {
+        let audit_case = audit_cases.get(case_id).unwrap_or_else(|| {
+            panic!("post-parse repair evidence case `{case_id}` should be audited")
+        });
+        assert_eq!(
+            audit_case.axis, *expected_axis,
+            "post-parse repair evidence case `{case_id}` should stay on its focused audit axis"
+        );
+
+        let source_case = smoke_cases
+            .get(&audit_case.source)
+            .unwrap_or_else(|| panic!("case `{case_id}` should exist in smoke fixture"));
+        let actual = actual_dom_dump_for_tree_case(source_case).unwrap_or_else(|error| {
+            panic!(
+                "case `{}` ({}) parse failed: {error}",
+                audit_case.id, audit_case.axis
+            )
+        });
+
+        assert_eq!(
+            actual, source_case.document,
+            "post-parse repair evidence case `{}` ({}) failed for input {:?}",
+            audit_case.id, audit_case.axis, source_case.data
         );
     }
 }

@@ -23,7 +23,11 @@
 
 use std::collections::{HashMap, HashSet};
 
-use cas_factor::factor_integer_polynomial;
+use cas_factor::{
+    factor_integer_polynomial, try_bivariate_hensel, try_n_variate_hensel,
+    BiPoly as HenselBiPoly, NPoly as HenselNPoly, Rat as HenselRat,
+};
+use cas_simplify::AssumptionContext;
 use symbolic_ir::{
     IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH,
     CSCH, D, DEFINE, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL,
@@ -1510,15 +1514,15 @@ fn derivative_handler() -> Handler {
 
 // ---------------------------------------------------------------------------
 // Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
-// ∫ c/(a + b·cos(x)) dx with rational a, b satisfying a² > b² (a > 0 for cos).
+// ∫ c/(a + b·cos(x)) dx with rational a, b satisfying a² > b².
 // Mirrors Python symbolic-vm 0.59.0 and TypeScript symbolic-vm 0.7.0.
 //
 // Closed forms:
 //   ∫ 1/(a + b·sin x) dx = (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
 //   ∫ 1/(a + b·cos x) dx = (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
 //
-// Discriminant cases a² ≤ b² and a ≤ 0 for cos are deferred — they need
-// sign analysis the assumption-free port cannot perform symbolically.
+// Symbolic-coefficient discriminant cases are deferred — they need sign
+// analysis the assumption-free port cannot perform symbolically.
 // ---------------------------------------------------------------------------
 
 /// Convert an IRNode to a `RatC` rational if it's an Integer or Rational
@@ -1731,6 +1735,9 @@ fn weierstrass_parse_a_plus_b_sincos(
     node: &IRNode,
     x: &str,
 ) -> Option<(RatC, RatC, &'static str, RatC, RatC)> {
+    if let Some((b, head, alpha, beta)) = weierstrass_parse_const_times_trig_linear(node, x) {
+        return Some(((0, 1), b, head, alpha, beta));
+    }
     let IRNode::Apply(apply) = node else {
         return None;
     };
@@ -1841,9 +1848,9 @@ fn try_weierstrass_degenerate(
 }
 
 /// Phase 36: Weierstrass log form for `a² < b²`.  Returns the closed
-/// form with `log|·|` instead of `arctan(·)`.  Sin branch handles any
-/// nonzero `a`; cos branch requires `b > |a|` strictly (the symmetric
-/// `b < −|a|` case has the opposite sign pattern and is deferred).
+/// form with `log|·|` instead of `arctan(·)`.  The `a = 0` sin/csc
+/// subcase closes as `(c/b)·log|tan(x/2)|`; the cos branch handles both
+/// sign regimes via the Abs-wrapped Phase 37 form.
 fn try_weierstrass_log_form(
     c: RatC,
     a: RatC,
@@ -1867,8 +1874,11 @@ fn try_weierstrass_log_form(
     );
     if trig_head == SIN {
         if a.0 == 0 {
-            // 1/(b·sin x) — defer to the elementary table.
-            return None;
+            // ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|.  Any linear argument
+            // scaling has already been absorbed into c by the dispatcher.
+            let coef_ir = rc_to_ir(rc_div(c, b)?)?;
+            let log_arg = apply_node("Abs", vec![tan_half]);
+            return Some(apply_node(MUL, vec![coef_ir, apply_node(LOG, vec![log_arg])]));
         }
         // log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
         let a_tan = apply_node(MUL, vec![rc_to_ir(a)?, tan_half]);
@@ -1938,6 +1948,7 @@ fn try_weierstrass_one_over_linear_trig(
         TAN,
         vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
     );
+    let mut coef_sign: RatC = (1, 1);
     let atan_arg = if trig_head == SIN {
         // (a·tan(x/2) + b) / √disc
         let a_ir = rc_to_ir(a_rc)?;
@@ -1948,9 +1959,10 @@ fn try_weierstrass_one_over_linear_trig(
         );
         apply_node(DIV, vec![top, sqrt_disc_ir.clone()])
     } else {
-        // cos branch — require a > 0 to avoid sign-flip.
-        if a_rc.0 <= 0 {
-            return None;
+        // cos branch — a < 0 uses the same atan argument, but the
+        // denominator quadratic has an overall negative factor.
+        if a_rc.0 < 0 {
+            coef_sign = (-1, 1);
         }
         let ratio = rc_div(rc_sub(a_rc, b_rc)?, rc_add(a_rc, b_rc)?)?;
         if ratio.0 <= 0 {
@@ -1960,9 +1972,401 @@ fn try_weierstrass_one_over_linear_trig(
         apply_node(MUL, vec![sqrt_ratio_ir, tan_half])
     };
     // Outer coefficient: 2c / √disc
-    let two_c = rc_mul(c_rc, (2, 1))?;
+    let two_c = rc_mul(rc_mul(c_rc, (2, 1))?, coef_sign)?;
     let coef_ir = apply_node(DIV, vec![rc_to_ir(two_c)?, sqrt_disc_ir]);
     Some(apply_node(MUL, vec![coef_ir, apply_node(ATAN, vec![atan_arg])]))
+}
+
+// ---------------------------------------------------------------------------
+// Track G2 — symbolic-coefficient Weierstrass lift (Rust port).
+//
+// The numeric helpers above parse `a, b` as `RatC` and bail out when
+// either is not a rational literal.  Track G2 generalises them: when
+// the numeric path returns `None` because `a` and/or `b` is a free IR
+// symbol (or any non-numeric IR expression), we re-parse the
+// integrand keeping `a, b` as IR nodes (`α, β, c` stay rational), then
+// consult `vm.assumptions` for the sign of the discriminant
+// `a² − b²` to decide which closed form to emit:
+//
+//   disc > 0 → arctan form with Sqrt(a²−b²)
+//   disc < 0 → log form with Sqrt(b²−a²)
+//   disc = 0 → degenerate rational-in-tan(arg/2) form
+//   no fact  → return None (integrator leaves it unevaluated)
+//
+// Linear-argument lifting `α·x + β` composes unchanged because the
+// inner substitution `u = tan(arg/2)` depends only on `α, β` (which
+// stay rational).
+//
+// `integrate` is a pure function with no `&VM` argument, and
+// threading one through ~30 call sites would be invasive.  Instead
+// we publish the live assumption store via a `thread_local!` mirror
+// of Python's `_CURRENT_VM` ContextVar.  `integrate_handler` clones
+// the `AssumptionContext` into the thread-local for the duration of
+// one evaluation; an RAII guard restores the previous value on Drop
+// so nested integrals (and panics) cannot strand it.
+// ---------------------------------------------------------------------------
+
+thread_local! {
+    /// Live assumption store published by `integrate_handler` for the
+    /// duration of one `Integrate(...)` evaluation.
+    static CURRENT_ASSUMPTIONS: std::cell::RefCell<Option<AssumptionContext>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// RAII guard that restores the previous current-assumptions value on
+/// Drop.  Mirrors Python's `_CURRENT_VM.reset(_vm_token)` in the
+/// `finally` clause.
+struct AssumptionGuard {
+    previous: Option<AssumptionContext>,
+}
+
+impl AssumptionGuard {
+    fn install(new: AssumptionContext) -> Self {
+        let previous = CURRENT_ASSUMPTIONS.with(|slot| slot.borrow_mut().replace(new));
+        Self { previous }
+    }
+}
+
+impl Drop for AssumptionGuard {
+    fn drop(&mut self) {
+        CURRENT_ASSUMPTIONS.with(|slot| {
+            *slot.borrow_mut() = self.previous.take();
+        });
+    }
+}
+
+/// Match `c·sin(α·x+β)` / `c·cos(α·x+β)` returning `c` as an IR node
+/// (instead of a `RatC`).  Only the outer scalar `c` is allowed to be
+/// symbolic; `α, β` stay rational because that's what makes the
+/// Weierstrass substitution composable in closed form.
+fn weierstrass_parse_const_times_trig_linear_symbolic(
+    node: &IRNode,
+    x: &str,
+) -> Option<(IRNode, &'static str, RatC, RatC)> {
+    if let IRNode::Apply(apply) = node {
+        if apply.args.len() == 1 {
+            let head_str = if apply.head == IRNode::Symbol(SIN.to_string()) {
+                Some(SIN)
+            } else if apply.head == IRNode::Symbol(COS.to_string()) {
+                Some(COS)
+            } else {
+                None
+            };
+            if let Some(head) = head_str {
+                if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(&apply.args[0], x) {
+                    return Some((IRNode::Integer(1), head, alpha, beta));
+                }
+            }
+        }
+        if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
+            let (a, b) = (&apply.args[0], &apply.args[1]);
+            for (const_side, trig_side) in [(a, b), (b, a)] {
+                if depends_on(const_side, x) {
+                    continue;
+                }
+                let IRNode::Apply(trig) = trig_side else {
+                    continue;
+                };
+                if trig.args.len() != 1 {
+                    continue;
+                }
+                let head_str = if trig.head == IRNode::Symbol(SIN.to_string()) {
+                    Some(SIN)
+                } else if trig.head == IRNode::Symbol(COS.to_string()) {
+                    Some(COS)
+                } else {
+                    None
+                };
+                let Some(head) = head_str else { continue };
+                if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(&trig.args[0], x) {
+                    return Some((const_side.clone(), head, alpha, beta));
+                }
+            }
+        }
+        if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
+            if let Some((c, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(&apply.args[0], x)
+            {
+                return Some((apply_node(NEG, vec![c]), head, alpha, beta));
+            }
+        }
+    }
+    None
+}
+
+/// Symbolic-coefficient sibling of [`weierstrass_parse_a_plus_b_sincos`].
+/// Parses `a + b·sin(α·x+β)` / `a + b·cos(α·x+β)` (any operand order,
+/// ADD or SUB) into `(a, b, head_str, α, β)` where `a` and `b` are IR
+/// nodes free of `x` and `α, β` are rational with `α ≠ 0`.
+fn weierstrass_parse_a_plus_b_sincos_symbolic(
+    node: &IRNode,
+    x: &str,
+) -> Option<(IRNode, IRNode, &'static str, RatC, RatC)> {
+    if let Some((b, head, alpha, beta)) =
+        weierstrass_parse_const_times_trig_linear_symbolic(node, x)
+    {
+        return Some((IRNode::Integer(0), b, head, alpha, beta));
+    }
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    if apply.args.len() != 2 {
+        return None;
+    }
+    let (left, right) = (&apply.args[0], &apply.args[1]);
+    if apply.head == IRNode::Symbol(ADD.to_string()) {
+        for (const_side, trig_side) in [(left, right), (right, left)] {
+            if depends_on(const_side, x) {
+                continue;
+            }
+            if let Some((b_node, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(trig_side, x)
+            {
+                return Some((const_side.clone(), b_node, head, alpha, beta));
+            }
+        }
+        return None;
+    }
+    if apply.head == IRNode::Symbol(SUB.to_string()) {
+        // `a − b·trig(...)` → `(a, −b, head, α, β)`.
+        if !depends_on(left, x) {
+            if let Some((b_node, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(right, x)
+            {
+                return Some((
+                    left.clone(),
+                    apply_node(NEG, vec![b_node]),
+                    head,
+                    alpha,
+                    beta,
+                ));
+            }
+        }
+        // `b·trig(...) − a` → `(−a, b, head, α, β)`.
+        if !depends_on(right, x) {
+            if let Some((b_node, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(left, x)
+            {
+                return Some((
+                    apply_node(NEG, vec![right.clone()]),
+                    b_node,
+                    head,
+                    alpha,
+                    beta,
+                ));
+            }
+        }
+    }
+    None
+}
+
+/// Build `Pow(node, 2)`.
+fn ir_square(node: &IRNode) -> IRNode {
+    apply_node(POW, vec![node.clone(), IRNode::Integer(2)])
+}
+
+/// Symbolic-coefficient arctan branch (a² > b²).
+fn try_weierstrass_arctan_symbolic(
+    c_scaled: IRNode,
+    a: &IRNode,
+    b: &IRNode,
+    trig_head: &'static str,
+    arg_node: &IRNode,
+) -> IRNode {
+    let disc = apply_node(SUB, vec![ir_square(a), ir_square(b)]);
+    let sqrt_disc = apply_node(SQRT, vec![disc]);
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
+    );
+    let atan_arg_top = if trig_head == SIN {
+        // (a·tan(arg/2) + b)
+        apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a.clone(), tan_half]), b.clone()],
+        )
+    } else {
+        // (a − b)·tan(arg/2)
+        apply_node(
+            MUL,
+            vec![apply_node(SUB, vec![a.clone(), b.clone()]), tan_half],
+        )
+    };
+    let atan_arg = apply_node(DIV, vec![atan_arg_top, sqrt_disc.clone()]);
+    let coef = apply_node(
+        DIV,
+        vec![apply_node(MUL, vec![IRNode::Integer(2), c_scaled]), sqrt_disc],
+    );
+    apply_node(MUL, vec![coef, apply_node(ATAN, vec![atan_arg])])
+}
+
+/// Symbolic-coefficient log branch (a² < b²).
+fn try_weierstrass_log_symbolic(
+    c_scaled: IRNode,
+    a: &IRNode,
+    b: &IRNode,
+    trig_head: &'static str,
+    arg_node: &IRNode,
+) -> IRNode {
+    let neg_disc = apply_node(SUB, vec![ir_square(b), ir_square(a)]);
+    let sqrt_neg_disc = apply_node(SQRT, vec![neg_disc]);
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
+    );
+    let (numer, denom) = if trig_head == SIN {
+        let a_tan = apply_node(MUL, vec![a.clone(), tan_half]);
+        let a_tan_plus_b = apply_node(ADD, vec![a_tan, b.clone()]);
+        let numer = apply_node(SUB, vec![a_tan_plus_b.clone(), sqrt_neg_disc.clone()]);
+        let denom = apply_node(ADD, vec![a_tan_plus_b, sqrt_neg_disc.clone()]);
+        (numer, denom)
+    } else {
+        let bma = apply_node(SUB, vec![b.clone(), a.clone()]);
+        let bma_tan = apply_node(MUL, vec![bma, tan_half]);
+        let numer = apply_node(ADD, vec![sqrt_neg_disc.clone(), bma_tan.clone()]);
+        let denom = apply_node(SUB, vec![sqrt_neg_disc.clone(), bma_tan]);
+        (numer, denom)
+    };
+    let log_arg = apply_node("Abs", vec![apply_node(DIV, vec![numer, denom])]);
+    let coef = apply_node(DIV, vec![c_scaled, sqrt_neg_disc]);
+    apply_node(MUL, vec![coef, apply_node(LOG, vec![log_arg])])
+}
+
+/// Symbolic-coefficient degenerate branch (a² = b²).
+fn try_weierstrass_degenerate_symbolic(
+    c_scaled: IRNode,
+    a: &IRNode,
+    b: &IRNode,
+    trig_head: &'static str,
+    arg_node: &IRNode,
+) -> IRNode {
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
+    );
+    let a_plus_b = apply_node(ADD, vec![a.clone(), b.clone()]);
+    let a_minus_b = apply_node(SUB, vec![a.clone(), b.clone()]);
+    if trig_head == SIN {
+        // −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+        let numer = apply_node(MUL, vec![IRNode::Integer(-2), c_scaled]);
+        let denom = apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a_plus_b, tan_half]), a_minus_b],
+        );
+        apply_node(DIV, vec![numer, denom])
+    } else {
+        // 2·c·tan(arg/2) / ( (a−b)·tan²(arg/2) + (a+b) )
+        let tan_sq = apply_node(POW, vec![tan_half.clone(), IRNode::Integer(2)]);
+        let numer = apply_node(
+            MUL,
+            vec![apply_node(MUL, vec![IRNode::Integer(2), c_scaled]), tan_half],
+        );
+        let denom = apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a_minus_b, tan_sq]), a_plus_b],
+        );
+        apply_node(DIV, vec![numer, denom])
+    }
+}
+
+/// Did the user pin down `a² > b²` (disc > 0)?  Probes both the
+/// natural `a² > b²` and the canonical-against-zero `a² − b² > 0`
+/// surface forms.
+fn assumption_says_disc_positive(
+    assumptions: &AssumptionContext,
+    a: &IRNode,
+    b: &IRNode,
+) -> bool {
+    let a_sq = ir_square(a);
+    let b_sq = ir_square(b);
+    let disc = apply_node(SUB, vec![a_sq.clone(), b_sq.clone()]);
+    assumptions.is_true_relation(&apply_node(GREATER, vec![a_sq, b_sq])) == Some(true)
+        || assumptions.is_true_relation(&apply_node(GREATER, vec![disc, IRNode::Integer(0)]))
+            == Some(true)
+}
+
+fn assumption_says_disc_negative(
+    assumptions: &AssumptionContext,
+    a: &IRNode,
+    b: &IRNode,
+) -> bool {
+    let a_sq = ir_square(a);
+    let b_sq = ir_square(b);
+    let disc = apply_node(SUB, vec![a_sq.clone(), b_sq.clone()]);
+    assumptions.is_true_relation(&apply_node(LESS, vec![a_sq, b_sq])) == Some(true)
+        || assumptions.is_true_relation(&apply_node(LESS, vec![disc, IRNode::Integer(0)]))
+            == Some(true)
+}
+
+fn assumption_says_disc_zero(
+    assumptions: &AssumptionContext,
+    a: &IRNode,
+    b: &IRNode,
+) -> bool {
+    let a_sq = ir_square(a);
+    let b_sq = ir_square(b);
+    let disc = apply_node(SUB, vec![a_sq.clone(), b_sq.clone()]);
+    assumptions.is_true_relation(&apply_node(EQUAL, vec![a_sq, b_sq])) == Some(true)
+        || assumptions.is_true_relation(&apply_node(EQUAL, vec![disc, IRNode::Integer(0)]))
+            == Some(true)
+}
+
+/// Track G2 entry point.  Mirrors the numeric
+/// [`try_weierstrass_one_over_linear_trig`] but accepts non-numeric
+/// `a, b`.  Returns `None` when the shape doesn't match, the
+/// numerator depends on `x`, no assumption store is available
+/// (called outside `integrate_handler`), or no assumption pins down
+/// the discriminant sign.
+fn try_weierstrass_symbolic_coefficients(f: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    if apply.head != IRNode::Symbol(DIV.to_string()) || apply.args.len() != 2 {
+        return None;
+    }
+    let (num, den) = (&apply.args[0], &apply.args[1]);
+    if depends_on(num, x) {
+        return None;
+    }
+    let (a, b, trig_head, alpha, beta) = weierstrass_parse_a_plus_b_sincos_symbolic(den, x)?;
+    if alpha.0 == 0 {
+        return None;
+    }
+    // Numeric path would already have closed the integral when both
+    // `a` and `b` are rational; bail out so we don't emit a second
+    // (potentially uglier) result.
+    if node_to_rc(&a).is_some() && node_to_rc(&b).is_some() {
+        return None;
+    }
+    // u = α·x + β; numerator scales by 1/α.
+    let one_over_alpha = rc(alpha.1, alpha.0)?;
+    let c_scaled = if rc_is_one(one_over_alpha) {
+        num.clone()
+    } else {
+        apply_node(MUL, vec![rc_to_ir(one_over_alpha)?, num.clone()])
+    };
+    let arg_node = weierstrass_build_linear_arg_ir(alpha, beta, x)?;
+    // Snapshot the current-assumptions thread-local.  We only need a
+    // read-only view, but the slot stores an owned
+    // `AssumptionContext`; we clone — cheap because each `Integrate`
+    // call only does this once.
+    let assumptions = CURRENT_ASSUMPTIONS.with(|slot| slot.borrow().clone())?;
+    if assumption_says_disc_positive(&assumptions, &a, &b) {
+        return Some(try_weierstrass_arctan_symbolic(
+            c_scaled, &a, &b, trig_head, &arg_node,
+        ));
+    }
+    if assumption_says_disc_negative(&assumptions, &a, &b) {
+        return Some(try_weierstrass_log_symbolic(
+            c_scaled, &a, &b, trig_head, &arg_node,
+        ));
+    }
+    if assumption_says_disc_zero(&assumptions, &a, &b) {
+        return Some(try_weierstrass_degenerate_symbolic(
+            c_scaled, &a, &b, trig_head, &arg_node,
+        ));
+    }
+    None
 }
 
 fn integrate_handler() -> Handler {
@@ -1980,6 +2384,13 @@ fn integrate_handler() -> Handler {
             _ => return IRNode::Apply(Box::new(expr)),
         };
 
+        // Track G2: publish a snapshot of the VM's assumption store
+        // for helpers that consult it (currently:
+        // `try_weierstrass_symbolic_coefficients`).  The guard
+        // restores the previous value on Drop so nested calls and
+        // panics can't strand the thread-local.
+        let _assumption_guard = AssumptionGuard::install(vm.assumptions.clone());
+
         if expr.args.len() == 4 {
             if let Some(result) = complete_elliptic_first_kind(&f, &x, &expr.args[2], &expr.args[3]) {
                 return vm.eval(result);
@@ -1994,8 +2405,15 @@ fn integrate_handler() -> Handler {
         }
 
         let result = integrate(&f, &x);
-        let original = apply_node(INTEGRATE, vec![f, IRNode::Symbol(x)]);
+        let original = apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.clone())]);
         if result == original {
+            // Track E2: generic tabular IBP fallback.  Fires after every
+            // shape-specific handler in `integrate` returned the original
+            // unevaluated `Integrate(...)` form.  Mirrors the Python
+            // ``try_ibp_tabular`` hook in ``integrate.py``.
+            if let Some(ibp_result) = try_ibp_tabular(&f, &x, vm) {
+                return vm.eval(ibp_result);
+            }
             result
         } else {
             vm.eval(result)
@@ -2034,6 +2452,14 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         return apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]);
     };
 
+    if let Some(result) = try_erf_integral(f, x) {
+        return result;
+    }
+
+    if let Some(result) = try_fresnel_integral(f, x) {
+        return result;
+    }
+
     match (head.as_str(), apply.args.as_slice()) {
         (ADD, [a, b]) => apply_node(ADD, vec![integrate(a, x), integrate(b, x)]),
         (SUB, [a, b]) => apply_node(SUB, vec![integrate(a, x), integrate(b, x)]),
@@ -2045,8 +2471,13 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         }
         // Phase 34: Weierstrass substitution for c / (a + b·sin/cos(x))
         // when c, a, b are rational and a² > b² (and a > 0 for the cos case).
+        // Track G2: symbolic-coefficient Weierstrass — fires only when
+        // the numeric path returns None and `vm.assumptions` records a
+        // sign for `a² − b²`.  Mirrors the Python helper at
+        // `symbolic_vm/integrate.py`.
         (DIV, [c, denom]) if !depends_on(c, x) => {
             try_weierstrass_one_over_linear_trig(c, denom, x)
+                .or_else(|| try_weierstrass_symbolic_coefficients(f, x))
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
         (POW, [base, exponent]) if base == &IRNode::Symbol(x.to_string()) => {
@@ -2098,6 +2529,8 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
                 _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
             }
         }
+        (POW, [base, exponent]) => try_recip_hyp_power(base, exponent, x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         // Phase 27: ∫ sin(log(x)) dx and ∫ cos(log(x)) dx (k=0 direct forms).
         (SIN, [inner]) if is_log_of_x(inner, x) => trig_log_integral(SIN, 0, x),
         (COS, [inner]) if is_log_of_x(inner, x) => trig_log_integral(COS, 0, x),
@@ -2107,24 +2540,267 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             .or_else(|| try_log_power_product(b, a, x))
             .or_else(|| try_trig_log_product(a, b, x))
             .or_else(|| try_trig_log_product(b, a, x))
+            .or_else(|| try_asin_acos_poly_product(a, b, x))
+            .or_else(|| try_asin_acos_poly_product(b, a, x))
+            .or_else(|| try_sinh_cosh_poly_product(a, b, x))
+            .or_else(|| try_sinh_cosh_poly_product(b, a, x))
+            .or_else(|| try_asinh_acosh_poly_product(a, b, x))
+            .or_else(|| try_asinh_acosh_poly_product(b, a, x))
             .or_else(|| try_log_poly_product(a, b, x))
             .or_else(|| try_log_poly_product(b, a, x))
             .or_else(|| try_atan_poly_product(a, b, x))
             .or_else(|| try_atan_poly_product(b, a, x))
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
-        // Phase 28: bare ∫ log(Q(x)) dx and ∫ atan(Q(x)) dx for non-linear Q.
-        // The simple arms (LOG, [inner]) and (ATAN, [inner]) above already captured
-        // the x-equals-inner case; these arms fire when Q depends on x but is non-linear.
+        // Phase 28: bare ∫ log(Q(x)) dx for non-linear Q, plus bare
+        // ∫ atan(Q(x)) dx for linear (Phase 11) and non-linear (Phase 28) Q.
+        // The simple LOG arm above already captured the x-equals-inner case.
         (LOG, [q_ir]) if depends_on(q_ir, x) && !is_linear_in(q_ir, x) => {
             try_log_poly_product(f, &IRNode::Integer(1), x)
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
-        (ATAN, [q_ir]) if depends_on(q_ir, x) && !is_linear_in(q_ir, x) => {
+        (ATAN, [q_ir]) if depends_on(q_ir, x) => {
             try_atan_poly_product(f, &IRNode::Integer(1), x)
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
+        (ASIN, [_]) | (ACOS, [_]) => try_asin_acos_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (SINH, [_]) | (COSH, [_]) => try_sinh_cosh_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (ASINH, [_]) | (ACOSH, [_]) => try_asinh_acosh_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (COTH, [_]) | (SECH, [_]) | (CSCH, [_]) => try_recip_hyp_linear(f, x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (TANH, [_]) | (ATANH, [_]) => try_tanh_atanh_linear(f, x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
     }
+}
+
+// ---------------------------------------------------------------------------
+// Track E2 — Generic tabular integration-by-parts fallback.
+//
+// Mirrors `ibp_tabular.py` from the Python reference (Track E1).  When
+// every shape-specific handler in `integrate` returned the original
+// unevaluated `Integrate(...)` form, this fallback makes a last-ditch
+// attempt by **generic tabular IBP**:
+//
+//   For ``f = u(x) · w(x)`` where ``u`` is polynomial in ``x``:
+//     ∫ u·w dx = Σ_{k=0}^{N-1} (-1)^k · u^(k)(x) · I^(k+1)(w)
+//
+// where N = deg(u) + 1.  The I-column entries ``∫w, ∫∫w, ..., ∫^N w``
+// come from recursive ``integrate``; if any step fails to close, the
+// partition is abandoned.  Bounded by `IBP_MAX_FACTORS` (5) and
+// `IBP_MAX_POLY_DEGREE` (8).
+// ---------------------------------------------------------------------------
+
+const IBP_MAX_FACTORS: usize = 5;
+const IBP_MAX_POLY_DEGREE: usize = 8;
+
+/// Flatten a (possibly nested-binary) `Mul` tree into a list of leaves.
+/// `Mul(a, Mul(b, Mul(c, d)))` → `[a, b, c, d]`.  Without flattening the
+/// IBP search would miss splits like `u = a·c, w = b·d` purely because
+/// the parse tree happened to group differently.
+fn ibp_flatten_mul(node: &IRNode) -> Vec<IRNode> {
+    if let IRNode::Apply(apply) = node {
+        if apply.head == IRNode::Symbol(MUL.to_string()) {
+            let mut out = Vec::new();
+            for arg in &apply.args {
+                out.extend(ibp_flatten_mul(arg));
+            }
+            return out;
+        }
+    }
+    vec![node.clone()]
+}
+
+/// Rebuild a left-associative `Mul` chain from a list of factors.  Empty
+/// list → `1`; single factor returns itself.
+fn ibp_multiply_ir(factors: &[IRNode]) -> IRNode {
+    if factors.is_empty() {
+        return IRNode::Integer(1);
+    }
+    if factors.len() == 1 {
+        return factors[0].clone();
+    }
+    let mut acc = factors[0].clone();
+    for f in &factors[1..] {
+        acc = apply_node(MUL, vec![acc, f.clone()]);
+    }
+    acc
+}
+
+/// Polynomial degree of `node` in `x`.  Returns `Some(-1)` for the zero
+/// polynomial, `Some(d)` for degree-d polynomials, `None` for anything
+/// outside Q[x].  Mirrors Python `_polynomial_degree`.
+fn ibp_polynomial_degree(node: &IRNode, x: &str) -> Option<i64> {
+    let (num, den) = to_rational_ir(node, x)?;
+    if rp_normalize(&den).len() > 1 {
+        return None; // rational, not polynomial in x
+    }
+    let n = rp_normalize(&num);
+    if n.is_empty() {
+        Some(-1) // zero
+    } else {
+        Some((n.len() - 1) as i64)
+    }
+}
+
+/// True if `node` contains any unevaluated `Integrate(...)` sub-tree.
+fn ibp_contains_integrate(node: &IRNode) -> bool {
+    if let IRNode::Apply(apply) = node {
+        if apply.head == IRNode::Symbol(INTEGRATE.to_string()) {
+            return true;
+        }
+        return apply.args.iter().any(ibp_contains_integrate);
+    }
+    false
+}
+
+/// True iff `node` canonicalises to the integer literal `0`.  Also
+/// recognises `Neg(0)`.
+fn ibp_is_zero(node: &IRNode) -> bool {
+    match node {
+        IRNode::Integer(0) => true,
+        IRNode::Apply(apply) => {
+            apply.head == IRNode::Symbol(NEG.to_string())
+                && apply.args.len() == 1
+                && ibp_is_zero(&apply.args[0])
+        }
+        _ => false,
+    }
+}
+
+/// Enumerate k-element subsets of `[0, n)`.
+fn ibp_combinations(n: usize, k: usize) -> Vec<Vec<usize>> {
+    let mut out = Vec::new();
+    let mut pick = Vec::new();
+    fn walk(start: usize, n: usize, k: usize, pick: &mut Vec<usize>, out: &mut Vec<Vec<usize>>) {
+        if pick.len() == k {
+            out.push(pick.clone());
+            return;
+        }
+        for i in start..n {
+            pick.push(i);
+            walk(i + 1, n, k, pick, out);
+            pick.pop();
+        }
+    }
+    walk(0, n, k, &mut pick, &mut out);
+    out
+}
+
+/// Attempt generic tabular IBP on a `Mul`-shaped integrand.  Returns the
+/// closed-form antiderivative as IR, or `None` when no viable `(u, w)`
+/// split was found.
+fn try_ibp_tabular(f: &IRNode, x: &str, vm: &mut VM) -> Option<IRNode> {
+    // Only fires on Mul — every other shape has dedicated handlers.
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    if apply.head != IRNode::Symbol(MUL.to_string()) {
+        return None;
+    }
+    let factors = ibp_flatten_mul(f);
+    if factors.len() < 2 || factors.len() > IBP_MAX_FACTORS {
+        return None;
+    }
+    let n = factors.len();
+    // Prefer smaller `u` first — tabular IBP is most efficient when `u`
+    // is low-degree.
+    for u_size in 1..n {
+        for u_idx in ibp_combinations(n, u_size) {
+            let u_set: HashSet<usize> = u_idx.into_iter().collect();
+            let mut u_factors: Vec<IRNode> = Vec::new();
+            let mut w_factors: Vec<IRNode> = Vec::new();
+            for (i, factor) in factors.iter().enumerate() {
+                if u_set.contains(&i) {
+                    u_factors.push(factor.clone());
+                } else {
+                    w_factors.push(factor.clone());
+                }
+            }
+            if let Some(result) = ibp_try_split(&u_factors, &w_factors, x, vm) {
+                return Some(result);
+            }
+        }
+    }
+    None
+}
+
+/// Try `u = ∏ u_factors`, `w = ∏ w_factors` as the tabular split.
+fn ibp_try_split(
+    u_factors: &[IRNode],
+    w_factors: &[IRNode],
+    x: &str,
+    vm: &mut VM,
+) -> Option<IRNode> {
+    let u_ir = vm.eval(ibp_multiply_ir(u_factors));
+    let deg = ibp_polynomial_degree(&u_ir, x)?;
+    if deg < 0 {
+        // u is the zero polynomial — ∫ 0·w dx = 0.
+        return Some(IRNode::Integer(0));
+    }
+    let deg = deg as usize;
+    if deg > IBP_MAX_POLY_DEGREE {
+        return None;
+    }
+
+    // D-column: u, u', u'', ..., 0.
+    let mut d_col: Vec<IRNode> = vec![u_ir.clone()];
+    let mut cur = u_ir;
+    for _ in 0..=deg {
+        let next = vm.eval(diff(&cur, x));
+        d_col.push(next.clone());
+        cur = next;
+        if ibp_is_zero(&cur) {
+            break;
+        }
+    }
+    if !ibp_is_zero(d_col.last().unwrap()) {
+        return None;
+    }
+    let big_n = d_col.len() - 1; // u^(N) = 0
+
+    // I-column: w, ∫w, ∫∫w, ..., ∫^N w.
+    let w_ir = vm.eval(ibp_multiply_ir(w_factors));
+    let mut i_col: Vec<IRNode> = vec![w_ir.clone()];
+    let mut cur = w_ir;
+    let x_sym = IRNode::Symbol(x.to_string());
+    for _ in 0..big_n {
+        // Call integrate directly to avoid re-entering the IBP fallback
+        // inside the recursive integrator (mirrors Python's
+        // `integrate_fn=lambda g: _integrate(g, x)` rather than the
+        // outer handler).
+        let integrated = integrate(&cur, x);
+        let unevaluated = apply_node(INTEGRATE, vec![cur.clone(), x_sym.clone()]);
+        if integrated == unevaluated {
+            return None;
+        }
+        let simplified = vm.eval(integrated);
+        if ibp_contains_integrate(&simplified) {
+            return None;
+        }
+        i_col.push(simplified.clone());
+        cur = simplified;
+    }
+
+    // Assemble: Σ_{k=0}^{N-1} (-1)^k · D[k] · I[k+1].
+    let mut pieces: Vec<IRNode> = Vec::new();
+    for k in 0..big_n {
+        let mut term = apply_node(MUL, vec![d_col[k].clone(), i_col[k + 1].clone()]);
+        if k % 2 == 1 {
+            term = apply_node(NEG, vec![term]);
+        }
+        pieces.push(term);
+    }
+    if pieces.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    let mut result = pieces[0].clone();
+    for piece in &pieces[1..] {
+        result = apply_node(ADD, vec![result, piece.clone()]);
+    }
+    Some(result)
 }
 
 fn complete_elliptic_first_kind(
@@ -2298,6 +2974,390 @@ fn incomplete_elliptic_second_kind(f: &IRNode, x: &str) -> Option<IRNode> {
     elliptic_second_kind_radicand(f, x).map(|modulus| {
         apply_node("EllipticE", vec![IRNode::Symbol(x.to_string()), modulus])
     })
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct SignedRat {
+    numer: i64,
+    denom: i64,
+}
+
+impl SignedRat {
+    fn new(mut numer: i64, mut denom: i64) -> Option<Self> {
+        if denom == 0 {
+            return None;
+        }
+        if denom < 0 {
+            numer = -numer;
+            denom = -denom;
+        }
+        if numer == 0 {
+            return None;
+        }
+        let g = gcd(numer.unsigned_abs(), denom.unsigned_abs()) as i64;
+        Some(Self {
+            numer: numer / g,
+            denom: denom / g,
+        })
+    }
+
+    fn mul(self, other: Self) -> Self {
+        Self::new(
+            self.numer.saturating_mul(other.numer),
+            self.denom.saturating_mul(other.denom),
+        )
+        .expect("signed rational product should stay nonzero")
+    }
+
+    fn div(self, other: Self) -> Self {
+        Self::new(
+            self.numer.saturating_mul(other.denom),
+            self.denom.saturating_mul(other.numer),
+        )
+        .expect("signed rational quotient should stay nonzero")
+    }
+
+    fn abs(self) -> PositiveRat {
+        PositiveRat::new(self.numer.abs(), self.denom)
+            .expect("absolute signed rational should be positive")
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct PositiveRat {
+    numer: i64,
+    denom: i64,
+}
+
+impl PositiveRat {
+    fn new(mut numer: i64, mut denom: i64) -> Option<Self> {
+        if denom == 0 {
+            return None;
+        }
+        if denom < 0 {
+            numer = -numer;
+            denom = -denom;
+        }
+        if numer <= 0 {
+            return None;
+        }
+        let g = gcd(numer.unsigned_abs(), denom.unsigned_abs()) as i64;
+        Some(Self {
+            numer: numer / g,
+            denom: denom / g,
+        })
+    }
+
+    fn mul(self, other: Self) -> Self {
+        Self::new(
+            self.numer.saturating_mul(other.numer),
+            self.denom.saturating_mul(other.denom),
+        )
+        .expect("positive rational product should stay positive")
+    }
+
+    fn div(self, other: Self) -> Self {
+        Self::new(
+            self.numer.saturating_mul(other.denom),
+            self.denom.saturating_mul(other.numer),
+        )
+        .expect("positive rational quotient should stay positive")
+    }
+
+    fn times_int(self, factor: i64) -> Self {
+        Self::new(self.numer.saturating_mul(factor), self.denom)
+            .expect("positive rational integer product should stay positive")
+    }
+
+    fn to_ir(self) -> IRNode {
+        if self.denom == 1 {
+            IRNode::Integer(self.numer)
+        } else {
+            IRNode::Rational(self.numer, self.denom)
+        }
+    }
+}
+
+fn exact_positive_rat(node: &IRNode) -> Option<PositiveRat> {
+    match node {
+        IRNode::Integer(n) => PositiveRat::new(*n, 1),
+        IRNode::Rational(n, d) => PositiveRat::new(*n, *d),
+        _ => None,
+    }
+}
+
+fn exact_signed_rat(node: &IRNode) -> Option<SignedRat> {
+    match node {
+        IRNode::Integer(n) => SignedRat::new(*n, 1),
+        IRNode::Rational(n, d) => SignedRat::new(*n, *d),
+        _ => None,
+    }
+}
+
+fn is_square_of_integration_var(node: &IRNode, x: &str) -> bool {
+    let IRNode::Apply(pow) = node else { return false };
+    if pow.head != IRNode::Symbol(POW.to_string()) {
+        return false;
+    }
+    let [base, exponent] = pow.args.as_slice() else {
+        return false;
+    };
+    base == &IRNode::Symbol(x.to_string()) && exponent == &IRNode::Integer(2)
+}
+
+#[derive(Clone, Copy)]
+struct SignedQuadraticFactors {
+    coeff: SignedRat,
+    has_x_squared: bool,
+}
+
+fn combine_signed_quadratic_factors(
+    a: SignedQuadraticFactors,
+    b: SignedQuadraticFactors,
+) -> Option<SignedQuadraticFactors> {
+    if a.has_x_squared && b.has_x_squared {
+        return None;
+    }
+    Some(SignedQuadraticFactors {
+        coeff: a.coeff.mul(b.coeff),
+        has_x_squared: a.has_x_squared || b.has_x_squared,
+    })
+}
+
+fn scan_signed_quadratic_factors(node: &IRNode, x: &str) -> Option<SignedQuadraticFactors> {
+    let one = SignedRat::new(1, 1).unwrap();
+    if is_square_of_integration_var(node, x) {
+        return Some(SignedQuadraticFactors {
+            coeff: one,
+            has_x_squared: true,
+        });
+    }
+    if let Some(coeff) = exact_signed_rat(node) {
+        return Some(SignedQuadraticFactors {
+            coeff,
+            has_x_squared: false,
+        });
+    }
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    if apply.head == IRNode::Symbol(NEG.to_string()) {
+        let [inner] = apply.args.as_slice() else {
+            return None;
+        };
+        let scanned = scan_signed_quadratic_factors(inner, x)?;
+        return Some(SignedQuadraticFactors {
+            coeff: SignedRat::new(-scanned.coeff.numer, scanned.coeff.denom)?,
+            has_x_squared: scanned.has_x_squared,
+        });
+    }
+    if apply.head == IRNode::Symbol(MUL.to_string()) {
+        let mut acc = SignedQuadraticFactors {
+            coeff: one,
+            has_x_squared: false,
+        };
+        for arg in &apply.args {
+            let scanned = scan_signed_quadratic_factors(arg, x)?;
+            acc = combine_signed_quadratic_factors(acc, scanned)?;
+        }
+        return Some(acc);
+    }
+    if apply.head == IRNode::Symbol(DIV.to_string()) {
+        let [numerator, denominator] = apply.args.as_slice() else {
+            return None;
+        };
+        let mut scanned = scan_signed_quadratic_factors(numerator, x)?;
+        let denom = exact_signed_rat(denominator)?;
+        scanned.coeff = scanned.coeff.div(denom);
+        return Some(scanned);
+    }
+    None
+}
+
+fn signed_quadratic_coeff(arg: &IRNode, x: &str) -> Option<SignedRat> {
+    let factors = scan_signed_quadratic_factors(arg, x)?;
+    if factors.has_x_squared {
+        Some(factors.coeff)
+    } else {
+        None
+    }
+}
+
+fn try_erf_integral(f: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    if apply.head != IRNode::Symbol(EXP.to_string()) {
+        return None;
+    }
+    let [arg] = apply.args.as_slice() else {
+        return None;
+    };
+    let c = signed_quadratic_coeff(arg, x)?;
+    let abs_c = c.abs();
+    let alpha = apply_node(SQRT, vec![abs_c.to_ir()]);
+    let special_arg = if abs_c.numer == abs_c.denom {
+        IRNode::Symbol(x.to_string())
+    } else {
+        apply_node(MUL, vec![alpha.clone(), IRNode::Symbol(x.to_string())])
+    };
+    let special_head = if c.numer < 0 { "Erf" } else { "Erfi" };
+    let sqrt_pi = apply_node(SQRT, vec![IRNode::Symbol("%pi".to_string())]);
+    let coeff = if abs_c.numer == abs_c.denom {
+        apply_node(DIV, vec![sqrt_pi, IRNode::Integer(2)])
+    } else {
+        apply_node(
+            DIV,
+            vec![sqrt_pi, apply_node(MUL, vec![IRNode::Integer(2), alpha])],
+        )
+    };
+    Some(apply_node(
+        MUL,
+        vec![coeff, apply_node(special_head, vec![special_arg])],
+    ))
+}
+
+#[derive(Clone, Copy)]
+struct FresnelFactors {
+    coeff: PositiveRat,
+    has_pi: bool,
+    has_x_squared: bool,
+}
+
+fn combine_fresnel_factors(a: FresnelFactors, b: FresnelFactors) -> Option<FresnelFactors> {
+    if (a.has_pi && b.has_pi) || (a.has_x_squared && b.has_x_squared) {
+        return None;
+    }
+    Some(FresnelFactors {
+        coeff: a.coeff.mul(b.coeff),
+        has_pi: a.has_pi || b.has_pi,
+        has_x_squared: a.has_x_squared || b.has_x_squared,
+    })
+}
+
+fn scan_fresnel_factors(node: &IRNode, x: &str) -> Option<FresnelFactors> {
+    let one = PositiveRat::new(1, 1).unwrap();
+    if is_square_of_integration_var(node, x) {
+        return Some(FresnelFactors {
+            coeff: one,
+            has_pi: false,
+            has_x_squared: true,
+        });
+    }
+    if node == &IRNode::Symbol("%pi".to_string()) {
+        return Some(FresnelFactors {
+            coeff: one,
+            has_pi: true,
+            has_x_squared: false,
+        });
+    }
+    if let Some(coeff) = exact_positive_rat(node) {
+        return Some(FresnelFactors {
+            coeff,
+            has_pi: false,
+            has_x_squared: false,
+        });
+    }
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    if apply.head == IRNode::Symbol(MUL.to_string()) {
+        let mut acc = FresnelFactors {
+            coeff: one,
+            has_pi: false,
+            has_x_squared: false,
+        };
+        for arg in &apply.args {
+            let scanned = scan_fresnel_factors(arg, x)?;
+            acc = combine_fresnel_factors(acc, scanned)?;
+        }
+        return Some(acc);
+    }
+    if apply.head == IRNode::Symbol(DIV.to_string()) {
+        let [numerator, denominator] = apply.args.as_slice() else {
+            return None;
+        };
+        let mut scanned = scan_fresnel_factors(numerator, x)?;
+        let denom = exact_positive_rat(denominator)?;
+        scanned.coeff = scanned.coeff.div(denom);
+        return Some(scanned);
+    }
+    None
+}
+
+fn fresnel_pi_quadratic_coeff(arg: &IRNode, x: &str) -> Option<PositiveRat> {
+    let factors = scan_fresnel_factors(arg, x)?;
+    if factors.has_pi && factors.has_x_squared {
+        Some(factors.coeff)
+    } else {
+        None
+    }
+}
+
+fn fresnel_pure_quadratic_coeff(arg: &IRNode, x: &str) -> Option<PositiveRat> {
+    let factors = scan_fresnel_factors(arg, x)?;
+    if !factors.has_pi && factors.has_x_squared {
+        Some(factors.coeff)
+    } else {
+        None
+    }
+}
+
+fn try_fresnel_integral(f: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    let [arg] = apply.args.as_slice() else {
+        return None;
+    };
+    let fresnel_head = if apply.head == IRNode::Symbol(SIN.to_string()) {
+        "FresnelS"
+    } else if apply.head == IRNode::Symbol(COS.to_string()) {
+        "FresnelC"
+    } else {
+        return None;
+    };
+
+    if let Some(q) = fresnel_pi_quadratic_coeff(arg, x) {
+        let two_q = q.times_int(2);
+        if two_q.numer == two_q.denom {
+            return Some(apply_node(fresnel_head, vec![IRNode::Symbol(x.to_string())]));
+        }
+        let sqrt_two_q = apply_node(SQRT, vec![two_q.to_ir()]);
+        let scale_arg = apply_node(MUL, vec![sqrt_two_q.clone(), IRNode::Symbol(x.to_string())]);
+        return Some(apply_node(
+            MUL,
+            vec![
+                apply_node(DIV, vec![IRNode::Integer(1), sqrt_two_q]),
+                apply_node(fresnel_head, vec![scale_arg]),
+            ],
+        ));
+    }
+
+    if let Some(a) = fresnel_pure_quadratic_coeff(arg, x) {
+        let two_a = a.times_int(2).to_ir();
+        let pi = IRNode::Symbol("%pi".to_string());
+        let sqrt_pi_over_two_a = apply_node(
+            SQRT,
+            vec![apply_node(DIV, vec![pi.clone(), two_a.clone()])],
+        );
+        let sqrt_two_a_over_pi = apply_node(SQRT, vec![apply_node(DIV, vec![two_a, pi])]);
+        return Some(apply_node(
+            MUL,
+            vec![
+                sqrt_pi_over_two_a,
+                apply_node(
+                    fresnel_head,
+                    vec![apply_node(
+                        MUL,
+                        vec![IRNode::Symbol(x.to_string()), sqrt_two_a_over_pi],
+                    )],
+                ),
+            ],
+        ));
+    }
+
+    None
 }
 
 /// Return `n` when `bracket = Add(1, Mul(n, Pow(Sin(x), 2)))`.
@@ -2928,6 +3988,24 @@ fn rp_mul(a: &[RatC], b: &[RatC]) -> Option<RatPoly> {
     Some(result)
 }
 
+/// Horner composition p(a*x+b).
+fn rp_compose_linear(p: &[RatC], a: RatC, b: RatC) -> Option<RatPoly> {
+    let Some(deg) = rp_deg(p) else {
+        return Some(vec![]);
+    };
+    let sub = vec![b, a];
+    let mut result = vec![rp_coeff(p, deg)];
+    for i in (0..deg).rev() {
+        result = rp_add(&rp_mul(&result, &sub)?, &[rp_coeff(p, i)])?;
+    }
+    Some(result)
+}
+
+/// Compose Q((t-b)/a), represented as a t-polynomial.
+fn rp_compose_to_t(q: &[RatC], a: RatC, b: RatC) -> Option<RatPoly> {
+    rp_compose_linear(q, rc_div(RC_ONE, a)?, rc_div(rc_neg(b), a)?)
+}
+
 /// Formal derivative of a polynomial (drops the constant term's contribution).
 fn rp_deriv(p: &[RatC]) -> Option<RatPoly> {
     if p.len() <= 1 {
@@ -3081,8 +4159,9 @@ fn is_linear_in(expr: &IRNode, x: &str) -> bool {
 /// Phase 28 residuals:
 ///
 /// - **Case A**: R = c·D′  →  c·log(D)
-/// - **Case B**: R is a constant, D = a₂x²+a₀ (no odd-degree terms),
-///              √(a₀/a₂) is rational  →  r₀/(a₂√(a₀/a₂))·atan(x/√(a₀/a₂))
+/// - **Case B**: R is linear, D = a₂x²+a₁x+a₀, and √(4a₂a₀-a₁²)
+///              is rational. Split off the D′ log term, then close the
+///              remaining constant-over-quadratic term with atan.
 ///
 /// Returns `None` if neither case applies (signals that Phase 28 falls through).
 fn close_remainder_over_d(
@@ -3105,56 +4184,86 @@ fn close_remainder_over_d(
         }
     }
 
-    // Case B: constant remainder over quadratic denominator with rational √
-    if rp_deg(r) != Some(0) {
+    // Case B: linear remainder over a positive shifted quadratic.
+    if rp_deg(d) != Some(2) {
         return None;
     }
-    if rp_deg(d) != Some(2) {
+    if !matches!(rp_deg(r), Some(0) | Some(1)) {
         return None;
     }
 
     let a2 = rp_coeff(d, 2);
     let a1 = rp_coeff(d, 1);
     let a0 = rp_coeff(d, 0);
-
-    // No linear term (otherwise denominator has a real root and we'd need
-    // partial fractions with irrational roots)
-    if !rc_is_zero(a1) {
+    if rc_is_zero(a2) || a2.0 <= 0 {
         return None;
     }
 
-    // a₀/a₂ must be a positive rational perfect square
-    let ba = rc_div(a0, a2)?;
-    if ba.0 <= 0 {
-        return None;
-    }
-    let sqrt_ba = rc_sqrt(ba)?;
-    if rc_is_zero(sqrt_ba) {
-        return None;
-    }
-
-    // ∫ r₀/(a₂x²+a₀) dx = r₀/(a₂·√(a₀/a₂)) · atan(x/√(a₀/a₂))
+    // R = r1*x + r0 = c*D' + k, with c = r1/(2*a2).
+    let two = (2, 1);
+    let four = (4, 1);
+    let r1 = rp_coeff(r, 1);
     let r0 = rp_coeff(r, 0);
-    let denom_coef = rc_mul(a2, sqrt_ba)?;
-    let coef = rc_div(r0, denom_coef)?;
+    let c = rc_div(r1, rc_mul(two, a2)?)?;
+    let k = rc_sub(r0, rc_mul(c, a1)?)?;
 
-    let coef_ir = rc_to_ir(coef)?;
-    let sqrt_ba_ir = rc_to_ir(sqrt_ba)?;
-    let x_sym = IRNode::Symbol(x.to_string());
+    // delta = 4*a2*a0 - a1^2 must have a positive rational square root.
+    let delta = rc_sub(
+        rc_mul(four, rc_mul(a2, a0)?)?,
+        rc_mul(a1, a1)?,
+    )?;
+    if delta.0 <= 0 {
+        return None;
+    }
+    let sqrt_delta = rc_sqrt(delta)?;
+    if rc_is_zero(sqrt_delta) {
+        return None;
+    }
 
-    // Build atan(x / √(a₀/a₂)).  If √(a₀/a₂) = 1, simplify to atan(x).
-    let atan_arg = if rc_is_one(sqrt_ba) {
-        x_sym
-    } else {
-        apply_node(DIV, vec![x_sym, sqrt_ba_ir])
-    };
-    let atan_node = apply_node(ATAN, vec![atan_arg]);
+    let mut terms = Vec::new();
+    if !rc_is_zero(c) {
+        let c_ir = rc_to_ir(c)?;
+        let log_d = apply_node(LOG, vec![d_ir.clone()]);
+        terms.push(if rc_is_one(c) {
+            log_d
+        } else {
+            apply_node(MUL, vec![c_ir, log_d])
+        });
+    }
 
-    Some(if rc_is_one(coef) {
-        atan_node
-    } else {
-        apply_node(MUL, vec![coef_ir, atan_node])
-    })
+    if !rc_is_zero(k) {
+        // ∫ k/D dx = (2k/sqrt(delta)) * atan((2*a2*x+a1)/sqrt(delta)).
+        let coef = rc_div(rc_mul(two, k)?, sqrt_delta)?;
+
+        let x_sym = IRNode::Symbol(x.to_string());
+        let atan_numer = apply_node(
+            ADD,
+            vec![
+                apply_node(MUL, vec![rc_to_ir(rc_mul(two, a2)?)?, x_sym]),
+                rc_to_ir(a1)?,
+            ],
+        );
+        let atan_arg = if rc_is_one(sqrt_delta) {
+            atan_numer
+        } else {
+            apply_node(DIV, vec![atan_numer, rc_to_ir(sqrt_delta)?])
+        };
+        let atan_node = apply_node(ATAN, vec![atan_arg]);
+
+        terms.push(if rc_is_one(coef) {
+            atan_node
+        } else {
+            apply_node(MUL, vec![rc_to_ir(coef)?, atan_node])
+        });
+    }
+
+    match terms.len() {
+        0 => None,
+        1 => terms.into_iter().next(),
+        _ => terms
+            .into_iter()
+            .reduce(|a, b| apply_node(ADD, vec![a, b])),
+    }
 }
 
 /// Core rational function integrator (Phase 28 residuals).
@@ -3267,7 +4376,7 @@ fn try_log_poly_product(
     Some(apply_node(SUB, vec![main_term, residual]))
 }
 
-/// Phase 28: ``∫ P(x) · atan(Q(x)) dx`` for non-linear polynomial Q.
+/// Phase 11/28: ``∫ P(x) · atan(Q(x)) dx`` for polynomial Q.
 ///
 /// IBP (u = atan Q, dv = P dx):
 ///   ∫ P·atan(Q) dx  =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
@@ -3288,8 +4397,9 @@ fn try_atan_poly_product(
     }
     let q_ir = &apply.args[0];
 
-    // Q must depend on x and be non-linear (linear Q left to future Phase 11)
-    if !depends_on(q_ir, x) || is_linear_in(q_ir, x) {
+    // Q must depend on x. Linear Q covers MACSYMA Phase 11; non-linear Q
+    // covers Phase 28.
+    if !depends_on(q_ir, x) {
         return None;
     }
 
@@ -3327,6 +4437,634 @@ fn try_atan_poly_product(
     // Result: R · atan(Q) − residual
     let main_term = apply_node(MUL, vec![r_ir, transcendental.clone()]);
     Some(apply_node(SUB, vec![main_term, residual]))
+}
+
+/// Phase 12: ``∫ P(x) · asin(a*x+b) dx`` and ``∫ P(x) · acos(a*x+b) dx``.
+fn try_asin_acos_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), ASIN | ACOS) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+
+    let arg_rp = rp_from_poly_vec(to_polynomial_coeffs(arg_ir, x)?)?;
+    if rp_deg(&arg_rp) != Some(1) {
+        return None;
+    }
+    let b = rp_coeff(&arg_rp, 0);
+    let a = rp_coeff(&arg_rp, 1);
+    if rc_is_zero(a) {
+        return None;
+    }
+
+    let p_rp = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+    if rp_is_zero(&p_rp) {
+        return None;
+    }
+
+    let q_rp = rp_integrate(&p_rp)?;
+    let q_tilde = rp_compose_to_t(&q_rp, a, b)?;
+    let (a_t, b_t) = sqrt_one_minus_t_squared_decompose(&q_tilde)?;
+    let a_x = rp_compose_linear(&a_t, a, b)?;
+    let b_x = rp_compose_linear(&b_t, a, b)?;
+
+    let q_ir = rp_to_ir(&q_rp, x)?;
+    let sqrt_ir = apply_node(
+        SQRT,
+        vec![apply_node(
+            SUB,
+            vec![
+                IRNode::Integer(1),
+                apply_node(POW, vec![arg_ir.clone(), IRNode::Integer(2)]),
+            ],
+        )],
+    );
+
+    if head.as_str() == ASIN {
+        let asin_coef = if rp_is_zero(&b_x) {
+            q_ir
+        } else {
+            apply_node(SUB, vec![q_ir, rp_to_ir(&b_x, x)?])
+        };
+        let mut result = apply_node(MUL, vec![asin_coef, transcendental.clone()]);
+        if !rp_is_zero(&a_x) {
+            result = apply_node(
+                SUB,
+                vec![result, apply_node(MUL, vec![rp_to_ir(&a_x, x)?, sqrt_ir])],
+            );
+        }
+        return Some(result);
+    }
+
+    let mut result = apply_node(MUL, vec![q_ir, transcendental.clone()]);
+    if !rp_is_zero(&a_x) {
+        result = apply_node(
+            ADD,
+            vec![result, apply_node(MUL, vec![rp_to_ir(&a_x, x)?, sqrt_ir])],
+        );
+    }
+    if !rp_is_zero(&b_x) {
+        result = apply_node(
+            ADD,
+            vec![
+                result,
+                apply_node(
+                    MUL,
+                    vec![rp_to_ir(&b_x, x)?, apply_node(ASIN, vec![arg_ir.clone()])],
+                ),
+            ],
+        );
+    }
+    Some(result)
+}
+
+fn linear_arg_coeffs(arg_ir: &IRNode, x: &str) -> Option<(RatC, RatC)> {
+    let arg_rp = rp_from_poly_vec(to_polynomial_coeffs(arg_ir, x)?)?;
+    if rp_deg(&arg_rp) != Some(1) {
+        return None;
+    }
+    let b = rp_coeff(&arg_rp, 0);
+    let a = rp_coeff(&arg_rp, 1);
+    if rc_is_zero(a) {
+        return None;
+    }
+    Some((a, b))
+}
+
+fn hyp_product_term(poly: &[RatC], head: &str, arg_ir: &IRNode, x: &str) -> Option<Option<IRNode>> {
+    if rp_is_zero(poly) {
+        return Some(None);
+    }
+    let hyp_ir = apply_node(head, vec![arg_ir.clone()]);
+    if rp_deg(poly) == Some(0) && rc_is_one(rp_coeff(poly, 0)) {
+        return Some(Some(hyp_ir));
+    }
+    Some(Some(apply_node(MUL, vec![rp_to_ir(poly, x)?, hyp_ir])))
+}
+
+fn add_terms(terms: Vec<Option<IRNode>>) -> Option<IRNode> {
+    let terms: Vec<IRNode> = terms.into_iter().flatten().collect();
+    match terms.len() {
+        0 => None,
+        1 => terms.into_iter().next(),
+        _ => terms.into_iter().reduce(|a, b| apply_node(ADD, vec![a, b])),
+    }
+}
+
+/// Phase 13: integrate P(x)*sinh(a*x+b) and P(x)*cosh(a*x+b).
+fn try_sinh_cosh_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), SINH | COSH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+
+    let mut derivative = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+    if rp_is_zero(&derivative) {
+        return None;
+    }
+
+    let mut cosh_poly: RatPoly = vec![];
+    let mut sinh_poly: RatPoly = vec![];
+    let mut a_power = a;
+    let mut sign = RC_ONE;
+    let mut degree = 0usize;
+    while !rp_is_zero(&derivative) {
+        let scale = rc_div(sign, a_power)?;
+        let scaled = rp_mul_scalar(&derivative, scale)?;
+        if head.as_str() == SINH {
+            if degree % 2 == 0 {
+                cosh_poly = rp_add(&cosh_poly, &scaled)?;
+            } else {
+                sinh_poly = rp_add(&sinh_poly, &scaled)?;
+            }
+        } else if degree % 2 == 0 {
+            sinh_poly = rp_add(&sinh_poly, &scaled)?;
+        } else {
+            cosh_poly = rp_add(&cosh_poly, &scaled)?;
+        }
+
+        derivative = rp_deriv(&derivative)?;
+        a_power = rc_mul(a_power, a)?;
+        sign = rc_neg(sign);
+        degree += 1;
+    }
+
+    add_terms(vec![
+        hyp_product_term(&cosh_poly, COSH, arg_ir, x)?,
+        hyp_product_term(&sinh_poly, SINH, arg_ir, x)?,
+    ])
+}
+
+/// Phase 13: integrate P(x)*asinh(a*x+b) and P(x)*acosh(a*x+b).
+fn try_asinh_acosh_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), ASINH | ACOSH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, b) = linear_arg_coeffs(arg_ir, x)?;
+
+    let p_rp = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+    if rp_is_zero(&p_rp) {
+        return None;
+    }
+
+    let q_rp = rp_integrate(&p_rp)?;
+    let q_tilde = rp_compose_to_t(&q_rp, a, b)?;
+    let (a_t, b_t) = if head.as_str() == ASINH {
+        sqrt_t_plus_one_decompose(&q_tilde)?
+    } else {
+        sqrt_t_minus_one_decompose(&q_tilde)?
+    };
+    let a_x = rp_compose_linear(&a_t, a, b)?;
+    let b_x = rp_compose_linear(&b_t, a, b)?;
+
+    let q_ir = rp_to_ir(&q_rp, x)?;
+    let main_coef = if rp_is_zero(&b_x) {
+        q_ir
+    } else {
+        apply_node(SUB, vec![q_ir, rp_to_ir(&b_x, x)?])
+    };
+    let mut result = apply_node(MUL, vec![main_coef, transcendental.clone()]);
+
+    if !rp_is_zero(&a_x) {
+        let arg_sq = apply_node(POW, vec![arg_ir.clone(), IRNode::Integer(2)]);
+        let sqrt_inner = if head.as_str() == ASINH {
+            apply_node(ADD, vec![arg_sq, IRNode::Integer(1)])
+        } else {
+            apply_node(SUB, vec![arg_sq, IRNode::Integer(1)])
+        };
+        result = apply_node(
+            SUB,
+            vec![
+                result,
+                apply_node(
+                    MUL,
+                    vec![rp_to_ir(&a_x, x)?, apply_node(SQRT, vec![sqrt_inner])],
+                ),
+            ],
+        );
+    }
+    Some(result)
+}
+
+fn try_tanh_atanh_linear(transcendental: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), TANH | ATANH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+    let inv_a = rc_div(RC_ONE, a)?;
+
+    if head.as_str() == TANH {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(inv_a)?,
+                apply_node(LOG, vec![apply_node(COSH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+
+    let arg_over_a = apply_node(MUL, vec![rc_to_ir(inv_a)?, arg_ir.clone()]);
+    let log_coef = rc_div(RC_ONE, rc_mul((2, 1), a)?)?;
+    let log_arg = apply_node(
+        SUB,
+        vec![
+            IRNode::Integer(1),
+            apply_node(POW, vec![arg_ir.clone(), IRNode::Integer(2)]),
+        ],
+    );
+    Some(apply_node(
+        ADD,
+        vec![
+            apply_node(MUL, vec![arg_over_a, transcendental.clone()]),
+            apply_node(MUL, vec![rc_to_ir(log_coef)?, apply_node(LOG, vec![log_arg])]),
+        ],
+    ))
+}
+
+fn try_recip_hyp_linear(transcendental: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), COTH | SECH | CSCH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+    let inv_a = rc_to_ir(rc_div(RC_ONE, a)?)?;
+
+    match head.as_str() {
+        COTH => Some(apply_node(
+            MUL,
+            vec![inv_a, apply_node(LOG, vec![apply_node(SINH, vec![arg_ir.clone()])])],
+        )),
+        SECH => Some(apply_node(
+            MUL,
+            vec![inv_a, apply_node(ATAN, vec![apply_node(SINH, vec![arg_ir.clone()])])],
+        )),
+        CSCH => {
+            let half_arg = apply_node(MUL, vec![IRNode::Rational(1, 2), arg_ir.clone()]);
+            Some(apply_node(
+                MUL,
+                vec![inv_a, apply_node(LOG, vec![apply_node(TANH, vec![half_arg])])],
+            ))
+        }
+        _ => None,
+    }
+}
+
+fn try_recip_hyp_power(base: &IRNode, exponent: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = base else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), SECH | CSCH | COTH | TANH) || apply.args.len() != 1 {
+        return None;
+    }
+    let n = match to_numeric(exponent) {
+        Some(Numeric::Int(n)) if n >= 0 => usize::try_from(n).ok()?,
+        _ => return None,
+    };
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+
+    match head.as_str() {
+        SECH => sech_power_integral(n, arg_ir, a, x),
+        CSCH => csch_power_integral(n, arg_ir, a, x),
+        COTH => coth_power_integral(n, arg_ir, a, x),
+        TANH => tanh_power_integral(n, arg_ir, a, x),
+        _ => None,
+    }
+}
+
+fn pow_if_needed(base: IRNode, exponent: usize) -> IRNode {
+    if exponent == 1 {
+        base
+    } else {
+        apply_node(POW, vec![base, IRNode::Integer(exponent as i64)])
+    }
+}
+
+fn recip_hyp_coeff(numer: i128, denom: i128, a: RatC) -> Option<IRNode> {
+    rc_to_ir(rc_div(rc(numer, denom)?, a)?)
+}
+
+fn sech_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(ATAN, vec![apply_node(SINH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+    if n == 2 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(TANH, vec![arg_ir.clone()]),
+            ],
+        ));
+    }
+
+    let sech_pow = pow_if_needed(apply_node(SECH, vec![arg_ir.clone()]), n - 2);
+    let main_term = apply_node(
+        MUL,
+        vec![
+            recip_hyp_coeff(1, (n - 1) as i128, a)?,
+            apply_node(MUL, vec![sech_pow, apply_node(TANH, vec![arg_ir.clone()])]),
+        ],
+    );
+    let tail = sech_power_integral(n - 2, arg_ir, a, x)?;
+    Some(apply_node(
+        ADD,
+        vec![
+            main_term,
+            apply_node(MUL, vec![IRNode::Rational((n - 2) as i64, (n - 1) as i64), tail]),
+        ],
+    ))
+}
+
+fn csch_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        let half_arg = apply_node(MUL, vec![IRNode::Rational(1, 2), arg_ir.clone()]);
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(LOG, vec![apply_node(TANH, vec![half_arg])]),
+            ],
+        ));
+    }
+    if n == 2 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(rc(-1, 1)?, a)?)?,
+                apply_node(COTH, vec![arg_ir.clone()]),
+            ],
+        ));
+    }
+
+    let csch_pow = pow_if_needed(apply_node(CSCH, vec![arg_ir.clone()]), n - 2);
+    let main_term = apply_node(
+        MUL,
+        vec![
+            recip_hyp_coeff(-1, (n - 1) as i128, a)?,
+            apply_node(MUL, vec![csch_pow, apply_node(COTH, vec![arg_ir.clone()])]),
+        ],
+    );
+    let tail = csch_power_integral(n - 2, arg_ir, a, x)?;
+    Some(apply_node(
+        SUB,
+        vec![
+            main_term,
+            apply_node(MUL, vec![IRNode::Rational((n - 2) as i64, (n - 1) as i64), tail]),
+        ],
+    ))
+}
+
+fn coth_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(LOG, vec![apply_node(SINH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+
+    let coth_pow = pow_if_needed(apply_node(COTH, vec![arg_ir.clone()]), n - 1);
+    let power_term = apply_node(
+        MUL,
+        vec![recip_hyp_coeff(1, (n - 1) as i128, a)?, coth_pow],
+    );
+    Some(apply_node(
+        SUB,
+        vec![coth_power_integral(n - 2, arg_ir, a, x)?, power_term],
+    ))
+}
+
+fn tanh_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(LOG, vec![apply_node(COSH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+
+    let tanh_pow = pow_if_needed(apply_node(TANH, vec![arg_ir.clone()]), n - 1);
+    let power_term = apply_node(
+        MUL,
+        vec![recip_hyp_coeff(1, (n - 1) as i128, a)?, tanh_pow],
+    );
+    Some(apply_node(
+        SUB,
+        vec![tanh_power_integral(n - 2, arg_ir, a, x)?, power_term],
+    ))
+}
+
+fn sqrt_t_plus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    fn monomial(n: usize, memo: &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)> {
+        if n < memo.len() {
+            if let Some(cached) = memo[n].clone() {
+                return Some(cached);
+            }
+        } else {
+            memo.resize_with(n + 1, || None);
+        }
+
+        let result = if n == 0 {
+            (vec![], vec![RC_ONE])
+        } else if n == 1 {
+            (vec![RC_ONE], vec![])
+        } else {
+            let mut a_new = vec![RC_ZERO; n];
+            a_new[n - 1] = rc(1, n as i128)?;
+            let (a_rec, b_rec) = monomial(n - 2, memo)?;
+            let coef = rc(-((n - 1) as i128), n as i128)?;
+            (
+                rp_add(&a_new, &rp_mul_scalar(&a_rec, coef)?)?,
+                rp_mul_scalar(&b_rec, coef)?,
+            )
+        };
+
+        memo[n] = Some(result.clone());
+        Some(result)
+    }
+
+    decompose_by_monomial(q_tilde, monomial)
+}
+
+fn sqrt_t_minus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    fn monomial(n: usize, memo: &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)> {
+        if n < memo.len() {
+            if let Some(cached) = memo[n].clone() {
+                return Some(cached);
+            }
+        } else {
+            memo.resize_with(n + 1, || None);
+        }
+
+        let result = if n == 0 {
+            (vec![], vec![RC_ONE])
+        } else if n == 1 {
+            (vec![RC_ONE], vec![])
+        } else {
+            let mut a_new = vec![RC_ZERO; n];
+            a_new[n - 1] = rc(1, n as i128)?;
+            let (a_rec, b_rec) = monomial(n - 2, memo)?;
+            let coef = rc((n - 1) as i128, n as i128)?;
+            (
+                rp_add(&a_new, &rp_mul_scalar(&a_rec, coef)?)?,
+                rp_mul_scalar(&b_rec, coef)?,
+            )
+        };
+
+        memo[n] = Some(result.clone());
+        Some(result)
+    }
+
+    decompose_by_monomial(q_tilde, monomial)
+}
+
+fn decompose_by_monomial(
+    q_tilde: &[RatC],
+    monomial: fn(usize, &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)>,
+) -> Option<(RatPoly, RatPoly)> {
+    let mut memo: Vec<Option<(RatPoly, RatPoly)>> = Vec::new();
+    let mut a_total = vec![];
+    let mut b_total = vec![];
+    for (deg, &coef) in q_tilde.iter().enumerate() {
+        if rc_is_zero(coef) {
+            continue;
+        }
+        let (a_n, b_n) = monomial(deg, &mut memo)?;
+        a_total = rp_add(&a_total, &rp_mul_scalar(&a_n, coef)?)?;
+        b_total = rp_add(&b_total, &rp_mul_scalar(&b_n, coef)?)?;
+    }
+    Some((a_total, b_total))
+}
+
+fn sqrt_one_minus_t_squared_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    fn monomial(n: usize, memo: &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)> {
+        if n < memo.len() {
+            if let Some(cached) = memo[n].clone() {
+                return Some(cached);
+            }
+        } else {
+            memo.resize_with(n + 1, || None);
+        }
+
+        let result = if n == 0 {
+            (vec![], vec![RC_ONE])
+        } else if n == 1 {
+            (vec![(-1, 1)], vec![])
+        } else {
+            let mut a_new = vec![RC_ZERO; n];
+            a_new[n - 1] = rc(-1, n as i128)?;
+            let (a_rec, b_rec) = monomial(n - 2, memo)?;
+            let coef = rc((n - 1) as i128, n as i128)?;
+            (
+                rp_add(&a_new, &rp_mul_scalar(&a_rec, coef)?)?,
+                rp_mul_scalar(&b_rec, coef)?,
+            )
+        };
+
+        memo[n] = Some(result.clone());
+        Some(result)
+    }
+
+    let mut memo: Vec<Option<(RatPoly, RatPoly)>> = Vec::new();
+    let mut a_total = vec![];
+    let mut b_total = vec![];
+    for (deg, &coef) in q_tilde.iter().enumerate() {
+        if rc_is_zero(coef) {
+            continue;
+        }
+        let (a_n, b_n) = monomial(deg, &mut memo)?;
+        a_total = rp_add(&a_total, &rp_mul_scalar(&a_n, coef)?)?;
+        b_total = rp_add(&b_total, &rp_mul_scalar(&b_n, coef)?)?;
+    }
+    Some((a_total, b_total))
 }
 
 fn integrate_power_of_x(exponent: &IRNode, x: &str) -> IRNode {
@@ -3430,6 +5168,32 @@ fn diff(f: &IRNode, x: &str) -> IRNode {
                 ),
             ],
         ),
+        (ASIN, [inner]) => {
+            let denom = apply_node(
+                SQRT,
+                vec![apply_node(
+                    SUB,
+                    vec![
+                        IRNode::Integer(1),
+                        apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                    ],
+                )],
+            );
+            apply_node(DIV, vec![diff(inner, x), denom])
+        }
+        (ACOS, [inner]) => {
+            let denom = apply_node(
+                SQRT,
+                vec![apply_node(
+                    SUB,
+                    vec![
+                        IRNode::Integer(1),
+                        apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                    ],
+                )],
+            );
+            apply_node(NEG, vec![apply_node(DIV, vec![diff(inner, x), denom])])
+        }
         (SINH, [inner]) => chain(COSH, inner, x),
         (COSH, [inner]) => chain(SINH, inner, x),
         (TANH, [inner]) => apply_node(
@@ -3628,6 +5392,21 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     }
 
     if let Some(rewritten) = factor_common_symbolic_term(input) {
+        return vm.eval(rewritten);
+    }
+
+    // Generic bivariate Hensel lifting fallback — mirrors the Python
+    // ``_try_bivariate_hensel_ir`` glue in ``symbolic-vm/cas_handlers.py``.
+    // For multivariate inputs the pattern handlers above couldn't
+    // recognise.
+    if let Some(rewritten) = try_bivariate_hensel_ir(input) {
+        return vm.eval(rewritten);
+    }
+
+    // n-variate (n ≥ 3) Hensel — Track K2.  Generalised algorithmic
+    // fallback for tri- and higher-variate polynomials (e.g.,
+    // x³ + y³ + z³ − 3xyz = (x+y+z)(…)).
+    if let Some(rewritten) = try_n_variate_hensel_ir(input) {
         return vm.eval(rewritten);
     }
 
@@ -4498,6 +6277,1147 @@ fn is_head_name(head: &IRNode, expected: &str) -> bool {
 }
 
 // ---------------------------------------------------------------------------
+// Bivariate Hensel-lifting IR glue.  Mirrors the Python
+// ``_try_bivariate_hensel_ir``, ``_find_two_variables``, ``_ir_to_bipoly``,
+// and ``_bipoly_to_ir`` helpers in ``symbolic-vm/cas_handlers.py``.
+// ---------------------------------------------------------------------------
+
+/// Find the first two distinct free variable names in ``node``.
+///
+/// Constants (``%pi``, ``%e``, …) and any sub-expression with three or more
+/// distinct free variables disqualify the input (returns ``None``).  The
+/// bivariate Hensel path is only meaningful when exactly two variables
+/// appear.
+fn find_two_variables(node: &IRNode) -> Option<(String, String)> {
+    let mut seen: Vec<String> = Vec::new();
+    fn walk(n: &IRNode, seen: &mut Vec<String>) -> bool {
+        match n {
+            IRNode::Symbol(name) if !name.starts_with('%') => {
+                if !seen.iter().any(|s| s == name) {
+                    seen.push(name.clone());
+                    if seen.len() > 2 {
+                        return false;
+                    }
+                }
+                true
+            }
+            IRNode::Apply(apply) => {
+                for arg in &apply.args {
+                    if !walk(arg, seen) {
+                        return false;
+                    }
+                }
+                true
+            }
+            _ => true,
+        }
+    }
+    if !walk(node, &mut seen) {
+        return None;
+    }
+    if seen.len() != 2 {
+        return None;
+    }
+    Some((seen[0].clone(), seen[1].clone()))
+}
+
+/// Convert an IR expression to a bivariate polynomial in ``(x, y)``.
+///
+/// Returns ``None`` for any sub-expression outside ℚ[x, y]: floats, a third
+/// free symbol, transcendentals (Sin/Log/…), non-integer exponents, etc.
+fn ir_to_bipoly(node: &IRNode, x: &str, y: &str) -> Option<HenselBiPoly> {
+    fn bi_one() -> HenselBiPoly {
+        let mut out = std::collections::BTreeMap::new();
+        out.insert((0, 0), HenselRat::ONE);
+        out
+    }
+    fn bi_mul_local(a: &HenselBiPoly, b: &HenselBiPoly) -> HenselBiPoly {
+        let mut out: HenselBiPoly = std::collections::BTreeMap::new();
+        for ((i1, j1), c1) in a {
+            for ((i2, j2), c2) in b {
+                let key = (i1 + i2, j1 + j2);
+                let cur = out.get(&key).copied().unwrap_or(HenselRat::ZERO);
+                out.insert(key, cur.add(&c1.mul(c2)));
+            }
+        }
+        out.retain(|_, v| !v.is_zero());
+        out
+    }
+    fn bi_add_into(acc: &mut HenselBiPoly, other: &HenselBiPoly) {
+        for (k, v) in other {
+            let cur = acc.get(k).copied().unwrap_or(HenselRat::ZERO);
+            acc.insert(*k, cur.add(v));
+        }
+        acc.retain(|_, v| !v.is_zero());
+    }
+
+    match node {
+        IRNode::Integer(value) => {
+            if *value == 0 {
+                Some(std::collections::BTreeMap::new())
+            } else {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert((0, 0), HenselRat::from_int(*value as i128));
+                Some(m)
+            }
+        }
+        IRNode::Rational(n, d) => {
+            let mut m = std::collections::BTreeMap::new();
+            m.insert((0, 0), HenselRat::new(*n as i128, *d as i128));
+            Some(m)
+        }
+        IRNode::Float(_) | IRNode::Str(_) => None,
+        IRNode::Symbol(name) => {
+            if name.starts_with('%') {
+                return None;
+            }
+            if name == x {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert((1, 0), HenselRat::ONE);
+                Some(m)
+            } else if name == y {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert((0, 1), HenselRat::ONE);
+                Some(m)
+            } else {
+                None
+            }
+        }
+        IRNode::Apply(apply) => {
+            let head = match &apply.head {
+                IRNode::Symbol(name) => name.as_str(),
+                _ => return None,
+            };
+            if head == ADD {
+                let mut acc: HenselBiPoly = std::collections::BTreeMap::new();
+                for arg in &apply.args {
+                    let sub = ir_to_bipoly(arg, x, y)?;
+                    bi_add_into(&mut acc, &sub);
+                }
+                Some(acc)
+            } else if head == SUB && apply.args.len() == 2 {
+                let a = ir_to_bipoly(&apply.args[0], x, y)?;
+                let b = ir_to_bipoly(&apply.args[1], x, y)?;
+                let mut neg_b: HenselBiPoly = std::collections::BTreeMap::new();
+                for (k, v) in &b {
+                    if !v.is_zero() {
+                        neg_b.insert(*k, v.neg());
+                    }
+                }
+                let mut acc = a;
+                bi_add_into(&mut acc, &neg_b);
+                Some(acc)
+            } else if head == NEG && apply.args.len() == 1 {
+                let sub = ir_to_bipoly(&apply.args[0], x, y)?;
+                let mut out: HenselBiPoly = std::collections::BTreeMap::new();
+                for (k, v) in sub {
+                    if !v.is_zero() {
+                        out.insert(k, v.neg());
+                    }
+                }
+                Some(out)
+            } else if head == MUL {
+                let mut acc = bi_one();
+                for arg in &apply.args {
+                    let sub = ir_to_bipoly(arg, x, y)?;
+                    acc = bi_mul_local(&acc, &sub);
+                }
+                Some(acc)
+            } else if head == POW && apply.args.len() == 2 {
+                let exp = match apply.args[1] {
+                    IRNode::Integer(e) => e,
+                    _ => return None,
+                };
+                if exp < 0 {
+                    return None;
+                }
+                let base = ir_to_bipoly(&apply.args[0], x, y)?;
+                if exp == 0 {
+                    return Some(bi_one());
+                }
+                let mut result = base.clone();
+                for _ in 1..exp {
+                    result = bi_mul_local(&result, &base);
+                }
+                Some(result)
+            } else {
+                None
+            }
+        }
+    }
+}
+
+/// Convert a bivariate ℚ-polynomial back to an IR expression.
+///
+/// Sorting is descending total degree, then descending i, then descending
+/// j — matching the Python ``_bipoly_to_ir`` deterministic key order.
+fn bipoly_to_ir(p: &HenselBiPoly, x: &str, y: &str) -> IRNode {
+    if p.is_empty() {
+        return IRNode::Integer(0);
+    }
+
+    fn monomial_node(i: usize, j: usize, c: HenselRat, x: &str, y: &str) -> IRNode {
+        let mut parts: Vec<IRNode> = Vec::new();
+        let is_constant_term = i == 0 && j == 0;
+        if !c.is_one() || is_constant_term {
+            if c.denom == 1 {
+                parts.push(IRNode::Integer(c.numer as i64));
+            } else {
+                parts.push(IRNode::rational(c.numer as i64, c.denom as i64));
+            }
+        }
+        if i > 0 {
+            let x_node = IRNode::Symbol(x.to_string());
+            if i == 1 {
+                parts.push(x_node);
+            } else {
+                parts.push(apply_node(POW, vec![x_node, IRNode::Integer(i as i64)]));
+            }
+        }
+        if j > 0 {
+            let y_node = IRNode::Symbol(y.to_string());
+            if j == 1 {
+                parts.push(y_node);
+            } else {
+                parts.push(apply_node(POW, vec![y_node, IRNode::Integer(j as i64)]));
+            }
+        }
+        if parts.len() == 1 {
+            parts.into_iter().next().unwrap()
+        } else {
+            apply_node(MUL, parts)
+        }
+    }
+
+    // Sort: descending total degree, then by descending i, then j.
+    let mut keys: Vec<(usize, usize)> = p.keys().copied().collect();
+    keys.sort_by(|a, b| {
+        let at = a.0 + a.1;
+        let bt = b.0 + b.1;
+        match bt.cmp(&at) {
+            std::cmp::Ordering::Equal => match b.0.cmp(&a.0) {
+                std::cmp::Ordering::Equal => b.1.cmp(&a.1),
+                o => o,
+            },
+            o => o,
+        }
+    });
+
+    let terms: Vec<IRNode> = keys
+        .iter()
+        .map(|(i, j)| monomial_node(*i, *j, *p.get(&(*i, *j)).unwrap(), x, y))
+        .collect();
+    if terms.len() == 1 {
+        terms.into_iter().next().unwrap()
+    } else {
+        apply_node(ADD, terms)
+    }
+}
+
+fn try_bivariate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
+    let (x_var, y_var) = find_two_variables(inner)?;
+    let bipoly = ir_to_bipoly(inner, &x_var, &y_var)?;
+    let factors = try_bivariate_hensel(&bipoly)?;
+    if factors.len() < 2 {
+        return None;
+    }
+    let factor_nodes: Vec<IRNode> = factors.iter().map(|f| bipoly_to_ir(f, &x_var, &y_var)).collect();
+    if factor_nodes.len() == 1 {
+        return Some(factor_nodes.into_iter().next().unwrap());
+    }
+    Some(apply_node(MUL, factor_nodes))
+}
+
+// ---------------------------------------------------------------------------
+// n-variate (n ≥ 3) Hensel-lifting IR glue — Track K2.  Mirrors the Python
+// ``_find_n_variables``, ``_ir_to_npoly``, ``_npoly_to_ir``, and
+// ``_try_n_variate_hensel_ir`` helpers in ``cas_handlers.py``.
+//
+// Output convention: LEFT-NESTED BINARY Add/Mul.  The symbolic-vm primitive
+// Add/Mul handlers are strictly binary, so an Apply(ADD, (a, b, c)) with
+// three or more children would crash when re-evaluated.  We mirror the
+// cubic-identity handler's nesting convention: Add(Add(a, b), c) for three
+// terms, etc.
+// ---------------------------------------------------------------------------
+
+const MAX_N_VARS: usize = 8;
+
+fn find_n_variables(node: &IRNode) -> Option<Vec<String>> {
+    let mut seen: Vec<String> = Vec::new();
+    fn walk(n: &IRNode, seen: &mut Vec<String>) -> bool {
+        match n {
+            IRNode::Symbol(name) if !name.starts_with('%') => {
+                if !seen.iter().any(|s| s == name) {
+                    seen.push(name.clone());
+                    if seen.len() > MAX_N_VARS {
+                        return false;
+                    }
+                }
+                true
+            }
+            IRNode::Apply(apply) => {
+                for arg in &apply.args {
+                    if !walk(arg, seen) {
+                        return false;
+                    }
+                }
+                true
+            }
+            _ => true,
+        }
+    }
+    if !walk(node, &mut seen) {
+        return None;
+    }
+    if seen.is_empty() {
+        return None;
+    }
+    Some(seen)
+}
+
+fn ir_to_npoly(node: &IRNode, vars: &[String]) -> Option<HenselNPoly> {
+    let num_vars = vars.len();
+    let zero_key: Vec<usize> = vec![0; num_vars];
+
+    let mut var_index: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    for (i, v) in vars.iter().enumerate() {
+        var_index.insert(v.clone(), i);
+    }
+
+    fn n_one(num_vars: usize) -> HenselNPoly {
+        let mut out = std::collections::BTreeMap::new();
+        out.insert(vec![0usize; num_vars], HenselRat::ONE);
+        out
+    }
+
+    fn n_mul_local(a: &HenselNPoly, b: &HenselNPoly, num_vars: usize) -> HenselNPoly {
+        let mut out: HenselNPoly = std::collections::BTreeMap::new();
+        for (k1, c1) in a {
+            for (k2, c2) in b {
+                let key: Vec<usize> = (0..num_vars).map(|i| k1[i] + k2[i]).collect();
+                let cur = out.get(&key).copied().unwrap_or(HenselRat::ZERO);
+                out.insert(key, cur.add(&c1.mul(c2)));
+            }
+        }
+        out.retain(|_, v| !v.is_zero());
+        out
+    }
+
+    fn n_add_into(acc: &mut HenselNPoly, other: &HenselNPoly) {
+        for (k, v) in other {
+            let cur = acc.get(k).copied().unwrap_or(HenselRat::ZERO);
+            acc.insert(k.clone(), cur.add(v));
+        }
+        acc.retain(|_, v| !v.is_zero());
+    }
+
+    fn unit_for(var_idx: usize, num_vars: usize) -> Vec<usize> {
+        let mut key = vec![0usize; num_vars];
+        key[var_idx] = 1;
+        key
+    }
+
+    fn walk(
+        node: &IRNode,
+        vars_idx: &std::collections::HashMap<String, usize>,
+        num_vars: usize,
+        zero_key: &[usize],
+    ) -> Option<HenselNPoly> {
+        match node {
+            IRNode::Integer(value) => {
+                if *value == 0 {
+                    Some(std::collections::BTreeMap::new())
+                } else {
+                    let mut m = std::collections::BTreeMap::new();
+                    m.insert(zero_key.to_vec(), HenselRat::from_int(*value as i128));
+                    Some(m)
+                }
+            }
+            IRNode::Rational(n, d) => {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert(zero_key.to_vec(), HenselRat::new(*n as i128, *d as i128));
+                Some(m)
+            }
+            IRNode::Float(_) | IRNode::Str(_) => None,
+            IRNode::Symbol(name) => {
+                if name.starts_with('%') {
+                    return None;
+                }
+                if let Some(&i) = vars_idx.get(name) {
+                    let mut m = std::collections::BTreeMap::new();
+                    m.insert(unit_for(i, num_vars), HenselRat::ONE);
+                    Some(m)
+                } else {
+                    None
+                }
+            }
+            IRNode::Apply(apply) => {
+                let head = match &apply.head {
+                    IRNode::Symbol(name) => name.as_str(),
+                    _ => return None,
+                };
+                if head == ADD {
+                    let mut acc: HenselNPoly = std::collections::BTreeMap::new();
+                    for arg in &apply.args {
+                        let sub = walk(arg, vars_idx, num_vars, zero_key)?;
+                        n_add_into(&mut acc, &sub);
+                    }
+                    Some(acc)
+                } else if head == SUB && apply.args.len() == 2 {
+                    let a = walk(&apply.args[0], vars_idx, num_vars, zero_key)?;
+                    let b = walk(&apply.args[1], vars_idx, num_vars, zero_key)?;
+                    let mut neg_b: HenselNPoly = std::collections::BTreeMap::new();
+                    for (k, v) in &b {
+                        if !v.is_zero() {
+                            neg_b.insert(k.clone(), v.neg());
+                        }
+                    }
+                    let mut acc = a;
+                    n_add_into(&mut acc, &neg_b);
+                    Some(acc)
+                } else if head == NEG && apply.args.len() == 1 {
+                    let sub = walk(&apply.args[0], vars_idx, num_vars, zero_key)?;
+                    let mut out: HenselNPoly = std::collections::BTreeMap::new();
+                    for (k, v) in sub {
+                        if !v.is_zero() {
+                            out.insert(k, v.neg());
+                        }
+                    }
+                    Some(out)
+                } else if head == MUL {
+                    let mut acc = n_one(num_vars);
+                    for arg in &apply.args {
+                        let sub = walk(arg, vars_idx, num_vars, zero_key)?;
+                        acc = n_mul_local(&acc, &sub, num_vars);
+                    }
+                    Some(acc)
+                } else if head == POW && apply.args.len() == 2 {
+                    let exp = match apply.args[1] {
+                        IRNode::Integer(e) => e,
+                        _ => return None,
+                    };
+                    if exp < 0 {
+                        return None;
+                    }
+                    let base = walk(&apply.args[0], vars_idx, num_vars, zero_key)?;
+                    if exp == 0 {
+                        return Some(n_one(num_vars));
+                    }
+                    let mut result = base.clone();
+                    for _ in 1..exp {
+                        result = n_mul_local(&result, &base, num_vars);
+                    }
+                    Some(result)
+                } else {
+                    None
+                }
+            }
+        }
+    }
+    let _ = zero_key;
+    walk(node, &var_index, num_vars, &vec![0usize; num_vars])
+}
+
+/// Left-fold a list of children into nested binary Apply nodes.
+fn fold_binary(head: &str, parts: Vec<IRNode>) -> IRNode {
+    assert!(!parts.is_empty(), "fold_binary requires at least one node");
+    let mut iter = parts.into_iter();
+    let mut result = iter.next().unwrap();
+    for nxt in iter {
+        result = apply_node(head, vec![result, nxt]);
+    }
+    result
+}
+
+fn npoly_to_ir(p: &HenselNPoly, vars: &[String]) -> IRNode {
+    if p.is_empty() {
+        return IRNode::Integer(0);
+    }
+    let num_vars = vars.len();
+
+    fn monomial_node(key: &[usize], c: HenselRat, vars: &[String]) -> IRNode {
+        let mut parts: Vec<IRNode> = Vec::new();
+        let all_zero = key.iter().all(|e| *e == 0);
+        if !c.is_one() || all_zero {
+            if c.denom == 1 {
+                parts.push(IRNode::Integer(c.numer as i64));
+            } else {
+                parts.push(IRNode::rational(c.numer as i64, c.denom as i64));
+            }
+        }
+        for (i, e) in key.iter().enumerate() {
+            if *e == 0 {
+                continue;
+            }
+            let v_node = IRNode::Symbol(vars[i].clone());
+            if *e == 1 {
+                parts.push(v_node);
+            } else {
+                parts.push(apply_node(POW, vec![v_node, IRNode::Integer(*e as i64)]));
+            }
+        }
+        if parts.is_empty() {
+            return IRNode::Integer(1);
+        }
+        fold_binary(MUL, parts)
+    }
+
+    // Sort: descending total degree, then lex on negated exponents.
+    let mut keys: Vec<Vec<usize>> = p.keys().cloned().collect();
+    keys.sort_by(|a, b| {
+        let sa: usize = a.iter().sum();
+        let sb: usize = b.iter().sum();
+        match sb.cmp(&sa) {
+            std::cmp::Ordering::Equal => {
+                for i in 0..num_vars {
+                    match b[i].cmp(&a[i]) {
+                        std::cmp::Ordering::Equal => continue,
+                        o => return o,
+                    }
+                }
+                std::cmp::Ordering::Equal
+            }
+            o => o,
+        }
+    });
+
+    let terms: Vec<IRNode> = keys
+        .iter()
+        .map(|k| monomial_node(k, *p.get(k).unwrap(), vars))
+        .collect();
+    fold_binary(ADD, terms)
+}
+
+fn try_n_variate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
+    let vars = find_n_variables(inner)?;
+    if vars.len() < 2 {
+        return None;
+    }
+    let npoly = ir_to_npoly(inner, &vars)?;
+    let factors = try_n_variate_hensel(&npoly, vars.len())?;
+    if factors.len() < 2 {
+        return None;
+    }
+    let factor_nodes: Vec<IRNode> = factors.iter().map(|f| npoly_to_ir(f, &vars)).collect();
+    if factor_nodes.len() == 1 {
+        return Some(factor_nodes.into_iter().next().unwrap());
+    }
+    // Left-nested binary Mul for binary-handler compatibility.
+    Some(fold_binary(MUL, factor_nodes))
+}
+
+// ---------------------------------------------------------------------------
+// Apart (Track B1) — partial-fraction decomposition over Q(x).
+//
+// Supports simple rational roots, repeated rational roots, and proper
+// irreducible denominators that are already apart.  Mixed rational-root plus
+// irreducible residual factors, emitted as rational-pole terms plus a
+// proper residual rational term.  This mirrors the Python
+// ``apart_handler`` / ``_apart_simple_roots`` / ``_apart_proper`` chain in
+// ``cas_handlers.py`` but stays inside the existing ``RatC`` / ``RatPoly``
+// machinery so we don't introduce a new arithmetic substrate.
+//
+// Polynomials use the same ``RatPoly`` representation as the rest of this
+// file: lowest degree first, coefficient at index k is the coefficient of
+// x^k.  Polynomials are not auto-normalised; callers strip trailing zeros
+// via ``rp_normalize`` when needed.
+// ---------------------------------------------------------------------------
+
+const APART: &str = "Apart";
+
+/// Strip trailing zero coefficients in place.
+fn rp_normalize(p: &[RatC]) -> RatPoly {
+    let mut out: RatPoly = p.to_vec();
+    while out.last().map_or(false, |c| rc_is_zero(*c)) {
+        out.pop();
+    }
+    out
+}
+
+/// Horner evaluation at a rational point.
+fn rp_evaluate(p: &[RatC], x: RatC) -> Option<RatC> {
+    let n = rp_normalize(p);
+    if n.is_empty() {
+        return Some(RC_ZERO);
+    }
+    let mut acc = RC_ZERO;
+    for &c in n.iter().rev() {
+        acc = rc_add(rc_mul(acc, x)?, c)?;
+    }
+    Some(acc)
+}
+
+/// Rational roots via the Rational-Roots Theorem.  Returns roots in
+/// ascending order — matches Python's ``sorted(roots)`` so the IR output
+/// shape stays stable across regression tests.
+fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
+    let n = rp_normalize(p);
+    if n.len() <= 1 {
+        return Some(vec![]);
+    }
+
+    // Clear denominators so candidates come from integer divisors of p.
+    let mut lcm_den: i128 = 1;
+    for &(_, d) in &n {
+        let g = gcd128(lcm_den.unsigned_abs(), d.unsigned_abs()) as i128;
+        lcm_den = lcm_den.checked_mul(d)? / g;
+    }
+    let mut int_coeffs: Vec<i128> = n
+        .iter()
+        .map(|&(num, den)| num.checked_mul(lcm_den).map(|p| p / den))
+        .collect::<Option<Vec<_>>>()?;
+    if *int_coeffs.last()? < 0 {
+        for c in int_coeffs.iter_mut() {
+            *c = -*c;
+        }
+    }
+
+    let a0 = int_coeffs[0];
+    let an = *int_coeffs.last()?;
+
+    if a0 == 0 {
+        // x = 0 is a root; strip it and recurse on the tail.
+        let tail_int = &int_coeffs[1..];
+        let tail_poly: RatPoly = tail_int.iter().map(|&c| (c, 1i128)).collect();
+        let mut tail_roots = rp_rational_roots(&tail_poly)?;
+        if !tail_roots.iter().any(|r| rc_is_zero(*r)) {
+            tail_roots.push(RC_ZERO);
+        }
+        // Keep ascending order.
+        tail_roots.sort_by(|a, b| {
+            // a = (an, ad), b = (bn, bd) — compare an*bd vs bn*ad.
+            let lhs = a.0 as i128 * b.1 as i128;
+            let rhs = b.0 as i128 * a.1 as i128;
+            lhs.cmp(&rhs)
+        });
+        return Some(tail_roots);
+    }
+
+    fn divisors(m: i128) -> Vec<i128> {
+        let abs = m.unsigned_abs();
+        let mut out = Vec::new();
+        let mut d: u128 = 1;
+        while d <= abs {
+            if abs % d == 0 {
+                out.push(d as i128);
+            }
+            d += 1;
+        }
+        out
+    }
+
+    let p_divs = divisors(a0);
+    let q_divs = divisors(an);
+
+    // Use a tuple-keyed set via Vec + dedup; counts are small.
+    let mut candidates: Vec<RatC> = Vec::new();
+    for &u in &p_divs {
+        for &v in &q_divs {
+            for sign in [1i128, -1] {
+                if let Some(cand) = rc(sign * u, v) {
+                    candidates.push(cand);
+                }
+            }
+        }
+    }
+    candidates.sort();
+    candidates.dedup();
+
+    let int_poly: RatPoly = int_coeffs.iter().map(|&c| (c, 1i128)).collect();
+    let mut roots: Vec<RatC> = Vec::new();
+    for cand in candidates {
+        if let Some(v) = rp_evaluate(&int_poly, cand) {
+            if rc_is_zero(v) && !roots.iter().any(|r| *r == cand) {
+                roots.push(cand);
+            }
+        }
+    }
+    // Sort ascending — matches Python's ``sorted(roots)``.
+    roots.sort_by(|a, b| {
+        let lhs = a.0 * b.1;
+        let rhs = b.0 * a.1;
+        lhs.cmp(&rhs)
+    });
+    Some(roots)
+}
+
+/// For each rational root, count the multiplicity of ``(x − r)`` in ``den``.
+/// Returns the remaining factor after rational-root factors are removed.
+/// The residual is constant iff ``den`` fully splits over Q.
+fn rp_root_multiplicities_and_residual(
+    den: &[RatC],
+    roots: &[RatC],
+) -> Option<(Vec<(RatC, usize)>, RatPoly)> {
+    let mut out: Vec<(RatC, usize)> = Vec::new();
+    let mut remaining: RatPoly = rp_normalize(den);
+    for &r in roots {
+        let linear: RatPoly = vec![rc_neg(r), RC_ONE]; // (x − r)
+        let mut m: usize = 0;
+        loop {
+            let (q, rem) = rp_div(&remaining, &linear)?;
+            if rp_is_zero(&rem) {
+                remaining = q;
+                m += 1;
+            } else {
+                break;
+            }
+        }
+        if m == 0 {
+            return None;
+        }
+        out.push((r, m));
+    }
+    Some((out, rp_normalize(&remaining)))
+}
+
+/// Rational form of an IR sub-expression in variable ``x``.
+type RpRational = (RatPoly, RatPoly); // (num, den)
+
+const fn rp_one_const() -> [RatC; 1] {
+    [(1i128, 1i128)]
+}
+
+fn rp_one() -> RatPoly {
+    rp_one_const().to_vec()
+}
+
+/// Attempt to represent ``node`` as a rational function ``num / den`` of
+/// ``x``.  Returns ``None`` for floats, free symbols, transcendentals, or
+/// any subtree outside Q(x).  Mirrors Python ``polynomial_bridge.to_rational``
+/// (and the analogous TS port).
+fn to_rational_ir(node: &IRNode, x: &str) -> Option<RpRational> {
+    match node {
+        IRNode::Integer(n) => Some((vec![(*n as i128, 1)], rp_one())),
+        IRNode::Rational(n, d) => {
+            let c = rc(*n as i128, *d as i128)?;
+            Some((vec![c], rp_one()))
+        }
+        IRNode::Float(_) => None,
+        IRNode::Symbol(s) => {
+            if s == x {
+                Some((vec![RC_ZERO, RC_ONE], rp_one()))
+            } else {
+                None
+            }
+        }
+        IRNode::Apply(apply) => {
+            let IRNode::Symbol(head) = &apply.head else {
+                return None;
+            };
+            match (head.as_str(), apply.args.as_slice()) {
+                (ADD, args) if !args.is_empty() => {
+                    let mut acc = to_rational_ir(&args[0], x)?;
+                    for arg in &args[1..] {
+                        let other = to_rational_ir(arg, x)?;
+                        acc = rational_add(acc, other)?;
+                    }
+                    Some(acc)
+                }
+                (SUB, [a, b]) => {
+                    let ra = to_rational_ir(a, x)?;
+                    let rb = to_rational_ir(b, x)?;
+                    rational_sub(ra, rb)
+                }
+                (NEG, [a]) => {
+                    let (num, den) = to_rational_ir(a, x)?;
+                    let neg_num: RatPoly = num.into_iter().map(rc_neg).collect();
+                    Some((neg_num, den))
+                }
+                (MUL, args) if !args.is_empty() => {
+                    let mut acc = to_rational_ir(&args[0], x)?;
+                    for arg in &args[1..] {
+                        let other = to_rational_ir(arg, x)?;
+                        acc = rational_mul(acc, other)?;
+                    }
+                    Some(acc)
+                }
+                (DIV, [a, b]) => {
+                    let ra = to_rational_ir(a, x)?;
+                    let rb = to_rational_ir(b, x)?;
+                    rational_div(ra, rb)
+                }
+                (POW, [base, exp]) => {
+                    let IRNode::Integer(n) = exp else {
+                        return None;
+                    };
+                    rational_pow(base, *n, x)
+                }
+                _ => None,
+            }
+        }
+        _ => None,
+    }
+}
+
+fn rational_add(a: RpRational, b: RpRational) -> Option<RpRational> {
+    let num = rp_add(&rp_mul(&a.0, &b.1)?, &rp_mul(&b.0, &a.1)?)?;
+    let den = rp_mul(&a.1, &b.1)?;
+    Some((num, den))
+}
+
+fn rational_sub(a: RpRational, b: RpRational) -> Option<RpRational> {
+    let num = rp_sub_poly(&rp_mul(&a.0, &b.1)?, &rp_mul(&b.0, &a.1)?)?;
+    let den = rp_mul(&a.1, &b.1)?;
+    Some((num, den))
+}
+
+fn rational_mul(a: RpRational, b: RpRational) -> Option<RpRational> {
+    Some((rp_mul(&a.0, &b.0)?, rp_mul(&a.1, &b.1)?))
+}
+
+fn rational_div(a: RpRational, b: RpRational) -> Option<RpRational> {
+    let new_den = rp_mul(&a.1, &b.0)?;
+    if rp_is_zero(&new_den) {
+        return None;
+    }
+    Some((rp_mul(&a.0, &b.1)?, new_den))
+}
+
+fn rational_pow(base: &IRNode, n: i64, x: &str) -> Option<RpRational> {
+    let (num, den) = to_rational_ir(base, x)?;
+    if n == 0 {
+        return Some((rp_one(), rp_one()));
+    }
+    if n < 0 {
+        if rp_is_zero(&num) {
+            return None;
+        }
+        let k = (-n) as usize;
+        return Some((rp_power(&den, k)?, rp_power(&num, k)?));
+    }
+    let k = n as usize;
+    Some((rp_power(&num, k)?, rp_power(&den, k)?))
+}
+
+fn rp_power(p: &[RatC], n: usize) -> Option<RatPoly> {
+    let mut result: RatPoly = rp_one();
+    for _ in 0..n {
+        result = rp_mul(&result, p)?;
+    }
+    Some(result)
+}
+
+/// Build canonical IR for a polynomial coefficient tuple.  Mirrors
+/// ``polynomial_bridge.from_polynomial`` — left-associated ``Add`` chain,
+/// drops zero terms, special-cases ±1 coefficients.
+fn rp_to_ir_apart(p: &[RatC], x: &str) -> Option<IRNode> {
+    let n = rp_normalize(p);
+    if n.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    if n.len() == 1 {
+        return rc_to_ir(n[0]);
+    }
+    let x_sym = IRNode::Symbol(x.to_string());
+    let mut terms: Vec<IRNode> = Vec::new();
+    for (i, &c) in n.iter().enumerate() {
+        if rc_is_zero(c) {
+            continue;
+        }
+        let monomial = if i == 0 {
+            rc_to_ir(c)?
+        } else {
+            let power: IRNode = if i == 1 {
+                x_sym.clone()
+            } else {
+                apply_node(POW, vec![x_sym.clone(), IRNode::Integer(i as i64)])
+            };
+            if rc_is_one(c) {
+                power
+            } else if c == (-1, 1) {
+                apply_node(NEG, vec![power])
+            } else {
+                apply_node(MUL, vec![rc_to_ir(c)?, power])
+            }
+        };
+        terms.push(monomial);
+    }
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
+}
+
+fn apart_simple_roots(
+    num: &[RatC],
+    den: &[RatC],
+    roots: &[RatC],
+    x: &str,
+) -> Option<IRNode> {
+    let den_deriv = rp_deriv(den)?;
+    let mut terms: Vec<IRNode> = Vec::new();
+    for &r in roots {
+        let num_val = rp_evaluate(num, r)?;
+        let den_d_val = rp_evaluate(&den_deriv, r)?;
+        if rc_is_zero(den_d_val) {
+            return None;
+        }
+        let coef = rc_div(num_val, den_d_val)?;
+        // (x − r) IR via from_polynomial([-r, 1], x).
+        let factor_ir = rp_to_ir_apart(&[rc_neg(r), RC_ONE], x)?;
+        let term = if rc_is_one(coef) {
+            apply_node(DIV, vec![IRNode::Integer(1), factor_ir])
+        } else if coef == (-1, 1) {
+            apply_node(NEG, vec![apply_node(DIV, vec![IRNode::Integer(1), factor_ir])])
+        } else {
+            apply_node(DIV, vec![rc_to_ir(coef)?, factor_ir])
+        };
+        terms.push(term);
+    }
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
+}
+
+/// Binomial coefficient ``C(n, k)``.  Returns ``0`` when ``k`` is out of
+/// range so callers can sum unconditionally.  Mirrors Python ``_binomial``.
+fn binomial_i128(n: usize, k: usize) -> i128 {
+    if k > n {
+        return 0;
+    }
+    if k == 0 || k == n {
+        return 1;
+    }
+    let kk = k.min(n - k);
+    let mut result: i128 = 1;
+    for i in 0..kk {
+        result = result * (n - i) as i128 / (i + 1) as i128;
+    }
+    result
+}
+
+/// First ``length`` Taylor coefficients of ``poly(r + t)`` as a polynomial
+/// in ``t``.  Mirrors Python ``_taylor_expand_around_r``: for
+/// ``poly(x) = ∑ c_i x^i``,
+///     poly(r + t)_j = ∑_{i ≥ j} c_i · C(i, j) · r^(i − j).
+/// When ``length`` exceeds ``deg poly`` trailing entries are 0.
+fn poly_taylor_expand_around_r(poly: &[RatC], r: RatC, length: usize) -> Option<RatPoly> {
+    let deg = if poly.is_empty() { 0 } else { poly.len() - 1 };
+    let mut result: RatPoly = Vec::with_capacity(length);
+    for j in 0..length {
+        let mut cj: RatC = RC_ZERO;
+        let mut r_pow: RatC = RC_ONE; // r^(i - j) starts at r^0 when i == j
+        let start = j;
+        for i in start..=deg {
+            if i >= poly.len() {
+                break;
+            }
+            let binom = binomial_i128(i, j);
+            if binom != 0 {
+                let coef = poly[i];
+                let term = rc_mul(rc_mul(coef, (binom, 1))?, r_pow)?;
+                cj = rc_add(cj, term)?;
+            }
+            r_pow = rc_mul(r_pow, r)?;
+        }
+        result.push(cj);
+    }
+    Some(result)
+}
+
+/// Formal power-series division ``N(t)/D(t)`` to ``length`` terms.
+/// Requires ``D(0) ≠ 0`` — returns ``None`` otherwise (signal of a
+/// repeated-root miscount upstream).  Mirrors Python ``_series_div``.
+fn poly_series_div(n_coeffs: &[RatC], d_coeffs: &[RatC], length: usize) -> Option<RatPoly> {
+    if d_coeffs.is_empty() || rc_is_zero(d_coeffs[0]) {
+        return None;
+    }
+    let d0 = d_coeffs[0];
+    let mut q: RatPoly = Vec::with_capacity(length);
+    for j in 0..length {
+        let nj = if j < n_coeffs.len() { n_coeffs[j] } else { RC_ZERO };
+        let mut s: RatC = RC_ZERO;
+        for k in 1..=j {
+            let dk = if k < d_coeffs.len() { d_coeffs[k] } else { RC_ZERO };
+            s = rc_add(s, rc_mul(dk, q[j - k])?)?;
+        }
+        q.push(rc_div(rc_sub(nj, s)?, d0)?);
+    }
+    Some(q)
+}
+
+/// Build the IR for ``A / (x − r)^power``.  Drops ``±1`` numerator
+/// coefficients to match the formatting in ``apart_simple_roots``.
+/// Mirrors Python ``_build_apart_term``.
+fn build_apart_term(a: RatC, r: RatC, power: usize, x: &str) -> Option<IRNode> {
+    let factor_ir = rp_to_ir_apart(&[rc_neg(r), RC_ONE], x)?;
+    let denom_ir = if power == 1 {
+        factor_ir
+    } else {
+        apply_node(POW, vec![factor_ir, IRNode::Integer(power as i64)])
+    };
+    let node = if rc_is_one(a) {
+        apply_node(DIV, vec![IRNode::Integer(1), denom_ir])
+    } else if a == (-1, 1) {
+        apply_node(NEG, vec![apply_node(DIV, vec![IRNode::Integer(1), denom_ir])])
+    } else {
+        apply_node(DIV, vec![rc_to_ir(a)?, denom_ir])
+    };
+    Some(node)
+}
+
+/// Decompose a *proper* rational function (deg num < deg den).
+///
+/// Phase 1 (simple roots) — residue formula ``A_i = P(r_i)/Q'(r_i)``.
+///
+/// Phase 48 (repeated linear factors) — for each rational root ``r`` of
+/// multiplicity ``m`` compute ``Q(x) = den(x)/(x − r)^m`` and expand
+/// ``φ(t) = P(r + t)/Q(r + t)`` as a Taylor series in ``t`` up to
+/// ``t^(m − 1)``.  Then ``A_{r, m − j} = φ_j``.  Emits terms
+/// ``A / (x − r)^power`` for ``power = 1..=m`` in ascending order.
+///
+/// Mixed rational-root plus irreducible residual factors are decomposed into
+/// rational-pole terms plus a proper residual rational term.
+fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
+    let roots = rp_rational_roots(den)?;
+    if roots.is_empty() {
+        return proper_rational_to_ir(num, den, x);
+    }
+    let (mults, residual_den) = rp_root_multiplicities_and_residual(den, &roots)?;
+    let has_residual = rp_deg(&residual_den).is_some_and(|deg| deg >= 1);
+
+    // Phase 1 fast path — preserves the existing output shape for the
+    // regression tests written against B1.
+    if !has_residual && mults.iter().all(|(_, m)| *m == 1) {
+        return apart_simple_roots(num, den, &roots, x);
+    }
+
+    // Phase 48 generic path: Taylor + series-division per root.
+    let mut terms: Vec<IRNode> = Vec::new();
+    let mut linear_part: RatPoly = rp_one();
+    let mut residual_num: RatPoly = rp_normalize(num);
+    for &r in &roots {
+        let m = mults
+            .iter()
+            .find_map(|(rr, mm)| if *rr == r { Some(*mm) } else { None })?;
+        // Q(x) = den(x) / (x − r)^m.  Successive divisions are exact
+        // because we just verified the multiplicity above.
+        let mut q_poly: RatPoly = rp_normalize(den);
+        let linear: RatPoly = vec![rc_neg(r), RC_ONE];
+        for _ in 0..m {
+            linear_part = rp_mul(&linear_part, &linear)?;
+        }
+        for _ in 0..m {
+            let (q, _rem) = rp_div(&q_poly, &linear)?;
+            q_poly = q;
+        }
+        // Taylor-expand both P(r + t) and Q(r + t) up to t^(m − 1).
+        let n_taylor = poly_taylor_expand_around_r(num, r, m)?;
+        let d_taylor = poly_taylor_expand_around_r(&q_poly, r, m)?;
+        let phi = poly_series_div(&n_taylor, &d_taylor, m)?;
+        // A_{r, m − j} = phi[j].  Emit ascending power order:
+        // 1/(x − r), 1/(x − r)^2, …, 1/(x − r)^m.
+        for power in 1..=m {
+            let j = m - power;
+            let a = phi[j];
+            if rc_is_zero(a) {
+                continue;
+            }
+            terms.push(build_apart_term(a, r, power, x)?);
+            let mut pole_denom: RatPoly = rp_one();
+            for _ in 0..power {
+                pole_denom = rp_mul(&pole_denom, &linear)?;
+            }
+            let (q, rem) = rp_div(den, &pole_denom)?;
+            if !rp_is_zero(&rem) {
+                return None;
+            }
+            let scaled: RatPoly = q
+                .iter()
+                .map(|&c| rc_mul(c, a))
+                .collect::<Option<Vec<_>>>()?;
+            residual_num = rp_sub_poly(&residual_num, &scaled)?;
+        }
+    }
+    if has_residual {
+        let (residual_quotient, residual_rem) = rp_div(&residual_num, &linear_part)?;
+        if !rp_is_zero(&residual_rem) {
+            return None;
+        }
+        let residual_ir = proper_rational_to_ir(&residual_quotient, &residual_den, x)?;
+        if residual_ir != IRNode::Integer(0) {
+            terms.push(residual_ir);
+        }
+    }
+    if terms.is_empty() {
+        return Some(IRNode::Integer(0));
+    }
+    Some(
+        terms
+            .into_iter()
+            .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
+            .unwrap(),
+    )
+}
+
+fn proper_rational_to_ir(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
+    if rp_is_zero(num) {
+        return Some(IRNode::Integer(0));
+    }
+    Some(apply_node(
+        DIV,
+        vec![rp_to_ir_apart(num, x)?, rp_to_ir_apart(den, x)?],
+    ))
+}
+
+fn apart_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    let fallback = IRNode::Apply(Box::new(expr.clone()));
+    if expr.args.len() != 2 {
+        return fallback;
+    }
+    let inner = &expr.args[0];
+    let var = &expr.args[1];
+    let IRNode::Symbol(x) = var else {
+        return fallback;
+    };
+    let Some((num, den)) = to_rational_ir(inner, x) else {
+        return fallback;
+    };
+    let den_norm = rp_normalize(&den);
+    let num_norm = rp_normalize(&num);
+
+    // Already a polynomial (denominator ≡ 1).
+    if den_norm.len() == 1 && rc_is_one(den_norm[0]) {
+        return rp_to_ir_apart(&num_norm, x).unwrap_or(fallback);
+    }
+
+    let num_deg = rp_deg(&num_norm).unwrap_or(0);
+    let den_deg = match rp_deg(&den_norm) {
+        Some(d) => d,
+        None => return fallback,
+    };
+
+    if num_deg >= den_deg {
+        let Some((q, r)) = rp_div(&num_norm, &den_norm) else {
+            return fallback;
+        };
+        if rp_is_zero(&r) {
+            return rp_to_ir_apart(&q, x).unwrap_or(fallback);
+        }
+        let Some(proper) = apart_proper(&r, &den_norm, x) else {
+            return fallback;
+        };
+        let Some(poly_part) = rp_to_ir_apart(&q, x) else {
+            return fallback;
+        };
+        return apply_node(ADD, vec![poly_part, proper]);
+    }
+
+    apart_proper(&num_norm, &den_norm, x).unwrap_or(fallback)
+}
+
+// ---------------------------------------------------------------------------
 // Build handler table
 // ---------------------------------------------------------------------------
 
@@ -4568,8 +7488,46 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
         m.insert(D.to_string(), derivative_handler());
         m.insert(INTEGRATE.to_string(), integrate_handler());
         m.insert(FACTOR.to_string(), handler_fn(factor_handler));
+        // Track B1 — Apart simple-roots partial-fraction decomposition.
+        m.insert(APART.to_string(), handler_fn(apart_handler));
+        // Track G2 — assumption store mutators.  `Assume(rel)` records a
+        // sign / equality fact on `vm.assumptions`; `Forget(rel)`
+        // removes one; `ForgetAll()` clears the whole table.  The
+        // relation argument is held (see `BaseBackend::new`) so it
+        // reaches the handler intact.  Returning the original expr
+        // mirrors the Python handler and lets MACSYMA chains like
+        // `Assume(x > 0); Sqrt(x^2)` thread the assertion through
+        // without producing extraneous result expressions.
+        m.insert("Assume".to_string(), assume_handler());
+        m.insert("Forget".to_string(), forget_handler());
+        m.insert("ForgetAll".to_string(), forget_all_handler());
     }
     m
+}
+
+fn assume_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() == 1 {
+            vm.assumptions.assume_relation(&expr.args[0]);
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+fn forget_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() == 1 {
+            vm.assumptions.forget_relation(&expr.args[0]);
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+fn forget_all_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        vm.assumptions.forget_all();
+        IRNode::Apply(Box::new(expr))
+    })
 }
 
 // ---------------------------------------------------------------------------

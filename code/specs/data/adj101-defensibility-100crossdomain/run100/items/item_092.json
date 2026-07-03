@@ -1,0 +1,7 @@
+{
+ "idx": 92,
+ "id": "ACA-3",
+ "scenario": "A grant's current budget period ends on December 31. The PI submitted the annual progress report on October 15 of the same year.",
+ "policy": "An annual progress report is due no later than 90 days before the end of the current budget period. A report submitted after that date is considered late.",
+ "question": "Is the progress report on time or late?"
+}

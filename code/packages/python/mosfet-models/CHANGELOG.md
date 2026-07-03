@@ -3,6 +3,10 @@
 ## [0.1.0] — Unreleased
 
 ### Added
+- `Level1Params` now includes MOS Level-1 capacitance footholds (`CGSO`,
+  `CGDO`, `CGBO`, `CBS`, `CBD`) and reports them through `MosResult`.
+- `Level1Params.PB` and `Level1Params.MJ` now shape zero-bias bulk-junction
+  `CBS`/`CBD` capacitance under reverse source-bulk and drain-bulk bias.
 - `Level1Params`: SPICE Level-1 parameter set (VT0, KP, LAMBDA, GAMMA, PHI, W, L, IS, N_SUB, T_NOM, subthreshold_enable).
 - `evaluate_level1(params, V_GS, V_DS, V_BS, T)`: classical square-law I-V with body effect, channel-length modulation, and optional subthreshold current.
 - `MosResult`: Id + small-signal Jacobian (gm, gds, gmb) + Meyer capacitances + region label.

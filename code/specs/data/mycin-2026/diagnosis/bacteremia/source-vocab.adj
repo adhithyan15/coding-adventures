@@ -1,0 +1,64 @@
+% ============================================================================
+% source-vocab — controlled vocabulary for ORGANISM IDENTIFICATION in
+% bacteremia / sepsis, reasoning from the PORTAL OF ENTRY. Importable CAS library.
+% ============================================================================
+% MYCIN-2026 A2. Bacteremia (organisms in the blood) was MYCIN's *primary* domain.
+% Its central diagnostic move was to infer the likely organism from the SOURCE /
+% portal of entry plus host factors, then recommend empiric coverage. This is the
+% same machinery as the meningitis organism-id (A1) pointed at a different site —
+% proving the substrate generalizes across infection sites with NO new engine.
+%
+% Same closed-vocabulary discipline: the decomposer is constrained to these
+% `surface` forms and the compiler rejects any term not defined here. Organism
+% names align with the bacteremia formulary's tokens (bsi-formulary.json).
+%
+% Use:  import "source-vocab.adj"  then  use bacteremia_vocab
+
+dictionary bacteremia_vocab {
+
+    % ======================== Hypotheses (the organisms) ========================
+    define s_aureus : hypothesis
+        surface "Staphylococcus aureus", "staph aureus", "MRSA", "MSSA"
+    define coag_neg_staph : hypothesis
+        surface "coagulase-negative staphylococcus", "CoNS", "Staphylococcus epidermidis"
+    define enteric_gnb : hypothesis
+        surface "enteric gram-negative bacilli", "E. coli", "Escherichia coli",
+                "Klebsiella", "Enterobacter", "gram-negative rods"
+    define pseudomonas : hypothesis
+        surface "Pseudomonas aeruginosa", "pseudomonas", "non-fermenting gram-negative rod"
+    define enterococcus : hypothesis
+        surface "Enterococcus", "enterococci", "Enterococcus faecalis", "VRE"
+    define strep_pyogenes : hypothesis
+        surface "Streptococcus pyogenes", "group A strep", "beta-hemolytic strep"
+    define s_pneumoniae : hypothesis
+        surface "Streptococcus pneumoniae", "pneumococcus", "pneumococcal bacteremia"
+    define anaerobes : hypothesis
+        surface "anaerobes", "Bacteroides", "Bacteroides fragilis", "anaerobic organisms"
+    define candida : hypothesis
+        surface "Candida", "candidemia", "yeast", "fungemia"
+
+    % ======================== Findings ==========================
+    % --- The portal of entry / source (the dominant determinant). ---
+    define infection_source : finding values [
+            urinary, intravascular_line, intraabdominal,
+            skin_soft_tissue, respiratory, unknown]
+        surface "urinary source", "urosepsis", "pyelonephritis", "UTI source",
+                "central line", "catheter-related", "intravascular catheter",
+                "intra-abdominal", "perforated viscus", "biliary source", "peritonitis",
+                "skin and soft tissue", "cellulitis", "wound infection",
+                "pneumonia", "respiratory source", "lung source",
+                "no clear source", "source unknown", "cryptogenic"
+
+    % --- Host factors that shift the organism distribution. ---
+    define neutropenia : finding values [present, absent]
+        surface "neutropenic", "neutropenia", "ANC < 500", "post-chemotherapy nadir",
+                "not neutropenic"
+    define injection_drug_use : finding values [present, absent]
+        surface "injection drug use", "IVDU", "people who inject drugs", "no IV drug use"
+    define prosthetic_material : finding values [present, absent]
+        surface "prosthetic valve", "prosthetic joint", "indwelling hardware",
+                "vascular graft", "no prosthetic material"
+    define healthcare_associated : finding values [present, absent]
+        surface "healthcare-associated", "hospital-acquired", "recent hospitalization",
+                "recent antibiotics", "nursing facility", "community-acquired"
+}

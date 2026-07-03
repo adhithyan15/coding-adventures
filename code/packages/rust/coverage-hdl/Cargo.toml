@@ -1,0 +1,11 @@
+[package]
+name = "coverage-hdl"
+version = "0.1.0"
+edition = "2021"
+description = "HDL coverage measurement — toggle, functional coverpoints, cross coverage"
+
+[dependencies]
+hardware-vm = { path = "../hardware-vm" }
+
+[dev-dependencies]
+hdl-ir = { path = "../hdl-ir" }

@@ -1,0 +1,7 @@
+{
+ "idx": 91,
+ "id": "ACA-2",
+ "scenario": "A PI was awarded $200,000 for the budget period and ended the period with $40,000 unspent. The PI wishes to carry the balance forward and has obtained no approvals.",
+ "policy": "A Principal Investigator (PI) may carry forward unspent funds into the next budget period only if the unspent balance is 25% or less of the period's total awarded amount; balances above 25% require prior written approval from the program officer.",
+ "question": "May the PI carry the $40,000 forward without prior written approval?"
+}

@@ -1,0 +1,16 @@
+[package]
+name = "irc-net-reactor"
+version = "0.1.0"
+edition = "2021"
+description = "All-Rust IRC server engine hosted on the home-grown tcp-runtime reactor (kqueue/epoll/IOCP) with in-process broadcast"
+authors = ["coding-adventures"]
+license = "MIT"
+
+[dependencies]
+irc-proto = { path = "../irc-proto" }
+irc-framing = { path = "../irc-framing" }
+irc-server = { path = "../irc-server" }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }
+
+[dev-dependencies]

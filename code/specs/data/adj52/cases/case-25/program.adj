@@ -1,0 +1,49 @@
+% ADJ52 case-25 program (this patient's observations + queries only; no rules).
+% 63yo man, 45 pack-years, arc-welder of IRON AND STEEL in a poorly ventilated
+% bay for the previous several months. Productive cough ~6 weeks; treated as CAP
+% with ~3 weeks IV broad-spectrum antibiotics with NO response. Well-appearing,
+% afebrile, SpO2 97% RA, PaO2 73 (mildly low), spirometry normal. Prior CXR 3
+% months earlier read clear. Current imaging: RUL peribronchial peripheral
+% SEGMENTAL air-space consolidation + small ill-defined nodules + background
+% centrilobular emphysema. Bronchoscopy: NO endobronchial lesion. BAL: MARKED
+% alveolar-macrophage predominance, scant neutrophils/lymphocytes/eosinophils.
+% CT-guided needle biopsy: NO malignant cells, NO vasculitis. ANCA negative.
+% NOT yet done: Perls' Prussian blue (iron) stain of the BAL/biopsy.
+
+% --- the occupational exposure (the central clue) ---
+observe occupational_exposure(iron_steel_arc_welding)
+observe exposure_condition(poorly_ventilated)
+observe smoking_burden(heavy_pack_years)
+
+% --- the non-resolving consolidation gestalt ---
+observe consolidation_response_to_antibiotics(none)
+observe general_appearance(well_afebrile)
+observe air_space_consolidation(segmental_right_upper_lobe)
+observe prior_film(recent_clear)
+
+% --- imaging detail ---
+observe ct_pattern(small_ill_defined_nodules)
+
+% --- BAL: macrophage-predominant, scant eosinophils ---
+observe bal_pattern(alveolar_macrophage_predominant)
+observe bal_eosinophils(scant)
+
+% --- procedures: clean airway, negative tissue, negative serology ---
+observe bronchoscopy(no_endobronchial_lesion)
+observe biopsy(no_malignant_cells)
+observe biopsy(no_vasculitis)
+observe biopsy(no_specific_diagnostic_feature)
+observe serology(anca_negative)
+
+% NOT observed (open, decision-relevant): iron_stain(...) — the Perls' Prussian
+% blue result is pending and is the decisive confirmatory discriminator.
+
+% --- queries: each candidate diagnosis + the recommended next steps ---
+? diagnosis(pulmonary_siderosis)
+? diagnosis(organizing_pneumonia)
+? diagnosis(lung_adenocarcinoma)
+? diagnosis(pulmonary_tuberculosis)
+? diagnosis(chronic_eosinophilic_pneumonia)
+? diagnosis(anca_vasculitis)
+? next_step(prussian_blue_iron_stain_of_bal_and_biopsy)
+? next_step(surgical_lung_biopsy)

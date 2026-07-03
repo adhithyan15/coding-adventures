@@ -507,6 +507,71 @@ impl NwkTopologySummary {
     pub fn needs_supervision(self) -> bool {
         self.neighbors.has_stale_neighbors() || self.routes.has_discovery_failures()
     }
+
+    pub fn routing_readiness(self) -> NwkRoutingReadinessSummary {
+        NwkRoutingReadinessSummary::from_topology(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NwkRoutingReadinessSummary {
+    pub generated_at_ms: u64,
+    pub total_neighbors: usize,
+    pub fresh_neighbors: usize,
+    pub stale_neighbors: usize,
+    pub route_capable_neighbors: usize,
+    pub usable_routes: usize,
+    pub discovery_underway_routes: usize,
+    pub discovery_failed_routes: usize,
+    pub best_router_candidate: Option<NetworkAddress>,
+    pub can_forward_now: bool,
+    pub needs_neighbor_refresh: bool,
+    pub needs_route_discovery: bool,
+    pub needs_supervision: bool,
+}
+
+impl NwkRoutingReadinessSummary {
+    pub fn from_topology(topology: NwkTopologySummary) -> Self {
+        let has_fresh_route_capable_neighbor = topology.neighbors.fresh_neighbors > 0
+            && topology.neighbors.route_capable_neighbors > 0;
+        let can_forward_now =
+            has_fresh_route_capable_neighbor && topology.routes.has_usable_routes();
+        let needs_neighbor_refresh =
+            topology.neighbors.is_empty() || topology.neighbors.has_stale_neighbors();
+        let needs_route_discovery =
+            has_fresh_route_capable_neighbor && !topology.routes.has_usable_routes();
+        let needs_supervision = needs_neighbor_refresh
+            || needs_route_discovery
+            || topology.routes.has_discovery_failures();
+
+        Self {
+            generated_at_ms: topology.generated_at_ms,
+            total_neighbors: topology.neighbors.total_neighbors,
+            fresh_neighbors: topology.neighbors.fresh_neighbors,
+            stale_neighbors: topology.neighbors.stale_neighbors,
+            route_capable_neighbors: topology.neighbors.route_capable_neighbors,
+            usable_routes: topology.routes.usable_routes,
+            discovery_underway_routes: topology.routes.discovery_underway_routes,
+            discovery_failed_routes: topology.routes.discovery_failed_routes,
+            best_router_candidate: topology.neighbors.best_router_candidate,
+            can_forward_now,
+            needs_neighbor_refresh,
+            needs_route_discovery,
+            needs_supervision,
+        }
+    }
+
+    pub fn is_ready(self) -> bool {
+        self.can_forward_now && !self.needs_supervision
+    }
+}
+
+pub fn nwk_routing_readiness_summary(
+    generated_at_ms: u64,
+    neighbors: &NeighborTable,
+    routes: &RouteTable,
+) -> NwkRoutingReadinessSummary {
+    NwkTopologySummary::new(generated_at_ms, neighbors, routes).routing_readiness()
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -922,6 +987,30 @@ impl NetworkStatusCode {
             Self::Unknown(value) => value,
         }
     }
+
+    pub fn is_route_failure(self) -> bool {
+        matches!(
+            self,
+            Self::NoRouteAvailable
+                | Self::TreeLinkFailure
+                | Self::NonTreeLinkFailure
+                | Self::NoRoutingCapacity
+                | Self::TargetDeviceUnavailable
+                | Self::ParentLinkFailure
+                | Self::SourceRouteFailure
+                | Self::ManyToOneRouteFailure
+        )
+    }
+
+    pub fn is_address_update(self) -> bool {
+        matches!(
+            self,
+            Self::AddressConflict
+                | Self::VerifyAddresses
+                | Self::NetworkAddressUpdate
+                | Self::PanIdentifierUpdate
+        )
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1053,6 +1142,196 @@ impl NwkCommand {
         }
         Ok(out)
     }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct NwkRouteDiscoveryCommandSummary {
+    pub total_commands: usize,
+    pub route_requests: usize,
+    pub route_replies: usize,
+    pub network_statuses: usize,
+    pub route_records: usize,
+    pub unknown_commands: usize,
+    pub destination_ieee_addresses: usize,
+    pub originator_ieee_addresses: usize,
+    pub responder_ieee_addresses: usize,
+    pub multicast_commands: usize,
+    pub many_to_one_requests: usize,
+    pub total_route_record_relays: usize,
+    pub route_failure_statuses: usize,
+    pub address_update_statuses: usize,
+}
+
+impl NwkRouteDiscoveryCommandSummary {
+    pub fn from_commands<'a>(commands: impl IntoIterator<Item = &'a NwkCommand>) -> Self {
+        let mut summary = Self::default();
+        for command in commands {
+            summary.record(command);
+        }
+        summary
+    }
+
+    pub fn record(&mut self, command: &NwkCommand) {
+        self.total_commands += 1;
+        match command {
+            NwkCommand::RouteRequest(request) => {
+                self.route_requests += 1;
+                if request.destination_ieee.is_some() {
+                    self.destination_ieee_addresses += 1;
+                }
+                if request.options.route_request_multicast() {
+                    self.multicast_commands += 1;
+                }
+                if request.options.route_request_many_to_one() > 0 {
+                    self.many_to_one_requests += 1;
+                }
+            }
+            NwkCommand::RouteReply(reply) => {
+                self.route_replies += 1;
+                if reply.originator_ieee.is_some() {
+                    self.originator_ieee_addresses += 1;
+                }
+                if reply.responder_ieee.is_some() {
+                    self.responder_ieee_addresses += 1;
+                }
+                if reply.options.route_reply_multicast() {
+                    self.multicast_commands += 1;
+                }
+            }
+            NwkCommand::NetworkStatus(status) => {
+                self.network_statuses += 1;
+                if status.status.is_route_failure() {
+                    self.route_failure_statuses += 1;
+                }
+                if status.status.is_address_update() {
+                    self.address_update_statuses += 1;
+                }
+            }
+            NwkCommand::RouteRecord(record) => {
+                self.route_records += 1;
+                self.total_route_record_relays += record.relay_count();
+            }
+            NwkCommand::Unknown { .. } => {
+                self.unknown_commands += 1;
+            }
+        }
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_commands == 0
+    }
+
+    pub fn has_route_discovery(self) -> bool {
+        self.route_requests + self.route_replies > 0
+    }
+
+    pub fn has_route_failures(self) -> bool {
+        self.route_failure_statuses > 0
+    }
+
+    pub fn has_unknown_commands(self) -> bool {
+        self.unknown_commands > 0
+    }
+
+    pub fn needs_route_repair(self) -> bool {
+        self.has_route_failures() || self.unknown_commands > 0
+    }
+
+    pub fn has_source_route_records(self) -> bool {
+        self.route_records > 0 && self.total_route_record_relays > 0
+    }
+}
+
+pub fn summarize_nwk_route_discovery_commands<'a>(
+    commands: impl IntoIterator<Item = &'a NwkCommand>,
+) -> NwkRouteDiscoveryCommandSummary {
+    NwkRouteDiscoveryCommandSummary::from_commands(commands)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NwkRouteRepairReadinessSummary {
+    pub routing_readiness: NwkRoutingReadinessSummary,
+    pub command_summary: NwkRouteDiscoveryCommandSummary,
+    pub required_repair_check_count: usize,
+    pub passed_repair_check_count: usize,
+    pub blocked_repair_check_count: usize,
+    pub forwarding_ready: bool,
+    pub route_discovery_clear: bool,
+    pub route_failure_clear: bool,
+    pub unknown_commands_clear: bool,
+    pub route_repair_ready: bool,
+}
+
+impl NwkRouteRepairReadinessSummary {
+    pub fn from_summaries(
+        routing_readiness: NwkRoutingReadinessSummary,
+        command_summary: NwkRouteDiscoveryCommandSummary,
+    ) -> Self {
+        let forwarding_ready = routing_readiness.is_ready();
+        let route_discovery_clear =
+            !routing_readiness.needs_route_discovery || command_summary.has_route_discovery();
+        let route_failure_clear = !command_summary.has_route_failures();
+        let unknown_commands_clear = !command_summary.has_unknown_commands();
+        let checks = [
+            forwarding_ready,
+            route_discovery_clear,
+            route_failure_clear,
+            unknown_commands_clear,
+        ];
+        let passed_repair_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_repair_check_count = checks.len();
+        let blocked_repair_check_count = required_repair_check_count - passed_repair_check_count;
+        let route_repair_ready = blocked_repair_check_count == 0;
+
+        Self {
+            routing_readiness,
+            command_summary,
+            required_repair_check_count,
+            passed_repair_check_count,
+            blocked_repair_check_count,
+            forwarding_ready,
+            route_discovery_clear,
+            route_failure_clear,
+            unknown_commands_clear,
+            route_repair_ready,
+        }
+    }
+
+    pub fn is_route_repair_ready(self) -> bool {
+        self.route_repair_ready
+    }
+
+    pub fn has_repair_blockers(self) -> bool {
+        self.blocked_repair_check_count > 0
+    }
+
+    pub fn needs_forwarding_path(self) -> bool {
+        !self.forwarding_ready
+    }
+
+    pub fn needs_route_discovery(self) -> bool {
+        !self.route_discovery_clear
+    }
+
+    pub fn needs_route_failure_review(self) -> bool {
+        !self.route_failure_clear
+    }
+
+    pub fn needs_unknown_command_review(self) -> bool {
+        !self.unknown_commands_clear
+    }
+}
+
+pub fn nwk_route_repair_readiness_summary<'a>(
+    generated_at_ms: u64,
+    neighbors: &NeighborTable,
+    routes: &RouteTable,
+    commands: impl IntoIterator<Item = &'a NwkCommand>,
+) -> NwkRouteRepairReadinessSummary {
+    NwkRouteRepairReadinessSummary::from_summaries(
+        nwk_routing_readiness_summary(generated_at_ms, neighbors, routes),
+        summarize_nwk_route_discovery_commands(commands),
+    )
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1922,6 +2201,107 @@ mod tests {
     }
 
     #[test]
+    fn routing_readiness_summary_marks_ready_active_mesh_path() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1001),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_250,
+                1_000,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_1001))
+            .with_link_metrics(210, 1),
+        );
+
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry::active(
+            NetworkAddress(0x2001),
+            NetworkAddress(0x1001),
+            1_300,
+        ));
+
+        let summary = nwk_routing_readiness_summary(1_500, &neighbors, &routes);
+
+        assert_eq!(
+            summary,
+            NwkRoutingReadinessSummary {
+                generated_at_ms: 1_500,
+                total_neighbors: 1,
+                fresh_neighbors: 1,
+                stale_neighbors: 0,
+                route_capable_neighbors: 1,
+                usable_routes: 1,
+                discovery_underway_routes: 0,
+                discovery_failed_routes: 0,
+                best_router_candidate: Some(NetworkAddress(0x1001)),
+                can_forward_now: true,
+                needs_neighbor_refresh: false,
+                needs_route_discovery: false,
+                needs_supervision: false,
+            }
+        );
+        assert!(summary.is_ready());
+    }
+
+    #[test]
+    fn routing_readiness_summary_flags_refresh_and_discovery_work() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(NeighborEntry::new(
+            NetworkAddress(0x1001),
+            NwkDeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+        neighbors.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1002),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Sibling,
+                1_300,
+                1_000,
+            )
+            .with_link_metrics(190, 2),
+        );
+
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry {
+            destination: NetworkAddress(0x2001),
+            next_hop: NetworkAddress(0x1002),
+            status: RouteStatus::DiscoveryFailed,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_350,
+        });
+        routes.upsert(RouteEntry {
+            destination: NetworkAddress(0x2002),
+            next_hop: NetworkAddress(0x1002),
+            status: RouteStatus::DiscoveryUnderway,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_375,
+        });
+
+        let summary = NwkTopologySummary::new(1_500, &neighbors, &routes).routing_readiness();
+
+        assert_eq!(summary.total_neighbors, 2);
+        assert_eq!(summary.fresh_neighbors, 1);
+        assert_eq!(summary.stale_neighbors, 1);
+        assert_eq!(summary.route_capable_neighbors, 2);
+        assert_eq!(summary.usable_routes, 0);
+        assert_eq!(summary.discovery_underway_routes, 1);
+        assert_eq!(summary.discovery_failed_routes, 1);
+        assert_eq!(summary.best_router_candidate, Some(NetworkAddress(0x1002)));
+        assert!(!summary.can_forward_now);
+        assert!(summary.needs_neighbor_refresh);
+        assert!(summary.needs_route_discovery);
+        assert!(summary.needs_supervision);
+        assert!(!summary.is_ready());
+    }
+
+    #[test]
     fn route_request_command_round_trips_with_destination_ieee() {
         let command = NwkCommand::RouteRequest(
             RouteRequest::new(7, NetworkAddress(0x3344), 12)
@@ -2022,6 +2402,179 @@ mod tests {
         } else {
             panic!("expected route record command");
         }
+    }
+
+    #[test]
+    fn route_discovery_command_summary_counts_command_shape() {
+        let commands = vec![
+            NwkCommand::RouteRequest(
+                RouteRequest::new(7, NetworkAddress(0x3344), 12)
+                    .with_options(RouteCommandOptions::new(
+                        ROUTE_REQUEST_MULTICAST_FLAG | (1 << ROUTE_REQUEST_MANY_TO_ONE_SHIFT),
+                    ))
+                    .with_destination_ieee(IeeeAddress(0x0012_4b00_0000_abcd)),
+            ),
+            NwkCommand::RouteReply(
+                RouteReply::new(7, NetworkAddress(0x0000), NetworkAddress(0x3344), 9)
+                    .with_options(RouteCommandOptions::new(ROUTE_REPLY_MULTICAST_FLAG))
+                    .with_originator_ieee(IeeeAddress(0x0012_4b00_0000_0001))
+                    .with_responder_ieee(IeeeAddress(0x0012_4b00_0000_0002)),
+            ),
+            NwkCommand::NetworkStatus(NetworkStatus::new(
+                NetworkStatusCode::SourceRouteFailure,
+                NetworkAddress(0x3344),
+            )),
+            NwkCommand::NetworkStatus(NetworkStatus::new(
+                NetworkStatusCode::NetworkAddressUpdate,
+                NetworkAddress(0x4455),
+            )),
+            NwkCommand::RouteRecord(
+                RouteRecord::new(vec![NetworkAddress(0x1001), NetworkAddress(0x1002)]).unwrap(),
+            ),
+        ];
+
+        let summary = summarize_nwk_route_discovery_commands(&commands);
+
+        assert_eq!(
+            summary,
+            NwkRouteDiscoveryCommandSummary {
+                total_commands: 5,
+                route_requests: 1,
+                route_replies: 1,
+                network_statuses: 2,
+                route_records: 1,
+                unknown_commands: 0,
+                destination_ieee_addresses: 1,
+                originator_ieee_addresses: 1,
+                responder_ieee_addresses: 1,
+                multicast_commands: 2,
+                many_to_one_requests: 1,
+                total_route_record_relays: 2,
+                route_failure_statuses: 1,
+                address_update_statuses: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_route_discovery());
+        assert!(summary.has_route_failures());
+        assert!(summary.needs_route_repair());
+        assert!(summary.has_source_route_records());
+        assert!(!summary.has_unknown_commands());
+    }
+
+    #[test]
+    fn route_discovery_command_summary_flags_unknown_commands() {
+        let commands = vec![NwkCommand::Unknown {
+            command_id: 0xee,
+            payload: vec![0x01, 0x02],
+        }];
+
+        let summary = NwkRouteDiscoveryCommandSummary::from_commands(&commands);
+
+        assert_eq!(summary.total_commands, 1);
+        assert_eq!(summary.unknown_commands, 1);
+        assert!(summary.has_unknown_commands());
+        assert!(summary.needs_route_repair());
+        assert!(!summary.has_route_discovery());
+        assert!(!summary.has_source_route_records());
+    }
+
+    #[test]
+    fn route_repair_readiness_summary_marks_clear_forwarding_path() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1001),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_250,
+                1_000,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_1001))
+            .with_link_metrics(210, 1),
+        );
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry::active(
+            NetworkAddress(0x2001),
+            NetworkAddress(0x1001),
+            1_300,
+        ));
+
+        let summary = nwk_route_repair_readiness_summary(1_500, &neighbors, &routes, []);
+
+        assert_eq!(
+            summary.routing_readiness,
+            nwk_routing_readiness_summary(1_500, &neighbors, &routes)
+        );
+        assert_eq!(
+            summary.command_summary,
+            NwkRouteDiscoveryCommandSummary::default()
+        );
+        assert_eq!(summary.required_repair_check_count, 4);
+        assert_eq!(summary.passed_repair_check_count, 4);
+        assert_eq!(summary.blocked_repair_check_count, 0);
+        assert!(summary.forwarding_ready);
+        assert!(summary.route_discovery_clear);
+        assert!(summary.route_failure_clear);
+        assert!(summary.unknown_commands_clear);
+        assert!(summary.route_repair_ready);
+        assert!(summary.is_route_repair_ready());
+        assert!(!summary.has_repair_blockers());
+        assert!(!summary.needs_forwarding_path());
+        assert!(!summary.needs_route_discovery());
+        assert!(!summary.needs_route_failure_review());
+        assert!(!summary.needs_unknown_command_review());
+    }
+
+    #[test]
+    fn route_repair_readiness_summary_routes_blocked_repair_work() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(NeighborEntry::new(
+            NetworkAddress(0x1001),
+            NwkDeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_250,
+            1_000,
+        ));
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry {
+            destination: NetworkAddress(0x2001),
+            next_hop: NetworkAddress(0x1001),
+            status: RouteStatus::DiscoveryFailed,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_300,
+        });
+        let commands = vec![
+            NwkCommand::NetworkStatus(NetworkStatus::new(
+                NetworkStatusCode::SourceRouteFailure,
+                NetworkAddress(0x2001),
+            )),
+            NwkCommand::Unknown {
+                command_id: 0xee,
+                payload: vec![0x01],
+            },
+        ];
+
+        let summary = NwkRouteRepairReadinessSummary::from_summaries(
+            nwk_routing_readiness_summary(1_500, &neighbors, &routes),
+            summarize_nwk_route_discovery_commands(&commands),
+        );
+
+        assert_eq!(summary.required_repair_check_count, 4);
+        assert_eq!(summary.passed_repair_check_count, 0);
+        assert_eq!(summary.blocked_repair_check_count, 4);
+        assert!(!summary.forwarding_ready);
+        assert!(!summary.route_discovery_clear);
+        assert!(!summary.route_failure_clear);
+        assert!(!summary.unknown_commands_clear);
+        assert!(!summary.route_repair_ready);
+        assert!(!summary.is_route_repair_ready());
+        assert!(summary.has_repair_blockers());
+        assert!(summary.needs_forwarding_path());
+        assert!(summary.needs_route_discovery());
+        assert!(summary.needs_route_failure_review());
+        assert!(summary.needs_unknown_command_review());
     }
 
     #[test]

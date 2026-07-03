@@ -1,0 +1,8 @@
+{
+ "check_id": 52,
+ "idx": 22,
+ "slot": "failure_type",
+ "claimed_value": "mechanical",
+ "scenario": "Priya's dishwasher suffered a mechanical pump failure covered by her extended service plan. The technician's invoice listed $220 for the part and $130 for labor. There was no cosmetic damage involved.",
+ "cited_span": "suffered a mechanical pump failure covered by her extended service plan"
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 95,
+ "id": "ACA-6",
+ "scenario": "A lab used grant funds to buy a specialized centrifuge with a useful life of several years. The PI did not seek prior approval before the purchase.",
+ "policy": "Equipment purchased with grant funds is defined as a tangible item with a useful life of more than one year AND a per-unit acquisition cost of $5,000 or more; such purchases require the funder's prior approval. Items below that threshold are supplies and need no prior approval.",
+ "question": "Did this purchase require the funder's prior approval?"
+}

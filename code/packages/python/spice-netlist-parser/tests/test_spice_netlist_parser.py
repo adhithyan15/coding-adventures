@@ -3,18 +3,21 @@ from math import isclose
 import pytest
 from mosfet_models import Level1Model, MosfetType
 from spice_engine import (
-    AcSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
+    AcSource,
     Capacitor,
     CurrentSource,
     Diode,
     Inductor,
     Mosfet,
+    MutualInductor,
     Resistor,
+    TransmissionLine,
     VoltageSource,
     ac_sweep,
     dc_op,
@@ -22,23 +25,41 @@ from spice_engine import (
     noise_ac,
     sens_dc,
     tf,
+    transient,
 )
 
 from spice_netlist_parser import (
     AcAnalysis,
     DcAnalysis,
+    DistortionAnalysis,
+    FourAnalysis,
     McAnalysis,
+    MeasureAnalysis,
     ModelCard,
     NetlistParseError,
     NoiseAnalysis,
     OpAnalysis,
     OptionsAnalysis,
+    OutputProbe,
+    PlotAnalysis,
+    PoleZeroAnalysis,
+    PrintAnalysis,
+    ProbeAnalysis,
+    SaveAnalysis,
     SensAnalysis,
+    TempAnalysis,
     TfAnalysis,
     TranAnalysis,
+    __version__,
+    build_analysis_plan,
     parse_netlist,
+    run_netlist,
 )
 from spice_netlist_parser.parser import parse_value
+
+
+def test_package_version_matches_pyproject_release() -> None:
+    assert __version__ == "0.3.0"
 
 
 def test_parse_linear_operating_point_netlist_into_circuit() -> None:
@@ -64,6 +85,43 @@ R2 mid 0 1k
     result = dc_op(parsed.circuit)
     assert result.converged
     assert isclose(result.node_voltages["mid"], 5.0, abs_tol=1e-9)
+
+
+def test_builds_and_runs_core_analysis_plan() -> None:
+    deck = """
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+C1 out 0 1u IC=0
+.options method=trap
+.op
+.dc V1 0 1 0.5
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+"""
+    parsed = parse_netlist(deck)
+
+    plan = parsed.analysis_plan()
+    assert plan == build_analysis_plan(parsed)
+    assert [(step.index, step.kind) for step in plan] == [
+        (1, "op"),
+        (2, "dc"),
+        (3, "ac"),
+        (4, "tran"),
+    ]
+
+    results = parsed.run_analysis_plan()
+    assert [result.kind for result in results] == ["op", "dc", "ac", "tran"]
+    assert isclose(results[0].result.node_voltages["out"], 0.5, abs_tol=1e-9)
+    assert len(results[1].result.points) == 3
+    assert isclose(results[1].result.points[-1].node_voltages["out"], 0.5, abs_tol=1e-9)
+    assert len(results[2].result.points) == 1
+    assert abs(results[2].result.points[0].node_voltages["out"]) > 0.0
+    assert results[3].result.method == "trap"
+    assert results[3].result.points[-1].node_voltages["out"] > 0.0
+
+    assert len(run_netlist(deck)) == 4
 
 
 def test_parse_reactive_elements_and_analysis_cards() -> None:
@@ -96,6 +154,79 @@ G1 out 0 in 0 2m
     ]
 
 
+def test_parse_mutual_inductor_card() -> None:
+    parsed = parse_netlist(
+        """
+Lpri p 0 10m
+Lsec s 0 40m
+Kcouple Lpri Lsec 0.75
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[2], MutualInductor)
+    mutual = parsed.circuit.elements[2]
+    assert mutual.name == "Kcouple"
+    assert mutual.primary == "Lpri"
+    assert mutual.secondary == "Lsec"
+    assert mutual.coupling == 0.75
+
+
+def test_mutual_inductor_rejects_missing_referenced_inductor() -> None:
+    with pytest.raises(NetlistParseError, match="referenced inductor"):
+        parse_netlist(
+            """
+Lpri p 0 10m
+Kbad Lpri Lmissing 0.75
+"""
+        )
+
+
+def test_mutual_inductor_rejects_non_finite_coupling() -> None:
+    with pytest.raises(NetlistParseError, match="coupling must be finite"):
+        parse_netlist(
+            """
+Lpri p 0 10m
+Lsec s 0 40m
+Kbad Lpri Lsec 1e999
+"""
+        )
+
+
+def test_parse_transmission_line_card() -> None:
+    parsed = parse_netlist(
+        """
+Tdelay in 0 out 0 Z0=50 TD=1n
+"""
+    )
+
+    assert isinstance(parsed.circuit.elements[0], TransmissionLine)
+    line = parsed.circuit.elements[0]
+    assert line.name == "Tdelay"
+    assert line.n1 == "in"
+    assert line.n2 == "0"
+    assert line.n3 == "out"
+    assert line.n4 == "0"
+    assert line.characteristic_impedance == 50.0
+    assert line.delay == 1.0e-9
+
+
+def test_transmission_line_rejects_unsupported_positional_form() -> None:
+    with pytest.raises(NetlistParseError, match="invalid transmission line parameter syntax"):
+        parse_netlist("Tdelay in 0 out 0 50 1n")
+
+
+def test_transmission_line_rejects_missing_parameters() -> None:
+    with pytest.raises(NetlistParseError, match="requires TD"):
+        parse_netlist("Tdelay in 0 out 0 Z0=50")
+
+
+def test_transmission_line_rejects_non_positive_parameters() -> None:
+    with pytest.raises(NetlistParseError, match="characteristic impedance must be positive"):
+        parse_netlist("Tdelay in 0 out 0 Z0=0 TD=1n")
+    with pytest.raises(NetlistParseError, match="delay must be positive"):
+        parse_netlist("Tdelay in 0 out 0 Z0=50 TD=0")
+
+
 def test_parse_options_analysis_card() -> None:
     parsed = parse_netlist(
         """
@@ -115,6 +246,265 @@ def test_parse_options_analysis_card() -> None:
         )
     ]
     assert parsed.options_cards() == parsed.analyses
+
+
+def test_options_cards_build_engine_call_kwargs() -> None:
+    parsed = parse_netlist(
+        """
+V1 vin 0 DC 10
+R1 vin mid 1k
+R2 mid 0 1k
+.options reltol=1u itl1=7 gmin=1p method=gear2 trtol=2m minstep=1n maxstep=5n itl4=9
+.op
+.tran 1n 2n
+"""
+    )
+    tran = parsed.tran_cards()[0]
+
+    assert parsed.dc_op_kwargs() == {
+        "tol": 1.0e-6,
+        "max_iterations": 7,
+        "pseudo_transient_shunt_conductance": 1.0e-12,
+    }
+    result = dc_op(parsed.circuit, **parsed.dc_op_kwargs())
+    assert isclose(result.node_voltages["mid"], 5.0, abs_tol=1.0e-9)
+
+    assert parsed.transient_kwargs(tran, adaptive=True) == {
+        "method": "gear2",
+        "tol": 1.0e-6,
+        "tol_lte": 2.0e-3,
+        "min_step": 1.0e-9,
+        "max_step": 5.0e-9,
+        "max_iterations": 9,
+        "adaptive": True,
+    }
+    transient_result = transient(
+        parsed.circuit,
+        t_stop=tran.t_stop,
+        t_step=tran.t_step,
+        **parsed.transient_kwargs(tran, adaptive=True),
+    )
+    assert transient_result.converged
+    assert transient_result.method == "gear2"
+
+
+def test_parse_temp_analysis_card() -> None:
+    parsed = parse_netlist(".temp 27 75 -40")
+
+    assert parsed.analyses == [TempAnalysis((27.0, 75.0, -40.0))]
+    assert parsed.temp_cards() == parsed.analyses
+    assert isclose(parsed.operating_temperature_kelvin(), 300.15, abs_tol=1e-12)
+    assert isclose(parsed.operating_temperature_kelvin(1), 348.15, abs_tol=1e-12)
+
+
+def test_operating_temperature_defaults_without_temp_cards() -> None:
+    parsed = parse_netlist("R1 in out 1k")
+
+    assert parsed.operating_temperature_kelvin(default=301.0) == 301.0
+    with pytest.raises(NetlistParseError, match=r"temperature index 3 exceeds \.temp entries"):
+        parse_netlist(".temp 27").operating_temperature_kelvin(3)
+
+
+def test_temp_card_rejects_missing_temperatures() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.temp expects at least 2 fields"):
+        parse_netlist(".temp")
+
+
+def test_parse_print_and_plot_output_cards() -> None:
+    parsed = parse_netlist(
+        """
+.print TRAN V(out) I(Vin)
+.plot ac V(in) V(out)
+"""
+    )
+
+    assert parsed.analyses == [
+        PrintAnalysis(
+            "tran",
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            ),
+        ),
+        PlotAnalysis(
+            "ac",
+            (
+                OutputProbe("voltage", "in"),
+                OutputProbe("voltage", "out"),
+            ),
+        ),
+    ]
+    assert parsed.print_cards() == [parsed.analyses[0]]
+    assert parsed.plot_cards() == [parsed.analyses[1]]
+
+
+def test_parse_save_probe_and_measure_cards() -> None:
+    parsed = parse_netlist(
+        """
+.save V(out) I(Vin)
+.probe tran V(out)
+.measure tran peak MAX V(out) FROM=0 TO=1m
+"""
+    )
+
+    assert parsed.analyses == [
+        SaveAnalysis(
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            )
+        ),
+        ProbeAnalysis("tran", (OutputProbe("voltage", "out"),)),
+        MeasureAnalysis(
+            "tran",
+            "peak",
+            "max",
+            OutputProbe("voltage", "out"),
+            start=0.0,
+            stop=1.0e-3,
+        ),
+    ]
+    assert parsed.save_cards() == [parsed.analyses[0]]
+    assert parsed.probe_cards() == [parsed.analyses[1]]
+    assert parsed.measure_cards() == [parsed.analyses[2]]
+
+
+def test_output_cards_reject_missing_or_unknown_probes() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.print expects at least 3 fields"):
+        parse_netlist(".print tran")
+    with pytest.raises(NetlistParseError, match=r"\.plot probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".plot tran P(out)")
+    with pytest.raises(NetlistParseError, match=r"\.save probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".save P(out)")
+    with pytest.raises(NetlistParseError, match=r"\.probe probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".probe tran")
+    with pytest.raises(NetlistParseError, match=r"\.measure FIND requires AT=<value>"):
+        parse_netlist(".measure tran final FIND V(out)")
+    with pytest.raises(NetlistParseError, match=r"\.measure operation must be FIND"):
+        parse_netlist(".measure tran peak PEAK V(out) AT=1m")
+
+
+def test_select_outputs_and_measure_results_from_analysis_plan() -> None:
+    deck = """
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+C1 out 0 1u IC=0
+.save V(out)
+.print dc V(in)
+.probe tran I(V1)
+.measure dc half FIND V(out) AT=1
+.measure tran final FIND V(out) AT=1m
+.measure tran average AVG V(out)
+.op
+.dc V1 0 1 0.5
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+"""
+    parsed = parse_netlist(deck)
+    results = parsed.run_analysis_plan()
+
+    outputs = parsed.select_outputs(results)
+    assert [output.kind for output in outputs] == ["op", "dc", "ac", "tran"]
+    assert isclose(outputs[0].rows[0].values["V(out)"], 0.5, abs_tol=1e-9)
+    assert list(outputs[1].rows[-1].values) == ["V(out)", "V(in)"]
+    assert isclose(outputs[1].rows[-1].values["V(in)"], 1.0, abs_tol=1e-9)
+    assert isinstance(outputs[2].rows[0].values["V(out)"], complex)
+    assert "I(V1)" in outputs[3].rows[-1].values
+
+    measures = parsed.measure_results(results)
+    assert [measure.name for measure in measures] == ["half", "final", "average"]
+    assert isclose(measures[0].value, 0.5, abs_tol=1e-9)
+    assert isclose(measures[1].value, outputs[3].rows[-1].values["V(out)"], abs_tol=1e-9)
+    assert 0.0 < measures[2].value <= outputs[3].rows[-1].values["V(out)"]
+
+
+def test_parse_four_analysis_card() -> None:
+    parsed = parse_netlist(".four 1k V(out) I(Vin)")
+
+    assert parsed.analyses == [
+        FourAnalysis(
+            1.0e3,
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            ),
+        )
+    ]
+    assert parsed.four_cards() == parsed.analyses
+
+
+def test_four_card_rejects_missing_or_unknown_probes() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.four expects at least 3 fields"):
+        parse_netlist(".four 1k")
+    with pytest.raises(NetlistParseError, match=r"\.four probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".four 1k P(out)")
+
+
+def test_parse_distortion_and_pole_zero_analysis_cards() -> None:
+    parsed = parse_netlist(
+        """
+.disto dec 5 1k 1meg V(out) I(Vin)
+.pz V(out) Vin pole
+"""
+    )
+
+    assert parsed.analyses == [
+        DistortionAnalysis(
+            "dec",
+            5,
+            1.0e3,
+            1.0e6,
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            ),
+        ),
+        PoleZeroAnalysis("out", "Vin", "pole"),
+    ]
+    assert parsed.distortion_cards() == [parsed.analyses[0]]
+    assert parsed.pole_zero_cards() == [parsed.analyses[1]]
+
+
+def test_distortion_and_pole_zero_cards_reject_invalid_shapes() -> None:
+    with pytest.raises(NetlistParseError, match=r"\.disto expects at least 6 fields"):
+        parse_netlist(".disto dec 5 1k 1meg")
+    with pytest.raises(NetlistParseError, match=r"\.disto probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".disto dec 5 1k 1meg P(out)")
+    with pytest.raises(NetlistParseError, match=r"\.pz output must be a voltage probe"):
+        parse_netlist(".pz out Vin")
+    with pytest.raises(NetlistParseError, match=r"\.pz kind must be"):
+        parse_netlist(".pz V(out) Vin residue")
+
+
+def test_parse_transient_method_from_tran_card() -> None:
+    parsed = parse_netlist(".tran 1n 20n method=gear2")
+
+    assert parsed.tran_cards() == [
+        TranAnalysis(t_step=1.0e-9, t_stop=20.0e-9, method="gear2")
+    ]
+    assert parsed.transient_method(parsed.tran_cards()[0]) == "gear2"
+
+
+def test_transient_method_falls_back_to_options_and_tran_takes_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.options method=trap
+.tran 1n 20n method=euler
+"""
+    )
+
+    assert parsed.options_cards()[0].values["method"] == "trap"
+    assert parsed.transient_method() == "trap"
+    assert parsed.transient_method(parsed.tran_cards()[0]) == "euler"
+
+
+def test_transient_method_rejects_unsupported_values() -> None:
+    with pytest.raises(NetlistParseError, match="must be euler, trap, or gear2"):
+        parse_netlist(".tran 1n 20n method=bogus")
+    with pytest.raises(NetlistParseError, match="must be euler, trap, or gear2"):
+        parse_netlist(".options method=bogus")
 
 
 def test_options_card_rejects_empty_values() -> None:
@@ -241,6 +631,7 @@ R1 in out 1k
 def test_parse_noise_analysis_card_and_run_noise_ac() -> None:
     parsed = parse_netlist(
         """
+.temp 75
 Vin in 0 DC 1
 Rtop in out 1k
 Rbot out 0 1k
@@ -249,26 +640,45 @@ Rbot out 0 1k
     )
 
     assert parsed.analyses == [
+        TempAnalysis((75.0,)),
         NoiseAnalysis(
             output_node="out",
             input_source="Vin",
             freqs=(1000.0,),
             temperature=300.0,
+            temperature_is_explicit=True,
         )
     ]
-    assert parsed.noise_cards() == parsed.analyses
+    assert parsed.noise_cards() == [parsed.analyses[1]]
     card = parsed.noise_cards()[0]
+    assert parsed.noise_temperature_kelvin(card) == 300.0
     result = noise_ac(
         parsed.circuit,
         card.output_node,
         card.input_source,
         freqs=list(card.freqs),
-        temperature=card.temperature,
+        temperature=parsed.noise_temperature_kelvin(card),
     )
     assert result.output_node == "out"
     assert result.input_source == "Vin"
     assert len(result.points) == 1
     assert result.points[0].output_psd > 0.0
+
+
+def test_noise_analysis_uses_temp_card_when_noise_temp_is_omitted() -> None:
+    parsed = parse_netlist(
+        """
+.temp 50
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin 1k
+"""
+    )
+    card = parsed.noise_cards()[0]
+
+    assert not card.temperature_is_explicit
+    assert isclose(parsed.noise_temperature_kelvin(card), 323.15, abs_tol=1e-12)
 
 
 def test_noise_analysis_card_rejects_non_voltage_output_probe() -> None:
@@ -346,7 +756,7 @@ Rload out 0 500
 def test_parse_diode_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast D(IS=1e-12 VT=25m)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -355,7 +765,19 @@ Rload out 0 1k
     )
 
     assert parsed.models == {
-        "fast": ModelCard("fast", "D", {"IS": 1.0e-12, "VT": 25.0e-3})
+        "fast": ModelCard(
+            "fast",
+            "D",
+            {
+                "IS": 1.0e-12,
+                "VT": 25.0e-3,
+                "N": 2.0,
+                "BV": 5.0,
+                "IBV": 1.0e-6,
+                "CJO": 2.0e-12,
+                "TT": 4.0e-9,
+            },
+        )
     }
     diode = parsed.circuit.elements[1]
     assert isinstance(diode, Diode)
@@ -363,16 +785,21 @@ Rload out 0 1k
     assert diode.cathode == "out"
     assert diode.Is == 1.0e-12
     assert diode.Vt == 25.0e-3
+    assert diode.N == 2.0
+    assert diode.BV == 5.0
+    assert diode.IBV == 1.0e-6
+    assert diode.Cjo == 2.0e-12
+    assert diode.Tt == 4.0e-9
 
     result = dc_op(parsed.circuit)
     assert result.converged
-    assert 0.1 < result.node_voltages["out"] < 0.7
+    assert 0.0 < result.node_voltages["out"] < 0.7
 
 
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast NPN(IS=1e-14 BF=120 VT=25m)
+.model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)
 Vcc vcc 0 DC 5
 Vb base 0 DC 0.7
 Rc vcc col 100
@@ -382,7 +809,19 @@ Q1 col base 0 fast
     )
 
     assert parsed.models == {
-        "fast": ModelCard("fast", "NPN", {"IS": 1.0e-14, "BF": 120.0, "VT": 25.0e-3})
+        "fast": ModelCard(
+            "fast",
+            "NPN",
+            {
+                "IS": 1.0e-14,
+                "BF": 120.0,
+                "VT": 25.0e-3,
+                "CJE": 2.0e-12,
+                "CJC": 3.0e-12,
+                "TF": 4.0e-9,
+                "TR": 5.0e-9,
+            },
+        )
     }
     bjt = parsed.circuit.elements[3]
     assert isinstance(bjt, BJT)
@@ -393,6 +832,10 @@ Q1 col base 0 fast
     assert bjt.Is == 1.0e-14
     assert bjt.beta_f == 120.0
     assert bjt.Vt == 25.0e-3
+    assert bjt.Cje == 2.0e-12
+    assert bjt.Cjc == 3.0e-12
+    assert bjt.Tf == 4.0e-9
+    assert bjt.Tr == 5.0e-9
 
     result = dc_op(parsed.circuit)
     assert result.converged
@@ -415,10 +858,51 @@ Qp col base emit slow
     assert isclose(bjt.Vt, 26.0e-3)
 
 
+def test_parse_jfet_model_into_operating_point_circuit() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
+J1 drain gate source fast
+"""
+    )
+
+    assert parsed.models == {
+        "fast": ModelCard(
+            "fast",
+            "NJF",
+            {"BETA": 2.0e-3, "VTO": -3.0, "LAMBDA": 0.02},
+        )
+    }
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.drain == "drain"
+    assert jfet.gate == "gate"
+    assert jfet.source == "source"
+    assert jfet.polarity == "NJF"
+    assert jfet.beta == 2.0e-3
+    assert jfet.vto == -3.0
+    assert jfet.lambda_ == 0.02
+
+
+def test_parse_pjf_model_aliases_beta() -> None:
+    parsed = parse_netlist(
+        """
+.model pslow PJF(B=750u)
+Jp drain gate source pslow
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.polarity == "PJF"
+    assert isclose(jfet.beta, 750.0e-6)
+    assert jfet.vto == 2.0
+
+
 def test_parse_mosfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02)
+.model nfast NMOS(VT0=0.45 KP=200u LAMBDA=0.02 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p)
 Vdd vdd 0 DC 1.8
 Vgate gate 0 DC 1.8
 Rload vdd out 1k
@@ -432,6 +916,7 @@ M1 out gate 0 0 nfast W=2u L=180n
     assert parsed.models["nfast"].params["VT0"] == 0.45
     assert isclose(parsed.models["nfast"].params["KP"], 200.0e-6)
     assert parsed.models["nfast"].params["LAMBDA"] == 0.02
+    assert isclose(parsed.models["nfast"].params["CGSO"], 3.0e-12)
     mosfet = parsed.circuit.elements[3]
     assert isinstance(mosfet, Mosfet)
     assert mosfet.drain == "out"
@@ -442,6 +927,11 @@ M1 out gate 0 0 nfast W=2u L=180n
     assert isinstance(mosfet.model.model, Level1Model)
     assert mosfet.model.model.params.VT0 == 0.45
     assert isclose(mosfet.model.model.params.KP, 200.0e-6)
+    assert isclose(mosfet.model.model.params.CGSO, 3.0e-12)
+    assert isclose(mosfet.model.model.params.CGDO, 4.0e-12)
+    assert isclose(mosfet.model.model.params.CGBO, 5.0e-12)
+    assert isclose(mosfet.model.model.params.CBS, 6.0e-12)
+    assert isclose(mosfet.model.model.params.CBD, 7.0e-12)
     assert isclose(mosfet.model.model.params.W, 2.0e-6)
     assert isclose(mosfet.model.model.params.L, 180.0e-9)
 
@@ -643,7 +1133,7 @@ Rload out 0 500
 def test_expands_subcircuit_diode_nodes_into_engine_elements() -> None:
     parsed = parse_netlist(
         """
-.model clamp D(IS=1e-12 VT=25m)
+.model clamp D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJ0=3p TT=5n)
 .subckt limiter inp outp
 Dlim inp outp clamp
 .ends limiter
@@ -657,6 +1147,11 @@ Xlim in out limiter
     assert diode.anode == "in"
     assert diode.cathode == "out"
     assert diode.Is == 1.0e-12
+    assert diode.N == 2.0
+    assert diode.BV == 5.0
+    assert diode.IBV == 1.0e-6
+    assert diode.Cjo == 3.0e-12
+    assert diode.Tt == 5.0e-9
 
 
 def test_expands_subcircuit_bjt_nodes_into_engine_elements() -> None:
@@ -682,6 +1177,72 @@ Xbuf out in 0 follower
     assert isinstance(resistor, Resistor)
     assert resistor.n_plus == "Xbuf.inner"
     assert resistor.n_minus == "0"
+
+
+def test_expands_subcircuit_jfet_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.model nchan NJF(BETA=1m)
+.subckt source_follower d g s
+Jbuf d g inner nchan
+Rtail inner s 100
+.ends source_follower
+Xbuf out in 0 source_follower
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    resistor = parsed.circuit.elements[1]
+    assert isinstance(jfet, JFET)
+    assert jfet.name == "Xbuf.Jbuf"
+    assert jfet.drain == "out"
+    assert jfet.gate == "in"
+    assert jfet.source == "Xbuf.inner"
+    assert jfet.beta == 1.0e-3
+    assert isinstance(resistor, Resistor)
+    assert resistor.n_plus == "Xbuf.inner"
+    assert resistor.n_minus == "0"
+
+
+def test_expands_subcircuit_mutual_inductor_refs_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt transformer p1 p2 s1 s2
+Lpri p1 p2 10m
+Lsec s1 s2 40m
+Kcore Lpri Lsec 0.9
+.ends transformer
+Xtx in 0 out 0 transformer
+"""
+    )
+
+    mutual = parsed.circuit.elements[2]
+    assert isinstance(mutual, MutualInductor)
+    assert mutual.name == "Xtx.Kcore"
+    assert mutual.primary == "Xtx.Lpri"
+    assert mutual.secondary == "Xtx.Lsec"
+    assert mutual.coupling == 0.9
+
+
+def test_expands_subcircuit_transmission_line_nodes_into_engine_elements() -> None:
+    parsed = parse_netlist(
+        """
+.subckt delay in out
+T1 in 0 out 0 Z0=75 TD=2n
+.ends delay
+Xdelay a b delay
+"""
+    )
+
+    line = parsed.circuit.elements[0]
+    assert isinstance(line, TransmissionLine)
+    assert line.name == "Xdelay.T1"
+    assert line.n1 == "a"
+    assert line.n2 == "0"
+    assert line.n3 == "b"
+    assert line.n4 == "0"
+    assert line.characteristic_impedance == 75.0
+    assert line.delay == 2.0e-9
 
 
 def test_expands_subcircuit_mosfet_nodes_into_engine_elements() -> None:

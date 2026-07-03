@@ -136,11 +136,11 @@ fn rule_sqrt(args: &[IRNode], ctx: Option<&AssumptionContext>) -> IRNode {
 fn try_extract_from_sqrt(factor: &IRNode, ctx: Option<&AssumptionContext>) -> Option<IRNode> {
     if is_square_power(factor) {
         let base = base_of(factor)?;
-        if matches!(base, IRNode::Integer(n) if *n > 0) {
+        if matches!(base, IRNode::Integer(n) if *n >= 0) {
             return Some(base.clone());
         }
         if let IRNode::Symbol(name) = base {
-            if ctx.is_some_and(|ctx| ctx.is_positive(name) == Some(true)) {
+            if ctx.is_some_and(|ctx| ctx.is_nonneg(name) == Some(true)) {
                 return Some(base.clone());
             }
         }
@@ -192,11 +192,11 @@ fn is_square_power(node: &IRNode) -> bool {
 }
 
 fn abs_or_pos(base: &IRNode, ctx: Option<&AssumptionContext>) -> IRNode {
-    if matches!(base, IRNode::Integer(n) if *n > 0) {
+    if matches!(base, IRNode::Integer(n) if *n >= 0) {
         return base.clone();
     }
     if let IRNode::Symbol(name) = base {
-        if ctx.is_some_and(|ctx| ctx.is_positive(name) == Some(true)) {
+        if ctx.is_some_and(|ctx| ctx.is_nonneg(name) == Some(true)) {
             return base.clone();
         }
     }

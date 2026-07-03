@@ -1,5 +1,1286 @@
 # Changelog
 
+## [2.29.0] - 2026-06-30
+
+### Added
+
+- **Level 1 conformance fixtures (17–24)** — eight new fixtures in
+  `code/specs/mini-sqlite-conformance/fixtures/` covering:
+
+  | # | Name | What it tests |
+  |---|------|---------------|
+  | 17 | null-aggregate-semantics | COUNT(\*)/COUNT(col) on empty tables; SUM/AVG/MIN/MAX → NULL; NULL-skipping |
+  | 18 | string-functions | LENGTH, UPPER, LOWER, SUBSTR, TRIM, LTRIM, RTRIM, REPLACE |
+  | 19 | math-functions | ABS (int/float/NULL), ROUND (0/2 decimals, half-away-from-zero) |
+  | 20 | limit-edge-cases | LIMIT 0, large OFFSET past end, LIMIT -1, LIMIT with OFFSET |
+  | 21 | distinct-aggregate | COUNT(DISTINCT v) with duplicates and NULLs |
+  | 22 | string-concat-null | `||` operator; NULL propagation; COALESCE with 2–3 arguments |
+  | 23 | null-in-order-by | NULL sort order (FIRST in ASC, LAST in DESC) and IS NOT NULL filter |
+  | 24 | having-aggregate | HAVING COUNT(\*) > N, HAVING SUM >= threshold, compound HAVING AND |
+
+  `manifest.json` updated to version `1.1.0` to reflect the new level.
+
+- **Parametrised conformance test runner** (`tests/test_conformance.py`) —
+  reads `manifest.json` and auto-generates one pytest test per fixture.
+  Supports all op types: `execute`, `executemany`, `query`, `expect_error`,
+  `commit`, `rollback`, `fetchone_test`, `fetchmany_test`, `fetchall_test`,
+  `fetchall_empty_test`, `connect_expect_error`.  Adding a new fixture JSON
+  and listing it in the manifest is sufficient to have it exercised.
+
+### Fixed
+
+- **`cursor.description` is now set correctly after `SELECT … LIMIT 0`**
+  (and any other zero-row SELECT).  PEP 249 requires `cursor.description`
+  to be a tuple of column-name seven-tuples after any DQL statement,
+  regardless of whether it returns rows.
+
+  Root cause: the cursor previously used `if result.columns:` to decide
+  whether the statement was a SELECT.  For `LIMIT 0` (and for any SELECT
+  that returns no rows) the optimizer produces an `EmptyResult` node; the
+  codegen emitted `SetResultSchema(columns=())` so `result.columns` was an
+  empty tuple — falsy — and the cursor wrongly took the DML/DDL branch,
+  setting `description = None`.
+
+  The fix spans two layers:
+
+  1. **`sql-optimizer` `DeadCodeElimination`** — `Limit(count=0)` now
+     produces `EmptyResult(columns=_schema_of_plan(inner))` so the column
+     schema is preserved through the optimizer.  A new `_schema_of_plan`
+     helper walks the inner plan to the nearest `Project` node.
+
+  2. **`cursor.py`** — the branch condition changed from `if result.columns:`
+     to `if result.rows_affected is None or result.columns:`.  This
+     correctly handles three cases:
+     - SELECT (rows_affected=None) — always a result set, even with 0 rows.
+     - DML + RETURNING (rows_affected≥1, columns non-empty) — exposed as a
+       result set, matching the real sqlite3 module's behaviour.
+     - DML/DDL without RETURNING (rows_affected≥1, columns=()) — treated as
+       a mutation with no result set.
+
+## [2.28.0] - 2026-06-19
+
+### Added
+
+- **`CREATE TRIGGER IF NOT EXISTS` is now accepted** — SQLite allows an
+  optional `IF NOT EXISTS` guard on `CREATE TRIGGER`:
+
+  ```sql
+  CREATE TRIGGER IF NOT EXISTS trg AFTER INSERT ON t
+  FOR EACH ROW BEGIN INSERT INTO log VALUES (1); END
+  ```
+
+  Without the guard, creating a trigger whose name already exists raises
+  an error as before.  With the guard the statement is silently ignored,
+  leaving the original trigger intact.
+
+  The fix propagates through the full pipeline:
+
+  | Layer      | File                             | Change                                  |
+  |------------|----------------------------------|-----------------------------------------|
+  | Grammar    | `sql.grammar`                    | `[ "IF" "NOT" "EXISTS" ]` added to rule |
+  | AST        | `sql_planner/ast.py`             | `CreateTriggerStmt.if_not_exists` field |
+  | Plan       | `sql_planner/plan.py`            | `CreateTrigger.if_not_exists` field     |
+  | Planner    | `sql_planner/planner.py`         | forwards field through plan node        |
+  | IR         | `sql_codegen/ir.py`              | `CreateTriggerDef.if_not_exists` field  |
+  | Compiler   | `sql_codegen/compiler.py`        | destructures and forwards field         |
+  | VM         | `sql_vm/vm.py`                   | catches `TriggerAlreadyExists` silently |
+  | Adapter    | `mini_sqlite/adapter.py`         | detects keyword sequence, sets flag     |
+
+  16 new oracle-style tests in `test_tier3_trigger_if_not_exists.py`
+  cover all six trigger forms (BEFORE/AFTER × INSERT/UPDATE/DELETE),
+  idempotent duplicate semantics, and the original-trigger-survives
+  invariant.
+
+- **`UPDATE OR <conflict>` conflict resolution** — the five conflict-resolution
+  strategies that SQLite supports for `INSERT` now also work with `UPDATE`:
+
+  ```sql
+  UPDATE OR IGNORE t SET id = 1 WHERE id = 2  -- skip row if constraint violated
+  UPDATE OR REPLACE t SET id = 1 WHERE id = 2 -- delete conflicting rows, then update
+  UPDATE OR ABORT t SET id = 1 WHERE id = 2   -- raise (same as no modifier)
+  UPDATE OR FAIL t SET id = 1 WHERE id = 2    -- raise (same as ABORT here)
+  UPDATE OR ROLLBACK t SET id = 1 WHERE id = 2 -- raise (same as ABORT here)
+  ```
+
+  Implementation spans the full pipeline:
+
+  - **Grammar** (`sql.grammar`): `update_stmt` gains an optional
+    `[ conflict_clause ]` immediately after the `UPDATE` keyword, reusing the
+    same rule already used by `INSERT`.
+  - **Adapter** (`mini_sqlite/adapter.py`): `_update()` extracts the conflict
+    action via the shared `_conflict_action()` helper.
+  - **AST/Planner** (`sql-planner`): `UpdateStmt` and the `Update` plan node
+    each gain an `on_conflict: str | None` field.  The planner forwards the
+    field through without transformation.
+  - **Constant-folding optimizer** (`sql-optimizer`): the `Update` pattern
+    match now captures and preserves `on_conflict` so it is not silently
+    dropped during folding.
+  - **Codegen** (`sql-codegen`): the `UpdateRows` IR node gains `on_conflict`;
+    the compiler passes it through from the plan.
+  - **VM** (`sql-vm`): `_do_update()` dispatches on `on_conflict`:
+    - `IGNORE` — if `_check_constraints` raises `ConstraintViolation`, the
+      current row is silently skipped and the loop continues.  `rows_affected`
+      counts only rows that were actually changed.
+    - `REPLACE` — any other row whose unique-column values conflict with the
+      post-update merged row is deleted before the current row is updated in
+      place.  The scan cursor's index is corrected for each pre-cursor
+      deletion so the outer scan loop resumes correctly.
+    - `ABORT`, `FAIL`, `ROLLBACK` — raise `ConstraintViolation` (same as the
+      default behaviour; full transactional semantics are deferred).
+
+  21 oracle tests in `tests/test_tier3_update_or_conflict.py` compare
+  mini-sqlite output byte-for-byte against `stdlib sqlite3`.
+
+## [2.27.0] - 2026-06-19
+
+### Fixed
+
+- **Column-level `ON CONFLICT` clause now accepted in `CREATE TABLE`** —
+  SQLite allows each `NOT NULL`, `UNIQUE`, and `PRIMARY KEY` column
+  constraint to carry its own conflict-resolution policy:
+
+  ```sql
+  CREATE TABLE t (x INT NOT NULL ON CONFLICT IGNORE, y TEXT)
+  CREATE TABLE t (x INT UNIQUE ON CONFLICT REPLACE, y TEXT)
+  CREATE TABLE t (x INT PRIMARY KEY ON CONFLICT ABORT, y TEXT)
+  CREATE TABLE t (x INTEGER PRIMARY KEY AUTOINCREMENT ON CONFLICT REPLACE, y TEXT)
+  ```
+
+  Previously all such forms raised a parse error.  The fix adds an optional
+  nested `col_conflict_clause` sub-rule to `col_constraint` in `sql.grammar`.
+  Using a *nested* sub-rule is deliberate: the adapter's keyword-sequence
+  matching in `_col_def` collects only the *direct* keyword children of each
+  `col_constraint` node, so the `ON / CONFLICT / action` tokens stay inside
+  the sub-node and existing logic (`NOT NULL → not_null=True`, `UNIQUE →
+  unique=True`, etc.) is completely unaffected.
+
+  Mini-sqlite always uses `ABORT` semantics for constraint violations; the
+  per-column action is parsed and silently ignored.
+
+  | SQL form                                              | Before      | After |
+  |-------------------------------------------------------|-------------|-------|
+  | `x INT NOT NULL ON CONFLICT IGNORE`                   | Parse error | OK    |
+  | `x INT NOT NULL ON CONFLICT REPLACE`                  | Parse error | OK    |
+  | `x INT UNIQUE ON CONFLICT ABORT`                      | Parse error | OK    |
+  | `x INT PRIMARY KEY ON CONFLICT FAIL`                  | Parse error | OK    |
+  | `x INT PRIMARY KEY AUTOINCREMENT ON CONFLICT REPLACE` | Parse error | OK    |
+  | All five actions: ROLLBACK, ABORT, FAIL, IGNORE, REPLACE | Parse error | OK |
+
+- **26 new oracle tests** in `test_tier3_col_conflict_clause.py` cover
+  all three constraint types × all five conflict actions, mixed
+  multi-column tables, COLLATE coexistence, table-level constraint
+  coexistence, and WITHOUT ROWID.
+
+## [2.26.0] - 2026-06-16
+
+### Fixed
+
+- **Table-level `PRIMARY KEY` and `UNIQUE` constraints now accepted in
+  `CREATE TABLE`** — SQLite allows constraints to appear after the column
+  list instead of (or in addition to) column-level constraint keywords:
+
+  ```sql
+  CREATE TABLE t (x INT, y INT, PRIMARY KEY(x))
+  CREATE TABLE t (x INT, y INT, UNIQUE(x, y))
+  CREATE TABLE t (x INT, y INT, PRIMARY KEY(x, y))
+  CREATE TABLE t (x INT, y INT, CHECK(x > 0))
+  CREATE TABLE orders (id INT, cid INT, FOREIGN KEY(cid) REFERENCES c(id))
+  ```
+
+  Previously these raised a parse error because the grammar did not define
+  `table_constraint` at all.  Three-part fix:
+
+  1. `sql.grammar`: Added `table_constraint` rule after `col_def` in
+     `create_table_stmt` (`{ "," table_constraint }`) covering `PRIMARY KEY`,
+     `UNIQUE`, `CHECK`, and `FOREIGN KEY` variants.
+  2. `adapter._create_table`: After building the `cols` tuple, iterates
+     `table_constraint` child nodes; `PRIMARY KEY(col)` and `UNIQUE(col)` for
+     a single named column promote `primary_key=True` / `unique=True` on the
+     matching `ColumnDef` via `dataclasses.replace`.  Composite (multi-column)
+     constraints and `CHECK`/`FOREIGN KEY` are parsed and silently accepted —
+     mini-sqlite has no multi-column constraint representation in `ColumnDef`.
+  3. `dataclasses.replace` added to the `from dataclasses import …` line.
+
+  | SQL form                                          | Before      | After |
+  |---------------------------------------------------|-------------|-------|
+  | `CREATE TABLE t (x INT, y INT, PRIMARY KEY(x))`  | Parse error | OK    |
+  | `CREATE TABLE t (x INT, y INT, UNIQUE(x, y))`    | Parse error | OK    |
+  | `CREATE TABLE t (x INT, y INT, PRIMARY KEY(x,y))`| Parse error | OK    |
+  | `CREATE TABLE t (x INT, y INT, CHECK(x > 0))`    | Parse error | OK    |
+  | `… WITHOUT ROWID` with table-level PK            | Parse error | OK    |
+  | `… STRICT` with table-level PK                   | Parse error | OK    |
+
+- **21 new oracle tests** in ``test_tier3_table_constraints.py`` cover
+  single/multi-column PKs, single-column UNIQUE, CHECK, FOREIGN KEY,
+  mixed column-level and table-level constraints, WITH ROWID, and STRICT.
+
+## [2.25.0] - 2026-06-16
+
+### Fixed
+
+- **`SELECT expr alias` (bare alias without `AS`) now accepted** — SQLite
+  allows column aliases in `SELECT` items without the `AS` keyword:
+  `SELECT 1 x` is equivalent to `SELECT 1 AS x`.  Previously mini-sqlite
+  required `AS` and raised a parse error on the bare-alias form:
+  ```
+  Parse error: Expected STAR or "/" or "%" or "+" or "-", got 'x'
+  ```
+  Two-part fix:
+  1. `sql.grammar` line `select_item`: `[ "AS" NAME ]` → `[ [ "AS" ] NAME ]`
+  2. `adapter._select_item`: extended to recognise a direct `NAME` child
+     that is not preceded by `AS` as the alias.
+
+  `NAME` never matches SQL keywords (`FROM`, `WHERE`, `GROUP`, …) so there
+  is no ambiguity — the grammar's PEG tokeniser emits those as `KEYWORD`
+  tokens which cannot satisfy the `NAME` alternative.
+
+  Several previously failing constructs now work correctly:
+
+  | SQL form                                        | Before      | After |
+  |-------------------------------------------------|-------------|-------|
+  | `SELECT 1 x`                                    | Parse error | `1`   |
+  | `SELECT a + b total FROM t`                     | Parse error | OK    |
+  | `SELECT group_concat(x, \|) FROM (SELECT 1 x …)`| Parse error | OK    |
+  | `SELECT expr AS alias` (with AS)                | OK          | OK    |
+
+- **14 new oracle tests** in ``test_tier3_select_bare_alias.py`` verify
+  the bare-alias form against the real sqlite3 reference engine.
+
+## [2.24.0] - 2026-06-16
+
+### Fixed
+
+- **`CREATE TRIGGER` without `FOR EACH ROW` now accepted** — SQLite makes
+  the `FOR EACH ROW` clause optional (SQLite has never supported
+  statement-level triggers, so the clause is redundant and permitted-but-not-
+  required).  Previously mini-sqlite required `FOR EACH ROW` and raised a
+  parse error when it was omitted:
+  ```
+  Parse error at 1:1: Expected program, got 'CREATE'
+  ```
+  The fix is a one-character grammar change: `"FOR" "EACH" "ROW"` →
+  `[ "FOR" "EACH" "ROW" ]`.  The adapter ignores the clause either way
+  because it scans by keyword type, and FOR/EACH/ROW are not emitted as
+  KEYWORD tokens.
+
+  | Trigger syntax                   | Before            | After     |
+  |----------------------------------|-------------------|-----------|
+  | `… FOR EACH ROW BEGIN … END`     | OK (correct)      | OK        |
+  | `… BEGIN … END` (no FOR EACH ROW)| Parse error       | OK        |
+
+- **12 new oracle tests** in ``test_tier3_trigger_for_each_row_optional.py``
+  verify that triggers fire correctly with and without `FOR EACH ROW`, and
+  that both forms match the real sqlite3 reference engine output.
+
+## [2.23.0] - 2026-06-16
+
+### Fixed
+
+- **`INTERSECT ALL` and `EXCEPT ALL` now raise `OperationalError: near "ALL": syntax error`** —
+  SQLite does not support bag semantics for `INTERSECT` or `EXCEPT`; only
+  `UNION ALL` is valid.  Previously mini-sqlite silently accepted these two
+  forms and returned results (treating them like plain `INTERSECT`/`EXCEPT`),
+  diverging from real SQLite behaviour.
+
+  Root cause: the SQL grammar accepts `[ "ALL" ]` for all three set operators
+  so the PEG parser can produce a meaningful token stream; the adapter
+  (`_set_op_clause`) is now the enforcement point.  When it detects
+  `INTERSECT ALL` or `EXCEPT ALL`, it raises `OperationalError` with the same
+  message byte-for-byte as the real engine.
+
+  | SQL form            | Before       | After                              |
+  |---------------------|--------------|------------------------------------|
+  | `UNION ALL`         | OK (correct) | OK (unchanged)                     |
+  | `INTERSECT ALL`     | returns rows | `OperationalError: near "ALL": …`  |
+  | `EXCEPT ALL`        | returns rows | `OperationalError: near "ALL": …`  |
+
+- **16 new oracle tests** in ``test_tier3_intersect_except_all_rejected.py``
+  verify that both operators raise the correct error type and message, that
+  plain `INTERSECT`/`EXCEPT` (without `ALL`) continue to work, and that
+  `UNION ALL` is unaffected.
+
+## [2.22.0] - 2026-06-16
+
+### Fixed
+
+- **`SELECT * FROM (SELECT 1, 2)` now returns `(1, 2)` instead of `(2,)`** —
+  when a derived-table subquery contains unnamed literal columns (e.g.
+  ``SELECT 1, 2``), the column names are now ``"1"`` and ``"2"`` (matching
+  SQLite's surface representation) instead of ``"?"`` for every column.
+
+  Root cause: ``_column_display_name()`` in sql-codegen returned ``None``
+  for ``Literal`` nodes, so every constant projection fell back to the
+  placeholder ``"?"``.  Two identical ``"?"`` keys in the same result set
+  caused ``dict(zip(cols, row))`` inside the VM's ``_do_run_subquery`` to
+  drop all columns but the last.  (sql-codegen v1.43.0)
+
+  The fix applies to all literal types:
+
+  | SQL expression | Column name before | Column name after |
+  |----------------|--------------------|-------------------|
+  | ``SELECT 1``   | ``"?"``            | ``"1"``           |
+  | ``SELECT 1, 2``| ``"?", "?"``       | ``"1", "2"``      |
+  | ``SELECT NULL``| ``"?"``            | ``"NULL"``        |
+  | ``SELECT 'hi'``| ``"?"``            | ``"'hi'"``        |
+
+- **21 new oracle tests** in ``test_tier3_subquery_literal_colnames.py``
+  cover column-name accuracy and row-value correctness for all literal
+  types, with byte-for-byte comparison against stdlib ``sqlite3``.
+- **10 new unit tests** in the sql-codegen test suite cover
+  ``_column_display_name`` directly, pushing sql-codegen coverage to
+  **80.48 %** (from the borderline pre-existing 79.61 %).
+
+## [2.21.0] - 2026-06-16
+
+### Fixed
+
+- **`PARTITION BY` + external `ORDER BY` column no longer crashes** —
+  queries like ``SELECT grp, SUM(val) OVER (PARTITION BY grp) FROM t
+  ORDER BY grp, val`` previously raised ``InternalError: ValueError:
+  tuple.index(x): x not in tuple`` because ``val`` was projected away
+  by ``ComputeWindowFunctions`` before ``SortResult`` could look it up.
+  Fixed by extending hidden-column injection in sql-codegen to cover
+  ``PlanWindowAgg`` inner nodes (was only ``Project``).  (sql-codegen
+  v1.42.0)
+
+- **RANGE mode peer-group expansion for cumulative window functions** —
+  ``COUNT(*)``, ``SUM``, ``AVG``, and other aggregate window functions
+  with a default ``ORDER BY`` frame now correctly include all tied rows
+  in the current row's frame.  Under ``RANGE BETWEEN UNBOUNDED
+  PRECEDING AND CURRENT ROW`` (the SQL default when ``ORDER BY`` is
+  present), ``CURRENT ROW`` means the *end of the peer group*, not just
+  the physical row position.  Fixes wrong counts/sums when ``ORDER BY``
+  values repeat.  (sql-vm v1.60.0)
+
+- 15 new oracle tests in ``test_tier3_window_correctness.py`` cover
+  both fixes with byte-for-byte comparison against stdlib ``sqlite3``.
+
+## [2.20.0] - 2026-06-16
+
+### Added
+
+- **Named WINDOW clause** — ``SELECT`` statements may now define window
+  specifications by name in a trailing ``WINDOW`` clause and reference
+  them with ``OVER <name>`` instead of an inline ``OVER (...)`` spec:
+
+  ```sql
+  SELECT a, ROW_NUMBER() OVER w
+  FROM   t
+  WINDOW w AS (PARTITION BY grp ORDER BY a)
+  ORDER  BY a;
+  ```
+
+  - Multiple named windows in one query are supported
+    (``WINDOW w1 AS (...), w2 AS (...)``).
+  - Named and inline ``OVER (...)`` references may be mixed freely in the
+    same query.
+  - All existing window functions work via a named window: ``ROW_NUMBER``,
+    ``RANK``, ``DENSE_RANK``, ``SUM``, ``COUNT(*)``, ``AVG``, ``MIN``,
+    ``MAX``, ``LAG``, ``LEAD``, ``NTILE``, ``FIRST_VALUE``,
+    ``LAST_VALUE``.
+  - Referencing an undefined window name raises ``OperationalError``.
+
+  **Implementation:** ``WINDOW`` was added to ``sql.tokens`` so the lexer
+  recognises it as a keyword.  ``sql.grammar`` gained a ``window_clause``
+  rule and a ``window_name_ref`` alternative in ``window_func_call``.
+  The adapter's ``_PlaceholderCounter`` gained a ``window_defs`` dict;
+  ``_extract_window_clause()`` populates it before the select list is
+  processed, and ``_window_func_call()`` resolves name references against
+  it.  The planner, optimizer, codegen, and VM are unchanged.
+
+  18 oracle tests added in ``tests/test_tier3_named_window.py``.
+
+## [2.19.0] - 2026-06-15
+
+### Added
+
+- **Row-value comparisons** — multi-column predicates are now supported in
+  ``WHERE``, ``ON``, and expression contexts, matching SQLite's behaviour:
+
+  - ``(a, b) = (1, 2)`` — pairwise equality (expands to ``a=1 AND b=2``)
+  - ``(a, b) != (1, 2)`` — pairwise inequality (expands to ``a!=1 OR b!=2``)
+  - ``(a, b) < (1, 2)`` — lexicographic less-than
+  - ``(a, b) <= / > / >= (x, y)`` — other ordered comparisons
+  - ``(a, b) IN ((1,2),(3,4))`` — multi-column IN membership
+  - ``(a, b) NOT IN ((1,2),(3,4))`` — negated IN
+
+  Works for any number of columns; 3-column and wider row values expand
+  recursively using the same lexicographic rule as SQLite.
+
+  **Implementation:** the grammar's ``comparison`` rule gained three new
+  PEG alternatives (``row_value cmp_op row_value``,
+  ``row_value NOT IN (row_value_list)``, ``row_value IN (row_value_list)``)
+  that fire before the existing scalar ``collated`` form.  The adapter
+  expands each row-value comparison into an equivalent scalar
+  ``BinaryExpr`` tree, so the planner, optimizer, codegen, and VM require
+  no changes.  Scalar regressions are not affected — non-parenthesised
+  expressions do not match ``row_value``.
+
+## [2.18.0] - 2026-06-15
+
+### Added
+
+- ``CREATE TABLE dst AS SELECT … FROM src`` (CTAS — *Create Table As
+  Select*) is now supported.  The statement:
+
+  1. Executes the source SELECT.
+  2. Creates the destination table with one column per SELECT output,
+     named after the output alias (or the source column name for bare
+     column references).
+  3. Bulk-inserts all rows from the SELECT result into the new table.
+
+  ``IF NOT EXISTS`` is honoured: if the destination table already exists
+  the entire statement becomes a no-op (no rows are inserted into the
+  existing table).
+
+  The destination is created even when the source SELECT returns zero
+  rows — column names are inferred by planning the SELECT statement
+  against the source schema without executing it.
+
+  CTAS respects all standard SELECT modifiers: ``WHERE``, ``ORDER BY``,
+  ``LIMIT``, ``GROUP BY``, ``HAVING``, aggregates, CTEs, ``TEMP`` /
+  ``TEMPORARY``, and so on.
+
+  CTAS is blocked under ``PRAGMA query_only = 1`` (it is a DDL write).
+
+  Known limitations versus real SQLite:
+
+  * Column types in the destination are always ``BLOB`` affinity
+    regardless of the source column's declared type.  Queries return
+    correct values because SQLite / mini-sqlite use dynamic typing;
+    only ``PRAGMA table_info`` shows ``BLOB`` rather than the original
+    type.
+  * Unnamed computed expression columns (e.g. ``SELECT x * 2 FROM t``)
+    are assigned a positional name (``col_0``, ``col_1``, …).  Real
+    SQLite uses the expression text (``x * 2``) as the column name.
+
+## [2.17.0] - 2026-05-24
+
+### Fixed
+
+- ``DETACH DATABASE <name>`` now raises SQLite-compatible
+  ``OperationalError`` messages instead of silently succeeding:
+
+  * ``DETACH DATABASE main`` → ``"cannot detach database main"``
+  * ``DETACH DATABASE <any-other>`` → ``"no such database: <name>"``
+    (mini-sqlite has no concept of attached databases, so any name
+    that is not "main" is, by definition, not attached)
+
+  The ``DATABASE`` keyword is optional (``DETACH aux`` and
+  ``DETACH DATABASE aux`` are both handled).  Quoted schema names
+  (double-quoted, single-quoted, backtick-quoted, or
+  bracket-quoted) are stripped before the comparison so
+  ``DETACH "aux"`` produces the same message as ``DETACH aux``.
+
+  Previously mini-sqlite returned an empty success result for all
+  DETACH statements; callers that inspect the error to detect
+  mis-typed or missing schema names would silently succeed and miss
+  the problem.
+
+  ``ATTACH DATABASE`` remains a no-op (returns success) because
+  mini-sqlite does not implement multi-database schema routing and
+  there is no appropriate error to produce for a fresh attach.
+
+## [2.16.0] - 2026-05-24
+
+### Added
+
+- ``PRAGMA query_only = 1`` now enforces read-only mode.  Any DML
+  (INSERT / UPDATE / DELETE) or DDL (CREATE TABLE / DROP TABLE /
+  CREATE INDEX / DROP INDEX / ALTER TABLE / CREATE VIEW / DROP VIEW /
+  CREATE TRIGGER / DROP TRIGGER) executed while ``query_only = 1``
+  is active on the connection raises::
+
+      OperationalError: attempt to write a readonly database
+
+  — matching SQLite's ``SQLITE_READONLY`` (code 8) behaviour.
+  ``PRAGMA query_only = 0`` always lifts the gate, even while it is
+  engaged.  SELECT, BEGIN/COMMIT/ROLLBACK, SAVEPOINT/RELEASE, and
+  PRAGMA statements are never affected.
+
+  Lifts the "Scope limit" noted in the 2.13.0 entry.  Previously
+  the PRAGMA value round-tripped correctly but had no semantic
+  effect — writes silently executed regardless of the setting.
+
+### Fixed
+
+- ``Connection.close()`` now evicts per-connection PRAGMA state from
+  the engine's ``_PRAGMA_STATE`` dict.  Previously, if the underlying
+  backend object was garbage-collected and its memory address reused
+  by a new connection, the new connection could silently inherit the
+  closed connection's PRAGMA settings (e.g. ``query_only=1`` from a
+  previous test or caller).  A ``__del__`` hook ensures cleanup
+  even when ``close()`` is not called explicitly.
+
+## [2.15.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(<blob> AS TEXT)`` now UTF-8-decodes the BLOB bytes rather
+  than hex-encoding them — matches SQLite.  So ``CAST(x'48656c6c6f'
+  AS TEXT)`` returns ``'Hello'`` (was ``'48656c6c6f'``) and
+  ``CAST(CAST(42 AS BLOB) AS TEXT)`` round-trips to ``'42'`` (was
+  ``'3432'``).  Together with the 2.14.0 fix to ``CAST(<numeric> AS
+  BLOB)``, this restores SQLite's documented round-trip identity::
+
+      CAST(CAST(n AS BLOB) AS TEXT) == CAST(n AS TEXT)
+
+  Lifts the "Known limitation" noted in 2.14.0.  Invalid UTF-8
+  bytes are mapped to U+FFFD via ``errors="replace"`` so the cast
+  is total (mini's SQL-engine layer stays lenient; sqlite3's Python
+  binding raises at fetch time via ``text_factory`` instead — a
+  binding-layer divergence, not an engine-layer one).  See sql-vm
+  1.59.0 for the scalar-function-level fix.
+
+## [2.14.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(<numeric> AS BLOB)`` now matches SQLite — the BLOB is the
+  UTF-8 encoding of the numeric's text form (``CAST(1 AS BLOB)``
+  → ``b'1'``, not ``b'\x00\x00\x00\x00\x00\x00\x00\x01'``).
+  Previously the integer and float paths used ``struct.pack`` to
+  produce 8-byte big-endian binary blobs that didn't survive
+  round-tripping through SQLite's text-first conversion rules.
+  See sql-vm 1.58.0 for the scalar-function-level fix.
+
+## [2.13.0] - 2026-05-24
+
+### Added
+
+- ``PRAGMA read_uncommitted`` and ``PRAGMA query_only`` are now
+  recognised as accept-and-store boolean PRAGMAs (default ``0``).
+  Reads return the current integer; writes accept
+  ``1``/``0``/``ON``/``OFF``/``TRUE``/``FALSE``/``YES``/``NO`` and
+  the value persists for the lifetime of the connection.  Both are
+  also advertised in ``PRAGMA pragma_list``.
+
+  Previously both returned ``[]`` (vs sqlite3's documented
+  ``[(0,)]`` default) and silently dropped writes — defensive callers
+  in ORMs and migration tools that probe these PRAGMAs to decide
+  whether to issue an explicit reset would trip on the missing
+  default.
+
+### Scope limits
+
+- ``read_uncommitted`` controls SQLite's shared-cache isolation
+  level.  Mini-sqlite has no shared cache, so the PRAGMA's value
+  has no semantic effect — it just round-trips per connection.
+- ``query_only = 1`` should reject writes in SQLite ("attempt to
+  write a readonly database").  Mini-sqlite does NOT yet enforce
+  the read-only gate — INSERT/UPDATE/DELETE still execute even
+  when ``query_only = 1``.  Enforcement is a deferred increment,
+  pinned by an explicit regression test that documents the current
+  divergence.
+
+## [2.12.0] - 2026-05-24
+
+### Fixed
+
+- ``CAST(TRUE AS TEXT)`` / ``CAST(FALSE AS TEXT)`` (and the
+  ``VARCHAR`` / ``CHAR`` / ``NVARCHAR`` aliases) now return ``'1'``
+  / ``'0'`` instead of Python's ``'True'`` / ``'False'``.  Matches
+  SQLite — see the sql-vm 1.57 entry for the scalar-function-level
+  fix.
+
+  Common idioms that the bug used to corrupt::
+
+      SELECT 'is_active=' || CAST(is_active AS TEXT) FROM users;
+      WHERE CAST(flag AS TEXT) = '1'
+
+  Now both sides agree with sqlite3.
+
+## [2.11.0] - 2026-05-24
+
+### Changed
+
+- PRIMARY KEY uniqueness violations now surface as ``UNIQUE
+  constraint failed: <table>.<col>`` (matching SQLite) instead of
+  ``PRIMARY KEY constraint failed: …``.  PRIMARY KEY implies UNIQUE
+  in SQL, so SQLite never emits a dedicated "PRIMARY KEY constraint
+  failed" message; mini-sqlite now follows the same convention.
+
+  Covers all three uniqueness paths:
+
+  * Named-column PRIMARY KEY (``a INT PRIMARY KEY``).
+  * INTEGER PRIMARY KEY (rowid alias) — both InMemoryBackend and
+    storage-sqlite paths.
+  * UPDATE that creates a duplicate PK (regression — pinned by a
+    test).
+
+  See the matching entries in sql-backend 0.22 and storage-sqlite
+  0.19 for the layered fix.
+
+## [2.10.0] - 2026-05-24
+
+### Changed
+
+- CHECK constraint violation messages now match SQLite::
+
+      CHECK constraint failed: a > 0
+
+  Previously emitted ``CHECK constraint failed: <table>.<col>`` —
+  which doesn't tell the user *why* the check rejected the row and
+  broke tests that pin error strings against the sqlite3 oracle.
+
+  Implementation: the adapter captures the source text of each
+  CHECK predicate by walking the parsed expression's leaf tokens
+  (joined with single spaces, with no-space-around rules for parens
+  / commas / function-call parens).  The text rides on a new
+  ``ColumnDef.check_expr_text`` field through the planner → IR →
+  VM pipeline.  See the matching entries in sql-backend 0.21,
+  sql-codegen 1.41, and sql-vm 1.56.
+
+  Covered: ``a > 0``, ``a >= 0 AND a <= 100``, ``a = 1 OR a = 2``,
+  ``name <> 'bad'``, ``LENGTH(name) > 0``, ``ABS(a) < 10``, ``a IN
+  (1, 2, 3)`` — exact-string match against the sqlite3 oracle for
+  all forms.
+
+## [2.9.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA writable_schema`` is now recognised as a read/write
+  boolean PRAGMA with the SQLite-compatible default of ``0`` (off).
+  Reads return the current integer (0 or 1); writes accept any of
+  ``1``/``0``/``ON``/``OFF``/``TRUE``/``FALSE``/``YES``/``NO`` and
+  the value persists for the lifetime of the connection.  It is also
+  now advertised in ``PRAGMA pragma_list``.
+
+  Mini-sqlite synthesises ``sqlite_master`` on every read (no backing
+  table), so honouring writes through the catalog is a much larger
+  change.  This PR fills only the read/write round-trip surface so
+  defensive callers (ORMs, migration tools, database-repair flows)
+  that toggle the PRAGMA before deciding whether to attempt a fix
+  see the expected value instead of an empty result or a "unknown
+  PRAGMA" error.
+
+  Previously: ``PRAGMA writable_schema`` returned ``[]`` instead of
+  the documented ``[(0,)]`` and writes were silently dropped.
+
+## [2.8.0] - 2026-05-23
+
+### Added
+
+- ``LIMIT`` clause now supports SQLite's two non-standard extensions:
+
+  * **Negative count** means "no limit" (unbounded).  ``SELECT v FROM
+    t LIMIT -1`` returns all rows; ``LIMIT -1 OFFSET 10`` returns
+    everything from row 11 onwards — the canonical "skip N, take
+    rest" idiom.
+
+  * **MySQL-compatible ``LIMIT m, n``** is now accepted as a synonym
+    for ``LIMIT n OFFSET m``.  Note the reversed argument order: the
+    FIRST number is the offset, the SECOND is the count.  This is the
+    only place in SQL where the order swaps.
+
+  * **Negative offset** is treated as zero (matches SQLite).  ``LIMIT
+    5 OFFSET -3`` returns the first five rows with no skip.
+
+  Previously all three raised ``Parse error … Expected NUMBER, got
+  '-'`` or ``Unexpected token: ','`` because the grammar only
+  accepted ``LIMIT NUMBER [ OFFSET NUMBER ]``.
+
+  Implementation: new grammar rule ``signed_number = [ "-" ] NUMBER``
+  used in both ``LIMIT`` slots, plus a comma-form alternative in the
+  trailing position.  The adapter detects the comma form by the
+  presence of a COMMA token and swaps the argument interpretation.
+  Negative counts map to ``Limit.count=None`` so the planner / codegen
+  paths that already understand "no limit" don't need any changes.
+
+## [2.7.0] - 2026-05-23
+
+### Added
+
+- SQLite's NULL-safe equality operators ``x IS y`` and ``x IS NOT y``
+  (general RHS form, beyond the existing ``IS NULL`` /
+  ``IS NOT NULL`` / ``IS DISTINCT FROM …`` shapes) are now supported.
+  ``IS`` is equivalent to ``IS NOT DISTINCT FROM`` (true iff both
+  sides are equal *or* both are NULL); ``IS NOT`` is the negation.
+
+  Examples that previously raised ``Parse error … Expected "NULL" or
+  "NOT" or "DISTINCT", got '1'``::
+
+      SELECT 1 IS 1                ⟶  1
+      SELECT NULL IS NULL          ⟶  1
+      SELECT NULL IS 1             ⟶  0
+      SELECT 'a' IS 'a'            ⟶  1
+      SELECT 1 IS NOT 2            ⟶  1
+      WHERE a IS b                 (NULL-safe column comparison)
+
+  Implementation: two new grammar alternatives — ``"IS" collated``
+  and ``"IS" "NOT" collated`` — at the end of the IS family (PEG
+  order: the more specific ``NULL`` / ``DISTINCT`` forms still get
+  the first shot at matching).  The adapter detects the bare-RHS
+  form by the count of ``collated`` children (one child = ``IS
+  NULL`` shape; two = ``IS <expr>`` shape) and routes through the
+  existing ``IS_[NOT_]DISTINCT_FROM`` planner/codegen/VM paths.
+
+## [2.6.0] - 2026-05-23
+
+### Added
+
+- Unary ``+`` prefix operator (e.g. ``SELECT +5``,
+  ``SELECT 1 + +2``, ``SELECT -+5``) is now accepted as the documented
+  SQLite no-op identity.  Previously raised
+  ``ProgrammingError: Parse error … Expected "-" or "~" or NUMBER …,
+  got '+'`` because the grammar's ``unary`` rule only listed ``-`` and
+  ``~`` as prefixes.
+
+  Implementation: one-character grammar change — ``unary = ( "-" | "~"
+  | "+" ) unary | primary`` — plus an adapter pass-through that
+  unwraps the ``+`` without emitting an IR node (the operand value is
+  unchanged, so adding a layer would just be work for the planner and
+  codegen to peel).  Regenerated sql-parser's ``_grammar.py`` cache.
+
+  All combinations work: ``+5.5``, ``+(-3)``, ``-+5``, ``++5``,
+  ``+~5``, ``+a`` in SELECT/WHERE/ORDER BY/CASE/function-argument
+  positions.
+
+## [2.5.0] - 2026-05-23
+
+### Added
+
+- ``CURRENT_DATE``, ``CURRENT_TIME``, and ``CURRENT_TIMESTAMP`` SQL
+  keyword expressions are now supported, matching SQLite::
+
+      CURRENT_DATE      ⟶  'YYYY-MM-DD'             (10 chars)
+      CURRENT_TIME      ⟶  'HH:MM:SS'               (8  chars)
+      CURRENT_TIMESTAMP ⟶  'YYYY-MM-DD HH:MM:SS'    (19 chars)
+
+  Previously these raised ``OperationalError: unknown column:
+  'CURRENT_TIMESTAMP'`` because the SQL token grammar doesn't list
+  them as keywords — the lexer emits them as bare NAME tokens, and
+  the planner couldn't resolve any matching column.
+
+  Implementation: the adapter's ``_column_ref_to_expr`` intercepts
+  single-name column refs whose value (case-insensitive) matches
+  ``CURRENT_DATE`` / ``CURRENT_TIME`` / ``CURRENT_TIMESTAMP`` and
+  rewrites them to the equivalent scalar-function call
+  (``date('now')`` / ``time('now')`` / ``datetime('now')``) — both
+  paths already implemented in the VM.
+
+### Known limitation
+
+- A column literally named ``CURRENT_DATE`` (or ``CURRENT_TIME`` /
+  ``CURRENT_TIMESTAMP``) is shadowed by the keyword even when
+  referenced via the double-quoted form (e.g.
+  ``SELECT "CURRENT_DATE" FROM t``).  SQLite distinguishes the two
+  cases because it preserves the "was quoted" flag through tokenization;
+  mini-sqlite's lexer post-processing strips quotes from quoted
+  identifiers and loses that distinction.  Workaround: don't name
+  columns after SQL keyword expressions.  Tracked for follow-up if
+  it ever bites a real user.
+
+## [2.4.0] - 2026-05-23
+
+### Added
+
+- ``WITH RECURSIVE`` CTEs now accept a ``VALUES`` anchor, matching
+  SQLite.  The canonical "count from N" idiom works::
+
+      WITH RECURSIVE c(n) AS (
+          VALUES(1)
+          UNION ALL
+          SELECT n + 1 FROM c WHERE n < 5
+      ) SELECT n FROM c
+
+  Previously this raised ``ProgrammingError: expected child rule
+  'select_stmt' under query_stmt`` because the recursive CTE branch
+  of ``mini_sqlite.adapter`` only looked for a ``select_stmt`` child
+  in the inner ``query_stmt``.  The non-recursive branch already
+  supported VALUES via ``_query_stmt`` recursion.
+
+  Implementation: the adapter first tries ``values_stmt`` and, if
+  present, runs ``_values_stmt`` to build the anchor; otherwise falls
+  back to the existing ``select_stmt`` path.  Single-row VALUES
+  (which is what every realistic recursive anchor needs) maps cleanly
+  onto ``RecursiveCTERef.anchor: SelectStmt``.  Multi-row VALUES
+  anchors are rejected with a clear pointer to the
+  ``SELECT … UNION ALL SELECT …`` rewrite — the planner's recursive
+  anchor path expects a single SELECT.
+
+## [2.3.0] - 2026-05-23
+
+### Fixed
+
+- ``ORDER BY <expr>`` with arbitrary expressions (``ORDER BY a+b``,
+  ``ORDER BY UPPER(name)``, ``ORDER BY CASE WHEN … END``, …) now
+  matches SQLite row-for-row instead of raising
+  ``InternalError: unexpected error: ValueError: tuple.index(x): x not
+  in tuple``.  Root cause was in sql-codegen's hidden-column
+  injection pass — see sql-codegen CHANGELOG 1.40.0 for the full fix.
+
+  Also covers multiple expression sort keys (``ORDER BY a+1, b-1``),
+  mixed expression + column keys, and the ``LIMIT`` / ``OFFSET`` /
+  ``DISTINCT`` interactions on top.
+
+## [2.2.0] - 2026-05-23
+
+### Added
+
+- ``INSERT INTO t DEFAULT VALUES`` is now supported.  Inserts a single
+  row consisting entirely of column defaults — equivalent to
+  ``INSERT INTO t () VALUES ()``.  Useful for tables where every column
+  either has a DEFAULT clause, is NULLable, or is an auto-assigned
+  INTEGER PRIMARY KEY.  Matches SQLite semantics: NOT NULL columns
+  without a DEFAULT still raise IntegrityError, RETURNING works as
+  expected, and sequential ``DEFAULT VALUES`` inserts increment the
+  IPK rowid.
+
+  Implementation: grammar adds ``"DEFAULT" "VALUES"`` as an alternative
+  in ``insert_body``; adapter detects the keyword and emits
+  ``InsertValuesStmt(rows=((),), columns=())``, which the existing
+  ``_apply_defaults`` / ``_autoassign_ipk`` paths in the backend
+  already handle correctly for empty-tuple row inputs.
+
+## [2.1.0] - 2026-05-23
+
+### Fixed
+
+- ``INSERT(v) VALUES (...) RETURNING *`` on a table with an
+  auto-assigned INTEGER PRIMARY KEY column now returns the
+  assigned id instead of ``NULL``.  Was the documented "known
+  limitation" of 2.0.  Backend ``insert()`` reflects auto-
+  assigned values back to the caller's dict, so the VM's
+  ``LoadLastInsertedColumn`` path sees the post-assign state.
+- DEFAULT column values are similarly reflected — ``INSERT INTO
+  t(id) VALUES (1) RETURNING *`` on ``v TEXT DEFAULT 'hi'``
+  surfaces ``'hi'`` rather than ``NULL``.
+
+## [2.0.0] - 2026-05-23
+
+### Added
+
+- ``RETURNING *`` shorthand is now supported on INSERT, UPDATE, and
+  DELETE — expands to one column per table column in declaration
+  order (matches SQLite).  Mixed forms like ``RETURNING id, *`` are
+  also accepted.
+
+  Implementation: parser accepts ``returning_item = "*" | expr``;
+  adapter emits :class:`Wildcard` sentinel; planner's
+  ``_expand_returning_wildcards()`` expands to ``Column(table, col)``
+  references at resolution time.
+
+### Known limitation
+
+- ``INSERT INTO t(v) VALUES (...) RETURNING *`` reports the
+  auto-assigned INTEGER PRIMARY KEY column as NULL when the user
+  omitted the id.  Pre-existing bug in INSERT RETURNING that's
+  independent of the ``*`` shorthand — explicit-id INSERTs and
+  UPDATE/DELETE RETURNING work correctly.  Filed for follow-up.
+
+## [1.99.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA foreign_keys`` is now honoured at INSERT/UPDATE/DELETE.
+  The engine reads the per-connection PRAGMA value and forwards it
+  to the VM's new ``fk_enabled`` flag.  Setting ``PRAGMA foreign_keys
+  = OFF`` disables FK enforcement for subsequent statements on the
+  same connection; ``PRAGMA foreign_keys = ON`` re-enables it.
+
+### Changed
+
+- ``_PRAGMA_DEFAULTS["foreign_keys"]`` flipped from ``0`` (OFF) to
+  ``1`` (ON) so the read value matches mini-sqlite's enforce-by-
+  default behaviour.  This is a *documented* deviation from SQLite,
+  which defaults the pragma to OFF.  ORMs and migration tools that
+  explicitly toggle the pragma get correct behaviour either way.
+- Two pragma-additions tests updated for the new default:
+  ``test_foreign_keys_default_off`` renamed/rewritten as
+  ``test_foreign_keys_default_on_in_mini_sqlite``;
+  ``test_foreign_keys_isolated_between_connections`` now toggles
+  c1 to OFF (rather than ON) so the isolation test still verifies
+  per-connection state.
+
+## [1.98.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA foreign_key_check`` is now implemented.  Walks every (or
+  one named) child table and reports one row per FK violation::
+
+      table   TEXT    — child table holding the bad row
+      rowid   INTEGER — the bad row's rowid
+      parent  TEXT    — referenced parent table
+      fkid    INTEGER — 0-based FK position (matches
+                        ``foreign_key_list.id``)
+
+  NULL child FK values pass unconditionally (SQL standard).  When the
+  ``REFERENCES`` clause omits a parent column, the parent's first
+  PRIMARY KEY column is used — matches the existing INSERT-time FK
+  validation.  ``foreign_key_check(<table>)`` restricts the scan to
+  one child table.
+- ``foreign_key_check`` added to ``PRAGMA pragma_list``.
+
+## [1.97.0] - 2026-05-23
+
+### Changed
+
+- ``PRAGMA table_info`` now matches real ``sqlite3`` exactly:
+
+  * ``notnull`` distinguishes explicit ``NOT NULL`` from the implicit
+    ``NOT NULL`` that ``PRIMARY KEY`` introduces — ``CREATE TABLE t
+    (id INTEGER PRIMARY KEY)`` reports ``notnull=0``, while
+    ``... PRIMARY KEY NOT NULL`` reports ``notnull=1``.  Runtime
+    NOT NULL enforcement is unchanged — the backend still treats PK
+    as implicit NOT NULL (TEXT PK still rejects ``INSERT VALUES
+    (NULL, ...)``, INTEGER PK still auto-assigns the next rowid).
+  * ``dflt_value`` returns the literal source text instead of the
+    parsed Python value: ``DEFAULT 42`` → ``'42'``, ``DEFAULT 'x'``
+    → ``"'x'"`` (single quotes preserved), ``DEFAULT NULL`` →
+    ``'NULL'``, ``DEFAULT 3.14`` → ``'3.14'``.  ``X'hex'`` BLOB
+    literals also round-trip.
+
+- The adapter no longer sets ``not_null=True`` for PRIMARY KEY columns
+  (the codegen now reads the raw flag through to the backend).
+  Internal ``effective_not_null()`` continues to OR the PK bit in for
+  constraint validation.
+
+## [1.96.0] - 2026-05-23
+
+### Added
+
+- ``PRAGMA index_info(<index-name>)`` is now implemented.  Returns
+  one row per indexed column with the SQLite-standard triple
+  ``(seqno, cid, name)``: the position in the index key, the column
+  id in the parent table, and the column name.  Returns zero rows
+  (no error) for an unknown index — matches SQLite.
+
+### Changed
+
+- ``PRAGMA index_list(<table>)`` now returns the SQLite-standard
+  5-column shape ``(seq, name, unique, origin, partial)`` instead of
+  the previous 3-column ``(seq, name, unique)``.  ``origin`` is
+  ``'c'`` for user-created indexes and ``'u'`` for auto-created
+  ``sqlite_autoindex_*`` indexes.  ``partial`` is always 0 —
+  mini-sqlite doesn't support partial indexes.
+- ``index_info`` added to the ``PRAGMA pragma_list`` enumeration.
+
+## [1.95.0] - 2026-05-23
+
+### Added
+
+- ``SELECT ... FROM sqlite_sequence`` now returns the high-water
+  rowid for each AUTOINCREMENT table — completes the AUTOINCREMENT
+  story started in 1.94.  The table materializes lazily: ``SELECT
+  * FROM sqlite_sequence`` on a fresh database errors with
+  "no such table" until at least one AUTOINCREMENT table is created
+  (matches SQLite).
+- ``CREATE TABLE sqlite_sequence``, ``DROP TABLE sqlite_sequence``,
+  and ``INSERT INTO sqlite_sequence`` are rejected with the same
+  reserved-name guard as ``sqlite_master``.
+
+## [1.94.0] - 2026-05-23
+
+### Added
+
+- ``CREATE TABLE t (id INTEGER PRIMARY KEY AUTOINCREMENT, ...)`` is
+  now fully end-to-end.  The adapter parses the ``AUTOINCREMENT``
+  keyword and forwards ``autoincrement=True`` to the backend
+  ``ColumnDef``.  The in-memory backend's ``_next_rowid`` counter is
+  never decremented (already monotonic), so SQLite's "deleted rowids
+  never reuse" guarantee holds.  The keyword round-trips through
+  ``sqlite_master.sql``.
+
+## [1.93.0] - 2026-05-23
+
+### Added
+
+- ``INSERT INTO t(other_col) VALUES (...)`` and ``INSERT INTO t
+  VALUES (NULL, ...)`` now work end-to-end on a table with an
+  ``INTEGER PRIMARY KEY`` column.  The id auto-assigns to the next
+  rowid — SQLite's "INTEGER PRIMARY KEY is an alias for rowid"
+  semantics.  Previously these forms failed with a NOT NULL
+  violation, blocking ORM patterns.
+- The rowid pseudo-column now aliases the INTEGER PRIMARY KEY
+  column when one exists: ``SELECT rowid, id FROM t`` returns
+  identical values per row.
+- ``last_insert_rowid()`` correctly reports the auto-assigned id
+  (or the explicit id when one was supplied).
+
+### Changed
+
+- ``SELECT *`` on a table with a partially-omitted INSERT now
+  returns columns in declaration order rather than insertion order
+  (where the omitted columns previously moved to the end).  See
+  ``sql-backend`` 0.18 for the underlying ``_apply_defaults`` fix.
+
+## [1.92.0] - 2026-05-23
+
+### Added
+
+- ``EXPLAIN QUERY PLAN`` SEARCH detail rows now include the matched
+  index bounds in SQLite's compact format::
+
+      SEARCH t USING INDEX ix_x (x=?)
+      SEARCH t USING INDEX ix_x (x>?)
+      SEARCH t USING INDEX ix_x (x>? AND x<?)
+      SEARCH t USING INDEX ix_xy (x=? AND y=?)
+      SEARCH t USING INDEX ix_xy (x=? AND y>?)
+
+  The previous format emitted just ``SEARCH t USING INDEX <name>``
+  without the bound suffix.  Inclusivity markers (``>=`` and ``<=``)
+  are collapsed to ``>`` and ``<`` for compactness — matches real
+  SQLite's behaviour.
+
+## [1.91.0] - 2026-05-23
+
+### Added
+
+- ``... FROM t INDEXED BY <name> ...`` and ``... FROM t NOT INDEXED
+  ...`` query hints are now wired end-to-end.  The adapter parses
+  the new ``index_hint`` grammar node and attaches it to ``TableRef``;
+  the planner forwards it to ``Scan``; the optimizer's
+  ``_try_index_scan`` honours both hints.
+- An unknown index in ``INDEXED BY <name>`` raises ``OperationalError``
+  with the message ``no such index on table <t>: <name>`` — mirrors
+  SQLite's behaviour.  Wired through ``mini_sqlite.errors.translate``
+  which now also maps ``sql_planner.errors.IndexNotFound``.
+
+## [1.90.0] - 2026-05-23
+
+### Added
+
+- ``EXPLAIN QUERY PLAN <stmt>`` is now implemented end-to-end.  The
+  engine parses and plans the inner statement (without executing it),
+  walks the optimised ``LogicalPlan``, and emits a four-column row set
+  (``id``, ``parent``, ``notused``, ``detail``) that mirrors SQLite's
+  output shape.  Detail strings cover the common plan shapes:
+  ``SCAN <table>``, ``SEARCH <table> USING INDEX <name>``, ``USE TEMP
+  B-TREE FOR ORDER BY / GROUP BY / DISTINCT / WINDOW FUNCTION``, and
+  ``SCAN SUBQUERY <alias>``.  Pure transforms (Filter, Project, Limit,
+  Having, Join) are elided so children reparent to the elided node's
+  parent — matching SQLite's output topology.
+- Bare ``EXPLAIN`` (without ``QUERY PLAN``) continues to return an
+  empty result — mini-sqlite does not expose its internal IR as VDBE
+  bytecode.
+
+### Changed
+
+- ``sqlite_master.rootpage`` now reports a stable non-zero monotonic
+  integer for tables and indexes (matching SQLite's convention) instead
+  of always returning 0.  Triggers still report 0 (not a b-tree
+  object).  See ``sql-backend`` 0.17 for the underlying change.
+
+## [1.89.0] - 2026-05-23
+
+### Added
+
+- ``SELECT ... FROM sqlite_master`` (and its alias ``sqlite_schema``)
+  now works on ``:memory:`` databases.  The in-memory backend
+  synthesizes the catalog rows from current schema state on every
+  scan — no storage, no maintenance, no DDL hook plumbing.  Common
+  migration-tool queries like ``SELECT name FROM sqlite_master WHERE
+  type='table'`` return rows identical to real ``sqlite3``.
+- ``INSERT`` / ``DROP TABLE`` / ``CREATE TABLE`` targeting the
+  reserved names ``sqlite_master`` / ``sqlite_schema`` are rejected
+  with ``IntegrityError``.
+
+## [1.88.0] - 2026-05-23
+
+### Added
+
+- ``CREATE TABLE ... STRICT`` is now fully end-to-end:
+  * Parser already accepted ``table_options = table_option {","
+    table_option}`` and ``table_option = "STRICT" | "WITHOUT" NAME``;
+    the adapter now lifts the ``STRICT`` keyword into
+    ``CreateTableStmt.strict``.
+  * The in-memory backend rejects column types outside SQLite's
+    ``{INT, INTEGER, REAL, TEXT, BLOB, ANY}`` set at CREATE TABLE time,
+    and validates value types on every INSERT/UPDATE.  ``ANY`` columns
+    opt back into lenient typing inside a STRICT table — matching
+    SQLite's escape hatch.
+  * ``WITHOUT ROWID`` continues to be parsed and silently accepted —
+    mini-sqlite always uses a rowid table internally.
+
+## [1.87.0] - 2026-05-23
+
+### Added
+
+- **ALTER TABLE RENAME TO / RENAME COLUMN / DROP COLUMN** — three
+  new forms beyond the existing ADD COLUMN, matching SQLite 3.25+ /
+  3.35+ syntax::
+
+      ALTER TABLE old RENAME TO new
+      ALTER TABLE t RENAME [COLUMN] old_col TO new_col
+      ALTER TABLE t DROP [COLUMN] col_name
+
+  The ``COLUMN`` keyword is optional everywhere.  Rows survive the
+  rename intact; the dropped column's values are removed from each
+  row.  Indexes follow renames automatically (their ``table`` /
+  ``columns`` fields get rewritten).
+- 16 oracle tests in ``test_tier3_alter_table_extras.py`` covering
+  all three new forms (with and without the ``COLUMN`` keyword),
+  rename-then-query, index follow-along, dropped column
+  unavailability, and SQLite's restrictions (cannot drop the only
+  column, the PRIMARY KEY, or a column referenced by an index).
+- Adapter ``_alter_table`` now parses all four forms via keyword
+  dispatch, building an ``AlterTableStmt`` with exactly one of
+  ``column`` / ``rename_to`` / ``rename_column`` / ``drop_column``
+  set.
+
+### Fixed
+
+- ``ALTER TABLE … ADD COLUMN x TEXT DEFAULT 'foo'`` now backfills
+  existing rows with the DEFAULT value (``'foo'``) rather than NULL.
+  The bug was in sql-vm's ``_do_alter_table``, which constructed the
+  backend ColumnDef without forwarding ``default``.
+
+## [1.86.0] - 2026-05-23
+
+### Added
+
+- **Implicit COLLATE in WHERE / UPDATE / DELETE**.  The column's
+  declared ``COLLATE`` clause now propagates into any comparison the
+  column participates in — matching SQLite's implicit collation
+  semantics.  So::
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+      INSERT INTO users VALUES ('Adhithya@example.com');
+      SELECT * FROM users WHERE email = 'adhithya@example.com';
+      -- ('Adhithya@example.com',)  ← case-insensitive match
+
+  works without an explicit ``COLLATE NOCASE`` on the WHERE.
+  Equally for ``UPDATE … WHERE name = 'X'`` and ``DELETE FROM …
+  WHERE name = 'X'`` against a NOCASE-declared column.
+- Same propagation applies to ``<``, ``<=``, ``>``, ``>=``,
+  ``<>``, ``IS [NOT] DISTINCT FROM``, and ``BETWEEN`` — every
+  comparison op whose value semantics depend on string ordering.
+- 18 oracle tests in
+  ``tests/test_tier3_collate_implicit_from_column.py``: basic
+  equality, ordering, multi-column independence, complex
+  predicates (AND / OR / NOT / BETWEEN / IS DISTINCT FROM),
+  RTRIM column, UPDATE / DELETE, and the explicit-override path.
+
+### Known limitations
+
+- Explicit ``COLLATE BINARY`` postfix does NOT override a
+  column-declared NOCASE (because the explicit-BINARY postfix is an
+  identity transform at the adapter, leaving no marker for the
+  propagation pass to recognise).  Override with ``COLLATE NOCASE``
+  or ``COLLATE RTRIM`` instead — those work as expected.
+- HAVING clauses don't currently propagate column collation through
+  GROUP BY.  Use explicit ``COLLATE NOCASE`` on the HAVING.
+
+## [1.85.0] - 2026-05-23
+
+### Added
+
+- ``COLLATE name`` accepted as a column constraint in CREATE TABLE:
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+
+  Plays through the full pipeline (parser → adapter → codegen → VM
+  → backend) and is then read back by the planner when an ORDER BY
+  references the column without an explicit COLLATE override.  So::
+
+      CREATE TABLE t(name TEXT COLLATE NOCASE);
+      INSERT INTO t VALUES ('Banana'), ('apple'), ('CHERRY');
+      SELECT name FROM t ORDER BY name;
+      -- ('apple',), ('Banana',), ('CHERRY',)   ← NOCASE order
+
+  matches stdlib sqlite3 byte-for-byte.  Explicit ``COLLATE`` on the
+  ORDER BY clause still overrides the column's declared collation.
+
+- 15 oracle tests in ``tests/test_tier3_column_collate.py``: parsing
+  of COLLATE alongside every other column constraint (NOT NULL,
+  DEFAULT, UNIQUE, PRIMARY KEY), implicit / explicit / RTRIM
+  propagation, per-column independence, and ``ALTER TABLE ADD COLUMN
+  … COLLATE`` round-trip.
+
+### Changed
+
+- Adapter ``_col_def`` recognises the new ``COLLATE NAME``
+  ``col_constraint`` and stores the upper-cased name on the column's
+  ``BackendColumnDef.collation`` field.
+
+## [1.84.0] - 2026-05-23
+
+### Added
+
+- ``expr COLLATE name`` postfix accepted on either operand of any
+  comparison operator (``=``, ``<>``, ``<``, ``<=``, ``>``, ``>=``,
+  ``BETWEEN`` / ``NOT BETWEEN``, ``IS DISTINCT FROM`` /
+  ``IS NOT DISTINCT FROM``, ``IN``).  Implements byte-identical
+  semantics with stdlib ``sqlite3``: ``'Foo' = 'foo' COLLATE NOCASE``
+  evaluates to TRUE, and a ``WHERE`` clause with a COLLATE postfix
+  filters rows case-insensitively.
+- 22 oracle tests in ``tests/test_tier3_collate_in_comparisons.py``
+  covering NOCASE equality (both LHS and RHS collation, both-sides
+  collation, default-BINARY behaviour), comparison ops, RTRIM,
+  BETWEEN / NOT BETWEEN, IS DISTINCT FROM, multi-predicate composition
+  with WHERE + ORDER BY, NULL propagation, integer operand regression
+  guard, and unknown-collation fallback.
+
+### Changed
+
+- Implementation is a pure adapter-level rewrite — no
+  planner / codegen / VM changes.  When ``_comparison`` builds a
+  comparison expression and either operand has a COLLATE clause, it
+  wraps **both** operands in ``lower()`` (for NOCASE) or ``rtrim()``
+  (for RTRIM).  ``BINARY`` and unknown names fall through to
+  identity, matching SQLite's "validate lazily" behaviour.
+- ``_order_item`` now also walks the inner ``collated`` subtree to
+  pick up COLLATE clauses that the PEG parser greedily consumed at
+  the inner level (which would otherwise leave the outer
+  ``order_item`` slot empty and silently drop the collation).  Both
+  ``ORDER BY x COLLATE NOCASE`` and direct comparisons now work
+  end-to-end.
+
+## [1.83.0] - 2026-05-22
+
+### Added
+
+- ``ORDER BY expr COLLATE name`` — collation-aware sorting,
+  byte-identical with stdlib ``sqlite3``.  Recognises SQLite's
+  three built-in collations:
+  - ``BINARY`` (default, what ``None`` means too): byte-for-byte
+  - ``NOCASE``: ASCII case-insensitive (``'A' == 'a'``)
+  - ``RTRIM``: strip trailing spaces before BINARY-comparing
+  Unknown collation names fall through to BINARY rather than
+  raising — matching SQLite's "validate lazily" approach (the user
+  may have registered a custom collation we don't know about).
+- 18 oracle tests in ``tests/test_tier3_order_by_collate.py``
+  covering all three collations, with/without DESC, with/without
+  NULLS FIRST/LAST, multi-column ORDER BY, positional
+  (``ORDER BY 1 COLLATE NOCASE``), aliased columns, mixed-case
+  word lists, NULL values, integer regression guard (collations
+  inert on non-strings), and the unknown-collation fallback.
+
+### Changed
+
+- Adapter ``_order_item`` parses the optional ``COLLATE name``
+  clause and stores it (upper-cased) on
+  ``SortKey.collation``.  The planner, optimizer, and codegen
+  thread it through unchanged; the VM ``_do_sort`` applies the
+  named transform when building the sort key.
+
+## [1.82.0] - 2026-05-22
+
+### Added
+
+- **Compound ORDER BY / LIMIT** — trailing ``ORDER BY`` and ``LIMIT``
+  on a ``UNION / INTERSECT / EXCEPT`` chain now apply to the whole
+  compound, matching SQLite (and the SQL standard).  Previously the
+  grammar parsed them into the rightmost SELECT, where the column
+  name from the leftmost SELECT's projection was invisible — the
+  result was a confusing ``unknown column: 'x'`` error on perfectly
+  valid SQL like::
+
+      SELECT 1 AS x UNION ALL SELECT 2 ORDER BY x
+
+  The fix hoists trailing ``ORDER BY``/``LIMIT`` from the rightmost
+  SELECT onto a wrapper ``SELECT * FROM (compound) ORDER BY … LIMIT
+  …``, which makes the compound's output column names (inherited
+  from the leftmost SELECT, matching SQLite) visible to the ORDER BY
+  clause.
+- 18 oracle tests in ``tests/test_tier3_compound_order_limit.py``
+  covering UNION ALL, UNION (dedup), INTERSECT, EXCEPT, ORDER BY by
+  name and by position, LIMIT, LIMIT/OFFSET, and the interaction
+  with VALUES (from PR #3968).
+
 ## [1.81.0] - 2026-05-22
 
 ### Added

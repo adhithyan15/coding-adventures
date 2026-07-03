@@ -684,19 +684,20 @@ class TestLimitsAtInfinity:
         out = limit_advanced(expr, x, INF, diff_fn=_DIFF, eval_fn=_EVAL)
         assert _close(out, 0.0, tol=1e-6)
 
-    def test_sin_over_x_at_inf_is_zero_or_unevaluated(self):
-        """lim_{x→∞} sin(x)/x: sin(∞) is NaN but overall limit is 0.
-
-        Our numeric evaluator gives nan for sin(∞), so this either:
-        - Falls through to unevaluated (no diff_fn path finds 0)
-        - OR the system returns unevaluated Limit(…)
-        This test just verifies no exception is raised.
-        """
+    def test_sin_over_x_at_inf_is_zero(self):
+        """lim_{x→∞} sin(x)/x = 0 by bounded-over-diverging recognition."""
         x = _sym("x")
         expr = IRApply(DIV, (IRApply(SIN, (x,)), x))
         out = limit_advanced(expr, x, INF, diff_fn=_DIFF, eval_fn=_EVAL)
-        # Either unevaluated or 0 — both acceptable
-        assert out is not None
+        assert isinstance(out, IRInteger) and out.value == 0
+
+    def test_cos_over_quadratic_at_neg_inf_is_zero(self):
+        """lim_{x→-∞} cos(x)/(x^2+1) = 0."""
+        x = _sym("x")
+        denom = IRApply(ADD, (IRApply(POW, (x, _i(2))), _i(1)))
+        expr = IRApply(DIV, (IRApply(COS, (x,)), denom))
+        out = limit_advanced(expr, x, MINF, diff_fn=_DIFF, eval_fn=_EVAL)
+        assert isinstance(out, IRInteger) and out.value == 0
 
 
 # ===========================================================================
@@ -752,11 +753,14 @@ class TestFallthrough:
     """Limits that fall through to unevaluated Limit(…)."""
 
     def test_no_diff_fn_indeterminate(self):
-        """Without diff_fn, 0/0 form cannot be resolved → unevaluated."""
+        """Without diff_fn, 0/0 form falls through to the Taylor-series
+        fallback (Track J1).  ``sin(x)/x`` at 0 closes to ``1`` via the
+        series expansion path even when L'Hôpital is unavailable."""
         x = _sym("x")
         expr = IRApply(DIV, (IRApply(SIN, (x,)), x))
         out = limit_advanced(expr, x, _i(0))  # no diff_fn
-        assert _is_unevaluated(out)
+        # Pre-J1: would return unevaluated. Post-J1: Taylor closes to 1.
+        assert isinstance(out, IRInteger) and out.value == 1
 
     def test_oscillating_sin_at_infinity(self):
         """lim_{x→∞} sin(x) is undefined (oscillates) → unevaluated."""

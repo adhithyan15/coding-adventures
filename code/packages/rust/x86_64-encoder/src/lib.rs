@@ -674,6 +674,140 @@ impl Assembler {
         self.emit_u8(modrm(0b00, dst.low3(), base.low3()));
     }
 
+    // -----------------------------------------------------------------------
+    // SSE2 — scalar double-precision floating-point (LANG-FULL E3 / ALGOL `real`)
+    //
+    // The `Reg` numbers double as XMM register numbers (`Rax`→`xmm0`,
+    // `Rcx`→`xmm1`, …) — the mandatory prefix + 0F-opcode select the XMM
+    // register file. REX is emitted only when a high register (≥ 8) is used,
+    // always with `W=0` (these ops don't use the 64-bit-operand bit). Every
+    // encoding was verified byte-for-byte against the system assembler.
+    // -----------------------------------------------------------------------
+
+    /// Shared SSE register-register form: `<prefix> [REX] 0F <opcode> ModRM(11,dst,src)`.
+    fn emit_sse_rr(&mut self, prefix: u8, opcode: u8, dst: Reg, src: Reg) {
+        self.emit_u8(prefix);
+        if dst.high1() || src.high1() {
+            self.emit_u8(rex(false, dst.high1(), false, src.high1()));
+        }
+        self.emit_u8(0x0F);
+        self.emit_u8(opcode);
+        self.emit_u8(modrm(0b11, dst.low3(), src.low3()));
+    }
+
+    /// Shared SSE register-memory form `[base + disp32]` (always `mod=10`, so the
+    /// RBP/disp=0 special case never bites). `xmm` is the ModR/M.reg operand.
+    fn emit_sse_mem(&mut self, prefix: u8, opcode: u8, xmm: Reg, base: Reg, disp: i32) {
+        self.emit_u8(prefix);
+        if xmm.high1() || base.high1() {
+            self.emit_u8(rex(false, xmm.high1(), false, base.high1()));
+        }
+        self.emit_u8(0x0F);
+        self.emit_u8(opcode);
+        let needs_sib = base.low3() == 4; // RSP / R12
+        if needs_sib {
+            self.emit_u8(modrm(0b10, xmm.low3(), 0b100));
+            self.emit_u8((0b100 << 3) | base.low3());
+        } else {
+            self.emit_u8(modrm(0b10, xmm.low3(), base.low3()));
+        }
+        self.emit_u32_le(disp as u32);
+    }
+
+    /// `MOVSD xmm, [base + disp32]` — load a double (`F2 0F 10 /r`).
+    pub fn movsd_load(&mut self, dst_xmm: Reg, base: Reg, disp: i32) {
+        self.emit_sse_mem(0xF2, 0x10, dst_xmm, base, disp);
+    }
+
+    /// `MOVSD [base + disp32], xmm` — store a double (`F2 0F 11 /r`).
+    pub fn movsd_store(&mut self, base: Reg, disp: i32, src_xmm: Reg) {
+        self.emit_sse_mem(0xF2, 0x11, src_xmm, base, disp);
+    }
+
+    /// `ADDSD xmm_dst, xmm_src` — double add (`F2 0F 58 /r`).
+    pub fn addsd(&mut self, dst: Reg, src: Reg) { self.emit_sse_rr(0xF2, 0x58, dst, src); }
+    /// `SUBSD xmm_dst, xmm_src` — double subtract (`F2 0F 5C /r`).
+    pub fn subsd(&mut self, dst: Reg, src: Reg) { self.emit_sse_rr(0xF2, 0x5C, dst, src); }
+    /// `MULSD xmm_dst, xmm_src` — double multiply (`F2 0F 59 /r`).
+    pub fn mulsd(&mut self, dst: Reg, src: Reg) { self.emit_sse_rr(0xF2, 0x59, dst, src); }
+    /// `DIVSD xmm_dst, xmm_src` — double divide (`F2 0F 5E /r`). IEEE div-by-zero
+    /// → `±inf`/`NaN`, never a trap.
+    pub fn divsd(&mut self, dst: Reg, src: Reg) { self.emit_sse_rr(0xF2, 0x5E, dst, src); }
+
+    /// `UCOMISD xmm_a, xmm_b` — unordered compare two doubles, set `ZF`/`PF`/`CF`
+    /// (`66 0F 2E /r`). Read with `setcc` (NaN sets `PF=1`).
+    pub fn ucomisd(&mut self, a: Reg, b: Reg) { self.emit_sse_rr(0x66, 0x2E, a, b); }
+
+    // ── LANG-FULL E8: int ⇄ real conversions ───────────────────────────────
+    //
+    // Two encoding shapes the existing SSE helpers don't cover:
+    //   * `cvtsi2sd` / `cvttsd2si` mix a 64-bit GPR with an XMM register, so
+    //     they need a **mandatory REX.W** (the `emit_sse_rr` helper only adds a
+    //     REX byte for high registers and never sets W).  `emit_sse_rr_w` always
+    //     emits `REX.W`.  As in `emit_sse_rr`, `reg` is the ModRM.reg operand
+    //     (REX.R) and `rm` is the ModRM.rm operand (REX.B).
+    //   * `roundsd` is a **three-byte opcode** (`66 0F 3A 0B`) with a trailing
+    //     `imm8` rounding-mode selector — `emit_sse_rri_0f3a` handles it.
+
+    /// SSE reg/reg with a mandatory `REX.W` (64-bit operand). `reg`→ModRM.reg
+    /// (REX.R), `rm`→ModRM.rm (REX.B). Layout: `prefix REX.W 0F opcode ModRM`.
+    fn emit_sse_rr_w(&mut self, prefix: u8, opcode: u8, reg: Reg, rm: Reg) {
+        self.emit_u8(prefix);
+        self.emit_u8(rex(true, reg.high1(), false, rm.high1()));
+        self.emit_u8(0x0F);
+        self.emit_u8(opcode);
+        self.emit_u8(modrm(0b11, reg.low3(), rm.low3()));
+    }
+
+    /// SSE reg/reg with the `66 0F 3A <opcode>` three-byte form + trailing
+    /// `imm8` (used by `roundsd`). `reg`→ModRM.reg, `rm`→ModRM.rm.
+    fn emit_sse_rri_0f3a(&mut self, opcode: u8, reg: Reg, rm: Reg, imm8: u8) {
+        self.emit_u8(0x66);
+        if reg.high1() || rm.high1() {
+            self.emit_u8(rex(false, reg.high1(), false, rm.high1()));
+        }
+        self.emit_u8(0x0F);
+        self.emit_u8(0x3A);
+        self.emit_u8(opcode);
+        self.emit_u8(modrm(0b11, reg.low3(), rm.low3()));
+        self.emit_u8(imm8);
+    }
+
+    /// `CVTSI2SD xmm_dst, r/m64` — convert a signed 64-bit integer (GPR) to a
+    /// double (XMM). Exact for |x|<2⁵³, round-to-nearest-even beyond — the IIR
+    /// `int_to_real` op. `F2 REX.W 0F 2A /r` → e.g. `cvtsi2sd xmm0,rax` =
+    /// `F2 48 0F 2A C0`.
+    pub fn cvtsi2sd(&mut self, xmm_dst: Reg, gpr_src: Reg) {
+        self.emit_sse_rr_w(0xF2, 0x2A, xmm_dst, gpr_src);
+    }
+
+    /// `CVTTSD2SI r64, xmm/m64` — convert a double (XMM) to a signed 64-bit
+    /// integer (GPR), **truncating toward zero**. On NaN / ±∞ / out-of-range it
+    /// yields the "integer indefinite" `0x8000_0000_0000_0000` (no trap) — a
+    /// documented divergence from the VM trap, shared with JVM/aarch64. The IIR
+    /// `real_to_int_trunc` op (and the tail of `real_to_int_floor`).
+    /// `F2 REX.W 0F 2C /r` → e.g. `cvttsd2si rax,xmm0` = `F2 48 0F 2C C0`.
+    pub fn cvttsd2si(&mut self, gpr_dst: Reg, xmm_src: Reg) {
+        self.emit_sse_rr_w(0xF2, 0x2C, gpr_dst, xmm_src);
+    }
+
+    /// `ROUNDSD xmm_dst, xmm_src, imm8` — SSE4.1 round a double under the mode
+    /// in `imm8` (`1` = toward −∞ / floor). Composed with `cvttsd2si` it gives
+    /// the IIR `real_to_int_floor` (ALGOL `entier`). `66 0F 3A 0B /r ib` → e.g.
+    /// `roundsd xmm0,xmm0,1` = `66 0F 3A 0B C0 01`.
+    pub fn roundsd(&mut self, xmm_dst: Reg, xmm_src: Reg, imm8: u8) {
+        self.emit_sse_rri_0f3a(0x0B, xmm_dst, xmm_src, imm8);
+    }
+
+    /// `SQRTSD xmm_dst, xmm_src` — SSE2 double-precision square root (AL8 `sqrt`).
+    ///
+    /// Single hardware FP instruction — no libm call.  NaN propagates; negative
+    /// input returns NaN per IEEE-754 (matches Rust `f64::sqrt` and the VM handler).
+    /// Opcode: `F2 0F 51 /r` → e.g. `sqrtsd xmm0,xmm0` = `F2 0F 51 C0`.
+    pub fn sqrtsd(&mut self, xmm_dst: Reg, xmm_src: Reg) {
+        self.emit_sse_rr(0xF2, 0x51, xmm_dst, xmm_src);
+    }
+
     /// `MOV byte ptr [base], r8` — store the low 8 bits of `src` to `[base]`
     /// (LANG76).
     ///
@@ -1069,6 +1203,79 @@ mod tests {
         let mut a = Assembler::new();
         a.movzx_r64_r8(Reg::Rax, Reg::Rax);
         assert_eq!(finish(a), vec![0x48, 0x0F, 0xB6, 0xC0]);
+    }
+
+    // ---- SSE2 scalar double (LANG-FULL E3) ----
+    // Reg-reg opcodes verified byte-identical against the system assembler
+    // (`clang -masm=intel`); the mem forms use this encoder's disp32 policy
+    // (the assembler picks disp8 for small offsets — semantically identical).
+
+    #[test]
+    fn sse_movsd_load_store_rbp_8() {
+        // movsd xmm0, [rbp+8] → F2 0F 10 85 08000000 ; store → F2 0F 11 85 …
+        let mut a = Assembler::new();
+        a.movsd_load(Reg::Rax, Reg::Rbp, 8);   // xmm0
+        a.movsd_store(Reg::Rbp, 8, Reg::Rax);
+        assert_eq!(finish(a), vec![
+            0xF2, 0x0F, 0x10, 0x85, 0x08, 0x00, 0x00, 0x00,
+            0xF2, 0x0F, 0x11, 0x85, 0x08, 0x00, 0x00, 0x00,
+        ]);
+    }
+
+    #[test]
+    fn sse_arith_xmm0_xmm1() {
+        let mut a = Assembler::new();
+        a.addsd(Reg::Rax, Reg::Rcx); // xmm0, xmm1
+        a.subsd(Reg::Rax, Reg::Rcx);
+        a.mulsd(Reg::Rax, Reg::Rcx);
+        a.divsd(Reg::Rax, Reg::Rcx);
+        assert_eq!(finish(a), vec![
+            0xF2, 0x0F, 0x58, 0xC1, // addsd xmm0, xmm1
+            0xF2, 0x0F, 0x5C, 0xC1, // subsd
+            0xF2, 0x0F, 0x59, 0xC1, // mulsd
+            0xF2, 0x0F, 0x5E, 0xC1, // divsd
+        ]);
+    }
+
+    #[test]
+    fn sse_ucomisd_xmm0_xmm1() {
+        // ucomisd xmm0, xmm1 → 66 0F 2E C1
+        let mut a = Assembler::new();
+        a.ucomisd(Reg::Rax, Reg::Rcx);
+        assert_eq!(finish(a), vec![0x66, 0x0F, 0x2E, 0xC1]);
+    }
+
+    // ---- LANG-FULL E8: int ⇄ real conversions ----
+
+    #[test]
+    fn sse_conversions_e8_base() {
+        // Base (xmm0 / rax) encodings, as documented on each method.
+        let mut a = Assembler::new();
+        a.cvtsi2sd(Reg::Rax, Reg::Rax);   // xmm0, rax  → F2 48 0F 2A C0
+        a.cvttsd2si(Reg::Rax, Reg::Rax);  // rax, xmm0  → F2 48 0F 2C C0
+        a.roundsd(Reg::Rax, Reg::Rax, 1); // xmm0,xmm0,1 → 66 0F 3A 0B C0 01
+        assert_eq!(finish(a), vec![
+            0xF2, 0x48, 0x0F, 0x2A, 0xC0,
+            0xF2, 0x48, 0x0F, 0x2C, 0xC0,
+            0x66, 0x0F, 0x3A, 0x0B, 0xC0, 0x01,
+        ]);
+    }
+
+    #[test]
+    fn sse_conversions_e8_reg_fields() {
+        // Verify ModRM.reg / ModRM.rm placement and REX bit routing with a mix
+        // of registers (Rcx = idx 1, R8 = idx 8 → REX.B/REX.R extension bit).
+        let mut a = Assembler::new();
+        // cvtsi2sd xmm1, r8 : reg=xmm1(low3=1), rm=r8(low3=0,high1) → REX.W+B,
+        //   ModRM = 11 001 000 = 0xC8 → F2 49 0F 2A C8
+        a.cvtsi2sd(Reg::Rcx, Reg::R8);
+        // cvttsd2si r8, xmm1 : reg=r8(low3=0,high1→REX.R), rm=xmm1(low3=1) →
+        //   REX.W+R, ModRM = 11 000 001 = 0xC1 → F2 4C 0F 2C C1
+        a.cvttsd2si(Reg::R8, Reg::Rcx);
+        assert_eq!(finish(a), vec![
+            0xF2, 0x49, 0x0F, 0x2A, 0xC8,
+            0xF2, 0x4C, 0x0F, 0x2C, 0xC1,
+        ]);
     }
 
     // ---- Stack ----

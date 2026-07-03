@@ -1,0 +1,28 @@
+// DropdownMenu.mil — interface for the toolkit's DropdownMenu (v0.9).
+//
+// A button that toggles open/closed; when open, a vertical menu of
+// clickable items appears beneath it. Bootstrap's
+// `<div class="dropdown">` distilled.
+//
+// State ownership: the `open` flag is a slot, so the host owns the
+// open/closed state. The DropdownMenu itself just renders + emits.
+// On click of the toggle button, onToggle fires and the host
+// decides whether to flip open. On click of any item, onSelect
+// fires with that item's index; the host usually closes the menu
+// in response.
+
+component DropdownMenu {
+  // The toggle button's label (e.g. "Actions ▾").
+  slot label : text ;
+
+  // The menu items shown when open.
+  slot items : list<text> ;
+
+  // Whether the menu is currently open. Host-owned.
+  slot open : bool ;
+
+  // Fired when the toggle button is clicked.
+  emit onToggle ;
+  // Fired when an item is clicked. Payload is the item's index.
+  emit onSelect ( index : number ) ;
+}

@@ -4,6 +4,6 @@ _targets = [
     rust_library(
         name = "cas-matrix",
         srcs = ["src/**/*.rs", "tests/**/*.rs"],
-        deps = ["symbolic-ir"],
+        deps = ["cas-solve", "symbolic-ir"],
     ),
 ]

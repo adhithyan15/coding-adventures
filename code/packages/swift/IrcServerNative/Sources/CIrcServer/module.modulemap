@@ -1,0 +1,13 @@
+/*
+ * module.modulemap — Clang module map for CIrcServer.
+ *
+ * SPM's .systemLibrary target requires module.modulemap at the root of the
+ * target path (Sources/CIrcServer/), not in a subdirectory. The header lives in
+ * include/ and is referenced with a relative path. `export *` re-exports every
+ * C symbol so the Swift `IrcServerNative` wrapper (and its tests) can reach the
+ * raw ABI.
+ */
+module CIrcServer {
+    header "include/irc_server_capi.h"
+    export *
+}

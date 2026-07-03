@@ -1,0 +1,209 @@
+% ============================================================================
+% ADJ52 case-23 derived rulebook.
+% Clinical area: cryptogenic multifocal cerebral infarction with diffuse
+% intracranial vasculopathy and subacute progressive cognitive decline in an
+% older adult ("intracranial-vasculopathy-of-uncertain-cause" workup).
+%
+% The diagnostic puzzle the IR poses (q1-q4): an older man with subacute
+% progressive cognitive decline + multifocal cortical infarcts in MULTIPLE
+% vascular territories + angiographic diffuse smooth tapering / beading of
+% mid-to-distal intracranial vessels, raising concern for CNS arteritis — BUT
+% with markedly elevated LDH against entirely NORMAL systemic inflammatory
+% markers (CRP, ESR, beta-2-microglobulin, ANCA) and a BLAND CSF apart from an
+% elevated protein. The question is whether this is true CNS arteritis or a
+% MIMIC that better explains the LDH + bland-but-high-protein CSF + the vessel
+% picture, and what test confirms it.
+%
+% Magnitudes encoded QUALITATIVELY per adj-lang grammar (lowercase identifiers,
+% no leading digit, no uppercase). E.g. serum_ldh(markedly_elevated),
+% systemic_inflammatory_markers(normal), csf_protein(elevated).
+%
+% Anti-overfit note: each clause is added because a CITED source supports the
+% DIRECTION of that finding's likelihood ratio for that disease, not to force a
+% chosen answer. Discriminators that argue AGAINST the tempting wrong answer
+% (primary CNS angiitis) are included with LR<1 wherever a source supports the
+% negative direction (e.g. normal inflammatory markers / bland CSF cytology /
+% elevated LDH are atypical for vasculitis and typical for the lymphoma mimic).
+% ============================================================================
+
+% ===== PRIORS (base rates among "intracranial vasculopathy of uncertain cause"
+% referrals presenting with multifocal infarcts + cognitive decline) =====
+
+% rationale: Primary angiitis of the CNS is the diagnosis the clinicians actually
+% reached for here ("raised concern for an inflammatory arteritis"); it is the
+% classic cause of multifocal infarcts + beaded vessels, so it gets the high prior
+% the engine must EARN moving away from on the discordant labs.
+prior 0.32 for diagnosis(primary_cns_angiitis)
+  source "PMC9996469 / PubMed 36911437 (PACNS diagnosis and management)" trust authoritative
+
+% rationale: Intracranial atherosclerotic disease is the single commonest cause of
+% multifocal intracranial stenosis in an adult over 45 with multifocal infarcts;
+% high baseline prior.
+prior 0.28 for diagnosis(intracranial_atherosclerotic_disease)
+  source "Practical Neurology 2019, Intracranial Atherosclerotic Disease" trust authoritative
+
+% rationale: Intravascular large B-cell lymphoma is rare in absolute terms but is THE
+% prototypical mimic of CNS vasculitis on angiography, with a characteristic
+% lab/CSF signature; moderate prior because the IR foregrounds exactly its
+% discriminators (high LDH, bland normal inflammatory markers).
+prior 0.18 for diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC6721363 (Vasculitis on brain angiography is not always vasculitis: IVLBCL mimicking CNS vasculitis)" trust authoritative
+
+% rationale: Reversible cerebral vasoconstriction syndrome produces the same
+% string-of-beads angiographic picture; included so the engine must actively
+% discriminate it on course/demographics.
+prior 0.12 for diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "Cleveland Clinic 16158; PMC10487016 (RCVS course and presentation)" trust authoritative
+
+% rationale: Secondary / systemic vasculitis (e.g. ANCA-associated) with CNS
+% involvement is on the differential whenever arteritis is suspected.
+prior 0.10 for diagnosis(secondary_systemic_vasculitis)
+  source "Practical Neurology 2019 (systemic vasculitis among causes of intracranial stenosis)" trust authoritative
+
+% ===== SHARED VASCULOPATHY GESTALT (correlated, counted ONCE) =====
+% rationale: multifocal cortical infarcts in MULTIPLE territories + the
+% angiographic diffuse smooth tapering / beading of mid-to-distal vessels are NOT
+% independent facts — they are correlated manifestations of one diffuse
+% small/medium intracranial vasculopathy. Each candidate that produces a
+% multifocal beaded-vessel picture gets this combined LR ONCE (anti-saturation),
+% rather than summing a separate edge for the infarcts and for the beading.
+% mechanism multifocal_beaded_vasculopathy for diagnosis(primary_cns_angiitis) lr 4.0 : mri_finding(multifocal_cortical_infarcts_multiple_territories), angiogram_finding(diffuse_smooth_tapering_distal_vessels), mra_finding(distal_branch_narrowing)
+% mechanism multifocal_beaded_vasculopathy for diagnosis(intravascular_large_b_cell_lymphoma) lr 3.5 : mri_finding(multifocal_cortical_infarcts_multiple_territories), angiogram_finding(diffuse_smooth_tapering_distal_vessels), mra_finding(distal_branch_narrowing)
+% mechanism multifocal_beaded_vasculopathy for diagnosis(reversible_cerebral_vasoconstriction_syndrome) lr 3.0 : mri_finding(multifocal_cortical_infarcts_multiple_territories), angiogram_finding(diffuse_smooth_tapering_distal_vessels), mra_finding(distal_branch_narrowing)
+% mechanism multifocal_beaded_vasculopathy for diagnosis(intracranial_atherosclerotic_disease) lr 2.0 : mri_finding(multifocal_cortical_infarcts_multiple_territories), angiogram_finding(diffuse_smooth_tapering_distal_vessels), mra_finding(distal_branch_narrowing)
+% mechanism multifocal_beaded_vasculopathy for diagnosis(secondary_systemic_vasculitis) lr 2.5 : mri_finding(multifocal_cortical_infarcts_multiple_territories), angiogram_finding(diffuse_smooth_tapering_distal_vessels), mra_finding(distal_branch_narrowing)
+
+% ===== INTRAVASCULAR LARGE B-CELL LYMPHOMA (the mimic) =====
+% rationale: the cardinal IVLBCL-CNS triad is subacute encephalopathy / progressive
+% cognitive decline + multiple strokes + ELEVATED SERUM LDH. The elevated LDH is the
+% single most specific discriminator separating this from vasculitis here; it fires
+% as its own independent edge (LDH is a tumor-burden marker, mechanistically
+% independent of the vasculopathy gestalt above).
+contributes 5.0 from serum_ldh(markedly_elevated) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC6721363 (high LDH with normal inflammatory markers distinguishes IVLBCL from vasculitis); annexpublishers IVBCL review (triad: subacute encephalopathy + strokes + elevated LDH)" trust authoritative
+
+% rationale: subacute PROGRESSIVE cognitive decline (months of forgetfulness, word-
+% finding difficulty, losing thread of conversation) is the typical IVLBCL-CNS
+% prodrome; reported over an 8-month decline in the index mimicry case.
+contributes 2.5 from course(subacute_progressive_cognitive_decline) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC6721363 (subacute progressive cognitive decline with word-finding difficulty over months)" trust authoritative
+
+% rationale: in IVLBCL the CSF characteristically shows hyperproteinorachia (elevated
+% protein) with otherwise BLAND analysis and cytology rarely positive (~6%); the
+% IR's "bland CSF apart from elevated protein" matches this exactly.
+contributes 2.5 from csf_profile(elevated_protein_otherwise_bland) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC10516690 (IVBCL: CSF hyperproteinorachia, rarely lymphomatous cells); Mayo series (CSF cytology positive only ~6%)" trust authoritative
+
+% rationale: ENTIRELY NORMAL systemic inflammatory markers (CRP, ESR, b2-microglobulin,
+% ANCA) sit oddly with a true arteritis but are compatible with the lymphoma mimic,
+% in which the LDH rises while CRP/ESR stay normal. Mildly favors the mimic.
+contributes 1.6 from systemic_inflammatory_markers(normal) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC6721363 (ESR and CRP normal, inconsistent with typical vasculitis, seen in IVLBCL)" trust authoritative
+
+% ===== PRIMARY CNS ANGIITIS (the tempting wrong answer) =====
+% rationale: catheter-angiographic beading is a classic (if non-specific) PACNS
+% finding — captured ONCE in the shared vasculopathy mechanism above, so no extra
+% edge here to avoid double counting.
+
+% rationale (DISCRIMINATOR, negative): PACNS CSF is abnormal in 80-90% of cases and
+% characteristically shows INFLAMMATORY changes — mild LYMPHOCYTIC PLEOCYTOSIS with
+% elevated protein. A CSF that is BLAND apart from protein (no pleocytosis) argues
+% AGAINST active PACNS, so LR<1.
+contributes 0.5 from csf_profile(elevated_protein_otherwise_bland) to diagnosis(primary_cns_angiitis)
+  source "PMC9996469 (PACNS CSF: mild lymphocytic pleocytosis + elevated protein, abnormal in 80-90%)" trust authoritative
+
+% rationale (DISCRIMINATOR, negative): a markedly elevated LDH is NOT a feature of
+% PACNS and instead points to a tumour-burden / lymphoma process; mildly argues
+% against PACNS as the unifying explanation.
+contributes 0.7 from serum_ldh(markedly_elevated) to diagnosis(primary_cns_angiitis)
+  source "PMC6721363 (elevated LDH points to the IVLBCL mimic rather than to vasculitis)" trust inferred
+
+% rationale: failure to identify any inflammatory or infectious cause after serology
+% + CSF + angiography is non-specific but does not, on its own, raise PACNS; kept
+% neutral-to-slightly-supportive because PACNS remains a clinical-exclusion
+% diagnosis once mimics are excluded.
+contributes 1.2 from workup(no_inflammatory_or_infectious_cause_found) to diagnosis(primary_cns_angiitis)
+  source "PubMed 25907920 (PACNS diagnostic criteria require excluding mimics)" trust authoritative
+
+% ===== INTRACRANIAL ATHEROSCLEROTIC DISEASE =====
+% rationale: ICAD is most likely in patients over 45 with vascular risk and
+% multifocal stenosis; an older man qualifies on age.
+contributes 1.5 from patient_age(over_fifty) to diagnosis(intracranial_atherosclerotic_disease)
+  source "Practical Neurology 2019 (ICAD more likely age >45 with vascular risk factors)" trust authoritative
+
+% rationale (DISCRIMINATOR, negative): ICAD classically gives ECCENTRIC, focal stenoses
+% at proximal vessels; DIFFUSE SMOOTH tapering of MULTIPLE MID-TO-DISTAL vessels is
+% atypical for atherosclerosis and instead suggests an inflammatory/infiltrative
+% vasculopathy, so the angiographic pattern argues mildly against ICAD.
+contributes 0.6 from angiogram_finding(diffuse_smooth_tapering_distal_vessels) to diagnosis(intracranial_atherosclerotic_disease)
+  source "AHA STROKEAHA.114.007419 / Practical Neurology 2019 (ICAD = eccentric focal proximal stenosis; smooth distal tapering favors non-atherosclerotic vasculopathy)" trust authoritative
+
+% rationale (DISCRIMINATOR, negative): a markedly elevated LDH has no role in
+% bland atherosclerotic stroke and points away from ICAD as the unifying process.
+contributes 0.8 from serum_ldh(markedly_elevated) to diagnosis(intracranial_atherosclerotic_disease)
+  source "PMC6721363 (elevated LDH is a systemic/tumour marker not explained by atherosclerosis)" trust inferred
+
+% ===== REVERSIBLE CEREBRAL VASOCONSTRICTION SYNDROME =====
+% rationale (DISCRIMINATOR, negative): RCVS is defined by recurrent THUNDERCLAP
+% headache and self-limited vasoconstriction resolving within ~3 months, typically in
+% WOMEN aged 20-50 — NOT a months-long PROGRESSIVE cognitive decline in an older man.
+% A subacute progressive dementing course argues strongly against RCVS.
+contributes 0.2 from course(subacute_progressive_cognitive_decline) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "Cleveland Clinic 16158; PMC10487016 (RCVS: thunderclap headache, resolves <3 months, women 20-50; not progressive dementia)" trust authoritative
+
+% rationale (DISCRIMINATOR, negative): the headaches here are intermittent DULL
+% headaches, not the thunderclap headache that is the defining RCVS trigger; argues
+% against RCVS.
+contributes 0.4 from headache_character(intermittent_dull) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "PMC3973996 (RCVS hallmark is sudden thunderclap headache, not dull headache)" trust authoritative
+
+% ===== SECONDARY / SYSTEMIC VASCULITIS =====
+% rationale (DISCRIMINATOR, negative): negative ANCA with entirely normal CRP/ESR
+% argues against an active systemic ANCA-associated or inflammatory vasculitis.
+contributes 0.4 from systemic_inflammatory_markers(normal) to diagnosis(secondary_systemic_vasculitis)
+  source "Practical Neurology 2019 (elevated inflammatory markers are a red flag FOR vasculitis; their absence argues against)" trust authoritative
+contributes 0.5 from anca(negative) to diagnosis(secondary_systemic_vasculitis)
+  source "The Rheumatologist, GPA (ANCA negativity argues against ANCA-associated vasculitis)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) — drive the next step =====
+% The pivotal unresolved item is TISSUE. Random skin biopsy (even of normal skin)
+% has ~75-78% sensitivity and ~99-100% specificity for IVLBCL and can OBVIATE brain
+% biopsy; brain biopsy is the gold-standard tie-breaker for both IVLBCL and PACNS.
+% Resolving tissue moves the lymphoma posterior the most, so it is the next step.
+uncertain { tissue(intravascular_cd20_positive_b_cells), tissue(transmural_vessel_wall_inflammation), tissue(no_diagnostic_abnormality) } for diagnosis(intravascular_large_b_cell_lymphoma)
+  source "Blood 2019;133(11):1257 (random skin biopsy sens ~78% spec ~99% for IVLBCL); PMC6721363 (brain biopsy: CD20+ cells filling vessel lumina)"
+contributes 12.0 from tissue(intravascular_cd20_positive_b_cells) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC6721363 (intravascular CD20-positive malignant cells filling vessel lumina is diagnostic of IVLBCL)" trust authoritative
+contributes 0.2 from tissue(transmural_vessel_wall_inflammation) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PubMed 25907920 (transmural vessel-wall inflammation defines vasculitis, not lymphoma)" trust authoritative
+contributes 0.3 from tissue(no_diagnostic_abnormality) to diagnosis(intravascular_large_b_cell_lymphoma)
+  source "PMC6450056 (negative tissue lowers but does not exclude IVLBCL given imperfect sensitivity)" trust authoritative
+
+% The same tissue result adjudicates PACNS in the opposite direction: transmural
+% inflammation confirms vasculitis; intravascular tumour cells refute it.
+uncertain { tissue(transmural_vessel_wall_inflammation), tissue(intravascular_cd20_positive_b_cells), tissue(no_diagnostic_abnormality) } for diagnosis(primary_cns_angiitis)
+  source "PubMed 25907920 (PACNS gold standard is biopsy showing transmural vascular inflammation)"
+contributes 9.0 from tissue(transmural_vessel_wall_inflammation) to diagnosis(primary_cns_angiitis)
+  source "PubMed 25907920 (histologic transmural vascular inflammation is the PACNS gold standard)" trust authoritative
+contributes 0.1 from tissue(intravascular_cd20_positive_b_cells) to diagnosis(primary_cns_angiitis)
+  source "PMC6721363 (intravascular CD20+ B cells establish the lymphoma mimic and refute PACNS)" trust authoritative
+
+% ===== NEXT-STEP CANDIDATES =====
+% rationale: tissue (random skin biopsy first, then brain biopsy if negative) is the
+% decisive confirmatory test for the unifying diagnosis and adjudicates lymphoma vs
+% arteritis; highest prior among next steps.
+prior 0.45 for next_step(random_skin_biopsy_then_brain_biopsy)
+  source "Blood 2019;133(11):1257 (random skin biopsy first-line, high spec, may obviate brain biopsy); PMC6721363 (brain biopsy is the tie-breaker)" trust authoritative
+contributes 4.0 from serum_ldh(markedly_elevated) to next_step(random_skin_biopsy_then_brain_biopsy)
+  source "annexpublishers IVBCL review (high LDH + strokes mandates tissue diagnosis for IVLBCL)" trust authoritative
+contributes 2.0 from csf_profile(elevated_protein_otherwise_bland) to next_step(random_skin_biopsy_then_brain_biopsy)
+  source "Mayo series (cytology-negative bland CSF cannot exclude IVLBCL -> need tissue)" trust authoritative
+
+% rationale: empiric corticosteroids/immunosuppression was the alternative the team
+% considered; included as a competing next step but it is a TREATMENT not a
+% confirmatory test, and treating a lymphoma mimic with steroids alone is harmful, so
+% the elevated LDH argues against committing to it before tissue.
+prior 0.15 for next_step(empiric_immunosuppression_for_presumed_arteritis)
+  source "f44 source span (empiric corticosteroids and immunosuppression were considered for presumed CNS arteritis)" trust unattributed
+contributes 0.5 from serum_ldh(markedly_elevated) to next_step(empiric_immunosuppression_for_presumed_arteritis)
+  source "PMC6721363 (typical angiographic findings should not justify long-term immunosuppression when a mimic is possible)" trust authoritative

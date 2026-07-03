@@ -1,0 +1,8 @@
+{
+ "check_id": 140,
+ "idx": 54,
+ "slot": "unit_re_rented",
+ "claimed_value": false,
+ "scenario": "Lena broke her 12-month lease and moved out on August 1 with four months remaining. The unit sat empty and was not re-rented for those four months. The landlord now demands four months of rent from Lena. The landlord listed the unit on a major rental website the day after Lena left.",
+ "cited_span": "The unit sat empty and was not re-rented for those four months"
+}

@@ -1,0 +1,9 @@
+{
+  "hash": "fb07976b62fcf1ca6908c8c7c0f8cbf2a42269acf4528187bd0be0a38c5b1c6f",
+  "url": "https://ar5iv.labs.arxiv.org/html/1405.1437",
+  "title": "Modjaz et al. 2014 / Liu & Modjaz 2014, arXiv:1405.1437 \u2014 SNID spectral templates of 70 stripped-envelope CCSNe (root: 1993J included as IIb template)",
+  "interned_at": "",
+  "content": "The CfA SNID template set contains 13 Type IIb supernovae out of 70 stripped-envelope core-collapse SNe, including SN 1993J. The paper notes for SN 1993J that its CfA spectra were taken at very late phases and advises caution when overwriting its templates-2.0 IIb template.",
+  "citations": [],
+  "onward_citations": []
+}

@@ -1,0 +1,7 @@
+[package]
+name = "device-physics"
+version = "0.1.0"
+edition = "2021"
+description = "Semiconductor device physics: constants, carrier concentration, PN junction, MOSFET threshold voltage"
+
+[dependencies]

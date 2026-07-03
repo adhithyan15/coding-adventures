@@ -407,6 +407,47 @@ impl SerialFrame {
         out.push(checksum);
         Ok(out)
     }
+
+    pub fn summary(&self) -> SerialFrameSummary {
+        SerialFrameSummary::from_frame(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SerialFrameSummary {
+    pub frame_type: SerialFrameType,
+    pub function_id: u8,
+    pub payload_len: usize,
+}
+
+impl SerialFrameSummary {
+    pub fn from_frame(frame: &SerialFrame) -> Self {
+        Self {
+            frame_type: frame.frame_type,
+            function_id: frame.function_id,
+            payload_len: frame.payload.len(),
+        }
+    }
+
+    pub fn is_request(&self) -> bool {
+        self.frame_type == SerialFrameType::Request
+    }
+
+    pub fn is_response(&self) -> bool {
+        self.frame_type == SerialFrameType::Response
+    }
+
+    pub fn has_payload(&self) -> bool {
+        self.payload_len > 0
+    }
+
+    pub fn is_function(&self, function_id: u8) -> bool {
+        self.function_id == function_id
+    }
+
+    pub fn is_empty_payload(&self) -> bool {
+        self.payload_len == 0
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -450,6 +491,85 @@ pub fn summarize_serial_frames<'a>(
     frames: impl IntoIterator<Item = &'a SerialFrame>,
 ) -> SerialFrameBatchSummary {
     SerialFrameBatchSummary::from_frames(frames)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZWaveControllerReadinessSummary {
+    pub network: ZWaveNetworkSummary,
+    pub command_frames: CommandClassFrameSummary,
+    pub serial_frames: SerialFrameBatchSummary,
+    pub has_nodes: bool,
+    pub has_command_class_coverage: bool,
+    pub has_serial_requests: bool,
+    pub has_serial_responses: bool,
+    pub has_security_coverage: bool,
+    pub long_range_region_mismatch: bool,
+}
+
+impl ZWaveControllerReadinessSummary {
+    pub fn from_summaries(
+        network: ZWaveNetworkSummary,
+        command_frames: CommandClassFrameSummary,
+        serial_frames: SerialFrameBatchSummary,
+    ) -> Self {
+        let has_nodes = network.has_nodes();
+        let has_command_class_coverage =
+            network.command_class_entries > 0 || !command_frames.is_empty();
+        let has_serial_requests = serial_frames.has_requests();
+        let has_serial_responses = serial_frames.has_responses();
+        let has_security_coverage =
+            network.has_security() || command_frames.has_security_2_frames();
+        let long_range_region_mismatch =
+            network.has_long_range_nodes() && !network.supports_long_range;
+
+        Self {
+            network,
+            command_frames,
+            serial_frames,
+            has_nodes,
+            has_command_class_coverage,
+            has_serial_requests,
+            has_serial_responses,
+            has_security_coverage,
+            long_range_region_mismatch,
+        }
+    }
+
+    pub fn is_ready(self) -> bool {
+        self.has_nodes
+            && self.has_command_class_coverage
+            && self.has_serial_requests
+            && self.has_serial_responses
+            && !self.long_range_region_mismatch
+    }
+
+    pub fn needs_node_discovery(self) -> bool {
+        !self.has_nodes
+    }
+
+    pub fn needs_command_class_interview(self) -> bool {
+        self.has_nodes && !self.has_command_class_coverage
+    }
+
+    pub fn needs_serial_probe(self) -> bool {
+        !self.has_serial_requests
+    }
+
+    pub fn waiting_for_serial_response(self) -> bool {
+        self.has_serial_requests && !self.has_serial_responses
+    }
+
+    pub fn needs_region_review(self) -> bool {
+        self.long_range_region_mismatch
+    }
+}
+
+pub fn summarize_zwave_controller_readiness(
+    network: ZWaveNetworkSummary,
+    command_frames: CommandClassFrameSummary,
+    serial_frames: SerialFrameBatchSummary,
+) -> ZWaveControllerReadinessSummary {
+    ZWaveControllerReadinessSummary::from_summaries(network, command_frames, serial_frames)
 }
 
 pub fn serial_checksum(bytes_after_sof_before_checksum: &[u8]) -> u8 {
@@ -541,6 +661,21 @@ mod tests {
 
         assert_eq!(encoded[0], SOF);
         assert_eq!(SerialFrame::parse(&encoded).unwrap(), frame);
+        let summary = frame.summary();
+        assert_eq!(
+            summary,
+            SerialFrameSummary {
+                frame_type: SerialFrameType::Request,
+                function_id: 0x13,
+                payload_len: 3,
+            }
+        );
+        assert!(summary.is_request());
+        assert!(!summary.is_response());
+        assert!(summary.has_payload());
+        assert!(!summary.is_empty_payload());
+        assert!(summary.is_function(0x13));
+        assert!(!summary.is_function(0x02));
     }
 
     #[test]
@@ -563,6 +698,16 @@ mod tests {
         assert!(summary.has_requests());
         assert!(summary.has_responses());
         assert!(!summary.is_empty());
+
+        let response_summary = response.summary();
+        assert_eq!(response_summary.payload_len, 1);
+        assert!(!response_summary.is_request());
+        assert!(response_summary.is_response());
+        assert!(response_summary.is_function(0x02));
+
+        let empty_response = SerialFrame::new(SerialFrameType::Response, 0x15, Vec::new());
+        assert!(empty_response.summary().is_empty_payload());
+        assert!(!empty_response.summary().has_payload());
     }
 
     #[test]
@@ -680,6 +825,70 @@ mod tests {
         assert!(summary.has_extended_command_classes());
         assert!(summary.has_security_2_frames());
         assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn controller_readiness_summary_marks_ready_controller_surface() {
+        let network = ZWaveNetworkSummary::from_parts(
+            RegionProfile::UnitedStatesLongRange,
+            [
+                NodeId::classic(2).unwrap(),
+                NodeId::long_range(2_001).unwrap(),
+            ],
+            [CommandClassId::SWITCH_BINARY],
+        );
+        let security2 = CommandClassFrame::new(CommandClassId::SECURITY_2, 0x02, vec![0x01]);
+        let command_frames = summarize_command_class_frames([&security2]);
+        let request = SerialFrame::new(SerialFrameType::Request, 0x13, vec![0x02, 0x25, 0x01]);
+        let response = SerialFrame::new(SerialFrameType::Response, 0x02, vec![0x01]);
+        let serial_frames = summarize_serial_frames([&request, &response]);
+
+        let readiness =
+            summarize_zwave_controller_readiness(network, command_frames, serial_frames);
+
+        assert_eq!(
+            readiness,
+            ZWaveControllerReadinessSummary {
+                network,
+                command_frames,
+                serial_frames,
+                has_nodes: true,
+                has_command_class_coverage: true,
+                has_serial_requests: true,
+                has_serial_responses: true,
+                has_security_coverage: true,
+                long_range_region_mismatch: false,
+            }
+        );
+        assert!(readiness.is_ready());
+        assert!(!readiness.needs_node_discovery());
+        assert!(!readiness.needs_command_class_interview());
+        assert!(!readiness.needs_serial_probe());
+        assert!(!readiness.waiting_for_serial_response());
+        assert!(!readiness.needs_region_review());
+    }
+
+    #[test]
+    fn controller_readiness_summary_flags_blocked_controller_surface() {
+        let network = ZWaveNetworkSummary::from_parts(
+            RegionProfile::UnitedStates,
+            [NodeId::long_range(2_001).unwrap()],
+            std::iter::empty::<CommandClassId>(),
+        );
+        let command_frames = CommandClassFrameSummary::default();
+        let request = SerialFrame::new(SerialFrameType::Request, 0x13, vec![0x02, 0x25, 0x01]);
+        let serial_frames = summarize_serial_frames([&request]);
+
+        let readiness =
+            summarize_zwave_controller_readiness(network, command_frames, serial_frames);
+
+        assert!(!readiness.is_ready());
+        assert!(!readiness.needs_node_discovery());
+        assert!(readiness.needs_command_class_interview());
+        assert!(!readiness.needs_serial_probe());
+        assert!(readiness.waiting_for_serial_response());
+        assert!(readiness.needs_region_review());
+        assert!(!readiness.has_security_coverage);
     }
 
     #[test]

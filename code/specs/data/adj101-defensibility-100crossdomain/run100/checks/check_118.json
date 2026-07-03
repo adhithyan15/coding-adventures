@@ -1,0 +1,8 @@
+{
+ "check_id": 118,
+ "idx": 50,
+ "slot": "area_with_ceiling_at_least_90in_sqft",
+ "claimed_value": 70,
+ "scenario": "A finished attic bedroom has a required floor area of 120 square feet. 70 square feet of that area sits under a flat ceiling measuring 96 inches high. The remaining 50 square feet is under a sloped ceiling that ranges from 48 inches to 72 inches high; of that, 30 square feet is below 60 inches.",
+ "cited_span": "70 square feet of that area sits under a flat ceiling measuring 96 inches high"
+}

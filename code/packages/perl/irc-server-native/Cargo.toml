@@ -1,0 +1,18 @@
+# Perl XS extension exposing the all-Rust irc-net-reactor IRC engine to Perl.
+# [workspace]-isolated: BUILD does its own `cargo build`.
+[workspace]
+
+[package]
+name = "irc-server-native-perl"
+version = "0.1.0"
+edition = "2021"
+description = "Perl XS extension exposing the irc-net-reactor IRC engine to Perl"
+build = "build.rs"
+
+[lib]
+name = "IrcServerNative"
+crate-type = ["cdylib"]
+
+[dependencies]
+perl-bridge     = { path = "../../rust/perl-bridge" }
+irc-net-reactor = { path = "../../rust/irc-net-reactor" }

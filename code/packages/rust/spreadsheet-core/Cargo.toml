@@ -1,0 +1,18 @@
+[package]
+name = "spreadsheet-core"
+version = "0.16.0"
+edition = "2021"
+description = "Headless spreadsheet engine — cell model, formula AST, dependency DAG, recalc, dispatch to Layer-1 cores. The engine VisiCalc Modern and any other Mosaic-rendered spreadsheet sits on top of."
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }
+statistics-core = { path = "../statistics-core" }
+math-core = { path = "../math-core" }
+financial-core = { path = "../financial-core" }
+lookup-core = { path = "../lookup-core" }
+text-core = { path = "../text-core" }
+datetime-core = { path = "../datetime-core" }
+number-format-core = { path = "../number-format-core" }
+wall-clock = { path = "../wall-clock", default-features = false }
+serde_json = "1"

@@ -15,7 +15,7 @@ use crate::limits::MAX_IR_DEPTH;
 use crate::manifest::{Feature, FeatureManifest};
 use crate::nodes::*;
 use crate::span::Span;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 
 /// A validator finding (error or warning) with a source position.
@@ -79,6 +79,57 @@ pub fn validate(module: &Module) -> ValidationResult {
 // Internal validator state
 // ---------------------------------------------------------------------------
 
+/// Pre-computed call-arity profile of a known top-level function,
+/// cached by [`ValidatorState`] so each `DirectCall` arity check is a
+/// constant-time map lookup rather than a re-scan of the callee's
+/// params.
+///
+/// `min` is [`Function::required_param_count`] (the leading run of
+/// no-default plain positionals); `max` is the total positional param
+/// count.  `variadic` records whether the callee has a `*rest`/`**opts`
+/// param or the synthetic trailing block param (`__sir_block__`) — when
+/// set, the strict bounds are not enforced (deferred; see the
+/// `DirectCall` arm of `check_expr`).
+#[derive(Debug, Clone, Copy)]
+struct FnArity {
+    min: usize,
+    max: usize,
+    variadic: bool,
+}
+
+/// `true` iff every argument in a call contributes exactly one positional
+/// value — i.e. the call has no splat/forwarding expansion and no implicit
+/// block handle appended to the argument list.  Only such "plain" calls
+/// have a statically meaningful `args.len()`, so the strict default-param
+/// arity bounds (SIR10) are applied to them alone.
+///
+/// The dynamic-arity argument shapes we exclude, all produced by the Ruby
+/// frontend's call-position lowerings, are:
+///   - `BuiltinCall("splat", …)`        — `f(*arr)` expands `arr` in place
+///   - `BuiltinCall("double_splat", …)` — `f(**hsh)` expands `hsh`
+///   - `BuiltinCall("forward_args", …)` — `f(...)` argument forwarding
+///   - `BuiltinCall("block_pass", …)`   — `f(&blk)` block-pass
+///   - `MakeClosure { … }`              — an implicit block (`f(x) { … }`)
+///     appended as a trailing positional argument even when the callee
+///     does not declare a block param.
+///
+/// Encountering any of these means the static argument count cannot be
+/// compared against the declared parameter count, so the caller skips the
+/// arity check (deferred — see the `DirectCall` arm of `check_expr`).
+fn args_are_plain(args: &[Expr]) -> bool {
+    !args.iter().any(|a| match a {
+        // An implicit block handle appended to the call (`f(x) { … }`).
+        Expr::MakeClosure { .. } => true,
+        // Splat / forwarding / block-pass markers expand to an unknown
+        // number of positional values.
+        Expr::BuiltinCall { name, .. } => matches!(
+            name.as_str(),
+            "splat" | "double_splat" | "forward_args" | "block_pass"
+        ),
+        _ => false,
+    })
+}
+
 struct ValidatorState<'m> {
     module: &'m Module,
     result: ValidationResult,
@@ -88,11 +139,29 @@ struct ValidatorState<'m> {
     /// All function names declared in this module.  Used to validate
     /// `DirectCall` targets and to detect duplicates.
     function_names: HashSet<String>,
+    /// Map from function name to its `(required_param_count, total_param_count,
+    /// has_variadic_or_synthetic)` arity profile, used to check
+    /// `DirectCall` arity (SIR10 default-param call-arity rule).  Built
+    /// once in `collect_top_level_names` so the per-call check is O(1).
+    /// `has_variadic_or_synthetic` is `true` when the callee has a
+    /// `*rest`/`**opts` param or the synthetic trailing block param — in
+    /// that case the strict upper-bound / required check is skipped
+    /// (deferred to a later phase; see the DirectCall arm).
+    fn_arity: HashMap<String, FnArity>,
     /// All global names declared in this module.
     global_names: HashSet<String>,
     /// `true` once a depth-overflow error has been recorded for
     /// this module.  Suppresses duplicate spam.
     depth_overflow_reported: bool,
+    /// `true` while checking the *immediate* arguments of a call node
+    /// (DirectCall / IndirectCall / MakeClosure).  A `KeywordArg` is only
+    /// well-placed as such an immediate argument; the flag lets the
+    /// `check_expr` `KeywordArg` arm distinguish a legitimate call-position
+    /// keyword from a misplaced one (e.g. `(+ (kw a 1))` or a keyword arg
+    /// nested inside another expression).  It is set true just around the
+    /// per-arg walk of a call and reset to false before recursing into any
+    /// argument's sub-expressions.
+    in_call_args: bool,
 }
 
 impl<'m> ValidatorState<'m> {
@@ -102,8 +171,10 @@ impl<'m> ValidatorState<'m> {
             result: ValidationResult::default(),
             observed: FeatureManifest::new(),
             function_names: HashSet::new(),
+            fn_arity: HashMap::new(),
             global_names: HashSet::new(),
             depth_overflow_reported: false,
+            in_call_args: false,
         }
     }
 
@@ -177,6 +248,21 @@ impl<'m> ValidatorState<'m> {
                     &f.span,
                 );
             }
+            // Cache the call-arity profile (SIR10 default-param call-arity
+            // rule).  `variadic` is set when the callee carries a
+            // `*rest`/`**opts` param or the synthetic trailing block param
+            // (`__sir_block__`); in that case the strict bounds are not
+            // enforced at the call site (deferred — see the `DirectCall`
+            // arm).  A duplicate name keeps the first profile, matching how
+            // `function_names` reports-but-keeps the first binding.
+            let variadic = f.params.iter().any(|p| {
+                p.kind != ParamKind::Required || p.name == "__sir_block__"
+            });
+            self.fn_arity.entry(f.name.clone()).or_insert(FnArity {
+                min: f.required_param_count(),
+                max: f.params.len(),
+                variadic,
+            });
         }
         for g in &self.module.globals {
             if !self.global_names.insert(g.name.clone()) {
@@ -205,6 +291,14 @@ impl<'m> ValidatorState<'m> {
         // Collect parameter and capture names; they must be unique
         // within their respective lists.
         let mut param_names: HashSet<String> = HashSet::new();
+        // `scope_so_far` accumulates the parameter names *preceding* the
+        // current one.  A default-value expression (`def f(a, b = a)`)
+        // may refer to earlier parameters but not to itself or to
+        // parameters declared later, so we validate each default against
+        // the set built up to that point.  Captures are unavailable in a
+        // default position, so we pass an empty capture set.
+        let mut scope_so_far: HashSet<String> = HashSet::new();
+        let no_captures: HashSet<String> = HashSet::new();
         for p in &f.params {
             if !param_names.insert(p.name.clone()) {
                 self.error(
@@ -216,6 +310,166 @@ impl<'m> ValidatorState<'m> {
                 self.observed.add(Feature::OptionalTypeAnnotations);
             } else {
                 self.observed.add(Feature::DynamicTyping);
+            }
+            // Keyword parameter (KW1): observe the feature.  A `Keyword`
+            // param is matched by name, not position; whether it is
+            // REQUIRED (`default == None`) or OPTIONAL (`default == Some`)
+            // rides on the same `default` field checked just below, so we
+            // do not special-case the default handling here — a keyword
+            // default is validated exactly like a positional default.
+            if p.kind == ParamKind::Keyword {
+                self.observed.add(Feature::KeywordParams);
+            }
+            // Default-value expression (SIR19): observe the feature and
+            // validate the expression as if it appeared in the function's
+            // parameter scope with the params declared so far in view.
+            //
+            // A default on a `Keyword` param means "optional keyword"; it
+            // triggers `KeywordParams` (above), NOT `DefaultParams` —
+            // `DefaultParams` is specifically the *positional* trailing
+            // default feature.  Only observe `DefaultParams` for a
+            // non-keyword default.
+            if let Some(default) = &p.default {
+                if p.kind != ParamKind::Keyword {
+                    self.observed.add(Feature::DefaultParams);
+                }
+                let mut env = LocalEnv::new(&scope_so_far, &no_captures);
+                self.check_expr(default, &mut env, 0);
+            }
+            scope_so_far.insert(p.name.clone());
+        }
+
+        // Variadic/keyword-parameter well-formedness (M3 + KW1). A
+        // Ruby-faithful, v0-light rule set over `kind`:
+        //   - at most one `Rest` (`*rest`) parameter;
+        //   - at most one `KwRest` (`**opts`) parameter;
+        //   - ordering: positional `Required` first, then the lone `Rest`,
+        //     then any number of `Keyword` params, then the lone `KwRest`.
+        //     Anything out of that order is a structural error (not a panic).
+        //
+        // The canonical param list is therefore:
+        //     Required*  Rest?  Keyword*  KwRest?
+        //
+        // Truth table for the offending transitions we reject (prev seen ⇒
+        // current kind is illegal):
+        //   prev seen \ cur | Required | Rest  | Keyword | KwRest
+        //   Rest            | ERROR    | (dup) | ok      | ok
+        //   Keyword         | ERROR    | ERROR | ok      | ok
+        //   KwRest          | ERROR    | ERROR | ERROR   | (dup)
+        //
+        // Rationale for `Keyword` sitting *after* `Rest` but *before*
+        // `KwRest`: a `*rest` slurps trailing *positional* args, so it must
+        // close the positional run before any name-matched keyword params;
+        // a `**opts` slurps *unmatched* keywords, so it must come after the
+        // explicitly-named keyword params it would otherwise shadow.
+        let mut rest_seen = false;
+        let mut keyword_seen = false;
+        let mut kwrest_seen = false;
+        for p in &f.params {
+            match p.kind {
+                ParamKind::Rest => {
+                    if rest_seen {
+                        self.error(
+                            format!("more than one rest parameter (`*{}`)", p.name),
+                            &p.span,
+                        );
+                    }
+                    if keyword_seen {
+                        self.error(
+                            format!("rest parameter `*{}` must precede keyword parameters", p.name),
+                            &p.span,
+                        );
+                    }
+                    if kwrest_seen {
+                        self.error(
+                            format!("rest parameter `*{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    }
+                    rest_seen = true;
+                }
+                ParamKind::Keyword => {
+                    // A keyword param must precede the lone `**opts`; it may
+                    // follow positionals, the `*rest`, and other keywords.
+                    if kwrest_seen {
+                        self.error(
+                            format!("keyword parameter `{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    }
+                    keyword_seen = true;
+                }
+                ParamKind::KwRest => {
+                    if kwrest_seen {
+                        self.error(
+                            format!("more than one keyword-rest parameter (`**{}`)", p.name),
+                            &p.span,
+                        );
+                    }
+                    kwrest_seen = true;
+                }
+                ParamKind::Required => {
+                    // The reserved trailing block parameter (Q9e) is always
+                    // Required and always appended last — after any variadic
+                    // or keyword params — so it is exempt from the ordering
+                    // rule.
+                    if p.name == "__sir_block__" {
+                        continue;
+                    }
+                    if kwrest_seen {
+                        self.error(
+                            format!("required parameter `{}` must precede the keyword-rest parameter", p.name),
+                            &p.span,
+                        );
+                    } else if keyword_seen {
+                        self.error(
+                            format!("required parameter `{}` must precede keyword parameters", p.name),
+                            &p.span,
+                        );
+                    } else if rest_seen {
+                        self.error(
+                            format!("required parameter `{}` must precede the rest parameter", p.name),
+                            &p.span,
+                        );
+                    }
+                }
+            }
+        }
+
+        // Defaults must be **trailing** (SIR10 default-param call-arity rule).
+        // A "hole" — a no-default `Required` param that follows a defaulted
+        // `Required` param, e.g. `def f(a = 1, b)` — is rejected.  Why:
+        //
+        //   - The call-arity rule lets a caller omit trailing defaulted args,
+        //     so `required_param_count()` counts only the *leading* no-default
+        //     run.  For a hole that count stops at the first default (here 0),
+        //     so the validator would accept `f()` / `f(0)`.
+        //   - But `missing_defaults(n)` then returns params that include the
+        //     trailing no-default `b`, breaking its documented guarantee that
+        //     "every returned param carries a default" — a backend that
+        //     unwraps `b.default` to fill it would panic.
+        //
+        // Enforcing "trailing defaults only" makes that guarantee true by
+        // construction.  It matches Python and JavaScript exactly and the
+        // common Ruby case; Ruby's required-after-optional form
+        // (`def f(a = 1, b)`) is a DEFERRED v0 limitation.  The synthetic
+        // trailing block param (`__sir_block__`) is always a no-default
+        // `Required` appended last, so it is exempt.
+        let mut defaulted_seen = false;
+        for p in &f.params {
+            if p.kind != ParamKind::Required || p.name == "__sir_block__" {
+                continue;
+            }
+            if p.default.is_some() {
+                defaulted_seen = true;
+            } else if defaulted_seen {
+                self.error(
+                    format!(
+                        "required parameter `{}` may not follow a defaulted parameter (defaults must be trailing)",
+                        p.name
+                    ),
+                    &p.span,
+                );
             }
         }
 
@@ -242,6 +496,21 @@ impl<'m> ValidatorState<'m> {
             return;
         }
         let mark = env.mark();
+        self.check_stmt_seq(&b.stmts, env, depth);
+        self.check_expr(&b.value, env, depth + 1);
+        env.rewind(mark);
+    }
+
+    /// Validate a flat statement sequence (`&[Stmt]`) against `env`.
+    ///
+    /// Factored out of [`check_block`] (Phase 14b) so a class body
+    /// (`Stmt::ClassDef.body`, a bare `Vec<Stmt>` with no trailing
+    /// value slot) can reuse the exact same statement-accounting
+    /// rules — parallel-`let` grouping, sequential `let*`, mutable
+    /// `Assign`, loop/scope handling — without wrapping the body in a
+    /// synthetic `Block`.  Callers are responsible for their own
+    /// `env.mark()`/`env.rewind()` scoping around the call.
+    fn check_stmt_seq(&mut self, stmts: &[Stmt], env: &mut LocalEnv, depth: usize) {
         // Walk statements in *groups*: a run of consecutive LetBinding
         // statements forms one parallel-let group whose RHS expressions
         // all evaluate in the scope BEFORE the group.  All names from
@@ -249,18 +518,18 @@ impl<'m> ValidatorState<'m> {
         // LetStarBinding and ExprStmt break the run; LetStarBinding
         // adds its name immediately (sequential semantics).
         let mut i = 0;
-        while i < b.stmts.len() {
-            match &b.stmts[i] {
+        while i < stmts.len() {
+            match &stmts[i] {
                 Stmt::LetBinding { .. } => {
                     // Find the maximal run of LetBindings starting at i.
                     let mut j = i;
-                    while j < b.stmts.len() && matches!(b.stmts[j], Stmt::LetBinding { .. }) {
+                    while j < stmts.len() && matches!(stmts[j], Stmt::LetBinding { .. }) {
                         j += 1;
                     }
                     // Check every RHS in the *outer* env (no new
                     // names added yet).
                     for k in i..j {
-                        if let Stmt::LetBinding { value, sir_type, .. } = &b.stmts[k] {
+                        if let Stmt::LetBinding { value, sir_type, .. } = &stmts[k] {
                             self.check_expr(value, env, depth + 1);
                             if sir_type.is_some() {
                                 self.observed.add(Feature::OptionalTypeAnnotations);
@@ -269,7 +538,7 @@ impl<'m> ValidatorState<'m> {
                     }
                     // Add every bound name to the env, all at once.
                     for k in i..j {
-                        if let Stmt::LetBinding { name, .. } = &b.stmts[k] {
+                        if let Stmt::LetBinding { name, .. } = &stmts[k] {
                             env.add_local(name.clone());
                         }
                     }
@@ -334,10 +603,99 @@ impl<'m> ValidatorState<'m> {
                     self.check_expr(value, env, depth + 1);
                     i += 1;
                 }
+                Stmt::ClassDef { body, span, .. } => {
+                    // A class declaration adds a name to the module
+                    // surface (the class itself) and contributes any
+                    // statements in its body.  Phase 14b populates the
+                    // body with the class's executable statements
+                    // (method defs are hoisted to top-level Functions
+                    // by the lowerer, so they don't appear here).
+                    //
+                    // We mark Feature::Classes and recurse into the
+                    // body using a fresh local-env mark: class body
+                    // names shouldn't leak into the surrounding
+                    // statement stream.  We do NOT add the class's
+                    // own name to the local env — classes are
+                    // top-level/module-level names, not locals.
+                    //
+                    // The explicit depth guard bounds recursion for a
+                    // pathological nest of `class A; class B; …` bodies
+                    // (each level re-enters check_stmt_seq); it mirrors
+                    // the MAX_IR_DEPTH guard check_block applies.
+                    self.observed.add(Feature::Classes);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let class_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(class_mark);
+                    i += 1;
+                }
+                Stmt::ModuleDef { body, span, .. } => {
+                    // A module declaration (Ruby Phase 14d) is validated
+                    // exactly like a class body: mark Feature::Modules,
+                    // depth-guard the recursion, and walk the body in a
+                    // fresh local-env scope so module-body names don't
+                    // leak into the surrounding statement stream.
+                    self.observed.add(Feature::Modules);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let module_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(module_mark);
+                    i += 1;
+                }
+                Stmt::SingletonClassDef { body, span, .. } => {
+                    // A singleton-class declaration (Ruby Phase 14e) is
+                    // a class-opening construct → mark Feature::Classes,
+                    // then depth-guard and walk the body in a fresh
+                    // local-env scope, same as ClassDef.
+                    self.observed.add(Feature::Classes);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let singleton_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(singleton_mark);
+                    i += 1;
+                }
+                Stmt::TryCatch { body, rescues, ensure_body, span } => {
+                    // Structured exception handling (Ruby Phase 16a).
+                    // Mark Feature::Exceptions, then depth-guard and walk
+                    // each block in a fresh local-env scope so block-local
+                    // names don't leak into the surrounding stream.  A
+                    // rescue's exception binding (`=> e`) is in scope for
+                    // that clause's body only.  Exception class names are
+                    // advisory (no symbol table), so they are not resolved.
+                    self.observed.add(Feature::Exceptions);
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let body_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(body_mark);
+                    for r in rescues {
+                        let rescue_mark = env.mark();
+                        if let Some(bind) = &r.binding {
+                            env.add_local(bind.clone());
+                        }
+                        self.check_stmt_seq(&r.body, env, depth + 1);
+                        env.rewind(rescue_mark);
+                    }
+                    if let Some(ens) = ensure_body {
+                        let ensure_mark = env.mark();
+                        self.check_stmt_seq(ens, env, depth + 1);
+                        env.rewind(ensure_mark);
+                    }
+                    i += 1;
+                }
             }
         }
-        self.check_expr(&b.value, env, depth + 1);
-        env.rewind(mark);
     }
 
     fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv, depth: usize) {
@@ -362,22 +720,85 @@ impl<'m> ValidatorState<'m> {
             }
             Expr::Block(b) => self.check_block(b, env, depth + 1),
             Expr::DirectCall { fn_name, args, .. } => {
-                if !self.function_names.contains(fn_name) {
+                // Call-side keyword-argument checks (ordering, duplicates,
+                // name resolution against the known callee) run first, then
+                // arity, then the recursive arg walk.
+                self.check_call_kwargs(fn_name, args, e.span());
+                if let Some(arity) = self.fn_arity.get(fn_name).copied() {
+                    // SIR10 default-param call-arity rule.  Let R be the
+                    // callee's required (leading no-default) param count and
+                    // M its total param count.  A DirectCall is arity-valid
+                    // iff R <= args.len() <= M; the omitted trailing params
+                    // (positions args.len()..M) are then exactly the ones
+                    // that carry defaults, so the backend can fill them.
+                    //
+                    // The strict R/M bounds only make sense when every
+                    // argument contributes exactly one positional value.  We
+                    // therefore skip the check entirely in two situations:
+                    //
+                    //   (a) the callee is variadic (`*rest`/`**opts`) or
+                    //       carries the synthetic trailing block param — the
+                    //       upper bound is then open / the block param is
+                    //       supplied by the lowerer, not positionally; and
+                    //   (b) the call carries an argument whose positional
+                    //       count is not statically 1 — a splat / double-splat
+                    //       / argument-forwarding marker (which expands to an
+                    //       unknown number of values) or an implicit Ruby
+                    //       block handle appended to the arg list (a trailing
+                    //       `MakeClosure`, or a `block_pass`/`block_given`
+                    //       marker).  Counting `args.len()` against the
+                    //       declared params would be meaningless there.
+                    //
+                    // This keeps v0 scope tight (plain positional callees with
+                    // trailing defaults) and is deliberately behaviour-neutral
+                    // for every existing frontend lowering, which relied on the
+                    // validator never checking DirectCall arity at all.
+                    if !arity.variadic && args_are_plain(args) {
+                        // Only *positional* args count against the R/M
+                        // bounds; any `KeywordArg` is matched by name, not
+                        // position, so it is excluded here (its validity is
+                        // handled by `check_call_kwargs`).  A plain
+                        // positional callee that receives a stray keyword
+                        // still gets the precise "unknown keyword" diagnostic
+                        // from name resolution rather than a misleading
+                        // arity-count error.
+                        let n = args
+                            .iter()
+                            .filter(|a| !matches!(a, Expr::KeywordArg { .. }))
+                            .count();
+                        if n < arity.min {
+                            self.error(
+                                format!(
+                                    "direct call to `{}` passes {} argument(s) but {} required",
+                                    fn_name, n, arity.min
+                                ),
+                                e.span(),
+                            );
+                        } else if n > arity.max {
+                            self.error(
+                                format!(
+                                    "direct call to `{}` passes {} argument(s) but the function takes at most {}",
+                                    fn_name, n, arity.max
+                                ),
+                                e.span(),
+                            );
+                        }
+                    }
+                } else {
                     self.error(
                         format!("direct call to unknown function `{}`", fn_name),
                         e.span(),
                     );
                 }
-                for a in args {
-                    self.check_expr(a, env, depth + 1);
-                }
+                self.check_args(args, env, depth);
             }
             Expr::IndirectCall { target, args, .. } => {
                 self.observed.add(Feature::Closures);
+                // Ordering + duplicate keyword checks apply, but the callee
+                // signature is not statically known, so no name resolution.
+                self.check_kwargs_common(None, args, e.span());
                 self.check_expr(target, env, depth + 1);
-                for a in args {
-                    self.check_expr(a, env, depth + 1);
-                }
+                self.check_args(args, env, depth);
             }
             Expr::BuiltinCall { name, args, .. } => {
                 match name.as_str() {
@@ -446,6 +867,206 @@ impl<'m> ValidatorState<'m> {
                 self.check_expr(lhs, env, depth + 1);
                 self.check_expr(rhs, env, depth + 1);
             }
+            // ── SIR18: string interpolation ────────────────────────
+            Expr::StrConcat { parts, span } => {
+                self.observed.add(Feature::StringInterpolation);
+                // A concat is only meaningful with at least two parts;
+                // a degenerate one-part concat signals a frontend bug
+                // (it should have emitted the bare part instead).
+                if parts.len() < 2 {
+                    self.error(
+                        format!(
+                            "str-concat needs at least 2 parts, got {}",
+                            parts.len()
+                        ),
+                        span,
+                    );
+                }
+                for p in parts {
+                    self.check_expr(p, env, depth + 1);
+                }
+            }
+            // ── KW1: keyword argument ──────────────────────────────
+            Expr::KeywordArg { value, span, .. } => {
+                // Using a keyword argument at all requires the feature.
+                self.observed.add(Feature::KeywordParams);
+                // A `KeywordArg` is only well-formed as an *immediate*
+                // argument of a call.  `in_call_args` is true exactly when
+                // we are walking such immediate arguments (see
+                // `check_args`); anywhere else — nested inside another
+                // expression, as a `BuiltinCall`/`Intrinsic` argument, as a
+                // block value, a let RHS, a default expr, etc. — it is
+                // misplaced and rejected.
+                if !self.in_call_args {
+                    self.error(
+                        "keyword argument may only appear directly in a call's argument list"
+                            .to_string(),
+                        span,
+                    );
+                }
+                // Recurse into the value with the call-args flag cleared:
+                // the value itself is an ordinary expression position (a
+                // nested `KeywordArg` inside it would be misplaced).
+                let prev = self.in_call_args;
+                self.in_call_args = false;
+                self.check_expr(value, env, depth + 1);
+                self.in_call_args = prev;
+            }
+        }
+    }
+
+    /// Walk the arguments of a call node (DirectCall / IndirectCall /
+    /// BuiltinCall / MakeClosure), permitting a top-level `KeywordArg`.
+    ///
+    /// A `KeywordArg` is only well-placed as a *direct* argument of a call,
+    /// so we set `in_call_args = true` around this loop; the `KeywordArg`
+    /// arm of [`Self::check_expr`] reads the flag to allow the keyword here
+    /// and to *reject* it anywhere else (it clears the flag before
+    /// recursing into the keyword's value).  We save and restore the prior
+    /// flag value so nested calls compose correctly.
+    fn check_args(&mut self, args: &[Expr], env: &mut LocalEnv, depth: usize) {
+        let prev = self.in_call_args;
+        self.in_call_args = true;
+        for a in args {
+            self.check_expr(a, env, depth + 1);
+        }
+        self.in_call_args = prev;
+    }
+
+    /// Call-side keyword-argument validation for a call whose args vec is
+    /// `args` (KW1).  Enforces, independent of the callee's identity:
+    ///
+    ///   1. **Ordering** — every `KeywordArg` must follow all positional
+    ///      (non-`KeywordArg`) arguments.  `f(1, a: 2)` is fine; a
+    ///      positional after a keyword (`f(a: 2, 1)`) is rejected.
+    ///   2. **No duplicate keyword names** within one call's args.
+    ///
+    /// When `known_callee` is `Some(name)` and that name resolves to a
+    /// function in this module, it additionally performs
+    ///   3. **Name resolution** — each `KeywordArg.name` must match a
+    ///      `Keyword` param of the callee OR the callee declares a
+    ///      `KwRest`; and every REQUIRED keyword param (Keyword, default
+    ///      None) must be supplied.
+    ///
+    /// IndirectCall / closure calls pass `None`: the signature is not
+    /// statically known, so only ordering + duplicate checks apply.
+    fn check_call_kwargs(&mut self, callee: &str, args: &[Expr], call_span: &Span) {
+        self.check_kwargs_common(Some(callee), args, call_span);
+    }
+
+    /// Ordering + duplicate checks (and optional name resolution) shared by
+    /// every call kind.  `callee` is `Some` only for a `DirectCall`, whose
+    /// target may be a known module function.
+    fn check_kwargs_common(&mut self, callee: Option<&str>, args: &[Expr], call_span: &Span) {
+        let mut seen_keyword = false;
+        let mut names: HashSet<&str> = HashSet::new();
+        let mut supplied: Vec<&str> = Vec::new();
+        for a in args {
+            match a {
+                Expr::KeywordArg { name, span, .. } => {
+                    seen_keyword = true;
+                    if !names.insert(name.as_str()) {
+                        self.error(
+                            format!("duplicate keyword argument `{}` in call", name),
+                            span,
+                        );
+                    }
+                    supplied.push(name.as_str());
+                }
+                _ => {
+                    // A positional argument.  Once a keyword has appeared,
+                    // positionals are illegal — keyword args must trail all
+                    // positionals so a backend can split `args` at the first
+                    // keyword unambiguously.
+                    if seen_keyword {
+                        self.error(
+                            "positional argument may not follow a keyword argument"
+                                .to_string(),
+                            a.span(),
+                        );
+                    }
+                }
+            }
+        }
+
+        // ── Indirect/closure keyword rejection (v0 soundness gate) ────────
+        //
+        // `callee == None` means the call target is *not* a statically-known
+        // direct function — it is an `IndirectCall` through a closure/function
+        // value.  Per `code/specs/sir-keyword-params.md` ("Out of scope"),
+        // keyword arguments on such calls are OUT OF SCOPE for v0: **no**
+        // backend can emit them.  Every emitter's `emit_args` for an
+        // `IndirectCall` routes each argument through `emit_expr`, whose
+        // `KeywordArg` arm is a hard `panic!` (keyword resolution needs the
+        // callee's parameter names/order, which an indirect call does not have
+        // statically).  If the validator accepted such a module, lowering it
+        // would panic — a denial-of-service on validator-accepted input.
+        //
+        // The ordering/duplicate loop above still runs (a keyword mis-ordered
+        // even on an indirect call is malformed), but we additionally reject
+        // the mere *presence* of any keyword argument here.  This is purely
+        // subtractive: it forbids more programs, changes no accepted DirectCall
+        // behaviour (that path passes `Some(callee)` and never reaches this
+        // branch), and adds no enum variant — so downstream crates that only
+        // *construct* IR are unaffected; only ill-formed IR is now caught.
+        let Some(callee) = callee else {
+            for a in args {
+                if let Expr::KeywordArg { name, span, .. } = a {
+                    self.error(
+                        format!(
+                            "keyword argument `{}` is not allowed on an indirect/closure call (only direct calls support keyword arguments in v0)",
+                            name
+                        ),
+                        span,
+                    );
+                }
+            }
+            return;
+        };
+        // Clone out the callee's keyword-param facts we need, to avoid
+        // holding a borrow of `self.module` across the `self.error` calls.
+        let Some(f) = self.module.functions.iter().find(|f| f.name == callee) else {
+            return;
+        };
+        let kw_names: HashSet<String> =
+            f.keyword_params().iter().map(|p| p.name.clone()).collect();
+        let has_kwrest = f.params.iter().any(|p| p.kind == ParamKind::KwRest);
+        let required_kw: Vec<String> = f
+            .params
+            .iter()
+            .filter(|p| p.kind == ParamKind::Keyword && p.default.is_none())
+            .map(|p| p.name.clone())
+            .collect();
+
+        // Every supplied keyword must name a declared keyword param, unless
+        // the callee slurps extras via `**kwrest`.
+        if !has_kwrest {
+            for a in args {
+                if let Expr::KeywordArg { name, span, .. } = a {
+                    if !kw_names.contains(name) {
+                        self.error(
+                            format!(
+                                "call to `{}` passes unknown keyword `{}` (callee declares no such keyword parameter and no `**` keyword-rest)",
+                                callee, name
+                            ),
+                            span,
+                        );
+                    }
+                }
+            }
+        }
+
+        // Every required keyword param must be supplied.
+        for req in &required_kw {
+            if !supplied.contains(&req.as_str()) {
+                self.error(
+                    format!(
+                        "call to `{}` is missing required keyword `{}`",
+                        callee, req
+                    ),
+                    call_span,
+                );
+            }
         }
     }
 
@@ -495,6 +1116,25 @@ impl<'m> ValidatorState<'m> {
             Scope::Builtin => {
                 // Builtin names are not enumerated by the SIR;
                 // resolution is the backend's responsibility.
+            }
+            Scope::Instance => {
+                // Instance variables (Ruby `@x`) need no prior
+                // declaration — reading an unset `@x` yields nil — so
+                // there is nothing to resolve against the local env.
+                // We only record that the feature is in use so the
+                // manifest comparison stays honest.
+                self.observed.add(Feature::InstanceVars);
+            }
+            Scope::ClassVar => {
+                // Class variables (Ruby `@@x`) likewise need no prior
+                // declaration; record the feature only.
+                self.observed.add(Feature::ClassVars);
+            }
+            Scope::Const => {
+                // Constants (Ruby `FOO` / `MyClass`) resolve against the
+                // constant scope, not a `let` binding — no local
+                // resolution; record the feature only.
+                self.observed.add(Feature::Constants);
             }
         }
     }
@@ -647,6 +1287,595 @@ mod tests {
         });
         let r = validate(&m);
         assert!(!r.is_ok());
+    }
+
+    /// Build a single-function module whose function has `params` and a
+    /// trivial nil body — for exercising the M3 variadic ordering rules.
+    fn module_with_params(params: Vec<Param>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    fn p(name: &str, kind: ParamKind) -> Param {
+        Param { name: name.into(), sir_type: None, kind, default: None, span: s() }
+    }
+
+    #[test]
+    fn variadic_params_in_canonical_order_are_valid() {
+        // def f(a, *rest, **opts) — required, then one Rest, then one KwRest.
+        let m = module_with_params(vec![
+            p("a", ParamKind::Required),
+            p("rest", ParamKind::Rest),
+            p("opts", ParamKind::KwRest),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn two_rest_params_is_error() {
+        let m = module_with_params(vec![
+            p("a", ParamKind::Rest),
+            p("b", ParamKind::Rest),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("more than one rest")));
+    }
+
+    #[test]
+    fn two_kwrest_params_is_error() {
+        let m = module_with_params(vec![
+            p("a", ParamKind::KwRest),
+            p("b", ParamKind::KwRest),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("more than one keyword-rest")));
+    }
+
+    #[test]
+    fn kwrest_before_rest_is_error() {
+        // def f(**opts, *rest) — Rest must precede KwRest.
+        let m = module_with_params(vec![
+            p("opts", ParamKind::KwRest),
+            p("rest", ParamKind::Rest),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("must precede the keyword-rest")));
+    }
+
+    /// SIR19: a parameter carrying a default-value expression validates
+    /// OK and causes the validator to observe `Feature::DefaultParams`.
+    #[test]
+    fn param_with_default_validates_and_observes_feature() {
+        // def f(a = 1) — one required param with a default literal `1`.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// A default that uses an unsupported/undeclared feature (here a
+    /// `StrLit`, which declares `Feature::Strings`) is observed through
+    /// the default expression — proving the validator recurses into the
+    /// default like any other expression.
+    #[test]
+    fn default_expr_features_are_observed() {
+        // def f(a = "x") — manifest must declare Strings (from the default)
+        // as well as DefaultParams, or validation fails.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+                Feature::Strings,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: Some(Box::new(Expr::StrLit { value: "x".into(), span: s() })),
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// A default expression may reference an earlier parameter
+    /// (`def f(a, b = a)`); the validator resolves the `VarRef` against
+    /// the params declared so far.
+    #[test]
+    fn default_expr_may_reference_earlier_param() {
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(Expr::VarRef {
+                        name: "a".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    })),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// A default expression that references a *later* parameter is a
+    /// scope error — only params declared so far are in view.
+    #[test]
+    fn default_expr_cannot_reference_later_param() {
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[
+                Feature::DynamicTyping,
+                Feature::DefaultParams,
+            ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    // references `b`, which is declared *after* `a`.
+                    default: Some(Box::new(Expr::VarRef {
+                        name: "b".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    })),
+                    span: s(),
+                },
+                Param { name: "b".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected scope error for forward reference");
+    }
+
+    // ── SIR10 default-param call-arity (P2a) ───────────────────────────
+    //
+    // Helpers and tests for the rule: a DirectCall to a known function is
+    // arity-valid iff R <= args.len() <= M, where R is the callee's
+    // required (leading no-default) param count and M is its total param
+    // count.  Omitting a trailing defaulted arg is OK; omitting a required
+    // arg or over-supplying is an error.
+
+    /// A param with an integer-literal default (`name = 1`).
+    fn p_default(name: &str) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Required,
+            default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+            span: s(),
+        }
+    }
+
+    /// Build a two-function module: a callee `f` with `callee_params`, and
+    /// a caller `g` whose body is `f(<n_args> int literals>)` via a
+    /// `DirectCall`.  The manifest declares `DefaultParams` so a defaulted
+    /// callee passes the manifest check.
+    fn module_calling_f(callee_params: Vec<Param>, n_args: usize) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: callee_params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let args: Vec<Expr> = (0..n_args)
+            .map(|i| Expr::IntLit { value: i as i64, span: s() })
+            .collect();
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args,
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn direct_call_exact_arity_is_valid() {
+        // def f(a, b = 1); f(0, 1) — R=1, M=2, args=2 → R<=2<=M.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 2);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_omitting_trailing_default_is_valid() {
+        // def f(a, b = 1); f(0) — omit the trailing defaulted `b`. R=1,
+        // M=2, args=1 → R<=1<=M, and the omitted param (`b`) has a default.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 1);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_omitting_all_defaults_is_valid() {
+        // def f(a = 1, b = 1); f() — both params defaulted, R=0, M=2,
+        // args=0 → 0<=0<=2.
+        let m = module_calling_f(vec![p_default("a"), p_default("b")], 0);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_omitting_required_arg_is_error() {
+        // def f(a, b = 1); f() — omits the *required* `a`. R=1, args=0 →
+        // 0 < R → error.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 0);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("required")),
+            "expected a 'required' arity error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn direct_call_too_many_args_is_error() {
+        // def f(a, b = 1); f(0, 1, 2) — three args but M=2. args > M → error.
+        let m = module_calling_f(vec![p("a", ParamKind::Required), p_default("b")], 3);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("at most")),
+            "expected an 'at most' arity error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn direct_call_to_no_default_function_still_requires_exact_arity() {
+        // Behaviour-neutral check: a default-less callee `def f(a, b)` keeps
+        // exact-arity semantics — f(0) is now an error (R=M=2), f(0,1) is ok.
+        let short = module_calling_f(
+            vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
+            1,
+        );
+        assert!(!validate(&short).is_ok(), "f(0) for def f(a,b) must error");
+        let exact = module_calling_f(
+            vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
+            2,
+        );
+        assert!(
+            validate(&exact).is_ok(),
+            "f(0,1) for def f(a,b) must validate"
+        );
+    }
+
+    #[test]
+    fn direct_call_to_variadic_callee_skips_strict_bounds() {
+        // def f(a, *rest); f(0,1,2,3) — a `*rest` removes the upper bound,
+        // so over-supply relative to the positional count is accepted
+        // (strict bounds are deferred for variadic callees).
+        let m = module_calling_f(
+            vec![p("a", ParamKind::Required), p("rest", ParamKind::Rest)],
+            4,
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok for variadic callee, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_with_trailing_block_handle_skips_arity_check() {
+        // Ruby block-passing convention: `helper(2) { … }` lowers to a
+        // DirectCall whose args are [2, MakeClosure(__block_0)] — i.e. one
+        // extra trailing block handle is appended even though `helper`'s
+        // declared params do NOT include a block param.  The static arg
+        // count (2) exceeds M (1), but because the trailing arg is an
+        // implicit block handle the strict bounds are skipped — this must
+        // still validate (behaviour-neutral for the Ruby frontend).
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::Closures,
+        ]));
+        m.functions.push(Function {
+            name: "helper".into(),
+            params: vec![p("x", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        // The hoisted block fn (so MakeClosure references a known function).
+        m.functions.push(Function {
+            name: "__block_0".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "outer".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "helper".into(),
+                    args: vec![
+                        Expr::IntLit { value: 2, span: s() },
+                        Expr::MakeClosure {
+                            fn_name: "__block_0".into(),
+                            captures: vec![],
+                            span: s(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "block-passing call must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn direct_call_with_splat_arg_skips_arity_check() {
+        // `helper(*arr)` → DirectCall(helper, [BuiltinCall("splat", [arr])]).
+        // A splat expands to an unknown count, so even though args.len()==1
+        // and helper takes 2 required params, the arity check is skipped.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+        m.functions.push(Function {
+            name: "helper".into(),
+            params: vec![p("a", ParamKind::Required), p("b", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "helper".into(),
+                    args: vec![Expr::BuiltinCall {
+                        name: "splat".into(),
+                        args: vec![Expr::NilLit { span: s() }],
+                        effects: EffectSet::PURE,
+                        span: s(),
+                    }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "splat call must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn required_param_count_helper() {
+        // def f(a, b, c = 1, d = 1) → required_param_count() == 2.
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                p("a", ParamKind::Required),
+                p("b", ParamKind::Required),
+                p_default("c"),
+                p_default("d"),
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        assert_eq!(f.required_param_count(), 2);
+        // missing_defaults: the trailing params a caller omits.
+        assert_eq!(f.missing_defaults(4).len(), 0);
+        let omitted_one = f.missing_defaults(3);
+        assert_eq!(omitted_one.len(), 1);
+        assert_eq!(omitted_one[0].name, "d");
+        let omitted_two = f.missing_defaults(2);
+        assert_eq!(omitted_two.len(), 2);
+        assert_eq!(omitted_two[0].name, "c");
+        assert_eq!(omitted_two[1].name, "d");
+        // Over-supply clamps rather than panicking.
+        assert_eq!(f.missing_defaults(99).len(), 0);
+    }
+
+    /// Build a single-function module `def f(<params>)` with a nil body and
+    /// a manifest declaring DynamicTyping + DefaultParams — for exercising
+    /// the trailing-defaults-only rule.
+    fn module_with_default_params(params: Vec<Param>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::DefaultParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn required_after_defaulted_param_is_a_hole_error() {
+        // def f(a = 1, b) — `b` is a required param following a defaulted
+        // one.  This "hole" is rejected so `missing_defaults` only ever
+        // returns params that carry a default.
+        let m = module_with_default_params(vec![p_default("a"), p("b", ParamKind::Required)]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "a hole must fail validation");
+        assert!(
+            r.errors().any(|i| i
+                .message
+                .contains("may not follow a defaulted parameter")),
+            "expected the trailing-defaults error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn trailing_defaults_validate() {
+        // def f(a, b = 1, c = 2) — all defaults are trailing; valid.
+        let m = module_with_default_params(vec![
+            p("a", ParamKind::Required),
+            p_default("b"),
+            p_default("c"),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "trailing defaults must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn block_param_after_defaulted_param_is_exempt() {
+        // def f(a = 1) { yield } → params [a=1, __sir_block__].  The
+        // synthetic block param is a no-default Required appended last, so
+        // it must NOT trip the trailing-defaults rule.
+        let m = module_with_default_params(vec![
+            p_default("a"),
+            p("__sir_block__", ParamKind::Required),
+        ]);
+        let r = validate(&m);
+        assert!(
+            r.is_ok(),
+            "block param after a default must be exempt, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn required_after_rest_is_error() {
+        // def f(*rest, a) — a required positional after the rest param.
+        let m = module_with_params(vec![
+            p("rest", ParamKind::Rest),
+            p("a", ParamKind::Required),
+        ]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(r.errors().any(|i| i.message.contains("must precede the rest")));
+    }
+
+    #[test]
+    fn reserved_block_param_after_rest_is_exempt() {
+        // The Q9e trailing block param is always Required and always last,
+        // appearing after any variadic params — and must NOT trigger the
+        // ordering rule. def f(*rest) { yield } → params [*rest, __sir_block__].
+        let m = module_with_params(vec![
+            p("rest", ParamKind::Rest),
+            p("__sir_block__", ParamKind::Required),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
     }
 
     #[test]
@@ -1049,6 +2278,64 @@ mod tests {
     }
 
     #[test]
+    fn str_concat_observes_string_interpolation_feature() {
+        // Phase 20b — a well-formed two-part `StrConcat` validates when
+        // the manifest declares `StringInterpolation`.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[Feature::StringInterpolation, Feature::Strings]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::StrConcat {
+                    parts: vec![
+                        Expr::StrLit { value: "a".into(), span: s() },
+                        Expr::StrLit { value: "b".into(), span: s() },
+                    ],
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn str_concat_with_fewer_than_two_parts_is_rejected() {
+        // Phase 20b — a one-part concat is degenerate; the frontend
+        // should have emitted the bare part instead.  The validator
+        // flags it so a buggy lowerer is caught early.
+        let mut m =
+            empty_module(FeatureManifest::from_features(&[Feature::StringInterpolation, Feature::Strings]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::StrConcat {
+                    parts: vec![Expr::StrLit { value: "lonely".into(), span: s() }],
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for 1-part str-concat, got ok");
+    }
+
+    #[test]
     fn sequential_let_star_sees_prior_binding() {
         // (let* ((x 1) (y x)) y) — fine in let*.
         let mut m = empty_module(FeatureManifest::new());
@@ -1089,5 +2376,1120 @@ mod tests {
         });
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    // -----------------------------------------------------------------
+    // Phase 14b (FC) — `Stmt::ClassDef.body` is now a populated
+    // `Vec<Stmt>`; the validator walks it via `check_stmt_seq`.
+    // -----------------------------------------------------------------
+
+    /// Wrap a single `ClassDef` statement in a one-function module
+    /// declaring `Feature::Classes`.
+    fn module_with_class_body(name: &str, body: Vec<Stmt>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ClassDef {
+                    name: name.into(),
+                    superclass: None,
+                    body,
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn class_def_body_with_let_binding_validates() {
+        // A class body holding a single LetBinding is now walked by the
+        // validator (Phase 14a no-op'd the body loop) and accepted.
+        let m = module_with_class_body(
+            "Foo",
+            vec![Stmt::LetBinding {
+                name: "MAX".into(),
+                sir_type: None,
+                value: Expr::IntLit { value: 10, span: s() },
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn class_def_body_undefined_varref_is_error() {
+        // Proves the body is *actually validated* now: a VarRef to an
+        // undefined local inside the class body must be reported as an
+        // error.  Under the Phase 14a no-op loop this would have been
+        // silently accepted.
+        let m = module_with_class_body(
+            "Foo",
+            vec![Stmt::ExprStmt {
+                expr: Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "expected undefined-varref error from class body, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn class_def_body_local_does_not_leak_to_sibling() {
+        // A binding introduced inside the class body must not be
+        // visible to statements *after* the class (the body is scoped
+        // by its own env mark/rewind).  Here `INNER` is bound inside
+        // the class, then referenced as a sibling statement after it —
+        // which must error.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![
+                    Stmt::ClassDef {
+                        name: "Foo".into(),
+                        superclass: None,
+                        body: vec![Stmt::LetBinding {
+                            name: "INNER".into(),
+                            sir_type: None,
+                            value: Expr::IntLit { value: 1, span: s() },
+                            span: s(),
+                        }],
+                        span: s(),
+                    },
+                    Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "INNER".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                ],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "class-body local INNER must not leak to sibling stmt, got {:?}",
+            r.issues
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 14d — `Stmt::ModuleDef` validation (mirrors ClassDef).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn module_def_body_with_let_binding_validates() {
+        // A module body holding a LetBinding is walked by the validator
+        // and accepted; the module declares Feature::Modules.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Modules]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "Config".into(),
+                    body: vec![Stmt::LetBinding {
+                        name: "V".into(),
+                        sir_type: None,
+                        value: Expr::IntLit { value: 3, span: s() },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn module_def_body_undefined_varref_is_error() {
+        // Proves the module body is actually validated: a VarRef to an
+        // undefined local inside the module body must be reported.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Modules]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "M".into(),
+                    body: vec![Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "ghost".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "expected undefined-varref error from module body, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn module_def_without_manifest_feature_is_error() {
+        // A ModuleDef present but `Feature::Modules` not declared →
+        // the used-but-undeclared check fires.
+        let mut m = empty_module(FeatureManifest::new());
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::ModuleDef {
+                    name: "M".into(),
+                    body: vec![],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-Modules-feature error");
+        assert!(r.errors().any(|i| i.message.contains("modules")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 14e — `Stmt::SingletonClassDef` validation.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn singleton_class_def_body_with_let_binding_validates() {
+        // A singleton-class body holding a LetBinding is walked and
+        // accepted; the module declares Feature::Classes.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::SingletonClassDef {
+                    target: "self".into(),
+                    body: vec![Stmt::LetBinding {
+                        name: "X".into(),
+                        sir_type: None,
+                        value: Expr::IntLit { value: 1, span: s() },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn singleton_class_def_body_undefined_varref_is_error() {
+        // Proves the singleton body is actually validated.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Classes]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::SingletonClassDef {
+                    target: "self".into(),
+                    body: vec![Stmt::ExprStmt {
+                        expr: Expr::VarRef {
+                            name: "ghost".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    }],
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(
+            !r.is_ok(),
+            "expected undefined-varref error from singleton body, got {:?}",
+            r.issues
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 15a — `Scope::Instance` (instance variables).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body value is a single
+    /// instance-var ref, declaring the given features.
+    fn module_with_instance_ref(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "@x".into(),
+                    scope: Scope::Instance,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn instance_var_ref_needs_no_declaration() {
+        // An instance-var ref is accepted with no prior `let`/param —
+        // reading an unset `@x` is nil in Ruby.  Module declares
+        // `InstanceVars`.
+        let m = module_with_instance_ref(&[Feature::InstanceVars]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn instance_var_ref_without_manifest_feature_is_error() {
+        // The validator observes `InstanceVars` from the Instance-scoped
+        // ref; if the manifest doesn't declare it, the
+        // used-but-undeclared check fires.
+        let m = module_with_instance_ref(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-InstanceVars-feature error");
+        assert!(r.errors().any(|i| i.message.contains("instance-vars")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 15b — `Scope::ClassVar` (class variables).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body value is a single
+    /// class-var ref, declaring the given features.
+    fn module_with_class_var_ref(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "@@count".into(),
+                    scope: Scope::ClassVar,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn class_var_ref_needs_no_declaration() {
+        // A class-var ref is accepted with no prior `let`/param —
+        // reading an unset `@@x` is nil in Ruby.  Module declares
+        // `ClassVars`.
+        let m = module_with_class_var_ref(&[Feature::ClassVars]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn class_var_ref_without_manifest_feature_is_error() {
+        // The validator observes `ClassVars` from the ClassVar-scoped
+        // ref; if the manifest doesn't declare it, the
+        // used-but-undeclared check fires.
+        let m = module_with_class_var_ref(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-ClassVars-feature error");
+        assert!(r.errors().any(|i| i.message.contains("class-vars")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 15c — `Scope::Const` (constants).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body value is a single
+    /// constant ref, declaring the given features.
+    fn module_with_const_ref(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef {
+                    name: "MAX".into(),
+                    scope: Scope::Const,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn const_ref_needs_no_declaration() {
+        // A constant ref is accepted with no prior `let`/param — a
+        // constant resolves against the constant scope, not a local
+        // binding.  Module declares `Constants`.
+        let m = module_with_const_ref(&[Feature::Constants]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn const_ref_without_manifest_feature_is_error() {
+        // The validator observes `Constants` from the Const-scoped ref;
+        // if the manifest doesn't declare it, the used-but-undeclared
+        // check fires.
+        let m = module_with_const_ref(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-Constants-feature error");
+        assert!(r.errors().any(|i| i.message.contains("constants")));
+    }
+
+    // -----------------------------------------------------------------
+    // SIR17 Phase 16a — `Stmt::TryCatch` (exception handling).
+    // -----------------------------------------------------------------
+
+    /// Build a one-function module whose body is a single `TryCatch`
+    /// (`begin; let _t=1; rescue Foo => e; let _r=e; ensure; let _e=1;
+    /// end`), declaring the given features.  The rescue body references
+    /// the bound exception `e`, exercising the binding's scope.
+    fn module_with_try_catch(features: &[Feature]) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(features));
+        let lb = |name: &str, value: Expr| Stmt::LetBinding {
+            name: name.into(),
+            sir_type: None,
+            value,
+            span: s(),
+        };
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::TryCatch {
+                    body: vec![lb("_t", Expr::IntLit { value: 1, span: s() })],
+                    rescues: vec![RescueClause {
+                        exception_types: vec!["Foo".into()],
+                        binding: Some("e".into()),
+                        // The rescue body reads the bound `e` — must resolve.
+                        body: vec![lb(
+                            "_r",
+                            Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+                        )],
+                        span: s(),
+                    }],
+                    ensure_body: Some(vec![lb("_e", Expr::IntLit { value: 1, span: s() })]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn try_catch_validates_and_binding_is_in_scope() {
+        // A try/catch validates when the manifest declares `Exceptions`,
+        // and the rescue binding `e` resolves inside the rescue body.
+        let m = module_with_try_catch(&[Feature::Exceptions]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn try_catch_without_manifest_feature_is_error() {
+        // The validator observes `Exceptions` from the TryCatch; if the
+        // manifest doesn't declare it, the used-but-undeclared check fires.
+        let m = module_with_try_catch(&[]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected missing-Exceptions-feature error");
+        assert!(r.errors().any(|i| i.message.contains("exceptions")));
+    }
+
+    #[test]
+    fn try_catch_binding_does_not_leak_past_rescue() {
+        // The rescue binding `e` is scoped to its clause body only — a
+        // reference to `e` in the ensure body is undefined.
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::Exceptions]));
+        m.functions.push(Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![Stmt::TryCatch {
+                    body: vec![],
+                    rescues: vec![RescueClause {
+                        exception_types: vec![],
+                        binding: Some("e".into()),
+                        body: vec![],
+                        span: s(),
+                    }],
+                    // ensure references `e` — out of scope → error.
+                    ensure_body: Some(vec![Stmt::LetBinding {
+                        name: "_x".into(),
+                        sir_type: None,
+                        value: Expr::VarRef { name: "e".into(), scope: Scope::Local, span: s() },
+                        span: s(),
+                    }]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected `e` out-of-scope error in ensure body");
+    }
+
+    // ── KW1: keyword parameters & arguments ────────────────────────────
+
+    /// A keyword param `name:` (required) or `name: 1` (optional).
+    fn kw(name: &str, default: Option<i64>) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: None,
+            kind: ParamKind::Keyword,
+            default: default.map(|v| Box::new(Expr::IntLit { value: v, span: s() })),
+            span: s(),
+        }
+    }
+
+    /// A keyword argument `name: <int>` for a call's args vec.
+    fn kwarg(name: &str, v: i64) -> Expr {
+        Expr::KeywordArg {
+            name: name.into(),
+            value: Box::new(Expr::IntLit { value: v, span: s() }),
+            span: s(),
+        }
+    }
+
+    /// Build a two-function module: callee `f` with `callee_params` and a
+    /// caller `g` whose body is a `DirectCall` to `f` with `call_args`.
+    /// The manifest declares KeywordParams so keyword-using modules pass
+    /// the manifest check; extra features can be appended by the caller
+    /// via `extra`.
+    fn module_kw_call(
+        callee_params: Vec<Param>,
+        call_args: Vec<Expr>,
+        extra: &[Feature],
+    ) -> Module {
+        let mut feats = vec![Feature::DynamicTyping, Feature::KeywordParams];
+        feats.extend_from_slice(extra);
+        let mut m = empty_module(FeatureManifest::from_features(&feats));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: callee_params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args: call_args,
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn keyword_param_observes_feature_and_gating() {
+        // def f(x:) with the feature declared → ok; without it → error.
+        let ok = module_with_params(vec![kw("x", Some(1))]);
+        // module_with_params only declares DynamicTyping, so the keyword
+        // param is undeclared → error.
+        assert!(
+            !validate(&ok).is_ok(),
+            "keyword param without KeywordParams declared must error"
+        );
+        // Now declare it.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![kw("x", Some(1))],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn keyword_arg_requires_feature() {
+        // f(a: 1) where the manifest omits KeywordParams → error, even
+        // though the callee accepts `a` (feature gating is independent of
+        // name resolution).
+        let mut m = empty_module(FeatureManifest::from_features(&[Feature::DynamicTyping]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![kw("a", Some(0))],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::DirectCall {
+                    fn_name: "f".into(),
+                    args: vec![kwarg("a", 1)],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "keyword arg without the feature must error");
+        assert!(r.errors().any(|i| i.message.contains("keyword-params")));
+    }
+
+    // ── def-side ordering ──────────────────────────────────────────────
+
+    #[test]
+    fn keyword_params_canonical_order_is_valid() {
+        // def f(a, *rest, x:, y: 1, **opts) — required, rest, keywords, kwrest.
+        let m = module_with_params_kw(vec![
+            p("a", ParamKind::Required),
+            p("rest", ParamKind::Rest),
+            kw("x", None),
+            kw("y", Some(1)),
+            p("opts", ParamKind::KwRest),
+        ]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// module_with_params but declaring KeywordParams too.
+    fn module_with_params_kw(params: Vec<Param>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn keyword_param_before_positional_is_error() {
+        // def f(x:, a) — a required positional after a keyword param.
+        let m = module_with_params_kw(vec![kw("x", None), p("a", ParamKind::Required)]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("must precede keyword parameters")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_param_after_kwrest_is_error() {
+        // def f(**opts, x:) — a keyword param after the keyword-rest.
+        let m = module_with_params_kw(vec![p("opts", ParamKind::KwRest), kw("x", None)]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("must precede the keyword-rest")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn rest_after_keyword_is_error() {
+        // def f(x:, *rest) — the rest param must precede keyword params.
+        let m = module_with_params_kw(vec![kw("x", None), p("rest", ParamKind::Rest)]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("must precede keyword parameters")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    // ── call-side ordering / duplicates ────────────────────────────────
+
+    #[test]
+    fn keyword_arg_after_positional_is_valid() {
+        // def f(a, x:); f(1, x: 2) — one positional then one keyword.
+        let m = module_kw_call(
+            vec![p("a", ParamKind::Required), kw("x", None)],
+            vec![Expr::IntLit { value: 1, span: s() }, kwarg("x", 2)],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn positional_after_keyword_arg_is_error() {
+        // f(x: 2, 1) — a positional after a keyword argument.
+        let m = module_kw_call(
+            vec![kw("x", Some(0)), p("a", ParamKind::Required)],
+            vec![kwarg("x", 2), Expr::IntLit { value: 1, span: s() }],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("positional argument may not follow a keyword")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn duplicate_keyword_arg_is_error() {
+        // f(x: 1, x: 2) — the same keyword twice in one call.
+        let m = module_kw_call(
+            vec![kw("x", Some(0))],
+            vec![kwarg("x", 1), kwarg("x", 2)],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("duplicate keyword argument")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    // ── name resolution against a known callee ─────────────────────────
+
+    #[test]
+    fn unknown_keyword_without_kwrest_is_error() {
+        // def f(x:); f(y: 1) — `y` is not a declared keyword and there is
+        // no **kwrest to absorb it.
+        let m = module_kw_call(vec![kw("x", None)], vec![kwarg("y", 1)], &[]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("unknown keyword `y`")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn unknown_keyword_with_kwrest_is_accepted() {
+        // def f(**opts); f(y: 1) — the **opts absorbs the unmatched keyword,
+        // so an otherwise-unknown keyword name is accepted.
+        let m = module_kw_call(
+            vec![p("opts", ParamKind::KwRest)],
+            vec![kwarg("y", 1)],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok with **kwrest, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn missing_required_keyword_is_error() {
+        // def f(x:); f() — the required keyword `x` is not supplied.
+        let m = module_kw_call(vec![kw("x", None)], vec![], &[]);
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("missing required keyword `x`")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn optional_keyword_may_be_omitted() {
+        // def f(x: 1); f() — the keyword `x` is optional (has a default),
+        // so omitting it is fine.
+        let m = module_kw_call(vec![kw("x", Some(1))], vec![], &[]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn supplying_required_keyword_is_valid() {
+        // def f(x:); f(x: 5) — the required keyword is supplied.
+        let m = module_kw_call(vec![kw("x", None)], vec![kwarg("x", 5)], &[]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    /// Build a single-function module whose body is an `IndirectCall`
+    /// through parameter `cb` with the given `call_args`.  The manifest
+    /// declares KeywordParams + Closures so the constructs pass the manifest
+    /// gate and the interesting failure (if any) is the validator rule.
+    fn module_indirect_call(call_args: Vec<Expr>) -> Module {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+            Feature::Closures,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![p("cb", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::IndirectCall {
+                    target: Box::new(Expr::VarRef {
+                        name: "cb".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    args: call_args,
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn indirect_call_with_keyword_arg_is_rejected() {
+        // DoD (a): a keyword argument on an indirect/closure call is REJECTED.
+        // No backend can emit an indirect keyword call (their `emit_expr`
+        // `KeywordArg` arm panics), so accepting one would be a DoS on
+        // validator-accepted input.  `main(g) { g(x: 1) }` is exactly the
+        // program described in the soundness gap.
+        let m = module_indirect_call(vec![kwarg("x", 1)]);
+        let r = validate(&m);
+        assert!(!r.is_ok(), "indirect keyword call must be rejected");
+        assert!(
+            r.errors().any(|i| i
+                .message
+                .contains("keyword argument `x` is not allowed on an indirect/closure call")),
+            "expected the indirect-keyword rejection message, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn direct_call_with_matching_keyword_still_validates() {
+        // DoD (b): the SAME keyword arg to a matching-signature DIRECT callee
+        // still validates — the fix is subtractive and does not touch the
+        // DirectCall path.  def f(x:); g() = f(x: 1).
+        let m = module_kw_call(vec![kw("x", None)], vec![kwarg("x", 1)], &[]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "direct keyword call must still validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn indirect_call_with_only_positionals_still_validates() {
+        // DoD (c): an indirect call with only positional args is unaffected.
+        let m = module_indirect_call(vec![Expr::IntLit { value: 1, span: s() }]);
+        let r = validate(&m);
+        assert!(r.is_ok(), "positional indirect call must validate, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn indirect_call_still_enforces_keyword_ordering() {
+        // Even without name resolution, a positional after a keyword in an
+        // indirect call is rejected.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+            Feature::Closures,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![p("cb", ParamKind::Required)],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::IndirectCall {
+                    target: Box::new(Expr::VarRef {
+                        name: "cb".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    args: vec![kwarg("x", 1), Expr::IntLit { value: 2, span: s() }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("positional argument may not follow a keyword")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    // ── KeywordArg only in call position ───────────────────────────────
+
+    #[test]
+    fn keyword_arg_outside_call_is_error() {
+        // A KeywordArg used as a block value (not a call argument) is
+        // misplaced.  `def g() = (a: 1)` — invalid.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: kwarg("a", 1),
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("may only appear directly in a call")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_nested_in_builtin_call_is_error() {
+        // A KeywordArg buried in a BuiltinCall's args (not a keyword-taking
+        // call position) is misplaced.  `(+ (a: 1))` — invalid.
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::DynamicTyping,
+            Feature::KeywordParams,
+        ]));
+        m.functions.push(Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::BuiltinCall {
+                    name: "+".into(),
+                    args: vec![kwarg("a", 1)],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("may only appear directly in a call")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_value_may_not_nest_a_keyword_arg() {
+        // The *value* of a keyword arg is an ordinary expression position,
+        // so a keyword arg nested inside it is misplaced.
+        // f(a: (b: 1)) — the inner `(b: 1)` is invalid.
+        let inner = Expr::KeywordArg {
+            name: "b".into(),
+            value: Box::new(Expr::IntLit { value: 1, span: s() }),
+            span: s(),
+        };
+        let outer = Expr::KeywordArg {
+            name: "a".into(),
+            value: Box::new(inner),
+            span: s(),
+        };
+        let m = module_kw_call(
+            vec![p("opts", ParamKind::KwRest)],
+            vec![outer],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors()
+                .any(|i| i.message.contains("may only appear directly in a call")),
+            "got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn keyword_arg_value_expression_is_validated() {
+        // The keyword arg's value is recursed into: a bad var-ref inside it
+        // is caught.  f(**opts); f(x: <unknown local>) — scope error.
+        let m = module_kw_call(
+            vec![p("opts", ParamKind::KwRest)],
+            vec![Expr::KeywordArg {
+                name: "x".into(),
+                value: Box::new(Expr::VarRef {
+                    name: "ghost".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                }),
+                span: s(),
+            }],
+            &[],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok());
+        assert!(
+            r.errors().any(|i| i.message.contains("unknown name `ghost`")),
+            "got {:?}",
+            r.issues
+        );
     }
 }

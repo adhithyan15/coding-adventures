@@ -6,6 +6,120 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — SPICE Berkeley Mosaic App Startup Summary
+- `spice-netlist-parser` now exposes Berkeley Mosaic app startup summaries plus
+  JSON helpers. The summary derives a compact ready/blocked route from the
+  bootstrap payload, including package name, source fingerprint, repaired
+  editor-state IDs, stale-state flags, active panel, diagnostic count, and
+  blocking reason.
+- The summary helpers reuse the run and non-run bootstrap paths so product
+  shells can make startup routing decisions without walking the full host
+  panel payload or duplicating simulator internals.
+
+### Added — SPICE Berkeley Mosaic App Bootstrap Snapshot
+- `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic app
+  bootstrap snapshots plus JSON helpers. The bootstrap payload combines the
+  static package manifest with the deck-specific host-surface wire export so
+  WebAssembly and product shells can load package capabilities, repaired
+  editor-state metadata, active panels, diagnostics, and run availability from
+  one startup envelope.
+- The run and non-run helpers preserve the same blocked-deck diagnostic surface
+  as host-wire exports while keeping the package manifest stable and derived
+  from the Rust app facade contract.
+
+### Added — SPICE Berkeley Mosaic App Package Manifest
+- `spice-netlist-parser` now exposes a schema-versioned Berkeley Mosaic app
+  package manifest plus JSON helper for WebAssembly and product-shell
+  packaging. The manifest advertises the Berkeley grammar version,
+  host-surface wire schema, source-fingerprint algorithm, panel kinds, editor
+  action kinds, command targets, runnable analysis directives, and artifact
+  capabilities before a host opens a deck.
+- The manifest keeps packaging metadata derived from the same Rust app facade
+  contract as host surfaces and host-wire exports, avoiding a separate product
+  registry while the public parser contract remains language-aligned.
+
+### Added — SPICE Berkeley Mosaic Host Wire Export
+- `spice-netlist-parser` now exposes schema-versioned Berkeley app host-surface
+  wire snapshots for Mosaic packaging and WebAssembly embedding.
+  `host_surface_wire()`, `run_host_surface_wire()`, and their JSON helpers
+  flatten the host panel contract into stable lower-case panel kinds,
+  diagnostics, active-panel IDs, and repaired persisted editor-state metadata.
+- The JSON helpers avoid exposing simulator internals to product shells while
+  preserving the Rust app substrate over the public Berkeley parser contract.
+
+### Added — SPICE Berkeley Mosaic Host Surface
+- `spice-netlist-parser` now exposes Berkeley app-deck host surfaces for Mosaic
+  shell integration. `host_surface()` and `run_host_surface()` derive stable
+  source, diagnostics, analysis, table, and waveform panel descriptors from
+  persisted editor state, including panel IDs, target names, enabled states,
+  active state, and disabled reasons.
+- The surface stays Rust-only app substrate over the public Berkeley parser
+  contract, so Python and TypeScript remain aligned when parser behavior
+  changes while Mosaic hosts can wire panels without reinterpreting simulator
+  internals.
+
+### Added — Twig LANG-FULL E4 Multi-Parameter String Evidence
+- `twig-ir-compiler` 0.42.0 now proves one conservative direct call can infer
+  multiple otherwise-unannotated string parameters at once. `(define (same a b)
+  (if (string=? a b) 42 0)) (same "OK" (string-append "O" "K"))` lowers the
+  function body through typed E4 `str_eq` without synthesizing refinement
+  annotations.
+- `lang-aot` adds the multi-parameter string-equality proof across native-AOT,
+  LLVM, WASM, JVM, CLR, VM, and JIT.
+
+### Added — Twig LANG-FULL E4 Static String Expression Parameter Evidence
+- `twig-ir-compiler` 0.41.0 now proves conservative direct-call evidence for
+  otherwise-unannotated string parameters can come from static string expression
+  actuals, not only literals or named/lexical string values. `(define (strlen x)
+  (string-length x)) (strlen (substring (string-append "HE" "LLO!") 0 5))`
+  runs through typed E4 `str_concat` + `str_slice` + `str_len` without
+  synthesizing refinement annotations.
+- `lang-aot` adds the static-expression-actual proof across native-AOT, LLVM,
+  WASM, JVM, CLR, VM, and JIT.
+
+### Added — Twig LANG-FULL E4 Derived Let Star String Parameter Evidence
+- `twig-ir-compiler` 0.40.0 now proves sequential lexical `let*` string actuals
+  derived from earlier string locals can seed conservative direct-call evidence
+  for otherwise-unannotated string parameters. `(define (strlen x)
+  (string-length x)) (let* ((a "HE") (b (string-append a "LLO"))) (strlen b))`
+  stays on the typed E4 `str_concat` + `str_len` path without synthesizing
+  refinement annotations.
+- `lang-aot` adds the derived `let*` lexical-actual proof across native-AOT,
+  LLVM, WASM, JVM, CLR, VM, and JIT.
+
+### Added — Twig LANG-FULL E4 Lexical String Parameter Evidence
+- `twig-ir-compiler` 0.39.0 now lets conservative `main`-level direct-call
+  evidence for otherwise-unannotated string parameters use lexical `let`/`let*`
+  string actuals, so `(define (strlen x) (string-length x)) (let ((s "HELLO"))
+  (strlen s))` runs through the typed E4 `str_len` path.
+- Lexical evidence is scoped: dynamic shadows and non-string local bindings
+  still block inference and remain on the dynamic path without synthesizing
+  refinement annotations.
+- `lang-aot` adds the lexical-actual proof across native-AOT, LLVM, WASM, JVM,
+  CLR, VM, and JIT.
+
+### Added — Twig LANG-FULL E4 Named String Parameter Evidence
+- `twig-ir-compiler` 0.38.0 now lets conservative `main`-level direct-call
+  evidence for otherwise-unannotated string parameters use non-escaping
+  top-level string value actuals, so `(define s "HELLO") (define (strlen x)
+  (string-length x)) (strlen s)` runs through the typed E4 `str_len` path.
+- The inference pass stays source-order and escape-analysis aware: captured,
+  shadowed, conflicting, unobserved, and closure-derived values remain on the
+  dynamic path and do not synthesize refinement annotations.
+- `lang-aot` adds the named-actual proof across native-AOT, LLVM, WASM, JVM,
+  CLR, VM, and JIT.
+
+### Added — HTML Parser Formatting Adoption
+- `</b>` adoption across `<aside>` now preserves the html5lib `<em><foo><foo>`
+  continuation during tree construction, retiring the old finish-time
+  `<em>/<aside>` post-parse repair.
+
+### Added — HTML Parser Browser Script Storage Access
+- Browser-readiness summaries now expose script storage-access descriptors for
+  inline references to Web Storage, cookies, IndexedDB, CacheStorage/service
+  workers, StorageManager, storage-event hooks, and fallback blockers such as
+  `nomodule`.
+
 ### Added — HTML Parser DOCTYPE Fragment Contexts
 - Parser-approved initial tokenizer contexts now include seeded DOCTYPE
   continuation states for keyword, name, public/system identifier, bogus, and

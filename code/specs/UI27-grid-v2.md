@@ -369,7 +369,7 @@ For `mosaic-emit-react::pipeline`:
 - `selected-bg-color` slot wins over mosstyle `sheet/selected-cell.background`
 - Missing `total-height` with `sticky-header: true` emits a runtime warning
 
-For `demo/visicalc/`:
+For `code/programs/typescript/visicalc/`:
 - Updated `Grid.dark.msl` declares all the sub-parts
 - Updated `App.tsx` removes the `@ts-expect-error` (depends on WA1)
 - Vite dev server smoke-test renders the grid with visible borders
@@ -385,7 +385,7 @@ For `demo/visicalc/`:
 | WA3 | `column-widths` + `row-height` + `header-height` slots | This spec (§6) | mosaic-emit-react |
 | WA4 | Row stripes (`data-row:even` sub-part) | This spec (§5 row) | mosstyle-compiler + mosaic-emit-react |
 | WA5 | Sticky header + scroll container | This spec (§6, §7.3) | mosaic-emit-react |
-| WA6 | Update `demo/visicalc/` to use everything | n/a | demo/visicalc/** |
+| WA6 | Update `code/programs/typescript/visicalc/` to use everything | n/a | code/programs/typescript/visicalc/** |
 
 Each WA item lands as a single focused PR; the autonomous loop
 sequences them.

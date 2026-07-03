@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@vitest/coverage-v8": "^3.0.0",
-    "vitest": "^3.0.0"
+    "@vitest/coverage-v8": "^4.1.0",
+    "vitest": "^4.1.0"
   }
 }

@@ -1,5 +1,185 @@
 # Changelog — twig-vm
 
+## [0.24.0] — 2026-06-27 (LANG-FULL E4 — shared `str_const` compatibility)
+
+`twig-vm` now executes the shared E4 `str_const` opcode by allocating the same
+`LangString` heap object as the older `const Operand::Str(...)` path. This keeps
+the self-hosted `twigc` compiler-tree tests compatible with
+`twig-ir-compiler` 0.27.0, which can emit `str_const` for immutable top-level
+string value defines.
+
+`twig-vm` also executes the shared E4 string operation opcodes:
+`str_len`, `str_index`, `str_concat`, `str_eq`, and `print_str`.
+`str_eq` returns Lispy's native `#t`/`#f` values so equality can safely feed
+Twig branch opcodes, where integer `0` remains truthy by Scheme rules.
+
+Added regression tests proving `str_const` returns a heap string, E4
+concat/length/index execute through the dispatcher, and E4 equality branches
+correctly.
+
+## [0.23.0] — 2026-05-30 (VMDEBUG01 — extract generic debug substrate to `vm-debug`)
+
+### Changed — `DebugHooks` + `DebugServer` moved to the new `vm-debug` crate
+
+Lifts the generic debug substrate out of `twig-vm` into the new
+[`vm-debug`](../vm-debug) crate so per-language DAP adapters
+(`basic-dap`, `nib-dap`, `oct-dap` — task #37) can depend on a single
+substrate without pulling in twig-vm's full Twig→IIR→Lispy stack.
+
+This is **source-compatible** for existing consumers: every type
+previously available under `twig_vm::debug::*` /
+`twig_vm::debug_server::*` is re-exported, so code like
+
+```rust
+use twig_vm::debug::DebugHooks;
+use twig_vm::debug_server::{DebugServer, StopReason, MAX_LINE_BYTES};
+```
+
+continues to compile unchanged.
+
+#### What moved
+
+| Type | From | To |
+|------|------|----|
+| `DebugHooks` trait     | `twig_vm::debug`        | `vm_debug` |
+| `DebugFrame` trait     | (new)                   | `vm_debug` |
+| `StopReason` enum      | `twig_vm::debug_server` | `vm_debug` |
+| `MAX_LINE_BYTES` const | `twig_vm::debug_server` | `vm_debug` |
+| `DebugServer` struct   | `twig_vm::debug_server` | `vm_debug` |
+
+#### What stayed in twig-vm
+
+- `FrameView<'a>` — twig-vm's concrete read-only frame view (it
+  borrows the private `dispatch::Frame`).  Now implements
+  `vm_debug::DebugFrame` so it can be passed to any
+  `vm_debug::DebugHooks` impl.
+- The `dispatch::run_with_debug` entry point (and every internal
+  helper that propagates `&mut Option<&mut dyn DebugHooks>`) — now
+  typed against the re-exported trait alias.
+
+#### Trait signature change
+
+`DebugHooks::before_instruction` now takes `&dyn DebugFrame` instead
+of `&FrameView<'_>`.  This affects any external `impl DebugHooks for
+MyType` — the signature must change from
+
+```rust
+fn before_instruction(&mut self, fn: &str, depth: usize, pc: usize, frame: &FrameView<'_>)
+```
+
+to
+
+```rust
+fn before_instruction(&mut self, fn: &str, depth: usize, pc: usize, frame: &dyn DebugFrame)
+```
+
+`vm_debug::DebugFrame` exposes the same `register_names` /
+`read_register` methods, so the body usually stays the same — just
+the parameter type changes.
+
+#### Tests
+
+All 171 existing twig-vm tests pass.  The 12 unit tests previously
+inside `debug.rs` and `debug_server.rs` now live in `vm-debug`'s test
+suite, with three new tests added there to cover the new
+`DebugFrame` trait shape (`recording_hook_records_calls`,
+`stop_reason_wire_strings_stable`,
+`snapshot_frame_uses_stable_slot_ordering_when_module_loaded`).
+
+Downstream `twig-dap` end-to-end tests pass unchanged.
+
+## [0.22.0] — 2026-05-26 (Dispatch: typed `field_load` for cons-cell read)
+
+### Added — `exec_field_load` for `car` / `cdr`
+
+Companion change to twig-ir-compiler 0.22.0's increment 6c.  The
+compiler now emits `(car pair)` and `(cdr pair)` as a single typed
+`field_load dest, pair, idx [ref<any>]` (idx 0 = car, idx 1 = cdr).
+
+twig-vm executes this form natively: resolve `pair` register to a
+`LispyValue`, dispatch to `lispy_runtime::heap::car` or `cdr` based
+on the index, store the result in `dest`.  Non-cons input surfaces
+as `RuntimeError::TypeError("field_load[0|1]: <reg> is not a cons cell")`.
+
+### Tests
+
+All 179 twig-vm lib tests pass.  The new arm is exercised by every
+test that reads from a list at runtime — `map` / `filter` / `fold-*`
+HOF tests, record / union variant accessors, etc.
+
+## [0.21.0] — 2026-05-24 (Dispatch: typed `alloc` + `field_store` for cons cells)
+
+### Added — `exec_alloc` and `exec_field_store` for cons cells
+
+Companion change to twig-ir-compiler 0.21.0's increment 6b.  The
+compiler now emits `(cons head tail)` as a three-instruction triple:
+
+```
+alloc cell [ref<LispyPair>]
+field_store cell, 0, head [void]
+field_store cell, 1, tail [void]
+```
+
+twig-vm executes this triple natively:
+
+- **`exec_alloc`** with `type_hint == "ref<LispyPair>"` allocates a
+  fresh cons cell `(NIL, NIL)` via `lispy_runtime::heap::alloc_cons`
+  and stores the tagged heap value in `dest`.  Other type_hints
+  surface as `MalformedInstruction` (future record types extend the
+  match).
+
+- **`exec_field_store`** expects `srcs = [Var(pair), Int(idx), value]`
+  with `idx ∈ {0, 1}`.  It resolves the pair register, resolves the
+  value operand (via the same `Operand → LispyValue` bridge that
+  `exec_call_builtin` uses), and writes via the new
+  `lispy_runtime::heap::set_field_unchecked` mutator.
+
+### Why mutation?
+
+The IIR-to-{wasm,jvm,clr,beam} backends emit pair construction as
+"allocate, then set the fields" (struct.set / aastore / stelem.ref /
+put_list).  twig-vm matches that semantics to keep IR shape uniform
+across runtime and AOT paths.
+
+In PR 2's `Box::leak` model every allocated ConsCell lives forever.
+`set_field_unchecked` re-validates the class id so misuse on
+non-cons heap values is detected as `MalformedInstruction` rather
+than memory corruption.  twig-vm's single-threaded dispatch loop
+means there are no concurrent writers.
+
+### Tests
+
+All 179 twig-vm lib tests pass.  The new dispatch arms are exercised
+indirectly by every test that constructs a list at runtime
+(via `(cons …)` or record / union constructors).
+
+## [0.20.0] — 2026-05-23 (Dispatch: typed `const … [ref<LispyPair>]` → NIL)
+
+### Added — `exec_const` produces `LispyValue::NIL` for the nil-ref shape
+
+Companion change to twig-ir-compiler 0.20.0's increment 6a, which
+now emits `const 0 [ref<LispyPair>]` instead of `call_builtin
+"make_nil"`.  Without a matching dispatch update, `exec_const`
+would produce `LispyValue::int(0)` — which HOF builtins like `map`
+/ `filter` / `fold-*` reject with `"list tail 0 is not a cons cell"`.
+
+The new arm at the top of `exec_const` recognises the
+`(type_hint == "ref<LispyPair>", srcs[0] == Int(0))` shape and
+writes `LispyValue::NIL` to the destination register.  All other
+shapes (plain `Int`, `Bool`, `Var`, `Str`) flow through the
+existing code unchanged.
+
+This is the symmetric companion to the 0.19.0 dispatch wrappers
+that synthesised `call_builtin "+"` from typed `add` (and the
+other arithmetic / comparison / mov opcodes).
+
+### Tests
+
+All 179 twig-vm lib tests pass.  The 4 previously-failing HOF
+tests (`map_empty_list`, `filter_empty_input`, `fold_left_empty`,
+`fold_right_cons_identity`) now pass because the nil sentinel is
+restored.
+
 ## [0.19.0] — 2026-05-22 (Dispatch: typed CIR mnemonics — path A regression fix)
 
 ### Added — Dispatch handlers for typed CIR mnemonics

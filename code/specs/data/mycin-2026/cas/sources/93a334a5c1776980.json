@@ -1,0 +1,59 @@
+{
+  "hash": "93a334a5c1776980",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/18691485/",
+  "title": "Clinical significance and predictors of community-onset Pseudomonas aeruginosa bacteremia (Cheong et al., Am J Med 2008;121(8):709-14)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/18691485/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Study cohort comprised 106 patients with P. aeruginosa bacteremia and 508 patients with E. coli bacteremia (bloodstream-infection epidemiology in community-onset Gram-negative bacteremia).",
+      "byte_quote": "A total of 106 patients with P. aeruginosa bacteremia and a total 508 \npatients with E. coli bacteremia were included in this study."
+    },
+    {
+      "id": "c2",
+      "text": "Neutropenia is a risk factor that raises the likelihood the bloodstream organism is P. aeruginosa rather than E. coli.",
+      "byte_quote": "Factors associated \nwith P. aeruginosa bacteremia in the multivariate analysis included presentation \nwith neutropenia"
+    },
+    {
+      "id": "c3",
+      "text": "Presentation with septic shock raises the likelihood of P. aeruginosa bacteremia.",
+      "byte_quote": "presentation with septic shock"
+    },
+    {
+      "id": "c4",
+      "text": "An indwelling central venous catheter (device/portal of entry) raises the likelihood the bloodstream organism is P. aeruginosa.",
+      "byte_quote": "indwelling central venous \ncatheter"
+    },
+    {
+      "id": "c5",
+      "text": "Health-care-associated infection (exposure) raises the likelihood of P. aeruginosa bacteremia; all four predictors significant at P<.05.",
+      "byte_quote": "health-care-associated infection (all P <.05)"
+    },
+    {
+      "id": "c6",
+      "text": "30-day mortality was 26.4% with P. aeruginosa bacteremia versus 13.6% with E. coli bacteremia (P<.001).",
+      "byte_quote": "The 30-day \nmortality rate was 26.4% in patients with P. aeruginosa and 13.6% in those with \nE. coli bacteremia (P <.001)."
+    },
+    {
+      "id": "c7",
+      "text": "Inappropriate initial antimicrobial therapy is an independent risk factor for mortality (supports empirical coverage decisions).",
+      "byte_quote": "risk factors for mortality included a P. aeruginosa bacteremia, inappropriate initial \nantimicrobial therapy, a higher Charlson's weighted index of comorbidity, and a \nhigher Pitt bacteremia score (all P <.05)"
+    },
+    {
+      "id": "c8",
+      "text": "Urinary-tract infection as the source/portal was a protective factor for mortality in this Gram-negative bacteremia cohort.",
+      "byte_quote": "urinary tract infection \nand benign pancreatobiliary disease were found to be protective factors for \nmortality based on multivariate analysis (all P <.05)"
+    },
+    {
+      "id": "c9",
+      "text": "Empirical antimicrobial coverage of P. aeruginosa should be considered when Gram-negative sepsis is suspected in community-onset infection with neutropenia, septic shock, indwelling central venous catheter, or health-care-associated infection.",
+      "byte_quote": "initial empirical antimicrobial coverage of \nP. aeruginosa should be seriously considered in patients with neutropenia, \npresentation with septic shock, indwelling central venous catheter, or \nhealth-care-associated infection, when Gram-negative sepsis is suspected in \ncommunity-onset infection."
+    },
+    {
+      "id": "c10",
+      "text": "Determining the likelihood of P. aeruginosa bacteremia matters when Gram-negative sepsis is suspected in community-onset infection.",
+      "byte_quote": "It is important to determine the likelihood of P. aeruginosa \nbacteremia when Gram-negative sepsis is suspected in community-onset infection."
+    }
+  ],
+  "cites": []
+}

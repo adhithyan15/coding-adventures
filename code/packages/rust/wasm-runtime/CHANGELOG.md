@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] — 2026-06-08
+
+### Added — run WasmGC struct (cons) modules end-to-end (LANG77 / McCarthy L3b-3a-3c-2)
+
+`WasmRuntime::call` now derives each WasmGC struct type's field count from the
+parsed module's `struct_types` and registers it with the execution engine
+(`set_struct_field_counts`), so a module that uses `struct.new`/`struct.get`
+runs **without the embedder calling `set_struct_field_counts` by hand**. Field
+counts are placed at their wasm *type index* (function types first, then struct
+types — matching the encoder's layout).
+
+With this, a hand-assembled `$LispyPair` cons module computing `(CAR (CONS 7 9))`
+parses, instantiates, and **runs to `7`** on the in-repo runtime (both via the
+explicit `load`→`instantiate`→`call` path and the all-in-one `load_and_run`).
+Before this slice the same module trapped with "no field count registered for
+struct type 1".
+
+Note: assumes struct types follow all function types (true for the cons modules
+we emit today, which declare no host imports). A module that interleaved
+imported-function types after the struct types would need order-preserving type
+parsing — not yet emitted or consumed. The reference-return placeholder from
+earlier (a returned `Ref` → its handle / `0`) is unchanged; the cons return
+boundary unboxes to `i32`, so it isn't exercised here.
+
+2 new tests: the `(CAR (CONS 7 9))` → 7 end-to-end run and a `load_and_run`
+regression guard.
+
 ## [0.2.0] - 2026-04-06
 
 ### Added

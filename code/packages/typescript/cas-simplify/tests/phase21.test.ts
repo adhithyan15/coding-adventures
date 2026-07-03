@@ -45,9 +45,19 @@ function greaterZero(node: IRNode): IRNode {
   return app(GREATER, [node, int(0)]);
 }
 
+function greaterEqualZero(node: IRNode): IRNode {
+  return app(GREATER_EQUAL, [node, int(0)]);
+}
+
 function positiveContext(...nodes: readonly IRNode[]): AssumptionContext {
   const ctx = new AssumptionContext();
   for (const node of nodes) ctx.assumeRelation(greaterZero(node));
+  return ctx;
+}
+
+function nonnegativeContext(...nodes: readonly IRNode[]): AssumptionContext {
+  const ctx = new AssumptionContext();
+  for (const node of nodes) ctx.assumeRelation(greaterEqualZero(node));
   return ctx;
 }
 
@@ -110,11 +120,14 @@ describe("radcan", () => {
   it("uses positivity when simplifying Sqrt(x^2)", () => {
     expect(radcan(app(SQRT, [app(POW, [x, int(2)])]))).toEqual(app(SQRT, [app(POW, [x, int(2)])]));
     expect(radcan(app(SQRT, [app(POW, [x, int(2)])]), positiveContext(x))).toEqual(x);
+    expect(radcan(app(SQRT, [app(POW, [x, int(2)])]), nonnegativeContext(x))).toEqual(x);
   });
 
   it("extracts and merges square-root products", () => {
     const extracted = radcan(app(SQRT, [app(MUL, [app(POW, [x, int(2)]), y])]), positiveContext(x));
     expect(extracted).toEqual(app(MUL, [x, app(SQRT, [y])]));
+    const nonnegativeExtracted = radcan(app(SQRT, [app(MUL, [app(POW, [x, int(2)]), y])]), nonnegativeContext(x));
+    expect(nonnegativeExtracted).toEqual(app(MUL, [x, app(SQRT, [y])]));
 
     const merged = radcan(app(MUL, [app(SQRT, [a]), app(SQRT, [b])]));
     expect(merged).toEqual(app(SQRT, [app(MUL, [a, b])]));

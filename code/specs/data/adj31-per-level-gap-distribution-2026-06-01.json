@@ -1,0 +1,202 @@
+{
+  "harness_version": "adj25-pr6-v1",
+  "endpoint": "http://127.0.0.1:11434",
+  "binary": "code/packages/rust/target/release/adj_pr6_bench",
+  "models": [
+    "qwen2.5:0.5b",
+    "qwen2.5:1.5b",
+    "qwen2.5:3b"
+  ],
+  "declarations": [
+    "matches",
+    "lighter-disposable"
+  ],
+  "cells": [
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 44.27952512493357,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "per_level_gap_distribution": {
+          "document_to_sentence": 1,
+          "fact_to_typed_component": 2,
+          "phrase_to_claim": 0,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 43.818086833
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 57.46504308306612,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "per_level_gap_distribution": {
+          "document_to_sentence": 0,
+          "fact_to_typed_component": 0,
+          "phrase_to_claim": 1,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 57.461328292
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 16.446312416926958,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:3b",
+        "per_level_gap_distribution": {
+          "document_to_sentence": 1,
+          "fact_to_typed_component": 0,
+          "phrase_to_claim": 0,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 16.067577334
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 38.59393412503414,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(5 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (5 gap(s))"
+        },
+        "model": "qwen2.5:0.5b",
+        "per_level_gap_distribution": {
+          "document_to_sentence": 1,
+          "fact_to_typed_component": 0,
+          "phrase_to_claim": 1,
+          "sentence_to_phrase": 3
+        },
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 38.590158333
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 72.36909225001,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(1 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (1 gap(s))"
+        },
+        "model": "qwen2.5:1.5b",
+        "per_level_gap_distribution": {
+          "document_to_sentence": 0,
+          "fact_to_typed_component": 0,
+          "phrase_to_claim": 1,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 72.36469275
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 120.22264399996493,
+      "raw_output": {
+        "error": {
+          "kind": "unparseable_at_FactToTypedComponent",
+          "message": "hierarchical-decompose unparseable response at FactToTypedComponent for parent \"F1\""
+        },
+        "model": "qwen2.5:3b",
+        "per_level_gap_distribution": null,
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 120.2191945
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    }
+  ],
+  "summary": {
+    "totals": {
+      "cells_run": 6,
+      "ir_produced": 0,
+      "fully_passing": 0,
+      "correlation_complete": 0,
+      "correlation_total": 0
+    },
+    "by_model": {
+      "qwen2.5:0.5b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 82.87345924996771
+      },
+      "qwen2.5:1.5b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 129.83413533307612
+      },
+      "qwen2.5:3b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 136.6689564168919
+      }
+    },
+    "by_level": {
+      "DocumentToSentence": {
+        "passed": 0,
+        "total": 0
+      },
+      "SentenceToPhrase": {
+        "passed": 0,
+        "total": 0
+      },
+      "PhraseToClaim": {
+        "passed": 0,
+        "total": 0
+      },
+      "FactToTypedComponent": {
+        "passed": 0,
+        "total": 0
+      }
+    }
+  }
+}

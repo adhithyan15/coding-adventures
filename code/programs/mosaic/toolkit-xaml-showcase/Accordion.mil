@@ -1,0 +1,36 @@
+// Accordion.mil — interface for the toolkit's Accordion (v0.7).
+//
+// A vertical stack of expand/collapse panels. Bootstrap's
+// `<div class="accordion">` equivalent. Each panel has a header
+// (always visible, clickable) and a body that only renders when
+// that panel's index matches `open-index`.
+//
+// v0.7 single-open contract:
+// --------------------------
+// The host owns the open-index. Clicking a header fires
+// onToggle(index); the host decides whether to set open-index to
+// that index (open) or back to -1 (close). Multi-open would need
+// a `list<bool>` of states which lives more naturally on the host.
+//
+// Why parallel `headers` + `bodies` lists instead of a single
+// `list<{header, body}>` struct slot? The kernel doesn't have
+// struct-slot syntax yet. Parallel-list-by-convention is the
+// idiomatic v0.7 workaround (Field uses the same pattern for
+// `error` and `help` as sibling text slots).
+
+component Accordion {
+  // Header labels for each panel, in order.
+  slot headers : list<text> ;
+
+  // Body text for each panel, in the same order as headers.
+  // Body i is conceptually shown iff open-index == i (see the
+  // v0.7 limitation in Accordion.mll).
+  slot bodies : list<text> ;
+
+  // Index of the currently-open panel, or -1 for all closed.
+  slot open-index : number ;
+
+  // Fired when the user clicks a header. Payload is the panel's
+  // index. Host decides whether to open, close, or switch panels.
+  emit onToggle ( index : number ) ;
+}

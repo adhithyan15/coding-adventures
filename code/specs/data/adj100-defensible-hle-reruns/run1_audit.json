@@ -1,0 +1,154 @@
+{
+  "blind_correct": 3,
+  "blind_n": 10,
+  "framework_mechanical_correct_auto": 3,
+  "framework_mechanical_correct_adjusted": 4,
+  "framework_n": 10,
+  "strict_accept_count": 3,
+  "strict_correct_count": 2,
+  "source_spider_audit": "/tmp/adj-hle10-full-framework/verified/source_spider_audit.json",
+  "pdf_text_audit": "/tmp/adj-hle10-full-framework/verified/pdf_text_audit.json",
+  "arxiv_pdf_text_audit": "/tmp/adj-hle10-full-framework/verified/arxiv_pdf_text_audit.json",
+  "items": [
+    {
+      "id": "672597fcf6",
+      "gold": "42.",
+      "blind_answer": "|N|",
+      "blind_correct": false,
+      "framework_answer": "|N|",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Source text was fetched/extracted and contradicts the shard candidate for the stated smooth-covering condition; answer not accepted as maximum against gold.",
+      "program_stdout": [
+        "{'candidate': '|N|', 'note': 'framework proposal selected smooth-covering equality with |N|'}"
+      ]
+    },
+    {
+      "id": "672a27f5d3",
+      "gold": "pi^2",
+      "blind_answer": "No universal numerical constant; Pi(0,0)=-g(E_F)=...",
+      "blind_correct": false,
+      "framework_answer": "No unique numerical value is defined at exact k=0; normalized q->0 limit is 1.0.",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": false,
+      "strict_accept": false,
+      "strict_reason": "No byte-clean source resolved exact k=0 versus limit and normalization to benchmark pi^2.",
+      "program_stdout": [
+        "{'exact_q_zero_status': 'undefined_by_static_sum', 'normalized_static_limit_q_to_0': 1.0, 'unnormalized_static_limit_form': '-m*k_F/(pi^2*hbar^2)'}"
+      ]
+    },
+    {
+      "id": "66eaed13c4",
+      "gold": "172.20.0.0 0.0.255.255",
+      "blind_answer": "172.20.0.0 0.0.255.255 (single covering entry)",
+      "blind_correct": true,
+      "framework_answer": "172.20.0.0 0.0.255.255",
+      "framework_auto_correct": true,
+      "framework_adjusted_correct": true,
+      "strict_accept": true,
+      "strict_reason": "Input bytes, wildcard source quotes, and covering-entry program are byte/program verified.",
+      "program_stdout": [
+        "{\"answer\": \"172.20.0.0 0.0.255.255\", \"networks\": [\"172.20.96.0/19\", \"172.20.128.0/19\"]}"
+      ]
+    },
+    {
+      "id": "673722a1f3",
+      "gold": "Eduardo Chillida.",
+      "blind_answer": "Marc Chagall",
+      "blind_correct": false,
+      "framework_answer": "Marc Chagall",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Shard candidate used weak Chagall association; no exact full-quote attribution source bytes. Spider found only weak Eduardo/Instagram index bytes, insufficient.",
+      "program_stdout": [
+        "{'candidate': 'Marc Chagall', 'warning': 'exact quote attribution was not verified in a non-social source by the shard'}"
+      ]
+    },
+    {
+      "id": "6736f62aaf",
+      "gold": "H-T",
+      "blind_answer": "H - S",
+      "blind_correct": false,
+      "framework_answer": "H - S",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": false,
+      "strict_accept": true,
+      "strict_reason": "Input definitions, OpenStax profit/loss source bytes, and program support H-S; benchmark gold says H-T, so accepted but gold-incorrect.",
+      "program_stdout": [
+        "{'profit_expression': 'S - H', 'classification': 'loss', 'area_representation': 'H - S'}"
+      ]
+    },
+    {
+      "id": "67180400ff",
+      "gold": "Yes,they are",
+      "blind_answer": "No",
+      "blind_correct": false,
+      "framework_answer": "No; neither polynucleotides nor homopolynucleotides are structurally polysaccharides under monomer/linkage definitions.",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Definitions were only partially source-byte verified and the intended structural interpretation remains unresolved; shard conflicts with benchmark gold.",
+      "program_stdout": [
+        "{'polynucleotide_is_polysaccharide': False, 'homopolynucleotide_is_polysaccharide': False, 'reason': 'nucleotide polymer versus monosaccharide polymer definition'}"
+      ]
+    },
+    {
+      "id": "67008a05ad",
+      "gold": "\\( \\langle n \\rangle\\approx 0.424 \\)",
+      "blind_answer": "0.358",
+      "blind_correct": false,
+      "framework_answer": "0.848",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": false,
+      "strict_accept": false,
+      "strict_reason": "Grand-partition source terms were PDF-text verified but the mean-field convention/factor producing 0.424 was not resolved; shard program gives 0.848.",
+      "program_stdout": [
+        "{\"z_total\": 12, \"occupancy\": 0.8480958210694133, \"rounded_3dp\": \"0.848\"}"
+      ]
+    },
+    {
+      "id": "67173a11ff",
+      "gold": "305 mm",
+      "blind_answer": "~190 mm",
+      "blind_correct": false,
+      "framework_answer": "306 mm, practically about 305 mm within chart precision",
+      "framework_auto_correct": true,
+      "framework_adjusted_correct": true,
+      "strict_accept": false,
+      "strict_reason": "Program lands near gold, but required Burmister chart/rigid-flexible rules were not fully source-byte verified; chart digitization is hand-entered.",
+      "program_stdout": [
+        "{\"required_thickness_mm\": 306.24761653970154, \"rounded\": 306}"
+      ]
+    },
+    {
+      "id": "6717eeddd6",
+      "gold": "$\\frac{1}{2n - 1}$",
+      "blind_answer": "1/(2n - 1)",
+      "blind_correct": true,
+      "framework_answer": "1/(2n-1)",
+      "framework_auto_correct": true,
+      "framework_adjusted_correct": true,
+      "strict_accept": true,
+      "strict_reason": "Input, basic graph rule source bytes/PDF text, and program support candidate; proof is still lighter than a formal all-n proof but accepted for this run.",
+      "program_stdout": [
+        "{'candidate': '1/(2n-1)', 'numeric_check_n_101': '1/201'}"
+      ]
+    },
+    {
+      "id": "676cc5d177",
+      "gold": "$4\\omega-4J(\\cos(\\pi/7)+\\cos(3\\pi/7))$",
+      "blind_answer": "4 omega - 4J[cos(pi/7)+cos(3pi/7)]",
+      "blind_correct": true,
+      "framework_answer": "4*omega - 4*J*(cos(pi/7)+cos(3*pi/7))",
+      "framework_auto_correct": false,
+      "framework_adjusted_correct": true,
+      "strict_accept": false,
+      "strict_reason": "Program/eigenvalue and arXiv hard-core source text support the answer, but the operator/ring derivation is not recursively byte-closed enough for strict acceptance.",
+      "program_stdout": [
+        "{'basis_size': 35, 'min_hopping_eigenvalue': -4.493959207434933, 'energy': '4*omega + (-4.493959207434933)*J', 'benchmark_equivalent': '4*omega-4*J*(cos(pi/7)+cos(3*pi/7))'}"
+      ]
+    }
+  ]
+}

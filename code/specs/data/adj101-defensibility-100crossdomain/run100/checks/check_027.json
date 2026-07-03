@@ -1,0 +1,8 @@
+{
+ "check_id": 27,
+ "idx": 12,
+ "slot": "knowledge_minutes_before_fall",
+ "claimed_value": 25,
+ "scenario": "A customer slipped on a spilled drink. A waiter saw the spill and reported it to the manager 25 minutes before the fall, but no one cleaned it up before the customer slipped.",
+ "cited_span": "25 minutes before the fall"
+}

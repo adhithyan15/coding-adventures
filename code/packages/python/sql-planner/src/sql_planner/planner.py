@@ -108,6 +108,7 @@ from .expr import (
     ExcludedColumn,
     ExistsSubquery,
     Expr,
+    FuncArg,
     FunctionCall,
     In,
     InSubquery,
@@ -226,6 +227,9 @@ def _plan_select(
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
     if stmt.where is not None:
         where = _resolve(stmt.where, scope, schema, outer_scope)
+        # Propagate column-declared collations into any comparisons the
+        # column participates in (SQLite implicit COLLATE behaviour).
+        where = _propagate_column_collation(where, schema)
         if contains_aggregate(where):
             raise InvalidAggregate(message="aggregate function not allowed in WHERE clause")
         # IX-6: If the WHERE predicate can be served by a B-tree index on the
@@ -269,6 +273,8 @@ def _plan_select(
     if having_raw is not None and select_aliases:
         having_raw = _substitute_aliases(having_raw, select_aliases)
     having = _resolve(having_raw, scope, schema, outer_scope) if having_raw is not None else None
+    if having is not None:
+        having = _propagate_column_collation(having, schema)
 
     def _resolve_order_key(k: AstSortKey) -> P.SortKey:
         """Resolve an ORDER BY sort key to a planner ``SortKey``.
@@ -367,11 +373,35 @@ def _plan_select(
                 k_expr = _substitute_aliases(k_expr, select_aliases)
             k_expr = _resolve(k_expr, scope, schema, outer_scope)
 
+        # If no explicit COLLATE on the ORDER BY clause itself, fall back
+        # to the column's declared collation (from CREATE TABLE's
+        # ``COLLATE name`` column constraint).  SQLite applies the
+        # column's collation in that situation; this keeps
+        # ``CREATE TABLE t(name TEXT COLLATE NOCASE); SELECT * FROM t
+        # ORDER BY name`` sorting case-insensitively without the user
+        # having to repeat the COLLATE clause.  Only the simple case
+        # ``ORDER BY column`` is handled here — when the sort expression
+        # is more complex (e.g. ``ORDER BY length(name)``), SQLite uses
+        # BINARY regardless.
+        effective_collation = k.collation
+        if effective_collation is None and isinstance(k_expr, Column):
+            table_name = k_expr.table
+            col_name = k_expr.col
+            # ``column_collation`` is an optional method on SchemaProvider —
+            # full backend-backed providers expose it; minimal test
+            # providers (e.g. InMemorySchemaProvider) don't.  Use
+            # ``getattr(...)`` so the missing case is silently treated
+            # as "no declared collation" rather than crashing.
+            lookup = getattr(schema, "column_collation", None)
+            if lookup is not None and table_name is not None:
+                effective_collation = lookup(table_name, col_name)
+
         return P.SortKey(
             expr=k_expr,
             descending=k.descending,
             nulls_first=k.nulls_first,
             positional_index=positional_index,
+            collation=effective_collation,
         )
 
     order_by = tuple(_resolve_order_key(k) for k in stmt.order_by)
@@ -564,7 +594,12 @@ def _build_from_tree(
         else:
             root_cols = schema.columns(root.table)
             _add_to_scope(scope, root.alias or root.table, root_cols)
-            tree = P.Scan(table=root.table, alias=root.alias)
+            tree = P.Scan(
+                table=root.table,
+                alias=root.alias,
+                index_hint=root.index_hint,
+                not_indexed=root.not_indexed,
+            )
 
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
@@ -593,7 +628,12 @@ def _build_from_tree(
         else:
             right_cols = schema.columns(j.right.table)  # type: ignore[union-attr]
             _add_to_scope(scope, j.right.alias or j.right.table, right_cols)  # type: ignore[union-attr]
-            right_node = P.Scan(table=j.right.table, alias=j.right.alias)  # type: ignore[union-attr]
+            right_node = P.Scan(
+                table=j.right.table,  # type: ignore[union-attr]
+                alias=j.right.alias,  # type: ignore[union-attr]
+                index_hint=j.right.index_hint,  # type: ignore[union-attr]
+                not_indexed=j.right.not_indexed,  # type: ignore[union-attr]
+            )
             right_cols_list = list(right_cols)
 
         # NATURAL JOIN resolution:
@@ -917,6 +957,163 @@ def _substitute_aliases(expr: Expr, alias_map: dict[str, Expr]) -> Expr:
             return UnaryExpr(op=op, operand=_substitute_aliases(operand, alias_map))
         case _:
             return expr
+
+
+# --------------------------------------------------------------------------
+# Column-collation propagation into comparison operators
+#
+# When a user declares ``CREATE TABLE t(name TEXT COLLATE NOCASE)`` and
+# then writes ``WHERE name = 'X'``, SQLite implicitly applies NOCASE to
+# the comparison — the column's *declared* collation flows into any
+# comparison the column participates in.  PR #4002 already handles the
+# explicit-postfix form (``WHERE name = 'X' COLLATE NOCASE``) at the
+# adapter level by wrapping both operands in ``lower()`` / ``rtrim()``;
+# this pass extends the same machinery to the implicit form.
+#
+# We run it as a post-resolution AST rewrite on the WHERE / HAVING /
+# JOIN-ON predicates (anywhere a comparison can appear).  Walking the
+# expression tree post-resolution is the right place because:
+#
+# * After ``_resolve``, every bare ``Column`` reference carries its
+#   resolved table name (we need this to look up the column's declared
+#   collation via the schema provider).
+# * The rewrite is purely AST → AST; the planner / codegen / VM never
+#   need to know about collation on the comparison itself.
+# --------------------------------------------------------------------------
+
+
+def _column_collation(col: Column, schema: SchemaProvider) -> str | None:
+    """Look up the declared collation for a resolved Column, if any.
+
+    Returns ``None`` when:
+
+    * The column reference has no table name (e.g. ``SELECT 'A' = 'a'``
+      with no FROM clause).
+    * The schema provider doesn't implement ``column_collation`` (some
+      minimal test providers).
+    * The column is declared without a COLLATE clause.
+
+    Stored upper-cased on the column definition, so values returned here
+    are also upper-cased.
+    """
+    if col.table is None:
+        return None
+    lookup = getattr(schema, "column_collation", None)
+    if lookup is None:
+        return None
+    return lookup(col.table, col.col)
+
+
+def _collation_transform(expr: Expr, collation: str) -> Expr:
+    """Wrap *expr* in the scalar-function call that applies *collation*.
+
+    Mirrors the adapter's identically-named helper (see
+    ``mini_sqlite.adapter._collation_transform``) — keep the two in
+    sync.  ``BINARY`` and unknown names fall through to identity,
+    matching SQLite's "validate lazily" behaviour.
+    """
+    coll = collation.upper()
+    if coll == "NOCASE":
+        return FunctionCall(name="lower", args=(FuncArg(value=expr),))
+    if coll == "RTRIM":
+        return FunctionCall(name="rtrim", args=(FuncArg(value=expr),))
+    return expr
+
+
+_COMPARISON_OPS = frozenset({
+    BinaryOp.EQ,
+    BinaryOp.NOT_EQ,
+    BinaryOp.LT,
+    BinaryOp.LTE,
+    BinaryOp.GT,
+    BinaryOp.GTE,
+    BinaryOp.IS_DISTINCT_FROM,
+    BinaryOp.IS_NOT_DISTINCT_FROM,
+})
+
+
+def _is_already_wrapped(expr: Expr) -> bool:
+    """Return True if *expr* is already wrapped by a collation-transform
+    call (``lower(x)`` or ``rtrim(x)``).
+
+    Used to avoid double-wrapping when both PR #4002's explicit-postfix
+    path and this pass would otherwise both fire — the adapter wraps
+    first, so by the time we get here the operand is already wrapped
+    and we should leave it alone.
+    """
+    if not isinstance(expr, FunctionCall):
+        return False
+    return expr.name in ("lower", "rtrim")
+
+
+def _propagate_column_collation(expr: Expr, schema: SchemaProvider) -> Expr:
+    """Walk *expr* and rewrite comparisons that mention a collated column.
+
+    For each ``BinaryExpr`` with a comparison op (``=``, ``<>``, ``<``,
+    ``<=``, ``>``, ``>=``, ``IS [NOT] DISTINCT FROM``) we look at both
+    operands.  If either side is a ``Column`` whose declared collation
+    is non-None and neither side is already wrapped by a transform, we
+    wrap **both** operands.  SQLite's rule: if both operands carry
+    collations, the LEFT one wins.
+
+    Also handles ``Between`` (collation propagates to both bounds when
+    the test operand is collated) and ``Like`` / ``NotLike`` (collation
+    on the LHS — the value being matched — applies to the LHS only,
+    since the pattern is already an opaque string template).
+
+    Recurses into nested subexpressions (AND / OR / NOT / arithmetic)
+    so that ``WHERE a = 'x' OR b = 'y'`` is rewritten in both halves.
+    """
+
+    def rec(e: Expr) -> Expr:
+        # Recurse into compound expressions first; the rewriter only
+        # transforms terminal comparison shapes.
+        if isinstance(e, UnaryExpr):
+            return UnaryExpr(op=e.op, operand=rec(e.operand))
+        if isinstance(e, BinaryExpr):
+            new_left = rec(e.left)
+            new_right = rec(e.right)
+            if e.op in _COMPARISON_OPS:  # noqa: SIM102
+                # Don't re-wrap if the adapter (PR #4002) already did so.
+                if not _is_already_wrapped(new_left) and not _is_already_wrapped(new_right):
+                    left_coll = (
+                        _column_collation(new_left, schema)
+                        if isinstance(new_left, Column)
+                        else None
+                    )
+                    right_coll = (
+                        _column_collation(new_right, schema)
+                        if isinstance(new_right, Column)
+                        else None
+                    )
+                    coll = left_coll if left_coll is not None else right_coll
+                    if coll is not None:
+                        new_left = _collation_transform(new_left, coll)
+                        new_right = _collation_transform(new_right, coll)
+            return BinaryExpr(op=e.op, left=new_left, right=new_right)
+        if isinstance(e, Between):
+            new_operand = rec(e.operand)
+            new_low = rec(e.low)
+            new_high = rec(e.high)
+            if not _is_already_wrapped(new_operand):
+                op_coll = (
+                    _column_collation(new_operand, schema)
+                    if isinstance(new_operand, Column)
+                    else None
+                )
+                if op_coll is not None:
+                    new_operand = _collation_transform(new_operand, op_coll)
+                    new_low = _collation_transform(new_low, op_coll)
+                    new_high = _collation_transform(new_high, op_coll)
+            return Between(operand=new_operand, low=new_low, high=new_high)
+        # Other node shapes (Like, In, IsNull, function calls, etc.) —
+        # leave alone for now.  Implicit-collation propagation through
+        # those forms is a separate, narrower question that we can
+        # tackle in a follow-up if needed.  The common
+        # equality / ordering case is handled above.
+        return e
+
+    return rec(expr)
 
 
 # --------------------------------------------------------------------------
@@ -1393,6 +1590,34 @@ def _resolve_upsert_expr(expr: Expr, table_cols: list[str], schema: SchemaProvid
             return expr
 
 
+def _expand_returning_wildcards(
+    returning: tuple[Expr, ...],
+    table: str,
+    cols: list[str],
+) -> tuple[Expr, ...]:
+    """Expand any ``RETURNING *`` Wildcards into one column ref per table column.
+
+    SQLite's ``RETURNING *`` short-hand emits every column of the
+    target table in declaration order.  The adapter encodes ``*`` as
+    a :class:`Wildcard` sentinel; the codegen can't handle Wildcards
+    in expression position, so we expand them here at planning time
+    — same approach SELECT * uses.  Non-Wildcard items pass through
+    unchanged so a mixed list like ``RETURNING id, *`` is also
+    supported (matches SQLite, though uncommon in practice).
+    """
+    out: list[Expr] = []
+    for item in returning:
+        if isinstance(item, Wildcard):
+            # ``Column`` is the unresolved (qualified-but-not-yet-typed)
+            # column reference; ``_resolve`` will turn it into the
+            # backend-bound form moments after this expansion runs.
+            for col_name in cols:
+                out.append(Column(table=table, col=col_name))
+        else:
+            out.append(item)
+    return tuple(out)
+
+
 def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPlan:
     # Validate the target table and, if a column list is given, each column.
     table_cols = schema.columns(stmt.table)
@@ -1403,8 +1628,11 @@ def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPla
     # Resolve RETURNING exprs against the table's column scope so that bare
     # column references like ``id`` become ``Column(table=stmt.table, col='id')``.
     returning_scope: Scope = {stmt.table: table_cols}
+    expanded_returning = _expand_returning_wildcards(
+        stmt.returning, stmt.table, table_cols
+    )
     resolved_returning = tuple(
-        _resolve(r, returning_scope, schema) for r in stmt.returning
+        _resolve(r, returning_scope, schema) for r in expanded_returning
     )
     upsert = _resolve_upsert(stmt.upsert_clause, table_cols, schema)
     return P.Insert(
@@ -1428,14 +1656,18 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
         for a in stmt.assignments
     )
     predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
+    if predicate is not None:
+        predicate = _propagate_column_collation(predicate, schema)
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in UPDATE WHERE clause")
-    resolved_returning = tuple(_resolve(r, scope, schema) for r in stmt.returning)
+    expanded_returning = _expand_returning_wildcards(stmt.returning, stmt.table, cols)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in expanded_returning)
     return P.Update(
         table=stmt.table,
         assignments=resolved_assignments,
         predicate=predicate,
         returning=resolved_returning,
+        on_conflict=stmt.on_conflict,
     )
 
 
@@ -1443,9 +1675,12 @@ def _plan_delete(stmt: DeleteStmt, schema: SchemaProvider) -> P.LogicalPlan:
     cols = schema.columns(stmt.table)
     scope: Scope = {stmt.table: cols}
     predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
+    if predicate is not None:
+        predicate = _propagate_column_collation(predicate, schema)
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in DELETE WHERE clause")
-    resolved_returning = tuple(_resolve(r, scope, schema) for r in stmt.returning)
+    expanded_returning = _expand_returning_wildcards(stmt.returning, stmt.table, cols)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in expanded_returning)
     return P.Delete(table=stmt.table, predicate=predicate, returning=resolved_returning)
 
 
@@ -1455,6 +1690,7 @@ def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
         table=stmt.table,
         columns=stmt.columns,
         if_not_exists=stmt.if_not_exists,
+        strict=stmt.strict,
     )
 
 
@@ -1463,7 +1699,13 @@ def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
 
 
 def _plan_alter_table(stmt: AlterTableStmt) -> P.LogicalPlan:
-    return P.AlterTable(table=stmt.table, column=stmt.column)
+    return P.AlterTable(
+        table=stmt.table,
+        column=stmt.column,
+        rename_to=stmt.rename_to,
+        rename_column=stmt.rename_column,
+        drop_column=stmt.drop_column,
+    )
 
 
 def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
@@ -1490,6 +1732,7 @@ def _plan_create_trigger(stmt: CreateTriggerStmt) -> P.LogicalPlan:
         event=stmt.event,
         table=stmt.table,
         body_sql=stmt.body_sql,
+        if_not_exists=stmt.if_not_exists,
     )
 
 
@@ -1654,12 +1897,33 @@ def _try_index_scan(
     ``b`` is preferred over a single-column index on ``a`` alone when the
     predicate has constraints on both ``a`` and ``b``.
     """
+    # Honour SQLite query hints carried on the Scan.
+    #
+    # ``NOT INDEXED``: short-circuit — the user explicitly opted out of
+    # index substitution for this scan.  The planner will leave the
+    # ``Filter(Scan)`` shape in place and the VM will do a full scan.
+    if scan.not_indexed:
+        return None
+
     list_indexes_fn = getattr(schema, "list_indexes", None)
     if list_indexes_fn is None:
         return None
 
     alias = scan.alias or scan.table
     indexes = list_indexes_fn(scan.table)
+
+    # ``INDEXED BY <name>``: filter the candidate indexes to just the
+    # named one.  An empty filtered list means the index doesn't exist
+    # on this table — a plan-time error in SQLite, which we surface
+    # via ``IndexNotFound`` from the planner.errors module.
+    if scan.index_hint is not None:
+        wanted = scan.index_hint
+        indexes = [i for i in indexes if i.name == wanted]
+        if not indexes:
+            from .errors import IndexNotFound
+            raise IndexNotFound(
+                f"no such index on table {scan.table}: {wanted}"
+            )
 
     best_n: int = 0
     best_node: P.IndexScan | None = None

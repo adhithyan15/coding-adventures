@@ -6,7 +6,9 @@ description = "Deterministic smart-home fixtures and fake streams for runtime an
 license = "MIT"
 
 [dependencies]
+hue-core = { path = "../hue-core" }
 smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-event-streams = { path = "../smart-home-event-streams" }
 smart-home-local-http = { path = "../smart-home-local-http" }
 smart-home-registry = { path = "../smart-home-registry" }

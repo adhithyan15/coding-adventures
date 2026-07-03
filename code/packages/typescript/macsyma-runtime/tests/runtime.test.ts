@@ -19,6 +19,7 @@ import {
   RULE,
   SIN,
   SOLVE,
+  SQRT,
   SUB,
   SUBST,
   TRUE,
@@ -51,6 +52,7 @@ import {
   PART,
   PROP_VARS,
   PROPERTIES,
+  RADCAN,
   RAT_SIMPLIFY,
   RANGE,
   REST,
@@ -109,6 +111,14 @@ describe("macsyma-runtime", () => {
     expect(MACSYMA_NAME_TABLE.get("trigsimp")).toEqual(TRIG_SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("trigexpand")).toEqual(TRIG_EXPAND);
     expect(MACSYMA_NAME_TABLE.get("trigreduce")).toEqual(TRIG_REDUCE);
+    expect(MACSYMA_NAME_TABLE.get("eigenvalues")).toEqual(sym("Eigenvalues"));
+    expect(MACSYMA_NAME_TABLE.get("eigenvectors")).toEqual(sym("Eigenvectors"));
+    expect(MACSYMA_NAME_TABLE.get("charpoly")).toEqual(sym("CharPoly"));
+    expect(MACSYMA_NAME_TABLE.get("nullspace")).toEqual(sym("NullSpace"));
+    expect(MACSYMA_NAME_TABLE.get("columnspace")).toEqual(sym("ColumnSpace"));
+    expect(MACSYMA_NAME_TABLE.get("rowspace")).toEqual(sym("RowSpace"));
+    expect(MACSYMA_NAME_TABLE.get("norm")).toEqual(sym("Norm"));
+    expect(MACSYMA_NAME_TABLE.get("lu")).toEqual(sym("LU"));
 
     const target = new Map<string, typeof KILL>();
     extendCompilerNameTable(target);
@@ -130,10 +140,21 @@ describe("macsyma-runtime", () => {
     const session = new MacsymaSession();
     const [killResult] = session.evalSource("kill(x);");
     const [evResult] = session.evalSource("ev(1 + 2, numer);");
+    const [odeResult] = session.evalSource("ode2(foo, y, x);");
+    const [luResult] = session.evalSource("lu(a);");
+    const [nullspaceResult] = session.evalSource("nullspace(a);");
 
     expect(killResult.input).toEqual(app(KILL, [sym("x")]));
     expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
     expect(evResult.output).toEqual(numberNode(3));
+    expect(odeResult.input).toEqual(app(sym("ODE2"), [
+      sym("foo"),
+      sym("y"),
+      sym("x"),
+    ]));
+    expect(odeResult.output).toEqual(odeResult.input);
+    expect(luResult.input).toEqual(app(sym("LU"), [sym("a")]));
+    expect(nullspaceResult.input).toEqual(app(sym("NullSpace"), [sym("a")]));
   });
 
   it("factors univariate integer polynomials through the runtime", () => {
@@ -582,6 +603,39 @@ describe("macsyma-runtime", () => {
     expect(declareResult.input).toEqual(app(DECLARE, [sym("x"), sym("positive")]));
     expect(declareResult.output).toEqual(sym("done"));
     expect(query.output).toEqual(TRUE);
+  });
+
+  it("feeds nonnegative session assumptions into radcan", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("assume(x >= 0); radcan(sqrt(x^2));");
+
+    expect(result.input).toEqual(app(RADCAN, [app(SQRT, [app(POW, [sym("x"), int(2)])])]));
+    expect(result.output).toEqual(sym("x"));
+  });
+
+  it("feeds declared positivity into radcan", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("declare(y, positive); radcan(sqrt(y^2));");
+
+    expect(result.output).toEqual(sym("y"));
+  });
+
+  it("feeds assumptions into elementary abs/sqrt/log simplification", () => {
+    const session = new MacsymaSession();
+    const [, sqrtResult, logResult, absResult] = session.evalSource(
+      "assume(x >= 0); sqrt(x^2); log(x^3); abs(x);",
+    );
+
+    expect(sqrtResult.output).toEqual(sym("x"));
+    expect(logResult.output).toEqual(app(MUL, [int(3), app(LOG, [sym("x")])]));
+    expect(absResult.output).toEqual(sym("x"));
+  });
+
+  it("uses negative assumptions for abs", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("assume(y < 0); abs(y);");
+
+    expect(result.output).toEqual(app(sym("Neg"), [sym("y")]));
   });
 
   it("properties lists declared properties deterministically", () => {

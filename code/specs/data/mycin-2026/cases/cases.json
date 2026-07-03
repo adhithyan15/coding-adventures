@@ -1,0 +1,26 @@
+{
+  "_doc": "MYCIN-2026 warm-path test vignettes. Messy clinical prose + a gold label. The decomposer (one model touchpoint) maps prose -> typed findings in the closed dictionary; everything after is CPU-bound (0 answer-time model calls). Gold is for scoring only - it is never shown to the decomposer or the reasoner.",
+  "domain": "bacterial_vs_viral_meningitis",
+  "cases": [
+    {
+      "id": "case_bacterial_culture",
+      "vignette": "A 19-year-old presents with fever, severe headache, and neck stiffness for one day. CSF shows a markedly elevated white count with neutrophil predominance, glucose 28 mg/dL (serum 110, ratio 0.25), protein 220 mg/dL. Gram stain shows gram-positive diplococci. CSF culture later grew Streptococcus pneumoniae.",
+      "gold": "bacterial_meningitis"
+    },
+    {
+      "id": "case_viral_entero",
+      "vignette": "A 24-year-old with a 3-day history of headache, photophobia, and low-grade fever. CSF shows a lymphocyte-predominant pleocytosis, normal glucose (60 mg/dL, ratio 0.6), mildly elevated protein. Gram stain negative. CSF enterovirus PCR returned positive.",
+      "gold": "viral_meningitis"
+    },
+    {
+      "id": "case_preculture_ambiguous",
+      "vignette": "A previously healthy adult with fever and headache. Lumbar puncture shows neutrophil-predominant pleocytosis, low CSF glucose, elevated CSF protein, and elevated CSF lactate. Gram stain is pending and no culture result is available yet. Procalcitonin not sent.",
+      "gold": "bacterial_meningitis"
+    },
+    {
+      "id": "case_viral_chemistry",
+      "vignette": "A college student with headache and neck discomfort. CSF white cells are mildly elevated with lymphocyte predominance. CSF glucose is normal and CSF lactate is normal. No organisms on Gram stain. Enterovirus PCR not yet resulted.",
+      "gold": "viral_meningitis"
+    }
+  ]
+}

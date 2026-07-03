@@ -1,0 +1,8 @@
+{
+ "check_id": 24,
+ "idx": 11,
+ "slot": "crashed_onto_private_property",
+ "claimed_value": true,
+ "scenario": "A commercial delivery drone malfunctioned and crashed through a homeowner's greenhouse roof, causing $7,200 in documented damage.",
+ "cited_span": "crashed through a homeowner's greenhouse roof"
+}

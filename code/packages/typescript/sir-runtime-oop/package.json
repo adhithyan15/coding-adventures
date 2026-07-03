@@ -1,0 +1,33 @@
+{
+  "name": "@coding-adventures/sir-runtime-oop",
+  "version": "0.1.11",
+  "description": "OOP runtime for Semantic-IR-emitted TypeScript/JavaScript — class registry, is_a?/ancestry, instance- and class-variable stores, and reflective method dispatch",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "oop",
+    "compiler",
+    "cross-language",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/sir-runtime-core": "file:../sir-runtime-core",
+    "@coding-adventures/sir-runtime-exceptions": "file:../sir-runtime-exceptions",
+    "@coding-adventures/sir-runtime-pairs": "file:../sir-runtime-pairs"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

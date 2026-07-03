@@ -1,0 +1,85 @@
+{
+  "ir": {
+    "slots": {
+      "order_value": {
+        "value": 950,
+        "span": "$950",
+        "type": "stated"
+      },
+      "category": {
+        "value": "books",
+        "span": "books",
+        "type": "stated"
+      }
+    },
+    "uncertainties": []
+  },
+  "provenance": {
+    "order_value": "$950",
+    "category": "books"
+  },
+  "result": {
+    "verdict": "DETERMINATE(precedence:override-marker)",
+    "answer": "0%",
+    "fired_rules": [
+      "books",
+      "over"
+    ],
+    "missing_slots_that_block": [],
+    "span_report": {
+      "order_value": "verbatim-ok",
+      "category": "verbatim-ok"
+    },
+    "hallucinated_slots": [],
+    "byte_accounting_ok": true,
+    "surfaced_uncertainties": [],
+    "proof": {
+      "slots": {
+        "order_value": {
+          "value": 950,
+          "span": "$950",
+          "type": "stated"
+        },
+        "category": {
+          "value": "books",
+          "span": "books",
+          "type": "stated"
+        }
+      },
+      "rules": [
+        {
+          "id": "books",
+          "when": {
+            "category": "books"
+          },
+          "then": "0%",
+          "source_span": "except for books, which are always duty-free regardless of order value",
+          "provenance": "passage"
+        },
+        {
+          "id": "over",
+          "when": {
+            "order_value": ">=800"
+          },
+          "then": "5%",
+          "source_span": "Orders valued at or above $800 incur a 5% import duty",
+          "provenance": "passage"
+        },
+        {
+          "id": "under",
+          "when": {
+            "order_value": "<800"
+          },
+          "then": "0%",
+          "source_span": "Orders valued under $800 are exempt from import duty.",
+          "provenance": "passage"
+        }
+      ],
+      "default": {
+        "then": "undetermined",
+        "source_span": "",
+        "provenance": "passage"
+      }
+    }
+  }
+}

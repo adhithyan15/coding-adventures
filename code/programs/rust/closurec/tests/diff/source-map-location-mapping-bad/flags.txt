@@ -1,0 +1,4 @@
+--js
+tests/diff/source-map-location-mapping-bad/input/a.js
+--source_map_location_mapping
+malformed-no-pipe-separator

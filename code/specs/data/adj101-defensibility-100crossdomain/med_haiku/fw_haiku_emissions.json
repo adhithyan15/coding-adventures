@@ -1,0 +1,330 @@
+[
+ {
+  "id": "MED-CRCL",
+  "facts": {
+   "age_years": {
+    "type": "stated",
+    "span": "68-year-old",
+    "magnitude": 68,
+    "unit": "years",
+    "polarity": "affirmed"
+   },
+   "weight_kg": {
+    "type": "stated",
+    "span": "80 kg",
+    "magnitude": 80,
+    "unit": "kg",
+    "polarity": "affirmed"
+   },
+   "serum_creatinine_mg_dl": {
+    "type": "stated",
+    "span": "1.2 mg/dL",
+    "magnitude": 1.2,
+    "unit": "mg/dL",
+    "polarity": "affirmed"
+   },
+   "systolic_bp_mmhg": {
+    "type": "stated",
+    "span": "130/85 mmHg",
+    "magnitude": 130,
+    "unit": "mmHg",
+    "polarity": "affirmed"
+   },
+   "diastolic_bp_mmhg": {
+    "type": "stated",
+    "span": "130/85 mmHg",
+    "magnitude": 85,
+    "unit": "mmHg",
+    "polarity": "affirmed"
+   },
+   "patient_sex": {
+    "type": "stated",
+    "span": "male",
+    "magnitude": "male",
+    "polarity": "affirmed"
+   },
+   "cockcroft_gault_numerator_constant": {
+    "type": "inferred",
+    "basis_span": "CrCl = (140 - age) * weight_kg / (72 * serum_creatinine)",
+    "magnitude": 140,
+    "entailment": "ENTAILED"
+   },
+   "cockcroft_gault_denominator_constant": {
+    "type": "inferred",
+    "basis_span": "CrCl = (140 - age) * weight_kg / (72 * serum_creatinine)",
+    "magnitude": 72,
+    "entailment": "ENTAILED"
+   }
+  },
+  "discarded": [],
+  "program": "\nimport math\n\n# Extract values from facts\nage = facts['age_years']['magnitude']\nweight_kg = facts['weight_kg']['magnitude']\nserum_creatinine = facts['serum_creatinine_mg_dl']['magnitude']\n\n# Extract Cockcroft-Gault equation constants\nnumerator_constant = facts['cockcroft_gault_numerator_constant']['magnitude']\ndenominator_constant = facts['cockcroft_gault_denominator_constant']['magnitude']\n\n# Calculate creatinine clearance using Cockcroft-Gault equation\n# CrCl = (140 - age) * weight_kg / (72 * serum_creatinine)\nRESULT = (numerator_constant - age) * weight_kg / (denominator_constant * serum_creatinine)\n"
+ },
+ {
+  "id": "MED-FLUID",
+  "facts": {
+   "patient_weight_kg": {
+    "type": "stated",
+    "span": "26 kg",
+    "magnitude": 26,
+    "unit": "kg",
+    "polarity": "affirmed"
+   },
+   "maintenance_rule_band_1_threshold": {
+    "type": "inferred",
+    "basis_span": "for the first 10 kg",
+    "magnitude": 10,
+    "unit": "kg",
+    "entailment": "ENTAILED",
+    "polarity": "affirmed"
+   },
+   "maintenance_rule_band_1_rate": {
+    "type": "stated",
+    "span": "4 mL/kg/h for the first 10 kg",
+    "magnitude": 4,
+    "unit": "mL/kg/h",
+    "polarity": "affirmed"
+   },
+   "maintenance_rule_band_2_threshold": {
+    "type": "inferred",
+    "basis_span": "for the next 10 kg",
+    "magnitude": 10,
+    "unit": "kg",
+    "entailment": "ENTAILED",
+    "polarity": "affirmed"
+   },
+   "maintenance_rule_band_2_rate": {
+    "type": "stated",
+    "span": "2 mL/kg/h for the next 10 kg",
+    "magnitude": 2,
+    "unit": "mL/kg/h",
+    "polarity": "affirmed"
+   },
+   "maintenance_rule_band_3_rate": {
+    "type": "stated",
+    "span": "1 mL/kg/h for each kg above 20",
+    "magnitude": 1,
+    "unit": "mL/kg/h",
+    "polarity": "affirmed"
+   },
+   "maintenance_rule_band_3_threshold": {
+    "type": "inferred",
+    "basis_span": "each kg above 20",
+    "magnitude": 20,
+    "unit": "kg",
+    "entailment": "ENTAILED",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "\n# 4-2-1 Rule for pediatric maintenance fluid calculation\n# Band 1: first 10 kg at 4 mL/kg/h\n# Band 2: next 10 kg (kg 10-20) at 2 mL/kg/h\n# Band 3: kg above 20 at 1 mL/kg/h\n\nweight = facts['patient_weight_kg']['magnitude']\nband_1_threshold = facts['maintenance_rule_band_1_threshold']['magnitude']\nband_1_rate = facts['maintenance_rule_band_1_rate']['magnitude']\nband_2_threshold = facts['maintenance_rule_band_2_threshold']['magnitude']\nband_2_rate = facts['maintenance_rule_band_2_rate']['magnitude']\nband_3_rate = facts['maintenance_rule_band_3_rate']['magnitude']\nband_3_start = facts['maintenance_rule_band_3_threshold']['magnitude']\n\n# Band 1: up to 10 kg\nband_1_contribution = min(weight, band_1_threshold) * band_1_rate\n\n# Band 2: kg 10-20 (next 10 kg)\nband_2_weight = max(0, min(weight - band_1_threshold, band_2_threshold))\nband_2_contribution = band_2_weight * band_2_rate\n\n# Band 3: kg above 20\nband_3_weight = max(0, weight - band_3_start)\nband_3_contribution = band_3_weight * band_3_rate\n\n# Total maintenance fluid rate in mL/h\nRESULT = band_1_contribution + band_2_contribution + band_3_contribution\n"
+ },
+ {
+  "id": "MED-DOSE",
+  "facts": {
+   "child_weight_kg": {
+    "type": "stated",
+    "span": "24 kg",
+    "magnitude": 24,
+    "unit": "kg",
+    "polarity": "affirmed"
+   },
+   "medication_dose_rate": {
+    "type": "stated",
+    "span": "15 mg/kg/day",
+    "magnitude": 15,
+    "unit": "mg/kg/day",
+    "polarity": "affirmed"
+   },
+   "dosing_interval_hours": {
+    "type": "stated",
+    "span": "every 8 hours",
+    "magnitude": 8,
+    "unit": "hours",
+    "polarity": "affirmed"
+   },
+   "daily_doses_count": {
+    "type": "inferred",
+    "basis_span": "every 8 hours",
+    "entailment": "ENTAILED",
+    "magnitude": 3,
+    "unit": "doses per day",
+    "polarity": "affirmed"
+   },
+   "total_daily_dose_mg": {
+    "type": "inferred",
+    "basis_span": "24 kg × 15 mg/kg/day",
+    "entailment": "ENTAILED",
+    "magnitude": 360,
+    "unit": "mg/day",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "\n# Extract facts from the input\nchild_weight = facts['child_weight_kg']['magnitude']  # 24 kg\ndose_rate = facts['medication_dose_rate']['magnitude']  # 15 mg/kg/day\ndosing_interval = facts['dosing_interval_hours']['magnitude']  # 8 hours\n\n# Calculate total daily dose: weight × dose_rate\ntotal_daily_dose = child_weight * dose_rate  # mg/day\n\n# Calculate number of doses per day: 24 hours / interval\ndoses_per_day = 24 / dosing_interval  # 24/8 = 3 doses\n\n# Calculate dose per administration: total_daily_dose / doses_per_day\nRESULT = total_daily_dose / doses_per_day  # mg per administration\n"
+ },
+ {
+  "id": "MED-BMI",
+  "facts": {
+   "height": {
+    "type": "stated",
+    "span": "1.75 m",
+    "magnitude": 1.75,
+    "unit": "m",
+    "polarity": "affirmed"
+   },
+   "weight": {
+    "type": "stated",
+    "span": "90 kg",
+    "magnitude": 90,
+    "unit": "kg",
+    "polarity": "affirmed"
+   },
+   "bmi_formula": {
+    "type": "inferred",
+    "basis_span": "body mass index in kg/m^2",
+    "entailment": "ENTAILED",
+    "magnitude": "weight / (height ** 2)",
+    "unit": "kg/m^2",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "\n# Compute BMI from height and weight\nheight_m = facts['height']['magnitude']\nweight_kg = facts['weight']['magnitude']\n\n# BMI = weight (kg) / height (m)^2\nRESULT = weight_kg / (height_m ** 2)\n"
+ },
+ {
+  "id": "MED-ANION",
+  "facts": {
+   "sodium_concentration": {
+    "type": "stated",
+    "span": "sodium 140 mmol/L",
+    "magnitude": 140,
+    "unit": "mmol/L"
+   },
+   "chloride_concentration": {
+    "type": "stated",
+    "span": "chloride 104 mmol/L",
+    "magnitude": 104,
+    "unit": "mmol/L"
+   },
+   "bicarbonate_concentration": {
+    "type": "stated",
+    "span": "bicarbonate 18 mmol/L",
+    "magnitude": 18,
+    "unit": "mmol/L"
+   },
+   "potassium_concentration": {
+    "type": "stated",
+    "span": "potassium 4.0 mmol/L",
+    "magnitude": 4,
+    "unit": "mmol/L"
+   },
+   "anion_gap_formula": {
+    "type": "inferred",
+    "basis_span": "What is the anion gap, using Na - (Cl + HCO3)?",
+    "entailment": "LEAP",
+    "magnitude": null
+   }
+  },
+  "discarded": [],
+  "program": "\n# Anion gap calculation: Na - (Cl + HCO3)\n# All values from facts in mmol/L\n\nsodium = facts['sodium_concentration']['magnitude']\nchloride = facts['chloride_concentration']['magnitude']\nbicarbonate = facts['bicarbonate_concentration']['magnitude']\n\n# Anion gap = Na - (Cl + HCO3)\nRESULT = sodium - (chloride + bicarbonate)\n"
+ },
+ {
+  "id": "MED-CACORR",
+  "facts": {
+   "measured_serum_calcium": {
+    "type": "stated",
+    "span": "7.6 mg/dL",
+    "magnitude": 7.6,
+    "unit": "mg/dL"
+   },
+   "serum_albumin": {
+    "type": "stated",
+    "span": "2.5 g/dL",
+    "magnitude": 2.5,
+    "unit": "g/dL"
+   },
+   "albumin_correction_normal": {
+    "type": "stated",
+    "span": "4 g/dL",
+    "magnitude": 4,
+    "unit": "g/dL"
+   },
+   "correction_factor": {
+    "type": "stated",
+    "span": "0.8 mg/dL for each 1 g/dL",
+    "magnitude": 0.8,
+    "unit": "mg/dL per g/dL"
+   },
+   "albumin_deficit": {
+    "type": "inferred",
+    "basis_span": "2.5 g/dL",
+    "entailment": "LEAP",
+    "magnitude": 1.5,
+    "unit": "g/dL"
+   }
+  },
+  "discarded": [],
+  "program": "\n# Corrected serum calcium calculation\n# Formula: Corrected Ca = Measured Ca + (0.8 mg/dL × deficit in albumin)\n\nmeasured_calcium = facts['measured_serum_calcium']['magnitude']\nmeasured_albumin = facts['serum_albumin']['magnitude']\nalbumin_normal = facts['albumin_correction_normal']['magnitude']\ncorrection_per_unit = facts['correction_factor']['magnitude']\n\n# Calculate how much albumin is below the normal threshold\nalbumin_deficit = max(0, albumin_normal - measured_albumin)\n\n# Calculate the correction to apply\ncorrection = correction_per_unit * albumin_deficit\n\n# Calculate corrected calcium\nRESULT = measured_calcium + correction\n"
+ },
+ {
+  "id": "MED-HEPARIN",
+  "facts": {
+   "concentration_units": {
+    "type": "stated",
+    "span": "25,000 units in 250 mL",
+    "magnitude": 25000,
+    "unit": "units"
+   },
+   "concentration_volume": {
+    "type": "stated",
+    "span": "25,000 units in 250 mL",
+    "magnitude": 250,
+    "unit": "mL"
+   },
+   "infusion_rate": {
+    "type": "stated",
+    "span": "running at 12 mL/h",
+    "magnitude": 12,
+    "unit": "mL/h"
+   },
+   "concentration_ratio": {
+    "type": "inferred",
+    "basis_span": "25,000 units in 250 mL",
+    "entailment": "LEAP",
+    "magnitude": "computed from concentration_units and concentration_volume",
+    "unit": "units/mL"
+   }
+  },
+  "discarded": [],
+  "program": "\n# Extract facts from the provided dictionary\nconcentration_units = facts['concentration_units']['magnitude']  # 25,000 units\nconcentration_volume = facts['concentration_volume']['magnitude']  # 250 mL\ninfusion_rate = facts['infusion_rate']['magnitude']  # 12 mL/h\n\n# Calculate concentration in units per mL\nconcentration_per_mL = concentration_units / concentration_volume  # units/mL\n\n# Calculate hourly dose: rate (mL/h) × concentration (units/mL) = units/h\nRESULT = infusion_rate * concentration_per_mL\n"
+ },
+ {
+  "id": "MED-REIMB",
+  "facts": {
+   "bill_amount": {
+    "type": "stated",
+    "span": "$1,840",
+    "magnitude": 1840,
+    "unit": "USD"
+   },
+   "reimbursement_rate": {
+    "type": "stated",
+    "span": "70%",
+    "magnitude": 0.7,
+    "unit": "fraction"
+   },
+   "deductible_status": {
+    "type": "stated",
+    "span": "annual deductible is fully met",
+    "polarity": "affirmed"
+   },
+   "network_status": {
+    "type": "stated",
+    "span": "in-network specialist",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "\n# The plan reimburses 70% of in-network specialist bills after deductible is met.\n# Deductible is fully met, so we calculate 70% of the bill amount.\n\nbill_amount = facts['bill_amount']['magnitude']\nreimbursement_rate = facts['reimbursement_rate']['magnitude']\n\nRESULT = bill_amount * reimbursement_rate\n"
+ }
+]

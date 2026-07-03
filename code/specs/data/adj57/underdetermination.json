@@ -1,0 +1,66 @@
+{
+  "determined": false,
+  "n_rivals": 7,
+  "n_resolved": 2,
+  "n_open": 5,
+  "holes": [
+    "The actual fillet radius and its stress-concentration factor compared against the design value / allowable Kt for the axle geometry.",
+    "A comparison of the operating/test bending stress amplitude at the fillet to the EA1N material fatigue limit.",
+    "Evidence of fretting damage (fretting scars, oxide debris, fretting initiation site) at the wheel-seat contact edge versus a clean free-surface initiation away from the press-fit.",
+    "The specified/required surface residual stress state for a qualified axle (i.e., whether compressive residual stress was required and absent) to judge whether 72-99 MPa tensile is out-of-spec versus normal.",
+    "The drawing-specified surface-finish/profile tolerance for the transition zone compared to the measured 342 \u03bcm step and 0.95 mm blade marks."
+  ],
+  "resolved": [
+    {
+      "hypothesis": "Corrosion-assisted (corrosion-fatigue) initiation is the primary driver: the local corrosion pits, not the machining textures, are the dominant crack nuclei, making the environment/storage condition the root cause rather than machining quality.",
+      "discriminating_observation": "Direct correlation of the crack origin to a corrosion pit versus to a machining-mark valley (i.e., which feature the fatigue crack actually nucleated from).",
+      "present": true,
+      "citation": "Parallel distributions of rough machining textures can be observed on the side of the crack source, and local corrosion pits exist."
+    },
+    {
+      "hypothesis": "A localized subsurface or surface material/processing anomaly that the sampled tests missed: composition and microstructure were checked at the crack source and core and found normal, but a discrete inclusion, micro-defect, or hard spot at the specific initiation point could be the true nucleus. Conformance of bulk chemistry/microstructure does not exclude a local defect at the initiation site.",
+      "discriminating_observation": "High-magnification (SEM) characterization of the exact fatigue-initiation point for an inclusion or local metallurgical anomaly.",
+      "present": true,
+      "citation": "No defects, such as porosity, slag inclusion, and repair welding, were found in this area."
+    }
+  ],
+  "open": [
+    {
+      "hypothesis": "The dominant root cause is geometric/design under-dimensioning of the transition fillet (insufficient fillet radius / high theoretical stress-concentration factor Kt), not the surface machining condition. The same dual-initiation bending-fatigue fractography at the fillet is fully consistent with a fillet radius too small for the service bending loads.",
+      "discriminating_observation": "The actual fillet radius and its stress-concentration factor compared against the design value / allowable Kt for the axle geometry.",
+      "present": false,
+      "citation": "",
+      "why": "discriminating observation ABSENT from the input \u2014 a required-but-missing datum"
+    },
+    {
+      "hypothesis": "The failure is an overload / under-design issue: the applied bending stress in fatigue testing exceeded the EA1N fatigue endurance limit, so the axle would crack from bending fatigue regardless of surface finish or residual stress. Beach marks and dual initiation are equally consistent with a stress amplitude simply above the material's fatigue limit.",
+      "discriminating_observation": "A comparison of the operating/test bending stress amplitude at the fillet to the EA1N material fatigue limit.",
+      "present": false,
+      "citation": "",
+      "why": "discriminating observation ABSENT from the input \u2014 a required-but-missing datum"
+    },
+    {
+      "hypothesis": "Press-fit / fretting fatigue at the wheel-seat\u2013axle interface is the primary driver (this is a wheel-seat fatigue test), with fretting at the seat edge near the transition initiating the cracks, rather than free-surface machining marks. Wheel-seat fatigue characteristically initiates near the seat/fillet boundary.",
+      "discriminating_observation": "Evidence of fretting damage (fretting scars, oxide debris, fretting initiation site) at the wheel-seat contact edge versus a clean free-surface initiation away from the press-fit.",
+      "present": false,
+      "citation": "failing to meet validation requirements",
+      "why": "discriminating observation ABSENT from the input \u2014 a required-but-missing datum"
+    },
+    {
+      "hypothesis": "Residual tensile stress alone (e.g., from heat treatment or improper machining-induced residual stress) is the controlling factor, not the geometric machining marks; the 72-99 MPa tensile residual stress is detrimental because the as-designed surface should have been compressive (no shot-peening / surface treatment applied). The leading conclusion lumps residual stress with surface texture, but residual stress could be the standalone cause.",
+      "discriminating_observation": "The specified/required surface residual stress state for a qualified axle (i.e., whether compressive residual stress was required and absent) to judge whether 72-99 MPa tensile is out-of-spec versus normal.",
+      "present": false,
+      "citation": "The arc transition zone exhibits residual tensile stress values of 72\u201399 MPa in the circumferential direction and 71\u201392 MPa in the axial direction.",
+      "why": "discriminating observation ABSENT from the input \u2014 a required-but-missing datum"
+    },
+    {
+      "hypothesis": "The roughness/step quantified near the transition (342 \u03bcm height difference, ~0.95 mm blade marks) reflects a gross machining step/mismatch that is a discrete geometric stress raiser (a machining error on specific axles) rather than a general 'rough surface finish' problem; the failure is a one-off process escape, not a systemic surface-condition design flaw.",
+      "discriminating_observation": "The drawing-specified surface-finish/profile tolerance for the transition zone compared to the measured 342 \u03bcm step and 0.95 mm blade marks.",
+      "present": false,
+      "citation": "The height difference between the highest point and the lowest point near the transition zone is 342 \u03bcm.",
+      "why": "discriminating observation ABSENT from the input \u2014 a required-but-missing datum"
+    }
+  ],
+  "before": "The axle failures are most plausibly a case of bending-fatigue cracking initiated at the machined transition fillet, where the leading hypothesis is that the failure was driven by manufacturing/surface condition rather than material defect: rough machining textures, blade marks, surface notches/roughness, corrosion pits, and detrimental residual tensile stress at the fillet acted together as stress concentrators that nucleated dual fatigue cracks, while chemical composition and microstructure were normal and conforming.",
+  "after": "HONEST REWRITE OF THE AXLE FAILURE CONCLUSION\n\nWhat the evidence actually supports (byte-grounded findings \u2014 keep these):\n- The fracture is a bending-fatigue failure that initiated at the machined transition fillet of the axle. Fractographic features are consistent with fatigue: beach/clamshell (progression) marks and dual crack initiation at the fillet.\n- Surface-condition stress concentrators are demonstrably present at/near the transition: rough machining texture, blade/tool marks (~0.95 mm), a measured surface step/height difference of 342 \u03bcm, surface notches/roughness, corrosion pits, and a measured tensile residual stress of 72\u201399 MPa at the fillet.\n- The material itself is clean: chemical composition and microstructure conform to EA1N specification \u2014 there is no evidence of a metallurgical/material defect (no inclusions, no microstructural anomaly, no off-spec chemistry) driving the failure.\n\nWhat CANNOT be concluded (the over-attribution to correct):\nThe leading conclusion asserts that manufacturing/surface condition \u2014 rough machining, blade marks, notches, pits, and tensile residual stress acting together \u2014 was THE root cause. The data do not establish this single cause. The same fractographic signature (dual-initiation bending fatigue at the fillet, with surface stress raisers present) is equally consistent with several rival mechanisms that the case text gives no information to rule out. The root cause must therefore be stated as a DISJUNCTION, not a single driver:\n\nROOT CAUSE = at least one (and possibly a combination) of the following, none of which can currently be excluded:\n1. Geometric under-dimensioning of the fillet \u2014 the fillet radius is too small / the theoretical stress-concentration factor Kt is too high for the service bending loads (a design/geometry cause, independent of surface finish).\n2. Overload / under-design in fatigue \u2014 the applied bending-stress amplitude at the fillet simply exceeded the EA1N fatigue endurance limit, so cracking would occur regardless of surface finish or residual stress.\n3. Press-fit / fretting fatigue at the wheel-seat\u2013axle interface \u2014 fretting at the seat/fillet boundary, characteristic of wheel-seat fatigue tests, initiated the cracks rather than free-surface machining marks.\n4. Residual tensile stress as a standalone controlling factor \u2014 the 72\u201399 MPa tensile residual stress (rather than the surface texture it is lumped with) is the controlling driver, detrimental specifically if the qualified design required a compressive surface state that was absent.\n5. A discrete machining-step / process escape \u2014 the 342 \u03bcm step and ~0.95 mm blade marks represent a gross localized geometric mismatch on specific axles (a one-off manufacturing error / discrete stress raiser), not a systemic surface-finish design flaw.\n\nThese rivals are not mutually exclusive and several can co-act; the evidence in hand does not weight among them.\n\nMISSING DISCRIMINATING DATA \u2014 what must be retrieved to decide (not present in the case text; do not invent):\n- The actual fillet radius and its stress-concentration factor compared against the design value / allowable Kt for the axle geometry. (discriminates rival 1)\n- A comparison of the operating/test bending-stress amplitude at the fillet to the EA1N material fatigue limit. (discriminates rival 2)\n- Evidence of fretting damage (fretting scars, oxide debris, fretting initiation site) at the wheel-seat contact edge versus a clean free-surface initiation away from the press-fit. (discriminates rival 3)\n- The specified/required surface residual-stress state for a qualified axle (i.e., whether compressive residual stress was required and absent) to judge whether 72\u201399 MPa tensile is out-of-spec versus normal. (discriminates rival 4)\n- The drawing-specified surface-finish/profile tolerance for the transition zone compared to the measured 342 \u03bcm step and 0.95 mm blade marks. (discriminates rival 5)\n\nBottom line: The failure is confidently a bending-fatigue crack initiating at the machined transition fillet, on conforming EA1N material with surface stress concentrators present \u2014 but the controlling root cause is UNDERDETERMINED among fillet geometry (Kt), overload relative to the fatigue limit, wheel-seat fretting, standalone residual tensile stress, and a discrete machining-step process escape. Resolving it requires the five missing measurements above, none of which appear in the available case text."
+}

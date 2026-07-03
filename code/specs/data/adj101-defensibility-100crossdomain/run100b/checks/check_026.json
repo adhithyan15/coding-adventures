@@ -1,0 +1,8 @@
+{
+ "check_id": 26,
+ "idx": 10,
+ "slot": "pte_nox_tpy",
+ "claimed_value": 31,
+ "scenario": "Greenfield Plastics operates a single coating line. Its potential to emit is 62 tpy of volatile organic compounds, 31 tpy of nitrogen oxides, and 18 tpy of particulate matter. No other regulated pollutants are emitted.",
+ "cited_span": "31 tpy of nitrogen oxides"
+}

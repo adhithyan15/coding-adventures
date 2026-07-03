@@ -1,5 +1,49 @@
 # MACSYMA Completion Roadmap
 
+> **🎉 macsyma-truly-finish-plan spec complete (2026-05-29).**
+> All eight tracks of `code/specs/macsyma-truly-finish-plan.md`
+> (F–N) shipped across Python, TypeScript, and Rust as an omnibus PR:
+>
+> - **Track F** — TS + Rust `macsyma-runtime` 0.4.0 (assumption-aware abs/sqrt/log).
+> - **Track G** — Symbolic-coefficient Weierstrass + `AssumptionContext`
+>   compound-relation store (Python G1 + TS/Rust G2).
+> - **Track H** — Gosper's algorithm for hypergeometric summation
+>   (Python H1 + TS/Rust H2).
+> - **Track I** — Closed-form transcendental infinite sums via
+>   Bernoulli-driven zeta/eta + Taylor series (Python I1 + TS/Rust I2).
+> - **Track J** — Series-expansion limit fallback after L'Hôpital
+>   (Python J1 + TS/Rust J2).
+> - **Track K** — n-variate Hensel factoring with symbolic-vm bridge
+>   (Python K1 + TS/Rust K2).
+> - **Track L** — Lie point-symmetry first-order ODE reduction (scaling +
+>   translation in x + translation in y) (Python L1 + TS/Rust L2).
+> - **Track M** — MACSYMA `load("name")` runtime directive +
+>   `orthopoly` loadable package (Python M1 + TS/Rust M2).
+> - **Track N** — Closure (this banner + Unreleased flush + spec sweep).
+>
+> Every CHANGELOG `Unreleased` section in the MACSYMA pipeline is
+> empty.  MACSYMA is feature-complete for mainstream Maxima 5.x parity.
+> New work is feature-driven (e.g. Maple frontend), not gap-driven.
+
+> **🎉 macsyma-finish-plan spec complete (2026-05-28).**  All five
+> tracks of `code/specs/macsyma-finish-plan.md` (ten sub-tracks total)
+> have shipped across Python, TypeScript, and Rust:
+>
+> - **Track A** — Phase 86 generic recogniser port (#4552) + delete
+>   42 redundant grid helpers (#4557).
+> - **Track B** — Apart simple-roots (#4558), Apart-retry telescope
+>   (#4559), Apart repeated-linear-factors (#4560) ports to TS+Rust.
+> - **Track C** — Frobenius / power-series ODE in Python (#4561)
+>   and the TS+Rust port (#4562).
+> - **Track D** — Bivariate Hensel lifting in Python `cas-factor`
+>   (#4563) and the TS+Rust port (#4564).
+> - **Track E** — Generic tabular IBP integration fallback in Python
+>   (#4569) and the TS+Rust port (this PR).
+>
+> The MACSYMA pipeline is now considered done for the purposes of this
+> repo — new work is feature-driven (e.g. Maple frontend), not
+> gap-driven.
+
 > **Status**: Living document. Tracks what is implemented, what is
 > specified but not built, and what needs a new spec. Updated as
 > work lands.

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/r-repl",
+  "capabilities": [
+    { "category": "stdin",  "action": "read",  "target": "*", "justification": "The R binary reads R expressions typed at the interactive prompt." },
+    { "category": "stdout", "action": "write", "target": "*", "justification": "The R binary writes prompts and results to the console." }
+  ],
+  "justification": "Only the interactive R binary touches the console; the RRepl library API is pure and exercised by tests without stdio."
+}

@@ -1,0 +1,125 @@
+% Vignette generated from 02-ingestion.json by build_vignette.py
+% Each observe line corresponds to one entry in observations[].
+% raw_value metadata is held by the framework but not surfaced here.
+
+% raw_value(o1) = '47-year-old'
+observe age(middle_aged_adult)
+% raw_value(o2) = 'male'
+observe sex(male)
+% raw_value(o3) = 'hyperlipidemia'
+observe past_medical_history(hyperlipidemia)
+% raw_value(o4) = 'gastroesophageal reflux disease'
+observe past_medical_history(gerd)
+% raw_value(o5) = 'anxiety'
+observe past_medical_history(anxiety)
+% raw_value(o6) = 'former tobacco smoker'
+observe smoking_status(former)
+% raw_value(o7) = 'six pack-years'
+observe pack_years(low)
+% raw_value(o8) = 'in his 20s'
+observe smoking_period(twenties)
+% raw_value(o9) = 'no familial history of cardiac arrest'
+observe family_history_cardiac_arrest(absent)
+% raw_value(o10) = 'presenting to the ED'
+observe encounter_setting(emergency_department)
+% raw_value(o11) = 'secondary community based center'
+observe facility_type(secondary_community_center)
+% raw_value(o12) = 'intermittent exertional substernal chest pain'
+observe chest_pain(exertional_substernal_intermittent)
+% raw_value(o13) = 'for the last few months'
+observe symptom_duration(months)
+% raw_value(o14) = 'progressively worsening in frequency and intensity'
+observe symptom_progression(worsening)
+% raw_value(o15) = 'in the last two weeks'
+observe recent_worsening_window(two_weeks)
+% raw_value(o16) = 'not able to walk to his car without stopping'
+observe exertional_tolerance(severely_limited)
+% raw_value(o17) = 'shortness of breath'
+observe associated_symptom(dyspnea_on_exertion)
+% raw_value(o18) = 'chest tightness'
+observe associated_symptom(chest_tightness)
+% raw_value(o19) = 'Symptoms would resolve with rest'
+observe symptom_relief(rest)
+% raw_value(o20) = 'denied any fever, chills, nausea, vomiting, diaphoresis, leg swelling, or recent travel'
+observe denies_associated_symptoms(fever_chills_nausea_vomiting_diaphoresis_leg_swelling_recent_travel)
+% raw_value(o21) = 'Review of systems was otherwise unremarkable'
+observe review_of_systems(otherwise_unremarkable)
+% raw_value(o22) = 'About six months prior'
+observe prior_cardiology_evaluation(six_months_prior)
+% raw_value(o23) = 'seen a cardiologist'
+observe prior_specialist_seen(cardiologist)
+% raw_value(o24) = 'cardiac stress test'
+observe prior_workup(cardiac_stress_test)
+% raw_value(o25) = 'echocardiogram'
+observe prior_workup(echocardiogram)
+% raw_value(o26) = 'came back normal'
+observe prior_workup_result(normal)
+% raw_value(o27) = 'elevated coronary artery calcium score'
+observe coronary_artery_calcium_score(elevated)
+% raw_value(o28) = 'greater than 200'
+observe coronary_artery_calcium_score_value(above_200)
+% raw_value(o29) = 'atorvastatin 20 mg'
+observe medication(atorvastatin_moderate_intensity)
+% raw_value(o30) = 'clonazepam'
+observe medication(clonazepam)
+% raw_value(o31) = 'citalopram'
+observe medication(citalopram)
+% raw_value(o32) = 'pantoprazole'
+observe medication(pantoprazole)
+% raw_value(o33) = 'taken as needed'
+observe medication_regimen(as_needed)
+% raw_value(o34) = 'vital signs were within normal limits'
+observe vital_signs(within_normal_limits)
+% raw_value(o35) = 'temperature 98.0 F'
+observe temperature(afebrile)
+% raw_value(o36) = 'heart rate 62 bpm'
+observe heart_rate(low_normal)
+% raw_value(o37) = 'blood pressure 124/82 mmHg'
+observe blood_pressure(normal)
+% raw_value(o38) = 'respiratory rate 16 breaths per minute'
+observe respiratory_rate(normal)
+% raw_value(o39) = 'oxygen saturation 96%'
+observe oxygen_saturation(normal)
+% raw_value(o40) = 'on room air'
+observe supplemental_oxygen(none)
+% raw_value(o41) = 'weight was 184.9 lbs'
+observe weight(normal_to_overweight)
+% raw_value(o42) = 'height was 6 ft'
+observe height(six_feet)
+% raw_value(o43) = 'no abnormalities upon physical examination'
+observe physical_examination(unremarkable)
+% raw_value(o44) = 'regular rate and rhythm'
+observe cardiac_exam(regular_rate_and_rhythm)
+% raw_value(o45) = 'normal S1 and S2 heart sounds'
+observe cardiac_exam(normal_s1_s2)
+% raw_value(o46) = 'lungs were clear to auscultation bilaterally'
+observe pulmonary_exam(clear_to_auscultation_bilaterally)
+% raw_value(o47) = 'Comprehensive metabolic panel was unremarkable'
+observe comprehensive_metabolic_panel(unremarkable)
+% raw_value(o48) = 'slightly decreased hemoglobin and hematocrit'
+observe hemoglobin_hematocrit(mildly_decreased)
+% raw_value(o49) = '12.8 g/dL'
+observe hemoglobin_value(mildly_low)
+% raw_value(o50) = '36.7%'
+observe hematocrit_value(mildly_low)
+% raw_value(o51) = 'Coagulation studies revealed no abnormalities'
+observe coagulation_studies(unremarkable)
+% raw_value(o52) = 'Cardiac biomarkers were within normal limits'
+observe cardiac_biomarkers(within_normal_limits)
+% raw_value(o53) = 'creatine kinase-MB was less than 1.0 ng/mL'
+observe creatine_kinase_mb(below_threshold)
+% raw_value(o54) = 'first high-sensitivity troponin I measurement was 5.9 ng/L'
+observe high_sensitivity_troponin_i_first(normal)
+% raw_value(o55) = 'second measurement was 6.3 ng/L'
+observe high_sensitivity_troponin_i_second(normal)
+% raw_value(o56) = 'Chest X-ray was negative for pneumothorax, opacities, or free air'
+observe chest_xray(negative_for_pneumothorax_opacities_free_air)
+% raw_value(o57) = 'Electrocardiogram revealed sinus bradycardia'
+observe electrocardiogram(sinus_bradycardia)
+% raw_value(o58) = 'no acute ST/T wave abnormalities'
+observe electrocardiogram(no_acute_st_t_changes)
+
+% Queries extracted by ingester:
+? diagnosis(acute_coronary_syndrome)
+? diagnosis(stable_angina)
+? disposition(admit_for_further_cardiac_workup)

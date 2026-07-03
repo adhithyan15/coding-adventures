@@ -1,0 +1,1353 @@
+{
+ "summary": {
+  "entailment_verdicts": {
+   "ENTAILED": 201,
+   "LEAP": 39,
+   "total": 240
+  },
+  "verdict_family_match": {
+   "baseline": "88/100",
+   "gated": "74/100"
+  },
+  "underdetermined -> INDETERMINATE": {
+   "baseline": "24/30",
+   "gated": "27/30"
+  },
+  "clean-determinate -> DETERMINATE (watch for false abstentions)": {
+   "baseline": "26/30",
+   "gated": "20/30"
+  }
+ },
+ "changed": [
+  {
+   "idx": 1,
+   "id": "MED-2",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "hours_since_last_dose"
+   ]
+  },
+  {
+   "idx": 7,
+   "id": "MED-8",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "threat_imminent"
+   ]
+  },
+  {
+   "idx": 14,
+   "id": "STA-5",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_manufacturer",
+    "used_for_intended_purpose"
+   ]
+  },
+  {
+   "idx": 18,
+   "id": "STA-9",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "checked_baggage_loss"
+   ]
+  },
+  {
+   "idx": 23,
+   "id": "TAX-4",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "paid_or_incurred_current_year"
+   ]
+  },
+  {
+   "idx": 25,
+   "id": "TAX-6",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "full_time_student"
+   ]
+  },
+  {
+   "idx": 27,
+   "id": "TAX-8",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "late_filing"
+   ]
+  },
+  {
+   "idx": 29,
+   "id": "TAX-10",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_imported_alcohol"
+   ]
+  },
+  {
+   "idx": 41,
+   "id": "INS-2",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "government_travel_advisory"
+   ]
+  },
+  {
+   "idx": 42,
+   "id": "INS-3",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "dwelling_insured_value",
+    "deductible_rate_pct"
+   ]
+  },
+  {
+   "idx": 47,
+   "id": "INS-8",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_emergency_service"
+   ]
+  },
+  {
+   "idx": 48,
+   "id": "INS-9",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "injury_intentionally_caused_by_insured"
+   ]
+  },
+  {
+   "idx": 59,
+   "id": "BUI-10",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_interior_bathroom_of_dwelling_unit"
+   ]
+  },
+  {
+   "idx": 71,
+   "id": "IMM-2",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "days_in_country"
+   ]
+  },
+  {
+   "idx": 81,
+   "id": "CON-2",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "acknowledgment_minutes"
+   ]
+  },
+  {
+   "idx": 82,
+   "id": "CON-3",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "within_business_hours"
+   ]
+  },
+  {
+   "idx": 88,
+   "id": "CON-9",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "hours_unresolved"
+   ]
+  },
+  {
+   "idx": 89,
+   "id": "CON-10",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "days_after_window_start"
+   ]
+  },
+  {
+   "idx": 92,
+   "id": "ACA-3",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "submitted_after_deadline"
+   ]
+  },
+  {
+   "idx": 96,
+   "id": "ACA-7",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "personnel_listed_in_approved_budget"
+   ]
+  },
+  {
+   "idx": 98,
+   "id": "ACA-9",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "financial_interest_in_relevant_entity"
+   ]
+  }
+ ],
+ "rows": [
+  {
+   "idx": 0,
+   "id": "MED-1",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 1,
+   "id": "MED-2",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "hours_since_last_dose"
+   ]
+  },
+  {
+   "idx": 2,
+   "id": "MED-3",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 3,
+   "id": "MED-4",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "iodinated_contrast_procedure"
+   ]
+  },
+  {
+   "idx": 4,
+   "id": "MED-5",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 5,
+   "id": "MED-6",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 6,
+   "id": "MED-7",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": [
+    "yi_meets_stemi"
+   ]
+  },
+  {
+   "idx": 7,
+   "id": "MED-8",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "threat_imminent"
+   ]
+  },
+  {
+   "idx": 8,
+   "id": "MED-9",
+   "domain": "medicine",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 9,
+   "id": "MED-10",
+   "domain": "medicine",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 10,
+   "id": "STA-1",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 11,
+   "id": "STA-2",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 12,
+   "id": "STA-3",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 13,
+   "id": "STA-4",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 14,
+   "id": "STA-5",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_manufacturer",
+    "used_for_intended_purpose"
+   ]
+  },
+  {
+   "idx": 15,
+   "id": "STA-6",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "tort_committed_by_employee",
+    "within_scope_of_employment"
+   ]
+  },
+  {
+   "idx": 16,
+   "id": "STA-7",
+   "domain": "statutory-liability",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 17,
+   "id": "STA-8",
+   "domain": "statutory-liability",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 18,
+   "id": "STA-9",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "checked_baggage_loss"
+   ]
+  },
+  {
+   "idx": 19,
+   "id": "STA-10",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 20,
+   "id": "TAX-1",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 21,
+   "id": "TAX-2",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 22,
+   "id": "TAX-3",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 23,
+   "id": "TAX-4",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "paid_or_incurred_current_year"
+   ]
+  },
+  {
+   "idx": 24,
+   "id": "TAX-5",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 25,
+   "id": "TAX-6",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "full_time_student"
+   ]
+  },
+  {
+   "idx": 26,
+   "id": "TAX-7",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 27,
+   "id": "TAX-8",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "late_filing"
+   ]
+  },
+  {
+   "idx": 28,
+   "id": "TAX-9",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 29,
+   "id": "TAX-10",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_imported_alcohol"
+   ]
+  },
+  {
+   "idx": 30,
+   "id": "BEN-1",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 31,
+   "id": "BEN-2",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap_slots": [
+    "eligible_children_count"
+   ]
+  },
+  {
+   "idx": 32,
+   "id": "BEN-3",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 33,
+   "id": "BEN-4",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "disability_duration_months"
+   ]
+  },
+  {
+   "idx": 34,
+   "id": "BEN-5",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 35,
+   "id": "BEN-6",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "active_service_days"
+   ]
+  },
+  {
+   "idx": 36,
+   "id": "BEN-7",
+   "domain": "benefits-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 37,
+   "id": "BEN-8",
+   "domain": "benefits-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 38,
+   "id": "BEN-9",
+   "domain": "benefits-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 39,
+   "id": "BEN-10",
+   "domain": "benefits-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 40,
+   "id": "INS-1",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap_slots": [
+    "payout_before_cap"
+   ]
+  },
+  {
+   "idx": 41,
+   "id": "INS-2",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "government_travel_advisory"
+   ]
+  },
+  {
+   "idx": 42,
+   "id": "INS-3",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "dwelling_insured_value",
+    "deductible_rate_pct"
+   ]
+  },
+  {
+   "idx": 43,
+   "id": "INS-4",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "death_is_covered"
+   ]
+  },
+  {
+   "idx": 44,
+   "id": "INS-5",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap_slots": [
+    "is_personal_property"
+   ]
+  },
+  {
+   "idx": 45,
+   "id": "INS-6",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 46,
+   "id": "INS-7",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 47,
+   "id": "INS-8",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_emergency_service"
+   ]
+  },
+  {
+   "idx": 48,
+   "id": "INS-9",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "injury_intentionally_caused_by_insured"
+   ]
+  },
+  {
+   "idx": 49,
+   "id": "INS-10",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 50,
+   "id": "BUI-1",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 51,
+   "id": "BUI-2",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 52,
+   "id": "BUI-3",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 53,
+   "id": "BUI-4",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_detached_accessory_structure"
+   ]
+  },
+  {
+   "idx": 54,
+   "id": "BUI-5",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "alarm_outside_sleeping_area_vicinity",
+    "more_than_one_alarm_required"
+   ]
+  },
+  {
+   "idx": 55,
+   "id": "BUI-6",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 56,
+   "id": "BUI-7",
+   "domain": "building-code",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "CONFLICT",
+   "gated": "CONFLICT",
+   "leap_slots": []
+  },
+  {
+   "idx": 57,
+   "id": "BUI-8",
+   "domain": "building-code",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 58,
+   "id": "BUI-9",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 59,
+   "id": "BUI-10",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_interior_bathroom_of_dwelling_unit"
+   ]
+  },
+  {
+   "idx": 60,
+   "id": "EMP-1",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "CONFLICT",
+   "gated": "CONFLICT",
+   "leap_slots": []
+  },
+  {
+   "idx": 61,
+   "id": "EMP-2",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 62,
+   "id": "EMP-3",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 63,
+   "id": "EMP-4",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 64,
+   "id": "EMP-5",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 65,
+   "id": "EMP-6",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 66,
+   "id": "EMP-7",
+   "domain": "employment-rules",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 67,
+   "id": "EMP-8",
+   "domain": "employment-rules",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "CONFLICT",
+   "gated": "CONFLICT",
+   "leap_slots": []
+  },
+  {
+   "idx": 68,
+   "id": "EMP-9",
+   "domain": "employment-rules",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 69,
+   "id": "EMP-10",
+   "domain": "employment-rules",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 70,
+   "id": "IMM-1",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 71,
+   "id": "IMM-2",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "days_in_country"
+   ]
+  },
+  {
+   "idx": 72,
+   "id": "IMM-3",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 73,
+   "id": "IMM-4",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "is_aggravated_felony"
+   ]
+  },
+  {
+   "idx": 74,
+   "id": "IMM-5",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 75,
+   "id": "IMM-6",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 76,
+   "id": "IMM-7",
+   "domain": "immigration-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 77,
+   "id": "IMM-8",
+   "domain": "immigration-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 78,
+   "id": "IMM-9",
+   "domain": "immigration-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 79,
+   "id": "IMM-10",
+   "domain": "immigration-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 80,
+   "id": "CON-1",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 81,
+   "id": "CON-2",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "acknowledgment_minutes"
+   ]
+  },
+  {
+   "idx": 82,
+   "id": "CON-3",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "within_business_hours"
+   ]
+  },
+  {
+   "idx": 83,
+   "id": "CON-4",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 84,
+   "id": "CON-5",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": [
+    "force_majeure_event"
+   ]
+  },
+  {
+   "idx": 85,
+   "id": "CON-6",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "invoice_days_past_due"
+   ]
+  },
+  {
+   "idx": 86,
+   "id": "CON-7",
+   "domain": "contract-sla",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 87,
+   "id": "CON-8",
+   "domain": "contract-sla",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 88,
+   "id": "CON-9",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "hours_unresolved"
+   ]
+  },
+  {
+   "idx": 89,
+   "id": "CON-10",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "days_after_window_start"
+   ]
+  },
+  {
+   "idx": 90,
+   "id": "ACA-1",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 91,
+   "id": "ACA-2",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 92,
+   "id": "ACA-3",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "submitted_after_deadline"
+   ]
+  },
+  {
+   "idx": 93,
+   "id": "ACA-4",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 94,
+   "id": "ACA-5",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 95,
+   "id": "ACA-6",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 96,
+   "id": "ACA-7",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "personnel_listed_in_approved_budget"
+   ]
+  },
+  {
+   "idx": 97,
+   "id": "ACA-8",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  },
+  {
+   "idx": 98,
+   "id": "ACA-9",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap_slots": [
+    "financial_interest_in_relevant_entity"
+   ]
+  },
+  {
+   "idx": 99,
+   "id": "ACA-10",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap_slots": []
+  }
+ ]
+}

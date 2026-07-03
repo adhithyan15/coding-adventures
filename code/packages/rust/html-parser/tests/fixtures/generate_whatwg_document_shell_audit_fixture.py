@@ -21,7 +21,7 @@ DEFAULT_INPUT = FIXTURE_DIR / "html5lib-tree-construction-smoke.dat"
 DEFAULT_OUTPUT = FIXTURE_DIR / "whatwg-document-shell-audit.json"
 
 DOCTYPE_MARKUP = re.compile(r"<!doctype", re.I)
-COMMENT_MARKUP = re.compile(r"<!--|-->", re.I)
+COMMENT_MARKUP = re.compile(r"<!--|--!?>", re.I)
 HTML_MARKUP = re.compile(r"</?html(?:\s|/|>)", re.I)
 HEAD_MARKUP = re.compile(r"</?head(?:\s|/|>)", re.I)
 BODY_MARKUP = re.compile(r"</?(?:body|frameset|frame)(?:\s|/|>)", re.I)

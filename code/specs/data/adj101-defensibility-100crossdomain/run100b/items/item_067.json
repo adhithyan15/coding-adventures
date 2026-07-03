@@ -1,0 +1,7 @@
+{
+ "idx": 67,
+ "id": "PRO-8",
+ "scenario": "An applicant holds a current valid barber license from a state that has a standing examination-reciprocity agreement with this state, and applies for an initial license here.",
+ "policy": "All initial barber license applicants must pass the state practical examination. Override: an applicant who holds a current valid barber license from a state with a standing examination-reciprocity agreement is exempt from the practical examination.",
+ "question": "Must the applicant pass this state's practical examination?"
+}

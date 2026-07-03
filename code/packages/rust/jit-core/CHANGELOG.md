@@ -5,6 +5,179 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.5.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 2 of 6)
+
+### Added — the compiled tier wraps narrow-width arithmetic
+
+`GenericCirJit`'s bytecode compiler mapped every integer-width arithmetic op
+(`add_u8`, `mul_u16`, …) to the same width-erased `ADD_I64`/`MUL_I64`/… opcode
+and ran it at full `i64` width, so a JIT-compiled `200u8 + 100u8` produced `300`
+instead of `44`.  (The interpreter tier already wrapped via vm-core 0.5.0.)
+
+This adds a `MASK_WIDTH <reg> <bits>` opcode (`0x15`).  `compile_to_bytecode`
+now emits it right after a narrow-suffixed (`_u8`/`_u16`/`_u32`) add / sub / mul
+/ div / neg, and the run loop applies `regs[reg] &= (1<<bits)-1` — so the
+compiled tier wraps mod-2ⁿ exactly like vm-core's `mask_result`.  `u4` is not in
+the CIR allowlist, so a `u4`-typed op specialises to the generic path and runs
+on the interpreter tier (which masks it); the observable wrap is identical.
+Signed narrow types and `i64`/`u64`/`any` keep full machine width.
+
+Unit tests: `add_u8`/`mul_u8`/`sub_u8` wrap, `u16`/`u32` widths, `neg_u8`, and
+`i64`-width-does-not-mask.
+
+## [0.4.1] — 2026-06-14 (CIROptimizer constant-propagation soundness fix)
+
+### Fixed — stale constants no longer survive a reassignment or a block boundary
+
+`CIROptimizer::constant_fold` recorded a register → literal binding for every
+`const_<t>` and propagated it into later instructions, but it never *removed* a
+binding when the register was later **overwritten**.  A function that seeds a
+slot with a constant and then reassigns it — exactly how an ALGOL function
+procedure lowers its result variable —
+
+```text
+const_i64 sq = 0      ; known[sq] = 0
+mul_i64   t  = x, x
+mov       sq = t      ; sq reassigned, but known still says 0
+ret_i64   sq          ; ← the dead 0 is propagated; should return t
+```
+
+was silently miscompiled: `ret sq` had the stale `0` substituted, so the
+JIT-compiled `sq(7)` returned `0` instead of `49`.  This surfaced when an ALGOL
+typed procedure (`integer procedure sq(x); value x; integer x; sq := x*x`) was
+called on the JIT backend in `lang-aot`'s executed conformance matrix — every
+other backend agreed on `49`; only the JIT disagreed.
+
+The fix adds two soundness rules to the linear constant-propagation pass:
+
+1. **Reassignment kills.** Any instruction that writes a register without
+   re-establishing a constant for it now drops that register's known binding.
+2. **Block boundaries kill everything.** With no control-flow graph, a constant
+   is only valid within its basic block; the map is cleared at every `label`
+   (a join point a backward edge may reach) and at every jump/branch. This also
+   pre-empts a latent loop-miscompilation where a constant defined before a loop
+   would be propagated into iterations where the register had since changed.
+
+Regression tests cover the reassignment case, the across-a-label case, and a
+straight-line fold to confirm the rules do not over-clear.
+
+## [0.4.0] — 2026-06-13 (LANG-MATRIX Phase I — compiled functions bind their parameters)
+
+### Fixed — JIT-compiled functions with parameters now read their arguments
+
+A function compiled by `GenericCirJit` ignored the arguments it was called
+with: `Backend::run(&self, binary, _args)` discarded `_args` and started every
+call with a zero-initialised register file, so a parameter read as `0`.  A
+function like Nib's `double(x) -> x + x`, compiled and invoked as `double(21)`,
+returned `0` instead of `42`.  Parameterless functions (e.g. BASIC's `main`)
+were unaffected, which is why this lay hidden until the LANG-MATRIX **JIT
+column** exercised a parameterised function end-to-end.
+
+The fix threads parameter context through the **existing** `compile_function` /
+`FunctionContext` infrastructure (no new trait surface, no bytecode-format
+change):
+
+- `JITCore::compile_fn` now calls `Backend::compile_function(&ctx, ir)` instead
+  of the bare `compile(ir)`, where `ctx` carries the function's name,
+  parameters (in declaration order), and return type.  IR-only backends are
+  unaffected — the trait's default `compile_function` forwards to `compile`.
+- `GenericCirJit::compile_function` pre-binds the parameter names to registers
+  `0, 1, 2, …` in declaration order *before* walking the body, so the
+  parameters deterministically occupy the first registers.  A duplicate
+  parameter name (malformed IR) makes the function uncompilable rather than
+  silently aliasing two params to one register.
+- `GenericCirJit::run` seeds registers `0..args.len()` from the incoming call
+  arguments (bounded by the 256-register file).  Because `compile_fn` passes
+  the arguments in declaration order, argument `i` lands in the register that
+  parameter `i` was bound to.
+
+Native backends (which already override `compile_function` for their ABI
+prologue) now receive the context from `jit-core`'s compile path too.
+
+New unit tests: `compiled_function_reads_its_argument` (the 21→42 regression,
+with the bare-`compile` contrast still returning 0),
+`two_params_map_to_args_in_declaration_order` (argument `i` → register `i` even
+when the body references the second param first), and
+`duplicate_parameter_name_is_uncompilable`.
+
+## [0.3.0] — 2026-05-28 (GenericCirJit — universal bytecode JIT)
+
+### Added — `jit_core::generic_jit::GenericCirJit`
+
+A universal bytecode JIT backend that **any language with typed IIR**
+can plug into.  Eliminates the per-language `Backend` duplication
+that was emerging with `BrainfuckCirJit` (~918 lines) and
+`BasicCirJit` (~640 lines) — ~70% of each is the same logic:
+register allocation, typed CIR opcode encoding, branch fixups,
+dispatch loop.
+
+#### How languages use it
+
+Three lines instead of ~600:
+
+```rust
+let backend = GenericCirJit::new();
+backend.register_builtin("print_i64", |args| { /* …captured I/O… */ });
+JITCore::new(&mut vm, Box::new(backend))
+    .execute_with_jit(&mut vm, &mut module, "main", &[]);
+```
+
+#### Supported CIR opcodes
+
+- **Constants**: `const_{i8|i16|i32|i64|u8|u16|u32|u64|bool}` → CONST_I64
+- **Move**: `mov` → MOV
+- **Arithmetic** (i64 family): `add_*`, `sub_*`, `mul_*`, `div_*`,
+  `neg_*` → ADD/SUB/MUL/DIV/NEG_I64
+- **Comparisons** (i64 family): `cmp_{eq|ne|lt|le|gt|ge}_*`
+- **Control flow**: `label`, `jmp`, `jmp_if_true`, `jmp_if_false`
+- **Linear memory** (when configured): `load_mem`, `store_mem`
+- **Builtins**: `call_builtin` → CALL_BUILTIN with 2-byte builtin
+  index into a per-binary name table
+- **Returns**: `ret_*` → RET_I64 / RET_VOID
+
+Float arithmetic refused (returns `None` from `compile()`).
+
+#### Builtin callback registry
+
+`GenericCirJit::register_builtin(name, |args| → Value)` registers
+language-specific callbacks.  Compile-time, `compile()` resolves
+each `call_builtin "name"` to a 2-byte index and emits a name table
+prefix in the bytecode.  At run-time, the index → callback lookup
+is O(1).
+
+#### Linear memory
+
+`GenericCirJit::with_linear_memory(tape_size)` allocates a fresh
+`Vec<u8>` of `tape_size` bytes per `run()` call.  Brainfuck's tape
+model fits directly: `load_mem` returns 0 for OOB addresses
+(lazy-infinite-tape convention), `store_mem` errors on OOB writes.
+
+#### Step counter + error slot
+
+`GenericCirJit::steps_handle()` / `error_handle()` expose
+`Arc<Mutex<…>>` handles so the wrapping VM can inspect fuel use
+and surface execution errors (which `Backend::run`'s signature
+can't return as a `Result`).
+
+#### Tests
+
+- 9 unit tests in `generic_jit::tests`: compile + run for const,
+  add, cmp+jmp, divide-by-zero, builtin dispatch, unregistered
+  builtin rejection, float refusal, load_mem/store_mem with and
+  without linear memory.
+- 2 end-to-end tests in `tests/generic_jit_e2e.rs`: full JITCore
+  flow with a BASIC-shaped print + arithmetic program.
+
+#### What's next
+
+`BrainfuckCirJit` and `BasicCirJit` continue to ship in their own
+crates for backwards compatibility, but new languages (Oct, Nib,
+Twig) plug into `GenericCirJit` directly — no per-language Backend
+impl.  Future PR will migrate Brainfuck + BASIC onto
+`GenericCirJit` and delete ~1500 lines of duplicated code.
+
+---
+
 ## [0.2.0] — 2026-05-11
 
 ### Changed (LANG32 — Operand::Str exhaustiveness)

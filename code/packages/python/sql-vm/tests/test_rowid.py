@@ -98,7 +98,13 @@ class TestRowIdSelect:
         assert rows == [{"rowid": 1}]
 
     def test_select_rowid_multiple_rows(self) -> None:
-        """Rowids are sequential 1-based integers in insertion order."""
+        """``rowid`` aliases the INTEGER PRIMARY KEY column when one exists.
+
+        SQLite invariant: ``INTEGER PRIMARY KEY`` IS the rowid, not a
+        separate column.  When the user inserts explicit id values 0..4,
+        the rowids match those values rather than running a parallel
+        1..5 counter.
+        """
         be = InMemoryBackend()
         _make_table("t", [("id", "INTEGER", True)], be)
         for i in range(5):
@@ -109,7 +115,7 @@ class TestRowIdSelect:
             items=(ProjectionItem(expr=RowIdRef(table="t"), alias="rowid"),),
         )
         rows = _select(be, plan)
-        assert [r["rowid"] for r in rows] == [1, 2, 3, 4, 5]
+        assert [r["rowid"] for r in rows] == [0, 1, 2, 3, 4]
 
     def test_select_rowid_with_real_column(self) -> None:
         """Rowid emitted alongside a real column."""

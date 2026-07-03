@@ -63,7 +63,6 @@ export const VERSION = "0.1.0";
 
 import { PaintVM, ExportNotSupportedError } from "@coding-adventures/paint-vm";
 import type {
-  PaintInstruction,
   PaintRect,
   PaintEllipse,
   PaintPath,

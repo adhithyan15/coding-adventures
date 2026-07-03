@@ -82,7 +82,7 @@ TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
 #
 # Available flags after ES2024: d, g, i, m, s, u, v, y
 
-REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsvy]*/
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuvy]*/
 
 # ============================================================================
 # Multi-character operators (unchanged from ES2023)

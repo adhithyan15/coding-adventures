@@ -1,0 +1,8 @@
+{
+ "idx": 78,
+ "policy": "Imported foodstuffs require a sanitary inspection certificate before release, except for shipments consigned to a government-licensed quarantine facility, which are released directly to the facility without an inspection certificate.",
+ "scenario": "Orchard Foods imports a refrigerated container of fresh produce. The shipment is consigned to the Riverside Quarantine Facility, which holds a current government license. Orchard did not obtain a sanitary inspection certificate.",
+ "question": "May this produce shipment be released without a sanitary inspection certificate?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "released directly to the facility"
+}

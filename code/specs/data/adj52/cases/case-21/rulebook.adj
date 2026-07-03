@@ -1,0 +1,216 @@
+% ============================================================================
+% ADJ52 case-21 derived rulebook.
+% Clinical area: bladder mass presenting with paroxysmal catecholamine-type
+% autonomic spells (urology / endocrinology cross-over).
+%
+% The diagnostic puzzle the IR poses (q1-q5): a vascular, avidly/uniformly
+% enhancing bladder DOME mass plus 3 years of recurrent, stereotyped autonomic
+% spells (pounding heartbeat, profuse sweating, throbbing frontal headache,
+% nausea/vomiting, feeling drained/shaky) that come on SHORTLY AFTER VOIDING,
+% culminating in an abrupt intraoperative hypertensive crisis (175/105) right
+% after induction/manipulation. That conjunction is the textbook picture of a
+% CATECHOLAMINE-SECRETING URINARY BLADDER PARAGANGLIOMA (extra-adrenal
+% pheochromocytoma of the bladder): micturition mechanically squeezes the tumor,
+% releasing a bolus of catecholamines -> the post-void spell; surgical
+% manipulation does the same -> the intraoperative crisis.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (lowercase, no
+% leading digit, no uppercase). E.g. contrast_enhancement(avid_uniform),
+% spell_trigger(post_voiding), intraop_event(hypertensive_crisis_on_manipulation).
+%
+% Anti-overfit note: every clause is added because a cited source supports the
+% DIRECTION of the likelihood ratio for that finding in that disease, NOT to make
+% this case land on a chosen answer. The tempting wrong answer for a "bladder
+% mass" is urothelial carcinoma; discriminators that argue AGAINST it (LR<1) are
+% included only where a source supports the direction (e.g. painless hematuria is
+% the urothelial-Ca hallmark and is explicitly DENIED here; intense uniform
+% hypervascular enhancement and a catecholamine spell pattern favor paraganglioma
+% over urothelial Ca per the cited differentiation studies).
+% ============================================================================
+
+% ===== PRIORS (base rates for a bladder mass workup in a patient with spells) =====
+
+% rationale: among ALL bladder tumors a paraganglioma is vanishingly rare (~0.05%),
+% but conditioned on a bladder mass PLUS paroxysmal catecholamine-type spells the
+% pretest probability is materially higher; we set a modest prior and let the engine
+% EARN the conclusion from the spell/enhancement/intraop discriminators.
+prior 0.18 for diagnosis(bladder_paraganglioma)
+  source "Frontiers Surg 2025 10.3389/fsurg.2025.1657833 (bladder PGL ~0.05% of bladder tumors); PMC4518387 (catecholamine PGL)" trust authoritative
+
+% rationale: urothelial carcinoma is by far the commonest bladder mass and is the
+% default working diagnosis when a polypoid enhancing bladder lesion is found, so it
+% carries the highest prior and must be argued DOWN by the catecholamine features.
+prior 0.45 for diagnosis(urothelial_carcinoma)
+  source "AAFP 2017 Bladder Cancer Dx/Tx; Medscape 438262 (urothelial Ca commonest bladder tumor, painless hematuria)" trust authoritative
+
+% rationale: a primary panic / anxiety disorder was the prior working label and
+% genuinely mimics catecholamine spells; modest prior, to be argued down by the
+% structural mass and the micturition/manipulation triggers.
+prior 0.12 for diagnosis(panic_anxiety_disorder)
+  source "PMC2693284 (pheochromocytoma mimics panic disorder; sympathetic activation reproduces same signs)" trust authoritative
+
+% rationale: a benign or inflammatory bladder lesion (e.g. polyp, cystitis-related
+% nodule) is a residual structural possibility for an incidental wall lesion.
+prior 0.10 for diagnosis(benign_bladder_lesion)
+  source "AAFP 2017 Bladder Cancer Dx/Tx (benign/inflammatory bladder lesions in the differential of a wall nodule)" trust authoritative
+
+% ===== CORRELATED CATECHOLAMINE-EXCESS SPELL (ONE syndrome -> fires ONCE) =====
+% rationale: the pounding heartbeat, profuse sweating, throbbing frontal headache,
+% lightheadedness, nausea/vomiting and the drained/shaky feeling are NOT independent
+% facts — they are the single correlated catecholamine-surge paroxysm described as a
+% syndrome in every source. Counting a separate LR for each would double-count one
+% mechanism and saturate the posterior, so they are grouped under ONE mechanism
+% directive that fires a single combined LR if ANY manifestation is observed.
+% mechanism catecholamine_surge for diagnosis(bladder_paraganglioma) lr 8.0 : symptom(palpitations), symptom(profuse_sweating), symptom(throbbing_frontal_headache), symptom(lightheadedness), symptom(nausea), symptom_occasional(vomiting), symptom(drained_and_shaky)
+% rationale: the same paroxysmal autonomic cluster is exactly what a panic attack
+% reproduces, so the syndrome RAISES panic too (this is why it was misdiagnosed) —
+% fires once, modestly, for the anxiety conclusion.
+% mechanism catecholamine_surge for diagnosis(panic_anxiety_disorder) lr 2.0 : symptom(palpitations), symptom(profuse_sweating), symptom(throbbing_frontal_headache), symptom(lightheadedness), symptom(nausea), symptom_occasional(vomiting), symptom(drained_and_shaky)
+
+% ===== BLADDER PARAGANGLIOMA (catecholamine-secreting) =====
+
+% rationale: KEY DISCRIMINATOR — the temporal link of the spells to MICTURITION
+% (attacks build in the minutes after voiding) is the near-pathognomonic clue:
+% bladder emptying mechanically compresses the tumor and triggers catecholamine
+% release. This is the single most specific feature pointing at bladder PGL.
+contributes 9.0 from spell_trigger(post_voiding) to diagnosis(bladder_paraganglioma)
+  source "Frontiers Oncol 2025 10.3389/fonc.2025.1624336; PMC4444169 (micturition-induced spells; temporal link vital clue)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — an abrupt hypertensive crisis right after
+% induction / on manipulation of the mass is the catecholamine-release signature of
+% a functional PGL and is the classic intraoperative hazard reported for these
+% tumors. Strongly specific.
+contributes 8.0 from intraop_event(hypertensive_crisis_on_manipulation) to diagnosis(bladder_paraganglioma)
+  source "PMC3797305 (unsuspected bladder PGL with intraoperative hypertensive crises); PMC3016130 (BP on bladder manipulation)" trust authoritative
+
+% rationale: intense, UNIFORM, avid contrast enhancement of the mass reflects the
+% hypervascular chromaffin tumor and favors PGL over urothelial Ca (whose enhancement
+% is typically less avid and more heterogeneous).
+contributes 3.0 from contrast_enhancement(avid_uniform) to diagnosis(bladder_paraganglioma)
+  source "PubMed 34973050 (bladder PGL: uniform marked enhancement, hypervascular); PMC6874976 (PGL vs urothelial Ca enhancement)" trust authoritative
+
+% rationale: a mass arising from the DOME (or antero-superior wall) is the
+% characteristic location for bladder PGL (dome/trigone predilection).
+contributes 2.0 from mass_location(bladder_dome) to diagnosis(bladder_paraganglioma)
+  source "PMC8523196 (bladder PGL most commonly at dome or trigone)" trust authoritative
+
+% rationale: a stereotyped, recurrent paroxysmal pattern over years (rather than a
+% steadily progressive complaint) fits an intermittently secreting functional tumor.
+contributes 1.6 from spell_pattern(recurrent_stereotyped) to diagnosis(bladder_paraganglioma)
+  source "Frontiers Oncol 2025 10.3389/fonc.2025.1624336 (decade-long paroxysmal pattern of functional bladder PGL)" trust authoritative
+
+% rationale: KEY SYNERGY — a post-voiding spell TOGETHER with an intraoperative
+% manipulation crisis is near-specific for a mechanically-squeezable catecholamine
+% tumor in the bladder wall; the two triggers share one mechanism (mechanical
+% catecholamine release) and their co-occurrence is more than the sum of parts.
+interacts 3.0 when spell_trigger(post_voiding) and intraop_event(hypertensive_crisis_on_manipulation) for diagnosis(bladder_paraganglioma)
+  source "PMC3016130 (hypertension after micturition AND on manipulation = bladder pheochromocytoma)" trust authoritative
+
+% ===== UROTHELIAL CARCINOMA (the tempting wrong answer — argued DOWN) =====
+
+% rationale: a polypoid enhancing bladder-wall mass is the generic appearance that
+% first suggests urothelial Ca, so the structural finding itself supports it.
+contributes 2.0 from finding(polypoid_mass) to diagnosis(urothelial_carcinoma)
+  source "Medscape 438262 (papillary/polypoid bladder mass typical of urothelial carcinoma)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — painless hematuria is the hallmark of
+% urothelial Ca; this patient explicitly DENIES hematuria, which argues against it.
+contributes 0.4 from denies(hematuria) to diagnosis(urothelial_carcinoma)
+  source "AAFP 2017 Bladder Cancer; Medscape 438262 (painless hematuria is the cardinal urothelial-Ca symptom)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — catecholamine spells precipitated by
+% micturition are NOT a feature of urothelial carcinoma; their presence points away
+% from a urothelial tumor and toward a functional paraganglioma.
+contributes 0.3 from spell_trigger(post_voiding) to diagnosis(urothelial_carcinoma)
+  source "PMC6874976 (catecholamine symptom pattern distinguishes bladder PGL from urothelial Ca)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — an abrupt catecholamine-driven crisis
+% on bladder manipulation is not expected from a urothelial tumor; it argues against.
+contributes 0.4 from intraop_event(hypertensive_crisis_on_manipulation) to diagnosis(urothelial_carcinoma)
+  source "PMC3797305 (intraoperative hypertensive crisis is the catecholamine signature of PGL, not urothelial Ca)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE, weak) — intense UNIFORM avid enhancement
+% favors a hypervascular PGL over urothelial Ca, whose enhancement is usually less
+% avid and more heterogeneous.
+contributes 0.6 from contrast_enhancement(avid_uniform) to diagnosis(urothelial_carcinoma)
+  source "PMC6874976 (urothelial-Ca enhancement less avid/more heterogeneous than bladder PGL)" trust authoritative
+
+% ===== PANIC / ANXIETY DISORDER (the prior label — argued DOWN) =====
+
+% rationale: the spells were initially attributed to panic/anxiety and partial prior
+% response to that framing supports a modest contribution; the syndrome itself is in
+% the mechanism above.
+contributes 1.3 from prior_diagnosis(presumed_panic_anxiety_disorder) to diagnosis(panic_anxiety_disorder)
+  source "PMC2693284 (paroxysmal sympathetic spells routinely first labeled panic/anxiety)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — a structural, avidly-enhancing bladder
+% mass is an organic secondary cause that argues strongly against a primary anxiety
+% disorder being the whole explanation.
+contributes 0.2 from finding(polypoid_mass) to diagnosis(panic_anxiety_disorder)
+  source "PMC2693284 (an organic catecholamine source must be excluded before attributing spells to panic)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — spells reproducibly TRIGGERED BY
+% MICTURITION are a mechanical/organic signature, not the situational/cognitive
+% trigger profile of panic disorder.
+contributes 0.3 from spell_trigger(post_voiding) to diagnosis(panic_anxiety_disorder)
+  source "Frontiers Oncol 2025 10.3389/fonc.2025.1624336 (micturition-locked spells indicate an organic bladder source, not panic)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — an objectively documented
+% intraoperative hypertensive crisis on manipulation is an organic catecholamine
+% event incompatible with anxiety as the sole cause.
+contributes 0.2 from intraop_event(hypertensive_crisis_on_manipulation) to diagnosis(panic_anxiety_disorder)
+  source "PMC2693284 (objective catecholamine crisis points to organic pheochromocytoma/PGL, not panic)" trust authoritative
+
+% ===== BENIGN BLADDER LESION =====
+
+% rationale: a small wall lesion with only scant peripheral blood flow could be a
+% benign polyp; weak support from the indolent imaging descriptor.
+contributes 1.4 from finding(scant_peripheral_blood_flow) to diagnosis(benign_bladder_lesion)
+  source "AAFP 2017 Bladder Cancer Dx/Tx (low-vascularity wall nodule may be benign/inflammatory)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — a catecholamine-driven intraoperative
+% crisis is not a feature of a benign inert lesion.
+contributes 0.3 from intraop_event(hypertensive_crisis_on_manipulation) to diagnosis(benign_bladder_lesion)
+  source "PMC3797305 (a functional catecholamine crisis indicates a secretory tumor, not a benign lesion)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — micturition-triggered autonomic spells
+% are not produced by a benign inert lesion.
+contributes 0.4 from spell_trigger(post_voiding) to diagnosis(benign_bladder_lesion)
+  source "PMC4444169 (micturition-induced catecholamine spells indicate a functional tumor)" trust authoritative
+
+% ===== NEXT STEP (biochemical confirmation BEFORE definitive resection) =====
+% rationale: the decisive next step is BIOCHEMICAL confirmation of catecholamine
+% excess (plasma free / 24h urinary fractionated metanephrines) BEFORE any further
+% resection, so that alpha-blockade can be started pre-op to prevent a hypertensive
+% crisis. This is what the neurologist's "rule out secondary causes" should have
+% triggered, and it is the standard of care for a suspected functional PGL.
+prior 0.22 for next_step(plasma_free_metanephrines_then_alpha_blockade)
+  source "Mayo PMET; CAP Testing module; PMC6874976 (plasma free metanephrines = best test; alpha-blockade pre-op)" trust authoritative
+contributes 9.0 from spell_trigger(post_voiding) to next_step(plasma_free_metanephrines_then_alpha_blockade)
+  source "Frontiers Oncol 2025 10.3389/fonc.2025.1624336 (micturition-locked spells -> measure post-void plasma metanephrines)" trust authoritative
+contributes 7.0 from intraop_event(hypertensive_crisis_on_manipulation) to next_step(plasma_free_metanephrines_then_alpha_blockade)
+  source "PMC3797305 (intraoperative crisis mandates biochemical PGL workup and pre-op alpha-blockade)" trust authoritative
+contributes 3.0 from contrast_enhancement(avid_uniform) to next_step(plasma_free_metanephrines_then_alpha_blockade)
+  source "PubMed 34973050 (hypervascular avidly enhancing bladder mass -> exclude functional PGL biochemically)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u-metanephrines: catecholamine biochemistry has NOT been measured; elevated
+% plasma/urinary fractionated metanephrines would near-confirm a functional PGL, a
+% normal result would strongly argue against it. Highest-value discriminator.
+contributes 30.0 from metanephrines(elevated) to diagnosis(bladder_paraganglioma)
+  source "Mayo PMET (plasma free metanephrines sensitivity ~100% for PGL); CAP Testing module" trust authoritative
+contributes 0.1 from metanephrines(normal) to diagnosis(bladder_paraganglioma)
+  source "Testing.com plasma free metanephrines (normal metanephrines make PGL extremely unlikely)" trust authoritative
+uncertain { metanephrines(elevated), metanephrines(normal) } for diagnosis(bladder_paraganglioma)
+  source "Mayo PMET; CAP Testing module (fractionated metanephrines not yet measured; decisive confirmatory test)"
+
+% u-histology: resection histopathology / immunostains (chromogranin, synaptophysin,
+% S100 sustentacular) have not yet been reported; PGL histology confirms and
+% separates from urothelial Ca (which the lesion can mimic).
+contributes 25.0 from histology(chromaffin_paraganglioma) to diagnosis(bladder_paraganglioma)
+  source "PMC6874976 (chromogranin/synaptophysin-positive, S100 sustentacular cells confirm bladder PGL)" trust authoritative
+contributes 0.1 from histology(urothelial_carcinoma) to diagnosis(bladder_paraganglioma)
+  source "PMC6874976 (urothelial-carcinoma histology excludes paraganglioma)" trust authoritative
+uncertain { histology(chromaffin_paraganglioma), histology(urothelial_carcinoma) } for diagnosis(bladder_paraganglioma)
+  source "PMC6874976 (definitive immunohistochemistry not yet reported; resection histology is confirmatory)"

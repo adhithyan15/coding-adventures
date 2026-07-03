@@ -1,0 +1,237 @@
+% ============================================================================
+% ADJ52 case-12 derived rulebook.
+% Clinical area: low-renin hypertension with hypokalemia + metabolic alkalosis.
+% Differential built from the IR alone (no answer given), recursing into the
+% inherited / monogenic low-renin-low-aldosterone hypertension subcategories.
+%
+% The central diagnostic puzzle the IR poses (q1-q4): resistant hypertension +
+% chronic hypokalemia + metabolic alkalosis + SUPPRESSED renin but, paradoxically,
+% LOW (not high) aldosterone, with disease unaffected by a mineralocorticoid-
+% receptor antagonist AND by adrenalectomy. That conjunction defines the
+% "pseudohyperaldosteronism" family: an aldosterone-INDEPENDENT mineralocorticoid
+% effect at the distal nephron.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (no digits-leading,
+% no uppercase identifiers). E.g. aldosterone(below_lower_limit), renin(suppressed),
+% age_of_onset(adolescence).
+%
+% Anti-overfit note: every clause is added because a cited source supports the
+% direction of the likelihood ratio for that finding in that disease, NOT to make
+% this case land on a chosen answer. Discriminators that argue AGAINST the tempting
+% wrong answer (primary aldosteronism) are included with LR<1 wherever a source
+% supports them.
+% ============================================================================
+
+% ===== PRIORS (base rates among secondary / low-renin hypertension referrals) =====
+
+% rationale: Liddle syndrome is a rare monogenic AD cause of early-onset low-renin
+% hypertension; rare in absolute terms but the prototypical aldosterone-independent
+% pseudohyperaldosteronism that fits this exact electrolyte signature.
+prior 0.18 for diagnosis(liddle_syndrome)
+  source "StatPearls NBK536911 (Liddle Syndrome / Pseudohyperaldosteronism)" trust authoritative
+
+% rationale: Apparent mineralocorticoid excess (11b-HSD2 deficiency / licorice) is the
+% sibling pseudohyperaldosteronism with the same low-renin LOW-aldosterone picture.
+prior 0.12 for diagnosis(apparent_mineralocorticoid_excess)
+  source "tandfonline 10.3109/08037051.2013.832967 (AME, forgotten cause of hypokalemia + HTN)" trust authoritative
+
+% rationale: primary aldosteronism is the single commonest endocrine cause of
+% hypertension + hypokalemia and was the prior working diagnosis here; high prior so
+% the engine must EARN the move away from it on the current low-aldosterone data.
+prior 0.30 for diagnosis(primary_aldosteronism)
+  source "AAFP 2023;108(3) Primary Aldosteronism; StatPearls NBK539779" trust authoritative
+
+% rationale: 11b-hydroxylase / 11b-OH congenital adrenal hyperplasia causes DOC-mediated
+% hyporeninemic hypokalemic hypertension with low aldosterone; on the differential.
+prior 0.05 for diagnosis(congenital_adrenal_hyperplasia_11b)
+  source "ScienceDirect B9780323961202000157 (CAH and hypertension; 11b-OHD DOC excess)" trust authoritative
+
+% rationale: Geller syndrome (activating MR mutation) gives AD hypokalemic hypertension
+% with SUPPRESSED aldosterone; classically unmasked / worsened in pregnancy.
+prior 0.03 for diagnosis(geller_syndrome)
+  source "PMC9308893 Geller Syndrome: rare cause of persistent hypokalemia in pregnancy" trust authoritative
+
+% ===== SHARED LOW-RENIN-LOW-ALDOSTERONE SIGNATURE =====
+% rationale: The triad suppressed-renin + LOW-aldosterone + metabolic alkalosis +
+% hypokalemia is ONE correlated syndrome (aldosterone-independent distal Na+ avidity),
+% not four independent facts. It is shared by the whole pseudohyperaldosteronism family,
+% so it fires ONCE per such conclusion rather than summing four edges (anti-saturation).
+% mechanism pseudohyperaldosteronism_signature for diagnosis(liddle_syndrome) lr 6.0 : renin(suppressed), aldosterone(below_lower_limit), acid_base(metabolic_alkalosis), serum_potassium(critically_low)
+% mechanism pseudohyperaldosteronism_signature for diagnosis(apparent_mineralocorticoid_excess) lr 5.0 : renin(suppressed), aldosterone(below_lower_limit), acid_base(metabolic_alkalosis), serum_potassium(critically_low)
+% mechanism pseudohyperaldosteronism_signature for diagnosis(geller_syndrome) lr 4.0 : renin(suppressed), aldosterone(below_lower_limit), acid_base(metabolic_alkalosis), serum_potassium(critically_low)
+% mechanism doc_mediated_signature for diagnosis(congenital_adrenal_hyperplasia_11b) lr 3.5 : renin(suppressed), aldosterone(below_lower_limit), acid_base(metabolic_alkalosis), serum_potassium(critically_low)
+
+% ===== LIDDLE SYNDROME (ENaC gain-of-function) =====
+
+% rationale: early-onset hypertension beginning in adolescence is the cardinal Liddle
+% phenotype (severe HTN starting in childhood/adolescence).
+contributes 3.0 from age_of_onset(adolescence) to diagnosis(liddle_syndrome)
+  source "MedlinePlus Genetics, Liddle syndrome (early-onset, often childhood/adolescence)" trust authoritative
+
+% rationale: autosomal dominant inheritance — an affected first-degree relative (mother)
+% with premature fatal vascular complication fits AD transmission of severe HTN.
+contributes 3.0 from family_pattern(autosomal_dominant) to diagnosis(liddle_syndrome)
+  source "MedlinePlus Genetics; Wikipedia Liddle (AD, one altered copy sufficient)" trust authoritative
+
+% rationale: premature stroke / fatal cerebral hemorrhage from severe HTN is a reported
+% Liddle complication and clusters in affected families.
+contributes 2.0 from family_history(premature_fatal_stroke) to diagnosis(liddle_syndrome)
+  source "Karger KBR 2022;45(4):603 / PubMed 32698182 (premature stroke from Liddle SCNN1B)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — failure to respond to a mineralocorticoid-receptor
+% antagonist (spironolactone) is expected in Liddle because the ENaC overactivity is
+% NOT aldosterone-mediated. This is the single most specific therapeutic clue here.
+contributes 6.0 from treatment_response(no_response_to_mr_antagonist) to diagnosis(liddle_syndrome)
+  source "StatPearls NBK536911; ScienceDirect Liddle (spironolactone ineffective; ENaC not aldosterone-mediated)" trust authoritative
+
+% rationale: failure of adrenalectomy to alter the disease argues against an adrenal
+% source and toward a renal-tubular (ENaC) channelopathy.
+contributes 4.0 from treatment_response(no_response_to_adrenalectomy) to diagnosis(liddle_syndrome)
+  source "PMC6311463 (Liddle misdiagnosed as primary aldosteronism; adrenal surgery non-curative)" trust authoritative
+
+% rationale: a prior label of primary aldosteronism that then fails surgery/medical Rx
+% is a recognized Liddle masquerade.
+contributes 2.5 from prior_course(misdiagnosed_as_primary_aldosteronism) to diagnosis(liddle_syndrome)
+  source "PMC6311463 (Liddle syndrome misdiagnosed as primary aldosteronism, novel SCNN1B)" trust authoritative
+
+% rationale: aldosterone below the lower reference limit is characteristic of Liddle
+% (low/suppressed aldosterone), distinguishing it from aldosterone-driven disease. Kept
+% as an independent edge because it is the discriminating biochemistry, not part of the
+% shared volume-signature mechanism above.
+contributes 1.8 from aldosterone(below_lower_limit) to diagnosis(liddle_syndrome)
+  source "MalaCards Liddle Syndrome 1; StatPearls NBK536911 (low aldosterone, not high)" trust authoritative
+
+% rationale: KEY SYNERGY — an MR-antagonist failure together with a suppressed-renin
+% low-aldosterone state is near-specific for an aldosterone-independent ENaC mechanism.
+interacts 3.0 when treatment_response(no_response_to_mr_antagonist) and aldosterone(below_lower_limit) for diagnosis(liddle_syndrome)
+  source "StatPearls NBK536911 (aldosterone-independent ENaC activation; MR blockade futile)" trust authoritative
+
+% ===== APPARENT MINERALOCORTICOID EXCESS (11b-HSD2 deficiency / licorice) =====
+
+% rationale: AME shares early-onset low-renin low-aldosterone hypertension with
+% metabolic alkalosis, so onset in youth supports it too (less specifically).
+contributes 1.6 from age_of_onset(adolescence) to diagnosis(apparent_mineralocorticoid_excess)
+  source "tandfonline 10.3109/08037051.2013.832967 (AME early-onset HTN, low renin + aldo)" trust authoritative
+
+% rationale: AME is AUTOSOMAL RECESSIVE, usually with consanguinity and low birth weight;
+% an affected parent in a dominant pattern argues somewhat AGAINST inherited AME.
+contributes 0.5 from family_pattern(autosomal_dominant) to diagnosis(apparent_mineralocorticoid_excess)
+  source "Frontiers Endocrinol 2024 HSD11B2 case series (AR; consanguinity 80.6%)" trust authoritative
+
+% rationale: NORMAL cortisol secretion / normal urinary free cortisol / normal ACTH is
+% EXPECTED in AME (total cortisol is normal; the defect is local metabolism). So a normal
+% cortisol axis does NOT argue against AME — neutral-to-mildly-supportive.
+contributes 1.2 from cortisol_axis(normal) to diagnosis(apparent_mineralocorticoid_excess)
+  source "Nature Pediatr Res 11b-HSD and AME (normal circulating cortisol; defect is local 11b-HSD2)" trust authoritative
+
+% rationale: MR-antagonist NON-response argues against AME, because AME (cortisol acting
+% on the MR) characteristically DOES respond to spironolactone. This separates AME from Liddle.
+contributes 0.4 from treatment_response(no_response_to_mr_antagonist) to diagnosis(apparent_mineralocorticoid_excess)
+  source "OMIM 218030; ScienceDirect AME (favorable response to spironolactone / MR blockade)" trust authoritative
+
+% rationale: aldosterone below the lower limit is part of the classic AME biochemistry
+% (hypoaldosteronism ~95%).
+contributes 1.5 from aldosterone(below_lower_limit) to diagnosis(apparent_mineralocorticoid_excess)
+  source "Frontiers Endocrinol 2024 HSD11B2 series (hypoaldosteronism 95.3%, hyporeninemia 87.3%)" trust authoritative
+
+% ===== PRIMARY ALDOSTERONISM (the prior working diagnosis — must be argued DOWN) =====
+
+% rationale: a prior aldosterone-to-renin ratio above 30 with a non-suppressing captopril
+% challenge is the classic PA screen/confirmation and was why PA was first invoked.
+contributes 2.5 from prior_arr(above_threshold) to diagnosis(primary_aldosteronism)
+  source "AAFP 2023;108(3) (ARR>20-30 screen); Endocrine Connections 2024 (captopril non-suppression)" trust authoritative
+contributes 2.0 from prior_captopril_challenge(non_suppression) to diagnosis(primary_aldosteronism)
+  source "Endocrine Connections 2024 13(3) (post-captopril PAC >70% baseline = positive)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — PA is defined by INAPPROPRIATELY HIGH/
+% autonomous aldosterone. A current aldosterone BELOW the assay lower limit is strongly
+% INCOMPATIBLE with active primary aldosteronism. This is the clause that demotes the
+% tempting prior diagnosis.
+contributes 0.10 from aldosterone(below_lower_limit) to diagnosis(primary_aldosteronism)
+  source "AAFP 2023;108(3); StatPearls NBK539779 (PA requires elevated/autonomous aldosterone)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — curative unilateral adrenalectomy reliably
+% improves BP/potassium in lateralized PA; complete non-response after removing the
+% enlarged gland argues against PA as the operative mechanism.
+contributes 0.30 from treatment_response(no_response_to_adrenalectomy) to diagnosis(primary_aldosteronism)
+  source "PubMed 30810749 (clinical outcomes after unilateral adrenalectomy for PA)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — true PA (aldosterone excess) responds to MR
+% blockade; failure of an MR antagonist argues against an aldosterone-driven process.
+contributes 0.40 from treatment_response(no_response_to_mr_antagonist) to diagnosis(primary_aldosteronism)
+  source "AAFP 2023;108(3) (MR antagonists are first-line medical therapy for PA)" trust authoritative
+
+% ===== CONGENITAL ADRENAL HYPERPLASIA (11b-hydroxylase, DOC-mediated) =====
+
+% rationale: 11b-OHD CAH gives hyporeninemic hypokalemic hypertension with low aldosterone
+% via DOC; onset in youth fits.
+contributes 1.5 from age_of_onset(adolescence) to diagnosis(congenital_adrenal_hyperplasia_11b)
+  source "ScienceDirect B9780323961202000157 (11b-OHD: hyporeninemic hypokalemic HTN, DOC)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — a NORMAL 17-hydroxyprogesterone and normal
+% sex steroids argue against a steroidogenic CAH block, which typically perturbs precursor
+% steroids / causes androgen excess.
+contributes 0.30 from steroid_precursors(normal) to diagnosis(congenital_adrenal_hyperplasia_11b)
+  source "StatPearls NBK448098 (CAH: abnormal 17-OHP / precursor steroids and androgen effects)" trust authoritative
+
+% rationale: aldosterone below the lower limit is consistent with DOC-driven CAH HTN
+% (aldosterone suppressed by volume expansion).
+contributes 1.3 from aldosterone(below_lower_limit) to diagnosis(congenital_adrenal_hyperplasia_11b)
+  source "ScienceDirect B9780323961202000157 (DOC excess suppresses renin and aldosterone)" trust authoritative
+
+% ===== GELLER SYNDROME (activating mineralocorticoid-receptor mutation) =====
+
+% rationale: Geller is AD hypokalemic hypertension with SUPPRESSED aldosterone, fitting
+% the family pattern and biochemistry.
+contributes 2.0 from family_pattern(autosomal_dominant) to diagnosis(geller_syndrome)
+  source "PMC9308893 (Geller: AD activating MR mutation, suppressed aldosterone)" trust authoritative
+contributes 1.5 from aldosterone(below_lower_limit) to diagnosis(geller_syndrome)
+  source "PMC9308893 (suppressed serum aldosterone indicates activating MR mutation)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — the constitutively active MR in Geller is
+% activated (not blocked) by spironolactone, so an MR-antagonist would WORSEN / fail to
+% help; observed non-response is weakly consistent but the classic Geller trigger
+% (pregnancy / exposure to MR-agonist progesterone) is absent here, so net mildly against.
+contributes 0.8 from treatment_response(no_response_to_mr_antagonist) to diagnosis(geller_syndrome)
+  source "PMC9308893 (Geller MR paradoxically activated by spironolactone; pregnancy-unmasked)" trust authoritative
+
+% ===== NEXT STEP (confirmatory pathway) =====
+
+% rationale: an empiric trial of an ENaC blocker (amiloride/triamterene) PLUS SCNN1B (and
+% SCNN1A/G) molecular testing is the decisive next step: response to amiloride with a
+% pathogenic ENaC variant confirms Liddle and separates it from the rest of the family.
+prior 0.25 for next_step(amiloride_trial_and_scnn1b_genetic_testing)
+  source "StatPearls NBK536911; BMC Nephrology 2025 12882-025-04252-7 (amiloride + SCNN1B testing confirm)" trust authoritative
+contributes 5.0 from treatment_response(no_response_to_mr_antagonist) to next_step(amiloride_trial_and_scnn1b_genetic_testing)
+  source "rarediseases.org NORD Liddle (amiloride most effective; MR-antagonist failure points to ENaC)" trust authoritative
+contributes 3.0 from aldosterone(below_lower_limit) to next_step(amiloride_trial_and_scnn1b_genetic_testing)
+  source "StatPearls NBK536911 (low aldosterone + low renin -> pursue ENaC channelopathy testing)" trust authoritative
+contributes 2.5 from family_pattern(autosomal_dominant) to next_step(amiloride_trial_and_scnn1b_genetic_testing)
+  source "PreventionGenetics SCNN1B test (AD Liddle; genetic confirmation)" trust authoritative
+
+% rationale: a urinary cortisol-to-cortisone metabolite ratio (THF+aTHF/THE) is the
+% pathognomonic test if AME is to be confirmed/excluded; the alternative confirmatory arm.
+prior 0.15 for next_step(urinary_cortisol_cortisone_metabolite_ratio)
+  source "Frontiers Endocrinol 2024 HSD11B2; AHA Hypertension 1996 27:1193 (THF/THE pathognomonic for AME)" trust authoritative
+contributes 2.0 from cortisol_axis(normal) to next_step(urinary_cortisol_cortisone_metabolite_ratio)
+  source "Nature Pediatr Res 11b-HSD (normal cortisol but abnormal metabolite ratio in AME)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u-amiloride: the empiric ENaC-blocker response has not been tested; it is the highest-
+% value discriminator between Liddle (responds) and the rest. Each result moves the posterior.
+contributes 9.0 from amiloride_response(marked_improvement) to diagnosis(liddle_syndrome)
+  source "rarediseases.org NORD Liddle; ScienceDirect (amiloride corrects HTN + hypokalemia in Liddle)" trust authoritative
+contributes 0.15 from amiloride_response(no_improvement) to diagnosis(liddle_syndrome)
+  source "StatPearls NBK536911 (ENaC blockade is curative in Liddle; non-response argues against)" trust authoritative
+uncertain { amiloride_response(marked_improvement), amiloride_response(no_improvement) } for diagnosis(liddle_syndrome)
+  source "StatPearls NBK536911 (amiloride trial not yet performed; decisive discriminator)"
+
+% u-genetics: SCNN1B/A/G molecular testing has not been done; a pathogenic ENaC variant is
+% near-dispositive for Liddle, its absence strongly against.
+contributes 30.0 from scnn1_genetics(pathogenic_enac_variant) to diagnosis(liddle_syndrome)
+  source "MedlinePlus Genetics; BMC Nephrology 2025 (pathogenic SCNN1 variant confirms Liddle)" trust authoritative
+contributes 0.10 from scnn1_genetics(no_variant) to diagnosis(liddle_syndrome)
+  source "PreventionGenetics SCNN1B (absence of variant argues strongly against Liddle)" trust authoritative
+uncertain { scnn1_genetics(pathogenic_enac_variant), scnn1_genetics(no_variant) } for diagnosis(liddle_syndrome)
+  source "MedlinePlus Genetics Liddle (germline SCNN1A/B/G variant is confirmatory; not yet sent)"

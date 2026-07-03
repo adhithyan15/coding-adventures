@@ -1,0 +1,86 @@
+{
+  "ir": {
+    "slots": {
+      "stay_days": {
+        "value": 120,
+        "span": null,
+        "type": "inferred"
+      },
+      "extension_obtained": {
+        "value": null,
+        "span": null,
+        "type": "stated"
+      }
+    },
+    "uncertainties": []
+  },
+  "provenance": {
+    "stay_days": "computed from entry='January 1' departure='May 1'",
+    "extension_obtained": "NONE"
+  },
+  "result": {
+    "verdict": "INDETERMINATE",
+    "answer": null,
+    "fired_rules": [],
+    "missing_slots_that_block": [
+      "extension_obtained"
+    ],
+    "span_report": {
+      "stay_days": "inferred (not byte-grounded; justified)",
+      "extension_obtained": "absent (correctly null)"
+    },
+    "hallucinated_slots": [],
+    "byte_accounting_ok": true,
+    "surfaced_uncertainties": [],
+    "proof": {
+      "slots": {
+        "stay_days": {
+          "value": 120,
+          "span": null,
+          "type": "inferred"
+        },
+        "extension_obtained": {
+          "value": null,
+          "span": null,
+          "type": "stated"
+        }
+      },
+      "rules": [
+        {
+          "id": "fine",
+          "when": {
+            "stay_days": ">90",
+            "extension_obtained": "false"
+          },
+          "then": "fine owed",
+          "source_span": "Overstaying that limit triggers a fine",
+          "provenance": "passage"
+        },
+        {
+          "id": "waiver",
+          "when": {
+            "stay_days": ">90",
+            "extension_obtained": "true"
+          },
+          "then": "no fine",
+          "source_span": "unless the visitor obtained an extension before the 90th day",
+          "provenance": "passage"
+        },
+        {
+          "id": "within",
+          "when": {
+            "stay_days": "<=90"
+          },
+          "then": "no fine",
+          "source_span": "Visitors may remain in the country for up to 90 days.",
+          "provenance": "passage"
+        }
+      ],
+      "default": {
+        "then": "no fine",
+        "source_span": "",
+        "provenance": "passage"
+      }
+    }
+  }
+}

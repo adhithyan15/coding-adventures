@@ -1,0 +1,22 @@
+{
+  "voting": {
+    "counts": {
+      "FACT": 10,
+      "UNCERTAINTY": 9,
+      "QUESTION": 8
+    },
+    "n_rules": 10,
+    "conditional_rules": 10,
+    "all_rule_provenance": "claimed_from_model_memory"
+  },
+  "library": {
+    "counts": {
+      "FACT": 9,
+      "UNCERTAINTY": 8,
+      "QUESTION": 5
+    },
+    "n_rules": 9,
+    "conditional_rules": 4,
+    "all_rule_provenance": "claimed_from_model_memory"
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "rung": "rung4_dimensional",
+  "description": "Rung-4 dimensional analysis: word problems whose answer is a UNIT-bearing quantity. The gold ADJ program `observe`s typed quantities (`quantity(240, km)`) and binds `let answer = distance / time`; the ENGINE carries the dimension through the division and reports the result as `80 km/h` in the JSON `derived` section (the unit tag is formed by Dimension::combine, never written by the model). Each item's options are `{value, unit}` objects, and the harness's `compute_dimensioned` extractor demands the engine's (magnitude, unit) pair match BOTH — so every item includes a wrong-unit-same-magnitude distractor (80 m/s vs 80 km/h) that a number-only reasoner would fall for but the dimensional engine rejects. This is the dimensional-engine rung promised by rung4_physics_chem (whose first PR kept units in prose only). All quantities are integers and every number in a program appears in its stem, so the no-result-literals gate holds; conversions that would need a hidden factor are out of scope for this first PR (all answers are direct ratios of stated quantities).",
+  "items": [
+    {
+      "id": "r4d-01",
+      "qtype": "speed_kmh",
+      "stem": "A car travels 240 kilometers in 3 hours. What is its average speed?",
+      "program": "observe distance(quantity(240, km))\nobserve time(quantity(3, h))\nlet answer = distance / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 80, "unit": "km/h"},
+        "B": {"value": 80, "unit": "m/s"},
+        "C": {"value": 720, "unit": "km/h"},
+        "D": {"value": 80, "unit": "km"},
+        "E": {"value": 60, "unit": "km/h"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-02",
+      "qtype": "speed_kmh",
+      "stem": "A train covers 300 kilometers in 5 hours at a steady pace. What is its average speed?",
+      "program": "observe distance(quantity(300, km))\nobserve time(quantity(5, h))\nlet answer = distance / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 60, "unit": "m/s"},
+        "B": {"value": 60, "unit": "km/h"},
+        "C": {"value": 60, "unit": "h/km"},
+        "D": {"value": 1500, "unit": "km/h"},
+        "E": {"value": 55, "unit": "km/h"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-03",
+      "qtype": "molarity",
+      "stem": "A chemist dissolves 6 moles of glucose in 2 liters of water. What is the molar concentration?",
+      "program": "observe moles(quantity(6, mol))\nobserve volume(quantity(2, l))\nlet answer = moles / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 3, "unit": "mol"},
+        "B": {"value": 12, "unit": "mol/l"},
+        "C": {"value": 3, "unit": "mol/l"},
+        "D": {"value": 3, "unit": "l/mol"},
+        "E": {"value": 8, "unit": "mol/l"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4d-04",
+      "qtype": "molarity",
+      "stem": "A solution is prepared with 8 moles of sodium chloride in 4 liters of water. What is its molarity?",
+      "program": "observe moles(quantity(8, mol))\nobserve volume(quantity(4, l))\nlet answer = moles / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 2, "unit": "mol/l"},
+        "B": {"value": 2, "unit": "mol"},
+        "C": {"value": 32, "unit": "mol/l"},
+        "D": {"value": 2, "unit": "l/mol"},
+        "E": {"value": 4, "unit": "mol/l"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-05",
+      "qtype": "flow_rate",
+      "stem": "An IV pump delivers 600 milliliters over 4 minutes. What is the flow rate?",
+      "program": "observe volume(quantity(600, ml))\nobserve time(quantity(4, min))\nlet answer = volume / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 150, "unit": "ml"},
+        "B": {"value": 2400, "unit": "ml/min"},
+        "C": {"value": 150, "unit": "ml/s"},
+        "D": {"value": 150, "unit": "ml/min"},
+        "E": {"value": 120, "unit": "ml/min"}
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r4d-06",
+      "qtype": "flow_rate",
+      "stem": "Water drains from a tank, releasing 500 milliliters in 10 seconds. What is the flow rate?",
+      "program": "observe volume(quantity(500, ml))\nobserve time(quantity(10, s))\nlet answer = volume / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 50, "unit": "ml/min"},
+        "B": {"value": 50, "unit": "ml/s"},
+        "C": {"value": 5000, "unit": "ml/s"},
+        "D": {"value": 50, "unit": "s/ml"},
+        "E": {"value": 50, "unit": "ml"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-07",
+      "qtype": "concentration",
+      "stem": "A pharmacist prepares a drug solution containing 250 milligrams of active ingredient in 5 milliliters of fluid. What is its concentration?",
+      "program": "observe mass(quantity(250, mg))\nobserve volume(quantity(5, ml))\nlet answer = mass / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 50, "unit": "mg/ml"},
+        "B": {"value": 50, "unit": "mg"},
+        "C": {"value": 1250, "unit": "mg/ml"},
+        "D": {"value": 50, "unit": "ml/mg"},
+        "E": {"value": 45, "unit": "mg/ml"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-08",
+      "qtype": "concentration",
+      "stem": "A saline batch holds 18 grams of salt dissolved in 6 liters of water. What is the mass concentration?",
+      "program": "observe mass(quantity(18, g))\nobserve volume(quantity(6, l))\nlet answer = mass / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 3, "unit": "g"},
+        "B": {"value": 108, "unit": "g/l"},
+        "C": {"value": 3, "unit": "l/g"},
+        "D": {"value": 3, "unit": "g/l"},
+        "E": {"value": 2, "unit": "g/l"}
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r4d-09",
+      "qtype": "speed_ms",
+      "stem": "A sprinter runs 96 meters in 8 seconds. What is the average speed?",
+      "program": "observe distance(quantity(96, m))\nobserve time(quantity(8, s))\nlet answer = distance / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 12, "unit": "km/h"},
+        "B": {"value": 12, "unit": "m/s"},
+        "C": {"value": 768, "unit": "m/s"},
+        "D": {"value": 12, "unit": "s/m"},
+        "E": {"value": 8, "unit": "m/s"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-10",
+      "qtype": "density",
+      "stem": "A metal block has a mass of 90 grams and a volume of 3 cubic centimeters (cc). What is its density?",
+      "program": "observe mass(quantity(90, g))\nobserve volume(quantity(3, cc))\nlet answer = mass / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 30, "unit": "g/cc"},
+        "B": {"value": 30, "unit": "cc/g"},
+        "C": {"value": 270, "unit": "g/cc"},
+        "D": {"value": 30, "unit": "g"},
+        "E": {"value": 27, "unit": "g/cc"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-11",
+      "qtype": "dose_rate",
+      "stem": "A patient receives 240 milligrams of a medication spread evenly over 8 hours. What is the hourly dosing rate?",
+      "program": "observe dose(quantity(240, mg))\nobserve time(quantity(8, h))\nlet answer = dose / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 30, "unit": "mg"},
+        "B": {"value": 30, "unit": "h/mg"},
+        "C": {"value": 1920, "unit": "mg/h"},
+        "D": {"value": 30, "unit": "mg/h"},
+        "E": {"value": 24, "unit": "mg/h"}
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r4d-12",
+      "qtype": "dimensionless_ratio",
+      "stem": "A loading dose of 60 milligrams is exactly how many times the maintenance dose of 20 milligrams?",
+      "program": "observe loading(quantity(60, mg))\nobserve maintenance(quantity(20, mg))\nlet answer = loading / maintenance\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 3, "unit": "mg"},
+        "B": {"value": 3, "unit": "scalar"},
+        "C": {"value": 3, "unit": "mg/mg"},
+        "D": {"value": 1200, "unit": "scalar"},
+        "E": {"value": 4, "unit": "scalar"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-13",
+      "qtype": "speed_kmh",
+      "stem": "A cyclist rides 180 kilometers in 4 hours. What is the average speed?",
+      "program": "observe distance(quantity(180, km))\nobserve time(quantity(4, h))\nlet answer = distance / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 45, "unit": "km/h"},
+        "B": {"value": 45, "unit": "m/s"},
+        "C": {"value": 720, "unit": "km/h"},
+        "D": {"value": 45, "unit": "km"},
+        "E": {"value": 40, "unit": "km/h"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-14",
+      "qtype": "molarity",
+      "stem": "A buffer is made by dissolving 10 moles of acetate in 5 liters of solvent. What is its molarity?",
+      "program": "observe moles(quantity(10, mol))\nobserve volume(quantity(5, l))\nlet answer = moles / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 2, "unit": "mol"},
+        "B": {"value": 2, "unit": "mol/l"},
+        "C": {"value": 50, "unit": "mol/l"},
+        "D": {"value": 2, "unit": "l/mol"},
+        "E": {"value": 5, "unit": "mol/l"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-15",
+      "qtype": "flow_rate",
+      "stem": "A perfusion line delivers 720 milliliters over 6 minutes. What is the flow rate?",
+      "program": "observe volume(quantity(720, ml))\nobserve time(quantity(6, min))\nlet answer = volume / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 120, "unit": "ml/s"},
+        "B": {"value": 120, "unit": "ml"},
+        "C": {"value": 120, "unit": "ml/min"},
+        "D": {"value": 4320, "unit": "ml/min"},
+        "E": {"value": 100, "unit": "ml/min"}
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r4d-16",
+      "qtype": "concentration",
+      "stem": "A vial contains 300 milligrams of drug in 6 milliliters of diluent. What is the concentration?",
+      "program": "observe mass(quantity(300, mg))\nobserve volume(quantity(6, ml))\nlet answer = mass / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 50, "unit": "mg/ml"},
+        "B": {"value": 50, "unit": "ml/mg"},
+        "C": {"value": 1800, "unit": "mg/ml"},
+        "D": {"value": 50, "unit": "mg"},
+        "E": {"value": 60, "unit": "mg/ml"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-17",
+      "qtype": "density",
+      "stem": "An alloy sample has a mass of 84 grams and occupies 4 cubic centimeters (cc). What is its density?",
+      "program": "observe mass(quantity(84, g))\nobserve volume(quantity(4, cc))\nlet answer = mass / volume\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 21, "unit": "cc/g"},
+        "B": {"value": 21, "unit": "g/cc"},
+        "C": {"value": 336, "unit": "g/cc"},
+        "D": {"value": 21, "unit": "g"},
+        "E": {"value": 20, "unit": "g/cc"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-18",
+      "qtype": "speed_ms",
+      "stem": "A runner covers 150 meters in 6 seconds. What is the average speed?",
+      "program": "observe distance(quantity(150, m))\nobserve time(quantity(6, s))\nlet answer = distance / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 25, "unit": "m/s"},
+        "B": {"value": 25, "unit": "km/h"},
+        "C": {"value": 900, "unit": "m/s"},
+        "D": {"value": 25, "unit": "s/m"},
+        "E": {"value": 30, "unit": "m/s"}
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r4d-19",
+      "qtype": "dose_rate",
+      "stem": "A continuous infusion administers 360 milligrams of a drug over 6 hours. What is the hourly rate?",
+      "program": "observe dose(quantity(360, mg))\nobserve time(quantity(6, h))\nlet answer = dose / time\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 60, "unit": "mg"},
+        "B": {"value": 60, "unit": "mg/h"},
+        "C": {"value": 2160, "unit": "mg/h"},
+        "D": {"value": 60, "unit": "h/mg"},
+        "E": {"value": 50, "unit": "mg/h"}
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r4d-20",
+      "qtype": "dimensionless_ratio",
+      "stem": "A peak serum level of 84 milligrams per liter is how many times the trough of 12 milligrams per liter?",
+      "program": "observe peak(quantity(84, mgl))\nobserve trough(quantity(12, mgl))\nlet answer = peak / trough\n? answer\n",
+      "answer_from": {"type": "compute_dimensioned", "name": "answer"},
+      "options": {
+        "A": {"value": 7, "unit": "mgl"},
+        "B": {"value": 7, "unit": "scalar"},
+        "C": {"value": 1008, "unit": "scalar"},
+        "D": {"value": 7, "unit": "mgl/mgl"},
+        "E": {"value": 6, "unit": "scalar"}
+      },
+      "gold_letter": "B"
+    }
+  ]
+}

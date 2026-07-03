@@ -1,0 +1,8 @@
+{
+ "check_id": 236,
+ "idx": 98,
+ "slot": "income_source_type",
+ "claimed_value": "us_accredited_institution_of_higher_education",
+ "scenario": "A PI received $9,000 in lecture honoraria during the year from a state university (a U.S. accredited institution of higher education) whose work overlaps with the PI's research area.",
+ "cited_span": "a state university (a U.S. accredited institution of higher education)"
+}

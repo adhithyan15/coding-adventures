@@ -1,0 +1,7 @@
+{
+ "idx": 34,
+ "id": "BEN-5",
+ "scenario": "Andre's family reports an annual income of $31,000. He is excited to start university and has registered for several courses this term, including a demanding lab sequence he describes as a full plate.",
+ "policy": "A student qualifies for the Full Tuition Grant if their family's annual income is below $40,000 AND they are enrolled full-time (defined as 12 or more credit hours per term).",
+ "question": "Does Andre qualify for the Full Tuition Grant?"
+}

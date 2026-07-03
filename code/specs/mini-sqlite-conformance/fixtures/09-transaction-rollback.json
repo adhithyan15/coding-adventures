@@ -1,0 +1,39 @@
+{
+  "id": "09-transaction-rollback",
+  "description": "ROLLBACK restores pre-transaction state",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE wallet (user, coins)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO wallet VALUES ('alice', 100)"
+    },
+    {
+      "op": "commit"
+    },
+    {
+      "op": "execute",
+      "sql": "UPDATE wallet SET coins = 50 WHERE user = 'alice'"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT coins FROM wallet WHERE user = 'alice'",
+      "expected_columns": ["coins"],
+      "expected_rows": [[50]],
+      "note": "Pre-rollback: in-transaction value should be visible to the same connection"
+    },
+    {
+      "op": "rollback"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT coins FROM wallet WHERE user = 'alice'",
+      "expected_columns": ["coins"],
+      "expected_rows": [[100]],
+      "note": "Post-rollback: committed value must be restored"
+    }
+  ]
+}

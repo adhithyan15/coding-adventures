@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-sql-vm"
+version = "0.1.0"
+edition = "2021"
+description = "Stack-machine bytecode VM for the Mini-SQLite SQL processing pipeline"
+license = "MIT"
+
+[dependencies]
+coding-adventures-sql-codegen = { path = "../sql-codegen" }
+coding-adventures-sql-backend = { path = "../sql-backend" }

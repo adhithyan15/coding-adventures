@@ -81,6 +81,12 @@ pub fn enumerate_all(query: &Term, kb: &KnowledgeBase) -> ProofDAG {
                 steps,
                 via_facts,
                 via_rules,
+                // SLD-resolution proofs leave the LP19e LR-aggregation
+                // fields empty. Setting them to None is the documented
+                // signal that the proof was produced by the
+                // WMC/EnumerateAll path, not LRAggregate.
+                posterior_logit: None,
+                posterior_probability: None,
             }
         })
         .collect();

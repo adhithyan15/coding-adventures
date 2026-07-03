@@ -1,0 +1,108 @@
+{
+  "hash": "08b1777d124b9dce",
+  "kind": "rulebook",
+  "source_name": "bacterial-arm.adj",
+  "imports": [
+    "9bb5d9645e2edb7e"
+  ],
+  "clauses": [
+    {
+      "key": "bacterial_meningitis::prior",
+      "lr": 0.037,
+      "declared_trust": "authoritative",
+      "accepted_trust": "authoritative",
+      "verdict": "ACCEPT",
+      "grounding_id": "prior_bacterial",
+      "spider_status": "direction_stable_magnitude_leap",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "bacterial_meningitis::csf_gram_stain(positive)",
+      "lr": 85.0,
+      "declared_trust": "authoritative",
+      "accepted_trust": "authoritative",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_gram_stain_positive",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "bacterial_meningitis::csf_culture(positive)",
+      "lr": 271.0,
+      "declared_trust": "consensus",
+      "accepted_trust": "inferred",
+      "verdict": "FLAG",
+      "grounding_id": "csf_culture_positive",
+      "spider_status": "direction_only",
+      "reason": "rulebook LR 271.0 != source-entailed 21"
+    },
+    {
+      "key": "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)",
+      "lr": 15.0,
+      "declared_trust": "empirical",
+      "accepted_trust": "inferred",
+      "verdict": "FLAG",
+      "grounding_id": "csf_neutrophilic_pleocytosis_high",
+      "spider_status": "direction_only",
+      "reason": "rulebook LR 15.0 != source-entailed 99"
+    },
+    {
+      "key": "bacterial_meningitis::csf_glucose(low)",
+      "lr": 17.5,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_glucose_low",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "bacterial_meningitis::csf_protein(high)",
+      "lr": 9.33,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_protein_high",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "bacterial_meningitis::csf_lactate(high)",
+      "lr": 22.9,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_lactate_high",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "bacterial_meningitis::serum_procalcitonin(high)",
+      "lr": 27.3,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "serum_procalcitonin_high",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "bacterial_meningitis::seizure(present)",
+      "lr": 4.4,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "seizure_present",
+      "spider_status": "direction_only",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    }
+  ],
+  "gate": {
+    "n_clauses": 9,
+    "accepted": 7,
+    "flagged_downgraded_to_inferred": [
+      "bacterial_meningitis::csf_culture(positive)",
+      "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)"
+    ]
+  }
+}

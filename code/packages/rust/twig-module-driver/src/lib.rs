@@ -1096,7 +1096,7 @@ mod tests {
 // ---------------------------------------------------------------------------
 //
 // These tests exercise the real `.tw` source files under
-// `code/twig/compiler/`.  Each test:
+// `code/packages/twig/compiler/`.  Each test:
 //   1. Copies the required `.tw` files from the source tree to a temp dir
 //      under `<tempdir>/compiler/`.
 //   2. Writes a small test-entry `.tw` file (or reuses `main.tw`) to
@@ -1113,16 +1113,16 @@ mod tw05d_tests {
 
     // ── Helpers ─────────────────────────────────────────────────────────────
 
-    /// Return the path to the `code/twig/compiler/` source directory.
+    /// Return the path to the `code/packages/twig/compiler/` source directory.
     /// Derived from CARGO_MANIFEST_DIR so it's crate-relative, not CWD-relative.
     fn twig_compiler_src() -> PathBuf {
         // CARGO_MANIFEST_DIR is <repo>/code/packages/rust/twig-module-driver
-        // so ../../../twig/compiler reaches code/twig/compiler/
+        // so ../../twig/compiler reaches code/packages/twig/compiler/
         let manifest = env!("CARGO_MANIFEST_DIR");
         Path::new(manifest)
-            .join("../../../twig/compiler")
+            .join("../../twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     /// Create a fresh temp directory for one test (tag prevents collisions).
@@ -1278,7 +1278,7 @@ mod tw05d_tests {
 
     #[test]
     fn full_module_tree_smoke_test() {
-        // Compile all 10 .tw files (the actual source files from code/twig/compiler/,
+        // Compile all 10 .tw files (the actual source files from code/packages/twig/compiler/,
         // including the TW05-E lexer and parser (LANG58), TW05-F emitter (LANG59),
         // and the TW05-H program emitter (LANG61)) and run (main).
         //
@@ -1325,9 +1325,9 @@ mod tw05e_tests {
     fn twig_compiler_src() -> PathBuf {
         let manifest = env!("CARGO_MANIFEST_DIR");
         Path::new(manifest)
-            .join("../../../twig/compiler")
+            .join("../../twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn tempdir(tag: &str) -> PathBuf {
@@ -1560,12 +1560,12 @@ mod tw05f_tests {
 
     fn twig_compiler_src() -> PathBuf {
         // CARGO_MANIFEST_DIR is <repo>/code/packages/rust/twig-module-driver
-        // so ../../../twig/compiler reaches code/twig/compiler/
+        // so ../../twig/compiler reaches code/packages/twig/compiler/
         let manifest = env!("CARGO_MANIFEST_DIR");
         PathBuf::from(manifest)
-            .join("../../../twig/compiler")
+            .join("../../twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn tempdir(tag: &str) -> PathBuf {
@@ -1831,9 +1831,9 @@ mod tw05g_tests {
     fn twig_compiler_src() -> PathBuf {
         let manifest = env!("CARGO_MANIFEST_DIR");
         PathBuf::from(manifest)
-            .join("../../../twig/compiler")
+            .join("../../twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn tempdir(tag: &str) -> PathBuf {
@@ -2096,9 +2096,9 @@ mod tw05h_tests {
     fn twig_compiler_src() -> PathBuf {
         let manifest = env!("CARGO_MANIFEST_DIR");
         PathBuf::from(manifest)
-            .join("../../../twig/compiler")
+            .join("../../twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn tempdir(tag: &str) -> PathBuf {
@@ -2347,9 +2347,9 @@ mod tw05i_tests {
     fn twig_compiler_src() -> PathBuf {
         let manifest = env!("CARGO_MANIFEST_DIR");
         PathBuf::from(manifest)
-            .join("../../../twig/compiler")
+            .join("../../twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn tempdir(tag: &str) -> PathBuf {
@@ -2528,7 +2528,7 @@ mod tw05i_tests {
         // source: 4 top-level forms, 2 emitted by emit-program.
         let src = twig_compiler_src();
         let real_span = fs::read_to_string(src.join("span.tw"))
-            .expect("span.tw must exist in twig/compiler/");
+            .expect("span.tw must exist in packages/twig/compiler/");
 
         // Escape the raw file content for safe embedding in a Twig string literal.
         //   real `\` → `\\`   (none in span.tw, but defensive)
@@ -2609,15 +2609,14 @@ mod tw05j_tests {
     use std::fs;
     use std::path::Path;
 
-    /// Path to the compiler source directory (code/twig/compiler/).
+    /// Path to the compiler source directory (code/packages/twig/compiler/).
     fn compiler_src_dir() -> std::path::PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -2857,10 +2856,9 @@ mod tw05k_tests {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3070,10 +3068,9 @@ mod tw05l_tests {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3286,10 +3283,9 @@ mod tw05m_tests {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3600,10 +3596,9 @@ mod tw05n_tests {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn make_tempdir(tag: &str) -> std::path::PathBuf {
@@ -3935,10 +3930,9 @@ mod tw05q_tests {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {
@@ -4087,7 +4081,7 @@ mod tw05q_tests {
 
     // ── test 5 ───────────────────────────────────────────────────────────────
     //
-    // Compile the full 11-module compiler tree (`code/twig/compiler/`).
+    // Compile the full 11-module compiler tree (`code/packages/twig/compiler/`).
     // All modules are `(typed strict)` and should pass Phase 3.5.
 
     #[test]

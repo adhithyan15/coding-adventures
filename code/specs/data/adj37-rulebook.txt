@@ -1,0 +1,28 @@
+RULEBOOK FOR DELIRIUM RISK IN OLDER INPATIENTS — drug and patient factors
+
+Base rate: in-hospital delirium prevalence in patients age >=65 is approximately 20% (Inouye SK. "Delirium in older persons." NEJM 2006;354(11):1157-65).
+
+Pre-existing cognitive impairment (dementia or mild cognitive impairment) substantially raises delirium risk; pooled LR+ approximately 6.0 (range 3.0-9.0) based on Inouye 2006 and CAM validation literature.
+
+Age >75 years contributes an additional LR+ of approximately 2.5 beyond baseline.
+
+Female sex is mildly protective in some series and mildly elevated in others; net LR is approximately 1.0 — effectively no contribution. [empirical, low confidence]
+
+Benzodiazepines: documented to elevate delirium risk; LR+ approximately 3.0 in older inpatients. Lorazepam specifically is on the Beers Criteria (American Geriatrics Society 2019 Updated Beers Criteria, J Am Geriatr Soc 2019;67:674-694).
+
+Anticholinergic medications: pooled LR+ approximately 2.5 per high-anticholinergic drug. The Anticholinergic Cognitive Burden Scale (Boustani M et al. Aging Health 2008;4(3):311-320) assigns 3 points to high-anticholinergic drugs including diphenhydramine and oxybutynin.
+
+Combined high-anticholinergic load (ACB score >=3): LR+ approximately 4.0 specifically for incident delirium in hospitalized older adults.
+
+Opioids: LR+ approximately 2.5 for delirium; meperidine strongest, morphine moderate. Source: Vaurio LE et al. Anesth Analg 2006;102(4):1267-73 [CITATION UNVERIFIED — verify before deployment].
+
+SSRIs (sertraline class): not directly associated with delirium at usual doses; LR+ approximately 1.2 [empirical, low confidence].
+
+Renal impairment (Cr >1.2 in older adults): contributes by slowing clearance of benzodiazepines and opioids, effectively amplifying their LRs by ~1.3x. [empirical synthesis]
+
+Medication regimen chronicity:
+  If regimen is chronic (>30 days): med-induced delirium LR+ approximately 0.7.
+  If regimen is recent (<30 days): LR+ approximately 2.5.
+  [empirical, derived from clinical reasoning]
+
+Joint contribution: benzodiazepine + anticholinergic together yields synergistic risk; additional LR_extra approximately 1.5 [empirical, low confidence].

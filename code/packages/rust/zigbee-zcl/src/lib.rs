@@ -147,6 +147,15 @@ impl ZclFrameControl {
             disable_default_response: true,
         }
     }
+
+    pub fn foundation_server_to_client() -> Self {
+        Self {
+            frame_type: ZclFrameType::Foundation,
+            manufacturer_specific: false,
+            direction: ZclDirection::ServerToClient,
+            disable_default_response: true,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -221,6 +230,204 @@ impl ZclFrame {
             payload,
         }
     }
+
+    pub fn foundation_response(
+        transaction_sequence_number: u8,
+        command_id: u8,
+        payload: Vec<u8>,
+    ) -> Self {
+        Self {
+            frame_control: ZclFrameControl::foundation_server_to_client(),
+            manufacturer_code: None,
+            transaction_sequence_number,
+            command_id,
+            payload,
+        }
+    }
+
+    pub fn summary(&self) -> ZclFrameSummary {
+        ZclFrameSummary::from_frame(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclFrameSummary {
+    pub frame_type: ZclFrameType,
+    pub direction: ZclDirection,
+    pub manufacturer_specific: bool,
+    pub has_manufacturer_code: bool,
+    pub disables_default_response: bool,
+    pub transaction_sequence_number: u8,
+    pub command_id: u8,
+    pub payload_len: usize,
+}
+
+impl ZclFrameSummary {
+    pub fn from_frame(frame: &ZclFrame) -> Self {
+        Self {
+            frame_type: frame.frame_control.frame_type,
+            direction: frame.frame_control.direction,
+            manufacturer_specific: frame.frame_control.manufacturer_specific,
+            has_manufacturer_code: frame.manufacturer_code.is_some(),
+            disables_default_response: frame.frame_control.disable_default_response,
+            transaction_sequence_number: frame.transaction_sequence_number,
+            command_id: frame.command_id,
+            payload_len: frame.payload.len(),
+        }
+    }
+
+    pub fn is_foundation_frame(&self) -> bool {
+        self.frame_type == ZclFrameType::Foundation
+    }
+
+    pub fn is_cluster_specific_frame(&self) -> bool {
+        self.frame_type == ZclFrameType::ClusterSpecific
+    }
+
+    pub fn is_client_to_server(&self) -> bool {
+        self.direction == ZclDirection::ClientToServer
+    }
+
+    pub fn is_server_to_client(&self) -> bool {
+        self.direction == ZclDirection::ServerToClient
+    }
+
+    pub fn has_payload(&self) -> bool {
+        self.payload_len > 0
+    }
+
+    pub fn has_manufacturer_context(&self) -> bool {
+        self.manufacturer_specific || self.has_manufacturer_code
+    }
+
+    pub fn expects_default_response(&self) -> bool {
+        !self.disables_default_response && self.is_client_to_server()
+    }
+
+    pub fn is_read_attributes(&self) -> bool {
+        self.is_foundation_frame() && self.command_id == ZCL_READ_ATTRIBUTES_COMMAND_ID
+    }
+
+    pub fn is_report_attributes(&self) -> bool {
+        self.is_foundation_frame() && self.command_id == ZCL_REPORT_ATTRIBUTES_COMMAND_ID
+    }
+
+    pub fn is_default_response(&self) -> bool {
+        self.is_foundation_frame()
+            && self.is_server_to_client()
+            && self.command_id == ZCL_DEFAULT_RESPONSE_COMMAND_ID
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ZclFrameBatchSummary {
+    pub frame_count: usize,
+    pub foundation_frames: usize,
+    pub cluster_specific_frames: usize,
+    pub reserved_frames: usize,
+    pub client_to_server_frames: usize,
+    pub server_to_client_frames: usize,
+    pub manufacturer_context_frames: usize,
+    pub default_response_expected_frames: usize,
+    pub read_attributes_frames: usize,
+    pub report_attributes_frames: usize,
+    pub default_response_frames: usize,
+    pub payload_frames: usize,
+    pub total_payload_bytes: usize,
+    pub max_payload_bytes: usize,
+}
+
+impl ZclFrameBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_frames<'a>(frames: impl IntoIterator<Item = &'a ZclFrame>) -> Self {
+        let mut summary = Self::empty();
+        for frame in frames {
+            summary.record_summary(&frame.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a>(summaries: impl IntoIterator<Item = &'a ZclFrameSummary>) -> Self {
+        let mut summary = Self::empty();
+        for frame_summary in summaries {
+            summary.record_summary(frame_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &ZclFrameSummary) {
+        self.frame_count += 1;
+
+        match summary.frame_type {
+            ZclFrameType::Foundation => self.foundation_frames += 1,
+            ZclFrameType::ClusterSpecific => self.cluster_specific_frames += 1,
+            ZclFrameType::Reserved(_) => self.reserved_frames += 1,
+        }
+
+        match summary.direction {
+            ZclDirection::ClientToServer => self.client_to_server_frames += 1,
+            ZclDirection::ServerToClient => self.server_to_client_frames += 1,
+        }
+
+        if summary.has_manufacturer_context() {
+            self.manufacturer_context_frames += 1;
+        }
+        if summary.expects_default_response() {
+            self.default_response_expected_frames += 1;
+        }
+        if summary.is_read_attributes() {
+            self.read_attributes_frames += 1;
+        }
+        if summary.is_report_attributes() {
+            self.report_attributes_frames += 1;
+        }
+        if summary.is_default_response() {
+            self.default_response_frames += 1;
+        }
+        if summary.has_payload() {
+            self.payload_frames += 1;
+        }
+
+        self.total_payload_bytes += summary.payload_len;
+        self.max_payload_bytes = self.max_payload_bytes.max(summary.payload_len);
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.frame_count == 0
+    }
+
+    pub fn has_foundation_frames(self) -> bool {
+        self.foundation_frames > 0
+    }
+
+    pub fn has_cluster_specific_frames(self) -> bool {
+        self.cluster_specific_frames > 0
+    }
+
+    pub fn has_server_to_client_frames(self) -> bool {
+        self.server_to_client_frames > 0
+    }
+
+    pub fn has_manufacturer_context(self) -> bool {
+        self.manufacturer_context_frames > 0
+    }
+
+    pub fn expects_default_responses(self) -> bool {
+        self.default_response_expected_frames > 0
+    }
+
+    pub fn has_payloads(self) -> bool {
+        self.payload_frames > 0
+    }
+}
+
+pub fn summarize_zcl_frames<'a>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+) -> ZclFrameBatchSummary {
+    ZclFrameBatchSummary::from_frames(frames)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -236,6 +443,40 @@ impl OnOffCommand {
             Self::Off => 0x00,
             Self::On => 0x01,
             Self::Toggle => 0x02,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ZclStatusCode {
+    Success,
+    Failure,
+    UnsupportedAttribute,
+    InvalidValue,
+    UnsupportedCommand,
+    Unknown(u8),
+}
+
+impl ZclStatusCode {
+    pub fn parse(raw: u8) -> Self {
+        match raw {
+            0x00 => Self::Success,
+            0x01 => Self::Failure,
+            0x86 => Self::UnsupportedAttribute,
+            0x87 => Self::InvalidValue,
+            0x81 => Self::UnsupportedCommand,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn encode(self) -> u8 {
+        match self {
+            Self::Success => 0x00,
+            Self::Failure => 0x01,
+            Self::UnsupportedAttribute => 0x86,
+            Self::InvalidValue => 0x87,
+            Self::UnsupportedCommand => 0x81,
+            Self::Unknown(raw) => raw,
         }
     }
 }
@@ -362,9 +603,364 @@ impl ZclAttributeReportSummary {
         self.state_delta_count > 0
     }
 
+    pub fn has_reports(&self) -> bool {
+        self.report_count > 0
+    }
+
+    pub fn typed_report_count(&self) -> usize {
+        self.bool_reports + self.numeric_reports + self.text_reports
+    }
+
+    pub fn has_typed_reports(&self) -> bool {
+        self.typed_report_count() > 0
+    }
+
     pub fn has_raw_reports(&self) -> bool {
         self.raw_reports > 0
     }
+
+    pub fn has_unknown_type_reports(&self) -> bool {
+        self.unknown_type_reports > 0
+    }
+
+    pub fn readiness(self) -> ZclAttributeReportReadinessSummary {
+        ZclAttributeReportReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclAttributeReportReadinessSummary {
+    pub report_summary: ZclAttributeReportSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub reports_present: bool,
+    pub state_delta_coverage_ready: bool,
+    pub typed_value_coverage_ready: bool,
+    pub raw_reports_absent: bool,
+    pub unknown_types_absent: bool,
+    pub report_ready: bool,
+}
+
+impl ZclAttributeReportReadinessSummary {
+    pub fn from_summary(report_summary: ZclAttributeReportSummary) -> Self {
+        let reports_present = report_summary.has_reports();
+        let state_delta_coverage_ready = report_summary.has_state_deltas();
+        let typed_value_coverage_ready = report_summary.has_typed_reports();
+        let raw_reports_absent = !report_summary.has_raw_reports();
+        let unknown_types_absent = !report_summary.has_unknown_type_reports();
+        let checks = [
+            reports_present,
+            state_delta_coverage_ready,
+            typed_value_coverage_ready,
+            raw_reports_absent,
+            unknown_types_absent,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let report_ready = missing_check_count == 0;
+
+        Self {
+            report_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            reports_present,
+            state_delta_coverage_ready,
+            typed_value_coverage_ready,
+            raw_reports_absent,
+            unknown_types_absent,
+            report_ready,
+        }
+    }
+
+    pub fn is_report_ready(self) -> bool {
+        self.report_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_report_discovery(self) -> bool {
+        !self.reports_present
+    }
+
+    pub fn needs_state_delta_mapping(self) -> bool {
+        !self.state_delta_coverage_ready
+    }
+
+    pub fn needs_typed_value_mapping(self) -> bool {
+        !self.typed_value_coverage_ready
+    }
+
+    pub fn has_raw_or_unknown_reports(self) -> bool {
+        !self.raw_reports_absent || !self.unknown_types_absent
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclReportOperatorSummary {
+    pub frame_batch: ZclFrameBatchSummary,
+    pub report_readiness: ZclAttributeReportReadinessSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub report_frame_observed: bool,
+    pub report_payloads_present: bool,
+    pub no_default_response_backlog: bool,
+    pub report_ready: bool,
+    pub operator_ready: bool,
+}
+
+impl ZclReportOperatorSummary {
+    pub fn from_parts(
+        frame_batch: ZclFrameBatchSummary,
+        report_readiness: ZclAttributeReportReadinessSummary,
+    ) -> Self {
+        let report_frame_observed = frame_batch.report_attributes_frames > 0;
+        let report_payloads_present = frame_batch.has_payloads();
+        let no_default_response_backlog = !frame_batch.expects_default_responses();
+        let report_ready = report_readiness.is_report_ready();
+        let checks = [
+            report_frame_observed,
+            report_payloads_present,
+            no_default_response_backlog,
+            report_ready,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let operator_ready = missing_check_count == 0;
+
+        Self {
+            frame_batch,
+            report_readiness,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            report_frame_observed,
+            report_payloads_present,
+            no_default_response_backlog,
+            report_ready,
+            operator_ready,
+        }
+    }
+
+    pub fn is_operator_ready(self) -> bool {
+        self.operator_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_report_frame_capture(self) -> bool {
+        !self.report_frame_observed
+    }
+
+    pub fn needs_report_payloads(self) -> bool {
+        !self.report_payloads_present
+    }
+
+    pub fn has_default_response_backlog(self) -> bool {
+        !self.no_default_response_backlog
+    }
+
+    pub fn needs_report_readiness_work(self) -> bool {
+        !self.report_ready
+    }
+}
+
+pub fn zcl_report_operator_summary<'a, 'b>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+    cluster_id: ZclClusterId,
+    reports: impl IntoIterator<Item = &'b ZclAttributeReport>,
+) -> ZclReportOperatorSummary {
+    let frame_batch = ZclFrameBatchSummary::from_frames(frames);
+    let report_readiness = ZclAttributeReportSummary::from_reports(cluster_id, reports).readiness();
+    ZclReportOperatorSummary::from_parts(frame_batch, report_readiness)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclReportSignoffSummary {
+    pub operator_summary: ZclReportOperatorSummary,
+    pub required_signoff_check_count: usize,
+    pub passed_signoff_check_count: usize,
+    pub missing_signoff_check_count: usize,
+    pub operator_ready: bool,
+    pub report_frame_observed: bool,
+    pub report_payloads_present: bool,
+    pub default_response_backlog_clear: bool,
+    pub report_readiness_ready: bool,
+    pub signoff_ready: bool,
+}
+
+impl ZclReportSignoffSummary {
+    pub fn from_operator_summary(operator_summary: ZclReportOperatorSummary) -> Self {
+        let operator_ready = operator_summary.is_operator_ready();
+        let report_frame_observed = !operator_summary.needs_report_frame_capture();
+        let report_payloads_present = !operator_summary.needs_report_payloads();
+        let default_response_backlog_clear = !operator_summary.has_default_response_backlog();
+        let report_readiness_ready = !operator_summary.needs_report_readiness_work();
+        let checks = [
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+        ];
+        let passed_signoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_signoff_check_count = checks.len();
+        let missing_signoff_check_count = required_signoff_check_count - passed_signoff_check_count;
+        let signoff_ready = missing_signoff_check_count == 0;
+
+        Self {
+            operator_summary,
+            required_signoff_check_count,
+            passed_signoff_check_count,
+            missing_signoff_check_count,
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+            signoff_ready,
+        }
+    }
+
+    pub fn is_signoff_ready(self) -> bool {
+        self.signoff_ready
+    }
+
+    pub fn has_missing_signoff_checks(self) -> bool {
+        self.missing_signoff_check_count > 0
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_report_frame_capture(self) -> bool {
+        !self.report_frame_observed
+    }
+
+    pub fn needs_report_payloads(self) -> bool {
+        !self.report_payloads_present
+    }
+
+    pub fn has_default_response_backlog(self) -> bool {
+        !self.default_response_backlog_clear
+    }
+
+    pub fn needs_report_readiness_work(self) -> bool {
+        !self.report_readiness_ready
+    }
+}
+
+pub fn zcl_report_signoff_summary<'a, 'b>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+    cluster_id: ZclClusterId,
+    reports: impl IntoIterator<Item = &'b ZclAttributeReport>,
+) -> ZclReportSignoffSummary {
+    ZclReportSignoffSummary::from_operator_summary(zcl_report_operator_summary(
+        frames, cluster_id, reports,
+    ))
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclReportClosureSummary {
+    pub signoff_summary: ZclReportSignoffSummary,
+    pub required_closure_check_count: usize,
+    pub passed_closure_check_count: usize,
+    pub missing_closure_check_count: usize,
+    pub signoff_ready: bool,
+    pub operator_ready: bool,
+    pub report_frame_observed: bool,
+    pub report_payloads_present: bool,
+    pub default_response_backlog_clear: bool,
+    pub report_readiness_ready: bool,
+    pub closure_ready: bool,
+}
+
+impl ZclReportClosureSummary {
+    pub fn from_signoff_summary(signoff_summary: ZclReportSignoffSummary) -> Self {
+        let signoff_ready = signoff_summary.is_signoff_ready();
+        let operator_ready = !signoff_summary.needs_operator_readiness();
+        let report_frame_observed = !signoff_summary.needs_report_frame_capture();
+        let report_payloads_present = !signoff_summary.needs_report_payloads();
+        let default_response_backlog_clear = !signoff_summary.has_default_response_backlog();
+        let report_readiness_ready = !signoff_summary.needs_report_readiness_work();
+        let checks = [
+            signoff_ready,
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+        ];
+        let passed_closure_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_closure_check_count = checks.len();
+        let missing_closure_check_count = required_closure_check_count - passed_closure_check_count;
+        let closure_ready = missing_closure_check_count == 0;
+
+        Self {
+            signoff_summary,
+            required_closure_check_count,
+            passed_closure_check_count,
+            missing_closure_check_count,
+            signoff_ready,
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+            closure_ready,
+        }
+    }
+
+    pub fn is_closure_ready(self) -> bool {
+        self.closure_ready
+    }
+
+    pub fn has_missing_closure_checks(self) -> bool {
+        self.missing_closure_check_count > 0
+    }
+
+    pub fn needs_signoff(self) -> bool {
+        !self.signoff_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_report_frame_capture(self) -> bool {
+        !self.report_frame_observed
+    }
+
+    pub fn needs_report_payloads(self) -> bool {
+        !self.report_payloads_present
+    }
+
+    pub fn has_default_response_backlog(self) -> bool {
+        !self.default_response_backlog_clear
+    }
+
+    pub fn needs_report_readiness_work(self) -> bool {
+        !self.report_readiness_ready
+    }
+}
+
+pub fn zcl_report_closure_summary<'a, 'b>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+    cluster_id: ZclClusterId,
+    reports: impl IntoIterator<Item = &'b ZclAttributeReport>,
+) -> ZclReportClosureSummary {
+    ZclReportClosureSummary::from_signoff_summary(zcl_report_signoff_summary(
+        frames, cluster_id, reports,
+    ))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -372,6 +968,8 @@ pub enum ZclError {
     Truncated { needed: usize, remaining: usize },
     ManufacturerCodeMismatch,
     InvalidString,
+    ValueTooLong { len: usize },
+    ValueTypeMismatch { data_type: ZclDataType },
 }
 
 impl fmt::Display for ZclError {
@@ -385,6 +983,15 @@ impl fmt::Display for ZclError {
                 write!(f, "manufacturer-specific flag does not match code field")
             }
             Self::InvalidString => write!(f, "ZCL character string is not valid UTF-8"),
+            Self::ValueTooLong { len } => {
+                write!(
+                    f,
+                    "ZCL value length {len} exceeds the one-byte length field"
+                )
+            }
+            Self::ValueTypeMismatch { data_type } => {
+                write!(f, "ZCL value does not match data type {data_type:?}")
+            }
         }
     }
 }
@@ -442,6 +1049,40 @@ pub fn move_to_color_temperature_frame(
         ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID,
         payload,
     )
+}
+
+pub fn report_attributes_frame(
+    transaction_sequence_number: u8,
+    reports: &[ZclAttributeReport],
+) -> Result<ZclFrame, ZclError> {
+    let payload = encode_attribute_reports(reports)?;
+    Ok(ZclFrame::foundation_command(
+        transaction_sequence_number,
+        ZCL_REPORT_ATTRIBUTES_COMMAND_ID,
+        payload,
+    ))
+}
+
+pub fn default_response_frame(
+    transaction_sequence_number: u8,
+    original_command_id: u8,
+    status: ZclStatusCode,
+) -> ZclFrame {
+    ZclFrame::foundation_response(
+        transaction_sequence_number,
+        ZCL_DEFAULT_RESPONSE_COMMAND_ID,
+        vec![original_command_id, status.encode()],
+    )
+}
+
+pub fn encode_attribute_reports(reports: &[ZclAttributeReport]) -> Result<Vec<u8>, ZclError> {
+    let mut out = Vec::new();
+    for report in reports {
+        out.extend_from_slice(&report.attribute_id.0.to_le_bytes());
+        out.push(report.data_type.encode());
+        encode_zcl_value(report.data_type, &report.value, &mut out)?;
+    }
+    Ok(out)
 }
 
 pub fn parse_attribute_reports(
@@ -610,6 +1251,32 @@ fn read_zcl_value(cursor: &mut Cursor<'_>, data_type: ZclDataType) -> Result<Zcl
     }
 }
 
+fn encode_zcl_value(
+    data_type: ZclDataType,
+    value: &ZclValue,
+    out: &mut Vec<u8>,
+) -> Result<(), ZclError> {
+    match (data_type, value) {
+        (ZclDataType::Bool, ZclValue::Bool(value)) => out.push(u8::from(*value)),
+        (ZclDataType::Bitmap8, ZclValue::Bitmap8(value)) => out.push(*value),
+        (ZclDataType::U8, ZclValue::U8(value)) => out.push(*value),
+        (ZclDataType::U16, ZclValue::U16(value)) => out.extend_from_slice(&value.to_le_bytes()),
+        (ZclDataType::U32, ZclValue::U32(value)) => out.extend_from_slice(&value.to_le_bytes()),
+        (ZclDataType::I16, ZclValue::I16(value)) => out.extend_from_slice(&value.to_le_bytes()),
+        (ZclDataType::Enum8, ZclValue::Enum8(value)) => out.push(*value),
+        (ZclDataType::CharacterString, ZclValue::CharacterString(value)) => {
+            if value.len() > u8::MAX as usize {
+                return Err(ZclError::ValueTooLong { len: value.len() });
+            }
+            out.push(value.len() as u8);
+            out.extend_from_slice(value.as_bytes());
+        }
+        (ZclDataType::Unknown(_), ZclValue::Raw(value)) => out.extend_from_slice(value),
+        _ => return Err(ZclError::ValueTypeMismatch { data_type }),
+    }
+    Ok(())
+}
+
 struct Cursor<'a> {
     bytes: &'a [u8],
     pos: usize,
@@ -712,6 +1379,53 @@ mod tests {
             frame.encode().unwrap(),
             vec![0x10, 0x22, 0x00, 0x04, 0x00, 0x05, 0x00]
         );
+        let summary = frame.summary();
+        assert_eq!(
+            summary,
+            ZclFrameSummary {
+                frame_type: ZclFrameType::Foundation,
+                direction: ZclDirection::ClientToServer,
+                manufacturer_specific: false,
+                has_manufacturer_code: false,
+                disables_default_response: true,
+                transaction_sequence_number: 0x22,
+                command_id: ZCL_READ_ATTRIBUTES_COMMAND_ID,
+                payload_len: 4,
+            }
+        );
+        assert!(summary.is_foundation_frame());
+        assert!(summary.is_client_to_server());
+        assert!(summary.is_read_attributes());
+        assert!(!summary.expects_default_response());
+        assert!(summary.has_payload());
+    }
+
+    #[test]
+    fn default_response_frame_encodes_server_to_client_status() {
+        let frame = default_response_frame(
+            0x23,
+            ZCL_READ_ATTRIBUTES_COMMAND_ID,
+            ZclStatusCode::UnsupportedAttribute,
+        );
+
+        assert_eq!(frame.command_id, ZCL_DEFAULT_RESPONSE_COMMAND_ID);
+        assert_eq!(
+            frame.frame_control,
+            ZclFrameControl::foundation_server_to_client()
+        );
+        assert_eq!(frame.payload, vec![ZCL_READ_ATTRIBUTES_COMMAND_ID, 0x86]);
+        assert_eq!(frame.encode().unwrap(), vec![0x18, 0x23, 0x0b, 0x00, 0x86]);
+        assert_eq!(ZclFrame::parse(&frame.encode().unwrap()).unwrap(), frame);
+        assert_eq!(
+            ZclStatusCode::parse(0x81),
+            ZclStatusCode::UnsupportedCommand
+        );
+        assert_eq!(ZclStatusCode::Unknown(0xfe).encode(), 0xfe);
+        let summary = frame.summary();
+        assert!(summary.is_default_response());
+        assert!(summary.is_server_to_client());
+        assert!(summary.has_payload());
+        assert!(!summary.expects_default_response());
     }
 
     #[test]
@@ -720,6 +1434,105 @@ mod tests {
 
         assert_eq!(frame.command_id, 0x01);
         assert_eq!(frame.encode().unwrap(), vec![0x11, 0x33, 0x01]);
+        let summary = frame.summary();
+        assert!(summary.is_cluster_specific_frame());
+        assert!(summary.is_client_to_server());
+        assert!(!summary.has_payload());
+        assert!(!summary.is_report_attributes());
+        assert!(!summary.has_manufacturer_context());
+    }
+
+    #[test]
+    fn frame_summary_reports_manufacturer_and_default_response_context() {
+        let frame = ZclFrame::parse(&[0x04, 0x34, 0x12, 0x51, 0x02, 0xaa]).unwrap();
+        let summary = frame.summary();
+
+        assert_eq!(frame.manufacturer_code, Some(0x1234));
+        assert_eq!(summary.frame_type, ZclFrameType::Foundation);
+        assert_eq!(summary.direction, ZclDirection::ClientToServer);
+        assert_eq!(summary.transaction_sequence_number, 0x51);
+        assert_eq!(summary.command_id, 0x02);
+        assert_eq!(summary.payload_len, 1);
+        assert!(summary.manufacturer_specific);
+        assert!(summary.has_manufacturer_code);
+        assert!(summary.has_manufacturer_context());
+        assert!(summary.expects_default_response());
+        assert!(summary.has_payload());
+    }
+
+    #[test]
+    fn frame_batch_summary_rolls_up_shape_and_payload_context() {
+        let read = read_attributes_frame(
+            0x22,
+            &[
+                ZclAttributeId::MANUFACTURER_NAME,
+                ZclAttributeId::MODEL_IDENTIFIER,
+            ],
+        );
+        let report = report_attributes_frame(
+            0x23,
+            &[ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId::ON_OFF,
+                data_type: ZclDataType::Bool,
+                value: ZclValue::Bool(true),
+            }],
+        )
+        .unwrap();
+        let on = on_off_command_frame(0x24, OnOffCommand::On);
+        let manufacturer = ZclFrame::parse(&[0x04, 0x34, 0x12, 0x25, 0x02, 0xaa]).unwrap();
+        let default_response =
+            default_response_frame(0x26, ZCL_READ_ATTRIBUTES_COMMAND_ID, ZclStatusCode::Success);
+
+        let summary = summarize_zcl_frames([&read, &report, &on, &manufacturer, &default_response]);
+
+        assert_eq!(
+            summary,
+            ZclFrameBatchSummary {
+                frame_count: 5,
+                foundation_frames: 4,
+                cluster_specific_frames: 1,
+                reserved_frames: 0,
+                client_to_server_frames: 4,
+                server_to_client_frames: 1,
+                manufacturer_context_frames: 1,
+                default_response_expected_frames: 1,
+                read_attributes_frames: 1,
+                report_attributes_frames: 1,
+                default_response_frames: 1,
+                payload_frames: 4,
+                total_payload_bytes: 11,
+                max_payload_bytes: 4,
+            }
+        );
+        assert!(summary.has_foundation_frames());
+        assert!(summary.has_cluster_specific_frames());
+        assert!(summary.has_server_to_client_frames());
+        assert!(summary.has_manufacturer_context());
+        assert!(summary.expects_default_responses());
+        assert!(summary.has_payloads());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn frame_batch_summary_can_record_precomputed_summaries() {
+        let summaries = [
+            read_attributes_frame(0x01, &[ZclAttributeId::MODEL_IDENTIFIER]).summary(),
+            on_off_command_frame(0x02, OnOffCommand::Toggle).summary(),
+        ];
+        let summary = ZclFrameBatchSummary::from_summaries(&summaries);
+
+        assert_eq!(summary.frame_count, 2);
+        assert_eq!(summary.foundation_frames, 1);
+        assert_eq!(summary.cluster_specific_frames, 1);
+        assert_eq!(summary.total_payload_bytes, 2);
+        assert_eq!(summary.max_payload_bytes, 2);
+        assert_eq!(summary.payload_frames, 1);
+        assert_eq!(
+            ZclFrameBatchSummary::empty(),
+            ZclFrameBatchSummary::default()
+        );
+        assert!(ZclFrameBatchSummary::empty().is_empty());
     }
 
     #[test]
@@ -791,6 +1604,90 @@ mod tests {
     }
 
     #[test]
+    fn report_attributes_frame_encodes_and_round_trips_reports() {
+        let reports = vec![
+            ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId::ON_OFF,
+                data_type: ZclDataType::Bool,
+                value: ZclValue::Bool(true),
+            },
+            ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId(0x0001),
+                data_type: ZclDataType::U16,
+                value: ZclValue::U16(0x1234),
+            },
+            ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId::MANUFACTURER_NAME,
+                data_type: ZclDataType::CharacterString,
+                value: ZclValue::CharacterString("Acme".to_string()),
+            },
+        ];
+
+        let frame = report_attributes_frame(0x56, &reports).unwrap();
+
+        assert_eq!(frame.command_id, ZCL_REPORT_ATTRIBUTES_COMMAND_ID);
+        assert_eq!(
+            frame.encode().unwrap(),
+            vec![
+                0x10, 0x56, 0x0a, 0x00, 0x00, 0x10, 0x01, 0x01, 0x00, 0x21, 0x34, 0x12, 0x04, 0x00,
+                0x42, 0x04, b'A', b'c', b'm', b'e',
+            ]
+        );
+        assert_eq!(
+            parse_attribute_reports(ZclClusterId::ON_OFF, &frame.payload).unwrap(),
+            reports
+        );
+    }
+
+    #[test]
+    fn attribute_report_encoder_preserves_unknown_raw_values() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::BASIC,
+            attribute_id: ZclAttributeId(0x0099),
+            data_type: ZclDataType::Unknown(0xff),
+            value: ZclValue::Raw(vec![0xde, 0xad]),
+        }];
+
+        let payload = encode_attribute_reports(&reports).unwrap();
+
+        assert_eq!(payload, vec![0x99, 0x00, 0xff, 0xde, 0xad]);
+        assert_eq!(
+            parse_attribute_reports(ZclClusterId::BASIC, &payload).unwrap(),
+            reports
+        );
+    }
+
+    #[test]
+    fn attribute_report_encoder_rejects_wrong_value_shapes() {
+        let wrong_shape = [ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::U8(1),
+        }];
+        let long_string = [ZclAttributeReport {
+            cluster_id: ZclClusterId::BASIC,
+            attribute_id: ZclAttributeId::MANUFACTURER_NAME,
+            data_type: ZclDataType::CharacterString,
+            value: ZclValue::CharacterString("x".repeat(256)),
+        }];
+
+        assert_eq!(
+            encode_attribute_reports(&wrong_shape),
+            Err(ZclError::ValueTypeMismatch {
+                data_type: ZclDataType::Bool,
+            })
+        );
+        assert_eq!(
+            encode_attribute_reports(&long_string),
+            Err(ZclError::ValueTooLong { len: 256 })
+        );
+    }
+
+    #[test]
     fn attribute_report_summary_counts_report_shape() {
         let payload = [
             0x00,
@@ -823,7 +1720,29 @@ mod tests {
         assert_eq!(summary.raw_reports, 0);
         assert_eq!(summary.unknown_type_reports, 0);
         assert!(summary.has_state_deltas());
+        assert!(summary.has_reports());
+        assert_eq!(summary.typed_report_count(), 3);
+        assert!(summary.has_typed_reports());
         assert!(!summary.has_raw_reports());
+        assert!(!summary.has_unknown_type_reports());
+
+        let readiness = summary.readiness();
+        assert_eq!(readiness.report_summary, summary);
+        assert_eq!(readiness.required_check_count, 5);
+        assert_eq!(readiness.passed_check_count, 5);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.reports_present);
+        assert!(readiness.state_delta_coverage_ready);
+        assert!(readiness.typed_value_coverage_ready);
+        assert!(readiness.raw_reports_absent);
+        assert!(readiness.unknown_types_absent);
+        assert!(readiness.report_ready);
+        assert!(readiness.is_report_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_report_discovery());
+        assert!(!readiness.needs_state_delta_mapping());
+        assert!(!readiness.needs_typed_value_mapping());
+        assert!(!readiness.has_raw_or_unknown_reports());
     }
 
     #[test]
@@ -838,7 +1757,209 @@ mod tests {
         assert_eq!(summary.raw_reports, 1);
         assert_eq!(summary.unknown_type_reports, 1);
         assert!(!summary.has_state_deltas());
+        assert!(summary.has_reports());
+        assert_eq!(summary.typed_report_count(), 0);
+        assert!(!summary.has_typed_reports());
         assert!(summary.has_raw_reports());
+        assert!(summary.has_unknown_type_reports());
+
+        let readiness = ZclAttributeReportReadinessSummary::from_summary(summary);
+        assert_eq!(readiness.required_check_count, 5);
+        assert_eq!(readiness.passed_check_count, 1);
+        assert_eq!(readiness.missing_check_count, 4);
+        assert!(readiness.reports_present);
+        assert!(!readiness.state_delta_coverage_ready);
+        assert!(!readiness.typed_value_coverage_ready);
+        assert!(!readiness.raw_reports_absent);
+        assert!(!readiness.unknown_types_absent);
+        assert!(!readiness.report_ready);
+        assert!(!readiness.is_report_ready());
+        assert!(readiness.has_missing_checks());
+        assert!(!readiness.needs_report_discovery());
+        assert!(readiness.needs_state_delta_mapping());
+        assert!(readiness.needs_typed_value_mapping());
+        assert!(readiness.has_raw_or_unknown_reports());
+    }
+
+    #[test]
+    fn zcl_report_operator_summary_reports_ready_path() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::Bool(true),
+        }];
+        let frame = report_attributes_frame(0x61, &reports).unwrap();
+
+        let summary = zcl_report_operator_summary([&frame], ZclClusterId::ON_OFF, &reports);
+
+        assert_eq!(summary.required_check_count, 4);
+        assert_eq!(summary.passed_check_count, 4);
+        assert_eq!(summary.missing_check_count, 0);
+        assert_eq!(summary.frame_batch.report_attributes_frames, 1);
+        assert_eq!(summary.report_readiness.report_summary.report_count, 1);
+        assert!(summary.report_frame_observed);
+        assert!(summary.report_payloads_present);
+        assert!(summary.no_default_response_backlog);
+        assert!(summary.report_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.is_operator_ready());
+        assert!(!summary.has_missing_checks());
+        assert!(!summary.needs_report_frame_capture());
+        assert!(!summary.needs_report_payloads());
+        assert!(!summary.has_default_response_backlog());
+        assert!(!summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_operator_summary_routes_blocked_path() {
+        let read = ZclFrame::parse(&[0x00, 0x62, ZCL_READ_ATTRIBUTES_COMMAND_ID]).unwrap();
+        let reports =
+            parse_attribute_reports(ZclClusterId::BASIC, &[0x99, 0x00, 0xff, 0xde, 0xad]).unwrap();
+
+        let summary = zcl_report_operator_summary([&read], ZclClusterId::BASIC, &reports);
+
+        assert_eq!(summary.required_check_count, 4);
+        assert_eq!(summary.passed_check_count, 0);
+        assert_eq!(summary.missing_check_count, 4);
+        assert_eq!(summary.frame_batch.read_attributes_frames, 1);
+        assert_eq!(summary.frame_batch.default_response_expected_frames, 1);
+        assert_eq!(summary.report_readiness.report_summary.raw_reports, 1);
+        assert!(!summary.report_frame_observed);
+        assert!(!summary.report_payloads_present);
+        assert!(!summary.no_default_response_backlog);
+        assert!(!summary.report_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.is_operator_ready());
+        assert!(summary.has_missing_checks());
+        assert!(summary.needs_report_frame_capture());
+        assert!(summary.needs_report_payloads());
+        assert!(summary.has_default_response_backlog());
+        assert!(summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_signoff_summary_reports_ready_path() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::Bool(true),
+        }];
+        let frame = report_attributes_frame(0x61, &reports).unwrap();
+
+        let summary = zcl_report_signoff_summary([&frame], ZclClusterId::ON_OFF, &reports);
+
+        assert_eq!(
+            summary.operator_summary,
+            zcl_report_operator_summary([&frame], ZclClusterId::ON_OFF, &reports)
+        );
+        assert_eq!(summary.required_signoff_check_count, 5);
+        assert_eq!(summary.passed_signoff_check_count, 5);
+        assert_eq!(summary.missing_signoff_check_count, 0);
+        assert!(summary.operator_ready);
+        assert!(summary.report_frame_observed);
+        assert!(summary.report_payloads_present);
+        assert!(summary.default_response_backlog_clear);
+        assert!(summary.report_readiness_ready);
+        assert!(summary.signoff_ready);
+        assert!(summary.is_signoff_ready());
+        assert!(!summary.has_missing_signoff_checks());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_report_frame_capture());
+        assert!(!summary.needs_report_payloads());
+        assert!(!summary.has_default_response_backlog());
+        assert!(!summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_signoff_summary_routes_blocked_path() {
+        let read = ZclFrame::parse(&[0x00, 0x62, ZCL_READ_ATTRIBUTES_COMMAND_ID]).unwrap();
+        let reports =
+            parse_attribute_reports(ZclClusterId::BASIC, &[0x99, 0x00, 0xff, 0xde, 0xad]).unwrap();
+
+        let summary = zcl_report_signoff_summary([&read], ZclClusterId::BASIC, &reports);
+
+        assert_eq!(summary.required_signoff_check_count, 5);
+        assert_eq!(summary.passed_signoff_check_count, 0);
+        assert_eq!(summary.missing_signoff_check_count, 5);
+        assert!(!summary.operator_ready);
+        assert!(!summary.report_frame_observed);
+        assert!(!summary.report_payloads_present);
+        assert!(!summary.default_response_backlog_clear);
+        assert!(!summary.report_readiness_ready);
+        assert!(!summary.signoff_ready);
+        assert!(!summary.is_signoff_ready());
+        assert!(summary.has_missing_signoff_checks());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_report_frame_capture());
+        assert!(summary.needs_report_payloads());
+        assert!(summary.has_default_response_backlog());
+        assert!(summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_closure_summary_reports_ready_path() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::Bool(true),
+        }];
+        let frame = report_attributes_frame(0x61, &reports).unwrap();
+
+        let summary = zcl_report_closure_summary([&frame], ZclClusterId::ON_OFF, &reports);
+
+        assert_eq!(
+            summary.signoff_summary,
+            zcl_report_signoff_summary([&frame], ZclClusterId::ON_OFF, &reports)
+        );
+        assert_eq!(summary.required_closure_check_count, 6);
+        assert_eq!(summary.passed_closure_check_count, 6);
+        assert_eq!(summary.missing_closure_check_count, 0);
+        assert!(summary.signoff_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.report_frame_observed);
+        assert!(summary.report_payloads_present);
+        assert!(summary.default_response_backlog_clear);
+        assert!(summary.report_readiness_ready);
+        assert!(summary.closure_ready);
+        assert!(summary.is_closure_ready());
+        assert!(!summary.has_missing_closure_checks());
+        assert!(!summary.needs_signoff());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_report_frame_capture());
+        assert!(!summary.needs_report_payloads());
+        assert!(!summary.has_default_response_backlog());
+        assert!(!summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_closure_summary_routes_blocked_path() {
+        let read = ZclFrame::parse(&[0x00, 0x62, ZCL_READ_ATTRIBUTES_COMMAND_ID]).unwrap();
+        let reports =
+            parse_attribute_reports(ZclClusterId::BASIC, &[0x99, 0x00, 0xff, 0xde, 0xad]).unwrap();
+
+        let summary = zcl_report_closure_summary([&read], ZclClusterId::BASIC, &reports);
+
+        assert_eq!(summary.required_closure_check_count, 6);
+        assert_eq!(summary.passed_closure_check_count, 0);
+        assert_eq!(summary.missing_closure_check_count, 6);
+        assert!(!summary.signoff_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.report_frame_observed);
+        assert!(!summary.report_payloads_present);
+        assert!(!summary.default_response_backlog_clear);
+        assert!(!summary.report_readiness_ready);
+        assert!(!summary.closure_ready);
+        assert!(!summary.is_closure_ready());
+        assert!(summary.has_missing_closure_checks());
+        assert!(summary.needs_signoff());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_report_frame_capture());
+        assert!(summary.needs_report_payloads());
+        assert!(summary.has_default_response_backlog());
+        assert!(summary.needs_report_readiness_work());
     }
 
     #[test]

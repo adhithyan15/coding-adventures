@@ -1,0 +1,596 @@
+[
+ {
+  "id": "MED2",
+  "input_ir": {
+   "slots": {
+    "in_network": {
+     "value": true,
+     "type": "stated",
+     "span": "in-network",
+     "polarity": "affirmed"
+    },
+    "specialist_visit": {
+     "value": true,
+     "type": "inferred",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "The scenario does not state whether the annual deductible has been met, which is the dispositive fact for selecting the 70% vs 0% rate. The engine should abstain (INDETERMINATE)."
+   ]
+  },
+  "justifications": [
+   {
+    "slot": "in_network",
+    "verdict": "ENTAILED",
+    "basis_span": "in-network rheumatologist"
+   },
+   {
+    "slot": "specialist_visit",
+    "verdict": "ENTAILED",
+    "basis_span": "rheumatologist (a specialist) for a consultation"
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1_specialist_after_deductible",
+     "when": {
+      "in_network": "true",
+      "specialist_visit": "true",
+      "deductible_met": "true"
+     },
+     "then": "reimbursed at 70%",
+     "source_span": "reimburses in-network specialist visits at 70% after the annual deductible is met"
+    },
+    {
+     "id": "R2_specialist_before_deductible",
+     "when": {
+      "in_network": "true",
+      "specialist_visit": "true",
+      "deductible_met": "false"
+     },
+     "then": "reimbursed at 0%",
+     "source_span": "and at 0% before the deductible is met"
+    }
+   ]
+  }
+ },
+ {
+  "id": "EMP2",
+  "input_ir": {
+   "slots": {
+    "requested_protected_family_leave": {
+     "value": true,
+     "type": "stated",
+     "span": "An employee requested protected family leave to care for a newborn.",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Scenario does not state the employee's length of employment (months_employed), which is the dispositive condition in the policy; the tenure slot is therefore omitted and the engine should abstain (INDETERMINATE)."
+   ]
+  },
+  "justifications": [
+   {
+    "slot": "requested_protected_family_leave",
+    "verdict": "ENTAILED",
+    "basis_span": "An employee requested protected family leave to care for a newborn."
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1",
+     "when": {
+      "months_employed": ">=12"
+     },
+     "then": "ENTITLED",
+     "source_span": "An employee is entitled to protected family leave only if employed by the company for at least 12 months."
+    },
+    {
+     "id": "R2",
+     "when": {
+      "months_employed": "<12"
+     },
+     "then": "NOT_ENTITLED",
+     "source_span": "only if employed by the company for at least 12 months"
+    }
+   ]
+  }
+ },
+ {
+  "id": "INS2",
+  "input_ir": {
+   "slots": {
+    "damage_type": {
+     "value": "water damage",
+     "type": "stated",
+     "span": "water damage to a kitchen floor",
+     "polarity": "affirmed"
+    },
+    "claim_filed": {
+     "value": true,
+     "type": "stated",
+     "span": "A policyholder filed a claim",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Scenario does not state whether the water damage was sudden and accidental (covered) or due to gradual seepage / long-term maintenance neglect (excluded). 'Discovered last week' describes when it was found, not the cause or onset, so neither the coverage condition nor the exclusion condition can be established. The dispositive cause slot is therefore omitted and the engine should abstain."
+   ]
+  },
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1_covered_sudden_accidental",
+     "when": {
+      "damage_type": "water damage",
+      "sudden_and_accidental": "true"
+     },
+     "then": "COVERED",
+     "source_span": "Water damage is covered if sudden and accidental (e.g., a burst pipe)"
+    },
+    {
+     "id": "R2_excluded_gradual_seepage",
+     "when": {
+      "damage_type": "water damage",
+      "gradual_seepage": "true"
+     },
+     "then": "NOT_COVERED",
+     "source_span": "excluded if due to gradual seepage"
+    },
+    {
+     "id": "R3_excluded_maintenance_neglect",
+     "when": {
+      "damage_type": "water damage",
+      "maintenance_neglect": "true"
+     },
+     "then": "NOT_COVERED",
+     "source_span": "long-term maintenance neglect"
+    }
+   ]
+  }
+ },
+ {
+  "id": "CON2",
+  "input_ir": {
+   "slots": {
+    "downtime_duration_hours": {
+     "value": 2,
+     "type": "stated",
+     "span": "down for 2 hours"
+    },
+    "planned_maintenance": {
+     "value": true,
+     "type": "inferred",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Scenario states the outage occurred 'during a maintenance window', implying planned maintenance, but does NOT state whether the maintenance was announced at least 48 hours in advance — the dispositive fact for the non-creditable exception. That slot is omitted, so the engine abstains (INDETERMINATE).",
+    "Scenario does not explicitly characterize the downtime as 'unplanned'; the maintenance-window phrasing points the other way."
+   ]
+  },
+  "justifications": [
+   {
+    "slot": "downtime_duration_hours",
+    "verdict": "ENTAILED",
+    "basis_span": "down for 2 hours"
+   },
+   {
+    "slot": "planned_maintenance",
+    "verdict": "ENTAILED",
+    "basis_span": "during a maintenance window"
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1_unplanned_creditable",
+     "when": {
+      "planned_maintenance": "false"
+     },
+     "then": "CREDITABLE",
+     "source_span": "Unplanned downtime is creditable under the SLA"
+    },
+    {
+     "id": "R2_planned_announced_not_creditable",
+     "when": {
+      "planned_maintenance": "true",
+      "maintenance_announced_hours_in_advance": ">=48"
+     },
+     "then": "NOT_CREDITABLE",
+     "source_span": "planned-maintenance downtime announced at least 48 hours in advance is not creditable"
+    }
+   ]
+  }
+ },
+ {
+  "id": "LAW1",
+  "input_ir": {
+   "slots": {
+    "parking_fine_incurred": {
+     "value": true,
+     "type": "stated",
+     "span": "A car received a parking fine at 3:00pm",
+     "polarity": "affirmed"
+    },
+    "violation_time_hour": {
+     "value": 15,
+     "type": "inferred",
+     "polarity": "affirmed"
+    },
+    "reported_stolen": {
+     "value": true,
+     "type": "stated",
+     "span": "Its owner had filed a police stolen-vehicle report for that car at 9:00am the same day",
+     "polarity": "affirmed"
+    },
+    "stolen_report_time_hour": {
+     "value": 9,
+     "type": "inferred",
+     "polarity": "affirmed"
+    },
+    "reported_stolen_before_violation": {
+     "value": true,
+     "type": "inferred",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Times are converted to 24-hour numeric form (3:00pm=15, 9:00am=9) so the engine can compare ordering; the scenario states clock times in 12-hour form.",
+    "The scenario does not explicitly say the report was the *same* vehicle's theft status at violation time; it states the report was filed for that car the same day, which entails it was reported stolen before the 3:00pm fine."
+   ]
+  },
+  "justifications": [
+   {
+    "slot": "violation_time_hour",
+    "verdict": "ENTAILED",
+    "basis_span": "a parking fine at 3:00pm"
+   },
+   {
+    "slot": "stolen_report_time_hour",
+    "verdict": "ENTAILED",
+    "basis_span": "a police stolen-vehicle report for that car at 9:00am"
+   },
+   {
+    "slot": "reported_stolen_before_violation",
+    "verdict": "ENTAILED",
+    "basis_span": "filed a police stolen-vehicle report for that car at 9:00am the same day"
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1_owner_liable_default",
+     "when": {
+      "parking_fine_incurred": "true"
+     },
+     "then": "LIABLE",
+     "source_span": "A vehicle owner is liable for parking fines incurred by the vehicle"
+    },
+    {
+     "id": "R2_exception_stolen_before_violation",
+     "when": {
+      "reported_stolen": "true",
+      "reported_stolen_before_violation": "true"
+     },
+     "then": "NOT_LIABLE",
+     "source_span": "if the vehicle was reported stolen before the time of the violation, the owner is not liable"
+    }
+   ]
+  }
+ },
+ {
+  "id": "BEN1",
+  "input_ir": {
+   "slots": {
+    "monthly_income": {
+     "value": 2600,
+     "type": "stated",
+     "span": "monthly income of $2,600"
+    },
+    "member_on_continuous_home_oxygen": {
+     "value": true,
+     "type": "stated",
+     "span": "one member who uses continuous home oxygen",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": []
+  },
+  "justifications": [
+   {
+    "slot": "monthly_income",
+    "verdict": "ENTAILED",
+    "basis_span": "monthly income of $2,600"
+   },
+   {
+    "slot": "member_on_continuous_home_oxygen",
+    "verdict": "ENTAILED",
+    "basis_span": "one member who uses continuous home oxygen"
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "base_income_qualifies",
+     "when": {
+      "monthly_income": "<=2000"
+     },
+     "then": "QUALIFIES",
+     "source_span": "A household qualifies for the energy subsidy if monthly income is at or below $2,000"
+    },
+    {
+     "id": "base_income_does_not_qualify",
+     "when": {
+      "monthly_income": ">2000"
+     },
+     "then": "DOES_NOT_QUALIFY",
+     "source_span": "A household qualifies for the energy subsidy if monthly income is at or below $2,000"
+    },
+    {
+     "id": "oxygen_override_qualifies",
+     "when": {
+      "member_on_continuous_home_oxygen": "true"
+     },
+     "then": "QUALIFIES",
+     "source_span": "households with a member on continuous home oxygen qualify regardless of income"
+    }
+   ]
+  }
+ },
+ {
+  "id": "IMM1",
+  "input_ir": {
+   "slots": {
+    "continuous_residence_years": {
+     "value": 3.17,
+     "type": "stated",
+     "span": "3 years and 2 months of continuous residence",
+     "polarity": "affirmed"
+    },
+    "married_living_with_citizen_spouse": {
+     "value": true,
+     "type": "stated",
+     "span": "married to and living with a U.S.-citizen spouse for that entire period",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Override says spouse condition must hold 'for the required period'. Scenario states it held for the 3yr-2mo residence period; whether '3 years' override threshold counts the spouse-period itself is treated as satisfied since the stated period (3y2m) >= 3 years."
+   ]
+  },
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "default_residence",
+     "when": {
+      "continuous_residence_years": ">=5"
+     },
+     "then": "MEETS continuous-residence requirement",
+     "source_span": "An applicant must have 5 years of continuous residence to naturalize."
+    },
+    {
+     "id": "spouse_override",
+     "when": {
+      "married_living_with_citizen_spouse": "true",
+      "continuous_residence_years": ">=3"
+     },
+     "then": "MEETS continuous-residence requirement",
+     "source_span": "an applicant married to and living with a citizen spouse for the required period qualifies with 3 years of continuous residence"
+    }
+   ]
+  }
+ },
+ {
+  "id": "LAW2",
+  "input_ir": {
+   "slots": {
+    "days_since_moveout": {
+     "value": 30,
+     "type": "stated",
+     "span": "moved out 30 days ago"
+    },
+    "deposit_returned": {
+     "value": false,
+     "type": "stated",
+     "span": "The deposit has not been returned",
+     "polarity": "denied"
+    },
+    "terminated_by": {
+     "value": "landlord",
+     "type": "stated",
+     "span": "the landlord ended the lease"
+    },
+    "termination_reason": {
+     "value": "non-payment",
+     "type": "stated",
+     "span": "ended the lease for non-payment"
+    },
+    "terminated_by_tenant_for_cause": {
+     "value": false,
+     "type": "inferred",
+     "polarity": "denied"
+    }
+   },
+   "uncertainties": [
+    "The policy exception is keyed on the lease being 'terminated by the tenant for cause'. The scenario states the landlord (not the tenant) ended the lease, for non-payment. The exception therefore does not apply; the inferred slot terminated_by_tenant_for_cause=false follows directly from the stated terminator being the landlord."
+   ]
+  },
+  "justifications": [
+   {
+    "slot": "days_since_moveout",
+    "verdict": "ENTAILED",
+    "basis_span": "moved out 30 days ago"
+   },
+   {
+    "slot": "deposit_returned",
+    "verdict": "ENTAILED",
+    "basis_span": "The deposit has not been returned"
+   },
+   {
+    "slot": "terminated_by",
+    "verdict": "ENTAILED",
+    "basis_span": "the landlord ended the lease"
+   },
+   {
+    "slot": "termination_reason",
+    "verdict": "ENTAILED",
+    "basis_span": "ended the lease for non-payment"
+   },
+   {
+    "slot": "terminated_by_tenant_for_cause",
+    "verdict": "ENTAILED",
+    "basis_span": "the landlord ended the lease for non-payment"
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "exception_tenant_for_cause",
+     "when": {
+      "terminated_by_tenant_for_cause": "true"
+     },
+     "then": "NO_VIOLATION (no deadline applies)",
+     "source_span": "except where the lease was terminated by the tenant for cause, in which case no deadline applies"
+    },
+    {
+     "id": "violation_deadline_passed",
+     "when": {
+      "terminated_by_tenant_for_cause": "false",
+      "days_since_moveout": ">21",
+      "deposit_returned": "false"
+     },
+     "then": "VIOLATION (deadline passed, deposit not returned)",
+     "source_span": "A landlord must return a tenant's security deposit within 21 days of move-out"
+    },
+    {
+     "id": "no_violation_within_deadline",
+     "when": {
+      "terminated_by_tenant_for_cause": "false",
+      "days_since_moveout": "<=21"
+     },
+     "then": "NO_VIOLATION (still within deadline)",
+     "source_span": "must return a tenant's security deposit within 21 days of move-out"
+    },
+    {
+     "id": "no_violation_deposit_returned",
+     "when": {
+      "terminated_by_tenant_for_cause": "false",
+      "deposit_returned": "true"
+     },
+     "then": "NO_VIOLATION (deposit returned)",
+     "source_span": "A landlord must return a tenant's security deposit within 21 days of move-out"
+    }
+   ]
+  }
+ },
+ {
+  "id": "BEN2",
+  "input_ir": {
+   "slots": {
+    "enrollment_status": {
+     "value": "full-time",
+     "type": "stated",
+     "span": "enrolled full-time",
+     "polarity": "affirmed"
+    },
+    "in_default_on_prior_education_loan": {
+     "value": true,
+     "type": "stated",
+     "span": "currently in default on a federal student loan from a prior program",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Scenario says 'full-time', policy threshold is 'at least half-time'; full-time entails meeting the half-time threshold, so enrollment satisfies the base eligibility rule. The default override is dispositive regardless."
+   ]
+  },
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1_base_eligibility",
+     "when": {
+      "enrollment_status": "full-time",
+      "in_default_on_prior_education_loan": "false"
+     },
+     "then": "eligible",
+     "source_span": "Applicants are eligible for tuition assistance if enrolled at least half-time"
+    },
+    {
+     "id": "R2_default_override",
+     "when": {
+      "in_default_on_prior_education_loan": "true"
+     },
+     "then": "ineligible",
+     "source_span": "except applicants in default on a prior education loan, who are ineligible regardless of enrollment"
+    }
+   ]
+  }
+ },
+ {
+  "id": "IMM2",
+  "input_ir": {
+   "slots": {
+    "months_of_presence": {
+     "value": 33,
+     "type": "stated",
+     "span": "accumulated 33 months of physical presence",
+     "polarity": "affirmed"
+    },
+    "longest_single_absence_months": {
+     "value": 13,
+     "type": "stated",
+     "span": "took one continuous trip abroad lasting 13 months during the period",
+     "polarity": "affirmed"
+    }
+   },
+   "uncertainties": [
+    "Scenario states the trip was 'one continuous trip', which the framework treats as a single absence; if it were multiple shorter trips summing to 13 the continuity-break exception would not apply."
+   ]
+  },
+  "justifications": [
+   {
+    "slot": "months_of_presence",
+    "verdict": "ENTAILED",
+    "basis_span": "accumulated 33 months of physical presence"
+   },
+   {
+    "slot": "longest_single_absence_months",
+    "verdict": "ENTAILED",
+    "basis_span": "took one continuous trip abroad lasting 13 months"
+   }
+  ],
+  "rulebook_ir": {
+   "rules": [
+    {
+     "id": "R1_presence_met",
+     "when": {
+      "months_of_presence": ">=30",
+      "longest_single_absence_months": "<12"
+     },
+     "then": "SATISFIES the physical-presence requirement",
+     "source_span": "satisfies the physical-presence requirement with 30 months of presence in the U.S. during the statutory period"
+    },
+    {
+     "id": "R2_continuity_break_override",
+     "when": {
+      "longest_single_absence_months": ">=12"
+     },
+     "then": "DOES NOT SATISFY the physical-presence requirement (single absence of 12 months or more breaks continuity and disqualifies the period regardless of total months)",
+     "source_span": "any single absence of 12 months or more breaks continuity and disqualifies the period regardless of total months"
+    },
+    {
+     "id": "R3_presence_below_threshold",
+     "when": {
+      "months_of_presence": "<30"
+     },
+     "then": "DOES NOT SATISFY the physical-presence requirement (insufficient months of presence)",
+     "source_span": "satisfies the physical-presence requirement with 30 months of presence in the U.S. during the statutory period"
+    }
+   ]
+  }
+ }
+]

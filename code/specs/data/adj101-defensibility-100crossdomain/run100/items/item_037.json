@@ -1,0 +1,7 @@
+{
+ "idx": 37,
+ "id": "BEN-8",
+ "scenario": "Theresa has $18,000 in savings. Her county was placed under a declared natural disaster 10 days ago after severe flooding destroyed her home. She files for Emergency Cash Aid today.",
+ "policy": "Applicants with assets exceeding $5,000 are generally ineligible for Emergency Cash Aid. However, this asset limit does not apply, and the applicant is eligible regardless of assets, when the application is filed within 30 days of a declared natural disaster in the applicant's county.",
+ "question": "Is Theresa eligible for Emergency Cash Aid?"
+}

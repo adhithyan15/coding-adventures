@@ -1,0 +1,8 @@
+{
+ "check_id": 110,
+ "idx": 46,
+ "slot": "rideshare_endorsement_purchased",
+ "claimed_value": true,
+ "scenario": "A policyholder crashed while driving a passenger for a paid rideshare trip. The policy file shows the policyholder had purchased and paid for the optional rideshare endorsement, which was active on the date of the crash.",
+ "cited_span": "the policyholder had purchased and paid for the optional rideshare endorsement, which was active on the date of the crash"
+}

@@ -1,0 +1,243 @@
+% ============================================================================
+% ADJ52 case-8 derived rulebook.
+% CLINICAL AREA: central-airway / endobronchial obstructing lesion presenting
+% as "refractory asthma" in a 46-year-old never-smoking man (unilateral fixed
+% wheeze, smaller left lung, restrictive non-reversible spirometry, smooth
+% polypoid mass nearly occluding the left main bronchus at bronchoscopy).
+%
+% Differential built from the IR alone (no answer given). Recurses into
+% subcategories of "endobronchial mass": neuroendocrine (carcinoid),
+% salivary-gland-type (mucoepidermoid), squamous-cell carcinoma, benign
+% (hamartoma/lipoma), and non-neoplastic (foreign body). Every clause carries
+% a % rationale + source + trust. Magnitudes are qualitative atoms (adj-lang
+% IDENT grammar: lowercase, no leading digit).
+%
+% ANTI-DOUBLE-COUNTING (ADJ53 mechanism construct): the unilateral fixed
+% wheeze, reduced ipsilateral air entry, smaller left lung (volume loss), the
+% restrictive/non-reversible spirometry, and the failure of maximal inhaler
+% therapy are NOT independent findings — the cited sources describe them as
+% the SHARED downstream picture of one central-airway-obstruction syndrome.
+% They are grouped under a single % mechanism directive that fires its
+% combined likelihood ratio ONCE, rather than as separate contributes.
+% ============================================================================
+
+% ===== PRIORS (a 46yo never-smoker with a near-occlusive endobronchial mass) =====
+
+% rationale: among endobronchial masses presenting as "asthma" in a young-ish
+% never-smoker with a smooth polypoid central lesion, carcinoid is the
+% prototypical and most common neuroendocrine cause; mean age fifth decade,
+% no smoking association, central/main-bronchus, hemoptysis from hypervascularity.
+prior 0.30 for diagnosis(bronchial_carcinoid_tumor)
+  source "Aljohaney et al., Misdiagnosed Bronchial Carcinoid w/ refractory dyspnoea+wheeze, PMC3743987; Diagnosis & Treatment of Bronchopulmonary Carcinoid PMC4524963" trust authoritative
+
+% rationale: central endobronchial squamous-cell carcinoma is a leading
+% malignant endobronchial mass with hemoptysis, but it is overwhelmingly a
+% smoker's tumour — kept on the differential, prior tempered for a never-smoker.
+prior 0.15 for diagnosis(endobronchial_squamous_cell_carcinoma)
+  source "Endobronchial Pulmonary Squamous Cell Carcinoma review, PMC10647737; Squamous-cell carcinoma of the lung (smoking dominant cause)" trust authoritative
+
+% rationale: benign endobronchial tumours (hamartoma, lipoma) present as smooth
+% polypoid masses that can subtotally occlude a main bronchus and radiologically
+% mimic carcinoid; a real and citable alternative for a smooth polypoid lesion.
+prior 0.12 for diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+  source "Endobronchial Hamartoma Subtotally Occluding Right Main Bronchus Mimicking Carcinoid, PMC4839844" trust authoritative
+
+% rationale: bronchial mucoepidermoid carcinoma is a rare salivary-gland-type
+% central airway tumour that, like carcinoid, occurs in younger non-smokers and
+% is a recognised differential of carcinoid; lower prior (rarer).
+prior 0.06 for diagnosis(bronchial_mucoepidermoid_carcinoma)
+  source "Mucoepidermoid Carcinoma of the Bronchus: A Review, Arch Pathol Lab Med 2007;131:1400; PMC5288321" trust authoritative
+
+% rationale: an aspirated endobronchial foreign body can cause chronic
+% unilateral wheeze + volume loss mislabelled as asthma; less likely with a
+% described smooth polypoid mass, but a citable non-neoplastic alternative.
+prior 0.05 for diagnosis(endobronchial_foreign_body)
+  source "Wheezing and Asthma, Clinical Methods NCBI NBK358 ('all that wheezes is not asthma'); LITFL Wheeze DDx" trust authoritative
+
+% rationale: residual probability that the refractory-asthma label is simply
+% true severe/poorly-controlled asthma despite the atypical workup — the null
+% hypothesis the second opinion must displace.
+prior 0.10 for diagnosis(refractory_asthma_true)
+  source "Asthma Differential Diagnoses, Medscape 296301-differential" trust authoritative
+
+% ===== SHARED MECHANISM: central airway obstruction syndrome =====
+% These correlated findings are ONE syndrome (fixed unilateral central airway
+% obstruction by an endobronchial lesion). Firing each as an independent
+% contributes would double-count. The directive fires the combined LR ONCE for
+% each obstruction-explaining structural diagnosis if ANY manifestation is seen.
+% Manifestations: unilateral louder/constant wheeze that does not clear with
+% coughing, reduced ipsilateral air entry, smaller (volume-loss) left lung,
+% asymmetric lung size on radiograph, restrictive non-reversible spirometry,
+% no bronchodilator response, failure of maximal inhaler therapy.
+
+% mechanism central_airway_obstruction for diagnosis(bronchial_carcinoid_tumor) lr 12.0 : wheeze_localization(left_chest_louder_constant), wheeze_character(does_not_clear_with_coughing), exam_finding(reduced_air_entry_left_side), imaging_finding(left_lung_smaller_than_right), imaging_finding(asymmetric_lung_size), spirometry_finding(restrictive_process), bronchodilator_response(no_meaningful_improvement), treatment_failure(maximal_inhaler_therapy)
+% source "Aljohaney PMC3743987 (localized fixed wheeze, obstruction, atelectasis); SOUND-SPECTROGRAM fixed-airway monophonic wheeze, Respirology 2018" trust authoritative
+
+% mechanism central_airway_obstruction_scc for diagnosis(endobronchial_squamous_cell_carcinoma) lr 9.0 : wheeze_localization(left_chest_louder_constant), wheeze_character(does_not_clear_with_coughing), exam_finding(reduced_air_entry_left_side), imaging_finding(left_lung_smaller_than_right), imaging_finding(asymmetric_lung_size), spirometry_finding(restrictive_process), bronchodilator_response(no_meaningful_improvement), treatment_failure(maximal_inhaler_therapy)
+% source "PMC10647737 (central endobronchial SCC obstruction); SOUND-SPECTROGRAM fixed-airway wheeze, Respirology 2018" trust authoritative
+
+% mechanism central_airway_obstruction_benign for diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma) lr 9.0 : wheeze_localization(left_chest_louder_constant), wheeze_character(does_not_clear_with_coughing), exam_finding(reduced_air_entry_left_side), imaging_finding(left_lung_smaller_than_right), imaging_finding(asymmetric_lung_size), spirometry_finding(restrictive_process), bronchodilator_response(no_meaningful_improvement), treatment_failure(maximal_inhaler_therapy)
+% source "PMC4839844 (endobronchial hamartoma subtotally occluding main bronchus)" trust authoritative
+
+% mechanism central_airway_obstruction_mec for diagnosis(bronchial_mucoepidermoid_carcinoma) lr 9.0 : wheeze_localization(left_chest_louder_constant), wheeze_character(does_not_clear_with_coughing), exam_finding(reduced_air_entry_left_side), imaging_finding(left_lung_smaller_than_right), imaging_finding(asymmetric_lung_size), spirometry_finding(restrictive_process), bronchodilator_response(no_meaningful_improvement), treatment_failure(maximal_inhaler_therapy)
+% source "Arch Pathol Lab Med 2007;131:1400 (central bronchial mucoepidermoid obstruction)" trust authoritative
+
+% mechanism central_airway_obstruction_fb for diagnosis(endobronchial_foreign_body) lr 6.0 : wheeze_localization(left_chest_louder_constant), wheeze_character(does_not_clear_with_coughing), exam_finding(reduced_air_entry_left_side), imaging_finding(left_lung_smaller_than_right), imaging_finding(asymmetric_lung_size), spirometry_finding(restrictive_process), bronchodilator_response(no_meaningful_improvement), treatment_failure(maximal_inhaler_therapy)
+% source "Clinical Methods NBK358 (foreign body causes localized fixed wheeze + volume loss)" trust authoritative
+
+% ===== STRUCTURAL EVIDENCE THAT IS GENUINELY INDEPENDENT OF THE OBSTRUCTION SYNDROME =====
+
+% rationale: a smooth, polypoid endobronchial mass in the left MAIN bronchus is
+% the classic bronchoscopic morphology of carcinoid (smooth, reddish-yellow,
+% polypoidal). Strongly raises carcinoid. This is independent of the physiology.
+contributes 6.0 from bronchoscopy_finding(smooth_polypoid_mass) to diagnosis(bronchial_carcinoid_tumor)
+  source "Aljohaney PMC3743987 (smooth reddish-yellow polypoidal mass); Cases Journal 2:7414 (left main bronchus polypoid mass)" trust authoritative
+contributes 4.0 from mass_location(left_main_bronchus) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC4524963 (three-quarters of bronchopulmonary carcinoids are central/main-bronchus)" trust authoritative
+
+% rationale: a smooth polypoid mass also fits a benign endobronchial tumour;
+% benign hamartoma/lipoma are classically smooth and polypoid.
+contributes 3.0 from bronchoscopy_finding(smooth_polypoid_mass) to diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+  source "PMC4839844 (smooth polypoid endobronchial hamartoma)" trust authoritative
+
+% rationale: squamous-cell carcinoma is typically an irregular/exophytic
+% infiltrating central mass; a SMOOTH polypoid morphology is somewhat atypical
+% (mild AGAINST) though SCC remains possible.
+contributes 0.7 from bronchoscopy_finding(smooth_polypoid_mass) to diagnosis(endobronchial_squamous_cell_carcinoma)
+  source "PMC10647737 (endobronchial SCC typically irregular/exophytic infiltrating mass)" trust empirical
+
+% rationale: mucoepidermoid carcinoma also presents as a smooth polypoid
+% endobronchial mass in a central airway, supporting it modestly.
+contributes 2.5 from bronchoscopy_finding(smooth_polypoid_mass) to diagnosis(bronchial_mucoepidermoid_carcinoma)
+  source "PMC5288321 (bronchial mucoepidermoid polypoid endobronchial mass)" trust authoritative
+
+% rationale: hemoptysis (small-volume, episodic) reflects tumour hypervascularity
+% typical of central carcinoid; raises carcinoid.
+contributes 2.5 from symptom(hemoptysis_small_volume_episodic) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC4524963 (central carcinoid hemoptysis from hypervascularity)" trust authoritative
+
+% rationale: hemoptysis is also common in central squamous-cell carcinoma;
+% raises SCC.
+contributes 2.5 from symptom(hemoptysis_small_volume_episodic) to diagnosis(endobronchial_squamous_cell_carcinoma)
+  source "PMC10647737 (hemoptysis more common in central SCC); Neumark Surgery hemoptysis in lung cancer" trust authoritative
+
+% rationale: benign tumours and foreign bodies bleed far less; mild AGAINST when
+% hemoptysis is present.
+contributes 0.6 from symptom(hemoptysis_small_volume_episodic) to diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+  source "PMC4839844 (benign endobronchial tumours rarely bleed)" trust inferred
+
+% ===== DISCRIMINATORS: smoking status, age, sex =====
+
+% rationale: KEY NEGATIVE DISCRIMINATOR. Squamous-cell carcinoma is dominantly
+% a smoker's tumour; a lifelong never-smoker argues strongly AGAINST SCC.
+contributes 0.25 from smoking_history(never_smoked) to diagnosis(endobronchial_squamous_cell_carcinoma)
+  source "Squamous-cell carcinoma of the lung (tobacco the dominant cause; vast majority are smokers)" trust authoritative
+
+% rationale: carcinoid has NO association with smoking; never-smoking is fully
+% compatible and mildly supportive relative to smoking-driven cancers.
+contributes 1.5 from smoking_history(never_smoked) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC3743987 / PMC4524963 (no association between carcinoid and cigarette smoking)" trust authoritative
+
+% rationale: mucoepidermoid carcinoma has no smoking risk and a mean age ~40 —
+% never-smoking is compatible and mildly supportive.
+contributes 1.4 from smoking_history(never_smoked) to diagnosis(bronchial_mucoepidermoid_carcinoma)
+  source "Arch Pathol Lab Med 2007;131:1400 (mucoepidermoid: no smoking risk, mean age ~40)" trust authoritative
+
+% rationale: age in the fifth decade (46) matches the mean presentation age of
+% typical carcinoid; supportive.
+contributes 1.6 from patient_age(forty_six_years) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC3743987 (typical carcinoid mean age fifth decade)" trust authoritative
+
+% rationale: 46 is younger than the usual squamous-cell carcinoma age range;
+% mild AGAINST.
+contributes 0.7 from patient_age(forty_six_years) to diagnosis(endobronchial_squamous_cell_carcinoma)
+  source "PMC10647737 (endobronchial SCC predominantly older smokers)" trust empirical
+
+% ===== THE ASTHMA NULL HYPOTHESIS (what makes 'refractory asthma' wrong) =====
+
+% rationale: STRONG NEGATIVE for true asthma. A FIXED, localized, monophonic
+% wheeze that does not clear with coughing and is louder over one hemithorax is
+% the signature of fixed airway narrowing, NOT the variable polyphonic wheeze of
+% asthma. Argues strongly against true asthma.
+contributes 0.15 from wheeze_localization(left_chest_louder_constant) to diagnosis(refractory_asthma_true)
+  source "SOUND-SPECTROGRAM, Respirology 2018 (fixed-airway wheeze is flat/monophonic vs polyphonic asthma)" trust authoritative
+
+% rationale: STRONG NEGATIVE for true asthma. Asthma is an obstructive, REVERSIBLE
+% disorder; a restrictive, non-bronchodilator-reversible pattern is incompatible.
+contributes 0.12 from spirometry_finding(restrictive_process) to diagnosis(refractory_asthma_true)
+  source "Medscape 296301-differential (asthma is obstructive+reversible); NBK358" trust authoritative
+contributes 0.2 from bronchodilator_response(no_meaningful_improvement) to diagnosis(refractory_asthma_true)
+  source "Medscape 296301-differential (asthma shows bronchodilator reversibility)" trust authoritative
+
+% rationale: NEGATIVE for true asthma. Genuine asthma generally responds to
+% stepped-up ICS/LABA; complete non-response over a year on maximal therapy
+% argues against the label.
+contributes 0.3 from treatment_response(no_improvement) to diagnosis(refractory_asthma_true)
+  source "Medscape 296301-differential (true asthma responds to controller therapy)" trust authoritative
+
+% rationale: an asymmetric smaller lung on plain film is not a feature of asthma
+% and points to a structural/obstructive process; strong AGAINST asthma.
+contributes 0.2 from imaging_finding(left_lung_smaller_than_right) to diagnosis(refractory_asthma_true)
+  source "NBK358 (asthma does not cause unilateral volume loss; localized wheeze warns of obstruction)" trust authoritative
+
+% ===== NEGATIVE / CONTEXT FINDINGS (constitutional symptoms) =====
+
+% rationale: absence of fever/night-sweats/weight-loss and normal CRP argue
+% against an aggressive malignancy/infection and are compatible with an indolent
+% lesion such as carcinoid or a benign tumour.
+contributes 1.2 from denied_symptom(weight_loss) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC4524963 (carcinoid often indolent, constitutional symptoms uncommon)" trust empirical
+contributes 0.7 from denied_symptom(weight_loss) to diagnosis(endobronchial_squamous_cell_carcinoma)
+  source "PMC10647737 (weight loss common in advanced SCC)" trust empirical
+
+% ===== NEXT STEP (diagnostic confirmation + definitive management) =====
+
+% rationale: histological confirmation by endobronchial/bronchoscopic biopsy is
+% the universal first step for ANY endobronchial mass before definitive therapy.
+prior 0.25 for next_step(bronchoscopic_biopsy_for_histology)
+  source "PMC4839844 / PMC1693761 (bronchoscopic biopsy is first step for all endobronchial lesions)" trust authoritative
+contributes 5.0 from bronchoscopy_finding(smooth_polypoid_mass) to next_step(bronchoscopic_biopsy_for_histology)
+  source "PMC1693761 (tissue diagnosis required; imaging cannot distinguish benign vs low-grade malignant)" trust authoritative
+contributes 3.0 from mass_effect(near_complete_lumen_obstruction) to next_step(bronchoscopic_biopsy_for_histology)
+  source "PMC4524963 (define histology before resection of obstructing endobronchial tumour)" trust authoritative
+
+% rationale: cross-sectional CT chest staging is the standard pre-resection step
+% to define extent/nodal involvement of a central endobronchial tumour.
+prior 0.15 for next_step(ct_chest_for_staging)
+  source "PMC3743987 (CT first when asthma/COPD fails conventional therapy, then bronchoscopy)" trust authoritative
+contributes 3.0 from mass_location(left_main_bronchus) to next_step(ct_chest_for_staging)
+  source "PMC4524963 (CT to define central tumour extent before surgery)" trust authoritative
+
+% rationale: surgical resection (sleeve/lobectomy) is the definitive treatment of
+% a localized typical carcinoid; offered after tissue diagnosis.
+prior 0.10 for next_step(surgical_resection)
+  source "Bronchial carcinoid tumors: surgical management, J Thorac Cardiovasc Surg (resection is treatment of choice)" trust authoritative
+contributes 2.0 from bronchoscopy_finding(smooth_polypoid_mass) to next_step(surgical_resection)
+  source "PMC4760028 (central bronchial carcinoid managed by resection)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved — drive the VOI panel) =====
+
+% u4: histology of the smooth polypoid mass is unknown; the biopsy result moves
+% the diagnosis between carcinoid / benign / squamous / mucoepidermoid.
+uncertain { test(biopsy_neuroendocrine_carcinoid), test(biopsy_benign_hamartoma_or_lipoma), test(biopsy_squamous_cell_carcinoma), test(biopsy_mucoepidermoid_carcinoma) } for diagnosis(bronchial_carcinoid_tumor)
+  source "PMC1693761 (only histology adjudicates endobronchial mass identity)"
+
+% rationale: a neuroendocrine-positive biopsy confirms carcinoid; a benign or
+% squamous result resolves it the other way. Wire each test result so resolving
+% it moves the posterior.
+contributes 9.0 from test(biopsy_neuroendocrine_carcinoid) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC4524963 (neuroendocrine histology = carcinoid)" trust authoritative
+contributes 0.1 from test(biopsy_benign_hamartoma_or_lipoma) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC4839844 (benign histology excludes carcinoid)" trust authoritative
+contributes 0.1 from test(biopsy_squamous_cell_carcinoma) to diagnosis(bronchial_carcinoid_tumor)
+  source "PMC10647737 (squamous histology excludes carcinoid)" trust authoritative
+contributes 0.2 from test(biopsy_mucoepidermoid_carcinoma) to diagnosis(bronchial_carcinoid_tumor)
+  source "Arch Pathol Lab Med 2007;131:1400 (mucoepidermoid histology excludes carcinoid)" trust authoritative
+
+% u4-benign: benign-tumour conclusion also hinges on the biopsy.
+uncertain { test(biopsy_neuroendocrine_carcinoid), test(biopsy_benign_hamartoma_or_lipoma), test(biopsy_squamous_cell_carcinoma), test(biopsy_mucoepidermoid_carcinoma) } for diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+  source "PMC4839844 (histology adjudicates benign vs malignant endobronchial mass)"
+contributes 9.0 from test(biopsy_benign_hamartoma_or_lipoma) to diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+  source "PMC4839844 (benign histology confirms hamartoma/lipoma)" trust authoritative
+contributes 0.1 from test(biopsy_neuroendocrine_carcinoid) to diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+  source "PMC4524963 (neuroendocrine histology excludes benign tumour)" trust authoritative

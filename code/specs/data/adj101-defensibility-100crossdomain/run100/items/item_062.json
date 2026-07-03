@@ -1,0 +1,7 @@
+{
+ "idx": 62,
+ "id": "EMP-3",
+ "scenario": "Priya, a non-exempt employee, was scheduled for and worked a single continuous shift of 5 hours and 45 minutes with no break.",
+ "policy": "A non-exempt employee who works a shift of 6 or more consecutive hours must be provided at least one 30-minute unpaid meal break. Shifts shorter than 6 hours require no meal break.",
+ "question": "Was the employer required to provide Priya a meal break for this shift?"
+}

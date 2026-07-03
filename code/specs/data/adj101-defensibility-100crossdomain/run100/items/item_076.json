@@ -1,0 +1,7 @@
+{
+ "idx": 76,
+ "id": "IMM-7",
+ "scenario": "Lin has exactly one conviction for a crime involving moral turpitude. The offense carried a maximum possible penalty of 364 days, and Lin was actually sentenced to 90 days.",
+ "policy": "General rule: A noncitizen convicted of a crime involving moral turpitude is inadmissible. Override: Notwithstanding the general rule, the petty-offense exception applies and the noncitizen is NOT inadmissible if they have committed only one such crime, the maximum possible penalty did not exceed one year, and the actual sentence imposed was 6 months or less.",
+ "question": "Is Lin inadmissible based on this conviction?"
+}

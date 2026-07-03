@@ -10,12 +10,14 @@ use std::collections::HashMap;
 use paint_instructions::{
     BlendMode, FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse,
     PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine,
-    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, Transform2D, IDENTITY_TRANSFORM,
+    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, StrokeCap, StrokeJoin, Transform2D,
+    IDENTITY_TRANSFORM,
 };
 
 pub const VERSION: &str = "0.1.0";
 const GRADIENT_RAMP_WIDTH: u32 = 1024;
 const RADIAL_GRADIENT_TEXTURE_SIZE: u32 = 256;
+const DEFAULT_MITER_LIMIT: f32 = 4.0;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GpuPaintPlan {
@@ -200,6 +202,29 @@ impl GpuBackendProfile {
             supports_texture_sampling: false,
             supports_linear_gradients: false,
             supports_radial_gradients: false,
+            supports_glyph_atlas: false,
+            accepts_degraded_solid_gradients: true,
+        }
+    }
+
+    pub const fn tier1_textured(
+        id: &'static str,
+        family: GpuApiFamily,
+        render_path: GpuRenderPath,
+        shader_model: &'static str,
+        readback: GpuReadbackStrategy,
+    ) -> Self {
+        Self {
+            id,
+            family,
+            render_path,
+            shader_model,
+            readback,
+            supports_indexed_meshes: true,
+            supports_scissor_clips: true,
+            supports_texture_sampling: true,
+            supports_linear_gradients: true,
+            supports_radial_gradients: true,
             supports_glyph_atlas: false,
             accepts_degraded_solid_gradients: true,
         }
@@ -403,24 +428,47 @@ impl PlanBuilder {
             );
         }
         if let Some(color) = self.stroke_color(rect.stroke.as_deref(), opacity) {
-            self.warn_stroke_dash(rect.stroke_dash.as_deref());
             let w = rect.stroke_width.unwrap_or(1.0).max(0.0);
             if w > 0.0 {
-                self.add_rect_stroke(rect.x, rect.y, rect.width, rect.height, w, transform, color);
+                if let Some(dash) = normalized_dash_pattern(rect.stroke_dash.as_deref()) {
+                    self.add_dashed_rect_stroke(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        w,
+                        &dash,
+                        rect.stroke_dash_offset.unwrap_or(0.0) as f32,
+                        transform,
+                        color,
+                    );
+                } else {
+                    self.add_rect_stroke(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        w,
+                        transform,
+                        color,
+                    );
+                }
             }
         }
     }
 
     fn plan_line(&mut self, line: &PaintLine, transform: Transform2D, opacity: f32) {
-        self.warn_stroke_dash(line.stroke_dash.as_deref());
         let color = parse_color_with_opacity(&line.stroke, opacity);
         if color.a == 0.0 {
             return;
         }
-        self.add_line_quad(
+        self.add_stroked_line(
             point(line.x1, line.y1),
             point(line.x2, line.y2),
             line.stroke_width.unwrap_or(1.0).max(1.0) as f32,
+            line.stroke_cap.as_ref(),
+            line.stroke_dash.as_deref(),
+            line.stroke_dash_offset.unwrap_or(0.0) as f32,
             transform,
             color,
             "line",
@@ -455,8 +503,18 @@ impl PlanBuilder {
         }
 
         if let Some(color) = self.stroke_color(ellipse.stroke.as_deref(), opacity) {
-            self.warn_stroke_dash(ellipse.stroke_dash.as_deref());
             let stroke_width = ellipse.stroke_width.unwrap_or(1.0).max(1.0) as f32;
+            if let Some(dash) = normalized_dash_pattern(ellipse.stroke_dash.as_deref()) {
+                self.add_dashed_ellipse_stroke(
+                    ellipse,
+                    stroke_width,
+                    &dash,
+                    ellipse.stroke_dash_offset.unwrap_or(0.0) as f32,
+                    transform,
+                    color,
+                );
+                return;
+            }
             let mut vertices = Vec::with_capacity(self.options.ellipse_segments * 2);
             let mut indices = Vec::with_capacity(self.options.ellipse_segments * 6);
             let outer_rx = ellipse.rx as f32 + stroke_width / 2.0;
@@ -525,27 +583,54 @@ impl PlanBuilder {
             }
         }
         if let Some(color) = self.stroke_color(path.stroke.as_deref(), opacity) {
-            self.warn_stroke_dash(path.stroke_dash.as_deref());
             let stroke_width = path.stroke_width.unwrap_or(1.0).max(1.0) as f32;
+            let dash = normalized_dash_pattern(path.stroke_dash.as_deref());
+            let cap = path.stroke_cap.as_ref().unwrap_or(&StrokeCap::Butt);
+            let join = path.stroke_join.as_ref().unwrap_or(&StrokeJoin::Miter);
             for contour in &contours {
-                for segment in contour.points.windows(2) {
-                    self.add_line_quad(
-                        segment[0],
-                        segment[1],
+                if let Some(dash) = dash.as_deref() {
+                    self.add_dashed_path_contour(
+                        contour,
                         stroke_width,
+                        dash,
+                        path.stroke_dash_offset.unwrap_or(0.0) as f32,
+                        cap,
+                        join,
+                        DEFAULT_MITER_LIMIT,
                         transform,
                         color,
-                        "path.stroke",
                     );
-                }
-                if contour.closed && contour.points.len() > 2 {
-                    self.add_line_quad(
-                        *contour.points.last().unwrap(),
-                        contour.points[0],
+                } else {
+                    for segment in contour.points.windows(2) {
+                        self.add_line_quad(
+                            segment[0],
+                            segment[1],
+                            stroke_width,
+                            transform,
+                            color,
+                            "path.stroke",
+                        );
+                    }
+                    if contour.closed && contour.points.len() > 2 {
+                        self.add_line_quad(
+                            *contour.points.last().unwrap(),
+                            contour.points[0],
+                            stroke_width,
+                            transform,
+                            color,
+                            "path.stroke",
+                        );
+                    }
+                    if !contour.closed {
+                        self.add_open_contour_caps(contour, stroke_width, cap, transform, color);
+                    }
+                    self.add_contour_joins(
+                        contour,
                         stroke_width,
+                        join,
+                        DEFAULT_MITER_LIMIT,
                         transform,
                         color,
-                        "path.stroke",
                     );
                 }
             }
@@ -844,6 +929,78 @@ impl PlanBuilder {
         self.add_rect_mesh(x + width - w, y, w, height, transform, brush, "rect.stroke");
     }
 
+    fn add_dashed_rect_stroke(
+        &mut self,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        stroke_width: f64,
+        dash: &[f32],
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if width <= 0.0 || height <= 0.0 {
+            return;
+        }
+        let (mut dash_index, mut dash_offset) = dash_start(dash, dash_offset);
+        let sides = [
+            (point(x, y), point(x + width, y)),
+            (point(x + width, y), point(x + width, y + height)),
+            (point(x + width, y + height), point(x, y + height)),
+            (point(x, y + height), point(x, y)),
+        ];
+        for (p0, p1) in sides {
+            self.add_dashed_line_segment(
+                p0,
+                p1,
+                stroke_width as f32,
+                dash,
+                &mut dash_index,
+                &mut dash_offset,
+                &StrokeCap::Butt,
+                transform,
+                color,
+                "rect.stroke.dash",
+            );
+        }
+    }
+
+    fn add_dashed_ellipse_stroke(
+        &mut self,
+        ellipse: &PaintEllipse,
+        stroke_width: f32,
+        dash: &[f32],
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if ellipse.rx <= 0.0 || ellipse.ry <= 0.0 {
+            return;
+        }
+        let (mut dash_index, mut dash_offset) = dash_start(dash, dash_offset);
+        let segments = self.options.ellipse_segments.max(4);
+        let mut previous = ellipse_point(ellipse, 0.0);
+        for i in 1..=segments {
+            let t = i as f32 / segments as f32 * std::f32::consts::TAU;
+            let next = ellipse_point(ellipse, t);
+            self.add_dashed_line_segment(
+                previous,
+                next,
+                stroke_width,
+                dash,
+                &mut dash_index,
+                &mut dash_offset,
+                &StrokeCap::Butt,
+                transform,
+                color,
+                "ellipse.stroke.dash",
+            );
+            previous = next;
+        }
+    }
+
     fn add_rect_mesh(
         &mut self,
         x: f64,
@@ -872,6 +1029,602 @@ impl PlanBuilder {
             brush.texture_id(),
             label,
         );
+    }
+
+    fn add_stroked_line(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        cap: Option<&StrokeCap>,
+        dash: Option<&[f64]>,
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let cap = cap.unwrap_or(&StrokeCap::Butt);
+        let Some(pattern) = normalized_dash_pattern(dash) else {
+            self.add_capped_line_segment(p0, p1, width, cap, transform, color, label);
+            return;
+        };
+        let (mut dash_index, mut dash_offset) = dash_start(&pattern, dash_offset);
+        self.add_dashed_line_quads(
+            p0,
+            p1,
+            width,
+            &pattern,
+            &mut dash_index,
+            &mut dash_offset,
+            cap,
+            transform,
+            color,
+            "line.dash",
+        );
+    }
+
+    fn add_dashed_line_quads(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        dash: &[f32],
+        dash_index: &mut usize,
+        dash_offset: &mut f32,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let ux = dx / len;
+        let uy = dy / len;
+        let mut distance = 0.0f32;
+        while distance < len {
+            let remaining_dash = dash[*dash_index] - *dash_offset;
+            let run = remaining_dash.min(len - distance);
+            if *dash_index % 2 == 0 && run > f32::EPSILON {
+                let start = GpuPoint {
+                    x: p0.x + ux * distance,
+                    y: p0.y + uy * distance,
+                };
+                let end = GpuPoint {
+                    x: p0.x + ux * (distance + run),
+                    y: p0.y + uy * (distance + run),
+                };
+                self.add_capped_line_segment(start, end, width, cap, transform, color, label);
+            }
+            distance += run;
+            if run < remaining_dash {
+                *dash_offset += run;
+            } else {
+                *dash_index = (*dash_index + 1) % dash.len();
+                *dash_offset = 0.0;
+            }
+        }
+    }
+
+    fn add_capped_line_segment(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+        let ux = dx / len;
+        let uy = dy / len;
+        let half_width = width / 2.0;
+        match cap {
+            StrokeCap::Butt => self.add_line_quad(p0, p1, width, transform, color, label),
+            StrokeCap::Square => {
+                let start = GpuPoint {
+                    x: p0.x - ux * half_width,
+                    y: p0.y - uy * half_width,
+                };
+                let end = GpuPoint {
+                    x: p1.x + ux * half_width,
+                    y: p1.y + uy * half_width,
+                };
+                self.add_line_quad(start, end, width, transform, color, label);
+            }
+            StrokeCap::Round => {
+                self.add_line_quad(p0, p1, width, transform, color, label);
+                self.add_round_line_cap(p0, -ux, -uy, half_width, transform, color, label);
+                self.add_round_line_cap(p1, ux, uy, half_width, transform, color, label);
+            }
+        }
+    }
+
+    fn add_round_line_cap(
+        &mut self,
+        center: GpuPoint,
+        out_x: f32,
+        out_y: f32,
+        radius: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        if radius <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+        let segments = (self.options.ellipse_segments / 4).max(6);
+        let perp_x = -out_y;
+        let perp_y = out_x;
+        let mut vertices = Vec::with_capacity(segments + 2);
+        vertices.push(vertex(apply_transform(center, transform), color));
+        for i in 0..=segments {
+            let theta =
+                -std::f32::consts::FRAC_PI_2 + std::f32::consts::PI * i as f32 / segments as f32;
+            let point = GpuPoint {
+                x: center.x + out_x * theta.cos() * radius + perp_x * theta.sin() * radius,
+                y: center.y + out_y * theta.cos() * radius + perp_y * theta.sin() * radius,
+            };
+            vertices.push(vertex(apply_transform(point, transform), color));
+        }
+        let mut indices = Vec::with_capacity(segments * 3);
+        for i in 1..=segments {
+            indices.extend_from_slice(&[0, i as u32, i as u32 + 1]);
+        }
+        self.add_mesh(vertices, indices, None, label);
+    }
+
+    fn add_open_contour_caps(
+        &mut self,
+        contour: &Contour,
+        stroke_width: f32,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if contour.points.len() < 2 || matches!(cap, StrokeCap::Butt) {
+            return;
+        }
+
+        let start = contour.points[0];
+        let after_start = contour.points[1];
+        self.add_line_endpoint_cap(
+            start,
+            after_start,
+            stroke_width,
+            true,
+            cap,
+            transform,
+            color,
+            "path.stroke",
+        );
+
+        let end = *contour.points.last().unwrap();
+        let before_end = contour.points[contour.points.len() - 2];
+        self.add_line_endpoint_cap(
+            before_end,
+            end,
+            stroke_width,
+            false,
+            cap,
+            transform,
+            color,
+            "path.stroke",
+        );
+    }
+
+    fn add_line_endpoint_cap(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        stroke_width: f32,
+        at_start: bool,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+        let ux = dx / len;
+        let uy = dy / len;
+        let half_width = stroke_width / 2.0;
+        let (center, out_x, out_y) = if at_start {
+            (p0, -ux, -uy)
+        } else {
+            (p1, ux, uy)
+        };
+
+        match cap {
+            StrokeCap::Butt => {}
+            StrokeCap::Square => {
+                let outside = GpuPoint {
+                    x: center.x + out_x * half_width,
+                    y: center.y + out_y * half_width,
+                };
+                self.add_line_quad(center, outside, stroke_width, transform, color, label);
+            }
+            StrokeCap::Round => {
+                self.add_round_line_cap(center, out_x, out_y, half_width, transform, color, label)
+            }
+        }
+    }
+
+    fn add_dashed_path_contour(
+        &mut self,
+        contour: &Contour,
+        stroke_width: f32,
+        dash: &[f32],
+        dash_offset: f32,
+        cap: &StrokeCap,
+        join: &StrokeJoin,
+        miter_limit: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if contour.points.len() < 2 || stroke_width <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let (mut dash_index, mut dash_offset) = dash_start(dash, dash_offset);
+        let segment_count = contour.points.len().saturating_sub(1);
+        for segment_index in 0..segment_count {
+            let start = contour.points[segment_index];
+            let end = contour.points[segment_index + 1];
+            let is_open_start = !contour.closed && segment_index == 0;
+            let is_open_end = !contour.closed && segment_index + 1 == segment_count;
+            self.add_dashed_path_segment(
+                start,
+                end,
+                stroke_width,
+                dash,
+                &mut dash_index,
+                &mut dash_offset,
+                cap,
+                is_open_start,
+                is_open_end,
+                transform,
+                color,
+            );
+
+            if segment_index + 1 < segment_count
+                && dash_cursor_inside_visible_run(dash_index, dash_offset)
+            {
+                self.add_line_join(
+                    start,
+                    end,
+                    contour.points[segment_index + 2],
+                    stroke_width,
+                    join,
+                    miter_limit,
+                    transform,
+                    color,
+                    "path.stroke.dash.join",
+                );
+            }
+        }
+    }
+
+    fn add_dashed_path_segment(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        dash: &[f32],
+        dash_index: &mut usize,
+        dash_offset: &mut f32,
+        cap: &StrokeCap,
+        is_open_start: bool,
+        is_open_end: bool,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let ux = dx / len;
+        let uy = dy / len;
+        let mut distance = 0.0f32;
+        while distance < len {
+            let remaining_dash = dash[*dash_index] - *dash_offset;
+            let run = remaining_dash.min(len - distance);
+            if *dash_index % 2 == 0 && run > f32::EPSILON {
+                let start = GpuPoint {
+                    x: p0.x + ux * distance,
+                    y: p0.y + uy * distance,
+                };
+                let end = GpuPoint {
+                    x: p0.x + ux * (distance + run),
+                    y: p0.y + uy * (distance + run),
+                };
+                let starts_at_segment_start = distance <= f32::EPSILON;
+                let ends_at_segment_end = distance + run >= len - f32::EPSILON;
+                let starts_at_dash_boundary = *dash_offset <= f32::EPSILON;
+                let ends_at_dash_boundary = run >= remaining_dash - f32::EPSILON;
+                let start_cap =
+                    starts_at_dash_boundary || (is_open_start && starts_at_segment_start);
+                let end_cap = ends_at_dash_boundary || (is_open_end && ends_at_segment_end);
+                self.add_partially_capped_line_segment(
+                    start,
+                    end,
+                    width,
+                    cap,
+                    start_cap,
+                    end_cap,
+                    transform,
+                    color,
+                    "path.stroke.dash",
+                );
+            }
+            distance += run;
+            if run < remaining_dash {
+                *dash_offset += run;
+            } else {
+                *dash_index = (*dash_index + 1) % dash.len();
+                *dash_offset = 0.0;
+            }
+        }
+    }
+
+    fn add_partially_capped_line_segment(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        cap: &StrokeCap,
+        start_cap: bool,
+        end_cap: bool,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        self.add_line_quad(p0, p1, width, transform, color, label);
+        if start_cap {
+            self.add_line_endpoint_cap(p0, p1, width, true, cap, transform, color, label);
+        }
+        if end_cap {
+            self.add_line_endpoint_cap(p0, p1, width, false, cap, transform, color, label);
+        }
+    }
+
+    fn add_contour_joins(
+        &mut self,
+        contour: &Contour,
+        stroke_width: f32,
+        join: &StrokeJoin,
+        miter_limit: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if stroke_width <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let logical_len = if contour.closed
+            && contour.points.len() > 1
+            && same_point(contour.points[0], *contour.points.last().unwrap())
+        {
+            contour.points.len() - 1
+        } else {
+            contour.points.len()
+        };
+        if logical_len < 3 {
+            return;
+        }
+
+        if contour.closed {
+            for index in 0..logical_len {
+                let previous = contour.points[(index + logical_len - 1) % logical_len];
+                let current = contour.points[index];
+                let next = contour.points[(index + 1) % logical_len];
+                self.add_line_join(
+                    previous,
+                    current,
+                    next,
+                    stroke_width,
+                    join,
+                    miter_limit,
+                    transform,
+                    color,
+                    "path.stroke.join",
+                );
+            }
+        } else {
+            for index in 1..logical_len - 1 {
+                self.add_line_join(
+                    contour.points[index - 1],
+                    contour.points[index],
+                    contour.points[index + 1],
+                    stroke_width,
+                    join,
+                    miter_limit,
+                    transform,
+                    color,
+                    "path.stroke.join",
+                );
+            }
+        }
+    }
+
+    fn add_line_join(
+        &mut self,
+        previous: GpuPoint,
+        current: GpuPoint,
+        next: GpuPoint,
+        stroke_width: f32,
+        join: &StrokeJoin,
+        miter_limit: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let Some(in_dir) = normalized_vector(previous, current) else {
+            return;
+        };
+        let Some(out_dir) = normalized_vector(current, next) else {
+            return;
+        };
+        let turn = cross(in_dir, out_dir);
+        if turn.abs() <= f32::EPSILON {
+            return;
+        }
+
+        let half_width = stroke_width / 2.0;
+        let side = if turn > 0.0 { 1.0 } else { -1.0 };
+        let in_normal = scale_point(left_normal(in_dir), side);
+        let out_normal = scale_point(left_normal(out_dir), side);
+        let outer0 = add_points(current, scale_point(in_normal, half_width));
+        let outer1 = add_points(current, scale_point(out_normal, half_width));
+
+        match join {
+            StrokeJoin::Bevel => {
+                self.add_join_triangle(current, outer0, outer1, transform, color, label);
+            }
+            StrokeJoin::Round => self.add_round_line_join(
+                current, in_normal, out_normal, turn, half_width, transform, color, label,
+            ),
+            StrokeJoin::Miter => {
+                let miter = line_intersection(outer0, in_dir, outer1, out_dir);
+                if let Some(miter) = miter
+                    .filter(|point| distance(*point, current) <= half_width * miter_limit.max(1.0))
+                {
+                    self.add_join_triangle(outer0, miter, outer1, transform, color, label);
+                } else {
+                    self.add_join_triangle(current, outer0, outer1, transform, color, label);
+                }
+            }
+        }
+    }
+
+    fn add_join_triangle(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        p2: GpuPoint,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        self.add_mesh(
+            vec![
+                vertex(apply_transform(p0, transform), color),
+                vertex(apply_transform(p1, transform), color),
+                vertex(apply_transform(p2, transform), color),
+            ],
+            vec![0, 1, 2],
+            None,
+            label,
+        );
+    }
+
+    fn add_round_line_join(
+        &mut self,
+        center: GpuPoint,
+        in_normal: GpuPoint,
+        out_normal: GpuPoint,
+        turn: f32,
+        radius: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        if radius <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let start_angle = in_normal.y.atan2(in_normal.x);
+        let end_angle = out_normal.y.atan2(out_normal.x);
+        let sweep = if turn > 0.0 {
+            positive_angle_delta(start_angle, end_angle)
+        } else {
+            -positive_angle_delta(end_angle, start_angle)
+        };
+        let segments = ((sweep.abs() / (std::f32::consts::PI / 8.0)).ceil() as usize).max(2);
+        let mut vertices = Vec::with_capacity(segments + 2);
+        vertices.push(vertex(apply_transform(center, transform), color));
+        for index in 0..=segments {
+            let theta = start_angle + sweep * index as f32 / segments as f32;
+            vertices.push(vertex(
+                apply_transform(
+                    GpuPoint {
+                        x: center.x + theta.cos() * radius,
+                        y: center.y + theta.sin() * radius,
+                    },
+                    transform,
+                ),
+                color,
+            ));
+        }
+        let mut indices = Vec::with_capacity(segments * 3);
+        for index in 1..=segments {
+            indices.extend_from_slice(&[0, index as u32, index as u32 + 1]);
+        }
+        self.add_mesh(vertices, indices, None, label);
+    }
+
+    fn add_dashed_line_segment(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        dash: &[f32],
+        dash_index: &mut usize,
+        dash_offset: &mut f32,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let ux = dx / len;
+        let uy = dy / len;
+        let mut distance = 0.0f32;
+        while distance < len {
+            let remaining_dash = dash[*dash_index] - *dash_offset;
+            let run = remaining_dash.min(len - distance);
+            if *dash_index % 2 == 0 && run > f32::EPSILON {
+                let start = GpuPoint {
+                    x: p0.x + ux * distance,
+                    y: p0.y + uy * distance,
+                };
+                let end = GpuPoint {
+                    x: p0.x + ux * (distance + run),
+                    y: p0.y + uy * (distance + run),
+                };
+                self.add_capped_line_segment(start, end, width, cap, transform, color, label);
+            }
+            distance += run;
+            if run < remaining_dash {
+                *dash_offset += run;
+            } else {
+                *dash_index = (*dash_index + 1) % dash.len();
+                *dash_offset = 0.0;
+            }
+        }
     }
 
     fn add_line_quad(
@@ -1018,16 +1771,6 @@ impl PlanBuilder {
         contours
     }
 
-    fn warn_stroke_dash(&mut self, dash: Option<&[f64]>) {
-        if dash.is_some_and(|dash| !dash.is_empty()) {
-            self.diagnostic(
-                GpuPlanSeverity::Degraded,
-                "stroke_dash",
-                "dashed strokes are currently lowered as solid strokes",
-            );
-        }
-    }
-
     fn diagnostic(
         &mut self,
         severity: GpuPlanSeverity,
@@ -1089,6 +1832,40 @@ fn gradient_ref(value: &str) -> Option<&str> {
         .trim()
         .strip_prefix("url(#")
         .and_then(|value| value.strip_suffix(')'))
+}
+
+fn normalized_dash_pattern(dash: Option<&[f64]>) -> Option<Vec<f32>> {
+    let dash = dash?;
+    let mut pattern = dash
+        .iter()
+        .filter_map(|value| {
+            let value = *value as f32;
+            (value.is_finite() && value > f32::EPSILON).then_some(value)
+        })
+        .collect::<Vec<_>>();
+    if pattern.is_empty() {
+        return None;
+    }
+    if pattern.len() % 2 == 1 {
+        let repeated = pattern.clone();
+        pattern.extend(repeated);
+    }
+    Some(pattern)
+}
+
+fn dash_start(dash: &[f32], dash_offset: f32) -> (usize, f32) {
+    let cycle = dash.iter().sum::<f32>();
+    let mut index = 0usize;
+    let mut offset = dash_offset.rem_euclid(cycle);
+    while offset >= dash[index] {
+        offset -= dash[index];
+        index = (index + 1) % dash.len();
+    }
+    (index, offset)
+}
+
+fn dash_cursor_inside_visible_run(dash_index: usize, dash_offset: f32) -> bool {
+    dash_index % 2 == 0 && dash_offset > f32::EPSILON
 }
 
 fn build_gradient_ramp(stops: &[GradientStop], opacity: f32) -> Vec<u8> {
@@ -1221,6 +1998,72 @@ fn same_point(a: GpuPoint, b: GpuPoint) -> bool {
     (a.x - b.x).abs() <= f32::EPSILON && (a.y - b.y).abs() <= f32::EPSILON
 }
 
+fn normalized_vector(from: GpuPoint, to: GpuPoint) -> Option<GpuPoint> {
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let len = (dx * dx + dy * dy).sqrt();
+    (len > f32::EPSILON).then_some(GpuPoint {
+        x: dx / len,
+        y: dy / len,
+    })
+}
+
+fn left_normal(vector: GpuPoint) -> GpuPoint {
+    GpuPoint {
+        x: -vector.y,
+        y: vector.x,
+    }
+}
+
+fn scale_point(point: GpuPoint, scale: f32) -> GpuPoint {
+    GpuPoint {
+        x: point.x * scale,
+        y: point.y * scale,
+    }
+}
+
+fn add_points(a: GpuPoint, b: GpuPoint) -> GpuPoint {
+    GpuPoint {
+        x: a.x + b.x,
+        y: a.y + b.y,
+    }
+}
+
+fn cross(a: GpuPoint, b: GpuPoint) -> f32 {
+    a.x * b.y - a.y * b.x
+}
+
+fn distance(a: GpuPoint, b: GpuPoint) -> f32 {
+    let dx = a.x - b.x;
+    let dy = a.y - b.y;
+    (dx * dx + dy * dy).sqrt()
+}
+
+fn line_intersection(
+    origin0: GpuPoint,
+    direction0: GpuPoint,
+    origin1: GpuPoint,
+    direction1: GpuPoint,
+) -> Option<GpuPoint> {
+    let denom = cross(direction0, direction1);
+    if denom.abs() <= f32::EPSILON {
+        return None;
+    }
+    let delta = GpuPoint {
+        x: origin1.x - origin0.x,
+        y: origin1.y - origin0.y,
+    };
+    let t = cross(delta, direction1) / denom;
+    Some(GpuPoint {
+        x: origin0.x + direction0.x * t,
+        y: origin0.y + direction0.y * t,
+    })
+}
+
+fn positive_angle_delta(from: f32, to: f32) -> f32 {
+    (to - from).rem_euclid(std::f32::consts::TAU)
+}
+
 fn parse_color_with_opacity(color: &str, opacity: f32) -> GpuColor {
     let mut parsed = parse_color(color);
     parsed.a *= opacity.clamp(0.0, 1.0);
@@ -1316,6 +2159,13 @@ fn point(x: f64, y: f64) -> GpuPoint {
     }
 }
 
+fn ellipse_point(ellipse: &PaintEllipse, t: f32) -> GpuPoint {
+    GpuPoint {
+        x: ellipse.cx as f32 + ellipse.rx as f32 * t.cos(),
+        y: ellipse.cy as f32 + ellipse.ry as f32 * t.sin(),
+    }
+}
+
 fn vertex(position: GpuPoint, color: GpuColor) -> GpuVertex {
     vertex_uv(position, [0.0, 0.0], color)
 }
@@ -1391,9 +2241,23 @@ fn cubic_point(p0: GpuPoint, p1: GpuPoint, p2: GpuPoint, p3: GpuPoint, t: f32) -
 mod tests {
     use super::*;
     use paint_instructions::{
-        GlyphPosition, GradientKind, GradientStop, PaintBase, PaintGradient, PaintGroup,
-        PaintImage, PaintInstruction, PaintRect, PixelContainer,
+        GlyphPosition, GradientKind, GradientStop, PaintBase, PaintEllipse, PaintGradient,
+        PaintGroup, PaintImage, PaintInstruction, PaintRect, PixelContainer,
     };
+
+    fn mesh_count(plan: &GpuPaintPlan, label: &str) -> usize {
+        plan.meshes
+            .iter()
+            .filter(|mesh| mesh.label == label)
+            .count()
+    }
+
+    fn mesh_has_vertex(mesh: &GpuMesh, x: f32, y: f32) -> bool {
+        mesh.vertices.iter().any(|vertex| {
+            (vertex.position.x - x).abs() <= f32::EPSILON
+                && (vertex.position.y - y).abs() <= f32::EPSILON
+        })
+    }
 
     #[test]
     fn plans_rect_as_indexed_mesh() {
@@ -1410,6 +2274,79 @@ mod tests {
         assert_eq!(plan.meshes[0].vertices.len(), 4);
         assert_eq!(plan.meshes[0].indices, vec![0, 1, 2, 0, 2, 3]);
         assert_eq!(plan.commands, vec![GpuCommand::DrawMesh { mesh_id: 0 }]);
+    }
+
+    #[test]
+    fn lowers_dashed_rect_stroke_around_perimeter() {
+        let mut scene = PaintScene::new(24.0, 16.0);
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 2.0,
+            width: 8.0,
+            height: 4.0,
+            fill: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            corner_radius: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "rect.stroke.dash"));
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 2.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 6.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.y, 2.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.y, 6.0);
+        assert_eq!(plan.meshes[2].vertices[0].position.x, 6.0);
+        assert_eq!(plan.meshes[2].vertices[1].position.x, 2.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
+    }
+
+    #[test]
+    fn lowers_dashed_ellipse_stroke_to_segments() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: 10.0,
+                cy: 10.0,
+                rx: 6.0,
+                ry: 4.0,
+                fill: None,
+                stroke: Some("#000000".to_string()),
+                stroke_width: Some(2.0),
+                stroke_dash: Some(vec![4.0, 4.0]),
+                stroke_dash_offset: None,
+            }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert!(plan.meshes.len() > 1);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "ellipse.stroke.dash"));
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
     }
 
     #[test]
@@ -1473,6 +2410,120 @@ mod tests {
         let plan = plan_scene(&scene);
         assert_eq!(plan.meshes[0].vertices.len(), 4);
         assert_eq!(plan.meshes[0].label, "line");
+    }
+
+    #[test]
+    fn lowers_square_line_caps_by_extending_segment() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 4.0,
+            y1: 6.0,
+            x2: 12.0,
+            y2: 6.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Square),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 1);
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 2.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 14.0);
+    }
+
+    #[test]
+    fn lowers_round_line_caps_to_endpoint_fans() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 4.0,
+            y1: 6.0,
+            x2: 12.0,
+            y2: 6.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(plan.meshes[0].vertices.len(), 4);
+        assert!(plan.meshes[1].vertices.len() > 4);
+        assert!(plan.meshes[2].vertices.len() > 4);
+        assert!(plan.meshes.iter().all(|mesh| mesh.label == "line"));
+    }
+
+    #[test]
+    fn lowers_dashed_line_to_segment_meshes() {
+        let mut scene = PaintScene::new(24.0, 8.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 0.0,
+            y1: 4.0,
+            x2: 20.0,
+            y2: 4.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "line.dash" && mesh.vertices.len() == 4));
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 4.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.x, 8.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.x, 12.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
+    }
+
+    #[test]
+    fn lowers_dashed_line_with_offset() {
+        let mut scene = PaintScene::new(24.0, 8.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 0.0,
+            y1: 4.0,
+            x2: 20.0,
+            y2: 4.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: Some(2.0),
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 2.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.x, 6.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.x, 10.0);
+        assert_eq!(plan.meshes[2].vertices[0].position.x, 14.0);
+        assert_eq!(plan.meshes[2].vertices[1].position.x, 18.0);
     }
 
     #[test]
@@ -1563,7 +2614,435 @@ mod tests {
                 ellipse_segments: 12,
             },
         );
+        assert_eq!(mesh_count(&plan, "path.stroke"), 4);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 3);
+    }
+
+    #[test]
+    fn lowers_bevel_path_joins_on_open_contours() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Bevel),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 1);
+        assert_eq!(join.vertices.len(), 3);
+        assert!(mesh_has_vertex(join, 10.0, 10.0));
+    }
+
+    #[test]
+    fn lowers_round_path_joins_to_arc_fans() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 1);
+        assert!(join.vertices.len() > 3);
+        assert!(mesh_has_vertex(join, 10.0, 10.0));
+    }
+
+    #[test]
+    fn lowers_miter_path_joins_to_outer_corners() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Miter),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 1);
+        assert_eq!(join.vertices.len(), 3);
+        assert!(mesh_has_vertex(join, 9.0, 9.0));
+    }
+
+    #[test]
+    fn lowers_closed_path_joins_at_each_corner() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 2.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+                PathCommand::LineTo { x: 6.0, y: 10.0 },
+                PathCommand::Close,
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Bevel),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 3);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 3);
+    }
+
+    #[test]
+    fn lowers_round_dashed_path_joins_when_dash_run_crosses_corner() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 0.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: Some(vec![24.0, 8.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.dash.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke.dash"), 4);
+        assert_eq!(mesh_count(&plan, "path.stroke.dash.join"), 1);
+        assert!(join.vertices.len() > 3);
+        assert!(mesh_has_vertex(join, 10.0, 10.0));
+    }
+
+    #[test]
+    fn lowers_miter_dashed_path_joins_when_dash_run_crosses_corner() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: Some(StrokeCap::Butt),
+            stroke_join: Some(StrokeJoin::Miter),
+            stroke_dash: Some(vec![24.0, 8.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.dash.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke.dash"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.dash.join"), 1);
+        assert_eq!(join.vertices.len(), 3);
+        assert!(mesh_has_vertex(join, 9.0, 9.0));
+    }
+
+    #[test]
+    fn skips_dashed_path_join_when_dash_boundary_lands_on_corner() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 0.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: Some(vec![10.0, 10.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(mesh_count(&plan, "path.stroke.dash"), 3);
+        assert_eq!(mesh_count(&plan, "path.stroke.dash.join"), 0);
+    }
+
+    #[test]
+    fn skips_dashed_path_joins_on_straight_continuations() {
+        let mut scene = PaintScene::new(24.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 6.0 },
+                PathCommand::LineTo { x: 10.0, y: 6.0 },
+                PathCommand::LineTo { x: 20.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(mesh_count(&plan, "path.stroke.dash.join"), 0);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "path.stroke.dash"));
+    }
+
+    #[test]
+    fn lowers_square_path_caps_on_open_contours() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 4.0, y: 6.0 },
+                PathCommand::LineTo { x: 12.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Square),
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let min_x = plan
+            .meshes
+            .iter()
+            .flat_map(|mesh| mesh.vertices.iter())
+            .map(|vertex| vertex.position.x)
+            .fold(f32::INFINITY, f32::min);
+        let max_x = plan
+            .meshes
+            .iter()
+            .flat_map(|mesh| mesh.vertices.iter())
+            .map(|vertex| vertex.position.x)
+            .fold(f32::NEG_INFINITY, f32::max);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(min_x, 2.0);
+        assert_eq!(max_x, 14.0);
+        assert!(plan.meshes.iter().all(|mesh| mesh.label == "path.stroke"));
+    }
+
+    #[test]
+    fn lowers_round_path_caps_on_open_contours() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 4.0, y: 6.0 },
+                PathCommand::LineTo { x: 12.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(plan.meshes[0].vertices.len(), 4);
+        assert!(plan.meshes[1].vertices.len() > 4);
+        assert!(plan.meshes[2].vertices.len() > 4);
+        assert!(plan.meshes.iter().all(|mesh| mesh.label == "path.stroke"));
+    }
+
+    #[test]
+    fn lowers_dashed_path_caps_on_dash_segments() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 6.0 },
+                PathCommand::LineTo { x: 10.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(plan.meshes.len(), 6);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "path.stroke.dash"));
+        assert_eq!(
+            plan.meshes
+                .iter()
+                .filter(|mesh| mesh.vertices.len() == 4)
+                .count(),
+            2
+        );
+        assert_eq!(
+            plan.meshes
+                .iter()
+                .filter(|mesh| mesh.vertices.len() > 4)
+                .count(),
+            4
+        );
+    }
+
+    #[test]
+    fn lowers_dashed_path_stroke_across_segments() {
+        let mut scene = PaintScene::new(24.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 6.0 },
+                PathCommand::LineTo { x: 10.0, y: 6.0 },
+                PathCommand::LineTo { x: 20.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
         assert_eq!(plan.meshes.len(), 4);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "path.stroke.dash"));
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 0.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 4.0);
+        assert_eq!(plan.meshes[1].vertices[0].position.x, 8.0);
+        assert_eq!(plan.meshes[1].vertices[1].position.x, 10.0);
+        assert_eq!(plan.meshes[2].vertices[0].position.x, 10.0);
+        assert_eq!(plan.meshes[2].vertices[1].position.x, 12.0);
+        assert_eq!(plan.meshes[3].vertices[0].position.x, 16.0);
+        assert_eq!(plan.meshes[3].vertices[1].position.x, 20.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
     }
 
     #[test]
@@ -1789,6 +3268,118 @@ mod tests {
         let unsupported = unsupported_plan_features(profile, &plan);
 
         assert_eq!(unsupported, vec!["gradient.radial"]);
+    }
+
+    #[test]
+    fn tier1_textured_profile_accepts_images_and_gradient_textures() {
+        let mut pixels = PixelContainer::new(1, 1);
+        pixels.set_pixel(0, 0, 12, 34, 56, 255);
+        let mut scene = PaintScene::new(24.0, 12.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("linear".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 12.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ff0000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#0000ff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("radial".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 18.0,
+                    cy: 6.0,
+                    r: 6.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ffffff".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#000000".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 12.0,
+            fill: Some("url(#linear)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 8.0,
+            y: 0.0,
+            width: 8.0,
+            height: 12.0,
+            fill: Some("url(#radial)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 16.0,
+            y: 0.0,
+            width: 8.0,
+            height: 12.0,
+            src: ImageSrc::Pixels(pixels),
+            opacity: None,
+        }));
+        let profile = GpuBackendProfile::tier1_textured(
+            "paint-vm-test-gpu",
+            GpuApiFamily::Wgpu,
+            GpuRenderPath::GraphicsPipeline,
+            "test-shader",
+            GpuReadbackStrategy::TextureCopyToBuffer,
+        );
+
+        let plan = plan_scene(&scene);
+        let unsupported = unsupported_plan_features(profile, &plan);
+
+        assert_eq!(
+            plan.images
+                .iter()
+                .map(|image| image.kind)
+                .collect::<Vec<_>>(),
+            vec![
+                GpuTextureKind::LinearGradient,
+                GpuTextureKind::RadialGradient,
+                GpuTextureKind::Image
+            ]
+        );
+        assert!(unsupported.is_empty());
     }
 
     #[test]

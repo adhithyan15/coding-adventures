@@ -1,0 +1,8 @@
+{
+ "check_id": 173,
+ "idx": 68,
+ "slot": "carries_liability_insurance",
+ "claimed_value": false,
+ "scenario": "A contractor is licensed solely under the handyman classification and carries no general-liability insurance.",
+ "cited_span": "carries no general-liability insurance"
+}

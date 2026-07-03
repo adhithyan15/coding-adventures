@@ -1,0 +1,8 @@
+{
+ "idx": 5,
+ "policy": "A drug claim is paid at the generic tier copay of $10 if a generic equivalent was dispensed. If the brand-name drug was dispensed when a generic was available and no medical-necessity override is on file, the patient pays the brand copay of $50 plus the cost difference.",
+ "scenario": "Nadia filled a prescription at an in-network pharmacy for a medication that has both a brand and a generic version available. Her plan has a $10 generic copay and a $50 brand copay. The pharmacy processed the claim.",
+ "question": "What copay tier applies to Nadia's claim?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "which version was dispensed not stated"
+}

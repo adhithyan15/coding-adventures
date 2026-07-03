@@ -28,6 +28,7 @@ import {
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { tryLieSymmetry, type LieOps } from "./lieSymmetry";
 
 export const ODE2 = sym("ODE2");
 export const C = sym("%c");
@@ -160,6 +161,13 @@ export function solveOde(equation: IRNode, y: IRNode, x: IRNode, options: SolveO
   const named = tryVarCoeffNamedOde(expr, y, x);
   if (named !== null) return named;
 
+  // Track C2: Frobenius / power-series fallback for un-named regular singular
+  // point ODEs.  Returns null for: non-2nd-order, non-polynomial coefficients,
+  // regular points, irregular singular points, and integer-difference /
+  // equal indicial roots (logarithmic case — out of scope).
+  const frob = tryFrobeniusSeries(expr, y, x);
+  if (frob !== null) return frob;
+
   const bernoulli = tryBernoulli(expr, y, x, ops);
   if (bernoulli !== null) return bernoulli;
 
@@ -175,7 +183,31 @@ export function solveOde(equation: IRNode, y: IRNode, x: IRNode, options: SolveO
   const homogeneous = tryHomogeneousType(expr, y, x, ops);
   if (homogeneous !== null) return homogeneous;
 
+  // Track L2: Lie point-symmetry (autonomous & scaling).  Runs AFTER
+  // every existing first-order family.  Catches autonomous nonlinear
+  // y' = g(y) (e.g. logistic y' = y(1-y)) that separable cannot invert,
+  // and any future symmetry-reducible case not covered above.
+  const lie = tryLieSymmetry(expr, y, x, lieOpsFor(ops));
+  if (lie !== null) return lie;
+
   return null;
+}
+
+function lieOpsFor(ops: Ops): LieOps {
+  return {
+    simp: ops.simp,
+    integrate: ops.integrate,
+    isConstWrt,
+    substIr,
+    flattenAdd,
+    sub,
+    add,
+    mul,
+    div,
+    neg,
+    pow,
+    C,
+  };
 }
 
 export function ode2(equation: IRNode, y: IRNode, x: IRNode, options: SolveOdeOptions = {}): IRNode {
@@ -1514,4 +1546,317 @@ function tryVarCoeffNamedOde(expr: IRNode, y: IRNode, x: IRNode): IRNode | null 
     ?? tryLegendreOde(expr, y, x)
     ?? tryBesselOde(expr, y, x)
     ?? tryHermiteOde(expr, y, x);
+}
+
+// ============================================================================
+// Track C2 — Frobenius / power-series method (port from cas_ode.frobenius)
+//
+// Solves second-order linear ODEs P(x)·y'' + Q(x)·y' + R(x)·y = 0 with a
+// regular singular point at x = 0 by substituting the Frobenius series
+//
+//   y(x) = x^r · Σ_{n≥0} a_n x^n
+//
+// and producing a truncated power-series IR.  Scope (matches Python C1):
+//   1. Singular point at x = 0 only.
+//   2. Indicial roots must be rational and differ by a non-integer.
+//      Equal or integer-difference roots produce logarithmic terms in the
+//      second solution and bail (return null).
+//
+// Pipeline:
+//   collectVar2Coeffs    — already exists (reused for named-ODE recogniser).
+//   polyCoeffsExtract    — turn IR polynomial expr into [a_0, a_1, ...] Frac[].
+//   isRegularSingular    — verify x=0 regular-singular; return (tildeP, tildeQ)
+//                           where tildeP = x·p(x), tildeQ = x²·q(x).
+//   solveIndicial        — solve r² + (p_0-1) r + q_0 = 0 for rational roots.
+//   rootsDifferByInteger — bail flag for logarithmic case.
+//   buildSeriesIr        — assemble Equal(y, x^r · poly(x)) IR.
+//   tryFrobeniusSeries   — top-level entry point.
+//
+// Default truncation N=10 matches the Python reference.
+// ============================================================================
+
+const FROBENIUS_DEFAULT_N = 10;
+
+/**
+ * Extract rational polynomial coefficients of `expr` in `x` of degree ≤ maxDeg.
+ *
+ * Returns an array `[c_0, c_1, ..., c_maxDeg]` (length maxDeg+1) of Frac, or
+ * `null` if `expr` is not a polynomial in `x` (rational coefficients only).
+ *
+ * This is a Frobenius-specific helper: it allows arbitrary integer degrees
+ * (unlike `polynomialCoeffs` which caps at 2 for Hermite/Chebyshev forcing).
+ */
+function polyCoeffsExtract(expr: IRNode, x: IRNode, maxDeg: number): Frac[] | null {
+  const out: Frac[] = Array.from({ length: maxDeg + 1 }, () => Frac.zero());
+  for (const term of flattenAdd(expr)) {
+    const pair = degreeOfMonomial(term, x);
+    if (pair === null) return null;
+    const [coeff, deg] = pair;
+    if (deg > maxDeg) return null;
+    out[deg] = out[deg].add(coeff);
+  }
+  return out;
+}
+
+/**
+ * Return `[coeff, degree]` for a monomial `c·x^k`, or `null` for non-monomial.
+ *
+ * Handles: rational literals (degree 0), bare x (degree 1), Pow(x, k≥0),
+ * Mul(c, x^k), Neg-wrapped variants.  Recursive over nested Mul/Neg trees.
+ */
+function degreeOfMonomial(term: IRNode, x: IRNode): readonly [Frac, number] | null {
+  // Neg unwrap.
+  if (term.kind === "apply" && headName(term.head) === NEG.name && term.args.length === 1) {
+    const inner = degreeOfMonomial(term.args[0], x);
+    if (inner === null) return null;
+    return [inner[0].neg(), inner[1]] as const;
+  }
+  // Rational literal.
+  const lit = Frac.fromNode(term);
+  if (lit !== null) return [lit, 0] as const;
+  // Bare symbol — must be x.
+  if (term.kind === "symbol") {
+    return equals(term, x) ? ([Frac.one(), 1] as const) : null;
+  }
+  if (term.kind !== "apply") return null;
+  // Pow(x, k) with k ≥ 0.
+  if (headName(term.head) === POW.name && term.args.length === 2) {
+    const [base, exp] = term.args;
+    if (equals(base, x) && exp.kind === "integer" && exp.value >= 0n) {
+      return [Frac.one(), Number(exp.value)] as const;
+    }
+    return null;
+  }
+  // Mul(a, b) — degree adds, coefficients multiply.  n-ary Mul handled by
+  // recursing on each factor.
+  if (headName(term.head) === MUL.name) {
+    let coeff = Frac.one();
+    let degree = 0;
+    for (const arg of term.args) {
+      const part = degreeOfMonomial(arg, x);
+      if (part === null) return null;
+      coeff = coeff.mul(part[0]);
+      degree += part[1];
+    }
+    return [coeff, degree] as const;
+  }
+  return null;
+}
+
+/**
+ * Multiply two truncated polynomials (lists of Frac), result truncated at `maxDeg`.
+ */
+function fracPolyMul(a: readonly Frac[], b: readonly Frac[], maxDeg: number): Frac[] {
+  const out: Frac[] = Array.from({ length: maxDeg + 1 }, () => Frac.zero());
+  for (let i = 0; i < a.length && i <= maxDeg; i += 1) {
+    if (a[i].isZero()) continue;
+    for (let j = 0; j < b.length && i + j <= maxDeg; j += 1) {
+      if (b[j].isZero()) continue;
+      out[i + j] = out[i + j].add(a[i].mul(b[j]));
+    }
+  }
+  return out;
+}
+
+/**
+ * Verify x=0 is a regular singular point of P(x)y'' + Q(x)y' + R(x)y = 0 and
+ * return the analytic Taylor series (tildeP, tildeQ) where tildeP = x·p(x)
+ * and tildeQ = x²·q(x), with p = Q/P and q = R/P.
+ *
+ * Returns null if:
+ *   - P(0) ≠ 0 (regular point, not singular — caller falls through).
+ *   - Order of vanishing of P at 0 exceeds 2 (irregular or out of scope).
+ *   - The analyticity condition on the analyticity of x·p or x²·q fails.
+ *
+ * Strategy: compute `inv_P_eff(x) = 1 / (P(x)/x^m)` as a Taylor series via
+ * the standard 1/series recurrence, then form tildeP, tildeQ by shifting.
+ */
+function isRegularSingular(P: readonly Frac[], Q: readonly Frac[], R: readonly Frac[]):
+  readonly [Frac[], Frac[]] | null {
+  const n = P.length;
+  // Order of vanishing of P at 0.
+  let m = 0;
+  while (m < n && P[m].isZero()) m += 1;
+  if (m === 0) return null;  // x=0 regular (non-singular)
+  if (m > 2) return null;    // beyond Frobenius scope
+
+  // P_eff(x) = P(x) / x^m.
+  const Peff: Frac[] = Array.from({ length: n }, () => Frac.zero());
+  for (let i = m; i < n; i += 1) Peff[i - m] = P[i];
+  if (Peff[0].isZero()) return null;
+
+  // Invert P_eff as Taylor series: inv[0] = 1/P_eff[0],
+  // inv[k] = -(1/P_eff[0]) · Σ_{j=1..k} P_eff[j] · inv[k-j].
+  const inv: Frac[] = Array.from({ length: n }, () => Frac.zero());
+  inv[0] = Frac.one().div(Peff[0]);
+  for (let k = 1; k < n; k += 1) {
+    let s = Frac.zero();
+    for (let j = 1; j <= k; j += 1) {
+      if (j >= n) break;
+      s = s.add(Peff[j].mul(inv[k - j]));
+    }
+    inv[k] = inv[0].neg().mul(s);
+  }
+
+  // tildeP = x^{1-m} · Q · inv  (left-shift by m-1; positive shift drops
+  // leading terms — must be zero for analyticity).
+  const Qinv = fracPolyMul(Q, inv, n - 1);
+  const shiftP = m - 1;
+  for (let i = 0; i < shiftP; i += 1) {
+    if (!Qinv[i].isZero()) return null;
+  }
+  const tildeP: Frac[] = Array.from({ length: n }, () => Frac.zero());
+  for (let k = 0; k < n; k += 1) {
+    const idx = k + shiftP;
+    if (idx < n) tildeP[k] = Qinv[idx];
+  }
+
+  // tildeQ = x^{2-m} · R · inv  (m=2 → no shift; m=1 → right-shift by 1).
+  const Rinv = fracPolyMul(R, inv, n - 1);
+  const shiftQ = m - 2;
+  const tildeQ: Frac[] = Array.from({ length: n }, () => Frac.zero());
+  if (shiftQ >= 0) {
+    for (let i = 0; i < shiftQ; i += 1) {
+      if (!Rinv[i].isZero()) return null;
+    }
+    for (let k = 0; k < n; k += 1) {
+      const idx = k + shiftQ;
+      if (idx < n) tildeQ[k] = Rinv[idx];
+    }
+  } else {
+    // shiftQ === -1: tildeQ = x · Rinv  (right shift by 1).
+    for (let k = 1; k < n; k += 1) tildeQ[k] = Rinv[k - 1];
+  }
+
+  return [tildeP, tildeQ] as const;
+}
+
+/**
+ * Solve r(r-1) + p_0 r + q_0 = 0 for rational roots.  Returns `[r1, r2]`
+ * with r1 ≥ r2, or `null` if the roots are irrational, complex, or repeated.
+ */
+function solveIndicial(p0: Frac, q0: Frac): readonly [Frac, Frac] | null {
+  // r² + (p0 − 1) r + q0 = 0.
+  const B = p0.sub(Frac.one());
+  const C = q0;
+  const disc = B.mul(B).sub(new Frac(4).mul(C));
+  if (disc.ltZero()) return null;  // complex roots
+  const sqrtDisc = exactSqrt(disc);
+  if (sqrtDisc === null) return null;  // irrational roots
+  const half = new Frac(1, 2);
+  let r1 = B.neg().add(sqrtDisc).mul(half);
+  let r2 = B.neg().sub(sqrtDisc).mul(half);
+  // Compare: r1 ≥ r2 by Frac comparison via sub sign.
+  if (r1.sub(r2).ltZero()) { const t = r1; r1 = r2; r2 = t; }
+  return [r1, r2] as const;
+}
+
+/**
+ * Return true iff r1 − r2 is an integer (denominator 1).  Equal roots and
+ * positive-integer differences both trigger logarithmic Frobenius — out of scope.
+ */
+function rootsDifferByInteger(r1: Frac, r2: Frac): boolean {
+  return r1.sub(r2).denom === 1n;
+}
+
+/**
+ * Build the IR for `x^r · (a_0 + a_1 x + … + a_N x^N)`.
+ *
+ * Conventions:
+ *   - Zero coefficients past a_0 are omitted.
+ *   - r = 0 collapses to the bare polynomial.
+ *   - r = 1 emits `Mul(x, poly)`.
+ *   - Otherwise emits `Mul(Pow(x, r), poly)` with r encoded as an integer
+ *     or rational literal (signed via Neg wrapper for negative r).
+ */
+function buildSeriesIr(r: Frac, a: readonly Frac[], x: IRNode): IRNode {
+  // Build the polynomial Σ a_k x^k (a_0 always emitted, others only if nonzero).
+  const polyTerms: IRNode[] = [];
+  for (let k = 0; k < a.length; k += 1) {
+    const ak = a[k];
+    if (ak.isZero() && k > 0) continue;
+    const coeffIr: IRNode = ak.isNeg() ? app(NEG, [ak.neg().toIr()]) : ak.toIr();
+    let termNode: IRNode;
+    if (k === 0) {
+      termNode = coeffIr;
+    } else if (k === 1) {
+      if (ak.eq(Frac.one())) termNode = x;
+      else if (ak.eq(Frac.one().neg())) termNode = app(NEG, [x]);
+      else termNode = app(MUL, [coeffIr, x]);
+    } else {
+      const xk = app(POW, [x, int(k)]);
+      if (ak.eq(Frac.one())) termNode = xk;
+      else if (ak.eq(Frac.one().neg())) termNode = app(NEG, [xk]);
+      else termNode = app(MUL, [coeffIr, xk]);
+    }
+    polyTerms.push(termNode);
+  }
+  if (polyTerms.length === 0) polyTerms.push(int(0));
+
+  let polyIr: IRNode = polyTerms[0];
+  for (let i = 1; i < polyTerms.length; i += 1) {
+    polyIr = app(ADD, [polyIr, polyTerms[i]]);
+  }
+
+  if (r.isZero()) return polyIr;
+  if (r.eq(Frac.one())) return app(MUL, [x, polyIr]);
+
+  const rIr: IRNode = r.isNeg() ? app(NEG, [r.neg().toIr()]) : r.toIr();
+  const xPowR = app(POW, [x, rIr]);
+  return app(MUL, [xPowR, polyIr]);
+}
+
+/**
+ * Attempt to solve `expr = 0` as a Frobenius power series at `x = 0`.
+ *
+ * Returns `Equal(y, x^r · Σ_{k=0..N} a_k x^k)` on success, or `null` on any
+ * of the out-of-scope conditions: non-2nd-order, non-polynomial coefficients,
+ * regular point at 0, irregular singular point, complex/irrational/integer-
+ * difference indicial roots.
+ *
+ * Default truncation N = 10 matches the Python reference's
+ * `_DEFAULT_TRUNCATION_N`.  Caller can override via the optional `N` arg.
+ */
+function tryFrobeniusSeries(expr: IRNode, y: IRNode, x: IRNode, N: number = FROBENIUS_DEFAULT_N): IRNode | null {
+  const coeffs = collectVar2Coeffs(expr, y, x);
+  if (coeffs === null) return null;
+  const { p: pNode, q: qNode, r: rNode } = coeffs;
+
+  const Ppoly = polyCoeffsExtract(pNode, x, N);
+  if (Ppoly === null) return null;
+  const Qpoly = polyCoeffsExtract(qNode, x, N);
+  if (Qpoly === null) return null;
+  const Rpoly = polyCoeffsExtract(rNode, x, N);
+  if (Rpoly === null) return null;
+
+  const pq = isRegularSingular(Ppoly, Qpoly, Rpoly);
+  if (pq === null) return null;
+  const [tildeP, tildeQ] = pq;
+
+  const p0 = tildeP[0];
+  const q0 = tildeQ[0];
+
+  const roots = solveIndicial(p0, q0);
+  if (roots === null) return null;
+  const [r1, r2] = roots;
+  if (rootsDifferByInteger(r1, r2)) return null;
+
+  // F(s) = s(s-1) + p0·s + q0.
+  const F = (s: Frac): Frac => s.mul(s.sub(Frac.one())).add(p0.mul(s)).add(q0);
+
+  const a: Frac[] = [Frac.one()];
+  for (let n = 1; n <= N; n += 1) {
+    const denom = F(new Frac(n).add(r1));
+    if (denom.isZero()) return null;  // defensive — shouldn't happen post-guard
+    let rhs = Frac.zero();
+    for (let k = 1; k <= n; k += 1) {
+      const pk = k < tildeP.length ? tildeP[k] : Frac.zero();
+      const qk = k < tildeQ.length ? tildeQ[k] : Frac.zero();
+      rhs = rhs.add(a[n - k].mul(pk.mul(new Frac(n - k).add(r1)).add(qk)));
+    }
+    a.push(rhs.neg().div(denom));
+  }
+
+  const seriesIr = buildSeriesIr(r1, a, x);
+  return app(EQUAL, [y, seriesIr]);
 }

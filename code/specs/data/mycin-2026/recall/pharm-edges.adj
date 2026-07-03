@@ -1,0 +1,242 @@
+% ============================================================================
+% pharm-edges — the clinical-pharmacology knowledge-graph (MYCIN-2026 PHARM).
+% ============================================================================
+% A Tier-1 recall domain (USMLE-DOMAIN-MAP §"To build"): drug → mechanism, class,
+% adverse effect, antidote. "What class of drug is lisinopril?" becomes the binding
+% query  ? drug_class(lisinopril, $Class).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — there is no
+% generator, no JSON, no manifest (the second ADJ-only recall domain, after MICRO).
+% Each fact is a `relate` clause whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see pharm-recall.query.adj. Nothing here
+% is asserted "from memory": every edge is defended by a span a reader can re-fetch
+% and check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope (edges left out rather than fabricated or one-hop-inferred):
+%   - propranolol drug_class: NBK557801 discusses beta-blockers as a group but has
+%     no self-contained "Propranolol is a non-selective beta-blocker" span naming
+%     the drug — declined (no verbatim drug-named class statement).
+%   - adverse_effect(lisinopril, dry_cough): the page attributes dry cough to "ACE
+%     inhibitors" (the class), not to lisinopril by name — that is a one-hop class
+%     inference, not a self-contained span, so it is declined here.
+% Declining an edge with no clean self-contained authoritative span is the correct
+% move: honest absence beats a fabricated or over-reaching citation.
+% ============================================================================
+
+dictionary pharm_vocab {
+    define drug       : entity   surface "drug", "medication", "agent"
+    define drugclass  : entity   surface "drug class", "pharmacologic class"
+    define moa        : entity   surface "mechanism of action"
+    define effect     : entity   surface "adverse effect", "adverse reaction"
+    define poisoning  : entity   surface "poisoning", "toxicity", "overdose"
+    define antidote   : entity   surface "antidote", "reversal agent"
+
+    define drug_class     : relation from drug to drugclass     % pharmacologic class
+    define mechanism      : relation from drug to moa           % how it works
+    define adverse_effect : relation from drug to effect        % a notable harm
+    define antidote_for   : relation from poisoning to antidote % what reverses a poisoning
+}
+
+rulebook pharm_facts {
+    use pharm_vocab
+
+    % --- Metformin -------------------------------------------------------
+    relate drug_class(metformin, biguanide)
+        source "Metformin, classified as a biguanide drug"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK518983/"
+        trust authoritative
+
+    % --- Lisinopril ------------------------------------------------------
+    relate drug_class(lisinopril, ace_inhibitor)
+        source "As a competitive ACE inhibitor, lisinopril prevents the conversion of angiotensin I to angiotensin II, a potent vasoconstrictor."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482230/"
+        trust authoritative
+
+    % --- Naloxone (opioid antagonist; antidote for opioid toxicity) ------
+    relate drug_class(naloxone, opioid_antagonist)
+        source "Naloxone is a pure, competitive opioid antagonist"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441910/"
+        trust authoritative
+    relate antidote_for(opioid_toxicity, naloxone)
+        source "Naloxone is indicated for the treatment of opioid toxicity, specifically to reverse respiratory depression from opioid use."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441910/"
+        trust authoritative
+
+    % --- Flumazenil (benzodiazepine antagonist; antidote for benzo overdose)
+    relate drug_class(flumazenil, benzodiazepine_antagonist)
+        source "Flumazenil is a benzodiazepine antagonist typically used in overdose emergencies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470180/"
+        trust authoritative
+    relate antidote_for(benzodiazepine_overdose, flumazenil)
+        source "The primary FDA-approved clinical uses for flumazenil include reversal agents for benzodiazepine overdose and postoperative sedation from benzodiazepine anesthetics."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470180/"
+        trust authoritative
+
+    % --- Warfarin --------------------------------------------------------
+    relate mechanism(warfarin, inhibits_vitamin_k_dependent_clotting_factor_synthesis)
+        source "Warfarin inhibits the synthesis of vitamin K-dependent clotting factors, reducing clotting ability."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470313/"
+        trust authoritative
+
+    % --- Acetaminophen (toxicity → hepatic necrosis; antidote acetylcysteine)
+    relate adverse_effect(acetaminophen, hepatic_necrosis)
+        source "Although generally safe at therapeutic doses, acetaminophen poisoning causes hepatic necrosis in overdose."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441917/"
+        trust authoritative
+    relate antidote_for(acetaminophen_poisoning, acetylcysteine)
+        source "Acetylcysteine, most often given IV, is the critical antidote for acetaminophen poisoning, and is most effective if administered within the first 8 hours after an acute overdose."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441917/"
+        trust authoritative
+
+    % --- EXPAND: protamine reverses heparin anticoagulation -------------
+    relate antidote_for(heparin_overdose, protamine)
+        source "Protamine is a medication used to reverse and neutralize the anticoagulant effects of heparin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK547753/"
+        trust authoritative
+
+    % --- EXPAND: digoxin immune Fab reverses digoxin toxicity ----------
+    relate antidote_for(digoxin_toxicity, digoxin_immune_fab)
+        source "Digoxin immune Fab is an antidote for digoxin toxicity, a condition typically observed in patients with atrial fibrillation and underlying heart failure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556101/"
+        trust authoritative
+
+    % --- EXPAND: vitamin K reverses warfarin-associated coagulopathy ----
+    relate antidote_for(warfarin_toxicity, vitamin_k)
+        source "Oral vitamin K lowers the international normalized ratio more rapidly than subcutaneous vitamin K in the treatment of warfarin-associated coagulopathy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557622/"
+        trust authoritative
+
+    % --- EXPAND: atropine is the primary treatment for organophosphate poisoning ----
+    relate antidote_for(organophosphate_poisoning, atropine)
+        source "The primary treatment for organophosphate poisoning involves atropine, which competes with acetylcholine at the muscarinic receptors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470430/"
+        trust authoritative
+
+    % --- EXPAND: fomepizole is the antidote of choice for toxic alcohol poisoning --
+    relate antidote_for(toxic_alcohol_poisoning, fomepizole)
+        source "Fomepizole is the antidote of choice for patients who present early after toxic alcohol exposure."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482121/"
+        trust authoritative
+
+    % --- EXPAND: hydroxocobalamin is the antidote for cyanide poisoning ------------
+    relate antidote_for(cyanide_poisoning, hydroxocobalamin)
+        source "Hydroxocobalamin can serve as an antidote for cyanide poisoning."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557632/"
+        trust authoritative
+
+    % --- EXPAND: leucovorin (folinic acid) rescues methotrexate toxicity -----------
+    relate antidote_for(methotrexate_toxicity, leucovorin)
+        source "Leucovorin is FDA indicated after high dose methotrexate therapy in osteosarcoma to decrease the toxic effects of methotrexate or counter the toxic effects of folate antagonists."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553114/"
+        trust authoritative
+
+    % --- EXPAND: deferoxamine chelates iron in iron toxicity -----------------------
+    relate antidote_for(iron_toxicity, deferoxamine)
+        source "Deferoxamine, a chelating agent that can remove iron from tissues and free iron from plasma, is indicated in patients with systemic toxicity, metabolic acidosis, worsening symptoms, or a serum iron level predictive of moderate or severe toxicity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459224/"
+        trust authoritative
+    % --- EXPAND: glucagon is the treatment of choice for beta-blocker overdose -----
+    relate antidote_for(beta_blocker_overdose, glucagon)
+        source "Although there have been no controlled trials to prove the efficacy of glucagon in poisoning beta-blocker overdose, glucagon is considered as a useful treatment of choice."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448097/"
+        trust authoritative
+
+    % --- EXPAND: methylene blue is the FDA-approved treatment for methemoglobinemia -
+    relate antidote_for(methemoglobinemia, methylene_blue)
+        source "Methylene blue is approved by the Food and Drug Administration (FDA) as a treatment for acquired methemoglobinemia, a condition in which hemoglobin iron is oxidized from the ferrous (Fe2+) to ferric (Fe3+) state."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557593/"
+        trust authoritative
+
+    % --- EXPAND: succimer (DMSA) chelates lead in lead poisoning -------------------
+    relate antidote_for(lead_poisoning, succimer)
+        source "A variety of chelating agents alone or in combination can be used depending on the severity of clinical presentation and the patient's blood lead concentration, including succimer, calcium disodium ethylenediaminetetraacetic acid (EDTA), and British anti-Lewisite (BAL, also known as dimercaprol)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541097/"
+        trust authoritative
+    % --- EXPAND: penicillamine chelates copper (copper overload / Wilson disease) --
+    relate antidote_for(copper_toxicity, penicillamine)
+        source "Penicillamine is a copper chelator derived from penicillin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK513316/"
+        trust authoritative
+    % --- EXPAND: idarucizumab reverses the anticoagulant dabigatran --------------
+    relate antidote_for(dabigatran_toxicity, idarucizumab)
+        source "Idarucizumab is an anti-dabigatran monoclonal antibody fragment used in patients treated with dabigatran presenting with life-threatening bleeding."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560651/"
+        trust authoritative
+    % --- EXPAND: dimercaprol (BAL) chelates arsenic / heavy metals ---------------
+    relate antidote_for(arsenic_poisoning, dimercaprol)
+        source "Dimercaprol is a medication used to treat toxic exposure to arsenic, mercury, gold, and lead."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK549804/"
+        trust authoritative
+    % --- EXPAND: pyridoxine (vitamin B6) is the antidote for isoniazid overdose --
+    relate antidote_for(isoniazid_toxicity, pyridoxine)
+        source "In cases of poisoning resulting from ingesting more than 10 grams of isoniazid (INH), an equal amount of pyridoxine (vitamin B6) should be administered as an antidote."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557436/"
+        trust authoritative
+    % --- EXPAND: sugammadex reverses rocuronium (steroidal neuromuscular blockade) --
+    relate antidote_for(rocuronium_toxicity, sugammadex)
+        source "Sugammadex is a modified gamma-cyclodextrin that is used to reverse steroidal non-depolarizing neuromuscular blocking drugs rocuronium and vecuronium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470263/"
+        trust authoritative
+
+    % ============================================================================
+    % BATCH: high-yield drug-class table + mechanisms + 1 antidote, grounded in
+    % parallel from each drug's StatPearls page (one self-contained span per edge
+    % naming the drug AND its class/mechanism). atorvastatin & aspirin are filed as
+    % `mechanism` (the span states "works by inhibiting ..." / "is a ... inhibitor").
+    % ============================================================================
+
+    % --- Drug classes ----------------------------------------------------
+    relate drug_class(omeprazole, proton_pump_inhibitor)
+        source "Omeprazole is a proton pump inhibitor used to manage and treat several conditions, including uncomplicated heartburn, peptic ulcer disease, gastrointestinal reflux disease, Zollinger-Ellison syndrome, multiple endocrine adenomas, systemic mastocytosis, erosive esophagitis, gastric ulcers, and helicobacter pylori infection."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK539786/"
+        trust authoritative
+    relate drug_class(losartan, angiotensin_receptor_blocker)
+        source "Losartan is an angiotensin receptor blocker (ARB) approved by the US Food and Drug Administration (FDA) for the treatment of several medical conditions, including hypertension and diabetic nephropathy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526065/"
+        trust authoritative
+    relate drug_class(furosemide, loop_diuretic)
+        source "Furosemide is a loop diuretic that has been in use for decades."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499921/"
+        trust authoritative
+    relate drug_class(hydrochlorothiazide, thiazide_type_diuretic)
+        source "Hydrochlorothiazide is a thiazide-type diuretic that inhibits the sodium–chloride cotransporter in the distal convoluted tubule of the nephron, reducing sodium reabsorption and promoting natriuresis and diuresis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430766/"
+        trust authoritative
+    relate drug_class(ciprofloxacin, fluoroquinolone)
+        source "Ciprofloxacin is a bactericidal antibiotic of the fluoroquinolone drug class."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535454/"
+        trust authoritative
+    relate drug_class(azithromycin, macrolide)
+        source "Like other macrolides, azithromycin can cause QTc prolongation, which can result in torsades de pointes or polymorphic ventricular tachycardia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557766/"
+        trust authoritative
+    relate drug_class(vancomycin, glycopeptide)
+        source "Vancomycin is a glycopeptide antibiotic that exerts its bactericidal effect by inhibiting the polymerization of peptidoglycans in the bacterial cell wall."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459263/"
+        trust authoritative
+    relate drug_class(albuterol, short_acting_beta_2_agonist)
+        source "Short-acting β2 agonists (SABAs), including albuterol (also known as salbutamol), levalbuterol, metaproterenol, and terbutaline, are primarily prescribed for the relief of acute bronchospasm associated with conditions such as asthma and chronic obstructive pulmonary disease (COPD)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559069/"
+        trust authoritative
+
+    % --- Mechanisms ------------------------------------------------------
+    relate mechanism(atorvastatin, inhibits_hmg_coa_reductase)
+        source "atorvastatin works by inhibiting HMG-CoA reductase, an enzyme crucial to cholesterol synthesis in the liver."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430779/"
+        trust authoritative
+    relate mechanism(aspirin, cyclooxygenase_inhibition)
+        source "Aspirin is a cyclooxygenase-1 (COX-1) inhibitor."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519032/"
+        trust authoritative
+
+    % --- EXPAND: dantrolene is the treatment for malignant hyperthermia --
+    relate antidote_for(malignant_hyperthermia, dantrolene)
+        source "Dantrolene is the only known treatment for malignant hyperthermia and should be administered as soon as possible following the identification of the symptoms of the disease process."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535398/"
+        trust authoritative
+}

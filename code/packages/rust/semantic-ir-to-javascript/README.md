@@ -1,0 +1,388 @@
+# semantic-ir-to-javascript
+
+The **JavaScript backend** for the narrow-waist Semantic IR (SIR18) —
+the fifth target after TypeScript, Rust, Python, and Go.
+
+It consumes a [`semantic_ir::Module`](../semantic-ir) and emits a
+single **self-contained** `.js` file that runs directly under Node.js:
+
+```sh
+node out.js
+```
+
+No `npm install`, no `require()`, no `import` — the runtime helpers are
+pasted inline at the top of every artifact.
+
+## Where it sits in the stack
+
+```text
+  frontend            narrow waist            backend (this crate)
+┌───────────┐      ┌────────────────┐      ┌──────────────────────┐
+│ Twig / …  │ ───▶ │  semantic_ir   │ ───▶ │ semantic-ir-to-      │ ──▶ out.js
+│ (source)  │      │  ::Module      │      │ javascript           │
+└───────────┘      └────────────────┘      └──────────────────────┘
+```
+
+Any frontend that lowers to `semantic_ir::Module` (e.g.
+`twig-to-semantic-ir`) can target JavaScript through this crate. The IR
+is the contract; the backend never sees source syntax.
+
+## Pipeline
+
+`compile(&module)` runs four steps and returns a
+[`semantic_ir::Artifact`](../semantic-ir) (`filename`, `source`,
+`metadata`):
+
+1. **Validate** — `semantic_ir::validate`. Structural errors block
+   lowering.
+2. **Capability check** — every declared `Feature` must be in
+   `accepts_features()`; every intrinsic must be whitelisted (none are).
+3. **Reject tail-calls** — V8 does not reliably tail-call optimise.
+4. **Lower** — walk the IR, emit JavaScript (see `src/emit.rs`).
+
+```rust
+use semantic_ir_to_javascript::compile;
+
+let module = twig_to_semantic_ir::compile_source(
+    "(define (add a b) (+ a b))\n(print (add 1 2))",
+    "demo",
+)?;
+let artifact = compile(&module)?;       // artifact.source is runnable JS
+std::fs::write("demo.js", artifact.source)?;
+```
+
+Or via the `Backend` trait:
+
+```rust
+use semantic_ir::Backend;
+let artifact = semantic_ir_to_javascript::JavaScriptBackend::new().compile(&module)?;
+```
+
+## Capability declaration
+
+This backend accepts the **v0 feature set plus all of SIR16 / v1** — the
+surface the emitter lowers today. JavaScript supports every SIR16 feature
+natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
+lowering is direct.
+
+| Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
+|---------------------------------|------------------------------------------|
+| `Closures`                      | `StringInterpolation` (`StrConcat`, SIR18) |
+| `Pairs`                         | `SingletonClassDef` OOP dispatch         |
+| `Symbols`                       | `TailCalls` (V8 has no reliable TCO)     |
+| `Strings`                       | `Intrinsics` (empty whitelist)           |
+| `DynamicTyping`                 |                                          |
+| `OptionalTypeAnnotations`       |                                          |
+| `MutualRecursion`               |                                          |
+| `Globals`                       |                                          |
+| `Floats` (SIR16)                |                                          |
+| `ShortCircuit` (SIR16)          |                                          |
+| `Sequences` (SIR16)             |                                          |
+| `Maps` (SIR16)                  |                                          |
+| `MutableBindings` (SIR16)       |                                          |
+| `Loops` (SIR16)                 |                                          |
+| `DefaultParams` (P2d)           |                                          |
+| `KeywordParams` (KW4)           |                                          |
+| `Exceptions` (E1, SIR17)        |                                          |
+| `Classes` (E2 ancestry + O3 OOP)|                                          |
+| `InstanceVars` (O3)             |                                          |
+| `ClassVars` (O3)                |                                          |
+| `Modules` (MX4 mixins)          |                                          |
+| `Constants`                     |                                          |
+
+`accepts_intrinsics()` is empty. The accept-set is deliberately matched
+to what `emit` handles, so a module using a deferred node is turned away
+*before* lowering rather than mis-compiled — and every accepted feature
+has a real emit arm (the residual `panic!` guards cover only the
+still-deferred SIR18 nodes — `SingletonClassDef` OOP dispatch and string
+interpolation).
+
+`Classes` now covers **full user-defined-class OOP (O3)**: a `ClassDef`
+supplies its `superclass` *ancestry edge* (so `raise MyErr; rescue
+StandardError` matches, and so method resolution walks the hierarchy), and
+the O2 Ruby frontend's OOP builtins (`__new__`, `__super__`,
+`__def_method__`, `__def_class_method__`, `__self__`) lower to the inlined
+`__Sir` OOP runtime — instantiation, method dispatch, `super`, `self`, and
+`@ivar`/`@@cvar` access all execute end-to-end.
+
+### User-defined-class OOP (O3)
+
+Method bodies are hoisted by the frontend to top-level functions and
+registered with `__Sir.defMethod("Class", "name", <closure>)`.  Dispatch,
+instantiation, and `super` all key on the **class/method *name string***
+through a `Map` — never `recv[name]`, `eval`, or `new Function` — so a
+class or method named `constructor` / `__proto__` is inert data (a Map
+miss floors to `NoMethodError`), closing the same RCE / prototype-pollution
+door as the collection-method allowlist.
+
+| SIR (from O2 frontend)          | JavaScript emitted                          |
+|---------------------------------|---------------------------------------------|
+| `Dog.new("Rex")`                | `__Sir.callNew("Dog", "Rex")`               |
+| `super(4)` in `Cat#initialize`  | `__Sir.callSuper("initialize", "Cat", 4)`   |
+| `def speak; …; end`             | `__Sir.defMethod("Dog", "speak", <closure>)`|
+| `def self.count; …; end`        | `__Sir.defClassMethod("Dog", "count", …)`   |
+| `self`                          | `__Sir.currentSelf()`                       |
+| `recv.meth(a)` (`SirInstance`)  | `__Sir.callMethod(recv, "meth", a)`         |
+| `@name` read / write            | `__Sir.ivarGet("@name")` / `ivarSet(…)`     |
+| `@@count` read / write          | `__Sir.cvarGet("@@count")` / `cvarSet(…)`   |
+
+`self` is a dynamic stack: a method pushes its receiver before running and
+pops it in a `finally`, so `@ivar` reads resolve against the live receiver
+and an exception thrown mid-method still unwinds cleanly.  A `SirInstance`
+receiver dispatches to the user method table; every **other** receiver
+(array, string, …) falls through to the unchanged built-in / collection
+path, so collection methods and exceptions are not regressed.
+
+### Mixins — `include` / `extend` (MX4)
+
+A `module M … end` registers its `def`s into the **same** `methodTable` a
+class uses (keyed by the module name), and the two mixin directives lower to
+one builtin each; dispatch then follows Ruby's **Method Resolution Order**.
+
+| SIR (from MX1 frontend)         | JavaScript emitted                          |
+|---------------------------------|---------------------------------------------|
+| `include Greet` in `class C`    | `__Sir.includeModule("C", "Greet")`         |
+| `extend Counter` in `class C`   | `__Sir.extendModule("C", "Counter")`        |
+| `Widget.tally(1)` (const recv)  | `__Sir.callClassMethod("Widget", "tally", 1)` |
+
+`__Sir.resolveMethod` walks the MRO: **class → its included modules
+most-recent-first (each expanded depth-first through its own `include`s) →
+superclass → …**  A class-defined method **shadows** a mixed-in module
+method, a **diamond** include resolves the shared module **once**, and
+`extend` promotes a module's instance methods to **class methods** (found by
+`callClassMethod`).  The per-owner `includedModules` / `extendedModules` are
+real `Map`s keyed by *name strings* holding module *name strings* — the same
+explicit-table, no-reflection bar as the method tables — and a single shared
+`seen` set makes a self-including module or cyclic hierarchy **terminate**
+(`NoMethodError`) rather than loop.
+
+### SIR16 lowering at a glance
+
+| SIR16 node                       | JavaScript emitted                              |
+|----------------------------------|-------------------------------------------------|
+| `FloatLit`                       | native `number` (`NaN`/`Infinity` spelled out)  |
+| `LogicalAnd` / `LogicalOr`       | `((__l) => __Sir.truthy(__l) ? … : …)(lhs)`     |
+| `SeqLit` / `SeqIndex` / `SeqLen` | `[…]` / `(a)[i]` / `(a).length`                 |
+| `SeqSet`                         | `(a)[i] = v;`                                    |
+| `MapLit` / `MapGet`              | `new Map([[k, v]])` / `((m).get(k) ?? null)`    |
+| `MapSet`                         | `(m).set(k, v);`                                |
+| `Assign`                         | `name = value;` (`let` bindings are mutable)    |
+| `While`                          | `while (__Sir.truthy(cond)) { … }`              |
+| `ForRange`                       | direction-aware C-style `for` (bounds once)     |
+| `ForEach`                        | `for (let x of iter) { … }`                     |
+
+### Exceptions (E1) — `try`/`catch`/`raise`
+
+`Stmt::TryCatch` lowers to a **native** `try`/`catch`/`finally`. A native
+`catch` binds one variable and catches everything, but Ruby has an ordered
+list of *typed* `rescue` clauses, so the catch body is an if/else-if chain
+that asks the runtime `__Sir.rescueMatches(__exc, [...classNames])` for
+each clause in source order — running the first match, binding `=> e` when
+present, and re-`throw`ing the original exception if none match:
+
+```js
+try {
+  __Sir.raiseError("ArgumentError", "x");
+} catch (__exc) {
+  if (__Sir.rescueMatches(__exc, ["StandardError"])) {
+    const e = __exc;
+    __Sir.print("caught");
+  } else {
+    throw __exc;
+  }
+}
+```
+
+An empty `exception_types` is a bare `rescue` (catch-all → `rescueMatches`
+returns `true`); an `ensure` becomes a `finally`. The `raise` builtin
+lowers to `__Sir.raiseError(cls, msg)` (`raise Foo, "m"` →
+`raiseError("Foo", "m")`; a non-class first arg → an implicit
+`RuntimeError`; bare `raise` → a generic re-raise).
+
+**User-class ancestry (E2 half).** So that `rescue StandardError` catches a
+`raise MyErr` when `class MyErr < StandardError`, the emitter collects
+every `ClassDef` inheritance edge and emits one `__Sir.registerAncestry({
+"MyErr": "StandardError" })` at program init, merging the pairs into the
+runtime's ancestry table. Dispatch is a pure string-map walk — never
+`eval` or reflection (see the runtime section).
+
+### Default parameters (P2d)
+
+A `Param` carrying `default: Some(expr)` lowers to a **native JS default
+parameter** — `function f(a, b = <expr>) { … }` — because JavaScript's
+default-parameter semantics are exactly SIR's:
+
+- **Call-time**: the default runs each call, only when the argument is
+  omitted (not a compile-time constant baked in once).
+- **Param scope**: a later default may reference an earlier parameter by
+  name. SIR emits such a reference as `VarRef { scope: Param }` → a bare
+  identifier, which is in scope left-to-right in a JS parameter list.
+
+There is no call-site padding: the SIR validator allows a caller to omit
+trailing defaulted args (arity ≥ `required_param_count`), so a
+`DirectCall` emits **only the args present** and the native defaults fill
+the omitted trailing params. For example, `f(a, b = a + 1)` emits
+`function f(a, b = (a + 1)) { … }`; `f(5)` calls it with one arg and
+`b` binds to `6` at call time. (`IndirectCall` / closure defaults are
+unchanged / deferred.)
+
+## Runtime shape (inlined `__Sir`)
+
+Every artifact pastes one fixed IIFE near the top:
+
+```js
+const __Sir = (() => {
+  "use strict";
+  class Sym { /* interned name */ }
+  class Pair { /* car / cdr */ }
+  class Closure { /* wraps a JS fn */ }
+  function intern(name) { /* one Sym per name */ }
+  function applyClosure(c, args) { /* invoke a Closure */ }
+  function truthy(v) { /* only false / null are falsy */ }
+  function format(v) { /* Lisp-ish display for print */ }
+  const builtins = { "+": …, "cons": …, "range": …, "print": … };
+  return { Sym, Pair, Closure, intern, applyClosure, truthy,
+           format, print, builtins, builtinClosure, callBuiltin };
+})();
+```
+
+The classic JavaScript module pattern: the classes, symbol table, and
+helpers are private to the arrow body; only the returned object escapes,
+bound to the single global `__Sir`. This mirrors the TypeScript
+backend's `namespace __Sir { … }` — minus the type annotations and the
+external package import.
+
+### Value model
+
+| SIR concept   | JavaScript representation                  |
+|---------------|--------------------------------------------|
+| `Int`/`Float` | native `number`                            |
+| `Bool`        | native `boolean`                           |
+| `Nil`         | `null`                                      |
+| `Symbol`      | `__Sir.Sym` instance (interned `.name`)    |
+| `Str`         | native `string`                            |
+| `Pair`        | `__Sir.Pair` instance (`car`/`cdr`)        |
+| `Closure`     | `__Sir.Closure` instance wrapping a JS fn  |
+
+### Builtin specialisation
+
+For idiomatic output, common builtins emit native JavaScript instead of
+a runtime call:
+
+- `+ *` (2 args) → `__Sir.plus(a, b)` / `__Sir.times(a, b)` — **polymorphic**
+  (see below); native infix would be wrong for the collection arms.
+- `- / %` (2 args) → native infix `(a - b)`, … (numeric-only in the SIR contract)
+- `= != < > <= >=` (2 args) → `(a === b)`, `(a !== b)`, …
+- `not` (1 arg) → `(!__Sir.truthy(a))`; `neg` → `(-(a))`
+- `len` (1 arg) → `(a).length` (arrays and strings)
+- `print` (1 arg) → `__Sir.print(a)` (consistent stringification)
+
+A **variadic** operator (`(+ 1 2 3)` — more than two args) and any
+unrecognised builtin fall back to `__Sir.callBuiltin("+", […])`, so a new
+builtin runs without a backend change.
+
+### Polymorphic `+` / `*` (Ruby operator overloading)
+
+Ruby overloads `+` and `*` by the receiver's runtime type, and all of these
+lower to the same SIR `+`/`*` builtins, so the JavaScript backend dispatches at
+**runtime** — via the inlined `__Sir.plus` / `__Sir.times` helpers — on the
+**first operand's** type:
+
+| Expr           | Result       | Arm                                    |
+|----------------|--------------|----------------------------------------|
+| `1 + 2`        | `3`          | numeric fold (unchanged)               |
+| `"a" + "b"`    | `"ab"`       | String concat                          |
+| `[1] + [2]`    | `[1, 2]`     | Array concat (a **new** array)         |
+| `"ab" * 3`     | `"ababab"`   | String repeat                          |
+| `[0] * 3`      | `[0, 0, 0]`  | Array repeat (a **new** array)         |
+| `[1, 2] * ", "`| `"1, 2"`     | Array join (elements via `format`)     |
+
+Dispatch is a runtime **tag** test (`typeof x === "string"` /
+`Array.isArray(x)`), never reflection or `eval` on a source-derived name. The
+String/Array arms sit strictly ahead of the numeric path, so every existing
+numeric program is byte-for-byte unchanged. This also fixes the native-JS
+`[1] + [2]` bug, which would otherwise coerce to the string `"1,2"`.
+
+**Security.** The two repeat arms multiply a length by a program-controlled
+count. A shared `repeatCount` guard clamps a non-finite / non-integer /
+non-positive count to an empty result and rejects an oversized product
+(`len * count > Number.MAX_SAFE_INTEGER`) with a Ruby-shaped
+`ArgumentError: argument too big` **before** allocating — so a hostile count
+can neither OOM the process nor throw a raw `RangeError` (CWE-1284 / CWE-400).
+
+### Exception helpers (E1)
+
+The inlined `__Sir` also carries the exception runtime — a plain-JS port
+of the published `@coding-adventures/sir-runtime-exceptions` package, so
+the artifact stays self-contained:
+
+- `SirError` — a real `Error` subclass tagged with its Ruby class name in
+  `.sirClass`; what `raise` throws.
+- `raiseError(cls, msg)` — throws a `SirError`; the target of a lowered
+  `raise`.
+- `rescueMatches(exc, classNames)` — the per-clause dispatcher: `true` for
+  a bare `rescue` (empty list) or `Exception` (universal root), otherwise
+  a superclass-chain walk over the ancestry table.
+- `registerAncestry(map)` — merges user `{ child: "Super" }` edges into the
+  ancestry lookup (called once at program init for the module's inheriting
+  classes).
+
+The built-in Ruby ancestry (`RuntimeError`/`ArgumentError`/… →
+`StandardError` → `Exception`) is baked in, so `rescue StandardError`
+catches the everyday subclasses out of the box.
+
+**Security.** Ancestry resolution is a pure `ancestry[cur]` string-map
+walk — never `eval` or dynamic property reflection; class and method names
+are treated strictly as data. The mutable map is `Object.create(null)`
+(prototype-less), so a user class named `constructor`/`__proto__` cannot
+poison the lookup, and a cyclic user map terminates via a `seen` guard.
+
+## Output format
+
+- 2-space indentation, semicolons always (no ASI reliance).
+- `"use strict";` at the top (after the banner comment).
+- Banner comment naming the source module and language.
+- Trailing newline at end of file.
+- **Deterministic** — the same module always produces byte-identical
+  output (the runtime is fixed text; no iteration over unordered maps).
+
+A `Block` in **function-body** position emits a flat
+`{ stmts…; return value; }`; a `Block` in **expression** position emits
+an IIFE `(() => { stmts…; return value; })()` so its `let` bindings stay
+private. The module footer calls `_init()` (if present) then `main()`.
+
+## Identifier sanitisation
+
+JavaScript identifiers match `[A-Za-z_$][A-Za-z0-9_$]*` and must not be
+reserved words. SIR names can carry `?`, `!`, `-`, `+`, etc., so
+`sanitize_ident` rewrites anything that does not fit:
+
+| input        | output      | rule                              |
+|--------------|-------------|-----------------------------------|
+| `hello`      | `hello`     | already valid → unchanged         |
+| `class`      | `_$class`   | reserved word → `_$` prefix       |
+| `null?`      | `_$null_3f` | invalid char → `_$` + hex-encoded |
+| `""` (empty) | `_$empty`   | empty → sentinel                  |
+
+The `_$` prefix guarantees a legal leading character and avoids
+collisions between distinct invalid inputs (each non-`[A-Za-z0-9_$]`
+character hex-encodes to `_<codepoint>`).
+
+## Tests
+
+```sh
+cargo test -p semantic-ir-to-javascript
+```
+
+- Unit tests for `sanitize_ident`, string quoting, float formatting, and
+  every emit arm.
+- A determinism test (two compilations are byte-identical).
+- End-to-end integration tests (`tests/run_with_node.rs`) that emit
+  JavaScript to a unique temp file, **run it with `node`**, and assert
+  stdout. Twig-lowered programs cover the v0 core (add → `3`, factorial →
+  `120`, closure-adder → `8`); hand-built SIR16 modules cover float
+  arithmetic promotion (`3.5`), short-circuit (rhs not evaluated), seq
+  build/index/len/set, map build/get/set (missing key → nil), a `while`
+  counter, a for-range accumulator (and a descending step), for-each, and
+  mutable reassignment (`42`). When `node` is not on PATH the execution is
+  skipped and the syntactic checks still run.

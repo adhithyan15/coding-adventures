@@ -72,47 +72,80 @@ Test organisation
 """
 
 import cmath
+import json
 import math
+from dataclasses import replace
 from math import exp, isclose
 
 import pytest
+from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 
 from spice_engine import (
-    BSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
     AcPoint,
     AcResult,
     AcSource,
+    BSource,
     Capacitor,
     Circuit,
     CornerAcSweepResult,
+    CornerAdaptiveTransientResult,
     CornerDcSweepResult,
+    CornerDistortionPoint,
+    CornerDistortionResult,
+    CornerFourierResult,
+    CornerMcResult,
+    CornerNoiseResult,
     CornerOverride,
+    CornerPoleZeroResult,
+    CornerPssResult,
+    CornerSensResult,
+    CornerSParameterResult,
     CornerSpec,
     CornerSweepResult,
+    CornerTemperatureDcResult,
     CornerTfResult,
+    CornerTransientResult,
     CurrentSource,
+    CustomModel,
+    CustomModelEvaluation,
+    DcResult,
     DcSweepPoint,
     DcSweepResult,
+    DigitalEvent,
+    DigitalEventStream,
+    DigitalLogicLevels,
+    DigitalThresholds,
     Diode,
+    DistortionHarmonic,
+    DistortionPoint,
+    DistortionResult,
     ExpWaveform,
+    FourierHarmonic,
+    FourierProbeResult,
+    FourierResult,
     Inductor,
     McPoint,
     McResult,
+    Mosfet,
+    MutualInductor,
     NoiseEntry,
     NoisePoint,
     NoiseResult,
+    PoleZeroEntry,
+    PoleZeroResult,
     PssNewtonCandidateResult,
     PssNewtonIterationResult,
     PssNewtonSolveResult,
     PssNewtonUpdateResult,
-    PssResult,
     PssResidualJacobianResult,
     PssResidualResult,
+    PssResult,
     PulseWaveform,
     PwlWaveform,
     Resistor,
@@ -122,30 +155,180 @@ from spice_engine import (
     SParameterPoint,
     SParameterResult,
     SubcircuitDefinition,
+    TemperatureDcResult,
     TfResult,
+    TransientPoint,
+    TransientResult,
+    TransmissionLine,
     VoltageSource,
     XInstance,
+    __version__,
     ac_sweep,
     ac_sweep_corners,
+    analyze_custom_model_source,
+    analyze_deck_controls,
+    bjt_from_model_card,
+    circuit_at_temperature,
+    custom_linear_conductance_model,
     dc_corners,
+    dc_initial_vector_from_conditions,
     dc_op,
+    dc_op_with_initial_conditions,
     dc_sweep,
     dc_sweep_corners,
+    dc_temperature_sweep,
+    dc_temperature_sweep_corners,
+    deck_output_plan_artifact_records,
+    deck_table_records,
+    device_model_audit_fixtures,
+    device_model_behavior_audit_fixtures,
+    device_model_capacitance_audit_fixtures,
+    device_model_charge_audit_fixtures,
+    device_model_noise_audit_fixtures,
+    device_model_reference_deck_audit_analysis_summary,
+    device_model_reference_deck_audit_analysis_summary_records,
+    device_model_reference_deck_audit_fixtures,
+    device_model_reference_deck_audit_gate,
+    device_model_reference_deck_audit_records,
+    device_model_reference_deck_audit_summary,
+    device_model_reference_deck_audit_summary_records,
+    device_model_temperature_audit_fixtures,
+    digital_event_streams_to_bridge_schedule,
+    digital_event_streams_to_voltage_sources,
+    digital_events_to_pwl_waveform,
+    digital_events_to_voltage_source,
+    diode_from_model_card,
+    distortion_from_fourier,
+    distortion_from_transient,
+    distortion_from_transient_corners,
     estimate_period,
+    format_ac_table,
+    format_adaptive_digital_event_stream_table,
+    format_corner_ac_table,
+    format_corner_adaptive_digital_event_stream_table,
+    format_corner_adaptive_transient_table,
+    format_corner_dc_sweep_table,
+    format_corner_dc_table,
+    format_corner_digital_event_stream_table,
+    format_corner_distortion_table,
+    format_corner_fourier_table,
+    format_corner_mc_table,
+    format_corner_noise_table,
+    format_corner_pole_zero_table,
+    format_corner_pss_table,
+    format_corner_s_parameter_table,
+    format_corner_sens_table,
+    format_corner_temperature_dc_table,
+    format_corner_tf_table,
+    format_corner_transient_table,
+    format_dc_sweep_table,
+    format_dc_table,
+    format_deck_ac_table,
+    format_deck_control_policy_artifact_csv,
+    format_deck_control_policy_artifact_json,
+    format_deck_control_policy_artifact_table,
+    format_deck_control_policy_summary_artifact_csv,
+    format_deck_control_policy_summary_artifact_json,
+    format_deck_control_policy_summary_artifact_table,
+    format_deck_dc_sweep_table,
+    format_deck_noise_table,
+    format_deck_op_table,
+    format_deck_output_plan_artifact_csv,
+    format_deck_output_plan_artifact_json,
+    format_deck_output_plan_artifact_table,
+    format_deck_rawfile_artifact_csv,
+    format_deck_rawfile_artifact_json,
+    format_deck_rawfile_artifact_table,
+    format_deck_run_artifact_csv,
+    format_deck_run_artifact_json,
+    format_deck_run_artifact_table,
+    format_deck_table_csv,
+    format_deck_table_json,
+    format_deck_transient_table,
+    format_deck_wrdata_artifact_csv,
+    format_deck_wrdata_artifact_json,
+    format_deck_wrdata_artifact_table,
+    format_deck_wrdata_ascii,
+    format_device_model_reference_deck_audit_analysis_summary_csv,
+    format_device_model_reference_deck_audit_analysis_summary_json,
+    format_device_model_reference_deck_audit_analysis_summary_table,
+    format_device_model_reference_deck_audit_csv,
+    format_device_model_reference_deck_audit_gate_report,
+    format_device_model_reference_deck_audit_json,
+    format_device_model_reference_deck_audit_summary_csv,
+    format_device_model_reference_deck_audit_summary_json,
+    format_device_model_reference_deck_audit_summary_table,
+    format_device_model_reference_deck_audit_table,
+    format_digital_bridge_schedule_table,
+    format_digital_event_stream_table,
+    format_digital_event_stream_vcd,
+    format_digital_event_table,
+    format_distortion_table,
+    format_fourier_table,
+    format_mc_table,
+    format_measurement_table,
+    format_noise_table,
+    format_pole_zero_table,
+    format_pss_table,
+    format_s_parameter_table,
+    format_sens_table,
+    format_temperature_dc_table,
+    format_tf_table,
+    format_transient_table,
+    fourier,
+    fourier_corners,
+    fourier_transient_deck,
+    jfet_from_model_card,
     mc_dc,
+    mc_dc_corners,
+    measure_ac_sweep_deck,
+    measure_ac_sweep_probe,
+    measure_dc_sweep_deck,
+    measure_dc_sweep_probe,
+    measure_transient_deck,
+    measure_transient_delay_between_probes,
+    measure_transient_find_at_probe,
+    measure_transient_probe,
+    measure_transient_when_probe,
+    measure_transient_when_probe_counted,
+    mosfet_from_model_card,
     noise_ac,
+    noise_ac_corners,
+    normalize_model_card,
+    normalize_model_card_type,
+    pole_zero_corners,
+    pole_zero_rc_highpass,
+    pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass,
+    pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass,
+    pole_zero_rlc_notch,
     pss,
+    pss_corners,
     pss_newton_candidate,
     pss_newton_iteration,
     pss_newton_solve,
     pss_newton_update,
-    pss_residual_jacobian,
     pss_residual,
-    sens_dc,
+    pss_residual_jacobian,
+    resolve_deck_initial_conditions,
+    run_deck,
+    run_deck_analysis,
     s_parameters,
+    s_parameters_corners,
+    sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams,
+    sens_dc,
+    sens_dc_corners,
     tf,
     tf_corners,
     transient,
+    transient_adaptive_corners,
+    transient_adaptive_with_digital_event_streams,
+    transient_adaptive_with_digital_event_streams_corners,
+    transient_corners,
+    transient_with_digital_event_streams,
+    transient_with_digital_event_streams_corners,
     waveform_period,
 )
 from spice_engine.engine import (
@@ -161,6 +344,800 @@ from spice_engine.engine import (
     _voltage_sources,
     _x_from_result,
 )
+
+
+def _assert_run_artifact_table_matches(
+    execution: object,
+) -> dict[str, str]:
+    assert execution.run_artifact_table == format_deck_run_artifact_table(
+        execution.run_artifacts
+    )
+    records = deck_table_records(execution.run_artifact_table)
+    assert records == json.loads(format_deck_run_artifact_json(execution.run_artifacts))
+    assert len(records) == 1
+    return records[0]
+
+
+def test_package_version_matches_pyproject_release() -> None:
+    assert __version__ == "0.14.0"
+
+
+def test_model_card_type_aliases_are_normalized() -> None:
+    assert normalize_model_card_type("diode") == "D"
+    assert normalize_model_card_type("n-jfet") == "NJF"
+    assert normalize_model_card_type("pch") == "PMOS"
+
+
+def test_model_card_aliases_build_device_instances() -> None:
+    diode_card = normalize_model_card(
+        "Dfast",
+        "diode",
+        {"JS": 2.0e-14, "CJ": 1.5e-12, "TT": 4.0e-9, "RS": 10.0},
+    )
+    diode_model = diode_from_model_card("D1", "a", "k", diode_card)
+    assert diode_card.parameters == {"IS": 2.0e-14, "CJO": 1.5e-12, "TT": 4.0e-9}
+    assert diode_card.unsupported_parameters == ("RS",)
+    assert diode_model.Is == pytest.approx(2.0e-14)
+    assert diode_model.Cjo == pytest.approx(1.5e-12)
+    assert diode_model.Tt == pytest.approx(4.0e-9)
+
+    bjt_card = normalize_model_card("Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12})
+    bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12}
+    assert bjt_model.polarity == "NPN"
+    assert bjt_model.beta_f == pytest.approx(125.0)
+    assert bjt_model.Cje == pytest.approx(2.0e-12)
+
+    jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
+    jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
+    assert jfet_card.parameters == {"BETA": 9.0e-4, "VTO": -1.8, "LAMBDA": 0.02}
+    assert jfet_model.polarity == "NJF"
+    assert jfet_model.beta == pytest.approx(9.0e-4)
+    assert jfet_model.vto == pytest.approx(-1.8)
+    assert jfet_model.lambda_ == pytest.approx(0.02)
+
+    mos_card = normalize_model_card(
+        "Mn",
+        "nmos",
+        {
+            "LEVEL": 1.0,
+            "VTO": 0.55,
+            "LAM": 0.04,
+            "NSUB": 1.6,
+            "CJD": 3.0e-13,
+            "PB": 0.9,
+            "MJ": 0.45,
+        },
+    )
+    mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
+    assert mos_card.parameters == {
+        "LEVEL": 1.0,
+        "VT0": 0.55,
+        "LAMBDA": 0.04,
+        "N_SUB": 1.6,
+        "CBD": 3.0e-13,
+        "PB": 0.9,
+        "MJ": 0.45,
+    }
+    assert isinstance(mos_model.model, MOSFET)
+    assert mos_model.model.type == MosfetType.NMOS
+    assert isinstance(mos_model.model.model, Level1Model)
+    assert pytest.approx(0.55) == mos_model.model.model.params.VT0
+    assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
+    assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
+    assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
+    assert pytest.approx(0.9) == mos_model.model.model.params.PB
+    assert pytest.approx(0.45) == mos_model.model.model.params.MJ
+
+
+def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
+    fixtures = device_model_audit_fixtures()
+    assert [fixture.kind for fixture in fixtures] == ["D", "NPN", "NJF", "NMOS"]
+    assert fixtures[0].parameters["IS"] == pytest.approx(2.0e-14)
+    assert fixtures[1].parameters["BF"] == pytest.approx(125.0)
+    assert fixtures[2].parameters["VTO"] == pytest.approx(-1.8)
+    assert fixtures[3].parameters["VT0"] == pytest.approx(0.55)
+
+
+def test_device_model_behavior_audit_fixtures_run_reference_bias_points() -> None:
+    fixtures = device_model_behavior_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-forward-bias",
+        "bjt-emitter-follower",
+        "jfet-source-bias",
+        "mos-level1-common-source",
+    ]
+
+    for fixture in fixtures:
+        result = dc_op(fixture.circuit)
+        value = result.node_voltages[fixture.probe_node]
+        assert result.converged
+        assert fixture.expected_min <= value <= fixture.expected_max
+        assert fixture.deck_lines[0].startswith("* device-model behavior fixture:")
+        assert ".op" in fixture.deck_lines
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+
+
+def test_device_model_temperature_audit_fixtures_run_reference_sweeps() -> None:
+    fixtures = device_model_temperature_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-forward-bias",
+        "bjt-emitter-follower",
+        "jfet-source-bias",
+        "mos-level1-common-source",
+    ]
+
+    for fixture in fixtures:
+        result = dc_temperature_sweep(
+            fixture.circuit,
+            [point.temperature_kelvin for point in fixture.temperature_points],
+            nominal_temperature_kelvin=fixture.nominal_temperature_kelvin,
+            energy_gap_ev=fixture.energy_gap_ev,
+        )
+        assert ".temp 260.15 300.15 340.15" in fixture.deck_lines
+        assert fixture.deck_lines[0].startswith("* device-model temperature fixture:")
+        assert len(result.points) == len(fixture.temperature_points)
+        for actual, expected in zip(result.points, fixture.temperature_points, strict=True):
+            value = actual.result.node_voltages[fixture.probe_node]
+            assert actual.result.converged
+            assert actual.temperature_kelvin == pytest.approx(expected.temperature_kelvin)
+            assert expected.expected_min <= value <= expected.expected_max
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert jfet_fixture.temperature_behavior.startswith("JFET temperature scaling is intentionally")
+
+
+def test_device_model_capacitance_audit_fixtures_run_reference_ac_points() -> None:
+    fixtures = device_model_capacitance_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-capacitance-ac",
+        "bjt-capacitance-ac",
+        "jfet-capacitance-ac",
+        "mos-level1-capacitance-ac",
+    ]
+
+    for fixture in fixtures:
+        result = ac_sweep(
+            fixture.circuit,
+            f_start=fixture.frequency_hz,
+            f_stop=fixture.frequency_hz,
+            n_points=1,
+            sweep="lin",
+        )
+        value = abs(result.points[0].node_voltages[fixture.probe_node])
+        assert fixture.expected_magnitude_min <= value <= fixture.expected_magnitude_max, (
+            f"{fixture.name} expected {fixture.expected_magnitude_min} <= "
+            f"{value} <= {fixture.expected_magnitude_max}"
+        )
+        assert fixture.deck_lines[0].startswith("* device-model capacitance fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".ac ") for line in fixture.deck_lines)
+        assert fixture.capacitance_behavior
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert "CGS/CGD" in jfet_fixture.capacitance_behavior
+
+
+def test_device_model_noise_audit_fixtures_run_reference_noise_points() -> None:
+    fixtures = device_model_noise_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-shot-noise",
+        "bjt-shot-noise",
+        "jfet-channel-noise",
+        "mos-level1-channel-noise",
+    ]
+
+    for fixture in fixtures:
+        result = noise_ac(
+            fixture.circuit,
+            fixture.output_node,
+            fixture.input_source,
+            freqs=[fixture.frequency_hz],
+        )
+        assert result.points
+        entry = next(
+            entry
+            for entry in result.points[0].entries
+            if entry.element_name == fixture.expected_noise_element
+        )
+        assert entry.noise_type == fixture.expected_noise_type
+        assert fixture.expected_source_psd_min <= entry.source_psd <= fixture.expected_source_psd_max
+        assert fixture.expected_output_psd_min <= entry.output_psd <= fixture.expected_output_psd_max
+        assert fixture.deck_lines[0].startswith("* device-model noise fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".noise ") for line in fixture.deck_lines)
+        assert fixture.noise_behavior
+
+
+def test_device_model_charge_audit_fixtures_run_reference_transients() -> None:
+    fixtures = device_model_charge_audit_fixtures()
+    assert [fixture.name for fixture in fixtures] == [
+        "diode-storage-charge",
+        "bjt-storage-charge",
+        "jfet-storage-charge",
+        "mos-level1-storage-charge",
+    ]
+
+    for fixture in fixtures:
+        result = transient(
+            fixture.circuit,
+            t_step=fixture.time_step_s,
+            t_stop=fixture.stop_time_s,
+        )
+        assert result.converged
+        assert result.points
+        initial = result.points[0].node_voltages[fixture.probe_node]
+        final = result.points[-1].node_voltages[fixture.probe_node]
+        assert fixture.expected_initial_min <= initial <= fixture.expected_initial_max
+        assert fixture.expected_final_min <= final <= fixture.expected_final_max, (
+            f"{fixture.name} expected {fixture.expected_final_min} <= "
+            f"{final} <= {fixture.expected_final_max}"
+        )
+        assert fixture.storage_capacitance_f > 0.0
+        assert fixture.deck_lines[0].startswith("* device-model charge fixture:")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert any(line.startswith(".tran ") for line in fixture.deck_lines)
+        assert fixture.charge_behavior
+
+    jfet_fixture = next(fixture for fixture in fixtures if fixture.kind == "NJF")
+    assert "CGS/CGD" in jfet_fixture.charge_behavior
+    mos_fixture = next(fixture for fixture in fixtures if fixture.kind == "NMOS")
+    assert "CGSO/CGDO/CGBO" in mos_fixture.charge_behavior
+    assert "CBS/CBD" in mos_fixture.charge_behavior
+
+
+def test_device_model_reference_deck_audit_fixtures_cover_model_depth_matrix() -> None:
+    fixtures = device_model_reference_deck_audit_fixtures()
+    assert len(fixtures) == 20
+    assert fixtures[0].name == "diode-forward-bias:op"
+    assert fixtures[-1].name == "mos-level1-storage-charge:tran"
+
+    expected_analyses = {"op", "temperature", "ac", "noise", "tran"}
+    assert {fixture.kind for fixture in fixtures} == {"D", "NPN", "NJF", "NMOS"}
+    for kind in {"D", "NPN", "NJF", "NMOS"}:
+        assert {
+            fixture.analysis
+            for fixture in fixtures
+            if fixture.kind == kind
+        } == expected_analyses
+
+    for fixture in fixtures:
+        assert fixture.reference == "SPICE2/SPICE3-style local model-depth fixture"
+        assert fixture.expected_behavior
+        assert fixture.deck_lines[0].startswith("* device-model ")
+        assert any(line.startswith(".model ") for line in fixture.deck_lines)
+        assert fixture.deck_lines[-1] == ".end"
+
+
+def test_device_model_reference_deck_audit_table_is_stable() -> None:
+    table = format_device_model_reference_deck_audit_table()
+    lines = table.splitlines()
+    assert len(lines) == 21
+    assert lines[0] == "name\tkind\tanalysis\tmodel\treference\texpected_behavior\tdeck_lines"
+    assert lines[1] == (
+        "diode-forward-bias:op\tD\top\tDfast\t"
+        "SPICE2/SPICE3-style local model-depth fixture\t"
+        "DC probe out remains in [0.55, 0.65] V\t8"
+    )
+    assert lines[-1] == (
+        "mos-level1-storage-charge:tran\tNMOS\ttran\tMn\t"
+        "SPICE2/SPICE3-style local model-depth fixture\t"
+        "Level-1 MOS CGSO/CGDO/CGBO plus CBS/CBD contribute transient "
+        "gate-overlap and depletion-shaped bulk-junction storage; explicit "
+        "Cstore keeps the fixture comparable with other charge audits\t10"
+    )
+
+
+def test_device_model_reference_deck_audit_record_exports_are_stable() -> None:
+    records = device_model_reference_deck_audit_records()
+    assert len(records) == 20
+    assert records[0] == {
+        "name": "diode-forward-bias:op",
+        "kind": "D",
+        "analysis": "op",
+        "model": "Dfast",
+        "reference": "SPICE2/SPICE3-style local model-depth fixture",
+        "expected_behavior": "DC probe out remains in [0.55, 0.65] V",
+        "deck_lines": "8",
+    }
+    assert records[-1]["name"] == "mos-level1-storage-charge:tran"
+    assert records[-1]["deck_lines"] == "10"
+
+    csv_lines = format_device_model_reference_deck_audit_csv().splitlines()
+    assert csv_lines[0] == (
+        "name,kind,analysis,model,reference,expected_behavior,deck_lines"
+    )
+    assert csv_lines[1] == (
+        "diode-forward-bias:op,D,op,Dfast,"
+        "SPICE2/SPICE3-style local model-depth fixture,"
+        '"DC probe out remains in [0.55, 0.65] V",8'
+    )
+
+    parsed = json.loads(format_device_model_reference_deck_audit_json())
+    assert parsed == records
+
+
+def test_device_model_reference_deck_audit_summary_exports_are_stable() -> None:
+    summary = device_model_reference_deck_audit_summary()
+    assert len(summary) == 4
+    assert summary[0].kind == "D"
+    assert summary[0].fixture_count == 5
+    assert summary[0].analyses == ("op", "temperature", "ac", "noise", "tran")
+    assert summary[0].missing_analyses == ()
+    assert summary[0].deck_line_count == 42
+    assert summary[0].references == ("SPICE2/SPICE3-style local model-depth fixture",)
+
+    table = format_device_model_reference_deck_audit_summary_table()
+    assert table.splitlines() == [
+        "kind\tfixture_count\tanalyses\tmissing_analyses\tdeck_lines\treferences",
+        (
+            "D\t5\top,temperature,ac,noise,tran\t\t42\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        (
+            "NPN\t5\top,temperature,ac,noise,tran\t\t47\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        (
+            "NJF\t5\top,temperature,ac,noise,tran\t\t52\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        (
+            "NMOS\t5\top,temperature,ac,noise,tran\t\t47\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+    ]
+
+    records = device_model_reference_deck_audit_summary_records()
+    assert records[0] == {
+        "kind": "D",
+        "fixture_count": "5",
+        "analyses": "op,temperature,ac,noise,tran",
+        "missing_analyses": "",
+        "deck_lines": "42",
+        "references": "SPICE2/SPICE3-style local model-depth fixture",
+    }
+    assert format_device_model_reference_deck_audit_summary_csv().splitlines()[1] == (
+        'D,5,"op,temperature,ac,noise,tran",,42,'
+        "SPICE2/SPICE3-style local model-depth fixture"
+    )
+    assert json.loads(format_device_model_reference_deck_audit_summary_json()) == records
+
+
+def test_device_model_reference_deck_audit_summary_reports_missing_analysis() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    summary = device_model_reference_deck_audit_summary(fixtures)
+    nmos = next(row for row in summary if row.kind == "NMOS")
+
+    assert nmos.fixture_count == 4
+    assert nmos.analyses == ("op", "temperature", "ac", "noise")
+    assert nmos.missing_analyses == ("tran",)
+    assert nmos.deck_line_count == 37
+    assert (
+        "NMOS\t4\top,temperature,ac,noise\ttran\t37\t"
+        "SPICE2/SPICE3-style local model-depth fixture"
+    ) in format_device_model_reference_deck_audit_summary_table(fixtures)
+
+
+def test_device_model_reference_deck_audit_analysis_summary_exports_are_stable() -> None:
+    summary = device_model_reference_deck_audit_analysis_summary()
+    assert len(summary) == 5
+    assert summary[0].analysis == "op"
+    assert summary[0].fixture_count == 4
+    assert summary[0].kinds == ("D", "NPN", "NJF", "NMOS")
+    assert summary[0].missing_kinds == ()
+    assert summary[0].deck_line_count == 36
+    assert summary[0].references == ("SPICE2/SPICE3-style local model-depth fixture",)
+
+    table = format_device_model_reference_deck_audit_analysis_summary_table()
+    assert table.splitlines() == [
+        "analysis\tfixture_count\tkinds\tmissing_kinds\tdeck_lines\treferences",
+        "op\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        (
+            "temperature\t4\tD,NPN,NJF,NMOS\t\t40\t"
+            "SPICE2/SPICE3-style local model-depth fixture"
+        ),
+        "ac\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "noise\t4\tD,NPN,NJF,NMOS\t\t36\tSPICE2/SPICE3-style local model-depth fixture",
+        "tran\t4\tD,NPN,NJF,NMOS\t\t40\tSPICE2/SPICE3-style local model-depth fixture",
+    ]
+
+    records = device_model_reference_deck_audit_analysis_summary_records()
+    assert records[0] == {
+        "analysis": "op",
+        "fixture_count": "4",
+        "kinds": "D,NPN,NJF,NMOS",
+        "missing_kinds": "",
+        "deck_lines": "36",
+        "references": "SPICE2/SPICE3-style local model-depth fixture",
+    }
+    assert format_device_model_reference_deck_audit_analysis_summary_csv().splitlines()[1] == (
+        'op,4,"D,NPN,NJF,NMOS",,36,'
+        "SPICE2/SPICE3-style local model-depth fixture"
+    )
+    assert (
+        json.loads(format_device_model_reference_deck_audit_analysis_summary_json())
+        == records
+    )
+
+
+def test_device_model_reference_deck_audit_analysis_summary_reports_missing_kind() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    summary = device_model_reference_deck_audit_analysis_summary(fixtures)
+    tran = next(row for row in summary if row.analysis == "tran")
+
+    assert tran.fixture_count == 3
+    assert tran.kinds == ("D", "NPN", "NJF")
+    assert tran.missing_kinds == ("NMOS",)
+    assert tran.deck_line_count == 30
+    assert (
+        "tran\t3\tD,NPN,NJF\tNMOS\t30\t"
+        "SPICE2/SPICE3-style local model-depth fixture"
+    ) in format_device_model_reference_deck_audit_analysis_summary_table(fixtures)
+
+
+def test_device_model_reference_deck_audit_gate_report_is_stable() -> None:
+    report = device_model_reference_deck_audit_gate()
+
+    assert report.passed is True
+    assert report.fixture_count == 20
+    assert report.expected_kinds == ("D", "NPN", "NJF", "NMOS")
+    assert report.expected_analyses == ("op", "temperature", "ac", "noise", "tran")
+    assert report.issues == ()
+    assert format_device_model_reference_deck_audit_gate_report(report) == (
+        "passed\tfixture_count\texpected_kinds\texpected_analyses\tissue_count\n"
+        "true\t20\tD,NPN,NJF,NMOS\top,temperature,ac,noise,tran\t0"
+    )
+
+
+def test_device_model_reference_deck_audit_gate_reports_missing_coverage() -> None:
+    fixtures = tuple(
+        fixture
+        for fixture in device_model_reference_deck_audit_fixtures()
+        if not (fixture.kind == "NMOS" and fixture.analysis == "tran")
+    )
+
+    report = device_model_reference_deck_audit_gate(fixtures)
+    table = format_device_model_reference_deck_audit_gate_report(report)
+
+    assert report.passed is False
+    assert any(
+        issue.fixture_name == "NMOS:tran" and issue.field == "coverage"
+        for issue in report.issues
+    )
+    assert "fixture_name\tfield\tmessage" in table
+    assert (
+        "NMOS:tran\tcoverage\t"
+        "missing required NMOS tran reference-deck audit row"
+    ) in table
+
+
+def test_transient_diode_junction_capacitance_slows_current_step() -> None:
+    def run(cjo: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0e-6), (5.0e-9, 1.0e-6))),
+        ))
+        circuit.add(Resistor("Rshunt", "out", "0", 1.0e12))
+        circuit.add(Diode("D1", "out", "0", Is=1.0e-15, Vt=0.02585, Cjo=cjo))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-12)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["out"]
+    charged_first = charged.points[1].node_voltages["out"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_jfet_gate_source_capacitance_slows_gate_step() -> None:
+    def run(cgs: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["gate"]
+    charged_first = charged.points[1].node_voltages["gate"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_overlap_capacitance_slows_gate_step() -> None:
+    def run(cgso: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "gate", 1_000.0))
+        circuit.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["gate"]
+    charged_first = charged.points[1].node_voltages["gate"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_bulk_junction_capacitance_slows_drain_step() -> None:
+    def run(cbd: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0), (5.0e-9, 1.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CBD=cbd)),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-9)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["drain"]
+    charged_first = charged.points[1].node_voltages["drain"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_mosfet_bulk_junction_depletion_shaping_reduces_reverse_bias_capacitance() -> None:
+    def run(grading_coefficient: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vstep",
+            "in",
+            "0",
+            1.0,
+            waveform=PwlWaveform(((0.0, 1.0), (1.0e-9, 2.0), (5.0e-9, 2.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "drain", 1_000.0))
+        circuit.add(Mosfet(
+            "M1",
+            "drain",
+            "0",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(
+                    KP=1.0e-12,
+                    W=1.0,
+                    L=1.0,
+                    CBD=1.0e-12,
+                    PB=1.0,
+                    MJ=grading_coefficient,
+                )),
+            ),
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    fixed = run(0.0)
+    shaped = run(0.5)
+
+    assert fixed.converged
+    assert shaped.converged
+    fixed_first = fixed.points[1].node_voltages["drain"]
+    shaped_first = shaped.points[1].node_voltages["drain"]
+    assert fixed_first == pytest.approx(1.5, rel=0.05)
+    assert shaped_first > fixed_first + 0.04
+    assert shaped_first < 1.7
+
+
+def test_transient_diode_transit_time_holds_forward_charge_on_turnoff() -> None:
+    def run(transit_time: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "out",
+            0.0,
+            waveform=PwlWaveform(((0.0, 1.0e-3), (1.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rshunt", "out", "0", 1.0e12))
+        circuit.add(Diode("D1", "out", "0", Is=1.0e-15, Vt=0.02585, Tt=transit_time))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    no_storage = run(0.0)
+    stored = run(1.0e-9)
+
+    assert no_storage.converged
+    assert stored.converged
+    assert no_storage.points[1].node_voltages["out"] == pytest.approx(0.0, abs=1.0e-12)
+    assert stored.points[1].node_voltages["out"] > 0.6
+    assert stored.points[1].node_voltages["out"] < stored.points[0].node_voltages["out"]
+
+
+def test_transient_bjt_base_emitter_capacitance_slows_base_current_step() -> None:
+    def run(base_emitter_capacitance: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "collector", "0", 5.0))
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "base",
+            0.0,
+            waveform=PwlWaveform(((0.0, 0.0), (1.0e-9, 1.0e-6), (5.0e-9, 1.0e-6))),
+        ))
+        circuit.add(Resistor("Rshunt", "base", "0", 1.0e12))
+        circuit.add(BJT(
+            "Q1",
+            collector="collector",
+            base="base",
+            emitter="0",
+            Is=1.0e-15,
+            Cje=base_emitter_capacitance,
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    uncharged = run(0.0)
+    charged = run(1.0e-12)
+
+    assert uncharged.converged
+    assert charged.converged
+    uncharged_first = uncharged.points[1].node_voltages["base"]
+    charged_first = charged.points[1].node_voltages["base"]
+    assert uncharged_first > 0.5
+    assert charged_first < 0.01
+    assert charged_first < uncharged_first
+
+
+def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> None:
+    def run(forward_transit_time: float) -> TransientResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "collector", "0", 5.0))
+        circuit.add(CurrentSource(
+            "Istep",
+            "0",
+            "base",
+            0.0,
+            waveform=PwlWaveform(((0.0, 1.0e-3), (1.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rshunt", "base", "0", 1.0e12))
+        circuit.add(BJT(
+            "Q1",
+            collector="collector",
+            base="base",
+            emitter="0",
+            Is=1.0e-15,
+            Tf=forward_transit_time,
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
+
+    no_storage = run(0.0)
+    stored = run(1.0e-9)
+
+    assert no_storage.converged
+    assert stored.converged
+    assert no_storage.points[1].node_voltages["base"] == pytest.approx(0.0, abs=1.0e-12)
+    assert stored.points[1].node_voltages["base"] > 0.6
+    assert stored.points[1].node_voltages["base"] < stored.points[0].node_voltages["base"]
+
+
+def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
+    with pytest.raises(ValueError, match="only MOS LEVEL=1"):
+        normalize_model_card("Mbad", "nmos", {"LEVEL": 2.0})
+
+
+def test_custom_model_evaluator_hook_stamps_dc_current() -> None:
+    def evaluator(context) -> CustomModelEvaluation:
+        conductance = context.parameters["g"]
+        return CustomModelEvaluation(
+            current_amps=conductance * context.voltage,
+            conductance_siemens=conductance,
+        )
+
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(
+        CustomModel(
+            "XG",
+            "in",
+            "0",
+            parameters={"g": 2.0e-3},
+            evaluator=evaluator,
+        )
+    )
+
+    result = dc_op(circuit)
+
+    assert result.node_voltages["in"] == pytest.approx(1.0)
+    assert result.branch_currents["I(V1)"] == pytest.approx(-2.0e-3)
+
+
+def test_custom_linear_conductance_model_fast_path_stamps_dc_current() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(custom_linear_conductance_model("XG", "in", "0", 2.0e-3))
+
+    result = dc_op(circuit)
+
+    assert result.branch_currents["I(V1)"] == pytest.approx(-2.0e-3)
+
+
+def test_custom_model_source_analyzer_accepts_subset_and_rejects_dynamic_constructs() -> None:
+    accepted = analyze_custom_model_source(
+        "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule"
+    )
+    rejected = analyze_custom_model_source(
+        "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule"
+    )
+
+    assert accepted.accepted is True
+    assert accepted.module_name == "rlim"
+    assert accepted.terminals == ("p", "n")
+    assert accepted.contribution == ("p", "n")
+    assert rejected.accepted is False
+    assert "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT" in {
+        diagnostic.code for diagnostic in rejected.diagnostics
+    }
 
 
 def test_waveform_period_reports_periodic_source_forms() -> None:
@@ -456,6 +1433,69 @@ def test_pss_returns_solved_steady_state_period() -> None:
     )
 
 
+def test_pss_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "0", 1_000.0))
+
+    nominal = pss(
+        c,
+        steps_per_period=4,
+        residual_tol=1.0e-9,
+        perturbation=1.0e-5,
+        max_newton_iterations=2,
+    )
+    result = pss_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rload-high", (CornerOverride("R1", "resistance", 2_000.0),)),
+        ],
+        steps_per_period=4,
+        residual_tol=1.0e-9,
+        perturbation=1.0e-5,
+        max_newton_iterations=2,
+    )
+
+    assert nominal is not None
+    assert result is not None
+    assert isinstance(result, CornerPssResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "rload-high"]
+    assert result.points[0].result.converged
+    assert result.points[1].result.converged
+    assert result.points[0].result.period == pytest.approx(1.0e-3)
+    assert result.points[1].result.steady_state.points[1].branch_currents["I(V1)"] == pytest.approx(-5.0e-4)
+    assert format_pss_table(nominal, ["V(in)", "I(V1)"]) == (
+        "Index\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n"
+        "0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n"
+        "2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n"
+        "3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n"
+        "4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+    )
+    assert format_corner_pss_table(result, ["V(in)", "I(V1)"]) == (
+        "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n"
+        "nominal\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "nominal\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n"
+        "nominal\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n"
+        "nominal\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n"
+        "nominal\t4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+        "rload-high\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "rload-high\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t2.500000e-04\t1.000000e+00\t-5.000000e-04\n"
+        "rload-high\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t5.000000e-04\t1.224647e-16\t-6.123234e-20\n"
+        "rload-high\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t7.500000e-04\t-1.000000e+00\t5.000000e-04\n"
+        "rload-high\t4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t1.000000e-03\t-2.449294e-16\t1.224647e-19\n"
+    )
+
+
 def test_pss_residual_requires_periodic_sources() -> None:
     c = Circuit()
     c.add(
@@ -573,6 +1613,33 @@ def test_resistor_voltage_divider():
     assert isclose(r.node_voltages["vmid"], 5.0, abs_tol=1e-6)
 
 
+def test_dc_initial_conditions_seed_operating_point_vector():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vin", "0", voltage=10.0))
+    c.add(Resistor("R1", "vin", "vmid", 1000.0))
+    c.add(Resistor("R2", "vmid", "0", 1000.0))
+    summary = resolve_deck_initial_conditions(
+        """
+.nodeset V(vin)=10 V(vmid)=1
+.ic V(vmid)=4
+.end
+"""
+    )
+
+    vector = dc_initial_vector_from_conditions(
+        c,
+        summary.initial_conditions,
+        summary.nodesets,
+    )
+    assert vector == pytest.approx([10.0, 4.0, 0.0])
+
+    r = dc_op_with_initial_conditions(c, summary, convergence_aids=False)
+
+    assert r.converged
+    assert isclose(r.node_voltages["vin"], 10.0, abs_tol=1e-6)
+    assert isclose(r.node_voltages["vmid"], 5.0, abs_tol=1e-6)
+
+
 def test_two_resistors_in_series():
     c = Circuit()
     c.add(VoltageSource("V1", "a", "0", voltage=12.0))
@@ -594,6 +1661,28 @@ def test_large_resistor_ladder_uses_sparse_real_solver_path():
 
     assert r.converged
     assert isclose(r.node_voltages["n34"], 10.0 / 35.0, abs_tol=1e-9)
+    assert r.diagnostics.matrix_size == 36
+    assert r.diagnostics.solver == "sparse_real"
+    assert r.diagnostics.convergence_aid == "newton"
+    assert r.diagnostics.tolerance == pytest.approx(1.0e-6)
+    assert math.isfinite(r.diagnostics.max_delta)
+    assert r.diagnostics.newton_step_limit is None
+    assert r.diagnostics.limited_newton_steps == 0
+    assert r.diagnostics.minimum_damping_factor == pytest.approx(1.0)
+    profile = r.diagnostics.solver_profile
+    assert profile.matrix_size == 36
+    assert profile.solver == "sparse_real"
+    assert profile.backend in {"scipy_sparse_lu", "native_sparse_gaussian"}
+    assert profile.structural_nonzeros > 0
+    assert 0.0 < profile.density < 0.1
+    assert profile.fill_in_nonzeros >= 0
+    if profile.backend == "native_sparse_gaussian":
+        assert (
+            profile.fallback_reason in {None, "scipy_unavailable"}
+            or profile.fallback_reason.startswith("scipy_sparse_lu:")
+        )
+    else:
+        assert profile.fallback_reason is None
 
 
 def test_current_source_into_resistor():
@@ -694,6 +1783,178 @@ def test_diode_reverse_bias():
     c.add(Diode("D1", anode="a", cathode="0"))
     r = dc_op(c)
     assert r.converged
+
+
+def test_diode_emission_coefficient_reduces_forward_current():
+    """Larger N uses N*Vt in the exponential and lowers fixed-bias current."""
+    base = Circuit()
+    base.add(VoltageSource("V1", "a", "0", voltage=0.7))
+    base.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585))
+    base_result = dc_op(base)
+
+    high_n = Circuit()
+    high_n.add(VoltageSource("V1", "a", "0", voltage=0.7))
+    high_n.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585, N=2.0))
+    high_n_result = dc_op(high_n)
+
+    assert base_result.converged
+    assert high_n_result.converged
+    assert abs(high_n_result.branch_currents["I(V1)"]) < abs(base_result.branch_currents["I(V1)"]) * 1e-3
+
+
+def test_diode_breakdown_voltage_increases_reverse_current():
+    """BV/IBV adds a bounded reverse-breakdown current branch."""
+    leakage = Circuit()
+    leakage.add(VoltageSource("V1", "0", "a", voltage=5.0))
+    leakage.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585))
+    leakage_result = dc_op(leakage)
+
+    breakdown = Circuit()
+    breakdown.add(VoltageSource("V1", "0", "a", voltage=5.0))
+    breakdown.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585, BV=5.0, IBV=1e-6))
+    breakdown_result = dc_op(breakdown)
+
+    assert leakage_result.converged
+    assert breakdown_result.converged
+    assert abs(breakdown_result.branch_currents["I(V1)"]) > 1e6 * abs(leakage_result.branch_currents["I(V1)"])
+    assert abs(breakdown_result.branch_currents["I(V1)"]) == pytest.approx(1e-6, rel=1e-3)
+
+
+def test_diode_temperature_scaling_reduces_fixed_current_forward_drop():
+    """Hotter silicon raises Is enough to lower fixed-current forward voltage."""
+    nominal = Circuit()
+    nominal.add(VoltageSource("V1", "vcc", "0", 5.0))
+    nominal.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    nominal.add(Diode("D1", anode="a", cathode="0", Is=1e-15, Vt=0.02585))
+
+    cold = circuit_at_temperature(nominal, 275.0)
+    hot = circuit_at_temperature(nominal, 350.0)
+
+    nominal_result = dc_op(nominal)
+    cold_result = dc_op(cold)
+    hot_result = dc_op(hot)
+
+    assert cold_result.converged
+    assert nominal_result.converged
+    assert hot_result.converged
+    assert cold_result.node_voltages["a"] > nominal_result.node_voltages["a"]
+    assert hot_result.node_voltages["a"] < nominal_result.node_voltages["a"]
+
+
+def test_dc_temperature_sweep_runs_operating_points_and_formats_table():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vcc", "0", 5.0))
+    c.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    c.add(Diode("D1", anode="a", cathode="0", Is=1.0e-15, Vt=0.02585))
+
+    result = dc_temperature_sweep(c, [275.0, 300.15, 350.0])
+
+    assert isinstance(result, TemperatureDcResult)
+    assert result.points[0].result.node_voltages["a"] > result.points[1].result.node_voltages["a"]
+    assert result.points[2].result.node_voltages["a"] < result.points[1].result.node_voltages["a"]
+    assert format_temperature_dc_table(result, ["V(a)", "I(V1)"]) == (
+        "Index\tTemperatureKelvin\tV(a)\tI(V1)\n"
+        "0\t2.750000e+02\t8.936097e-01\t-9.549745e-04\n"
+        "1\t3.001500e+02\t7.188350e-01\t-9.956198e-04\n"
+        "2\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+    )
+
+
+def test_dc_temperature_sweep_corners_runs_named_corners_and_formats_table():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vcc", "0", 5.0))
+    c.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    c.add(Diode("D1", anode="a", cathode="0", Is=1.0e-15, Vt=0.02585))
+
+    result = dc_temperature_sweep_corners(
+        c,
+        [275.0, 350.0],
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbias-high", (CornerOverride("Rbias", "resistance", 8600.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerTemperatureDcResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "rbias-high"]
+    assert result.points[0].points[0].result.node_voltages["a"] > result.points[0].points[1].result.node_voltages["a"]
+    assert format_corner_temperature_dc_table(result, ["V(a)", "I(V1)"]) == (
+        "Corner\tIndex\tTemperatureKelvin\tV(a)\tI(V1)\n"
+        "nominal\t0\t2.750000e+02\t8.936097e-01\t-9.549745e-04\n"
+        "nominal\t1\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+        "rbias-high\t0\t2.750000e+02\t7.877634e-01\t-4.897950e-04\n"
+        "rbias-high\t1\t3.500000e+02\t6.144482e-01\t-5.099479e-04\n"
+    )
+
+
+def test_bjt_temperature_scaling_reduces_emitter_follower_forward_drop():
+    """Hotter silicon raises BJT Is enough to lift a fixed-base emitter node."""
+    nominal = Circuit()
+    nominal.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    nominal.add(VoltageSource("Vbase", "base", "0", 0.72))
+    nominal.add(
+        BJT(
+            "Q1",
+            collector="vcc",
+            base="base",
+            emitter="out",
+            Is=1e-14,
+            beta_f=120.0,
+            Vt=0.02585,
+        )
+    )
+    nominal.add(Resistor("Rload", "out", "0", 1000.0))
+
+    cold = circuit_at_temperature(nominal, 275.0)
+    hot = circuit_at_temperature(nominal, 350.0)
+
+    nominal_result = dc_op(nominal)
+    cold_result = dc_op(cold)
+    hot_result = dc_op(hot)
+
+    assert cold_result.converged
+    assert nominal_result.converged
+    assert hot_result.converged
+    assert cold_result.node_voltages["out"] < nominal_result.node_voltages["out"]
+    assert hot_result.node_voltages["out"] > nominal_result.node_voltages["out"]
+
+
+def test_mosfet_temperature_scaling_changes_common_source_bias():
+    """Hotter Level-1 NMOS lowers VT0 enough to pull the drain node down."""
+    nominal = Circuit()
+    nominal.add(VoltageSource("Vdd", "vdd", "0", 1.8))
+    nominal.add(VoltageSource("Vgate", "gate", "0", 1.1))
+    nominal.add(Resistor("Rload", "vdd", "out", 1000.0))
+    nominal.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(
+                VT0=0.65,
+                KP=200.0e-6,
+                LAMBDA=0.02,
+                W=2.0e-6,
+                L=180.0e-9,
+            )),
+        ),
+    ))
+
+    cold = circuit_at_temperature(nominal, 275.0)
+    hot = circuit_at_temperature(nominal, 350.0)
+
+    nominal_result = dc_op(nominal)
+    cold_result = dc_op(cold)
+    hot_result = dc_op(hot)
+
+    assert cold_result.converged
+    assert nominal_result.converged
+    assert hot_result.converged
+    assert cold_result.node_voltages["out"] > nominal_result.node_voltages["out"]
+    assert hot_result.node_voltages["out"] < nominal_result.node_voltages["out"]
 
 
 # ---- DC: Capacitor (open in DC) ----
@@ -957,6 +2218,91 @@ def test_transient_inductor_respects_initial_current():
     assert isclose(result.points[2].node_voltages["out"], -0.25, abs_tol=1e-9)
 
 
+def test_transient_gear2_rc_charging_bootstraps_then_uses_bdf2():
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "vc", 1000.0))
+    c.add(Capacitor("C1", "vc", "0", 1.0e-6))
+
+    result = transient(c, t_stop=3.0e-3, t_step=1.0e-3, method="gear2")
+
+    assert result.converged
+    assert result.method == "gear2"
+    assert result.points[1].node_voltages["vc"] == pytest.approx(0.5, abs=1e-12)
+    assert result.points[2].node_voltages["vc"] == pytest.approx(0.8, abs=1e-12)
+    assert result.points[3].node_voltages["vc"] == pytest.approx(0.94, abs=1e-12)
+
+
+def test_transient_gear2_rl_current_buildup_bootstraps_then_uses_bdf2():
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Inductor("L1", "out", "0", 1.0))
+
+    result = transient(c, t_stop=3.0e-3, t_step=1.0e-3, method="gear2")
+
+    assert result.converged
+    assert result.points[1].branch_currents["L1"] == pytest.approx(0.5e-3, abs=1e-12)
+    assert result.points[2].branch_currents["L1"] == pytest.approx(0.8e-3, abs=1e-12)
+    assert result.points[3].branch_currents["L1"] == pytest.approx(0.94e-3, abs=1e-12)
+
+
+def test_transient_gear2_damps_coarse_lc_oscillator_more_than_trap():
+    c = Circuit()
+    c.add(Capacitor("C1", "tank", "0", 1.0, initial_voltage=1.0))
+    c.add(Inductor("L1", "tank", "0", 1.0))
+
+    trap = transient(c, t_stop=10.0, t_step=1.0, method="trap")
+    gear2 = transient(c, t_stop=10.0, t_step=1.0, method="gear2")
+
+    assert trap.converged
+    assert gear2.converged
+    trap_tail = max(abs(point.node_voltages["tank"]) for point in trap.points[-4:])
+    gear2_tail = max(abs(point.node_voltages["tank"]) for point in gear2.points[-4:])
+    assert gear2_tail < trap_tail * 0.75
+
+
+def test_transient_mutual_inductor_couples_secondary_voltage():
+    c = Circuit()
+    c.add(CurrentSource("Istep", "0", "pri", 1.0))
+    c.add(Inductor("Lpri", "pri", "0", 1.0))
+    c.add(Inductor("Lsec", "sec", "0", 1.0))
+    c.add(MutualInductor("K1", "Lpri", "Lsec", 0.5))
+    c.add(Resistor("Rload", "sec", "0", 10.0))
+
+    result = transient(c, t_stop=0.1, t_step=0.1, method="euler")
+
+    assert result.converged
+    assert isclose(result.points[1].node_voltages["pri"], 8.75, rel_tol=1e-9)
+    assert isclose(result.points[1].node_voltages["sec"], 2.5, rel_tol=1e-9)
+
+
+def test_transient_transmission_line_delays_matched_step():
+    delay = 1.0e-9
+    c = Circuit()
+    c.add(VoltageSource("VIN", "in", "0", 1.0))
+    c.add(TransmissionLine("T1", "in", "0", "out", "0", 50.0, delay))
+    c.add(Resistor("RL", "out", "0", 50.0))
+
+    result = transient(c, t_stop=2.0 * delay, t_step=delay / 2.0, method="euler")
+
+    assert result.converged
+    assert result.points[0].node_voltages.get("out", 0.0) == pytest.approx(0.0, abs=1e-12)
+    assert result.points[1].node_voltages.get("out", 0.0) == pytest.approx(0.0, abs=1e-12)
+    assert result.points[2].node_voltages["out"] == pytest.approx(1.0, rel=1e-9, abs=1e-9)
+    assert result.points[2].branch_currents["I(T1:2)"] == pytest.approx(-0.02, rel=1e-9)
+
+
+def test_transient_transmission_line_rejects_invalid_parameters():
+    c = Circuit()
+    c.add(VoltageSource("VIN", "in", "0", 1.0))
+    c.add(TransmissionLine("Tbad", "in", "0", "out", "0", 50.0, 0.0))
+    c.add(Resistor("RL", "out", "0", 50.0))
+
+    with pytest.raises(ValueError, match="delay must be positive"):
+        transient(c, t_stop=1.0e-9, t_step=1.0e-9, method="euler")
+
+
 # ---- Transient: TransientResult metadata ----
 
 
@@ -1085,6 +2431,79 @@ def test_bjt_pnp_dataclass():
     """PNP BJT stores polarity correctly."""
     q = BJT("Q2", collector="c", base="b", emitter="vcc", polarity="PNP")
     assert q.polarity == "PNP"
+
+
+def test_jfet_n_channel_source_resistor_bias_dc() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
+    c.add(VoltageSource("Vg", "gate", "0", voltage=0.0))
+    c.add(Resistor("Rd", "vdd", "drain", 2_000.0))
+    c.add(Resistor("Rs", "source", "0", 1_000.0))
+    c.add(JFET("J1", "drain", "gate", "source", beta=1.0e-3, vto=-2.0))
+
+    result = dc_op(c)
+
+    assert result.converged
+    assert result.node_voltages["source"] == pytest.approx(1.0, abs=0.05)
+    assert result.node_voltages["drain"] == pytest.approx(8.0, abs=0.1)
+
+
+def test_jfet_common_source_ac_gain_from_bias_point() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
+    c.add(VoltageSource("Vin", "gate", "0", voltage=0.0, ac=AcSource(1.0)))
+    c.add(Resistor("Rd", "vdd", "drain", 1_000.0))
+    c.add(JFET("J1", "drain", "gate", "0", beta=1.0e-3, vto=-2.0))
+
+    result = ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1)
+
+    out = result.points[0].node_voltages["drain"]
+    assert out.real == pytest.approx(-4.0, abs=1.0e-6)
+    assert out.imag == pytest.approx(0.0, abs=1.0e-12)
+
+
+def test_ac_jfet_gate_source_capacitance_shunts_high_frequency_gate_drive() -> None:
+    """JFET CGS contributes gate-source AC susceptance."""
+
+    def gate_amplitude(cgs: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "gate", 1_000.0))
+        c.add(Resistor("Rdrain", "drain", "0", 1_000.0))
+        c.add(JFET("J1", "drain", "gate", "0", beta=1.0e-12, vto=-2.0, Cgs=cgs))
+        result = ac_sweep(c, f_start=100_000.0, f_stop=100_000.0, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    without_capacitance = gate_amplitude(0.0)
+    with_capacitance = gate_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
+
+
+def test_jfet_transient_source_follower_charges_output_capacitor() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", voltage=10.0))
+    c.add(
+        VoltageSource(
+            "Vg",
+            "gate",
+            "0",
+            voltage=0.0,
+            waveform=PwlWaveform([(0.0, 0.0), (1.0e-6, 1.0), (2.0e-6, 1.0)]),
+        )
+    )
+    c.add(JFET("J1", "vdd", "gate", "out", beta=1.0e-3, vto=-2.0))
+    c.add(Resistor("Rs", "out", "0", 1_000.0))
+    c.add(Capacitor("Cout", "out", "0", 1.0e-9))
+
+    result = transient(c, t_step=1.0e-7, t_stop=2.0e-6)
+
+    initial_out = result.points[0].node_voltages["out"]
+    final_out = result.points[-1].node_voltages["out"]
+    assert final_out > initial_out + 1.0
+    assert final_out > 1.5
+    assert final_out < 2.0
 
 
 def test_bjt_npn_off():
@@ -1393,6 +2812,23 @@ def test_solve_complex_3x3():
         assert isclose(abs(s - b[i]), 0.0, abs_tol=1e-9), (
             f"Row {i}: A·x = {s}, expected {b[i]}"
         )
+
+
+def test_solve_complex_large_sparse_path():
+    size = 36
+    A = [[0j for _ in range(size)] for _ in range(size)]
+    b = [complex(index + 1, -index) for index in range(size)]
+    for index in range(size):
+        A[index][index] = 2.0 + 1.0j
+        if index + 1 < size:
+            A[index][index + 1] = -0.25j
+            A[index + 1][index] = 0.5 + 0j
+
+    x = _solve_complex(A, b)
+
+    for row_index, row in enumerate(A):
+        actual = sum(value * x[col] for col, value in enumerate(row))
+        assert abs(actual - b[row_index]) < 1.0e-8
 
 
 # ============================================================================
@@ -1747,6 +3183,64 @@ def test_ac_rl_highpass_3db_at_cutoff():
     )
 
 
+def test_ac_mutual_inductor_transformer_ratio():
+    primary_l = 1.0e-3
+    secondary_l = 4.0e-3
+    coupling = 0.9
+    load = 1_000.0
+    freq = 1_000.0
+    mutual_l = coupling * math.sqrt(primary_l * secondary_l)
+    expected = (1j * 2.0 * math.pi * freq * mutual_l) / (
+        1.0 + 1j * 2.0 * math.pi * freq * secondary_l / load
+    )
+
+    c = Circuit()
+    c.add(CurrentSource("Iin", "0", "pri", 0.0, ac=AcSource(1.0)))
+    c.add(Inductor("Lpri", "pri", "0", primary_l))
+    c.add(Inductor("Lsec", "sec", "0", secondary_l))
+    c.add(MutualInductor("K1", "Lpri", "Lsec", coupling))
+    c.add(Resistor("Rload", "sec", "0", load))
+
+    point = ac_sweep(c, f_start=freq, f_stop=freq, n_points=1, sweep="lin").points[0]
+
+    assert point.node_voltages["sec"] == pytest.approx(expected)
+
+
+def test_ac_mutual_inductor_rejects_missing_reference():
+    c = Circuit()
+    c.add(VoltageSource("Vin", "pri", "0", 1.0))
+    c.add(Inductor("Lpri", "pri", "0", 1.0e-3))
+    c.add(MutualInductor("Kbad", "Lpri", "Lmissing", 0.9))
+
+    with pytest.raises(ValueError, match="referenced inductor"):
+        ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin")
+
+
+def test_ac_transmission_line_matched_load_phase_delay():
+    freq = 1_000_000.0
+    delay = 1.0 / (4.0 * freq)
+
+    c = Circuit()
+    c.add(VoltageSource("Vin", "src", "0", 0.0, ac=AcSource(1.0)))
+    c.add(Resistor("Rsrc", "src", "in", 50.0))
+    c.add(TransmissionLine("T1", "in", "0", "out", "0", 50.0, delay))
+    c.add(Resistor("Rload", "out", "0", 50.0))
+
+    point = ac_sweep(c, f_start=freq, f_stop=freq, n_points=1, sweep="lin").points[0]
+
+    assert point.node_voltages["out"] == pytest.approx(-0.5j)
+
+
+def test_ac_transmission_line_rejects_invalid_parameters():
+    c = Circuit()
+    c.add(VoltageSource("Vin", "src", "0", 0.0, ac=AcSource(1.0)))
+    c.add(TransmissionLine("Tbad", "src", "0", "out", "0", 0.0, 1.0e-9))
+    c.add(Resistor("Rload", "out", "0", 50.0))
+
+    with pytest.raises(ValueError, match="characteristic impedance must be positive"):
+        ac_sweep(c, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin")
+
+
 # ============================================================================
 # 20. AC sweep — sweep modes (log, lin, edge cases)
 # ============================================================================
@@ -1856,7 +3350,7 @@ def test_ac_diode_reverse_biased_acts_like_open():
     is determined only by the resistor divider.
     """
     c = Circuit()
-    c.add(VoltageSource("Vac", "in", "0", 1.0))
+    c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
     c.add(Resistor("R1", "in", "anode", 1000.0))
     c.add(Resistor("R2", "anode", "0", 1000.0))   # load
     # Diode reverse-biased: cathode at Vin, anode at V_mid ≈ 0.5 V
@@ -1869,6 +3363,39 @@ def test_ac_diode_reverse_biased_acts_like_open():
         assert isclose(v_anode, 0.5, abs_tol=0.05), (
             f"f={pt.freq:.0f} Hz: V_anode={v_anode:.5f} (expected ≈ 0.5)"
         )
+
+
+def test_ac_diode_junction_capacitance_shunts_high_frequency():
+    """Reverse-biased diode junction capacitance is stamped in AC."""
+    c = Circuit()
+    c.add(VoltageSource("Vac", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "node", 1000.0))
+    # Reverse-biased at the DC operating point, so the AC drop is dominated by Cjo.
+    c.add(Diode("D1", anode="0", cathode="node", Cjo=1.0e-6))
+
+    result = ac_sweep(c, f_start=10.0, f_stop=100000.0, n_points=2)
+    low = abs(result.points[0].node_voltages["node"])
+    high = abs(result.points[-1].node_voltages["node"])
+
+    assert low > 0.9
+    assert high < low / 100.0
+
+
+def test_ac_diode_transit_time_shunts_forward_bias_at_high_frequency():
+    """Forward-biased diode transit time contributes diffusion capacitance."""
+    def high_frequency_anode(tt: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 1.0, ac=AcSource(1.0)))
+        c.add(Resistor("R1", "in", "anode", 1.0e6))
+        c.add(Diode("D1", anode="anode", cathode="0", Tt=tt))
+        result = ac_sweep(c, f_start=100000000.0, f_stop=100000000.0, n_points=1)
+        return abs(result.points[0].node_voltages["anode"])
+
+    without_transit = high_frequency_anode(0.0)
+    with_transit = high_frequency_anode(1.0e-6)
+
+    assert without_transit > 0.01
+    assert with_transit < without_transit / 100.0
 
 
 def test_ac_bjt_npn_small_signal():
@@ -1903,6 +3430,88 @@ def test_ac_bjt_npn_small_signal():
         # Both nodes should be present
         assert "col" in pt.node_voltages
         assert "base" in pt.node_voltages
+
+
+def test_ac_bjt_junction_capacitance_shunts_high_frequency_base_drive():
+    """BJT Cje contributes base-emitter capacitance in AC analysis."""
+    def base_amplitude(cje: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(Resistor("Rc", "col", "0", 1000.0))
+        c.add(BJT("Q1", collector="col", base="base", emitter="0", Cje=cje))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    without_capacitance = base_amplitude(0.0)
+    with_capacitance = base_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
+
+
+def test_ac_bjt_transit_time_adds_diffusion_capacitance():
+    """BJT Tf contributes gm-scaled diffusion capacitance in AC analysis."""
+    def base_amplitude(tf: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(Resistor("Rc", "col", "0", 1000.0))
+        c.add(BJT("Q1", collector="col", base="base", emitter="0", Is=25.85e-6, Tf=tf))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    without_transit_time = base_amplitude(0.0)
+    with_transit_time = base_amplitude(1.0e-3)
+
+    assert without_transit_time > 0.9
+    assert with_transit_time < without_transit_time / 100.0
+
+
+def test_ac_bjt_reverse_transit_time_adds_collector_diffusion_capacitance():
+    """BJT Tr contributes gm-scaled base-collector diffusion capacitance."""
+    def base_amplitude(tr: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "base", 1000.0))
+        c.add(Resistor("Rc", "col", "0", 1.0))
+        c.add(BJT("Q1", collector="col", base="base", emitter="0", Is=25.85e-6, Tr=tr))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    without_transit_time = base_amplitude(0.0)
+    with_transit_time = base_amplitude(1.0e-2)
+
+    assert without_transit_time > 0.9
+    assert with_transit_time < without_transit_time / 100.0
+
+
+def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():
+    """MOS Level-1 CGSO contributes gate-source AC susceptance."""
+    def gate_amplitude(cgso: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
+        c.add(Resistor("Rin", "in", "gate", 1000.0))
+        c.add(Resistor("Rdrain", "drain", "0", 1000.0))
+        c.add(Mosfet(
+            "M1",
+            "drain",
+            "gate",
+            "0",
+            "0",
+            MOSFET(
+                MosfetType.NMOS,
+                Level1Model(Level1Params(KP=1.0e-12, W=1.0, L=1.0, CGSO=cgso)),
+            ),
+        ))
+        result = ac_sweep(c, f_start=100000.0, f_stop=100000.0, n_points=1)
+        return abs(result.points[0].node_voltages["gate"])
+
+    without_capacitance = gate_amplitude(0.0)
+    with_capacitance = gate_amplitude(1.0e-6)
+
+    assert without_capacitance > 0.9
+    assert with_capacitance < without_capacitance / 100.0
 
 
 # ============================================================================
@@ -2028,6 +3637,19 @@ def test_tfresult_exported():
     """TfResult is importable from the top-level spice_engine package."""
     from spice_engine import TfResult as TfResult_exported
     assert TfResult_exported is TfResult
+
+
+def test_tf_text_output_table_is_stable() -> None:
+    result = TfResult(
+        transfer_ratio=0.5,
+        input_impedance=2000.0,
+        output_impedance=500.0,
+    )
+
+    assert format_tf_table(result) == (
+        "TransferRatio\tInputImpedance\tOutputImpedance\n"
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    )
 
 
 # ============================================================================
@@ -2527,6 +4149,57 @@ def test_dc_sweep_voltage_divider_exact() -> None:
         assert pt.converged
         expected_vout = pt.source_value / 2.0
         assert isclose(pt.node_voltages["out"], expected_vout, abs_tol=1e-9)
+    assert format_dc_sweep_table(result, ["V(out)", "I(Vin)"]) == (
+        "Index\tSource\tValue\tV(out)\tI(Vin)\n"
+        "0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tVin\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+        "2\tVin\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n"
+        "3\tVin\t3.000000e+00\t1.500000e+00\t-1.500000e-03\n"
+        "4\tVin\t4.000000e+00\t2.000000e+00\t-2.000000e-03\n"
+        "5\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+    )
+
+
+def test_dc_sweep_probe_measurements_execute_parsed_cards() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 0.0, 2.0, 1.0)
+    peak = measure_dc_sweep_probe(
+        result,
+        "out_peak",
+        "V(out)",
+        "max",
+        from_value=1.0,
+        to_value=2.0,
+    )
+    average = measure_dc_sweep_probe(result, "out_avg", "V(out)", "avg")
+
+    assert peak.value == pytest.approx(1.0)
+    assert peak.analysis == "dc"
+    assert average.value == pytest.approx(0.5)
+    assert format_measurement_table([peak, average]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_peak\tdc\tV(out)\tmax\t1.000000e+00\t2.000000e+00\t1.000000e+00\n"
+        "out_avg\tdc\tV(out)\tavg\t\t\t5.000000e-01\n"
+    )
+
+    measurements = measure_dc_sweep_deck(
+        result,
+        """
+.measure dc out_swing PP V(out) FROM=0 TO=2
+.meas dc out_final FINAL V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_swing\tdc\tV(out)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\n"
+        "out_final\tdc\tV(out)\tlast\t\t\t1.000000e+00\n"
+    )
 
 
 def test_dc_sweep_source_value_sequence() -> None:
@@ -4137,6 +5810,48 @@ def test_noise_bjt_shot_noise_type_string() -> None:
     assert bjt_entry.noise_type == "shot"
 
 
+def test_noise_mosfet_channel_thermal_noise() -> None:
+    """A biased MOSFET contributes long-channel channel thermal noise."""
+    c = Circuit()
+    c.add(VoltageSource("Vdd", "vdd", "0", 5.0))
+    c.add(VoltageSource("Vgate", "gate", "0", 3.0))
+    c.add(Resistor("Rload", "vdd", "out", 1000.0))
+    c.add(Mosfet(
+        "M1",
+        "out",
+        "gate",
+        "0",
+        "0",
+        MOSFET(
+            MosfetType.NMOS,
+            Level1Model(Level1Params(
+                VT0=1.0,
+                KP=1.0e-3,
+                LAMBDA=0.0,
+                GAMMA=0.0,
+                W=1.0,
+                L=1.0,
+            )),
+        ),
+    ))
+
+    result = noise_ac(c, "out", "Vgate", freqs=[1000.0], temperature=300.0)
+    entry = next(
+        (e for e in result.points[0].entries if e.element_name == "M1"), None
+    )
+    gm = 1.0e-3 * (3.0 - 1.0)
+    expected_source_psd = 4.0 * _kB * 300.0 * (2.0 / 3.0) * gm
+
+    assert entry is not None, "No MOSFET channel noise entry"
+    assert entry.noise_type == "thermal"
+    assert isclose(entry.source_psd, expected_source_psd, rel_tol=1e-6)
+    assert isclose(
+        entry.output_psd,
+        expected_source_psd * 1000.0 ** 2,
+        rel_tol=1e-6,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section 51 — Noise analysis: frequency sweep and defaults
 # ---------------------------------------------------------------------------
@@ -5167,6 +6882,2505 @@ def test_sin_waveform_transient_sinusoid() -> None:
         )
 
 
+def test_fourier_extracts_transient_sinusoid_components() -> None:
+    freq = 1_000.0
+    amp = 2.0
+    offset = 0.25
+    period = 1.0 / freq
+    c = Circuit([
+        VoltageSource(
+            "Vs",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=offset, amplitude=amp, frequency=freq),
+        ),
+    ])
+    result = transient(c, t_stop=2.0 * period, t_step=period / 64.0)
+    analysis = fourier(result, freq, ["V(in)"], harmonics=5)
+
+    assert isinstance(analysis, FourierResult)
+    assert isinstance(analysis.probes[0], FourierProbeResult)
+    assert isinstance(analysis.probes[0].harmonics[0], FourierHarmonic)
+    assert analysis.start_time == pytest.approx(period)
+    probe = analysis.probes[0]
+    fundamental = probe.harmonics[0]
+    assert probe.dc == pytest.approx(offset, abs=2.0e-3)
+    assert fundamental.frequency == pytest.approx(freq)
+    assert fundamental.magnitude == pytest.approx(amp, rel=2.0e-3)
+    assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
+    assert abs(fundamental.cosine) < 2.0e-3
+    assert probe.total_harmonic_distortion < 2.0e-3
+
+
+def test_fourier_transient_deck_routes_parsed_four_cards() -> None:
+    freq = 1_000.0
+    amp = 2.0
+    offset = 0.25
+    period = 1.0 / freq
+    c = Circuit([
+        VoltageSource(
+            "Vs",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=offset, amplitude=amp, frequency=freq),
+        ),
+    ])
+    result = transient(c, t_stop=2.0 * period, t_step=period / 64.0)
+
+    analyses = fourier_transient_deck(
+        result,
+        """
+.tran 15.625u 2m
+.four 1k V(in) HARMONICS=5 FROM=1m
+.end
+""",
+    )
+
+    assert len(analyses) == 1
+    analysis = analyses[0]
+    probe = analysis.probes[0]
+    fundamental = probe.harmonics[0]
+    assert probe.probe == "V(in)"
+    assert len(probe.harmonics) == 5
+    assert analysis.start_time == pytest.approx(period)
+    assert probe.dc == pytest.approx(offset, abs=2.0e-3)
+    assert fundamental.frequency == pytest.approx(freq)
+    assert fundamental.magnitude == pytest.approx(amp, rel=2.0e-3)
+
+
+def test_fourier_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    circuit = Circuit([
+        VoltageSource(
+            "Vin",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=1_000.0),
+        ),
+        Resistor("R1", "in", "out", 1_000.0),
+        Resistor("R2", "out", "0", 1_000.0),
+    ])
+
+    result = fourier_corners(
+        circuit,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r2-high", (CornerOverride("R2", "resistance", 2_000.0),)),
+        ],
+        t_stop=2.0e-3,
+        t_step=2.5e-4,
+        fundamental_frequency=1_000.0,
+        probes=["V(out)"],
+        harmonics=2,
+    )
+
+    assert isinstance(result, CornerFourierResult)
+    assert result.fundamental_frequency == pytest.approx(1_000.0)
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "r2-high"
+    assert result.points[0].result.probes[0].harmonics[0].magnitude == pytest.approx(0.5)
+    assert result.points[1].result.probes[0].harmonics[0].magnitude == pytest.approx(
+        2.0 / 3.0
+    )
+    assert format_corner_fourier_table(result) == (
+        "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n"
+        "nominal\tV(out)\t1\t1.000000e+03\t6.018531e-33\t5.000000e-01\t5.000000e-01\t6.896729e-31\t0.000000e+00\t1.224647e-16\n"
+        "nominal\tV(out)\t2\t2.000000e+03\t0.000000e+00\t-6.123234e-17\t6.123234e-17\t1.800000e+02\t0.000000e+00\t1.224647e-16\n"
+        "r2-high\tV(out)\t1\t1.000000e+03\t7.523164e-33\t6.666667e-01\t6.666667e-01\t6.465683e-31\t1.355253e-17\t1.290373e-16\n"
+        "r2-high\tV(out)\t2\t2.000000e+03\t2.710505e-17\t-8.164312e-17\t8.602490e-17\t1.616341e+02\t1.355253e-17\t1.290373e-16\n"
+    )
+
+
+def test_pole_zero_result_shape_supports_simple_rc_pole_fixture() -> None:
+    resistance = 1_000.0
+    capacitance = 1.0e-6
+    pole_rad_per_second = -1.0 / (resistance * capacitance)
+    result = PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=pole_rad_per_second,
+                imaginary=0.0,
+                frequency=abs(pole_rad_per_second) / (2.0 * math.pi),
+                damping=1.0,
+            )
+        ],
+    )
+
+    assert isinstance(result, PoleZeroResult)
+    assert result.entries[0].kind == "pole"
+    assert result.entries[0].frequency == pytest.approx(
+        1.0 / (2.0 * math.pi * resistance * capacitance)
+    )
+
+
+def test_pole_zero_rc_lowpass_returns_simple_rc_pole() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", 1_000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_rc_lowpass(circuit, input_source="Vin", output_node="out")
+
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=-1.0e3,
+                imaginary=0.0,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=1.0,
+            )
+        ],
+    )
+
+
+def test_pole_zero_corners_runs_selected_topology_per_corner_and_formats_table() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", 1_000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_corners(
+        circuit,
+        "Vin",
+        "out",
+        "rc-lowpass",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("cap-high", (CornerOverride("C1", "capacitance", 2.0e-6),)),
+        ],
+    )
+
+    assert isinstance(result, CornerPoleZeroResult)
+    assert result.input_source == "Vin"
+    assert result.output_node == "out"
+    assert result.topology == "rc-lowpass"
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "cap-high"
+    assert result.points[0].result.entries[0].real == pytest.approx(-1.0e3)
+    assert result.points[1].result.entries[0].real == pytest.approx(-5.0e2)
+    assert format_corner_pole_zero_table(result) == (
+        "Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping\n"
+        "nominal\t0\tpole\t-1.000000e+03\t0.000000e+00\t1.591549e+02\t1.000000e+00\n"
+        "cap-high\t0\tpole\t-5.000000e+02\t0.000000e+00\t7.957747e+01\t1.000000e+00\n"
+    )
+
+
+def test_pole_zero_rc_highpass_returns_origin_zero_and_simple_rc_pole() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Capacitor("C1", "in", "out", 1.0e-6),
+        Resistor("R1", "out", "0", 1_000.0),
+    ])
+
+    result = pole_zero_rc_highpass(circuit, input_source="Vin", output_node="out")
+
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-1.0e3,
+                imaginary=0.0,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=1.0,
+            ),
+        ],
+    )
+
+
+def test_pole_zero_rlc_lowpass_returns_complex_conjugate_poles() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "mid", 10.0),
+        Inductor("L1", "mid", "out", 1.0e-3),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_rlc_lowpass(circuit, input_source="Vin", output_node="out")
+
+    alpha = 10.0 / (2.0 * 1.0e-3)
+    omega0 = 1.0 / math.sqrt(1.0e-3 * 1.0e-6)
+    imaginary = math.sqrt(omega0 * omega0 - alpha * alpha)
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=-imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+        ],
+    )
+
+
+def test_pole_zero_rlc_highpass_returns_origin_zeros_and_complex_conjugate_poles() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "mid", 10.0),
+        Capacitor("C1", "mid", "out", 1.0e-6),
+        Inductor("L1", "out", "0", 1.0e-3),
+    ])
+
+    result = pole_zero_rlc_highpass(circuit, input_source="Vin", output_node="out")
+
+    alpha = 10.0 / (2.0 * 1.0e-3)
+    omega0 = 1.0 / math.sqrt(1.0e-3 * 1.0e-6)
+    imaginary = math.sqrt(omega0 * omega0 - alpha * alpha)
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=-imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+        ],
+    )
+
+
+def test_pole_zero_rlc_bandpass_returns_origin_zero_and_complex_conjugate_poles() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Inductor("L1", "in", "mid", 1.0e-3),
+        Capacitor("C1", "mid", "out", 1.0e-6),
+        Resistor("R1", "out", "0", 10.0),
+    ])
+
+    result = pole_zero_rlc_bandpass(circuit, input_source="Vin", output_node="out")
+
+    alpha = 10.0 / (2.0 * 1.0e-3)
+    omega0 = 1.0 / math.sqrt(1.0e-3 * 1.0e-6)
+    imaginary = math.sqrt(omega0 * omega0 - alpha * alpha)
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=0.0,
+                frequency=0.0,
+                damping=1.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=-imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+        ],
+    )
+
+
+def test_pole_zero_rlc_notch_returns_imaginary_axis_zeros_and_complex_conjugate_poles() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", 10.0),
+        Inductor("L1", "out", "mid", 1.0e-3),
+        Capacitor("C1", "mid", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_rlc_notch(circuit, input_source="Vin", output_node="out")
+
+    alpha = 10.0 / (2.0 * 1.0e-3)
+    omega0 = 1.0 / math.sqrt(1.0e-3 * 1.0e-6)
+    imaginary = math.sqrt(omega0 * omega0 - alpha * alpha)
+    assert result == PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=omega0,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=0.0,
+            ),
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=-omega0,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=0.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-alpha,
+                imaginary=-imaginary,
+                frequency=omega0 / (2.0 * math.pi),
+                damping=alpha / omega0,
+            ),
+        ],
+    )
+
+
+def test_distortion_result_shape_supports_nonlinear_device_smoke_fixture() -> None:
+    result = DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1.0e3,
+                fundamental_magnitude=1.0,
+                harmonics=[
+                    DistortionHarmonic(
+                        harmonic=2,
+                        frequency=2.0e3,
+                        magnitude=0.025,
+                        phase_degrees=-12.0,
+                    )
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert isinstance(result, DistortionResult)
+    assert result.points[0].harmonics[0].harmonic == 2
+    assert result.points[0].total_harmonic_distortion == pytest.approx(0.025)
+
+
+def test_distortion_from_fourier_projects_probe_harmonics() -> None:
+    fourier_result = FourierResult(
+        fundamental_frequency=1.0e3,
+        start_time=0.0,
+        end_time=1.0e-3,
+        probes=[
+            FourierProbeResult(
+                probe="V(out)",
+                dc=0.0,
+                harmonics=[
+                    FourierHarmonic(1, 1.0e3, 0.0, 1.0, 1.0, 0.0),
+                    FourierHarmonic(2, 2.0e3, 0.0, 0.025, 0.025, -12.0),
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    result = distortion_from_fourier(fourier_result, input_source="Vin", output_probe="V(out)")
+
+    assert result == DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1.0e3,
+                fundamental_magnitude=1.0,
+                harmonics=[DistortionHarmonic(2, 2.0e3, 0.025, -12.0)],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+
+def test_distortion_from_transient_extracts_harmonic_content() -> None:
+    freq = 1.0e3
+    period = 1.0 / freq
+    points = [
+        TransientPoint(
+            time=index * period / 64.0,
+            node_voltages={
+                "out": math.sin(2.0 * math.pi * freq * index * period / 64.0)
+                + 0.1 * math.sin(4.0 * math.pi * freq * index * period / 64.0)
+            },
+        )
+        for index in range(129)
+    ]
+
+    result = distortion_from_transient(
+        points,
+        fundamental_frequency=freq,
+        input_source="Vin",
+        output_probe="V(out)",
+        harmonics=3,
+    )
+
+    assert result.input_source == "Vin"
+    assert result.output_probe == "V(out)"
+    point = result.points[0]
+    assert point.frequency == pytest.approx(freq)
+    assert point.fundamental_magnitude == pytest.approx(1.0, abs=2.0e-3)
+    assert point.harmonics[0].harmonic == 2
+    assert point.harmonics[0].magnitude == pytest.approx(0.1, abs=2.0e-3)
+    assert point.total_harmonic_distortion == pytest.approx(0.1, abs=2.0e-3)
+
+
+def test_distortion_from_transient_corners_projects_each_corner() -> None:
+    freq = 1.0e3
+    period = 1.0 / freq
+    circuit = Circuit([
+        VoltageSource(
+            "Vin",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=freq),
+        ),
+        Resistor("Rtop", "in", "out", 1_000.0),
+        Resistor("Rbot", "out", "0", 1_000.0),
+    ])
+
+    result = distortion_from_transient_corners(
+        circuit,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-high", (CornerOverride("Rbot", "resistance", 3_000.0),)),
+        ],
+        t_stop=2.0 * period,
+        t_step=period / 64.0,
+        fundamental_frequency=freq,
+        input_source="Vin",
+        output_probe="V(out)",
+        harmonics=3,
+    )
+
+    assert isinstance(result, CornerDistortionResult)
+    assert result.input_source == "Vin"
+    assert result.output_probe == "V(out)"
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "rbot-high"
+    assert result.points[0].result.points[0].fundamental_magnitude == pytest.approx(
+        0.5,
+        abs=2.0e-3,
+    )
+    assert result.points[1].result.points[0].fundamental_magnitude == pytest.approx(
+        0.75,
+        abs=2.0e-3,
+    )
+    assert result.points[0].result.points[0].total_harmonic_distortion < 2.0e-3
+    assert result.points[1].result.points[0].total_harmonic_distortion < 2.0e-3
+
+
+def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
+    circuit = Circuit([
+        VoltageSource("V1", "vin", "0", 10.0),
+        Resistor("R1", "vin", "mid", 1_000.0),
+        Resistor("R2", "mid", "0", 1_000.0),
+    ])
+    dc_result = dc_op(circuit)
+
+    assert format_dc_table(dc_result) == (
+        "Index\tV(mid)\tV(vin)\tI(V1)\n"
+        "0\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n"
+    )
+    assert format_dc_table(dc_result, ["V(vin, mid)", "I(V1)"]) == (
+        "Index\tV(vin, mid)\tI(V1)\n"
+        "0\t5.000000e+00\t-5.000000e-03\n"
+    )
+
+    transient_points = [
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {"I(V1)": 0.0}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 0.5}, {"I(V1)": -5.0e-4}),
+    ]
+    assert format_transient_table(transient_points) == (
+        "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+
+
+def test_deck_wrdata_ascii_selects_marker_probe_columns() -> None:
+    table = (
+        "Index\tV(in)\tI(V1)\n"
+        "0\t1.000000e+00\t-1.000000e-03\n"
+        "1\t2.000000e+00\t-2.000000e-03\n"
+    )
+
+    assert format_deck_wrdata_ascii(
+        table,
+        ["I(V1)"],
+        ["set wr_vecnames", "set wr_singlescale"],
+    ) == (
+        "# SPICE deck wrdata artifact\n"
+        "Probes: I(V1)\n"
+        "Options: set wr_vecnames;set wr_singlescale\n"
+        "VectorNames: Index;I(V1)\n"
+        "Scale: Index\n"
+        "Index\tI(V1)\n"
+        "0\t-1.000000e-03\n"
+        "1\t-2.000000e-03\n"
+    )
+
+
+def test_deck_output_tables_route_save_probe_print_plot_cards() -> None:
+    netlist = """
+.save V(out)
+.probe dc I(V1)
+.probe tran V(clk)
+.print tran V(ignored)
+.plot tran I(V1)
+.probe ac I(V1)
+.end
+"""
+    dc_result = DcResult(
+        node_voltages={"in": 10.0, "out": 5.0},
+        branch_currents={"I(V1)": -0.005},
+        iterations=1,
+        converged=True,
+    )
+    dc_sweep_result = DcSweepResult(
+        points=[
+            DcSweepPoint(0.0, {"out": 0.0}, {"I(V1)": 0.0}, True),
+            DcSweepPoint(1.0, {"out": 0.5}, {"I(V1)": -5.0e-4}, True),
+        ],
+        source_name="V1",
+    )
+    transient_points = [
+        TransientPoint(
+            0.0,
+            {"clk": 0.0, "out": 0.0, "ignored": 1.0},
+            {"I(V1)": 0.0},
+        ),
+        TransientPoint(
+            1.0e-3,
+            {"clk": 1.0, "out": 0.5, "ignored": 2.0},
+            {"I(V1)": -5.0e-4},
+        ),
+    ]
+    ac_result = AcResult(
+        points=[
+            AcPoint(
+                freq=1000.0,
+                node_voltages={"out": 0.5 - 0.5j},
+                branch_currents={"I(V1)": -0.001 + 0.001j},
+            )
+        ]
+    )
+
+    assert format_deck_op_table(dc_result, netlist) == (
+        "Index\tV(out)\n"
+        "0\t5.000000e+00\n"
+    )
+    assert format_deck_dc_sweep_table(dc_sweep_result, netlist) == (
+        "Index\tSource\tValue\tV(out)\tI(V1)\n"
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+    assert format_deck_transient_table(transient_points, netlist) == (
+        "Index\tTime\tV(out)\tV(clk)\tV(ignored)\tI(V1)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t5.000000e-01\t1.000000e+00\t2.000000e+00\t-5.000000e-04\n"
+    )
+    assert format_deck_ac_table(ac_result, netlist) == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "0\t1.000000e+03\tI(V1)\t-1.000000e-03\t1.000000e-03\t1.414214e-03\t1.350000e+02\n"
+    )
+    assert format_deck_transient_table(
+        transient_points,
+        ".probe ac V(freq)\n.end\n",
+    ) == format_transient_table(transient_points)
+
+
+def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "vin", "0", 1.0))
+    circuit.add(Resistor("R1", "vin", "mid", 1000.0))
+    circuit.add(Resistor("R2", "mid", "0", 1000.0))
+
+    netlist = """
+.save V(mid)
+.probe dc I(V1)
+.print dc V(mid)
+.plot ac V(mid)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.tf V(mid) V1
+.sens V(mid)
+.noise V(mid) V1 lin 1 1k 1k
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
+.end
+"""
+    netlist_lines = netlist.splitlines()
+    save_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".save")
+    )
+    probe_dc_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".probe dc")
+    )
+    print_dc_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".print dc")
+    )
+    plot_ac_line = next(
+        index
+        for index, line in enumerate(netlist_lines, start=1)
+        if line.strip().startswith(".plot ac")
+    )
+
+    op_execution = run_deck_analysis(circuit, netlist, "op")
+    assert op_execution.plan.analysis == "op"
+    assert op_execution.output_probes == ["V(mid)"]
+    assert op_execution.output_directives == [".save"]
+    assert op_execution.analysis_directives == [".op"]
+    expected_deck_analysis_kinds = ["op", "dc", "ac", "tran", "tf", "sens", "noise"]
+    expected_deck_analysis_directives = [
+        ".op",
+        ".dc",
+        ".ac",
+        ".tran",
+        ".tf",
+        ".sens",
+        ".noise",
+    ]
+    assert op_execution.deck_analysis_kind_count == 7
+    assert op_execution.deck_analysis_kinds == expected_deck_analysis_kinds
+    assert op_execution.deck_analysis_directive_count == 7
+    assert op_execution.deck_analysis_directives == expected_deck_analysis_directives
+    assert op_execution.table_count == 3
+    assert op_execution.tables == ["result", "output-plan", "run-artifact"]
+    assert [artifact.name for artifact in op_execution.table_artifacts] == (
+        op_execution.tables
+    )
+    assert op_execution.measurements == []
+    assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
+    assert format_deck_table_csv(op_execution.table) == "Index,V(mid)\n0,5.000000e-01\n"
+    assert deck_table_records(op_execution.table) == [
+        {"Index": "0", "V(mid)": "5.000000e-01"}
+    ]
+    assert json.loads(format_deck_table_json(op_execution.table)) == [
+        {"Index": "0", "V(mid)": "5.000000e-01"}
+    ]
+    assert op_execution.table_artifacts[0].table == op_execution.table
+    assert op_execution.table_artifacts[0].csv == format_deck_table_csv(
+        op_execution.table
+    )
+    assert op_execution.table_artifacts[0].json == format_deck_table_json(
+        op_execution.table
+    )
+    assert op_execution.table_artifacts[0].records == deck_table_records(
+        op_execution.table
+    )
+    expected_output_plan_columns = [
+        "Analysis",
+        "Directive",
+        "Line",
+        "SourceName",
+        "OutputNode",
+        "SweepKind",
+        "StartValue",
+        "StopValue",
+        "StepValue",
+        "PointCount",
+        "StartFrequencyHz",
+        "StopFrequencyHz",
+        "StepTime",
+        "StopTime",
+        "StartTime",
+        "MaxStep",
+        "UseInitialConditions",
+        "ResultRows",
+        "ResultColumns",
+        "ResultColumnList",
+        "OutputProbes",
+        "OutputProbeList",
+        "OutputProbeLines",
+        "OutputProbeLineList",
+        "OutputDirectives",
+        "OutputDirectiveList",
+        "OutputDirectiveKinds",
+        "OutputDirectiveKindList",
+        "OutputDirectiveAnalysisKinds",
+        "OutputDirectiveAnalysisKindList",
+        "OutputDirectiveLines",
+        "OutputDirectiveLineList",
+        "Tables",
+        "TableList",
+    ]
+    expected_output_plan_row = [
+        "op",
+        ".op",
+        str(op_execution.plan.line_number),
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "1",
+        "2",
+        "Index;V(mid)",
+        "1",
+        "V(mid)",
+        "1",
+        str(save_line),
+        "1",
+        ".save",
+        "1",
+        "save",
+        "1",
+        "global",
+        "1",
+        str(save_line),
+        "3",
+        "result;output-plan;run-artifact",
+    ]
+    expected_output_plan_table = (
+        "\t".join(expected_output_plan_columns)
+        + "\n"
+        + "\t".join(expected_output_plan_row)
+        + "\n"
+    )
+    expected_output_plan_records = [
+        dict(zip(expected_output_plan_columns, expected_output_plan_row, strict=False))
+    ]
+    assert op_execution.output_plan_artifact_count == 1
+    assert len(op_execution.output_plan_artifacts) == 1
+    output_plan_artifact = op_execution.output_plan_artifacts[0]
+    assert output_plan_artifact.analysis == "op"
+    assert output_plan_artifact.directive == ".op"
+    assert output_plan_artifact.line_number == op_execution.plan.line_number
+    assert output_plan_artifact.source_name is None
+    assert output_plan_artifact.output_node is None
+    assert output_plan_artifact.sweep_kind is None
+    assert output_plan_artifact.start_value is None
+    assert output_plan_artifact.stop_value is None
+    assert output_plan_artifact.step_value is None
+    assert output_plan_artifact.point_count is None
+    assert output_plan_artifact.start_frequency_hz is None
+    assert output_plan_artifact.stop_frequency_hz is None
+    assert output_plan_artifact.step_time is None
+    assert output_plan_artifact.stop_time is None
+    assert output_plan_artifact.start_time is None
+    assert output_plan_artifact.max_step is None
+    assert output_plan_artifact.use_initial_conditions is None
+    assert output_plan_artifact.result_row_count == 1
+    assert output_plan_artifact.result_columns == ["Index", "V(mid)"]
+    assert output_plan_artifact.output_probes == ["V(mid)"]
+    assert output_plan_artifact.output_probe_line_count == 1
+    assert output_plan_artifact.output_probe_lines == [save_line]
+    assert output_plan_artifact.output_directives == [".save"]
+    assert output_plan_artifact.output_directive_kind_count == 1
+    assert output_plan_artifact.output_directive_kinds == ["save"]
+    assert output_plan_artifact.output_directive_analysis_kind_count == 1
+    assert output_plan_artifact.output_directive_analysis_kinds == ["global"]
+    assert output_plan_artifact.output_directive_line_count == 1
+    assert output_plan_artifact.output_directive_lines == [save_line]
+    assert output_plan_artifact.tables == ["result", "output-plan", "run-artifact"]
+    assert op_execution.output_plan_artifact_table == expected_output_plan_table
+    assert op_execution.output_plan_artifact_table == (
+        format_deck_output_plan_artifact_table(op_execution.output_plan_artifacts)
+    )
+    assert op_execution.output_plan_artifact_csv == (
+        ",".join(expected_output_plan_columns)
+        + "\n"
+        + ",".join(expected_output_plan_row)
+        + "\n"
+    )
+    assert op_execution.output_plan_artifact_csv == (
+        format_deck_output_plan_artifact_csv(op_execution.output_plan_artifacts)
+    )
+    assert json.loads(op_execution.output_plan_artifact_json) == (
+        expected_output_plan_records
+    )
+    assert op_execution.output_plan_artifact_json == (
+        format_deck_output_plan_artifact_json(op_execution.output_plan_artifacts)
+    )
+    assert op_execution.output_plan_artifact_records == expected_output_plan_records
+    assert op_execution.output_plan_artifact_records == (
+        deck_output_plan_artifact_records(op_execution.output_plan_artifacts)
+    )
+    assert op_execution.run_artifacts[0].result_rows == 1
+    assert op_execution.run_artifacts[0].result_column_count == 2
+    assert op_execution.run_artifacts[0].result_columns == ["Index", "V(mid)"]
+    assert op_execution.run_artifacts[0].table_count == 3
+    assert op_execution.run_artifacts[0].tables == ["result", "output-plan", "run-artifact"]
+    assert op_execution.run_artifacts[0].source_name is None
+    assert op_execution.run_artifacts[0].output_node is None
+    assert op_execution.run_artifacts[0].sweep_kind is None
+    assert op_execution.run_artifacts[0].point_count is None
+    assert op_execution.run_artifacts[0].step_time is None
+    assert op_execution.run_artifacts[0].use_initial_conditions is None
+    assert op_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert op_execution.run_artifacts[0].output_directives == [".save"]
+    assert op_execution.run_artifacts[0].analysis_directive_count == 1
+    assert op_execution.run_artifacts[0].analysis_directives == [".op"]
+    assert op_execution.run_artifacts[0].deck_analysis_kind_count == 7
+    assert op_execution.run_artifacts[0].deck_analysis_kinds == (
+        expected_deck_analysis_kinds
+    )
+    assert op_execution.run_artifacts[0].deck_analysis_directive_count == 7
+    assert op_execution.run_artifacts[0].deck_analysis_directives == (
+        expected_deck_analysis_directives
+    )
+    assert op_execution.run_artifacts[0].measurement_names == []
+    assert op_execution.run_artifacts[0].fourier_probes == []
+    assert op_execution.run_artifacts[0].control_line_count == 0
+    assert op_execution.run_artifacts[0].control_lines == []
+    assert op_execution.diagnostic_count == 0
+    assert op_execution.diagnostic_codes == []
+    assert op_execution.run_artifacts[0].diagnostic_count == 0
+    assert op_execution.run_artifacts[0].diagnostic_codes == []
+    assert op_execution.run_artifact_table == (
+        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\tDeckAnalysisKinds\tDeckAnalysisKindList\tDeckAnalysisDirectives\tDeckAnalysisDirectiveList\n"
+        f"op\t.op\t1\t.op\t{op_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1\t2\tIndex;V(mid)\t3\tresult;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\t7\top;dc;ac;tran;tf;sens;noise\t7\t.op;.dc;.ac;.tran;.tf;.sens;.noise\n"
+    )
+    assert op_execution.table_artifacts[1].name == "output-plan"
+    assert op_execution.table_artifacts[1].table == op_execution.output_plan_artifact_table
+    assert op_execution.table_artifacts[1].csv == op_execution.output_plan_artifact_csv
+    assert op_execution.table_artifacts[1].json == op_execution.output_plan_artifact_json
+    assert op_execution.table_artifacts[1].records == (
+        op_execution.output_plan_artifact_records
+    )
+    assert op_execution.table_artifacts[2].name == "run-artifact"
+    assert op_execution.table_artifacts[2].table == op_execution.run_artifact_table
+    assert op_execution.table_artifacts[2].records == deck_table_records(
+        op_execution.run_artifact_table
+    )
+    assert format_deck_table_csv(
+        op_execution.run_artifact_table
+    ) == format_deck_run_artifact_csv(op_execution.run_artifacts)
+    assert format_deck_table_json(
+        op_execution.run_artifact_table
+    ) == format_deck_run_artifact_json(op_execution.run_artifacts)
+    assert deck_table_records(op_execution.run_artifact_table) == json.loads(
+        format_deck_run_artifact_json(op_execution.run_artifacts)
+    )
+    assert format_deck_run_artifact_csv(op_execution.run_artifacts) == (
+        "Analysis,Directive,AnalysisDirectives,AnalysisDirectiveList,Line,SourceName,OutputNode,SweepKind,StartValue,StopValue,StepValue,PointCount,StartFrequencyHz,StopFrequencyHz,StepTime,StopTime,StartTime,MaxStep,UseInitialConditions,ResultRows,ResultColumns,ResultColumnList,Tables,TableList,OutputProbes,OutputProbeList,OutputDirectives,OutputDirectiveList,Measurements,MeasurementList,Fourier,FourierList,ControlLines,ControlLineList,WriteMarkers,WriteMarkerList,RawfileOptions,RawfileOptionList,ControlPolicyArtifacts,ControlPolicyCategoryList,ControlPolicyCodeList,ControlPolicySeverityList,Diagnostics,DiagnosticCodeList,DeckAnalysisKinds,DeckAnalysisKindList,DeckAnalysisDirectives,DeckAnalysisDirectiveList\n"
+        f"op,.op,1,.op,{op_execution.plan.line_number},,,,,,,,,,,,,,,1,2,Index;V(mid),3,result;output-plan;run-artifact,1,V(mid),1,.save,0,,0,,0,,0,,0,,0,,,,0,,7,op;dc;ac;tran;tf;sens;noise,7,.op;.dc;.ac;.tran;.tf;.sens;.noise\n"
+    )
+    assert format_deck_table_csv('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == (
+        'Name,Value\nprobe,"SPICE,""QUOTED"""\n'
+    )
+    assert format_deck_table_json('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == (
+        '[{"Name":"probe","Value":"SPICE,\\"QUOTED\\""}]\n'
+    )
+    assert deck_table_records('Name\tValue\nprobe\tSPICE,"QUOTED"\n') == [
+        {"Name": "probe", "Value": 'SPICE,"QUOTED"'}
+    ]
+    artifact_json = format_deck_run_artifact_json(op_execution.run_artifacts)
+    artifact_records = json.loads(artifact_json)
+    assert list(artifact_records[0]) == [
+        "Analysis",
+        "Directive",
+        "AnalysisDirectives",
+        "AnalysisDirectiveList",
+        "Line",
+        "SourceName",
+        "OutputNode",
+        "SweepKind",
+        "StartValue",
+        "StopValue",
+        "StepValue",
+        "PointCount",
+        "StartFrequencyHz",
+        "StopFrequencyHz",
+        "StepTime",
+        "StopTime",
+        "StartTime",
+        "MaxStep",
+        "UseInitialConditions",
+        "ResultRows",
+        "ResultColumns",
+        "ResultColumnList",
+        "Tables",
+        "TableList",
+        "OutputProbes",
+        "OutputProbeList",
+        "OutputDirectives",
+        "OutputDirectiveList",
+        "Measurements",
+        "MeasurementList",
+        "Fourier",
+        "FourierList",
+        "ControlLines",
+        "ControlLineList",
+        "WriteMarkers",
+        "WriteMarkerList",
+        "RawfileOptions",
+        "RawfileOptionList",
+        "ControlPolicyArtifacts",
+        "ControlPolicyCategoryList",
+        "ControlPolicyCodeList",
+        "ControlPolicySeverityList",
+        "Diagnostics",
+        "DiagnosticCodeList",
+        "DeckAnalysisKinds",
+        "DeckAnalysisKindList",
+        "DeckAnalysisDirectives",
+        "DeckAnalysisDirectiveList",
+    ]
+    assert artifact_records == [
+        {
+            "Analysis": "op",
+            "Directive": ".op",
+            "AnalysisDirectives": "1",
+            "AnalysisDirectiveList": ".op",
+            "Line": str(op_execution.plan.line_number),
+            "SourceName": "",
+            "OutputNode": "",
+            "SweepKind": "",
+            "StartValue": "",
+            "StopValue": "",
+            "StepValue": "",
+            "PointCount": "",
+            "StartFrequencyHz": "",
+            "StopFrequencyHz": "",
+            "StepTime": "",
+            "StopTime": "",
+            "StartTime": "",
+            "MaxStep": "",
+            "UseInitialConditions": "",
+            "ResultRows": "1",
+            "ResultColumns": "2",
+            "ResultColumnList": "Index;V(mid)",
+            "Tables": "3",
+            "TableList": "result;output-plan;run-artifact",
+            "OutputProbes": "1",
+            "OutputProbeList": "V(mid)",
+            "OutputDirectives": "1",
+            "OutputDirectiveList": ".save",
+            "Measurements": "0",
+            "MeasurementList": "",
+            "Fourier": "0",
+            "FourierList": "",
+            "ControlLines": "0",
+            "ControlLineList": "",
+            "WriteMarkers": "0",
+            "WriteMarkerList": "",
+            "RawfileOptions": "0",
+            "RawfileOptionList": "",
+            "ControlPolicyArtifacts": "0",
+            "ControlPolicyCategoryList": "",
+            "ControlPolicyCodeList": "",
+            "ControlPolicySeverityList": "",
+            "Diagnostics": "0",
+            "DiagnosticCodeList": "",
+            "DeckAnalysisKinds": "7",
+            "DeckAnalysisKindList": "op;dc;ac;tran;tf;sens;noise",
+            "DeckAnalysisDirectives": "7",
+            "DeckAnalysisDirectiveList": ".op;.dc;.ac;.tran;.tf;.sens;.noise",
+        }
+    ]
+    diagnostic_artifact = replace(
+        op_execution.run_artifacts[0],
+        diagnostic_count=2,
+        diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", "SPICE_DECK_ANALYSIS_RANGE"],
+    )
+    diagnostic_record = deck_table_records(
+        format_deck_run_artifact_table([diagnostic_artifact])
+    )[0]
+    assert diagnostic_record["Diagnostics"] == "2"
+    assert (
+        diagnostic_record["DiagnosticCodeList"]
+        == "SPICE_DECK_ANALYSIS_TOKEN;SPICE_DECK_ANALYSIS_RANGE"
+    )
+    quoted_diagnostic_artifact = replace(
+        op_execution.run_artifacts[0],
+        diagnostic_count=2,
+        diagnostic_codes=["SPICE_DECK_ANALYSIS_TOKEN", 'SPICE,"QUOTED"'],
+    )
+    assert format_deck_run_artifact_csv([quoted_diagnostic_artifact]).endswith(
+        ',0,,0,,0,,0,,,,2,"SPICE_DECK_ANALYSIS_TOKEN;SPICE,""QUOTED""",7,op;dc;ac;tran;tf;sens;noise,7,.op;.dc;.ac;.tran;.tf;.sens;.noise\n'
+    )
+    assert json.loads(format_deck_run_artifact_json([quoted_diagnostic_artifact]))[
+        0
+    ]["DiagnosticCodeList"] == 'SPICE_DECK_ANALYSIS_TOKEN;SPICE,"QUOTED"'
+
+    dc_execution = run_deck_analysis(circuit, netlist, "dc")
+    assert dc_execution.plan.source_name == "V1"
+    assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
+    assert dc_execution.output_directives == [".save", ".probe", ".print"]
+    assert dc_execution.output_plan_artifacts[0].line_number == dc_execution.plan.line_number
+    assert dc_execution.output_plan_artifacts[0].source_name == "V1"
+    assert dc_execution.output_plan_artifacts[0].output_node is None
+    assert dc_execution.output_plan_artifacts[0].sweep_kind is None
+    assert dc_execution.output_plan_artifacts[0].start_value == pytest.approx(0.0)
+    assert dc_execution.output_plan_artifacts[0].stop_value == pytest.approx(1.0)
+    assert dc_execution.output_plan_artifacts[0].step_value == pytest.approx(1.0)
+    assert dc_execution.output_plan_artifacts[0].point_count is None
+    assert dc_execution.output_plan_artifacts[0].start_frequency_hz is None
+    assert dc_execution.output_plan_artifacts[0].stop_frequency_hz is None
+    assert dc_execution.output_plan_artifacts[0].step_time is None
+    assert dc_execution.output_plan_artifacts[0].use_initial_conditions is None
+    assert dc_execution.output_plan_artifact_records[0]["Line"] == str(
+        dc_execution.plan.line_number
+    )
+    assert dc_execution.output_plan_artifact_records[0]["SourceName"] == "V1"
+    assert dc_execution.output_plan_artifact_records[0]["OutputNode"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["SweepKind"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StartValue"] == "0.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["StopValue"] == "1.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["StepValue"] == "1.000000e+00"
+    assert dc_execution.output_plan_artifact_records[0]["PointCount"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StartFrequencyHz"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StopFrequencyHz"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["StepTime"] == ""
+    assert dc_execution.output_plan_artifact_records[0]["UseInitialConditions"] == ""
+    assert dc_execution.output_plan_artifacts[0].output_directive_kinds == [
+        "save",
+        "probe",
+        "print",
+    ]
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputDirectiveKindList"
+    ] == "save;probe;print"
+    assert dc_execution.output_plan_artifacts[0].output_directive_analysis_kinds == [
+        "global",
+        "dc",
+    ]
+    dc_output_directive_lines = [save_line, probe_dc_line, print_dc_line]
+    dc_output_probe_lines = [save_line, probe_dc_line]
+    assert (
+        dc_execution.output_plan_artifacts[0].output_probe_lines
+        == dc_output_probe_lines
+    )
+    assert (
+        dc_execution.output_plan_artifacts[0].output_directive_lines
+        == dc_output_directive_lines
+    )
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputDirectiveAnalysisKindList"
+    ] == "global;dc"
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputProbeLineList"
+    ] == ";".join(str(line) for line in dc_output_probe_lines)
+    assert dc_execution.output_plan_artifact_records[0][
+        "OutputDirectiveLineList"
+    ] == ";".join(str(line) for line in dc_output_directive_lines)
+    assert dc_execution.analysis_directives == [".dc"]
+    assert dc_execution.table_count == 4
+    assert dc_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
+    assert [artifact.name for artifact in dc_execution.table_artifacts] == (
+        dc_execution.tables
+    )
+    assert [measurement.name for measurement in dc_execution.measurements] == ["mid_avg"]
+    assert dc_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
+    )
+    assert dc_execution.table_artifacts[1].table == dc_execution.measurement_table
+    assert dc_execution.table_artifacts[1].csv == format_deck_table_csv(
+        dc_execution.measurement_table
+    )
+    assert dc_execution.table_artifacts[1].json == format_deck_table_json(
+        dc_execution.measurement_table
+    )
+    assert dc_execution.table_artifacts[1].records == deck_table_records(
+        dc_execution.measurement_table
+    )
+    assert isinstance(dc_execution.result, DcSweepResult)
+    assert len(dc_execution.result.points) == 2
+    assert dc_execution.table == (
+        "Index\tSource\tValue\tV(mid)\tI(V1)\n"
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+    assert dc_execution.run_artifacts[0].analysis == "dc"
+    assert dc_execution.run_artifacts[0].source_name == "V1"
+    assert dc_execution.run_artifacts[0].output_node is None
+    assert dc_execution.run_artifacts[0].start_value == pytest.approx(0.0)
+    assert dc_execution.run_artifacts[0].stop_value == pytest.approx(1.0)
+    assert dc_execution.run_artifacts[0].step_value == pytest.approx(1.0)
+    assert dc_execution.run_artifacts[0].result_column_count == 5
+    assert dc_execution.run_artifacts[0].result_columns == [
+        "Index",
+        "Source",
+        "Value",
+        "V(mid)",
+        "I(V1)",
+    ]
+    assert dc_execution.run_artifacts[0].table_count == 4
+    assert dc_execution.run_artifacts[0].tables == [
+        "result",
+        "measurement",
+        "output-plan",
+        "run-artifact",
+    ]
+    assert dc_execution.run_artifacts[0].step_time is None
+    assert dc_execution.run_artifacts[0].use_initial_conditions is None
+    assert dc_execution.run_artifacts[0].output_probes == ["V(mid)", "I(V1)"]
+    assert dc_execution.run_artifacts[0].output_directives == [
+        ".save",
+        ".probe",
+        ".print",
+    ]
+    assert dc_execution.run_artifacts[0].analysis_directives == [".dc"]
+    assert dc_execution.run_artifacts[0].measurement_names == ["mid_avg"]
+    assert dc_execution.run_artifacts[0].fourier_probes == []
+    dc_run_artifact_record = _assert_run_artifact_table_matches(dc_execution)
+    assert dc_run_artifact_record["Analysis"] == "dc"
+    assert dc_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        dc_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
+    )
+    assert dc_run_artifact_record["DeckAnalysisDirectives"] == "7"
+
+    ac_execution = run_deck_analysis(circuit, netlist, "ac")
+    assert ac_execution.output_probes == ["V(mid)"]
+    assert ac_execution.output_directives == [".save", ".plot"]
+    assert ac_execution.output_plan_artifacts[0].output_node is None
+    assert ac_execution.output_plan_artifacts[0].sweep_kind == "dec"
+    assert ac_execution.output_plan_artifacts[0].point_count == 1
+    assert ac_execution.output_plan_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.output_plan_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.output_plan_artifacts[0].start_value is None
+    assert ac_execution.output_plan_artifacts[0].step_time is None
+    assert ac_execution.output_plan_artifacts[0].use_initial_conditions is None
+    assert ac_execution.output_plan_artifact_records[0]["SweepKind"] == "dec"
+    assert ac_execution.output_plan_artifact_records[0]["PointCount"] == "1"
+    assert ac_execution.output_plan_artifact_records[0]["StartFrequencyHz"] == "1.000000e+03"
+    assert ac_execution.output_plan_artifact_records[0]["StopFrequencyHz"] == "1.000000e+03"
+    assert ac_execution.output_plan_artifact_records[0]["StepTime"] == ""
+    assert ac_execution.output_plan_artifacts[0].output_directive_kinds == [
+        "save",
+        "plot",
+    ]
+    assert ac_execution.output_plan_artifact_records[0][
+        "OutputDirectiveKindList"
+    ] == "save;plot"
+    assert ac_execution.output_plan_artifacts[0].output_directive_analysis_kinds == [
+        "global",
+        "ac",
+    ]
+    ac_output_directive_lines = [save_line, plot_ac_line]
+    assert ac_execution.output_plan_artifacts[0].output_probe_lines == [save_line]
+    assert (
+        ac_execution.output_plan_artifacts[0].output_directive_lines
+        == ac_output_directive_lines
+    )
+    assert ac_execution.output_plan_artifact_records[0][
+        "OutputDirectiveAnalysisKindList"
+    ] == "global;ac"
+    assert ac_execution.output_plan_artifact_records[0][
+        "OutputDirectiveLineList"
+    ] == ";".join(str(line) for line in ac_output_directive_lines)
+    assert ac_execution.analysis_directives == [".ac"]
+    assert ac_execution.table_count == 4
+    assert ac_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
+    assert [measurement.name for measurement in ac_execution.measurements] == ["mid_peak"]
+    assert ac_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n"
+    )
+    assert isinstance(ac_execution.result, AcResult)
+    assert len(ac_execution.result.points) == 1
+    assert ac_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+    assert ac_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert ac_execution.run_artifacts[0].source_name is None
+    assert ac_execution.run_artifacts[0].output_node is None
+    assert ac_execution.run_artifacts[0].sweep_kind == "dec"
+    assert ac_execution.run_artifacts[0].point_count == 1
+    assert ac_execution.run_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.run_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
+    assert ac_execution.run_artifacts[0].result_column_count == 7
+    assert ac_execution.run_artifacts[0].result_columns == [
+        "Index",
+        "Frequency",
+        "Probe",
+        "Real",
+        "Imaginary",
+        "Magnitude",
+        "Phase",
+    ]
+    assert ac_execution.run_artifacts[0].table_count == 4
+    assert ac_execution.run_artifacts[0].tables == [
+        "result",
+        "measurement",
+        "output-plan",
+        "run-artifact",
+    ]
+    assert ac_execution.run_artifacts[0].step_time is None
+    assert ac_execution.run_artifacts[0].use_initial_conditions is None
+    assert ac_execution.run_artifacts[0].output_directives == [".save", ".plot"]
+    assert ac_execution.run_artifacts[0].measurement_names == ["mid_peak"]
+    assert ac_execution.run_artifacts[0].fourier_probes == []
+    ac_run_artifact_record = _assert_run_artifact_table_matches(ac_execution)
+    assert ac_run_artifact_record["Analysis"] == "ac"
+    assert ac_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        ac_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
+    )
+    assert ac_run_artifact_record["DeckAnalysisDirectives"] == "7"
+
+    tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert tran_execution.output_probes == ["V(mid)"]
+    assert tran_execution.output_directives == [".save"]
+    assert tran_execution.output_plan_artifacts[0].step_time == pytest.approx(1.0e-3)
+    assert tran_execution.output_plan_artifacts[0].stop_time == pytest.approx(1.0e-3)
+    assert tran_execution.output_plan_artifacts[0].start_time is None
+    assert tran_execution.output_plan_artifacts[0].max_step is None
+    assert tran_execution.output_plan_artifacts[0].use_initial_conditions is False
+    assert tran_execution.output_plan_artifact_records[0]["StepTime"] == "1.000000e-03"
+    assert tran_execution.output_plan_artifact_records[0]["StopTime"] == "1.000000e-03"
+    assert tran_execution.output_plan_artifact_records[0]["StartTime"] == ""
+    assert tran_execution.output_plan_artifact_records[0]["MaxStep"] == ""
+    assert tran_execution.output_plan_artifact_records[0]["UseInitialConditions"] == "false"
+    assert tran_execution.output_plan_artifacts[0].output_directive_lines == [
+        save_line
+    ]
+    assert tran_execution.output_plan_artifacts[0].output_probe_lines == [save_line]
+    assert tran_execution.analysis_directives == [".tran"]
+    assert tran_execution.table_count == 4
+    assert tran_execution.tables == ["result", "measurement", "output-plan", "run-artifact"]
+    assert [measurement.name for measurement in tran_execution.measurements] == [
+        "mid_final"
+    ]
+    assert tran_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n"
+    )
+    assert isinstance(tran_execution.result, TransientResult)
+    assert tran_execution.table == (
+        "Index\tTime\tV(mid)\n"
+        "0\t0.000000e+00\t5.000000e-01\n"
+        "1\t1.000000e-03\t5.000000e-01\n"
+    )
+    assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tran_execution.run_artifacts[0].source_name is None
+    assert tran_execution.run_artifacts[0].output_node is None
+    assert tran_execution.run_artifacts[0].step_time == pytest.approx(1.0e-3)
+    assert tran_execution.run_artifacts[0].stop_time == pytest.approx(1.0e-3)
+    assert tran_execution.run_artifacts[0].result_column_count == 3
+    assert tran_execution.run_artifacts[0].result_columns == ["Index", "Time", "V(mid)"]
+    assert tran_execution.run_artifacts[0].table_count == 4
+    assert tran_execution.run_artifacts[0].tables == [
+        "result",
+        "measurement",
+        "output-plan",
+        "run-artifact",
+    ]
+    assert tran_execution.run_artifacts[0].start_time is None
+    assert tran_execution.run_artifacts[0].max_step is None
+    assert tran_execution.run_artifacts[0].use_initial_conditions is False
+    assert tran_execution.run_artifacts[0].output_directives == [".save"]
+    assert tran_execution.run_artifacts[0].measurement_names == ["mid_final"]
+    assert tran_execution.run_artifacts[0].fourier_probes == []
+    assert tran_execution.run_artifacts[0].diagnostic_count == 0
+    assert tran_execution.run_artifacts[0].diagnostic_codes == []
+    tran_run_artifact_record = _assert_run_artifact_table_matches(tran_execution)
+    assert tran_run_artifact_record["Analysis"] == "tran"
+    assert tran_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        tran_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
+    )
+    assert tran_run_artifact_record["DeckAnalysisDirectives"] == "7"
+
+    tf_execution = run_deck_analysis(circuit, netlist, "tf")
+    assert tf_execution.plan.output_node == "mid"
+    assert tf_execution.plan.source_name == "V1"
+    assert isinstance(tf_execution.result, TfResult)
+    assert tf_execution.result.transfer_ratio == pytest.approx(0.5)
+    assert tf_execution.result.input_impedance == pytest.approx(2000.0)
+    assert tf_execution.result.output_impedance == pytest.approx(500.0)
+    assert tf_execution.output_probes == ["V(mid)"]
+    assert tf_execution.output_directives == []
+    assert tf_execution.output_plan_artifacts[0].output_node == "mid"
+    assert tf_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
+    assert tf_execution.analysis_directives == [".tf"]
+    assert tf_execution.table_count == 3
+    assert tf_execution.tables == ["result", "output-plan", "run-artifact"]
+    assert tf_execution.measurements == []
+    assert tf_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert tf_execution.table == (
+        "TransferRatio\tInputImpedance\tOutputImpedance\n"
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+    )
+    assert tf_execution.run_artifacts[0].analysis == "tf"
+    assert tf_execution.run_artifacts[0].source_name == "V1"
+    assert tf_execution.run_artifacts[0].output_node == "mid"
+    assert tf_execution.run_artifacts[0].result_rows == 1
+    assert tf_execution.run_artifacts[0].result_column_count == 3
+    assert tf_execution.run_artifacts[0].result_columns == [
+        "TransferRatio",
+        "InputImpedance",
+        "OutputImpedance",
+    ]
+    assert tf_execution.run_artifacts[0].table_count == 3
+    assert tf_execution.run_artifacts[0].tables == ["result", "output-plan", "run-artifact"]
+    assert tf_execution.run_artifacts[0].step_time is None
+    assert tf_execution.run_artifacts[0].use_initial_conditions is None
+    assert tf_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tf_execution.run_artifacts[0].output_directives == []
+    assert tf_execution.run_artifacts[0].measurement_names == []
+    assert tf_execution.run_artifacts[0].fourier_probes == []
+    tf_run_artifact_record = _assert_run_artifact_table_matches(tf_execution)
+    assert tf_run_artifact_record["Analysis"] == "tf"
+    assert tf_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        tf_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
+    )
+    assert tf_run_artifact_record["DeckAnalysisDirectives"] == "7"
+
+    sens_execution = run_deck_analysis(circuit, netlist, "sens")
+    assert sens_execution.plan.output_node == "mid"
+    assert sens_execution.plan.source_name is None
+    assert isinstance(sens_execution.result, SensResult)
+    assert sens_execution.result.output_node == "mid"
+    assert len(sens_execution.result.entries) == 3
+    assert sens_execution.output_probes == ["V(mid)"]
+    assert sens_execution.output_plan_artifacts[0].output_node == "mid"
+    assert sens_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
+    assert sens_execution.analysis_directives == [".sens"]
+    assert sens_execution.table_count == 3
+    assert sens_execution.tables == ["result", "output-plan", "run-artifact"]
+    assert sens_execution.measurements == []
+    assert sens_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert sens_execution.table.startswith(
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity\n"
+    )
+    assert sens_execution.run_artifacts[0].analysis == "sens"
+    assert sens_execution.run_artifacts[0].source_name is None
+    assert sens_execution.run_artifacts[0].output_node == "mid"
+    assert sens_execution.run_artifacts[0].result_rows == 1
+    assert sens_execution.run_artifacts[0].result_column_count == 7
+    assert sens_execution.run_artifacts[0].result_columns == [
+        "OutputNode",
+        "NominalVoltage",
+        "Element",
+        "Parameter",
+        "NominalValue",
+        "Sensitivity",
+        "RelativeSensitivity",
+    ]
+    assert sens_execution.run_artifacts[0].table_count == 3
+    assert sens_execution.run_artifacts[0].tables == ["result", "output-plan", "run-artifact"]
+    assert sens_execution.run_artifacts[0].step_time is None
+    assert sens_execution.run_artifacts[0].use_initial_conditions is None
+    assert sens_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert sens_execution.run_artifacts[0].output_directives == []
+    assert sens_execution.run_artifacts[0].measurement_names == []
+    assert sens_execution.run_artifacts[0].fourier_probes == []
+    sens_run_artifact_record = _assert_run_artifact_table_matches(sens_execution)
+    assert sens_run_artifact_record["Analysis"] == "sens"
+    assert sens_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        sens_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
+    )
+    assert sens_run_artifact_record["DeckAnalysisDirectives"] == "7"
+
+    noise_execution = run_deck_analysis(circuit, netlist, "noise")
+    assert noise_execution.plan.output_node == "mid"
+    assert noise_execution.plan.source_name == "V1"
+    assert noise_execution.plan.sweep_kind == "lin"
+    assert noise_execution.plan.point_count == 1
+    assert noise_execution.plan.start_frequency == pytest.approx(1.0e3)
+    assert noise_execution.plan.stop_frequency == pytest.approx(1.0e3)
+    assert isinstance(noise_execution.result, NoiseResult)
+    assert noise_execution.result.output_node == "mid"
+    assert noise_execution.result.input_source == "V1"
+    assert len(noise_execution.result.points) == 1
+    assert noise_execution.output_probes == ["V(mid)"]
+    assert noise_execution.output_plan_artifacts[0].source_name == "V1"
+    assert noise_execution.output_plan_artifacts[0].output_node == "mid"
+    assert noise_execution.output_plan_artifacts[0].sweep_kind == "lin"
+    assert noise_execution.output_plan_artifacts[0].point_count == 1
+    assert noise_execution.output_plan_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert noise_execution.output_plan_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
+    assert noise_execution.output_plan_artifact_records[0]["OutputNode"] == "mid"
+    assert noise_execution.output_plan_artifact_records[0]["SweepKind"] == "lin"
+    assert noise_execution.output_plan_artifact_records[0]["PointCount"] == "1"
+    assert (
+        noise_execution.output_plan_artifact_records[0]["StartFrequencyHz"]
+        == "1.000000e+03"
+    )
+    assert (
+        noise_execution.output_plan_artifact_records[0]["StopFrequencyHz"]
+        == "1.000000e+03"
+    )
+    assert noise_execution.analysis_directives == [".noise"]
+    assert noise_execution.table_count == 3
+    assert noise_execution.tables == ["result", "output-plan", "run-artifact"]
+    assert noise_execution.measurements == []
+    assert noise_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    assert noise_execution.table == format_deck_noise_table(noise_execution.result)
+    assert noise_execution.table.startswith(
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+    )
+    assert noise_execution.run_artifacts[0].analysis == "noise"
+    assert noise_execution.run_artifacts[0].source_name == "V1"
+    assert noise_execution.run_artifacts[0].output_node == "mid"
+    assert noise_execution.run_artifacts[0].sweep_kind == "lin"
+    assert noise_execution.run_artifacts[0].point_count == 1
+    assert noise_execution.run_artifacts[0].start_frequency_hz == pytest.approx(1.0e3)
+    assert noise_execution.run_artifacts[0].stop_frequency_hz == pytest.approx(1.0e3)
+    assert noise_execution.run_artifacts[0].result_rows == 1
+    assert noise_execution.run_artifacts[0].result_column_count == 10
+    assert noise_execution.run_artifacts[0].result_columns == [
+        "Index",
+        "Frequency",
+        "OutputNode",
+        "InputSource",
+        "OutputPSD",
+        "InputReferredPSD",
+        "Element",
+        "Type",
+        "SourcePSD",
+        "ContributionPSD",
+    ]
+    assert noise_execution.run_artifacts[0].table_count == 3
+    assert noise_execution.run_artifacts[0].tables == ["result", "output-plan", "run-artifact"]
+    assert noise_execution.run_artifacts[0].step_time is None
+    assert noise_execution.run_artifacts[0].use_initial_conditions is None
+    assert noise_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert noise_execution.run_artifacts[0].output_directives == []
+    assert noise_execution.run_artifacts[0].measurement_names == []
+    assert noise_execution.run_artifacts[0].fourier_probes == []
+    noise_run_artifact_record = _assert_run_artifact_table_matches(noise_execution)
+    assert noise_run_artifact_record["Analysis"] == "noise"
+    assert noise_run_artifact_record["DeckAnalysisKinds"] == "7"
+    assert (
+        noise_run_artifact_record["DeckAnalysisKindList"]
+        == "op;dc;ac;tran;tf;sens;noise"
+    )
+    assert noise_run_artifact_record["DeckAnalysisDirectives"] == "7"
+
+    tran_window_execution = run_deck_analysis(
+        circuit,
+        ".save V(mid)\n.tran 2m 6m 2m 1m uic\n.end\n",
+    )
+    assert tran_window_execution.plan.start_time == pytest.approx(2.0e-3)
+    assert tran_window_execution.plan.max_step == pytest.approx(1.0e-3)
+    assert tran_window_execution.plan.use_initial_conditions is True
+    assert tran_window_execution.run_artifacts[0].step_time == pytest.approx(2.0e-3)
+    assert tran_window_execution.run_artifacts[0].stop_time == pytest.approx(6.0e-3)
+    assert tran_window_execution.run_artifacts[0].start_time == pytest.approx(2.0e-3)
+    assert tran_window_execution.run_artifacts[0].max_step == pytest.approx(1.0e-3)
+    assert tran_window_execution.run_artifacts[0].use_initial_conditions is True
+    assert tran_window_execution.run_artifacts[0].result_column_count == 3
+    assert tran_window_execution.run_artifacts[0].result_columns == [
+        "Index",
+        "Time",
+        "V(mid)",
+    ]
+    assert tran_window_execution.run_artifacts[0].table_count == 3
+    assert tran_window_execution.run_artifacts[0].tables == [
+        "result",
+        "output-plan",
+        "run-artifact",
+    ]
+    assert tran_window_execution.table_count == 3
+    assert tran_window_execution.tables == ["result", "output-plan", "run-artifact"]
+    assert tran_window_execution.output_probes == ["V(mid)"]
+    assert isinstance(tran_window_execution.result, TransientResult)
+    assert [point.time for point in tran_window_execution.result.points] == pytest.approx(
+        [2.0e-3, 4.0e-3, 6.0e-3],
+    )
+    assert tran_window_execution.table == (
+        "Index\tTime\tV(mid)\n"
+        "0\t2.000000e-03\t5.000000e-01\n"
+        "1\t4.000000e-03\t5.000000e-01\n"
+        "2\t6.000000e-03\t5.000000e-01\n"
+    )
+    tran_window_run_artifact_record = _assert_run_artifact_table_matches(
+        tran_window_execution
+    )
+    assert tran_window_run_artifact_record["Analysis"] == "tran"
+    assert tran_window_run_artifact_record["DeckAnalysisKinds"] == "1"
+    assert tran_window_run_artifact_record["DeckAnalysisKindList"] == "tran"
+    assert tran_window_run_artifact_record["DeckAnalysisDirectives"] == "1"
+
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        run_deck_analysis(circuit, netlist)
+
+    lin_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n")
+    assert lin_execution.output_probes == ["V(mid)"]
+    assert isinstance(lin_execution.result, AcResult)
+    assert [point.freq for point in lin_execution.result.points] == [1.0, 2.0, 3.0]
+    assert lin_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+    oct_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n")
+    assert oct_execution.output_probes == ["V(mid)"]
+    assert isinstance(oct_execution.result, AcResult)
+    assert [point.freq for point in oct_execution.result.points] == [1.0, 2.0, 4.0]
+    assert oct_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_run_deck_executes_all_analysis_cards_in_source_order() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(Resistor("R1", "in", "0", 1000.0))
+    netlist = ".save V(in)\n.op\n.dc V1 0 1 1\n.op\n.end\n"
+
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        run_deck_analysis(circuit, netlist)
+
+    execution = run_deck(circuit, netlist)
+
+    assert execution.execution_count == 3
+    assert execution.analysis_order == ["op", "dc", "op"]
+    assert execution.analysis_directives == [".op", ".dc", ".op"]
+    assert [item.plan.analysis for item in execution.executions] == ["op", "dc", "op"]
+    assert execution.run_artifact_count == 3
+    assert [artifact.analysis for artifact in execution.run_artifacts] == ["op", "dc", "op"]
+    assert execution.run_artifact_records == deck_table_records(
+        execution.run_artifact_table
+    )
+    assert json.loads(execution.run_artifact_json) == execution.run_artifact_records
+    assert execution.run_artifact_records[1]["Analysis"] == "dc"
+    assert execution.run_artifact_records[1]["DeckAnalysisKinds"] == "2"
+    assert execution.run_artifact_records[1]["DeckAnalysisKindList"] == "op;dc"
+    assert execution.run_artifact_records[1]["DeckAnalysisDirectives"] == "3"
+    assert (
+        execution.run_artifact_records[1]["DeckAnalysisDirectiveList"]
+        == ".op;.dc;.op"
+    )
+
+
+def test_run_deck_analysis_surfaces_control_diagnostics_in_artifacts() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(Resistor("R1", "in", "0", 1000.0))
+    netlist = """
+.save V(in)
+.control
+save V(in)
+probe V(in)
+set filetype=ascii
+set wr_vecnames
+set wr_singlescale
+set appendwrite
+.set WR_VECNAMES
+write out.raw V(in) V(missing)
+wrdata out.dat V(in) V(missing)
+source other.cir
+cd /tmp
+if v(in) > 0
+let gain = 2
+.endc
+.op
+.end
+"""
+
+    execution = run_deck_analysis(circuit, netlist, "op")
+    expected_codes = [
+        "SPICE_DECK_CONTROL_SCRIPT_COMMAND",
+        "SPICE_DECK_CONTROL_WORKDIR_COMMAND",
+        "SPICE_DECK_CONTROL_FLOW_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+    ]
+    code_list = ";".join(expected_codes)
+    expected_control_lines = [".save V(in)", ".probe V(in)"]
+    control_line_list = ";".join(expected_control_lines)
+    expected_write_markers = [
+        "write out.raw V(in) V(missing)",
+        "wrdata out.dat V(in) V(missing)",
+    ]
+    write_marker_list = ";".join(expected_write_markers)
+    expected_rawfile_options = [
+        "set filetype=ascii",
+        "set wr_vecnames",
+        "set wr_singlescale",
+        "set appendwrite",
+        "set wr_vecnames",
+    ]
+    rawfile_option_list = ";".join(expected_rawfile_options)
+    expected_policy_lines = [13, 14, 15, 16]
+    expected_policy_categories = ["script", "workdir", "control-flow", "variable"]
+    expected_policy_commands = [
+        "source other.cir",
+        "cd /tmp",
+        "if v(in) > 0",
+        "let gain = 2",
+    ]
+    expected_table_names = [
+        "result",
+        "control-policy",
+        "control-policy-summary",
+        "output-plan",
+        "run-artifact",
+    ]
+
+    assert execution.control_line_count == len(expected_control_lines)
+    assert execution.control_lines == expected_control_lines
+    assert execution.write_marker_count == len(expected_write_markers)
+    assert execution.write_markers == expected_write_markers
+    assert execution.rawfile_option_count == len(expected_rawfile_options)
+    assert execution.rawfile_options == expected_rawfile_options
+    assert execution.rawfile_artifact_count == 1
+    assert execution.rawfile_artifacts[0].target == "out.raw"
+    assert execution.rawfile_artifacts[0].marker == "write out.raw V(in) V(missing)"
+    assert execution.rawfile_artifacts[0].probe_count == 2
+    assert execution.rawfile_artifacts[0].probes == ["V(in)", "V(missing)"]
+    assert execution.rawfile_artifacts[0].matched_probe_count == 1
+    assert execution.rawfile_artifacts[0].matched_probes == ["V(in)"]
+    assert execution.rawfile_artifacts[0].unmatched_probe_count == 1
+    assert execution.rawfile_artifacts[0].unmatched_probes == ["V(missing)"]
+    assert execution.rawfile_artifacts[0].option_count == len(
+        expected_rawfile_options
+    )
+    assert execution.rawfile_artifacts[0].options == expected_rawfile_options
+    assert "Title: SPICE deck op result\n" in execution.rawfile_artifacts[0].rawfile
+    assert "No. Variables: 2\n" in execution.rawfile_artifacts[0].rawfile
+    assert "Options: " + rawfile_option_list + "\n" in execution.rawfile_artifacts[0].rawfile
+    assert "0\t0\t1.000000e+00\n" in execution.rawfile_artifacts[0].rawfile
+    rawfile_record = execution.rawfile_artifact_records[0]
+    assert rawfile_record["Target"] == "out.raw"
+    assert rawfile_record["Marker"] == "write out.raw V(in) V(missing)"
+    assert rawfile_record["Probes"] == "2"
+    assert rawfile_record["ProbeList"] == "V(in);V(missing)"
+    assert rawfile_record["MatchedProbes"] == "1"
+    assert rawfile_record["MatchedProbeList"] == "V(in)"
+    assert rawfile_record["UnmatchedProbes"] == "1"
+    assert rawfile_record["UnmatchedProbeList"] == "V(missing)"
+    assert rawfile_record["Options"] == str(len(expected_rawfile_options))
+    assert rawfile_record["RawfileOptionList"] == rawfile_option_list
+    assert rawfile_record["Bytes"] == str(
+        len(execution.rawfile_artifacts[0].rawfile.encode())
+    )
+    assert execution.rawfile_artifact_table == format_deck_rawfile_artifact_table(
+        execution.rawfile_artifacts
+    )
+    assert execution.rawfile_artifact_csv == format_deck_rawfile_artifact_csv(
+        execution.rawfile_artifacts
+    )
+    assert execution.rawfile_artifact_json == format_deck_rawfile_artifact_json(
+        execution.rawfile_artifacts
+    )
+    assert json.loads(execution.rawfile_artifact_json)[0]["RawfileOptionList"] == (
+        rawfile_option_list
+    )
+    rawfile_json = json.loads(execution.rawfile_artifact_json)[0]
+    assert rawfile_json["ProbeList"] == "V(in);V(missing)"
+    assert rawfile_json["MatchedProbeList"] == "V(in)"
+    assert rawfile_json["UnmatchedProbeList"] == "V(missing)"
+    assert execution.wrdata_artifact_count == 1
+    assert execution.wrdata_artifacts[0].target == "out.dat"
+    assert execution.wrdata_artifacts[0].marker == "wrdata out.dat V(in) V(missing)"
+    assert execution.wrdata_artifacts[0].probe_count == 2
+    assert execution.wrdata_artifacts[0].probes == ["V(in)", "V(missing)"]
+    assert execution.wrdata_artifacts[0].matched_probe_count == 1
+    assert execution.wrdata_artifacts[0].matched_probes == ["V(in)"]
+    assert execution.wrdata_artifacts[0].unmatched_probe_count == 1
+    assert execution.wrdata_artifacts[0].unmatched_probes == ["V(missing)"]
+    assert execution.wrdata_artifacts[0].option_count == len(
+        expected_rawfile_options
+    )
+    assert execution.wrdata_artifacts[0].options == expected_rawfile_options
+    assert "# SPICE deck wrdata artifact\n" in execution.wrdata_artifacts[0].datafile
+    assert "Probes: V(in);V(missing)\n" in execution.wrdata_artifacts[0].datafile
+    assert "Options: " + rawfile_option_list + "\n" in execution.wrdata_artifacts[0].datafile
+    assert "VectorNames: Index;V(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "Scale: Index\n" in execution.wrdata_artifacts[0].datafile
+    assert "Index\tV(in)\n" in execution.wrdata_artifacts[0].datafile
+    assert "0\t1.000000e+00\n" in execution.wrdata_artifacts[0].datafile
+    wrdata_record = execution.wrdata_artifact_records[0]
+    assert wrdata_record["Target"] == "out.dat"
+    assert wrdata_record["Marker"] == "wrdata out.dat V(in) V(missing)"
+    assert wrdata_record["Probes"] == "2"
+    assert wrdata_record["ProbeList"] == "V(in);V(missing)"
+    assert wrdata_record["MatchedProbes"] == "1"
+    assert wrdata_record["MatchedProbeList"] == "V(in)"
+    assert wrdata_record["UnmatchedProbes"] == "1"
+    assert wrdata_record["UnmatchedProbeList"] == "V(missing)"
+    assert wrdata_record["Options"] == str(len(expected_rawfile_options))
+    assert wrdata_record["RawfileOptionList"] == rawfile_option_list
+    assert wrdata_record["Bytes"] == str(
+        len(execution.wrdata_artifacts[0].datafile.encode())
+    )
+    assert execution.wrdata_artifact_table == format_deck_wrdata_artifact_table(
+        execution.wrdata_artifacts
+    )
+    assert execution.wrdata_artifact_csv == format_deck_wrdata_artifact_csv(
+        execution.wrdata_artifacts
+    )
+    assert execution.wrdata_artifact_json == format_deck_wrdata_artifact_json(
+        execution.wrdata_artifacts
+    )
+    wrdata_json = json.loads(execution.wrdata_artifact_json)[0]
+    assert wrdata_json["ProbeList"] == "V(in);V(missing)"
+    assert wrdata_json["MatchedProbeList"] == "V(in)"
+    assert wrdata_json["UnmatchedProbeList"] == "V(missing)"
+    assert wrdata_json["RawfileOptionList"] == rawfile_option_list
+    assert execution.control_policy_artifact_count == len(expected_codes)
+    assert [artifact.line_number for artifact in execution.control_policy_artifacts] == (
+        expected_policy_lines
+    )
+    assert [artifact.category for artifact in execution.control_policy_artifacts] == (
+        expected_policy_categories
+    )
+    assert [artifact.command for artifact in execution.control_policy_artifacts] == (
+        expected_policy_commands
+    )
+    assert [artifact.code for artifact in execution.control_policy_artifacts] == (
+        expected_codes
+    )
+    assert [artifact.severity for artifact in execution.control_policy_artifacts] == (
+        ["error"] * len(expected_codes)
+    )
+    assert "external script and shell commands are disabled" in (
+        execution.control_policy_artifacts[0].message
+    )
+    policy_record = execution.control_policy_artifact_records[0]
+    assert policy_record["Line"] == "13"
+    assert policy_record["Category"] == "script"
+    assert policy_record["Command"] == "source other.cir"
+    assert policy_record["Code"] == "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
+    assert policy_record["Severity"] == "error"
+    assert execution.control_policy_artifact_table == (
+        format_deck_control_policy_artifact_table(
+            execution.control_policy_artifacts
+        )
+    )
+    assert execution.control_policy_artifact_csv == (
+        format_deck_control_policy_artifact_csv(
+            execution.control_policy_artifacts
+        )
+    )
+    assert execution.control_policy_artifact_json == (
+        format_deck_control_policy_artifact_json(
+            execution.control_policy_artifacts
+        )
+    )
+    policy_json = json.loads(execution.control_policy_artifact_json)
+    assert policy_json[2]["Category"] == "control-flow"
+    assert policy_json[3]["Command"] == "let gain = 2"
+    assert execution.control_policy_summary_artifact_count == len(
+        expected_policy_categories
+    )
+    assert [
+        artifact.category for artifact in execution.control_policy_summary_artifacts
+    ] == expected_policy_categories
+    assert [
+        artifact.artifact_count
+        for artifact in execution.control_policy_summary_artifacts
+    ] == [1, 1, 1, 1]
+    assert [
+        artifact.line_numbers
+        for artifact in execution.control_policy_summary_artifacts
+    ] == [[line] for line in expected_policy_lines]
+    assert [
+        artifact.commands for artifact in execution.control_policy_summary_artifacts
+    ] == [[command] for command in expected_policy_commands]
+    assert [
+        artifact.codes for artifact in execution.control_policy_summary_artifacts
+    ] == [[code] for code in expected_codes]
+    summary_record = execution.control_policy_summary_artifact_records[0]
+    assert summary_record["Category"] == "script"
+    assert summary_record["Artifacts"] == "1"
+    assert summary_record["LineList"] == "13"
+    assert summary_record["CommandList"] == "source other.cir"
+    assert summary_record["CodeList"] == "SPICE_DECK_CONTROL_SCRIPT_COMMAND"
+    assert summary_record["SeverityList"] == "error"
+    assert execution.control_policy_summary_artifact_table == (
+        format_deck_control_policy_summary_artifact_table(
+            execution.control_policy_summary_artifacts
+        )
+    )
+    assert execution.control_policy_summary_artifact_csv == (
+        format_deck_control_policy_summary_artifact_csv(
+            execution.control_policy_summary_artifacts
+        )
+    )
+    assert execution.control_policy_summary_artifact_json == (
+        format_deck_control_policy_summary_artifact_json(
+            execution.control_policy_summary_artifacts
+        )
+    )
+    summary_json = json.loads(execution.control_policy_summary_artifact_json)
+    assert summary_json[2]["Category"] == "control-flow"
+    assert summary_json[3]["CommandList"] == "let gain = 2"
+    assert execution.diagnostic_count == len(expected_codes)
+    assert execution.diagnostic_codes == expected_codes
+    assert execution.table_count == len(expected_table_names)
+    assert execution.tables == expected_table_names
+    assert [artifact.name for artifact in execution.table_artifacts] == (
+        expected_table_names
+    )
+    policy_table_artifact = execution.table_artifacts[-4]
+    assert policy_table_artifact.name == "control-policy"
+    assert policy_table_artifact.table == execution.control_policy_artifact_table
+    assert policy_table_artifact.csv == execution.control_policy_artifact_csv
+    assert policy_table_artifact.json == execution.control_policy_artifact_json
+    assert policy_table_artifact.records == execution.control_policy_artifact_records
+    summary_table_artifact = execution.table_artifacts[-3]
+    assert summary_table_artifact.name == "control-policy-summary"
+    assert (
+        summary_table_artifact.table
+        == execution.control_policy_summary_artifact_table
+    )
+    assert (
+        summary_table_artifact.csv
+        == execution.control_policy_summary_artifact_csv
+    )
+    assert (
+        summary_table_artifact.json
+        == execution.control_policy_summary_artifact_json
+    )
+    assert (
+        summary_table_artifact.records
+        == execution.control_policy_summary_artifact_records
+    )
+    output_plan_table_artifact = execution.table_artifacts[-2]
+    assert output_plan_table_artifact.name == "output-plan"
+    assert output_plan_table_artifact.table == execution.output_plan_artifact_table
+    assert output_plan_table_artifact.csv == execution.output_plan_artifact_csv
+    assert output_plan_table_artifact.json == execution.output_plan_artifact_json
+    assert output_plan_table_artifact.records == execution.output_plan_artifact_records
+    assert execution.run_artifacts[0].control_line_count == len(expected_control_lines)
+    assert execution.run_artifacts[0].control_lines == expected_control_lines
+    assert execution.run_artifacts[0].table_count == len(expected_table_names)
+    assert execution.run_artifacts[0].tables == expected_table_names
+    assert execution.run_artifacts[0].write_marker_count == len(expected_write_markers)
+    assert execution.run_artifacts[0].write_markers == expected_write_markers
+    assert execution.run_artifacts[0].rawfile_option_count == len(
+        expected_rawfile_options
+    )
+    assert execution.run_artifacts[0].rawfile_options == expected_rawfile_options
+    assert execution.run_artifacts[0].control_policy_artifact_count == len(
+        expected_codes
+    )
+    assert (
+        execution.run_artifacts[0].control_policy_categories
+        == expected_policy_categories
+    )
+    assert execution.run_artifacts[0].control_policy_codes == expected_codes
+    assert execution.run_artifacts[0].control_policy_severities == ["error"]
+    assert execution.run_artifacts[0].diagnostic_count == len(expected_codes)
+    assert execution.run_artifacts[0].diagnostic_codes == expected_codes
+    record = deck_table_records(execution.run_artifact_table)[0]
+    assert record["Tables"] == str(len(expected_table_names))
+    assert record["TableList"] == ";".join(expected_table_names)
+    assert record["ControlLines"] == str(len(expected_control_lines))
+    assert record["ControlLineList"] == control_line_list
+    assert record["WriteMarkers"] == str(len(expected_write_markers))
+    assert record["WriteMarkerList"] == write_marker_list
+    assert record["RawfileOptions"] == str(len(expected_rawfile_options))
+    assert record["RawfileOptionList"] == rawfile_option_list
+    assert record["ControlPolicyArtifacts"] == str(len(expected_codes))
+    assert record["ControlPolicyCategoryList"] == ";".join(expected_policy_categories)
+    assert record["ControlPolicyCodeList"] == code_list
+    assert record["ControlPolicySeverityList"] == "error"
+    assert record["Diagnostics"] == str(len(expected_codes))
+    assert record["DiagnosticCodeList"] == code_list
+    assert execution.table_artifacts[-1].name == "run-artifact"
+    assert execution.table_artifacts[-1].records[0]["ControlLineList"] == control_line_list
+    assert (
+        execution.table_artifacts[-1].records[0]["WriteMarkerList"] == write_marker_list
+    )
+    assert (
+        execution.table_artifacts[-1].records[0]["RawfileOptionList"]
+        == rawfile_option_list
+    )
+    assert (
+        execution.table_artifacts[-1].records[0]["ControlPolicyCategoryList"]
+        == ";".join(expected_policy_categories)
+    )
+    assert (
+        execution.table_artifacts[-1].records[0]["ControlPolicyCodeList"] == code_list
+    )
+    assert (
+        execution.table_artifacts[-1].records[0]["ControlPolicySeverityList"]
+        == "error"
+    )
+    assert execution.table_artifacts[-1].records[0]["DiagnosticCodeList"] == code_list
+    assert execution.table_artifacts[-1].csv == format_deck_run_artifact_csv(
+        execution.run_artifacts
+    )
+    assert execution.table_artifacts[-1].json == format_deck_run_artifact_json(
+        execution.run_artifacts
+    )
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "ControlLineList"
+    ] == control_line_list
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "WriteMarkerList"
+    ] == write_marker_list
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "RawfileOptionList"
+    ] == rawfile_option_list
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "ControlPolicyCategoryList"
+    ] == ";".join(expected_policy_categories)
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "ControlPolicyCodeList"
+    ] == code_list
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "ControlPolicySeverityList"
+    ] == "error"
+    assert json.loads(format_deck_run_artifact_json(execution.run_artifacts))[0][
+        "DiagnosticCodeList"
+    ] == code_list
+
+
+def test_analyze_deck_controls_surfaces_write_markers() -> None:
+    summary = analyze_deck_controls(
+        """
+.control
+write out.raw V(out)
+wrdata out.dat V(out)
+wrdata empty.dat
+.write dotted.raw V(a)
+.wrdata dotted.dat V(a)
+.endc
+.end
+"""
+    )
+
+    assert summary.write_markers == (
+        "write out.raw V(out)",
+        "wrdata out.dat V(out)",
+        "write dotted.raw V(a)",
+        "wrdata dotted.dat V(a)",
+    )
+
+
+def test_analyze_deck_controls_surfaces_rawfile_options() -> None:
+    summary = analyze_deck_controls(
+        """
+.control
+set filetype=ascii
+set wr_vecnames
+set wr_singlescale
+set appendwrite
+.set WR_VECNAMES
+set noaskquit
+set filetype=binary
+set temp=27
+.endc
+.end
+"""
+    )
+
+    assert summary.rawfile_options == (
+        "set filetype=ascii",
+        "set wr_vecnames",
+        "set wr_singlescale",
+        "set appendwrite",
+        "set wr_vecnames",
+    )
+    assert [diagnostic.code for diagnostic in summary.diagnostics] == [
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+        "SPICE_DECK_CONTROL_VARIABLE_COMMAND",
+    ]
+
+
+def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "vin", "0", 1.0))
+    circuit.add(Resistor("R1", "vin", "mid", 1000.0))
+    circuit.add(Resistor("R2", "mid", "0", 1000.0))
+
+    netlist = """
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+"""
+
+    op_execution = run_deck_analysis(circuit, netlist, "op")
+    assert op_execution.fourier == []
+    assert op_execution.fourier_table == ""
+    assert op_execution.table_count == 3
+    assert op_execution.tables == ["result", "output-plan", "run-artifact"]
+
+    tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert len(tran_execution.fourier) == 1
+    assert tran_execution.table_count == 4
+    assert tran_execution.tables == ["result", "fourier", "output-plan", "run-artifact"]
+    assert [artifact.name for artifact in tran_execution.table_artifacts] == (
+        tran_execution.tables
+    )
+    result = tran_execution.fourier[0]
+    assert result.fundamental_frequency == pytest.approx(2000.0)
+    assert result.probes[0].probe == "V(mid)"
+    assert len(result.probes[0].harmonics) == 1
+    assert tran_execution.fourier_table == format_fourier_table(result)
+    assert tran_execution.table_artifacts[1].table == tran_execution.fourier_table
+    assert tran_execution.table_artifacts[1].csv == format_deck_table_csv(
+        tran_execution.fourier_table
+    )
+    assert tran_execution.table_artifacts[1].json == format_deck_table_json(
+        tran_execution.fourier_table
+    )
+    assert tran_execution.table_artifacts[1].records == deck_table_records(
+        tran_execution.fourier_table
+    )
+    assert tran_execution.run_artifacts[0].fourier_count == 1
+    assert tran_execution.run_artifacts[0].source_name is None
+    assert tran_execution.run_artifacts[0].output_node is None
+    assert tran_execution.run_artifacts[0].step_time == pytest.approx(5.0e-4)
+    assert tran_execution.run_artifacts[0].stop_time == pytest.approx(1.0e-3)
+    assert tran_execution.run_artifacts[0].result_column_count == 3
+    assert tran_execution.run_artifacts[0].result_columns == ["Index", "Time", "V(mid)"]
+    assert tran_execution.run_artifacts[0].table_count == 4
+    assert tran_execution.run_artifacts[0].tables == [
+        "result",
+        "fourier",
+        "output-plan",
+        "run-artifact",
+    ]
+    assert tran_execution.run_artifacts[0].start_time is None
+    assert tran_execution.run_artifacts[0].max_step is None
+    assert tran_execution.run_artifacts[0].use_initial_conditions is False
+    assert tran_execution.run_artifacts[0].output_probes == ["V(mid)"]
+    assert tran_execution.run_artifacts[0].output_directives == [".save"]
+    assert tran_execution.run_artifacts[0].measurement_names == []
+    assert tran_execution.run_artifacts[0].fourier_probes == ["V(mid)"]
+    assert tran_execution.deck_analysis_kind_count == 2
+    assert tran_execution.deck_analysis_kinds == ["op", "tran"]
+    assert tran_execution.deck_analysis_directive_count == 2
+    assert tran_execution.deck_analysis_directives == [".op", ".tran"]
+    assert tran_execution.run_artifacts[0].deck_analysis_kind_count == 2
+    assert tran_execution.run_artifacts[0].deck_analysis_kinds == ["op", "tran"]
+    assert tran_execution.run_artifacts[0].deck_analysis_directive_count == 2
+    assert tran_execution.run_artifacts[0].deck_analysis_directives == [
+        ".op",
+        ".tran",
+    ]
+    assert tran_execution.run_artifact_table == (
+        "Analysis\tDirective\tAnalysisDirectives\tAnalysisDirectiveList\tLine\tSourceName\tOutputNode\tSweepKind\tStartValue\tStopValue\tStepValue\tPointCount\tStartFrequencyHz\tStopFrequencyHz\tStepTime\tStopTime\tStartTime\tMaxStep\tUseInitialConditions\tResultRows\tResultColumns\tResultColumnList\tTables\tTableList\tOutputProbes\tOutputProbeList\tOutputDirectives\tOutputDirectiveList\tMeasurements\tMeasurementList\tFourier\tFourierList\tControlLines\tControlLineList\tWriteMarkers\tWriteMarkerList\tRawfileOptions\tRawfileOptionList\tControlPolicyArtifacts\tControlPolicyCategoryList\tControlPolicyCodeList\tControlPolicySeverityList\tDiagnostics\tDiagnosticCodeList\tDeckAnalysisKinds\tDeckAnalysisKindList\tDeckAnalysisDirectives\tDeckAnalysisDirectiveList\n"
+        f"tran\t.tran\t1\t.tran\t{tran_execution.plan.line_number}\t\t\t\t\t\t\t\t\t\t5.000000e-04\t1.000000e-03\t\t\tfalse\t3\t3\tIndex;Time;V(mid)\t4\tresult;fourier;output-plan;run-artifact\t1\tV(mid)\t1\t.save\t0\t\t1\tV(mid)\t0\t\t0\t\t0\t\t0\t\t\t\t0\t\t2\top;tran\t2\t.op;.tran\n"
+    )
+
+
+def test_transient_probe_measurements_are_stable() -> None:
+    transient_points = [
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"in": 1.0, "out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"in": 1.0, "out": 0.75}, {}),
+    ]
+
+    peak_to_peak = measure_transient_probe(
+        transient_points,
+        "swing",
+        "V(out)",
+        "peak-to-peak",
+        from_time=1.0e-3,
+        to_time=3.0e-3,
+    )
+    final_value = measure_transient_probe(
+        transient_points,
+        "settled",
+        "V(out)",
+        "final",
+    )
+    midpoint = measure_transient_find_at_probe(
+        transient_points,
+        "midpoint",
+        "V(out)",
+        1.5e-3,
+    )
+    crossing = measure_transient_when_probe(
+        transient_points,
+        "crossing",
+        "V(out)",
+        0.5,
+        from_time=1.0e-3,
+        to_time=3.0e-3,
+    )
+    second_crossing = measure_transient_when_probe_counted(
+        transient_points,
+        "second_crossing",
+        "V(out)",
+        0.5,
+        "cross",
+        2,
+        from_time=1.0e-3,
+        to_time=3.0e-3,
+    )
+    propagation_delay = measure_transient_delay_between_probes(
+        transient_points,
+        "prop_delay",
+        "V(in)",
+        0.5,
+        "rise",
+        1,
+        "V(out)",
+        0.5,
+        "fall",
+        1,
+        from_time=0.0,
+        to_time=3.0e-3,
+    )
+
+    assert peak_to_peak.value == pytest.approx(1.5)
+    assert peak_to_peak.mode == "pp"
+    assert final_value.value == pytest.approx(0.75)
+    assert final_value.mode == "last"
+    assert midpoint.value == pytest.approx(0.5)
+    assert midpoint.mode == "find"
+    assert crossing.value == pytest.approx(1.5e-3)
+    assert crossing.mode == "when"
+    assert second_crossing.value == pytest.approx(2.75e-3)
+    assert second_crossing.mode == "when"
+    assert propagation_delay.value == pytest.approx(1.0e-3)
+    assert propagation_delay.probe == "V(in)->V(out)"
+    assert propagation_delay.mode == "delay"
+    assert format_measurement_table(
+        [
+            peak_to_peak,
+            final_value,
+            midpoint,
+            crossing,
+            second_crossing,
+            propagation_delay,
+        ]
+    ) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
+        "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
+        "second_crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "prop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n"
+    )
+
+
+def test_transient_deck_measurements_execute_parsed_cards() -> None:
+    transient_points = [
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"in": 1.0, "out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"in": 1.0, "out": 0.75}, {}),
+    ]
+
+    measurements = measure_transient_deck(
+        transient_points,
+        """
+V1 in 0 DC 1
+.measure tran swing PP V(out) FROM=1m TO=3m
+.measure tran midpoint FIND V(out) AT=1.5m
+.measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m
+.measure tran second_cross WHEN V(out)=0.5 FROM=1m TO=3m CROSS=2
+.measure tran falling WHEN V(out)=0.5 FROM=1m TO=3m FALL=1
+.measure tran rising WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
+.measure tran prop_delay TRIG V(in) VAL=0.5 RISE=1 TARG V(out) VAL=0.5 FALL=1 FROM=0 TO=3m
+.meas tran settled LAST V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
+        "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
+        "second_cross\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "falling\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
+        "rising\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "prop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n"
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+    )
+
+
+def test_pole_zero_text_output_table_is_stable() -> None:
+    result = PoleZeroResult(
+        input_source="Vin",
+        output_node="out",
+        entries=[
+            PoleZeroEntry(
+                kind="zero",
+                real=0.0,
+                imaginary=1.0e3,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=0.0,
+            ),
+            PoleZeroEntry(
+                kind="pole",
+                real=-5.0,
+                imaginary=-999.987499921874,
+                frequency=1.0e3 / (2.0 * math.pi),
+                damping=5.0e-3,
+            ),
+        ],
+    )
+
+    assert format_pole_zero_table(result) == (
+        "Index\tKind\tReal\tImaginary\tFrequency\tDamping\n"
+        "0\tzero\t0.000000e+00\t1.000000e+03\t1.591549e+02\t0.000000e+00\n"
+        "1\tpole\t-5.000000e+00\t-9.999875e+02\t1.591549e+02\t5.000000e-03\n"
+    )
+
+
+def test_distortion_text_output_table_is_stable() -> None:
+    result = DistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            DistortionPoint(
+                frequency=1000.0,
+                fundamental_magnitude=1.0,
+                harmonics=[
+                    DistortionHarmonic(
+                        harmonic=1,
+                        frequency=1000.0,
+                        magnitude=1.0,
+                        phase_degrees=0.0,
+                    ),
+                    DistortionHarmonic(
+                        harmonic=2,
+                        frequency=2000.0,
+                        magnitude=0.025,
+                        phase_degrees=-1.5707963267948966,
+                    ),
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert format_distortion_table(result) == (
+        "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
+        "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
+        "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+    )
+
+
+def test_corner_distortion_text_output_table_is_stable() -> None:
+    result = CornerDistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            CornerDistortionPoint(
+                corner_name="nominal",
+                result=DistortionResult(
+                    input_source="Vin",
+                    output_probe="V(out)",
+                    points=[
+                        DistortionPoint(
+                            frequency=1000.0,
+                            fundamental_magnitude=1.0,
+                            harmonics=[
+                                DistortionHarmonic(1, 1000.0, 1.0, 0.0),
+                                DistortionHarmonic(
+                                    2,
+                                    2000.0,
+                                    0.025,
+                                    -1.5707963267948966,
+                                ),
+                            ],
+                            total_harmonic_distortion=0.025,
+                        )
+                    ],
+                ),
+            ),
+            CornerDistortionPoint(
+                corner_name="slow",
+                result=DistortionResult(
+                    input_source="Vin",
+                    output_probe="V(out)",
+                    points=[
+                        DistortionPoint(
+                            frequency=1000.0,
+                            fundamental_magnitude=0.8,
+                            harmonics=[DistortionHarmonic(2, 2000.0, 0.04, 12.5)],
+                            total_harmonic_distortion=0.05,
+                        )
+                    ],
+                ),
+            ),
+        ],
+    )
+
+    assert format_corner_distortion_table(result) == (
+        "Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
+        "nominal\t1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
+        "nominal\t1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+        "slow\t1.000000e+03\tVin\tV(out)\t2\t4.000000e-02\t1.250000e+01\t5.000000e-02\n"
+    )
+
+
+def test_fourier_text_output_table_is_stable() -> None:
+    result = FourierResult(
+        fundamental_frequency=1000.0,
+        start_time=0.0,
+        end_time=0.001,
+        probes=[
+            FourierProbeResult(
+                probe="V(out)",
+                dc=0.1,
+                harmonics=[
+                    FourierHarmonic(
+                        harmonic=1,
+                        frequency=1000.0,
+                        cosine=1.0,
+                        sine=0.0,
+                        magnitude=1.0,
+                        phase_degrees=0.0,
+                    ),
+                    FourierHarmonic(
+                        harmonic=2,
+                        frequency=2000.0,
+                        cosine=0.0,
+                        sine=-0.025,
+                        magnitude=0.025,
+                        phase_degrees=-90.0,
+                    ),
+                ],
+                total_harmonic_distortion=0.025,
+            )
+        ],
+    )
+
+    assert format_fourier_table(result) == (
+        "Probe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n"
+        "V(out)\t1\t1.000000e+03\t1.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\t1.000000e-01\t2.500000e-02\n"
+        "V(out)\t2\t2.000000e+03\t0.000000e+00\t-2.500000e-02\t2.500000e-02\t-9.000000e+01\t1.000000e-01\t2.500000e-02\n"
+    )
+
+
+def test_ac_text_output_table_is_stable() -> None:
+    result = AcResult(
+        points=[
+            AcPoint(
+                freq=1000.0,
+                node_voltages={"out": 0.5 - 0.5j},
+                branch_currents={"I(V1)": -0.001 + 0.001j},
+            )
+        ]
+    )
+
+    assert format_ac_table(result) == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "0\t1.000000e+03\tI(V1)\t-1.000000e-03\t1.000000e-03\t1.414214e-03\t1.350000e+02\n"
+    )
+
+
+def test_ac_sweep_probe_measurements_execute_parsed_cards() -> None:
+    result = AcResult(
+        points=[
+            AcPoint(freq=10.0, node_voltages={"out": 1.0 + 0.0j}),
+            AcPoint(freq=100.0, node_voltages={"out": 0.0 + 2.0j}),
+            AcPoint(freq=1000.0, node_voltages={"out": 0.0 + 0.5j}),
+        ]
+    )
+
+    peak = measure_ac_sweep_probe(
+        result,
+        "out_peak",
+        "V(out)",
+        "max",
+        from_frequency=10.0,
+        to_frequency=100.0,
+    )
+    average = measure_ac_sweep_probe(result, "out_avg", "V(out)", "avg")
+
+    assert peak.value == pytest.approx(2.0)
+    assert peak.analysis == "ac"
+    assert average.value == pytest.approx(1.1666666666666667)
+    assert format_measurement_table([peak, average]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_peak\tac\tV(out)\tmax\t1.000000e+01\t1.000000e+02\t2.000000e+00\n"
+        "out_avg\tac\tV(out)\tavg\t\t\t1.166667e+00\n"
+    )
+
+    measurements = measure_ac_sweep_deck(
+        result,
+        """
+.measure ac out_swing PP V(out) FROM=10 TO=1000
+.meas ac out_final FINAL V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n"
+        "out_final\tac\tV(out)\tlast\t\t\t5.000000e-01\n"
+    )
+
+
 # ---- PulseWaveform unit tests -----------------------------------------------
 
 
@@ -5434,7 +9648,66 @@ def test_dc_op_convergence_aids_false_still_converges_linear() -> None:
     ])
     result = dc_op(c, convergence_aids=False)
     assert result.converged
+    assert result.convergence_aid == "newton"
     assert result.node_voltages["a"] == pytest.approx(10.0)
+
+
+def test_dc_op_reports_no_convergence_aid_when_disabled_solve_fails() -> None:
+    """dc_op(convergence_aids=False) reports that no fallback aid converged."""
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = dc_op(c, max_iterations=1, convergence_aids=False)
+    assert not result.converged
+    assert result.convergence_aid == "none"
+
+
+def test_dc_op_newton_step_limit_reports_damped_nonlinear_step() -> None:
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+
+    result = dc_op(
+        c,
+        max_iterations=1,
+        convergence_aids=False,
+        newton_step_limit=0.25,
+    )
+
+    assert not result.converged
+    assert result.convergence_aid == "none"
+    assert result.diagnostics.newton_step_limit == pytest.approx(0.25)
+    assert result.diagnostics.limited_newton_steps == 1
+    assert 0.0 < result.diagnostics.minimum_damping_factor < 1.0
+    assert result.diagnostics.max_delta == pytest.approx(0.25)
+    assert max(abs(value) for value in result.node_voltages.values()) <= 0.25 + 1e-12
+
+
+def test_dc_op_rejects_invalid_newton_step_limit() -> None:
+    with pytest.raises(ValueError, match="newton_step_limit must be finite and positive"):
+        dc_op(Circuit(), newton_step_limit=0.0)
+
+
+def test_dc_op_pseudo_transient_recovers_after_earlier_aids_fail() -> None:
+    """Pseudo-transient continuation is the final DC fallback aid."""
+    c = Circuit([
+        VoltageSource("Vs", "in", "0", 10.0),
+        Diode("D1", anode="in", cathode="out", Is=1e-15, Vt=0.02585),
+        Resistor("Rload", "out", "0", 100.0),
+    ])
+    result = dc_op(
+        c,
+        max_iterations=1,
+        pseudo_transient_max_iterations=500,
+        pseudo_transient_steps=40,
+    )
+    assert result.converged
+    assert result.convergence_aid == "pseudo_transient"
+    assert 0.0 < result.node_voltages["out"] < 10.0
 
 
 # ---- _dc_gmin_step ---------------------------------------------------------
@@ -5618,6 +9891,7 @@ def test_dc_op_iterations_field_is_populated() -> None:
     ])
     result = dc_op(c)
     assert result.converged
+    assert result.convergence_aid == "newton"
     assert result.iterations >= 1
 
 
@@ -5693,6 +9967,13 @@ def test_dc_corners_runs_named_parameter_overrides() -> None:
     assert isinstance(result, CornerSweepResult)
     voltages = [point.result.node_voltages["out"] for point in result.points]
     assert voltages == pytest.approx([5.0, 10.0 / 3.0, 6.0, -5.0])
+    assert format_corner_dc_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tV(out)\tI(Vin)\n"
+        "nominal\t0\t5.000000e+00\t-5.000000e-03\n"
+        "rbot-fast\t1\t3.333333e+00\t-6.666667e-03\n"
+        "vin-high\t2\t6.000000e+00\t-6.000000e-03\n"
+        "vin-inverted\t3\t-5.000000e+00\t5.000000e-03\n"
+    )
 
 
 def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
@@ -5720,6 +10001,15 @@ def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
     assert [point.source_value for point in result.points[0].result.points] == pytest.approx([0.0, 5.0, 10.0])
     assert [point.node_voltages["out"] for point in result.points[0].result.points] == pytest.approx([0.0, 2.5, 5.0])
     assert [point.node_voltages["out"] for point in result.points[1].result.points] == pytest.approx([0.0, 5.0 / 3.0, 10.0 / 3.0])
+    assert format_corner_dc_sweep_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\n"
+        "nominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "nominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+        "nominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "rbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "rbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\n"
+        "rbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\n"
+    )
 
 
 def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
@@ -5750,6 +10040,13 @@ def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
     fast_out = result.points[1].result.points[0].node_voltages["out"]
     assert abs(nominal_out) == pytest.approx(1.0 / math.sqrt(2.0))
     assert abs(fast_out) == pytest.approx(1.0 / math.sqrt(1.25))
+    assert format_corner_ac_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "nominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "nominal\t0\t1.591549e+02\tI(Vin)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n"
+        "r-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\n"
+        "r-fast\t0\t1.591549e+02\tI(Vin)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\n"
+    )
 
 
 def test_tf_corners_runs_transfer_function_per_corner() -> None:
@@ -5776,3 +10073,473 @@ def test_tf_corners_runs_transfer_function_per_corner() -> None:
     assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast", "rbot-slow"]
     assert [point.result.gain for point in result.points] == pytest.approx([0.5, 1.0 / 3.0, 2.0 / 3.0])
     assert [point.result.input_impedance for point in result.points] == pytest.approx([2000.0, 1500.0, 3000.0])
+    assert format_corner_tf_table(result) == (
+        "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\n"
+        "nominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+        "rbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\n"
+        "rbot-slow\t6.666667e-01\t3.000000e+03\t6.666667e+02\n"
+    )
+
+
+def test_transient_corners_runs_waveforms_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("V1", "vin", "0", 10.0),
+        Resistor("R1", "vin", "mid", 1000.0),
+        Resistor("R2", "mid", "0", 1000.0),
+    ])
+
+    result = transient_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r2-high", (CornerOverride("R2", "resistance", 2000.0),)),
+        ],
+        t_step=1.0e-3,
+        t_stop=2.0e-3,
+    )
+
+    assert isinstance(result, CornerTransientResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r2-high"]
+    assert [point.points[-1].node_voltages["mid"] for point in result.points] == pytest.approx([5.0, 20.0 / 3.0])
+    assert format_corner_transient_table(result, ["V(vin)", "V(mid)", "I(V1)"]) == (
+        "Corner\tIndex\tTime\tV(vin)\tV(mid)\tI(V1)\n"
+        "nominal\t0\t0.000000e+00\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "nominal\t1\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "nominal\t2\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "r2-high\t0\t0.000000e+00\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+        "r2-high\t1\t1.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+        "r2-high\t2\t2.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+    )
+
+
+def test_transient_adaptive_corners_runs_waveforms_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("V1", "vin", "0", 1.0),
+        Resistor("R1", "vin", "out", 1000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = transient_adaptive_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r1-high", (CornerOverride("R1", "resistance", 2000.0),)),
+        ],
+        t_step=1.0e-3,
+        t_stop=2.0e-3,
+        method="trap",
+        tol_lte=1.0,
+        min_step=1.0e-3,
+        max_step=1.0e-3,
+    )
+
+    assert isinstance(result, CornerAdaptiveTransientResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r1-high"]
+    assert [point.result.points[-1].node_voltages["out"] for point in result.points] == pytest.approx([8.8888889e-1, 6.4e-1])
+    assert format_corner_adaptive_transient_table(result, ["V(vin)", "V(out)", "I(V1)"]) == (
+        "Corner\tMethod\tStepsRejected\tConverged\tIndex\tTime\tV(vin)\tV(out)\tI(V1)\n"
+        "nominal\ttrap\t0\ttrue\t0\t0.000000e+00\t1.000000e+00\t0.000000e+00\t-1.000000e-03\n"
+        "nominal\ttrap\t0\ttrue\t1\t1.000000e-03\t1.000000e+00\t6.666667e-01\t-3.333333e-04\n"
+        "nominal\ttrap\t0\ttrue\t2\t2.000000e-03\t1.000000e+00\t8.888889e-01\t-1.111111e-04\n"
+        "r1-high\ttrap\t0\ttrue\t0\t0.000000e+00\t1.000000e+00\t0.000000e+00\t-5.000000e-04\n"
+        "r1-high\ttrap\t0\ttrue\t1\t1.000000e-03\t1.000000e+00\t4.000000e-01\t-3.000000e-04\n"
+        "r1-high\ttrap\t0\ttrue\t2\t2.000000e-03\t1.000000e+00\t6.400000e-01\t-1.800000e-04\n"
+    )
+
+
+def test_mc_dc_corners_runs_trials_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 10.0),
+        Resistor("Rtop", "in", "mid", 1000.0),
+        Resistor("Rbot", "mid", "0", 1000.0),
+    ])
+
+    nominal = mc_dc(c, "mid", n_trials=2, tolerance=0.0, seed=7)
+    result = mc_dc_corners(
+        c,
+        "mid",
+        2,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+        ],
+        tolerance=0.0,
+        seed=7,
+    )
+
+    assert isinstance(result, CornerMcResult)
+    assert result.output_node == "mid"
+    assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast"]
+    assert [point.result.mean for point in result.points] == pytest.approx([5.0, 10.0 / 3.0])
+    assert format_mc_table(nominal) == (
+        "Trial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n"
+        "0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+        "1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+    )
+    assert format_corner_mc_table(result) == (
+        "Corner\tTrial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n"
+        "nominal\t0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+        "nominal\t1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+        "rbot-fast\t0\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n"
+        "rbot-fast\t1\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n"
+    )
+
+
+def test_sens_dc_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 10.0),
+        Resistor("Rtop", "vin", "out", 1000.0),
+        Resistor("Rbot", "out", "0", 1000.0),
+    ])
+
+    nominal = sens_dc(c, "out")
+    result = sens_dc_corners(
+        c,
+        "out",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerSensResult)
+    assert result.output_node == "out"
+    assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast"]
+    assert [point.result.nominal_voltage for point in result.points] == pytest.approx(
+        [5.0, 10.0 / 3.0]
+    )
+    assert format_sens_table(nominal).splitlines()[0] == (
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\t"
+        "Sensitivity\tRelativeSensitivity"
+    )
+    corner_table = format_corner_sens_table(result)
+    assert corner_table.splitlines()[0] == (
+        "Corner\tOutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\t"
+        "Sensitivity\tRelativeSensitivity"
+    )
+    assert "nominal\tout\t5.000000e+00\tVin\tvoltage\t1.000000e+01" in corner_table
+    assert "rbot-fast\tout\t3.333333e+00\tVin\tvoltage\t1.000000e+01" in corner_table
+
+
+def test_noise_ac_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        CurrentSource("Iin", "0", "out", 0.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+
+    nominal = noise_ac(c, "out", "Iin", freqs=[1000.0], temperature=300.0)
+    result = noise_ac_corners(
+        c,
+        "out",
+        "Iin",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rload-high", (CornerOverride("Rload", "resistance", 2000.0),)),
+        ],
+        freqs=[1000.0],
+        temperature=300.0,
+    )
+
+    assert isinstance(result, CornerNoiseResult)
+    assert result.output_node == "out"
+    assert result.input_source == "Iin"
+    assert [point.corner_name for point in result.points] == ["nominal", "rload-high"]
+    assert [point.result.points[0].output_psd for point in result.points] == pytest.approx(
+        [1.6567788e-17, 3.3135576e-17]
+    )
+    assert format_noise_table(nominal) == (
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+        "0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\t"
+        "Rload\tthermal\t1.656779e-23\t1.656779e-17\n"
+    )
+    assert format_corner_noise_table(result) == (
+        "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+        "nominal\t0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\t"
+        "Rload\tthermal\t1.656779e-23\t1.656779e-17\n"
+        "rload-high\t0\t1.000000e+03\tout\tIin\t3.313558e-17\t8.283894e-24\t"
+        "Rload\tthermal\t8.283894e-24\t3.313558e-17\n"
+    )
+
+
+def test_s_parameters_corners_runs_two_port_extraction_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("P1", "p1", "0", 0.0),
+        VoltageSource("P2", "p2", "0", 0.0),
+        Resistor("Rseries", "p1", "p2", 50.0),
+    ])
+
+    nominal = s_parameters(
+        c,
+        port1_source="P1",
+        port2_source="P2",
+        frequencies=[1.0e6],
+        reference_impedance=50.0,
+    )
+    result = s_parameters_corners(
+        c,
+        port1_source="P1",
+        port2_source="P2",
+        frequencies=[1.0e6],
+        reference_impedance=50.0,
+        corners=[
+            CornerSpec("nominal"),
+            CornerSpec("series-high", (CornerOverride("Rseries", "resistance", 100.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerSParameterResult)
+    assert result.port1_source == "P1"
+    assert result.port2_source == "P2"
+    assert [point.corner_name for point in result.points] == ["nominal", "series-high"]
+    assert result.points[0].result.points[0].s21.real == pytest.approx(2.0 / 3.0)
+    assert result.points[1].result.points[0].s21.real == pytest.approx(0.5)
+    assert format_s_parameter_table(nominal) == (
+        "Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+        "0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+    )
+    assert format_corner_s_parameter_table(result) == (
+        "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_digital_bridge_builds_sources_schedule_and_vcd_output() -> None:
+    streams = [
+        DigitalEventStream(
+            "clk",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.0e-9, "low"),
+            ],
+        ),
+        DigitalEventStream(
+            "enable",
+            [
+                DigitalEvent(0.25e-9, "low"),
+                DigitalEvent(0.75e-9, "high"),
+            ],
+        ),
+    ]
+    levels = DigitalLogicLevels.cmos_1v8(0.25e-9)
+
+    waveform = digital_events_to_pwl_waveform(streams[0].events, levels)
+    source = digital_events_to_voltage_source("Vclk", "clk", "0", streams[0].events, levels)
+    sources = digital_event_streams_to_voltage_sources(streams, "0", levels)
+    schedule = digital_event_streams_to_bridge_schedule(streams, levels)
+
+    expected_points = (
+        (0.0, 0.0),
+        (0.5e-9, 0.0),
+        (0.75e-9, 1.8),
+        (1.0e-9, 1.8),
+        (1.25e-9, 0.0),
+    )
+    assert len(waveform.points) == len(expected_points)
+    for point, expected in zip(waveform.points, expected_points, strict=True):
+        assert point == pytest.approx(expected)
+    assert source.name == "Vclk"
+    assert [source.name for source in sources] == ["Vclk", "Venable"]
+    assert format_digital_bridge_schedule_table(schedule) == (
+        "Index\tTime\tStopTime\n"
+        "0\t0.000000e+00\t1.250000e-09\n"
+        "1\t2.500000e-10\t1.250000e-09\n"
+        "2\t5.000000e-10\t1.250000e-09\n"
+        "3\t7.500000e-10\t1.250000e-09\n"
+        "4\t1.000000e-09\t1.250000e-09\n"
+        "5\t1.250000e-09\t1.250000e-09\n"
+    )
+    assert format_digital_event_stream_vcd(streams) == (
+        "$version coding-adventures spice-engine mixed-signal bridge $end\n"
+        "$timescale 1ps $end\n"
+        "$scope module spice_bridge $end\n"
+        "$var wire 1 s0 clk $end\n"
+        "$var wire 1 s1 enable $end\n"
+        "$upscope $end\n"
+        "$enddefinitions $end\n"
+        "$dumpvars\n"
+        "0s0\n"
+        "0s1\n"
+        "$end\n"
+        "#0\n"
+        "0s0\n"
+        "#250\n"
+        "0s1\n"
+        "#500\n"
+        "1s0\n"
+        "#750\n"
+        "1s1\n"
+        "#1000\n"
+        "0s0\n"
+    )
+
+
+def test_transient_probe_samples_back_to_digital_streams() -> None:
+    levels = DigitalLogicLevels.cmos_1v8(0.25e-9)
+    events = [
+        DigitalEvent(0.0, "low"),
+        DigitalEvent(0.5e-9, "high"),
+        DigitalEvent(1.25e-9, "low"),
+    ]
+    c = Circuit([
+        digital_events_to_voltage_source("Vdin", "din", "0", events, levels),
+        Resistor("Rload", "din", "0", 1000.0),
+    ])
+
+    points = transient(c, t_step=0.25e-9, t_stop=1.5e-9).points
+    sampled = sample_transient_probe_as_digital_events(
+        points,
+        "V(din)",
+        DigitalThresholds.cmos_1v8(),
+    )
+    streams = sample_transient_probes_as_digital_event_streams(
+        points,
+        [("din", "V(din)")],
+        DigitalThresholds.cmos_1v8(),
+    )
+
+    assert format_digital_event_table(sampled) == (
+        "Index\tTime\tState\n"
+        "0\t2.500000e-10\tlow\n"
+        "1\t7.500000e-10\thigh\n"
+        "2\t1.500000e-09\tlow\n"
+    )
+    assert format_digital_event_stream_table(streams) == (
+        "Signal\tIndex\tTime\tState\n"
+        "din\t0\t2.500000e-10\tlow\n"
+        "din\t1\t7.500000e-10\thigh\n"
+        "din\t2\t1.500000e-09\tlow\n"
+    )
+
+
+def test_transient_bridge_runs_digital_input_and_corner_outputs() -> None:
+    input_streams = [
+        DigitalEventStream(
+            "din",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.25e-9, "low"),
+            ],
+        )
+    ]
+    c = Circuit([Resistor("Rload", "din", "0", 1000.0)])
+
+    result = transient_with_digital_event_streams(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+    )
+    corner_result = transient_with_digital_event_streams_corners(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        [CornerSpec("nominal"), CornerSpec("load-high", (CornerOverride("Rload", "resistance", 2000.0),))],
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+    )
+
+    assert format_digital_event_stream_table(result.output_streams) == (
+        "Signal\tIndex\tTime\tState\n"
+        "dout\t0\t2.500000e-10\tlow\n"
+        "dout\t1\t7.500000e-10\thigh\n"
+        "dout\t2\t1.500000e-09\tlow\n"
+    )
+    assert format_corner_digital_event_stream_table(corner_result) == (
+        "Corner\tSignal\tIndex\tTime\tState\n"
+        "nominal\tdout\t0\t2.500000e-10\tlow\n"
+        "nominal\tdout\t1\t7.500000e-10\thigh\n"
+        "nominal\tdout\t2\t1.500000e-09\tlow\n"
+        "load-high\tdout\t0\t2.500000e-10\tlow\n"
+        "load-high\tdout\t1\t7.500000e-10\thigh\n"
+        "load-high\tdout\t2\t1.500000e-09\tlow\n"
+    )
+
+
+def test_adaptive_transient_bridge_formats_metadata_and_corner_outputs() -> None:
+    input_streams = [
+        DigitalEventStream(
+            "din",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.25e-9, "low"),
+            ],
+        )
+    ]
+    c = Circuit([Resistor("Rload", "din", "0", 1000.0)])
+
+    result = transient_adaptive_with_digital_event_streams(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+        method="trap",
+        tol_lte=1.0,
+        min_step=0.25e-9,
+        max_step=0.25e-9,
+    )
+    corner_result = transient_adaptive_with_digital_event_streams_corners(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        [CornerSpec("nominal")],
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+        method="trap",
+        tol_lte=1.0,
+        min_step=0.25e-9,
+        max_step=0.25e-9,
+    )
+
+    assert format_adaptive_digital_event_stream_table(result) == (
+        "Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n"
+        "trap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+        "trap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n"
+        "trap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
+    )
+    assert format_corner_adaptive_digital_event_stream_table(corner_result) == (
+        "Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n"
+        "nominal\ttrap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+        "nominal\ttrap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n"
+        "nominal\ttrap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
+    )

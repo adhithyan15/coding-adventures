@@ -1,0 +1,345 @@
+{
+  "description": "Rung-6b clinical MANAGEMENT as a dose-feasibility decision \u2014 the therapy half of the clinical/MLE bridge, the step past rung-6's differential (which diagnosis) to WHICH THERAPY under the patient's chart. Each item renders a management decision as a scalar constraint program over the drug's dose: it must clear a therapeutic minimum and stay under every ceiling (efficacy/toxicity maximum plus an organ-adjusted cap from the chart \u2014 renal, hepatic, age, weight, blood-pressure, or potassium safety). The gold ADJ program declares `symbol dose : scalar`, one `constrain` per bound, and `check`; the ENGINE intersects the constraints (QF_LRA linear feasibility) and returns feasible or infeasible, read by the existing check_outcome extractor \u2014 no harness or engine change. The reasoning and the anchoring trap: when an organ-adjusted cap falls BELOW the therapeutic minimum the regimen is INFEASIBLE (the drug cannot be dosed safely AND effectively for this patient, so therapy must be switched); a clinician who checks only whether the therapeutic minimum is reachable, ignoring the chart cap, wrongly calls it feasible. Twenty scenarios across antimicrobials, anticoagulants, analgesics, antiarrhythmics, antiepileptics, endocrine, and oncologic therapy; every numeric bound is stated verbatim in the stem (no-result-literals gate holds); options are the distinct constraint outcomes (feasible / infeasible / unbounded / optimal / unknown). Engine returns the correct feasibility 20/20 in cached mode, zero wrong.",
+  "items": [
+    {
+      "id": "r6b-01",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with MRSA bacteremia needs vancomycin. For vancomycin, the safe-and-effective dose (in mg per kg per day) must satisfy: the therapeutic trough requires at least 15; the toxicity ceiling caps it at 20; the maximum per-dose limit is 45. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 15\nconstrain dose <= 20\nconstrain dose <= 45\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-02",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with gram-negative sepsis and acute kidney injury needs gentamicin. For gentamicin, the safe-and-effective dose (in mg per kg per day) must satisfy: the effective peak requires at least 5; the renal-adjusted cap allows at most 3. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 5\nconstrain dose <= 3\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-03",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient needs therapeutic enoxaparin. For enoxaparin, the safe-and-effective dose (in mg per kg per day) must satisfy: the anti-Xa target requires at least 1; the bleeding-risk ceiling caps it at 2. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 1\nconstrain dose <= 2\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-04",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with cirrhosis needs acetaminophen for pain. For acetaminophen, the safe-and-effective dose (in mg per kg per day) must satisfy: adequate analgesia requires at least 3; the hepatic-impairment cap allows at most 2. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 3\nconstrain dose <= 2\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-05",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with type 2 diabetes and normal renal function needs metformin. For metformin, the safe-and-effective dose (in mg per kg per day) must satisfy: the glycemic-control minimum is 10; the GI-tolerability ceiling is 25. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 10\nconstrain dose <= 25\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-06",
+      "qtype": "clinical_management_feasibility",
+      "stem": "An elderly patient with reduced renal clearance needs digoxin. For digoxin, the safe-and-effective dose (in mg per kg per day) must satisfy: the rate-control minimum requires at least 8; the age-and-renal cap allows at most 5. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 8\nconstrain dose <= 5\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-07",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with bipolar disorder needs lithium. For lithium, the safe-and-effective dose (in mg per kg per day) must satisfy: the therapeutic level requires at least 6; the toxicity ceiling caps it at 12. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 6\nconstrain dose <= 12\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-08",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with renal impairment needs aminophylline. For aminophylline, the safe-and-effective dose (in mg per kg per day) must satisfy: the bronchodilation minimum is 10; the renal-adjusted cap allows at most 8. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 10\nconstrain dose <= 8\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-09",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with community-acquired pneumonia needs ceftriaxone. For ceftriaxone, the safe-and-effective dose (in mg per kg per day) must satisfy: the therapeutic minimum is 20; the maximum daily dose is 80. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 20\nconstrain dose <= 80\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-10",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with gout and chronic kidney disease needs colchicine. For colchicine, the safe-and-effective dose (in mg per kg per day) must satisfy: the anti-inflammatory minimum requires at least 4; the renal cap allows at most 2. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 4\nconstrain dose <= 2\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-11",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient needs a therapeutic heparin infusion. For heparin, the safe-and-effective dose (in mg per kg per day) must satisfy: the anticoagulation target requires at least 12; the bleeding-risk ceiling is 30. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 12\nconstrain dose <= 30\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-12",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with severe respiratory depression needs cautious morphine. For morphine, the safe-and-effective dose (in mg per kg per day) must satisfy: adequate analgesia requires at least 6; the respiratory-safety cap allows at most 4. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 6\nconstrain dose <= 4\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-13",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with status epilepticus needs phenytoin. For phenytoin, the safe-and-effective dose (in mg per kg per day) must satisfy: the therapeutic level requires at least 10; the toxicity ceiling caps it at 20. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 10\nconstrain dose <= 20\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-14",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A cystic fibrosis patient with reduced renal function needs tobramycin. For tobramycin, the safe-and-effective dose (in mg per kg per day) must satisfy: the bactericidal peak requires at least 9; the renal-adjusted cap allows at most 6. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 9\nconstrain dose <= 6\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-15",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient needs warfarin titrated to target INR. For warfarin, the safe-and-effective dose (in mg per kg per day) must satisfy: the anticoagulation minimum is 2; the bleeding-risk ceiling is 10. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 2\nconstrain dose <= 10\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-16",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with decompensated heart failure and hypotension needs cautious metoprolol. For metoprolol, the safe-and-effective dose (in mg per kg per day) must satisfy: the rate-control minimum requires at least 50; the blood-pressure-safety cap allows at most 25. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 50\nconstrain dose <= 25\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-17",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A child with acute otitis media needs weight-based amoxicillin. For amoxicillin, the safe-and-effective dose (in mg per kg per day) must satisfy: the high-dose minimum is 40; the maximum is 90. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 40\nconstrain dose <= 90\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-18",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with renal impairment needs methotrexate. For methotrexate, the safe-and-effective dose (in mg per kg per day) must satisfy: the antineoplastic minimum requires at least 15; the renal cap allows at most 7. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 15\nconstrain dose <= 7\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r6b-19",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with hypothyroidism needs levothyroxine. For levothyroxine, the safe-and-effective dose (in mg per kg per day) must satisfy: the replacement minimum is 75; the over-replacement ceiling is 150. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 75\nconstrain dose <= 150\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r6b-20",
+      "qtype": "clinical_management_feasibility",
+      "stem": "A patient with heart failure and hyperkalemia needs cautious spironolactone. For spironolactone, the safe-and-effective dose (in mg per kg per day) must satisfy: the diuretic minimum requires at least 25; the potassium-safety cap allows at most 12. Is there a single dose that satisfies every one of these constraints at once (so the regimen is feasible), or do they conflict (infeasible, meaning therapy must be changed)?",
+      "program": "symbol dose : scalar\nconstrain dose >= 25\nconstrain dose <= 12\ncheck\n",
+      "answer_from": {
+        "type": "check_outcome"
+      },
+      "options": {
+        "A": "feasible",
+        "B": "infeasible",
+        "C": "unbounded",
+        "D": "optimal",
+        "E": "unknown"
+      },
+      "gold_letter": "B"
+    }
+  ]
+}

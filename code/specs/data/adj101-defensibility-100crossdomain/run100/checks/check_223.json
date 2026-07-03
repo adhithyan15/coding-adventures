@@ -1,0 +1,8 @@
+{
+ "check_id": 223,
+ "idx": 91,
+ "slot": "has_prior_written_approval",
+ "claimed_value": false,
+ "scenario": "A PI was awarded $200,000 for the budget period and ended the period with $40,000 unspent. The PI wishes to carry the balance forward and has obtained no approvals.",
+ "cited_span": "has obtained no approvals"
+}

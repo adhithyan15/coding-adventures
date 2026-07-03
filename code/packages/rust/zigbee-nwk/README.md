@@ -16,6 +16,13 @@ This crate starts D25 at the NWK byte boundary:
 - topology summaries for neighbor roles, relationships, identity coverage,
   link metric extrema, freshness, depth, router candidates, and route health
   supervision
+- routing readiness summaries that project neighbor freshness, active route
+  coverage, route-discovery needs, and supervision flags for mesh forwarding
+- route-discovery command summaries for request/reply/status/record traffic,
+  IEEE-address coverage, multicast and many-to-one flags, route records, and
+  repair-needed status signals
+- route-repair readiness summaries that combine routing readiness with
+  route-discovery command telemetry and blocker checks
 - typed NWK route-discovery command payloads:
   - route request
   - route reply

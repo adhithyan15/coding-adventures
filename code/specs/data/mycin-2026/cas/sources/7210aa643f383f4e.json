@@ -1,0 +1,39 @@
+{
+  "hash": "7210aa643f383f4e",
+  "source_id": "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm",
+  "title": "Meningococcal Disease and College Students — Recommendations of the Advisory Committee on Immunization Practices (ACIP), MMWR Recomm Rep 2000;49(RR-7)",
+  "resolved_url": "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Following control of Haemophilus influenzae type b, N. meningitidis is the leading cause of bacterial meningitis in U.S. children and young adults.",
+      "byte_quote": "As a result of the control of Haemophilus influenzae type b infections, N. meningitidis has become the leading cause of bacterial meningitis in children and young adults in the United States"
+    },
+    {
+      "id": "c2",
+      "text": "During 1994-1998, about two thirds of meningococcal cases in persons aged 18-23 years were due to serogroups C, Y, or W135.",
+      "byte_quote": "During 1994--1998, approximately two thirds of cases among persons aged 18--23 years were caused\nby serogroups C, Y, or W135"
+    },
+    {
+      "id": "c3",
+      "text": "Among college undergraduate isolates with serogroup data: 49% serogroup C, 24% serogroup B, 21% serogroup Y, 1% serogroup W-135.",
+      "byte_quote": "35 (49%)\nwere serogroup C, 17 (24%) were serogroup B, 15 (21%) were serogroup Y, and one (1%)\nwas serogroup W-135"
+    },
+    {
+      "id": "c4",
+      "text": "Host/exposure risk factor (crowding): meningococcal disease occurred 9-23 times more often in students living in dormitories than other accommodations.",
+      "byte_quote": "cases of meningococcal disease occurred 9--23 times\nmore frequently in students residing in dormitories than in those residing in other types"
+    },
+    {
+      "id": "c5",
+      "text": "Freshmen living in dormitories were at higher risk; white race, radiator heat, and recent upper respiratory infection were also associated with meningococcal disease.",
+      "byte_quote": "freshmen living in dormitories were at higher risk for meningococcal disease. In\naddition, white race, radiator heat, and recent upper respiratory infection were"
+    },
+    {
+      "id": "c6",
+      "text": "Meningococcal disease rate was higher among freshmen in dormitories than students living off-campus (3.2 vs 0.96 per 100,000).",
+      "byte_quote": "dormitories compared with students living off-campus (3.2/100,000 vs. 0.96/100,000, p=0.05)"
+    }
+  ],
+  "cites": []
+}

@@ -1,0 +1,8 @@
+{
+ "idx": 76,
+ "policy": "All imported steel products are subject to a standard 8% duty. However, notwithstanding the standard rate, steel products covered by an active anti-dumping order from the named exporting country are subject to a 25% anti-dumping duty in place of the standard duty.",
+ "scenario": "Pinemont Construction imports steel reinforcing bars from the country of Veksia. Veksian steel rebar is covered by an active anti-dumping order. The declared customs value is $100,000.",
+ "question": "What duty rate applies to Pinemont's steel rebar?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "25%"
+}

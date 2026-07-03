@@ -159,11 +159,28 @@ class Backend(ABC):
         table: str,
         columns: list[ColumnDef],
         if_not_exists: bool,
+        *,
+        strict: bool = False,
     ) -> None:
         """Create a new table.
 
         If ``if_not_exists`` is True and the table already exists, this is a
         no-op. Otherwise, raise :class:`TableAlreadyExists`.
+
+        When ``strict`` is True, the table is a SQLite STRICT table:
+
+        * Every column's declared type must be one of ``INT``, ``INTEGER``,
+          ``REAL``, ``TEXT``, ``BLOB``, or ``ANY`` (case-insensitive).
+          Any other declared type causes a :class:`ConstraintViolation`
+          at CREATE TABLE time.
+        * Values inserted or updated must match the column's declared type.
+          ``NULL`` is always allowed unless the column is ``NOT NULL``.
+          ``ANY`` columns opt back into lenient typing for that column.
+
+        The ``strict`` parameter is keyword-only so existing call sites stay
+        valid and only opt in explicitly.  Backends that don't implement
+        strict typing should ignore the flag (lenient affinity matches
+        legacy SQLite behaviour).
         """
 
     @abstractmethod
@@ -183,6 +200,47 @@ class Backend(ABC):
         :class:`TableNotFound` if the table does not exist and
         :class:`ColumnAlreadyExists` if a column with that name already exists.
         """
+
+    def rename_table(self, old_name: str, new_name: str) -> None:
+        """Rename an existing table (``ALTER TABLE old RENAME TO new``).
+
+        Optional method — backends that don't implement it get a default
+        ``NotImplementedError``.  Raises :class:`TableNotFound` if
+        ``old_name`` doesn't exist or :class:`TableAlreadyExists` if
+        ``new_name`` already does.  Indexes on the table follow
+        automatically (their ``table`` field is rewritten).
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE RENAME TO"
+        )
+
+    def rename_column(self, table: str, old_name: str, new_name: str) -> None:
+        """Rename a column (``ALTER TABLE t RENAME [COLUMN] old TO new``).
+
+        Optional method.  Raises :class:`TableNotFound` if the table
+        doesn't exist, :class:`UnknownColumn` if ``old_name`` is not a
+        column of the table, or :class:`ColumnAlreadyExists` if
+        ``new_name`` already is.  Indexes referencing the column have
+        their ``columns`` lists rewritten to use the new name.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE RENAME COLUMN"
+        )
+
+    def drop_column(self, table: str, column_name: str) -> None:
+        """Drop a column (``ALTER TABLE t DROP [COLUMN] c``).
+
+        Optional method.  Raises :class:`TableNotFound` if the table
+        doesn't exist or :class:`UnknownColumn` if ``column_name`` is
+        not a column of the table.  Per SQLite, the column cannot be a
+        PRIMARY KEY column, cannot be referenced by an existing index,
+        and cannot be the only column in the table; backends should
+        raise an appropriate error in those cases.  All existing rows
+        lose their values for that column.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE DROP COLUMN"
+        )
 
     # --- Indexes -----------------------------------------------------------
 
@@ -431,6 +489,18 @@ class SchemaProvider(ABC):
     def columns(self, table: str) -> list[str]:
         """Return the column *names* of ``table`` (not full ColumnDefs)."""
 
+    def column_collation(self, table: str, column: str) -> str | None:
+        """Return the declared ``COLLATE name`` for a column, or ``None``.
+
+        Default implementation returns ``None`` for *every* column — minimal
+        :class:`SchemaProvider` implementations don't track collation.  Real
+        :class:`Backend`-backed providers override this to look up the
+        :class:`ColumnDef.collation` field on the underlying column metadata,
+        so that ``ORDER BY name`` against a column declared
+        ``name TEXT COLLATE NOCASE`` automatically sorts NOCASE.
+        """
+        return None
+
 
 class _BackendSchemaProvider(SchemaProvider):
     """Adapter: expose a Backend as a SchemaProvider.
@@ -446,6 +516,17 @@ class _BackendSchemaProvider(SchemaProvider):
 
     def columns(self, table: str) -> list[str]:
         return [col.name for col in self._backend.columns(table)]
+
+    def column_collation(self, table: str, column: str) -> str | None:
+        """Look up the declared collation for *table.column*, if any."""
+        try:
+            cols = self._backend.columns(table)
+        except Exception:  # noqa: BLE001 — unknown table → no collation info
+            return None
+        for col in cols:
+            if col.name == column:
+                return col.collation
+        return None
 
     def list_indexes(self, table: str) -> list[IndexDef]:
         """Proxy ``Backend.list_indexes`` filtered to *table*."""

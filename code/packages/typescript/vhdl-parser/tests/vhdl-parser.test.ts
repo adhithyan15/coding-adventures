@@ -825,3 +825,26 @@ describe("complex structures", () => {
     expect(archs).toHaveLength(2);
   });
 });
+
+// =============================================================================
+// GRAMMAR VERSION SELECTION
+// =============================================================================
+//
+// parseVhdl accepts an optional version param (default 2008).  These tests
+// cover every case in `loadVhdlGrammar`'s switch and the SUPPORTED_VERSIONS
+// guard.
+
+describe("grammar version selection", () => {
+  for (const version of ["1987", "1993", "2002", "2008", "2019"]) {
+    it(`accepts the ${version} grammar`, () => {
+      const ast = parseVhdl("entity foo is end entity foo;", version);
+      expect(ast).toBeDefined();
+    });
+  }
+
+  it("throws on an unknown version", () => {
+    expect(() => parseVhdl("entity foo is end;", "1980")).toThrow(
+      /Unknown VHDL version/,
+    );
+  });
+});

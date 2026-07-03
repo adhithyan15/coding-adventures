@@ -1,0 +1,7 @@
+{
+ "idx": 69,
+ "id": "EMP-10",
+ "scenario": "Grace worked 8 hours on a designated public holiday. Her regular rate is $25/hour. Grace is classified as 'essential operations.'",
+ "policy": "Employees who work on a designated public holiday earn holiday premium pay at double their regular rate, except for employees in the 'essential operations' classification, who instead receive a flat $300 holiday stipend and no premium multiplier.",
+ "question": "What holiday compensation is Grace entitled to for that day?"
+}

@@ -392,6 +392,12 @@ where
         self.expect_run_report(written.request_id, written.len)
     }
 
+    pub fn ping(&mut self) -> Result<(), ClientError> {
+        let written = self.session.ping_frame(&mut self.request)?;
+        self.exchange_checked(written.request_id, written.len, MessageType::PONG)?;
+        Ok(())
+    }
+
     pub fn reboot_to_bootloader(&mut self) -> Result<(), ClientError> {
         let written = self.session.bootloader_reboot_frame(&mut self.request)?;
         self.exchange_checked(
@@ -569,6 +575,8 @@ mod tests {
                 FakeEvent::SleepMs(250),
             ]
         );
+
+        client.ping().unwrap();
 
         let stop = client.stop().unwrap();
         assert_eq!(stop.status, RunStatus::Stopped);

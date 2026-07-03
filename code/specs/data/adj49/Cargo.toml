@@ -1,0 +1,15 @@
+[package]
+name = "adj49-ma-deal-demo"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ49 — M&A deal-completion demo. Answers the investment-banker objection: 'if I have to check it anyway, what's the point of AI?' by showing per-claim audit trail and decision-relevant kickback on real deal vignettes."
+publish = false
+
+[dependencies]
+adj-lang = { path = "../../../packages/rust/adj-lang" }
+logic-core = { path = "../../../packages/rust/logic-core" }
+logic-engine = { path = "../../../packages/rust/logic-engine" }
+
+[[bin]]
+name = "adj49"
+path = "src/main.rs"

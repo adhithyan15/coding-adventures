@@ -1,0 +1,41 @@
+% ============================================================================
+% immuno-recall.query.adj — a worked recall query over the immunology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER an immunology recall
+% question: it states no immune fact — it only `import`s the grounded library and
+% asks binding queries. The native adj-lang engine resolves each `?` against the
+% imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli immuno-recall.query.adj
+% ============================================================================
+
+import "immuno-edges.adj"
+
+? mediated_by(type_i_hypersensitivity, $Mediator)          % expect ige
+? mediated_by(type_iv_hypersensitivity, $Mediator)         % expect t_cells
+? associated_hla(ankylosing_spondylitis, $HLA)             % expect hla_b27
+? gene_defect(x_linked_agammaglobulinemia, $Gene)          % expect btk
+? deficiency_of(chronic_granulomatous_disease, $Component) % expect nadph_oxidase
+? deficiency_of(digeorge_syndrome, $Component)             % expect t_cells
+? gene_defect(digeorge_syndrome, $Gene)                    % expect chromosome_22q11_2_deletion
+? associated_hla(celiac_disease, $HLA)                 % expect hla_dq2 (expand)
+? mediated_by(type_iii_hypersensitivity, $Mediator)    % expect immune_complexes (expand)
+? mediated_by(type_ii_hypersensitivity, $Mediator)     % expect igg_igm_antibodies (expand)
+? gene_defect(x_linked_scid, $Gene)                    % expect il2rg (expand)
+? gene_defect(wiskott_aldrich_syndrome, $Gene)         % expect was (expand)
+? deficiency_of(hereditary_angioedema, $Component)     % expect c1_inhibitor (expand)
+? gene_defect(chediak_higashi_syndrome, $Gene)         % expect lyst (expand)
+? gene_defect(job_syndrome, $Gene)                     % expect stat3 (expand)
+% --- BATCH: HLA disease-associations + classic immunodeficiency genes ---
+? associated_hla(rheumatoid_arthritis, $HLA)           % expect hla_dr4 (expand)
+? associated_hla(multiple_sclerosis, $HLA)             % expect hla_dr2 (expand)
+? associated_hla(psoriasis, $HLA)                      % expect hla_cw6 (expand)
+? associated_hla(reactive_arthritis, $HLA)             % expect hla_b27 (expand)
+? associated_hla(behcet_disease, $HLA)                 % expect hla_b51 (expand)
+? associated_hla(type_1_diabetes_mellitus, $HLA)       % expect hla_dr4 (expand)
+? gene_defect(ataxia_telangiectasia, $Gene)            % expect atm (expand)
+? gene_defect(ipex_syndrome, $Gene)                    % expect foxp3 (expand)
+? gene_defect(cd40_ligand_deficiency, $Gene)           % expect cd40lg (recovered)
+? deficiency_of(terminal_complement_deficiency, $Component)  % expect c5_c9 (expand)

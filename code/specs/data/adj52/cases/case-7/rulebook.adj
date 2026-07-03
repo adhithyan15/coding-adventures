@@ -1,0 +1,259 @@
+% ============================================================================
+% ADJ52 case-7 derived rulebook (deriver subagent output).
+%
+% CLINICAL AREA (domain_key): splenomegaly_with_cytopenias
+%
+% Differential built from the IR alone (no answer given). The IR poses an
+% unresolved workup: a 45yo man with chronic HBV, MASSIVE splenomegaly
+% (22 cm / 16 cm below costal margin), pancytopenia, a small volume of ascites
+% and ankle edema, BUT a normal-sized/normal-contour liver, patent normal-
+% caliber portal vein, preserved synthetic function (normal albumin, bilirubin,
+% INR, ALT/AST), no portal-hypertensive stigmata, and a scant/non-diagnostic
+% marrow aspirate. The discriminating question: what unifies massive splenomegaly
+% + pancytopenia when the liver and portal system are normal?
+%
+% Candidate differential (recursed into subcategories):
+%   - splenic_marginal_zone_lymphoma  (indolent B-NHL; documented HBV link;
+%       classically MASQUERADES as cirrhotic hypersplenism)
+%   - hairy_cell_leukemia             (massive spleen + pancytopenia + DRY/scant
+%       marrow tap from reticulin fibrosis; monocytopenia is its signature)
+%   - primary_myelofibrosis           (massive spleen + pancytopenia + dry tap;
+%       needs teardrop cells / leukoerythroblastic smear)
+%   - decompensated_hbv_cirrhosis_with_hypersplenism  (the INITIAL working
+%       diagnosis — argued DOWN here by the discordant hepatic features)
+%   - chronic_visceral_infection      (visceral leishmaniasis / chronic malaria;
+%       infiltrative benign mimic of massive spleen + pancytopenia)
+%
+% NOTE: numeric/unit term-args in the IR were normalized to qualitative atoms to
+% satisfy the adj-lang IDENT grammar (no uppercase, no leading digit). Mapping:
+%   patient_age(45)->patient_age(over_40); spleen_long_axis(22cm) and
+%   palpable_spleen_tip(16cm...)->splenomegaly_magnitude(massive);
+%   hemoglobin/wbc/neutrophils/platelets -> lab(pancytopenia).
+%
+% CORRELATED EVIDENCE: the portal-hypertensive stigmata (absent spider naevi /
+% palmar erythema / asterixis / varices) and the preserved-synthesis labs
+% (normal albumin / bilirubin / INR / liver imaging) are each ONE syndrome with
+% ONE underlying cause; they are grouped under single % mechanism directives so
+% the combined LR fires ONCE (not once per finding -> avoids double counting).
+% ============================================================================
+
+% ===== PRIORS (base rates among adults presenting with massive splenomegaly) =====
+
+% rationale: in a chronic-HBV patient with massive spleen masquerading as
+% hypersplenism, SMZL is the lead infiltrative candidate; HBsAg+ in ~16-19% of SMZL.
+prior 0.22 for diagnosis(splenic_marginal_zone_lymphoma)
+  source "Nature Blood Cancer J 2017 bcj201728 (HBsAg+ in 16-19% of SMZL); PMC3299233 (SMZL masquerading as cirrhotic hypersplenism)" trust authoritative
+
+% rationale: HCL is a classic cause of massive splenomegaly + pancytopenia + dry tap.
+prior 0.14 for diagnosis(hairy_cell_leukemia)
+  source "StatPearls NBK499845 (HCL: splenomegaly, cytopenias, dry tap); PMC7819457 (massive spleen + pancytopenia)" trust authoritative
+
+% rationale: primary myelofibrosis is a leading myeloproliferative cause of
+% massive spleen + pancytopenia + dry tap, but usually shows a leukoerythroblastic smear.
+prior 0.14 for diagnosis(primary_myelofibrosis)
+  source "MSD Manual Primary Myelofibrosis; Pathology Outlines myeloproliferativemyelofibrosis" trust authoritative
+
+% rationale: the INITIAL working diagnosis; HBV is real and cirrhosis can cause
+% spleen + cytopenias, so it carries a meaningful prior before the discordant data.
+prior 0.20 for diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism)
+  source "IR f48 initial working diagnosis; Medscape 206208 splenomegaly differential (cirrhotic portal HTN)" trust authoritative
+
+% rationale: chronic visceral infection (leishmaniasis / malaria) is a recognized
+% benign cause of massive spleen + pancytopenia; lower prior without travel/fever data.
+prior 0.08 for diagnosis(chronic_visceral_infection)
+  source "Medscape 206208 splenomegaly differential (parasitic: malaria, leishmaniasis)" trust authoritative
+
+% ============================================================================
+% SHARED / CROSS-CUTTING FINDINGS
+% ============================================================================
+
+% rationale: massive splenomegaly (>=8 cm below costal margin / spleen >20 cm) is
+% the entry feature shared by the infiltrative/hematologic candidates.
+contributes 1.6 from splenomegaly_magnitude(massive) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC8908078 (massive splenomegaly = hematologic malignancy until proven otherwise)" trust authoritative
+contributes 1.6 from splenomegaly_magnitude(massive) to diagnosis(hairy_cell_leukemia)
+  source "PMC7819457 (massive splenomegaly in HCL)" trust authoritative
+contributes 1.6 from splenomegaly_magnitude(massive) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (massive splenomegaly is a hallmark)" trust authoritative
+contributes 1.4 from splenomegaly_magnitude(massive) to diagnosis(chronic_visceral_infection)
+  source "Medscape 206208 (massive spleen in chronic malaria/leishmaniasis)" trust authoritative
+% rationale: cirrhotic portal hypertension produces only moderate spleen; MASSIVE
+% enlargement is disproportionate and argues AGAINST cirrhosis (IR f51).
+contributes 0.45 from splenomegaly_magnitude(massive) to diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism)
+  source "IR f51 (splenic enlargement far greater than cirrhotic portal HTN); Medscape 206208" trust authoritative
+
+% rationale: pancytopenia is the shared cytopenic readout; in infiltrative/marrow
+% disease it reflects marrow replacement +/- splenic sequestration.
+contributes 1.5 from lab(pancytopenia) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "ASH Blood 2003;101:2464 (cytopenias in advanced SMZL)" trust authoritative
+contributes 1.5 from lab(pancytopenia) to diagnosis(hairy_cell_leukemia)
+  source "StatPearls NBK499845 (pancytopenia incl monocytopenia in HCL)" trust authoritative
+contributes 1.5 from lab(pancytopenia) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (pancytopenia a diagnostic clue)" trust authoritative
+contributes 1.4 from lab(pancytopenia) to diagnosis(chronic_visceral_infection)
+  source "Medscape 206208 (pancytopenia from hypersplenism in chronic visceral infection)" trust authoritative
+
+% rationale: a smear with NO overt blasts argues against acute leukemia and is
+% compatible with indolent lymphoma / chronic myeloproliferation (mild support).
+contributes 1.2 from peripheral_smear(no_overt_blasts) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "Pathology Outlines lymphomasplenicmzl (indolent; villous lymphocytes not blasts)" trust authoritative
+contributes 1.2 from peripheral_smear(no_overt_blasts) to diagnosis(hairy_cell_leukemia)
+  source "Pathology Outlines lymphomahcl (hairy cells, not blasts)" trust authoritative
+
+% ============================================================================
+% MECHANISM DIRECTIVES (correlated evidence -> ONE combined LR, fired once)
+% ============================================================================
+
+% mechanism intact_hepatic_synthesis for diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism) lr 0.25 : finding(synthetic_liver_function_preserved), lab(serum_albumin_normal), lab(total_bilirubin_normal), lab(inr_normal), imaging(liver_normal_size_and_contour)
+% rationale: normal albumin, bilirubin, INR and a normal-sized non-nodular liver
+% are ONE syndrome (preserved hepatocellular synthesis) -> single strong LR AGAINST
+% decompensated cirrhosis. Source: IR f33-f44, f49-f50.
+% source "IR f33,f34,f35,f39,f40,f44,f49,f50; PMC3299233 (preserved liver function should prompt search beyond cirrhosis)" trust authoritative
+
+% mechanism intact_hepatic_synthesis_smzl for diagnosis(splenic_marginal_zone_lymphoma) lr 1.8 : imaging(liver_normal_size_and_contour), finding(synthetic_liver_function_preserved)
+% rationale: a normal liver with massive spleen is exactly the SMZL-masquerading-as-
+% hypersplenism gestalt -> the same evidence that lowers cirrhosis RAISES SMZL once.
+% source "PMC3299233 (SMZL hidden for years behind a cirrhosis label; normal liver should redirect)" trust authoritative
+
+% mechanism portal_hypertension_absent for diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism) lr 0.4 : exam_negative(spider_naevi), exam_negative(palmar_erythema), exam_negative(asterixis), imaging(no_large_varices), imaging(portal_vein_patent_normal_caliber)
+% rationale: absent spider naevi / palmar erythema / asterixis / varices plus a
+% patent normal-caliber portal vein are correlated manifestations of ONE state
+% (no portal hypertension) -> single LR AGAINST cirrhotic portal hypertension.
+% source "IR f20,f21,f22,f46,f47; AASLD portal hypertension stigmata" trust authoritative
+
+% mechanism marrow_infiltration_dry_tap for diagnosis(splenic_marginal_zone_lymphoma) lr 1.5 : bone_marrow_result(scant_nondiagnostic_aspirate)
+% rationale: a scant / non-diagnostic aspirate is a forme-fruste DRY TAP from
+% marrow fibrosis or packed infiltration -> supports an infiltrative marrow process.
+% source "IR f52,f53; PMC3299233 (SMZL gives intrasinusoidal marrow infiltration); jdpo 2706 (aspirate fails in fibrosed/infiltrated marrow)" trust authoritative
+% mechanism marrow_infiltration_dry_tap_hcl for diagnosis(hairy_cell_leukemia) lr 2.2 : bone_marrow_result(scant_nondiagnostic_aspirate)
+% rationale: a DRY TAP is the signature aspirate result of HCL (reticulin fibrosis).
+% source "StatPearls NBK499845 (dry tap from marrow fibrosis is characteristic of HCL)" trust authoritative
+% mechanism marrow_infiltration_dry_tap_pmf for diagnosis(primary_myelofibrosis) lr 2.2 : bone_marrow_result(scant_nondiagnostic_aspirate)
+% rationale: dry tap from marrow fibrosis is a classic PMF aspiration finding.
+% source "MSD Manual PMF (aspiration often fails -> dry tap from fibrosis)" trust authoritative
+
+% ============================================================================
+% SPLENIC MARGINAL ZONE LYMPHOMA (lead candidate)
+% ============================================================================
+
+% rationale: chronic HBV is an established etiologic association of SMZL (antigenic
+% B-cell drive; HBsAg+ enriched in SMZL vs other B-NHL; remission after antivirals).
+contributes 2.2 from history(chronic_hepatitis_b) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "Nature Blood Cancer J 2017 bcj201728 (HBV association confirmed for SMZL); PubMed 25977147 (SMZL remission after HBV treatment)" trust authoritative
+
+% rationale: detectable HBsAg / HBV DNA documents the ongoing chronic infection
+% that drives the SMZL association.
+contributes 1.5 from lab(hbsag_positive) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC7236417 (HBsAg as etiologic factor in SMZL)" trust authoritative
+
+% rationale: massive spleen + cytopenias with a normal liver/portal system is the
+% textbook SMZL-masquerading-as-hypersplenism presentation.
+contributes 2.0 from discordant_feature(splenomegaly_disproportionate_to_portal_hypertension) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC3299233 (disproportionate massive spleen unmasks SMZL behind a hypersplenism label)" trust authoritative
+
+% rationale: SYNERGY — chronic HBV AND disproportionate massive spleen together is
+% the specific SMZL gestalt (each alone is weaker).
+interacts 2.0 when history(chronic_hepatitis_b) and discordant_feature(splenomegaly_disproportionate_to_portal_hypertension) for diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC3299233 + Nature bcj201728 (HBV-associated SMZL hidden behind hypersplenism)" trust empirical
+
+% ============================================================================
+% HAIRY CELL LEUKEMIA (strong runner-up)
+% ============================================================================
+
+% rationale: MONOCYTOPENIA is the discriminating hematologic signature of HCL.
+% The IR documents neutropenia but does NOT document monocytopenia -> the
+% discriminator is unresolved; resolving the differential leukocyte count moves HCL.
+contributes 2.6 from leukocyte_differential(monocytopenia_present) to diagnosis(hairy_cell_leukemia)
+  source "StatPearls NBK499845 (monocytopenia is characteristic of HCL); Pathology Outlines lymphomahcl" trust authoritative
+contributes 0.6 from leukocyte_differential(monocytes_preserved) to diagnosis(hairy_cell_leukemia)
+  source "StatPearls NBK499845 (preserved monocytes argues against classic HCL)" trust authoritative
+
+% rationale: HCL skews toward older patients; a 45yo man is plausible but not the
+% modal age (median ~55) -> mild neutral-to-slightly-against vs SMZL/PMF.
+contributes 0.9 from patient_age(over_40) to diagnosis(hairy_cell_leukemia)
+  source "StatPearls NBK499845 (HCL median age ~55, male predominance)" trust authoritative
+
+% ============================================================================
+% PRIMARY MYELOFIBROSIS (runner-up)
+% ============================================================================
+
+% rationale: the DISCRIMINATING PMF smear is leukoerythroblastic with TEARDROP
+% cells (dacrocytes). The IR smear shows 'no overt blasts' but does NOT report
+% teardrops / leukoerythroblastosis -> unresolved; resolving it moves PMF.
+contributes 3.0 from peripheral_smear(teardrop_cells_leukoerythroblastic) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (teardrop RBCs + leukoerythroblastosis); Pathology Outlines myeloproliferativemyelofibrosis" trust authoritative
+contributes 0.5 from peripheral_smear(no_teardrops_no_leukoerythroblastosis) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (absence of teardrop/leukoerythroblastic picture argues against PMF)" trust authoritative
+
+% rationale: a driver mutation (JAK2/CALR/MPL) is required-supporting for PMF.
+contributes 3.5 from molecular(jak2_or_calr_or_mpl_positive) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (JAK2 ~60%, CALR ~20%, MPL ~8%)" trust authoritative
+
+% ============================================================================
+% DECOMPENSATED HBV CIRRHOSIS WITH HYPERSPLENISM (the initial, contested framing)
+% ============================================================================
+
+% rationale: ascites + ankle edema were the features that prompted the cirrhosis
+% framing; they are real but non-specific (albumin is normal, so not hypoalbuminemic).
+contributes 1.3 from imaging(small_volume_ascites) to diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism)
+  source "IR f45; Medscape 206208 (ascites in portal hypertension)" trust authoritative
+
+% rationale: chronic HBV is the substrate the cirrhosis hypothesis leans on.
+contributes 1.4 from history(chronic_hepatitis_b) to diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism)
+  source "IR f8; AASLD HBV cirrhosis natural history" trust authoritative
+% (The intact_hepatic_synthesis and portal_hypertension_absent MECHANISMS above
+%  fire ONCE each strongly AGAINST this diagnosis.)
+
+% ============================================================================
+% CHRONIC VISCERAL INFECTION (benign infiltrative mimic)
+% ============================================================================
+
+% rationale: chronic HBV does not cause massive spleen, but a coexisting chronic
+% visceral infection could; the absence of documented fever/travel keeps it low.
+contributes 1.2 from lab(pancytopenia) to diagnosis(chronic_visceral_infection)
+  source "Medscape 206208 (pancytopenia with massive spleen in leishmaniasis/malaria)" trust authoritative
+
+% ============================================================================
+% NEXT STEP (what to do after a scant / non-diagnostic marrow ASPIRATE)
+% ============================================================================
+
+% rationale: a scant/non-diagnostic aspirate (dry-tap equivalent) mandates a
+% TREPHINE (core) biopsy with immunohistochemistry — it captures architecture,
+% fibrosis grade, and intrasinusoidal infiltration that aspirate cannot.
+prior 0.30 for next_step(bone_marrow_trephine_biopsy_with_immunophenotyping)
+  source "jdpo 2706 / PMC3894839 (trephine essential when aspirate nondiagnostic, esp. fibrosis/lymphoma); PMC3299233 (BM biopsy stages SMZL via intrasinusoidal pattern)" trust authoritative
+contributes 4.0 from bone_marrow_result(scant_nondiagnostic_aspirate) to next_step(bone_marrow_trephine_biopsy_with_immunophenotyping)
+  source "jdpo 2706 (aspirate fails in fibrosed/infiltrated marrow -> proceed to trephine)" trust authoritative
+contributes 2.0 from splenomegaly_magnitude(massive) to next_step(bone_marrow_trephine_biopsy_with_immunophenotyping)
+  source "PMC8908078 (massive spleen workup centres on marrow histology + immunophenotype)" trust authoritative
+
+% rationale: peripheral-blood flow cytometry is a high-yield, non-invasive first
+% line for SMZL/HCL — most cases show detectable clonal B-cells even without
+% lymphocytosis (CD11c/CD103 etc. discriminate HCL from SMZL).
+prior 0.22 for next_step(peripheral_blood_flow_cytometry)
+  source "Annals Lymphoma Mollejo (SMZL diagnosable by PB/marrow flow); Pathology Outlines lymphomahcl (flow defines HCL CD103/CD11c)" trust authoritative
+contributes 3.0 from lab(pancytopenia) to next_step(peripheral_blood_flow_cytometry)
+  source "PMC3894839 (immunophenotyping indicated in pancytopenia of unknown cause)" trust authoritative
+contributes 2.5 from peripheral_smear(no_overt_blasts) to next_step(peripheral_blood_flow_cytometry)
+  source "Annals Lymphoma Mollejo (flow detects low-level clonal B-cells when smear unremarkable)" trust authoritative
+
+% rationale: diagnostic splenectomy is reserved for when marrow + flow remain
+% non-diagnostic; it is definitive but invasive, hence a lower-prior later step.
+prior 0.10 for next_step(diagnostic_splenectomy)
+  source "Annals Lymphoma Mollejo (splenectomy when SMZL not confirmable otherwise)" trust authoritative
+contributes 1.5 from splenomegaly_magnitude(massive) to next_step(diagnostic_splenectomy)
+  source "PMC3299233 (splenectomy both diagnostic and therapeutic in massive SMZL)" trust authoritative
+
+% ============================================================================
+% UNCERTAINTIES (decision-relevant, unresolved — drive value-of-information)
+% ============================================================================
+
+% u-HCL: the differential leukocyte count (monocytopenia?) is the HCL discriminator
+% and is NOT in the IR; resolving it materially moves HCL vs SMZL.
+uncertain { leukocyte_differential(monocytopenia_present), leukocyte_differential(monocytes_preserved) } for diagnosis(hairy_cell_leukemia)
+  source "StatPearls NBK499845 (monocytopenia is the HCL signature; quantify monocytes)"
+
+% u-PMF: the smear morphology (teardrops / leukoerythroblastosis) and driver
+% mutation status are the PMF discriminators and are unresolved in the IR.
+uncertain { peripheral_smear(teardrop_cells_leukoerythroblastic), peripheral_smear(no_teardrops_no_leukoerythroblastosis), molecular(jak2_or_calr_or_mpl_positive) } for diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (teardrop/leukoerythroblastic smear + JAK2/CALR/MPL adjudicate PMF)"

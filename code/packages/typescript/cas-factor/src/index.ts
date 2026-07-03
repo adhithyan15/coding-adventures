@@ -5,6 +5,9 @@ export type FactorList = Array<[bigint[], number]>;
 export const FACTOR = "Factor";
 export const IRREDUCIBLE = "Irreducible";
 
+export { tryBivariateHensel, tryNVariateHensel, Rational as BiRational } from "./hensel.js";
+export type { BiPoly, NPoly } from "./hensel.js";
+
 const MAX_COMBOS = 10_000;
 const MAX_BZH_DEGREE = 20;
 const MAX_BZH_PRIME = 200;

@@ -1,0 +1,29 @@
+[package]
+name = "coding-adventures-closure-pass-inline-variables"
+version = "0.11.1"
+edition = "2021"
+description = "Constant-propagation pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Replaces references to a top-level `const` bound to a literal with the literal itself, so the binding becomes unused and remove-unused-vars deletes it."
+
+[dependencies]
+coding-adventures-closure-pass-pipeline = { path = "../closure-pass-pipeline" }
+coding-adventures-javascript-ast = { path = "../javascript-ast" }
+# Correlation-vector provenance (#89): the pass emits `propagated`
+# contributions, so this is now a runtime dependency (was dev-only).
+coding_adventures_correlation_vector = { path = "../correlation-vector" }
+serde_json = "1"
+
+[dev-dependencies]
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+coding-adventures-closure-pass-constant-fold = { path = "../closure-pass-constant-fold" }
+# Test the real source -> bridge -> inline-variables -> emit roundtrip
+# against the actual AST shape the parser produces (not hand-built ASTs).
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+coding-adventures-closure-emitter = { path = "../closure-emitter" }
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+
+# Upstream-test ports live under `tests/upstream/`; Cargo only
+# auto-discovers `tests/*.rs` one level deep, so each ported file needs
+# an explicit `[[test]]` entry. Per CLOC12.01 §3.
+[[test]]
+name = "upstream_inline_variables"
+path = "tests/upstream/inline_variables_test.rs"

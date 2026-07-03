@@ -1,0 +1,8 @@
+{
+ "idx": 10,
+ "policy": "A facility must obtain a Title V air permit if its potential to emit (PTE) any single regulated air pollutant is 100 tons per year (tpy) or more. Facilities with PTE below 100 tpy for every regulated pollutant are not required to obtain a Title V permit.",
+ "scenario": "Greenfield Plastics operates a single coating line. Its potential to emit is 62 tpy of volatile organic compounds, 31 tpy of nitrogen oxides, and 18 tpy of particulate matter. No other regulated pollutants are emitted.",
+ "question": "Is Greenfield Plastics required to obtain a Title V air permit?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "not required"
+}

@@ -41,7 +41,7 @@
   the author meant.
 - Three new unit tests cover the basic literal, escape resolution,
   and the empty-string case.
-- Resolves limitation #3 in `demo/visicalc/README.md` —
+- Resolves limitation #3 in `code/programs/typescript/visicalc/README.md` —
   `placeholder: "Enter formula"` is now expressible at the source level.
 
 ## [0.1.0] — 2026-05-11

@@ -1,0 +1,5 @@
+[package]
+name = "fpga-bitstream"
+version = "0.1.0"
+edition = "2021"
+description = "iCE40 bitstream emitter (Project IceStorm record-stream format)"

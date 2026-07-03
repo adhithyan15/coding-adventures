@@ -1,0 +1,17 @@
+// Badge.light.msl — default light-theme styling for Badge.
+//
+// Pill shape via large border-radius. Variant sub-parts deferred
+// per spec §10 question 2; v0.1 PR-2 ships the primary-style base.
+
+style Badge {
+  part badge {
+    padding       : 6 ;
+    border-radius : 12 ;
+    background    : "#0d6efd" ;
+    color         : "#ffffff" ;
+    font-size     : 12 ;
+    font-weight   : 600 ;
+  }
+  part badge-text {
+  }
+}

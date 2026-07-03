@@ -1,0 +1,8 @@
+{
+ "check_id": 146,
+ "idx": 58,
+ "slot": "height_above_grade_inches",
+ "claimed_value": 10,
+ "scenario": "An exterior wood sill plate sits 10 inches above finished grade and 14 inches from exposed earth. The wood is untreated, ordinary framing lumber, but it rests on a continuous impervious moisture barrier that fully separates it from the earth.",
+ "cited_span": "sits 10 inches above finished grade"
+}

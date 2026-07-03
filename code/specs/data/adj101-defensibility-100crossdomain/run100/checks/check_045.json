@@ -1,0 +1,8 @@
+{
+ "check_id": 45,
+ "idx": 17,
+ "slot": "is_volunteer",
+ "claimed_value": true,
+ "scenario": "At a roadside crash, a bystander volunteer pulled an injured passenger from a car. Acting with gross negligence, he dragged the passenger by the neck despite an obvious spinal injury, worsening the harm.",
+ "cited_span": "a bystander volunteer pulled an injured passenger from a car"
+}

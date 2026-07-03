@@ -592,4 +592,72 @@ describe("tcp-client", () => {
     expect(conn).toBeInstanceOf(TcpConnection);
     conn.close();
   });
+
+  // ── Group 6: socket-error paths ────────────────────────────────────
+  //
+  // These tests trigger ECONNRESET by destroying the server side mid-stream
+  // so the client's 'error' event handler fires (covering 471-483, the
+  // ECONNRESET branch of mapSocketError, and the "throw socketError" guards
+  // in readLine/readExact/readUntil/writeAll).
+
+  /** Server that destroys the socket immediately to simulate ECONNRESET. */
+  function startResettingServer(): Promise<number> {
+    return new Promise((resolve) => {
+      const server = net.createServer((socket) => {
+        socket.on("data", () => socket.destroy(Object.assign(new Error("reset"), { code: "ECONNRESET" })));
+        socket.on("error", () => {});
+      });
+      servers.push(server);
+      server.listen(0, "127.0.0.1", () => {
+        const addr = server.address() as net.AddressInfo;
+        resolve(addr.port);
+      });
+    });
+  }
+
+  it("readExact throws UnexpectedEofError when server closes mid-read", async () => {
+    // Server sends 5 bytes then closes — client asks for 10 → EOF mid-read.
+    const port = await startPartialServer(Buffer.from("hello"));
+    const conn = await connect("127.0.0.1", port, testOptions);
+    connections.push(conn);
+    await expect(conn.readExact(10)).rejects.toBeInstanceOf(UnexpectedEofError);
+  });
+
+  it("readLine sees EOF and returns empty string after server closes", async () => {
+    // Triggers the dual-callback (data + end) path inside the socket's
+    // 'end' handler, plus the readLine EOF branch.
+    const port = await startPartialServer(Buffer.alloc(0));
+    const conn = await connect("127.0.0.1", port, testOptions);
+    connections.push(conn);
+    // Wait for server to finish + close.
+    await new Promise((r) => setTimeout(r, 100));
+    expect(await conn.readLine()).toBe("");
+  });
+
+  it("readUntil returns remaining buffer at EOF when delimiter never arrives", async () => {
+    const port = await startPartialServer(Buffer.from("no-delimiter-here"));
+    const conn = await connect("127.0.0.1", port, testOptions);
+    connections.push(conn);
+    const result = await conn.readUntil(0x7c); // pipe — never present
+    expect(result.toString("utf-8")).toBe("no-delimiter-here");
+  });
+
+  it("connect to a non-listening port surfaces ConnectionRefusedError", async () => {
+    // Find a port nothing is listening on by binding and immediately closing.
+    const probe = net.createServer();
+    await new Promise<void>((r) => probe.listen(0, "127.0.0.1", () => r()));
+    const port = (probe.address() as net.AddressInfo).port;
+    await new Promise<void>((r) => probe.close(() => r()));
+    await expect(connect("127.0.0.1", port, testOptions)).rejects.toBeInstanceOf(TcpError);
+  });
+
+  it("readLine returns remaining buffer (no newline) at clean EOF", async () => {
+    // Partial server sends data then closes — no newline ever.
+    const port = await startPartialServer(Buffer.from("no-newline-here"));
+    const conn = await connect("127.0.0.1", port, testOptions);
+    connections.push(conn);
+    // First read pulls the data; second read sees EOF and returns "".
+    const all = await conn.readLine();
+    expect(all).toBe("no-newline-here");
+  });
 });

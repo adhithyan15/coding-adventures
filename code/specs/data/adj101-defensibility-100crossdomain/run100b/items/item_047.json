@@ -1,0 +1,7 @@
+{
+ "idx": 47,
+ "id": "FOO-8",
+ "scenario": "A cook assembles raw beef patties by hand, shaping the ground beef with bare hands. The patties are then grilled to an internal temperature of 160 degrees F before serving to customers.",
+ "policy": "Bare-hand contact with ready-to-eat food is prohibited; handlers must use gloves, utensils, or deli tissue. Notwithstanding this rule, bare-hand contact is permitted when the ready-to-eat food will be subsequently cooked to at least 145 degrees F before being served.",
+ "question": "Did the cook violate the bare-hand contact rule?"
+}

@@ -1,0 +1,47 @@
+[package]
+name = "coding-adventures-closurec"
+version = "0.234.0"
+edition = "2021"
+description = "closurec — CLI driver for the Closure Compiler clone. Mirrors the upstream Java Closure Compiler's command-line flag surface (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility. Per CLOC08."
+
+[[bin]]
+name = "closurec"
+path = "src/main.rs"
+
+[dependencies]
+# CLI parsing — declarative JSON spec via cli-builder, not hand-rolled.
+cli-builder = { path = "../../../packages/rust/cli-builder" }
+
+# Front end
+coding-adventures-javascript-tokens = { path = "../../../packages/rust/javascript-tokens" }
+coding-adventures-javascript-lexer = { path = "../../../packages/rust/javascript-lexer" }
+coding-adventures-javascript-ast = { path = "../../../packages/rust/javascript-ast" }
+coding-adventures-javascript-parser = { path = "../../../packages/rust/javascript-parser" }
+lexer = { path = "../../../packages/rust/lexer" }
+
+# Type checker
+coding-adventures-closure-typechecker = { path = "../../../packages/rust/closure-typechecker" }
+
+# Pass pipeline + every canonical pass per CLOC06
+coding-adventures-closure-pass-pipeline = { path = "../../../packages/rust/closure-pass-pipeline" }
+coding-adventures-closure-pass-constant-fold = { path = "../../../packages/rust/closure-pass-constant-fold" }
+coding-adventures-closure-pass-fold-control-flow = { path = "../../../packages/rust/closure-pass-fold-control-flow" }
+coding-adventures-closure-pass-dce = { path = "../../../packages/rust/closure-pass-dce" }
+coding-adventures-closure-pass-inline = { path = "../../../packages/rust/closure-pass-inline" }
+coding-adventures-closure-pass-inline-variables = { path = "../../../packages/rust/closure-pass-inline-variables" }
+coding-adventures-closure-pass-rename = { path = "../../../packages/rust/closure-pass-rename" }
+coding-adventures-closure-pass-rename-globals = { path = "../../../packages/rust/closure-pass-rename-globals" }
+coding-adventures-closure-pass-rename-properties = { path = "../../../packages/rust/closure-pass-rename-properties" }
+coding-adventures-closure-pass-treeshake = { path = "../../../packages/rust/closure-pass-treeshake" }
+coding-adventures-closure-pass-collapse-properties = { path = "../../../packages/rust/closure-pass-collapse-properties" }
+coding-adventures-closure-pass-remove-unused-vars = { path = "../../../packages/rust/closure-pass-remove-unused-vars" }
+
+# Back end
+coding-adventures-closure-emitter = { path = "../../../packages/rust/closure-emitter" }
+coding-adventures-closure-source-map = { path = "../../../packages/rust/closure-source-map" }
+
+# Shared
+coding_adventures_correlation_vector = { path = "../../../packages/rust/correlation-vector" }
+coding-adventures-type-sidecar = { path = "../../../packages/rust/type-sidecar" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

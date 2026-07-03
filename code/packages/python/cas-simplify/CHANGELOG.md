@@ -1,11 +1,50 @@
 # Changelog
 
-## Unreleased
+## [0.4.0] — 2026-05-29
 
-- Added deterministic assumption metadata query helpers:
-  `AssumptionContext.facts_for(...)` and
-  `AssumptionContext.symbols_with_facts()`, for MACSYMA `properties` /
-  `propvars` runtime support.
+**Track G1 — compound-relation assumption store.**
+
+Extends `AssumptionContext` so `assume(...)` and `is(...)` accept
+arbitrary relational shapes, not just plain-symbol-vs-zero.  Previously
+`assume(a^2 > b^2)` was silently dropped by `assume_relation`; under
+Track G1 it is canonicalised into a `(lhs, op, rhs)` triple and stored
+in a new `_general_relations` set.  Subsequent `is(a^2 > b^2)` /
+`is(b^2 < a^2)` queries return `True` via structural lookup with
+commutativity-aware rewriting.  The legacy plain-symbol path is
+unchanged; the new path fires only when the plain-symbol path returns
+`None`.
+
+This is the assumption-context half of Track G1 in
+`code/specs/macsyma-truly-finish-plan.md`.  The other half — the
+symbolic-coefficient Weierzstrass integrator in `symbolic-vm` — ships
+in the same PR but lives in that package's changelog.
+
+### Added
+
+- `AssumptionContext._general_relations` — set of canonicalised
+  `(IRNode, str, IRNode)` triples for compound relations.
+- New private helpers `_canon_relation`, `_node_key`, and the
+  centralised `_RELATION_HEAD_TO_OP` map.
+- `assume_relation`, `forget_relation`, and `is_true_relation` now have
+  a compound-relation fallback branch when the plain-symbol path
+  doesn't apply.  `forget_all` clears both stores.
+
+### Semantics
+
+- No negative-knowledge inference: `assume(a^2 > b^2)` does NOT make
+  `is(a^2 < b^2)` return `False` — it returns `None`.  The user must
+  assert the opposite explicitly.
+- Commutativity is honoured:
+    - `is(b^2 < a^2)` ≡ `is(a^2 > b^2)`,
+    - `is(b^2 = a^2)` ≡ `is(a^2 = b^2)`,
+    - and the same for `<=`/`>=`, `!=`.
+
+## [0.5.0] — 2026-05-29
+
+- Released the previously-Unreleased deterministic assumption metadata
+  query helpers (`AssumptionContext.facts_for(...)` and
+  `AssumptionContext.symbols_with_facts()`) as part of the
+  `macsyma-truly-finish-plan` closure sweep (Track N).
 
 ## 0.3.0 — 2026-05-04
 

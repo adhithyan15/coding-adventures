@@ -1,0 +1,46 @@
+% ============================================================================
+% viral-arm - the viral/aseptic-meningitis evidence, as an IMPORTABLE LIBRARY.
+% ============================================================================
+% MYCIN-2026 M4. A CAS library: imports the controlled vocabulary, then a named
+% rulebook block carries the prior + likelihood ratios favoring VIRAL (aseptic)
+% meningitis. The two CSF-chemistry complements (normal glucose, normal lactate)
+% are byte-grounded as the inverse of the bacterial signals. The two specifically-
+% viral signals (lymphocytic pleocytosis, enteroviral PCR) were INFERRED at first
+% and are now SPIDER-GROUNDED (grounding/grounding-results.json): the spider
+% recalibrated each to the magnitude its primary source actually entails.
+import "9bb5d9645e2edb7e.adj"
+rulebook viral_arm {
+    use meningitis_vocab
+
+    % Pre-test probability of viral/aseptic (vs bacterial) meningitis - the
+    % complement of the bacterial prior. Nigrovic 2007: 96.3% aseptic (grounded).
+    prior 0.963 for viral_meningitis
+        source "Nigrovic LE et al., JAMA 2007 PMID 17200475 (3174/3295 = 96.3% aseptic)"
+        trust authoritative
+
+    % --- CSF-chemistry complements ---
+    % spider direction_only: normal glucose (ratio >= 0.5) recalibrated 4.9 -> 3.38.
+    contributes 3.38 from csf_glucose(normal) to viral_meningitis
+        source "aseptic-CSF series (normal CSF:serum glucose ratio, recalibrated 4.9->3.38)"
+        trust empirical
+
+    % spider-grounded: complement of Sakushima 2011 lactate (PMID 21382412).
+    contributes 13.7 from csf_lactate(normal) to viral_meningitis
+        source "Sakushima K et al., J Infect 2011 PMID 21382412 (normal CSF lactate)"
+        trust empirical
+
+    % --- Specifically-viral signals (NOW spider-grounded, recalibrated) ---
+    % spider-grounded (soft): AAFP 2017 - ~57% of aseptic cases are neutrophil-
+    % predominant, so lymphocyte predominance is a WEAK signal; LR recalibrated
+    % 5.0 -> 2.3. Trust empirical (was inferred).
+    contributes 2.3 from csf_lymphocytic_pleocytosis(high) to viral_meningitis
+        source "AAFP 2017 aafp.org p314 (lymphocyte predominance ~LR 2.3 - weak)"
+        trust empirical
+
+    % spider-grounded: PMC105179 Amplicor enterovirus CSF PCR sens 85.7% spec 93.9%
+    % -> LR+ = 0.857/(1-0.939) = 14.05. Recalibrated 50 -> 14.05. Trust authoritative
+    % (was inferred - the headline: the spider grounded a previously-inferred clause).
+    contributes 14.05 from enteroviral_pcr(positive) to viral_meningitis
+        source "PMC105179 (Amplicor enterovirus CSF PCR: sens 85.7% spec 93.9% -> LR+ 14.05)"
+        trust authoritative
+}

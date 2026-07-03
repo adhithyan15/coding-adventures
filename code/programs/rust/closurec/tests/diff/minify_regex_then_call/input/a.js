@@ -1,0 +1,1 @@
+var found = /test/.test(s);

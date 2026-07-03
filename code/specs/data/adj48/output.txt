@@ -1,0 +1,181 @@
+================================================================
+  ADJ48 — MYCIN-2026 ACS demo
+================================================================
+
+Rulebook: rulebook.adj (7531 bytes)
+Decision threshold: 30% (admit / discharge gate)
+
+----------------------------------------------------------------
+  Case: 01-jane-doe
+----------------------------------------------------------------
+  Vignette 1 — the ADJ36 Jane Doe case, ported.
+  
+  62yo M presenting to ED with 2 hours of pressure-like chest discomfort,
+  mild diaphoresis. No clear precipitator. PMH: HTN, smoker. Vitals
+  normal. ECG: no acute ST changes.
+  
+  Expected behaviour: posterior in the 25-30% range; uncertainty
+  report for the precipitator; at typical decision threshold of 30%
+  (admit vs discharge), kickback should fire.
+
+Posterior:  P(acs) = 0.3691  (logodds = -0.5361)
+
+Fired clauses:
+  prior -2.1972    source: Pope JH et al., Missed Diagnoses of Acute Cardiac Ischemia in the Emergency Department. NEJM 1995;342(16):1163-70
+  +0.4055      [Compound { functor: "pmh", args: [Atom("hypertension")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6
+  +0.5878      [Compound { functor: "pmh", args: [Atom("smoker")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.4055      [Compound { functor: "demographic", args: [Atom("age_over_55")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.9163      [Compound { functor: "symptom_quality", args: [Atom("pressure_like")] }]  source: Panju AA et al., JAMA 1998 — pooled LR for 'pressure' descriptor (range 1.5-3.0)
+  +0.6931      [Compound { functor: "associated_symptom", args: [Atom("diaphoresis")] }]  source: Panju AA et al., JAMA 1998 — pooled LR 1.7-2.7
+  -0.6931      [Compound { functor: "vital_signs", args: [Atom("within_normal_limits")] }]  source: Panju AA et al., JAMA 1998 — normal vitals roughly halve ACS likelihood
+  -0.9163      [Compound { functor: "denied", args: [Atom("ecg_acute_st_changes")] }]  source: Pope JH et al., NEJM 1995 — ECG w/o acute ST changes lowers but does not exclude ACS
+  +0.2624      [joint, 2 terms]  source: [empirical] clinical experience — pressure + diaphoresis combination is more diagnostic than the product of individual LRs would suggest
+
+Active uncertainties (VOI ranked):
+  voi = +1.4271 logits over 3 candidates
+       +0.9163   if observed: Compound { functor: "precipitator", args: [Atom("exertional")] }
+       -0.5108   if observed: Compound { functor: "precipitator", args: [Atom("rest")] }
+       -0.2231   if observed: Compound { functor: "precipitator", args: [Atom("positional")] }
+
+KICKBACK RECOMMENDED:
+  At decision threshold 30%, the posterior 0.3691 is sensitive to
+  unresolved uncertainty. Plausible band: [0.2598, 0.5939].
+  Recommend resolving 1 uncertainties before committing.
+
+----------------------------------------------------------------
+  Case: 02-classic-stemi
+----------------------------------------------------------------
+  Vignette 2 — classic STEMI presentation.
+  
+  68yo M with pressure-like chest pain radiating to both arms,
+  diaphoresis, dyspnea, onset during exertion. PMH: HTN, diabetes,
+  smoker, prior MI. ECG: new ST elevation in V2-V4.
+  
+  Expected behaviour: posterior approaches 1.0 well above any
+  reasonable threshold; no kickback; no uncertainty.
+
+Posterior:  P(acs) = 0.9969  (logodds = +5.7783)
+
+Fired clauses:
+  prior -2.1972    source: Pope JH et al., Missed Diagnoses of Acute Cardiac Ischemia in the Emergency Department. NEJM 1995;342(16):1163-70
+  +0.4055      [Compound { functor: "pmh", args: [Atom("hypertension")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6
+  +0.5878      [Compound { functor: "pmh", args: [Atom("smoker")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.5306      [Compound { functor: "pmh", args: [Atom("diabetes")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.6931      [Compound { functor: "pmh", args: [Atom("prior_mi")] }]  source: Pope JH et al., NEJM 1995
+  +0.4055      [Compound { functor: "demographic", args: [Atom("age_over_55")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.9163      [Compound { functor: "symptom_quality", args: [Atom("pressure_like")] }]  source: Panju AA et al., JAMA 1998 — pooled LR for 'pressure' descriptor (range 1.5-3.0)
+  +0.6931      [Compound { functor: "symptom_quality", args: [Atom("radiates_both_arms")] }]  source: Panju AA et al., JAMA 1998 — pooled LR for bilateral arm radiation (most discriminating)
+  +0.6931      [Compound { functor: "associated_symptom", args: [Atom("diaphoresis")] }]  source: Panju AA et al., JAMA 1998 — pooled LR 1.7-2.7
+  +0.2624      [Compound { functor: "associated_symptom", args: [Atom("dyspnea")] }]  source: Panju AA et al., JAMA 1998
+  +0.9163      [Compound { functor: "precipitator", args: [Atom("exertional")] }]  source: Diamond GA, Forrester JS. NEJM 1979;300(24):1350-8 — typical-angina pillar
+  +1.6094      [Compound { functor: "ecg", args: [Atom("new_st_elevation")] }]  source: Antman EM et al., ACC/AHA STEMI Guidelines 2013 update
+  +0.2624      [joint, 2 terms]  source: [empirical] clinical experience — pressure + diaphoresis combination is more diagnostic than the product of individual LRs would suggest
+
+----------------------------------------------------------------
+  Case: 03-pleuritic-mss
+----------------------------------------------------------------
+  Vignette 3 — pleuritic musculoskeletal chest pain (low-probability).
+  
+  28yo F with sharp, pleuritic chest pain reproducible by palpation.
+  Pain worsens with deep breath; no diaphoresis, no radiation. No
+  PMH. Vitals normal. ECG: no acute ST changes.
+  
+  Expected behaviour: posterior far below threshold; no kickback;
+  no active uncertainty. Joint interaction term (pleuritic +
+  normal_vitals) further suppresses the posterior.
+
+Posterior:  P(acs) = 0.0017  (logodds = -6.3732)
+
+Fired clauses:
+  prior -2.1972    source: Pope JH et al., Missed Diagnoses of Acute Cardiac Ischemia in the Emergency Department. NEJM 1995;342(16):1163-70
+  -0.2231      [Compound { functor: "demographic", args: [Atom("age_under_40")] }]  source: Panju AA et al., JAMA 1998;280(14):1256-63
+  -0.2231      [Compound { functor: "symptom_quality", args: [Atom("sharp")] }]  source: Panju AA et al., JAMA 1998 — sharp / stabbing reduces likelihood
+  -1.2040      [Compound { functor: "symptom_quality", args: [Atom("pleuritic")] }]  source: Panju AA et al., JAMA 1998 — pleuritic is strongly protective (LR 0.2-0.4)
+  -0.2231      [Compound { functor: "precipitator", args: [Atom("positional")] }]  source: [empirical] positional pain is often MSK or pleuritic
+  -0.6931      [Compound { functor: "vital_signs", args: [Atom("within_normal_limits")] }]  source: Panju AA et al., JAMA 1998 — normal vitals roughly halve ACS likelihood
+  -0.9163      [Compound { functor: "denied", args: [Atom("ecg_acute_st_changes")] }]  source: Pope JH et al., NEJM 1995 — ECG w/o acute ST changes lowers but does not exclude ACS
+  -0.6931      [joint, 2 terms]  source: [empirical] pleuritic pain with normal vitals strongly suggests non-cardiac etiology
+
+----------------------------------------------------------------
+  Case: 04-nstemi-equivocal
+----------------------------------------------------------------
+  Vignette 4 — equivocal NSTEMI. The case where the framework's
+  kickback machinery matters most.
+  
+  64yo M with pressure-like chest pain x 90 min. Mild diaphoresis,
+  no radiation. PMH: HTN, diabetes. Vitals borderline. ECG: T-wave
+  inversions in lateral leads — could be old, could be new.
+  Troponin pending.
+  
+  Expected behaviour: posterior in the 40-60% range; uncertainty
+  over the precipitator AND over whether the T-wave inversions are
+  new vs old AND whether troponin will rise. Kickback strongly
+  suggested — the answer hinges on resolutions we can obtain.
+
+Posterior:  P(acs) = 0.7342  (logodds = +1.0161)
+
+Fired clauses:
+  prior -2.1972    source: Pope JH et al., Missed Diagnoses of Acute Cardiac Ischemia in the Emergency Department. NEJM 1995;342(16):1163-70
+  +0.4055      [Compound { functor: "pmh", args: [Atom("hypertension")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6
+  +0.5306      [Compound { functor: "pmh", args: [Atom("diabetes")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.4055      [Compound { functor: "demographic", args: [Atom("age_over_55")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.9163      [Compound { functor: "symptom_quality", args: [Atom("pressure_like")] }]  source: Panju AA et al., JAMA 1998 — pooled LR for 'pressure' descriptor (range 1.5-3.0)
+  +0.6931      [Compound { functor: "associated_symptom", args: [Atom("diaphoresis")] }]  source: Panju AA et al., JAMA 1998 — pooled LR 1.7-2.7
+  +0.2624      [joint, 2 terms]  source: [empirical] clinical experience — pressure + diaphoresis combination is more diagnostic than the product of individual LRs would suggest
+
+Active uncertainties (VOI ranked):
+  voi = +3.6889 logits over 2 candidates
+       +2.0794   if observed: Compound { functor: "biomarker", args: [Atom("troponin_dynamic_rise")] }
+       -1.6094   if observed: Compound { functor: "biomarker", args: [Atom("troponin_undetectable_serial")] }
+  voi = +2.0149 logits over 2 candidates
+       +1.0986   if observed: Compound { functor: "ecg", args: [Atom("new_t_wave_inversion")] }
+       -0.9163   if observed: Compound { functor: "denied", args: [Atom("ecg_acute_st_changes")] }
+  voi = +1.4271 logits over 3 candidates
+       +0.9163   if observed: Compound { functor: "precipitator", args: [Atom("exertional")] }
+       -0.5108   if observed: Compound { functor: "precipitator", args: [Atom("rest")] }
+       -0.2231   if observed: Compound { functor: "precipitator", args: [Atom("positional")] }
+
+KICKBACK RECOMMENDED:
+  At decision threshold 30%, the posterior 0.7342 is sensitive to
+  unresolved uncertainty. Plausible band: [0.1171, 0.9940].
+  Recommend resolving 3 uncertainties before committing.
+
+----------------------------------------------------------------
+  Case: 05-troponin-rules-in
+----------------------------------------------------------------
+  Vignette 5 — same demographics and history as Jane Doe but with
+  troponin rising on serial measurement. Demonstrates the
+  counterfactual machinery: "the precipitator is still uncertain,
+  but knowing troponin rose has already resolved the diagnosis."
+  
+  62yo M, same case as vignette 1, but troponin rose from 0.02 to
+  0.18 ng/mL over 3 hours — dynamic change consistent with NSTEMI.
+
+Posterior:  P(acs) = 0.8239  (logodds = +1.5433)
+
+Fired clauses:
+  prior -2.1972    source: Pope JH et al., Missed Diagnoses of Acute Cardiac Ischemia in the Emergency Department. NEJM 1995;342(16):1163-70
+  +0.4055      [Compound { functor: "pmh", args: [Atom("hypertension")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6
+  +0.5878      [Compound { functor: "pmh", args: [Atom("smoker")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.4055      [Compound { functor: "demographic", args: [Atom("age_over_55")] }]  source: HEART Score; Six AJ et al., Neth Heart J 2008
+  +0.9163      [Compound { functor: "symptom_quality", args: [Atom("pressure_like")] }]  source: Panju AA et al., JAMA 1998 — pooled LR for 'pressure' descriptor (range 1.5-3.0)
+  +0.6931      [Compound { functor: "associated_symptom", args: [Atom("diaphoresis")] }]  source: Panju AA et al., JAMA 1998 — pooled LR 1.7-2.7
+  -0.6931      [Compound { functor: "vital_signs", args: [Atom("within_normal_limits")] }]  source: Panju AA et al., JAMA 1998 — normal vitals roughly halve ACS likelihood
+  -0.9163      [Compound { functor: "denied", args: [Atom("ecg_acute_st_changes")] }]  source: Pope JH et al., NEJM 1995 — ECG w/o acute ST changes lowers but does not exclude ACS
+  +2.0794      [Compound { functor: "biomarker", args: [Atom("troponin_dynamic_rise")] }]  source: Roffi M et al., 2015 ESC NSTE-ACS Guidelines — dynamic troponin change >20%
+  +0.2624      [joint, 2 terms]  source: [empirical] clinical experience — pressure + diaphoresis combination is more diagnostic than the product of individual LRs would suggest
+
+Active uncertainties (VOI ranked):
+  voi = +1.4271 logits over 3 candidates
+       +0.9163   if observed: Compound { functor: "precipitator", args: [Atom("exertional")] }
+       -0.5108   if observed: Compound { functor: "precipitator", args: [Atom("rest")] }
+       -0.2231   if observed: Compound { functor: "precipitator", args: [Atom("positional")] }
+
+No kickback at threshold 30% — uncertainty does not change the side of the decision.
+
+================================================================
+  Summary
+================================================================
+Vignettes run: 5.  Rulebook is the single source of truth; every
+contribution in every audit document above is reachable via the
+source citation. To question any claim, click the citation.

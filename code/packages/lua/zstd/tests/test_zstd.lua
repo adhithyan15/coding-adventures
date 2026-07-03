@@ -297,4 +297,42 @@ describe("CodingAdventures.Zstd", function()
         end)
     end)
 
+    -- =========================================================================
+    -- TC-11: Trailing bytes after last block rejected
+    -- =========================================================================
+    --
+    -- A valid ZStd frame ends exactly at the last block's payload. Any bytes
+    -- remaining after that are garbage (corruption, a concatenated frame, etc.)
+    -- and must be rejected rather than silently ignored.
+
+    describe("TC-11: trailing bytes after last block rejected", function()
+        it("decompress raises error when extra bytes follow the last block", function()
+            local frame = "\x28\xB5\x2F\xFD"  -- magic
+                       .. "\x20"               -- FHD: Single_Segment=1, FCS=1byte
+                       .. "\x05"               -- FCS = 5
+                       .. "\x29\x00\x00"       -- block header: last=1, raw, size=5
+                       .. "hello"              -- raw payload
+                       .. "\xAA\xBB\xCC"       -- 3 trailing garbage bytes
+
+            local ok, err = pcall(function() zstd.decompress(frame) end)
+            assert.is_false(ok, "expected decompress to raise an error for trailing bytes")
+            assert.is_string(err)
+            assert.is_truthy(
+                err:find("trailing") or err:find("unexpected"),
+                "error message should mention trailing data, got: " .. tostring(err))
+        end)
+
+        it("a clean frame with no trailing bytes decompresses without error", function()
+            local frame = "\x28\xB5\x2F\xFD"
+                       .. "\x20"
+                       .. "\x05"
+                       .. "\x29\x00\x00"
+                       .. "hello"
+
+            local ok, result = pcall(function() return zstd.decompress(frame) end)
+            assert.is_true(ok, "clean frame should decompress without error")
+            assert.are.equal("hello", result)
+        end)
+    end)
+
 end)

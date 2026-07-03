@@ -1,0 +1,78 @@
+{
+  "kind": "uti-id",
+  "clauses": {
+    "uti_prior_ecoli": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.75,
+      "byte_quote": "The microbial spectrum of uncomplicated cystitis and pyelonephritis consists mainly of Escherichia coli (75%\u201395%), with occasional other species of Enterobacteriaceae, such as Proteus mirabilis and Klebsiella pneumoniae, and Staphylococcus saprophyticus.",
+      "url": "https://academic.oup.com/cid/article/52/5/e103/388285"
+    },
+    "uti_prior_saprophyticus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.1,
+      "byte_quote": "In females ages 16 to 25, it causes up to 42% of all infections.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK482367/"
+    },
+    "uti_prior_klebsiella": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.035,
+      "byte_quote": "The most common bacteria was E. coli with 86.3% (365/423) followed by Enterococcus faecalis with 10.2% (43/423) and Klebsiella pneumoniae with 3.5% (15/423).",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5644167/"
+    },
+    "uti_prior_proteus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.03,
+      "byte_quote": "Most UTIs in women are acute uncomplicated cystitis caused by Escherichia coli (86 percent), Staphylococcus saprophyticus (4 percent), Klebsiella species (3 percent), Proteus species (3 percent), Enterobacter species (1.4 percent), Citrobacter species (0.8 percent), or Enterococcus species (0.5 percent).",
+      "url": "https://www.aafp.org/pubs/afp/issues/2011/1001/p771.html"
+    },
+    "uti_prior_enterococcus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.048,
+      "byte_quote": "The most frequent pathogen found was Escherichia coli (73%), followed by Proteus spp. (7.4%), Klebsiella spp. (6.6%) and Enterococcus spp. (4.8%).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15701325/"
+    },
+    "uti_prior_pseudomonas": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.101,
+      "byte_quote": "Pseudomonas aeruginosa (10.1% CAUTI; 3.3% non-CAUTI)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10031580/"
+    },
+    "uti_prior_gbs": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.01,
+      "byte_quote": "GBS was cultured from 387/34,367 consecutive urine samples (1.1%)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2708523/"
+    },
+    "uti_finding_nitrite": {
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 8,
+      "byte_quote": "At low oxygen concentrations, E. coli utilises nitrate as a secondary electron acceptor for anaerobic respiration. ... UTI diagnosis is commonly supported by detecting nitrite with dipsticks.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217021/"
+    },
+    "uti_finding_urease_proteus": {
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "value": 20,
+      "byte_quote": "Proteus mirabilis, a Gram-negative rod-shaped bacterium, is well-known for its urease production and distinctive ability to differentiate into elongated swarm cells and characteristic bull's-eye pattern of motility on agar plates.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5880328/"
+    }
+  },
+  "hash": "de86775748c5f0ba"
+}

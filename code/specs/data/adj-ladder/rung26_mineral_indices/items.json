@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 26 \u2014 mineral indices from a single mineral panel (a NEW panel: bone / mineral metabolism, CKD-MBD). From three stated quantities (serum calcium CA, phosphate PHOS, albumin ALB) compute the calcium-phosphate product (CA*PHOS), the calcium-to-phosphate ratio (CA/PHOS), or the phosphate-to-calcium ratio (PHOS/CA). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a PRODUCT (CA*PHOS) contrasted with the DIVISION forms, exercising the engine across * and / on a fresh mineral-panel stem \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed quantities via * and / \u2014 no constant leaks \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the calcium-to-albumin ratio (CA/ALB, confusing the correction input with a divisor) and the phosphate-to-albumin ratio (PHOS/ALB, the same mix-up on the other analyte). The core confusion tested is product vs ratio (CA*PHOS vs CA/PHOS) plus the ratio's direction.",
+  "items": [
+    {
+      "id": "r26min-01",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 10 mg/dL, phosphate 4 mg/dL, and albumin 5 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(10)\nobserve phosphate(4)\nobserve albumin(5)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r26min-02",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 10 mg/dL, phosphate 4 mg/dL, and albumin 5 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(10)\nobserve phosphate(4)\nobserve albumin(5)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r26min-03",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 10 mg/dL, phosphate 4 mg/dL, and albumin 5 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(10)\nobserve phosphate(4)\nobserve albumin(5)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r26min-04",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 9 mg/dL, phosphate 3 mg/dL, and albumin 4 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(9)\nobserve phosphate(3)\nobserve albumin(4)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r26min-05",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 9 mg/dL, phosphate 3 mg/dL, and albumin 4 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(9)\nobserve phosphate(3)\nobserve albumin(4)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r26min-06",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 9 mg/dL, phosphate 3 mg/dL, and albumin 4 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(9)\nobserve phosphate(3)\nobserve albumin(4)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3333333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r26min-07",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 8 mg/dL, phosphate 2 mg/dL, and albumin 4 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(8)\nobserve phosphate(2)\nobserve albumin(4)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r26min-08",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 8 mg/dL, phosphate 2 mg/dL, and albumin 4 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(8)\nobserve phosphate(2)\nobserve albumin(4)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r26min-09",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 8 mg/dL, phosphate 2 mg/dL, and albumin 4 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(8)\nobserve phosphate(2)\nobserve albumin(4)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r26min-10",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 12 mg/dL, phosphate 6 mg/dL, and albumin 4 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(12)\nobserve phosphate(6)\nobserve albumin(4)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r26min-11",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 12 mg/dL, phosphate 6 mg/dL, and albumin 4 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(12)\nobserve phosphate(6)\nobserve albumin(4)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r26min-12",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 12 mg/dL, phosphate 6 mg/dL, and albumin 4 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(12)\nobserve phosphate(6)\nobserve albumin(4)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 72,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r26min-13",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 10 mg/dL, phosphate 5 mg/dL, and albumin 4 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(10)\nobserve phosphate(5)\nobserve albumin(4)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r26min-14",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 10 mg/dL, phosphate 5 mg/dL, and albumin 4 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(10)\nobserve phosphate(5)\nobserve albumin(4)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r26min-15",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 10 mg/dL, phosphate 5 mg/dL, and albumin 4 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(10)\nobserve phosphate(5)\nobserve albumin(4)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r26min-16",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 11 mg/dL, phosphate 4 mg/dL, and albumin 5 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(11)\nobserve phosphate(4)\nobserve albumin(5)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.36363636363636365,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r26min-17",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 11 mg/dL, phosphate 4 mg/dL, and albumin 5 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(11)\nobserve phosphate(4)\nobserve albumin(5)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.36363636363636365,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r26min-18",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 11 mg/dL, phosphate 4 mg/dL, and albumin 5 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(11)\nobserve phosphate(4)\nobserve albumin(5)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.75,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.36363636363636365,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r26min-19",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 9 mg/dL, phosphate 6 mg/dL, and albumin 3 g/dL. What is the patient's calcium-phosphate product?",
+      "program": "observe calcium(9)\nobserve phosphate(6)\nobserve albumin(3)\nlet answer = calcium * phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r26min-20",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 9 mg/dL, phosphate 6 mg/dL, and albumin 3 g/dL. What is the patient's calcium-to-phosphate ratio?",
+      "program": "observe calcium(9)\nobserve phosphate(6)\nobserve albumin(3)\nlet answer = calcium / phosphate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r26min-21",
+      "qtype": "mineral_index",
+      "stem": "A mineral panel shows serum calcium 9 mg/dL, phosphate 6 mg/dL, and albumin 3 g/dL. What is the patient's phosphate-to-calcium ratio?",
+      "program": "observe calcium(9)\nobserve phosphate(6)\nobserve albumin(3)\nlet answer = phosphate / calcium\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 54,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

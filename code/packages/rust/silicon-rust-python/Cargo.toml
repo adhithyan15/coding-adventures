@@ -1,0 +1,15 @@
+[package]
+name = "silicon-rust-python"
+version = "0.1.0"
+edition = "2021"
+description = "Python C extension bindings for the silicon simulation stack: device-physics, mosfet-models, fab-process-simulation"
+
+[lib]
+crate-type = ["cdylib"]
+name = "silicon_rust_python"
+
+[dependencies]
+device-physics = { path = "../device-physics" }
+mosfet-models = { path = "../mosfet-models" }
+fab-process-simulation = { path = "../fab-process-simulation" }
+python-bridge = { path = "../python-bridge" }

@@ -219,6 +219,46 @@ where
             walk_intrinsics_in_expr(key, f, depth + 1);
             walk_intrinsics_in_expr(value, f, depth + 1);
         }
+        Stmt::ClassDef { body, .. } => {
+            // Recurse into each body statement so intrinsics nested
+            // under a class declaration are still observed.  Phase
+            // 14a always emits an empty body; the populated body
+            // case is handled forward-compatibly.
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
+        Stmt::ModuleDef { body, .. } => {
+            // Same recursion as ClassDef for module bodies (Ruby
+            // Phase 14d).
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
+        Stmt::SingletonClassDef { body, .. } => {
+            // Same recursion for singleton-class bodies (Ruby
+            // Phase 14e).
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // Recurse into the try body, each rescue body, and the
+            // optional ensure body (Ruby Phase 16a).
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+            for r in rescues {
+                for s in &r.body {
+                    walk_intrinsics_in_stmt(s, f, depth + 1);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for s in ens {
+                    walk_intrinsics_in_stmt(s, f, depth + 1);
+                }
+            }
+        }
     }
 }
 
@@ -303,6 +343,16 @@ where
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
             walk_intrinsics_in_expr(lhs, f, depth + 1);
             walk_intrinsics_in_expr(rhs, f, depth + 1);
+        }
+        // ── SIR18: string interpolation ────────────────────────────
+        Expr::StrConcat { parts, .. } => {
+            for p in parts {
+                walk_intrinsics_in_expr(p, f, depth + 1);
+            }
+        }
+        // ── KW1: keyword argument ──────────────────────────────────
+        Expr::KeywordArg { value, .. } => {
+            walk_intrinsics_in_expr(value, f, depth + 1);
         }
     }
 }

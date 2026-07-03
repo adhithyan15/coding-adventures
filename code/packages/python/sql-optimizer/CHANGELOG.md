@@ -1,5 +1,52 @@
 # Changelog
 
+## [0.18.0] - 2026-06-30
+
+### Fixed
+
+- `DeadCodeElimination`: `Limit(count=0)` now produces `EmptyResult` with
+  the correct output column schema instead of a bare `EmptyResult()`.
+
+  Previously, when the optimiser eliminated a `LIMIT 0` clause it returned
+  `EmptyResult()` with no column information.  The codegen then emitted
+  `SetResultSchema(columns=())` — an empty tuple — so the VM left
+  `result.columns` as `()` even though the query was a well-formed SELECT.
+  Callers (e.g. the PEP 249 cursor) then saw `description = ()` or
+  `description = None` instead of the expected column-name tuple.
+
+  The fix adds a `_schema_of_plan(inner)` helper that walks the inner plan
+  to the nearest `Project` node and derives the output column names from its
+  `items`, then passes those names to `EmptyResult(columns=...)`.  For the
+  common `Limit(Sort(Project(...)))` tree shape this restores the correct
+  schema.  The `Project(EmptyResult)` propagation path was also updated to
+  prefer the schema derived from `Project.items` when the inner
+  `EmptyResult` carries no column information.
+
+  Two new imports (`Column`, `ProjectionItem`, `Wildcard`) were added from
+  `sql_planner` to support the helper.  The optimizer's 165-test suite
+  passes without changes.
+
+## [0.17.0] - 2026-06-19
+
+### Fixed
+
+- Constant-folding pass now preserves `Update.on_conflict` when rebuilding
+  an `Update` plan node.  The previous pattern match did not capture
+  `on_conflict`, so the field was silently reset to `None` after folding,
+  causing `UPDATE OR IGNORE` and `UPDATE OR REPLACE` statements to behave
+  identically to a plain `UPDATE` (raising on constraint violation instead
+  of ignoring or replacing).
+
+## [0.16.0] - 2026-05-22
+
+### Fixed
+
+- Constant-folding pass now preserves ``SortKey.collation`` when
+  rebuilding a Sort node.  Without this, the COLLATE clause from an
+  ``ORDER BY name COLLATE NOCASE`` query was silently dropped by the
+  optimizer before the codegen ever saw it, falling back to BINARY
+  comparison and producing wrong row ordering.
+
 ## [0.15.0] - 2026-05-21
 
 ### Added

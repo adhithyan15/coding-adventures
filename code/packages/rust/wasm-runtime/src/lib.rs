@@ -1322,6 +1322,36 @@ impl WasmRuntime {
             host_functions,
         });
 
+        // Register the module's WasmGC struct field counts (LANG77 / McCarthy
+        // L3b-3a-3c-2) so the engine knows how many fields each `struct.new`
+        // allocates — without this, a `struct.new` traps with "no field count
+        // registered". Previously the embedder had to call this by hand; now it
+        // flows automatically from the parsed module's `struct_types`.
+        //
+        // `set_struct_field_counts` is indexed by the **wasm type index**, and
+        // function and struct types share one index space. The encoder emits all
+        // function types first, then the struct types, so a struct's wasm index
+        // is `func_type_count + its position in struct_types`. We therefore pad
+        // the front with filler slots for the function types (which are never
+        // the target of a `struct.new`) and append the struct field counts.
+        //
+        // (This assumes struct types follow *all* function types — true for the
+        // cons modules we emit today, which declare no host imports. A module
+        // that interleaved imported-function types after the struct types would
+        // need order-preserving type parsing; not yet emitted or consumed.)
+        if !instance.module.struct_types.is_empty() {
+            let func_type_count = instance.func_types.len();
+            let mut struct_field_counts = vec![0u32; func_type_count];
+            struct_field_counts.extend(
+                instance
+                    .module
+                    .struct_types
+                    .iter()
+                    .map(|st| st.fields.len() as u32),
+            );
+            engine.set_struct_field_counts(struct_field_counts);
+        }
+
         let results = engine.call_function(func_index, &wasm_args)?;
         let state = engine.into_state();
         instance.memory = state.memory;
@@ -1337,6 +1367,15 @@ impl WasmRuntime {
                 WasmValue::I64(v) => *v,
                 WasmValue::F32(v) => *v as i64,
                 WasmValue::F64(v) => *v as i64,
+                // A WasmGC reference result (LANG77 L3b-3a-3b).  In the lisp
+                // value model the return boundary unboxes integer results to
+                // i64, so a *reference* reaching here is a structural result
+                // (a cons or nil).  This i64 path can't represent one yet:
+                // surface a deterministic, non-panicking placeholder — null
+                // (nil) as 0, a heap reference as its raw handle.  Proper
+                // reference-return handling lands with the cons e2e (L3b-3a-3c).
+                WasmValue::Ref(None) => 0,
+                WasmValue::Ref(Some(h)) => *h as i64,
             })
             .collect())
     }
@@ -1508,6 +1547,111 @@ mod tests {
 
         let result = runtime.load_and_run(&wasm, "square", &[5]);
         assert_eq!(result.unwrap(), vec![25]);
+    }
+
+    /// Hand-assemble a WasmGC module that computes `(CAR (CONS 7 9))`:
+    ///
+    /// ```wat
+    /// (type $f (func (result i32)))
+    /// (type $LispyPair (struct (field (mut anyref)) (field (mut anyref))))
+    /// (func (export "main") (result i32)
+    ///   i32.const 7  ref.i31          ;; car = box 7
+    ///   i32.const 9  ref.i31          ;; cdr = box 9
+    ///   struct.new $LispyPair         ;; (7 . 9)
+    ///   struct.get $LispyPair 0       ;; car  -> i31ref
+    ///   i31.get_s)                    ;; unbox -> 7
+    /// ```
+    ///
+    /// The struct type is the **second** type (wasm type index 1, after the one
+    /// function type), so `struct.new`/`struct.get` reference type index 1 — the
+    /// exact case the L3b-3a-3c-2 arity wiring must resolve from the parsed
+    /// `struct_types`.
+    fn build_cons_car_wasm() -> Vec<u8> {
+        let mut wasm = Vec::new();
+        wasm.extend_from_slice(&[0x00, 0x61, 0x73, 0x6D]); // magic
+        wasm.extend_from_slice(&[0x01, 0x00, 0x00, 0x00]); // version 1
+
+        // Type section (id=1): a func type then the $LispyPair struct type.
+        let type_section = vec![
+            0x02, // 2 types
+            // type 0: () -> i32
+            0x60, 0x00, 0x01, 0x7F, // type 1: $LispyPair — struct { mut anyref, mut anyref }
+            0x50, 0x00, 0x5F, // sub-type, 0 supers, struct marker
+            0x02, // 2 fields
+            0x6E, 0x01, // field 0: anyref, mutable
+            0x6E, 0x01, // field 1: anyref, mutable
+        ];
+        wasm.push(0x01);
+        wasm.push(type_section.len() as u8);
+        wasm.extend_from_slice(&type_section);
+
+        // Function section (id=3): 1 function of type 0.
+        let func_section = vec![0x01, 0x00];
+        wasm.push(0x03);
+        wasm.push(func_section.len() as u8);
+        wasm.extend_from_slice(&func_section);
+
+        // Export section (id=7): export "main" as function 0.
+        let export_section = vec![
+            0x01, // 1 export
+            0x04, b'm', b'a', b'i', b'n', // name "main"
+            0x00, 0x00, // kind: function, index 0
+        ];
+        wasm.push(0x07);
+        wasm.push(export_section.len() as u8);
+        wasm.extend_from_slice(&export_section);
+
+        // Code section (id=10): the (CAR (CONS 7 9)) body.
+        let body = vec![
+            0x00, // 0 local declarations
+            0x41, 0x07, 0xFB, 0x1C, // i32.const 7 ; ref.i31  (box 7)
+            0x41, 0x09, 0xFB, 0x1C, // i32.const 9 ; ref.i31  (box 9)
+            0xFB, 0x00, 0x01, // struct.new $LispyPair (type 1)
+            0xFB, 0x02, 0x01, 0x00, // struct.get $LispyPair 0  (car)
+            0xFB, 0x1D, // i31.get_s  (unbox)
+            0x0B, // end
+        ];
+        let code_section = {
+            let mut v = vec![0x01u8]; // 1 body
+            v.push(body.len() as u8);
+            v.extend_from_slice(&body);
+            v
+        };
+        wasm.push(0x0A);
+        wasm.push(code_section.len() as u8);
+        wasm.extend_from_slice(&code_section);
+
+        wasm
+    }
+
+    #[test]
+    fn test_runtime_runs_cons_car_struct_module() {
+        // The L3b-3a-3c-2 capstone: a parsed WasmGC *struct* module runs on the
+        // in-repo runtime with NO manual `set_struct_field_counts` — the arity
+        // is derived from the module's parsed `struct_types`. `(CAR (CONS 7 9))`
+        // → 7.
+        let wasm = build_cons_car_wasm();
+        let runtime = WasmRuntime::new();
+
+        // Use the explicit load → instantiate → call path (exactly what the
+        // arity wiring touches).
+        let module = runtime.load(&wasm).expect("cons module must parse");
+        assert_eq!(module.struct_types.len(), 1, "the $LispyPair struct is parsed");
+        let mut instance = runtime.instantiate(&module).expect("must instantiate");
+        let result = runtime
+            .call(&mut instance, "main", &[])
+            .expect("cons module must run");
+        assert_eq!(result, vec![7], "(CAR (CONS 7 9)) must evaluate to 7");
+    }
+
+    #[test]
+    fn test_runtime_cons_module_traps_without_arity_wiring_is_now_wired() {
+        // Regression guard: before L3b-3a-3c-2 this trapped with "no field count
+        // registered for struct type 1". The arity wiring must make it succeed.
+        let wasm = build_cons_car_wasm();
+        let runtime = WasmRuntime::new();
+        let result = runtime.load_and_run(&wasm, "main", &[]);
+        assert_eq!(result.expect("must run end-to-end via load_and_run"), vec![7]);
     }
 
     #[test]

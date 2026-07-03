@@ -1,0 +1,8 @@
+{
+ "check_id": 184,
+ "idx": 72,
+ "slot": "misclassified",
+ "claimed_value": true,
+ "scenario": "Norwood Electronics classified a shipment of laptop chargers under a tariff code carrying a 3% duty rate. The correct code carried a 7% duty rate. The declared customs value of the chargers was $50,000.",
+ "cited_span": "Norwood Electronics classified a shipment of laptop chargers under a tariff code carrying a 3% duty rate. The correct code carried a 7% duty rate."
+}

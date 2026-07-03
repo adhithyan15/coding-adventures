@@ -1,5 +1,28 @@
 # Changelog — ir-to-beam
 
+## [0.2.1] — 2026-06-02
+
+### Fixed (atom table now loads on OTP 27 *and* 28)
+
+- Reverted `encode_atu8` to the **classic positive-count `AtU8` format** (a
+  big-endian `u32` atom count, then a single raw length byte per atom). The
+  0.2.0 "OTP 25+" rewrite (negative count + `(len << 4)` / `[0x08, len]`
+  nibble-packed lengths) was based on a misdiagnosis: OTP 28 accepts *both*
+  formats, but **OTP 27 rejects the nibble-packed form** with
+  `beam_load.c: corrupt atom table`. Every BEAM module the encoder produced
+  therefore failed to load on OTP 27 (CI's pinned runtime) with `undef`,
+  breaking `iir-to-beam`'s `test_65`/`test_66` real-`erl` round-trips.
+- Verified empirically by round-tripping `iir_arith_test:main/0` through `erl`
+  on both runtimes:
+
+  | atom form    | OTP 27 load | OTP 28 load |
+  |--------------|-------------|-------------|
+  | nibble-packed| `badfile` ✗ | `ok` ✓      |
+  | classic      | `ok` ✓      | `ok` ✓      |
+
+  The classic form covers every atom we emit (capped at 255 bytes by
+  `validate_for_beam`), so it is now emitted unconditionally.
+
 ## [0.2.0] — 2026-05-12
 
 ### Fixed (OTP 25+ BEAM file format compatibility)

@@ -1,0 +1,8 @@
+{
+ "idx": 25,
+ "policy": "The warranty covers defects for 2 years from the date of manufacture. Coverage is void if the product was serviced by an unauthorized repair shop at any point.",
+ "scenario": "Liam's espresso machine, manufactured on a date stamped clearly on its base 14 months ago, developed a confirmed internal seal defect. He submitted a claim with photos and the serial number. Liam mentions that the machine 'works perfectly otherwise' and that he has always taken good care of it.",
+ "question": "Is the defect covered under the warranty?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether an unauthorized shop serviced it"
+}

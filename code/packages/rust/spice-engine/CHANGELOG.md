@@ -2,8 +2,654 @@
 
 ## Unreleased
 
+- Add `device_model_reference_deck_audit_analysis_summary`,
+  `format_device_model_reference_deck_audit_analysis_summary_table`,
+  `device_model_reference_deck_audit_analysis_summary_records`,
+  `format_device_model_reference_deck_audit_analysis_summary_csv`, and
+  `format_device_model_reference_deck_audit_analysis_summary_json`, stable
+  per-analysis coverage summaries for the reference-deck audit matrix,
+  matching Python and TypeScript.
+- Add `device_model_reference_deck_audit_summary`,
+  `format_device_model_reference_deck_audit_summary_table`,
+  `device_model_reference_deck_audit_summary_records`,
+  `format_device_model_reference_deck_audit_summary_csv`, and
+  `format_device_model_reference_deck_audit_summary_json`, stable per-kind
+  coverage summaries for the reference-deck audit matrix, matching Python and
+  TypeScript.
+- Add `device_model_reference_deck_audit_records`,
+  `format_device_model_reference_deck_audit_csv`, and
+  `format_device_model_reference_deck_audit_json`, stable record-oriented
+  exports for the device-model reference-deck audit matrix, matching Python
+  and TypeScript.
+- Add `device_model_reference_deck_audit_gate` and
+  `format_device_model_reference_deck_audit_gate_report`, a stable pass/fail
+  gate for the required device-model reference-deck audit coverage matrix,
+  matching Python and TypeScript.
+- Add `format_device_model_reference_deck_audit_table`, a stable
+  tab-separated summary for the device-model reference-deck audit matrix,
+  matching Python and TypeScript.
+- Add `device_model_reference_deck_audit_fixtures`, a stable reference coverage
+  matrix across DC, temperature, AC, noise, and transient model-depth fixtures
+  for diode, BJT, JFET, and Level-1 MOS families, matching Python and
+  TypeScript.
+- Shape Level-1 MOS reverse-biased bulk-junction capacitance with
+  `bulk_junction_potential` and `bulk_junction_grading_coefficient`
+  model-card parameters (`PB`/`MJ`) for AC operating-point capacitance reports
+  and transient source-body / drain-body companions, matching Python and
+  TypeScript, with regression coverage for reverse-biased drain-step delay.
+- Stamp Level-1 MOS zero-bias bulk-junction
+  `source_bulk_capacitance` and `drain_bulk_capacitance` model-card storage as
+  transient source-body and drain-body companions, matching Python and
+  TypeScript, with regression coverage for drain-step delay.
+- Stamp Level-1 MOS `gate_source_overlap_capacitance`,
+  `gate_drain_overlap_capacitance`, and `gate_bulk_overlap_capacitance`
+  model-card storage as transient gate-source, gate-drain, and gate-body
+  companions, matching Python and TypeScript, with regression coverage for
+  gate-step delay.
+- Stamp JFET `gate_source_capacitance` and `gate_drain_capacitance`
+  model-card storage as transient gate-source and gate-drain companions and AC
+  susceptance, matching Python and TypeScript, with regression coverage for
+  gate-step delay and high-frequency gate-drive shunting.
+- Stamp BJT `base_emitter_capacitance`, `base_collector_capacitance`,
+  `forward_transit_time`, and `reverse_transit_time` model-card storage as
+  transient base-emitter and base-collector companions, matching Python and
+  TypeScript, with regression coverage for base current-step delay and forward
+  transit-time turnoff charge.
+- Stamp diode `junction_capacitance` and `transit_time` model-card storage as
+  transient anode-cathode companions, matching Python and TypeScript, with
+  regression coverage for current-step delay and turnoff charge retention.
+- Add `device_model_charge_audit_fixtures` runnable one-device `.tran`
+  fixtures with reference deck lines, explicit terminal storage capacitance
+  metadata, stable first/final probe-voltage windows, and charge-behavior notes
+  for diode, BJT, JFET, and Level-1 MOS audits, matching Python and
+  TypeScript.
+- Add `device_model_noise_audit_fixtures` runnable one-device `.noise`
+  fixtures with reference deck lines and stable source/output PSD windows for
+  diode and BJT shot noise plus JFET and Level-1 MOS channel thermal noise
+  audits, matching Python and TypeScript.
+- Add `device_model_capacitance_audit_fixtures` runnable one-device AC fixtures
+  with `.ac` reference deck lines and stable high-frequency probe-magnitude
+  windows for diode, BJT, JFET, and Level-1 MOS model-depth audits, matching
+  Python and TypeScript.
+- Add `device_model_temperature_audit_fixtures` runnable one-device DC
+  temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Python and TypeScript.
+- Add `device_model_behavior_audit_fixtures` runnable one-device DC bias
+  fixtures with reference deck lines and stable probe-voltage windows for
+  diode, BJT, JFET, and Level-1 MOS model-depth audits, matching Python and
+  TypeScript.
+- Add configurable nonlinear Newton damping through
+  `DcOpOptions::newton_step_limit`, plus stable diagnostics for
+  `newton_step_limit`, `limited_newton_steps`, and `minimum_damping_factor`,
+  matching Python and TypeScript.
+- Add `DcResult::diagnostics.solver_profile` with matrix size, solver kind,
+  backend, structural nonzero count, density, peak fill-in, and fallback
+  metadata for production sparse-solver audits, matching Python and TypeScript.
+- Add `run_deck` whole-run execution for every parsed `.op`, `.dc`, `.ac`,
+  `.tran`, `.tf`, `.sens`, and `.noise` card in source order, preserving
+  duplicate analysis directives, defaulting analysis-less decks to an implicit
+  `.op`, and returning aggregate run-artifact table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
+- Expose selected analysis sweep, frequency, transient timing, and `UIC`
+  metadata in `run_deck_analysis` output-plan artifacts, with stable table,
+  CSV, compact JSON, and header-keyed record exports, matching Python and
+  TypeScript.
+- Expose selected analysis output-node metadata in `run_deck_analysis`
+  output-plan artifacts beside line/source metadata, with stable table, CSV,
+  compact JSON, and header-keyed record exports, matching Python and
+  TypeScript.
+- Expose selected analysis line/source metadata in `run_deck_analysis`
+  output-plan artifacts beside directive metadata, with stable table, CSV,
+  compact JSON, and header-keyed record exports, matching Python and
+  TypeScript.
+- Expose selected result row counts in `run_deck_analysis` output-plan
+  artifacts beside result-column inventories, with stable table, CSV, compact
+  JSON, and header-keyed record exports, matching Python and TypeScript.
+- Expose selected output probe source line inventories in `run_deck_analysis`
+  output-plan artifacts aligned with selected output-probe inventories, with
+  stable table, CSV, compact JSON, and header-keyed record exports, matching
+  Python and TypeScript.
+- Expose selected output directive source line inventories in
+  `run_deck_analysis` output-plan artifacts beside directive scope
+  inventories, with stable table, CSV, compact JSON, and header-keyed record
+  exports, matching Python and TypeScript.
+- Expose normalized selected output directive analysis scope inventories in
+  `run_deck_analysis` output-plan artifacts beside directive kind inventories,
+  distinguishing global `.save` / `.probe` selections from scoped `.probe`,
+  `.print`, and `.plot` selections in stable table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
+- Expose normalized selected output directive kind inventories in
+  `run_deck_analysis` output-plan artifacts beside the selected directive
+  tokens, with stable table, CSV, compact JSON, and header-keyed record exports,
+  matching Python and TypeScript.
+- Include selected `run_deck_analysis` output-plan tables in execution
+  `tables`, selected-run `TableList` metadata, and ordered `table_artifacts`
+  with stable table, CSV, compact JSON, and header-keyed record payloads,
+  matching Python and TypeScript.
+- Expose selected `run_deck_analysis` output-plan inventories as
+  `output_plan_artifacts` with stable result-column, output-probe,
+  output-directive, and table lists plus table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
+- Include policy-blocked `.control` row and summary tables in selected
+  `run_deck_analysis` execution `tables`, selected-run `TableList` metadata,
+  and ordered `table_artifacts` as `control-policy` and
+  `control-policy-summary` exports with stable table, CSV, JSON, and
+  header-keyed records, matching Python and TypeScript.
+- Carry policy-blocked `.control` command inventories through selected
+  `run_deck_analysis` run artifacts as stable `ControlPolicyArtifacts`,
+  `ControlPolicyCategoryList`, `ControlPolicyCodeList`, and
+  `ControlPolicySeverityList` table, CSV/JSON, and `table_artifacts` fields,
+  matching Python and TypeScript.
+- Group policy-blocked `.control` command artifacts from selected
+  `run_deck_analysis` execution results by category as
+  `control_policy_summary_artifacts` with stable counts, line lists, command
+  lists, code lists, severity lists, and table, CSV, compact JSON, and
+  header-keyed record exports, matching Python and TypeScript.
+- Expose policy-blocked `.control` commands from selected `run_deck_analysis`
+  execution results as `control_policy_artifacts` with stable line, category,
+  command, code, severity, and message metadata plus table, CSV, compact JSON,
+  and header-keyed record exports, matching Python and TypeScript.
+- Carry matched and unmatched `write <rawfile> <probes...>` probe inventories
+  through rawfile artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, and keep only
+  requested matching vector columns in deterministic in-memory rawfile output,
+  matching Python and TypeScript.
+- Carry matched and unmatched `wrdata <file> <probes...>` probe inventories
+  through WRDATA artifact `MatchedProbes` / `MatchedProbeList` and
+  `UnmatchedProbes` / `UnmatchedProbeList` summary columns, matching Python and
+  TypeScript.
+- Treat explicit `wrdata <file> <probes...>` probe lists as in-memory data-file
+  column selectors in `format_deck_wrdata_ascii`, preserving the scale column
+  plus requested matching probe columns in deterministic WRDATA output,
+  matching Python and TypeScript.
+- Carry accepted `.control` rawfile/data-write option inventories through
+  WRDATA artifact `Options` / `RawfileOptionList` summary columns, and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in in-memory WRDATA data files, matching Python and
+  TypeScript.
+- Expose deterministic in-memory ASCII data-file artifacts for accepted
+  `.control` `wrdata <file> ...` markers from selected `run_deck_analysis`
+  execution results as `wrdata_artifact_count`, `wrdata_artifacts`,
+  `wrdata_artifact_table`, `wrdata_artifact_csv`, `wrdata_artifact_json`, and
+  `wrdata_artifact_records`, matching Python and TypeScript.
+- Expose deterministic in-memory ASCII rawfile artifacts for accepted
+  `.control` `write <rawfile> ...` markers from selected `run_deck_analysis`
+  execution results as `rawfile_artifact_count`, `rawfile_artifacts`,
+  `rawfile_artifact_table`, `rawfile_artifact_csv`, `rawfile_artifact_json`,
+  and `rawfile_artifact_records`, matching Python and TypeScript.
+- Expose accepted `.control` rawfile option inventories from
+  `analyze_deck_controls` and selected `run_deck_analysis` execution results as
+  `rawfile_option_count` / `rawfile_options`, and carry them through
+  selected-run artifacts as stable `RawfileOptions` / `RawfileOptionList`
+  table, CSV/JSON, and ordered `table_artifacts` fields, matching Python and
+  TypeScript.
+- Expose accepted `.control` `write` / `wrdata` marker inventories from
+  `analyze_deck_controls` and selected `run_deck_analysis` execution results as
+  `write_marker_count` / `write_markers`, and carry them through selected-run
+  artifacts as stable `WriteMarkers` / `WriteMarkerList` table, CSV/JSON, and
+  ordered `table_artifacts` fields, matching Python and TypeScript.
+- Expose selected diagnostic inventories directly on selected
+  `run_deck_analysis` execution results as `diagnostic_count` /
+  `diagnostic_codes`, matching Python and TypeScript.
+- Expose normalized `.control` command inventories directly on selected
+  `run_deck_analysis` execution results as `control_line_count` /
+  `control_lines`, matching Python and TypeScript.
+- Add normalized `.control` command inventories to `analyze_deck_controls`
+  separately from full active deck input, and carry those commands through
+  selected `run_deck_analysis` run artifacts as stable `ControlLines` /
+  `ControlLineList` table, CSV/JSON, and ordered `table_artifacts` fields,
+  matching Python and TypeScript.
+- Surface existing `.control` body policy diagnostic codes in selected
+  `run_deck_analysis` run artifacts and propagate them through stable
+  run-artifact tables, CSV/JSON helpers, and ordered `table_artifacts`,
+  matching Python and TypeScript.
+- Add ordered `table_artifacts` to selected `run_deck_analysis` execution
+  results with each stable table's text, CSV, compact JSON, and header-keyed
+  records beside the existing table inventory, matching Python and TypeScript.
+- Add stable table count/name lists directly to selected `run_deck_analysis`
+  execution results beside analysis directives, output probes, output
+  directives, and selected-run artifacts, matching Python and TypeScript.
+- Add stable table count/name lists to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `TableList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add selected analysis directives to `run_deck_analysis` results and selected-run
+  artifacts, including a stable `AnalysisDirectiveList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add selected output directives to `run_deck_analysis` results beside selected
+  output probes, matching Python and TypeScript.
+- Add `deck_table_records` for stable tab-separated deck output tables as
+  header-keyed records for browser and host integrations, matching Python and
+  TypeScript.
+- Add `format_deck_table_json` for stable tab-separated deck output tables as
+  compact JSON records keyed by the header row, matching Python and TypeScript.
+- Add `format_deck_table_csv` for stable tab-separated deck output tables with
+  the same deterministic CSV escaping as selected-run artifacts, matching
+  Python and TypeScript.
+- Add `format_deck_run_artifact_json` for selected-run artifacts with the same
+  stable keys and normalized cell values as `format_deck_run_artifact_table`,
+  matching Python and TypeScript.
+- Add `format_deck_run_artifact_csv` for selected-run artifacts with the same
+  stable columns as `format_deck_run_artifact_table` plus deterministic CSV
+  escaping for browser and spreadsheet consumers, matching Python and
+  TypeScript.
+- Add selected Fourier probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `FourierList` column from
+  `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add selected measurement names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `MeasurementList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Add normalized output-probe names to selected-run artifacts in
+  `run_deck_analysis` and render them in a stable `OutputProbeList` column
+  from `format_deck_run_artifact_table`, matching Python and TypeScript.
+- Emit explicit policy diagnostics for selected `.control` block
+  variable/state mutation commands, including `let`, `alter`, `alterparam`,
+  `set`, and `unset`, in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript. Accepted no-op `set` options still route as
+  no-op markers.
+- Emit explicit policy diagnostics for selected `.control` block control-flow
+  commands, including `if`, `while`, `foreach`, and `repeat`, in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Control-flow execution remains disabled by the deck execution
+  policy.
+- Emit explicit policy diagnostics for selected `.control` block `cd`
+  working-directory mutation commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Working-directory
+  mutation remains disabled by the deck execution policy.
+- Emit explicit policy diagnostics for selected `.control` block `source` and
+  `shell` external script/shell commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. External script
+  execution and shelling out remain disabled by the deck execution policy.
+- Accept selected `.control` block read-only `echo`, `rusage`, and `where`
+  console/debug commands as no-op control commands in `analyze_deck_controls`
+  and `resolve_deck_sources`, matching Python and TypeScript. Actual
+  console/debug output remains out of scope for these markers.
+- Accept selected `.control` block read-only `status`, `version`, and `help`
+  UI introspection commands as no-op control commands in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Actual console/help output remains out of scope for these
+  markers.
+- Accept selected `.control` block read-only `show` and `showmod`
+  device/model inspection commands as no-op control commands in
+  `analyze_deck_controls` and `resolve_deck_sources`, matching Python and
+  TypeScript. Actual console/model inspection output remains out of scope for
+  these markers.
+- Accept selected `.control` block read-only `display` and `listing`
+  inspection commands as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Actual
+  console/listing output remains out of scope for these markers.
+- Accept selected `.control` block `wrdata <file> <probes...>` ASCII
+  data-write markers as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Actual data-file
+  serialization remains out of scope for this marker.
+- Accept selected `.control` block `write <rawfile> [probes...]` rawfile-write
+  markers as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript. Rawfile
+  serialization remains out of scope for this marker.
+- Accept selected `.control` block `set appendwrite` rawfile append-write
+  options as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript.
+- Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
+  rawfile output toggles as no-op control commands in `analyze_deck_controls`
+  and `resolve_deck_sources`, matching Python and TypeScript.
+- Accept selected `.control` block `set filetype=ascii` output-format options
+  as no-op control commands in `analyze_deck_controls` and
+  `resolve_deck_sources`, matching Python and TypeScript.
+- Accept selected `.control` block `reset` session-reset markers as no-op
+  control commands in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript.
+- Accept selected `.control` block `set noaskquit` UI options as no-op control
+  commands in `analyze_deck_controls` and `resolve_deck_sources`, matching
+  Python and TypeScript.
+- Accept selected `.control` block `quit` interpreter-exit markers as no-op
+  control commands in `analyze_deck_controls` and `resolve_deck_sources`,
+  matching Python and TypeScript.
+- Accept selected `.control` block `run` execution markers as no-op control
+  commands in `analyze_deck_controls` and `resolve_deck_sources`, matching
+  Python and TypeScript.
+- Add selected `.control` block `four` and `fourier` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.four` deck cards, matching Python and TypeScript.
+- Add selected `.control` block `measure` and `meas` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.measure` and `.meas` deck cards, matching Python and
+  TypeScript.
+- Add selected `.control` block `save` and `probe` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.save` and `.probe` deck cards, matching Python and
+  TypeScript.
+- Add selected `.control` block command routing to `analyze_deck_controls` and
+  `resolve_deck_sources`; analysis/output commands (`op`, `dc`, `ac`, `tran`,
+  `save`, `probe`, `print`, and `plot`) are normalized into dotted deck cards,
+  matching Python and TypeScript.
+- Add control-block exclusion diagnostics to `analyze_deck_controls` and
+  `resolve_deck_sources`; unsupported `.control` / `.endc` block markers and
+  unrecognized body commands are no longer forwarded as active deck lines and
+  emit stable diagnostics, matching Python and TypeScript.
+- Add parsed `.plot <analysis> ...` output routing to `resolve_deck_outputs`,
+  `select_deck_output_probes`, and deck table formatters, matching Python and
+  TypeScript.
+- Add parsed `.print <analysis> ...` output routing to `resolve_deck_outputs`,
+  `select_deck_output_probes`, and deck table formatters, matching Python and
+  TypeScript.
+- Add selected-run artifact summaries to `run_deck_analysis`; executions now
+  return stable result-row, output-probe, measurement, and Fourier counts plus
+  a run-artifact table, matching Python and TypeScript.
+- Add selected Fourier artifacts to `run_deck_analysis`; selected `.tran`
+  executions now return parsed `.four` harmonic results and a stable Fourier
+  table alongside the selected plan, solver result, output probes, and
+  measurement artifacts, matching Python and TypeScript.
+- Add selected measurement artifacts to `run_deck_analysis`; selected `.dc`,
+  `.ac`, and `.tran` executions now return parsed `.measure` / `.meas` results
+  and a stable measurement table alongside the selected plan, solver result,
+  output probes, and output table, matching Python and TypeScript.
+- Add selected-output probe artifacts to `run_deck_analysis`; callers now
+  receive the normalized deck-selected output probes alongside each selected
+  plan, solver result, and stable table, matching Python and TypeScript.
+- Add `.tran` print-step output routing to `run_deck_analysis`; deck transient
+  plans now keep `.tran TSTEP` as the stable output print grid while `MAXSTEP`
+  caps internal solver stepping, matching Python and TypeScript.
+- Add `.tran START/MAXSTEP/UIC` selected-plan execution routing to
+  `run_deck_analysis`; deck transient plans now apply `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Python and TypeScript.
+- Add `.ac LIN` and `.ac OCT` selected-plan execution routing to
+  `run_deck_analysis`; deck AC plans now execute SPICE-style linear,
+  points-per-decade, and points-per-octave grids, matching Python and
+  TypeScript.
+- Add `run_deck_analysis` so callers can select one deck `.op`, `.dc`,
+  `.ac DEC`, or `.tran` plan, execute the matching solver, and receive the
+  selected plan, solver result, and deck-selected output table, matching Python
+  and TypeScript.
+- Add `select_deck_analysis_plan` so callers can choose one explicit or
+  implicit deck analysis plan with stable ambiguity and invalid-card errors,
+  matching Python and TypeScript.
+- Add `resolve_deck_analyses` so `.op`, `.dc`, `.ac`, and `.tran` analysis
+  cards are extracted before `.end` into stable metadata with shared
+  diagnostics, matching Python and TypeScript.
+- Add `resolve_deck_fourier`, `fourier_transient_cards`, and
+  `fourier_transient_deck` so parsed `.four` / `.FOUR` deck cards can route
+  transient samples into SPICE-style Fourier harmonic results with optional
+  `HARMONICS=` and `FROM=` controls, matching Python and TypeScript.
+- Add `measure_transient_delay_between_probes` and parsed transient
+  `.measure ... TRIG ... TARG ...` routing so deck measurements can report
+  trigger-to-target delays with counted crossing controls, matching Python and
+  TypeScript.
+- Add `measure_transient_when_probe_counted` and parsed transient
+  `.measure ... WHEN probe=target RISE|FALL|CROSS=n` routing so deck
+  measurements can report counted threshold occurrences over optional
+  `FROM=` / `TO=` windows, matching Python and TypeScript.
+- Add `measure_transient_when_probe` and parsed transient
+  `.measure ... WHEN probe=target` routing so deck measurements can report the
+  first crossing time over optional `FROM=` / `TO=` windows, matching Python
+  and TypeScript.
+- Add `measure_transient_find_at_probe` and parsed transient
+  `.measure ... FIND ... AT=` routing so deck measurements can sample or
+  linearly interpolate a probe value at one scalar time, matching Python and
+  TypeScript.
+- Add `measure_ac_sweep_probe`, `measure_ac_sweep_cards`, and
+  `measure_ac_sweep_deck` so parsed `.measure ac` / `.meas ac` cards can route
+  AC sweep probe magnitudes into the shared scalar measurement table surface,
+  matching Python and TypeScript.
+- Add `measure_dc_sweep_probe`, `measure_dc_sweep_cards`, and
+  `measure_dc_sweep_deck` so parsed `.measure dc` / `.meas dc` cards can route
+  DC sweep probe samples into the shared scalar measurement table surface,
+  matching Python and TypeScript.
+- Add `resolve_deck_outputs`, `select_deck_output_probes`, and
+  `format_deck_*_table` helpers so parsed `.save` and `.probe` deck cards can
+  drive stable operating-point, DC sweep, AC sweep, and transient table output
+  in the live Rust package.
+- Add `resolve_deck_measurements`, `measure_transient_cards`, and
+  `measure_transient_deck` for parsed transient `.measure` / `.meas` card
+  routing into stable scalar measurement rows, matching Python and TypeScript.
+- Add `measure_transient_probe` and `format_measurement_table` for a shared
+  `.MEASURE`-style scalar transient output surface with MAX, MIN, AVG, RMS,
+  peak-to-peak, and final-value probe measurements, matching Python and
+  TypeScript.
+- Add `dc_initial_vector_from_conditions`,
+  `dc_op_with_initial_conditions`, and `dc_op_with_initial_vector` so parsed
+  `.ic` / `.nodeset` node-voltage hints can seed DC operating-point Newton
+  solves as MNA warm-start vectors, with `.ic` values taking precedence over
+  `.nodeset`, matching Python and TypeScript.
+- Add scalar `.func` call evaluation to `resolve_deck_parameters`: definitions
+  are collected before `.end`, calls can appear in `.param` assignments and
+  braced or quoted active-line expressions, and unknown functions, bad arity,
+  and recursive calls produce stable diagnostics, matching Python and
+  TypeScript.
+- Add `resolve_deck_functions` for scalar `.func name(args) expression`
+  definition extraction before `.end`, braced or quoted expression delimiter
+  stripping, and stable diagnostics for malformed signatures, arguments,
+  duplicate arguments, and empty expressions, matching Python and TypeScript.
+- Add `resolve_deck_initial_conditions` for scalar `.ic` and `.nodeset`
+  `V(node)=value` hint extraction before `.end`, numeric SPICE
+  suffix/arithmetic expression evaluation, and stable diagnostics for malformed
+  targets and unresolved values, matching Python and TypeScript.
+- Add `resolve_deck_parameters` for scalar whitespace-tokenized `.param`
+  assignment evaluation, braced and quoted active-line expression rewriting,
+  and stable diagnostics for unresolved expressions, matching Python and
+  TypeScript.
+- Add `resolve_deck_sources` for map-backed `.include` and selected
+  `.lib path section` expansion with stable diagnostics for missing sources,
+  missing or unterminated library sections, cycles, and still-unsupported
+  `.control` blocks, matching Python and TypeScript.
+- Add `analyze_deck_controls` for shared deck-control boundary diagnostics:
+  active pre-`.end` lines plus stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control`, matching Python and TypeScript.
+- Add `compatibility_corpus`, `release_readiness_gates`,
+  `format_compatibility_corpus_table`, and `format_release_readiness_report`
+  for the first oracle-backed compatibility deck corpus with golden tolerances
+  and known incompatibility notes shared with Python and TypeScript.
+- Add `CustomModel`, `CustomModelKind`, `CustomModelEvaluation`, and
+  `analyze_custom_model_source` for the first Rust-native two-terminal
+  residual/Jacobian custom-model fast path and Verilog-A subset diagnostics
+  shared with Python and TypeScript.
+- Add `format_digital_event_stream_vcd` and
+  `format_digital_event_stream_vcd_with_options` for deterministic VCD
+  correlation output from SPICE-side mixed-signal digital event streams.
+- Add `normalize_model_card`, typed model-card builders, and
+  `device_model_audit_fixtures` for cross-language diode, BJT, JFET, and
+  Level-1 MOS `.model` alias compatibility fixtures.
+- Add `DcResult::diagnostics` with stable matrix size, solver kind, tolerance,
+  convergence aid, and final Newton delta metadata; large AC complex systems
+  now route through the sparse-row complex solver path.
+
+## 0.14.0 — 2026-06-05
+
+- Add `s_parameters_corners_parallel` for order-preserving parallel Rust
+  S-parameter extraction across named PVT corners.
+- Add `noise_ac_corners_parallel` for order-preserving parallel Rust `.NOISE`
+  evaluation across named PVT corners.
+- Add `sens_dc_corners_parallel` for order-preserving parallel Rust DC
+  sensitivity evaluation across named PVT corners.
+- Add `mc_dc_corners_parallel` for order-preserving parallel Rust Monte Carlo
+  DC evaluation across named PVT corners.
+- Add `tf_corners_parallel` for order-preserving parallel Rust `.TF`
+  transfer-function evaluation across named PVT corners.
+- Add `ac_sweep_corners_parallel` for order-preserving parallel Rust `.AC`
+  frequency-sweep evaluation across named PVT corners.
+- Add `dc_sweep_corners_parallel` for order-preserving parallel Rust `.DC`
+  source-sweep evaluation across named PVT corners.
+- Add `dc_corners_parallel` for order-preserving parallel Rust DC
+  operating-point evaluation across named PVT corners.
+- Add `digital_event_streams_to_bridge_schedule` and
+  `format_digital_bridge_schedule_table` for stable SPICE-side mixed-signal
+  bridge breakpoint schedules over digital event starts and finite-edge
+  transition endpoints.
+- Add `transient_adaptive_with_digital_event_streams`,
+  `transient_adaptive_with_digital_event_streams_corners`, and adaptive
+  digital event stream table formatters for SPICE-side mixed-signal bridge
+  snapshots that carry method, rejected-step, and convergence metadata.
+- Add `transient_with_digital_event_streams_corners` and
+  `format_corner_digital_event_stream_table` for stable named-corner
+  mixed-signal transient bridge output stream snapshots.
+- Add `transient_with_digital_event_streams` for a SPICE-side mixed-signal
+  transient bridge from named digital input streams to sampled output streams.
+- Add `digital_event_streams_to_voltage_sources` for converting named
+  mixed-signal event streams into finite-edge PWL voltage sources.
+- Add `sample_transient_probes_as_digital_event_streams` for collecting
+  multiple thresholded transient probes as named mixed-signal event streams.
+- Add `DigitalEventStream` and `format_digital_event_stream_table` for stable
+  tab-separated named mixed-signal digital event stream snapshots.
+- Add `format_digital_event_table` for stable tab-separated mixed-signal
+  digital event stream snapshots.
+- Add binary mixed-signal boundary helpers that convert digital event timelines
+  and named event streams into finite-edge PWL voltage sources and threshold
+  transient probes back into digital events.
+- Add `dc_temperature_sweep_corners` and
+  `format_corner_temperature_dc_table` for stable tab-separated named-corner
+  DC operating-point snapshots across explicit `.temp`-style analysis
+  temperatures.
+- Add `dc_temperature_sweep` and `format_temperature_dc_table` for stable
+  tab-separated DC operating-point snapshots across explicit `.temp`-style
+  analysis temperatures.
+- Add `format_adaptive_transient_table`, `transient_adaptive_corners`, and
+  `format_corner_adaptive_transient_table` for stable tab-separated adaptive
+  transient sample text output snapshots, including method, rejected-step, and
+  convergence metadata.
+- Add `fourier_corners`, `fourier_corners_with_start_time`, and
+  `format_corner_fourier_table` for stable tab-separated named-corner `.FOUR`
+  harmonic coefficient, magnitude, phase, DC, and THD text output snapshots.
+- Add `transient_corners`, `transient_corners_with_method`, and
+  `format_corner_transient_table` for stable tab-separated named-corner
+  transient sample text output snapshots.
+- Add `format_corner_dc_table` for stable tab-separated named-corner DC
+  operating-point voltage and current text output snapshots.
+- Add `format_corner_tf_table` for stable tab-separated named-corner `.TF`
+  gain and impedance text output snapshots.
+- Add `format_corner_ac_table` for stable tab-separated named-corner `.AC`
+  real, imaginary, magnitude, and phase text output snapshots.
+- Add `format_dc_sweep_table` and `format_corner_dc_sweep_table` for stable
+  tab-separated `.DC` source-sweep value and selected-probe snapshots.
+- Add `format_mc_table` and `format_corner_mc_table` for stable tab-separated
+  `.MC` output-node trial, mean, standard-deviation, and convergence snapshots.
+- Add `format_corner_distortion_table` for stable tab-separated named-corner
+  `.DISTO` harmonic magnitude, phase, and THD text output snapshots.
+- Add `format_corner_pole_zero_table` for stable tab-separated named-corner
+  `.PZ` pole-zero text output snapshots.
+- Add `format_corner_pss_table` for stable tab-separated named-corner PSS
+  steady-state period, convergence, residual, and probe text output snapshots.
+- Add `format_corner_sens_table` for stable tab-separated named-corner `.SENS`
+  nominal, absolute-sensitivity, and relative-sensitivity text output snapshots.
+- Add `format_corner_noise_table` for stable tab-separated named-corner
+  `.NOISE` total and per-source PSD text output snapshots.
+- Add `format_corner_s_parameter_table` for stable tab-separated named-corner
+  S-parameter real, imaginary, magnitude, and phase text output snapshots.
+- Add `format_sens_table` for stable tab-separated `.SENS` nominal,
+  absolute-sensitivity, and relative-sensitivity text output snapshots.
+- Add multi-corner DC sensitivity analysis with `sens_dc_corners`, returning
+  the same `.SENS` output-node query evaluated under each named corner.
+- Add `format_noise_table` for stable tab-separated `.NOISE` total and
+  per-source PSD text output snapshots.
+- Add multi-corner AC noise analysis with `noise_ac_corners`, returning the
+  same `.NOISE` output/input query evaluated under each named corner.
+- Add multi-corner periodic steady-state analysis with `pss_corners`, returning
+  the same PSS solve evaluated under each named corner.
+- Add multi-corner pole-zero analysis with `pole_zero_corners`, returning the
+  selected constrained `.PZ` topology evaluated under each named corner.
+- Add multi-corner distortion projection with
+  `distortion_from_transient_corners`, returning the same transient-to-`.DISTO`
+  query evaluated under each named corner.
+- Add multi-corner S-parameter extraction with `s_parameters_corners`,
+  returning the same two-port query evaluated under each named corner.
+- Add `format_s_parameter_table` for stable tab-separated S-parameter real,
+  imaginary, magnitude, and phase text output snapshots.
+- Add `diode_at_temperature` and `circuit_at_temperature` helpers, which adjust
+  diode thermal voltage and saturation current for an operating temperature
+  using a SPICE-style silicon energy-gap foothold.
+- Add `bjt_at_temperature` and extend `circuit_at_temperature` to adjust BJT
+  thermal voltage and saturation current with the same silicon energy-gap
+  foothold.
+- Add `mosfet_at_temperature` and extend `circuit_at_temperature` to adjust
+  Level-1 MOSFET threshold voltage, transconductance parameter, and nominal
+  temperature.
+- Add `format_dc_table` and `format_transient_table` for stable tab-separated
+  node-voltage and branch-current text output snapshots.
+- Add `format_pole_zero_table` for stable tab-separated `.PZ` pole-zero text
+  output snapshots.
+- Add `format_distortion_table` for stable tab-separated `.DISTO` harmonic
+  magnitude, phase, and THD text output snapshots.
+- Add `format_fourier_table` for stable tab-separated `.FOUR` harmonic
+  coefficient, magnitude, phase, DC, and THD text output snapshots.
+- Add `format_ac_table` for stable tab-separated `.AC` real, imaginary,
+  magnitude, and phase text output snapshots.
+- Add `format_tf_table` for stable tab-separated `.TF` gain and impedance text
+  output snapshots.
+- Add JFET source-follower transient fixtures covering nonlinear
+  companion-model solves.
+- Add `fourier`, which computes SPICE-style DC, harmonic sine/cosine
+  coefficients, magnitudes, phases, and THD from transient samples for
+  `V(node)` and `I(source)` probes.
+- Add `distortion_from_transient`, which runs the Fourier extraction path and
+  returns the Phase-8 distortion result shape directly from transient samples.
+- Add `pole_zero_rc_highpass`, which returns the origin zero and RC pole for a
+  constrained first-order high-pass fixture.
+- Add `pole_zero_rlc_lowpass`, which returns the second-order pole pair for a
+  constrained series R-L / shunt-C low-pass fixture.
+- Add `pole_zero_rlc_highpass`, which returns the double origin zero plus
+  second-order pole pair for a constrained series R-C / shunt-L high-pass
+  fixture.
+- Add `pole_zero_rlc_bandpass`, which returns the origin zero plus second-order
+  pole pair for a constrained series L-C / shunt-R band-pass fixture.
+- Add `pole_zero_rlc_notch`, which returns the imaginary-axis zero pair plus
+  second-order pole pair for a constrained series-R / shunt-series-L-C notch
+  fixture.
+- Add MOS Level-1 capacitance support through `CGSO`, `CGDO`, `CGBO`, `CBS`,
+  and `CBD`, contributing small-signal AC susceptance.
+- Add MOSFET channel thermal noise to `.NOISE` via the long-channel `4kTγgm`
+  model and per-element `M` device contributions.
+- Add diode emission coefficient support through `emission_coefficient`,
+  scaling the effective thermal voltage in DC and small-signal diode
+  conductance.
+- Add diode breakdown support through `breakdown_voltage` /
+  `breakdown_current`, adding a bounded reverse-breakdown current and
+  conductance foothold.
+- Add diode junction capacitance support through `junction_capacitance`,
+  contributing small-signal AC susceptance in parallel with the linearized
+  diode conductance.
+- Add diode transit-time support through `transit_time`, contributing
+  forward-bias diffusion capacitance to small-signal AC admittance.
+- Add BJT capacitance support through `base_emitter_capacitance` /
+  `base_collector_capacitance`, contributing small-signal AC susceptance.
+- Add BJT transit-time support through `forward_transit_time`, contributing
+  forward-bias diffusion capacitance to small-signal AC admittance.
+- Add BJT reverse transit-time support through `reverse_transit_time`,
+  contributing base-collector diffusion capacitance to small-signal AC
+  admittance.
+- Add pseudo-transient DC continuation as a final bounded convergence aid after
+  Newton, Gmin stepping, and source stepping; successful fallback results
+  report `DcConvergenceAid::PseudoTransient`.
+- Add `DcResult::convergence_aid`, reporting whether the DC operating point
+  came from plain Newton, Gmin stepping, source stepping, or no successful
+  convergence aid.
+- Add `transient_adaptive`, an LTE-controlled transient surface with bounded
+  step growth/shrinkage and `Euler` / `Trap` / `Gear2` method routing.
+- Add trapezoidal transient integration parity for capacitors and inductors,
+  enabling LC damping comparisons against Gear-2.
+- Add Gear-2 transient integration with BDF2 capacitor/inductor companion
+  histories after bootstrapping with one backward-Euler step.
+- Add transient analysis stamping for `TransmissionLine` using a lossless
+  Bergeron delay-line companion model, including matched-load delayed step
+  behavior.
+- Add AC analysis stamping for `TransmissionLine` using the lossless two-port
+  admittance matrix, including matched-load phase-delay behavior.
+- Add a public `TransmissionLine` element as the parser-facing SPICE `T` card
+  foothold for future AC/transient delay-line stamping.
+- Add transient analysis stamping for `MutualInductor` by coupling referenced
+  inductor pairs through a two-winding companion conductance matrix.
+- Add AC analysis stamping for `MutualInductor` by coupling referenced
+  inductor pairs through the inverted two-winding inductance matrix.
+- Add a public `MutualInductor` element as the parser-facing SPICE `K` card
+  foothold.
+- Add JFET nonlinear DC operating-point stamping and AC small-signal analysis
+  from the solved DC bias point.
+- Add a public `Jfet` element and `JfetPolarity` as the parser-facing
+  three-terminal SPICE `J` card foothold; nonlinear analysis stamping follows
+  in a later compatibility slice.
 - Add `pss`, which runs the bounded shooting-Newton solve and returns one
   steady-state transient period from the solved circuit.
+- Add `format_pss_table`, which renders the direct PSS result as a stable
+  tab-separated steady-state table with period, step, convergence, iteration,
+  residual, time, and selected voltage/current probes.
 - Add `pss_newton_solve`, which runs bounded accepted Newton iterations until
   residual convergence, no improvement, or the iteration cap.
 - Add `pss_newton_iteration`, which runs one candidate update, accepts it only
@@ -35,6 +681,8 @@
   harmonic common independent-source period.
 - Add multi-corner transfer-function analysis with `tf_corners`, returning the
   same `.TF` query evaluated under each named corner.
+- Add multi-corner Monte Carlo DC analysis with `mc_dc_corners`, returning the
+  same seeded tolerance trial set evaluated under each named corner.
 - Add multi-corner AC frequency sweeps with `ac_sweep_corners`, returning the
   same frequency grid evaluated under each named corner.
 - Add multi-corner DC source sweeps with `dc_sweep_corners`, returning the same

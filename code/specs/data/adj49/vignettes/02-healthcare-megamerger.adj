@@ -1,0 +1,33 @@
+% Vignette 2 — healthcare megamerger with high concentration.
+%
+% $48B combination of two major health insurers. Significant HHI
+% overlap in 14 state markets — HSR Second Request highly likely.
+% Stock-and-cash mix (65% stock). Narrow MAC carveouts without
+% industry headwind protection (negotiated when target had
+% leverage). RTF of 2.5%. No announced activist position yet but
+% major holders not locked up. Regulated industry (state DOIs +
+% federal HHS review).
+%
+% Expected behaviour: posterior well below prior; multiple
+% uncertainties (mostly about whether divestitures will be
+% acceptable to FTC). The joint interaction term (industry
+% concentration + narrow MAC) should fire and further suppress.
+% Kickback strongly recommended.
+
+observe regulatory(hsr_second_request_likely)
+observe regulatory(industry_concentration_high)
+observe regulatory(regulated_industry_target)
+observe deal_structure(stock_component_above_50pct)
+observe mac_clause(narrow_carveouts_no_industry)
+observe rtf_below_2pct
+
+uncertain { financing(committed_debt_no_market_out),
+            financing(financing_condition_in_merger_agreement) } for deal_completes_by_drop_dead
+  source "financing structure under amendment per public filings"
+  trust authoritative
+
+uncertain { shareholders(known_activist_position),
+            shareholders(major_holders_locked_up) } for deal_completes_by_drop_dead
+  source "activist filing window not yet expired; voting agreements being negotiated"
+
+? deal_completes_by_drop_dead

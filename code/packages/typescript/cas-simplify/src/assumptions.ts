@@ -9,6 +9,7 @@ import {
   equals,
   headName,
   int,
+  structuralKey,
 } from "@coding-adventures/symbolic-ir";
 
 const POSITIVE = "positive";
@@ -36,19 +37,48 @@ const PROPERTY_MAP = new Map<string, string>([
 
 const ZERO_IR = int(0);
 
+// Short operator strings used to canonicalise compound relations.  The
+// six legal values mirror the Python ``_RELATION_HEAD_TO_OP`` map and
+// give us a stable, hashable middle component for the
+// ``(lhs, op, rhs)`` triple stored in ``_generalRelations``.
+type RelationOp = ">" | "<" | ">=" | "<=" | "=" | "!=";
+
+const RELATION_HEAD_TO_OP: ReadonlyMap<string, RelationOp> = new Map([
+  [GREATER.name, ">"],
+  [LESS.name, "<"],
+  [GREATER_EQUAL.name, ">="],
+  [LESS_EQUAL.name, "<="],
+  [EQUAL.name, "="],
+  [NOT_EQUAL.name, "!="],
+]);
+
 export class AssumptionContext {
   private readonly facts = new Map<string, Set<string>>();
 
+  // Track G1 (TS port) — store compound relations as canonicalised
+  // ``(lhs, op, rhs)`` triples keyed by a structural string.  IR nodes
+  // are not natively hashable in JavaScript, but ``structuralKey``
+  // produces a deterministic string that respects structural equality
+  // (the same key Add / Mul canonicalisation already relies on).
+  private readonly generalRelations = new Set<string>();
+
   assumeRelation(expr: IRNode): void {
-    const parsed = relationAgainstZero(expr);
+    const parsed = parseRelation(expr);
     if (parsed === undefined) return;
-    const [symbolName, relation] = parsed;
-    if (relation === GREATER.name) this.add(symbolName, POSITIVE);
-    else if (relation === LESS.name) this.add(symbolName, NEGATIVE);
-    else if (relation === GREATER_EQUAL.name) this.add(symbolName, NONNEG);
-    else if (relation === LESS_EQUAL.name) this.add(symbolName, NONPOS);
-    else if (relation === EQUAL.name) this.add(symbolName, ZERO);
-    else if (relation === NOT_EQUAL.name) this.add(symbolName, NONZERO);
+    const { lhs, op, rhs } = parsed;
+    const sym = symbolNameOf(lhs);
+    // Plain-symbol-vs-zero path: fold into the per-symbol fact table.
+    if (sym !== undefined && equals(rhs, ZERO_IR)) {
+      if (op === ">") this.add(sym, POSITIVE);
+      else if (op === "<") this.add(sym, NEGATIVE);
+      else if (op === ">=") this.add(sym, NONNEG);
+      else if (op === "<=") this.add(sym, NONPOS);
+      else if (op === "=") this.add(sym, ZERO);
+      else if (op === "!=") this.add(sym, NONZERO);
+      return;
+    }
+    // Compound-relation path: canonicalise and stash.
+    this.generalRelations.add(canonKey(lhs, op, rhs));
   }
 
   assumeProperty(symbol: IRNode, property: IRNode): void {
@@ -60,19 +90,25 @@ export class AssumptionContext {
   }
 
   forgetRelation(expr: IRNode): void {
-    const parsed = relationAgainstZero(expr);
+    const parsed = parseRelation(expr);
     if (parsed === undefined) return;
-    const [symbolName, relation] = parsed;
-    if (relation === GREATER.name) this.remove(symbolName, POSITIVE);
-    else if (relation === LESS.name) this.remove(symbolName, NEGATIVE);
-    else if (relation === GREATER_EQUAL.name) this.remove(symbolName, NONNEG);
-    else if (relation === LESS_EQUAL.name) this.remove(symbolName, NONPOS);
-    else if (relation === EQUAL.name) this.remove(symbolName, ZERO);
-    else if (relation === NOT_EQUAL.name) this.remove(symbolName, NONZERO);
+    const { lhs, op, rhs } = parsed;
+    const sym = symbolNameOf(lhs);
+    if (sym !== undefined && equals(rhs, ZERO_IR)) {
+      if (op === ">") this.remove(sym, POSITIVE);
+      else if (op === "<") this.remove(sym, NEGATIVE);
+      else if (op === ">=") this.remove(sym, NONNEG);
+      else if (op === "<=") this.remove(sym, NONPOS);
+      else if (op === "=") this.remove(sym, ZERO);
+      else if (op === "!=") this.remove(sym, NONZERO);
+      return;
+    }
+    this.generalRelations.delete(canonKey(lhs, op, rhs));
   }
 
   forgetAll(): void {
     this.facts.clear();
+    this.generalRelations.clear();
   }
 
   isPositive(symbolName: string): boolean | undefined {
@@ -108,30 +144,59 @@ export class AssumptionContext {
     return undefined;
   }
 
+  /**
+   * Evaluate a relational IR node to ``true`` / ``false`` / ``undefined``.
+   *
+   * Two paths, tried in order:
+   *
+   *   1. Plain-symbol-vs-zero — folds against the per-symbol fact
+   *      table (Phase 21 behaviour).  May return ``true`` or ``false``
+   *      depending on what the user asserted; falls through on
+   *      ``undefined`` so a verbatim compound assertion may still
+   *      match.
+   *   2. Compound-relation lookup — Track G1.  Structurally looks up
+   *      ``_generalRelations`` for the canonicalised query.  Returns
+   *      ``true`` on hit, otherwise ``undefined``.  No
+   *      negative-knowledge inference: asserting ``a^2 > b^2`` does
+   *      NOT make ``a^2 < b^2`` return ``false``.
+   */
   isTrueRelation(expr: IRNode): boolean | undefined {
-    const parsed = relationAgainstZero(expr);
+    const parsed = parseRelation(expr);
     if (parsed === undefined) return undefined;
-    const [symbolName, relation] = parsed;
-    const facts = this.facts.get(symbolName);
+    const { lhs, op, rhs } = parsed;
+    const sym = symbolNameOf(lhs);
 
-    if (relation === GREATER.name) return this.isPositive(symbolName);
-    if (relation === LESS.name) return this.isNegative(symbolName);
-    if (relation === GREATER_EQUAL.name) {
+    if (sym !== undefined && equals(rhs, ZERO_IR)) {
+      const plain = this.isTruePlain(sym, op);
+      if (plain !== undefined) return plain;
+      // Fall through to compound-relation lookup just in case the user
+      // asserted the comparison verbatim with a non-symbol LHS that
+      // canonicalises to the same triple.
+    }
+
+    return this.generalRelations.has(canonKey(lhs, op, rhs)) ? true : undefined;
+  }
+
+  private isTruePlain(symbolName: string, op: RelationOp): boolean | undefined {
+    const facts = this.facts.get(symbolName);
+    if (op === ">") return this.isPositive(symbolName);
+    if (op === "<") return this.isNegative(symbolName);
+    if (op === ">=") {
       if (facts?.has(POSITIVE) || facts?.has(ZERO) || facts?.has(NONNEG)) return true;
       if (facts?.has(NEGATIVE)) return false;
       return undefined;
     }
-    if (relation === LESS_EQUAL.name) {
+    if (op === "<=") {
       if (facts?.has(NEGATIVE) || facts?.has(ZERO) || facts?.has(NONPOS)) return true;
       if (facts?.has(POSITIVE)) return false;
       return undefined;
     }
-    if (relation === EQUAL.name) {
+    if (op === "=") {
       if (facts?.has(ZERO)) return true;
       if (facts?.has(POSITIVE) || facts?.has(NEGATIVE) || facts?.has(NONZERO)) return false;
       return undefined;
     }
-    if (relation === NOT_EQUAL.name) {
+    if (op === "!=") {
       if (facts?.has(NONZERO) || facts?.has(POSITIVE) || facts?.has(NEGATIVE)) return true;
       if (facts?.has(ZERO)) return false;
       return undefined;
@@ -171,13 +236,42 @@ export class AssumptionContext {
   }
 }
 
-function relationAgainstZero(expr: IRNode): readonly [string, string] | undefined {
-  if (expr.kind !== "apply" || expr.args.length !== 2 || !equals(expr.args[1], ZERO_IR)) {
-    return undefined;
+interface ParsedRelation {
+  readonly lhs: IRNode;
+  readonly op: RelationOp;
+  readonly rhs: IRNode;
+}
+
+function parseRelation(expr: IRNode): ParsedRelation | undefined {
+  if (expr.kind !== "apply" || expr.args.length !== 2) return undefined;
+  const op = RELATION_HEAD_TO_OP.get(headName(expr.head));
+  if (op === undefined) return undefined;
+  return { lhs: expr.args[0], op, rhs: expr.args[1] };
+}
+
+/**
+ * Canonicalise a ``(lhs, op, rhs)`` relation and return a string key
+ * suitable for set membership.  Rules mirror the Python ``_canon_relation``:
+ *
+ *   - ``a < b`` is stored as ``(b, >, a)`` — every strict inequality
+ *     becomes ``>``.
+ *   - ``a <= b`` becomes ``(b, >=, a)``.
+ *   - ``a = b`` / ``a != b`` are commutative — order by structural key.
+ *   - ``a > b`` and ``a >= b`` pass through verbatim.
+ */
+function canonKey(lhs: IRNode, op: RelationOp, rhs: IRNode): string {
+  if (op === "<") return tripleKey(rhs, ">", lhs);
+  if (op === "<=") return tripleKey(rhs, ">=", lhs);
+  if (op === "=" || op === "!=") {
+    const a = structuralKey(lhs);
+    const b = structuralKey(rhs);
+    return a <= b ? `${a}|${op}|${b}` : `${b}|${op}|${a}`;
   }
-  const symbolName = symbolNameOf(expr.args[0]);
-  if (symbolName === undefined) return undefined;
-  return [symbolName, headName(expr.head)];
+  return tripleKey(lhs, op, rhs);
+}
+
+function tripleKey(lhs: IRNode, op: RelationOp, rhs: IRNode): string {
+  return `${structuralKey(lhs)}|${op}|${structuralKey(rhs)}`;
 }
 
 function symbolNameOf(node: IRNode): string | undefined {

@@ -1,0 +1,68 @@
+{
+  "id": "24-having-aggregate",
+  "description": "HAVING clause with aggregate conditions: COUNT(*) > N, SUM >= threshold, groups that produce no match",
+  "level": 1,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE orders (customer TEXT, amount INTEGER)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO orders VALUES ('alice', 50)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO orders VALUES ('alice', 60)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO orders VALUES ('bob', 200)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO orders VALUES ('bob', 150)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO orders VALUES ('carol', 30)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT customer, COUNT(*) AS n FROM orders GROUP BY customer HAVING COUNT(*) > 1 ORDER BY customer",
+      "expected_columns": ["customer", "n"],
+      "expected_rows": [
+        ["alice", 2],
+        ["bob", 2]
+      ],
+      "note": "carol has only 1 order — filtered out by HAVING COUNT(*) > 1"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT customer, SUM(amount) AS total FROM orders GROUP BY customer HAVING SUM(amount) >= 100 ORDER BY customer",
+      "expected_columns": ["customer", "total"],
+      "expected_rows": [
+        ["alice", 110],
+        ["bob", 350]
+      ],
+      "note": "carol's total is 30 — filtered out by HAVING SUM >= 100"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT customer, COUNT(*) AS n FROM orders GROUP BY customer HAVING COUNT(*) > 5 ORDER BY customer",
+      "expected_columns": ["customer", "n"],
+      "expected_rows": [],
+      "note": "No group has more than 5 orders — result is empty"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT customer, COUNT(*) AS n, SUM(amount) AS total FROM orders GROUP BY customer HAVING COUNT(*) >= 1 AND SUM(amount) > 50 ORDER BY customer",
+      "expected_columns": ["customer", "n", "total"],
+      "expected_rows": [
+        ["alice", 2, 110],
+        ["bob", 2, 350]
+      ],
+      "note": "Compound HAVING condition: carol excluded (total = 30, not > 50)"
+    }
+  ]
+}

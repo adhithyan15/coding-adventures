@@ -2,6 +2,18 @@
 
 All notable changes to `coding_adventures_sql_lexer` will be documented in this file.
 
+## [0.1.2] - 2026-06-02
+
+### Fixed
+
+- Updated `test_string_with_escape` to use SQLite-style string escaping. SQL
+  strings escape an embedded single quote by doubling it (`''`), not with a
+  backslash — `sql.tokens` declares `escapes: none`. The old test fed
+  `'it\'s'`, which SQLite tokenizes as the string `'it\'` followed by a
+  dangling `'` (a lexer error), so it broke once the package was rebuilt. The
+  test now uses `'it''s'` and asserts the single STRING token (value `it''s`,
+  with the doubled quote preserved verbatim by the lexer).
+
 ## [0.1.1] - 2026-03-31
 
 ### Fixed

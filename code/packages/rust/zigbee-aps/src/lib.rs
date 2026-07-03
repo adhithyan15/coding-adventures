@@ -16,6 +16,7 @@ const GROUP_ADDRESS_LEN: usize = 2;
 const CLUSTER_ID_LEN: usize = 2;
 const PROFILE_ID_LEN: usize = 2;
 const COUNTER_LEN: usize = 1;
+const APS_COMMAND_ID_LEN: usize = 1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Endpoint(pub u8);
@@ -246,6 +247,386 @@ impl ApsFrameSummary {
 
     pub fn requires_ack(self) -> bool {
         self.ack_request
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ApsFrameBatchSummary {
+    pub total_frames: usize,
+    pub data_frames: usize,
+    pub command_frames: usize,
+    pub ack_frames: usize,
+    pub inter_pan_frames: usize,
+    pub unicast_frames: usize,
+    pub indirect_frames: usize,
+    pub broadcast_frames: usize,
+    pub group_frames: usize,
+    pub home_automation_frames: usize,
+    pub zdo_profile_frames: usize,
+    pub manufacturer_specific_profile_frames: usize,
+    pub unknown_profile_frames: usize,
+    pub general_cluster_frames: usize,
+    pub measurement_and_sensing_frames: usize,
+    pub manufacturer_specific_cluster_frames: usize,
+    pub unknown_cluster_frames: usize,
+    pub ack_request_frames: usize,
+    pub secured_frames: usize,
+    pub payload_bytes: usize,
+}
+
+impl ApsFrameBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_frames<'a>(frames: impl IntoIterator<Item = &'a ApsFrame>) -> Self {
+        let mut summary = Self::empty();
+        for frame in frames {
+            summary.record_summary(frame.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries(summaries: impl IntoIterator<Item = ApsFrameSummary>) -> Self {
+        let mut summary = Self::empty();
+        for frame_summary in summaries {
+            summary.record_summary(frame_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: ApsFrameSummary) {
+        self.total_frames += 1;
+        self.payload_bytes += summary.payload_len;
+
+        match summary.frame_type {
+            ApsFrameType::Data => self.data_frames += 1,
+            ApsFrameType::Command => self.command_frames += 1,
+            ApsFrameType::Ack => self.ack_frames += 1,
+            ApsFrameType::InterPan => self.inter_pan_frames += 1,
+        }
+
+        match summary.delivery_mode {
+            DeliveryMode::Unicast => self.unicast_frames += 1,
+            DeliveryMode::Indirect => self.indirect_frames += 1,
+            DeliveryMode::Broadcast => self.broadcast_frames += 1,
+            DeliveryMode::Group => self.group_frames += 1,
+        }
+
+        match summary.profile_kind {
+            ProfileKind::ZigbeeDeviceProfile => self.zdo_profile_frames += 1,
+            ProfileKind::HomeAutomation => self.home_automation_frames += 1,
+            ProfileKind::ManufacturerSpecific => self.manufacturer_specific_profile_frames += 1,
+            ProfileKind::Unknown => self.unknown_profile_frames += 1,
+        }
+
+        match summary.cluster_kind {
+            ClusterKind::General => self.general_cluster_frames += 1,
+            ClusterKind::MeasurementAndSensing => self.measurement_and_sensing_frames += 1,
+            ClusterKind::ManufacturerSpecific => self.manufacturer_specific_cluster_frames += 1,
+            ClusterKind::Unknown => self.unknown_cluster_frames += 1,
+        }
+
+        if summary.ack_request {
+            self.ack_request_frames += 1;
+        }
+        if summary.security {
+            self.secured_frames += 1;
+        }
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_frames == 0
+    }
+
+    pub fn has_group_delivery(self) -> bool {
+        self.group_frames > 0
+    }
+
+    pub fn has_broadcast_delivery(self) -> bool {
+        self.broadcast_frames > 0
+    }
+
+    pub fn has_ack_requests(self) -> bool {
+        self.ack_request_frames > 0
+    }
+
+    pub fn has_secured_frames(self) -> bool {
+        self.secured_frames > 0
+    }
+
+    pub fn carries_payloads(self) -> bool {
+        self.payload_bytes > 0
+    }
+
+    pub fn has_application_delivery(self) -> bool {
+        self.unicast_frames > 0 || self.group_frames > 0
+    }
+
+    pub fn has_home_automation_context(self) -> bool {
+        self.home_automation_frames > 0
+    }
+
+    pub fn has_cluster_context(self) -> bool {
+        self.general_cluster_frames > 0 || self.measurement_and_sensing_frames > 0
+    }
+
+    pub fn readiness(self) -> ApsFrameBatchReadinessSummary {
+        ApsFrameBatchReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ApsFrameBatchReadinessSummary {
+    pub batch_summary: ApsFrameBatchSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub frames_present: bool,
+    pub data_frames_present: bool,
+    pub application_delivery_ready: bool,
+    pub home_automation_context_ready: bool,
+    pub cluster_context_ready: bool,
+    pub payload_context_ready: bool,
+    pub frame_batch_ready: bool,
+}
+
+impl ApsFrameBatchReadinessSummary {
+    pub fn from_summary(batch_summary: ApsFrameBatchSummary) -> Self {
+        let frames_present = !batch_summary.is_empty();
+        let data_frames_present = batch_summary.data_frames > 0;
+        let application_delivery_ready = batch_summary.has_application_delivery();
+        let home_automation_context_ready = batch_summary.has_home_automation_context();
+        let cluster_context_ready = batch_summary.has_cluster_context();
+        let payload_context_ready = batch_summary.carries_payloads();
+        let checks = [
+            frames_present,
+            data_frames_present,
+            application_delivery_ready,
+            home_automation_context_ready,
+            cluster_context_ready,
+            payload_context_ready,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let frame_batch_ready = missing_check_count == 0;
+
+        Self {
+            batch_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            frames_present,
+            data_frames_present,
+            application_delivery_ready,
+            home_automation_context_ready,
+            cluster_context_ready,
+            payload_context_ready,
+            frame_batch_ready,
+        }
+    }
+
+    pub fn is_frame_batch_ready(self) -> bool {
+        self.frame_batch_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_frames(self) -> bool {
+        !self.frames_present
+    }
+
+    pub fn needs_data_frames(self) -> bool {
+        !self.data_frames_present
+    }
+
+    pub fn needs_application_delivery(self) -> bool {
+        !self.application_delivery_ready
+    }
+
+    pub fn needs_home_automation_context(self) -> bool {
+        !self.home_automation_context_ready
+    }
+
+    pub fn needs_cluster_context(self) -> bool {
+        !self.cluster_context_ready
+    }
+
+    pub fn needs_payload_context(self) -> bool {
+        !self.payload_context_ready
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ApsDeliveryHandoffSummary {
+    pub readiness_summary: ApsFrameBatchReadinessSummary,
+    pub required_handoff_check_count: usize,
+    pub passed_handoff_check_count: usize,
+    pub blocked_handoff_check_count: usize,
+    pub frame_batch_ready: bool,
+    pub application_delivery_ready: bool,
+    pub payload_context_ready: bool,
+    pub security_or_ack_context_present: bool,
+    pub delivery_handoff_ready: bool,
+}
+
+impl ApsDeliveryHandoffSummary {
+    pub fn from_readiness(readiness_summary: ApsFrameBatchReadinessSummary) -> Self {
+        let frame_batch_ready = readiness_summary.is_frame_batch_ready();
+        let application_delivery_ready = !readiness_summary.needs_application_delivery();
+        let payload_context_ready = !readiness_summary.needs_payload_context();
+        let security_or_ack_context_present = readiness_summary.batch_summary.has_secured_frames()
+            || readiness_summary.batch_summary.has_ack_requests();
+        let checks = [
+            frame_batch_ready,
+            application_delivery_ready,
+            payload_context_ready,
+            security_or_ack_context_present,
+        ];
+        let passed_handoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_handoff_check_count = checks.len();
+        let blocked_handoff_check_count = required_handoff_check_count - passed_handoff_check_count;
+        let delivery_handoff_ready = blocked_handoff_check_count == 0;
+
+        Self {
+            readiness_summary,
+            required_handoff_check_count,
+            passed_handoff_check_count,
+            blocked_handoff_check_count,
+            frame_batch_ready,
+            application_delivery_ready,
+            payload_context_ready,
+            security_or_ack_context_present,
+            delivery_handoff_ready,
+        }
+    }
+
+    pub fn from_batch_summary(batch_summary: ApsFrameBatchSummary) -> Self {
+        Self::from_readiness(batch_summary.readiness())
+    }
+
+    pub fn is_delivery_handoff_ready(self) -> bool {
+        self.delivery_handoff_ready
+    }
+
+    pub fn has_blocked_handoff_checks(self) -> bool {
+        self.blocked_handoff_check_count > 0
+    }
+
+    pub fn needs_frame_batch(self) -> bool {
+        !self.frame_batch_ready
+    }
+
+    pub fn needs_application_delivery(self) -> bool {
+        !self.application_delivery_ready
+    }
+
+    pub fn needs_payload_context(self) -> bool {
+        !self.payload_context_ready
+    }
+
+    pub fn needs_security_or_ack_context(self) -> bool {
+        !self.security_or_ack_context_present
+    }
+}
+
+pub fn summarize_aps_delivery_handoff(
+    readiness_summary: ApsFrameBatchReadinessSummary,
+) -> ApsDeliveryHandoffSummary {
+    ApsDeliveryHandoffSummary::from_readiness(readiness_summary)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ApsCommandId(pub u8);
+
+impl ApsCommandId {
+    pub const TRANSPORT_KEY: Self = Self(0x05);
+    pub const UPDATE_DEVICE: Self = Self(0x06);
+    pub const REMOVE_DEVICE: Self = Self(0x07);
+    pub const REQUEST_KEY: Self = Self(0x08);
+    pub const SWITCH_KEY: Self = Self(0x09);
+
+    pub fn is_key_management(self) -> bool {
+        matches!(
+            self,
+            Self::TRANSPORT_KEY
+                | Self::UPDATE_DEVICE
+                | Self::REMOVE_DEVICE
+                | Self::REQUEST_KEY
+                | Self::SWITCH_KEY
+        )
+    }
+
+    pub fn name(self) -> Option<&'static str> {
+        match self {
+            Self::TRANSPORT_KEY => Some("transport-key"),
+            Self::UPDATE_DEVICE => Some("update-device"),
+            Self::REMOVE_DEVICE => Some("remove-device"),
+            Self::REQUEST_KEY => Some("request-key"),
+            Self::SWITCH_KEY => Some("switch-key"),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ApsCommandFrame {
+    pub command_id: ApsCommandId,
+    pub payload: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ApsCommandSummary {
+    pub command_id: ApsCommandId,
+    pub command_name: Option<&'static str>,
+    pub payload_len: usize,
+    pub key_management: bool,
+}
+
+impl ApsCommandFrame {
+    pub fn new(command_id: ApsCommandId, payload: Vec<u8>) -> Self {
+        Self {
+            command_id,
+            payload,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, ApsError> {
+        let mut cursor = Cursor::new(bytes);
+        let command_id = ApsCommandId(cursor.read_u8()?);
+        Ok(Self {
+            command_id,
+            payload: cursor.remaining_bytes().to_vec(),
+        })
+    }
+
+    pub fn encode(&self) -> Vec<u8> {
+        let mut out = Vec::with_capacity(APS_COMMAND_ID_LEN + self.payload.len());
+        out.push(self.command_id.0);
+        out.extend_from_slice(&self.payload);
+        out
+    }
+
+    pub fn summary(&self) -> ApsCommandSummary {
+        ApsCommandSummary {
+            command_id: self.command_id,
+            command_name: self.command_id.name(),
+            payload_len: self.payload.len(),
+            key_management: self.command_id.is_key_management(),
+        }
+    }
+}
+
+impl ApsCommandSummary {
+    pub fn is_known(self) -> bool {
+        self.command_name.is_some()
+    }
+
+    pub fn is_key_management(self) -> bool {
+        self.key_management
     }
 }
 
@@ -489,6 +870,10 @@ impl BindingTable {
         summary.unique_device_destinations = unique_device_destinations.len();
         summary
     }
+
+    pub fn readiness_summary(&self) -> BindingTableReadinessSummary {
+        self.summary().readiness()
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -561,6 +946,98 @@ impl BindingTableSummary {
 
     pub fn has_non_application_sources(self) -> bool {
         self.non_application_source_bindings > 0
+    }
+
+    pub fn has_destination_coverage(self) -> bool {
+        self.has_group_bindings() && self.has_device_bindings()
+    }
+
+    pub fn has_cluster_coverage(self) -> bool {
+        self.general_cluster_bindings > 0 && self.measurement_and_sensing_bindings > 0
+    }
+
+    pub fn readiness(self) -> BindingTableReadinessSummary {
+        BindingTableReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BindingTableReadinessSummary {
+    pub binding_summary: BindingTableSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub bindings_present: bool,
+    pub application_sources_ready: bool,
+    pub destination_coverage_ready: bool,
+    pub cluster_coverage_ready: bool,
+    pub zdo_sources_absent: bool,
+    pub non_application_sources_absent: bool,
+    pub binding_ready: bool,
+}
+
+impl BindingTableReadinessSummary {
+    pub fn from_summary(binding_summary: BindingTableSummary) -> Self {
+        let bindings_present = binding_summary.has_bindings();
+        let application_sources_ready = binding_summary.has_application_sources();
+        let destination_coverage_ready = binding_summary.has_destination_coverage();
+        let cluster_coverage_ready = binding_summary.has_cluster_coverage();
+        let zdo_sources_absent = !binding_summary.has_zdo_sources();
+        let non_application_sources_absent = !binding_summary.has_non_application_sources();
+        let checks = [
+            bindings_present,
+            application_sources_ready,
+            destination_coverage_ready,
+            cluster_coverage_ready,
+            zdo_sources_absent,
+            non_application_sources_absent,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let binding_ready = missing_check_count == 0;
+
+        Self {
+            binding_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            bindings_present,
+            application_sources_ready,
+            destination_coverage_ready,
+            cluster_coverage_ready,
+            zdo_sources_absent,
+            non_application_sources_absent,
+            binding_ready,
+        }
+    }
+
+    pub fn is_binding_ready(self) -> bool {
+        self.binding_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_binding_discovery(self) -> bool {
+        !self.bindings_present
+    }
+
+    pub fn needs_application_source_binding(self) -> bool {
+        !self.application_sources_ready
+    }
+
+    pub fn needs_destination_coverage(self) -> bool {
+        !self.destination_coverage_ready
+    }
+
+    pub fn needs_cluster_coverage(self) -> bool {
+        !self.cluster_coverage_ready
+    }
+
+    pub fn has_source_endpoint_issues(self) -> bool {
+        !self.zdo_sources_absent || !self.non_application_sources_absent
     }
 }
 
@@ -827,6 +1304,45 @@ mod tests {
     }
 
     #[test]
+    fn aps_command_frame_round_trips_key_management_payloads() {
+        let frame = ApsCommandFrame::new(ApsCommandId::TRANSPORT_KEY, vec![0xaa, 0xbb, 0xcc]);
+
+        let parsed = ApsCommandFrame::parse(&frame.encode()).unwrap();
+        let summary = parsed.summary();
+
+        assert_eq!(parsed, frame);
+        assert_eq!(summary.command_id, ApsCommandId::TRANSPORT_KEY);
+        assert_eq!(summary.command_name, Some("transport-key"));
+        assert_eq!(summary.payload_len, 3);
+        assert!(summary.is_known());
+        assert!(summary.is_key_management());
+    }
+
+    #[test]
+    fn aps_command_frame_preserves_unknown_command_payloads() {
+        let parsed = ApsCommandFrame::parse(&[0xfe, 0x01, 0x02]).unwrap();
+        let summary = parsed.summary();
+
+        assert_eq!(parsed.command_id, ApsCommandId(0xfe));
+        assert_eq!(parsed.payload, vec![0x01, 0x02]);
+        assert_eq!(parsed.encode(), vec![0xfe, 0x01, 0x02]);
+        assert_eq!(summary.command_name, None);
+        assert!(!summary.is_known());
+        assert!(!summary.is_key_management());
+    }
+
+    #[test]
+    fn aps_command_frame_rejects_empty_payloads() {
+        assert_eq!(
+            ApsCommandFrame::parse(&[]),
+            Err(ApsError::Truncated {
+                needed: 1,
+                remaining: 0
+            })
+        );
+    }
+
+    #[test]
     fn group_frame_round_trips() {
         let mut control = ApsFrameControl::data_unicast();
         control.delivery_mode = DeliveryMode::Group;
@@ -987,6 +1503,280 @@ mod tests {
     }
 
     #[test]
+    fn aps_frame_batch_summary_rolls_up_delivery_and_payload_context() {
+        let unicast = ApsFrame::unicast_data(
+            Endpoint(1),
+            Endpoint(2),
+            ClusterId::ON_OFF,
+            ProfileId::HOME_AUTOMATION,
+            7,
+            vec![0x01, 0x02],
+        );
+        let mut group_control = ApsFrameControl::data_unicast();
+        group_control.delivery_mode = DeliveryMode::Group;
+        group_control.ack_request = true;
+        group_control.security = true;
+        let group = ApsFrame {
+            frame_control: group_control,
+            addressing: ApsAddressing::Group {
+                group: GroupAddress(0x1234),
+                source_endpoint: Endpoint(3),
+            },
+            cluster_id: ClusterId::TEMPERATURE_MEASUREMENT,
+            profile_id: ProfileId::HOME_AUTOMATION,
+            counter: 8,
+            payload: vec![0x03],
+        };
+        let mut command_control = ApsFrameControl::data_unicast();
+        command_control.frame_type = ApsFrameType::Command;
+        command_control.delivery_mode = DeliveryMode::Broadcast;
+        let command = ApsFrame {
+            frame_control: command_control,
+            addressing: ApsAddressing::Broadcast {
+                destination_endpoint: Endpoint(255),
+                source_endpoint: Endpoint::ZDO,
+            },
+            cluster_id: ClusterId(0xfc00),
+            profile_id: ProfileId::ZIGBEE_DEVICE_PROFILE,
+            counter: 9,
+            payload: Vec::new(),
+        };
+
+        let summary = ApsFrameBatchSummary::from_frames([&unicast, &group, &command]);
+
+        assert_eq!(summary.total_frames, 3);
+        assert_eq!(summary.data_frames, 2);
+        assert_eq!(summary.command_frames, 1);
+        assert_eq!(summary.unicast_frames, 1);
+        assert_eq!(summary.broadcast_frames, 1);
+        assert_eq!(summary.group_frames, 1);
+        assert_eq!(summary.home_automation_frames, 2);
+        assert_eq!(summary.zdo_profile_frames, 1);
+        assert_eq!(summary.general_cluster_frames, 1);
+        assert_eq!(summary.measurement_and_sensing_frames, 1);
+        assert_eq!(summary.manufacturer_specific_cluster_frames, 1);
+        assert_eq!(summary.ack_request_frames, 1);
+        assert_eq!(summary.secured_frames, 1);
+        assert_eq!(summary.payload_bytes, 3);
+        assert!(summary.has_group_delivery());
+        assert!(summary.has_broadcast_delivery());
+        assert!(summary.has_ack_requests());
+        assert!(summary.has_secured_frames());
+        assert!(summary.carries_payloads());
+    }
+
+    #[test]
+    fn aps_frame_batch_summary_handles_precomputed_and_empty_summaries() {
+        let empty = ApsFrameBatchSummary::empty();
+        assert!(empty.is_empty());
+        assert!(!empty.carries_payloads());
+
+        let summary = ApsFrameBatchSummary::from_summaries([
+            ApsFrameSummary {
+                frame_type: ApsFrameType::Ack,
+                delivery_mode: DeliveryMode::Indirect,
+                profile_kind: ProfileKind::ManufacturerSpecific,
+                cluster_kind: ClusterKind::Unknown,
+                source_endpoint: Endpoint(2),
+                destination_endpoint: None,
+                group: None,
+                counter: 1,
+                payload_len: 0,
+                ack_request: false,
+                security: false,
+            },
+            ApsFrameSummary {
+                frame_type: ApsFrameType::InterPan,
+                delivery_mode: DeliveryMode::Unicast,
+                profile_kind: ProfileKind::Unknown,
+                cluster_kind: ClusterKind::ManufacturerSpecific,
+                source_endpoint: Endpoint(3),
+                destination_endpoint: Some(Endpoint(4)),
+                group: None,
+                counter: 2,
+                payload_len: 4,
+                ack_request: true,
+                security: false,
+            },
+        ]);
+
+        assert_eq!(summary.total_frames, 2);
+        assert_eq!(summary.ack_frames, 1);
+        assert_eq!(summary.inter_pan_frames, 1);
+        assert_eq!(summary.indirect_frames, 1);
+        assert_eq!(summary.unicast_frames, 1);
+        assert_eq!(summary.manufacturer_specific_profile_frames, 1);
+        assert_eq!(summary.unknown_profile_frames, 1);
+        assert_eq!(summary.manufacturer_specific_cluster_frames, 1);
+        assert_eq!(summary.unknown_cluster_frames, 1);
+        assert_eq!(summary.payload_bytes, 4);
+        assert!(summary.has_ack_requests());
+        assert!(!summary.has_secured_frames());
+    }
+
+    #[test]
+    fn aps_frame_batch_readiness_summary_marks_application_capture_ready() {
+        let unicast = ApsFrame::unicast_data(
+            Endpoint(1),
+            Endpoint(2),
+            ClusterId::ON_OFF,
+            ProfileId::HOME_AUTOMATION,
+            7,
+            vec![0x01],
+        );
+        let group = ApsFrame {
+            frame_control: ApsFrameControl {
+                delivery_mode: DeliveryMode::Group,
+                ..ApsFrameControl::data_unicast()
+            },
+            addressing: ApsAddressing::Group {
+                group: GroupAddress(0x1234),
+                source_endpoint: Endpoint(3),
+            },
+            cluster_id: ClusterId::TEMPERATURE_MEASUREMENT,
+            profile_id: ProfileId::HOME_AUTOMATION,
+            counter: 8,
+            payload: vec![0x02, 0x03],
+        };
+        let summary = ApsFrameBatchSummary::from_frames([&unicast, &group]);
+
+        let readiness = summary.readiness();
+
+        assert_eq!(readiness.batch_summary, summary);
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 6);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.frames_present);
+        assert!(readiness.data_frames_present);
+        assert!(readiness.application_delivery_ready);
+        assert!(readiness.home_automation_context_ready);
+        assert!(readiness.cluster_context_ready);
+        assert!(readiness.payload_context_ready);
+        assert!(readiness.frame_batch_ready);
+        assert!(readiness.is_frame_batch_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_frames());
+        assert!(!readiness.needs_data_frames());
+        assert!(!readiness.needs_application_delivery());
+        assert!(!readiness.needs_home_automation_context());
+        assert!(!readiness.needs_cluster_context());
+        assert!(!readiness.needs_payload_context());
+    }
+
+    #[test]
+    fn aps_frame_batch_readiness_summary_routes_sparse_capture_gaps() {
+        let command_only = ApsFrameSummary {
+            frame_type: ApsFrameType::Command,
+            delivery_mode: DeliveryMode::Broadcast,
+            profile_kind: ProfileKind::ZigbeeDeviceProfile,
+            cluster_kind: ClusterKind::ManufacturerSpecific,
+            source_endpoint: Endpoint::ZDO,
+            destination_endpoint: Some(Endpoint(255)),
+            group: None,
+            counter: 1,
+            payload_len: 0,
+            ack_request: false,
+            security: false,
+        };
+
+        let readiness = ApsFrameBatchSummary::from_summaries([command_only]).readiness();
+
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 1);
+        assert_eq!(readiness.missing_check_count, 5);
+        assert!(readiness.frames_present);
+        assert!(!readiness.data_frames_present);
+        assert!(!readiness.application_delivery_ready);
+        assert!(!readiness.home_automation_context_ready);
+        assert!(!readiness.cluster_context_ready);
+        assert!(!readiness.payload_context_ready);
+        assert!(!readiness.frame_batch_ready);
+        assert!(!readiness.needs_frames());
+        assert!(readiness.needs_data_frames());
+        assert!(readiness.needs_application_delivery());
+        assert!(readiness.needs_home_automation_context());
+        assert!(readiness.needs_cluster_context());
+        assert!(readiness.needs_payload_context());
+
+        let empty = ApsFrameBatchSummary::empty().readiness();
+        assert_eq!(empty.passed_check_count, 0);
+        assert!(empty.needs_frames());
+    }
+
+    #[test]
+    fn aps_delivery_handoff_summary_marks_ready_delivery() {
+        let frame = ApsFrame {
+            frame_control: ApsFrameControl {
+                ack_request: true,
+                ..ApsFrameControl::data_unicast()
+            },
+            addressing: ApsAddressing::Unicast {
+                destination_endpoint: Endpoint(1),
+                source_endpoint: Endpoint(2),
+            },
+            cluster_id: ClusterId::ON_OFF,
+            profile_id: ProfileId::HOME_AUTOMATION,
+            counter: 9,
+            payload: vec![0x01, 0x00],
+        };
+        let batch_summary = ApsFrameBatchSummary::from_frames([&frame]);
+        let readiness = batch_summary.readiness();
+
+        let summary = summarize_aps_delivery_handoff(readiness);
+
+        assert_eq!(summary.readiness_summary, readiness);
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 4);
+        assert_eq!(summary.blocked_handoff_check_count, 0);
+        assert!(summary.frame_batch_ready);
+        assert!(summary.application_delivery_ready);
+        assert!(summary.payload_context_ready);
+        assert!(summary.security_or_ack_context_present);
+        assert!(summary.delivery_handoff_ready);
+        assert!(summary.is_delivery_handoff_ready());
+        assert!(!summary.has_blocked_handoff_checks());
+        assert!(!summary.needs_frame_batch());
+        assert!(!summary.needs_application_delivery());
+        assert!(!summary.needs_payload_context());
+        assert!(!summary.needs_security_or_ack_context());
+    }
+
+    #[test]
+    fn aps_delivery_handoff_summary_routes_blocked_delivery() {
+        let command_only = ApsFrameSummary {
+            frame_type: ApsFrameType::Command,
+            delivery_mode: DeliveryMode::Broadcast,
+            profile_kind: ProfileKind::ZigbeeDeviceProfile,
+            cluster_kind: ClusterKind::ManufacturerSpecific,
+            source_endpoint: Endpoint::ZDO,
+            destination_endpoint: Some(Endpoint(255)),
+            group: None,
+            counter: 1,
+            payload_len: 0,
+            ack_request: false,
+            security: false,
+        };
+        let batch_summary = ApsFrameBatchSummary::from_summaries([command_only]);
+
+        let summary = ApsDeliveryHandoffSummary::from_batch_summary(batch_summary);
+
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 0);
+        assert_eq!(summary.blocked_handoff_check_count, 4);
+        assert!(!summary.frame_batch_ready);
+        assert!(!summary.application_delivery_ready);
+        assert!(!summary.payload_context_ready);
+        assert!(!summary.security_or_ack_context_present);
+        assert!(!summary.delivery_handoff_ready);
+        assert!(!summary.is_delivery_handoff_ready());
+        assert!(summary.has_blocked_handoff_checks());
+        assert!(summary.needs_frame_batch());
+        assert!(summary.needs_application_delivery());
+        assert!(summary.needs_payload_context());
+        assert!(summary.needs_security_or_ack_context());
+    }
+
+    #[test]
     fn binding_table_summary_counts_destinations_and_cluster_kinds() {
         let source = BindingSource::new(IeeeAddress(0x0012_4b00_0000_0001), Endpoint(1));
         let mut table = BindingTable::new();
@@ -1060,5 +1850,77 @@ mod tests {
         assert!(summary.has_zdo_sources());
         assert!(!summary.has_application_sources());
         assert!(summary.has_non_application_sources());
+    }
+
+    #[test]
+    fn binding_table_readiness_summary_marks_application_binding_surface_ready() {
+        let source = BindingSource::new(IeeeAddress(0x0012_4b00_0000_0001), Endpoint(1));
+        let mut table = BindingTable::new();
+        table.upsert(BindingEntry::new(
+            source,
+            ClusterId::ON_OFF,
+            BindingDestination::group(GroupAddress(0x1234)),
+        ));
+        table.upsert(BindingEntry::new(
+            source,
+            ClusterId::TEMPERATURE_MEASUREMENT,
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0002), Endpoint(2)),
+        ));
+
+        let readiness = table.readiness_summary();
+
+        assert_eq!(readiness.binding_summary, table.summary());
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 6);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.bindings_present);
+        assert!(readiness.application_sources_ready);
+        assert!(readiness.destination_coverage_ready);
+        assert!(readiness.cluster_coverage_ready);
+        assert!(readiness.zdo_sources_absent);
+        assert!(readiness.non_application_sources_absent);
+        assert!(readiness.binding_ready);
+        assert!(readiness.is_binding_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_binding_discovery());
+        assert!(!readiness.needs_application_source_binding());
+        assert!(!readiness.needs_destination_coverage());
+        assert!(!readiness.needs_cluster_coverage());
+        assert!(!readiness.has_source_endpoint_issues());
+    }
+
+    #[test]
+    fn binding_table_readiness_summary_flags_endpoint_and_cluster_gaps() {
+        let mut table = BindingTable::new();
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0010), Endpoint::ZDO),
+            ClusterId::BASIC,
+            BindingDestination::group(GroupAddress(0x1000)),
+        ));
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0011), Endpoint(241)),
+            ClusterId(0x1234),
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0012), Endpoint(3)),
+        ));
+
+        let readiness = BindingTableReadinessSummary::from_summary(table.summary());
+
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 2);
+        assert_eq!(readiness.missing_check_count, 4);
+        assert!(readiness.bindings_present);
+        assert!(!readiness.application_sources_ready);
+        assert!(readiness.destination_coverage_ready);
+        assert!(!readiness.cluster_coverage_ready);
+        assert!(!readiness.zdo_sources_absent);
+        assert!(!readiness.non_application_sources_absent);
+        assert!(!readiness.binding_ready);
+        assert!(!readiness.is_binding_ready());
+        assert!(readiness.has_missing_checks());
+        assert!(!readiness.needs_binding_discovery());
+        assert!(readiness.needs_application_source_binding());
+        assert!(!readiness.needs_destination_coverage());
+        assert!(readiness.needs_cluster_coverage());
+        assert!(readiness.has_source_endpoint_issues());
     }
 }

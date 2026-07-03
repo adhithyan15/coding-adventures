@@ -1,0 +1,4 @@
+--js
+tests/diff/source-map-input-bad/input/a.js
+--source_map_input
+this-is-malformed-no-pipe-separator

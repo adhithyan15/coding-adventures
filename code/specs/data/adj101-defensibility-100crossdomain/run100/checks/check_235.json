@@ -1,0 +1,8 @@
+{
+ "check_id": 235,
+ "idx": 98,
+ "slot": "financial_interest_in_relevant_entity",
+ "claimed_value": true,
+ "scenario": "A PI received $9,000 in lecture honoraria during the year from a state university (a U.S. accredited institution of higher education) whose work overlaps with the PI's research area.",
+ "cited_span": "received $9,000 in lecture honoraria during the year from a state university ... whose work overlaps with the PI's research area"
+}

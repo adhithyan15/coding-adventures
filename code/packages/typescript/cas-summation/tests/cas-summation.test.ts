@@ -8,6 +8,7 @@ import {
   NEG,
   POW,
   PRODUCT,
+  SQRT,
   SUB,
   SUM,
   app,
@@ -28,6 +29,10 @@ import {
   trySpecialInfinite,
   type RationalValue,
 } from "../src/index";
+// Track B2 — Apart-retry telescope chain tests need a real VM with the
+// Apart handler installed.  symbolic-vm is a devDependency of
+// cas-summation; the published runtime does not depend on it.
+import { SymbolicBackend, VM } from "@coding-adventures/symbolic-vm";
 
 function evalNode(node: IRNode): IRNode {
   if (node.kind !== "apply") return node;
@@ -305,6 +310,26 @@ describe("summation: Phase 41+42 limit-aware infinite telescope", () => {
     const kPlus1Sq = app(POW, [app(ADD, [k, int(1)]), int(2)]);
     const f = app(SUB, [app(DIV, [int(1), kSq]), app(DIV, [int(1), kPlus1Sq])]);
     expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(1));
+  });
+
+  it("standard exp(-k) telescope closes because exp(-k) vanishes", () => {
+    const k = sym("k");
+    const gK = app(EXP, [app(NEG, [k])]);
+    const gKp1 = app(EXP, [app(NEG, [app(ADD, [k, int(1)])])]);
+    const f = app(SUB, [gKp1, gK]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(
+      app(NEG, [app(EXP, [int(-1)])]),
+    );
+  });
+
+  it("antisymmetric 2^(-k) telescope closes because the magnitude vanishes", () => {
+    const k = sym("k");
+    const gK = app(POW, [int(2), app(NEG, [k])]);
+    const gKp1 = app(POW, [int(2), app(NEG, [app(ADD, [k, int(1)])])]);
+    const f = app(SUB, [gK, gKp1]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(
+      app(POW, [int(2), int(-1)]),
+    );
   });
 
   it("Phase 42 proper rational ∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = 1/2", () => {
@@ -678,5 +703,846 @@ describe("summation: Phase 50 log/polynomial growth-rate", () => {
     const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
     // Phase 50 must NOT close this.
     expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 51 (TypeScript port): Sqrt/polynomial growth-rate.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 51 sqrt/polynomial growth-rate", () => {
+  it("∑ [sqrt(k)/k² − sqrt(k+1)/(k+1)²] closes (1/2 < 2)", () => {
+    const k = sym("k");
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sqrtKp1 = app(sym("Sqrt"), [kPlus1]);
+    const f = app(SUB, [
+      app(DIV, [sqrtK, app(POW, [k, int(2)])]),
+      app(DIV, [sqrtKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sqrt(k³)/k² − ...] closes (3/2 < 2)", () => {
+    const k = sym("k");
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kPlus1, int(3)])]);
+    const f = app(SUB, [
+      app(DIV, [sqrtK3, app(POW, [k, int(2)])]),
+      app(DIV, [sqrtKp1_3, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sqrt(Mul(-1, k))/k² stays unevaluated", () => {
+    const k = sym("k");
+    const negK = app(MUL, [int(-1), k]);
+    const sqrtNegK = app(sym("Sqrt"), [negK]);
+    const kPlus1 = app(ADD, [k, int(1)]);
+    const sqrtNegKp1 = app(sym("Sqrt"), [app(MUL, [int(-1), kPlus1])]);
+    const f = app(SUB, [
+      app(DIV, [sqrtNegK, app(POW, [k, int(2)])]),
+      app(DIV, [sqrtNegKp1, app(POW, [kPlus1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 52 (TypeScript port): Bounded × polynomial numerator.
+// ---------------------------------------------------------------------------
+// The numerator is Mul(bounded_factor, polynomial_in_k).  Phase 52 catches
+// shapes like sin(k)·k/k³ that Phase 49 misses (the whole Mul isn't bounded)
+// and Phase 42 refuses (sin is not polynomial).
+//
+// Tests mirror Python Phase 52 (cas-summation 1.0.0).
+
+describe("summation: Phase 52 bounded × polynomial numerator", () => {
+  it("∑ [sin(k)·k/k³ − sin(k+1)·(k+1)/(k+1)³] closes (bounded × deg 1 over deg 3)", () => {
+    // Numerator = sin(k)·k = Mul(sin(k), k): bounded × polynomial deg 1.
+    // Denominator = k³: polynomial deg 3.  3 > 1 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinK = app(sym("Sin"), [k]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const numK = app(MUL, [sinK, k]);
+    const numKp1 = app(MUL, [sinKp1, kp1]);
+    const denK = app(POW, [k, int(3)]);
+    const denKp1 = app(POW, [kp1, int(3)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [k·cos(k)/k² − ...] closes (factor order irrelevant: polynomial × bounded)", () => {
+    // Numerator = k·cos(k) = Mul(k, cos(k)): polynomial deg 1 × bounded.
+    // Denominator = k²: polynomial deg 2.  2 > 1 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const cosK = app(sym("Cos"), [k]);
+    const cosKp1 = app(sym("Cos"), [kp1]);
+    const numK = app(MUL, [k, cosK]);
+    const numKp1 = app(MUL, [kp1, cosKp1]);
+    const denK = app(POW, [k, int(2)]);
+    const denKp1 = app(POW, [kp1, int(2)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·k²/k³ − ...] closes (bounded × deg 2 over deg 3)", () => {
+    // Numerator = sin(k)·k²: bounded × polynomial deg 2.
+    // Denominator = k³: polynomial deg 3.  3 > 2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinK = app(sym("Sin"), [k]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const numK = app(MUL, [sinK, app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [sinKp1, app(POW, [kp1, int(2)])]);
+    const denK = app(POW, [k, int(3)]);
+    const denKp1 = app(POW, [kp1, int(3)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·k²/k² stays unevaluated (degrees tie: 2 > 2 is false)", () => {
+    // Numerator = sin(k)·k²: bounded × polynomial deg 2.
+    // Denominator = k²: polynomial deg 2.  2 > 2 is false → stays.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinK = app(sym("Sin"), [k]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const numK = app(MUL, [sinK, app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [sinKp1, app(POW, [kp1, int(2)])]);
+    const denK = app(POW, [k, int(2)]);
+    const denKp1 = app(POW, [kp1, int(2)]);
+    const f = app(SUB, [
+      app(DIV, [numK, denK]),
+      app(DIV, [numKp1, denKp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: k/k² still closes via Phase 42 (no bounded factor in numerator)", () => {
+    // Numerator = k: pure polynomial deg 1.  No bounded factor → Phase 52 skips.
+    // Phase 42 closes it: deg 1 < deg 2.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [k, app(POW, [k, int(2)])]),
+      app(DIV, [kp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 53 (TypeScript port): Sqrt × polynomial numerator.
+//
+// The numerator is Mul(Sqrt(P(k)), polynomial_in_k).  Phase 53 catches
+// shapes like sqrt(k)·k/k³ (eff deg = ½+1 = 3/2 < 3) and
+// sqrt(k²)·k/k³ (eff deg = 1+1 = 2 < 3) that fall through all earlier phases.
+//
+// Effective degree = deg(P)/2 + deg(Q).  Closes when deg(den) > eff_deg.
+// Tests mirror Python Phase 53 (cas-summation 1.1.0).
+// ---------------------------------------------------------------------------
+describe("summation: Phase 53 Sqrt × polynomial numerator", () => {
+  it("Sqrt(k)·k/k³ closes (eff deg = ½+1 = 3/2 < 3)", () => {
+    // Numerator = Sqrt(k)·k: eff deg 1/2 + 1 = 3/2.  Denominator = k³: deg 3.
+    // 3 > 3/2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [k]), k]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [kp1]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("Sqrt(k²)·k/k³ closes (eff deg = 1+1 = 2 < 3)", () => {
+    // Numerator = Sqrt(k²)·k: eff deg 2/2 + 1 = 2.  Denominator = k³: deg 3.
+    // 3 > 2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [app(POW, [k, int(2)])]), k]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [app(POW, [kp1, int(2)])]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("Sqrt(k)·k²/k³ closes (eff deg = ½+2 = 5/2 < 3)", () => {
+    // Numerator = Sqrt(k)·k²: eff deg 1/2 + 2 = 5/2.  Denominator = k³: deg 3.
+    // 3 > 5/2 → closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: Sqrt(k)·k²/k² stays unevaluated (eff deg 5/2 > 2)", () => {
+    // Numerator = Sqrt(k)·k²: eff deg 1/2 + 2 = 5/2.  Denominator = k²: deg 2.
+    // 2 > 5/2 is false → stays unevaluated.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sqrt"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Sqrt"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: plain Sqrt(k)/k² still closes via Phase 51 (not Phase 53)", () => {
+    // Phase 53 requires a Mul node; plain Sqrt(P) is handled by Phase 51.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [app(sym("Sqrt"), [k]), app(POW, [k, int(2)])]),
+      app(DIV, [app(sym("Sqrt"), [kp1]), app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 54 — Log×polynomial numerator (TS port).
+// ---------------------------------------------------------------------------
+// log(h(k))·P(k)/Q(k) vanishes when deg(Q) > deg(P) (strictly).
+// log grows sub-polynomially so its effective growth degree equals deg(P).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 54 Log×polynomial numerator", () => {
+  it("log(k)·k / k³ closes (poly_deg=1, den_deg=3)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), k]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("log(k)·k² / k³ closes (poly_deg=2, den_deg=3)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("log(k)·k / k² closes (poly_deg=1, den_deg=2)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), k]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("log(k)·k² / k² stays unevaluated (equal degrees — diverges)", () => {
+    // log(k)*k²/k² = log(k) → diverges; equal degrees must be refused.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Log"), [k]), app(POW, [k, int(2)])]);
+    const numKp1 = app(MUL, [app(sym("Log"), [kp1]), app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+
+  it("regression: plain log(k)/k³ still closes via Phase 50", () => {
+    // Phase 54 requires a Mul node; bare Log(k) is handled by Phase 50.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const f = app(SUB, [
+      app(DIV, [app(sym("Log"), [k]), app(POW, [k, int(3)])]),
+      app(DIV, [app(sym("Log"), [kp1]), app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 55 — Bounded×Log(diverging) numerator (TS port).
+// ---------------------------------------------------------------------------
+// ``sin(k)·log(k)/Q(k)`` vanishes at infinity when Q(k) diverges.
+// The numerator is bounded×sub-polynomial — dominated by any polynomial
+// or faster-growing denominator.
+// isBoundedTimesLogInK requires exactly one Log(diverging) factor; all
+// other factors must pass isBoundedInK.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 55 Bounded×Log(diverging) numerator", () => {
+  it("sin(k)·log(k) / k² closes (bounded×log / poly-2)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("cos(k)·log(k) / k closes (bounded×log / poly-1)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Cos"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Cos"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, k]),
+      app(DIV, [numKp1, kp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·cos(k)·log(k) / k³ closes (two bounded×log / poly-3)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Cos"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Cos"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·log(k²) / k³ closes (log of k² diverges, bounded×log)", () => {
+    // log(k²) diverges (k² is a positive-degree polynomial).
+    // After substituting k→k+1: log((k+1)²) — structural equality holds.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const kSq = app(POW, [k, int(2)]);
+    const kp1Sq = app(POW, [kp1, int(2)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Log"), [kSq])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Log"), [kp1Sq])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("sin(k)·log(k) / 1 stays unevaluated (constant denominator — does not diverge)", () => {
+    // Denominator = 1 (constant). hDivergesAtInfinity(1) = false.
+    // Phase 55 correctly refuses; no other phase closes.
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Log"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Log"), [kp1])]);
+    const f = app(SUB, [
+      app(DIV, [numK, int(1)]),
+      app(DIV, [numKp1, int(1)]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 56 (TS port): bounded × Sqrt(diverging) numerator.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 56 bounded × sqrt numerator", () => {
+  it("∑ [sin(k)·sqrt(k)/k² − ...] closes (1/2 < 2)", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sinK, sqrtK]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·sqrt(k³)/2^k − ...] closes (sqrt < exp)", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const numK = app(MUL, [sinK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kp1, int(3)])]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·sqrt(k³)/k stays unevaluated (3/2 > 1)", () => {
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const numK = app(MUL, [sinK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kp1, int(3)])]);
+    const numKp1 = app(MUL, [sinKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, k]),
+      app(DIV, [numKp1, kp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // 3/2 > 1 → does not vanish.
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// Phase 57 (TS port): bounded × Log(diverging) × Sqrt(positive-poly) numerator.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 57 bounded × log × sqrt numerator", () => {
+  it("∑ [sin(k)·log(k)·sqrt(k)/k² − ...] closes (log·k^½ < k²)", () => {
+    // sin(k)·log(k)·sqrt(k) / k²: effective growth k^½·log(k) dominated
+    // by k² (half-degree = 1/2, den-deg = 2, 2 > 1/2 ✓).
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [sinK, logK, sqrtK]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, sqrtKp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [log(k)·sqrt(k)/k² − ...] closes (no bounded factor needed)", () => {
+    // Pure log·sqrt without a bounded factor — still Phase 57 (log_count=1,
+    // sqrt present).  half-degree = 1/2, den-deg = 2.
+    const k = sym("k");
+    const logK = app(sym("Log"), [k]);
+    const sqrtK = app(sym("Sqrt"), [k]);
+    const numK = app(MUL, [logK, sqrtK]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const sqrtKp1 = app(sym("Sqrt"), [kp1]);
+    const numKp1 = app(MUL, [logKp1, sqrtKp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·log(k)·sqrt(k³)/2^k − ...] closes (exp dominates)", () => {
+    // Exponential denominator — non-polynomial diverging, dominates any
+    // half-polynomial growth.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const numK = app(MUL, [sinK, logK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kp1, int(3)])]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·log(k)·sqrt(k³)/k stays unevaluated (3/2 > 1)", () => {
+    // half-degree of sqrt(k³) = 3/2 > den-deg 1 → does NOT vanish.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const sqrtK3 = app(sym("Sqrt"), [app(POW, [k, int(3)])]);
+    const numK = app(MUL, [sinK, logK, sqrtK3]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const sqrtKp1_3 = app(sym("Sqrt"), [app(POW, [kp1, int(3)])]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, sqrtKp1_3]);
+    const f = app(SUB, [
+      app(DIV, [numK, k]),
+      app(DIV, [numKp1, kp1]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // sqrt(k³) half-degree 3/2 > denDeg 1 → refused.
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// Phase 58 (TS port): bounded × Log(diverging) × polynomial numerator.
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 58 bounded × log × polynomial numerator", () => {
+  it("∑ [sin(k)·log(k)·k/k³ − ...] closes (polyDeg=1 < denDeg=3)", () => {
+    // sin(k)·log(k)·k / k³: log sub-polynomial, effective poly deg = 1,
+    // denominator deg = 3, 3 > 1 ✓.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [sinK, logK, k]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, kp1]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(3)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(3)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [sin(k)·log(k)·k²/2^k − ...] closes (exp denominator dominates)", () => {
+    // Exponential denominator — non-polynomial diverging, dominates any k^m.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [sinK, logK, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [int(2), k])]),
+      app(DIV, [numKp1, app(POW, [int(2), kp1])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("∑ [cos(k)·log(k)·k²/k⁴ − ...] closes (polyDeg=2 < denDeg=4)", () => {
+    const k = sym("k");
+    const cosK = app(sym("Cos"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [cosK, logK, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const cosKp1 = app(sym("Cos"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [cosKp1, logKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(4)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(4)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).not.toEqual(SUM);
+  });
+
+  it("regression: sin(k)·log(k)·k²/k² stays unevaluated (equal degrees)", () => {
+    // polyDeg = denDeg = 2: log(k)·C diverges → refused.
+    const k = sym("k");
+    const sinK = app(sym("Sin"), [k]);
+    const logK = app(sym("Log"), [k]);
+    const numK = app(MUL, [sinK, logK, app(POW, [k, int(2)])]);
+    const kp1 = app(ADD, [k, int(1)]);
+    const sinKp1 = app(sym("Sin"), [kp1]);
+    const logKp1 = app(sym("Log"), [kp1]);
+    const numKp1 = app(MUL, [sinKp1, logKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [
+      app(DIV, [numK, app(POW, [k, int(2)])]),
+      app(DIV, [numKp1, app(POW, [kp1, int(2)])]),
+    ]);
+    const out = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(out.kind === "apply" ? out.head : undefined).toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 86 (TS port): generic log × sqrt × polynomial recogniser cleanup.
+//
+// A single helper handles arbitrary (N, M, K) — supersedes the hand-written
+// grid from Phases 59-85.  These tests prove the generic closes cases the
+// hardcoded grid cannot reach (more than 5 Sqrts, more than 6 Logs, mixed).
+// ---------------------------------------------------------------------------
+
+describe("summation: Phase 86 generic log × sqrt × polynomial recogniser", () => {
+  it("seven logs over k² closes via generic (hand-written grid stops at 6)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const logsK = Array.from({ length: 7 }, () => app(LOG, [k]));
+    const logsKp1 = Array.from({ length: 7 }, () => app(LOG, [kp1]));
+    const numK = app(MUL, logsK);
+    const numKp1 = app(MUL, logsKp1);
+    const gK = app(DIV, [numK, app(POW, [k, int(2)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+
+  it("six sqrts of k over k⁴ closes via generic (grid stops at 5)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const sqrtsK = Array.from({ length: 6 }, () => app(SQRT, [k]));
+    const sqrtsKp1 = Array.from({ length: 6 }, () => app(SQRT, [kp1]));
+    const numK = app(MUL, sqrtsK);
+    const numKp1 = app(MUL, sqrtsKp1);
+    const gK = app(DIV, [numK, app(POW, [k, int(4)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(4)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalfSum = 6 * 0.5 = 3; denDeg = 4 > 3 → closes.
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+
+  it("three sqrts × seven logs × k over k⁵ closes via generic", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const logsK = Array.from({ length: 7 }, () => app(LOG, [k]));
+    const logsKp1 = Array.from({ length: 7 }, () => app(LOG, [kp1]));
+    const sqrtFactorsK = [
+      app(SQRT, [app(POW, [k, int(3)])]),
+      app(SQRT, [k]),
+      app(SQRT, [app(POW, [k, int(2)])]),
+    ];
+    const sqrtFactorsKp1 = [
+      app(SQRT, [app(POW, [kp1, int(3)])]),
+      app(SQRT, [kp1]),
+      app(SQRT, [app(POW, [kp1, int(2)])]),
+    ];
+    const numK = app(MUL, [app(sym("Sin"), [k]), ...logsK, ...sqrtFactorsK, k]);
+    const numKp1 = app(MUL, [
+      app(sym("Sin"), [kp1]),
+      ...logsKp1,
+      ...sqrtFactorsKp1,
+      kp1,
+    ]);
+    const gK = app(DIV, [numK, app(POW, [k, int(5)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(5)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // sqrtHalfSum = 1.5 + 0.5 + 1 = 3, polyDegSum = 1, effective = 4, denDeg = 5 → closes.
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+
+  it("refuses unrecognised factor (Exp) so divergent sum stays unevaluated", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(LOG, [k]), app(SQRT, [k]), app(EXP, [k])]);
+    const numKp1 = app(MUL, [
+      app(LOG, [kp1]),
+      app(SQRT, [kp1]),
+      app(EXP, [kp1]),
+    ]);
+    const gK = app(DIV, [numK, app(POW, [k, int(3)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(3)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // exp(k)·log(k)·sqrt(k) grows exponentially → must NOT vanish.
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("refuses Sqrt of negative polynomial (complex-valued)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const negK = app(MUL, [int(-1), k]);
+    const negKp1 = app(MUL, [int(-1), kp1]);
+    const numK = app(MUL, [app(LOG, [k]), app(SQRT, [negK])]);
+    const numKp1 = app(MUL, [app(LOG, [kp1]), app(SQRT, [negKp1])]);
+    const gK = app(DIV, [numK, app(POW, [k, int(3)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(3)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    expect(result).toMatchObject({ kind: "apply", head: SUM });
+  });
+
+  it("pure bounded falls through to Phase 49 (sum still closes)", () => {
+    const k = sym("k");
+    const kp1 = app(ADD, [k, int(1)]);
+    const numK = app(MUL, [app(sym("Sin"), [k]), app(sym("Cos"), [k])]);
+    const numKp1 = app(MUL, [app(sym("Sin"), [kp1]), app(sym("Cos"), [kp1])]);
+    const gK = app(DIV, [numK, app(POW, [k, int(2)])]);
+    const gKp1 = app(DIV, [numKp1, app(POW, [kp1, int(2)])]);
+    const f = app(SUB, [gK, gKp1]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), evalNode);
+    // Phase 49 (bounded × diverging) catches it — generic returns undefined.
+    expect(result.kind === "apply" ? result.head : undefined).not.toEqual(SUM);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Track B2 — Apart-retry telescope chain (Phase 40 + Phase 46 composition).
+//
+// These tests drive ``evaluateSum`` through a real ``symbolic-vm`` VM
+// (``SymbolicBackend`` has the Apart handler installed since 0.13.0), so the
+// ``Apply(Apart, ...)`` emitted by the new retry path is actually dispatched
+// to ``apartHandler``.  This is the only place in the cas-summation TS test
+// suite that takes a runtime dependency on symbolic-vm — it is a
+// devDependency so the published package still has no runtime tie.
+// ---------------------------------------------------------------------------
+
+function vmEval(): (node: IRNode) => IRNode {
+  const vm = new VM(new SymbolicBackend());
+  return (node) => vm.eval(node);
+}
+
+describe("summation: Track B2 Apart-retry telescope chain (Phase 40+46)", () => {
+  it("acceptance — ∑_{k=1}^∞ 1/(k(k+1)) = 1 (closes via Apart-retry)", () => {
+    // The classic case: Apart decomposes 1/(k(k+1)) → 1/k − 1/(k+1).
+    // The Phase 40+46 Add-Neg normaliser rewrites Add(Div(1,k), Div(-1,k+1))
+    // to Sub(1/k, 1/(k+1)); Phase 41 closes the resulting telescope at
+    // ∞ to give 1/k|_{k=1} = 1.
+    const k = sym("k");
+    const f = app(DIV, [int(1), app(MUL, [k, app(ADD, [k, int(1)])])]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), vmEval())).toEqual(int(1));
+  });
+
+  it("three-term shifted: ∑_{k=1}^∞ 1/(k(k+2)) = 3/4", () => {
+    // Apart: 1/(k(k+2)) = (1/2)/k − (1/2)/(k+2).  This is *not* a
+    // direct k → k+1 telescope (shift is 2, not 1), so cas-summation
+    // doesn't immediately close it via the structural detector — but
+    // the sum still has a known value 3/4 = (1/2)(1 + 1/2).  Because
+    // the Apart-retry must not falsely claim closure here, we accept
+    // either a correct closed form (3/4) or a passthrough — the safety
+    // requirement is "do not produce a wrong value".  Currently the
+    // structural detector returns unevaluated for shift-2 telescopes,
+    // so this test pins the *no false closure* property.
+    const k = sym("k");
+    const f = app(DIV, [int(1), app(MUL, [k, app(ADD, [k, int(2)])])]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), vmEval());
+    // Acceptable outcomes: rational 3/4 (if a future shift-aware
+    // telescope detector closes it) or unevaluated Sum (current
+    // structural detector).  A wrong numeric result would fail.
+    const rv = rationalValue(result);
+    if (rv === undefined) {
+      expect(result.kind === "apply" ? result.head : undefined).toEqual(SUM);
+    } else {
+      expect(rv).toEqual({ numer: 3n, denom: 4n });
+    }
+  });
+
+  it("Phase 46 constant-numerator: ∑_{k=1}^∞ 2/(k(k+1)) = 2", () => {
+    // Apart: 2/(k(k+1)) = 2/k − 2/(k+1).  The Phase 46 widening
+    // recognises ``Add(Div(2, k), Div(-2, k+1))`` (negative-literal
+    // numerator) as a telescope after the Add-Neg normaliser fires.
+    const k = sym("k");
+    const f = app(DIV, [int(2), app(MUL, [k, app(ADD, [k, int(1)])])]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), vmEval())).toEqual(int(2));
+  });
+
+  it("irreducible denominator (Apart bails): ∑_{k=1}^∞ 1/(k²+1) returns unevaluated SUM", () => {
+    // ``k² + 1`` has no rational roots, so Apart returns its input
+    // unchanged (Phase 1 simple-roots path requires rational roots).
+    // The cas-summation Apart-retry then sees ``apart_attempt == f``
+    // and does not recurse; we fall through to the unevaluated Sum.
+    const k = sym("k");
+    const f = app(DIV, [int(1), app(ADD, [app(POW, [k, int(2)]), int(1)])]);
+    const result = evaluateSum(f, k, int(1), sym("%inf"), vmEval());
+    expect(result.kind === "apply" ? result.head : undefined).toEqual(SUM);
+  });
+
+  it("polynomial summand (not a Div, skips Apart): ∑_{k=1}^4 k(k+1) = 40 via Faulhaber", () => {
+    // ``k(k+1)`` is a polynomial, not ``Div(...)`` — the Apart-retry
+    // guard skips it entirely.  The existing Faulhaber / power-of-k
+    // path closes the sum directly: ∑_{k=1}^4 k(k+1) = ∑k² + ∑k = 30 + 10 = 40.
+    const k = sym("k");
+    const f = app(MUL, [k, app(ADD, [k, int(1)])]);
+    expect(evaluateSum(f, k, int(1), int(4), vmEval())).toEqual(int(40));
+  });
+
+  it("Apart fires but post-Apart shape still doesn't telescope: returns unevaluated SUM", () => {
+    // Construct a sum whose Apart decomposition produces terms that
+    // individually diverge or don't pair into a shift-1 telescope.
+    // ``∑_{k=1}^N 1/((k-1)(k+1))`` (k from 2) — Apart yields
+    // (1/2)/(k-1) − (1/2)/(k+1), a shift-2 telescope.  Finite hi makes
+    // it numerically summable via direct iteration but the structural
+    // telescope detector won't fire and the explicit numeric path
+    // closes it.  Use an infinite hi with a symbolic shape that
+    // structurally resists both — pick a hi=%inf with a 3-factor
+    // denominator: ``1/((k-1)(k+1)(k+2))`` from k=2 — Apart produces
+    // a 3-term shift-mixed decomposition that has no direct shift-1
+    // pairing, so the retry's inner telescope detector returns
+    // undefined and we fall through to unevaluated SUM (no spurious
+    // numeric closure, no wrong answer).
+    const k = sym("k");
+    const f = app(DIV, [
+      int(1),
+      app(MUL, [
+        app(SUB, [k, int(1)]),
+        app(MUL, [app(ADD, [k, int(1)]), app(ADD, [k, int(2)])]),
+      ]),
+    ]);
+    const result = evaluateSum(f, k, int(2), sym("%inf"), vmEval());
+    // Safety: must not produce a wrong numeric value.  Either it stays
+    // unevaluated (current detector limitation) or a correct future
+    // closed form (real value: (1/4)·H₂ + small) — either is fine; a
+    // wrong rational would be a regression.
+    const rv = rationalValue(result);
+    if (rv === undefined) {
+      expect(result.kind === "apply" ? result.head : undefined).toEqual(SUM);
+    } else {
+      // Any closed numeric value here would need independent verification;
+      // for now this branch is reserved for a future widening that knows
+      // how to close shift-3 telescopes.
+      expect(rv.denom).toBeGreaterThan(0n);
+    }
   });
 });

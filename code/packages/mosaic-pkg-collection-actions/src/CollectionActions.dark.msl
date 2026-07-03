@@ -1,0 +1,219 @@
+// CollectionActions.dark.msl - dark collection action panel style.
+
+style CollectionActions {
+  part collection-actions {
+    background : "#111827" ;
+    border-color : "#0891b2" ;
+    border-width : 1 ;
+    padding : 14 ;
+  }
+
+  part collection-title {
+    color : "#ecfeff" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+    padding-bottom : 10 ;
+  }
+
+  part collection-counts {
+    padding-bottom : 10 ;
+  }
+
+  part media-health-counts {
+    padding-bottom : 8 ;
+  }
+
+  part note-count {
+    padding : 8 ;
+  }
+
+  part note-type-count {
+    padding : 8 ;
+  }
+
+  part media-count {
+    padding : 8 ;
+  }
+
+  part referenced-media-count {
+    padding : 8 ;
+  }
+
+  part missing-media-count {
+    padding : 8 ;
+  }
+
+  part unused-media-count {
+    padding : 8 ;
+  }
+
+  part note-count-value {
+    color : "#67e8f9" ;
+    font-size : 22 ;
+    font-weight : 700 ;
+  }
+
+  part note-type-count-value {
+    color : "#a7f3d0" ;
+    font-size : 22 ;
+    font-weight : 700 ;
+  }
+
+  part media-count-value {
+    color : "#fde68a" ;
+    font-size : 22 ;
+    font-weight : 700 ;
+  }
+
+  part referenced-media-value {
+    color : "#bae6fd" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+  }
+
+  part missing-media-value {
+    color : "#fca5a5" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+  }
+
+  part unused-media-value {
+    color : "#fcd34d" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+  }
+
+  part note-count-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part note-type-count-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part media-count-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part referenced-media-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part missing-media-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part unused-media-label {
+    color : "#cbd5e1" ;
+    font-size : 12 ;
+  }
+
+  part media-missing-list {
+    padding-bottom : 4 ;
+  }
+
+  part media-unused-list {
+    padding-bottom : 8 ;
+  }
+
+  part missing-media-item {
+    color : "#fecaca" ;
+    font-size : 12 ;
+    padding : 2 ;
+  }
+
+  part unused-media-item {
+    color : "#fde68a" ;
+    font-size : 12 ;
+    padding : 2 ;
+  }
+
+  part import-export-actions {
+    gap : 8 ;
+    padding-bottom : 8 ;
+  }
+
+  part note-actions {
+    gap : 8 ;
+    padding-bottom : 8 ;
+  }
+
+  part destructive-actions {
+    gap : 8 ;
+  }
+
+  part import-button {
+    background    : "#0e7490" ;
+    border-width  : 1 ;
+    border-color  : "#155e75" ;
+    border-radius : 6 ;
+    color         : "#ecfeff" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part export-button {
+    background    : "#334155" ;
+    border-width  : 1 ;
+    border-color  : "#64748b" ;
+    border-radius : 6 ;
+    color         : "#f8fafc" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part prune-unused-media-button {
+    background    : "#b45309" ;
+    border-width  : 1 ;
+    border-color  : "#92400e" ;
+    border-radius : 6 ;
+    color         : "#fffbeb" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part add-note-button {
+    background    : "#0f766e" ;
+    border-width  : 1 ;
+    border-color  : "#134e4a" ;
+    border-radius : 6 ;
+    color         : "#ecfdf5" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part add-note-type-button {
+    background    : "#0f766e" ;
+    border-width  : 1 ;
+    border-color  : "#134e4a" ;
+    border-radius : 6 ;
+    color         : "#ecfdf5" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part delete-note-button {
+    background    : "#be123c" ;
+    border-width  : 1 ;
+    border-color  : "#881337" ;
+    border-radius : 6 ;
+    color         : "#fff1f2" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part delete-note-type-button {
+    background    : "#be123c" ;
+    border-width  : 1 ;
+    border-color  : "#881337" ;
+    border-radius : 6 ;
+    color         : "#fff1f2" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+}

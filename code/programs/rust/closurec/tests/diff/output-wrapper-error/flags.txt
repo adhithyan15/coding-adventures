@@ -1,0 +1,4 @@
+--js
+tests/diff/output-wrapper-error/input/a.js
+--output_wrapper
+(function(){})()

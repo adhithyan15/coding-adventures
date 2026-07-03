@@ -39,6 +39,14 @@ recent era at or before their release.
 
 Establishes the bulk of Ruby's syntax:
 - `def` / `end`, `class` / `end`, `module` / `end`
+  - **Default / optional parameters** (`def f(a = 1)`, `def f(a, b = a + 1)`)
+    are part of the 1.0 baseline. They are evaluated at CALL time and may
+    reference EARLIER parameters. As of `ruby-to-semantic-ir` 0.2.0 (changelog
+    0.99.0), the grammar `param` rule is `[ "*" | "**" ] NAME [ EQUALS
+    expression ]` and the frontend lowers the default into `Param.default`
+    (param-scoped, observing `Feature::DefaultParams`) — closing the original
+    Ruby-1.0 gap where the `= <default>` subtree was dropped and, in fact,
+    did not even parse. See the `ruby-to-semantic-ir` CHANGELOG.
 - `if` / `elsif` / `else` / `end`, `unless`, `while`, `until`, `for`
 - `case` / `when` / `else` / `end`  (no `in` patterns yet)
 - `begin` / `rescue` / `ensure` / `end`

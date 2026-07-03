@@ -1,0 +1,66 @@
+{
+  "id": "20-limit-edge-cases",
+  "description": "LIMIT edge cases: LIMIT 0, large OFFSET past end, LIMIT -1 (all rows)",
+  "level": 1,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE nums (x INTEGER)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nums VALUES (1)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nums VALUES (2)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nums VALUES (3)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nums VALUES (4)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO nums VALUES (5)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT x FROM nums ORDER BY x LIMIT 0",
+      "expected_columns": ["x"],
+      "expected_rows": [],
+      "note": "LIMIT 0 returns zero rows"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT x FROM nums ORDER BY x LIMIT 100 OFFSET 1000",
+      "expected_columns": ["x"],
+      "expected_rows": [],
+      "note": "OFFSET past end of table returns zero rows"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT x FROM nums ORDER BY x LIMIT -1",
+      "expected_columns": ["x"],
+      "expected_rows": [[1], [2], [3], [4], [5]],
+      "note": "LIMIT -1 returns all rows (SQLite semantics)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT x FROM nums ORDER BY x LIMIT 3 OFFSET 0",
+      "expected_columns": ["x"],
+      "expected_rows": [[1], [2], [3]],
+      "note": "OFFSET 0 is the same as no OFFSET"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT x FROM nums ORDER BY x LIMIT 2 OFFSET 3",
+      "expected_columns": ["x"],
+      "expected_rows": [[4], [5]],
+      "note": "Normal LIMIT with OFFSET skips first 3 rows"
+    }
+  ]
+}

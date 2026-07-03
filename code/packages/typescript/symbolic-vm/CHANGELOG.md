@@ -1,5 +1,302 @@
 # Changelog
 
+## [0.20.0] — 2026-05-29
+
+**Track K2 — n-variate Hensel factor bridge (TypeScript port).**
+
+Wires the new `tryNVariateHensel` from cas-factor 0.3.0 into the
+`Factor(...)` IR handler.  Mirrors the Python Track K1 bridge in
+`symbolic-vm/cas_handlers.py` (PR #5590).
+
+Algorithm (n ≥ 3, generic — not per-arity):
+
+1. Identify all free variables in the input (`findNVariables`, bounded
+   at 8 distinct symbols so a pathological input can't allocate
+   gigantic sparse-dict keys).
+2. Convert to an `NPoly` via `irToNpoly`.  Returns undefined for
+   floats, foreign symbols, transcendentals (Sin/Log/…), or non-integer
+   exponents.
+3. Call `tryNVariateHensel`.  On success, convert each factor back to
+   IR via `npolyToIr` using **left-nested binary Add/Mul** (the
+   primitive Add/Mul handlers are strictly binary, so n-ary Apply
+   nodes with three or more children would crash).
+4. Hook into `factor_handler` AFTER the bivariate Hensel path, BEFORE
+   the unevaluated-wrapper fallback.
+
+Catches `x³ + y³ + z³ − 3xyz = (x+y+z)(x²+y²+z²−xy−yz−zx)`,
+`(x+y+z)(x+2y+3z) = x²+3xy+4xz+2y²+5yz+3z²`, and similar trivariate
+cases.  Falls through cleanly on `x² + y² + z² + 1` (irreducible),
+`sin(x) + y + z` (transcendental), and so on.
+
+### Added
+
+- `tryNVariateHenselIr` — top-level IR glue mirroring Python
+  `_try_n_variate_hensel_ir`.
+- `findNVariables`, `irToNpoly`, `npolyToIr`, `foldBinary` — helpers
+  mirroring `_find_n_variables`, `_ir_to_npoly`, `_npoly_to_ir`, and
+  the left-nested-binary-fold convention.
+- `tests/n_variate_factor.test.ts` — 6 end-to-end pipeline tests
+  exercising `Factor(...)` over the VM: sum-of-cubes identity, linear
+  product round-trip, irreducible fall-through, transcendental safety,
+  bivariate regression, univariate regression.
+
+### Changed
+
+- `cas-factor` minimum bumped to 0.3.0 (n-variate Hensel landed there).
+- `factor_handler` dispatch order: univariate → bivariate Hensel →
+  n-variate Hensel → unevaluated wrapper.
+
+## [0.19.0] — 2026-05-29
+
+**Track G2 — symbolic-coefficient Weierstrass lift (TypeScript port).**
+
+Generalises the Phase-34/35/36/37 Weierstrass substitution
+``∫ c / (a + b·trig(α·x + β)) dx`` from concrete rational ``a, b`` to
+symbolic ones.  When the numeric pattern returns `undefined` because
+either coefficient is a free IR expression, the new helper consults
+`vm.assumptions` for the sign of the discriminant ``a² − b²`` and,
+upon finding a declared inequality / equality, emits the matching
+arctan / log / degenerate closed form with symbolic
+``Sqrt(a² − b²)`` (or ``Sqrt(b² − a²)``) in the result.  When no
+assumption pins down the sign, the integral is left unevaluated.
+
+This depends on the compound-relation extension to
+`cas-simplify.AssumptionContext` shipped in cas-simplify 0.2.0 (same
+PR, Track G2).  Mirrors Python `symbolic-vm` 0.74.0.
+
+### Added
+
+- New `assumptions: AssumptionContext` field on `VM` — published to
+  Weierstrass helpers via a module-level current-assumptions mirror
+  of Python's `_CURRENT_VM` ContextVar.
+- Handlers `Assume(rel)` / `Forget(rel)` / `ForgetAll()` registered
+  on the symbolic backend, threading user-declared facts through to
+  `vm.assumptions`.  Both relational heads are added to the
+  hold-evaluate set so the relation argument reaches the handler
+  intact.
+- `tryWeierstrassSymbolicCoefficients` — symbolic dispatcher,
+  invoked after the numeric helper returns `undefined`.
+- `weierstrassParseAPlusBSincosSymbolic` — symbolic sibling of the
+  numeric parser.
+- Branch emitters `tryWeierstrass{Arctan,Log,Degenerate}Symbolic`.
+- New dependency on `@coding-adventures/cas-simplify`.
+
+### Regression
+
+The numeric Weierstrass path is tried first and unchanged; the
+symbolic path explicitly bails out when both ``a`` and ``b`` are
+numeric, so concrete-coefficient integrals continue to use the
+arithmetic-folded numeric closed forms.  All 38 existing
+Phase 34 / 35 / 36 / 37 tests still pass; 218 / 218 in the broader
+TS symbolic-vm suite.
+
+## [0.18.0] - 2026-06-06
+
+### Added
+
+- Port the Python Phase 23 `Exp(c*x^2)` integration fallback for exact
+  rational, nonzero `c`, returning `Erf` for negative coefficients and
+  `Erfi` for positive coefficients.
+
+## [0.17.0] — 2026-06-06
+
+### Added
+
+- Port the Python Phase 23 Fresnel integration fallback for
+  `Integrate(Sin(a*x^2), x)` / `Integrate(Cos(a*x^2), x)` and
+  `q*%pi*x^2` variants into the TypeScript VM.
+- Tighten the previous IBP fallthrough tests so `sin(x^2)` and `cos(x^2)`
+  must now return `FresnelS` / `FresnelC` forms instead of accepting an
+  unevaluated `Integrate(...)`.
+
+## [0.16.0] — 2026-05-28
+
+**Track E2 — generic tabular integration-by-parts fallback (TypeScript
+port).**  Mirrors the Python `ibp_tabular.py` reference (Track E1) and
+closes the cross-language gap for the `Integrate` handler.
+
+When every shape-specific handler in `integrateIndefinite` has returned
+`undefined` for a `Mul`-shaped integrand, the new `tryIbpTabular`
+fallback makes a last-ditch attempt by **generic tabular IBP**:
+
+```
+For f = u(x) · w(x) with u polynomial in x:
+  ∫ u·w dx = Σ_{k=0}^{N-1} (-1)^k · u^(k)(x) · I^(k+1)(w)
+```
+
+where N = deg(u) + 1.  The I-column entries `∫w, ∫∫w, ..., ∫^N w` come
+from the recursive `integrateIndefinite` callback; any step that fails
+to close abandons the partition.  Bounded by `IBP_MAX_FACTORS = 5`
+(number of flattened Mul factors) and `IBP_MAX_POLY_DEGREE = 8` (degree
+of the polynomial column).
+
+### Added
+
+- `tryIbpTabular(f, x, integrateFn, diffFn, simplifyFn)` — top-level
+  fallback.  Returns the closed-form antiderivative or `undefined`.
+- `ibpFlattenMul(node)` — flattens nested-binary `Mul(a, Mul(b, c))`
+  trees so the IBP search isn't fooled by parse-tree grouping.
+- `ibpMultiplyIr(factors)` — rebuilds a left-associative `Mul` chain.
+- `ibpPolynomialDegree(node, x)` — returns the polynomial degree in x
+  (`-1` for zero, `undefined` for non-polynomial).
+- `ibpContainsIntegrate(node)`, `ibpIsZero(node)`, `ibpTrySplit(...)`,
+  `ibpCombinations(n, k)` — implementation helpers.
+
+### Changed
+
+- `integrate()` handler now invokes `tryIbpTabular` as the **last**
+  fallback before returning the unevaluated `Integrate(...)` form.
+  Closed-form results are passed through `vm.eval` for simplification.
+
+### Test plan
+
+Six tests in `tests/ibp-tabular.test.ts`:
+
+1. `∫ x·sin(x) dx` closes via tabular IBP — verified numerically
+   against `sin(1) − cos(1)`.
+2. `∫ x²·eˣ dx` closes via tabular IBP — verified against `2e² − 2`.
+3. `∫ x³·cos(x) dx` closes — verified against trapezoidal rule.
+4. Fallthrough: `∫ 1/x dx → log(x)` (IBP short-circuits — head is DIV).
+5. Fallthrough: `∫ sin(x²) dx` stays unevaluated or returns Fresnel —
+   IBP fabricates no bogus elementary form.
+6. Regression: `∫ cos(x²) dx` (Fresnel family) still stays unevaluated
+   after the IBP port lands.
+
+## [0.15.0] — 2026-05-28
+
+**Track D2 — bivariate Hensel lifting in `Factor` (TypeScript port).**
+
+Wires the new `@coding-adventures/cas-factor` 0.2.0 `tryBivariateHensel`
+into the `Factor` head's multivariate fall-through chain.  When none of
+the existing pattern handlers (perfect square/cube, difference of
+squares, cubic identity, grouping, common-factor) recognise the input,
+the handler now converts the IR to `BiPoly`, calls
+`tryBivariateHensel`, and emits a `Mul(...)` of the lifted factors.
+Mirrors the Python `_try_bivariate_hensel_ir` glue in
+`symbolic-vm/cas_handlers.py`.
+
+### Added
+
+- `findTwoVariables(node)` — walks the IR tree, returns the first two
+  distinct free variables or `undefined` (third variable, transcendental
+  constant, etc. all disqualify).
+- `irToBipoly(node, x, y)` — converts the polynomial subset of IR
+  (`Add`, `Sub`, `Mul`, `Pow`, `Neg`, `Integer`, `Rational`, symbol) to
+  a sparse `BiPoly`.  Returns `undefined` for floats, transcendentals,
+  non-integer or negative exponents, foreign symbols.
+- `bipolyToIr(p, x, y)` — converts a `BiPoly` back to IR with
+  deterministic descending-degree term order.
+- `tryBivariateHenselIr(inner)` — the top-level glue.
+
+### Changed
+
+- `factorHandler` — when the multivariate pattern path (`Apply`-level
+  pattern recognisers) finishes without producing a factorisation, the
+  handler now tries `tryBivariateHenselIr` before falling through to
+  unevaluated `Factor(...)`.
+
+## [0.14.0] — 2026-05-28
+
+**Track B3 — Apart for repeated linear factors (Phase 48, TypeScript port).**
+
+Lifts the multiplicity > 1 bail introduced in Track B1.
+``Apart(P(x)/Q(x), x)`` now decomposes rational functions whose denominator
+factors as ``∏_r (x − r)^{m_r}`` for *rational* ``r`` with arbitrary
+multiplicity.  Each pole ``r`` of multiplicity ``m`` contributes terms
+``A_{r,1}/(x − r) + A_{r,2}/(x − r)² + … + A_{r,m}/(x − r)^m`` where the
+coefficients come from the Taylor expansion of
+``φ(t) = P(r + t)/Q(r + t)`` around ``t = 0`` with
+``Q(x) = den(x)/(x − r)^m``.  Then ``A_{r, m − j} = φ_j``.
+
+This mirrors the Phase 48 algorithm added to Python ``symbolic-vm`` in PR
+\#3927.  Acceptance: ``Apart(1/(k²(k+1)²), k)`` decomposes to
+``2/(k+1) + 1/(k+1)² − 2/k + 1/k²`` (left-associated, roots sorted
+ascending), matching the Python reference byte-for-byte.
+
+Denominators that still contain an irreducible quadratic factor on top of
+the rational roots continue to bail to the unevaluated ``Apart(...)``
+form — partial fractions over the rationals can't go further there.
+
+### Added
+
+- ``polyTaylorExpandAroundR`` — Taylor-expand a ``PolyQ`` around a
+  rational point ``r`` to ``length`` coefficients.  Uses the binomial
+  identity ``poly(r+t)_j = ∑_{i≥j} c_i · C(i, j) · r^(i−j)`` with exact
+  arbitrary-precision ``BigInt`` arithmetic.
+- ``polySeriesDiv`` — formal power-series division ``N(t)/D(t)`` to
+  ``length`` terms via the standard recurrence
+  ``Q_j = (N_j − ∑_{k≥1} D_k · Q_{j−k}) / D_0``.  Returns ``undefined``
+  when ``D(0) = 0`` (defensive guard against a repeated-root miscount).
+- ``buildApartTerm`` — IR builder for ``A / (x − r)^power`` with
+  ``±1`` numerator elision (matches the formatting in
+  ``apartSimpleRoots``).
+- ``binomialBig`` — exact ``BigInt`` binomial helper used by the
+  Taylor expansion.
+
+### Changed
+
+- ``apartProper`` — Phase 48 generic path lifted in: when any
+  multiplicity > 1, compute ``Q(x) = den(x)/(x − r)^m`` per root via
+  successive division, Taylor-expand ``num`` and ``Q`` around ``r``,
+  series-divide, and emit ascending-power terms via ``buildApartTerm``.
+  Phase 1 simple-roots fast path retained (cheaper than Taylor + series
+  division and preserves the existing B1 regression-test IR shapes).
+- ``polyQRationalRoots`` — the ``a₀ = 0`` (x = 0 is a root) branch now
+  sorts its returned roots ascending, matching the non-zero-root path
+  and the Python ``sorted(roots)`` reference.  B1's simple-root tests
+  never exercised this branch; Phase 48 needs a stable order across
+  multi-root denominators including ``x = 0``.
+
+### Removed
+
+- The ``mult > 1 → undefined`` bail in ``apartProper`` — the new code
+  path handles the repeated-root case directly.
+
+### Out of scope (deferred)
+
+- Irreducible quadratic factors (``Apart`` over the rationals only).
+- Algebraic-number roots beyond Q — would require an irrational-roots
+  extension.
+
+## [0.13.0] — 2026-05-28
+
+**Track B1 — Apart simple-roots partial-fraction decomposition (TypeScript port).**
+
+Ports the Phase 1 simple-root subset of Python's ``apart_handler`` from
+``symbolic-vm/cas_handlers.py``.  ``Apart(P(x)/Q(x), x)`` now decomposes
+rational functions whose denominator has only *distinct rational* roots
+using the residue formula ``A_i = P(r_i) / Q'(r_i)``.  Improper fractions
+(deg P ≥ deg Q) get a polynomial-division step first, then Apart on the
+proper remainder.  Repeated roots (Phase 48 in the Python tree) and
+denominators with irreducible quadratic factors leave the expression
+wrapped in ``Apart(...)`` for downstream pipelines to handle.
+
+This unblocks the deferred TS port of the Phase 40 / 46 Apart-retry
+telescope chain in ``cas-summation``.
+
+### Added
+
+- ``apartHandler`` registered under the ``"Apart"`` head in the symbolic
+  backend's handler table.
+- Self-contained ``RatQ`` (BigInt rational) coefficient type plus
+  polynomial primitives ``polyQNormalize`` / ``polyQDegree`` /
+  ``polyQEvaluate`` / ``polyQDeriv`` / ``polyQDivmod`` /
+  ``polyQRationalRoots`` / ``polyQRootMultiplicities``.
+- IR ↔ polynomial bridges ``toRational`` and ``fromPolynomial``,
+  mirroring ``polynomial_bridge.py`` (left-associated ``Add`` chains,
+  ±1 coefficient elision, zero-term skipping).
+- ``apartSimpleRoots`` + ``apartProper`` implementing the residue-formula
+  decomposition.  ``apartProper`` bails to ``undefined`` (caller emits
+  unevaluated ``Apart(...)``) when *any* multiplicity > 1 — Phase 48 is
+  explicitly out of scope for this PR.
+- 6 new test cases in ``tests/apart.test.ts`` mirroring the Track B1
+  acceptance cases in ``code/specs/macsyma-finish-plan.md``.
+
+### Out of scope (deferred to follow-on tracks)
+
+- Repeated linear factors (Phase 48 algorithm) — Track B3.
+- Apart-retry telescope chain (Phase 40 + 46 composition) — Track B2.
+
 ## [0.12.0] — 2026-05-22
 
 **Phase 47 — Nested-Add flattening (TypeScript port).**

@@ -1,0 +1,13 @@
+{
+  "name": "@coding-adventures/visicalc-deno",
+  "version": "0.2.0",
+  "tasks": {
+    "dev": "deno run --allow-net main.ts",
+    "desktop": "deno desktop -A main.ts",
+    "build": "deno desktop -A --output VisiCalc.app main.ts",
+    "engine": "bash scripts/build-engine.sh",
+    "dev:ffi": "deno run --allow-net --allow-ffi --allow-read main-ffi.ts",
+    "desktop:ffi": "deno desktop -A main-ffi.ts",
+    "build:ffi": "deno desktop -A --output VisiCalc-FFI.app main-ffi.ts"
+  }
+}

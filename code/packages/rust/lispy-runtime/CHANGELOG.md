@@ -1,5 +1,34 @@
 # Changelog — lispy-runtime
 
+## [0.5.0] — 2026-05-24 (Path A increment 6b — typed cons-cell mutator)
+
+### Added — `heap::set_field_unchecked`
+
+New `unsafe fn set_field_unchecked(pair: LispyValue, index: usize,
+new_value: LispyValue) -> Result<(), &'static str>`.  Writes
+`new_value` into the `car` (index 0) or `cdr` (index 1) field of a
+live `ConsCell`.
+
+This is the runtime companion to twig-ir-compiler's increment 6b
+typed cons emission: each cons cell is allocated via `alloc_cons(NIL,
+NIL)` and then mutated into its final shape via two `field_store`
+instructions, matching the Phase 2 heap-lowering convention used by
+the IIR-to-{wasm,jvm,clr,beam} backends.
+
+### Safety
+
+The function re-validates the class id (`class_or_kind == CLASS_CONS`)
+before taking the `*mut` cast.  Misuse on a non-cons heap value (a
+`Closure`, `LangString`, …) returns `Err(...)` rather than corrupting
+memory.  In PR 2's `Box::leak` model every value returned by
+`alloc_cons` is a live cons forever, so the safety contract is
+trivially satisfied for the intended caller (twig-vm's dispatch loop,
+which writes single-threaded).
+
+External callers must:
+1. Pass a value that came from `alloc_cons` (validated internally).
+2. Serialise their own writes (no concurrent mutators).
+
 ## [0.4.0] — 2026-05-14
 
 ### Added — LANG52 stdlib completeness for self-hosting

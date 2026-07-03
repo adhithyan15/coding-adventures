@@ -1,0 +1,7 @@
+{
+ "idx": 9,
+ "id": "MED-10",
+ "scenario": "Ms. Nakagawa arrives unconscious after a car crash with a rapidly expanding intracranial hematoma that will be fatal within minutes without immediate surgery. She cannot consent, and despite attempts no family member or authorized surrogate can be reached in time. No signed consent form exists.",
+ "policy": "A surgical consent form must be signed by the patient before any operative procedure may proceed, except in a life-threatening emergency where the patient is unable to consent and no authorized surrogate is available, in which case the procedure may proceed under implied (emergency) consent.",
+ "question": "May the surgeons proceed with the emergency operation?"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 193,
+ "idx": 78,
+ "slot": "age_at_filing",
+ "claimed_value": 58,
+ "scenario": "Rosa is 58 years old at the time she files for naturalization and has been a lawful permanent resident for 22 years.",
+ "cited_span": "Rosa is 58 years old at the time she files for naturalization"
+}

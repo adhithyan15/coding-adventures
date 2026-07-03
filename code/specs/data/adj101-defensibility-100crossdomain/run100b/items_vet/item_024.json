@@ -1,0 +1,8 @@
+{
+ "idx": 24,
+ "policy": "A 'satisfaction guarantee' entitles the customer to a full refund if the product is returned in unused, resalable condition. Products that have been used are not eligible for any refund under this guarantee.",
+ "scenario": "Aisha bought a pair of noise-cancelling headphones and decided three days later they were not for her. She brought them back to the store with all original packaging, the warranty card, and the receipt, requesting a refund under the satisfaction guarantee.",
+ "question": "Is Aisha entitled to a full refund under the satisfaction guarantee?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether the product was used"
+}

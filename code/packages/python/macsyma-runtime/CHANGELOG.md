@@ -1,5 +1,64 @@
 # Changelog
 
+## 1.27.0 — 2026-05-29
+
+**Track M1: runtime `load("name")` directive and orthogonal-polynomial loadable package.**
+
+This release closes the last user-facing surface gap on the
+`macsyma-truly-finish-plan` roadmap: the ability for a session to opt
+in to extra evaluator tables on demand, mirroring Maxima's
+`load("orthopoly")` workflow.
+
+### New features
+
+- **`load("name")` runtime directive** (`handlers.py`, `heads.py`,
+  `backend.py`): Calling `load("orthopoly")` in a MACSYMA session
+  installs the orthogonal-polynomial handler table onto the calling
+  backend.  The name is checked against a hardcoded allowlist —
+  currently `{"orthopoly"}` — so user input never reaches `importlib`
+  or the filesystem.  Unknown names raise the new
+  `MacsymaUserError` with the available packages listed in the
+  message.  Repeated `load` calls are idempotent.  Per-session state
+  lives in `MacsymaBackend._loaded_packages`; a fresh backend always
+  starts with the set empty.
+
+- **`orthopoly` loadable package** (`packages/orthopoly.py`):
+  Numeric/symbolic closed-form evaluators for the classical
+  orthogonal polynomial families, installed only after `load`:
+
+  - `LegendreP(n, x)` — Bonnet recursion
+    `(n+1)P_{n+1} = (2n+1)x P_n − n P_{n−1}`, with `P_0 = 1`, `P_1 = x`.
+  - `ChebyshevT(n, x)` — `T_{n+1} = 2x T_n − T_{n−1}`, seed `T_0 = 1`, `T_1 = x`.
+  - `ChebyshevU(n, x)` — same recurrence, seed `U_0 = 1`, `U_1 = 2x`.
+  - `HermiteH(n, x)` — physicists' convention,
+    `H_{n+1} = 2x H_n − 2n H_{n−1}`, seed `H_0 = 1`, `H_1 = 2x`.
+  - `LegendreQ`, `BesselJ`, `BesselY` — registered as passthrough
+    handlers so the symbols are "known" after `load` even though no
+    closed-form polynomial exists.
+
+  Non-integer or negative `n` falls through unevaluated, preserving the
+  original `IRApply` so downstream rewrites (Taylor, integrate, …) can
+  still pattern-match on the head.
+
+- **Surface name table extensions** (`name_table.py`): The new MACSYMA
+  surface names `load`, `legendre_p`, `legendre_q`, `chebyshev_t`,
+  `chebyshev_u`, `hermite`, `bessel_j`, `bessel_y` are now mapped to
+  their canonical IR heads.  These mappings are unconditional (they're
+  parse-time), so `legendre_p(3, x)` parses to `LegendreP(3, x)` even
+  before `load`; only the evaluator handler is gated.
+
+### Security
+
+- The `load` dispatcher uses a **static `if/elif`** over the
+  hardcoded allowlist, never `importlib.import_module(user_name)`.
+  Adding a new loadable package requires editing two adjacent lines
+  in `handlers.py` — the allowlist set and the dispatch arm — and
+  there is no path resolution anywhere in the chain.  Path-traversal
+  strings (`../etc/passwd`, `/tmp/orthopoly`, `os`) are rejected
+  for the same reason any unknown name is: they aren't in the
+  allowlist.  A dedicated regression test
+  (`test_load_path_traversal_string_is_rejected`) pins this.
+
 ## 1.26.0 — 2026-05-14
 
 **MACSYMA stress-test parity: limit L'Hôpital, multivariate expand, Taylor for transcendentals,

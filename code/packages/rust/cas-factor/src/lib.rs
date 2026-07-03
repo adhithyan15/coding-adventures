@@ -42,12 +42,17 @@
 
 pub mod bzh;
 pub mod factor;
+pub mod hensel;
 pub mod kronecker;
 pub mod polynomial;
 pub mod rational_roots;
 
 pub use bzh::bzh_factor;
 pub use factor::{factor_integer_polynomial, FactorList};
+pub use hensel::{
+    bi_mul, bi_degree_x, bi_degree_y, n_mul, try_bivariate_hensel, try_n_variate_hensel, BiPoly,
+    NPoly, Rat,
+};
 pub use kronecker::kronecker_factor;
 pub use polynomial::{
     content, degree, divide_linear, divisors, evaluate, normalize, primitive_part, Poly,

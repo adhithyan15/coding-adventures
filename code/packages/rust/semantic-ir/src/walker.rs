@@ -77,8 +77,16 @@ pub fn walk_module_default<V: Visitor>(v: &mut V, m: &Module) {
     }
 }
 
-/// Default walk for a function: visits the body block.
+/// Default walk for a function: visits each parameter's default-value
+/// expression (if any) and then the body block.  Visiting defaults
+/// before the body keeps source-ish order (`def f(a = <expr>) …`) and
+/// ensures passes that walk the IR observe the default expressions.
 pub fn walk_function_default<V: Visitor>(v: &mut V, f: &Function) {
+    for p in &f.params {
+        if let Some(default) = &p.default {
+            v.visit_expr(default);
+        }
+    }
     v.visit_block(&f.body);
 }
 
@@ -120,6 +128,46 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt) {
             v.visit_expr(map);
             v.visit_expr(key);
             v.visit_expr(value);
+        }
+        Stmt::ClassDef { body, .. } => {
+            // Class body is a list of statements; recurse so visitors
+            // see nested declarations.  Phase 14a always lowers an
+            // empty body for `class Foo; end`, but later phases will
+            // populate it; the walker is forward-compatible.
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+        }
+        Stmt::ModuleDef { body, .. } => {
+            // Module body is a list of statements — same recursion as
+            // ClassDef (Ruby Phase 14d).
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+        }
+        Stmt::SingletonClassDef { body, .. } => {
+            // Singleton-class body — same recursion (Ruby Phase 14e).
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // Exception handling (Ruby Phase 16a): recurse into the try
+            // body, each rescue clause's body, and the optional ensure
+            // body, so visitors see every nested statement.
+            for stmt in body {
+                v.visit_stmt(stmt);
+            }
+            for r in rescues {
+                for stmt in &r.body {
+                    v.visit_stmt(stmt);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for stmt in ens {
+                    v.visit_stmt(stmt);
+                }
+            }
         }
     }
 }
@@ -203,6 +251,21 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr) {
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
             v.visit_expr(lhs);
             v.visit_expr(rhs);
+        }
+        // ── SIR18: string interpolation ────────────────────────────
+        Expr::StrConcat { parts, .. } => {
+            for p in parts {
+                v.visit_expr(p);
+            }
+        }
+        // ── KW1: keyword argument ──────────────────────────────────
+        // A keyword argument has exactly one child, its `value`.  We
+        // recurse into it so a visitor sees the argument expression (e.g.
+        // the `1` in `f(a: 1)`).  The recursion is depth-bounded like the
+        // rest of the walk: the same `visit_expr` dispatch that guards
+        // every other child applies here — we add no bypass.
+        Expr::KeywordArg { value, .. } => {
+            v.visit_expr(value);
         }
     }
 }
@@ -321,6 +384,89 @@ mod tests {
         let mut c = Counter { builtins: 0, ints: 0 };
         c.visit_module(&m);
         assert_eq!(c.ints, 1);  // the literal 5 in the let RHS
+    }
+
+    #[test]
+    fn visitor_visits_param_default_expr() {
+        // def f(a = 7) { nil } — the walker should visit the default
+        // expression `7`, so the IntLit counter sees it.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "a".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: Some(Box::new(Expr::IntLit { value: 7, span: s() })),
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "m".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut c = Counter { builtins: 0, ints: 0 };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1, "walker should visit the default-value expression");
+    }
+
+    #[test]
+    fn visitor_visits_keyword_arg_value() {
+        // KW1: the walker must recurse into a KeywordArg's value, so the
+        // IntLit `2` inside `f(a: 2)` is counted.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::DirectCall {
+                fn_name: "f".into(),
+                args: vec![Expr::KeywordArg {
+                    name: "a".into(),
+                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    span: s(),
+                }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        };
+        let f = Function {
+            name: "g".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = Module {
+            name: "m".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut c = Counter { builtins: 0, ints: 0 };
+        c.visit_module(&m);
+        assert_eq!(c.ints, 1, "walker should visit the keyword-arg value");
     }
 
     #[test]

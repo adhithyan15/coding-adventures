@@ -2,6 +2,18 @@
 
 All notable changes to the Ruby Parser package will be documented in this file.
 
+## [0.1.2] - 2026-06-02
+
+### Fixed
+
+- Updated the operator-precedence tests to match the current `ruby.grammar`.
+  The grammar now threads expressions through a full precedence chain
+  (`expression → ternary → … → sum → term → factor`), so additive operators
+  surface at the `sum` level rather than directly under `expression`. The
+  `test_multiplication_before_addition` and `test_chained_addition` tests were
+  still asserting the old flat shape (PLUS directly under `expression`) and
+  failed once the package was rebuilt in CI. They now inspect the `sum` node.
+
 ## [0.1.1] - 2026-03-31
 
 ### Fixed

@@ -100,7 +100,35 @@ fn print_function_indented(out: &mut String, f: &Function, indent: usize) {
         if i > 0 {
             out.push(' ');
         }
-        let _ = write!(out, "({} {})", p.name, type_or_any(p.sir_type.as_ref()));
+        // Kinds render with a Ruby-faithful sigil so a round-tripped
+        // module preserves the parameter's binding form:
+        //   - `Rest`    → `*name`   prefix (slurps positionals)
+        //   - `KwRest`  → `**name`  prefix (slurps keywords)
+        //   - `Keyword` → `name:`   *suffix* (a named keyword param — the
+        //     trailing colon mirrors Ruby `def f(x:)` / `def f(x: 1)`)
+        //   - `Required`→ plain `name`
+        // A keyword param uses a suffix (not a prefix) so its printed form
+        // reads exactly like the Ruby source that produced it.
+        let (prefix, suffix) = match p.kind {
+            ParamKind::Required => ("", ""),
+            ParamKind::Rest => ("*", ""),
+            ParamKind::Keyword => ("", ":"),
+            ParamKind::KwRest => ("**", ""),
+        };
+        // A parameter with a default-value expression renders an extra
+        // `(default <expr>)` clause inside the param form, e.g.
+        // `(a any (default (int 1)))`.  Params with no default keep the
+        // original `(name type)` shape, so existing modules round-trip
+        // unchanged.  For a keyword param the same clause distinguishes an
+        // OPTIONAL keyword (`(x: any (default (int 1)))`, Ruby `x: 1`) from
+        // a REQUIRED one (`(x: any)`, Ruby `x:`).
+        if let Some(default) = &p.default {
+            let _ = write!(out, "({}{}{} {} (default ", prefix, p.name, suffix, type_or_any(p.sir_type.as_ref()));
+            print_expr_inline_depth(out, default, 0);
+            out.push_str("))");
+        } else {
+            let _ = write!(out, "({}{}{} {})", prefix, p.name, suffix, type_or_any(p.sir_type.as_ref()));
+        }
     }
     let _ = write!(out, ") {}", type_or_any(f.return_type.as_ref()));
     if !f.captures.is_empty() {
@@ -222,6 +250,76 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             print_expr_inline_depth(out, key, depth + 1);
             out.push(' ');
             print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            // `(class-def Name)` for the empty base-class case;
+            // `(class-def Name (< Super))` when the class inherits
+            // (Ruby Phase 14c `class Foo < Bar`); body statements, if
+            // any, are printed one per line after the optional
+            // superclass clause.
+            let _ = write!(out, "(class-def {}", name);
+            if let Some(sup) = superclass {
+                let _ = write!(out, " (< {})", sup);
+            }
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
+        Stmt::ModuleDef { name, body, .. } => {
+            // `(module-def Name)` for the empty case; body statements
+            // (if any) printed one per line (Ruby Phase 14d).  Mirrors
+            // the ClassDef printer minus the superclass clause.
+            let _ = write!(out, "(module-def {}", name);
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
+        Stmt::SingletonClassDef { target, body, .. } => {
+            // `(singleton-class-def << Target)` head; body statements
+            // (if any) printed one per line (Ruby Phase 14e).
+            let _ = write!(out, "(singleton-class-def << {}", target);
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            // `(try-catch <body…> (rescue …) … (ensure …))` — exception
+            // handling (Ruby Phase 16a).  Each clause prints on its own
+            // indented line.
+            out.push_str("(try-catch");
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            for r in rescues {
+                let _ = write!(out, "\n{}  (rescue", " ".repeat(indent));
+                if !r.exception_types.is_empty() {
+                    let _ = write!(out, " (types {})", r.exception_types.join(" "));
+                }
+                if let Some(bind) = &r.binding {
+                    let _ = write!(out, " (bind {})", bind);
+                }
+                for inner in &r.body {
+                    let _ = write!(out, "\n{}    ", " ".repeat(indent));
+                    print_stmt(out, inner, indent + 4, depth + 1);
+                }
+                out.push(')');
+            }
+            if let Some(ens) = ensure_body {
+                let _ = write!(out, "\n{}  (ensure", " ".repeat(indent));
+                for inner in ens {
+                    let _ = write!(out, "\n{}    ", " ".repeat(indent));
+                    print_stmt(out, inner, indent + 4, depth + 1);
+                }
+                out.push(')');
+            }
             out.push(')');
         }
     }
@@ -360,6 +458,22 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             print_expr_inline_depth(out, rhs, depth + 1);
             out.push(')');
         }
+        Expr::StrConcat { parts, .. } => {
+            let _ = write!(out, "(str-concat");
+            print_args(out, parts, depth);
+            out.push(')');
+        }
+        // ── KW1: keyword argument ──────────────────────────────────
+        // `(keyword-arg name <value>)` — the head keyword names the
+        // concept, then the keyword's name (bare, like a `var-ref`'s name),
+        // then the value expression.  It appears inline in a call's arg
+        // list, so `f(1, a: 2)` prints as
+        // `(direct-call f (effects …) (int 1) (keyword-arg a (int 2)))`.
+        Expr::KeywordArg { name, value, .. } => {
+            let _ = write!(out, "(keyword-arg {} ", name);
+            print_expr_inline_depth(out, value, depth + 1);
+            out.push(')');
+        }
     }
 }
 
@@ -464,6 +578,20 @@ mod tests {
     }
 
     #[test]
+    fn print_str_concat() {
+        // Phase 20b — `StrConcat` renders as `(str-concat <parts…>)`,
+        // each part printed inline like a builtin-call's args.
+        let e = Expr::StrConcat {
+            parts: vec![
+                Expr::StrLit { value: "hi ".into(), span: s() },
+                Expr::VarRef { name: "name".into(), scope: Scope::Local, span: s() },
+            ],
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(str-concat (str \"hi \") (var-ref name local))");
+    }
+
+    #[test]
     fn print_booleans_and_nil() {
         assert_eq!(print_expr(&Expr::BoolLit { value: true, span: s() }), "(bool true)");
         assert_eq!(print_expr(&Expr::BoolLit { value: false, span: s() }), "(bool false)");
@@ -478,6 +606,42 @@ mod tests {
             span: s(),
         };
         assert_eq!(print_expr(&e), "(var-ref x local)");
+    }
+
+    #[test]
+    fn print_var_ref_instance_scope() {
+        // Phase 15a — an instance-var ref prints with the `instance`
+        // scope tag and the `@`-sigil name preserved verbatim.
+        let e = Expr::VarRef {
+            name: "@x".into(),
+            scope: Scope::Instance,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(var-ref @x instance)");
+    }
+
+    #[test]
+    fn print_var_ref_class_var_scope() {
+        // Phase 15b — a class-var ref prints with the `class-var`
+        // scope tag and the `@@`-sigil name preserved verbatim.
+        let e = Expr::VarRef {
+            name: "@@count".into(),
+            scope: Scope::ClassVar,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(var-ref @@count class-var)");
+    }
+
+    #[test]
+    fn print_var_ref_const_scope() {
+        // Phase 15c — a constant ref prints with the `const` scope tag
+        // and the (uppercase-initial) name preserved verbatim.
+        let e = Expr::VarRef {
+            name: "MAX".into(),
+            scope: Scope::Const,
+            span: s(),
+        };
+        assert_eq!(print_expr(&e), "(var-ref MAX const)");
     }
 
     #[test]
@@ -562,8 +726,8 @@ mod tests {
         let f = Function {
             name: "add".into(),
             params: vec![
-                Param { name: "x".into(), sir_type: None, span: s() },
-                Param { name: "y".into(), sir_type: None, span: s() },
+                Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "y".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
             ],
             return_type: None,
             captures: vec![],
@@ -579,6 +743,139 @@ mod tests {
         let text = print_module(&m);
         assert!(text.contains("(function add ((x any) (y any)) any (effects pure)"));
         assert!(text.contains("(builtin-call + (effects pure) (var-ref x param) (var-ref y param))"));
+    }
+
+    #[test]
+    fn print_variadic_params_render_splat_prefix() {
+        // M3: a Rest param renders `*name`, a KwRest param renders `**name`,
+        // so round-tripping preserves splat-ness. `def f(a, *rest, **opts)`.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
+                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = module_with(
+            vec![f],
+            FeatureManifest::from_features(&[Feature::DynamicTyping]),
+        );
+        let text = print_module(&m);
+        assert!(
+            text.contains("(function f ((a any) (*rest any) (**opts any)) any"),
+            "got: {text}"
+        );
+    }
+
+    #[test]
+    fn print_param_default_renders_default_clause() {
+        // SIR19: `def f(a = 1)` — the param carries a default literal.
+        // The printer renders an extra `(default (int 1))` clause inside
+        // the param form, while a defaultless param keeps `(name type)`.
+        let body = Block {
+            stmts: vec![],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param {
+                    name: "a".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                    span: s(),
+                },
+                Param { name: "b".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = module_with(
+            vec![f],
+            FeatureManifest::from_features(&[Feature::DynamicTyping, Feature::DefaultParams]),
+        );
+        let text = print_module(&m);
+        assert!(
+            text.contains("(function f ((a any (default (int 1))) (b any)) any"),
+            "got: {text}"
+        );
+    }
+
+    #[test]
+    fn print_keyword_params_render_colon_suffix() {
+        // KW1: `def f(x:, y: 1)` → a REQUIRED keyword `x` renders `(x: any)`
+        // and an OPTIONAL keyword `y` renders `(y: any (default (int 1)))`.
+        let body = Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "x".into(), sir_type: None, kind: ParamKind::Keyword, default: None, span: s() },
+                Param {
+                    name: "y".into(),
+                    sir_type: None,
+                    kind: ParamKind::Keyword,
+                    default: Some(Box::new(Expr::IntLit { value: 1, span: s() })),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let m = module_with(
+            vec![f],
+            FeatureManifest::from_features(&[Feature::DynamicTyping, Feature::KeywordParams]),
+        );
+        let text = print_module(&m);
+        assert!(
+            text.contains("(function f ((x: any) (y: any (default (int 1)))) any"),
+            "got: {text}"
+        );
+    }
+
+    #[test]
+    fn print_keyword_arg_renders_head_name_value() {
+        // KW1: `f(1, a: 2)` → a keyword argument prints as
+        // `(keyword-arg a (int 2))`, inline in the call's arg list after
+        // the positional `(int 1)`.
+        let e = Expr::DirectCall {
+            fn_name: "f".into(),
+            args: vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::KeywordArg {
+                    name: "a".into(),
+                    value: Box::new(Expr::IntLit { value: 2, span: s() }),
+                    span: s(),
+                },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(
+            print_expr(&e),
+            "(direct-call f (effects pure) (int 1) (keyword-arg a (int 2)))"
+        );
     }
 
     #[test]
@@ -652,5 +949,188 @@ mod tests {
         print_block(&mut out, &block, 0);
         assert!(out.contains("(let x (int 1))"));
         assert!(out.contains("(var-ref x local)"));
+    }
+
+    // ── SIR17: class declarations ──────────────────────────────────
+
+    #[test]
+    fn print_empty_class_def() {
+        // `class Foo; end` → `(class-def Foo)` (no body lines).
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ClassDef {
+                name: "Foo".into(),
+                superclass: None,
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(class-def Foo)"),
+            "expected `(class-def Foo)` in output, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn print_class_def_with_body_stmt() {
+        // Forward-compat: a populated body prints each statement
+        // indented under the class-def head.  Phase 14a never emits
+        // this shape, but the printer supports it.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ClassDef {
+                name: "Bar".into(),
+                superclass: None,
+                body: vec![Stmt::LetBinding {
+                    name: "y".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: s_.clone() },
+                    span: s_.clone(),
+                }],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(out.contains("(class-def Bar"));
+        assert!(out.contains("(let y (int 2))"));
+    }
+
+    #[test]
+    fn print_empty_module_def() {
+        // `module M; end` → `(module-def M)` (no body lines).
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ModuleDef {
+                name: "M".into(),
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(module-def M)"),
+            "expected `(module-def M)` in output, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn print_module_def_with_body_stmt() {
+        // A populated module body prints each statement indented under
+        // the module-def head.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ModuleDef {
+                name: "Config".into(),
+                body: vec![Stmt::LetBinding {
+                    name: "v".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 3, span: s_.clone() },
+                    span: s_.clone(),
+                }],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(out.contains("(module-def Config"));
+        assert!(out.contains("(let v (int 3))"));
+    }
+
+    #[test]
+    fn print_singleton_class_def() {
+        // `class << self; end` → `(singleton-class-def << self)`.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::SingletonClassDef {
+                target: "self".into(),
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(singleton-class-def << self)"),
+            "expected `(singleton-class-def << self)` in output, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn print_class_def_with_superclass() {
+        // Ruby Phase 14c: `class Foo < Bar` prints the superclass
+        // clause `(< Bar)` right after the class name.
+        let s_ = s();
+        let block = Block {
+            stmts: vec![Stmt::ClassDef {
+                name: "Foo".into(),
+                superclass: Some("Bar".into()),
+                body: vec![],
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(
+            out.contains("(class-def Foo (< Bar))"),
+            "expected `(class-def Foo (< Bar))` in output, got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn print_try_catch_with_rescue_and_ensure() {
+        // Ruby Phase 16a: `begin … rescue Foo => e … ensure … end` prints
+        // a `(try-catch …)` head with `(rescue (types …) (bind …) …)` and
+        // `(ensure …)` clauses.
+        let s_ = s();
+        let lb = |name: &str| Stmt::LetBinding {
+            name: name.into(),
+            sir_type: None,
+            value: Expr::IntLit { value: 1, span: s_.clone() },
+            span: s_.clone(),
+        };
+        let block = Block {
+            stmts: vec![Stmt::TryCatch {
+                body: vec![lb("x")],
+                rescues: vec![crate::nodes::RescueClause {
+                    exception_types: vec!["StandardError".into()],
+                    binding: Some("e".into()),
+                    body: vec![lb("y")],
+                    span: s_.clone(),
+                }],
+                ensure_body: Some(vec![lb("z")]),
+                span: s_.clone(),
+            }],
+            value: Expr::NilLit { span: s_.clone() },
+            span: s_,
+        };
+        let mut out = String::new();
+        print_block(&mut out, &block, 0);
+        assert!(out.contains("(try-catch"), "expected try-catch head, got:\n{}", out);
+        assert!(
+            out.contains("(rescue (types StandardError) (bind e)"),
+            "expected rescue clause, got:\n{}",
+            out
+        );
+        assert!(out.contains("(ensure"), "expected ensure clause, got:\n{}", out);
     }
 }

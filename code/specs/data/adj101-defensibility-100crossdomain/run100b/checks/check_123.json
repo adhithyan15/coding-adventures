@@ -1,0 +1,8 @@
+{
+ "check_id": 123,
+ "idx": 48,
+ "slot": "consumer_advisory_posted",
+ "claimed_value": true,
+ "scenario": "A steakhouse serves a whole-muscle intact ribeye steak cooked to an internal temperature of 145 degrees F at the customer's request for medium-rare. A consumer advisory regarding undercooked meats is posted on the menu.",
+ "cited_span": "A consumer advisory regarding undercooked meats is posted on the menu"
+}

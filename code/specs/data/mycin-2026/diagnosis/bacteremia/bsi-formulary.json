@@ -1,0 +1,45 @@
+{
+  "_doc": "Empiric BACTEREMIA / SEPSIS formulary — systemic antibacterial (+ antifungal) FACTS, not regimens. Each drug carries what it COVERS (bloodstream pathogens), contraindications, and a preference TIER (first-line=1 … reserve=5). The regimen is DERIVED by minimum-cost SET-COVER over the organisms the source-id differential keeps in play (identify_bsi.py) — so it generalizes across sources with no new rules. Unlike the meningitis formulary there is no CSF-penetration filter (this is bloodstream, not CNS). Coverage facts are AUTHORED-ILLUSTRATIVE from standard references (IDSA bloodstream/sepsis/SSTI/cIAI guidance, Surviving Sepsis, Sanford) and are NOT yet spider-grounded — a future formulary-spider pass grounds + gates them exactly as it did the meningitis formulary (which corrected three hand-authored errors). Tiers encode empiric preference among valid options; both are one CAS edit from a grounded value. domain: empiric community/healthcare-associated bacteremia.",
+  "drugs": {
+    "piperacillin_tazobactam": {
+      "covers": ["enteric_gnb", "pseudomonas", "anaerobes", "enterococcus", "strep_pyogenes", "s_pneumoniae"],
+      "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 1,
+      "source": "IDSA/Surviving Sepsis: anti-pseudomonal beta-lactam/beta-lactamase-inhibitor, broad gram-negative + anaerobe + enterococcal (faecalis) coverage"
+    },
+    "cefepime": {
+      "covers": ["enteric_gnb", "pseudomonas", "strep_pyogenes", "s_pneumoniae"],
+      "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 2,
+      "source": "IDSA neutropenic fever: anti-pseudomonal cephalosporin (no anaerobic/enterococcal coverage)"
+    },
+    "ceftriaxone": {
+      "covers": ["enteric_gnb", "strep_pyogenes", "s_pneumoniae"],
+      "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 1,
+      "source": "3rd-gen cephalosporin: non-pseudomonal gram-negative + streptococcal (community sepsis)"
+    },
+    "meropenem": {
+      "covers": ["enteric_gnb", "pseudomonas", "anaerobes", "enterococcus", "strep_pyogenes", "s_pneumoniae"],
+      "betalactam": true, "contraindications": ["betalactam_allergy_severe"], "tier": 3,
+      "source": "Carbapenem (reserve): very broad incl. ESBL gram-negatives, anaerobes; Enterococcus faecalis"
+    },
+    "vancomycin": {
+      "covers": ["s_aureus", "coag_neg_staph", "enterococcus", "strep_pyogenes", "s_pneumoniae"],
+      "betalactam": false, "contraindications": [], "tier": 1,
+      "source": "Empiric gram-positive coverage incl. MRSA, CoNS, most enterococci (not VRE)"
+    },
+    "metronidazole": {
+      "covers": ["anaerobes"],
+      "betalactam": false, "contraindications": [], "tier": 1,
+      "source": "Anaerobic coverage (pairs with a non-anaerobic gram-negative agent, e.g. cefepime/ceftriaxone)"
+    },
+    "micafungin": {
+      "covers": ["candida"],
+      "betalactam": false, "contraindications": [], "tier": 2,
+      "source": "IDSA candidiasis: echinocandin, first-line empiric candidemia"
+    },
+    "daptomycin": {
+      "covers": ["s_aureus", "coag_neg_staph", "enterococcus", "strep_pyogenes"],
+      "betalactam": false, "contraindications": [], "tier": 3,
+      "source": "Gram-positive incl. MRSA + VRE (reserve; NOT for pulmonary source — inactivated by surfactant)"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+[package]
+name = "intel8008-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Intel 8008 instruction encoder.  Covers the subset of 8008 opcodes the LANG VM intel8008-backend uses to lower CIR to 8-bit-data Intel 8008 machine code.  No IR knowledge.  Phase 6 of the historical-arch backend migration."
+
+[lib]
+name = "intel8008_encoder"
+path = "src/lib.rs"
+
+[dependencies]

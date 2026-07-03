@@ -1,0 +1,14 @@
+// Breadcrumb.dark.msl — dark-theme styling.
+
+style Breadcrumb {
+  part breadcrumb {
+    padding : 8 ;
+  }
+  part breadcrumb-link {
+    padding       : 4 ;
+    background    : "transparent" ;
+    color         : "#60a5fa" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+  }
+}

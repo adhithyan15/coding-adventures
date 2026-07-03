@@ -1,0 +1,19 @@
+{
+ "claim": "a wrong verdict localizes to exactly one clause via the proof DAG",
+ "case": "MEN-1",
+ "seeded_corruption": "contributes 5.84 from seizure(present) to bacterial_meningitis  ->  contributes 584 from seizure(present) to bacterial_meningitis (100x typo)",
+ "posterior_good": 0.999872,
+ "posterior_corrupted": 0.999999,
+ "diverging_proof_steps": [
+  {
+   "step": "seizure(present)",
+   "logit_good": 1.765,
+   "logit_bad": 6.37,
+   "delta": 4.605
+  }
+ ],
+ "localized_to": [
+  "seizure(present)"
+ ],
+ "verdict": "LOCALIZED \u2014 exactly one proof step diverged; the reviewer reads the trail, sees the seizure contribution's logit jumped from ~1.76 to ~6.37, and that one clause is the locus. No model re-run."
+}

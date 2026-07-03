@@ -19,6 +19,7 @@
 /// The full inlined runtime.  Always emitted verbatim.
 pub const RUNTIME: &str = r##"mod __sir {
     //! Runtime support — value model, builtins, helpers.
+    use std::cell::Cell;
     use std::cell::RefCell;
     use std::collections::HashMap;
     use std::rc::Rc;
@@ -27,12 +28,74 @@ pub const RUNTIME: &str = r##"mod __sir {
     #[derive(Clone)]
     pub enum Value {
         Int(i64),
+        // SIR16 floats.  Kept distinct from `Int` so the value model
+        // never silently coerces — arithmetic promotes to `Float` only
+        // when an operand is already a `Float` (see `any_float`).
+        Float(f64),
         Bool(bool),
         Nil,
+        // ── DefaultParams (P2e) sentinel ──────────────────────────
+        // `Missing` marks an *omitted* positional argument at a call
+        // site (the `DirectCall` emitter pads omitted trailing slots
+        // with `missing()`).  A defaulted param's body-top prologue
+        // tests for it via `is_missing` and substitutes the param's
+        // default expression.  It is an internal sentinel — it should
+        // never be printed or compared by ordinary user code, because
+        // by the time a function body runs past its prologue every
+        // `Missing` has been replaced.  We still give it safe,
+        // defensive arms in `format`/`value_eq` so a leaked sentinel
+        // degrades gracefully instead of panicking (`<missing>`; equal
+        // only to another `Missing`).
+        Missing,
         Sym(Rc<str>),
         Str(Rc<str>),
         Pair(Rc<Pair>),
         Closure(Rc<Closure>),
+        // ── SIR16 sequences ───────────────────────────────────────
+        // A growable, *mutably shared* vector.  `Rc<RefCell<…>>` is the
+        // crux: `SeqSet` (`xs[i] = v`) must mutate the very sequence the
+        // caller holds, and two bindings that alias the same literal must
+        // see each other's writes — exactly the reference semantics of a
+        // Python list or JS array.  Cloning a `Value::Seq` clones the
+        // `Rc` (a shared handle), not the backing `Vec`.
+        Seq(Rc<RefCell<Vec<Value>>>),
+        // ── SIR16 maps ────────────────────────────────────────────
+        // An *insertion-ordered* association list.  We key by `Value`
+        // using the runtime's own `value_eq` (linear scan) rather than a
+        // `HashMap`, because our `Value` is neither `Hash` nor `Eq`
+        // (floats, closures, nested seqs/maps).  `value_eq` already
+        // defines structural equality across the whole tower, so a
+        // `Vec<(Value, Value)>` gives correct `MapGet`/`MapSet` semantics
+        // — including missing-key ⇒ `Nil` — for *any* key type, and
+        // preserves insertion order for deterministic iteration/printing.
+        // Shared + mutable via `Rc<RefCell<…>>`, same as `Seq`.
+        Map(Rc<RefCell<Vec<(Value, Value)>>>),
+        // ── SIR17 user-defined-class instances (O5) ───────────────
+        // A *handle* into the `INSTANCES` side-table: the `u64` is an
+        // opaque instance id, and the real object state — its class-name
+        // tag plus its `@ivar` bag — lives in a `thread_local` map keyed
+        // by that id (see `SirInstance` / `INSTANCES` below).
+        //
+        // ── Value-model decision (variant vs. side-table) ──────────
+        // We do NOT store `SirInstance` inline in the enum, and we do NOT
+        // reuse an existing variant as a disguised handle.  Instead this
+        // is a NARROW, dedicated variant carrying only an `id`, backed by
+        // a side-table.  The trade-offs we weighed:
+        //   • A side-table alone (reusing, say, a magic `Pair`) would
+        //     leak: `pair?`/`car`/`cdr` would report/operate on an
+        //     "instance", and `format`/`value_eq` would mis-render it.
+        //   • Storing `SirInstance` INLINE (`Instance(Rc<SirInstance>)`)
+        //     would put a `RefCell<HashMap>` on the hot, frequently-cloned
+        //     `Value` and widen every ownership move.
+        // The chosen id-handle-plus-side-table keeps `Value: Clone` a
+        // trivial `Copy` of a `u64`, gives instances a *distinct*
+        // discriminator (no built-in-type leak), and confines the
+        // mutable object state to one `thread_local`.  Adding the arm
+        // touches only THIS backend's emitted runtime `Value` — never the
+        // core semantic-IR — and only two existing exhaustive sites
+        // (`format_d`, and an identity arm in `value_eq_d`); every other
+        // `match` already has a `_`/`matches!` fallback.
+        Instance(u64),
     }
 
     pub struct Pair {
@@ -60,6 +123,23 @@ pub const RUNTIME: &str = r##"mod __sir {
             t.insert(name.to_string(), s.clone());
             Value::Sym(s)
         })
+    }
+
+    // ── DefaultParams (P2e) sentinel helpers ──────────────────────
+    //
+    // `missing()` constructs the omitted-argument sentinel; the
+    // `DirectCall` emitter appends one per trailing param the caller
+    // left off, so the emitted call is always full-arity.  `is_missing`
+    // is the predicate a defaulted param's prologue uses to decide
+    // whether to evaluate its default.  Both are trivial, but exposing
+    // them as named helpers keeps the emitter's output readable and the
+    // sentinel representation in one place.
+    pub fn missing() -> Value {
+        Value::Missing
+    }
+
+    pub fn is_missing(v: &Value) -> bool {
+        matches!(v, Value::Missing)
     }
 
     // ── global storage ────────────────────────────────────────────
@@ -115,17 +195,93 @@ pub const RUNTIME: &str = r##"mod __sir {
     }
 
     // ── arithmetic builtins (variadic) ────────────────────────────
+    //
+    // Numeric tower (SIR16): the helpers stay on the integer path while
+    // every operand is an `Int`, preserving exact i64 semantics
+    // (including `times`' wrapping).  The moment *any* operand is a
+    // `Float`, the whole fold promotes to f64 — matching the
+    // "int op float ⇒ float" rule of Python/Ruby/JS.
+    // `plus` is POLYMORPHIC on the tag of the FIRST operand, matching
+    // Ruby's `+` (overloaded by receiver type).  The dispatch is an
+    // explicit `match` on the first operand's variant — never reflection
+    // (see [[dynamic-dispatch-rce]]): a `String` receiver concatenates,
+    // a `Seq` receiver concatenates element vectors, and everything else
+    // falls through to the UNCHANGED numeric fold below.
+    //
+    // | first arg   | behaviour                                   |
+    // |-------------|---------------------------------------------|
+    // | `Str`       | concatenate all args' string contents → Str |
+    // | `Seq`       | concatenate the element vecs into a NEW Seq |
+    // | otherwise   | numeric int/float fold (unchanged)          |
+    //
+    // Ruby `+` is binary; the SIR builtin is variadic (numeric fold), so
+    // the string/array arms fold left-associatively over ≥2 operands,
+    // preserving the existing variadic contract.
     pub fn plus(args: Vec<Value>) -> Value {
-        let mut total: i64 = 0;
-        for a in args {
-            total += as_i64(&a);
+        match args.first() {
+            // ── String concatenation ──────────────────────────────
+            // `"a" + "b"` → `"ab"`.  Ruby's `String#+` requires a String
+            // right-hand operand (`"a" + 1` raises `TypeError`); typed
+            // rejection belongs to the sir-typed-runtime-errors cascade, so
+            // here we require every operand be a `Str` and concatenate their
+            // contents — a non-Str operand panics with a clear message rather
+            // than silently coercing to integer garbage.
+            Some(Value::Str(_)) => {
+                let mut out = String::new();
+                for a in &args {
+                    match a {
+                        Value::Str(s) => out.push_str(s),
+                        other => panic!("string + expects strings, got {}", format(other)),
+                    }
+                }
+                Value::Str(Rc::from(out.as_str()))
+            }
+            // ── Array concatenation ───────────────────────────────
+            // `[1] + [2]` → `[1, 2]`.  Build a FRESH `Seq` from the
+            // concatenated element snapshots — never alias or mutate an
+            // input handle (Ruby `Array#+` returns a new array).  Each
+            // operand must itself be a `Seq`.
+            Some(Value::Seq(_)) => {
+                let mut out: Vec<Value> = Vec::new();
+                for a in &args {
+                    match a {
+                        Value::Seq(items) => out.extend(items.borrow().iter().cloned()),
+                        other => panic!("array + expects arrays, got {}", format(other)),
+                    }
+                }
+                seq_lit(out)
+            }
+            // ── Numeric fold (UNCHANGED) ──────────────────────────
+            _ => {
+                if any_float(&args) {
+                    let mut total = 0.0f64;
+                    for a in &args {
+                        total += as_f64(a);
+                    }
+                    return Value::Float(total);
+                }
+                let mut total: i64 = 0;
+                for a in args {
+                    total += as_i64(&a);
+                }
+                Value::Int(total)
+            }
         }
-        Value::Int(total)
     }
 
     pub fn minus(args: Vec<Value>) -> Value {
         if args.is_empty() {
             return Value::Int(0);
+        }
+        if any_float(&args) {
+            if args.len() == 1 {
+                return Value::Float(-as_f64(&args[0]));
+            }
+            let mut acc = as_f64(&args[0]);
+            for a in &args[1..] {
+                acc -= as_f64(a);
+            }
+            return Value::Float(acc);
         }
         if args.len() == 1 {
             return Value::Int(-as_i64(&args[0]));
@@ -137,23 +293,146 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Int(acc)
     }
 
+    // `times` is POLYMORPHIC on the tag of the FIRST operand, matching
+    // Ruby's `*`.  Dispatch is an explicit `match` (never reflection):
+    //
+    // | first arg | 2nd arg | behaviour                              |
+    // |-----------|---------|----------------------------------------|
+    // | `Str`     | `Int n` | repeat the string n times (n≤0 → "")   |
+    // | `Seq`     | `Int n` | new Seq with elements repeated n times |
+    // | `Seq`     | `Str s` | join elements with `s` → Str           |
+    // | otherwise | —       | numeric int/float fold (unchanged)     |
+    //
+    // Ruby `*` is binary; the SIR builtin is variadic (numeric fold).  The
+    // string/array arms fold left-associatively pairwise, so `"ab" * 2 * 2`
+    // repeats then repeats again — the natural extension of the binary
+    // operator that preserves the variadic contract.  The join arm produces
+    // a `Str`, so a subsequent operand would fold via the `Str` receiver
+    // (repeat), matching left-associative Ruby chaining.
     pub fn times(args: Vec<Value>) -> Value {
-        let mut acc: i64 = 1;
-        for a in args {
-            acc = acc.wrapping_mul(as_i64(&a));
+        match args.first() {
+            Some(Value::Str(_)) | Some(Value::Seq(_)) => {
+                // Fold left-associatively over the operands: seed with the
+                // first, apply `times_binary` against each subsequent operand.
+                let mut it = args.into_iter();
+                let mut acc = it.next().expect("first() was Some");
+                for rhs in it {
+                    acc = times_binary(acc, rhs);
+                }
+                acc
+            }
+            // ── Numeric fold (UNCHANGED) ──────────────────────────
+            _ => {
+                if any_float(&args) {
+                    let mut acc = 1.0f64;
+                    for a in &args {
+                        acc *= as_f64(a);
+                    }
+                    return Value::Float(acc);
+                }
+                let mut acc: i64 = 1;
+                for a in args {
+                    acc = acc.wrapping_mul(as_i64(&a));
+                }
+                Value::Int(acc)
+            }
         }
-        Value::Int(acc)
+    }
+
+    // The binary `*` for a String/Seq left operand — the atom the variadic
+    // `times` fold applies pairwise.  Kept separate so the three
+    // string/array behaviours (string repeat, array repeat, array join)
+    // live in one explicit `match` on `(lhs, rhs)`.
+    fn times_binary(lhs: Value, rhs: Value) -> Value {
+        match (&lhs, &rhs) {
+            // `"ab" * 3` → `"ababab"`.  A count ≤ 0 yields the empty
+            // string (Ruby `"ab" * 0 == ""`, and negative counts raise in
+            // Ruby but we clamp to empty for the never-raise floor).
+            (Value::Str(s), Value::Int(n)) => {
+                let count = if *n > 0 { *n as usize } else { 0 };
+                // Guard `len * count` against `usize` overflow: `count` is cast
+                // from a program-controlled `i64`, so an oversized repeat could
+                // overflow (bogus size into `str::repeat`) or drive an
+                // unbounded allocation.  Ruby raises `ArgumentError: argument
+                // too big`; panic with the same controlled message rather than
+                // overflow/OOM.
+                if s.len().checked_mul(count).is_none() {
+                    panic!("argument too big");
+                }
+                Value::Str(Rc::from(s.repeat(count).as_str()))
+            }
+            // `[0] * 3` → `[0, 0, 0]`.  A fresh Seq whose element snapshot
+            // is repeated n times (n ≤ 0 → empty), never aliasing the input.
+            (Value::Seq(items), Value::Int(n)) => {
+                let count = if *n > 0 { *n as usize } else { 0 };
+                let snapshot = items.borrow().clone();
+                // Short-circuit an empty receiver (also avoids spinning the
+                // `0..count` loop for a huge count), and guard the capacity
+                // multiply against `usize` overflow — same program-controlled
+                // count as the string arm.  `checked_mul` → controlled
+                // `argument too big` panic (Ruby's `ArgumentError`) instead of
+                // a wrapped/absurd `Vec::with_capacity` request.
+                if snapshot.is_empty() || count == 0 {
+                    return seq_lit(Vec::new());
+                }
+                let total = snapshot
+                    .len()
+                    .checked_mul(count)
+                    .unwrap_or_else(|| panic!("argument too big"));
+                let mut out: Vec<Value> = Vec::with_capacity(total);
+                for _ in 0..count {
+                    out.extend(snapshot.iter().cloned());
+                }
+                seq_lit(out)
+            }
+            // `[1, 2] * ", "` → `"1, 2"` (Ruby `Array#*` with a String is
+            // `join`).  Element rendering uses the same `format` display the
+            // rest of the backend uses (so it matches `Array#join`).
+            (Value::Seq(items), Value::Str(sep)) => {
+                let joined = items
+                    .borrow()
+                    .iter()
+                    .map(format)
+                    .collect::<Vec<_>>()
+                    .join(sep);
+                Value::Str(Rc::from(joined.as_str()))
+            }
+            (l, r) => panic!(
+                "unsupported operands for *: {} and {}",
+                format(l),
+                format(r)
+            ),
+        }
     }
 
     pub fn divide(args: Vec<Value>) -> Value {
         if args.is_empty() {
             return Value::Int(0);
         }
+        if any_float(&args) {
+            // Ruby raises `ZeroDivisionError` for `/` by zero on BOTH int
+            // and float operands (`1/0` and `1.0/0` both raise — Ruby does
+            // NOT hand back IEEE `inf` here, unlike a bare host `f64` `/`).
+            // We surface it as a typed `SirError` (via `raise`) so a
+            // translated `rescue ZeroDivisionError` matches it, rather than
+            // producing an uncatchable host `panic!` or a silent `inf`.
+            let mut acc = as_f64(&args[0]);
+            for a in &args[1..] {
+                let d = as_f64(a);
+                if d == 0.0 {
+                    raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+                }
+                acc /= d;
+            }
+            return Value::Float(acc);
+        }
         let mut acc = as_i64(&args[0]);
         for a in &args[1..] {
             let d = as_i64(a);
             if d == 0 {
-                panic!("division by zero");
+                // Typed `ZeroDivisionError` (was an uncatchable `panic!`)
+                // so `rescue ZeroDivisionError` catches it — Ruby parity.
+                raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
             }
             acc /= d;
         }
@@ -165,10 +444,21 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Bool(value_eq(&a, &b))
     }
     pub fn lt(a: Value, b: Value) -> Value {
-        Value::Bool(as_i64(&a) < as_i64(&b))
+        Value::Bool(num_lt(&a, &b))
     }
     pub fn gt(a: Value, b: Value) -> Value {
-        Value::Bool(as_i64(&a) > as_i64(&b))
+        Value::Bool(num_lt(&b, &a))
+    }
+
+    // Ordered numeric comparison.  Both-int compares as i64 (no
+    // precision loss for large magnitudes); any float operand lifts the
+    // comparison into f64.  `gt` is defined as `num_lt` with operands
+    // swapped, so the two share one source of truth.
+    fn num_lt(a: &Value, b: &Value) -> bool {
+        match (a, b) {
+            (Value::Int(x), Value::Int(y)) => x < y,
+            _ => as_f64(a) < as_f64(b),
+        }
     }
 
     // ── pair ops ──────────────────────────────────────────────────
@@ -191,7 +481,9 @@ pub const RUNTIME: &str = r##"mod __sir {
     // ── predicates ────────────────────────────────────────────────
     pub fn is_null(a: Value) -> Value { Value::Bool(matches!(a, Value::Nil)) }
     pub fn is_pair(a: Value) -> Value { Value::Bool(matches!(a, Value::Pair(_))) }
-    pub fn is_number(a: Value) -> Value { Value::Bool(matches!(a, Value::Int(_))) }
+    // `number?` is true for both integers and floats — the predicate
+    // names the numeric tower, not a single representation.
+    pub fn is_number(a: Value) -> Value { Value::Bool(matches!(a, Value::Int(_) | Value::Float(_))) }
     pub fn is_symbol(a: Value) -> Value { Value::Bool(matches!(a, Value::Sym(_))) }
 
     // ── print ─────────────────────────────────────────────────────
@@ -200,42 +492,441 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Nil
     }
 
-    // ── format ────────────────────────────────────────────────────
-    pub fn format(v: &Value) -> String {
-        match v {
-            Value::Int(n) => n.to_string(),
-            Value::Bool(true) => "#t".to_string(),
-            Value::Bool(false) => "#f".to_string(),
-            Value::Nil => "nil".to_string(),
-            Value::Sym(s) => s.to_string(),
-            Value::Str(s) => s.to_string(),
-            Value::Pair(p) => format_pair(p),
-            Value::Closure(_) => "<closure>".to_string(),
+    // ── puts (Ruby semantics) ──────────────────────────────────────
+    //
+    // Ruby's `puts` is THE common output method and is deceptively subtle:
+    //
+    //   - `puts`            → one newline.
+    //   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s`
+    //                         already ends in "\n" (no second newline):
+    //                         `puts "x\n"` prints `x\n`, not `x\n\n`.
+    //   - `puts a, b`       → each argument on its own line, in order.
+    //   - `puts nil`        → a blank line (`nil.to_s` is "", then newline).
+    //   - `puts []`         → a single newline (an argument flattening to
+    //                         nothing still prints a blank line).
+    //   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
+    //                         recursively: `1\n2\n3\n`.
+    //
+    // `puts` is variadic, so it takes the whole `Vec<Value>` (unlike the
+    // fixed-arity `print`).  We use `print!` (no trailing newline) so the
+    // trailing-newline-suppression rule can be honoured.
+    pub fn puts(args: Vec<Value>) -> Value {
+        if args.is_empty() {
+            // No arguments: exactly one newline.
+            print!("\n");
+            return Value::Nil;
+        }
+        // A `Value::Seq` is a shared, mutable `Rc<RefCell<..>>` handle, so a
+        // program can build a *cyclic* array (`a = []; a << a`).  The
+        // element-per-line flatten below recurses through nested arrays, so —
+        // like `format` — it MUST be cycle-guarded or a self-referential array
+        // overflows the native stack and aborts (a DoS: CWE-674, uncontrolled
+        // recursion).  We thread a `visited` set of the `Rc` handle addresses
+        // on the active flatten path (the same `seq_handle_id` key `format`
+        // uses); a handle removed on exit still flattens in full via a sibling
+        // path — only a true self-cycle is short-circuited.
+        let mut visited: std::collections::HashSet<usize> = std::collections::HashSet::new();
+        for a in &args {
+            // `puts []` (empty array arg) still writes one blank line — Ruby
+            // prints a line when an argument flattens to nothing.  A
+            // recursive flatten of an empty seq writes nothing, so detect it.
+            if let Value::Seq(items) = a {
+                if items.borrow().is_empty() {
+                    print!("\n");
+                    continue;
+                }
+            }
+            puts_one(a, &mut visited);
+        }
+        Value::Nil
+    }
+
+    // Emit a single `puts` argument.  Arrays recurse (element-per-line,
+    // nested arrays flattened); everything else renders via `format` then a
+    // newline — suppressed when the text already ends in one.  `nil` is a
+    // blank line (`format(nil)` is "nil" for `print`, but `puts nil` is a
+    // blank line, so nil is special-cased).
+    //
+    // Cycle safety: `visited` holds the `Rc` addresses of the seqs currently
+    // on the active flatten path.  A seq ALREADY on the path is a cycle
+    // (`a = []; a << a`): rather than recurse forever we write Ruby's `[...]`
+    // placeholder then a newline, matching real Ruby (`puts a` on a self-
+    // referential array prints `[...]` and terminates).  (We emit the literal
+    // placeholder rather than `format(v)`: that formatter starts a fresh
+    // visited set, so it would render the *containing* level too — `[[...]]`
+    // for `a = [a]` — whereas Ruby prints a bare `[...]`.)  A seq reached twice
+    // by *sibling* (non-cyclic) paths is flattened in full both times because
+    // it is removed from `visited` on exit — only a handle re-appearing
+    // *within its own subtree* is short-circuited.  Non-cyclic output is
+    // unchanged (`puts [1,[2,3]]` still prints `1\n2\n3\n`).
+    fn puts_one(v: &Value, visited: &mut std::collections::HashSet<usize>) {
+        if let Value::Seq(items) = v {
+            let id = seq_handle_id(items);
+            if !visited.insert(id) {
+                // Already on the active path ⇒ cycle: emit Ruby's `[...]`
+                // placeholder and a newline, then stop recursing.
+                println!("[...]");
+                return;
+            }
+            // Clone the handle's items to avoid holding the borrow across the
+            // recursive call (a nested seq re-borrows the same `RefCell`).
+            let snapshot: Vec<Value> = items.borrow().clone();
+            for item in &snapshot {
+                puts_one(item, visited);
+            }
+            visited.remove(&id);
+            return;
+        }
+        if matches!(v, Value::Nil) {
+            print!("\n");
+            return;
+        }
+        let text = format(v);
+        if text.ends_with('\n') {
+            print!("{}", text);
+        } else {
+            println!("{}", text);
         }
     }
 
-    fn format_pair(p: &Pair) -> String {
+    // ── format ────────────────────────────────────────────────────
+    //
+    // Cycle safety.  `Value::Seq`/`Value::Map` are *shared, mutable*
+    // handles, so an emitted program can build a cyclic structure
+    // (`xs = []; xs[0] = xs`).  A naive structural walk would recurse
+    // forever and blow the stack.  We guard the recursion with a
+    // `visited` set of the `Rc` handle addresses *currently on the
+    // active path*: a handle is inserted on entry and removed on exit.
+    //
+    // Removing on exit (rather than leaving it set for the whole walk)
+    // is deliberate — it means a value reached twice by two *sibling*
+    // (non-cyclic) paths still prints in full both times; only a handle
+    // that re-appears *within its own subtree* (a true cycle) is
+    // short-circuited to a placeholder (`[...]` for a seq, `{...}` for a
+    // map).  See `handle_id` for how a stable per-handle key is derived.
+    pub fn format(v: &Value) -> String {
+        let mut visited: std::collections::HashSet<usize> = std::collections::HashSet::new();
+        format_d(v, &mut visited)
+    }
+
+    // A stable identity for a shared handle: the address of the
+    // `RefCell` the `Rc` points at, narrowed to a plain `usize`.  Two
+    // `Value`s alias the same backing store iff their `handle_id`s match.
+    fn seq_handle_id(items: &Rc<RefCell<Vec<Value>>>) -> usize {
+        Rc::as_ptr(items) as *const () as usize
+    }
+
+    fn map_handle_id(entries: &Rc<RefCell<Vec<(Value, Value)>>>) -> usize {
+        Rc::as_ptr(entries) as *const () as usize
+    }
+
+    fn format_d(v: &Value, visited: &mut std::collections::HashSet<usize>) -> String {
+        match v {
+            Value::Int(n) => n.to_string(),
+            // `{:?}` keeps a trailing `.0` on integral floats (`3.0`,
+            // not `3`) so the printed form is unambiguously a float —
+            // matching how Python/Ruby render `3.0`.  Non-finite values
+            // print as `NaN` / `inf` / `-inf`.
+            Value::Float(x) => format_float(*x),
+            Value::Bool(true) => "#t".to_string(),
+            Value::Bool(false) => "#f".to_string(),
+            Value::Nil => "nil".to_string(),
+            // Defensive: a `Missing` sentinel should be consumed by a
+            // defaulted param's prologue before any value is printed, so
+            // this arm is normally unreachable.  Render a visible
+            // placeholder rather than panicking if one ever leaks.
+            Value::Missing => "<missing>".to_string(),
+            Value::Sym(s) => s.to_string(),
+            Value::Str(s) => s.to_string(),
+            Value::Pair(p) => format_pair_d(p, visited),
+            Value::Closure(_) => "<closure>".to_string(),
+            // Sequences print like a bracketed list: `[1, 2, 3]`.
+            Value::Seq(items) => {
+                let id = seq_handle_id(items);
+                if !visited.insert(id) {
+                    // Already on the active path ⇒ cycle.  Print a
+                    // placeholder instead of recursing forever.
+                    return "[...]".to_string();
+                }
+                let out = format_seq_d(&items.borrow(), visited);
+                visited.remove(&id);
+                out
+            }
+            // Maps print like a brace-wrapped entry list in insertion
+            // order: `{a: 1, b: 2}`.
+            Value::Map(entries) => {
+                let id = map_handle_id(entries);
+                if !visited.insert(id) {
+                    return "{...}".to_string();
+                }
+                let out = format_map_d(&entries.borrow(), visited);
+                visited.remove(&id);
+                out
+            }
+            // A user instance renders as Ruby's default `#<Class>` form.
+            // We deliberately do NOT walk its ivars (Ruby's default
+            // `to_s`/`inspect` prints only the class + an object id), so
+            // there is no cyclic-structure risk and no `visited` handling
+            // needed here.  A program wanting a richer form defines its
+            // own `to_s`, which dispatches through `call_method` first.
+            Value::Instance(id) => format!("#<{}>", instance_class(*id)),
+        }
+    }
+
+    fn format_seq_d(items: &[Value], visited: &mut std::collections::HashSet<usize>) -> String {
+        let mut out = String::new();
+        out.push('[');
+        for (i, item) in items.iter().enumerate() {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&format_d(item, visited));
+        }
+        out.push(']');
+        out
+    }
+
+    fn format_map_d(
+        entries: &[(Value, Value)],
+        visited: &mut std::collections::HashSet<usize>,
+    ) -> String {
+        let mut out = String::new();
+        out.push('{');
+        for (i, (k, v)) in entries.iter().enumerate() {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&format_d(k, visited));
+            out.push_str(": ");
+            out.push_str(&format_d(v, visited));
+        }
+        out.push('}');
+        out
+    }
+
+    fn format_float(x: f64) -> String {
+        if x.is_nan() {
+            "NaN".to_string()
+        } else if x.is_infinite() {
+            if x > 0.0 { "inf".to_string() } else { "-inf".to_string() }
+        } else {
+            format!("{:?}", x)
+        }
+    }
+
+    // `Pair`s are immutable (no shared `RefCell`), so a pair-chain can
+    // never form a cycle on its own.  It can, however, *contain* a
+    // cyclic seq/map in a `car`/`cdr`, so we still thread `visited`
+    // through to the element formatters.
+    fn format_pair_d(p: &Pair, visited: &mut std::collections::HashSet<usize>) -> String {
         let mut out = String::new();
         out.push('(');
-        out.push_str(&format(&p.car));
+        out.push_str(&format_d(&p.car, visited));
         let mut rest = p.cdr.clone();
         loop {
             match rest {
                 Value::Pair(inner) => {
                     out.push(' ');
-                    out.push_str(&format(&inner.car));
+                    out.push_str(&format_d(&inner.car, visited));
                     rest = inner.cdr.clone();
                 }
                 Value::Nil => break,
                 other => {
                     out.push_str(" . ");
-                    out.push_str(&format(&other));
+                    out.push_str(&format_d(&other, visited));
                     break;
                 }
             }
         }
         out.push(')');
         out
+    }
+
+    // ── loop support (SIR16 Loops) ────────────────────────────────
+    //
+    // `as_int` exposes the integer extraction the `ForRange` emitter
+    // needs for its `start`/`stop`/`step` bounds: these must be raw
+    // `i64`s for the numeric loop counter, not boxed `Value`s.  It is
+    // simply the public face of `as_i64` (which stays private for the
+    // arithmetic helpers).
+    pub fn as_int(v: &Value) -> i64 {
+        as_i64(v)
+    }
+
+    // `seq_iter` flattens a sequence value into a `Vec<Value>` for a
+    // `ForEach` loop.  SIR16 introduced two distinct "sequence" shapes
+    // this backend must iterate uniformly:
+    //
+    //   * `Value::Seq(vec)` — the real `Sequences` value (a `SeqLit`,
+    //     `[1, 2, 3]`).  Cloned element-wise so the loop body sees stable
+    //     snapshots even if it mutates the underlying sequence.
+    //   * the classic cons-list — a `Pair`-chain ending in `Nil` (what
+    //     `cons`/`car`/`cdr` build).  `Nil` itself is the empty sequence.
+    //
+    // Keeping both keeps A2's `ForEach`-over-cons-list working while
+    // making `for x in [1, 2, 3]` (a `SeqLit`) iterate end to end.  An
+    // improper list (a non-`Nil`, non-`Pair` tail) is a programming error
+    // and panics, matching the strictness of `car`/`cdr` on a non-pair.
+    pub fn seq_iter(v: &Value) -> Vec<Value> {
+        // A real sequence: snapshot its current elements.
+        if let Value::Seq(items) = v {
+            return items.borrow().clone();
+        }
+        // Otherwise treat it as a cons-list.
+        let mut out = Vec::new();
+        let mut cur = v.clone();
+        loop {
+            match cur {
+                Value::Nil => break,
+                Value::Pair(p) => {
+                    out.push(p.car.clone());
+                    cur = p.cdr.clone();
+                }
+                other => panic!("cannot iterate non-sequence: {}", format(&other)),
+            }
+        }
+        out
+    }
+
+    // ── sequence ops (SIR16 Sequences) ────────────────────────────
+    //
+    // A `Value::Seq` wraps a shared, mutable `Vec<Value>`.  These helpers
+    // are the lowering targets for `SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet`.
+
+    // `seq_lit([a, b, ...])` constructs a fresh sequence from its items.
+    pub fn seq_lit(items: Vec<Value>) -> Value {
+        Value::Seq(Rc::new(RefCell::new(items)))
+    }
+
+    // `seq_index(seq, i)` reads `seq[i]`.  The index is taken as an
+    // integer; a negative or out-of-range index panics (sequences are
+    // strict, like `car`/`cdr`), matching SIR's "0-indexed, bounds are
+    // target-defined" — we choose to define out-of-bounds as a panic.
+    pub fn seq_index(seq: &Value, index: &Value) -> Value {
+        match seq {
+            Value::Seq(items) => {
+                let i = as_i64(index);
+                let items = items.borrow();
+                if i < 0 || (i as usize) >= items.len() {
+                    panic!("sequence index out of range: {} (len {})", i, items.len());
+                }
+                items[i as usize].clone()
+            }
+            other => panic!("seq-index on non-sequence: {}", format(other)),
+        }
+    }
+
+    // `seq_len(seq)` returns the element count as an `Int`.
+    pub fn seq_len(seq: &Value) -> Value {
+        match seq {
+            Value::Seq(items) => Value::Int(items.borrow().len() as i64),
+            other => panic!("seq-len on non-sequence: {}", format(other)),
+        }
+    }
+
+    // `seq_set(seq, i, value)` writes `seq[i] = value`, mutating the
+    // shared backing vector in place.  Out-of-range writes panic (we do
+    // not auto-grow, matching the index read's strictness).
+    pub fn seq_set(seq: &Value, index: &Value, value: Value) -> Value {
+        match seq {
+            Value::Seq(items) => {
+                let i = as_i64(index);
+                let mut items = items.borrow_mut();
+                if i < 0 || (i as usize) >= items.len() {
+                    panic!("sequence index out of range: {} (len {})", i, items.len());
+                }
+                items[i as usize] = value.clone();
+                value
+            }
+            other => panic!("seq-set on non-sequence: {}", format(other)),
+        }
+    }
+
+    // ── map ops (SIR16 Maps) ──────────────────────────────────────
+    //
+    // A `Value::Map` wraps a shared, mutable, insertion-ordered
+    // `Vec<(Value, Value)>`.  Lookups use `value_eq` for key comparison,
+    // so any value type (including a float, string, or symbol) can be a
+    // key with the same structural-equality semantics as `=`.
+
+    // `map_lit([(k0, v0), (k1, v1), ...])` builds a fresh map.  Later
+    // entries with a key equal to an earlier one overwrite in place, so
+    // the literal `{a: 1, a: 2}` yields `{a: 2}` (last-write-wins,
+    // mirroring object/dict literal semantics) while keeping first-seen
+    // insertion order.
+    pub fn map_lit(entries: Vec<(Value, Value)>) -> Value {
+        // `store` is a plain local `Vec` (not yet wrapped in the shared
+        // `Rc<RefCell<…>>`), so the `value_eq` key comparisons below
+        // cannot collide with a borrow of the map under construction —
+        // even for a self-referential key, which can only be an *already
+        // built* map handle, never this not-yet-published `store`.
+        let mut store: Vec<(Value, Value)> = Vec::with_capacity(entries.len());
+        for (k, v) in entries {
+            // Resolve the slot index without holding any iterator borrow
+            // across the (recursive) `value_eq` call.
+            let found = store.iter().position(|(ek, _)| value_eq(ek, &k));
+            match found {
+                Some(i) => store[i].1 = v,
+                None => store.push((k, v)),
+            }
+        }
+        Value::Map(Rc::new(RefCell::new(store)))
+    }
+
+    // `map_get(map, key)` reads `map[key]`, returning the associated
+    // value or `Nil` when the key is absent (SIR's target-defined
+    // missing-key behaviour — we choose `Nil`, mirroring the TypeScript
+    // backend's `?? null`).
+    pub fn map_get(map: &Value, key: &Value) -> Value {
+        match map {
+            Value::Map(entries) => {
+                // Snapshot the entries (a shallow `Rc`-handle clone per
+                // value) and drop the borrow *before* running `value_eq`.
+                // A self-referential key would otherwise re-enter this
+                // same cell while it's still borrowed; `value_eq` on a
+                // cyclic value can deep-walk, so we must not hold a borrow
+                // across it.  (A shared borrow would tolerate a nested
+                // shared re-borrow, but scoping it is clearer and keeps
+                // `map_get`/`map_set`/`map_lit` uniform.)
+                let snapshot = entries.borrow().clone();
+                snapshot
+                    .iter()
+                    .find(|(k, _)| value_eq(k, key))
+                    .map(|(_, v)| v.clone())
+                    .unwrap_or(Value::Nil)
+            }
+            other => panic!("map-get on non-map: {}", format(other)),
+        }
+    }
+
+    // `map_set(map, key, value)` inserts or overwrites `map[key]`,
+    // mutating the shared backing store.  A new key appends (preserving
+    // insertion order); an existing key (by `value_eq`) overwrites in
+    // place without disturbing order.
+    pub fn map_set(map: &Value, key: Value, value: Value) -> Value {
+        match map {
+            Value::Map(entries) => {
+                // Find the matching slot *without* holding a `borrow_mut`
+                // across `value_eq`: take a short shared borrow, snapshot
+                // the keys, drop it, then compare.  A self-referential key
+                // (`d["self"] = d` then looking it up) would otherwise
+                // re-borrow this very cell inside `value_eq` and panic with
+                // "already mutably borrowed".  Resolving to an *index*
+                // first lets us re-borrow mutably only for the write.
+                let index = {
+                    let keys: Vec<Value> =
+                        entries.borrow().iter().map(|(k, _)| k.clone()).collect();
+                    keys.iter().position(|k| value_eq(k, &key))
+                };
+                let mut entries = entries.borrow_mut();
+                match index {
+                    Some(i) => entries[i].1 = value.clone(),
+                    None => entries.push((key, value.clone())),
+                }
+                value
+            }
+            other => panic!("map-set on non-map: {}", format(other)),
+        }
     }
 
     // ── helpers ───────────────────────────────────────────────────
@@ -246,16 +937,115 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
+    // Coerce any number to f64 for the promoted arithmetic/comparison
+    // paths.  Integers widen losslessly for values within ±2^53; beyond
+    // that the all-integer fast paths above keep exactness, so this
+    // widening only runs once a float is genuinely in play.
+    fn as_f64(v: &Value) -> f64 {
+        match v {
+            Value::Int(n) => *n as f64,
+            Value::Float(x) => *x,
+            other => panic!("expected number, got {}", format(other)),
+        }
+    }
+
+    fn any_float(args: &[Value]) -> bool {
+        args.iter().any(|v| matches!(v, Value::Float(_)))
+    }
+
+    // Public structural equality.  Cycle safety: two *distinct* cyclic
+    // structures (e.g. `xs[0]=xs` and `ys[0]=ys`, separate handles) would
+    // make a naive deep walk recurse forever, because the `Rc::ptr_eq`
+    // fast path only catches a value compared against *itself*.  We bound
+    // the walk co-inductively with a `pending` set of handle-pairs
+    // currently being compared: re-encountering a pair already in flight
+    // means we've closed a cycle in lock-step, so we treat that pair as
+    // equal (the standard co-inductive definition of bisimulation
+    // equality).  This terminates for *any* pair of finite-handle graphs.
     fn value_eq(a: &Value, b: &Value) -> bool {
+        let mut pending: std::collections::HashSet<(usize, usize)> =
+            std::collections::HashSet::new();
+        value_eq_d(a, b, &mut pending)
+    }
+
+    fn value_eq_d(
+        a: &Value,
+        b: &Value,
+        pending: &mut std::collections::HashSet<(usize, usize)>,
+    ) -> bool {
         match (a, b) {
             (Value::Int(x), Value::Int(y)) => x == y,
+            // Cross-representation numeric equality (`1 == 1.0`) holds,
+            // mirroring dynamic-language `==`.  Float/Float uses IEEE
+            // equality, so `NaN == NaN` is correctly `false`.
+            (Value::Float(x), Value::Float(y)) => x == y,
+            (Value::Int(x), Value::Float(y)) => (*x as f64) == *y,
+            (Value::Float(x), Value::Int(y)) => *x == (*y as f64),
             (Value::Bool(x), Value::Bool(y)) => x == y,
             (Value::Nil, Value::Nil) => true,
+            // Defensive: the `Missing` sentinel is internal and should
+            // never reach a user-level comparison (a defaulted param's
+            // prologue replaces it before the body runs).  Give it a
+            // safe arm anyway: a `Missing` is equal only to another
+            // `Missing`, never to `Nil` or any real value.
+            (Value::Missing, Value::Missing) => true,
             (Value::Sym(x), Value::Sym(y)) => x == y,
             (Value::Str(x), Value::Str(y)) => **x == **y,
             (Value::Pair(x), Value::Pair(y)) => {
-                value_eq(&x.car, &y.car) && value_eq(&x.cdr, &y.cdr)
+                value_eq_d(&x.car, &y.car, pending) && value_eq_d(&x.cdr, &y.cdr, pending)
             }
+            // Sequences and maps compare *structurally* (element-wise),
+            // matching how `Pair` compares — `[1, 2] = [1, 2]` is true,
+            // and two maps are equal when they hold equal entries in the
+            // same insertion order.  Identical `Rc` handles short-circuit
+            // to `true` without a deep walk.  Comparing two maps element-
+            // wise (rather than as unordered sets) is sufficient here
+            // because `map_lit`/`map_set` keep a canonical first-seen
+            // order, so equal maps built the same way share that order.
+            (Value::Seq(x), Value::Seq(y)) => {
+                if Rc::ptr_eq(x, y) {
+                    return true;
+                }
+                let pair = (seq_handle_id(x), seq_handle_id(y));
+                // Already comparing this exact handle-pair higher up the
+                // stack ⇒ we've matched in lock-step around a cycle.
+                // Assume equal; if the structures genuinely differ it will
+                // be caught on a *non-cyclic* element elsewhere.
+                if !pending.insert(pair) {
+                    return true;
+                }
+                // Snapshot the operands before recursing so we never hold
+                // a `RefCell` borrow across the recursive `value_eq_d`
+                // calls (a self-referential element would otherwise try to
+                // re-borrow the same cell and panic).
+                let xs = x.borrow().clone();
+                let ys = y.borrow().clone();
+                let result = xs.len() == ys.len()
+                    && xs.iter().zip(ys.iter()).all(|(a, b)| value_eq_d(a, b, pending));
+                pending.remove(&pair);
+                result
+            }
+            (Value::Map(x), Value::Map(y)) => {
+                if Rc::ptr_eq(x, y) {
+                    return true;
+                }
+                let pair = (map_handle_id(x), map_handle_id(y));
+                if !pending.insert(pair) {
+                    return true;
+                }
+                let xs = x.borrow().clone();
+                let ys = y.borrow().clone();
+                let result = xs.len() == ys.len()
+                    && xs.iter().zip(ys.iter()).all(|((ak, av), (bk, bv))| {
+                        value_eq_d(ak, bk, pending) && value_eq_d(av, bv, pending)
+                    });
+                pending.remove(&pair);
+                result
+            }
+            // User instances compare by IDENTITY (same handle id) —
+            // Ruby's default `==` is object identity, and two distinct
+            // `Foo.new` objects are unequal even with identical ivars.
+            (Value::Instance(x), Value::Instance(y)) => x == y,
             _ => false,
         }
     }
@@ -297,6 +1087,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             "number?" => is_number(args.into_iter().next().unwrap_or(Value::Nil)),
             "symbol?" => is_symbol(args.into_iter().next().unwrap_or(Value::Nil)),
             "print" => print(args.into_iter().next().unwrap_or(Value::Nil)),
+            "puts" => puts(args),
             "global_set" => {
                 let mut it = args.into_iter();
                 let key = it.next().unwrap_or(Value::Nil);
@@ -309,6 +1100,1319 @@ pub const RUNTIME: &str = r##"mod __sir {
             }
             other => panic!("unknown builtin: {}", other),
         }
+    }
+
+    // ── collection-method dispatch (C6) ───────────────────────────
+    //
+    // A source-level `recv.meth(args…)` / `recv.meth { |x| … }` reaches
+    // this backend as `BuiltinCall("__method__", [recv, "meth", …args])`
+    // and is emitted as `call_method(recv, "meth", vec![…args])`.  This
+    // is the Rust analogue of the Python/TypeScript `sir-runtime-oop`
+    // `call_method`, ported for behavioural parity (same method names,
+    // same semantics) so a collection program produces identical output
+    // across every backend.
+    //
+    // ── SECURITY: the catalog IS the allowlist ────────────────────
+    //
+    // Dispatch is an EXPLICIT `match` on `(type_of(recv), name)` — every
+    // reachable method is written out by hand below.  There is NO
+    // reflective / dynamic lookup that could turn an attacker-controlled
+    // method name into arbitrary behaviour: a name we do not enumerate
+    // simply falls through to `no_method_error`, which raises a typed
+    // `NoMethodError` carrying only the (data) name string — never an
+    // out-of-catalog effect.  (A KNOWN method used block-less floors to
+    // `unknown_method`'s `nil` instead — see those helpers.)  This mirrors the C3 RCE
+    // lesson: the allowlist is the whole security boundary, so it must be
+    // a closed, hand-written set, never a table keyed by the raw name.
+    //
+    // ── block convention ──────────────────────────────────────────
+    //
+    // A trailing Ruby block reaches us as the *last* element of `args`
+    // when it is a `Value::Closure` (a `{ }` block lowers to `MakeClosure`;
+    // an `&:sym` block-pass lowers to `sym_to_proc`, also a `Closure`).
+    // Block-taking methods split it off with `split_block` and apply it
+    // via `apply_closure`, exactly as the Python runtime applies a trailing
+    // `Closure`.
+
+    // Coerce a (rarely used) non-literal method name to a `String`.  The
+    // narrow-waist convention makes the name a `StrLit` in practice, so the
+    // emitter passes a `&str` literal directly and this is only reached for
+    // a defensively-handled non-literal name.
+    pub fn method_name(v: &Value) -> String {
+        match v {
+            Value::Str(s) => s.to_string(),
+            Value::Sym(s) => s.to_string(),
+            other => format(other),
+        }
+    }
+
+    // Split a trailing block off an argument list: if the last argument is
+    // a `Closure`, return `(positional_args, Some(block))`, else
+    // `(all_args, None)`.  Mirrors the Python runtime's
+    // `isinstance(arg_list[-1], Closure)` test.
+    fn split_block(mut args: Vec<Value>) -> (Vec<Value>, Option<Value>) {
+        if matches!(args.last(), Some(Value::Closure(_))) {
+            let block = args.pop();
+            (args, block)
+        } else {
+            (args, None)
+        }
+    }
+
+    // The `nil` floor for a KNOWN method used in a shape Ruby tolerates
+    // without a value — e.g. a block-taking method (`map`, `select`,
+    // `reduce`) called WITHOUT its block.  Ruby returns an `Enumerator`
+    // there; SIR v0 has no `Enumerator`, so we floor to `nil` (a controlled
+    // value, never undefined behaviour) rather than raising.  This is
+    // distinct from `no_method_error` below: a name that is genuinely NOT
+    // in the catalog is a Ruby `NoMethodError`, but a block-less `map` is
+    // not an *unknown* method.  Also used for the defensive receiver-type
+    // guards at each catalog's entry, which are unreachable in practice
+    // (dispatch already routed by type).
+    fn unknown_method(_recv: &Value, _name: &str) -> Value {
+        Value::Nil
+    }
+
+    // The conventional Ruby class name of a value — for a `NoMethodError`
+    // message and nothing else.  A closed match (never reflection on a
+    // host type name), a verbatim parity port of the Go backend's
+    // `_sir_ruby_class_name`.  A user instance reports its own class tag so
+    // `obj.undefined` names the real class (e.g. `Dog`).
+    fn ruby_class_name(v: &Value) -> String {
+        match v {
+            Value::Nil => "NilClass".to_string(),
+            Value::Bool(true) => "TrueClass".to_string(),
+            Value::Bool(false) => "FalseClass".to_string(),
+            Value::Int(_) => "Integer".to_string(),
+            Value::Float(_) => "Float".to_string(),
+            Value::Str(_) => "String".to_string(),
+            Value::Sym(_) => "Symbol".to_string(),
+            Value::Seq(_) => "Array".to_string(),
+            Value::Map(_) => "Hash".to_string(),
+            Value::Pair(_) => "Pair".to_string(),
+            Value::Closure(_) => "Proc".to_string(),
+            Value::Instance(id) => instance_class(*id),
+            Value::Missing => "Object".to_string(),
+        }
+    }
+
+    // The honest "no such method" boundary: a name genuinely absent from
+    // the receiver's catalog (or an instance's method table) is a Ruby
+    // `NoMethodError`.  We surface a typed `SirError` (via `raise`) with the
+    // Ruby-shaped message `undefined method 'x' for <Class>`, so a
+    // translated `rescue NoMethodError` (or `rescue NameError`, its
+    // superclass) catches it — replacing the old silent `nil` floor for a
+    // truly-unknown method.  Resolution stays a closed match on the name
+    // (never a reflective host lookup — the C3 allowlist discipline), so
+    // this only ever fires for a name no catalog arm claimed.
+    fn no_method_error(recv: &Value, name: &str) -> ! {
+        raise(
+            "NoMethodError",
+            Value::Str(Rc::from(
+                format!("undefined method '{}' for {}", name, ruby_class_name(recv)).as_str(),
+            )),
+        )
+    }
+
+    /// Dispatch collection method `name` on `recv`.
+    ///
+    /// Resolution is a closed match on the receiver's runtime type, then on
+    /// the method name within that type.  Block-taking methods pull a
+    /// trailing `Closure` block off `args` first.  Anything unresolved
+    /// bottoms out at `unknown_method` (Ruby `nil`) — never a reflective
+    /// fallthrough.
+    pub fn call_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        // ── user-defined-class dispatch (O5) ──────────────────────────
+        // A `Value::Instance` receiver dispatches to the USER method table
+        // (walking ancestry), with `self` bound for the call.  This branch
+        // is taken FIRST and ONLY for instances, so the built-in /
+        // collection path below is byte-for-byte unchanged for every other
+        // receiver.  Resolution is `resolve_method` → an EXPLICIT
+        // `HashMap::get` on the `(class, method)` key (never reflection):
+        // a name like `constructor` simply misses and floors to the same
+        // honest `NoMethodError`/`Nil` boundary the collection catalog uses
+        // (`unknown_method`).  See `dispatch_user_method`.
+        if let Value::Instance(id) = &recv {
+            return dispatch_user_method(*id, &recv, name, args);
+        }
+        // Universal `Object#to_s` — available on *every* receiver, matching
+        // the Python/TS reference (where `to_s` lives in the universal
+        // Object table).  Handled here, before the type-specific catalogs,
+        // so `&:to_s` works on numbers, symbols, etc.  It renders via the
+        // runtime's `format` (the same display path `print` uses), so
+        // `1.to_s == "1"` and `[1,2].to_s == "[1, 2]"`.  Instances are
+        // excluded above (a user `to_s` may be defined); if none is, the
+        // instance arm falls through to `unknown_method`, matching the
+        // never-raise floor.
+        if name == "to_s" && !matches!(recv, Value::Sym(_)) {
+            // A Symbol has its own `to_s` (its bare name) in `symbol_method`;
+            // everything else uses the universal display form.
+            return Value::Str(Rc::from(format(&recv).as_str()));
+        }
+        match &recv {
+            Value::Seq(_) => array_method(recv, name, args),
+            Value::Map(_) => map_method(recv, name, args),
+            Value::Str(_) => string_method(recv, name, args),
+            Value::Sym(_) => symbol_method(recv, name, args),
+            // `bool` is checked before the numeric arm on purpose: a Ruby
+            // `true`/`false` is not a Numeric, so it never resolves the
+            // numeric catalog.
+            Value::Bool(_) => no_method_error(&recv, name),
+            Value::Int(_) | Value::Float(_) => numeric_method(recv, name, args),
+            _ => no_method_error(&recv, name),
+        }
+    }
+
+    // ── Array (`Value::Seq`) catalog ──────────────────────────────
+    //
+    // A Ruby `Array` is a `Value::Seq` (shared, mutable `Vec`).  Non-block
+    // methods read/compute; the mutators (`push`/`pop`) mutate the backing
+    // vector in place through the `Rc<RefCell<…>>`, so the caller's handle
+    // observes the change — exactly like the Python list reference.
+    fn array_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let items_rc = match &recv {
+            Value::Seq(items) => items.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        let (pos, block) = split_block(args);
+        match name {
+            "length" | "size" => Value::Int(items_rc.borrow().len() as i64),
+            "first" => items_rc.borrow().first().cloned().unwrap_or(Value::Nil),
+            "last" => items_rc.borrow().last().cloned().unwrap_or(Value::Nil),
+            // `Array#[]` — the LENIENT indexed read (the OO-surface `arr[i]`,
+            // as opposed to the strict SIR-native `SeqIndex` primitive).  Ruby
+            // returns `nil` for an out-of-bounds index (it does NOT raise —
+            // that is `fetch`'s job), and folds a negative index from the end.
+            // This arm keeps `arr[oob] ⇒ nil` from falling through to the
+            // `no_method_error` floor.
+            "[]" => {
+                let items = items_rc.borrow();
+                let len = items.len() as i64;
+                let raw = as_i64(pos.first().unwrap_or(&Value::Nil));
+                let idx = if raw < 0 { raw + len } else { raw };
+                if idx >= 0 && idx < len {
+                    items[idx as usize].clone()
+                } else {
+                    Value::Nil
+                }
+            }
+            "reverse" => {
+                let mut v = items_rc.borrow().clone();
+                v.reverse();
+                seq_lit(v)
+            }
+            "sort" => {
+                let mut v = items_rc.borrow().clone();
+                // Ordering uses the runtime's numeric `<` (`num_lt`); a
+                // stable insertion-order-preserving sort keeps ties in place.
+                v.sort_by(|a, b| {
+                    if num_lt(a, b) {
+                        std::cmp::Ordering::Less
+                    } else if num_lt(b, a) {
+                        std::cmp::Ordering::Greater
+                    } else {
+                        std::cmp::Ordering::Equal
+                    }
+                });
+                seq_lit(v)
+            }
+            "join" => {
+                let sep = pos.first().map(|s| method_name(s)).unwrap_or_default();
+                let joined = items_rc
+                    .borrow()
+                    .iter()
+                    .map(format)
+                    .collect::<Vec<_>>()
+                    .join(&sep);
+                Value::Str(Rc::from(joined.as_str()))
+            }
+            "include?" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                Value::Bool(items_rc.borrow().iter().any(|x| value_eq(x, &needle)))
+            }
+            "push" | "append" => {
+                items_rc.borrow_mut().extend(pos);
+                recv
+            }
+            "pop" => items_rc.borrow_mut().pop().unwrap_or(Value::Nil),
+            // `Array#fetch(i)` is the STRICT indexed read: unlike `arr[i]`
+            // (which returns `nil` out of bounds), a `fetch` past the end
+            // (or a negative index past the front) raises `IndexError` in
+            // Ruby.  We surface a typed `SirError` so `rescue IndexError`
+            // matches.  A supplied default arg (`fetch(i, default)`) is
+            // returned instead of raising, matching Ruby.
+            "fetch" => {
+                let items = items_rc.borrow();
+                let len = items.len() as i64;
+                let raw = as_i64(pos.first().unwrap_or(&Value::Nil));
+                // Ruby folds a negative index from the end (`-1` ⇒ last).
+                let idx = if raw < 0 { raw + len } else { raw };
+                if idx >= 0 && idx < len {
+                    items[idx as usize].clone()
+                } else if let Some(default) = pos.get(1) {
+                    default.clone()
+                } else {
+                    drop(items);
+                    raise(
+                        "IndexError",
+                        Value::Str(Rc::from(
+                            format!("index {} outside of array bounds: {}...{}", raw, -len, len)
+                                .as_str(),
+                        )),
+                    );
+                }
+            }
+            // ── block-taking Array methods ────────────────────────
+            "each" => {
+                if let Some(b) = &block {
+                    for item in items_rc.borrow().clone() {
+                        apply_closure(b, vec![item]);
+                    }
+                }
+                recv
+            }
+            "map" | "collect" => match &block {
+                Some(b) => seq_lit(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .map(|item| apply_closure(b, vec![item]))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "select" | "filter" => match &block {
+                Some(b) => seq_lit(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|item| truthy(&apply_closure(b, vec![item.clone()])))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "reject" => match &block {
+                Some(b) => seq_lit(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|item| !truthy(&apply_closure(b, vec![item.clone()])))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "find" | "detect" => match &block {
+                Some(b) => items_rc
+                    .borrow()
+                    .clone()
+                    .into_iter()
+                    .find(|item| truthy(&apply_closure(b, vec![item.clone()])))
+                    .unwrap_or(Value::Nil),
+                None => unknown_method(&recv, name),
+            },
+            "any?" => match &block {
+                Some(b) => Value::Bool(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .any(|item| truthy(&apply_closure(b, vec![item]))),
+                ),
+                None => Value::Bool(items_rc.borrow().iter().any(truthy)),
+            },
+            "all?" => match &block {
+                Some(b) => Value::Bool(
+                    items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .all(|item| truthy(&apply_closure(b, vec![item]))),
+                ),
+                None => Value::Bool(items_rc.borrow().iter().all(truthy)),
+            },
+            "none?" => match &block {
+                Some(b) => Value::Bool(
+                    !items_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .any(|item| truthy(&apply_closure(b, vec![item]))),
+                ),
+                None => Value::Bool(!items_rc.borrow().iter().any(truthy)),
+            },
+            "reduce" | "inject" => {
+                let b = match &block {
+                    Some(b) => b,
+                    None => return unknown_method(&recv, name),
+                };
+                // With an explicit seed arg the fold starts there over the
+                // whole vector; without one it seeds from the first element
+                // (Ruby `inject`).  An empty seedless reduce is `nil`.
+                let snapshot = items_rc.borrow().clone();
+                let (mut acc, rest): (Value, &[Value]) = if let Some(seed) = pos.into_iter().next() {
+                    (seed, &snapshot[..])
+                } else if let Some((head, tail)) = snapshot.split_first() {
+                    (head.clone(), tail)
+                } else {
+                    return Value::Nil;
+                };
+                for item in rest {
+                    acc = apply_closure(b, vec![acc, item.clone()]);
+                }
+                acc
+            }
+            _ => no_method_error(&recv, name),
+        }
+    }
+
+    // ── Hash (`Value::Map`) catalog ───────────────────────────────
+    //
+    // A Ruby `Hash` is a `Value::Map` (insertion-ordered assoc list).  A
+    // block method receives `[key, value]` per entry, matching the Python
+    // reference's `apply(block, [key, value])`.
+    fn map_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let entries_rc = match &recv {
+            Value::Map(entries) => entries.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        let (pos, block) = split_block(args);
+        match name {
+            "keys" => seq_lit(entries_rc.borrow().iter().map(|(k, _)| k.clone()).collect()),
+            "values" => seq_lit(entries_rc.borrow().iter().map(|(_, v)| v.clone()).collect()),
+            // `Hash#[]` — the LENIENT keyed read (the OO-surface `hash[k]`,
+            // as opposed to the SIR-native `MapGet`).  Ruby returns `nil` for a
+            // missing key (never raises — that is `fetch`'s job).  Keeps
+            // `hash[miss] ⇒ nil` from reaching the `no_method_error` floor.
+            "[]" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                entries_rc
+                    .borrow()
+                    .iter()
+                    .find(|(k, _)| value_eq(k, &needle))
+                    .map(|(_, v)| v.clone())
+                    .unwrap_or(Value::Nil)
+            }
+            "size" | "length" => Value::Int(entries_rc.borrow().len() as i64),
+            "has_key?" | "key?" | "include?" | "member?" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                Value::Bool(entries_rc.borrow().iter().any(|(k, _)| value_eq(k, &needle)))
+            }
+            // `Hash#fetch(k)` is the STRICT keyed read: unlike `hash[k]`
+            // (which returns `nil` for a missing key), a `fetch` of an
+            // absent key raises `KeyError` in Ruby.  We surface a typed
+            // `SirError` so `rescue KeyError` matches.  A supplied default
+            // arg (`fetch(k, default)`) is returned instead of raising.
+            "fetch" => {
+                let needle = pos.first().cloned().unwrap_or(Value::Nil);
+                let hit = entries_rc
+                    .borrow()
+                    .iter()
+                    .find(|(k, _)| value_eq(k, &needle))
+                    .map(|(_, v)| v.clone());
+                match hit {
+                    Some(v) => v,
+                    None => match pos.get(1) {
+                        Some(default) => default.clone(),
+                        None => raise(
+                            "KeyError",
+                            Value::Str(Rc::from(
+                                format!("key not found: {}", format(&needle)).as_str(),
+                            )),
+                        ),
+                    },
+                }
+            }
+            "each" | "each_pair" => {
+                if let Some(b) = &block {
+                    for (k, v) in entries_rc.borrow().clone() {
+                        apply_closure(b, vec![k, v]);
+                    }
+                }
+                recv
+            }
+            "map" | "collect" => match &block {
+                Some(b) => seq_lit(
+                    entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .map(|(k, v)| apply_closure(b, vec![k, v]))
+                        .collect(),
+                ),
+                None => unknown_method(&recv, name),
+            },
+            "select" | "filter" => match &block {
+                Some(b) => {
+                    let kept: Vec<(Value, Value)> = entries_rc
+                        .borrow()
+                        .clone()
+                        .into_iter()
+                        .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .collect();
+                    Value::Map(Rc::new(RefCell::new(kept)))
+                }
+                None => unknown_method(&recv, name),
+            },
+            _ => no_method_error(&recv, name),
+        }
+    }
+
+    // ── String (`Value::Str`) catalog ─────────────────────────────
+    //
+    // A Ruby `String` is an immutable `Value::Str`, so every method returns
+    // a fresh value.  `split` with no argument splits on whitespace runs
+    // (Ruby's awk-style default); with a separator it splits on that
+    // literal substring.
+    fn string_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let s = match &recv {
+            Value::Str(s) => s.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        match name {
+            "length" | "size" => Value::Int(s.chars().count() as i64),
+            "upcase" => Value::Str(Rc::from(s.to_uppercase().as_str())),
+            "downcase" => Value::Str(Rc::from(s.to_lowercase().as_str())),
+            "reverse" => Value::Str(Rc::from(s.chars().rev().collect::<String>().as_str())),
+            "strip" => Value::Str(Rc::from(s.trim())),
+            "include?" => {
+                let needle = args.first().map(method_name).unwrap_or_default();
+                Value::Bool(s.contains(&needle))
+            }
+            "split" => {
+                let parts: Vec<Value> = match args.first() {
+                    Some(sep) => {
+                        let sep = method_name(sep);
+                        s.split(&sep).map(|p| Value::Str(Rc::from(p))).collect()
+                    }
+                    None => s.split_whitespace().map(|p| Value::Str(Rc::from(p))).collect(),
+                };
+                seq_lit(parts)
+            }
+            _ => no_method_error(&recv, name),
+        }
+    }
+
+    // ── Numeric (`Value::Int` / `Value::Float`) catalog ───────────
+    fn numeric_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
+        let (pos, block) = split_block(args);
+        match name {
+            "abs" => match &recv {
+                Value::Int(n) => Value::Int(n.abs()),
+                Value::Float(x) => Value::Float(x.abs()),
+                _ => unknown_method(&recv, name),
+            },
+            "to_i" => Value::Int(as_i64_lenient(&recv)),
+            "to_f" => Value::Float(as_f64_lenient(&recv)),
+            "even?" => Value::Bool(as_i64_lenient(&recv) % 2 == 0),
+            "odd?" => Value::Bool(as_i64_lenient(&recv) % 2 != 0),
+            "zero?" => Value::Bool(as_f64_lenient(&recv) == 0.0),
+            "times" => {
+                // `n.times { |i| … }` yields 0..n and returns the receiver.
+                if let Some(b) = &block {
+                    let n = as_i64_lenient(&recv);
+                    let mut i = 0i64;
+                    while i < n {
+                        apply_closure(b, vec![Value::Int(i)]);
+                        i += 1;
+                    }
+                }
+                let _ = pos;
+                recv
+            }
+            _ => no_method_error(&recv, name),
+        }
+    }
+
+    // Lenient numeric coercions for the Numeric catalog: unlike the strict
+    // `as_i64`/`as_f64` used by arithmetic (which panic on a non-number),
+    // these degrade a non-numeric receiver to `0` rather than panicking —
+    // upholding the never-raise-on-the-OO-surface invariant.
+    fn as_i64_lenient(v: &Value) -> i64 {
+        match v {
+            Value::Int(n) => *n,
+            Value::Float(x) => *x as i64,
+            _ => 0,
+        }
+    }
+
+    fn as_f64_lenient(v: &Value) -> f64 {
+        match v {
+            Value::Int(n) => *n as f64,
+            Value::Float(x) => *x,
+            _ => 0.0,
+        }
+    }
+
+    // ── Symbol catalog + `Symbol#to_proc` (`&:sym`) ───────────────
+    fn symbol_method(recv: Value, name: &str, _args: Vec<Value>) -> Value {
+        let s = match &recv {
+            Value::Sym(s) => s.clone(),
+            _ => return unknown_method(&recv, name),
+        };
+        match name {
+            "to_s" => Value::Str(Rc::from(&*s)),
+            "to_sym" => recv,
+            "length" | "size" => Value::Int(s.chars().count() as i64),
+            "upcase" => intern(&s.to_uppercase()),
+            "downcase" => intern(&s.to_lowercase()),
+            _ => no_method_error(&recv, name),
+        }
+    }
+
+    // `sym_to_proc(:m)` builds a `Closure` equivalent to Ruby's
+    // `:m.to_proc`: applied to `[recv, rest…]` it dispatches
+    // `recv.m(rest…)` through `call_method`, so `[1,2,3].map(&:to_s)` is
+    // `[1,2,3].map { |x| x.to_s }`.  The frontend lowers `&:sym` to
+    // `block_pass(SymLit("sym"))`; the emitter turns that surviving
+    // envelope into `sym_to_proc(intern("sym"))`, yielding a `Closure` the
+    // block-taking catalog drives exactly like a `{ }` block.  A non-symbol
+    // argument is coerced to its display name defensively.
+    pub fn sym_to_proc(sym: Value) -> Value {
+        // An already-callable `&blk` (a `Closure`) passes through unchanged
+        // — only a *symbol* is converted into a dispatching proc.
+        if matches!(sym, Value::Closure(_)) {
+            return sym;
+        }
+        let method = match &sym {
+            Value::Sym(s) => s.to_string(),
+            other => format(other),
+        };
+        Value::Closure(Rc::new(Closure {
+            fun: Box::new(move |mut args: Vec<Value>| {
+                if args.is_empty() {
+                    return Value::Nil;
+                }
+                let recv = args.remove(0);
+                call_method(recv, &method, args)
+            }),
+        }))
+    }
+
+    // ── exception model (SIR17 Exceptions) ────────────────────────────
+    //
+    // Rust has NO native exceptions.  Ruby's `begin/rescue/ensure`
+    // maps onto Rust's *unwinding panic* machinery: a `raise` becomes a
+    // `std::panic::panic_any(SirError { … })` carrying a class-tagged
+    // payload, and a `TryCatch` region runs its body under
+    // `std::panic::catch_unwind`, then downcasts the caught payload back
+    // to a `SirError` to dispatch the rescue clauses.  See `emit.rs` for
+    // the emitted shape; this module is the runtime half.
+    //
+    // Why panic-unwind and not a `Result`-threading discipline?  Threading
+    // a `Result` would demand rewriting *every* emitted expression into a
+    // `?`-propagating form and changing every `fn … -> Value` signature to
+    // `-> Result<Value, SirError>`.  Panic-unwind is a *localized*
+    // transform: only `raise` and `TryCatch` change; all other emit arms
+    // are byte-for-byte unchanged, matching how the TS/Python backends add
+    // exceptions as a localized `throw`/`try` transform over otherwise
+    // unchanged code.
+    //
+    // SECURITY: rescue matching is an EXPLICIT ancestry-table lookup —
+    // never reflection / type-name introspection.  The built-in table is a
+    // small curated slice of Ruby's hierarchy (parity with the TS
+    // `sir-runtime-exceptions` `ANCESTRY`); user classes contribute edges
+    // only through `register_ancestry`, emitted from the module's own
+    // `ClassDef { superclass }` pairs.  A `seen`-set cycle guard bounds the
+    // ancestry walk so a malicious/cyclic edge set can never spin forever.
+
+    /// A raised SIR exception: a Ruby/SIR class name plus a message.
+    ///
+    /// This is the panic *payload* — `raise` calls `panic_any(SirError{…})`
+    /// and a `TryCatch` recovers it with `catch_unwind` + `downcast`.
+    ///
+    /// ## Why `msg: String` (not `Value`)
+    ///
+    /// `std::panic::panic_any<M>` requires `M: Any + Send + 'static`, but our
+    /// `Value` model is built on `Rc` (single-threaded by design) and is
+    /// therefore NOT `Send`.  So the payload cannot carry a raw `Value`.  A
+    /// `raise Klass, msg` renders `msg` to its string form *at raise time*
+    /// (via `format`) and stores that `String` — which is `Send` — exactly as
+    /// Ruby's `exception.message` is a string.  `exc_value` re-wraps it as a
+    /// `Value::Str` for a `rescue … => e` binding.  This keeps the whole
+    /// unwinding path `Send`-clean with no `unsafe`, at the cost of a
+    /// non-string message value being flattened to its printed form — an
+    /// acceptable v0 fidelity trade (Ruby itself expects a string message).
+    #[derive(Clone)]
+    pub struct SirError {
+        /// The Ruby/SIR class this was raised as (`ArgumentError`, `MyErr`…).
+        pub class: String,
+        /// The message Ruby's `raise Klass, "msg"` carries, rendered to a
+        /// string.  When no message is given, the class name is used (Ruby's
+        /// default `exception.message`).
+        pub msg: String,
+    }
+
+    // Built-in Ruby exception ancestry: subclass → immediate superclass.
+    // A verbatim parity port of the TS `sir-runtime-exceptions` `ANCESTRY`
+    // table.  Every entry ultimately chains up to `StandardError →
+    // Exception`.  Kept as a match (not a `HashMap`) so it is a pure,
+    // allocation-free, compile-time-closed lookup — the runtime can only
+    // ever return an edge this function spells out.
+    fn builtin_super(class: &str) -> Option<&'static str> {
+        match class {
+            "RuntimeError" => Some("StandardError"),
+            "ArgumentError" => Some("StandardError"),
+            "TypeError" => Some("StandardError"),
+            "NameError" => Some("StandardError"),
+            "NoMethodError" => Some("NameError"),
+            "IndexError" => Some("StandardError"),
+            "KeyError" => Some("IndexError"),
+            "RangeError" => Some("StandardError"),
+            "ZeroDivisionError" => Some("StandardError"),
+            "IOError" => Some("StandardError"),
+            "StopIteration" => Some("StandardError"),
+            "NotImplementedError" => Some("StandardError"),
+            "StandardError" => Some("Exception"),
+            _ => None,
+        }
+    }
+
+    thread_local! {
+        // User-defined ancestry edges (subclass → superclass), populated
+        // once at program init from the module's `ClassDef` pairs via
+        // `register_ancestry`.  Consulted *in addition to* the built-in
+        // table so `class MyErr < StandardError` makes a raised `MyErr`
+        // catchable by `rescue StandardError`.
+        static USER_ANCESTRY: RefCell<HashMap<String, String>> =
+            RefCell::new(HashMap::new());
+    }
+
+    /// Register user-defined `subclass → superclass` edges, once at init.
+    ///
+    /// The emitter collects every `Stmt::ClassDef { name, superclass:
+    /// Some(sup) }` in the module and emits a single call to this with all
+    /// the pairs.  This is the ONLY way a user edge enters the matcher —
+    /// there is no reflection over runtime type names.
+    pub fn register_ancestry(edges: &[(&str, &str)]) {
+        USER_ANCESTRY.with(|m| {
+            let mut m = m.borrow_mut();
+            for (sub, sup) in edges {
+                m.insert((*sub).to_string(), (*sup).to_string());
+            }
+        });
+    }
+
+    /// The immediate superclass of `class`, consulting the user table first
+    /// (so a user edge can extend, but a built-in is the fallback).
+    fn super_of(class: &str) -> Option<String> {
+        if let Some(sup) = USER_ANCESTRY.with(|m| m.borrow().get(class).cloned()) {
+            return Some(sup);
+        }
+        builtin_super(class).map(|s| s.to_string())
+    }
+
+    /// `true` if `actual` is `target` or descends from it via the merged
+    /// built-in + user ancestry.  The `seen` set bounds the walk so a
+    /// cyclic edge set (`A→B→A`) terminates instead of looping forever.
+    fn is_ancestor_or_self(actual: &str, target: &str) -> bool {
+        let mut cur = actual.to_string();
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        loop {
+            if cur == target {
+                return true;
+            }
+            if !seen.insert(cur.clone()) {
+                return false; // cycle — stop.
+            }
+            match super_of(&cur) {
+                Some(next) => cur = next,
+                None => return false,
+            }
+        }
+    }
+
+    /// Does a caught `SirError` match a rescue clause naming `class_names`?
+    ///
+    /// - An **empty** list is a bare `rescue` (catch-all) → always `true`.
+    /// - `Exception` is Ruby's universal root → matches anything.
+    /// - Otherwise the error matches if its class equals, or descends from,
+    ///   any named class (per the merged ancestry table).
+    ///
+    /// Parity with the TS `rescueMatches`.
+    pub fn rescue_matches(exc: &SirError, class_names: &[&str]) -> bool {
+        if class_names.is_empty() {
+            return true;
+        }
+        class_names
+            .iter()
+            .any(|name| *name == "Exception" || is_ancestor_or_self(&exc.class, name))
+    }
+
+    /// The message value a rescue binding (`rescue … => e`) sees — the
+    /// exception's message, re-wrapped as a `Value::Str`.  Ruby would bind an
+    /// exception *object* here; SIR v0 has no exception-object model, so the
+    /// message string is the honest stand-in (the same choice the TS backend
+    /// makes, where `=> e` binds the thrown value's message).
+    pub fn exc_value(exc: &SirError) -> Value {
+        Value::Str(Rc::from(exc.msg.as_str()))
+    }
+
+    /// Raise a SIR exception of `class` with message `msg` by panicking with
+    /// a `SirError` payload.  The `msg` `Value` is rendered to a string at
+    /// raise time (see `SirError`'s doc for why the payload cannot carry a
+    /// raw `Value`).  Declared `-> !` (never returns) so control-flow
+    /// analysis knows code after a `raise` is unreachable.
+    ///
+    /// A quiet panic hook (installed by `install_panic_hook`, called at
+    /// program init) suppresses Rust's default `thread 'main' panicked …`
+    /// banner for *our* `SirError` payloads on the caught path, so a rescued
+    /// exception prints no spurious stderr noise.  A genuine (non-`SirError`)
+    /// Rust panic still prints normally.
+    pub fn raise(class: &str, msg: Value) -> ! {
+        std::panic::panic_any(SirError { class: class.to_string(), msg: format(&msg) })
+    }
+
+    /// Bare `raise` with no in-flight exception threaded: re-raise as a
+    /// generic `RuntimeError` (SIR v0 does not carry the current exception
+    /// into a bare re-raise — documented limitation, parity with TS).
+    pub fn reraise() -> ! {
+        std::panic::panic_any(SirError {
+            class: "RuntimeError".to_string(),
+            msg: "RuntimeError".to_string(),
+        })
+    }
+
+    /// Recover a `SirError` from a `catch_unwind` payload, or **re-panic**.
+    ///
+    /// A `catch_unwind` `Err` payload is `Box<dyn Any + Send>`.  If it
+    /// downcasts to our `SirError`, that is a SIR-level `raise` we should
+    /// dispatch to rescue clauses.  If it does NOT — it is a *genuine Rust
+    /// panic* (an index-out-of-bounds, an `unwrap` on `None`, an internal
+    /// bug), which must NEVER be silently swallowed as if it were a
+    /// rescuable Ruby exception.  We `resume_unwind` it so it propagates
+    /// exactly as an uncaught panic would, preserving Rust's own crash
+    /// semantics.  This is the security-critical passthrough: a rescue
+    /// clause can only ever catch a value that a `raise` produced.
+    pub fn exc_from_payload(payload: Box<dyn std::any::Any + Send>) -> SirError {
+        match payload.downcast::<SirError>() {
+            Ok(e) => *e,
+            Err(other) => std::panic::resume_unwind(other),
+        }
+    }
+
+    /// Install a quiet panic hook so a *`SirError`* panic (a SIR `raise`)
+    /// does not print Rust's default panic banner to stderr — the
+    /// `catch_unwind` in a `TryCatch` is responsible for that exception, and
+    /// an *uncaught* one already renders its own message via `report_uncaught`.
+    /// A non-`SirError` panic (a real Rust bug) still prints normally.
+    ///
+    /// Idempotent-safe to call once at program init.
+    pub fn install_panic_hook() {
+        let default = std::panic::take_hook();
+        std::panic::set_hook(Box::new(move |info| {
+            if info.payload().is::<SirError>() {
+                // A SIR raise: stay silent here.  If it is ultimately
+                // uncaught, the process still aborts with a non-zero status
+                // (the unwind reaches `main` and terminates the thread); the
+                // top-level `catch_unwind` in `main` prints a clean message.
+                return;
+            }
+            default(info);
+        }));
+    }
+
+    /// Render an uncaught SIR exception (one that unwound past every
+    /// `TryCatch`) as Ruby would at top level (`Class: message`) and exit
+    /// non-zero.  Called by the `main`-level `catch_unwind` wrapper.
+    pub fn report_uncaught(exc: &SirError) -> ! {
+        eprintln!("{}: {}", exc.class, exc.msg);
+        std::process::exit(1)
+    }
+
+    // ── user-defined-class OOP (SIR17 `Classes`, O5) ───────────────────
+    //
+    // The Rust analogue of the JS/Python/Go OOP runtimes.  It reuses the
+    // ancestry machinery the exception runtime already built (`super_of`,
+    // the `seen`-guarded `is_ancestor_or_self` walk) and adds four pieces,
+    // all kept to the same security bar as the collection catalog and the
+    // rescue matcher:
+    //
+    //   • `SirInstance`  — a user object: a class-name tag + its own
+    //                      `@ivar` bag.  It lives in the `INSTANCES`
+    //                      side-table, referenced by a `Value::Instance(id)`
+    //                      handle (see the value-model note on the enum).
+    //   • the method tables — instance + class ("static") methods, each a
+    //                      `HashMap<(String, String), Value>` (the `Value`
+    //                      is the method-body `Closure` a `MakeClosure`
+    //                      produced).
+    //   • the self-stack  — the dynamic `self` a running method reads via
+    //                      `current_self()` / `ivar_get`/`ivar_set`.
+    //   • `call_new` / `call_super` — instantiation and superclass dispatch.
+    //
+    // ── SECURITY (the C3 RCE lesson) ──────────────────────────────────
+    // Every lookup here is an EXPLICIT `HashMap::get` on a `(class, method)`
+    // key.  There is NO reflection, no trait-object-by-name, no
+    // `dyn Any`-downcast on a source-derived string.  A user class or
+    // method literally named `constructor` / `new` / `drop` is only ever a
+    // map KEY: a miss floors to the same honest boundary the collection
+    // catalog uses (`Value::Nil` for a plain call, a `NoMethodError`
+    // `raise` where Ruby would).  The ancestry walk reuses the exception
+    // runtime's `seen`-guarded `is_ancestor_or_self`/`super_of`, so a
+    // cyclic user hierarchy (`A < B < A`) TERMINATES rather than looping.
+
+    /// A user object: its class-name tag plus its instance-variable bag.
+    ///
+    /// The `ivars` bag is a plain `HashMap<String, Value>` behind a
+    /// `RefCell` so a method can mutate `@x` through the shared side-table
+    /// entry.  An ivar name is just a map key (`"@x"`), never a field
+    /// accessed by reflection.
+    pub struct SirInstance {
+        pub class: String,
+        pub ivars: RefCell<HashMap<String, Value>>,
+    }
+
+    thread_local! {
+        // The instance side-table: `id → SirInstance`.  We hold each
+        // `SirInstance` behind an `Rc` so a `current_self()` read (and the
+        // `ivar_*`/`cvar_*` helpers) can clone a cheap handle to the object
+        // without removing it from the table.  Instances are never freed in
+        // v0 (the transpiled scripts we target are short-lived); this
+        // matches the reference runtimes, which likewise let the GC/refcount
+        // keep every instance alive for the process lifetime.
+        static INSTANCES: RefCell<HashMap<u64, Rc<SirInstance>>> =
+            RefCell::new(HashMap::new());
+        static NEXT_INSTANCE_ID: Cell<u64> = const { Cell::new(0) };
+
+        // Instance-method table and class-method table, each keyed by the
+        // FLAT `(class, method)` pair.  A `HashMap` key of owned `String`s
+        // means a name like `"constructor"` is inert DATA — there is no
+        // reachable host callable behind it.
+        static METHOD_TABLE: RefCell<HashMap<(String, String), Value>> =
+            RefCell::new(HashMap::new());
+        static CLASS_METHOD_TABLE: RefCell<HashMap<(String, String), Value>> =
+            RefCell::new(HashMap::new());
+
+        // The dynamic `self` stack.  Pushed before a user method runs and
+        // popped after (via an RAII guard — see `SelfGuard` — so a panic
+        // mid-method still pops, leaving no stale `self` for the next
+        // dispatch).
+        static SELF_STACK: RefCell<Vec<Value>> = const { RefCell::new(Vec::new()) };
+
+        // Per-class class-variable (`@@x`) bags, keyed by class name then
+        // var name.  Shared across every instance of a class, matching
+        // Ruby's class-variable semantics.
+        static CLASS_VARS: RefCell<HashMap<String, HashMap<String, Value>>> =
+            RefCell::new(HashMap::new());
+
+        // ── MX6 mixins: per-owner included-module list ────────────────
+        //
+        // `include M` (in class/module `Owner`) records `M` on `Owner`'s
+        // list, in SOURCE (include) order.  Ruby's MRO searches the
+        // MOST-RECENTLY-included module first, so the resolution walk
+        // iterates this list in REVERSE (see `resolve_instance_method`).
+        //
+        // An owner is a class OR a module NAME — a module that itself
+        // `include`s another module has its own entry here, so the MRO walk
+        // recursing into it honours Ruby's transitive mixin inclusion.
+        //
+        // SECURITY: a plain `HashMap<String, Vec<String>>` keyed by
+        // source-derived NAMES — no reflection (the C3 RCE discipline).  The
+        // MRO walk carries a `seen` set so a module that (transitively)
+        // includes itself TERMINATES rather than looping forever.
+        static INCLUDED_MODULES: RefCell<HashMap<String, Vec<String>>> =
+            RefCell::new(HashMap::new());
+    }
+
+    /// The class-name tag of instance `id` (or `"?"` if the id is stale —
+    /// unreachable in practice, defensive only).  Used by `format`.
+    fn instance_class(id: u64) -> String {
+        INSTANCES.with(|t| {
+            t.borrow().get(&id).map(|o| o.class.clone()).unwrap_or_else(|| "?".to_string())
+        })
+    }
+
+    /// Fetch a cheap `Rc` handle to instance `id`, if it exists.
+    fn instance_of(id: u64) -> Option<Rc<SirInstance>> {
+        INSTANCES.with(|t| t.borrow().get(&id).cloned())
+    }
+
+    /// Allocate a bare instance of `cls` (no `initialize` yet — that is
+    /// `call_new`'s job) and return its `Value::Instance` handle.
+    pub fn new_instance(cls: &str) -> Value {
+        let id = NEXT_INSTANCE_ID.with(|c| {
+            let n = c.get();
+            c.set(n + 1);
+            n
+        });
+        let obj = Rc::new(SirInstance {
+            class: cls.to_string(),
+            ivars: RefCell::new(HashMap::new()),
+        });
+        INSTANCES.with(|t| t.borrow_mut().insert(id, obj));
+        Value::Instance(id)
+    }
+
+    /// Register an instance method: `def m … end` in `class C` →
+    /// `def_method("C", "m", <closure>)`.  The closure is the method body a
+    /// `MakeClosure` produced; storing it as a `Value` keeps dispatch a
+    /// plain `apply_closure`.
+    pub fn def_method(cls: &str, name: &str, f: Value) -> Value {
+        METHOD_TABLE.with(|t| {
+            t.borrow_mut().insert((cls.to_string(), name.to_string()), f);
+        });
+        Value::Nil
+    }
+
+    /// Register a class ("static") method: `def self.m …` →
+    /// `def_class_method("C", "m", <closure>)`.
+    pub fn def_class_method(cls: &str, name: &str, f: Value) -> Value {
+        CLASS_METHOD_TABLE.with(|t| {
+            t.borrow_mut().insert((cls.to_string(), name.to_string()), f);
+        });
+        Value::Nil
+    }
+
+    // ── MX6 mixins: include / extend directives ───────────────────────
+
+    /// `__include__("Owner", "M")` — record that `Owner` mixes in `M`.
+    ///
+    /// Appends `M` to `Owner`'s include list in SOURCE order.  Idempotent
+    /// duplicates are harmless: the MRO walk's `seen` set de-dups a diamond,
+    /// and appending a name twice just makes the second visit a no-op.
+    /// Returns `Nil` (the directive has no Ruby value the emitter needs).
+    pub fn include_module(owner: &str, module: &str) -> Value {
+        INCLUDED_MODULES.with(|t| {
+            t.borrow_mut()
+                .entry(owner.to_string())
+                .or_default()
+                .push(module.to_string());
+        });
+        Value::Nil
+    }
+
+    /// `__extend__("Owner", "M")` — mix `M`'s INSTANCE methods in as
+    /// `Owner`'s CLASS (singleton) methods, so they become callable as
+    /// `Owner.method`.
+    ///
+    /// We SNAPSHOT `M`'s registered instance methods (including those `M`
+    /// itself includes, via the same MRO walk instances use) and copy each
+    /// into `Owner`'s class-method table.  An entry `Owner` ALREADY defines
+    /// is NOT overwritten — a class's own `def self.m` shadows an extended
+    /// module method, matching Ruby's singleton-first precedence.
+    ///
+    /// Copy-at-extend-time is the v0 model: methods defined on `M` AFTER the
+    /// `extend` are not retroactively added, which is sufficient because the
+    /// frontend emits every `__def_method__` for `M` before any `__extend__`
+    /// that names it (registrations run in source order, module def before
+    /// the including class).
+    pub fn extend_module(owner: &str, module: &str) -> Value {
+        for name in module_method_names(module) {
+            let key = (owner.to_string(), name.clone());
+            let exists = CLASS_METHOD_TABLE.with(|t| t.borrow().contains_key(&key));
+            if exists {
+                continue;
+            }
+            if let Some(f) = resolve_instance_method(module, &name) {
+                CLASS_METHOD_TABLE.with(|t| {
+                    t.borrow_mut().insert(key, f);
+                });
+            }
+        }
+        Value::Nil
+    }
+
+    /// The instance-method NAMES reachable on `module` (its own defs plus
+    /// those of modules IT includes), for `extend_module` to copy.  Walks the
+    /// same include-list MRO as instance resolution, `seen`-guarded against a
+    /// cyclic include, and de-dups names so each is copied once (the
+    /// earliest, most-specific definition wins).
+    fn module_method_names(module: &str) -> Vec<String> {
+        let mut names: Vec<String> = Vec::new();
+        let mut added: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut stack: Vec<String> = vec![module.to_string()];
+        while let Some(owner) = stack.pop() {
+            if owner.is_empty() || !seen.insert(owner.clone()) {
+                continue;
+            }
+            METHOD_TABLE.with(|t| {
+                for (o, m) in t.borrow().keys() {
+                    if o == &owner && added.insert(m.clone()) {
+                        names.push(m.clone());
+                    }
+                }
+            });
+            // Recurse into this owner's included modules (order does not
+            // matter for a name-collection pass — `added` de-dups).
+            if let Some(mods) = INCLUDED_MODULES.with(|t| t.borrow().get(&owner).cloned()) {
+                for m in mods {
+                    stack.push(m);
+                }
+            }
+        }
+        names
+    }
+
+    /// Resolve instance method `name` on `cls` following Ruby's MRO:
+    ///
+    /// ```text
+    ///   cls  →  cls's included modules (REVERSE / most-recent-first)  →
+    ///   cls's superclass  →  its included modules  →  …  →  Object
+    /// ```
+    ///
+    /// A class's OWN method shadows any module it includes; a module method
+    /// shadows the superclass's (a module precedes the superclass in the
+    /// ancestor list).  A module included via TWO paths (a diamond) resolves
+    /// ONCE, at its earliest position, because the shared `seen` set skips an
+    /// owner already visited.  The walk is a depth-first, most-recent-first,
+    /// de-duplicated linearisation (the order the spec's truth table
+    /// documents).  It reuses the runtime's single ancestry table
+    /// (`super_of`) for the superclass chain — the SAME table `rescue` walks.
+    ///
+    /// The `seen` set makes the walk TOTAL even for a cyclic class hierarchy
+    /// (`A < B < A`) OR a self-including module.  Lookup is
+    /// `METHOD_TABLE.get(&(owner, name))` — explicit DATA, never reflection.
+    /// `from` is the class to START at (the receiver's class for a normal
+    /// call; the SUPERCLASS for `super`).
+    fn resolve_instance_method(cls: &str, name: &str) -> Option<Value> {
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        // Check `owner`'s own methods, then (reverse-order) its included
+        // modules — each of which may itself include further modules, so this
+        // recurses.  Returns the closure on the first hit.
+        fn resolve_owner(
+            owner: &str,
+            name: &str,
+            seen: &mut std::collections::HashSet<String>,
+        ) -> Option<Value> {
+            if owner.is_empty() || !seen.insert(owner.to_string()) {
+                return None;
+            }
+            if let Some(f) =
+                METHOD_TABLE.with(|t| t.borrow().get(&(owner.to_string(), name.to_string())).cloned())
+            {
+                return Some(f);
+            }
+            // Most-recently-included module searched first ⇒ iterate the
+            // include-order list in REVERSE.  A module search recurses so a
+            // module that itself includes another module is honoured.
+            if let Some(mods) = INCLUDED_MODULES.with(|t| t.borrow().get(owner).cloned()) {
+                for m in mods.iter().rev() {
+                    if let Some(f) = resolve_owner(m, name, seen) {
+                        return Some(f);
+                    }
+                }
+            }
+            None
+        }
+        let mut cur = Some(cls.to_string());
+        while let Some(c) = cur {
+            // A cyclic CLASS chain (`A < B < A`) would re-enter an owner
+            // `resolve_owner` already inserted into `seen`; guard here too so
+            // the outer superclass loop terminates.
+            if seen.contains(&c) {
+                break;
+            }
+            if let Some(f) = resolve_owner(&c, name, &mut seen) {
+                return Some(f);
+            }
+            cur = super_of(&c);
+        }
+        None
+    }
+
+    /// Resolve a CLASS ("static") method `name` on `cls` or any ancestor,
+    /// walking the merged (built-in + user) ancestry.  The `seen` set bounds
+    /// the walk so a cyclic hierarchy terminates.  Lookup is
+    /// `CLASS_METHOD_TABLE.get(&(cur, name))` — explicit DATA, never
+    /// reflection.  (Class methods do NOT participate in module include-MRO;
+    /// an `extend`ed module method is COPIED into this table by
+    /// `extend_module`, so it is found by the same plain ancestry walk.)
+    fn resolve_class_method(from: Option<String>, name: &str) -> Option<Value> {
+        let mut cur = from;
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        while let Some(c) = cur {
+            if !seen.insert(c.clone()) {
+                return None; // cycle — stop.
+            }
+            let found =
+                CLASS_METHOD_TABLE.with(|t| t.borrow().get(&(c.clone(), name.to_string())).cloned());
+            if found.is_some() {
+                return found;
+            }
+            cur = super_of(&c);
+        }
+        None
+    }
+
+    // ── the dynamic `self` stack (RAII-balanced) ───────────────────────
+    //
+    // A running method needs its receiver for `@ivar` reads and for `self`.
+    // We push the receiver before applying a method and pop it afterwards.
+    // The pop is done by an RAII DROP GUARD rather than an explicit call:
+    // if the method body PANICS (a SIR `raise` unwinds as a panic, or a
+    // genuine Rust panic occurs), the guard's `Drop` still runs during
+    // unwinding, so the stack is always balanced and no stale `self` leaks
+    // to the next dispatch.  This is the Rust analogue of the JS runtime's
+    // `try { … } finally { popSelf(); }`.
+    struct SelfGuard;
+    impl Drop for SelfGuard {
+        fn drop(&mut self) {
+            SELF_STACK.with(|s| {
+                s.borrow_mut().pop();
+            });
+        }
+    }
+
+    /// Push `recv` as the current self and return an RAII guard that pops it
+    /// on drop (including during a panic unwind).
+    fn push_self_guarded(recv: Value) -> SelfGuard {
+        SELF_STACK.with(|s| s.borrow_mut().push(recv));
+        SelfGuard
+    }
+
+    /// The current `self` — the top of the self-stack, or `Nil` outside any
+    /// method (`__self__` at top level).
+    pub fn current_self() -> Value {
+        SELF_STACK.with(|s| s.borrow().last().cloned().unwrap_or(Value::Nil))
+    }
+
+    /// Apply a resolved method closure with `recv` bound as `self`.  The
+    /// `SelfGuard` pops the self-stack on scope exit — normal return OR
+    /// panic unwind — so the stack stays balanced.
+    fn apply_with_self(f: &Value, recv: Value, args: Vec<Value>) -> Value {
+        let _guard = push_self_guarded(recv);
+        apply_closure(f, args)
+        // `_guard` drops here (or during unwind), popping the self-stack.
+    }
+
+    /// Dispatch method `name` on user instance `id`.  Resolves the user
+    /// method table walking ancestry; pushes `self`, applies, pops (RAII);
+    /// an unresolved method floors to the honest `NoMethodError` boundary
+    /// (matching Ruby / the collection catalog's never-silently-wrong
+    /// contract).  `recv` is the `Value::Instance` handle to bind as self.
+    fn dispatch_user_method(id: u64, recv: &Value, name: &str, args: Vec<Value>) -> Value {
+        let class = match instance_of(id) {
+            Some(obj) => obj.class.clone(),
+            // Stale handle (unreachable in practice) → honest floor.
+            None => return unknown_method(recv, name),
+        };
+        match resolve_instance_method(&class, name) {
+            Some(f) => apply_with_self(&f, recv.clone(), args),
+            // An instance method genuinely absent from the class's table
+            // (and all ancestors) is a Ruby `NoMethodError` — surface it
+            // typed so `rescue NoMethodError` catches it.
+            None => no_method_error(recv, name),
+        }
+    }
+
+    /// `Klass.new(args…)` → `call_new("Klass", args…)`.  Allocate a bare
+    /// instance, then run the inherited `initialize` (if any is registered
+    /// anywhere in the ancestry chain) with `self` bound to the fresh
+    /// instance, then return the INSTANCE (Ruby discards `initialize`'s
+    /// result).  A class with no `initialize` in its chain is valid — `new`
+    /// just yields a bare instance.
+    pub fn call_new(cls: &str, args: Vec<Value>) -> Value {
+        let obj = new_instance(cls);
+        if let Some(init) = resolve_instance_method(cls, "initialize") {
+            apply_with_self(&init, obj.clone(), args);
+        }
+        obj
+    }
+
+    /// `super(args…)` inside method `method` of class `cls` →
+    /// `call_super("method", "cls", args…)`.  Resolve `method` starting from
+    /// the SUPERCLASS of `cls` (so the current definition is skipped) and
+    /// apply it with the CURRENT `self` still bound — `super` reuses the
+    /// live receiver, it does NOT push a new one.  A missing super method
+    /// floors to the honest boundary (Ruby raises `NoMethodError`).
+    pub fn call_super(method: &str, cls: &str, args: Vec<Value>) -> Value {
+        // Resolve from the SUPERCLASS, following the full MRO from there (its
+        // own methods, then its included modules, then ITS superclass, …), so
+        // `super` can reach a method a mixed-in module of the parent provides.
+        let resolved = match super_of(cls) {
+            Some(parent) => resolve_instance_method(&parent, method),
+            None => None,
+        };
+        match resolved {
+            // Reuse the live self already on the stack (no new push).
+            Some(f) => apply_closure(&f, args),
+            None => Value::Nil,
+        }
+    }
+
+    /// `Owner.method(args…)` — a CLASS-method call (`__class_method__`).
+    ///
+    /// Resolves `method` in `Owner`'s class-method table, walking the ancestry
+    /// (`resolve_class_method`) so an inherited `def self.method` is found, AND
+    /// including methods mixed in via `extend` (which `extend_module` copied
+    /// into the class-method table).  No `self` is pushed — a v0 class method
+    /// runs without an instance receiver.  An unresolved name hits the
+    /// controlled `NoMethodError` floor (typed, so `rescue NoMethodError`
+    /// catches it), never a reflective fallthrough.
+    pub fn call_class_method(cls: &str, method: &str, args: Vec<Value>) -> Value {
+        match resolve_class_method(Some(cls.to_string()), method) {
+            Some(f) => apply_closure(&f, args),
+            None => raise(
+                "NoMethodError",
+                Value::Str(Rc::from(
+                    format!("undefined method '{}' for {}", method, cls).as_str(),
+                )),
+            ),
+        }
+    }
+
+    // ── instance / class variables on the current self ─────────────────
+    // `@x` / `@@x` read/write route here.  They act on `current_self()` — a
+    // method body's receiver.  A read of an unset var yields `Nil` (Ruby's
+    // nil), matching the `Scope::Instance`/`Scope::ClassVar` "no prior
+    // declaration" rule.  A read/write outside any method (no instance
+    // self) is a no-op returning `Nil`, never a panic.
+
+    /// Read `@name` on the current self (or `Nil`).
+    pub fn ivar_get(name: &str) -> Value {
+        if let Value::Instance(id) = current_self() {
+            if let Some(obj) = instance_of(id) {
+                return obj.ivars.borrow().get(name).cloned().unwrap_or(Value::Nil);
+            }
+        }
+        Value::Nil
+    }
+
+    /// Write `@name = val` on the current self; returns `val`.
+    pub fn ivar_set(name: &str, val: Value) -> Value {
+        if let Value::Instance(id) = current_self() {
+            if let Some(obj) = instance_of(id) {
+                obj.ivars.borrow_mut().insert(name.to_string(), val.clone());
+            }
+        }
+        val
+    }
+
+    /// The class name of the current self, if it is an instance.
+    fn current_self_class() -> Option<String> {
+        if let Value::Instance(id) = current_self() {
+            return instance_of(id).map(|o| o.class.clone());
+        }
+        None
+    }
+
+    /// Read `@@name` for the current self's class (or `Nil`).
+    pub fn cvar_get(name: &str) -> Value {
+        match current_self_class() {
+            Some(cls) => CLASS_VARS.with(|t| {
+                t.borrow()
+                    .get(&cls)
+                    .and_then(|bag| bag.get(name).cloned())
+                    .unwrap_or(Value::Nil)
+            }),
+            None => Value::Nil,
+        }
+    }
+
+    /// Write `@@name = val` for the current self's class; returns `val`.
+    pub fn cvar_set(name: &str, val: Value) -> Value {
+        if let Some(cls) = current_self_class() {
+            CLASS_VARS.with(|t| {
+                t.borrow_mut()
+                    .entry(cls)
+                    .or_default()
+                    .insert(name.to_string(), val.clone());
+            });
+        }
+        val
     }
 }
 "##;
@@ -330,11 +2434,22 @@ mod tests {
     }
 
     #[test]
+    fn runtime_declares_float_variant_and_helpers() {
+        // SIR16 floats: the value model gains a `Float(f64)` arm, and
+        // the numeric helpers gain f64 coercion + a display path.
+        assert!(RUNTIME.contains("Float(f64)"));
+        assert!(RUNTIME.contains("fn as_f64"));
+        assert!(RUNTIME.contains("fn any_float"));
+        assert!(RUNTIME.contains("fn format_float"));
+        assert!(RUNTIME.contains("fn num_lt"));
+    }
+
+    #[test]
     fn runtime_includes_all_builtins() {
         for op in &[
             "plus", "minus", "times", "divide", "eq", "lt", "gt",
             "cons", "car", "cdr", "is_null", "is_pair", "is_number",
-            "is_symbol", "print", "global_set", "global_get",
+            "is_symbol", "print", "puts", "global_set", "global_get",
             "apply_closure", "intern", "truthy", "format",
             "call_builtin_by_name", "builtin_closure",
         ] {
@@ -343,9 +2458,191 @@ mod tests {
     }
 
     #[test]
+    fn runtime_plus_times_are_polymorphic() {
+        // sir-polymorphic-operators (PO5): `plus`/`times` dispatch on the
+        // first operand's tag via an explicit `match` (String/Seq arms
+        // ahead of the numeric fold), never reflection.
+        // `plus` gains the String-concat and Seq-concat arms.
+        assert!(RUNTIME.contains("string + expects strings"));
+        assert!(RUNTIME.contains("array + expects arrays"));
+        // `times` gains the binary String/Seq atom with the three arms
+        // (string repeat, array repeat, array join).
+        assert!(RUNTIME.contains("fn times_binary"));
+        assert!(RUNTIME.contains("(Value::Str(s), Value::Int(n))"));
+        assert!(RUNTIME.contains("(Value::Seq(items), Value::Int(n))"));
+        assert!(RUNTIME.contains("(Value::Seq(items), Value::Str(sep))"));
+        // Dispatch is a `match args.first()` on the runtime tag — no
+        // reflective / name-indexed lookup (see [[dynamic-dispatch-rce]]).
+        assert!(RUNTIME.contains("match args.first()"));
+    }
+
+    #[test]
     fn runtime_uses_thread_local_globals() {
         assert!(RUNTIME.contains("thread_local!"));
         assert!(RUNTIME.contains("static GLOBALS"));
         assert!(RUNTIME.contains("static SYMBOL_TABLE"));
+    }
+
+    #[test]
+    fn runtime_declares_loop_helpers() {
+        // SIR16 Loops: ForRange needs an integer bound extractor
+        // (`as_int`), ForEach needs cons-list iteration (`seq_iter`).
+        assert!(RUNTIME.contains("pub fn as_int"));
+        assert!(RUNTIME.contains("pub fn seq_iter"));
+    }
+
+    #[test]
+    fn runtime_declares_seq_and_map_value_and_helpers() {
+        // SIR16 Sequences + Maps: the value model gains shared, mutable
+        // `Seq`/`Map` arms and the lowering helpers for each IR node.
+        assert!(RUNTIME.contains("Seq(Rc<RefCell<Vec<Value>>>)"));
+        assert!(RUNTIME.contains("Map(Rc<RefCell<Vec<(Value, Value)>>>)"));
+        for helper in &[
+            "pub fn seq_lit", "pub fn seq_index", "pub fn seq_len",
+            "pub fn seq_set", "pub fn map_lit", "pub fn map_get",
+            "pub fn map_set",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+    }
+
+    #[test]
+    fn runtime_declares_method_dispatch_and_catalog() {
+        // C6: the inline runtime must ship `call_method` (the dispatcher),
+        // `sym_to_proc` (`&:sym`), and a representative method from each of
+        // the four catalogs so a collection program runs end to end.
+        for helper in &["pub fn call_method", "pub fn sym_to_proc", "pub fn method_name"] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+        // Array / Map / String / Numeric catalog witnesses.
+        for name in &[
+            "\"map\" | \"collect\"",
+            "\"reduce\" | \"inject\"",
+            "\"keys\"",
+            "\"upcase\"",
+            "\"even?\"",
+        ] {
+            assert!(RUNTIME.contains(name), "runtime catalog missing `{}`", name);
+        }
+    }
+
+    #[test]
+    fn runtime_dispatch_has_no_reflective_fallback() {
+        // Security: dispatch is a closed match with an honest `nil` floor
+        // (`unknown_method`) — there must be NO `call_builtin_by_name`-style
+        // raw-name table reachable from `call_method`.
+        assert!(RUNTIME.contains("fn unknown_method"));
+    }
+
+    #[test]
+    fn runtime_seq_iter_handles_real_seq() {
+        // ForEach reconciliation: `seq_iter` must snapshot a `Value::Seq`
+        // (the new real sequence) as well as walk a cons-list.
+        assert!(RUNTIME.contains("if let Value::Seq(items) = v"));
+    }
+
+    #[test]
+    fn runtime_declares_exception_helpers() {
+        // E4: the inline runtime must ship the exception model + matcher so a
+        // `raise`/`TryCatch` program runs end to end.
+        for helper in &[
+            "pub struct SirError",
+            "pub fn raise",
+            "pub fn reraise",
+            "pub fn exc_from_payload",
+            "pub fn exc_value",
+            "pub fn rescue_matches",
+            "pub fn register_ancestry",
+            "pub fn install_panic_hook",
+            "pub fn report_uncaught",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+    }
+
+    #[test]
+    fn runtime_rescue_matcher_is_explicit_table_with_cycle_guard() {
+        // SECURITY: rescue matching is an EXPLICIT ancestry table (no
+        // reflection), and the ancestry walk carries a `seen`-set cycle
+        // guard so a cyclic edge set terminates.
+        assert!(RUNTIME.contains("fn builtin_super"), "missing explicit ancestry table");
+        // A representative built-in edge (parity with the TS ANCESTRY).
+        assert!(RUNTIME.contains(r#""ArgumentError" => Some("StandardError")"#));
+        assert!(RUNTIME.contains(r#""StandardError" => Some("Exception")"#));
+        // Cycle guard.
+        assert!(RUNTIME.contains("seen.insert"), "missing cycle guard");
+    }
+
+    #[test]
+    fn runtime_non_sir_error_payload_is_resumed_not_swallowed() {
+        // A non-`SirError` panic payload must be re-raised, never treated as
+        // a rescuable exception.
+        assert!(RUNTIME.contains("std::panic::resume_unwind(other)"));
+    }
+
+    #[test]
+    fn runtime_declares_oop_value_and_helpers() {
+        // O5: the inline runtime must ship the user-defined-class OOP model —
+        // the `Instance` value handle, the side-table + method tables, and
+        // the instantiation/dispatch/super/self/ivar/cvar helpers.
+        assert!(RUNTIME.contains("Instance(u64)"), "missing Instance value arm");
+        assert!(RUNTIME.contains("pub struct SirInstance"));
+        for helper in &[
+            "pub fn new_instance",
+            "pub fn def_method",
+            "pub fn def_class_method",
+            "pub fn call_new",
+            "pub fn call_super",
+            "pub fn current_self",
+            "pub fn ivar_get",
+            "pub fn ivar_set",
+            "pub fn cvar_get",
+            "pub fn cvar_set",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+    }
+
+    #[test]
+    fn runtime_oop_dispatch_is_explicit_table_with_cycle_guard() {
+        // SECURITY: user-method resolution is an EXPLICIT `HashMap` lookup on
+        // a `(class, method)` key — never reflection — and the ancestry walk
+        // carries a `seen`-set cycle guard so a cyclic hierarchy terminates.
+        assert!(RUNTIME.contains("static METHOD_TABLE"));
+        assert!(RUNTIME.contains("static CLASS_METHOD_TABLE"));
+        assert!(RUNTIME.contains("fn resolve_instance_method"));
+        assert!(RUNTIME.contains("fn resolve_class_method"));
+        assert!(RUNTIME.contains("if !seen.insert(c.clone())"), "missing OOP cycle guard");
+        // The instance dispatch branch is taken FIRST in `call_method`.
+        assert!(RUNTIME.contains("fn dispatch_user_method"));
+    }
+
+    #[test]
+    fn runtime_declares_mixin_helpers() {
+        // MX6: the inline runtime must ship the include/extend mixin model —
+        // the per-owner included-module table, the MRO-aware instance
+        // resolver, the `extend` copy, and the class-method dispatcher.
+        assert!(RUNTIME.contains("static INCLUDED_MODULES"), "missing included-module table");
+        for helper in &[
+            "pub fn include_module",
+            "pub fn extend_module",
+            "pub fn call_class_method",
+            "fn module_method_names",
+        ] {
+            assert!(RUNTIME.contains(helper), "runtime missing `{}`", helper);
+        }
+        // SECURITY: the MRO walk searches most-recently-included first
+        // (reverse iteration) and is `seen`-guarded so a self-including
+        // module terminates.
+        assert!(RUNTIME.contains("mods.iter().rev()"), "missing reverse include-order walk");
+    }
+
+    #[test]
+    fn runtime_self_stack_pops_via_raii_guard() {
+        // The self-stack must pop even on a panic unwind: the pop lives in a
+        // `Drop` impl (an RAII guard), not an explicit end-of-scope call.
+        assert!(RUNTIME.contains("struct SelfGuard"));
+        assert!(RUNTIME.contains("impl Drop for SelfGuard"));
+        assert!(RUNTIME.contains("fn apply_with_self"));
     }
 }

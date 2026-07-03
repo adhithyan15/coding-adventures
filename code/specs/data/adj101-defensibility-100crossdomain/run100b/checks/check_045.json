@@ -1,0 +1,8 @@
+{
+ "check_id": 45,
+ "idx": 20,
+ "slot": "defect_type",
+ "claimed_value": "workmanship",
+ "scenario": "Maria purchased a blender on March 1, 2025. On August 10, 2025, the motor failed due to a defect in workmanship confirmed by the manufacturer's inspection. She submitted a warranty claim on August 15, 2025.",
+ "cited_span": "a defect in workmanship confirmed by the manufacturer's inspection"
+}

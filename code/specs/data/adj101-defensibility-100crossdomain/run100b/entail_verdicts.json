@@ -1,0 +1,1267 @@
+[
+ {
+  "check_id": 0,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"The visit was not an emergency,\" directly forcing verified_emergency = false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 1,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"Maria has a closed HMO with no out-of-network benefits,\" directly establishing the slot value true with no alternative reading."
+ },
+ {
+  "check_id": 2,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly calls Dr. Lee \"an out-of-network dermatologist,\" directly establishing the provider is out-of-network. The claimed boolean is a literal restatement, leaving no alternative reading."
+ },
+ {
+  "check_id": 3,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the screening was \"covered\" — the word directly modifies \"screening,\" forcing covered_screening=true with no alternative reading."
+ },
+ {
+  "check_id": 4,
+  "verdict": "ENTAILED",
+  "why": "Scenario states age 52 and band 45–75; 45 ≤ 52 ≤ 75, so within_age_band=true is forced with no alternative reading."
+ },
+ {
+  "check_id": 5,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"19 days after the date of service\" and the dates (March 1 to March 20) confirm 19. No alternative reading leaves the value open."
+ },
+ {
+  "check_id": 6,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"she saw an in-network cardiologist,\" directly stating the visit's network status. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 7,
+  "verdict": "ENTAILED",
+  "why": "A cardiologist is unambiguously a medical specialist, not primary care; the plan even names a \"$40 specialist copay\" tier. The cited span forces visit_type = specialist."
+ },
+ {
+  "check_id": 8,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says Tom went to a \"hospital ER\" with chest pain. \"ER\" is the standard term for emergency room, so visit_type=emergency_room is directly forced by the text, not an inference."
+ },
+ {
+  "check_id": 9,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly says Tom went to \"an out-of-network hospital ER,\" directly stating the hospital's network status as out_of_network. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 10,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the medication \"has both a brand and a generic version available,\" directly establishing generic_available=true with no alternative reading."
+ },
+ {
+  "check_id": 11,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states reconstruction surgery following a mastectomy to treat breast cancer. The claimed procedure_type restates these words directly; the cosmetic flag is only the administrator's initial label, not a contrary fact."
+ },
+ {
+  "check_id": 12,
+  "verdict": "LEAP",
+  "why": "Scenario says the procedure \"normally\" requires prior authorization, but it was an emergency appendectomy. Emergency context plausibly waives the requirement, so whether prior auth applies here is left open, not forced."
+ },
+ {
+  "check_id": 13,
+  "verdict": "ENTAILED",
+  "why": "Scenario directly states the surgery \"was performed during the documented emergency,\" which is the slot rendered_during_emergency=true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 14,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"no prior authorization was on file,\" directly forcing prior_authorization_on_file = false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 15,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim that the surgery \"is otherwise a covered service,\" directly forcing otherwise_covered=true with no alternative reading."
+ },
+ {
+  "check_id": 16,
+  "verdict": "ENTAILED",
+  "why": "Scenario names \"Mercy Hospital\" for both the discharge and the readmission, so same_hospital=true is forced by the explicit identical names; no alternative reading."
+ },
+ {
+  "check_id": 17,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"she was readmitted to Mercy Hospital for the same pneumonia, 16 days after discharge.\" The word \"readmitted\" is verbatim; no alternative reading leaves is_readmission false."
+ },
+ {
+  "check_id": 18,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states readmission was \"for the same pneumonia,\" directly establishing the same condition. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 19,
+  "verdict": "ENTAILED",
+  "why": "Scenario states \"16 days after discharge\" verbatim; April 2 to April 18 is 16 days, confirming the value. No alternative reading."
+ },
+ {
+  "check_id": 20,
+  "verdict": "LEAP",
+  "why": "Jan 5 to March 30 is 84 days only in a non-leap year; a leap year gives 85. No year is stated, so the exact count rests on an unstated leap-year assumption."
+ },
+ {
+  "check_id": 21,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"the balance remains unpaid,\" directly establishing balance_unpaid = true. No alternative reading leaves the slot open."
+ },
+ {
+  "check_id": 22,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Devon filed a formal appeal of the charge on January 20 and the appeal \"is still pending\" — directly establishing an active appeal. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 23,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"No other regulated pollutants are emitted,\" a categorical denial that directly forces the claimed value false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 24,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"Its potential to emit is 62 tpy of volatile organic compounds,\" directly fixing the VOC PTE at 62 tpy with no alternative reading."
+ },
+ {
+  "check_id": 25,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states PTE includes \"18 tpy of particulate matter,\" directly matching the slot (PM potential-to-emit in tpy). No alternative reading; value is verbatim stated."
+ },
+ {
+  "check_id": 26,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states potential to emit is \"31 tpy of nitrogen oxides.\" NOx PTE = 31 tpy is stated verbatim; no alternative reading exists."
+ },
+ {
+  "check_id": 27,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Harbor Metals \"filed its complete NOI on March 1,\" directly establishing the NOI was both filed and complete. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 28,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the outfall \"began discharging industrial stormwater,\" directly asserting the discharge is industrial stormwater. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 29,
+  "verdict": "ENTAILED",
+  "why": "Filing March 1 and discharge March 12, same month/year, are both stated. The day count between them is 12 minus 1 = 11, the standard exclusive difference. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 30,
+  "verdict": "ENTAILED",
+  "why": "Scenario states filling 0.34 acre of jurisdictional wetlands (a form of waters) and explicitly \"no other waters affected,\" forcing total loss of waters = 0.34 acre."
+ },
+ {
+  "check_id": 31,
+  "verdict": "LEAP",
+  "why": "\"0.7-acre parcel\" states parcel size, not disturbed area. Grading for a single duplex could disturb less than the full parcel; the scenario never equates disturbed acreage with parcel size."
+ },
+ {
+  "check_id": 32,
+  "verdict": "LEAP",
+  "why": "Scenario says 1,240 kg solvent was generated but explicitly notes a large portion went to reclamation/recycling, not disposal. Whether recycled solvent counts as \"hazardous waste\" is an uncompelled categorization; true waste figure is unknown."
+ },
+ {
+  "check_id": 33,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"potential to emit 85 tpy of ozone-precursor VOCs,\" directly forcing the slot value 85 with no alternative reading available."
+ },
+ {
+  "check_id": 34,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the plant is \"in a region designated nonattainment for ozone,\" directly establishing the nonattainment-area slot as true with no alternative reading."
+ },
+ {
+  "check_id": 35,
+  "verdict": "LEAP",
+  "why": "Permit face value is 8 mg/L (7 complies), but the TMDL assigns a 4 mg/L wasteload allocation, which typically becomes the controlling limit. At 7 mg/L Millbrook exceeds 4, so compliance is not forced."
+ },
+ {
+  "check_id": 36,
+  "verdict": "ENTAILED",
+  "why": "TMDL wasteload allocation is 4 mg/L; discharge is 7 mg/L. 7 > 4 forces noncompliance with the allocation. The NPDES 8 mg/L permit is separate and irrelevant to the WLA comparison."
+ },
+ {
+  "check_id": 37,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"The state issued a TMDL for the receiving creek,\" directly establishing tmdl_issued=true with no alternative reading available."
+ },
+ {
+  "check_id": 38,
+  "verdict": "LEAP",
+  "why": "\"Mechanically trivial\" describes physical effort, not regulatory status. Minor-modification classification turns on emissions thresholds; a 0.3 tpy HAP increase may or may not be minor depending on limits the scenario never states."
+ },
+ {
+  "check_id": 39,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the change \"will increase emissions of the HAP methylene chloride by 0.3 tpy\" — naming it a HAP and asserting an increase. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 40,
+  "verdict": "LEAP",
+  "why": "Scenario loads CWA 404(f)(1) normal-farming-exemption markers (established 15-year ongoing operation, routine annual plowing, \"incidentally redeposits\"). A consistent reading treats this exempt incidental fallback as not a regulated discharge of fill into US waters. The legal categorization isn't compelled."
+ },
+ {
+  "check_id": 41,
+  "verdict": "ENTAILED",
+  "why": "Scenario states an established, continuously operated ranch doing routine annual planting (plowing) every season for fifteen years — directly satisfying the \"established/ongoing normal farming-ranching\" characterization. Plowing for planting is a textbook normal-farming activity; no reading leaves it open."
+ },
+ {
+  "check_id": 42,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states an \"established and continuously operated\" ranch doing \"routine annual planting...every season for fifteen years.\" This directly establishes the activity as part of an established ongoing operation; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 43,
+  "verdict": "LEAP",
+  "why": "Standard UST rules exclude tanks of 110 gallons or less. At 95 gallons capacity, the tank plausibly falls below the regulated-UST threshold, so \"is_ust=true\" is not forced; it may be exempt."
+ },
+ {
+  "check_id": 44,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"maximum capacity of 95 gallons,\" directly matching slot capacity_gallons=95. No alternative reading; the number is stated verbatim with no categorization or assumption required."
+ },
+ {
+  "check_id": 45,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the motor failed \"due to a defect in workmanship confirmed by the manufacturer's inspection,\" directly naming the defect type as workmanship. No alternative reading is plausible."
+ },
+ {
+  "check_id": 46,
+  "verdict": "LEAP",
+  "why": "Scenario never states \"months since purchase\" or a counting convention. Floor-counting Mar 1→Aug 15 gives 5, but inclusive month-counting (Mar–Aug) gives 6. Value is derived, convention-dependent, not forced."
+ },
+ {
+  "check_id": 47,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the lamp was defective twice (\"defective desk lamp\" and \"store confirmed the lamp was defective\"). No alternative reading leaves item_defective open."
+ },
+ {
+  "check_id": 48,
+  "verdict": "ENTAILED",
+  "why": "Both dates are explicit: delivery June 1, return June 12. The interval is 12 minus 1 = 11 days, forced by the cited span with no alternative reading."
+ },
+ {
+  "check_id": 49,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Devon returned the lamp \"along with the original paper receipt from the purchase,\" directly forcing has_original_receipt=true with no alternative reading."
+ },
+ {
+  "check_id": 50,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the failure was \"covered by her extended service plan.\" This directly asserts coverage; no alternative reading leaves covered_by_plan open."
+ },
+ {
+  "check_id": 51,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"There was no cosmetic damage involved,\" directly establishing cosmetic_damage = false with no alternative reading."
+ },
+ {
+  "check_id": 52,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says \"mechanical pump failure\" and rules out cosmetic damage, forcing failure_type = \"mechanical\" with no alternative reading."
+ },
+ {
+  "check_id": 53,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the chuck mechanism failed due to a manufacturing defect, confirmed by the manufacturer. A defective component is directly stated, leaving no alternative reading."
+ },
+ {
+  "check_id": 54,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the machine was manufactured \"14 months ago\" per a clear date stamp, directly fixing months_since_manufacture at 14. No alternative reading."
+ },
+ {
+  "check_id": 55,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the machine \"developed a confirmed internal seal defect.\" This directly forces defect_present=true; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 56,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states swimming \"at a depth of about 0.5 meters\"; the slot submersion_depth_meters reads this figure directly. \"About\" is the scenario's own approximation, not an external assumption. No alternative depth is supported."
+ },
+ {
+  "check_id": 57,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim that the failure occurred \"during normal use.\" The slot normal_use=true is directly asserted by the cited span, not inferred; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 58,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"The failure was caused by water ingress,\" matching the cited span verbatim. The failure_cause value is directly asserted, requiring no assumption or categorization."
+ },
+ {
+  "check_id": 59,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the watch is \"labeled and certified IP67 waterproof,\" which directly establishes ip67_certified=true verbatim. No alternative reading leaves the certification status open."
+ },
+ {
+  "check_id": 60,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Carlos bought the laptop in a store located in the state of Greenfield; the purchase/sale occurred there, forcing sold_in_greenfield = true with no alternative reading."
+ },
+ {
+  "check_id": 61,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"bought a laptop ... 20 months ago,\" directly fixing months_since_purchase at 20 with no alternative reading."
+ },
+ {
+  "check_id": 62,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states she dropped the tablet \"cracking the screen,\" directly establishing screen_crack=true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 63,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Sofia \"accidentally dropped her new tablet,\" directly establishing accidental_drop=true with no alternative reading."
+ },
+ {
+  "check_id": 64,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"This was the first time she had ever damaged the device,\" directly establishing first_occurrence=true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 65,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the drop occurred \"2 months after buying it,\" directly fixing months_of_ownership at 2. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 66,
+  "verdict": "LEAP",
+  "why": "Scenario states battery degradation and a replacement request but never characterizes the battery as a consumable part. That label is an external categorization the bytes don't compel; batteries can also be warranted components."
+ },
+ {
+  "check_id": 67,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states battery \"degraded to 72% of its maximum rated capacity,\" directly fixing max_capacity_percent at 72 with no alternative reading."
+ },
+ {
+  "check_id": 68,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the event occurred \"8 months after purchase.\" 8 months is unambiguously within the first year (12 months); no alternative reading leaves \"within_first_year\" false."
+ },
+ {
+  "check_id": 69,
+  "verdict": "ENTAILED",
+  "why": "Rule 144(c)(1)'s current-public-information prong for a reporting issuer is satisfied when the company is fully reporting and current on periodic filings. The scenario states exactly this, forcing the value."
+ },
+ {
+  "check_id": 70,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"has held them for nine months,\" directly forcing holding_period_months = 9. No alternative reading leaves the duration open."
+ },
+ {
+  "check_id": 71,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Reyes bought/sold Vortex common stock. Common stock is by definition an equity security, so a transaction in equity securities is directly stated, not assumed."
+ },
+ {
+  "check_id": 72,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Reyes is \"a director of Vortex Inc.\" A director is a statutory insider under Section 16; director status itself establishes insider status, leaving no alternative reading."
+ },
+ {
+  "check_id": 73,
+  "verdict": "ENTAILED",
+  "why": "Stated numbers force it: 1,000 shares bought at $40 ($40,000) and sold at $52 ($52,000), no other transactions—a $12,000 realized gain. No reading leaves proceeds below cost."
+ },
+ {
+  "check_id": 74,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states both a purchase (1,000 shares Mar 1) and a sale (same 1,000 shares Jun 15) of identical Vortex stock with no other transactions, forcing a matchable purchase-and-sale pair."
+ },
+ {
+  "check_id": 75,
+  "verdict": "ENTAILED",
+  "why": "Scenario states purchase March 1 and sale June 15 of the same year — about 3.5 months apart, unambiguously within six months. No alternative reading spans more than six months."
+ },
+ {
+  "check_id": 76,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"It conducted no general solicitation or advertising,\" directly forcing general_solicitation = false with no alternative reading."
+ },
+ {
+  "check_id": 77,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"40 non-accredited investors.\" The count is directly stated; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 78,
+  "verdict": "ENTAILED",
+  "why": "Scenario states info was unannounced/not-yet-public (nonpublic), FDA approval moved stock for substantial profit (material), and Morgan overheard it (possessed). Possession, unlike trading liability, requires no duty—forced by the words."
+ },
+ {
+  "check_id": 79,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly negates employment/contractual ties and sources the info from overheard strangers. No relationship exists from which a duty of trust/confidence could arise; mere possession of MNPI creates none (Chiarella/Dirks)."
+ },
+ {
+  "check_id": 80,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Morgan overheard the unannounced FDA approval, then immediately bought options before the news became public. The trade occurred while possessing the nonpublic info; no alternative reading leaves possession-at-trade open."
+ },
+ {
+  "check_id": 81,
+  "verdict": "LEAP",
+  "why": "Scenario states facts consistent with Rule 701 eligibility (private co., compensatory employee options) but never states Nimbus elected to rely on Rule 701. Could use Section 4(a)(2) or Reg D instead; the election is unstated."
+ },
+ {
+  "check_id": 82,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"an aggregate sales price of $4,200,000,\" directly matching the slot and claimed value. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 83,
+  "verdict": "ENTAILED",
+  "why": "5 day trades is \"four or more,\" and a four-business-day window falls within any five-business-day span, so the condition is forced by the scenario's words."
+ },
+ {
+  "check_id": 84,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the tip was unannounced earnings (material, non-public) from an insider and that \"Avery traded on the information and profited.\" The slot is the bare trading-on-MNPI fact, which the bytes force; the no-benefit clause only bears on liability, not this fact."
+ },
+ {
+  "check_id": 85,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Avery \"received a tip... from an insider, Sam.\" The slot only asks whether info was received from an insider; the no-personal-benefit details affect liability, not this fact. No alternative reading."
+ },
+ {
+  "check_id": 86,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states Sam \"received no personal benefit of any kind\" and enumerates every category (money, gift, reputational, familial/friendship). The false value is directly asserted, leaving no alternative reading."
+ },
+ {
+  "check_id": 87,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"Beacon has no purpose or intent to change or influence control of Solis,\" directly establishing the slot value as false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 88,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Beacon \"acquired 7% ... in the ordinary course of its business.\" The claimed boolean true is a direct restatement of explicit scenario text, requiring no inference or categorization."
+ },
+ {
+  "check_id": 89,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Beacon \"acquired 7% of Solis Corp's registered common stock,\" directly establishing ownership_percent=7 with no alternative reading or unstated assumption."
+ },
+ {
+  "check_id": 90,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states Beacon is \"a registered investment adviser and qualified institutional investor,\" directly stipulating the slot's value as a fact. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 91,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that \"The call was a regularly scheduled, previously announced call,\" directly asserting the slot value with no alternative reading."
+ },
+ {
+  "check_id": 92,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Quanta \"had already furnished its earnings press release before the call.\" The cited span directly asserts the fact; no inference or categorization needed, no alternative reading leaves it open."
+ },
+ {
+  "check_id": 93,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"regularly scheduled, previously announced call.\" The claimed value (previously announced = true) is asserted directly by the text; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 94,
+  "verdict": "LEAP",
+  "why": "Scenario stresses a regularly-scheduled, previously-announced call after the earnings release was already furnished — the classic Item 2.02/7.01 exception. Those facts point away from an independent Item 2.02 furnishing event, leaving the classification uncompelled."
+ },
+ {
+  "check_id": 95,
+  "verdict": "LEAP",
+  "why": "Scenario says the earnings press release was furnished BEFORE the call; it never states that release lacked the results-of-operations info. So \"released solely through the call\" is not forced — the press release plausibly carried it too."
+ },
+ {
+  "check_id": 96,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim that Priya \"is not and has never been an affiliate\" of Lumen Foods. This directly forces is_affiliate=false with no alternative reading."
+ },
+ {
+  "check_id": 97,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly names the offering as a \"qualified Regulation A Tier 2 offering,\" directly matching the claimed offering_type with no alternative reading possible."
+ },
+ {
+  "check_id": 98,
+  "verdict": "ENTAILED",
+  "why": "The scenario states the shares were bought in a \"qualified Regulation A Tier 2 offering.\" Regulation A is by definition an exemption from Securities Act registration, so the offering being exempt is compelled, not assumed."
+ },
+ {
+  "check_id": 99,
+  "verdict": "ENTAILED",
+  "why": "Scenario states rice below 135°F for 5h10m; 5+10/60=5.17 hours is a forced unit conversion. \"Below 135°F\" is exactly the out-of-temp duration the recorder confirms; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 100,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the rice has been below 135°F and measures it at 122°F, with logs and continuous recorder confirming. The slot below_135=true is forced by the bytes."
+ },
+ {
+  "check_id": 101,
+  "verdict": "ENTAILED",
+  "why": "Cooked rice is a canonical TCS food under the FDA Food Code; held on a steam table for hot-holding, no consistent reading leaves its TCS status open. The categorization is forced."
+ },
+ {
+  "check_id": 102,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"A line cook was diagnosed with Norovirus,\" directly asserting the diagnosis. No alternative reading leaves diagnosed_norovirus open."
+ },
+ {
+  "check_id": 103,
+  "verdict": "ENTAILED",
+  "why": "Monday 8:00 AM to Tuesday 9:00 AM is exactly 25 hours; the scenario also explicitly states \"25 hours after her symptoms resolved.\" Both arithmetic and text force the value."
+ },
+ {
+  "check_id": 104,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"It started at 40 degrees F,\" directly fixing starting_temp_f = 40. No alternative reading leaves the starting temperature open."
+ },
+ {
+  "check_id": 105,
+  "verdict": "LEAP",
+  "why": "Scenario never labels the food as \"cold_tcs\". That tuna salad is a cold-held TCS food is a food-safety categorization from domain knowledge, not compelled by the words; the 40F start only implies prior refrigeration."
+ },
+ {
+  "check_id": 106,
+  "verdict": "LEAP",
+  "why": "Scenario gives a single 74°F probe reading after 3 hours, not a stated maximum. Calling it \"max_temp_f\" assumes monotonic warming and that no higher temp occurred—facts the bytes never establish."
+ },
+ {
+  "check_id": 107,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"After 3 hours on display,\" directly forcing elapsed_hours = 3. No alternative reading leaves the elapsed time open."
+ },
+ {
+  "check_id": 108,
+  "verdict": "LEAP",
+  "why": "Scenario gives 105 min from \"cooking ended\" to 70°F. Treating this as the regulatory stage-1 window assumes cooking ended exactly at 135°F (window1 start), which the bytes never state."
+ },
+ {
+  "check_id": 109,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the last oyster was sold \"30 days ago,\" directly fixing days_since_last_sold = 30. No alternative reading leaves the elapsed time open."
+ },
+ {
+  "check_id": 110,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the manager \"produces the corresponding shellstock tag from the file,\" directly establishing the tag is retained on file. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 111,
+  "verdict": "LEAP",
+  "why": "Scenario shows the tag is in the file for an empty container (last oyster sold 30 days ago), not attached to the container. \"container_tagged\"=true assumes a filed tag equals a tagged container; the bytes don't compel that."
+ },
+ {
+  "check_id": 112,
+  "verdict": "LEAP",
+  "why": "Scenario gives dates but never defines \"counted refrigerated days\" or how frozen time affects the count. Getting 4 = (Day0-3) + (Day23-24) requires assuming frozen days pause and this exclusive-interval summation rule, which the bytes never state."
+ },
+ {
+  "check_id": 113,
+  "verdict": "ENTAILED",
+  "why": "Prepared Day 0, frozen Day 3 per cited span. 3 days elapsed is unambiguously before 7 days under any reasonable anchor (prep date). No reading places freezing at or after Day 7."
+ },
+ {
+  "check_id": 114,
+  "verdict": "LEAP",
+  "why": "Scenario says a kitchen prepared the salad, but never ties preparation to the inspection site. \"prepared_on_site\" requires that the prep location equals the inspected location, a fact the bytes don't compel."
+ },
+ {
+  "check_id": 115,
+  "verdict": "ENTAILED",
+  "why": "The scenario verbatim states the kitchen prepares \"ready-to-eat chicken salad\" on Day 0. The claimed value restates this exact food identity; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 116,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the cook shapes the ground beef \"with bare hands,\" directly establishing bare-hand contact with the food. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 117,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states patties are grilled to an internal temperature of 160 degrees F, directly establishing cook_temperature_f = 160 with no alternative reading."
+ },
+ {
+  "check_id": 118,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states patties are \"then grilled to an internal temperature of 160 degrees F\" after the raw hand-assembly. Grilling is cooking; \"then/before serving\" forces it as a subsequent step. No alternative reading."
+ },
+ {
+  "check_id": 119,
+  "verdict": "ENTAILED",
+  "why": "Scenario states \"whole-muscle intact ribeye steak\" verbatim; ribeye is unambiguously a beef cut, so generalizing to \"whole-muscle intact beef steak\" requires no unstated assumption."
+ },
+ {
+  "check_id": 120,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the steak was cooked \"at the customer's request for medium-rare,\" directly establishing the serving was at customer request. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 121,
+  "verdict": "LEAP",
+  "why": "Scenario only states steak type, cook temp, and posted advisory. TCS classification is an external FDA Food Code categorization the bytes never state; nothing in the text compels is_tcs_food=true."
+ },
+ {
+  "check_id": 122,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"cooked to an internal temperature of 145 degrees F,\" directly matching slot internal_temp_f=145. No interpretation or assumption needed; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 123,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that a consumer advisory regarding undercooked meats is posted on the menu, directly forcing consumer_advisory_posted = true with no alternative reading."
+ },
+ {
+  "check_id": 124,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"then removes and discards the gloves,\" directly forcing claimed_value true. No alternative reading leaves the removal/discard action open."
+ },
+ {
+  "check_id": 125,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim the cook \"proceeds directly to chopping vegetables without washing hands first\" — the action and the absence of handwashing are explicitly stated, leaving no alternative reading."
+ },
+ {
+  "check_id": 126,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the cook \"handles raw chicken.\" Chicken is unambiguously a raw animal product; the cited span directly establishes the slot with no alternative reading."
+ },
+ {
+  "check_id": 127,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states inspection confirmed the cook's hands were \"visibly clean and dry,\" directly matching the slot and claimed value true. No alternative reading is possible."
+ },
+ {
+  "check_id": 128,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the refund check was postmarked April 5, \"35 days later\" than the March 1 return. The 35-day count is stated verbatim and matches the dates (March 1 to April 5)."
+ },
+ {
+  "check_id": 129,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"Tomas vacated his apartment and returned the keys to the landlord on March 1,\" directly asserting both the vacating and key-return. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 130,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"Priya is a month-to-month tenant,\" directly asserting tenant_type as month-to-month. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 131,
+  "verdict": "ENTAILED",
+  "why": "Scenario states she \"handed her landlord a written notice,\" directly establishing written notice was given. The slot tracks the act of giving notice, not its legal sufficiency."
+ },
+ {
+  "check_id": 132,
+  "verdict": "LEAP",
+  "why": "Scenario gives two dates (June 20 notice, June 30 move-out). \"notice_days\"=10 holds only as raw date arithmetic; it never states a notice period requirement or that 10 is the operative legal notice. The slot meaning isn't compelled."
+ },
+ {
+  "check_id": 133,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the faucet was \"a slow, non-urgent drip,\" directly negating any emergency. No reading of these words leaves emergency=true open."
+ },
+ {
+  "check_id": 134,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"The landlord had sent no notice of any kind before entering,\" directly forcing advance_notice_given = false with no alternative reading."
+ },
+ {
+  "check_id": 135,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the landlord \"used his key to enter Dana's unit,\" directly asserting entry. No alternative reading leaves entry open; legality of the entry is a separate slot."
+ },
+ {
+  "check_id": 136,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"eight days late\" (due 1st, paid 9th = 8-day difference). The cited span directly asserts the value; no alternative reading leaves days_past_due open."
+ },
+ {
+  "check_id": 137,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"The landlord assessed a $40 late fee,\" directly forcing late_fee_amount = 40. No alternative reading leaves the assessed amount open."
+ },
+ {
+  "check_id": 138,
+  "verdict": "LEAP",
+  "why": "Listing once the day after is one mitigation act, not proof efforts were \"reasonable.\" The unit stayed empty four months; nothing states fair pricing, active showing, or applicant handling. The legal standard isn't compelled."
+ },
+ {
+  "check_id": 139,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Lena \"broke her 12-month lease and moved out... with four months remaining\" — a fixed-term lease ended early. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 140,
+  "verdict": "ENTAILED",
+  "why": "The scenario verbatim states the unit \"was not re-rented for those four months,\" directly establishing unit_re_rented = false. No alternative reading is possible."
+ },
+ {
+  "check_id": 141,
+  "verdict": "ENTAILED",
+  "why": "Scenario states \"the heat in Omar's apartment stopped working,\" directly forcing the defect_type to be heating. No alternative reading leaves the defect as anything other than heat-related."
+ },
+ {
+  "check_id": 142,
+  "verdict": "LEAP",
+  "why": "January 12 only implies winter under a Northern-Hemisphere assumption. The scenario never states a location or hemisphere; in the Southern Hemisphere January is summer, so \"winter\" is not compelled."
+ },
+ {
+  "check_id": 143,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim the repair was \"fixed it 40 hours after the landlord first learned of the problem,\" directly establishing 40 repair-hours after notice with no alternative reading."
+ },
+ {
+  "check_id": 144,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"The notice itself was procedurally proper,\" directly asserting the slot value true. No alternative reading leaves procedural propriety open; the retaliation angle concerns substantive validity, not procedure."
+ },
+ {
+  "check_id": 145,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Yuki filed a good-faith habitability complaint about mold with the city housing authority. The filing and the \"good-faith\" qualifier are both explicit; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 146,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the landlord \"served Yuki a notice declining to renew her month-to-month tenancy\" — this is verbatim a non-renewal action, not an eviction or termination. No alternative reading."
+ },
+ {
+  "check_id": 147,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Yuki \"filed a good-faith habitability complaint about mold with the city housing authority,\" directly establishing filed_with_housing_authority = true."
+ },
+ {
+  "check_id": 148,
+  "verdict": "ENTAILED",
+  "why": "Complaint filed March 3, notice served May 10 — both dates explicit. The ~2-month gap is unambiguously within 6 months; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 149,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states an inspector found the cause was a roof leak the landlord \"had neglected to maintain\" — directly establishing both causation and landlord's failure to maintain the structure."
+ },
+ {
+  "check_id": 150,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states water stains and warped flooring appeared in Carla's living room — physical damage within the unit. The slot asks only whether damage occurred, not its cause or liability, so the value is forced."
+ },
+ {
+  "check_id": 151,
+  "verdict": "ENTAILED",
+  "why": "Water stains and warped flooring from a roof leak is categorically structural/accidental damage, not the gradual deterioration of ordinary use that defines normal wear and tear. No reading leaves this as mere wear and tear."
+ },
+ {
+  "check_id": 152,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Raj withheld rent \"through the lawful procedure,\" with the unit legally declared uninhabitable during those exact months. No alternative reading leaves lawful withholding open."
+ },
+ {
+  "check_id": 153,
+  "verdict": "LEAP",
+  "why": "Scenario says Raj withheld rent lawfully while the unit was legally uninhabitable. Lawful withholding suspends the obligation, so \"unpaid rent owed\" isn't established; the bytes only show money withheld, not a debt."
+ },
+ {
+  "check_id": 154,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim that the city declared the unit legally uninhabitable, directly establishing the slot value as true with no alternative reading available."
+ },
+ {
+  "check_id": 155,
+  "verdict": "LEAP",
+  "why": "Scenario establishes the withheld months coincided with the uninhabitable declaration, but whether rent legally \"accrued\" during a legally-uninhabitable, lawfully-withheld period is a legal conclusion the bytes don't compel; temporal overlap is not accrual."
+ },
+ {
+  "check_id": 156,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"The dog is a verified assistance animal\" with required verification provided. The slot's claim is asserted directly; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 157,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim the animal is one \"Greta needs for a documented disability.\" The needed_for_disability=true value is directly asserted, not inferred; no consistent reading leaves it open."
+ },
+ {
+  "check_id": 158,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that the lease \"contains a clear no-pets clause.\" The assistance-animal facts affect enforceability, not the clause's existence, so no alternative reading leaves it open."
+ },
+ {
+  "check_id": 159,
+  "verdict": "LEAP",
+  "why": "Scenario adds that the dog is a verified assistance animal for a documented disability with required verification given — a recognized accommodation exception. So keeping it is plausibly NOT a violation; \"in violation\" is an uncompelled legal categorization."
+ },
+ {
+  "check_id": 160,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"of which 3 hours were in professional ethics,\" directly fixing ethics_hours at 3. No alternative reading."
+ },
+ {
+  "check_id": 161,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"she logged 34 total continuing-education hours,\" directly forcing total_ce_hours = 34. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 162,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says \"submits an initial license application,\" directly naming the application_type as \"initial.\" No alternative reading."
+ },
+ {
+  "check_id": 163,
+  "verdict": "LEAP",
+  "why": "Scenario lists three disciplines on an initial application but never designates one as primary/base. Deriving \"2 additional\" requires an unstated 3-minus-1 convention the bytes don't compel."
+ },
+ {
+  "check_id": 164,
+  "verdict": "ENTAILED",
+  "why": "Both 2022 and 2024 fall within five years preceding any 2026 application date; \"no other licensure\" excludes other months. 14+11=25 is forced arithmetic over the window."
+ },
+ {
+  "check_id": 165,
+  "verdict": "ENTAILED",
+  "why": "\"Expired and was never renewed\" is the definition of a lapsed license; the scenario states this directly, leaving no alternative reading."
+ },
+ {
+  "check_id": 166,
+  "verdict": "LEAP",
+  "why": "Scenario states the attorney applies for admission by reciprocity, but \"applies_reciprocity\" plausibly means reciprocity is granted/applicable — a legal determination depending on this state's rules that the scenario never establishes."
+ },
+ {
+  "check_id": 167,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"1,740 hours of supervised pharmacy internship.\" The internship_hours value 1740 is directly given, no categorization or inference required."
+ },
+ {
+  "check_id": 168,
+  "verdict": "LEAP",
+  "why": "The conviction was formally expunged by court order in 2020. Under a reasonable legal reading, expungement removes the conviction, so \"has_felony_conviction = true\" requires a contestable categorization the bytes don't compel."
+ },
+ {
+  "check_id": 169,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the felony conviction was \"formally expunged by court order in 2020,\" which directly satisfies the conviction_expunged_or_pardoned slot. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 170,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a current valid license from a state with a standing examination-reciprocity agreement with this state — exactly the predicate for holding a reciprocity-qualifying license. No alternative reading."
+ },
+ {
+  "check_id": 171,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says the applicant \"applies for an initial license here,\" directly establishing is_initial_applicant=true. No alternative reading; \"initial\" is stated verbatim, not inferred."
+ },
+ {
+  "check_id": 172,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the contractor \"is licensed solely under the handyman classification,\" directly forcing is_licensed=true. The classification scope and lack of insurance don't negate that a license is held."
+ },
+ {
+  "check_id": 173,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the contractor \"carries no general-liability insurance,\" directly negating the slot. No alternative reading leaves carries_liability_insurance open; false is forced."
+ },
+ {
+  "check_id": 174,
+  "verdict": "LEAP",
+  "why": "Scenario states the contractor's license is solely handyman, but that describes licensing status, not that actual work is limited to handyman tasks. Equating license scope with work performed is an unstated inference."
+ },
+ {
+  "check_id": 175,
+  "verdict": "ENTAILED",
+  "why": "Scenario directly states the licensee \"moved to a new address,\" which forces address_changed = true. No alternative reading leaves it open; inactive status and non-notification don't affect the fact of the move."
+ },
+ {
+  "check_id": 176,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the licensee \"has not notified the board,\" directly forcing notified_board = false with no alternative reading."
+ },
+ {
+  "check_id": 177,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the licensee is \"currently on inactive status,\" directly fixing status = inactive. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 178,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the address change \"60 days ago\"; days_since_change=60 is directly read off the cited span with no alternative count available."
+ },
+ {
+  "check_id": 179,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"marine insurance for the voyage cost $1,000.\" The insurance slot value of 1000 is the only insurance figure present and is stated verbatim, leaving no alternative reading."
+ },
+ {
+  "check_id": 180,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that international ocean freight cost $3,000. The value is explicit, leaving no alternative reading."
+ },
+ {
+  "check_id": 181,
+  "verdict": "ENTAILED",
+  "why": "Cited span defines customs value as price paid plus all freight plus insurance. Scenario states all three explicitly: 40000+3000+1000=44000. The sum is arithmetically forced with no alternative reading."
+ },
+ {
+  "check_id": 182,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"The price paid to the foreign seller was $40,000,\" directly matching the price_paid slot. Freight and insurance are separately itemized, not conflated with price paid."
+ },
+ {
+  "check_id": 183,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states no paperwork was filed and goods remained \"uncleared\" on March 22; no reading leaves clearance open. cleared_within_period = false is forced."
+ },
+ {
+  "check_id": 184,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the used code (3% duty) differs from the stated \"correct code\" (7% duty). Goods placed under a code that isn't the correct one is by definition misclassified; no reading leaves it open."
+ },
+ {
+  "check_id": 185,
+  "verdict": "ENTAILED",
+  "why": "Scenario gives 3% applied, 7% correct, and $50,000 value. Underpaid duty = (7%-3%) x $50,000 = $2,000 by forced arithmetic; no alternative reading or unstated assumption."
+ },
+ {
+  "check_id": 186,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states goods are manufactured in Calavia (an FTA country) and \"clearly qualify as originating in Calavia under the FTA's rules of origin.\" No alternative reading leaves this open."
+ },
+ {
+  "check_id": 187,
+  "verdict": "ENTAILED",
+  "why": "\"Returns from an overseas trip\" plus presenting items \"at customs\" for inspection forces the reading that Maria is an arriving traveler; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 188,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that the souvenirs and gifts have \"a total value of $650,\" directly establishing total_value=650 with no alternative reading."
+ },
+ {
+  "check_id": 189,
+  "verdict": "LEAP",
+  "why": "\"Souvenirs and gifts\" doesn't compel a \"personal use\" categorization — gifts are for others. The scenario never states the goods are for Maria's own personal use; that's an unstated customs classification."
+ },
+ {
+  "check_id": 190,
+  "verdict": "ENTAILED",
+  "why": "Bonded warehouse storage for the entire intervening period keeps goods under customs control, outside domestic commerce. No reading leaves room for domestic use, so domestic_use=false is forced."
+ },
+ {
+  "check_id": 191,
+  "verdict": "ENTAILED",
+  "why": "Import Jan 10 2024 to re-export/claim Aug 5 2025 is ~19 months. Every candidate anchor pair in the scenario is well under three years, so \"within_three_years\" is forced."
+ },
+ {
+  "check_id": 192,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that the company \"re-exported the identical pumps to a buyer abroad,\" directly asserting re_exported=true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 193,
+  "verdict": "LEAP",
+  "why": "\"Identical pumps\" asserts these are the same items (not substitutes), not that their condition was unchanged. Same-condition is a legal categorization the bytes don't compel; 19 months of storage could alter condition. Unstated."
+ },
+ {
+  "check_id": 194,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Pinemont \"imports\" the steel rebar from Veksia, directly forcing is_imported=true with no alternative reading."
+ },
+ {
+  "check_id": 195,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"steel reinforcing bars\" and \"Veksian steel rebar.\" Rebar is by definition a steel product; no alternative reading leaves is_steel_product open."
+ },
+ {
+  "check_id": 196,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Veksian steel rebar is covered by an active anti-dumping order, and Pinemont imports exactly that good. No alternative reading leaves the slot open."
+ },
+ {
+  "check_id": 197,
+  "verdict": "LEAP",
+  "why": "Scenario says a company imports a small $400 controlled-drug parcel via informal entry, but never states it is a commercial/for-resale shipment. Company importation could be for samples, research, or internal use—commercial classification is uncompelled."
+ },
+ {
+  "check_id": 198,
+  "verdict": "ENTAILED",
+  "why": "The scenario literally states the parcel is \"a controlled pharmaceutical substance,\" directly asserting the slot value rather than requiring any categorization or inference."
+ },
+ {
+  "check_id": 199,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"a declared value of $400,\" directly establishing declared_value = 400 with no alternative reading."
+ },
+ {
+  "check_id": 200,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that the shipment is consigned to the Riverside Quarantine Facility; the name itself identifies it as a quarantine facility, forcing the boolean true with no alternative reading."
+ },
+ {
+  "check_id": 201,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"Orchard did not obtain a sanitary inspection certificate,\" directly forcing has_sanitary_inspection_certificate = false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 202,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Orchard Foods imports a container of fresh produce — an imported foodstuff. No alternative reading leaves this open; the importing of food is stated outright."
+ },
+ {
+  "check_id": 203,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the facility \"holds a current government license,\" directly establishing facility_government_licensed = true with no alternative reading."
+ },
+ {
+  "check_id": 204,
+  "verdict": "ENTAILED",
+  "why": "Scenario states duty was due June 2 and the payment system \"suffered a documented nationwide outage all day on June 2.\" Outage, documented status, and due-date coincidence are all explicit—no alternative reading."
+ },
+ {
+  "check_id": 205,
+  "verdict": "ENTAILED",
+  "why": "Due date is stated as June 2; payment occurred June 3. June 3 is after June 2, so paid_by_due_date is false under any reading. The outage may excuse penalty but doesn't change the payment date."
+ },
+ {
+  "check_id": 206,
+  "verdict": "ENTAILED",
+  "why": "Scenario states payment due June 2 and Sterling paid the full amount June 3, explicitly labeled \"the next business day.\" The factual claim that payment occurred on the next business day is asserted verbatim."
+ },
+ {
+  "check_id": 207,
+  "verdict": "ENTAILED",
+  "why": "Both endpoints are explicit: Mon 09:00 confirmation to Thu 16:00 notification, same week. Mon 09:00→Thu 09:00 is 72h, plus 7h to 16:00 = 79h. Arithmetic is forced."
+ },
+ {
+  "check_id": 208,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the exfiltrated database held \"unencrypted checking account numbers and routing numbers\" — these are financial account numbers, stated as unencrypted. No alternative reading leaves the value open."
+ },
+ {
+  "check_id": 209,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"Jordan submitted an erasure request on March 1,\" directly forcing erasure_requested = true with no alternative reading."
+ },
+ {
+  "check_id": 210,
+  "verdict": "ENTAILED",
+  "why": "Scenario gives both explicit dates: request March 1, deletion March 20. Elapsed days = 20 - 1 = 19, a direct arithmetic difference of stated dates requiring no external assumption."
+ },
+ {
+  "check_id": 211,
+  "verdict": "ENTAILED",
+  "why": "Scenario states address was collected \"solely\" to mail cards, cards no longer sent, and it \"now serves no remaining purpose.\" That explicitly establishes the data is no longer necessary; no alternate purpose is left open."
+ },
+ {
+  "check_id": 212,
+  "verdict": "ENTAILED",
+  "why": "The consent checkbox Priya ticked explicitly states processing is \"to generate my health reports,\" directly specifying the purpose. The cited span verbatim names this purpose; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 213,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly processes resting heart-rate and blood-pressure readings for health reports — physiological measurements that are data concerning health (special category). No reading leaves this open."
+ },
+ {
+  "check_id": 214,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Priya was shown an explicit-consent checkbox for processing her health data and actively ticked it before continuing. Active affirmative opt-in to wording reading \"I explicitly consent\" forces explicit_consent_given=true."
+ },
+ {
+  "check_id": 215,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states Sam asked DriftMedia to honor an opt-out of the sale of his personal information, directly establishing opt_out_requested=true with no alternative reading."
+ },
+ {
+  "check_id": 216,
+  "verdict": "ENTAILED",
+  "why": "Scenario directly states DriftMedia \"transfers readers' browsing identifiers to an analytics partner, AdLoom\"—a named distinct entity. The slot asks only whether a third-party transfer occurs; the bytes assert it explicitly, leaving no open reading."
+ },
+ {
+  "check_id": 217,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states CloudKeep emailed the controller about adding ByteHaul 14 days before the change. Informing the controller of the intended change is directly stated, not assumed."
+ },
+ {
+  "check_id": 218,
+  "verdict": "ENTAILED",
+  "why": "Bryce Co. is the controller; the scenario explicitly states it \"never raised an objection,\" directly forcing controller_objected = false with no alternative reading."
+ },
+ {
+  "check_id": 219,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"Ana withdrew her consent in writing,\" directly establishing consent_withdrawn=true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 220,
+  "verdict": "ENTAILED",
+  "why": "The cited span states marketing offers were emailed \"based on her consent,\" directly establishing that this processing relied on consent. No alternative reading leaves the consent basis open for the cited activity."
+ },
+ {
+  "check_id": 221,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says Felix sends \"an identical, complete data access request every single business day for the past three weeks,\" with data unchanged and the first fully answered. Repetitive is forced by the words; no alternative reading."
+ },
+ {
+  "check_id": 222,
+  "verdict": "ENTAILED",
+  "why": "Daily, identical, full data-access requests for three weeks, after one was fully answered and the data is confirmed unchanged, is the textbook repetitive/excessive pattern. No reasonable reading makes this routine rather than excessive."
+ },
+ {
+  "check_id": 223,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"KidQuest did not obtain consent from Mia's parents,\" directly forcing parental_consent_obtained=false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 224,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the \"sole purpose\" is detecting/blocking account hijacking and retaining only what that security function needs — directly forcing processing-solely-for-security = true with no alternate reading."
+ },
+ {
+  "check_id": 225,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Mia is \"11-year-old\"; 11 is under 13, forcing child_under_13=true with no alternative reading."
+ },
+ {
+  "check_id": 226,
+  "verdict": "ENTAILED",
+  "why": "Scenario states processing is for the \"sole purpose\" of security and \"retaining only what is needed for that security function\" — data minimization stated verbatim. The consent gap is a separate slot and doesn't affect this one."
+ },
+ {
+  "check_id": 227,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states no adequacy decision and no SCCs signed. Explicit consent is a derogation, not an \"appropriate safeguard,\" so safeguards being absent (false) is forced by the bytes."
+ },
+ {
+  "check_id": 228,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Voyagr showed Leah a notice explaining the absence of safeguards and the resulting risks, directly establishing she was informed of those risks. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 229,
+  "verdict": "ENTAILED",
+  "why": "Scenario verbatim states Leah was shown a notice of the risks and \"explicitly consented to this specific transfer.\" This directly asserts informed explicit consent; no alternative reading leaves it unestablished."
+ },
+ {
+  "check_id": 230,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Voyagr transfers Leah's booking details to a hotel partner in a country with no adequacy decision — a transfer to a third country is directly stated, not inferred. No alternative reading."
+ },
+ {
+  "check_id": 231,
+  "verdict": "ENTAILED",
+  "why": "A sole practitioner deciding to maintain/process medical records for her own patients alone determines the purposes and means of processing — the definition of a GDPR controller. No external entity directs her, so processor or exemption readings fail."
+ },
+ {
+  "check_id": 232,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim she \"processes detailed medical records solely to treat her own patients,\" directly forcing the claimed_value true for processing-for-treatment-of-own-patients. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 233,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"Dr. Okafor is a sole practitioner physician,\" reinforced by \"single-doctor clinic.\" The slot is directly asserted, not inferred; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 234,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Dana was driving \"from home to that office\" (her regular downtown workplace) on \"her usual route\" when injured. The spatial fact—between home and regular workplace—is directly stated, no alternative reading."
+ },
+ {
+  "check_id": 235,
+  "verdict": "ENTAILED",
+  "why": "Scenario directly states she was driving her own car along her usual home-to-office route, with no errand or work equipment — an ordinary commute. The factual descriptor is forced by the text."
+ },
+ {
+  "check_id": 236,
+  "verdict": "LEAP",
+  "why": "Scenario states two-thirds of the wage is $1,600 but never states that figure IS the payable \"calculated_rate.\" Comp rates are subject to statutory caps the scenario doesn't address, so equating them assumes no maximum applies."
+ },
+ {
+  "check_id": 237,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"50 days later\" and dates corroborate: March 1 to April 20 = 30 (rest of March) + 20 = 50 days. No alternative reading."
+ },
+ {
+  "check_id": 238,
+  "verdict": "ENTAILED",
+  "why": "Scenario states BAC of 0.09% \"above the legal limit,\" which directly establishes legal intoxication; no alternative reading leaves \"intoxicated\" open."
+ },
+ {
+  "check_id": 239,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the husband \"died from a compensable crane accident at the construction site\" — death, workplace (crane/construction), and compensability are all explicit. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 240,
+  "verdict": "LEAP",
+  "why": "Cited span only shows she began receiving benefits as surviving spouse two years ago. The scenario actively questions continued eligibility and notes new cohabitation/name change—facts that can terminate status. Present surviving-spouse status is not forced."
+ },
+ {
+  "check_id": 241,
+  "verdict": "ENTAILED",
+  "why": "Scenario states sandblasting at FineCoat routinely generated silica dust (the named hazard) and Hector worked the line daily, directly forcing routine hazard exposure during that employment. No reading leaves it open."
+ },
+ {
+  "check_id": 242,
+  "verdict": "ENTAILED",
+  "why": "FineCoat is the most recent employer; sandblasting there routinely generated silica dust and Hector worked daily through his last three years, so the final injurious exposure necessarily occurred at FineCoat."
+ },
+ {
+  "check_id": 243,
+  "verdict": "ENTAILED",
+  "why": "Manager's email calls attendance \"mandatory for all sales staff\" with review consequences for absence, and Tomas is confirmed sales staff—directly compelling employer-required attendance."
+ },
+ {
+  "check_id": 244,
+  "verdict": "LEAP",
+  "why": "Scenario states attendance was mandatory for sales staff with absence noted in reviews, supporting a work-related reading. \"Recreational\" is a contested categorization the bytes don't compel."
+ },
+ {
+  "check_id": 245,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Nadia was stabbed by an armed robber (a third party) in a \"deliberate assault\" — explicitly willful misconduct by someone other than employer/coworker. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 246,
+  "verdict": "LEAP",
+  "why": "Scenario shows a robbery for register cash; \"directed due to employment duties\" is an interpretive causal categorization the words never state. The assault targeted the money, with her job role incidental—an alternative reading leaves the framing open."
+ },
+ {
+  "check_id": 247,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Raj \"operates a one-person landscaping business as a sole proprietor,\" directly asserting sole-proprietor status with no alternative reading."
+ },
+ {
+  "check_id": 248,
+  "verdict": "ENTAILED",
+  "why": "Scenario states explicitly \"one-person business,\" \"He has no employees and works alone.\" This directly forces has_employees_other_than_owner = false; no alternative reading exists."
+ },
+ {
+  "check_id": 249,
+  "verdict": "LEAP",
+  "why": "Cited span shows Raj carries no WC insurance, but a solo sole proprietor with no employees is typically exempt. Scenario never establishes coverage was legally required; auditor's proposed penalty is an allegation, not proof of requirement."
+ },
+ {
+  "check_id": 250,
+  "verdict": "LEAP",
+  "why": "\"Compensable\" is a legal conclusion the scenario never establishes. \"At the job site\" suggests work-relatedness but doesn't compel coverage; the injury could be disputed or arise outside employment. Compensability is unstated."
+ },
+ {
+  "check_id": 251,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states emergency surgery to \"stop life-threatening blood loss\" (prevent death) and \"save the limb\" (prevent serious impairment), directly forcing both prongs of the slot."
+ },
+ {
+  "check_id": 252,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"No one obtained the insurer's pre-authorization before the surgery,\" directly forcing pre_authorized=false with no alternative reading."
+ }
+]

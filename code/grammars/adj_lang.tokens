@@ -1,0 +1,158 @@
+# @version 1
+
+# Adj-Lang token grammar — the surface syntax for the adjudication
+# framework's probabilistic-logic rulebooks. Compiles to a
+# `logic-engine` KnowledgeBase via the adj-lang crate.
+#
+# Token shapes are deliberately conservative: every literal symbol
+# is its own token, the regex-defined tokens (STRING, NUMBER, IDENT)
+# cover only what real rulebooks need, and the only trivia skipped
+# is whitespace and `%`-prefixed line comments.
+#
+# Surface examples this grammar tokenises:
+#
+#   prior 0.10 for acs
+#     source "Pope JH et al., NEJM 1995"
+#
+#   contributes 1.5 from pmh(hypertension) to acs
+#     trust empirical
+#
+#   uncertain { precipitator(exertional),
+#               precipitator(rest),
+#               precipitator(positional) } for acs
+#
+#   observe pmh(smoker)
+#   ? acs
+
+escapes: none
+
+skip:
+  WHITESPACE      = /[ \t\r\n]+/
+  LINE_COMMENT    = /%[^\n]*/
+
+# ----------------------------------------------------------------
+# Punctuation — every symbolic token gets its own kind so the
+# parser grammar can reference it directly.
+# ----------------------------------------------------------------
+
+LPAREN            = "("
+RPAREN            = ")"
+LBRACE            = "{"
+RBRACE            = "}"
+LBRACK            = "["
+RBRACK            = "]"
+COMMA             = ","
+QUESTION          = "?"
+COLON             = ":"
+
+# ----------------------------------------------------------------
+# Comparison operators — for predicate-gated contributions
+# (`contributes <lr> from <slot> >= <value> to <verdict>`), the
+# surface form of a DETERMINISTIC rule expressed as the saturating
+# limit of a probabilistic one.
+#
+# CRITICAL ordering: the two-character operators (>=, <=, ==) MUST be
+# listed before the single-character ones (>, <). The lexer matches
+# patterns in definition order, first match wins — if `>` came first,
+# `>=` would tokenise as GT then a stray `=`. Longest-operator-first
+# is the maximal-munch discipline made explicit by ordering.
+# ----------------------------------------------------------------
+
+GE                = ">="
+LE                = "<="
+EQEQ              = "=="
+NE                = "!="
+GT                = ">"
+LT                = "<"
+
+# ----------------------------------------------------------------
+# Literals.
+#
+# NUMBER allows an optional leading minus + optional decimal +
+# optional exponent. Used for both probability values (0.10) and
+# LR magnitudes (1.5, 2.5, 0.4).
+#
+# STRING is double-quoted with backslash escapes. The lexer accepts any
+# `\<char>` and leaves escape processing to the adapter: provenance/source
+# strings translate `\"` -> ", `\\` -> \, `\n` -> newline, `\t` -> tab, and
+# keep any other `\<char>` verbatim, while LaTeX strings preserve commands such
+# as `\times` and `\frac` for the math frontend.
+# ----------------------------------------------------------------
+
+STRING            = /"([^"\\]|\\.)*"/
+NUMBER            = /-?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][+-]?[0-9]+)?/
+
+# ----------------------------------------------------------------
+# Logic VARIABLE — a `$`-prefixed name (MYCIN-2026 REL-2). Used in a
+# binding query goal: `? deficient_in(tay_sachs, $Enzyme)` asks the engine
+# to BIND `$Enzyme` to whatever the grounded edge holds. The `$` sigil is
+# unambiguous against lowercase IDENT atoms and the `?` query lead, and the
+# name allows uppercase (the conventional `$Enzyme`/`$Disease` style).
+#
+# Listed BEFORE IDENT so the maximal-munch order is explicit, though the two
+# never overlap (IDENT cannot start with `$`). An unknown token name maps to
+# TokenType::Name, so to the adapter a VAR surfaces as a Name token whose
+# value begins with `$` — that is how a variable argument is recognised.
+# ----------------------------------------------------------------
+
+VAR               = /\$[A-Za-z_][A-Za-z0-9_]*/
+
+# ----------------------------------------------------------------
+# Identifiers — lowercase, snake_case, optionally with digits.
+#
+# Compound terms like `pmh(hypertension)` parse as IDENT followed by
+# `(` IDENT `)` in the parser grammar; the lexer makes no
+# compound/atomic distinction.
+# ----------------------------------------------------------------
+
+IDENT             = /[a-z_][a-z0-9_]*/
+
+# ----------------------------------------------------------------
+# Arithmetic operators + assignment — for `let <name> = <expr>`
+# computed values (ADJ expansion step 3). The engine evaluates the
+# formula on the CPU into a derivation tree; the model only writes it.
+#
+# ORDERING #1: these are listed AFTER NUMBER so a negative literal
+# `-5` still lexes as one NUMBER(-5) (NUMBER's regex has a leading
+# `-?`), preserving predicate thresholds (`>= -100`) and the existing
+# LR-magnitude lexing. A binary MINUS therefore only matches a `-`
+# that is NOT immediately followed by a digit/`.` — so a `let` formula
+# must SPACE its operators (`a - 5`, `total - discount`); a `-` glued
+# to a digit (`a-5`) reads as `a` then `NUMBER(-5)`. A decomposer emits
+# spaced formulas, so this is a spacing convention, not a real limit.
+#
+# ORDERING #2: `EQUALS` ("=") sits after `EQEQ` ("==") above, so `==`
+# still tokenises as one EQEQ (first-match-wins maximal munch).
+# ----------------------------------------------------------------
+
+PLUS              = "+"
+MINUS             = "-"
+STAR              = "*"
+SLASH             = "/"
+EQUALS            = "="
+
+# ----------------------------------------------------------------
+# Keywords — recognised at the lexer level so the parser grammar
+# can match by token kind rather than by value.
+# ----------------------------------------------------------------
+
+keywords:
+  prior
+  for
+  contributes
+  from
+  to
+  interacts
+  when
+  and
+  observe
+  uncertain
+  source
+  trust
+  locator
+  cites
+  consensus
+  authoritative
+  empirical
+  inferred
+  unattributed

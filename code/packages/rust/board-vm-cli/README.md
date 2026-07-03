@@ -49,9 +49,11 @@ cargo run -p board-vm-cli --bin board-vm -- eject blink \
 ```
 
 `smoke` opens the selected serial device or endpoint, sends `HELLO`, queries
-capabilities, uploads the standard onboard LED blink module, and starts it with
-a bounded instruction budget. It is transport-hosting glue only; the board
-firmware still owns the protocol dispatcher and HAL behavior. The serial path
+capabilities, uploads the standard onboard LED blink module, starts it with
+a bounded instruction budget, verifies the board still answers `PING`, and
+then sends `STOP` to prove host control is recovered. It is transport-hosting
+glue only; the board firmware still owns the protocol dispatcher and HAL
+behavior. The serial path
 asks `board-vm-language-core` for the runtime serial open plan, then applies
 CLI `--baud` and `--timeout-ms` overrides before touching the OS port. That
 keeps DTR/open-settle, stale-byte clearing, endpoint metadata, and wire
@@ -76,7 +78,7 @@ the run report.
 `repl` opens the same serial-plan-backed transport, sends `HELLO`, and then
 accepts a small interactive command set: `caps`, `upload-blink`, `upload-gpio-read <pin>
 [mode]`, `upload-time-now`, `run [budget]`, `blink [budget]`, `gpio-read <pin>
-[mode] [budget]`, `time-now [budget]`, `stop`, `hello`, `help`, and `quit`.
+[mode] [budget]`, `time-now [budget]`, `ping`, `stop`, `hello`, `help`, and `quit`.
 This is the first language-agnostic host shell: it drives the binary protocol
 through the shared client library, while future frontend packages can put
 richer syntax on top of the same transport calls. `gpio-read` and `time-now`
@@ -86,7 +88,9 @@ with loopback coverage for interactive upload/run flows over serial endpoint
 metadata, TCP, BLE GATT, and RFCOMM.
 
 `eject blink` writes the current blink MVP as embeddable Rust constants with a
-program id, slot, boot policy, bytecode CRC, and BVM module bytes. That output
-is intentionally board-agnostic so Uno R4, ESP32, Pico, and future firmware
-backends can consume the same ejected artifact format while owning their own HAL
-and startup behavior.
+program id, slot, boot policy, BVM module metadata, required capabilities,
+bytecode CRC, and BVM module bytes. The command report mirrors that metadata so
+language frontends can stay thin over the Rust-owned artifact contract instead
+of parsing generated Rust constants. The output is intentionally board-agnostic
+so Uno R4, ESP32, Pico, and future firmware backends can consume the same
+ejected artifact format while owning their own HAL and startup behavior.

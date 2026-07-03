@@ -1,0 +1,65 @@
+{
+ "rulebook": {
+  "rules": [
+   {
+    "id": "section-2-distance-rule",
+    "when": {
+     "relocation_distance_miles": "> 50",
+     "destination_already_owned": "false"
+    },
+    "then": "ENTITLED",
+    "source_span": "An employee who relocates their primary residence more than 50 miles closer to their assigned work site is entitled to the relocation bonus."
+   },
+   {
+    "id": "section-8-override-rule",
+    "when": {
+     "destination_already_owned": "true"
+    },
+    "then": "NOT_ENTITLED",
+    "source_span": "Override: The relocation bonus does not apply when the destination residence is a property the employee (or their spouse) already owned at the time the role was offered. This self-owned-destination exclusion applies regardless of distance and takes precedence over the eligibility provisions above."
+   }
+  ]
+ },
+ "prose": [
+  {
+   "id": "OV-1",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Clause 8's self-owned-destination override expressly states it \"applies regardless of distance and takes precedence over the eligibility provisions above.\" Dana owns the destination property (since 2019), so the override precludes the bonus despite satisfying the 120-mile distance requirement in clause 2."
+  },
+  {
+   "id": "OV-2",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Marcus satisfied the distance (75 miles > 50-mile threshold) and timing (40 days < 180-day window) requirements. However, Clause 8's self-owned-destination override applies: he relocated into a condominium he already owned, which disqualifies him regardless of distance and takes precedence over all eligibility provisions."
+  },
+  {
+   "id": "OV-3",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Clause 8 Override states the bonus does not apply when the destination is already owned by the employee or spouse, taking precedence over distance. Priya's destination was jointly owned; she is excluded."
+  },
+  {
+   "id": "OV-4",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Lou meets the 50-mile distance threshold (95 miles) but is excluded by clause 8: the self-owned-destination override applies because he owned the cabin prior to the role offer. Clause 8 takes precedence over distance eligibility."
+  },
+  {
+   "id": "OV-5",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Clause 8 override applies: destination residence already owned by employee takes precedence over distance requirement, regardless of the 140-mile relocation distance."
+  },
+  {
+   "id": "OV-6",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Clause 8 override: destination residence was already owned by employee at offer time. Override takes precedence over distance eligibility regardless of distance met."
+  },
+  {
+   "id": "HO-1",
+   "verdict": "NOT_ENTITLED",
+   "reasoning": "Sofia's 80-mile relocation exceeds the 50-mile threshold in Clause 2, but Clause 8's override applies: destination residences already owned by the employee (or spouse) at the time of the offer are excluded \"regardless of distance\" and \"take precedence.\" Sofia owned the beach condominium she moved into at the time of the offer."
+  },
+  {
+   "id": "HO-2",
+   "verdict": "ENTITLED",
+   "reasoning": "Theo relocated 90 miles closer (exceeds 50-mile threshold per clause 2) and rented the destination (did not own it pre-offer). The clause 8 override does not apply since destination_already_owned is false."
+  }
+ ]
+}

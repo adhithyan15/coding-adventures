@@ -1,0 +1,195 @@
+================================================================
+  ADJ52 — counterfactual / VOI / kickback pipeline run
+================================================================
+
+Inputs:
+  rulebook: C:\Users\adhit\Downloads\coding-adventures\code\specs\data\adj52\cases/mcardle-pmr\03-derived-rulebook.adj
+  vignette: C:\Users\adhit\Downloads\coding-adventures\code\specs\data\adj52\cases/mcardle-pmr\04-vignette.adj
+Observed facts in vignette: 38
+
+Queries to answer: 9
+  ? diagnosis(mcardle_disease_gsd_v)
+  ? diagnosis(polymyalgia_rheumatica)
+  ? diagnosis(coexisting_pmr_and_metabolic_myopathy)
+  ? diagnosis(seronegative_inflammatory_myopathy)
+  ? diagnosis(other_metabolic_myopathy_lipid_storage)
+  ? diagnosis(diabetic_amyotrophy)
+  ? next_step(pygm_molecular_genetic_testing)
+  ? next_step(nonischemic_forearm_exercise_test)
+  ? next_step(muscle_biopsy_myophosphorylase_stain)
+
+================================================================
+Query 1/9: diagnosis(mcardle_disease_gsd_v)
+================================================================
+
+  Posterior:  P = 0.9999  (100.0%)   logodds = +9.8210
+
+  Fired clauses:
+    prior  -2.9444                                source: GeneReviews NBK1344 (GSD V); StatPearls NBK560785
+    +1.7918  childhood_exertional_intolerance(carrie...   src: GeneReviews NBK1344 (onset first deca...
+    +1.6094  exertional_symptom(muscle_spasms_when_w...   src: Patient.info Doctor, McArdle's Diseas...
+    +1.0986  history_on_questioning(episodic_short_l...   src: GeneReviews NBK1344 (recurrent exerci...
+    +0.6931  episodic_myalgia_chronicity(longstandin...   src: Reumatologia Clinica S217357431600035...
+    +1.0986  creatine_kinase_initial(elevated)            src: GeneReviews NBK1344 (baseline CK freq...
+    +1.7918  ck_rise_trigger(strenuous_activity)          src: GeneReviews NBK1344 (exercise-induced...
+    +1.3863  creatine_kinase_later_peak(markedly_ele...   src: GeneReviews NBK1344 (markedly raised ...
+    +0.4055  myositis_autoantibody_panel(negative)        src: GeneReviews NBK1344 (GSD V is a non-a...
+    +0.4055  upper_limb_muscle_mri_finding(nonspecif...   src: Reumatologia Clinica S217357431600035...
+    +1.3863  [joint x2: childhood_exertional_intolerance(carried_off_track_after_50_yard_sprint) + ck...]
+    +1.0986  [joint x2: exertional_symptom(muscle_spasms_when_walking_long_distances) + ck_rise_trigg...]
+
+  Coverage: 9/38 observed terms matched a clause for this query.
+
+  Decision at 30%: ABOVE threshold
+
+  Counterfactual sensitivity (what would shift this answer):
+    uncertainty: diagnosis(mcardle_disease_gsd_v) over { test(pygm_biallelic_pathogenic), test(pygm_no_variant), t... }   VOI range = 0.0000 logits
+      if observe test(pygm_biallelic_pathogenic)           P 0.9999 -> 0.9999
+      if observe test(pygm_no_variant)                     P 0.9999 -> 0.9999
+      if observe test(forearm_flat_lactate_high_ammonia)   P 0.9999 -> 0.9999
+      if observe test(forearm_normal_lactate_rise)         P 0.9999 -> 0.9999
+
+  No kickback: resolving the open uncertainties would not move the 30% decision.
+
+================================================================
+Query 2/9: diagnosis(polymyalgia_rheumatica)
+================================================================
+
+  Posterior:  P = 0.9753  (97.5%)   logodds = +3.6760
+
+  Fired clauses:
+    prior  -0.8473                                source: AFP 2013;88(10):676; EULAR/ACR 2012 + BSR/BHPR PMR criteria
+    +0.9163  age(over_50)                                 src: EULAR/ACR 2012 PMR criteria (age>=50 ...
+    +1.3863  myalgia_distribution(hips_and_shoulders)     src: EULAR/ACR 2012 PMR criteria; AFP 2013...
+    +0.6931  myalgia_character(proximal)                  src: MSD Manual, Polymyalgia Rheumatica
+    +0.9163  associated_symptom(stiffness)                src: EULAR/ACR 2012 PMR criteria; CCJM 202...
+    +1.2528  crp_status(elevated)                         src: EULAR/ACR 2012 PMR criteria; AFP 2013...
+    +0.5878  esr(elevated)                                src: BSR/BHPR PMR guideline; AFP 2013;88(1...
+    +0.2624  neurological_deficit(absent)                 src: MSD Manual, Polymyalgia Rheumatica
+    -1.6094  creatine_kinase_later_peak(markedly_ele...   src: AFP 2013;88(10):676; MSD Manual (musc...
+    -0.7985  creatine_kinase_initial(elevated)            src: AFP 2013;88(10):676 (muscle enzymes n...
+    +0.9163  [joint x2: myalgia_distribution(hips_and_shoulders) + crp_status(elevated)]
+
+  Coverage: 9/38 observed terms matched a clause for this query.
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 3/9: diagnosis(coexisting_pmr_and_metabolic_myopathy)
+================================================================
+
+  Posterior:  P = 0.9951  (99.5%)   logodds = +5.3189
+
+  Fired clauses:
+    prior  -2.1972                                source: Reumatologia Clinica S2173574316000356; GeneReviews NBK1344
+    +1.0986  myalgia_distribution(hips_and_shoulders)     src: EULAR/ACR 2012 PMR criteria; AFP 2013...
+    +0.9163  crp_status(elevated)                         src: EULAR/ACR 2012 PMR criteria (raised C...
+    +1.2528  childhood_exertional_intolerance(carrie...   src: Reumatologia Clinica S217357431600035...
+    +1.2528  ck_rise_trigger(strenuous_activity)          src: GeneReviews NBK1344 (exertional CK ri...
+    +1.6094  [joint x2: crp_status(elevated) + ck_rise_trigger(strenuous_activity)]
+    +1.3863  [joint x2: myalgia_distribution(hips_and_shoulders) + childhood_exertional_intolerance(c...]
+
+  Coverage: 4/38 observed terms matched a clause for this query.
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 4/9: diagnosis(seronegative_inflammatory_myopathy)
+================================================================
+
+  Posterior:  P = 0.0336  (3.4%)   logodds = -3.3586
+
+  Fired clauses:
+    prior  -2.4423                                source: AMBOSS Inflammatory Myopathies
+    +0.6931  symptom_gradient(upper_limbs_greater_th...   src: AMBOSS Inflammatory Myopathies
+    +0.9163  creatine_kinase_later_peak(markedly_ele...   src: AMBOSS Inflammatory Myopathies (marke...
+    -0.9163  myositis_autoantibody_panel(negative)        src: AMBOSS Inflammatory Myopathies (negat...
+    -0.9163  upper_limb_muscle_mri_finding(nonspecif...   src: AMBOSS Inflammatory Myopathies (activ...
+    -0.6931  examination_finding(nonspecific_myalgia...   src: The Rheumatologist, Diagnosis: Myopat...
+
+  Coverage: 5/38 observed terms matched a clause for this query.
+
+  Decision at 30%: BELOW threshold
+
+  Counterfactual sensitivity (what would shift this answer):
+    uncertainty: diagnosis(seronegative_inflammatory_myopathy) over { test(muscle_biopsy_inflammatory_infiltrate), test(muscle_... }   VOI range = 0.0000 logits
+      if observe test(muscle_biopsy_inflammatory_infil...  P 0.0336 -> 0.0336
+      if observe test(muscle_biopsy_no_inflammation_gl...  P 0.0336 -> 0.0336
+
+  No kickback: resolving the open uncertainties would not move the 30% decision.
+
+================================================================
+Query 5/9: diagnosis(other_metabolic_myopathy_lipid_storage)
+================================================================
+
+  Posterior:  P = 0.1192  (11.9%)   logodds = -2.0002
+
+  Fired clauses:
+    prior  -3.4761                                source: The Rheumatologist, Tips for Diagnosing Metabolic Myopathies
+    +0.9163  childhood_exertional_intolerance(carrie...   src: The Rheumatologist, metabolic myopath...
+    +0.9163  ck_rise_trigger(strenuous_activity)          src: The Rheumatologist, metabolic myopath...
+    -0.3567  exertional_symptom(muscle_spasms_when_w...   src: The Rheumatologist (lipid disorders p...
+
+  Coverage: 3/38 observed terms matched a clause for this query.
+
+  Decision at 30%: BELOW threshold
+
+================================================================
+Query 6/9: diagnosis(diabetic_amyotrophy)
+================================================================
+
+  Posterior:  P = 0.0050  (0.5%)   logodds = -5.2983
+
+  Fired clauses:
+    prior  -3.1781                                source: MSD Manual, proximal diabetic neuropathy/amyotrophy
+    +0.4055  diabetes_diagnosis_timing(three_months_...   src: MSD Manual, proximal diabetic neuropa...
+    -0.9163  neurological_deficit(absent)                 src: MSD Manual (amyotrophy presents with ...
+    -1.6094  childhood_exertional_intolerance(carrie...   src: MSD Manual (diabetic complications po...
+
+  Coverage: 3/38 observed terms matched a clause for this query.
+
+  Decision at 30%: BELOW threshold
+
+================================================================
+Query 7/9: next_step(pygm_molecular_genetic_testing)
+================================================================
+
+  Posterior:  P = 0.8333  (83.3%)   logodds = +1.6094
+
+  Fired clauses:
+    prior  -1.3863                                source: GeneReviews NBK1344 (biallelic PYGM variants = confirmato...
+    +1.6094  ck_rise_trigger(strenuous_activity)          src: GeneReviews NBK1344 (exertional rhabd...
+    +1.3863  childhood_exertional_intolerance(carrie...   src: GeneReviews NBK1344 (lifelong exercis...
+
+  Coverage: 2/38 observed terms matched a clause for this query.
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 8/9: next_step(nonischemic_forearm_exercise_test)
+================================================================
+
+  Posterior:  P = 0.4138  (41.4%)   logodds = -0.3483
+
+  Fired clauses:
+    prior  -1.7346                                source: GeneReviews NBK1344; StatPearls NBK560785 (non-ischemic f...
+    +1.3863  exertional_symptom(muscle_spasms_when_w...   src: Patient.info GSD V (forearm exercise ...
+
+  Coverage: 1/38 observed terms matched a clause for this query.
+
+  Decision at 30%: ABOVE threshold
+
+================================================================
+Query 9/9: next_step(muscle_biopsy_myophosphorylase_stain)
+================================================================
+
+  Posterior:  P = 0.2174  (21.7%)   logodds = -1.2809
+
+  Fired clauses:
+    prior  -2.1972                                source: GeneReviews NBK1344 (myophosphorylase assay / PAS glycoge...
+    +0.9163  creatine_kinase_initial(elevated)            src: Reumatologia Clinica S217357431600035...
+
+  Coverage: 1/38 observed terms matched a clause for this query.
+
+  Decision at 30%: BELOW threshold
+

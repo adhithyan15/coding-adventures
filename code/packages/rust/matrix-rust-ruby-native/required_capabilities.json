@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/matrix-rust-ruby-native",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "export",
+      "target": "Init_matrix_rust_ruby_native + Ruby singleton method run_graph_on_cpu",
+      "justification": "This crate exists to be dlopen()'d by Ruby. It exports the Init_matrix_rust_ruby_native entry point and registers MatrixRustRuby.run_graph_on_cpu as a singleton method — no other surface."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "Ruby C API (via ruby-bridge)",
+      "justification": "Defining the Ruby module and singleton method requires calling rb_define_module, rb_define_singleton_method, rb_utf8_str_new, rb_string_value_cstr, rb_raise — all funneled through the workspace ruby-bridge crate's safe wrappers."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "c-bridge::run_graph_on_cpu_via_json_envelope (pure-Rust workspace fn)",
+      "justification": "The actual graph execution is delegated to the c-bridge workspace crate so envelope shape + error semantics stay defined in exactly one place across every language binding."
+    }
+  ],
+  "justification": "Native extension crate. The only outward-facing surface is one Ruby singleton method (run_graph_on_cpu) registered at Init time. No network, no filesystem, no process spawning. Build script links Ruby's C API on macOS (dynamic_lookup) and Windows (rbconfig-discovered libruby); on Linux the dynamic loader handles symbol resolution automatically."
+}

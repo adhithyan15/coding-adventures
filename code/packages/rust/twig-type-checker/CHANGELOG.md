@@ -27,11 +27,11 @@
 
 ### Changed (LANG71 — TW05-P Part 2: `.tw` module conversions)
 
-- `code/twig/compiler/lexer.tw` — `(typed lenient)` → `(typed strict)`
-- `code/twig/compiler/cst-parser.tw` — `(typed lenient)` → `(typed strict)`
-- `code/twig/compiler/parser.tw` — `(typed lenient)` → `(typed strict)`
-- `code/twig/compiler/emit.tw` — `(typed lenient)` → `(typed strict)`
-- `code/twig/compiler/main.tw` — `(typed lenient)` → `(typed strict)`
+- `code/packages/twig/compiler/lexer.tw` — `(typed lenient)` → `(typed strict)`
+- `code/packages/twig/compiler/cst-parser.tw` — `(typed lenient)` → `(typed strict)`
+- `code/packages/twig/compiler/parser.tw` — `(typed lenient)` → `(typed strict)`
+- `code/packages/twig/compiler/emit.tw` — `(typed lenient)` → `(typed strict)`
+- `code/packages/twig/compiler/main.tw` — `(typed lenient)` → `(typed strict)`
 
 All 11 compiler modules now run under `(typed strict)`.
 

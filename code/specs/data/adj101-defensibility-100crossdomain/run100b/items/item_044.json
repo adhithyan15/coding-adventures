@@ -1,0 +1,7 @@
+{
+ "idx": 44,
+ "id": "FOO-5",
+ "scenario": "An inspector examines a restaurant's oyster cooler. The oysters are stored in their original container. The manager sold the last oyster from this container 30 days ago and produces the corresponding shellstock tag from the file.",
+ "policy": "Shellfish may be sold only if accompanied by a shellstock identification tag, and the tag must be retained on file for 90 days from the date the last shellfish from that container was sold or served. Selling shellfish from an untagged container is a critical violation.",
+ "question": "Did the restaurant commit a critical violation regarding this container?"
+}

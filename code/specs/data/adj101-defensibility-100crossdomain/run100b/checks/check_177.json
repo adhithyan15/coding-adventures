@@ -1,0 +1,8 @@
+{
+ "check_id": 177,
+ "idx": 69,
+ "slot": "status",
+ "claimed_value": "inactive",
+ "scenario": "A licensee currently on inactive status moved to a new address 60 days ago and has not notified the board.",
+ "cited_span": "currently on inactive status"
+}

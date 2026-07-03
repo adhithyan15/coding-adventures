@@ -1,0 +1,11 @@
+[
+ {"id":"f0","finding":"prior","state":"base_rate"},
+ {"id":"f1","finding":"csf_gram_stain","state":"positive"},
+ {"id":"f2","finding":"csf_neutrophilic_pleocytosis","state":"high"},
+ {"id":"f3","finding":"csf_glucose","state":"low"},
+ {"id":"f4","finding":"csf_protein","state":"elevated"},
+ {"id":"f5","finding":"csf_lactate","state":"elevated"},
+ {"id":"f6","finding":"serum_procalcitonin","state":"elevated"},
+ {"id":"f7","finding":"seizure","state":"present"},
+ {"id":"f8","finding":"csf_culture","state":"positive"}
+]

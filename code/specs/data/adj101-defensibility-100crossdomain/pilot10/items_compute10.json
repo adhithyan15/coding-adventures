@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "pilot": "ADJ101 program-emission track — 10-item pilot",
+    "principle": "LLM translates messy input -> typed provenanced facts + emits a program (SymPy/RDKit); executor runs it. Scored on auditability/localizability/correctability; correctness is informational. gold tool-derived.",
+    "fields": "source+question shown to the solver; quantity_spans = phrases the solver must use-or-discard; gold_answer/tolerance/gold_tool held aside"
+  },
+  "items": [
+    {
+      "id": "PHYS1", "domain": "physics",
+      "source": "A projectile is launched from ground level at a speed of 20 m/s at an angle of 30 degrees above the horizontal. Take g = 9.8 m/s^2. The launch pad is 2 meters wide.",
+      "question": "What is the maximum height (in meters) the projectile reaches?",
+      "quantity_spans": ["20 m/s", "30 degrees", "9.8 m/s^2", "2 meters wide"],
+      "distractor": "2 meters wide", "gold_answer": 5.102, "tolerance": 0.02,
+      "gold_tool": "sympy (20*sin(rad(30)))**2/(2*9.8)"
+    },
+    {
+      "id": "MATH1", "domain": "mathematics",
+      "source": "Consider the cubic equation x^3 - 2x - 5 = 0.",
+      "question": "What is its real root, to 3 decimal places?",
+      "quantity_spans": ["x^3 - 2x - 5 = 0"],
+      "distractor": null, "gold_answer": 2.095, "tolerance": 0.005,
+      "gold_tool": "sympy.solve(x**3-2*x-5,x) real root"
+    },
+    {
+      "id": "UNIT1", "domain": "units-physics",
+      "source": "A car covers a distance of 150 kilometers in a time of 1.5 hours.",
+      "question": "What is its average speed in meters per second?",
+      "quantity_spans": ["150 kilometers", "1.5 hours"],
+      "distractor": null, "gold_answer": 27.778, "tolerance": 0.05,
+      "gold_tool": "150000/(1.5*3600)"
+    },
+    {
+      "id": "CHEM1", "domain": "chemistry",
+      "source": "Aspirin is the molecule with SMILES string CC(=O)Oc1ccccc1C(=O)O.",
+      "question": "What is its molecular weight in g/mol, to 2 decimals?",
+      "quantity_spans": ["CC(=O)Oc1ccccc1C(=O)O"],
+      "distractor": null, "gold_answer": 180.16, "tolerance": 0.05,
+      "gold_tool": "rdkit Descriptors.MolWt"
+    },
+    {
+      "id": "CHEM2", "domain": "chemistry",
+      "source": "Caffeine has the SMILES string CN1C=NC2=C1C(=O)N(C(=O)N2C)C and a molar mass of about 194 g/mol.",
+      "question": "How many hydrogen-bond donors does caffeine have?",
+      "quantity_spans": ["CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "molar mass of about 194 g/mol"],
+      "distractor": "molar mass of about 194 g/mol", "gold_answer": 0, "tolerance": 0,
+      "gold_tool": "rdkit CalcNumHBD"
+    },
+    {
+      "id": "FIN1", "domain": "finance-math",
+      "source": "An account starts with a principal of $5,000 and earns 4% interest compounded annually over a term of 3 years. The account's branch number is 4021.",
+      "question": "What is the account balance at the end of the term, to 2 decimals?",
+      "quantity_spans": ["$5,000", "4%", "3 years", "branch number is 4021"],
+      "distractor": "branch number is 4021", "gold_answer": 5624.32, "tolerance": 0.05,
+      "gold_tool": "5000*(1.04)**3"
+    },
+    {
+      "id": "CHEM3", "domain": "chemistry",
+      "source": "When methane (CH4) undergoes complete combustion in oxygen, carbon dioxide and water are produced. A chemist burns 25.0 grams of methane to completion. The lab thermometer on the bench reads 21 degrees Celsius.",
+      "question": "How many grams of carbon dioxide (CO2) are produced?",
+      "quantity_spans": ["25.0 grams of methane", "21 degrees Celsius"],
+      "distractor": "21 degrees Celsius", "gold_answer": 68.58, "tolerance": 0.2,
+      "gold_tool": "rdkit MW(CH4),MW(CO2); 25/MW_CH4*MW_CO2"
+    },
+    {
+      "id": "GEO1", "domain": "geometry",
+      "source": "A triangle has side lengths of 7 cm, 8 cm, and 9 cm.",
+      "question": "What is its area in square centimeters, to 3 decimals?",
+      "quantity_spans": ["7 cm", "8 cm", "9 cm"],
+      "distractor": null, "gold_answer": 26.833, "tolerance": 0.01,
+      "gold_tool": "sympy Heron sqrt(s(s-a)(s-b)(s-c)), s=12"
+    },
+    {
+      "id": "PHYS2", "domain": "physics",
+      "source": "A simple pendulum has a length of 2 meters. Take g = 9.8 m/s^2.",
+      "question": "What is its period of oscillation in seconds, to 3 decimals?",
+      "quantity_spans": ["2 meters", "9.8 m/s^2"],
+      "distractor": null, "gold_answer": 2.838, "tolerance": 0.01,
+      "gold_tool": "sympy 2*pi*sqrt(L/g)"
+    },
+    {
+      "id": "CHEM4", "domain": "chemistry",
+      "source": "Water has the SMILES string O (a single oxygen with implicit hydrogens).",
+      "question": "What is the mass percent of oxygen in water, to 2 decimals?",
+      "quantity_spans": ["O (a single oxygen with implicit hydrogens)"],
+      "distractor": null, "gold_answer": 88.81, "tolerance": 0.1,
+      "gold_tool": "rdkit MW(H2O) and O atomic mass -> 15.999/18.015*100"
+    }
+  ]
+}

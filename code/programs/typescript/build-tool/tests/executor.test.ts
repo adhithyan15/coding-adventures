@@ -218,4 +218,21 @@ describe("executeBuilds", () => {
 
     expect(results.get("python/pkg-multi")?.status).toBe("built");
   });
+
+  it("silently skips graph nodes that aren't in pkgByName", async () => {
+    // Branch coverage for `if (!pkgByName.has(name)) continue` (line 232).
+    // We add a node to the graph that isn't backed by a Package — the executor
+    // should walk past it without producing a result.
+    const graph = new DirectedGraph();
+    graph.addNode("python/ghost");
+    const results = await executeBuilds({
+      packages: [],
+      graph,
+      cache: new BuildCache(),
+      packageHashes: new Map(),
+      depsHashes: new Map(),
+      force: true,
+    });
+    expect(results.has("python/ghost")).toBe(false);
+  });
 });

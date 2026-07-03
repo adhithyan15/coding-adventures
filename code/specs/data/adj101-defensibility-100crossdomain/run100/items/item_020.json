@@ -1,0 +1,7 @@
+{
+ "idx": 20,
+ "id": "TAX-1",
+ "scenario": "Dana earned $9,200 in wages during the tax year and had no other income. The filing threshold for the year is $14,600.",
+ "policy": "An individual must file a federal income tax return for the year if their gross income equals or exceeds the filing threshold of $14,600. If gross income is below the threshold, no return is required.",
+ "question": "Is Dana required to file a federal income tax return for the year?"
+}

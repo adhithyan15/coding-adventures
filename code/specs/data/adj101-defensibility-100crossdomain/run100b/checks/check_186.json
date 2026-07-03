@@ -1,0 +1,8 @@
+{
+ "check_id": 186,
+ "idx": 73,
+ "slot": "goods_originate_in_fta_country",
+ "claimed_value": true,
+ "scenario": "Brightline Apparel imports cotton shirts manufactured in Calavia, a country that has a Free Trade Agreement with the importing nation. The shirts have a declared customs value of $80,000 and the goods clearly qualify as originating in Calavia under the FTA's rules of origin.",
+ "cited_span": "imports cotton shirts manufactured in Calavia, a country that has a Free Trade Agreement with the importing nation"
+}

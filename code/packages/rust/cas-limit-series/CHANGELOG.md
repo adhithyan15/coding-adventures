@@ -1,5 +1,30 @@
 # Changelog — cas-limit-series (Rust)
 
+## [0.3.0] - 2026-05-29
+
+### Added
+
+- Track J2: `series_limit` module porting Python Track J1 (PR #5574). New
+  `try_series_limit` / `try_series_limit_default` resolve transcendental
+  `0/0` limits via a self-contained rational-coefficient series ring
+  with bounded order (4 → 6 → 8 → 10 → 12). Wired into `limit_advanced`
+  after the L'Hopital path and before the unevaluated `Limit(...)`
+  fallthrough. Closes the canonical acceptance set:
+  `limit((sin(x) - x)/x^3, x, 0) = -1/6`,
+  `limit((1 - cos(x))/x^2, x, 0) = 1/2`,
+  `limit((exp(x) - 1 - x)/x^2, x, 0) = 1/2`,
+  `limit((tan(x) - x)/x^3, x, 0) = 1/3`,
+  `limit((log(1 + x) - x)/x^2, x, 0) = -1/2`.
+- `limit_advanced(sin(x)/x, x, 0)` without a `diff_fn` now closes to `1`.
+
+## [0.2.2] - 2026-06-06
+
+### Added
+
+- Add bounded-over-diverging limit recognition at infinity, closing
+  `limit(sin(x)/x, x, inf)` and `limit(cos(x)/(x^2+1), x, minf)` to exact
+  `0` instead of returning an unevaluated `Limit(...)`.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

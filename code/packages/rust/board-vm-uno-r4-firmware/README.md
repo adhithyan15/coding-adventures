@@ -36,8 +36,8 @@ target/thumbv7em-none-eabihf/release/uno-r4-vm-blink-smoke
 
 `uno-r4-wifi-ejected-blink` is the first board-specific ejection runner. It
 loads the constants in `src/ejected_blink.rs`, validates their BVM module
-metadata against the Uno R4 backend capabilities, and runs the ejected program
-directly on boot without a host protocol session:
+metadata against the Uno R4 backend capabilities, and applies the artifact boot
+policy before running it directly on boot without a host protocol session:
 
 ```sh
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-ejected-blink --release
@@ -48,6 +48,44 @@ The constants match the output shape produced by:
 ```sh
 cargo run -p board-vm-cli --bin board-vm -- eject blink --out src/ejected_blink.rs
 ```
+
+Host-side tests re-run the Rust eject generator and compare the generated
+artifact against the embedded constants, so firmware changes catch stale
+ejected blink metadata before flashing hardware.
+
+The firmware crate also exposes a compact ejected-artifact summary, letting
+board-specific startup paths inspect the embedded program id, slot, boot policy,
+module metadata, CRC, capability count, and byte length without parsing the raw
+generated constants. Host-side tests compare that firmware summary against the
+target-independent `board-vm-eject` artifact summary, so the board-specific view
+cannot drift from the Rust-owned eject contract.
+
+The ejected boot-plan helper validates the embedded artifact and returns the
+checked summary together with the board startup action, so firmware entrypoints
+do not need to interpret raw boot-policy constants separately from artifact
+metadata validation. The stricter validated boot-plan path also checks the
+artifact against the board capability set and maximum stack before startup code
+acts on that plan. The runtime handoff keeps that validated plan together with
+the parsed BVM module, so the boot runner uses one board-checked artifact view
+for both store-only decisions and direct execution. The checked boot-run result
+returns that plan with the optional runtime report, letting diagnostics describe
+whether startup validated-and-ran or validated-and-skipped a store-only artifact.
+Its compact summary preserves the boot plan plus run status, instruction count,
+and open-handle count when execution happened, without inventing a second
+artifact interpretation path. Startup diagnostics can also capture failures as
+the embedded program summary plus the firmware smoke error, and preserve the
+checked boot plan when failure happens after validation. Their compact summary
+normalizes completed and failed boot attempts into one board-facing status shape,
+so a board-specific entrypoint can report what happened without re-parsing the
+generated constants or duplicating enum-specific reporting logic. The summary
+also classifies that status as ran, store-only skip, validation failure, or
+runtime failure, keeping optional-field interpretation inside the firmware crate.
+Firmware smoke errors expose a compact kind for board-facing reports, so callers
+can group validation, runtime, metadata, CRC, capability, format, and boot-policy
+failures without matching every detailed error payload themselves. Those status
+and error-kind values also provide stable snake_case labels for compact serial,
+CLI, or host logs without duplicating Rust enum formatting outside the firmware
+crate.
 
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.

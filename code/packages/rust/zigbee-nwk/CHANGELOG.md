@@ -11,6 +11,13 @@ All notable changes to this package will be documented in this file.
   link metrics, freshness, router candidates, and route health.
 - `NeighborTableSummary` freshness/detail fields for fresh neighbor count,
   maximum depth, best LQI, and worst outgoing cost.
+- `NwkRoutingReadinessSummary` for projecting neighbor freshness, active route
+  coverage, route-discovery needs, and supervision state from topology reads.
+- `NwkRouteDiscoveryCommandSummary` for counting route request/reply/status/
+  record command traffic, IEEE-address coverage, multicast/many-to-one flags,
+  route records, and repair-needed status signals.
+- `NwkRouteRepairReadinessSummary` for combining routing readiness with
+  route-discovery command telemetry and blocker checks.
 
 ## [0.1.0] - 2026-05-06
 

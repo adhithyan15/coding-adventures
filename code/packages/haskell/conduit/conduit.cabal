@@ -1,0 +1,59 @@
+cabal-version:      2.4
+name:               conduit
+version:            0.1.0.0
+synopsis:           Sinatra/Express-style web framework backed by a Rust engine (WEB18).
+description:
+    Haskell bindings for the Conduit web framework via GHC's built-in C FFI.
+    Handlers are plain Haskell IO actions; the library boxes them with StablePtr
+    and FunPtr so conduit-capi (the Rust cdylib) can invoke them safely from any
+    OS thread.
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Web
+build-type:         Simple
+
+library
+    -- All Haskell modules in this library.
+    exposed-modules:  Conduit
+                    , Conduit.FFI
+                    , Conduit.App
+                    , Conduit.Request
+                    , Conduit.Response
+                    , Conduit.Server
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    default-extensions: OverloadedStrings
+    -- -optc-Wno-error=int-conversion: GHC < 9.6 generates libffi adjustor C
+    -- stubs (for `foreign import ccall "wrapper"`) that assign a void* to an
+    -- ffi_arg (unsigned long).  Clang 15+ (macOS CI) promotes -Wint-conversion
+    -- to a hard error, breaking the build; this downgrades it back to a warning.
+    ghc-options:      -Wall -Wno-unused-imports -threaded
+                      -optc-Wno-error=int-conversion
+    build-depends:
+        base       >= 4.7  && < 5
+      , bytestring >= 0.10 && < 0.13
+      , text       >= 1.2  && < 2.2
+    -- Link against the conduit-capi Rust cdylib.
+    -- The path is supplied at build time via --extra-lib-dirs (run-tests.sh).
+    extra-libraries:  conduit_capi
+    -- GHC needs the conduit_capi.h header for nothing at link time, but
+    -- --extra-include-dirs is passed so IDE tooling can find it if desired.
+
+test-suite conduit-test
+    default-language: Haskell2010
+    default-extensions: OverloadedStrings
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    ConduitSpec
+                    , ServerE2ESpec
+    ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
+    build-depends:
+        base       >= 4.7  && < 5
+      , bytestring >= 0.10 && < 0.13
+      , text       >= 1.2  && < 2.2
+      , conduit
+      , hspec      >= 2.0  && < 3
+      , network    >= 3.0  && < 4
+      , async      >= 2.2  && < 3

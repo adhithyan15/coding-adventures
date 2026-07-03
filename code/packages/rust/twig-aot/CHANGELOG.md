@@ -1,5 +1,288 @@
 # Changelog — `twig-aot`
 
+## 0.25.0 — 2026-07-01 — TWIG-GC: conservative mark-and-sweep GC for native AOT
+
+**TWIG-GC** (native-aot-substrate Layer 1, `code/specs/native-aot-substrate.md`):
+Added `runtime/twig_gc.c` — a portable conservative mark-and-sweep garbage
+collector for every language that targets the native AOT backend.
+
+Key design points:
+
+- **Conservative stack scanning**: registers flushed via `setjmp`; every stack
+  word (and `word & ~0x7` for NaN-boxed Lispy pointers) is tested against the
+  live-object table.  No GC maps or safepoint metadata needed from the compiler.
+- **32-byte `gc_header_t`** prepended before each allocation; payload is always
+  16-byte–aligned, satisfying the Lispy HEAP-tag requirement (low 3 bits clear).
+- **Adaptive threshold**: starts at 1 MB; doubles when >50% of heap survives;
+  halves otherwise (floor 1 MB) — matches Go/JVM ergonomic GC heuristics.
+- **Public API**: `__twig_gc_alloc(n)`, `__twig_gc_collect()`,
+  `__twig_gc_safepoint()`, `__twig_gc_live_bytes()`, `__twig_gc_collection_count()`.
+- **Stack-base detection**: macOS via `pthread_get_stackaddr_np`; Linux via
+  `pthread_getattr_np + pthread_attr_getstack`; Windows via
+  `__readgsqword(0x08)` (TEB.StackBase).
+
+**`lispy_runtime.c` update**: `__twig_lispy_cons` now calls `__twig_gc_alloc(16)`
+instead of `calloc(1, 16)`.  Cons cells are now GC-tracked and freed when
+unreachable; McCarthy Lisp programs no longer leak heap on every `CONS`.
+
+**`build.rs` update**: `twig_gc.c` added to the `cc::Build` compilation alongside
+`twig_runtime.c` and `lispy_runtime.c`; `cargo:rerun-if-changed` wired up.
+
+## 0.24.0 — 2026-07-01 — LANG-STR-RT: string function parameters on NativeAot
+
+**Root cause fixed:** `str_const dest = "HELLO"` was removed from the IIR
+instruction stream after `lower_string_literals_for_aot`, leaving `dest`
+undefined.  When `call strlen(dest)` followed, the backend loaded the
+uninitialized stack slot and passed 0 to the callee — causing
+`str_len(param)` to read 0 from the buffer header instead of the actual length.
+
+**Fix — alias mov:** After every `push_aot_string_literal` block, now emit
+`mov dest = buf_var` (type `i64`) so `dest` is always a defined, live pointer
+to the LANG-STR-RT buffer.  `strings[dest] = (dest, len_var, literal)` so
+subsequent string ops still fold statically.
+
+**Fix — dead-stripping alias tracking:** `strip_dead_aot_string_allocs` was
+updated to understand the alias pattern:
+- `alias_movs` — collects `{dest → buf_var}` from `mov` instructions whose
+  src is an `__aot_str{N}_buf` variable.
+- `live_alias_dests` — dests that appear in srcs of any non-write-only,
+  non-alias-mov instruction (e.g. `call strlen(dest)` makes `dest` live).
+- A buf is live if directly referenced OR its alias dest is live.
+- Dead buf blocks AND their alias-movs are stripped together when the alias
+  is not observed outside already-folded string ops.
+
+This ensures `FrameTooLarge` cannot be triggered by fold-only strings
+(their buffers are still dead-stripped), while passing strings to function
+calls now works correctly.
+
+**New unit tests** (in `tests` module):
+- `string_param_len_lowers_to_field_load` — `str_len` on a function parameter
+  generates `field_load(s, 0)` runtime fallback.
+- `string_param_eq_lowers_to_call_builtin_str_eq` — `str_eq` with a non-literal
+  operand generates `call_builtin "str_eq" left right`.
+- `string_literal_buffer_has_length_header` — buffer for "hello" allocates 13
+  bytes, stores `field_store buf, 0, 5`, and writes 5 bytes at offsets 8–12.
+
+**`__twig_str_eq` C helper** (`runtime/twig_runtime.c`): reads the 8-byte
+length prefix from each LANG-STR-RT buffer and does a `memcmp` over the data
+region.  Returns 1 (equal) or 0 (not equal).
+
+## 0.23.0 — 2026-06-30 — strip dead AOT string-literal allocation blocks
+
+Added `strip_dead_aot_string_allocs` pass (called from `prepare_module_for_aot`
+after `lower_string_literals_for_aot`):
+
+After `lower_string_literals_for_aot` folds literal-only `str_eq`/`str_cmp`
+ops to constant integers, the `push_aot_string_literal` blocks that allocated
+the buffer (`alloc_bytes` + `store_byte` writes) are left with no live
+consumer — their `__aot_str{N}_buf` variable is written but never read.
+
+On aarch64, each such dead block uses 8+ frame slots. With multiple string
+comparisons (e.g. the ALGOL `s = 'ALPHA' and s != 'OMEGA'` cell), the
+accumulated frame size exceeded the 504-byte limit of the
+`stp_pre`/`ldp_post` 7-bit signed immediate, causing
+`BackendError::FrameTooLarge` in the NativeAot backend.
+
+The pass scans all `alloc_bytes` instructions whose dest starts with
+`__aot_str` and ends with `_buf`, checks whether any instruction other than
+`store_byte` references that var as a source, and removes the entire dead
+block (the `alloc_bytes` + every `store_byte` into it) when no live
+consumer exists.
+
+## 0.22.0 — 2026-06-28 — native string comparison metadata folding (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds literal-only `str_cmp` to the shared `-1`,
+`0`, or `1` integer convention before direct native lowering.
+
+## 0.21.0 — 2026-06-28 — native substring metadata folding (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds literal-only `str_slice` results into the
+same native byte-buffer metadata used by `str_const` and `str_concat`. This lets
+Twig `(let ((s "ABCDE")) (string-ref (substring s 1 4) 1))` fold the slice to
+`BCD` and the final `str_index` to byte `67` before direct native lowering.
+
+## 0.20.0 — 2026-06-28 — native computed string index metadata (LANG-FULL E4)
+
+`prepare_module_for_aot` now records folded `str_len` results as integer
+metadata and propagates that metadata through typed integer arithmetic. This
+lets Twig `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))` fold the
+native `str_index` to byte `69` instead of leaving an unsupported E4 string op
+for the direct native backend.
+
+## 0.19.0 — 2026-06-27 — native string literal metadata through local moves (LANG-FULL E4)
+
+`prepare_module_for_aot` now propagates literal string and integer metadata
+through `mov`, so lexical Twig bindings such as `(let ((s "ABC") (i 2))
+(string-ref s i))` still fold the native `str_index` to a byte constant instead
+of leaving an unsupported string op in the direct native backend.
+
+## 0.18.0 — 2026-06-27 — native literal string index OOB trap (LANG-FULL E4)
+
+`prepare_module_for_aot` now preserves the E4 trap contract for direct-literal
+`str_index` when the index is statically out of range. The native rewrite emits
+an unconditional `type_assert` trap before a dummy destination seed, so
+`(string-ref "ABC" 3)` reaches native machine code and traps at runtime instead
+of being rejected before execution.
+
+## 0.17.0 — 2026-06-27 — native literal string index lowering (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds direct-literal `str_index` when both the
+string value and index are statically known. Twig `(string-ref "ABC" 1)` now
+runs through the native AOT column and returns byte/codepoint `66`, matching the
+shared E4 byte-string semantics for printable ASCII. Dynamic string indexing and
+the out-of-bounds trap matrix proof remain follow-up runtime slices.
+
+## 0.16.0 — 2026-06-27 — native literal string metadata lowering (LANG-FULL E4)
+
+`prepare_module_for_aot` now folds `str_len`, `str_eq`, and literal
+`str_concat` metadata over direct string literals before native machine-code
+lowering. This lets Twig `(string-length "HELLO")`,
+`(string=? "HELLO" "HELLO")`, and
+`(string-length (string-append "AB" "CDE"))` run through the native AOT column
+without adding rodata string objects or a dynamic string runtime. The existing
+`str_const` + `print_str` rewrite still handles literal output, and non-literal
+byte-string ops remain deferred.
+
+## 0.15.0 — 2026-06-27 — native string literal PRINT lowering (LANG-FULL E4 / BA4)
+
+`prepare_module_for_aot` now lowers the landed E4 literal-output pair
+`str_const` + `print_str` into the native runtime path that already existed:
+`alloc_bytes`, one `store_byte` per printable-ASCII byte, and
+`call_builtin "print_string"` (`__twig_print_string(ptr,len)`). This covers the
+direct native AOT column without adding object-file rodata support or duplicating
+machine-backend logic.
+
+Added unit coverage for the rewrite shape and a Mach-O object compile test that
+proves the transformed IIR reaches the aarch64 backend/packager.
+
+## 0.14.0 — 2026-06-10 — `lispy_runtime.c`: universal exit coercion (LANG77 / McCarthy W13b)
+
+Adds `__twig_lispy_to_exit_code(uint64_t)` to the shared tagged-word C runtime: it
+coerces ANY `LispyValue` to a raw exit code by dispatching on its runtime tag
+(integer → `>> 3`; `#t`/`#f`/nil → `1`/`0`/`0`; symbol/pair → the tagged word
+verbatim). This is the program-exit boundary for a value whose tag the compiler
+cannot know statically — a **lambda** result (F7), typed `any`. It is a safe
+superset of the static `unbox_int`/`truthy` helpers (they agree on every tag they
+each cover). Reusable by every tagged-word backend that links this runtime (LLVM
+today; native AOT W14 and JIT W15 inherit it). No Rust source change; this is a
+runtime-asset addition compiled into the AOT executable.
+
+## 0.13.0 — 2026-06-04 — native symbols (LANG77 / McCarthy L3b-2c-3)
+
+`prepare_module_for_aot` now runs `iir_builtin_lowering::intern_symbols`
+(between the heap-builtin rename and `lower_lisp_repr`): each
+`const Var(name):symbol` becomes the tagged immediate `(id << 32) | TAG_SYMBOL`,
+with module-wide ids. So a McCarthy program's symbols compile to native and
+`EQ` on them is word equality — `(CAR '(A B C))` produces the symbol `A`,
+observable via `(EQ … 'A)` driving a `COND` branch. No backend change (a
+symbol is just a tagged `const_i64`; `EQ` reuses `lispy_equal`).
+
+No symbol-name *printing* yet (that needs string-literal emission, deferred) —
+static programs observe symbol identity via `EQ`.
+
+## 0.12.0 — 2026-06-04 — ATOM/EQ + COND truthiness (LANG77 / McCarthy L3b-2c-2)
+
+Adds `__twig_lispy_truthy` to `runtime/lispy_runtime.c` — normalises a tagged
+`LispyValue` to a **raw** machine `0`/`1` (false iff `#f` or nil) so the
+backend's `jmp_if_false` branches correctly on a `COND` predicate that
+produced a tagged boolean. A golden-test assertion pins its truth table.
+
+With the lowering changes in `iir-builtin-lowering` 0.6.0 (predicate renames +
+`COND` truthiness wrapping + bidirectional `mov` boxing), McCarthy `ATOM`/`EQ`
+now drive a native branch: `(COND ((ATOM 5) 7) (5 9))` → 7, and
+`(COND ((ATOM (CONS 1 2)) 7) (5 9))` → 9. No changes to `prepare_module_for_aot`
+beyond what 0.11.0 already wired.
+
+## 0.11.0 — 2026-06-04 — tag native lisp integers (LANG77 / McCarthy L3b-2c-1)
+
+`prepare_module_for_aot` now runs `iir_builtin_lowering::lower_lisp_repr`
+right after `lower_heap_builtins_runtime`. This **type-directed** pass boxes
+the integer atoms that flow into `lispy_*` calls (`n << 3`, so their NaN-box
+tag is `000` rather than the heap tag a raw int's low bits would collide
+with), tags the nil sentinel, and inserts an unbox at the program-exit
+boundary — so `(CAR (CONS 7 9))` still exits 7, now through fully **tagged**
+`LispyValue`s. This lays the representation the `pair?`/`ATOM`/`EQ`
+predicates (L3b-2c-2) require.
+
+Gate-free: the pass keys on use-sites, not the source language, so every
+Twig/Nib/Brainfuck program (whose integers feed `add`/`print_i64`, never a
+`lispy_*` call) is left byte-for-byte unchanged. No new opcodes — the unbox
+is a `call_builtin "lispy_unbox_int"` resolved from the runtime archive.
+
+## 0.10.0 — 2026-06-04 — route native cons through the lisp runtime (LANG77 / McCarthy L3b-2b)
+
+`prepare_module_for_aot` now calls
+`iir_builtin_lowering::lower_heap_builtins_runtime` instead of
+`lower_heap_builtins`, so a lisp frontend's `call_builtin
+"cons"/"car"/"cdr"` is routed to the LANG77 C runtime
+(`__twig_lispy_cons`/`car`/`cdr`, shipped in the runtime archive since
+0.9.0) rather than expanded to a raw-word `alloc`/`field_*` cell. Cons
+cells are now proper NaN-box **tagged** `LispyValue`s — the prerequisite for
+`pair?`/`ATOM`/`EQ`/symbols (L3b-2c).
+
+`(CAR (CONS 7 9))` still compiles to a native executable that exits 7 (Linux/
+Windows; the macOS AOT-exe runtime-helper gap is unchanged) — now through
+the tagged runtime instead of raw words. Integer payloads inside cells stay
+raw in this slice; boxing lands with the predicates in L3b-2c, where the tag
+is first inspected.
+
+The change only touches the cons/car/cdr builtin names, so every
+Twig/Nib/Brainfuck program is unaffected. The L3b-1 `alloc`/`field_*`
+backend emitters remain available as general-purpose heap ops.
+
+## 0.9.0 — 2026-06-04 — the shared lisp-native runtime (LANG77 / McCarthy L3b-2a)
+
+Adds `runtime/lispy_runtime.c` — a portable C implementation of
+`lispy-runtime`'s tagged-value model (`cons`/`car`/`cdr`/`pair?`/`equal?`/
+`not`/interned `symbol`s/`nil`, plus int box/unbox) — to the existing runtime
+archive.  `build.rs` compiles it into `libtwig_aot_runtime` alongside
+`twig_runtime.c` with one extra `.file(...)`, reusing the whole
+embed/link path unchanged.
+
+This is the **reusable primitive** that lets *any* lisp-family frontend
+(Twig and McCarthy Lisp today, future lisps tomorrow) compile its heap +
+symbol value model to a native executable — not a McCarthy-specific feature.
+It supersedes the raw-word cons of 0.8.0 (which had no type tag, so `pair?`/
+`ATOM`/`EQ`/symbols were impossible): values are now NaN-box **tagged**,
+exactly as the VM/JIT sees them.
+
+**This release ships the runtime + its divergence guard only — no lowering
+or backend changes**, so existing native compilation is byte-for-byte
+unchanged.  A new lib unit-test module `lispy_runtime_golden` links the C
+archive into the test binary and asserts every tag constant and encoding
+matches `lispy-runtime`'s canonical `pub const`s and constructors
+(`LispyValue::int(_).bits()`, `TAG_INT`, …).  If the Rust ABI ever changes,
+the C runtime fails `cargo test` — the two implementations cannot silently
+drift.  `lispy-runtime` is added as a **dev-dependency** for that test only;
+the AOT binary never links the Rust crate.
+
+Subsequent slices (L3b-2b/c, tracked in
+`code/specs/LANG77-lisp-native-runtime.md`) wire the shared
+`lower_heap_builtins` pass + the backends' `V1_BUILTINS` tables to *call*
+these `__twig_lispy_*` symbols, so `(CAR (CONS 7 9))` runs through tagged
+values and `(CAR '(A B C))` → `A` lights up.
+
+## 0.8.0 — 2026-06-04 — run heap-builtin lowering (McCarthy Lisp L3b)
+
+`prepare_module_for_aot` now runs `iir_builtin_lowering::lower_heap_builtins`
+(right after `lower_global_io`), so a Lisp frontend's `call_builtin
+"cons"/"car"/"cdr"/"null?"` is rewritten to `alloc`/`field_store`/
+`field_load`/`is_null` before infer/specialise.  The native backends
+(aarch64 0.5.0 / x86_64 0.7.0) lower those to a `__twig_alloc_bytes` cell +
+word loads/stores, so a McCarthy cons-of-integers program — e.g.
+`(CAR (CONS 7 9))` — compiles to a native executable that exits 7.
+
+The pass only rewrites those exact builtin names, so a module without them
+(every Twig / Nib / Brainfuck program today) is left byte-for-byte
+unchanged — no regression (the existing `macos_arm64_smoke` Twig native
+tests still pass).
+
+> **Note:** the macOS-executable path still can't link the runtime
+> archive's C helpers (`__twig_alloc_bytes` etc.) — a pre-existing
+> limitation shared with Brainfuck's tape — so cons programs run natively
+> on Linux/Windows; macOS native + runtime helpers is a separate
+> build-system fix.  See `lessons.md`.
+
 ## 0.7.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
 
 Runtime archive gains one new helper:

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/spice-engine",
-  "version": "0.1.0",
+  "version": "0.14.0",
   "description": "SPICE-style circuit analysis primitives and solvers",
   "type": "module",
   "main": "src/index.ts",
@@ -20,7 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0",
-    "@vitest/coverage-v8": "^3.0.0"
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
   }
 }

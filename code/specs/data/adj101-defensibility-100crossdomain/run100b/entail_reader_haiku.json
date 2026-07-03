@@ -1,0 +1,197 @@
+[
+ {
+  "check_id": 12,
+  "verdict": "LEAP",
+  "why": "Cited span states procedure \"normally\" requires authorization; scenario documents emergency override. Conflates general requirement type with this specific instance's actual requirement status."
+ },
+ {
+  "check_id": 20,
+  "verdict": "ENTAILED",
+  "why": "January 5 to March 30 yields exactly 84 days by calendar arithmetic; two precise dates force the value with no alternative reading."
+ },
+ {
+  "check_id": 31,
+  "verdict": "LEAP",
+  "why": "Scenario states parcel size (0.7 acres) but not acreage disturbed. Single duplex typically disturbs <50% of lot footprint; claiming 0.7 acres disturbed requires unstated assumption that full parcel area = disturbed area."
+ },
+ {
+  "check_id": 32,
+  "verdict": "LEAP",
+  "why": "Scenario states 1,240 kg solvent was generated, but explicitly notes \"large portion...sent off-site for reclamation and recycling rather than disposal.\" Reclamation contradicts waste classification. Actual hazardous waste quantity is unstated and unknown."
+ },
+ {
+  "check_id": 35,
+  "verdict": "LEAP",
+  "why": "Scenario presents two limits (8 mg/L permit, 4 mg/L TMDL). Discharge of 7 mg/L passes one, fails the other. Verdict requires unstated assumption about which is the effective \"permit_limit\"."
+ },
+ {
+  "check_id": 38,
+  "verdict": "LEAP",
+  "why": "Mechanical triviality does not entail minor modification; the scenario's 0.3 tpy emissions increase suggests material regulatory impact despite mechanical ease."
+ },
+ {
+  "check_id": 40,
+  "verdict": "LEAP",
+  "why": "Scenario states soil reposition is \"incidental,\" suggesting unintended activity. Whether incidental movement constitutes a legal \"discharge of fill\" is unstated; exempt agricultural practices are hinted but never established."
+ },
+ {
+  "check_id": 43,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"installed a new waste-oil underground tank.\" The adjectives \"underground\" and \"tank\" unambiguously establish the existence of a UST. No reasonable alternative reading makes this unknown."
+ },
+ {
+  "check_id": 46,
+  "verdict": "LEAP",
+  "why": "Value 5 requires assuming reference date (August 15) and rounding logic. Scenario provides dates but not explicit month-count instruction."
+ },
+ {
+  "check_id": 66,
+  "verdict": "LEAP",
+  "why": "Degradation and replaceability do not establish consumable status. Consumability is about design intent, not observed wear. Battery could instead be a durable good with limited lifespan or a defect."
+ },
+ {
+  "check_id": 81,
+  "verdict": "LEAP",
+  "why": "Granted compensatory stock options describes a factual action, not reliance on Rule 701. The scenario never invokes, applies, or claims the exemption."
+ },
+ {
+  "check_id": 94,
+  "verdict": "LEAP",
+  "why": "Scenario establishes topic is \"results of operations\" but not the specific code \"item_2.02\". That categorization requires external taxonomy knowledge and a matching judgment the scenario never states."
+ },
+ {
+  "check_id": 95,
+  "verdict": "LEAP",
+  "why": "Scenario explicitly states press release furnished before call. Information released through both channels, not solely the call."
+ },
+ {
+  "check_id": 105,
+  "verdict": "LEAP",
+  "why": "Tuna salad is not explicitly classified as TCS in the scenario. The cited span \"without refrigeration\" describes action, not food type. Inferring TCS classification requires external domain knowledge about tuna salad composition and regulatory status\u2014not entailed by the text."
+ },
+ {
+  "check_id": 106,
+  "verdict": "LEAP",
+  "why": "A single thermometer reading of 74\u00b0F establishes the current temperature, not the maximum. The scenario leaves open that higher temperatures were reached before stabilization."
+ },
+ {
+  "check_id": 108,
+  "verdict": "LEAP",
+  "why": "The scenario states 1 hour 45 minutes (105 minutes) as a time interval, but never defines what \"window1_minutes\" semantically represents. Mapping the numeric value to the slot requires unstated domain knowledge."
+ },
+ {
+  "check_id": 111,
+  "verdict": "LEAP",
+  "why": "Scenario shows tag document exists; does not establish the examined container currently bears the tag. Alternative: tag is filed separately, container unlabeled."
+ },
+ {
+  "check_id": 112,
+  "verdict": "LEAP",
+  "why": "Scenario establishes 5 refrigerated days (Days 0-2, then Days 23-24), not 4. The claim requires an unstated assumption about when the transition occurs or how days are counted."
+ },
+ {
+  "check_id": 114,
+  "verdict": "LEAP",
+  "why": "\"Prepares\" is ambiguous: could mean on-site production from ingredients, or sourced pre-made then handled/assembled. Scenario never states origin of salad or full production."
+ },
+ {
+  "check_id": 121,
+  "verdict": "LEAP",
+  "why": "The scenario describes a cooked ribeye at 145\u00b0F with posted advisory, but doesn't establish TCS classification. TCS status depends on holding/cooling protocols post-cooking, which are unstated. Requires assumption about state-dependent food safety classification."
+ },
+ {
+  "check_id": 132,
+  "verdict": "LEAP",
+  "why": "Scenario shows 10 days of actual notice (June 20 to June 30) but does not establish the legal requirement. Actual notice \u2260 required notice_days without explicit statement."
+ },
+ {
+  "check_id": 138,
+  "verdict": "LEAP",
+  "why": "Listing once is one action, not efforts. Scenario says unit sat empty 4 months\u2014consistent with passive listing + no follow-up. Reasonable efforts requires sustained pursuit; single listing does not establish it."
+ },
+ {
+  "check_id": 142,
+  "verdict": "LEAP",
+  "why": "The scenario provides a date (January 12) but does not specify location or actual seasonal conditions. Winter is not established\u2014only a calendar month that conventionally implies winter in the Northern Hemisphere is mentioned. Southern Hemisphere locations would place January in summer."
+ },
+ {
+  "check_id": 153,
+  "verdict": "LEAP",
+  "why": "Scenario states rent was \"withheld through lawful procedure\" due to city's uninhabitability declaration\u2014a legal defense that distinguishes defensible withholding from unpaid debt. Requires assuming \"lawfully withheld\" = \"unpaid.\""
+ },
+ {
+  "check_id": 155,
+  "verdict": "LEAP",
+  "why": "Scenario establishes rent was withheld during uninhabitability, but doesn't establish WHEN the obligation accrued\u2014possibly before the uninhabitable period began."
+ },
+ {
+  "check_id": 159,
+  "verdict": "LEAP",
+  "why": "Cited span proves she keeps a dog, not that keeping violates lease. Scenario establishes assistance-animal exception: verified disability, documentation provided, landlord aware. Violation requires assumption that exception doesn't apply."
+ },
+ {
+  "check_id": 163,
+  "verdict": "LEAP",
+  "why": "Scenario establishes three total disciplines, not the split between base and additional. \"Additional_disciplines=2\" requires unstated assumptions about which are primary vs. supplementary."
+ },
+ {
+  "check_id": 166,
+  "verdict": "LEAP",
+  "why": "Scenario establishes an APPLICATION for reciprocity was made, not that reciprocity rules apply to this attorney. Applicability of reciprocity is unstated; application filing does not entail reciprocity's existence or availability."
+ },
+ {
+  "check_id": 168,
+  "verdict": "LEAP",
+  "why": "Cited span omits expungement (2020 court order). Ambiguous whether slot means \"was convicted\" (true) or \"has active conviction on record\" (false after expungement). Scenario doesn't compel true reading alone."
+ },
+ {
+  "check_id": 174,
+  "verdict": "LEAP",
+  "why": "Licensing classification establishes permitted scope, not actual work performed. Scenario never states the contractor's actual work is limited to handyman tasks\u2014only the legal license category."
+ },
+ {
+  "check_id": 189,
+  "verdict": "LEAP",
+  "why": "Carrying \"souvenirs and gifts\" does not establish personal-use intent; gifts may target others, items could be for resale, and customs context suggests intent is undeclared/under-inspection."
+ },
+ {
+  "check_id": 193,
+  "verdict": "LEAP",
+  "why": "\"Identical\" in \"re-exported the identical pumps\" means same unit, not same condition. 18+ months storage leaves condition unspecified\u2014no affirmative preservation stated."
+ },
+ {
+  "check_id": 197,
+  "verdict": "LEAP",
+  "why": "Scenario places import in \"informal entry\" category, which is for non-commercial/de minimis shipments, directly contradicting commercial classification claim."
+ },
+ {
+  "check_id": 236,
+  "verdict": "ENTAILED",
+  "why": "Cited span explicitly states \"Two-thirds of his average weekly wage is $1,600,\" directly establishing the calculated value without alternative readings."
+ },
+ {
+  "check_id": 240,
+  "verdict": "LEAP",
+  "why": "Cited span establishes past designation (\"began receiving...as his surviving spouse\"), not current status. Scenario flags ongoing eligibility review due to cohabitation, leaving present-day status ambiguous."
+ },
+ {
+  "check_id": 244,
+  "verdict": "LEAP",
+  "why": "Mandatory attendance makes this work-related, not recreational. The scenario never states the activity is optional or leisure-based; \"mandatory\" contradicts \"recreational\" categorization."
+ },
+ {
+  "check_id": 246,
+  "verdict": "LEAP",
+  "why": "Scenario shows assault during job duties (temporal), not that assault was caused/motivated by duties. Robber's motive was theft; assault was incidental to robbery, not due to employment per se."
+ },
+ {
+  "check_id": 249,
+  "verdict": "LEAP",
+  "why": "Scenario proves absence (\"carries no insurance\") but not requirement. Sole proprietors often exempt from WC requirements; auditor's challenge doesn't establish legal mandate."
+ },
+ {
+  "check_id": 250,
+  "verdict": "LEAP",
+  "why": "Scenario establishes job-site injury + emergency surgery, but \"compensable\" is not explicit. Insurer's authorization dispute presupposes coverage, but doesn't guarantee compensability\u2014insurer might dispute on other grounds (necessity, coverage exclusion, employee status)."
+ }
+]

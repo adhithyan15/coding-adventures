@@ -6,17 +6,23 @@ extern crate std;
 use core::fmt::{self, Write};
 
 use board_vm_host::{crc32_ieee, write_blink_module, BlinkProgram, HostError};
-use board_vm_ir::{parse_module, CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, MODULE_VERSION};
+use board_vm_ir::{
+    collect_required_capabilities, parse_module, RequiredCapabilitiesError, CAP_GPIO_OPEN,
+    CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, MODULE_VERSION,
+};
 use board_vm_protocol::{ProgramFormat, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 
 pub const DEFAULT_EJECT_SLOT: u8 = 0;
 pub const DEFAULT_BOOT_POLICY: u8 = BOOT_RUN_IF_NO_HOST;
+pub const MAX_EJECT_REQUIRED_CAPABILITIES: usize = 16;
 pub const BLINK_REQUIRED_CAPABILITIES: [u16; 3] =
     [CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EjectError {
     Host(HostError),
+    RequiredCapabilities(RequiredCapabilitiesError),
+    RequiredCapabilitiesMismatch,
     InvalidBootPolicy(u8),
     Fmt,
 }
@@ -30,6 +36,12 @@ impl From<HostError> for EjectError {
 impl From<fmt::Error> for EjectError {
     fn from(_: fmt::Error) -> Self {
         Self::Fmt
+    }
+}
+
+impl From<RequiredCapabilitiesError> for EjectError {
+    fn from(value: RequiredCapabilitiesError) -> Self {
+        Self::RequiredCapabilities(value)
     }
 }
 
@@ -74,9 +86,38 @@ pub struct EjectedProgram<'a> {
     pub required_capabilities: &'static [u16],
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedProgramSummary {
+    pub program_id: u16,
+    pub slot: u8,
+    pub boot_policy: u8,
+    pub program_format: ProgramFormat,
+    pub module_version: u8,
+    pub module_flags: u8,
+    pub max_stack: u8,
+    pub module_crc32: u32,
+    pub required_capability_count: usize,
+    pub module_len: usize,
+}
+
 impl<'a> EjectedProgram<'a> {
     pub const fn module_len(self) -> usize {
         self.module.len()
+    }
+
+    pub const fn summary(self) -> EjectedProgramSummary {
+        EjectedProgramSummary {
+            program_id: self.program_id,
+            slot: self.slot,
+            boot_policy: self.boot_policy,
+            program_format: self.format,
+            module_version: self.module_version,
+            module_flags: self.module_flags,
+            max_stack: self.max_stack,
+            module_crc32: self.module_crc32,
+            required_capability_count: self.required_capabilities.len(),
+            module_len: self.module.len(),
+        }
     }
 }
 
@@ -90,6 +131,7 @@ pub struct RustConstNames<'a> {
     pub module_flags: &'a str,
     pub max_stack: &'a str,
     pub module_crc32: &'a str,
+    pub required_capabilities: &'a str,
     pub module: &'a str,
 }
 
@@ -104,6 +146,7 @@ impl<'a> RustConstNames<'a> {
             module_flags: "BOARD_VM_MODULE_FLAGS",
             max_stack: "BOARD_VM_MODULE_MAX_STACK",
             module_crc32: "BOARD_VM_PROGRAM_CRC32",
+            required_capabilities: "BOARD_VM_REQUIRED_CAPABILITIES",
             module: "BOARD_VM_PROGRAM",
         }
     }
@@ -129,6 +172,11 @@ pub fn build_module_eject_artifact<'a>(
     validate_boot_policy(options.boot_policy)?;
 
     let parsed = parse_module(module).map_err(HostError::from)?;
+    let mut derived_capabilities = [0u16; MAX_EJECT_REQUIRED_CAPABILITIES];
+    let derived_len = collect_required_capabilities(&parsed, &mut derived_capabilities)?;
+    if &derived_capabilities[..derived_len] != required_capabilities {
+        return Err(EjectError::RequiredCapabilitiesMismatch);
+    }
 
     Ok(EjectedProgram {
         program_id: options.program_id,
@@ -191,6 +239,20 @@ where
     )?;
     writeln!(
         out,
+        "pub const {}: [u16; {}] = [",
+        names.required_capabilities,
+        artifact.required_capabilities.len()
+    )?;
+    for chunk in artifact.required_capabilities.chunks(8) {
+        write!(out, "    ")?;
+        for capability in chunk {
+            write!(out, "0x{capability:04X}, ")?;
+        }
+        writeln!(out)?;
+    }
+    writeln!(out, "];")?;
+    writeln!(
+        out,
         "pub const {}: [u8; {}] = [",
         names.module,
         artifact.module.len()
@@ -246,6 +308,33 @@ mod tests {
     }
 
     #[test]
+    fn summarizes_blink_eject_artifact_contract() {
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let artifact = build_blink_eject_artifact(
+            BlinkProgram::onboard_led(),
+            EjectOptions::new(DEFAULT_PROGRAM_ID).slot(2),
+            &mut module,
+        )
+        .unwrap();
+
+        assert_eq!(
+            artifact.summary(),
+            EjectedProgramSummary {
+                program_id: DEFAULT_PROGRAM_ID,
+                slot: 2,
+                boot_policy: BOOT_RUN_IF_NO_HOST,
+                program_format: ProgramFormat::BvmModule,
+                module_version: MODULE_VERSION,
+                module_flags: 1,
+                max_stack: 4,
+                module_crc32: 0xBAD6_949E,
+                required_capability_count: 3,
+                module_len: BLINK_MODULE_LEN,
+            }
+        );
+    }
+
+    #[test]
     fn builds_generic_module_eject_artifact() {
         let mut module = [0u8; BLINK_MODULE_LEN];
         let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
@@ -281,6 +370,22 @@ mod tests {
             error,
             EjectError::Host(HostError::Module(ModuleError::TooShort))
         );
+    }
+
+    #[test]
+    fn rejects_mismatched_generic_module_capabilities() {
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
+        let module = &module[..module_len];
+
+        let error = build_module_eject_artifact(
+            module,
+            &[CAP_GPIO_OPEN, CAP_TIME_SLEEP_MS],
+            EjectOptions::new(DEFAULT_PROGRAM_ID),
+        )
+        .unwrap_err();
+
+        assert_eq!(error, EjectError::RequiredCapabilitiesMismatch);
     }
 
     #[test]
@@ -320,6 +425,8 @@ mod tests {
         assert!(source.contains("pub const BOARD_VM_MODULE_FLAGS: u8 = 0x01;"));
         assert!(source.contains("pub const BOARD_VM_MODULE_MAX_STACK: u8 = 4;"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM_CRC32: u32 = 0xBAD6949E;"));
+        assert!(source.contains("pub const BOARD_VM_REQUIRED_CAPABILITIES: [u16; 3] = ["));
+        assert!(source.contains("0x0001, 0x0002, 0x0010,"));
         assert!(source.contains("pub const BOARD_VM_PROGRAM: [u8; 36] = ["));
         assert!(source.contains("0x42, 0x56, 0x4D, 0x31"));
         assert!(source.ends_with("];\n"));

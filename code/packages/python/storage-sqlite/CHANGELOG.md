@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.19.0] - 2026-05-24
+
+### Changed
+
+- INTEGER PRIMARY KEY duplicate-insert error now surfaces as
+  ``UNIQUE constraint failed: <table>.<col>`` (matches SQLite)
+  instead of ``PRIMARY KEY constraint failed: …``.  PRIMARY KEY
+  implies UNIQUE in SQL, so SQLite reports both with the unified
+  UNIQUE wording; the storage-sqlite backend now follows suit.
+
 ## [0.18.0] - 2026-04-28
 
 ### Added

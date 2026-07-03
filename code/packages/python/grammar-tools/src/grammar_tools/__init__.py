@@ -35,10 +35,12 @@ from grammar_tools.parser_grammar import (
     validate_parser_grammar,
 )
 from grammar_tools.token_grammar import (
+    ModeTransition,
     PatternGroup,
     TokenDefinition,
     TokenGrammar,
     TokenGrammarError,
+    TransitionAction,
     parse_token_grammar,
     validate_token_grammar,
 )
@@ -52,6 +54,8 @@ __all__ = [
     "TokenDefinition",
     "TokenGrammar",
     "TokenGrammarError",
+    "ModeTransition",
+    "TransitionAction",
     "parse_token_grammar",
     "validate_token_grammar",
     # Parser grammar

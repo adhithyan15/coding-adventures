@@ -1,0 +1,69 @@
+{
+  "hash": "a33b749e843fef42",
+  "source_id": "https://academic.oup.com/cid/article/64/6/e34/2996079",
+  "title": "2017 IDSA Clinical Practice Guidelines for Healthcare-Associated Ventriculitis and Meningitis (Tunkel et al., Clinical Infectious Diseases)",
+  "resolved_url": "https://academic.oup.com/cid/article/64/6/e34/2996079",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In healthcare-associated ventriculitis/meningitis the likely etiologic agents differ from community-acquired disease, being resistant gram-negative bacilli and staphylococci.",
+      "byte_quote": "resistant gram-negative bacilli and staphylococci"
+    },
+    {
+      "id": "c2",
+      "text": "CSF shunt infections are commonly caused by coagulase-negative staphylococci and Propionibacterium acnes, which are indolent and evoke minimal inflammation.",
+      "byte_quote": "coagulase-negative staphylococci and _P. acnes_, are indolent, evoke minimal inflammation"
+    },
+    {
+      "id": "c3",
+      "text": "Organisms implicated include S. aureus, a coagulase-negative staphylococcus, or Propionibacterium acnes.",
+      "byte_quote": "_S. aureus_, a coagulase-negative staphylococcus, or _Propionibacterium acnes_"
+    },
+    {
+      "id": "c4",
+      "text": "Gram-negative bacilli and S. aureus are among the causative organisms.",
+      "byte_quote": "gram-negative bacilli and _S. aureus_"
+    },
+    {
+      "id": "c5",
+      "text": "Host/risk factors raising CSF shunt infection risk include premature birth (especially with intraventricular hemorrhage), younger age, and previous shunt infection.",
+      "byte_quote": "Factors associated with an increased risk of CSF shunt infection include premature birth (especially when associated with intraventricular hemorrhage), younger age, previous shunt infection"
+    },
+    {
+      "id": "c6",
+      "text": "Shunt infection risk depends on the cause of hydrocephalus, being more likely after purulent meningitis, hemorrhage, and myelomeningocele.",
+      "byte_quote": "cause of hydrocephalus (more likely after purulent meningitis, hemorrhage, and myelomeningocele)"
+    },
+    {
+      "id": "c7",
+      "text": "Procedural/exposure risk factors include less experienced neurosurgeon, more people traversing the operating theater, and exposure to perforated surgical gloves.",
+      "byte_quote": "less experienced neurosurgeon, higher number of people traversing the operating theater, exposure to perforated surgical gloves"
+    },
+    {
+      "id": "c8",
+      "text": "Additional procedural risk factors include intraoperative use of the neuroendoscope and longer duration of the shunt procedure.",
+      "byte_quote": "intraoperative use of the neuroendoscope, longer duration of the shunt procedure"
+    },
+    {
+      "id": "c9",
+      "text": "Risk factors for infection (drain/device context) include intraventricular or subarachnoid hemorrhage, cranial fracture with CSF leak, catheter irrigation, and craniotomy.",
+      "byte_quote": "Factors associated with an increased risk of infection are intraventricular or subarachnoid hemorrhage, cranial fracture with CSF leak, catheter irrigation, craniotomy"
+    },
+    {
+      "id": "c10",
+      "text": "A negative CSF Gram stain does not exclude infection, especially after prior antimicrobial therapy.",
+      "byte_quote": "A negative CSF Gram stain does not exclude the presence of infection, especially in patients who have received previous antimicrobial therapy"
+    },
+    {
+      "id": "c11",
+      "text": "Gram-stain diagnostic accuracy depends on the number of organisms present, the type of meningeal pathogen, and receipt of prior antimicrobial therapy.",
+      "byte_quote": "The diagnostic accuracy of a Gram stain is a function of the number of microorganisms present, the type of meningeal pathogen, and the receipt of prior antimicrobial therapy"
+    },
+    {
+      "id": "c12",
+      "text": "In one study of nosocomial meningitis the CSF Gram stain was positive in 65 (71%) of 91 cases.",
+      "byte_quote": "The CSF Gram stain was positive in 65 (71%) of 91 cases in one study of patients with nosocomial meningitis"
+    }
+  ],
+  "cites": []
+}

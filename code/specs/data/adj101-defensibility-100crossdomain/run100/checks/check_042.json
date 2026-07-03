@@ -1,0 +1,8 @@
+{
+ "check_id": 42,
+ "idx": 16,
+ "slot": "hazard_is_artificial_condition",
+ "claimed_value": true,
+ "scenario": "A six-year-old child wandered onto an owner's land, was drawn to an unfenced backyard swimming pool, and was injured falling into it. The child was a trespasser.",
+ "cited_span": "an unfenced backyard swimming pool"
+}

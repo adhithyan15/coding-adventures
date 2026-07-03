@@ -1,0 +1,160 @@
+{
+  "applicant": "Kiran",
+  "case_id": "case_011_heldout_borderline_pass",
+  "case_ir_hash": "bdb3fc58e18f7180f02faa2869bd5f790813348c3af1a8cdd129462f2c092267",
+  "coverage": [
+    {
+      "end": 101,
+      "field": "no_exception_claimed",
+      "kind": "represented",
+      "length": 101,
+      "role": "fact",
+      "start": 0
+    },
+    {
+      "end": 169,
+      "field": "lpr",
+      "kind": "represented",
+      "length": 68,
+      "role": "fact",
+      "start": 101
+    },
+    {
+      "end": 290,
+      "field": "continuous_residence_years",
+      "kind": "represented",
+      "length": 121,
+      "role": "fact",
+      "start": 169
+    },
+    {
+      "end": 413,
+      "field": "physical_presence_months",
+      "kind": "represented",
+      "length": 123,
+      "role": "fact",
+      "start": 290
+    },
+    {
+      "end": 489,
+      "field": "state_district_residence_months",
+      "kind": "represented",
+      "length": 76,
+      "role": "fact",
+      "start": 413
+    },
+    {
+      "end": 597,
+      "field": "continuous_until_admission",
+      "kind": "represented",
+      "length": 108,
+      "role": "fact",
+      "start": 489
+    },
+    {
+      "end": 639,
+      "field": "good_moral_character",
+      "kind": "represented",
+      "length": 42,
+      "role": "fact",
+      "start": 597
+    },
+    {
+      "end": 727,
+      "field": "attached_constitution",
+      "kind": "represented",
+      "length": 88,
+      "role": "fact",
+      "start": 639
+    },
+    {
+      "end": 814,
+      "field": "well_disposed",
+      "kind": "represented",
+      "length": 87,
+      "role": "fact",
+      "start": 727
+    },
+    {
+      "end": 912,
+      "kind": "represented",
+      "length": 98,
+      "query": "eligible_under_8usc1427a_ordinary_five_year_path",
+      "role": "query",
+      "start": 814
+    }
+  ],
+  "coverage_summary": {
+    "discarded_bytes": 0,
+    "input_bytes": 912,
+    "represented_bytes": 912
+  },
+  "fact_refs": {
+    "attached_constitution": {
+      "end": 727,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 639,
+      "text": "Applicant Kiran is attached to the principles of the Constitution of the United States.\n"
+    },
+    "continuous_residence_years": {
+      "end": 290,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 169,
+      "text": "Applicant Kiran has resided continuously in the United States after LPR admission for 5 years immediately before filing.\n"
+    },
+    "continuous_until_admission": {
+      "end": 597,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 489,
+      "text": "Applicant Kiran has resided continuously in the United States from application to admission to citizenship.\n"
+    },
+    "good_moral_character": {
+      "end": 639,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 597,
+      "text": "Applicant Kiran has good moral character.\n"
+    },
+    "lpr": {
+      "end": 169,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 101,
+      "text": "Applicant Kiran has been lawfully admitted for permanent residence.\n"
+    },
+    "no_exception_claimed": {
+      "end": 101,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 0,
+      "text": "Applicant Kiran claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+    },
+    "physical_presence_months": {
+      "end": 413,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 290,
+      "text": "Applicant Kiran was physically present in the United States for 30 months during the five years immediately before filing.\n"
+    },
+    "state_district_residence_months": {
+      "end": 489,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 413,
+      "text": "Applicant Kiran resided in the filing state or USCIS district for 3 months.\n"
+    },
+    "well_disposed": {
+      "end": 814,
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "start": 727,
+      "text": "Applicant Kiran is well disposed to the good order and happiness of the United States.\n"
+    }
+  },
+  "facts": {
+    "attached_constitution": true,
+    "continuous_residence_years": 5.0,
+    "continuous_until_admission": true,
+    "good_moral_character": true,
+    "lpr": true,
+    "no_exception_claimed": true,
+    "physical_presence_months": 30.0,
+    "state_district_residence_months": 3.0,
+    "well_disposed": true
+  },
+  "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+}

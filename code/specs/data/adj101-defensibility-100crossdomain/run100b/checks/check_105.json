@@ -1,0 +1,8 @@
+{
+ "check_id": 105,
+ "idx": 42,
+ "slot": "food_type",
+ "claimed_value": "cold_tcs",
+ "scenario": "A deli displays tuna salad without refrigeration. It started at 40 degrees F. After 3 hours on display, a probe thermometer reads 74 degrees F.",
+ "cited_span": "A deli displays tuna salad without refrigeration."
+}

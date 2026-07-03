@@ -1,0 +1,789 @@
+{
+  "description": "MLE-PASS multi-hop recall bank \u2014 TWO-HOP board questions answered purely from grounded edges with zero model calls. A clinical clue \u2192 disease (hop 1, an organ-system recall library) \u2192 answer (hop 2) is joined on the shared disease through an adj-lang rule body; the engine's SLD resolver returns the binding with BOTH hops' byte-provenance, and the harness maps it to the printed options. Slice 2 adds: more clue\u2192disease\u2192gene chains (derm, niemann-pick, pompe); a second relation as hop 2 \u2014 inheritance (clue\u2192disease\u2192inheritance pattern), proving the harness is generic over the second hop, not gene-specific; and an ABSTENTION sub-bank whose clue has no grounded hop-1 edge, which MUST abstain (never fabricate). Slice 3 adds the microbiology organism-ID chain (the original MYCIN domain) run in REVERSE: the clue is a disease, hop 1 is causes(organism, disease) traversed backwards to bind the causative organism, and hop 2 reads that organism's Gram stain or microscopic morphology \u2014 proving a two-hop chain need not run left to right through the edges, and that both hops can share one library. Slice 4 adds the first THREE-hop chain (finding \u2192 disease \u2192 organism \u2192 Gram stain). Slice 6 adds a third hop-2 relation off an already-chained disease (g6pd_deficiency now answers gene, inheritance, AND a hematology smear finding \u2014 write-once-use-many at the hop-2 level), and a THREE-hop abstention whose interior join is ungrounded (grounded ends, no causative organism) and so MUST abstain \u2014 the never-fabricate discipline extended to the deepest chain. Nothing authored: every edge reuses an already-grounded, spider+adversarially-gated fact. Engine: every answerable item correct with both hops cited; every abstention item abstains; zero model calls.",
+  "items": [
+    {
+      "id": "mh-01",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a white pupillary reflex (leukocoria). That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "leukocoria",
+      "expected": "rb1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-02",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Kayser-Fleischer corneal rings. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "kayser_fleischer_rings",
+      "expected": "atp7b",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-03",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has upward (superior) lens dislocation. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "superior_lens_dislocation",
+      "expected": "fbn1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-04",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has degeneration of the caudate nucleus. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "neuro-edges.adj",
+      "hop1_relation": "lesion_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "caudate_nucleus",
+      "expected": "htt",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-05",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a defect in type I collagen. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "collagen-defect-edges.adj",
+      "hop1_relation": "defect_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "type_i",
+      "expected": "col1a1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-06",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of alpha-galactosidase A. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "alpha_galactosidase_a",
+      "expected": "gla",
+      "options": {
+        "A": "gla",
+        "B": "rb1",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-07",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of glucocerebrosidase. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "glucocerebrosidase",
+      "expected": "gba1",
+      "options": {
+        "A": "rb1",
+        "B": "gba1",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-08",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has ash-leaf (hypopigmented) macules. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "derm-edges.adj",
+      "hop1_relation": "skin_finding_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "ash_leaf_spots",
+      "expected": "tsc1_tsc2",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "tsc1_tsc2",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-09",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of sphingomyelinase. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "sphingomyelinase",
+      "expected": "smpd1",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "smpd1",
+        "E": "htt"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-10",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has deficiency of acid alpha-glucosidase. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "enzyme-deficiency-edges.adj",
+      "hop1_relation": "enzyme_deficiency_disease",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "acid_alpha_glucosidase",
+      "expected": "gaa",
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "gaa"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-35",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has caf\u00e9-au-lait macules. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "derm-edges.adj",
+      "hop1_relation": "skin_finding_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "cafe_au_lait_macules",
+      "expected": "nf1",
+      "options": {
+        "A": "nf1",
+        "B": "rb1",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-36",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Heinz bodies on the peripheral blood smear. That finding points to a single disease; the disease is caused by a mutation in which gene?",
+      "hop1_lib": "histo-edges.adj",
+      "hop1_relation": "seen_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "heinz_bodies",
+      "expected": "g6pd",
+      "options": {
+        "A": "rb1",
+        "B": "g6pd",
+        "C": "atp7b",
+        "D": "fbn1",
+        "E": "htt"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-11",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has degeneration of the caudate nucleus. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "neuro-edges.adj",
+      "hop1_relation": "lesion_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "caudate_nucleus",
+      "expected": "autosomal_dominant",
+      "options": {
+        "A": "autosomal_dominant",
+        "B": "autosomal_recessive",
+        "C": "x_linked_recessive",
+        "D": "x_linked_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-12",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Kayser-Fleischer corneal rings. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "kayser_fleischer_rings",
+      "expected": "autosomal_recessive",
+      "options": {
+        "A": "autosomal_dominant",
+        "B": "autosomal_recessive",
+        "C": "x_linked_recessive",
+        "D": "x_linked_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-13",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has upward (superior) lens dislocation. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "superior_lens_dislocation",
+      "expected": "autosomal_dominant",
+      "options": {
+        "A": "autosomal_recessive",
+        "B": "x_linked_recessive",
+        "C": "autosomal_dominant",
+        "D": "x_linked_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-37",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has caf\u00e9-au-lait macules. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "derm-edges.adj",
+      "hop1_relation": "skin_finding_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "cafe_au_lait_macules",
+      "expected": "autosomal_dominant",
+      "options": {
+        "A": "autosomal_recessive",
+        "B": "x_linked_recessive",
+        "C": "x_linked_dominant",
+        "D": "autosomal_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-38",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Heinz bodies on the peripheral blood smear. That finding points to a single disease; that disease is inherited in which pattern?",
+      "hop1_lib": "histo-edges.adj",
+      "hop1_relation": "seen_in",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "inheritance",
+      "clue": "heinz_bodies",
+      "expected": "x_linked",
+      "options": {
+        "A": "autosomal_dominant",
+        "B": "autosomal_recessive",
+        "C": "x_linked_recessive",
+        "D": "x_linked_dominant",
+        "E": "x_linked"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-16",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "cholera",
+      "stem": "A patient is diagnosed with cholera. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_negative",
+        "B": "gram_positive",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-17",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "gonorrhea",
+      "stem": "A patient is diagnosed with gonorrhea. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-18",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pertussis",
+      "stem": "A patient is diagnosed with whooping cough (pertussis). The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "acid_fast",
+        "C": "gram_negative",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-19",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "anthrax",
+      "stem": "A patient is diagnosed with anthrax. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "acid_fast",
+        "C": "gram_variable",
+        "D": "gram_positive",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-20",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "listeriosis",
+      "stem": "A patient is diagnosed with listeriosis. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "acid_fast",
+        "C": "gram_variable",
+        "D": "poorly_staining",
+        "E": "gram_positive"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-21",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pseudomembranous_colitis",
+      "stem": "A patient is diagnosed with pseudomembranous colitis. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-22",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "tetanus",
+      "stem": "A patient is diagnosed with tetanus. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "gram_positive",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-23",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "legionnaires_disease",
+      "stem": "A patient is diagnosed with Legionnaires disease. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "acid_fast",
+        "C": "gram_negative",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-24",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "cholera",
+      "stem": "A patient is diagnosed with rice-water diarrhea of cholera. The organism that causes it has which microscopic morphology?",
+      "expected": "comma_shaped",
+      "options": {
+        "A": "cocci",
+        "B": "diplococci",
+        "C": "bacilli",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-25",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "peptic_ulcer_disease",
+      "stem": "A patient is diagnosed with Helicobacter peptic ulcer disease. The organism that causes it has which microscopic morphology?",
+      "expected": "spiral",
+      "options": {
+        "A": "cocci",
+        "B": "diplococci",
+        "C": "bacilli",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-26",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "gonorrhea",
+      "stem": "A patient is diagnosed with gonorrhea. The organism that causes it has which microscopic morphology?",
+      "expected": "diplococci",
+      "options": {
+        "A": "diplococci",
+        "B": "cocci",
+        "C": "bacilli",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-27",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "syphilis",
+      "stem": "A patient is diagnosed with syphilis. The organism that causes it has which microscopic morphology?",
+      "expected": "spirochete",
+      "options": {
+        "A": "cocci",
+        "B": "spirochete",
+        "C": "diplococci",
+        "D": "bacilli",
+        "E": "comma_shaped"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-28",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "meningitis",
+      "stem": "A patient is diagnosed with meningococcal meningitis. The organism that causes it has which microscopic morphology?",
+      "expected": "diplococci",
+      "options": {
+        "A": "cocci",
+        "B": "bacilli",
+        "C": "diplococci",
+        "D": "comma_shaped",
+        "E": "spiral"
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "mh-29",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "morphology",
+      "clue": "pertussis",
+      "stem": "A patient is diagnosed with whooping cough (pertussis). The organism that causes it has which microscopic morphology?",
+      "expected": "coccobacilli",
+      "options": {
+        "A": "cocci",
+        "B": "diplococci",
+        "C": "bacilli",
+        "D": "coccobacilli",
+        "E": "comma_shaped"
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "mh-31",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "community_acquired_pneumonia",
+      "stem": "A patient is diagnosed with community-acquired pneumonia. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "acid_fast",
+        "C": "gram_variable",
+        "D": "poorly_staining",
+        "E": "gram_positive"
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "mh-32",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pharyngitis",
+      "stem": "A patient is diagnosed with streptococcal pharyngitis. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-33",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "pneumonia",
+      "stem": "A patient is diagnosed with Klebsiella pneumonia. The organism that causes it shows which Gram-stain reaction on microscopy?",
+      "expected": "gram_negative",
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-30",
+      "qtype": "multi_hop_recall",
+      "hop1_lib": "micro-edges.adj",
+      "hop1_relation": "causes",
+      "hop1_reverse": true,
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "gram_stain",
+      "clue": "a_syndrome_with_no_grounded_organism",
+      "stem": "A patient has a syndrome whose causative organism is not in the grounded library. The organism that causes it shows which Gram-stain reaction on microscopy? (If the causative organism is not grounded, abstain.)",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      }
+    },
+    {
+      "id": "mh-34",
+      "qtype": "multi_hop_recall",
+      "stem": "A colonic biopsy shows pseudomembranes. The disease this indicates is caused by an organism with which Gram-stain reaction?",
+      "hop1_lib": "gi-edges.adj",
+      "hop1_relation": "biopsy_finding_in",
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "causes",
+      "hop2_reverse": true,
+      "hop3_lib": "micro-edges.adj",
+      "hop3_relation": "gram_stain",
+      "clue": "pseudomembranes",
+      "expected": "gram_positive",
+      "options": {
+        "A": "gram_negative",
+        "B": "gram_positive",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "mh-39",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has Heinz bodies on the peripheral blood smear. That finding points to a single disease; that disease has which other classic peripheral-smear finding?",
+      "hop1_lib": "histo-edges.adj",
+      "hop1_relation": "seen_in",
+      "hop2_lib": "anemia-edges.adj",
+      "hop2_relation": "classic_finding",
+      "clue": "heinz_bodies",
+      "expected": "bite_cells",
+      "options": {
+        "A": "bite_cells",
+        "B": "koilonychia",
+        "C": "ringed_sideroblasts",
+        "D": "spherocytes",
+        "E": "target_cells"
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "mh-40",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a white pupillary reflex (leukocoria). The disease it indicates is caused by an organism with which Gram-stain reaction? (If no causative organism is grounded, abstain.)",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "micro-edges.adj",
+      "hop2_relation": "causes",
+      "hop2_reverse": true,
+      "hop3_lib": "micro-edges.adj",
+      "hop3_relation": "gram_stain",
+      "clue": "leukocoria",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "gram_positive",
+        "B": "gram_negative",
+        "C": "acid_fast",
+        "D": "gram_variable",
+        "E": "poorly_staining"
+      }
+    },
+    {
+      "id": "mh-14",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has an eye finding not in the grounded library. The disease it indicates is caused by a mutation in which gene? (If the chain is not grounded, abstain.)",
+      "hop1_lib": "ophtho-edges.adj",
+      "hop1_relation": "eye_finding_indicates",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "a_clue_with_no_grounded_eye_edge",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      }
+    },
+    {
+      "id": "mh-15",
+      "qtype": "multi_hop_recall",
+      "stem": "A patient has a neuro lesion not in the grounded library. The disease it indicates is caused by a mutation in which gene? (If the chain is not grounded, abstain.)",
+      "hop1_lib": "neuro-edges.adj",
+      "hop1_relation": "lesion_causes",
+      "hop2_lib": "genetics-edges.adj",
+      "hop2_relation": "gene_defect",
+      "clue": "a_lesion_with_no_grounded_edge",
+      "expected": null,
+      "expect_abstain": true,
+      "options": {
+        "A": "rb1",
+        "B": "atp7b",
+        "C": "fbn1",
+        "D": "htt",
+        "E": "col1a1"
+      }
+    }
+  ]
+}

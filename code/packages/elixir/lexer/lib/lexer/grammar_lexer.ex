@@ -295,6 +295,19 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       # -- Extension: Bracket depth tracking ---
       # Per-type bracket nesting depth counters: %{paren: 0, bracket: 0, brace: 0}
       bracket_depths: %{paren: 0, bracket: 0, brace: 0},
+      # -- F10: Declarative mode transitions ---
+      # List of mode_transition maps parsed from the grammar's `transitions:` section.
+      # Evaluated after every emitted token (first-match-wins). When empty (the
+      # default), mode switching still works via the on_token callback as before.
+      transitions: [],
+      # Set of group names that inherit the default group's patterns as a fallthrough.
+      # A group inherits when it is a `set_mode` target but NOT a `push` target. Push
+      # targets are exclusive — only their own patterns apply, matching the Go impl.
+      inheriting_modes: MapSet.new(),
+      # The mode the lexer starts in. Defaults to "default" when the grammar does not
+      # set `start_mode:`. Used to initialize group_stack; future support for reset
+      # between calls lives here too.
+      start_mode: "default",
       # -- Position tracking ---
       pos: 0,
       line: 1,
@@ -473,6 +486,11 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
     layout_keyword_set =
       MapSet.new(Map.get(grammar, :layout_keywords, []) || [])
 
+    # F10: determine the lexer's starting mode and compute flat-mode inheritance.
+    start_mode = grammar.start_mode || "default"
+    transitions = grammar.transitions || []
+    inheriting_modes = compute_inheriting_modes(transitions)
+
     %State{
       source: source,
       patterns: patterns,
@@ -486,11 +504,14 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       group_patterns: group_patterns,
       context_keyword_set: context_keyword_set,
       layout_keyword_set: layout_keyword_set,
-      group_stack: ["default"],
+      group_stack: [start_mode],
       on_token: on_token,
       skip_enabled: true,
       last_emitted_token: nil,
-      bracket_depths: %{paren: 0, bracket: 0, brace: 0}
+      bracket_depths: %{paren: 0, bracket: 0, brace: 0},
+      transitions: transitions,
+      inheriting_modes: inheriting_modes,
+      start_mode: start_mode
     }
   end
 
@@ -673,7 +694,8 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
     if ch == "\n" do
       token = %Token{type: "NEWLINE", value: "\\n", line: state.line, column: state.column}
-      new_state = %{advance(state) | last_emitted_token: token}
+      # Apply F10 transitions for NEWLINE, then record it as the last emitted token.
+      new_state = state |> apply_transitions(token) |> then(&%{advance(&1) | last_emitted_token: token})
       {:continue, new_state, [token | tokens]}
     else
       # Use the active group's patterns (top of the group stack).
@@ -682,10 +704,27 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       active_group = List.first(state.group_stack)
       group_pats = Map.get(state.group_patterns, active_group, state.patterns)
 
+      # F10 flat-mode inheritance: groups that are `set_mode` targets (but NOT
+      # `push` targets) inherit the default group's patterns as a fallthrough.
+      # This lets a subsidiary mode recognise its own tokens first and still
+      # fall back to identifiers, numbers, etc. from the default group — no
+      # duplication needed. Push targets remain exclusive.
+      group_pats =
+        if active_group != "default" and MapSet.member?(state.inheriting_modes, active_group) do
+          default_pats = Map.get(state.group_patterns, "default", [])
+          group_pats ++ default_pats
+        else
+          group_pats
+        end
+
       case try_match_token_in_group(remaining, state, group_pats) do
         {:matched, token, new_state} ->
           # Update bracket depth tracking.
           new_state = update_bracket_depth(new_state, token.value)
+
+          # Apply F10 declarative transitions (fires before or alongside the
+          # on_token callback; both can act on the same token independently).
+          new_state = apply_transitions(new_state, token)
 
           # If a callback is registered, invoke it and process the
           # returned actions. The callback receives a read-only context
@@ -815,6 +854,106 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
     new_state = %{new_state | last_emitted_token: last_emitted}
 
     {:continue, new_state, new_tokens}
+  end
+
+  # -- F10: Compute inheriting modes -----------------------------------------
+  #
+  # Returns a MapSet of group names that should inherit the default group's
+  # patterns as a fallthrough (flat-mode inheritance).
+  #
+  # A group qualifies when it is:
+  #   1. A target of at least one `set_mode` action, AND
+  #   2. NOT a target of any `push` action (push targets are exclusive), AND
+  #   3. Not "default" itself.
+  #
+  # The distinction matters because `push` creates a nested, exclusive region —
+  # only the pushed group's own patterns apply there. `set_mode` does a flat
+  # swap: the new mode is conceptually "still the default mode, but with
+  # overrides", so inheriting the default patterns as fallthrough is natural.
+  #
+  # Mirrors `computeInheritingModes` in the Go lexer (grammar_lexer_f10.go).
+
+  defp compute_inheriting_modes(transitions) do
+    # Collect set_mode and push targets from all transition rules.
+    {push_targets, set_mode_targets} =
+      Enum.reduce(transitions, {MapSet.new(), MapSet.new()}, fn rule, {pushes, sets} ->
+        Enum.reduce(rule.actions, {pushes, sets}, fn
+          {:push, target}, {p, s} -> {MapSet.put(p, target), s}
+          {:set_mode, target}, {p, s} -> {p, MapSet.put(s, target)}
+          _, acc -> acc
+        end)
+      end)
+
+    # Inheriting = set_mode targets minus push targets minus "default".
+    set_mode_targets
+    |> MapSet.difference(push_targets)
+    |> MapSet.delete("default")
+  end
+
+  # -- F10: Apply declarative mode transitions --------------------------------
+  #
+  # Called after every emitted token (including NEWLINEs). Walks the transition
+  # table, finds the first rule whose on_tokens / in_mode / on_value guards all
+  # pass, and applies its actions to the state.
+  #
+  # Action semantics:
+  #   {:set_mode, name}  — flat toggle: replace the active group in-place.
+  #   {:push, name}      — push a new group (exclusive nested region).
+  #   :pop               — close the current region; clamp at bottom.
+  #   :enable_skip       — resume skip-pattern processing.
+  #   :disable_skip      — suspend skip-pattern processing.
+  #
+  # Guard semantics (all must match):
+  #   on_tokens  — token.type must be in the list (required).
+  #   in_mode    — if set, the active group must equal the value.
+  #   on_value   — if set, token.value must equal the value.
+  #
+  # First-match-wins: once a rule fires, remaining rules are skipped.
+  #
+  # Returns the updated state (unchanged if no rule matches or transitions = []).
+
+  defp apply_transitions(%State{transitions: []} = state, _token), do: state
+
+  defp apply_transitions(%State{} = state, token) do
+    active = List.first(state.group_stack)
+
+    matching_rule =
+      Enum.find(state.transitions, fn rule ->
+        type_matched = token.type in rule.on_tokens
+        mode_matched = is_nil(rule.in_mode) or rule.in_mode == active
+        value_matched = is_nil(rule.on_value) or rule.on_value == token.value
+        type_matched and mode_matched and value_matched
+      end)
+
+    case matching_rule do
+      nil ->
+        state
+
+      rule ->
+        Enum.reduce(rule.actions, state, fn action, acc ->
+          case action do
+            {:set_mode, target} ->
+              # Replace only the top-of-stack entry, leaving the rest intact.
+              [_top | rest] = acc.group_stack
+              %{acc | group_stack: [target | rest]}
+
+            {:push, target} ->
+              %{acc | group_stack: [target | acc.group_stack]}
+
+            :pop ->
+              case acc.group_stack do
+                [_only] -> acc
+                [_top | rest] -> %{acc | group_stack: rest}
+              end
+
+            :enable_skip ->
+              %{acc | skip_enabled: true}
+
+            :disable_skip ->
+              %{acc | skip_enabled: false}
+          end
+        end)
+    end
   end
 
   # -- Skip pattern matching --------------------------------------------------

@@ -1,0 +1,159 @@
+{
+  "applicant": "Gita",
+  "case_id": "case_007_no_good_moral_character",
+  "coverage": [
+    {
+      "end": 100,
+      "field": "no_exception_claimed",
+      "kind": "represented",
+      "length": 100,
+      "role": "fact",
+      "start": 0
+    },
+    {
+      "end": 167,
+      "field": "lpr",
+      "kind": "represented",
+      "length": 67,
+      "role": "fact",
+      "start": 100
+    },
+    {
+      "end": 289,
+      "field": "continuous_residence_years",
+      "kind": "represented",
+      "length": 122,
+      "role": "fact",
+      "start": 167
+    },
+    {
+      "end": 411,
+      "field": "physical_presence_months",
+      "kind": "represented",
+      "length": 122,
+      "role": "fact",
+      "start": 289
+    },
+    {
+      "end": 486,
+      "field": "state_district_residence_months",
+      "kind": "represented",
+      "length": 75,
+      "role": "fact",
+      "start": 411
+    },
+    {
+      "end": 593,
+      "field": "continuous_until_admission",
+      "kind": "represented",
+      "length": 107,
+      "role": "fact",
+      "start": 486
+    },
+    {
+      "end": 644,
+      "field": "good_moral_character",
+      "kind": "represented",
+      "length": 51,
+      "role": "fact",
+      "start": 593
+    },
+    {
+      "end": 731,
+      "field": "attached_constitution",
+      "kind": "represented",
+      "length": 87,
+      "role": "fact",
+      "start": 644
+    },
+    {
+      "end": 817,
+      "field": "well_disposed",
+      "kind": "represented",
+      "length": 86,
+      "role": "fact",
+      "start": 731
+    },
+    {
+      "end": 915,
+      "kind": "represented",
+      "length": 98,
+      "query": "eligible_under_8usc1427a_ordinary_five_year_path",
+      "role": "query",
+      "start": 817
+    }
+  ],
+  "coverage_summary": {
+    "discarded_bytes": 0,
+    "input_bytes": 915,
+    "represented_bytes": 915
+  },
+  "fact_refs": {
+    "attached_constitution": {
+      "end": 731,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 644,
+      "text": "Applicant Gita is attached to the principles of the Constitution of the United States.\n"
+    },
+    "continuous_residence_years": {
+      "end": 289,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 167,
+      "text": "Applicant Gita has resided continuously in the United States after LPR admission for 6.1 years immediately before filing.\n"
+    },
+    "continuous_until_admission": {
+      "end": 593,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 486,
+      "text": "Applicant Gita has resided continuously in the United States from application to admission to citizenship.\n"
+    },
+    "good_moral_character": {
+      "end": 644,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 593,
+      "text": "Applicant Gita does not have good moral character.\n"
+    },
+    "lpr": {
+      "end": 167,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 100,
+      "text": "Applicant Gita has been lawfully admitted for permanent residence.\n"
+    },
+    "no_exception_claimed": {
+      "end": 100,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 0,
+      "text": "Applicant Gita claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+    },
+    "physical_presence_months": {
+      "end": 411,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 289,
+      "text": "Applicant Gita was physically present in the United States for 33 months during the five years immediately before filing.\n"
+    },
+    "state_district_residence_months": {
+      "end": 486,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 411,
+      "text": "Applicant Gita resided in the filing state or USCIS district for 6 months.\n"
+    },
+    "well_disposed": {
+      "end": 817,
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "start": 731,
+      "text": "Applicant Gita is well disposed to the good order and happiness of the United States.\n"
+    }
+  },
+  "facts": {
+    "attached_constitution": true,
+    "continuous_residence_years": 6.1,
+    "continuous_until_admission": true,
+    "good_moral_character": false,
+    "lpr": true,
+    "no_exception_claimed": true,
+    "physical_presence_months": 33.0,
+    "state_district_residence_months": 6.0,
+    "well_disposed": true
+  },
+  "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+}

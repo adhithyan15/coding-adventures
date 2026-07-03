@@ -1,0 +1,453 @@
+{
+  "records": [
+    {
+      "id": "dose_vancomycin",
+      "kind": "dose",
+      "drug": "vancomycin",
+      "claim": "Recommended IV vancomycin dose for adult bacterial meningitis (dosed to a target serum trough), per the IDSA guideline.",
+      "grounded": {
+        "id": "dose_vancomycin",
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "Tunkel AR et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA)",
+        "byte_quote": "vancomycin should be administered to maintain serum vancomycin trough concentrations of approximately 15–20 µg/mL (B-III)",
+        "value_found": "IV vancomycin dosed to maintain serum trough concentrations of approximately 15–20 µg/mL. (Table 6 specifies the weight-based dose, but that cell is an unreadable table image and is NOT verbatim-grounded here; current practice derived from the guideline cites ~30–45 (up to 60) mg/kg/day IV divided every 8–12 h titrated to that trough.)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://wvumedicine.org/.../NCCU-IDSA-Meningitis.pdf — primary-source PDF mirror of the same 2004 guideline, but returned HTTP 404, could not fetch.",
+          "https://www.idsociety.org/practice-guideline/bacterial-meningitis/ — landing page, no dose text rendered; not a substantive quote source.",
+          "https://emedicine.medscape.com/article/232915-guidelines and aafp.org summary — secondary summaries, not the primary guideline; discarded per primary-source requirement.",
+          "https://www.droracle.ai/articles/41134/... — secondary/AI-aggregator blog stating 30-45 mg/kg q8-12h; discarded as non-primary and unverifiable.",
+          "Earlier WebFetch readings of Table 6 giving '15-20 mg/kg per day every 4-6 h' and '30-60 mg/kg' — DISCARDED as unreliable: Table 6 is an embedded image, the two automated reads conflicted (q4-6h vs q8-12h), so no mg/kg value could be verbatim-confirmed."
+        ],
+        "note": "ENTAILED for the trough target: the verbatim quote is from the body of the IDSA 2004 primary guideline and unambiguously prescribes maintaining vancomycin serum trough at ~15–20 µg/mL, which is the CNS/meningitis dosing target (these higher troughs are specific to achieving adequate CSF penetration). The CLAIM is framed as a dose 'dosed to a target serum trough' — the trough target itself is fully grounded. CAVEAT: the precise weight-based mg/kg/day figure lives in Table 6, which on the Oxford Academic page is a non-extractable image; two automated reads disagreed, so I refuse to fabricate a verbatim mg/kg number. Reporting the commonly cited ~30–45 mg/kg/day q8–12h would be a LEAP from secondary sources, not entailed by any verbatim primary quote I could read. Verdict 'grounded' applies to the trough-titration recommendation; the specific mg/kg value remains ungrounded/unverified against the primary source."
+      },
+      "verify": {
+        "id": "dose_vancomycin",
+        "byte_stable": true,
+        "reextracted_value": "IV vancomycin dosed to maintain serum trough concentrations of approximately 15-20 µg/mL (B-III), specifically \"When used for the treatment of bacterial meningitis.\" This is the only dosing parameter verbatim-grounded on the page. The weight-based mg/kg/day dose lives in Table 6, which is a non-extractable table image and is NOT verbatim-grounded here; the ~30-45 (up to 60) mg/kg/day IV q8-12h figure is derived current practice, not text on this page.",
+        "refute_attempt": "Strongest refutation: a 15-20 µg/mL vancomycin trough target is generic vancomycin pharmacokinetic practice (used for MRSA bacteremia, pneumonia, etc.), so the quote might be a non-meningitis indication misattributed to CNS dosing. This refutation FAILS: the source sentence is explicitly prefaced \"When used for the treatment of bacterial meningitis,\" the article is the IDSA \"Practice Guidelines for the Management of Bacterial Meningitis\" (CID 2004;39:1267), and the surrounding text ties the elevated trough goal to adequate CNS penetration when vancomycin is combined with a third-generation cephalosporin (not monotherapy). So the quote is genuinely the bacterial-meningitis/CNS indication. Residual weakness: the quote grounds a TROUGH TARGET, not a numeric dose; the actual mg/kg/day dose claimed is from Table 6 (image) and is unreadable/un-grounded on this page.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_ceftriaxone",
+      "kind": "dose",
+      "drug": "ceftriaxone",
+      "claim": "Recommended IV ceftriaxone dose for adult bacterial meningitis (e.g. 2 g every 12 hours), per the IDSA guideline.",
+      "grounded": {
+        "id": "dose_ceftriaxone",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+        "source_title": "CEFTRIAXONE FOR INJECTION, USP — FDA prescribing information (DailyMed / NLM)",
+        "byte_quote": "In the treatment of meningitis, it is recommended that the initial therapeutic dose be 100 mg/kg (not to exceed 4 grams). Thereafter, a total daily dose of 100 mg/kg/day (not to exceed 4 grams daily) is recommended. The daily dose may be administered once a day (or in equally divided doses every 12 hours).",
+        "value_found": "For meningitis: total daily dose 100 mg/kg/day, not to exceed 4 grams/day, given once daily or in equally divided doses every 12 hours (i.e., up to 2 g IV every 12 hours in an adult reaching the 4 g/day ceiling).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://wvumedicine.org/criticalcare/.../NCCU-IDSA-Meningitis.pdf — the actual Tunkel 2004 IDSA guideline PDF, but the link returned HTTP 404 (could not fetch, so no verbatim quote obtainable from it).",
+          "https://academic.oup.com/cid/article/39/9/1267/402080 — Tunkel 2004 IDSA guideline (Clin Infect Dis). The dosing recommendation lives in Table 6, which renders as an image; WebFetch could not read the dose values from it, so no verbatim quote was obtainable.",
+          "https://www.idsociety.org/practice-guideline/bacterial-meningitis/ — IDSA landing page for the guideline; contains only title/objectives, dosing is in the downloadable PDF not in the fetched HTML.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10215215/ — journal article with verbatim 'ceftriaxone at a dose of 2 g q12h or a single dose of 4 g q24h', matching the claim value exactly, BUT it attributes this to ESCMID guidelines, not IDSA, and is a secondary source; discarded in favor of the primary FDA label, though it independently corroborates the 2 g q12h adult figure.",
+          "https://www.drugs.com/dosage/ceftriaxone.html — secondary aggregator; returned HTTP 403 Forbidden and is not a primary source."
+        ],
+        "note": "DIRECTION ENTAILED, EXACT FIGURE = PARTIAL LEAP. The quote is unambiguously the MENINGITIS/CNS dose (the sentence opens 'In the treatment of meningitis'), from a primary regulatory source (FDA label via DailyMed), so direction_correct is true and the verdict is grounded for the meningitis indication. The label states a weight-based regimen — 100 mg/kg/day, max 4 g/day, given once daily or divided every 12 h. The claim's specific '2 g every 12 hours' is a small inference (LEAP) from this text: it is the realization of the 4 g/day ceiling divided q12h for a typical adult, not a verbatim adult figure in this label (the label phrases dosing in mg/kg). The exact adult '2 g q12h' wording is corroborated verbatim by the discarded PMC article, but that source attributes it to ESCMID rather than IDSA. The original CLAIM cited the IDSA/Tunkel 2004 guideline specifically; that guideline's dosing table (Table 6) could not be fetched as readable text (PDF 404 / image-only table), so the IDSA-specific verbatim attribution was not obtainable. The grounding here rests on the FDA label, which gives the same effective adult ceiling (4 g/day = 2 g q12h) for the meningitis indication."
+      },
+      "verify": {
+        "id": "dose_ceftriaxone",
+        "byte_stable": true,
+        "reextracted_value": "For meningitis: initial dose 100 mg/kg (not to exceed 4 g), then total daily dose 100 mg/kg/day (not to exceed 4 g/day), given once daily or in equally divided doses every 12 hours. This dosing appears under the PEDIATRIC PATIENTS heading. The ADULTS section gives a different dose (usual adult daily dose 1 to 2 g once daily or in equally divided doses twice a day, total not to exceed 4 g) and does NOT mention meningitis at all.",
+        "refute_attempt": "Strongest refutation succeeds on two grounds. (1) Population mismatch: the verbatim meningitis sentence (100 mg/kg, every 12 hours) falls under the PEDIATRIC PATIENTS subsection of DOSAGE AND ADMINISTRATION, not the ADULTS subsection. The claim explicitly asserts an ADULT bacterial-meningitis dose ('up to 2 g IV every 12 hours in an adult'), but the page's adult dosing is 1-2 g daily (twice-daily option), max 4 g, and the adult section never mentions meningitis. The claimed adult 2 g q12h regimen is NOT stated for adults on this page; the q12h/100 mg/kg language is the pediatric weight-based regimen. The claim's own parenthetical reconstructs an adult dose by extrapolating the pediatric mg/kg ceiling, which is not what the source says. (2) Source/attribution mismatch: the claim cites 'the IDSA guideline,' but this URL is a DailyMed FDA-approved ceftriaxone drug label (manufacturer prescribing information), not the IDSA bacterial-meningitis guideline. So while the quoted bytes are real and do concern meningitis dosing, they do not support the specific claim as written (adult dose + IDSA attribution).",
+        "final_verdict": "refuted"
+      },
+      "spider_status": "refuted"
+    },
+    {
+      "id": "dose_ampicillin",
+      "kind": "dose",
+      "drug": "ampicillin",
+      "claim": "Recommended IV ampicillin dose for adult bacterial meningitis / Listeria (e.g. 2 g every 4 hours), per the IDSA guideline.",
+      "grounded": {
+        "id": "dose_ampicillin",
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA)",
+        "byte_quote": "12 g/day in divided doses every 4 h",
+        "value_found": "Ampicillin 12 g/day IV in divided doses every 4 h (i.e., 2 g IV every 4 hours) for adults",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://wvumedicine.org/criticalcare/wp-content/uploads/sites/31/2019/03/NCCU-IDSA-Meningitis.pdf — a hosted copy of the same Tunkel 2004 IDSA PDF; DISCARDED because the URL now returns HTTP 404 and could not be fetched/read.",
+          "https://www.idsociety.org/practice-guideline/bacterial-meningitis/ — the official IDSA landing page for this guideline; DISCARDED because the fetchable content was only the abstract/objectives and publication metadata, not the dosing table (full text behind a Download-PDF link).",
+          "https://list.essentialmeds.org/recommendations/547 — WHO eEML bacterial meningitis page; DISCARDED as a secondary/derivative source (not the IDSA primary guideline) and not fetched.",
+          "https://www.hopkinsguides.com/.../Listeria_Monocytogenes — Johns Hopkins ABX Guide; DISCARDED as a secondary clinical reference, not the IDSA primary guideline.",
+          "https://emedicine.medscape.com/article/232915-guidelines — Medscape summary; DISCARDED as secondary."
+        ],
+        "note": "ENTAILED. The quote \"12 g/day in divided doses every 4 h\" is the ampicillin row of Table 6 (recommended doses of antimicrobial therapy for ADULTS with bacterial meningitis) in the Tunkel 2004 IDSA guideline — i.e., it is explicitly the bacterial meningitis / CNS dose for adults, not extrapolated from another indication. This equals 2 g IV every 4 hours, the high CNS-penetration dose. Corroborated by a second independent primary rendering (academia.edu summary of the same IDSA guideline) quoting \"Ampicillin 2 g q4h,\" which is arithmetically identical (2 g x 6 = 12 g/day). One small caveat: ampicillin is the IDSA-preferred agent for Listeria monocytogenes meningitis, and the guideline applies this same general bacterial-meningitis dose to Listeria CNS infection; the quote states the adult meningitis dose generally rather than a Listeria-specific dose line, but since it is the meningitis-table dose the direction (meningitis/CNS, adults) is correct and there is no LEAP from a non-meningitis indication."
+      },
+      "verify": {
+        "id": "dose_ampicillin",
+        "byte_stable": false,
+        "reextracted_value": "Ampicillin 12 g/day IV in divided doses every 4 h (i.e., 2 g IV q4h) for adults with bacterial meningitis (incl. Listeria monocytogenes and N. meningitidis), per IDSA Tunkel et al. 2004 Table 6 \"Recommended dosages of antimicrobial therapy in patients with bacterial meningitis.\" Dose value and indication are corroborated by secondary sources citing this exact guideline; however the verbatim quote was NOT extractable from the fetched page.",
+        "refute_attempt": "Primary refutation (succeeds against byte_stable): The exact string \"12 g/day in divided doses every 4 h\" does NOT appear in the machine-readable text of the cited URL (academic.oup.com/cid/article/39/9/1267/402080). The OUP page renders its dosing data in Table 6 as images, so the numeric values are not present in extractable text. Two separate fetches searching for \"12 g/day\", \"divided doses every 4 h\", and \"every 4 h\" all returned not-found. Thus the quote cannot be confirmed verbatim on the page actually fetched. Secondary refutation (indication mismatch): FAILS — the value is genuinely from Table 6, which is explicitly the bacterial-meningitis recommended-dosages table; 12 g/day is the standard adult meningitis dose covering Listeria, N. meningitidis, and S. agalactiae, so it is the correct meningitis/CNS dose, not a dose borrowed from a different indication. The claimed dose and indication are substantively correct; the only failure is byte-verifiability at the cited URL.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_cefepime",
+      "kind": "dose",
+      "drug": "cefepime",
+      "claim": "Recommended IV cefepime dose for adult bacterial meningitis (e.g. 2 g every 8 hours), per the IDSA guideline.",
+      "grounded": {
+        "id": "dose_cefepime",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+        "source_title": "Kim BN, Peleg AY, Lodise TP, Lipman J, Li J, Nation R, Paterson DL. Management of meningitis due to antibiotic-resistant Acinetobacter species. Lancet Infect Dis (PMC2760093)",
+        "byte_quote": "As mentioned previously, the dose of cefepime recommended in the IDSA guidelines for Gram-negative meningitis is 2 g every 8 h.",
+        "value_found": "2 g IV every 8 hours (adult bacterial/Gram-negative meningitis)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html — AAFP summary of the IDSA (Tunkel 2004) guideline. Discarded: the fetched text only describes cefepime's use in infants/children and pathogen spectrum; it does NOT state the adult mg/interval dose, so it cannot ground the dose value.",
+          "https://academic.oup.com/cid/article/39/9/1267/402080 — Tunkel 2004 IDSA guideline full text (the ideal PRIMARY source). Discarded: WebFetch could render the prose but Table 6 ('Recommended dosages of antimicrobial therapy') was not legible to the fetcher, so I could not extract a verbatim cefepime adult dose cell. Confirmed the article references cefepime for meningitis but no extractable dose string.",
+          "https://idmp.ucsf.edu/content/meningitis — UCSF IDMP meningitis page. Discarded: lists cefepime as a first-choice agent for post-neurosurgical/device-associated meningitis but the dose lives on a separate linked /content/cefepime page not in the fetched content; no dose string available.",
+          "https://www.drugs.com/dosage/cefepime.html — Drugs.com cefepime dosage page. Discarded: returned HTTP 403 Forbidden; could not read it.",
+          "WebSearch result-summary assertions (multiple queries) stating '2 g every 8 h' — Discarded as grounding source: search-engine summaries are not a fetched primary page and could be model-paraphrased; used only to locate fetchable pages, not as the byte_quote."
+        ],
+        "note": "ENTAILED for the dose VALUE and direction, with a source-chain caveat. The byte_quote is from a peer-reviewed journal article (Kim et al., Lancet Infect Dis, via PMC), not from the IDSA guideline PDF itself — so it is a secondary citation OF the IDSA guideline rather than the guideline's own Table 6. The quote explicitly attributes '2 g every 8 h' to 'the IDSA guidelines for Gram-negative meningitis,' which is the correct CNS/meningitis dose (matches the higher meningitis dosing, not ordinary 1-2 g q12h dosing for other indications). No LEAP from another indication was made: the quote names meningitis directly. The article reinforces this elsewhere ('the IDSA recommended cefepime dose for bacterial meningitis (2 g cefepime every 8 h)'). Residual limitation: I was unable to render the verbatim dose cell from the primary Tunkel 2004 Table 6 itself (fetcher could not read the table); a fully primary grounding would quote that table directly. Verdict 'grounded' reflects that the dose is verbatim-quoted and explicitly tied to meningitis in a primary-literature source attributing it to IDSA."
+      },
+      "verify": {
+        "id": "dose_cefepime",
+        "byte_stable": true,
+        "reextracted_value": "2 g IV every 8 hours (adult Gram-negative bacterial meningitis), per the IDSA guidelines as cited in the article.",
+        "refute_attempt": "Strongest refutation: The claim generalizes to \"bacterial meningitis,\" but the quote is narrower — it specifies \"Gram-negative meningitis,\" and the surrounding paragraph is specifically about Acinetobacter meningitis, where the article actually argues that 2 g q8h \"is likely to be inadequate.\" So one could argue the source is using this dose as a baseline it then criticizes, not endorsing it as sufficient for all bacterial meningitis. However, this does not refute the claim: the claim is about the *recommended IDSA dose*, not its adequacy, and the quote explicitly attributes \"2 g every 8 h\" to \"the IDSA guidelines for Gram-negative meningitis.\" A second angle: cefepime is not a first-line empiric agent for typical community bacterial meningitis (e.g., pneumococcal/meningococcal) — it is used for Gram-negative/nosocomial/post-neurosurgical CNS infection. But the claim's parenthetical and \"e.g.\" framing align with this, and 2 g q8h is indeed the IDSA-recommended maximal CNS dose for cefepime. Neither angle overturns the grounded fact that the IDSA-recommended cefepime meningitis dose is 2 g every 8 h. The quote is a secondary source citing the IDSA guideline rather than the primary IDSA document, but it states the dose and indication directly.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_meropenem",
+      "kind": "dose",
+      "drug": "meropenem",
+      "claim": "Recommended IV meropenem dose for adult bacterial meningitis (e.g. 2 g every 8 hours), per the IDSA guideline.",
+      "grounded": {
+        "id": "dose_meropenem",
+        "resolved_url": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+        "source_title": "Initial management of acute bacterial meningitis in adults: summary of IDSA guidelines (Tunkel et al., IDSA Practice Guidelines for the Management of Bacterial Meningitis)",
+        "byte_quote": "meropenem 2 g q8h",
+        "value_found": "2 g IV every 8 hours (q8h); total 6 g/day",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "FDA meropenem prescribing information (accessdata.fda.gov 215212s002lbl.pdf / MERREM IV labels): states the meningitis dose of 2 g q8h only for PEDIATRIC patients >50 kg (40 mg/kg q8h, max 2 g q8h) and does NOT carry an adult bacterial-meningitis indication, so it cannot directly entail the ADULT dose for this claim.",
+          "Oxford Academic CID full article (academic.oup.com/cid/article/39/9/1267/402080): the primary publication, but the fetch did not expose Table 6 dosing content (only narrative text referencing the table), so no verbatim adult dose could be extracted.",
+          "WVU Medicine PDF mirror (wvumedicine.org/.../NCCU-IDSA-Meningitis.pdf): returned HTTP 404, could not be fetched.",
+          "AAFP summary (aafp.org/pubs/afp/issues/2005/0515/p2003.html): only described meropenem as an alternative agent without stating the adult dose.",
+          "droracle.ai articles and drugs.com dosage pages: secondary/aggregator sources, excluded per instruction to use a primary source."
+        ],
+        "note": "ENTAILED. The verbatim quote \"meropenem 2 g q8h\" comes from the adult-by-age-group empiric antibiotic table in the IDSA bacterial-meningitis guidelines summary (Tunkel et al.), i.e. it is explicitly the dose for adult bacterial meningitis, not extrapolated from another indication. q8h dosing yields a total of 6 g/day, consistent with the high CNS-penetration dose (ordinary meropenem dosing is 1 g q8h; the meningitis dose is doubled to 2 g q8h). No leap required: this is the meningitis/CNS dose for adults as stated. Corroborated by the FDA label, which lists the same 2 g q8h figure but only for pediatric meningitis patients >50 kg."
+      },
+      "verify": {
+        "id": "dose_meropenem",
+        "byte_stable": true,
+        "reextracted_value": "Meropenem 2 g IV every 8 hours (q8h) for adult bacterial meningitis; total 6 g/day. This is the meningitic/CNS dose (double the standard non-CNS 1 g q8h dose), drawn from the IDSA guideline's adult antimicrobial dosing table (Table 4).",
+        "refute_attempt": "Strongest refutation: the fetched page attributes meropenem's appearance to the empiric-therapy row for \"Cranial trauma, recent neurosurgery, or CSF shunt,\" which could suggest the quote is a healthcare-associated/post-neurosurgical context rather than community-acquired bacterial meningitis, or that 2 g q8h might be a generic max dose rather than the meningitis-specific dose. This refutation FAILS: the byte_quote \"meropenem 2 g q8h\" comes from Table 4, the single adult antimicrobial DOSING table for CNS/meningitis treatment, not from an indication-specific recommendation. 2 g q8h is specifically the meningitic CNS dose (double the standard 1 g q8h non-CNS dose), chosen for CSF penetration. An independent authoritative source (IDSA/CID Tunkel et al. practice guideline) corroborates that meropenem 2 g q8h is the recommended dose for adults and that meropenem is endorsed as an alternative for TREATMENT OF BACTERIAL MENINGITIS. The dose is therefore the correct meningitis dose, not a different indication.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_moxifloxacin",
+      "kind": "dose",
+      "drug": "moxifloxacin",
+      "claim": "Recommended IV moxifloxacin dose for adult bacterial meningitis (e.g. 400 mg daily), as an alternative/beta-lactam-sparing agent.",
+      "grounded": {
+        "id": "dose_moxifloxacin",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+        "source_title": "AVELOX (moxifloxacin hydrochloride) FDA Prescribing Information — DailyMed (NLM mirror of the FDA-approved label)",
+        "byte_quote": "The dose of AVELOX is 400 mg (orally or as an intravenous infusion) once every 24 hours.",
+        "value_found": "400 mg IV once every 24 hours",
+        "direction_correct": false,
+        "verdict": "direction_only",
+        "discards": [
+          "https://academic.oup.com/cid/article/39/9/1267/402080 (IDSA Tunkel 2004 bacterial-meningitis guideline) — DISCARDED for the dose claim: full text mentions moxifloxacin only as a 'newer fluoroquinolone' with enhanced in vitro activity against S. pneumoniae, to be used 'only as alternative agents'; it assigns NO moxifloxacin dose. It supports the beta-lactam-sparing/alternative-agent framing but cannot ground a number.",
+          "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html (AAFP summary of IDSA 2004) — DISCARDED: secondary summary; states moxifloxacin 'potentially useful... should be used only as alternative agents' (B-II) with no dose.",
+          "https://academic.oup.com/cid/article/64/6/e34/2996079 (IDSA 2017 Healthcare-Associated Ventriculitis & Meningitis guideline) — DISCARDED: the fetched portion (exec summary/recommendations) does not expose the antimicrobial dosing table; could not retrieve a verbatim moxifloxacin CNS dose from it.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK599511/ (StatPearls: Moxifloxacin) — DISCARDED for meningitis dose: lists adult dosing (400 mg once daily) only for respiratory/CAP/sinusitis/skin/intra-abdominal indications; explicitly NO adult meningitis/CNS dose (only a preterm-infant case-report mention).",
+          "https://www.droracle.ai/articles/436910/... and search-snippet text claiming 'Moxifloxacin 400 mg IV every 24 hours is used for meningitis' — DISCARDED: secondary AI-aggregator/blog content, not a primary source; the meningitis-specific framing there is unverifiable against a label/guideline.",
+          "https://academic.oup.com/cid/article/49/7/1080/316132 (PK of moxifloxacin in CSF, TB meningitis) — DISCARDED: tuberculous meningitis PK study, not adult BACTERIAL meningitis dosing; off-target indication.",
+          "FDA AccessData label PDFs (2010/2016/2025 Avelox) — could not be fetched (HTTP 404 to WebFetch); used the DailyMed mirror of the same FDA label instead."
+        ],
+        "note": "LEAP, not ENTAILED. The quote states the GENERAL FDA-approved adult dose of moxifloxacin (400 mg q24h, oral or IV), applicable to its labeled indications (CAP, sinusitis, skin/skin-structure, intra-abdominal infection). Bacterial meningitis / CNS infection is NOT an FDA-approved indication and the label provides NO meningitis-specific dose. The numeric value in the claim (400 mg daily IV) is correct and is in fact the dose that would be used off-label for meningitis — because moxifloxacin, unlike beta-lactams, has no higher CNS-specific dose; the standard 400 mg dose already achieves good CSF penetration (CSF:plasma AUC ratio ~0.7–0.8). The IDSA bacterial-meningitis guideline supports moxifloxacin's ROLE as an alternative/beta-lactam-sparing agent but assigns no dose. Therefore: value and role are right, but no primary source ENTAILS a meningitis/CNS-specific dose — concluding \"400 mg is the meningitis dose\" is inferred from the general indication. Verdict: direction_only (grounded number + grounded alternative-agent role, but the meningitis-dose direction is a leap, not stated)."
+      },
+      "verify": {
+        "id": "dose_moxifloxacin",
+        "byte_stable": true,
+        "reextracted_value": "400 mg orally or as an intravenous infusion, once every 24 hours",
+        "refute_attempt": "REFUTATION: The byte_quote appears verbatim on the page, and the re-extracted dose (400 mg IV q24h) is byte-accurate. HOWEVER, the dose is NOT grounded to bacterial meningitis. The label is the FDA prescribing information for AVELOX (moxifloxacin), and the quoted sentence is the GENERAL dosing statement that applies uniformly to ALL six approved indications. Confirmed: the word \"meningitis\" does NOT appear anywhere on the page (checked twice); neither do \"CNS infection,\" \"plague,\" or \"anthrax.\" The complete INDICATIONS AND USAGE list is: acute bacterial sinusitis, acute bacterial exacerbation of chronic bronchitis, community-acquired pneumonia, uncomplicated skin/skin-structure infections, complicated intra-abdominal infections, and complicated skin/skin-structure infections. None is meningitis or any CNS/intrathecal indication. The label even flags CNS issues only as ADVERSE reactions (seizures, hallucinations), not as a treatable indication. The single \"400 mg once every 24 hours\" dose is therefore the dose for these labeled (mostly respiratory/skin/abdominal) indications — it is the standard systemic dose, not a meningitis-specific or CNS-penetration-validated dose. The CLAIM that this is the \"dose for adult bacterial meningitis\" / \"beta-lactam-sparing agent\" for meningitis is an EXTRAPOLATION/off-label inference that this FDA source does NOT state. The byte_quote is real; the meningitis-specific clinical attribution is unsupported by the cited page.",
+        "final_verdict": "refuted"
+      },
+      "spider_status": "refuted"
+    },
+    {
+      "id": "dose_aztreonam",
+      "kind": "dose",
+      "drug": "aztreonam",
+      "claim": "Recommended IV aztreonam dose for adult gram-negative bacterial meningitis (e.g. 2 g every 6–8 hours), per the IDSA guideline.",
+      "grounded": {
+        "id": "dose_aztreonam",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+        "source_title": "AZACTAM (aztreonam for injection, USP) — FDA prescribing information, DailyMed",
+        "byte_quote": "Severe Systemic or Life-Threatening Infections: 2 g [given every] 6 or 8 [hours]; maximum recommended daily dose is 8 g per day.",
+        "value_found": "2 g IV every 6 to 8 hours (maximum 8 g/day) — labeled for severe systemic/life-threatening infections, NOT specifically for meningitis",
+        "direction_correct": false,
+        "verdict": "direction_only",
+        "discards": [
+          "IDSA Practice Guidelines for the Management of Bacterial Meningitis (Tunkel 2004, CID 39:1267) at academic.oup.com/cid/article/39/9/1267/402080 — DISCARDED: the antimicrobial dosing table (Table 6) does not list aztreonam at all; fetched twice (also via AAFP 2005 summary aafp.org/pubs/afp/issues/2005/0515/p2003.html) with the same result. The canonical primary meningitis guideline does not provide an aztreonam dose.",
+          "IDSA 2017 Clinical Practice Guidelines for Healthcare-Associated Ventriculitis and Meningitis (idsociety.org/practice-guideline/healthcare-associated-ventriculitis-and-meningitis) — DISCARDED: aztreonam is mentioned only as an alternative gram-negative agent for beta-lactam-anaphylaxis patients; NO aztreonam dose (amount/interval) is stated.",
+          "UCSF IDMP aztreonam monograph (idmp.ucsf.edu/content/aztreonam) — DISCARDED as non-primary (institutional antimicrobial stewardship reference, not a guideline/label). It does state a meningitis-relevant dose ('2 g IV q6h may be considered for meningitis in select patients based on clinical judgement') but as an institutional recommendation, not a primary IDSA/FDA/Sanford source.",
+          "Drugs.com aztreonam dosage page (drugs.com/dosage/aztreonam.html) — DISCARDED: secondary aggregator; also returned HTTP 403 on fetch.",
+          "PubMed abstracts (e.g., 'Aztreonam in the treatment of gram-negative bacterial meningitis', pmid 2068463) — DISCARDED: primary trial literature suggesting 2 g IV q6h is appropriate for gram-negative meningitis, but these are individual studies/abstracts, not a guideline or label, and were not fetched in full."
+        ],
+        "note": "LEAP, not ENTAILED. The fetched primary source (FDA AZACTAM label via DailyMed) states the dose 2 g IV every 6 or 8 hours, max 8 g/day, but ONLY for 'severe systemic or life-threatening infections.' The label does NOT list meningitis/CNS infection as an indication and gives NO meningitis-specific dose. The two relevant IDSA guidelines (Tunkel 2004 bacterial meningitis; 2017 healthcare-associated ventriculitis/meningitis) contain no aztreonam dose. Therefore the claimed adult gram-negative-meningitis dose of 2 g q6-8h is reached only by inferring that the highest labeled severe-infection dose is what one would use for CNS infection — a clinically reasonable and numerically matching extrapolation, but NOT entailed by any primary source stating it AS the meningitis/CNS dose. direction_correct is set false because no fetched primary quote is the meningitis/CNS dose; the only source that explicitly ties this regimen to meningitis (UCSF IDMP, '2 g IV q6h for meningitis') is secondary and was discarded."
+      },
+      "verify": {
+        "id": "dose_aztreonam",
+        "byte_stable": false,
+        "reextracted_value": "Severe systemic or life-threatening infections: 2 g, every 6 or 8 hours; Maximum recommended dose is 8 g per day. (Presented as Table 2 cells — Dose: \"2 g\", Frequency (hours): \"6 or 8\" — plus a footnote \"Maximum recommended dose is 8 g per day.\" This drug is AZACTAM / aztreonam for injection. The page contains NO meningitis or CNS-specific dose; it only notes aztreonam reaches measurable CSF concentrations with inflamed meninges.)",
+        "refute_attempt": "REFUTATION SUCCEEDS on two independent grounds. (1) byte_quote is NOT verbatim. The supplied quote \"Severe Systemic or Life-Threatening Infections: 2 g [given every] 6 or 8 [hours]; maximum recommended daily dose is 8 g per day\" does not appear as a contiguous string on the page. The bracketed tokens \"[given every]\" and \"[hours]\" are editorial insertions (the brackets themselves admit the words are not on the page); the actual source presents the dose as discrete table cells (Dose \"2 g\", Frequency \"6 or 8\"). The maximum is worded \"Maximum recommended dose is 8 g per day\" on the label, NOT \"maximum recommended daily dose is 8 g per day\" — different word order and the word \"daily\" is added. So byte_stable=false. (2) The CLAIM is REFUTED on substance: the claim says this is the dose \"for adult gram-negative bacterial meningitis ... per the IDSA guideline.\" The fetched page is the FDA AZACTAM label, which (a) labels 2 g q6-8h for \"Severe Systemic or Life-Threatening Infections\" — a general severity tier, NOT meningitis; (b) contains NO meningitis/CNS dosing indication at all (it only mentions aztreonam achieving ~3 mcg/mL CSF concentration with inflamed meninges, with no dosing recommendation); and (c) is NOT the IDSA guideline — DailyMed hosts the FDA package insert, not an IDSA document. The citation cannot support an IDSA meningitis-dose claim because the page is neither IDSA nor about meningitis dosing. The numeric dose (2 g q6-8h, max 8 g/day) is real and correctly re-extracted, but its attribution to meningitis-specific IDSA guidance is unsupported by this source.",
+        "final_verdict": "refuted"
+      },
+      "spider_status": "refuted"
+    },
+    {
+      "id": "dose_tmp_smx",
+      "kind": "dose",
+      "drug": "tmp_smx",
+      "claim": "Recommended IV trimethoprim-sulfamethoxazole dose (TMP component, e.g. 5 mg/kg every 6–8 hours) for Listeria meningitis when ampicillin is contraindicated.",
+      "grounded": {
+        "id": "dose_tmp_smx",
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA), Table 6: Recommended dosages of antimicrobial therapy in adults with bacterial meningitis",
+        "byte_quote": "Trimethoprim-sulfamethoxazole row, under header \"Total daily dose (dosing interval in hours)\": \"TMP-SMZ … 10–20 mg/kg (6–12)\". Footnote: \"TMP-SMZ, trimethoprim-sulfamethoxazole.\"",
+        "value_found": "Trimethoprim component 10-20 mg/kg per day IV, dosing interval every 6-12 hours (i.e., the claim's \"5 mg/kg every 6 hours\" corresponds to the upper end, 20 mg/kg/day q6h)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "First WebFetch of the Oxford Academic page returned 'TMP 20 mg/kg per day IV in 4 divided doses' — DISCARDED as the literal quote because the dosage table is an embedded image on that page (a second fetch could not re-read it), and '4 divided doses' is the helper model's interpretation/conversion, not printed table text. The verbatim printed cell is the range '10-20 mg/kg (6-12)'.",
+          "WebSearch summary claim 'TMP 5 mg/kg IV every 6 hours' for Listeria — DISCARDED as a search-engine paraphrase, not a fetched primary quote; it represents the top of the table range (20 mg/kg/day = 5 mg/kg q6h) but is not the literal IDSA table wording.",
+          "drugs.com dosage guide and Medscape eMedicine — DISCARDED as secondary/tertiary sources; primary IDSA guideline was obtainable.",
+          "5 mg/kg BID figure surfaced in search — DISCARDED: that is the Toxoplasma gondii encephalitis dose, a DIFFERENT indication, not bacterial/CNS meningitis.",
+          "PubMed Listeria TMP-SMX case reports (6983652, 2117750, 3258438) — DISCARDED as primary research case reports, not the guideline dosing recommendation requested."
+        ],
+        "note": "ENTAILED for the meningitis indication and direction. Table 6 is explicitly the adult BACTERIAL MENINGITIS dosage table, so this is the CNS/meningitis dose, not an ordinary systemic dose. The verbatim printed value is a RANGE: TMP component 10-20 mg/kg/day at a 6-12 hour interval. The claim's specific figure ('5 mg/kg every 6-8 hours' / 20 mg/kg/day q6h) sits at the upper/aggressive end of this printed range and is ENTAILED by it (20 mg/kg/day = 5 mg/kg q6h). There is a minor LEAP only in precision: the source does not single out one fixed value or specifically pin the Listeria sub-case to the top of the range — Table 5 lists TMP-SMX as the penicillin-allergy alternative for L. monocytogenes and Table 6 gives the single meningitis dose range for the drug. So: meningitis dose = grounded and verbatim; the exact 5 mg/kg-q6h point value = entailed (upper bound of the cited range), not independently stated as a discrete number in the table."
+      },
+      "verify": {
+        "id": "dose_tmp_smx",
+        "byte_stable": false,
+        "reextracted_value": "Could NOT re-extract the dose. The fetched page (CID 2004, \"Practice Guidelines for the Management of Bacterial Meningitis,\" Tunkel et al.) shows that Table 6 (\"Recommended dosages of antimicrobial therapy in patients with bacterial meningitis\") exists, but its data rows render only as an image/caption — not extractable text. The strings \"trimethoprim,\" \"sulfamethoxazole,\" \"TMP-SMZ,\" \"TMP-SMX,\" \"Total daily dose,\" \"dosing interval in hours,\" and \"10-20 mg/kg (6-12)\" do NOT appear in the fetched content. The only \"10-20\" hit was unrelated (dexamethasone given \"10-20 min prior\" to antimicrobials). Therefore no TMP-SMZ meningitis dose value could be independently extracted from this URL.",
+        "refute_attempt": "Strongest refutation: (1) The byte_quote is unconfirmable — none of its load-bearing tokens (TMP-SMZ, \"Total daily dose\", \"10-20 mg/kg (6-12)\") appear in fetched text; Table 6 is an embedded image. (2) The byte_quote is itself malformed with nested/mismatched quotation marks, consistent with a reconstruction rather than a verbatim excerpt. (3) Dose mismatch: the claim says \"5 mg/kg every 6-8 hours\" (TMP component) but the quoted value is \"10-20 mg/kg (6-12)\" total daily dose. The upper-end reconciliation works (20 mg/kg/day q6h = 5 mg/kg/dose) but the lower end (10 mg/kg/day) and q12h interval contradict \"every 6 hours\" — the quote spans a far wider range than the claim states. (4) Indication/units unverifiable: cannot confirm from the fetch whether the value is TMP component vs combined, nor that the row is the CNS/meningitis dose versus a general listing — the exact distinction requested.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_cap_ceftriaxone_hepatorenal",
+      "kind": "dose_cap",
+      "drug": "ceftriaxone",
+      "claim": "In a patient with BOTH hepatic impairment AND significant renal impairment, ceftriaxone must be capped at 2 g/day. The cap is CONJUNCTIVE: hepatic impairment alone needs no dose adjustment, and renal impairment alone is handled by the ordinary renal dose-window; only the joint occurrence triggers this ceiling.",
+      "grounded": {
+        "id": "dose_cap_ceftriaxone_hepatorenal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=5cd2d96f-83e5-4326-ae87-d0ede4ba493a",
+        "source_title": "CEFTRIAXONE FOR INJECTION, USP — FDA prescribing information (DailyMed / NLM); USE IN SPECIFIC POPULATIONS / section 5.7 Patients with Hepatic and Renal Impairment",
+        "byte_quote": "Patients with hepatic impairment and significant renal impairment should not receive more than 2 grams per day of ceftriaxone.",
+        "value_found": "ceftriaxone capped at 2 g/day for the CONJUNCTION of hepatic impairment AND significant renal impairment; the label states this only for the joint condition, and elsewhere notes that ordinary hepatic impairment alone does not require a dosage adjustment.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29 — a different DailyMed ceftriaxone label revision used for the dose_ceftriaxone record; it carries the meningitis weight-based dosing but the hepatorenal-conjunction sentence used here is quoted from the 5cd2d96f revision where it appears verbatim in both Highlights and section 5.7, so that revision is cited as the primary source for THIS claim.",
+          "Single-condition framing ('hepatic impairment caps ceftriaxone' or 'renal impairment caps ceftriaxone') — DISCARDED as unsupported: the label conditions the 2 g/day cap on the CONJUNCTION ('hepatic impairment AND significant renal impairment'), and separately states no dosage adjustment is needed for hepatic impairment alone. Encoding either single condition as the trigger would misrepresent the source.",
+          "Secondary aggregators (drugs.com, Medscape ceftriaxone monographs) restating the 2 g/day hepatorenal cap — DISCARDED per the primary-source-first requirement; the FDA label states it directly."
+        ],
+        "note": "ENTAILED, and specifically a CONJUNCTIVE constraint. The verbatim sentence ties the 2 g/day ceiling to the JOINT presence of hepatic impairment AND significant renal impairment — not to either alone. This is why chart_to_cop.py models it as a derived 'hepatorenal' risk that exists only when a hepatic_status risk and a renal_status risk co-occur, and applies the dose-ceiling penalty to ceftriaxone only then; hepatic_status alone adds the risk marker (for audit) but no dose penalty, faithfully reflecting that hepatic impairment alone needs no adjustment. The grounded facts are (a) the existence and CONJUNCTIVE trigger of the cap and (b) its target drug (ceftriaxone) and direction (a ceiling, i.e. dose must shrink). The exact mg/kg ceiling-penalty number in formulary.json (a 12 mg/kg/day reduction, 50 -> 38) is the project's ILLUSTRATIVE feasibility model, NOT a verbatim PK/PD figure: the label's cap is an absolute 2 g/day, which the per-kg feasibility model only approximates. The mechanism (conjunction -> shrink the ceiling) is grounded; the precise numeric shrink is illustrative, consistent with formulary.json's standing dose-window disclaimer."
+      },
+      "verify": {
+        "id": "dose_cap_ceftriaxone_hepatorenal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 5cd2d96f DailyMed ceftriaxone label: the sentence 'Patients with hepatic impairment and significant renal impairment should not receive more than 2 grams per day of ceftriaxone.' appears verbatim under USE IN SPECIFIC POPULATIONS and is referenced from section 5.7 (Patients with Hepatic and Renal Impairment). Confirmed the conjunction wording ('hepatic impairment and significant renal impairment') is the literal trigger.",
+        "refute_attempt": "Strongest refutation: one might read the cap as applying whenever EITHER organ is impaired (treating 'and' loosely), which would make the constraint fire on hepatic-impairment alone and contradict the model's conjunctive gate. This FAILS: the sentence uses a coordinating 'and' joining two required conditions ('hepatic impairment AND significant renal impairment'), and the same label elsewhere states no dosage adjustment is necessary for hepatic impairment alone, so the conjunctive reading is the only one consistent with the full label. Second angle: the cap is an absolute 2 g/day while the model encodes a per-kg ceiling reduction — a units mismatch. This is acknowledged, not hidden: the formulary dose-window numbers are explicitly an illustrative feasibility model, not validated PK/PD; the grounded claim is the conjunctive trigger and the ceiling-shrink direction, both of which the model preserves.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "dose_penalty_vancomycin_renal",
+      "kind": "dose_penalty",
+      "drug": "vancomycin",
+      "claim": "Renal impairment lowers vancomycin's safe dose ceiling: because toxicity risk rises with high, prolonged blood concentrations and the dose must be adjusted for renal dysfunction, the feasible dose ceiling shrinks as renal function falls (the renal_severe / renal_moderate ceiling penalties).",
+      "grounded": {
+        "id": "dose_penalty_vancomycin_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce",
+        "source_title": "VANCOMYCIN HYDROCHLORIDE for injection — FDA prescribing information (DailyMed / NLM), WARNINGS",
+        "byte_quote": "Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations. Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction.",
+        "value_found": "Renal dysfunction mandates a vancomycin dose adjustment because toxicity risk rises with high, prolonged blood concentrations — i.e. the safe ceiling shrinks as renal function falls. DIRECTION only; the label gives no single mg/kg ceiling-reduction figure, so the per-kg penalty magnitude in formulary.json stays the illustrative feasibility model.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Numeric mg/kg ceiling-reduction per CrCl band — the label states the dose 'must be adjusted' and toxicity rises with concentration, but gives no closed-form per-kg ceiling formula in extractable text; reporting a specific mg/kg shrink would be a LEAP, so the formulary penalty magnitude stays explicitly illustrative.",
+          "The Table 1 maintenance-dose-by-CrCl grid — present in some vancomycin labels but rendered as a non-extractable table image here; not verbatim-grounded, so not cited for a numeric value.",
+          "Secondary aggregators (drugs.com, sanford) restating renal dose adjustment — discarded per primary-source-first; the FDA label states it directly."
+        ],
+        "note": "DIRECTION ENTAILED. The two verbatim WARNINGS sentences jointly establish that (a) vancomycin toxicity rises with high, prolonged blood concentrations and (b) the dose MUST be adjusted in renal dysfunction — which is exactly the direction the dose-window model encodes: as renal function falls, the safe ceiling shrinks (renal_severe penalty > renal_moderate penalty > 0). The grounded facts are the EXISTENCE and DIRECTION of the renal ceiling penalty, not its magnitude; the per-kg numbers in formulary.json remain the project's standing ILLUSTRATIVE feasibility model (same disclaimer as dose_vancomycin)."
+      },
+      "verify": {
+        "id": "dose_penalty_vancomycin_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 75a6a873 DailyMed vancomycin label: both sentences appear verbatim under WARNINGS — 'Vancomycin should be used with caution in patients with renal insufficiency because the risk of toxicity is appreciably increased by high, prolonged blood concentrations.' and 'Dosage of vancomycin hydrochloride for injection must be adjusted for patients with renal dysfunction.'",
+        "refute_attempt": "Strongest refutation: 'must be adjusted' could mean adjust the INTERVAL (less frequent dosing) rather than lower the per-dose CEILING, so it might not justify a ceiling penalty. This is partially conceded and is exactly why the verdict is direction_only, not a numeric grounding: the label grounds that renal dysfunction REQUIRES a downward dose adjustment because toxicity tracks blood concentration, which is the DIRECTION the feasibility model encodes (shrink the safe ceiling); the precise mechanism (per-dose vs interval) and magnitude are left to the illustrative model and not over-claimed. Second angle: the sentence is generic vancomycin PK, not meningitis-specific — but dose feasibility under renal impairment is indication-independent, so the direction holds for the meningitis dose too.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_vancomycin_nephrotoxin",
+      "kind": "dose_penalty",
+      "drug": "vancomycin",
+      "claim": "Concomitant therapy with another nephrotoxin (e.g. an aminoglycoside) compounds vancomycin nephrotoxicity, requiring careful dosing — i.e. the additive-nephrotoxicity interaction further lowers the safe ceiling (the nephrotoxin_interaction penalty).",
+      "grounded": {
+        "id": "dose_penalty_vancomycin_nephrotoxin",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=75a6a873-21b9-4f48-89a9-c1476294c0ce",
+        "source_title": "VANCOMYCIN HYDROCHLORIDE for injection — FDA prescribing information (DailyMed / NLM), PRECAUTIONS",
+        "byte_quote": "In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules.",
+        "value_found": "Concomitant aminoglycoside (a nephrotoxin) raises vancomycin nephrotoxicity risk, calling for careful/adjusted dosing — i.e. the additive-toxicity interaction lowers the safe ceiling. DIRECTION only; no numeric per-kg reduction is stated.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "A numeric ceiling-reduction for the interaction — the label says to take 'particular care ... in following appropriate dosing schedules', not a quantified reduction; the formulary's nephrotoxin_interaction penalty magnitude stays illustrative.",
+          "Extending the interaction to ALL concomitant drugs — the quote names the aminoglycoside / nephrotoxin class specifically; the model's nephrotoxin_interaction token is scoped to additive nephrotoxins, matching the quote (not a generic any-drug penalty)."
+        ],
+        "note": "DIRECTION ENTAILED. The PRECAUTIONS sentence names the additive-nephrotoxicity scenario (vancomycin + an aminoglycoside, or underlying renal dysfunction) and prescribes careful dosing + renal monitoring to MINIMIZE nephrotoxicity — the direction the model encodes as the nephrotoxin_interaction ceiling penalty (an extra downward shrink when a concurrent nephrotoxin is on the chart). Grounds the existence + direction of the interaction penalty, not its magnitude."
+      },
+      "verify": {
+        "id": "dose_penalty_vancomycin_nephrotoxin",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched: the sentence appears verbatim under PRECAUTIONS — 'In order to minimize the risk of nephrotoxicity when treating patients with underlying renal dysfunction or patients receiving concomitant therapy with an aminoglycoside, serial monitoring of renal function should be performed, and particular care should be taken in following appropriate dosing schedules.'",
+        "refute_attempt": "Strongest refutation: the sentence prescribes MONITORING, not a dose reduction, so it might not justify a ceiling penalty. Conceded to the extent that the verdict is direction_only: the label couples 'minimize the risk of nephrotoxicity' with 'particular care ... in following appropriate dosing schedules' for the aminoglycoside-co-administration case, which is the additive-toxicity direction the model encodes (shrink the safe ceiling when a concurrent nephrotoxin is present); the magnitude is illustrative, not claimed. The quote explicitly names the aminoglycoside/nephrotoxin co-administration, so the interaction scope is grounded, not invented.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_cefepime_renal",
+      "kind": "dose_penalty",
+      "drug": "cefepime",
+      "claim": "Renal impairment lowers cefepime's safe dose: the dose must be adjusted in patients with CrCl ≤ 60 mL/min because of slower renal elimination, and neurotoxicity occurs especially when renally-impaired patients receive UNADJUSTED doses — i.e. the safe ceiling shrinks as renal function falls (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_cefepime_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921",
+        "source_title": "CEFEPIME for injection — FDA prescribing information (DailyMed / NLM); DOSAGE AND ADMINISTRATION §2.3 + WARNINGS AND PRECAUTIONS §5.2 Neurotoxicity",
+        "byte_quote": "Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination. Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses.",
+        "value_found": "Cefepime dose must be reduced as renal function falls (CrCl ≤ 60 mL/min), and failure to adjust in renal impairment causes neurotoxicity — i.e. the safe ceiling shrinks with renal impairment. DIRECTION only; the per-kg penalty magnitude in formulary.json stays the illustrative feasibility model (the label's adjustment is a CrCl-banded table, not a single per-kg figure).",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "The CrCl-banded maintenance-dose grid (label Table 2) — a numeric dose-by-CrCl schedule, but it is a multi-row table (not a single per-kg ceiling reduction) and renders as tabular data; the formulary's single renal_severe per-kg penalty is an illustrative approximation of 'shrink the ceiling', not a transcription of Table 2, so the table is not cited for a numeric value.",
+          "Secondary aggregators (drugs.com, Sanford, UpToDate cefepime renal dosing) — discarded per primary-source-first; the FDA label states the adjustment + the neurotoxicity-on-unadjusted-dose warning directly."
+        ],
+        "note": "DIRECTION ENTAILED. Two verbatim sentences jointly establish the direction the dose-window model encodes for cefepime: (a) §2.3 mandates a dose adjustment once CrCl ≤ 60 mL/min (slower elimination → accumulation), and (b) §5.2 warns neurotoxicity occurs ESPECIALLY when renally-impaired patients get UNADJUSTED doses — both say the safe ceiling must shrink as renal function falls. Grounds the EXISTENCE + DIRECTION of cefepime's renal ceiling penalty, not its magnitude (the formulary renal_severe per-kg number stays the standing ILLUSTRATIVE feasibility model). This is the write-once-use-many demonstration: the same dose_caps.adj single-factor substrate now grounds a SECOND drug (cefepime) from a data row + this record, no engine/compiler change."
+      },
+      "verify": {
+        "id": "dose_penalty_cefepime_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the be5f8ca6 DailyMed cefepime label: §2.3 (DOSAGE AND ADMINISTRATION) states 'Adjust the dose of Cefepime Injection in patients with creatinine clearance less than or equal to 60 mL/min to compensate for the slower rate of renal elimination.' and §5.2 (WARNINGS AND PRECAUTIONS / Neurotoxicity, also in Highlights) states 'Neurotoxicity: May occur especially in patients with renal impairment administered unadjusted doses.'",
+        "refute_attempt": "Strongest refutation: §2.3 'adjust the dose' could mean lengthen the INTERVAL rather than lower the per-dose CEILING, so it might not justify a ceiling penalty. Conceded to the extent the verdict is direction_only (not a numeric grounding): the §5.2 neurotoxicity-on-UNADJUSTED-doses warning makes the safety direction unambiguous — an unreduced cefepime exposure in renal impairment is harmful, which is exactly the 'shrink the safe ceiling' direction the model encodes; the precise mechanism (interval vs per-dose) and magnitude are left to the illustrative feasibility model and not over-claimed. Second angle: the quote is generic cefepime PK, not meningitis-specific — but dose feasibility under renal impairment is indication-independent, so the direction holds for the meningitis dose too.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_meropenem_renal",
+      "kind": "dose_penalty",
+      "drug": "meropenem",
+      "claim": "Renal impairment lowers meropenem's safe dose: the dose must be reduced at CrCl <= 50 mL/min (meropenem is substantially renally excreted, so it accumulates) — i.e. the safe ceiling shrinks as renal function falls (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_meropenem_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=a456013b-b20e-4b29-b2f9-06f18f1ea6bd",
+        "source_title": "MEROPENEM for injection — FDA prescribing information (DailyMed / NLM), DOSAGE AND ADMINISTRATION",
+        "byte_quote": "Dosage should be reduced in patients with creatinine clearance of 50 mL/min or less.",
+        "value_found": "Meropenem dose must be reduced at CrCl <= 50 mL/min — the safe ceiling shrinks with renal impairment. DIRECTION only; the per-kg penalty magnitude stays the illustrative feasibility model (the label's adjustment is a CrCl-banded table, not a single per-kg figure).",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "The CrCl-banded dose-reduction table — a multi-row schedule, not a single per-kg ceiling reduction; the formulary's renal_severe per-kg penalty approximates 'shrink the ceiling', not a transcription of the table.",
+          "Secondary aggregators (drugs.com, Sanford) — discarded per primary-source-first; the FDA label states the reduction directly."
+        ],
+        "note": "DIRECTION ENTAILED. The verbatim DOSAGE AND ADMINISTRATION sentence mandates a dose reduction once CrCl <= 50 mL/min (meropenem is substantially renally excreted and accumulates), which is the direction the renal_severe ceiling penalty encodes. Grounds existence + direction of the cap, not its magnitude (the per-kg number stays the standing ILLUSTRATIVE feasibility model)."
+      },
+      "verify": {
+        "id": "dose_penalty_meropenem_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the a456013b DailyMed meropenem label: DOSAGE AND ADMINISTRATION states 'Dosage should be reduced in patients with creatinine clearance of 50 mL/min or less.'",
+        "refute_attempt": "Strongest refutation: 'reduced' could mean a longer interval rather than a lower per-dose ceiling. Conceded to the extent the verdict is direction_only: the label, plus its WARNINGS note that meropenem is 'substantially excreted by the kidney' and adverse reactions (seizure, renal/heart failure) rise in renal impairment, make the safety direction unambiguous (shrink the safe exposure); mechanism/magnitude are left to the illustrative model. Generic vs meningitis: dose feasibility under renal impairment is indication-independent.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_aztreonam_renal",
+      "kind": "dose_penalty",
+      "drug": "aztreonam",
+      "claim": "Renal impairment lowers aztreonam's safe dose: the dose must be reduced (halved at CrCl 10–30 mL/min/1.73 m2 after a loading dose) as renal function falls — i.e. the safe ceiling shrinks (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_aztreonam_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2",
+        "source_title": "AZACTAM (aztreonam for injection) — FDA prescribing information (DailyMed / NLM), DOSAGE AND ADMINISTRATION (Renal Impairment in Adult Patients)",
+        "byte_quote": "Therefore, the dosage of AZACTAM should be halved in patients with estimated creatinine clearances between 10 and 30 mL/min/1.73 m2 after an initial loading dose of 1g or 2 g.",
+        "value_found": "Aztreonam dose halved at CrCl 10–30 mL/min/1.73 m2 (after a loading dose) — the maintenance ceiling shrinks with renal impairment. DIRECTION (and, here, the halving factor) grounded; the formulary per-kg penalty stays the illustrative model.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Mapping the label's CrCl 10–30 band exactly onto the model's renal_severe token — the model's single renal_severe penalty is a coarse stand-in for 'significant renal impairment'; the label's banded schedule (halve at 10–30) is the basis for the DIRECTION, not a per-band per-kg transcription.",
+          "Secondary aggregators — discarded per primary-source-first; the FDA label states the halving directly."
+        ],
+        "note": "DIRECTION ENTAILED (with a concrete halving factor at the 10–30 band). The verbatim DOSAGE AND ADMINISTRATION sentence reduces the aztreonam maintenance dose in renal impairment, which is the direction the renal_severe ceiling penalty encodes. Grounds existence + direction; the model's single per-kg penalty number stays the standing ILLUSTRATIVE feasibility model rather than transcribing the banded schedule."
+      },
+      "verify": {
+        "id": "dose_penalty_aztreonam_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 9a105eaf DailyMed AZACTAM label: under DOSAGE AND ADMINISTRATION / 'Renal Impairment in Adult Patients' it states 'Therefore, the dosage of AZACTAM should be halved in patients with estimated creatinine clearances between 10 and 30 mL/min/1.73 m2 after an initial loading dose of 1g or 2 g.'",
+        "refute_attempt": "Strongest refutation: the quote specifies a particular CrCl band (10–30), so mapping it to the model's coarse renal_severe token is approximate. Conceded: the model uses a single renal_severe penalty as a stand-in for significant renal impairment; the label unambiguously establishes the DIRECTION (reduce/halve the maintenance dose as renal function falls), which is what is grounded. The exact per-kg magnitude and CrCl banding stay the illustrative feasibility model.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "dose_penalty_tmp_smx_renal",
+      "kind": "dose_penalty",
+      "drug": "tmp_smx",
+      "claim": "Renal impairment lowers the safe trimethoprim-sulfamethoxazole dose: a reduced dosage must be used when renal function is impaired — i.e. the safe ceiling shrinks (the renal_severe ceiling penalty).",
+      "grounded": {
+        "id": "dose_penalty_tmp_smx_renal",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+        "source_title": "SULFAMETHOXAZOLE AND TRIMETHOPRIM injection — FDA prescribing information (DailyMed / NLM), DOSAGE AND ADMINISTRATION",
+        "byte_quote": "When renal function is impaired, a reduced dosage should be employed, as shown in Table 2.",
+        "value_found": "Trimethoprim-sulfamethoxazole dose must be reduced when renal function is impaired — the safe ceiling shrinks with renal impairment. DIRECTION only; the per-kg penalty magnitude stays the illustrative feasibility model (Table 2 is a CrCl-banded schedule).",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Table 2's CrCl-banded reduced-dose schedule — a multi-row table, not a single per-kg ceiling reduction; the formulary's renal_severe per-kg penalty approximates 'shrink the ceiling', not a transcription of Table 2.",
+          "The adjacent 'avoid ... in patients with impaired renal function' caution — the dose-window model expresses graded shrink (penalty) rather than a hard exclusion, consistent with the label's primary instruction to use a REDUCED dosage; not modeled as a contraindication here.",
+          "Secondary aggregators — discarded per primary-source-first; the FDA label states the reduction directly."
+        ],
+        "note": "DIRECTION ENTAILED. The verbatim DOSAGE AND ADMINISTRATION sentence prescribes a reduced dosage in renal impairment, the direction the renal_severe ceiling penalty encodes. Grounds existence + direction of the cap, not its magnitude (the per-kg number stays the standing ILLUSTRATIVE feasibility model)."
+      },
+      "verify": {
+        "id": "dose_penalty_tmp_smx_renal",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 793c75eb DailyMed sulfamethoxazole-trimethoprim label: DOSAGE AND ADMINISTRATION states 'When renal function is impaired, a reduced dosage should be employed, as shown in Table 2.'",
+        "refute_attempt": "Strongest refutation: the same label elsewhere says to AVOID the drug in impaired renal function, which could argue for an exclusion rather than a dose penalty. The primary dosing instruction, however, is to EMPLOY A REDUCED DOSAGE (Table 2) — a graded shrink, which is exactly the renal_severe ceiling penalty; the avoid-caution is a relative one and the dose-window's shrink (which can still go UNSAT if floor>ceiling) faithfully represents 'use less, and not at all if no safe dose exists'. Direction grounded; magnitude illustrative.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    }
+  ]
+}

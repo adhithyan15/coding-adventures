@@ -1,0 +1,367 @@
+{
+  "job": "mini-sqlite-completion",
+  "cron_job_id": "d39be3bf",
+  "started": "2026-06-30",
+  "items": [
+    {
+      "id": "ts-v011",
+      "title": "TypeScript mini-sqlite v0.1.1 (cut ReDoS fix release)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "mini-sqlite/ts-v011",
+      "pr_number": 7003,
+      "notes": "Merged 2026-06-30."
+    },
+    {
+      "id": "ruby-v011",
+      "title": "Ruby mini-sqlite v0.1.1 (cut ReDoS fix release)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "mini-sqlite/ruby-v011",
+      "pr_number": 7004,
+      "notes": "Merged 2026-06-30."
+    },
+    {
+      "id": "conformance-fixtures",
+      "title": "Shared conformance test fixtures for Level 0 mini-sqlite ports",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "mini-sqlite/conformance-fixtures",
+      "pr_number": 7006,
+      "notes": "Merged 2026-06-30. 16 JSON fixtures in code/specs/mini-sqlite-conformance/."
+    },
+    {
+      "id": "wasm-mini-sqlite",
+      "title": "Wasm mini-sqlite Level 0 facade",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "mini-sqlite/wasm-mini-sqlite",
+      "pr_number": 7016,
+      "notes": "Merged 2026-06-30. Wraps coding-adventures-mini-sqlite with wasm-bindgen. 14 native tests pass."
+    },
+    {
+      "id": "csharp-level1-sql-backend",
+      "title": "C# sql-backend (Level 1 prerequisite)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "mini-sqlite/csharp-level1-sql-backend",
+      "pr_number": 7027,
+      "notes": "Merged 2026-06-30. InMemoryBackend + SqlValue discriminated union + coverlet."
+    },
+    {
+      "id": "fsharp-level1-sql-backend",
+      "title": "F# sql-backend (Level 1 prerequisite)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 1942,
+      "notes": "Already on main (PR #1942). Full InMemoryBackend in SqlBackend.fs."
+    },
+    {
+      "id": "java-level1-sql-backend",
+      "title": "Java sql-backend (Level 1 prerequisite)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 1943,
+      "notes": "Already on main (PR #1943)."
+    },
+    {
+      "id": "kotlin-level1-sql-backend",
+      "title": "Kotlin sql-backend (Level 1 prerequisite)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 1958,
+      "notes": "Already on main (PR #1958)."
+    },
+    {
+      "id": "haskell-level1-sql-backend",
+      "title": "Haskell sql-backend (Level 1 prerequisite)",
+      "status": "merged",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": 1962,
+      "notes": "Already on main (PR #1962)."
+    },
+    {
+      "id": "fsharp-level1-sql-planner",
+      "title": "F# sql-planner",
+      "status": "merged",
+      "depends_on": ["fsharp-level1-sql-backend"],
+      "branch": "mini-sqlite/fsharp-level1-sql-planner",
+      "pr_number": 7036,
+      "notes": "Merged 2026-06-30. PR #7036."
+    },
+    {
+      "id": "fsharp-level1-sql-optimizer",
+      "title": "F# sql-optimizer",
+      "status": "in-review",
+      "depends_on": ["fsharp-level1-sql-planner"],
+      "branch": "mini-sqlite/fsharp-level1-sql-optimizer",
+      "pr_number": null,
+      "notes": "PR open 2026-06-30. 60 tests, 5-pass optimizer. Awaiting CI + merge."
+    },
+    {
+      "id": "fsharp-level1-sql-codegen",
+      "title": "F# sql-codegen",
+      "status": "pending",
+      "depends_on": ["fsharp-level1-sql-optimizer"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_codegen to F#."
+    },
+    {
+      "id": "fsharp-level1-sql-vm",
+      "title": "F# sql-vm",
+      "status": "pending",
+      "depends_on": ["fsharp-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_vm to F#."
+    },
+    {
+      "id": "fsharp-level1-graduate",
+      "title": "Graduate F# mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["fsharp-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire F# mini-sqlite to use the full sql-backend/planner/optimizer/codegen/vm pipeline."
+    },
+    {
+      "id": "java-level1-sql-planner",
+      "title": "Java sql-planner",
+      "status": "merged",
+      "depends_on": ["java-level1-sql-backend"],
+      "branch": "mini-sqlite/java-level1-sql-planner",
+      "pr_number": 7045,
+      "notes": "Merged 2026-06-30. PR #7045."
+    },
+    {
+      "id": "java-level1-sql-optimizer",
+      "title": "Java sql-optimizer",
+      "status": "in-review",
+      "depends_on": ["java-level1-sql-planner"],
+      "branch": "mini-sqlite/java-level1-sql-optimizer",
+      "pr_number": 7073,
+      "notes": "PR open 2026-06-30. 124 tests (JaCoCo ≥80%). 5 passes: ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown. Java 21 sealed interfaces + records."
+    },
+    {
+      "id": "java-level1-sql-codegen",
+      "title": "Java sql-codegen",
+      "status": "in-review",
+      "depends_on": ["java-level1-sql-optimizer"],
+      "branch": "mini-sqlite/java-level1-sql-codegen",
+      "pr_number": null,
+      "notes": "PR open 2026-06-30. 36 tests (JaCoCo ≥80%). Compiles OptimizedPlan → flat bytecode Program for SQL VM."
+    },
+    {
+      "id": "java-level1-sql-vm",
+      "title": "Java sql-vm",
+      "status": "pending",
+      "depends_on": ["java-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_vm to Java."
+    },
+    {
+      "id": "java-level1-graduate",
+      "title": "Graduate Java mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["java-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire Java mini-sqlite to use the full pipeline."
+    },
+    {
+      "id": "kotlin-level1-sql-planner",
+      "title": "Kotlin sql-planner",
+      "status": "merged",
+      "depends_on": ["kotlin-level1-sql-backend"],
+      "branch": "mini-sqlite/kotlin-level1-sql-planner",
+      "pr_number": 7047,
+      "notes": "Merged 2026-06-30. PR #7047."
+    },
+    {
+      "id": "kotlin-level1-sql-optimizer",
+      "title": "Kotlin sql-optimizer",
+      "status": "in-review",
+      "depends_on": ["kotlin-level1-sql-planner"],
+      "branch": "mini-sqlite/kotlin-level1-sql-optimizer",
+      "pr_number": null,
+      "notes": "PR open 2026-06-30. 42 tests, JaCoCo ≥80%. OptimizedPlan sealed class + 5 passes (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). Awaiting CI + merge."
+    },
+    {
+      "id": "kotlin-level1-sql-codegen",
+      "title": "Kotlin sql-codegen",
+      "status": "pending",
+      "depends_on": ["kotlin-level1-sql-optimizer"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_codegen to Kotlin."
+    },
+    {
+      "id": "kotlin-level1-sql-vm",
+      "title": "Kotlin sql-vm",
+      "status": "pending",
+      "depends_on": ["kotlin-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_vm to Kotlin."
+    },
+    {
+      "id": "kotlin-level1-graduate",
+      "title": "Graduate Kotlin mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["kotlin-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire Kotlin mini-sqlite to use the full pipeline."
+    },
+    {
+      "id": "haskell-level1-sql-planner",
+      "title": "Haskell sql-planner",
+      "status": "in-review",
+      "depends_on": ["haskell-level1-sql-backend"],
+      "branch": "mini-sqlite/haskell-level1-sql-planner",
+      "pr_number": 7048,
+      "notes": "PR open 2026-06-30. 47 hspec tests. Fixed planSelect ordering + LiteralVal(..) export. CI all green. Awaiting merge."
+    },
+    {
+      "id": "haskell-level1-sql-optimizer",
+      "title": "Haskell sql-optimizer",
+      "status": "in-review",
+      "depends_on": ["haskell-level1-sql-planner"],
+      "branch": "mini-sqlite/haskell-level1-sql-optimizer",
+      "pr_number": 7090,
+      "notes": "PR open 2026-06-30. 47 hspec tests, 5-pass optimizer (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). OptimizedPlan ADT + EmptyResult sentinel. Awaiting CI + merge."
+    },
+    {
+      "id": "haskell-level1-sql-codegen",
+      "title": "Haskell sql-codegen",
+      "status": "pending",
+      "depends_on": ["haskell-level1-sql-optimizer"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_codegen to Haskell."
+    },
+    {
+      "id": "haskell-level1-sql-vm",
+      "title": "Haskell sql-vm",
+      "status": "pending",
+      "depends_on": ["haskell-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_vm to Haskell."
+    },
+    {
+      "id": "haskell-level1-graduate",
+      "title": "Graduate Haskell mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["haskell-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire Haskell mini-sqlite to use the full pipeline."
+    },
+    {
+      "id": "csharp-level1-sql-planner",
+      "title": "C# sql-planner (Level 1 prerequisite)",
+      "status": "merged",
+      "depends_on": ["csharp-level1-sql-backend"],
+      "branch": "mini-sqlite/csharp-level1-sql-planner",
+      "pr_number": 7041,
+      "notes": "Merged 2026-06-30. PR #7041."
+    },
+    {
+      "id": "csharp-level1-sql-optimizer",
+      "title": "C# sql-optimizer (Level 1 prerequisite)",
+      "status": "in-review",
+      "depends_on": ["csharp-level1-sql-planner"],
+      "branch": "mini-sqlite/csharp-level1-sql-optimizer",
+      "pr_number": null,
+      "notes": "PR open 2026-06-30. 5 passes (ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown). 121 xUnit tests. 85.85% line / 80.67% branch coverage. CI pending."
+    },
+    {
+      "id": "csharp-level1-sql-codegen",
+      "title": "C# sql-codegen (Level 1 prerequisite)",
+      "status": "in-review",
+      "depends_on": ["csharp-level1-sql-optimizer"],
+      "branch": "mini-sqlite/csharp-level1-sql-codegen",
+      "pr_number": null,
+      "notes": "PR open 2026-06-30. 74 xUnit tests, 85.61% line coverage. Full instruction set: 36 instruction records, nested-loop scan, two-phase aggregation, DML/DDL. Instruction records BinaryOpInstr/UnaryOpInstr renamed to avoid clash with SqlExpr subtypes."
+    },
+    {
+      "id": "csharp-level1-sql-vm",
+      "title": "C# sql-vm (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["csharp-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port Python sql_vm to C#."
+    },
+    {
+      "id": "csharp-level1-graduate",
+      "title": "Graduate C# mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["csharp-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire C# mini-sqlite to use the full sql-backend/planner/optimizer/codegen/vm pipeline."
+    },
+    {
+      "id": "rust-level1-sql-planner",
+      "title": "Rust sql-planner (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust already has sql-lexer, sql-parser, sql-backend. sql-planner converts AST to LogicalPlan. Rust workspace: code/packages/rust/. Reference: Python sql-planner."
+    },
+    {
+      "id": "rust-level1-sql-optimizer",
+      "title": "Rust sql-optimizer (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-planner"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "5 optimization passes: ConstantFolding, PredicatePushdown, ProjectionPruning, DeadCodeElimination, LimitPushdown."
+    },
+    {
+      "id": "rust-level1-sql-codegen",
+      "title": "Rust sql-codegen (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-optimizer"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Compiles OptimizedPlan to bytecode Program. Reference: Python sql-codegen, code/specs/sql-codegen.md."
+    },
+    {
+      "id": "rust-level1-sql-vm",
+      "title": "Rust sql-vm (Level 1 prerequisite)",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-codegen"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Stack-machine VM executing bytecode against sql-backend. Reference: Python sql-vm, code/specs/sql-vm.md."
+    },
+    {
+      "id": "rust-level1-graduate",
+      "title": "Graduate Rust mini-sqlite to Level 1",
+      "status": "pending",
+      "depends_on": ["rust-level1-sql-vm"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Wire Rust mini-sqlite to use full Level 1 pipeline. Replace sql-execution-engine with sql-planner+optimizer+codegen+vm."
+    },
+    {
+      "id": "sqlite-conformance-expansion",
+      "title": "Expand conformance test fixtures (SQLite test suite inspired)",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port SQLite test suite scenarios to JSON conformance fixtures. Cover: NULL semantics, three-valued logic, type affinity, aggregate edge cases, DISTINCT, HAVING, subqueries, CASE, COALESCE, string/math functions, ORDER BY NULL handling, LIMIT edge cases, JOIN variants, UNION/INTERSECT/EXCEPT. Run against all language implementations."
+    }
+  ]
+}

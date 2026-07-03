@@ -1,0 +1,66 @@
+{
+  "hash": "2a121f0e8e098fb3",
+  "source_id": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html",
+  "title": "Haemophilus influenzae — CDC Epidemiology and Prevention of Vaccine-Preventable Diseases (Pink Book), Chapter 8",
+  "resolved_url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Before vaccines, H. influenzae type b (Hib) was the leading cause of bacterial meningitis and other invasive bacterial disease, primarily in children under age 5.",
+      "byte_quote": "Before the introduction of effective vaccines, H. influenzae type b (Hib) was the leading cause of bacterial meningitis and other invasive bacterial disease, primarily among children younger than age 5 years; approximately one in 200 children in this age group developed invasive Hib disease."
+    },
+    {
+      "id": "c2",
+      "text": "Approximately two-thirds of all Hib cases occurred in children younger than 18 months.",
+      "byte_quote": "Approximately two-thirds of all cases occurred among children younger than age 18 months."
+    },
+    {
+      "id": "c3",
+      "text": "Six capsular polysaccharide serotypes (a through f) of H. influenzae have been described.",
+      "byte_quote": "Six antigenically and biochemically distinct capsular polysaccharide types have been described; these are designated serotypes a through f."
+    },
+    {
+      "id": "c4",
+      "text": "In the pre-Hib-vaccine era, type b organisms accounted for 95% of all H. influenzae strains causing invasive disease.",
+      "byte_quote": "In the pre-Hib-vaccine era, type b organisms accounted for 95% of all H. influenzae strains that caused invasive disease."
+    },
+    {
+      "id": "c5",
+      "text": "In the prevaccine era, up to 60% of invasive disease occurred before age 12 months, with peak occurrence at age 6 to 11 months.",
+      "byte_quote": "In the prevaccine era, up to 60% of invasive disease occurred before age 12 months, although some infants received passive protection from maternal IgG antibodies passed through the placenta and breastfeeding during the first 6 months of life. Peak occurrence was among children age 6 to 11 months."
+    },
+    {
+      "id": "c6",
+      "text": "Meningitis was the most common manifestation of invasive Hib disease, accounting for 50% to 65% of cases in the prevaccine era.",
+      "byte_quote": "Meningitis, an infection of the membranes covering the brain and spinal cord, is the most common clinical manifestation of invasive Hib disease, accounting for 50% to 65% of cases in the prevaccine era."
+    },
+    {
+      "id": "c7",
+      "text": "Non-type b encapsulated strains can cause invasive disease similar to type b; nontypeable strains are generally less virulent but may cause invasive disease, especially in neonates and adults over 65.",
+      "byte_quote": "Non-type b encapsulated strains can cause invasive disease similar to type b infections. Nontypeable strains are generally less virulent than encapsulated strains among previously healthy individuals, but may cause invasive disease, particularly among neonates and those older than age 65 years."
+    },
+    {
+      "id": "c8",
+      "text": "From 2009-2018, of 36 Hib cases reported in patients under age 5 to ABCs, 33.3% were unvaccinated and 38.9% were undervaccinated.",
+      "byte_quote": "From 2009–2018, 36 Hib cases in patients younger than age 5 years were reported to ABCs. Two (5.6%) were too young to have received Hib vaccine, 12 (33.3%) were unvaccinated, and 14 (38.9%) were undervaccinated"
+    },
+    {
+      "id": "c9",
+      "text": "A Gram stain of infected body fluid may show small, gram-negative coccobacilli suggestive of H. influenzae.",
+      "byte_quote": "A Gram stain of an infected body fluid may demonstrate small, gram-negative coccobacilli suggestive of H. influenzae disease."
+    },
+    {
+      "id": "c10",
+      "text": "H. influenzae is a fastidious, pleomorphic, gram-negative coccobacillus requiring hemin (X factor) and NAD (V factor) for in vitro growth.",
+      "byte_quote": "H. influenzae , a fastidious, pleomorphic, gram-negative coccobacillus, requires hemin (X factor) and nicotinamide-adenine-dinucleotide (NAD, also known as V factor) for in vitro growth."
+    }
+  ],
+  "cites": [
+    "Active Bacterial Core surveillance (ABCs)",
+    "MacNeil J, Cohn A, Farley M, et al. Current epidemiology and trends in invasive Haemophilus influenzae disease–United States, 1989–2008. Clin Infect Dis 2011;53(12):1230–6.",
+    "Soeters H, Blain A, Pondo T, et al. Current epidemiology and trends in invasive Haemophilus influenzae disease — United States, 2009–2015. Clin Infect Dis 2018;67(6):881–9.",
+    "Livorsi D, MacNeil J, Cohn A, et al. Invasive Haemophilus influenzae in the United States, 1999–2008: epidemiology and outcomes. J Infect 2012;65(6):496–504.",
+    "Bisgard K, Kao A, Leake J, et al. Haemophilus influenzae invasive disease in the United States, 1994–1995: near disappearance of a vaccine-preventable childhood disease. Emerg Infect Dis 1998;4(2):229–37.",
+    "CDC. Prevention and Control of Haemophilus influenzae Type b Disease: recommendations of the Advisory Committee on Immunization Practices (ACIP). MMWR 2014;63(No. RR-1):1–14."
+  ]
+}

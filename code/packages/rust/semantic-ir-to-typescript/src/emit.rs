@@ -4,8 +4,8 @@
 //!
 //! ```text
 //! // banner comment
-//! namespace __Sir { ... }   // inlined runtime
-//! let <global>: __Sir.Val = __Sir.NIL;
+//! import * as __Sir from "@coding-adventures/sir-runtime-core";
+//! let <global>: __Sir.Val = null;
 //! function <name>(...): __Sir.Val { ... }
 //! _init();                  // if module has _init
 //! const __sir_result: __Sir.Val = main();
@@ -16,20 +16,384 @@
 //! `MakeClosure` becomes a `new __Sir.Closure((..._a) => ...)` that
 //! prepends capture values to the call's args.
 
+use std::cell::{Cell, RefCell};
+use std::collections::HashSet;
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Function, Global, Module, Scope, Stmt,
+    Block, Expr, Feature, Function, Global, Module, ParamKind, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
 
+/// True if the module uses any object-orientation feature, in which
+/// case the emitted artifact imports `@coding-adventures/sir-runtime-oop`.
+fn uses_oop(m: &Module) -> bool {
+    [
+        Feature::Classes,
+        Feature::Modules,
+        Feature::InstanceVars,
+        Feature::ClassVars,
+        Feature::Constants,
+    ]
+    .iter()
+    .any(|f| m.manifest.contains(*f))
+        // Method dispatch (`recv.meth(args)` → `BuiltinCall("__method__", …)`)
+        // and scoped lookups (`A::B` → `BuiltinCall("__scope__", …)`) both route
+        // through the OOP runtime even when the module declares no class/module
+        // of its own — e.g. `"hi".upcase` or, post-M3, a rest param used as an
+        // Array (`def f(*a); a.length; end`). Gate the OOP import on those
+        // builtins too, else the emitted call is undefined.
+        || module_uses_builtin(m, "__method__")
+        || module_uses_builtin(m, "__scope__")
+        // `case_eq` (M5) routes through the OOP runtime helper.
+        || module_uses_builtin(m, "case_eq")
+        // OOP object-model builtins (O1): `Foo.new`, `super`, `self`, and the
+        // method-table registrations all resolve to the OOP runtime, so their
+        // presence must pull in the import even in a module that declares no
+        // class of its own (defensive — the frontend always pairs them with a
+        // `ClassDef`, but the gate must not depend on that).
+        || module_uses_builtin(m, "__new__")
+        || module_uses_builtin(m, "__super__")
+        || module_uses_builtin(m, "__def_method__")
+        || module_uses_builtin(m, "__def_class_method__")
+        || module_uses_builtin(m, "__class_method__")
+        || module_uses_builtin(m, "__self__")
+        // Mixin directives (MX3): `include M` / `extend M` route to the OOP
+        // runtime's `includeModule`/`extendModule`, so their presence pulls in
+        // the import (the frontend pairs them with module `__def_method__`s,
+        // which already gate, but the gate must not depend on that).
+        || module_uses_builtin(m, "__include__")
+        || module_uses_builtin(m, "__extend__")
+}
+
+/// True if the module uses exception handling, in which case the emitted
+/// artifact imports `@coding-adventures/sir-runtime-exceptions`.
+fn uses_exceptions(m: &Module) -> bool {
+    m.manifest.contains(Feature::Exceptions)
+}
+
+/// Collect every `class Child < Parent` edge in the module as `(child, parent)`
+/// pairs, in source order, de-duplicated (first edge for a name wins).
+///
+/// **Why (E2).**  A `rescue StandardError` must catch a raised user
+/// `MyErr < StandardError`, but the exception runtime only knows the built-in
+/// hierarchy — it cannot learn that `MyErr` descends from `StandardError`
+/// unless we *tell* it.  `Stmt::ClassDef` carries exactly that static edge, so
+/// we harvest the `superclass`-bearing class defs here and emit a single
+/// `registerAncestry({...})` call at program init (see [`emit_module`]).
+/// Classes without a superclass (`class Foo`) contribute no edge — they still
+/// match by exact name, unchanged.
+///
+/// The walk mirrors the builtin-usage scan: exhaustive over the statement forms
+/// that nest bodies (`ClassDef`/`ModuleDef`/`SingletonClassDef`/`TryCatch` and
+/// the loops), so a class defined *inside* a `begin`/loop/class body is still
+/// found.
+fn collect_user_ancestry(m: &Module) -> Vec<(String, String)> {
+    let mut pairs: Vec<(String, String)> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
+    for f in &m.functions {
+        collect_ancestry_in_block(&f.body, &mut pairs, &mut seen);
+    }
+    pairs
+}
+
+fn collect_ancestry_in_block(
+    b: &Block,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut HashSet<String>,
+) {
+    collect_ancestry_in_stmts(&b.stmts, pairs, seen);
+    collect_ancestry_in_expr(&b.value, pairs, seen);
+}
+
+fn collect_ancestry_in_stmts(
+    stmts: &[Stmt],
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut HashSet<String>,
+) {
+    for s in stmts {
+        collect_ancestry_in_stmt(s, pairs, seen);
+    }
+}
+
+fn collect_ancestry_in_stmt(
+    s: &Stmt,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut HashSet<String>,
+) {
+    match s {
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            if let Some(sup) = superclass {
+                if seen.insert(name.clone()) {
+                    pairs.push((name.clone(), sup.clone()));
+                }
+            }
+            collect_ancestry_in_stmts(body, pairs, seen);
+        }
+        Stmt::ModuleDef { body, .. } | Stmt::SingletonClassDef { body, .. } => {
+            collect_ancestry_in_stmts(body, pairs, seen);
+        }
+        Stmt::While { body, .. }
+        | Stmt::ForRange { body, .. }
+        | Stmt::ForEach { body, .. } => {
+            collect_ancestry_in_block(body, pairs, seen);
+        }
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            collect_ancestry_in_stmts(body, pairs, seen);
+            for r in rescues {
+                collect_ancestry_in_stmts(&r.body, pairs, seen);
+            }
+            if let Some(e) = ensure_body {
+                collect_ancestry_in_stmts(e, pairs, seen);
+            }
+        }
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::Assign { value, .. }
+        | Stmt::ExprStmt { expr: value, .. } => {
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            collect_ancestry_in_expr(seq, pairs, seen);
+            collect_ancestry_in_expr(index, pairs, seen);
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            collect_ancestry_in_expr(map, pairs, seen);
+            collect_ancestry_in_expr(key, pairs, seen);
+            collect_ancestry_in_expr(value, pairs, seen);
+        }
+    }
+}
+
+fn collect_ancestry_in_expr(
+    e: &Expr,
+    pairs: &mut Vec<(String, String)>,
+    seen: &mut HashSet<String>,
+) {
+    match e {
+        Expr::If { then_branch, else_branch, .. } => {
+            collect_ancestry_in_block(then_branch, pairs, seen);
+            collect_ancestry_in_block(else_branch, pairs, seen);
+        }
+        Expr::Block(b) => collect_ancestry_in_block(b, pairs, seen),
+        // No other expression form can nest a statement block that could hold a
+        // class declaration (calls/literals carry only sub-*expressions*).
+        _ => {}
+    }
+}
+
+/// True if the module uses cons pairs, in which case the emitted artifact
+/// imports `@coding-adventures/sir-runtime-pairs` (the `cons`/`car`/`cdr`/
+/// `pair?` helpers, extracted from core).
+fn uses_pairs(m: &Module) -> bool {
+    m.manifest.contains(Feature::Pairs)
+}
+
+/// True if the module calls the `regex` builtin (a Ruby `/pat/flags` literal
+/// lowers to `BuiltinCall("regex", …)`).  Regex carries no SIR `Feature`, so we
+/// detect it by walking for the builtin name; a positive result gates the
+/// `@coding-adventures/sir-runtime-regex` import.
+fn uses_regex(m: &Module) -> bool {
+    module_uses_builtin(m, "regex")
+}
+
+/// True if the module calls the `backtick` builtin (a Ruby `` `cmd` ``
+/// literal lowers to `BuiltinCall("backtick", [cmd])`).  Gates the
+/// `@coding-adventures/sir-runtime-shell` import.
+fn uses_shell(m: &Module) -> bool {
+    module_uses_builtin(m, "backtick")
+}
+
+/// True if the module calls the `range` builtin (a Ruby `a..b` / `a...b`
+/// literal lowers to `BuiltinCall("range", [start, stop, exclusive])`).  Range
+/// carries no SIR `Feature`, so we detect it by builtin name; a positive result
+/// gates the `@coding-adventures/sir-runtime-range` import.
+fn uses_range(m: &Module) -> bool {
+    module_uses_builtin(m, "range")
+}
+
+/// Walk every function body for a `BuiltinCall` named `name` — gates
+/// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
+/// over `Stmt`/`Expr` so a new node can't silently hide a use.
+fn module_uses_builtin(m: &Module, name: &str) -> bool {
+    m.functions.iter().any(|f| block_uses_builtin(&f.body, name))
+}
+
+fn block_uses_builtin(b: &Block, name: &str) -> bool {
+    b.stmts.iter().any(|s| stmt_uses_builtin(s, name)) || expr_uses_builtin(&b.value, name)
+}
+
+fn stmts_use_builtin(stmts: &[Stmt], name: &str) -> bool {
+    stmts.iter().any(|s| stmt_uses_builtin(s, name))
+}
+
+fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
+    match s {
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::Assign { value, .. } => expr_uses_builtin(value, name),
+        Stmt::ExprStmt { expr, .. } => expr_uses_builtin(expr, name),
+        Stmt::While { cond, body, .. } => {
+            expr_uses_builtin(cond, name) || block_uses_builtin(body, name)
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            expr_uses_builtin(start, name)
+                || expr_uses_builtin(stop, name)
+                || expr_uses_builtin(step, name)
+                || block_uses_builtin(body, name)
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            expr_uses_builtin(iter, name) || block_uses_builtin(body, name)
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            expr_uses_builtin(seq, name)
+                || expr_uses_builtin(index, name)
+                || expr_uses_builtin(value, name)
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            expr_uses_builtin(map, name)
+                || expr_uses_builtin(key, name)
+                || expr_uses_builtin(value, name)
+        }
+        Stmt::ClassDef { body, .. }
+        | Stmt::ModuleDef { body, .. }
+        | Stmt::SingletonClassDef { body, .. } => stmts_use_builtin(body, name),
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            stmts_use_builtin(body, name)
+                || rescues.iter().any(|r| stmts_use_builtin(&r.body, name))
+                || ensure_body.as_deref().is_some_and(|e| stmts_use_builtin(e, name))
+        }
+    }
+}
+
+fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
+    match e {
+        Expr::BuiltinCall { name: n, args, .. } => {
+            n == name || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::DirectCall { args, .. } => args.iter().any(|a| expr_uses_builtin(a, name)),
+        Expr::IndirectCall { target, args, .. } => {
+            expr_uses_builtin(target, name) || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            expr_uses_builtin(cond, name)
+                || block_uses_builtin(then_branch, name)
+                || block_uses_builtin(else_branch, name)
+        }
+        Expr::Block(b) => block_uses_builtin(b, name),
+        Expr::MakeClosure { captures, .. } => {
+            captures.iter().any(|c| expr_uses_builtin(&c.value, name))
+        }
+        Expr::SeqLit { items, .. } => items.iter().any(|i| expr_uses_builtin(i, name)),
+        Expr::SeqIndex { seq, index, .. } => {
+            expr_uses_builtin(seq, name) || expr_uses_builtin(index, name)
+        }
+        Expr::SeqLen { seq, .. } => expr_uses_builtin(seq, name),
+        Expr::MapLit { entries, .. } => entries
+            .iter()
+            .any(|en| expr_uses_builtin(&en.key, name) || expr_uses_builtin(&en.value, name)),
+        Expr::MapGet { map, key, .. } => {
+            expr_uses_builtin(map, name) || expr_uses_builtin(key, name)
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::StrConcat { parts, .. } => parts.iter().any(|p| expr_uses_builtin(p, name)),
+        Expr::Intrinsic { args, .. } => args.iter().any(|a| expr_uses_builtin(a, name)),
+        // KW1 compile-compat stub: recurse into a `KeywordArg`'s inner `value`
+        // (its runtime meaning) so this builtin-usage scan stays faithful.
+        // Real support pending KW2–KW6.
+        Expr::KeywordArg { value, .. } => expr_uses_builtin(value, name),
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. }
+        | Expr::VarRef { .. } => false,
+    }
+}
+
+thread_local! {
+    /// Monotonic counter for synthesised loop temporaries (the
+    /// once-evaluated `__stop`/`__step` bounds of a `ForRange`).  Reset
+    /// at the start of every `emit_module` so output stays deterministic.
+    static LOOP_COUNTER: Cell<usize> = const { Cell::new(0) };
+
+    /// Names that are the target of an `Assign` somewhere in the current
+    /// function.  A `LetBinding` for such a name must emit `let` (not
+    /// `const`) so the later reassignment type-checks.  Populated per
+    /// function in `emit_function`; immutable bindings stay `const`.
+    static MUTABLE_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+}
+
+fn fresh_loop_id() -> usize {
+    LOOP_COUNTER.with(|c| {
+        let n = c.get();
+        c.set(n + 1);
+        n
+    })
+}
+
 /// Emit a SIR module as TypeScript source.  Caller is responsible
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
+    LOOP_COUNTER.with(|c| c.set(0));
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str(RUNTIME);
+    // Only OOP-using modules import the OOP runtime, so a pure
+    // arithmetic module gains no dependency on it.
+    if uses_oop(m) {
+        out.push_str(crate::runtime::RUNTIME_OOP);
+    }
+    // Only throwing/rescuing modules import the exception runtime.
+    if uses_exceptions(m) {
+        out.push_str(crate::runtime::RUNTIME_EXC);
+    }
+    // Only pair-using modules import the pairs runtime.
+    if uses_pairs(m) {
+        out.push_str(crate::runtime::RUNTIME_PAIRS);
+    }
+    // Only regex-using modules import the regex runtime.
+    if uses_regex(m) {
+        out.push_str(crate::runtime::RUNTIME_REGEX);
+    }
+    // Only backtick-using modules import the shell runtime.
+    if uses_shell(m) {
+        out.push_str(crate::runtime::RUNTIME_SHELL);
+    }
+    // Only range-using modules import the range runtime.
+    if uses_range(m) {
+        out.push_str(crate::runtime::RUNTIME_RANGE);
+    }
+    // E2: thread user `class Child < Parent` ancestry into the exception
+    // matcher at program init, *before* any function or main body runs, so a
+    // `rescue StandardError` catches a raised user `MyErr < StandardError`.
+    // Gated on both the exception import (so the helper exists) and the
+    // presence of at least one superclass edge (so we never emit an empty,
+    // meaningless registration for a module that has classes but no
+    // inheritance).
+    if uses_exceptions(m) {
+        let pairs = collect_user_ancestry(m);
+        if !pairs.is_empty() {
+            out.push_str("\n__SirExc.registerAncestry({");
+            for (i, (child, parent)) in pairs.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                let _ = write!(
+                    out,
+                    "{}: {}",
+                    quote_ts_string(child),
+                    quote_ts_string(parent)
+                );
+            }
+            out.push_str("});\n");
+        }
+    }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -58,7 +422,7 @@ fn emit_globals(out: &mut String, globals: &[Global]) {
     }
     out.push('\n');
     for g in globals {
-        let _ = writeln!(out, "let {}: __Sir.Val = __Sir.NIL;", sanitize_ident(&g.name));
+        let _ = writeln!(out, "let {}: __Sir.Val = null;", sanitize_ident(&g.name));
     }
 }
 
@@ -92,18 +456,268 @@ fn emit_function(out: &mut String, f: &Function) {
         first = false;
         let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&c.name));
     }
+    // KW3 — keyword parameters lower to a single trailing "options object".
+    //
+    // TypeScript (like JavaScript) has NO native keyword-argument syntax: a
+    // caller cannot write `f(y: 2)` and have `y` bound by name to a formal
+    // parameter.  The idiomatic, zero-runtime equivalent is the *options
+    // object* — one trailing parameter that carries a bag of named values,
+    // destructured on entry.  So for a definition
+    //
+    //     def f(a, x:, y: 1)          # a positional, x required-kw, y opt-kw
+    //
+    // we emit
+    //
+    //     function f(a: __Sir.Val, __kw: __Sir.Val): __Sir.Val {
+    //       const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };
+    //       …
+    //     }
+    //
+    // The destructure carries each *optional* keyword's default (`y = 1`) and
+    // omits it for a *required* one (`x`) — matching the call side, which for
+    // a validator-accepted call always supplies every required keyword.  We
+    // split the param list rather than interleave: all `Keyword` params
+    // collapse into the ONE `__kw` object, appended after the positionals, so
+    // the arity of the JS parameter list stays `positionals + 1`.
+    //
+    // Why `__kw`?  The `__`-prefix is this backend's reserved namespace for
+    // synthesized bindings (`__Sir`, `__SirOop`, `__l`, `__sir_result`, …).
+    // A user keyword name never round-trips through the frontends as `__kw`,
+    // and `sanitize_ident` passes real user idents through verbatim, so the
+    // options-object parameter cannot shadow a user binding in practice.
+    let keyword_params: Vec<&semantic_ir::Param> = f.keyword_params();
     for p in &f.params {
+        // Keyword params are NOT emitted inline — they fold into the trailing
+        // `__kw` object handled after this loop.  Skip them here.
+        if p.kind == ParamKind::Keyword {
+            continue;
+        }
         if !first {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
+        // M3 variadic kinds in TypeScript:
+        //   Rest   (`*rest`)  → `...rest: __Sir.Val[]`  (native JS rest)
+        //   KwRest (`**opts`) → `opts: __Sir.Val`        (v0 object fallback)
+        // JavaScript has no keyword-argument call form, so a KwRest def
+        // parameter has no faithful native declaration. v0: emit it as a
+        // trailing ordinary object parameter — the call side (Q10f) already
+        // collapses `**h` into a single merged trailing object, so this binds
+        // that object. (Documented limitation; mirrors the TS double-splat
+        // call-position treatment.)
+        match p.kind {
+            ParamKind::Rest => {
+                let _ = write!(out, "...{}: __Sir.Val[]", sanitize_ident(&p.name));
+            }
+            // Keyword handled above (skipped); this arm covers positionals and
+            // the KwRest object fallback.
+            ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
+                let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
+                // P2b default parameters.  A SIR default is evaluated
+                // per-call in the callee's parameter scope and may reference
+                // EARLIER params — exactly TypeScript's native default-value
+                // semantics.  So we emit the default expression verbatim
+                // through the ordinary expression emitter (which renders an
+                // earlier param's `VarRef` as a plain identifier, valid in
+                // TS):  `name: __Sir.Val = <default>`.  The call side never
+                // pads omitted trailing args (the validator allows omitting
+                // them), so these native defaults are what fill them in.
+                //
+                // Only `Required` params carry a meaningful default: a `Rest`
+                // param matched the arm above, and a `KwRest` (`**opts`) has
+                // no default surface form, so its `default` (if any) is
+                // ignored here — consistent with the v0 object fallback.
+                if p.kind == ParamKind::Required {
+                    if let Some(default) = &p.default {
+                        out.push_str(" = ");
+                        emit_expr(out, default, 2);
+                    }
+                }
+            }
+        }
+    }
+    // Append the single trailing options-object parameter iff the function has
+    // any keyword params.  (No keyword params → no `__kw`, so ordinary
+    // positional functions are byte-for-byte unchanged.)
+    if !keyword_params.is_empty() {
+        if !first {
+            out.push_str(", ");
+        }
+        out.push_str("__kw: __Sir.Val");
     }
     out.push_str("): __Sir.Val {\n");
 
+    // Body prologue: destructure the options object into the keyword bindings.
+    // Each required keyword (`default: None`) is a bare name; each optional
+    // (`default: Some(e)`) carries its default expression, so an omitted
+    // optional falls back to `e`.  `__kw ?? {}` tolerates a caller that
+    // supplied NO keywords at all (the object is then absent → `undefined`),
+    // which happens when every keyword is optional and the call omits them.
+    if !keyword_params.is_empty() {
+        out.push_str("  const { ");
+        for (i, p) in keyword_params.iter().enumerate() {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&sanitize_ident(&p.name));
+            if let Some(default) = &p.default {
+                out.push_str(" = ");
+                emit_expr(out, default, 2);
+            }
+        }
+        // Cast the untyped `Val` to an index signature so the destructure
+        // typechecks under `strict` — the runtime shape is a plain object.
+        out.push_str(" } = (__kw ?? {}) as { [k: string]: __Sir.Val };\n");
+    }
+
+    // Pre-pass: any local that is later reassigned must bind with `let`.
+    MUTABLE_NAMES.with(|m| {
+        let mut set = m.borrow_mut();
+        set.clear();
+        collect_assigned_locals(&f.body, &mut set);
+    });
+
     emit_function_body(out, &f.body, 2);
 
+    MUTABLE_NAMES.with(|m| m.borrow_mut().clear());
     out.push_str("}\n");
+}
+
+/// Walk a block (recursing through nested blocks, loop bodies, and
+/// block-bearing expressions) collecting the names targeted by an
+/// `Assign` with `Local` scope.  These need `let` rather than `const`.
+fn collect_assigned_locals(b: &Block, out: &mut HashSet<String>) {
+    for s in &b.stmts {
+        collect_stmt_assigned(s, out);
+    }
+    collect_expr_assigned(&b.value, out);
+}
+
+fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
+    match s {
+        Stmt::Assign { name, scope: Scope::Local, value, .. } => {
+            out.insert(name.clone());
+            collect_expr_assigned(value, out);
+        }
+        Stmt::Assign { value, .. } => collect_expr_assigned(value, out),
+        Stmt::LetBinding { value, .. } | Stmt::LetStarBinding { value, .. } => {
+            collect_expr_assigned(value, out);
+        }
+        Stmt::ExprStmt { expr, .. } => collect_expr_assigned(expr, out),
+        Stmt::While { cond, body, .. } => {
+            collect_expr_assigned(cond, out);
+            collect_assigned_locals(body, out);
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            collect_expr_assigned(start, out);
+            collect_expr_assigned(stop, out);
+            collect_expr_assigned(step, out);
+            collect_assigned_locals(body, out);
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            collect_expr_assigned(iter, out);
+            collect_assigned_locals(body, out);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            collect_expr_assigned(seq, out);
+            collect_expr_assigned(index, out);
+            collect_expr_assigned(value, out);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            collect_expr_assigned(map, out);
+            collect_expr_assigned(key, out);
+            collect_expr_assigned(value, out);
+        }
+        // A try/rescue/ensure carries bare statement lists that may reassign
+        // an outer local, so descend into every one.
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            for st in body {
+                collect_stmt_assigned(st, out);
+            }
+            for r in rescues {
+                for st in &r.body {
+                    collect_stmt_assigned(st, out);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for st in ens {
+                    collect_stmt_assigned(st, out);
+                }
+            }
+        }
+        // Class/module bodies are rejected at the capability check for this
+        // backend; nothing to collect.
+        Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
+    }
+}
+
+fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
+    match e {
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            collect_expr_assigned(cond, out);
+            collect_assigned_locals(then_branch, out);
+            collect_assigned_locals(else_branch, out);
+        }
+        Expr::Block(b) => collect_assigned_locals(b, out),
+        Expr::DirectCall { args, .. } | Expr::BuiltinCall { args, .. } => {
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::IndirectCall { target, args, .. } => {
+            collect_expr_assigned(target, out);
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::MakeClosure { captures, .. } => {
+            for c in captures {
+                collect_expr_assigned(&c.value, out);
+            }
+        }
+        Expr::SeqLit { items, .. } => {
+            for i in items {
+                collect_expr_assigned(i, out);
+            }
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            collect_expr_assigned(seq, out);
+            collect_expr_assigned(index, out);
+        }
+        Expr::SeqLen { seq, .. } => collect_expr_assigned(seq, out),
+        Expr::MapLit { entries, .. } => {
+            for entry in entries {
+                collect_expr_assigned(&entry.key, out);
+                collect_expr_assigned(&entry.value, out);
+            }
+        }
+        Expr::MapGet { map, key, .. } => {
+            collect_expr_assigned(map, out);
+            collect_expr_assigned(key, out);
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::StrConcat { parts, .. } => {
+            for p in parts {
+                collect_expr_assigned(p, out);
+            }
+        }
+        // KW1 compile-compat stub: recurse into a `KeywordArg`'s inner `value`
+        // — its runtime meaning — so assigned-local collection stays faithful.
+        // Real support pending KW2–KW6.
+        Expr::KeywordArg { value, .. } => collect_expr_assigned(value, out),
+        // Leaves with no nested blocks/exprs that could hold an Assign.
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. }
+        | Expr::VarRef { .. }
+        | Expr::Intrinsic { .. } => {}
+    }
 }
 
 fn emit_function_body(out: &mut String, b: &Block, indent: usize) {
@@ -124,12 +738,17 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
     let pad = " ".repeat(indent);
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
-            // TypeScript `const` works for both: parallel-let
-            // semantics were already preserved by the lowerer (each
-            // RHS was evaluated in the outer scope at lowering
-            // time).  Sequential `let*` is naturally honored by
-            // top-down `const` emission.
-            let _ = write!(out, "{}const {}: __Sir.Val = ", pad, sanitize_ident(name));
+            // `const` for immutable bindings (the common case); `let`
+            // when a later `Assign` re-binds this name (otherwise the
+            // reassignment would not type-check).  Parallel-let
+            // semantics were already preserved by the lowerer, so
+            // top-down emission is faithful either way.
+            let keyword = if MUTABLE_NAMES.with(|m| m.borrow().contains(name)) {
+                "let"
+            } else {
+                "const"
+            };
+            let _ = write!(out, "{}{} {}: __Sir.Val = ", pad, keyword, sanitize_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -146,16 +765,223 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push_str(";\n");
             }
         }
-        // SIR16 statement kinds — TS backend hasn't been extended yet.
-        // The capability declaration rejects modules that use them,
-        // so reaching this arm is a backend bug.
-        Stmt::Assign { span, .. }
-        | Stmt::While { span, .. }
-        | Stmt::ForRange { span, .. }
-        | Stmt::ForEach { span, .. }
-        | Stmt::SeqSet { span, .. }
-        | Stmt::MapSet { span, .. } => {
-            panic!("ts backend reached SIR16 statement at {} — capability check should have rejected it", span);
+        // ── SIR16 mutation ──────────────────────────────────────────
+        // `Assign` re-binds an already-declared name.  Local/Param/
+        // Capture/Global all resolve to a bare identifier in TS (globals
+        // are module-level `let`s), so a plain reassignment is faithful.
+        // Instance/ClassVar/Const are not in this backend's accepted
+        // features yet, so they fall through to the panic guard.
+        Stmt::Assign {
+            name,
+            scope: scope @ (Scope::Local | Scope::Param | Scope::Capture | Scope::Global),
+            value,
+            ..
+        } => {
+            let _ = scope; // identifier is the same for all four
+            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        // `seq[index] = value` — cast through the array view of `Val`.
+        Stmt::SeqSet { seq, index, value, .. } => {
+            out.push_str(&pad);
+            out.push_str("((");
+            emit_expr(out, seq, indent);
+            out.push_str(") as __Sir.Val[])[(");
+            emit_expr(out, index, indent);
+            out.push_str(") as number] = ");
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        // `map[key] = value` — `Map.set` on the map view of `Val`.
+        Stmt::MapSet { map, key, value, .. } => {
+            out.push_str(&pad);
+            out.push_str("((");
+            emit_expr(out, map, indent);
+            out.push_str(") as Map<__Sir.Val, __Sir.Val>).set(");
+            emit_expr(out, key, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
+        // ── SIR16 loops ─────────────────────────────────────────────
+        // `while (truthy(cond)) { body }` — the test routes through SIR
+        // truthiness (only `false`/`nil` are falsy), never JS truthiness.
+        Stmt::While { cond, body, .. } => {
+            out.push_str(&pad);
+            out.push_str("while (__Sir.truthy(");
+            emit_expr(out, cond, indent);
+            out.push_str(")) {\n");
+            emit_block_as_stmts(out, body, indent + 2);
+            let _ = write!(out, "{}}}\n", pad);
+        }
+        // `for (var = start; …; var += step) { body }` — half-open
+        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
+        // block-scoped temporaries (matching Python's `range`), and the
+        // loop condition is direction-aware so a negative `step` counts
+        // down correctly.
+        Stmt::ForRange { var, start, stop, step, body, .. } => {
+            let id = fresh_loop_id();
+            let v = sanitize_ident(var);
+            let inner = indent + 2;
+            let inner_pad = " ".repeat(inner);
+            // Open a block so the temporaries don't leak.
+            let _ = write!(out, "{}{{\n", pad);
+            let _ = write!(out, "{}let {}: __Sir.Val = ", inner_pad, v);
+            emit_expr(out, start, inner);
+            out.push_str(";\n");
+            let _ = write!(out, "{}const __sir_stop_{}: number = (", inner_pad, id);
+            emit_expr(out, stop, inner);
+            out.push_str(") as number;\n");
+            let _ = write!(out, "{}const __sir_step_{}: number = (", inner_pad, id);
+            emit_expr(out, step, inner);
+            out.push_str(") as number;\n");
+            let _ = write!(
+                out,
+                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{\n",
+                inner_pad, id = id, v = v
+            );
+            emit_block_as_stmts(out, body, inner + 2);
+            let _ = write!(
+                out,
+                "{}{} = ({} as number) + __sir_step_{};\n",
+                " ".repeat(inner + 2),
+                v,
+                v,
+                id
+            );
+            let _ = write!(out, "{}}}\n", inner_pad);
+            let _ = write!(out, "{}}}\n", pad);
+        }
+        // `for (const var of iter) { body }` — iterate a Seq.  The
+        // binding uses `let` if the body reassigns the loop variable.
+        Stmt::ForEach { var, iter, body, .. } => {
+            let kw = if MUTABLE_NAMES.with(|m| m.borrow().contains(var)) {
+                "let"
+            } else {
+                "const"
+            };
+            let _ = write!(out, "{}for ({} {} of ((", pad, kw, sanitize_ident(var));
+            emit_expr(out, iter, indent);
+            out.push_str(") as __Sir.Val[])) {\n");
+            emit_block_as_stmts(out, body, indent + 2);
+            let _ = write!(out, "{}}}\n", pad);
+        }
+        // ── SIR17 scopes (assignment) ───────────────────────────────
+        // `@x = v` → current-self instance-variable write via the OOP
+        // runtime (no native `this` — methods are receiver-less).
+        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+            let _ = write!(out, "{}__SirOop.ivarSet({}, ", pad, quote_ts_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
+        // `@@x = v` → class-variable store write.
+        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+            let _ = write!(out, "{}__SirOop.cvarSet({}, ", pad, quote_ts_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
+        // `CONST = v` → an ordinary module-level binding.  Constants are
+        // assign-once in Ruby, so `const` is faithful; reads elsewhere
+        // emit the bare identifier (see `emit_var_ref`).
+        Stmt::Assign { name, scope: Scope::Const, value, .. } => {
+            let _ = write!(out, "{}const {}: __Sir.Val = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        // `Assign` to a builtin is never produced by any frontend (you
+        // cannot rebind `+`); a validated module never reaches here.
+        Stmt::Assign { scope: Scope::Builtin, span, .. } => {
+            panic!("ts backend reached an assign to a Builtin-scoped name at {} — invalid SIR", span);
+        }
+        // ── SIR17 class / module / singleton declarations ───────────
+        // The Ruby→SIR frontend hoists method `def`s to top-level
+        // functions, so a `ClassDef` body carries only its non-`def`
+        // statements (constant / class-variable assigns).  We register
+        // the class in the OOP runtime (for ancestry-aware `is_a?`) and
+        // emit the body statements in source order.
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            let _ = write!(out, "{}__SirOop.defineClass({}, ", pad, quote_ts_string(name));
+            match superclass {
+                Some(sup) => {
+                    let _ = write!(out, "{}", quote_ts_string(sup));
+                }
+                None => out.push_str("null"),
+            }
+            out.push_str(");\n");
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
+        }
+        // A module is a namespace with no superclass; register it so it
+        // can participate in `is_a?`/ancestry, then emit its body.
+        Stmt::ModuleDef { name, body, .. } => {
+            let _ = write!(out, "{}__SirOop.defineClass({}, null);\n", pad, quote_ts_string(name));
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
+        }
+        // `class << receiver; …; end` — method `def`s are hoisted out by
+        // the frontend, so only the body's non-`def` statements remain.
+        Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
+        }
+        // `begin … rescue … ensure … end` → native `try { … } catch (e) {
+        // … } finally { … }`.  A native `catch` binds *one* variable and
+        // catches *everything*, while Ruby has an ordered list of typed
+        // `rescue` clauses, so the catch body is an if/else-if chain that asks
+        // the exception runtime `rescueMatches(exc, [class names])` for each
+        // clause in source order and re-`throw`s if none match (matching
+        // Ruby's "propagate when unrescued").
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            let pad = " ".repeat(indent);
+            let _ = write!(out, "{}try {{\n", pad);
+            emit_stmt_block(out, body, indent + 2);
+            let _ = write!(out, "{}}}", pad);
+            if !rescues.is_empty() {
+                out.push_str(" catch (__exc) {\n");
+                let inner = indent + 2;
+                let ipad = " ".repeat(inner);
+                for (i, r) in rescues.iter().enumerate() {
+                    let mut types = String::from("[");
+                    for (j, t) in r.exception_types.iter().enumerate() {
+                        if j > 0 {
+                            types.push_str(", ");
+                        }
+                        types.push_str(&quote_ts_string(t));
+                    }
+                    types.push(']');
+                    let kw = if i == 0 { "if" } else { "} else if" };
+                    let _ = write!(
+                        out,
+                        "{}{} (__SirExc.rescueMatches(__exc, {})) {{\n",
+                        ipad, kw, types
+                    );
+                    // `rescue Foo => e` binds the caught value as a local.
+                    if let Some(bind) = &r.binding {
+                        let _ = write!(
+                            out,
+                            "{}  const {}: __Sir.Val = __exc;\n",
+                            ipad,
+                            sanitize_ident(bind)
+                        );
+                    }
+                    emit_stmt_block(out, &r.body, inner + 2);
+                }
+                // No clause matched → propagate the original exception.
+                let _ = write!(out, "{}}} else {{\n", ipad);
+                let _ = write!(out, "{}  throw __exc;\n", ipad);
+                let _ = write!(out, "{}}}\n", ipad);
+                let _ = write!(out, "{}}}", pad);
+            }
+            if let Some(ens) = ensure_body {
+                out.push_str(" finally {\n");
+                emit_stmt_block(out, ens, indent + 2);
+                let _ = write!(out, "{}}}", pad);
+            }
+            out.push('\n');
         }
     }
 }
@@ -205,14 +1031,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::Block(b) => emit_block_as_expr(out, b, indent),
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
-            emit_args(out, args, indent);
+            emit_call_args(out, args, indent);
             out.push(')');
         }
         Expr::IndirectCall { target, args, .. } => {
-            out.push_str("__Sir.applyClosure(");
+            out.push_str("__Sir.apply(");
             emit_expr(out, target, indent);
             out.push_str(", [");
-            emit_args(out, args, indent);
+            emit_call_args(out, args, indent);
             out.push_str("])");
         }
         Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
@@ -235,16 +1061,97 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 name, span
             );
         }
-        // SIR16 expression kinds — TS backend hasn't been extended yet.
-        Expr::FloatLit { span, .. }
-        | Expr::SeqLit { span, .. }
-        | Expr::SeqIndex { span, .. }
-        | Expr::SeqLen { span, .. }
-        | Expr::MapLit { span, .. }
-        | Expr::MapGet { span, .. }
-        | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. } => {
-            panic!("ts backend reached SIR16 expression at {} — capability check should have rejected it", span);
+        // ── SIR16 expression kinds — native TypeScript ─────────────
+        Expr::FloatLit { value, .. } => {
+            let _ = write!(out, "{:?}", value);
+        }
+        Expr::SeqLit { items, .. } => {
+            out.push('[');
+            emit_args(out, items, indent);
+            out.push(']');
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            // `Val` is a union; cast to an array/number for the native
+            // index.
+            out.push_str("((");
+            emit_expr(out, seq, indent);
+            out.push_str(") as __Sir.Val[])[(");
+            emit_expr(out, index, indent);
+            out.push_str(") as number]");
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push_str("((");
+            emit_expr(out, seq, indent);
+            out.push_str(") as __Sir.Val[]).length");
+        }
+        Expr::MapLit { entries, .. } => {
+            out.push_str("new Map<__Sir.Val, __Sir.Val>([");
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_expr(out, &entry.key, indent);
+                out.push_str(", ");
+                emit_expr(out, &entry.value, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        Expr::MapGet { map, key, .. } => {
+            out.push_str("(((");
+            emit_expr(out, map, indent);
+            out.push_str(") as Map<__Sir.Val, __Sir.Val>).get(");
+            emit_expr(out, key, indent);
+            out.push_str(") ?? null)");
+        }
+        // Short-circuit: an arrow closure keeps the rhs unevaluated until
+        // the lhs decides, routing the test through SIR truthiness (only
+        // `false`/`nil` are falsy — not `0`/`""`).  The param `__l` gives
+        // each occurrence its own scope, so nested `&&`/`||` never collide.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? (");
+            emit_expr(out, rhs, indent);
+            out.push_str(") : __l)(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? __l : (");
+            emit_expr(out, rhs, indent);
+            out.push_str("))(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        // String interpolation: each part rendered through the SIR display
+        // helper (a string part renders to itself) and joined.
+        Expr::StrConcat { parts, .. } => {
+            out.push('(');
+            if parts.is_empty() {
+                out.push_str("\"\"");
+            }
+            for (i, p) in parts.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(" + ");
+                }
+                out.push_str("__Sir.toDisplay(");
+                emit_expr(out, p, indent);
+                out.push(')');
+            }
+            out.push(')');
+        }
+        // KW3 — a `KeywordArg` is NOT a first-class value: it only ever
+        // appears inside a call's `args`, where `emit_call_args` collapses the
+        // trailing run of them into one options-object literal (never routing
+        // them through `emit_expr`).  The validator (spec rule 6) rejects a
+        // `KeywordArg` in any other position, so reaching this arm means the
+        // call path bypassed `emit_call_args` — an internal backend bug.  A
+        // positioned panic surfaces it (mirrors the `Intrinsic` guard).
+        Expr::KeywordArg { span, .. } => {
+            panic!(
+                "typescript backend reached a bare keyword-arg expression at {} — a KeywordArg must be collapsed by emit_call_args, never emitted as a value",
+                span
+            );
         }
     }
 }
@@ -255,7 +1162,23 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
             let _ = write!(out, "{}", sanitize_ident(name));
         }
         Scope::Builtin => {
-            let _ = write!(out, "__Sir.builtins[{}]", quote_ts_string(name));
+            let _ = write!(out, "__Sir.builtinClosure({})", quote_ts_string(name));
+        }
+        // SIR17 scopes — emitted via the OOP runtime, since the
+        // Ruby→SIR frontend hoists methods to receiver-less top-level
+        // functions (no native `this` to read members from).
+        Scope::Instance => {
+            // `@x` → current-self instance-variable read.
+            let _ = write!(out, "__SirOop.ivarGet({})", quote_ts_string(name));
+        }
+        Scope::ClassVar => {
+            // `@@x` → class-variable store read.
+            let _ = write!(out, "__SirOop.cvarGet({})", quote_ts_string(name));
+        }
+        Scope::Const => {
+            // Constants are ordinary module-level bindings — a bare,
+            // sanitised identifier (e.g. `LEGS`).
+            out.push_str(&sanitize_ident(name));
         }
     }
 }
@@ -265,41 +1188,467 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
         if i > 0 {
             out.push_str(", ");
         }
-        emit_expr(out, a, indent);
+        emit_arg(out, a, indent);
     }
 }
 
+/// Emit one argument / sequence element, expanding the `splat` marker into
+/// JavaScript's native spread syntax.
+///
+/// Ruby `*x` reaches the backend as `BuiltinCall("splat", [x])` — a trailing
+/// call argument or an array element — and maps cleanly to JS `...` (array /
+/// argument spread).
+///
+/// | SIR marker (Ruby) | TS emitted | meaning |
+/// |---|---|---|
+/// | `splat` (`f(*a)`, `[1, *a, 3]`) | `...a` | spread an iterable's items |
+///
+/// `double_splat` (`**h`) is **not** handled here: it has no per-argument JS
+/// form (JavaScript has no keyword-argument call), so the *call-argument* layer
+/// ([`emit_call_args`]) collapses a contiguous run of `**` markers into one
+/// merged keyword-map argument instead.  Anything that is not a `splat` marker
+/// emits as an ordinary expression.
+fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "splat" && args.len() == 1 {
+            out.push_str("...");
+            emit_expr(out, &args[0], indent);
+            return;
+        }
+    }
+    if try_emit_block_pass(out, a, indent) {
+        return;
+    }
+    emit_expr(out, a, indent);
+}
+
+/// Emit a `&expr` block-pass argument that survived frontend normalization
+/// (M2).  The Ruby frontend wraps a `&`-prefixed block argument as
+/// `BuiltinCall("block_pass", [inner])`.  Q9f unwraps it at *user-method*
+/// `DirectCall` sites, but a block-pass to a **method-dispatch** call
+/// (`recv.map(&:to_s)`) reaches the backend intact inside the `__method__`
+/// envelope.  Two inner shapes matter:
+///
+/// | inner | emitted | meaning |
+/// |---|---|---|
+/// | `SymLit("m")` (`&:m`) | `__SirOop.symToProc(intern("m"))` | `Symbol#to_proc` — a block calling `recv.m(...rest)` |
+/// | any other (`&proc`)   | `<inner>` (unwrapped) | the operand already *is* the proc/block value |
+///
+/// Returns `true` when it handled a `block_pass` envelope (so the caller does
+/// not also `emit_expr` it).  A malformed envelope (not exactly one operand)
+/// is left for the generic path.
+fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
+    if let Expr::BuiltinCall { name, args, .. } = a {
+        if name == "block_pass" && args.len() == 1 {
+            if let Expr::SymLit { .. } = &args[0] {
+                out.push_str("__SirOop.symToProc(");
+                emit_expr(out, &args[0], indent);
+                out.push(')');
+            } else {
+                emit_expr(out, &args[0], indent);
+            }
+            return true;
+        }
+    }
+    false
+}
+
+/// Is this argument a `**h` double-splat marker (`BuiltinCall("double_splat",
+/// [operand])`)?
+fn is_double_splat(a: &Expr) -> bool {
+    matches!(a, Expr::BuiltinCall { name, args, .. }
+        if name == "double_splat" && args.len() == 1)
+}
+
+/// Emit a *call's* argument list, collapsing every contiguous run of `**`
+/// double-splat markers into a single merged keyword-map argument.
+///
+/// Ruby `f(**h1, **h2)` splices each map's entries as keyword arguments (later
+/// keys winning).  Python emits a native `**`; **JavaScript has no
+/// keyword-argument call form**, so there is no faithful per-argument spread.
+/// The v0 strategy (see `code/specs/sir-runtime.md`) is the conventional JS
+/// "options object": collapse the trailing/contiguous run of `**` markers into
+/// ONE argument built by the runtime merge helper —
+/// `__Sir.doubleSplatMerge(h1, h2)` — which returns a fresh `Map` with
+/// left-to-right precedence.  A callee compiled from `def f(**opts)` then
+/// receives that map as its final positional parameter.
+///
+/// Plain (`splat`-or-ordinary) arguments pass straight through [`emit_arg`], so
+/// `f(a, *b, **h)` becomes `f(a, ...b, __Sir.doubleSplatMerge(h))`.  Runs are
+/// collapsed *in place*, which keeps a trailing block argument (appended by the
+/// frontend's block-param ABI) after the merged map — e.g. `f(**h) { … }`
+/// emits `f(__Sir.doubleSplatMerge(h), <block>)`.
+///
+/// v0 cut-line: mixing inline `key: value` pairs with `**h` at one call site is
+/// not modelled — only explicit `**map` operands are merged.
+///
+/// **KW3 — keyword arguments (`f(1, y: 2)`).**  A named keyword argument
+/// reaches the backend as an [`Expr::KeywordArg`] inside `args`, always AFTER
+/// every positional (the validator enforces the ordering).  The def side folds
+/// keyword *parameters* into a trailing `__kw` options object, so the call side
+/// must supply that object: every `KeywordArg` in this call collapses into ONE
+/// trailing object literal `{ name: value, … }`.  With no keyword args the
+/// object is omitted entirely, so an ordinary positional call is unchanged:
+///
+/// | SIR `args`                                   | emitted            |
+/// |----------------------------------------------|--------------------|
+/// | `[Int(1)]`                                    | `f(1)`             |
+/// | `[Int(1), KeywordArg{y, Int(2)}]`             | `f(1, { y: 2 })`   |
+/// | `[KeywordArg{x,…}, KeywordArg{y,…}]`          | `f({ x: …, y: … })`|
+fn emit_call_args(out: &mut String, args: &[Expr], indent: usize) {
+    // Split positionals from the trailing run of keyword arguments.  Because
+    // the validator guarantees every `KeywordArg` follows all positionals, the
+    // keyword args are exactly the trailing suffix — we partition once.
+    let n_positional = args.iter().take_while(|a| !is_keyword_arg(a)).count();
+    let positional = &args[..n_positional];
+    let keyword = &args[n_positional..];
+
+    let mut first = true;
+    let mut i = 0;
+    while i < positional.len() {
+        if !first {
+            out.push_str(", ");
+        }
+        first = false;
+        if is_double_splat(&positional[i]) {
+            // Gather this maximal contiguous run of `**` markers.
+            let start = i;
+            while i < positional.len() && is_double_splat(&positional[i]) {
+                i += 1;
+            }
+            out.push_str("__Sir.doubleSplatMerge(");
+            for (j, a) in positional[start..i].iter().enumerate() {
+                if j > 0 {
+                    out.push_str(", ");
+                }
+                if let Expr::BuiltinCall { args: inner, .. } = a {
+                    emit_expr(out, &inner[0], indent);
+                }
+            }
+            out.push(')');
+        } else {
+            emit_arg(out, &positional[i], indent);
+            i += 1;
+        }
+    }
+
+    // Collapse the trailing keyword arguments into one options-object literal
+    // that binds the callee's `__kw` parameter (see `emit_function`).  Each
+    // `KeywordArg { name, value }` becomes an object entry `name: <value>`;
+    // the value lowers through the ordinary expression emitter.
+    if !keyword.is_empty() {
+        if !first {
+            out.push_str(", ");
+        }
+        out.push_str("{ ");
+        for (j, a) in keyword.iter().enumerate() {
+            if j > 0 {
+                out.push_str(", ");
+            }
+            if let Expr::KeywordArg { name, value, .. } = a {
+                let _ = write!(out, "{}: ", sanitize_ident(name));
+                emit_expr(out, value, indent);
+            }
+        }
+        out.push_str(" }");
+    }
+}
+
+/// Is this argument a keyword argument (`f(y: 2)` → `Expr::KeywordArg`)?
+fn is_keyword_arg(a: &Expr) -> bool {
+    matches!(a, Expr::KeywordArg { .. })
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // Reflective method dispatch: the Ruby→SIR frontend lowers
+    // `recv.meth(args…)` to `BuiltinCall("__method__", [recv, "meth",
+    // args…])`.  Route it through the OOP runtime's `callMethod`.  For
+    // the class-predicate methods, a `Const`-scoped class operand (e.g.
+    // `Integer`) is passed as its *name string* so the predicate works
+    // without a binding for the built-in class name.
+    if name == "__method__" && args.len() >= 2 {
+        if let Expr::StrLit { value: meth, .. } = &args[1] {
+            out.push_str("__SirOop.callMethod(");
+            emit_expr(out, &args[0], indent);
+            let _ = write!(out, ", {}", quote_ts_string(meth));
+            let is_class_pred =
+                matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
+            for (i, a) in args[2..].iter().enumerate() {
+                out.push_str(", ");
+                match a {
+                    // First operand of a class predicate, given as a
+                    // constant class name → emit the name as a string.
+                    Expr::VarRef { name: cn, scope: Scope::Const, .. } if is_class_pred && i == 0 => {
+                        out.push_str(&quote_ts_string(cn));
+                    }
+                    // A `&:sym` / `&proc` block argument on a dispatched call
+                    // (`recv.map(&:to_s)`) survives as a `block_pass` envelope
+                    // (Q9f only unwraps these at user-method DirectCalls).
+                    _ if try_emit_block_pass(out, a, indent) => {}
+                    _ => emit_expr(out, a, indent),
+                }
+            }
+            out.push(')');
+            return;
+        }
+    }
+    // OOP object-model builtins (O1).  The Ruby→SIR frontend (O2) emits these
+    // for user-defined classes; each routes to the OOP runtime's explicit
+    // method-table helpers (never reflection — the C3 RCE lesson).  Class and
+    // method names arrive as `StrLit` args and emit through the normal
+    // expression path (`quote_ts_string`), so no source-derived name is ever
+    // interpolated raw.
+    //
+    //   __new__(class, ...ctor_args)          → __SirOop.callNew(class, args…)
+    //   __super__(method, class, ...args)     → __SirOop.callSuper(method, class, args…)
+    //   __def_method__(class, method, fn)     → __SirOop.defMethod(class, method, fn)
+    //   __def_class_method__(class, meth, fn) → __SirOop.defClassMethod(class, meth, fn)
+    //   __self__()                            → __SirOop.currentSelfVal()
+    //
+    // All args are ordinary SIR `Expr`s (`StrLit` for the names, `MakeClosure`
+    // for the method body), so a plain `emit_args` is correct and safe.
+    if name == "__new__" && !args.is_empty() {
+        out.push_str("__SirOop.callNew(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__super__" && args.len() >= 2 {
+        out.push_str("__SirOop.callSuper(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_method__" && args.len() == 3 {
+        out.push_str("__SirOop.defMethod(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__def_class_method__" && args.len() == 3 {
+        out.push_str("__SirOop.defClassMethod(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // Class-method CALL dispatch `Foo.bar(args)` (const receiver) →
+    // `__SirOop.callClassMethod("Foo", "bar", args…)` (issue #59, mirrored from
+    // the Python backend).  Needed for `extend M`'s methods (registered as class
+    // methods) to be callable as `Owner.method`.  The class + method names
+    // arrive as `StrLit`s through the normal expression path — never a raw
+    // source-derived name (the C3 RCE lesson).
+    if name == "__class_method__" && args.len() >= 2 {
+        out.push_str("__SirOop.callClassMethod(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // Mixin directives (MX3).  The Ruby frontend (MX1) lowers `include M` /
+    // `extend M` in a class/module body to these two builtins, both carrying the
+    // owner and module names as `StrLit`s (never a source-derived value that is
+    // interpolated raw — the C3 RCE lesson):
+    //
+    //   __include__("Owner", "M")  → __SirOop.includeModule("Owner", "M")
+    //   __extend__("Owner", "M")   → __SirOop.extendModule("Owner", "M")
+    //
+    // `includeModule` appends `M` to the owner's include-order list (consulted
+    // by the method-resolution walk); `extendModule` copies `M`'s instance
+    // methods into the owner's class-method table (`Owner.method`).
+    if name == "__include__" && args.len() == 2 {
+        out.push_str("__SirOop.includeModule(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__extend__" && args.len() == 2 {
+        out.push_str("__SirOop.extendModule(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    if name == "__self__" && args.is_empty() {
+        out.push_str("__SirOop.currentSelfVal()");
+        return;
+    }
+    // `case_eq` (M5) — Ruby case-equality `pattern === value`, emitted by a
+    // `when` clause for range/regex/literal patterns (the class case lowers to
+    // `is_a?` via `__method__` instead).  Routes to the OOP runtime helper.
+    if name == "case_eq" && args.len() == 2 {
+        out.push_str("__SirOop.caseEq(");
+        emit_expr(out, &args[0], indent);
+        out.push_str(", ");
+        emit_expr(out, &args[1], indent);
+        out.push(')');
+        return;
+    }
+    // `raise` → throw a SIR exception via the exception runtime.  The first
+    // argument decides the shape:
+    //   • a `Const` class name (`raise Foo` / `raise Foo, "msg"`) → the class
+    //     name is passed as a *string* (no binding needed for a built-in
+    //     class), with the optional message second;
+    //   • any other first arg (`raise "msg"`) → an implicit `RuntimeError`
+    //     carrying that value as the message (matching Ruby);
+    //   • no args (bare `raise`) → a generic re-raise (`RuntimeError`).
+    if name == "raise" {
+        out.push_str("__SirExc.raiseError(");
+        match args.first() {
+            None => {}
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                out.push_str(&quote_ts_string(cn));
+                if let Some(msg) = args.get(1) {
+                    out.push_str(", ");
+                    emit_expr(out, msg, indent);
+                }
+            }
+            Some(other) => {
+                out.push_str("\"RuntimeError\", ");
+                emit_expr(out, other, indent);
+            }
+        }
+        out.push(')');
+        return;
+    }
+    // `regex` (a Ruby `/pat/flags` literal) → compile via the regex runtime.
+    // Args are `[pattern, flags]`; routes to `__SirRegex.compile`, gated by
+    // `uses_regex`.
+    if name == "regex" {
+        out.push_str("__SirRegex.compile(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // `backtick` (a Ruby `` `cmd` `` literal) → run via the shell runtime,
+    // returning the command's stdout.  Gated by `uses_shell`.
+    if name == "backtick" {
+        out.push_str("__SirShell.backtick(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // `range` (a Ruby `a..b` / `a...b` literal) → construct a first-class SIR
+    // `Range` via the range runtime.  Args are `[start, stop, exclusive]`
+    // (start/stop may be `NilLit` for the begin/endless forms).  Gated by
+    // `uses_range`.
+    if name == "range" {
+        out.push_str("__SirRange.range(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or", [lhs,
+    // rhs])`.  They must **short-circuit** and use SIR truthiness, so they
+    // emit the same truthy-guarded arrow IIFE as `Expr::LogicalAnd`/`LogicalOr`
+    // rather than routing through the eager `callBuiltin` dispatch.
+    if name == "and" && args.len() == 2 {
+        out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? (");
+        emit_expr(out, &args[1], indent);
+        out.push_str(") : __l)(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    if name == "or" && args.len() == 2 {
+        out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? __l : (");
+        emit_expr(out, &args[1], indent);
+        out.push_str("))(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    // `!`/`not` → SIR-truthiness negation (always boolean); `-x` (unary minus)
+    // → numeric negation.
+    if name == "not" && args.len() == 1 {
+        out.push_str("(!__Sir.truthy(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
+    if name == "neg" && args.len() == 1 {
+        out.push_str("(-(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
+    // `lambda` / `->{…}` lower to `BuiltinCall("lambda", [MakeClosure])`.  The
+    // lambda *is* its closure value, so we emit the inner `MakeClosure`
+    // directly (which renders `new __Sir.Closure(...)`) rather than routing
+    // through the eager `callBuiltin` dispatch — there is no separate
+    // "lambda" runtime helper, the closure already is the result.
+    if name == "lambda" && args.len() == 1 {
+        emit_expr(out, &args[0], indent);
+        return;
+    }
+    // `defined?(x)` lowers to `BuiltinCall("defined?", [operand])`.  Ruby's
+    // contract: `defined?` **never evaluates its operand** — so we inspect the
+    // operand's SIR shape at emit time and emit a constant description string;
+    // the operand is never rendered, so it cannot run.  Same shape→description
+    // table and v0 simplifications as the Python backend (see its comment and
+    // `code/specs/sir-runtime.md`): instance/class/global vars report their
+    // static description rather than the runtime nil-when-unset.  Q10h: a
+    // method-call operand `recv.meth` (the `__method__` dispatch envelope)
+    // reports `"method"` — Ruby's category when the method resolves — instead of
+    // the generic `"expression"`; the respond_to?-presence check that would
+    // return `nil` for an absent method is the documented method-dispatch
+    // boundary.  The non-evaluation contract holds for every shape.
+    if name == "defined?" && args.len() == 1 {
+        let desc = match &args[0] {
+            Expr::VarRef { scope, .. } => match scope {
+                Scope::Local | Scope::Param | Scope::Capture => "local-variable",
+                Scope::Const => "constant",
+                Scope::Instance => "instance-variable",
+                Scope::ClassVar => "class variable",
+                Scope::Global => "global-variable",
+                Scope::Builtin => "method",
+            },
+            Expr::BuiltinCall { name: inner, .. } if inner == "__method__" => "method",
+            _ => "expression",
+        };
+        out.push_str(&quote_ts_string(desc));
+        return;
+    }
     let helper = match name {
-        "+" => "__Sir.plus",
-        "-" => "__Sir.minus",
-        "*" => "__Sir.times",
-        "/" => "__Sir.divide",
+        "+" => "__Sir.add",
+        "-" => "__Sir.sub",
+        "*" => "__Sir.mul",
+        "/" => "__Sir.div",
         "=" => "__Sir.eq",
         "<" => "__Sir.lt",
         ">" => "__Sir.gt",
-        "cons" => "__Sir.cons",
-        "car" => "__Sir.car",
-        "cdr" => "__Sir.cdr",
+        // Pairs live in the dedicated `@coding-adventures/sir-runtime-pairs`
+        // package now (imported as `__SirPairs`, gated by `uses_pairs`).
+        "cons" => "__SirPairs.cons",
+        "car" => "__SirPairs.car",
+        "cdr" => "__SirPairs.cdr",
         "null?" => "__Sir.isNull",
-        "pair?" => "__Sir.isPair",
+        "pair?" => "__SirPairs.isPair",
         "number?" => "__Sir.isNumber",
         "symbol?" => "__Sir.isSymbol",
         "print" => "__Sir.print",
+        // `puts` is variadic in the runtime (`puts(...args)`), so a direct
+        // `__Sir.puts(a, b)` forwards every argument (Ruby `puts a, b`).
+        "puts" => "__Sir.puts",
         "global_set" => "__Sir.globalSet",
         "global_get" => "__Sir.globalGet",
         // Unknown builtin: route through the dispatch table.  This
         // lets future builtins land without immediate backend changes.
         _ => {
-            let _ = write!(out, "__Sir.builtins[{}](", quote_ts_string(name));
+            let _ = write!(out, "__Sir.callBuiltin({}, [", quote_ts_string(name));
             emit_args(out, args, indent);
-            out.push(')');
+            out.push_str("])");
             return;
         }
     };
     let _ = write!(out, "{}(", helper);
     emit_args(out, args, indent);
     out.push(')');
+}
+
+/// Emit a bare statement list (a `Vec<Stmt>`, as carried by `TryCatch`
+/// bodies / rescue clauses / `ensure`) at the given indent.
+fn emit_stmt_block(out: &mut String, stmts: &[Stmt], indent: usize) {
+    for s in stmts {
+        emit_stmt(out, s, indent);
+    }
 }
 
 fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
@@ -320,6 +1669,24 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
     out.push_str(";\n");
     let outer_pad = " ".repeat(indent);
     let _ = write!(out, "{}}})()", outer_pad);
+}
+
+/// Emit a block in **statement context** — used for loop bodies, whose
+/// trailing value is discarded rather than returned.  Each statement is
+/// emitted in order; the block's trailing `value` is emitted as an
+/// expression statement so any side effect still fires, except a bare
+/// `nil` (the common "this block yields nothing" marker), which is
+/// dropped to keep the output clean.
+fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
+    for s in &b.stmts {
+        emit_stmt(out, s, indent);
+    }
+    if !matches!(b.value, Expr::NilLit { .. }) {
+        let pad = " ".repeat(indent);
+        out.push_str(&pad);
+        emit_expr(out, &b.value, indent);
+        out.push_str(";\n");
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -647,7 +2014,7 @@ mod tests {
             },
             0,
         );
-        assert_eq!(out, r#"__Sir.builtins["+"]"#);
+        assert_eq!(out, r#"__Sir.builtinClosure("+")"#);
     }
 
     #[test]
@@ -666,7 +2033,7 @@ mod tests {
             },
             0,
         );
-        assert_eq!(out, "__Sir.plus(1, 2)");
+        assert_eq!(out, "__Sir.add(1, 2)");
     }
 
     #[test]
@@ -702,7 +2069,7 @@ mod tests {
             },
             0,
         );
-        assert_eq!(out, "__Sir.applyClosure(f, [5])");
+        assert_eq!(out, "__Sir.apply(f, [5])");
     }
 
     #[test]
@@ -739,7 +2106,7 @@ mod tests {
         };
         let f = Function {
             name: "id".into(),
-            params: vec![Param { name: "x".into(), sir_type: None, span: s() }],
+            params: vec![Param { name: "x".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() }],
             return_type: None,
             captures: vec![],
             body,
@@ -751,6 +2118,81 @@ mod tests {
         emit_function(&mut out, &f);
         assert!(out.contains("function id(x: __Sir.Val): __Sir.Val"));
         assert!(out.contains("return x;"));
+    }
+
+    #[test]
+    fn emit_default_param_referencing_earlier_param() {
+        // P2b: `def f(a, b = a + 1); b; end` → TS
+        // `function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1)): __Sir.Val`.
+        // The default is inlined natively and references the EARLIER param
+        // `a` (valid TS), so omitted trailing args are filled at call time.
+        let default_b = Expr::BuiltinCall {
+            name: "+".into(),
+            args: vec![
+                Expr::VarRef { name: "a".into(), scope: Scope::Param, span: s() },
+                Expr::IntLit { value: 1, span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param {
+                    name: "b".into(),
+                    sir_type: None,
+                    kind: ParamKind::Required,
+                    default: Some(Box::new(default_b)),
+                    span: s(),
+                },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VarRef { name: "b".into(), scope: Scope::Param, span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(
+            out.contains("function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1)): __Sir.Val"),
+            "got:\n{}",
+            out
+        );
+    }
+
+    #[test]
+    fn emit_variadic_params_rest_native_kwrest_object_fallback() {
+        // M3: `def f(a, *rest, **opts); end` → TS
+        // `function f(a: __Sir.Val, ...rest: __Sir.Val[], opts: __Sir.Val)`.
+        // Rest is native JS rest; KwRest has no faithful JS form (no kwargs),
+        // so v0 emits it as a trailing ordinary object parameter.
+        let f = Function {
+            name: "f".into(),
+            params: vec![
+                Param { name: "a".into(), sir_type: None, kind: ParamKind::Required, default: None, span: s() },
+                Param { name: "rest".into(), sir_type: None, kind: ParamKind::Rest, default: None, span: s() },
+                Param { name: "opts".into(), sir_type: None, kind: ParamKind::KwRest, default: None, span: s() },
+            ],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(
+            out.contains("function f(a: __Sir.Val, ...rest: __Sir.Val[], opts: __Sir.Val)"),
+            "got: {out}"
+        );
     }
 
     #[test]
@@ -782,7 +2224,7 @@ mod tests {
         };
         let out = emit_module(&m);
         assert!(out.contains("// Generated by semantic-ir-to-typescript"));
-        assert!(out.contains("namespace __Sir"));
+        assert!(out.contains(r#"import * as __Sir from "@coding-adventures/sir-runtime-core";"#));
         assert!(out.contains("function main()"));
         assert!(out.contains("const __sir_result: __Sir.Val = main();"));
     }
@@ -807,5 +2249,167 @@ mod tests {
         // Crucially the SymLit form is suppressed in favour of the
         // direct assignment.
         assert!(!out.contains("intern"));
+    }
+
+    // M2 — `&:sym` symbol-to-proc on a method-dispatch call.
+
+    fn method_call(recv: Expr, meth: &str, extra: Vec<Expr>) -> Expr {
+        let mut args = vec![recv, Expr::StrLit { value: meth.into(), span: s() }];
+        args.extend(extra);
+        Expr::BuiltinCall {
+            name: "__method__".into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        }
+    }
+
+    fn block_pass(inner: Expr) -> Expr {
+        Expr::BuiltinCall {
+            name: "block_pass".into(),
+            args: vec![inner],
+            effects: EffectSet::PURE,
+            span: s(),
+        }
+    }
+
+    // ── O1: OOP object-model builtin emit arms ───────────────────────────────
+
+    fn ts_str_lit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn ts_builtin(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    #[test]
+    fn oop_new_emits_call_new_ts() {
+        // Dog.new("Rex") → __SirOop.callNew("Dog", "Rex").
+        let e = ts_builtin("__new__", vec![ts_str_lit("Dog"), ts_str_lit("Rex")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callNew("Dog", "Rex")"#);
+    }
+
+    #[test]
+    fn oop_super_emits_call_super_ts() {
+        let e = ts_builtin("__super__", vec![ts_str_lit("describe"), ts_str_lit("Cat")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callSuper("describe", "Cat")"#);
+    }
+
+    #[test]
+    fn oop_def_method_emits_registration_ts() {
+        // __def_method__("Dog", "speak", MakeClosure(Dog_speak)) →
+        // __SirOop.defMethod("Dog", "speak", new __Sir.Closure(...)).
+        let closure = Expr::MakeClosure {
+            fn_name: "Dog_speak".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = ts_builtin("__def_method__", vec![ts_str_lit("Dog"), ts_str_lit("speak"), closure]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert!(
+            out.starts_with(r#"__SirOop.defMethod("Dog", "speak", new __Sir.Closure("#),
+            "got: {out}"
+        );
+    }
+
+    #[test]
+    fn oop_def_class_method_emits_registration_ts() {
+        let closure = Expr::MakeClosure {
+            fn_name: "Counter_zero".into(),
+            captures: vec![],
+            span: s(),
+        };
+        let e = ts_builtin(
+            "__def_class_method__",
+            vec![ts_str_lit("Counter"), ts_str_lit("zero"), closure],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert!(
+            out.starts_with(r#"__SirOop.defClassMethod("Counter", "zero", new __Sir.Closure("#),
+            "got: {out}"
+        );
+    }
+
+    #[test]
+    fn oop_self_emits_current_self_ts() {
+        let e = ts_builtin("__self__", vec![]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, "__SirOop.currentSelfVal()");
+    }
+
+    #[test]
+    fn class_method_call_emits_call_class_method_ts() {
+        // __class_method__("Counter", "zero") → __SirOop.callClassMethod("Counter", "zero").
+        let e = ts_builtin("__class_method__", vec![ts_str_lit("Counter"), ts_str_lit("zero")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callClassMethod("Counter", "zero")"#);
+    }
+
+    #[test]
+    fn mixin_include_emits_include_module_ts() {
+        // __include__("Greeter", "Loud") → __SirOop.includeModule("Greeter", "Loud").
+        let e = ts_builtin("__include__", vec![ts_str_lit("Greeter"), ts_str_lit("Loud")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.includeModule("Greeter", "Loud")"#);
+    }
+
+    #[test]
+    fn mixin_extend_emits_extend_module_ts() {
+        // __extend__("Widget", "Describable") → __SirOop.extendModule("Widget", "Describable").
+        let e = ts_builtin("__extend__", vec![ts_str_lit("Widget"), ts_str_lit("Describable")]);
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.extendModule("Widget", "Describable")"#);
+    }
+
+    #[test]
+    fn sym_block_pass_on_dispatch_emits_sym_to_proc() {
+        // arr.map(&:to_s) → callMethod(arr, "map", symToProc(intern("to_s")))
+        let e = method_call(
+            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            "map",
+            vec![block_pass(Expr::SymLit { name: "to_s".into(), span: s() })],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(
+            out,
+            r#"__SirOop.callMethod(arr, "map", __SirOop.symToProc(__Sir.intern("to_s")))"#
+        );
+    }
+
+    #[test]
+    fn proc_block_pass_on_dispatch_unwraps_to_value() {
+        // arr.each(&p) → callMethod(arr, "each", p) — the proc IS the block.
+        let e = method_call(
+            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            "each",
+            vec![block_pass(Expr::VarRef {
+                name: "p".into(),
+                scope: Scope::Local,
+                span: s(),
+            })],
+        );
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert_eq!(out, r#"__SirOop.callMethod(arr, "each", p)"#);
+    }
+
+    #[test]
+    fn sym_block_pass_as_plain_arg_emits_sym_to_proc() {
+        // The general emit_arg path also handles a surviving block_pass.
+        let mut out = String::new();
+        emit_arg(&mut out, &block_pass(Expr::SymLit { name: "upcase".into(), span: s() }), 0);
+        assert_eq!(out, r#"__SirOop.symToProc(__Sir.intern("upcase"))"#);
     }
 }

@@ -1,0 +1,7 @@
+{
+ "idx": 70,
+ "id": "IMM-1",
+ "scenario": "Maria has held a green card for 6 years and 2 months with no gaps in her permanent residence. She is not married to a U.S. citizen and applies for naturalization today.",
+ "policy": "An applicant qualifies for naturalization only if they have been a lawful permanent resident (green card holder) for at least 5 continuous years immediately preceding the application. Spouses of citizens require only 3 continuous years.",
+ "question": "Does Maria meet the continuous-residence requirement for naturalization?"
+}

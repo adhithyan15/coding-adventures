@@ -1,0 +1,18 @@
+% Vignette 3 — pleuritic musculoskeletal chest pain (low-probability).
+%
+% 28yo F with sharp, pleuritic chest pain reproducible by palpation.
+% Pain worsens with deep breath; no diaphoresis, no radiation. No
+% PMH. Vitals normal. ECG: no acute ST changes.
+%
+% Expected behaviour: posterior far below threshold; no kickback;
+% no active uncertainty. Joint interaction term (pleuritic +
+% normal_vitals) further suppresses the posterior.
+
+observe demographic(age_under_40)
+observe symptom_quality(sharp)
+observe symptom_quality(pleuritic)
+observe vital_signs(within_normal_limits)
+observe denied(ecg_acute_st_changes)
+observe precipitator(positional)
+
+? acs

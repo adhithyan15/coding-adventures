@@ -1,0 +1,602 @@
+[
+  {
+    "q_idx": 0,
+    "choice": "B",
+    "rationale": "Resident must first attempt to convince attending to disclose; direct communication is the first step before escalating to ethics committee.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 1,
+    "choice": "D",
+    "rationale": "Ototoxicity + sensorineural hearing loss in bladder cancer chemotherapy points to cisplatin, which works by cross-linking DNA.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 2,
+    "choice": "B",
+    "rationale": "Post-catheterization with livedo reticularis, eosinophilia, AKI, and intravascular cholesterol clefts (spindle-shaped vacuoles) is classic cholesterol embolization.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 3,
+    "choice": "D",
+    "rationale": "Septic shock + DIC + pelvic source with LPS (lipid A = phosphorylated GlcNAc disaccharide with fatty acids) indicates gram-negative sepsis; E. coli ferments lactose on MacConkey.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 4,
+    "choice": "B",
+    "rationale": "Classic seasonal allergic conjunctivitis; ketotifen (mast cell stabilizer/antihistamine) eye drops are first-line.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 5,
+    "choice": "A",
+    "rationale": "Cocaine-induced chest pain; benzos are preferred but among options, diltiazem (CCB) addresses HTN and coronary vasoconstriction. Beta-blockers contraindicated due to unopposed alpha.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 6,
+    "choice": "C",
+    "rationale": "Older patient with PAD and unilateral hydronephrosis suggests common iliac artery aneurysm compressing the ureter.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 7,
+    "choice": "C",
+    "rationale": "Post-PCI for NSTEMI, dual antiplatelet therapy (aspirin + clopidogrel) is standard.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 8,
+    "choice": "B",
+    "rationale": "Active PID is an absolute contraindication to copper IUD placement; the other options are contraindications for hormonal methods.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 9,
+    "choice": "A",
+    "rationale": "Nail pitting in a young woman strongly suggests psoriasis, which presents with silvery plaques on extensor surfaces.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 10,
+    "choice": "D",
+    "rationale": "HIV confirmatory testing now uses the HIV-1/HIV-2 antibody differentiation immunoassay (replaced Western blot per CDC algorithm).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 11,
+    "choice": "D",
+    "rationale": "Primary myelofibrosis (massive splenomegaly, marrow fibrosis, JAK2+) treated with ruxolitinib, a JAK2 inhibitor.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 12,
+    "choice": "B",
+    "rationale": "Bilateral vestibular schwannomas + merlin mutation on chr 22 = NF2; increased risk of meningiomas.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 13,
+    "choice": "D",
+    "rationale": "Standing decreases venous return and preload, increasing HR which reduces diastolic filling time.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 14,
+    "choice": "C",
+    "rationale": "Reassortment of segmented genomes occurs with segmented viruses like rotavirus (Reoviridae).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 15,
+    "choice": "B",
+    "rationale": "Calcified gallbladder (porcelain gallbladder) carries high risk of gallbladder adenocarcinoma, which must be excluded.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 16,
+    "choice": "D",
+    "rationale": "IL-4 promotes B-cell class switching to IgE in allergic asthma.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 17,
+    "choice": "D",
+    "rationale": "Pairing cases with controls on confounding variables is matching.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 18,
+    "choice": "B",
+    "rationale": "Acute pericarditis: NSAIDs (ibuprofen) plus colchicine is first-line therapy.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 19,
+    "choice": "D",
+    "rationale": "Low BAC with sedation, ataxia, diminished reflexes, normal pupils suggests benzodiazepine intoxication.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 20,
+    "choice": "C",
+    "rationale": "Previous radiation therapy is a known risk factor for secondary diffuse large B-cell lymphoma.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 21,
+    "choice": "A",
+    "rationale": "VSD (holosystolic murmur LLSB) with acyanotic CHF symptoms is associated with 22q11 deletion (DiGeorge).",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 22,
+    "choice": "C",
+    "rationale": "Mississippi River valley + dimorphic fungus + macrophages with intracellular yeast = Histoplasma capsulatum.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 23,
+    "choice": "D",
+    "rationale": "Hospital-acquired pneumonia after 1 week; S. aureus is a common HAP pathogen.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 24,
+    "choice": "A",
+    "rationale": "Silent chest with lethargy after maximal asthma therapy indicates impending respiratory failure requiring intubation.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 25,
+    "choice": "D",
+    "rationale": "Negative NBT and recurrent catalase-positive organism infections = chronic granulomatous disease, defective respiratory burst.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 26,
+    "choice": "D",
+    "rationale": "Barking cough and stridor = croup; X-ray shows steeple sign (subglottic narrowing).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 27,
+    "choice": "A",
+    "rationale": "Rifampin induces CYP3A4, accelerating estrogen/progestin metabolism.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 28,
+    "choice": "D",
+    "rationale": "Post-diarrheal ascending weakness with diminished reflexes = Guillain-Barre; CSF shows albuminocytologic dissociation (increased protein, normal cell count).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 29,
+    "choice": "C",
+    "rationale": "Flexible metatarsus adductus (correctable with stimulation) typically resolves spontaneously; reassurance is appropriate.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 30,
+    "choice": "D",
+    "rationale": "Cholescintigraphy showing intrahepatic ducts but no gallbladder filling = cystic duct obstruction (acute cholecystitis).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 31,
+    "choice": "C",
+    "rationale": "Elderly with palpitations/dyspnea and PV loop shifted up/left (diastolic dysfunction) = increased ventricular wall stiffness (HFpEF).",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 32,
+    "choice": "D",
+    "rationale": "Aplastic anemia after antibiotic in Guatemala (where it is still used)\u2014chloramphenicol causes aplastic anemia.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 33,
+    "choice": "B",
+    "rationale": "Hypertrophic gastropathy with parietal atrophy and hypoalbuminemia (edema) = Menetrier disease (mucus cell hyperplasia).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 34,
+    "choice": "D",
+    "rationale": "DKA resolved after insulin/fluids; now needs supportive monitoring.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 35,
+    "choice": "A",
+    "rationale": "Asymmetric arthritis + nail pitting + scalp scaling (dandruff = psoriasis) = psoriatic arthritis.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 36,
+    "choice": "D",
+    "rationale": "Proximal weakness improving with exercise + autonomic symptoms + no response to anticholinesterase = Lambert-Eaton (paraneoplastic from SCLC).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 37,
+    "choice": "A",
+    "rationale": "Persistent diarrhea, candidiasis, RSV in infant with negative HIV = T cell defect (SCID).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 38,
+    "choice": "D",
+    "rationale": "TI = TD50/ED50. ED50 around 20mg, TD50 around 60mg. Therefore TI = 60/20 = 3, closest is 2.67.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 39,
+    "choice": "A",
+    "rationale": "Fluent speech with intact comprehension but impaired repetition = conduction aphasia from arcuate fasciculus damage.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 40,
+    "choice": "C",
+    "rationale": "Hirsutism, acne, oligomenorrhea, obesity, IGT = PCOS (Rotterdam criteria).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 41,
+    "choice": "C",
+    "rationale": "Diabetic peripheral neuropathy progression is best prevented by strict glycemic control.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 42,
+    "choice": "A",
+    "rationale": "Down syndrome (quad screen pattern) + bilious vomiting + polyhydramnios = duodenal atresia.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 43,
+    "choice": "B",
+    "rationale": "Coronary sinus has lowest O2 content because heart extracts maximum O2 from blood at rest and exercise.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 44,
+    "choice": "C",
+    "rationale": "Multiparous woman with menorrhagia, bulk symptoms, irregular enlarged uterus = fibroids (leiomyoma).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 45,
+    "choice": "D",
+    "rationale": "Severe anion-gap metabolic acidosis in alcoholic with normal salicylate\u2014suspect methanol/ethylene glycol; fomepizole is treatment.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 46,
+    "choice": "C",
+    "rationale": "ARR = 210/1500 - 134/1500 = 0.14 - 0.089 = 0.051; NNT = 1/0.051 about 20.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 47,
+    "choice": "A",
+    "rationale": "Unilateral calf claudication with absent pedal pulses but palpable femoral pulse localizes lesion to femoropopliteal segment.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 48,
+    "choice": "B",
+    "rationale": "Stillbirth at 35 weeks with no obvious cause\u2014autopsy is the most informative next step.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 49,
+    "choice": "C",
+    "rationale": "Type II pneumocytes (surfactant-secreting) proliferate to regenerate alveolar epithelium.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 50,
+    "choice": "D",
+    "rationale": "Ionizing radiation causes double-strand DNA breaks via free radicals.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 51,
+    "choice": "A",
+    "rationale": "Resistant hypertension + hypokalemia + metabolic alkalosis = primary hyperaldosteronism.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 52,
+    "choice": "D",
+    "rationale": "Conjugated hyperbilirubinemia (bilirubin in urine) with low urobilinogen suggests biliary obstruction (defective excretion).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 53,
+    "choice": "C",
+    "rationale": "Galantamine (AChE inhibitor) causing cholinergic side effects; atropine antagonizes muscarinic effects.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 54,
+    "choice": "A",
+    "rationale": "Lip smacking, blinking, chronic neuroleptic exposure = tardive dyskinesia.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 55,
+    "choice": "A",
+    "rationale": "Tinea cruris (groin itching with scaly patch); KOH prep confirms dermatophyte.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 56,
+    "choice": "C",
+    "rationale": "Risperidone increases prolactin, causing gynecomastia/galactorrhea.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 57,
+    "choice": "B",
+    "rationale": "Tampon-associated TSS via TSST-1 superantigen binding to MHC II and variable beta region of TCR.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 58,
+    "choice": "C",
+    "rationale": "Post-diarrheal MAHA, thrombocytopenia, AKI in child after Mexico trip = HUS (Shiga toxin from EHEC).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 59,
+    "choice": "C",
+    "rationale": "Bulimia nervosa with normal BMI; patients can transition between anorexia and bulimia.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 60,
+    "choice": "C",
+    "rationale": "Travel to Indonesia + stepwise fever, rose spots, hepatosplenomegaly = typhoid fever (S. typhi).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 61,
+    "choice": "A",
+    "rationale": "Metronidazole inhibits aldehyde dehydrogenase causing acetaldehyde accumulation (disulfiram-like).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 62,
+    "choice": "D",
+    "rationale": "Mild normocytic anemia at 16 weeks is physiologic dilutional anemia of pregnancy.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 63,
+    "choice": "A",
+    "rationale": "Postoperative urinary retention after anticholinergic/opioid premedication; straight cath relieves bladder.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 64,
+    "choice": "C",
+    "rationale": "Oral thrush (pseudomembranes wiping off) in young man\u2014azole antifungal (inhibits 14-alpha-demethylase).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 65,
+    "choice": "B",
+    "rationale": "Subacute back pain, worse at night, history of lung cancer = bony metastases (lytic lesions).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 66,
+    "choice": "C",
+    "rationale": "Emergency life/limb-threatening surgery in minor with parents unreachable; implied consent\u2014proceed.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 67,
+    "choice": "B",
+    "rationale": "Neonatal hyperthyroidism (mother with Graves') from transplacental TSI/TSH receptor antibodies.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 68,
+    "choice": "D",
+    "rationale": "Esophageal varices secondary prevention with nonselective beta-blocker nadolol.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 69,
+    "choice": "B",
+    "rationale": "2cm liver lesion with arterial enhancement in cirrhotic = HCC; resection is appropriate if resectable.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 70,
+    "choice": "A",
+    "rationale": "Hepatic encephalopathy with fever and ascites\u2014SBP is most likely precipitant.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 71,
+    "choice": "A",
+    "rationale": "Blunt chest trauma + elevated troponin + elevated PCWP + chest wall bruising = cardiac contusion.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 72,
+    "choice": "C",
+    "rationale": "Hepatorenal syndrome in decompensated cirrhotic; definitive treatment is liver transplantation.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 73,
+    "choice": "D",
+    "rationale": "Hyperthyroidism (likely Graves'); radioiodine is definitive single treatment.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 74,
+    "choice": "C",
+    "rationale": "Hypopigmented rash post-tropical travel = tinea versicolor; KOH prep shows spaghetti and meatballs.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 75,
+    "choice": "A",
+    "rationale": "Cri-du-chat syndrome (high-pitched cry, microcephaly, epicanthal folds) = chromosome 5p deletion.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 76,
+    "choice": "B",
+    "rationale": "Postmenopausal vaginal mass requires biopsy to rule out vaginal cancer.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 77,
+    "choice": "B",
+    "rationale": "Hemochromatosis arthropathy (high transferrin sat, ferritin, MCP involvement, diabetes) with CPP deposition.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 78,
+    "choice": "C",
+    "rationale": "Cyanotic newborn + egg-shaped heart + atrial septostomy = transposition of great vessels.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 79,
+    "choice": "C",
+    "rationale": "Penetrating cardiac injury requires surgical repair with pledgeted sutures.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 80,
+    "choice": "B",
+    "rationale": "Smoker with productive cough and cor pulmonale = chronic bronchitis; Reid index >50% is the pathologic finding.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 81,
+    "choice": "A",
+    "rationale": "Follicular lymphoma t(14;18) overexpresses BCL-2, which inhibits caspase-9-mediated apoptosis.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 82,
+    "choice": "C",
+    "rationale": "African-American patients are at highest risk for acral lentiginous melanoma.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 83,
+    "choice": "A",
+    "rationale": "Polymyalgia rheumatica with elevated ESR/CRP\u2014screen for giant cell arteritis (jaw claudication).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 84,
+    "choice": "C",
+    "rationale": "Infertility + cyclic dysmenorrhea + dyschezia = endometriosis (endometrial tissue outside uterus).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 85,
+    "choice": "B",
+    "rationale": "Prosthetic valve + splinter hemorrhages = infective endocarditis with vegetations on valve.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 86,
+    "choice": "C",
+    "rationale": "Suspected endometriosis with normal imaging\u2014diagnostic laparoscopy is gold standard.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 87,
+    "choice": "C",
+    "rationale": "LDL 186 with family history of premature CAD is indication for statin therapy.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 88,
+    "choice": "C",
+    "rationale": "Widened mediastinum + NG tube deviation + depressed mainstem after MVC = traumatic aortic rupture.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 89,
+    "choice": "B",
+    "rationale": "Hyperthyroidism in 1st trimester\u2014PTU is preferred (methimazole teratogenic in 1st trimester).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 90,
+    "choice": "D",
+    "rationale": "Schistosoma mansoni (lateral spine eggs, hepatic granulomas, periportal fibrosis) acquired via freshwater snails.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 91,
+    "choice": "B",
+    "rationale": "TOF patients can have iron deficiency anemia despite normal Hb due to relative polycythemia masking it.",
+    "confidence": "MEDIUM"
+  },
+  {
+    "q_idx": 92,
+    "choice": "C",
+    "rationale": "Acute waxing/waning confusion, inattentiveness, sundowning post-op in elderly = delirium.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 93,
+    "choice": "C",
+    "rationale": "Atlantoaxial instability (cervical clunk) in patient with intellectual disability suggests Down syndrome.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 94,
+    "choice": "C",
+    "rationale": "Cardiac tamponade (Beck's triad); pulsus paradoxus = SBP drop >10 mmHg with inspiration.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 95,
+    "choice": "D",
+    "rationale": "ADPKD with HTN and family history; screen for berry aneurysms with MR angiography.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 96,
+    "choice": "A",
+    "rationale": "PE with normal aPTT response to heparin suggests antithrombin III deficiency (autosomal dominant).",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 97,
+    "choice": "B",
+    "rationale": "Neisseria gonorrhoeae undergoes antigenic variation of pilins, preventing lasting immunity.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 98,
+    "choice": "B",
+    "rationale": "Trauma with neck pain\u2014cervical immobilization is the immediate first step before imaging.",
+    "confidence": "HIGH"
+  },
+  {
+    "q_idx": 99,
+    "choice": "B",
+    "rationale": "Bromocriptine is a dopamine agonist and decreases prolactin; the other antipsychotics increase prolactin and cause galactorrhea.",
+    "confidence": "HIGH"
+  }
+]

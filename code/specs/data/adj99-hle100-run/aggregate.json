@@ -1,0 +1,110 @@
+{
+  "n_items": 100,
+  "arms": {
+    "plain-haiku": {
+      "mean_defensibility": 2.14,
+      "n_scored": 100,
+      "def_ge4": 14,
+      "accuracy": {
+        "correct": 4,
+        "partial": 7,
+        "incorrect": 89
+      },
+      "agent_errors": 0
+    },
+    "plain-opus": {
+      "mean_defensibility": 3.724,
+      "n_scored": 98,
+      "def_ge4": 60,
+      "accuracy": {
+        "correct": 27,
+        "partial": 8,
+        "incorrect": 63
+      },
+      "agent_errors": 2
+    },
+    "fw-haiku": {
+      "mean_defensibility": 2.677,
+      "n_scored": 99,
+      "def_ge4": 25,
+      "accuracy": {
+        "correct": 7,
+        "partial": 5,
+        "incorrect": 87
+      },
+      "agent_errors": 1
+    },
+    "fw-opus": {
+      "mean_defensibility": 3.612,
+      "n_scored": 98,
+      "def_ge4": 56,
+      "accuracy": {
+        "correct": 27,
+        "partial": 6,
+        "incorrect": 65
+      },
+      "agent_errors": 2
+    }
+  },
+  "audit_trail": {
+    "fw_haiku_items": 100,
+    "same_model_haiku_found_flaw": 82,
+    "same_model_agent_errors": 6,
+    "cross_model_opus_found_flaw": 90,
+    "cross_model_agent_errors": 2,
+    "either_found_flaw": 95,
+    "flaw_is_cas_extraction": 52,
+    "distinct_flagged_cas_facts": 118
+  },
+  "total_arm_agent_errors": 5,
+  "by_category_mean_defensibility": {
+    "Biology/Medicine": {
+      "plain-haiku": 1.917,
+      "plain-opus": 4.0,
+      "fw-haiku": 3.083,
+      "fw-opus": 3.583
+    },
+    "Chemistry": {
+      "plain-haiku": 2.333,
+      "plain-opus": 3.417,
+      "fw-haiku": 2.167,
+      "fw-opus": 3.417
+    },
+    "Computer Science/AI": {
+      "plain-haiku": 2.077,
+      "plain-opus": 3.75,
+      "fw-haiku": 2.462,
+      "fw-opus": 3.833
+    },
+    "Engineering": {
+      "plain-haiku": 2.417,
+      "plain-opus": 4.0,
+      "fw-haiku": 3.083,
+      "fw-opus": 3.917
+    },
+    "Humanities/Social Science": {
+      "plain-haiku": 1.5,
+      "plain-opus": 3.583,
+      "fw-haiku": 3.333,
+      "fw-opus": 3.417
+    },
+    "Math": {
+      "plain-haiku": 1.923,
+      "plain-opus": 3.462,
+      "fw-haiku": 2.083,
+      "fw-opus": 3.769
+    },
+    "Other": {
+      "plain-haiku": 1.769,
+      "plain-opus": 3.083,
+      "fw-haiku": 2.462,
+      "fw-opus": 2.833
+    },
+    "Physics": {
+      "plain-haiku": 3.154,
+      "plain-opus": 4.462,
+      "fw-haiku": 2.769,
+      "fw-opus": 4.077
+    }
+  }
+}

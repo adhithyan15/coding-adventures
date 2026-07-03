@@ -1,0 +1,113 @@
+% ============================================================================
+% rheum-edges — the rheumatology autoantibody knowledge-graph (MYCIN-2026 RHEUM).
+% ============================================================================
+% The first Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2"): the
+% autoantibody → disease associations that anchor the rheumatology/immunology board
+% questions. "Which autoantibody is associated with systemic lupus erythematosus?"
+% becomes the binding query  ? associated_autoantibody(systemic_lupus_erythematosus, $Ab).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the fifth ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see rheum-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only edges whose cited span states the autoantibody↔disease association
+% AND names both endpoints are included. Under the primary-source-first, zero-deferral
+% policy, two previously-declined associations are now GROUNDED from spans that name both
+% endpoints: rheumatoid arthritis → anti-CCP (the RA page defines ACPA = anti-cyclic
+% citrullinated peptide antibodies and names them among RA's best-known autoantibodies)
+% and Sjögren syndrome → anti-Ro/SSA and anti-La/SSB (one span names the disease and both
+% markers). A third backfill is now GROUNDED: primary biliary cholangitis → anti-
+% mitochondrial antibody (the StatPearls page titled "Primary Biliary Cholangitis" carries
+% a contiguous Pathophysiology span naming the disease — by its legacy name "Primary
+% biliary cirrhosis" — and its hallmark anti-mitochondrial antibody together).
+% A fourth backfill is now GROUNDED: dermatomyositis → anti-Jo-1 (the dedicated
+% Dermatomyositis page, NBK558917, names "Anti-Jo" as the most common antisynthetase
+% antibody found in dermatomyositis — both endpoints in one sentence). The earlier
+% holdout was the Autoimmune Myopathies page (NBK532860), which calls Jo-1 "the most
+% studied and commonly detected antisynthetase antibody" but names no disease alongside;
+% the disease-specific Dermatomyositis page supplies the clean both-endpoints span.
+% Nothing rheumatologic remains deferred. (Honest absence still beats over-reach.)
+% ============================================================================
+
+dictionary rheum_vocab {
+    define disease   : entity   surface "autoimmune disease", "rheumatologic disease"
+    define antibody  : entity   surface "autoantibody", "serologic marker"
+
+    define associated_autoantibody : relation from disease to antibody  % the serologic marker of a disease
+}
+
+rulebook rheum_facts {
+    use rheum_vocab
+
+    % --- Systemic lupus erythematosus (anti-dsDNA, anti-Sm, anti-ribosomal P) ---
+    relate associated_autoantibody(systemic_lupus_erythematosus, anti_dsdna)
+        source "Anti-dsDNA antibodies have more than 95% specificity for SLE but are found in only about 40% to 80% of patients with SLE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535405/"
+        trust authoritative
+    relate associated_autoantibody(systemic_lupus_erythematosus, anti_smith)
+        source "Anti-Sm antibodies are seen in 10% to 55% of patients with SLE but have 99% specificity for SLE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535405/"
+        trust authoritative
+    relate associated_autoantibody(systemic_lupus_erythematosus, anti_ribosomal_p)
+        source "Anti-ribosomal P antibodies are highly specific for SLE, although their prevalence in SLE is less than 5%, and they may correlate with neuropsychiatric manifestations of SLE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535405/"
+        trust authoritative
+
+    % --- Granulomatosis with polyangiitis (PR3-ANCA / c-ANCA) ------------
+    relate associated_autoantibody(granulomatosis_with_polyangiitis, pr3)
+        source "ANCA in GPA typically reacts with PR3, a serine proteinase prevalent in neutrophil granulocytes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557827/"
+        trust authoritative
+
+    % --- Systemic sclerosis (anti-Scl-70 and anti-centromere; one span names both) ---
+    relate associated_autoantibody(systemic_sclerosis, anti_scl70)
+        source "Antinuclear antibodies may be present in more than 90% of cases of systemic sclerosis, and up to 70% of cases exhibit at least one of the more specific autoantibodies (anti-centromere, anti-Scl-70, and anti-RNA polymerase III)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430875/"
+        trust authoritative
+    relate associated_autoantibody(systemic_sclerosis, anti_centromere)
+        source "Antinuclear antibodies may be present in more than 90% of cases of systemic sclerosis, and up to 70% of cases exhibit at least one of the more specific autoantibodies (anti-centromere, anti-Scl-70, and anti-RNA polymerase III)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430875/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): rheumatoid arthritis → anti-CCP (ACPA) ---
+    % The cited page defines: "These antibodies are called anti-cyclic citrullinated
+    % peptide antibodies (ACPA)." — so ACPA here IS anti-CCP, named among RA's autoantibodies.
+    relate associated_autoantibody(rheumatoid_arthritis, anti_ccp)
+        source "RF and ACPA antibodies are the best-known autoantibodies in RA, but several other autoantibodies are relatively specific for RA."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441999/"
+        trust authoritative
+
+    % --- BACKFILL: Sjögren syndrome → anti-Ro/SSA and anti-La/SSB (one span names both) ---
+    relate associated_autoantibody(sjogren_syndrome, anti_ro)
+        source "B cells generate autoantibodies characteristic of Sjögren disease, including rheumatoid factor, SSA/Ro, and SSB/La."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431049/"
+        trust authoritative
+    relate associated_autoantibody(sjogren_syndrome, anti_la)
+        source "B cells generate autoantibodies characteristic of Sjögren disease, including rheumatoid factor, SSA/Ro, and SSB/La."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK431049/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): primary biliary cholangitis → anti-mitochondrial ---
+    % The page is titled "Primary Biliary Cholangitis"; this Pathophysiology span uses the
+    % disease's legacy name ("Primary biliary cirrhosis") and names its hallmark serology.
+    relate associated_autoantibody(primary_biliary_cholangitis, anti_mitochondrial)
+        source "Primary biliary cirrhosis is associated with highly specific autoantibodies. The anti-mitochondrial antibody is found in 85% of the cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459209/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): dermatomyositis → anti-Jo-1 -----------------
+    % The disease-specific Dermatomyositis page names both endpoints in one sentence,
+    % where the Autoimmune Myopathies overview (NBK532860) named only the antibody.
+    relate associated_autoantibody(dermatomyositis, anti_jo1)
+        source "Anti-Jo is the most common antisynthetase antibody found in dermatomyositis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK558917/"
+        trust authoritative
+}

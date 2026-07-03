@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/nib-formatter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Format Nib source into canonical layout using the shared document algebra stack.",
   "type": "module",
   "main": "src/index.ts",
@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "@vitest/coverage-v8": "^3.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.0"
   }
 }

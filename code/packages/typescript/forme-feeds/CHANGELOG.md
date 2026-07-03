@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/forme-feeds
 
+## Unreleased
+
+### Fixed
+- `INVALID_XML_RE` now uses explicit `\uXXXX` escape sequences instead of
+  literal control bytes in the source.  Same code-point set, but readable
+  and no longer flagged by codeql `js/overly-large-range`.
+
 ## 0.1.0 — 2026-05-17
 
 Initial release.  First FM00 v0 stage package — pure RSS 2.0 +

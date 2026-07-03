@@ -2,6 +2,33 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.27.0] - 2026-05-23
+
+### Added
+
+- ``AUTOINCREMENT`` keyword recognised by the lexer.  Used by SQLite's
+  ``CREATE TABLE t (id INTEGER PRIMARY KEY AUTOINCREMENT)`` form,
+  which previously failed to parse.
+- Regenerated `_grammar.py` to include the new keyword.
+
+## [0.26.0] - 2026-05-23
+
+### Added
+
+- ``INDEXED`` keyword recognised by the lexer.  Required by the new
+  ``INDEXED BY <name>`` and ``NOT INDEXED`` table-source query hints
+  parsed in sql-parser 0.38.
+- Regenerated `_grammar.py` to include the new keyword.
+
+## [0.25.0] - 2026-05-23
+
+### Added
+
+- ``RENAME`` keyword recognised by the lexer.  Required by the new
+  ``ALTER TABLE … RENAME TO`` / ``RENAME [COLUMN]`` forms parsed in
+  sql-parser 0.37.
+- Regenerated `_grammar.py` to include the new keyword.
+
 ## [0.24.0] - 2026-05-21
 
 ### Added

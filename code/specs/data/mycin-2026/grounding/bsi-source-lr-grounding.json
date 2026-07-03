@@ -1,0 +1,322 @@
+{
+  "records": [
+    {
+      "id": "src_urinary_enteric",
+      "kind": "source_lr",
+      "evidence": "infection_source(urinary)",
+      "target": "enteric_gnb",
+      "claim": "A urinary-tract source of bacteremia predicts Enterobacterales (enteric gram-negative bacilli, esp. Escherichia coli) as the bloodstream organism.",
+      "grounded": {
+        "id": "src_urinary_enteric",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10350481/",
+        "source_title": "Epidemiology of Gram-Negative Bloodstream Infections in the United States: Results From a Cohort of 24 Hospitals (Open Forum Infectious Diseases, peer-reviewed multicenter cohort)",
+        "byte_quote": "Most common source of infection was the urinary tract (47.9%). ... E coli (n = 2471, 51.0%) was the most common Gram-negative organism recovered.",
+        "value_found": "Urinary tract = most common source of Gram-negative BSI, 47.9%. Escherichia coli (an Enterobacterales) = most common Gram-negative organism, 51.0% (n=2471). Table 4 stratifies organism by source; in the urinary-source group E. coli is the dominant isolate (1524, 31.4% of total isolates). No single conditional odds ratio for P(E. coli | urinary source) is stated. (Corroborating, not fetched as primary quote: a kidney-transplant series reported Enterobacterales caused 83.3% of BSIs from urinary sources vs 60.5% from non-urinary sources.)",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Kidney-transplant abstract PMC10679110 (Enterobacterales 83.3% urinary vs 60.5% non-urinary BSI) — gives the cleanest direct conditional comparison, but the PMC page is reCAPTCHA-blocked and could not be fetched, so its quote cannot be cited verbatim; discarded to avoid fabrication.",
+          "Virulence-gene source-prediction paper PMC10965582 (papX/papGII predict urinary source) — predicts source FROM the organism's genes, the reverse direction of the claim (organism→source, not source→organism); off-axis.",
+          "BMC Infect Dis PMC7576869 (urinary symptoms in bacteremic UTI) — about symptom presence in E. coli bacteremic UTI, not the source→organism distribution; off-axis.",
+          "JCM jcm.01902-10 (host factors/portal of entry predict SEVERITY of E. coli bacteremia) — outcome/severity focus, not which organism a urinary portal predicts.",
+          "ScienceDirect 'Bloodstream Infection overview' and Frontiers/StatPearls hits — secondary/topic-overview pages, not primary series; not used as the grounding source."
+        ],
+        "note": "LEAP (partial). The fetched primary source ENTAILS the two marginals: in a 24-hospital US cohort the urinary tract is the single most common source of Gram-negative (Enterobacterales) bacteremia (47.9%) and E. coli — an enteric Gram-negative bacillus / Enterobacterales — is the most common organism overall (51.0%). Table 4 stratifies organism by source and shows E. coli dominating the urinary-source group, which supports the claim's DIRECTION (a urinary portal of entry raises the probability the bloodstream organism is Enterobacterales/E. coli). What the quote does NOT directly state is a single conditional statistic P(E. coli | urinary source) or an odds ratio — inferring the strength of the source→organism association from the two marginals plus the source-stratified table is a LEAP. The corroborating transplant series (83.3% vs 60.5% Enterobacterales, urinary vs non-urinary) would have given an explicit conditional contrast but was reCAPTCHA-blocked, so it is noted not quoted. Verdict therefore direction_only: direction firmly grounded, exact magnitude not entailed by a citable verbatim quote."
+      },
+      "verify": {
+        "id": "src_urinary_enteric",
+        "byte_stable": false,
+        "reextracted_value": "Page (PMC10350481, Taddese et al. Gram-negative BSI cohort, 4851 isolates / 3710 patients) verbatim: \"Most common source of infection was the urinary tract (47.9%).\" and \"Escherichia coli (2471, 51.0%) was the most common Gram-negative organism recovered.\" Table 4 (\"Source-Specific Antibiogram\") stratifies organism by source; within the urinary-source subgroup E. coli is the dominant isolate (1524, 31.4% of total isolates), and together with other Enterobacterales (K. pneumoniae 322, P. mirabilis 145, E. cloacae, Citrobacter, K. oxytoca, S. marcescens) the enteric gram-negative bacilli overwhelmingly dominate; the only listed non-Enterobacterale, P. aeruginosa, is 37 (0.8%). No conditional probability or odds ratio for P(E. coli | urinary source) is stated.",
+        "refute_attempt": "Two challenges. (1) Byte-exactness: the supplied byte_quote second clause \"E coli (n = 2471, 51.0%) was the most common Gram-negative organism recovered\" is NOT verbatim — the page reads \"Escherichia coli (2471, 51.0%)\" (full genus name, no \"n = \"). The first clause and the percentages match exactly. (2) Direction via ecological fallacy: the two cited sentences are marginal statistics — urinary = most common SOURCE overall, and E. coli = most common ORGANISM overall — which on their own do NOT establish a conditional urinary->E.coli link; an overall-most-common source and overall-most-common organism can co-occur without being associated within the source stratum. This refutation FAILS, however, because Table 4 directly stratifies organism by source: within the urinary-source group E. coli alone is ~72% of urinary isolates and Enterobacterales as a class dominate, with the sole non-Enterobacterale (P. aeruginosa) at 0.8%. The stratified data confirms the portal-of-entry->organism direction even though no explicit conditional OR is reported.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "src_line_cons",
+      "kind": "source_lr",
+      "evidence": "infection_source(intravascular_line)",
+      "target": "coag_neg_staph",
+      "claim": "An intravascular catheter / central-line source of bacteremia predicts coagulase-negative staphylococci.",
+      "grounded": {
+        "id": "src_line_cons",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK430891/",
+        "source_title": "Central Line–Associated Blood Stream Infections — StatPearls, NCBI Bookshelf (peer-reviewed clinical reference)",
+        "byte_quote": "Gram-positive organisms (coagulase-negative staphylococci, 34.1%; enterococci, 16%; and Staphylococcus aureus, 9.9%) are the most common, followed by gram-negatives...",
+        "value_found": "Coagulase-negative staphylococci = 34.1% of CLABSI pathogens (NHSN data, 2006–2007); ranked the single most common organism. (A proportion P(organism|CLABSI), not an odds ratio or likelihood ratio.)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "UNMC-hosted IDSA 2009 CRBSI guideline PDF (https://www.unmc.edu/intmed/_documents/id/asp/clinicpath-management-crbsi-2009.pdf): returned HTTP 404, could not be fetched, so no verbatim quote obtainable from it.",
+          "NHSN COVID-era CLABSI pathogen paper (PMC9551181): reports CoNS at only 13.3% (2019) / 18.2% (2020) with Candida overtaking as #1; reflects a later, shifted epidemiology and a marginal-pathogen distribution rather than catheter-source attribution, so it understates the classic association and was not used as the grounding quote.",
+          "academia.edu PDF copies of the IDSA intravascular-catheter guidelines: secondary/non-authoritative hosting of the primary doc; preferred the NCBI Bookshelf peer-reviewed reference which loaded cleanly with the percentage."
+        ],
+        "note": "LEAP (small, directionally entailed). The quote ENTAILS that within catheter-related/central-line bloodstream infection, coagulase-negative staphylococci are the single most common organism (34.1%), which forces the direction: a central-line portal of entry RAISES the probability of CoNS relative to a non-catheter prior where CoNS are usually dismissed as contaminants. The LEAP is in magnitude/metric: the source gives a marginal proportion P(CoNS | CLABSI = 34.1%), not a likelihood ratio or odds ratio comparing catheter-source vs other-source bacteremia. The rulebook's intended quantity (an LR favoring CoNS given a catheter source) is inferred from this dominance, not stated as an LR in the page."
+      },
+      "verify": {
+        "id": "src_line_cons",
+        "byte_stable": true,
+        "reextracted_value": "Coagulase-negative staphylococci = 34.1% of CLABSI pathogens, the single most common organism, per NHSN surveillance data (Jan 2006–Oct 2007). This is a proportion P(organism | CLABSI), not an odds ratio or likelihood ratio. Re-extraction matches the claimed value exactly.",
+        "refute_attempt": "Strongest refutation: the source establishes CoNS as the most common organism WITHIN CLABSI overall, but it does not present a discriminative statistic showing a central-line/intravascular-catheter source uniquely PREDICTS CoNS versus other portals of entry (e.g., no relative risk vs. urinary/respiratory/gut sources). A bare proportion P(CoNS|CLABSI)=34.1% is not the same as P(central-line source|CoNS) or a likelihood ratio favoring CoNS given a catheter. However, this does not refute the direction: the entire NBK430891 page is scoped to Central Line–Associated Blood Stream Infections, and within that catheter-sourced population CoNS is the leading pathogen (34.1%), with the page also describing skin-flora migration along the catheter as the mechanism. So the portal-of-entry (central line) → organism (CoNS) association is genuinely supported by the cited context; the only weakness is that the figure is a population proportion rather than a formal discriminative/likelihood measure.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "src_line_saureus",
+      "kind": "source_lr",
+      "evidence": "infection_source(intravascular_line)",
+      "target": "s_aureus",
+      "claim": "An intravascular catheter / central-line source of bacteremia predicts Staphylococcus aureus.",
+      "grounded": {
+        "id": "src_line_saureus",
+        "resolved_url": "https://academic.oup.com/cid/article/49/1/1/369414",
+        "source_title": "Clinical Practice Guidelines for the Diagnosis and Management of Intravascular Catheter-Related Infection: 2009 Update by the Infectious Diseases Society of America (Mermel et al., Clinical Infectious Diseases 2009;49:1-45)",
+        "byte_quote": "In order of prevalence, the 4 groups of microbes that most commonly cause CRBSI associated with percutaneously inserted, noncuffed catheters are as follows: coagulase-negative staphylococci, S. aureus, Candida species, and enteric gram-negative bacilli. One study found that 1 in 4 patients with S. aureus colonization of an intravascular catheter subsequently developed S. aureus bacteremia if they did not receive immediate anti-staphylococcal antibiotics.",
+        "value_found": "S. aureus is the 2nd most prevalent organism among the 4 microbe groups that most commonly cause CRBSI (percutaneously inserted, noncuffed catheters). Progression proportion: 1 in 4 (~25%) of patients with S. aureus colonization of an intravascular catheter subsequently developed S. aureus bacteremia absent immediate anti-staphylococcal therapy. No single source→organism odds ratio / relative risk is given.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.unmc.edu/intmed/_documents/id/asp/clinicpath-management-crbsi-2009.pdf — IDSA 2009 guideline PDF mirror; returned HTTP 404, could not fetch, so not used as the grounding source (the primary OUP/CID article was used instead).",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3723241/ — single-center microbiological observational study giving S. aureus at 19.44% overall and 40% of CRBSI; a useful corroborating series but a smaller secondary observational study, not the authoritative guideline; discarded in favor of the IDSA primary source.",
+          "https://www.scielo.br/j/bjid/a/jXySPfyyRV5rwdrKDYN6CQs/?lang=en — focuses specifically on CVC-related BSI CAUSED BY S. aureus (risk factors within S. aureus cases), not the source→organism likelihood direction, so it does not cleanly support the portal-of-entry claim.",
+          "https://www.sciencedirect.com/science/article/pii/S1201971224003187 — catheter-type microbiology differences; secondary search-summary statement claimed S. aureus is proportionally MORE common in peripheral/dialysis catheters and gram-negatives MORE common in central lines, which partially complicates a blanket 'central-line' framing; discarded because it was a search-engine paraphrase, not a fetched verbatim source, and the IDSA guideline already establishes the direction.",
+          "https://academic.oup.com/cid/article/32/9/1249/289998 — the older 2001 IDSA guideline; superseded by the 2009 update which was used."
+        ],
+        "note": "ENTAILED for direction. The verbatim quote explicitly lists S. aureus as one of the 4 most common CRBSI organisms (ranked #2 by prevalence) and states that intravascular-catheter S. aureus colonization progresses to S. aureus bacteremia in ~1 in 4 untreated patients. Together these directly entail that an intravascular catheter / central-line portal of entry RAISES the probability of S. aureus as the bacteremia organism. Minor LEAP on the numeric value: the '1 in 4' is a colonization→bacteremia progression rate, NOT a formal source→organism odds ratio or relative risk; the guideline gives prevalence ranking and this progression proportion but no OR/RR. Caveat surfaced during discard review: one secondary source suggested S. aureus is proportionally more common in peripheral/dialysis lines than central lines — the direction (catheter source raises S. aureus likelihood) still holds, but a strict 'central-line specifically' weight should not be over-claimed beyond 'intravascular catheter'."
+      },
+      "verify": {
+        "id": "src_line_saureus",
+        "byte_stable": true,
+        "reextracted_value": "Verbatim quote confirmed on the page. Re-extraction: The IDSA/CID guideline states that for CRBSI associated with percutaneously inserted, noncuffed catheters, the 4 most common microbe groups \"in order of prevalence\" are (1) coagulase-negative staphylococci, (2) S. aureus, (3) Candida species, (4) enteric gram-negative bacilli — so S. aureus is the 2nd most prevalent organism, with CoNS ranked ABOVE it. Progression statistic: \"1 in 4\" (~25%) of patients with S. aureus colonization of an intravascular catheter subsequently developed S. aureus bacteremia if they did not receive immediate anti-staphylococcal antibiotics. No source→organism odds ratio or relative risk is provided — only a marginal prevalence ranking and a colonization→bacteremia progression proportion. This matches the claimed value exactly.",
+        "refute_attempt": "Strongest refutation of the direction: The CLAIM says an intravascular catheter source \"predicts\" S. aureus, but the quote's own ranking undercuts this — for this exact catheter type, coagulase-negative staphylococci are listed as MORE prevalent than S. aureus. A portal-of-entry \"prediction\" requires a discriminating source→organism signal (catheter making S. aureus more likely than alternatives), but the quote gives only marginal prevalence given catheter source, where CoNS outranks S. aureus, and no odds ratio/relative risk. The \"1 in 4\" sentence concerns progression of already-S.-aureus colonization to bacteremia, not catheter-source predicting S. aureus over other organisms. Thus the quote supports a directional association (catheter is a major, prominent source of S. aureus bacteremia — 2nd most common, frequent progression) but does NOT establish a quantified or dominant source→organism prediction over the more-prevalent CoNS.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "src_intraabd_enteric",
+      "kind": "source_lr",
+      "evidence": "infection_source(intraabdominal)",
+      "target": "enteric_gnb",
+      "claim": "An intra-abdominal source of bacteremia predicts enteric gram-negative bacilli (Enterobacterales).",
+      "grounded": {
+        "id": "src_intraabd_enteric",
+        "resolved_url": "https://academic.oup.com/cid/article/72/7/1211/5836974",
+        "source_title": "Epidemiology of Escherichia coli Bacteremia: A Systematic Literature Review (Clinical Infectious Diseases, Vol. 72, Issue 7, April 2021)",
+        "byte_quote": "Of the diverse other sources, the most common were biliary infection (range, 11–27%) and other intra-abdominal infections (range, 4–48%). ... Other common sources of E. coli bacteremia are biliary tract infection caused by bacteria ascending from the gastrointestinal tract and other intra-abdominal infections.",
+        "value_found": "Among E. coli bacteremia episodes, biliary infection accounted for a range of 11–27% and other intra-abdominal infections for a range of 4–48% (urogenital was the leading source at pooled 52.6%). Corroborating 24-hospital US cohort (PMC10350481): intra-abdominal = 14.4–14.5% of gram-negative BSI sources, with E. coli (12.8%) and K. pneumoniae (6.0%) the predominant isolates from intra-abdominal sources. No single odds ratio / relative risk for P(Enterobacterales | intra-abdominal source) was reported in either source.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "Clinical Microbiology Reviews 'Pathogenesis of Gram-Negative Bacteremia' (journals.asm.org/doi/10.1128/cmr.00234-20) — returned HTTP 403, could not fetch a verbatim supporting quote, so not cited.",
+          "OUP cohort article direct URL (academic.oup.com/ofid/article/10/7/ofad265/7175984) — HTTP 403 Forbidden; used the PMC mirror (PMC10350481) instead for corroboration.",
+          "PMC10350481 (24-hospital gram-negative BSI cohort) — provides the intra-abdominal proportion (14.4–14.5%) and source-specific organism counts (E. coli, K. pneumoniae predominant), used as CORROBORATION, but on careful re-reading it contains NO verbatim sentence explicitly stating that an abdominal source predicts/suggests Enterobacterales; the directional language ('a urinary or abdominal source strongly suggests a Gram-negative pathogen') appeared only in a search-summary, not as confirmed page text, so I did not quote it.",
+          "ESBL-Enterobacterales cohort (PMC3519701) — intra-abdominal = 8.8% of ESBL-E bacteremia sources; discarded as a narrower ESBL-specific subset, not a general source→organism statement.",
+          "StatPearls / Johns Hopkins ABX / Enterobacter StatPearls — secondary/tertiary references, lower evidentiary tier than the peer-reviewed CID systematic review; not used for the byte_quote."
+        ],
+        "note": "LEAP (modest). The quote ENTAILS that intra-abdominal and biliary (GI-ascending) sources are common origins of E. coli bacteremia, and that bacteria ascend 'from the gastrointestinal tract' — directly establishing the abdominal/enteric portal → enteric gram-negative bacillus direction. The leaps: (1) the source names E. coli specifically — the prototypical enteric gram-negative bacillus / Enterobacterales — rather than the full Enterobacterales order; generalizing E. coli to all Enterobacterales (Klebsiella, Enterobacter, etc.) is inferred (though corroborated by PMC10350481's intra-abdominal isolate breakdown showing E. coli + K. pneumoniae predominance). (2) The numbers are proportions of sources AMONG E. coli cases (P(abdominal source | E. coli)), not P(Enterobacterales | abdominal source); neither source reports an odds ratio or likelihood ratio for the organism-given-source direction the claim asserts. Hence verdict direction_only rather than fully grounded: direction is well-supported and quantified for sources-given-organism, but no quantitative organism-given-source LR is captured."
+      },
+      "verify": {
+        "id": "src_intraabd_enteric",
+        "byte_stable": true,
+        "reextracted_value": "Per the OUP CID article (Bonten et al., \"Epidemiology of Escherichia coli Bacteremia,\" Clin Infect Dis 2021;72(7):1211): urogenital infection is the leading source of E. coli bacteremia (pooled 52.6%; 95% CI 47.0–58.1%; range 31–80%). \"Of the diverse other sources, the most common were biliary infection (range, 11–27%) and other intra-abdominal infections (range, 4–48%).\" The article also states: \"Other common sources of E. coli bacteremia are biliary tract infection caused by bacteria ascending from the gastrointestinal tract and other intra-abdominal infections.\" These figures are P(intra-abdominal/biliary source | E. coli bacteremia), i.e., the share of intra-abdominal/biliary portals AMONG E. coli episodes — not the forward conditional P(Enterobacterales | intra-abdominal source). No odds ratio or relative risk for the forward predictive direction is reported. The corroborating PMC10350481 cohort figures (intra-abdominal 14.4–14.5% of GNB sources; E. coli 12.8%, K. pneumoniae 6.0%) were not independently fetched/confirmed in this verification.",
+        "refute_attempt": "Strongest refutation: the quote reports the REVERSE conditional from the CLAIM. The article quantifies P(intra-abdominal/biliary source | E. coli bacteremia) = 11–48% among E. coli episodes; the CLAIM asserts the forward direction P(enteric GNB/Enterobacterales | intra-abdominal source). The article gives no OR/RR for that forward quantity, and intra-abdominal is NOT even the dominant source of E. coli itself (urogenital dominates at 52.6%). So the byte_quote cannot establish that an intra-abdominal source PREDICTS Enterobacterales as a posterior probability. However, the direction is mechanistically and qualitatively supported: the article explicitly attributes biliary/intra-abdominal E. coli bacteremia to \"bacteria ascending from the gastrointestinal tract,\" establishing the portal-of-entry→enteric-GNB association the CLAIM names. The refutation succeeds against the QUANTIFIED forward claim but fails against the directional association, which the quote does support.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "src_intraabd_anaerobes",
+      "kind": "source_lr",
+      "evidence": "infection_source(intraabdominal)",
+      "target": "anaerobes",
+      "claim": "An intra-abdominal source of bacteremia predicts anaerobes (e.g. Bacteroides fragilis).",
+      "grounded": {
+        "id": "src_intraabd_anaerobes",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12902366/",
+        "source_title": "Clinical Emergence of Bacteroides-Associated Anaerobic Bacteremia Due to Drug-Resistant Non-Bacteroides fragilis Species: A Multicentric Retrospective Observational Study (Open Forum Infectious Diseases)",
+        "byte_quote": "These studies also emphasize that intra-abdominal sources are the most common origin of infection and that timely, adequate source control—through surgical drainage—is a critical determinant of survival. The percentage of bacteremia originating from the gastrointestinal tract was 29.4% and 54.1% in B. fragilis and non-B. fragilis groups (P = .002), respectively.",
+        "value_found": "Among Bacteroides-associated anaerobic bacteremia, 29.4% of B. fragilis cases (and 54.1% of non-B. fragilis Bacteroides cases) originated from the gastrointestinal tract; the source paper also states intra-abdominal sources are the most common origin of infection. No odds ratio or relative risk is reported (proportion only).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.sciencedirect.com/science/article/abs/pii/S0953620522003016 (Epidemiology and outcome of anaerobic bacteremia, tertiary hospital) — reported abdominal source 35.2% in search snippet, but the page returned HTTP 403 and could not be fetched, so no verbatim quote could be verified; discarded to avoid fabrication.",
+          "https://www.researchgate.net/.../Clinical_significance...Bacteroides_fragilis_bacteremia.pdf — primary source for the 49.3% intra-abdominal figure but returned HTTP 403; could not obtain a verbatim quote, discarded.",
+          "https://pubmed.ncbi.nlm.nih.gov/12173118/ and https://academic.oup.com/cid/article/35/Supplement_1/S106/442976 (Goldstein, CID 2002) — both yield the clean directional quote 'Anaerobic bacteremia is often associated with an intra-abdominal source,' but provide NO proportion/OR. Kept as corroboration of direction; not chosen as the primary citation because the PMC source supplies both direction AND a number.",
+          "Secondary/tertiary pages (StatPearls, microbeonline, biologyinsights, Wikipedia, Rupa Health) — not primary clinical-microbiology series/guidelines; discarded per the primary-source requirement."
+        ],
+        "note": "ENTAILED for direction; LEAP-adjacent for the specific organism granularity. The fetched verbatim quote directly entails the claim's direction: it states intra-abdominal sources are the most common origin of these Bacteroides (anaerobe) bloodstream infections, and quantifies GI-tract origin at 29.4% for B. fragilis — i.e., an intra-abdominal/GI portal raises, and is the leading contributor to, anaerobic / B. fragilis bacteremia. This corroborates the independent peer-reviewed CID statement 'Anaerobic bacteremia is often associated with an intra-abdominal source.' Caveat: the value_found is a within-anaerobe source PROPORTION (P(intra-abdominal | anaerobic bacteremia)), not a likelihood ratio P(anaerobe | intra-abdominal source); reading it as the LR direction the claim needs is a mild LEAP, though the directional inference (intra-abdominal RAISES anaerobe probability) is well supported and uncontroversial in the cited literature."
+      },
+      "verify": {
+        "id": "src_intraabd_anaerobes",
+        "byte_stable": false,
+        "reextracted_value": "The page (PMC12902366, \"Clinical Emergence of Bacteroides-Associated Anaerobic Bacteremia Due to Drug-Resistant Non-Bacteroides fragilis Species\") does contain both sentences verbatim, but they are NOT contiguous — they appear in the Discussion separated by intervening content, so the byte_quote is a stitched-together span, not one verbatim passage. Re-extracted facts: GI-tract origin of bacteremia was 29.4% in the B. fragilis group vs 54.1% in the non-B. fragilis group (P = .002), and the paper states intra-abdominal sources are the most common origin of infection. Only proportions and P-values are reported — no odds ratio or relative risk. Notably the GI/intra-abdominal origin is MORE frequent for non-B. fragilis (54.1%) than for B. fragilis (29.4%), the opposite of singling out B. fragilis.",
+        "refute_attempt": "Direction challenge: The claim asserts an intra-abdominal source \"predicts anaerobes (e.g. B. fragilis).\" The cited data do NOT support that direction for three reasons. (1) The study population is ALREADY all Bacteroides-associated anaerobic bacteremia — there is no non-anaerobe comparator group, so the data cannot show that intra-abdominal source discriminates anaerobes from other organism classes; it only partitions source between two anaerobe subgroups. (2) Within that population the GI/intra-abdominal origin is actually associated with the NON-B. fragilis group (54.1%) more than with B. fragilis (29.4%, P=.002), so the data argue against singling out B. fragilis as the predicted organism. (3) The paper reports only proportions + P-values, no OR/RR, so no predictive/effect-size statement about source→organism is licensed. The byte_quote is also non-contiguous (two stitched sentences). The claimed value's narrower wording (proportions + 'most common origin') is faithful, but the broader CLAIM's 'predicts anaerobes' direction is unsupported by this source.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "src_skin_saureus",
+      "kind": "source_lr",
+      "evidence": "infection_source(skin_soft_tissue)",
+      "target": "s_aureus",
+      "claim": "A skin / soft-tissue source of bacteremia predicts Staphylococcus aureus.",
+      "grounded": {
+        "id": "src_skin_saureus",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/",
+        "source_title": "Staphylococcus aureus Infections: Epidemiology, Pathophysiology, Clinical Manifestations, and Management (Tong et al., Clinical Microbiology Reviews, 2015) — PMC4451395",
+        "byte_quote": "It is the most common pathogen isolated from surgical site infections (SSIs), cutaneous abscesses, and purulent cellulitis. According to 2009-2010 U.S. National Healthcare Safety Network data, S. aureus was the most common cause of SSIs overall, accounting for 30% of infections.",
+        "value_found": "S. aureus accounted for 30% of surgical site infections (2009-2010 U.S. NHSN data); 49% of SSIs in ATLAS trials were due to S. aureus. (These are organism-share within SSTI/SSI, not a formal OR/RR for the source->organism direction.)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "UpToDate 'Clinical approach to Staphylococcus aureus bacteremia in adults' — paywalled/authenticated secondary review, could not fetch a verbatim primary quote.",
+          "Frontiers/PMC6167439 'Molecular Epidemiology of S. aureus Bacteremia: Association of Molecular Factors With the Source of Infection' — describes molecular markers (e.g., hlb) by source within an already-S.-aureus cohort; it conditions on organism=S. aureus and does NOT give P(organism | source), so it cannot ground the source->organism direction.",
+          "Single-center BSI series (PMC11777014, Cape Town PMC12771707, etc.) — report the DISTRIBUTION OF SOURCES AMONG S. aureus bacteremias (e.g., SSTI ~19-25% of SAB foci). That is P(source | organism=S. aureus), the inverse of the claimed direction, so discarded as primary grounding for 'source raises P(organism)'.",
+          "derangedphysiology.com and other clinical blogs — secondary/non-peer-reviewed, excluded per instructions."
+        ],
+        "note": "LEAP (small). The verbatim quote ENTAILS that S. aureus is the single most common organism isolated from SSTIs/SSIs (30% NHSN; up to 49% in ATLAS) — i.e., given a skin/soft-tissue portal of entry, S. aureus is the modal organism. The claim 'SSTI source RAISES P(S. aureus)' follows from 'most common cause' only via the mild Bayesian inference that a portal where S. aureus is the leading pathogen elevates P(S. aureus) above the unconditioned base rate; the source states predominance/modal share, not an explicit relative-risk vs. other portals. Direction is firmly supported (grounded); the magnitude as a true source->organism likelihood ratio is inferred, not stated. Note also the corpus's converse studies (SSTI = 19-25% of SAB foci) measure P(source|organism), the inverse, and were correctly NOT used for grounding."
+      },
+      "verify": {
+        "id": "src_skin_saureus",
+        "byte_stable": true,
+        "reextracted_value": "Per the fetched page (NCBI PMC4451395, \"Staphylococcus aureus Infections: Epidemiology, Pathophysiology, Clinical Manifestations, and Management\"): S. aureus is \"the most common pathogen isolated from surgical site infections (SSIs), cutaneous abscesses, and purulent cellulitis,\" and per 2009-2010 U.S. NHSN data was the most common cause of SSIs overall, \"accounting for 30% of infections\" (44% methicillin-resistant). The page separately states \"49% of SSIs in ATLAS studies (telavancin versus vancomycin) were due to S. aureus.\" These are organism-share within SSI/SSTI, i.e. P(S. aureus | SSI), not a formal OR/RR for the source->organism direction. The page does independently support SSTIs as a primary source/focus of S. aureus bacteremia.",
+        "refute_attempt": "Strongest refutation: the 30%/49% figures are organism-share within surgical site infections generally (P(S. aureus | SSI)), not effect sizes for the claim's actual direction, which concerns a SKIN/SOFT-TISSUE SOURCE OF BACTEREMIA -> S. aureus. An SSI is not identical to \"the bacteremia portal of entry was skin,\" so the cited numbers do not by themselves quantify source->organism in the bacteremia setting; they could be invoked as a confounded proxy. Additionally, \"most common cause\" / \"30%\" means S. aureus is the modal but minority (30%) organism even within SSIs, so a skin source does not make S. aureus more-likely-than-not in absolute terms. However, the refutation does not overturn the association: the page DOES support both pieces directionally -- S. aureus is the predominant SSTI/SSI pathogen, and SSTIs are explicitly named a primary source/focus of S. aureus bacteremia (\"common primary clinical foci or sources of infection are...SSTIs\"; \"rates of SSTI-associated SAB are highest in communities with large numbers of cutaneous infections\"). The claimed value already honestly flags that these are organism-share, not a formal OR/RR.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "src_skin_pyogenes",
+      "kind": "source_lr",
+      "evidence": "infection_source(skin_soft_tissue)",
+      "target": "strep_pyogenes",
+      "claim": "A skin / soft-tissue source of bacteremia predicts group A Streptococcus (Streptococcus pyogenes).",
+      "grounded": {
+        "id": "src_skin_pyogenes",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12258469/",
+        "source_title": "Five-year review of epidemiology of invasive group A streptococcal infections with bacteraemia in a tertiary care centre in the UK (P50)",
+        "byte_quote": "The commonest focus of infection was skin and soft tissue (56.45%), followed by respiratory tract (18.8%).",
+        "value_found": "Skin and soft tissue = 56.45% of identified foci among 186 GAS bacteraemia cases (commonest source); respiratory tract 18.8%; no focus identified 11.8%. Reported as a proportion of source distribution, not an odds ratio/relative risk.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK587112/ (Streptococcus pyogenes NCBI Bookshelf) — supporting and authoritative ('In both children and adults, the soft tissues are the most common primary site of infection'; portal of entry usually skin), but kept as corroborating secondary reference rather than the primary cited source because it gives no numeric source-distribution proportion for bacteraemia specifically.",
+          "https://academic.oup.com/ofid/article/8/Supplement_1/S205/6449743 (Duration of Therapy for Streptococcal Bacteremia) — discarded: about treatment duration, not source-to-organism direction.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10644168/ (Antibiotic prescribing for GAS bacteremia) — discarded: gives skin/soft-tissue mortality/readmission outcomes but does not state the source IS the commonest/predicts the organism; it conditions on GAS already, so it cannot establish direction.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6925856/ (necrotizing SSTI risk identification) — discarded: about predicting necrotizing SSTI severity, not bacteraemia portal-of-entry → organism.",
+          "https://www.idsociety.org/practice-guideline/skin-and-soft-tissue-infections/ (IDSA 2014 SSTI guideline) — discarded: guideline landing page; relevant but not fetched with a supporting verbatim proportion, and the PMC series already provides a cleaner quantified primary quote.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC6189468/ (emm89 clade molecular epidemiology) — discarded: strain-genomics focus, no source-distribution direction claim."
+        ],
+        "note": "ENTAILED (with a small framing note). The verbatim quote states skin and soft tissue is the COMMONEST focus of infection (56.45%) in a cohort of GAS/S. pyogenes bacteraemia — i.e., among confirmed GAS bacteraemias, a skin/SSTI source dominates all others. This directly supports the claim's DIRECTION: a skin/soft-tissue portal of entry is the most prevalent route for GAS bacteraemia, so observing that source raises the likelihood the organism is S. pyogenes. Strictly, 56.45% is P(source=SSTI | organism=GAS) rather than the posterior P(organism=GAS | source=SSTI); converting to a true likelihood-ratio for organism identification across all bacteraemia organisms would be a minor LEAP (no base-rate-adjusted OR/RR is given). But the qualitative direction is entailed by the quote, and the NCBI Bookshelf reference corroborates ('soft tissues are the most common primary site of infection'; pediatric portal of entry 'usually the skin'). Verdict grounded on direction + proportion; the cross-organism odds ratio itself was not stated by the source."
+      },
+      "verify": {
+        "id": "src_skin_pyogenes",
+        "byte_stable": true,
+        "reextracted_value": "Among 186 GAS (Streptococcus pyogenes) bacteraemia cases in a 5-year UK tertiary-centre review, skin and soft tissue was the commonest focus of infection at 56.45%, followed by respiratory tract at 18.8%. This is a proportion/distribution of infection sources within the GAS cohort, not an odds ratio or relative risk.",
+        "refute_attempt": "Strongest refutation: the study is a single-organism, descriptive cohort of GAS-ONLY bacteraemia. The quote establishes P(skin source | GAS) — that skin/soft tissue is the most common focus among GAS cases. But the CLAIM asserts the reverse conditional, P(GAS | skin source): that a skin/soft-tissue source PREDICTS group A Streptococcus. The paper has no comparison group, no other organisms, and no statistical association (no OR/RR/p-value) linking skin source specifically to GAS versus other pathogens. Skin/soft tissue is also a common portal for S. aureus, group B/C/G strep, etc., so a high within-GAS proportion does not show that skin source discriminates toward GAS. The verbatim quote and its extracted value are faithfully grounded as a source distribution, but the predictive portal-of-entry→organism DIRECTION the claim needs is not supported by this descriptive data.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "src_resp_pneumo",
+      "kind": "source_lr",
+      "evidence": "infection_source(respiratory)",
+      "target": "s_pneumoniae",
+      "claim": "A respiratory / pneumonia source of bacteremia predicts Streptococcus pneumoniae.",
+      "grounded": {
+        "id": "src_resp_pneumo",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3892635/",
+        "source_title": "Streptococcus pneumoniae bacteremia: clinical and microbiological epidemiology in a health area of Southern Spain (PMC3892635)",
+        "byte_quote": "Like in other studies, the main source of bacteremia in our patients was the low respiratory tract in 46 (68.6%).",
+        "value_found": "Lower respiratory tract was the source in 46 of 67 S. pneumoniae bacteremia episodes = 68.6% (proportion of pneumococcal-bacteremia cases attributable to a respiratory source). No odds ratio / relative risk reported.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "clinicalmicrobiologyandinfection.org/article/S1198-743X(14)62609-4 — Nosocomial BSI by S. pneumoniae (pneumonia 70.1% portal of entry): corroborating but DISCARDED as the cited source because WebFetch returned HTTP 403 Forbidden; could not obtain a verbatim quote directly from the page, only a search-snippet paraphrase, so it cannot be used as a grounded citation.",
+          "ncbi.nlm.nih.gov/books/NBK333425 — Group A streptococcal (S. pyogenes) infections: off-organism (wrong species), discarded.",
+          "pmc.ncbi.nlm.nih.gov/articles/PMC3993406 — Respiratory microbiota dynamics in mice after S. pneumoniae acquisition: animal mechanistic study, not a clinical bacteremia-by-source series; discarded.",
+          "biorxiv.org 2024.06.25.600637 — mouse lung-infection barrier-disruption preprint: animal/non-clinical and non-peer-reviewed; discarded.",
+          "PMC11835467 — Sarcina ventriculi bacteremia complicating aspiration pneumonia: single case report, wrong organism; discarded.",
+          "PMC10299478 — 'Nausea predicts bacteremia in pneumococcal CAP': addresses a symptom predictor of bacteremia, not portal-of-entry→organism direction; discarded as off-claim."
+        ],
+        "note": "DIRECTION ENTAILED, magnitude is a base-rate not an OR. The quote directly states that among confirmed S. pneumoniae bacteremia episodes, the lower respiratory tract (pneumonia) was the dominant source (68.6%), which entails the claim that a respiratory/pneumonia portal of entry is the predominant origin for pneumococcal bacteremia — confirming the direction that a respiratory source raises the likelihood of S. pneumoniae. CAVEAT / LEAP: this is P(respiratory source | S. pneumoniae bacteremia), i.e. the source breakdown WITHIN pneumococcal cases, not the inverse posterior P(S. pneumoniae | respiratory-source bacteremia) nor a likelihood ratio against other organisms. Inferring that a respiratory source RAISES the probability of pneumococcus relative to other organisms is a modest Bayesian LEAP — well supported clinically (pneumococcus is the classic pneumonia-source bloodstream organism) and corroborated by the discarded nosocomial series (pneumonia 70.1% portal of entry), but the fetched quote alone gives the within-organism source proportion, not a cross-organism OR/LR."
+      },
+      "verify": {
+        "id": "src_resp_pneumo",
+        "byte_stable": true,
+        "reextracted_value": "Among 67 confirmed Streptococcus pneumoniae bacteremia episodes, the lower respiratory tract was the source in 46 (68.6%). This is a within-pneumococcal-cases proportion: P(respiratory source | S. pneumoniae bacteremia) = 68.6%. No odds ratio or relative risk linking respiratory source to S. pneumoniae is reported; remaining sources were 1 CSF case and ~20 (29.8%) of unknown origin. The byte_quote appears verbatim on the page.",
+        "refute_attempt": "STRONGEST refutation — the direction the claim asserts is NOT what the quote supports. The CLAIM is \"a respiratory/pneumonia source predicts S. pneumoniae,\" i.e. P(S. pneumoniae | respiratory source) is high — a forward predictive/diagnostic direction. But the quoted statistic is the REVERSE conditional: of patients already known to have pneumococcal bacteremia, 68.6% had a respiratory source, i.e. P(respiratory source | S. pneumoniae). These are not interchangeable (base-rate / inverse-conditional fallacy). Many organisms (e.g., Klebsiella, Pseudomonas, Haemophilus, Staphylococcus, Legionella, gram-negatives) also seed bacteremia from the lower respiratory tract, so a respiratory source does NOT by itself single out pneumococcus. To support the claimed predictive direction one would need the distribution of organisms among respiratory-source bacteremias, or an OR/RR — and the paper explicitly reports NEITHER (it ran statistics only on demographics/outcomes, not source-specific risk). The number is also descriptive and single-cohort (n=67, no comparator group of non-pneumococcal bacteremia), so it cannot establish any association/risk direction at all. Thus the quote grounds only a directional/qualitative association (pneumococcal bacteremia commonly arises from the lungs — consistent with pneumococcus being the classic pneumonia pathogen), not the quantitative predictive claim \"respiratory source ⇒ S. pneumoniae\" with the cited 68.6% standing in for that predictive strength.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "host_neutropenia_pseudomonas",
+      "kind": "source_lr",
+      "evidence": "neutropenia(present)",
+      "target": "pseudomonas",
+      "claim": "Neutropenia is a risk factor for Pseudomonas aeruginosa bacteremia.",
+      "grounded": {
+        "id": "host_neutropenia_pseudomonas",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/18691485/",
+        "source_title": "Cheong HS, et al. \"Clinical significance and predictors of community-onset Pseudomonas aeruginosa bacteremia.\" The American Journal of Medicine, August 2008 (PubMed 18691485)",
+        "byte_quote": "Factors associated with P. aeruginosa bacteremia in the multivariate analysis included presentation with neutropenia, presentation with septic shock, indwelling central venous catheter, and health-care-associated infection (all P <.05).",
+        "value_found": "No odds ratio reported for neutropenia in the abstract; statistical significance only (P < .05) as an independent multivariate factor distinguishing P. aeruginosa bacteremia (n=106) from E. coli bacteremia (n=508). (A separately fetched mortality study, BMC Infect Dis PMC3994322, gives neutropenia OR 2.14 [95% CI 1.09–4.22] — but that is for 14-day MORTALITY among PA bacteremia patients, NOT for PA etiology, so it does not support this claim and was discarded.)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "BMC Infect Dis / PMC3994322 (Cheng et al., combination-therapy mortality study): neutropenia OR 2.14 (95% CI 1.09–4.22; p=0.03) — DISCARDED because the verbatim context is 'Risk factors associated with 14-day mortality in patients with P. aeruginosa bacteremia.' The outcome is death GIVEN PA bacteremia, not the probability that a bacteremia IS PA. Wrong outcome variable for this portal/host claim. (Also the OR became non-significant in multivariate: 1.45, 95% CI 0.63–3.33, p=0.37.)",
+          "PMC9610728 (PA BSI in cancer: HM vs solid tumors): uses neutropenia as an INCLUSION criterion and reports profound-neutropenia proportions (67% vs 44.6%) but states no risk-factor OR for neutropenia vs non-neutropenia; cannot ground a directional risk claim on its own.",
+          "uhhospitals.org Gransden PDF and clinicalmicrobiologyandinfection.org S1198-743X(14)65127-2 (Gransden seven-risk-factor clinical index, which DOES list neutropenia as a predictor): DISCARDED as a fetchable quote — the PDF mirror is a scanned/CCITTFax image (no extractable text) and the journal fulltext returned HTTP 403. Could not capture a verbatim byte_quote.",
+          "Hindawi/Wiley ED predictors study (PMC6174785 / 10.1155/2018/7581036): relevant (predicts PA etiology) but DISCARDED for quoting — PMC returned a reCAPTCHA wall and the Wiley DOI returned HTTP 402; no verbatim text obtainable.",
+          "Springer link.springer.com articles (1471-2334-14-161 full text, s15010-024-02453-0): redirect to idp.springer.com auth wall; not fetchable."
+        ],
+        "note": "ENTAILED for direction, with a scope caveat. The quote is from a multivariate comparison of community-onset P. aeruginosa bacteremia (n=106) against E. coli bacteremia (n=508); neutropenia being an independent factor 'associated with P. aeruginosa bacteremia' directly entails that neutropenia RAISES the likelihood the organism is P. aeruginosa relative to the dominant gram-negative alternative — exactly the [host_neutropenia_pseudomonas] direction. The LEAP, if any, is generalizing 'P. aeruginosa vs E. coli, community-onset' to 'P. aeruginosa vs all causes' — the study fixes the comparator as E. coli, so the literal entailment is a likelihood ratio against E. coli, not against every organism. No numeric OR is available from a fetchable source: the abstract gives only P<.05, and the one OR found in the literature (2.14) belongs to a mortality outcome and was discarded as off-target. Verdict grounded on direction; value_found is unquantified."
+      },
+      "verify": {
+        "id": "host_neutropenia_pseudomonas",
+        "byte_stable": true,
+        "reextracted_value": "Neutropenia (\"presentation with neutropenia\") is listed as an independent factor associated with P. aeruginosa bacteremia in multivariate analysis, statistical significance only (all P < .05), no odds ratio reported in the abstract. Study compares 106 P. aeruginosa vs 508 E. coli bacteremia cases (retrospective cohort). Re-extracted value matches the claimed value: significance-only (P < .05), no OR for neutropenia in the abstract.",
+        "refute_attempt": "Strongest refutation: the study is comparative (P. aeruginosa vs E. coli etiology among gram-negative bacteremia), so the quote technically shows neutropenia DISTINGUISHES PA from E. coli, not that it is a risk factor against a general/healthy baseline. One could argue this is a \"PA-vs-E.coli discriminator,\" not an absolute \"risk factor.\" However, the direction is unambiguously positive: presentation with neutropenia is associated with PA bacteremia (it appears on the PA side, not as protective), at P < .05 in multivariate analysis — consistent with the well-established clinical direction that neutropenia predisposes to Pseudomonas. The refutation does not overturn the directional claim; it only qualifies the comparator. The separately-fetched mortality OR 2.14 (PMC3994322) is correctly discarded since it measures 14-day mortality among PA patients, not PA etiology, and was not used to support this claim.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_idu_saureus",
+      "kind": "source_lr",
+      "evidence": "injection_drug_use(present)",
+      "target": "s_aureus",
+      "claim": "Injection drug use is a risk factor for Staphylococcus aureus bacteremia / right-sided endocarditis.",
+      "grounded": {
+        "id": "host_idu_saureus",
+        "resolved_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1584240/fullTextXML",
+        "source_title": "Clinical manifestations and outcome in Staphylococcus aureus endocarditis among injection drug users and nonaddicts: a prospective study of 74 patients (BMC Infectious Diseases, 2006; PMC1584240)",
+        "byte_quote": "Endocarditis was more common in SAB among drug abusers (46%) than in nonaddicts (14%) (odds ratio [OR], 5.12; 95% confidence interval [CI], 2.65–9.91; P < 0.001). [...] Right-sided endocarditis was observed in 60% of IDUs whereas 93% of nonaddicts had left-sided involvement (P < 0.001).",
+        "value_found": "OR 5.12 (95% CI 2.65–9.91, P<0.001) for endocarditis given S. aureus bacteremia in injection drug users (46%) vs nonaddicts (14%); right-sided endocarditis in 60% of IDUs vs 93% left-sided involvement in nonaddicts (P<0.001).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC1584240/ — same article on PMC, but DISCARDED because the page returned a reCAPTCHA verification wall with no article content (no quotable text).",
+          "https://link.springer.com/article/10.1186/1471-2334-6-137 — canonical publisher (Springer/BMC) DOI landing for the SAME study, DISCARDED because it 303-redirected to an idp.springer.com authorize/login URL, blocking full-text fetch.",
+          "https://bmcinfectdis.biomedcentral.com/articles/10.1186/1471-2334-6-137 — BMC native URL for the same article, DISCARDED because it 301-redirects back to the auth-walled Springer link page.",
+          "https://europepmc.org/article/MED/16965625 — Europe PMC HTML view of the same article, DISCARDED because the fetch returned only site nav/header chrome, not the article body. Substituted the Europe PMC REST fullTextXML endpoint instead, which served the full clean text.",
+          "https://www.sciencedirect.com/science/article/pii/S0735109720380050 — ICE prospective cohort of IE in PWID (S. aureus 65.9% in PWID vs 26.8% non-PWID), relevant and corroborating but DISCARDED as the primary citation since it was not directly fetched/quoted; the 74-patient SAB-anchored study is a tighter fit for the bacteremia→organism direction."
+        ],
+        "note": "ENTAILED for the bacteremia→endocarditis direction and ENTAILED for the right-sided phenotype. This is a prospective cohort of 430 consecutive adults with S. aureus bacteremia (SAB); among them, IDUs developed endocarditis far more often than nonaddicts (46% vs 14%, OR 5.12), and IDUs' endocarditis was predominantly right-sided (60%) versus left-sided in nonaddicts (93%). The quote forces the conclusion that injection drug use raises the likelihood of S. aureus endocarditis / right-sided endocarditis. MINOR LEAP on framing: the original claim is phrased as 'IDU is a risk factor for S. aureus bacteremia,' i.e., IDU→organism. This study conditions ON having SAB and measures IDU→endocarditis/right-sided, which is the portal-of-entry→complication axis rather than IDU→S. aureus selection among all-cause bacteremia. The article's own framing ('One of the reasons for increased incidence of S. aureus in IE is injection drug abuse') supports the broader IDU→S. aureus direction, so direction_correct holds, but the verbatim OR quantifies endocarditis-given-SAB, not S. aureus-given-bacteremia."
+      },
+      "verify": {
+        "id": "host_idu_saureus",
+        "byte_stable": true,
+        "reextracted_value": "Endocarditis more common in SAB among drug abusers (46%) than nonaddicts (14%): OR 5.12, 95% CI 2.65–9.91, P<0.001. Right-sided endocarditis in 60% of IDUs whereas 93% of nonaddicts had left-sided involvement (P<0.001). Article title: \"Clinical manifestations and outcome in Staphylococcus aureus endocarditis among injection drug users and nonaddicts: a prospective study of 74 patients\" (PMC1584240). All numeric values and both sentences confirmed verbatim in the raw fullTextXML; the en-dash (–) in the CI and the italic P render as in source.",
+        "refute_attempt": "The byte_quote joins two non-adjacent sentences with a bracketed ellipsis [...]; both verified present verbatim, so that is not a fabrication. The substantive challenge: the OR 5.12 measures endocarditis CONDITIONAL on already having SAB (P(endocarditis | SAB) higher in drug users), not the risk of ACQUIRING bacteremia. So strictly, the quote supports \"IDU → endocarditis given SAB\" and \"IDU → right-sided location,\" but not directly \"IDU is a risk factor for acquiring S. aureus bacteremia.\" The claim's bacteremia-acquisition reading is mildly over-extended by this specific quote. However, directionally the association (drug use positively linked to both endocarditis-in-SAB and right-sided endocarditis) is unambiguously supported, and the source article plus its cited reference \"Staphylococcus aureus infections in injection drug users: risk factors and prevention strategies\" back the broader risk-factor framing. Direction is supported; refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

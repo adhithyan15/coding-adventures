@@ -1,0 +1,48 @@
+{
+ "case_id": "MEN-4",
+ "findings": [
+  {
+   "term": "csf_culture(pending)",
+   "span": "cultures are all still pending at the time of this note",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "seizure(absent)",
+   "span": "no seizure",
+   "type": "stated",
+   "polarity": "affirmed"
+  }
+ ],
+ "discard": [
+  {
+   "span": "A 33-year-old man",
+   "reason": "Demographics; age/sex not a dispositive dictionary finding."
+  },
+  {
+   "span": "6 hours of headache and feeling feverish",
+   "reason": "Nonspecific meningitis symptoms; no dictionary functor for headache/fever."
+  },
+  {
+   "span": "after a camping trip",
+   "reason": "Contextual exposure history; no dictionary term."
+  },
+  {
+   "span": "he mentions a tick bite last week",
+   "reason": "Exposure/distractor; no dictionary functor for tick bite."
+  },
+  {
+   "span": "Initial CSF shows a mildly elevated white-cell count",
+   "reason": "Pleocytosis present but differential pending; cannot map to neutrophilic vs lymphocytic functor and no undifferentiated-pleocytosis term exists."
+  },
+  {
+   "span": "the differential, glucose, protein, lactate, Gram stain, and cultures are all still pending at the time of this note",
+   "reason": "differential/glucose/protein/lactate/Gram-stain functors have no 'pending' value; unresulted tests cannot be emitted (only csf_culture has 'pending', emitted as a finding)."
+  },
+  {
+   "span": "He is alert",
+   "reason": "Mental status; no dictionary functor for alertness/consciousness."
+  }
+ ],
+ "inference_justifications": []
+}

@@ -1,0 +1,3 @@
+--print_tree_json
+--js
+tests/diff/print-tree-json/input/a.js

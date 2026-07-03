@@ -1,0 +1,8 @@
+{
+ "check_id": 82,
+ "idx": 34,
+ "slot": "aggregate_sales_price",
+ "claimed_value": 4200000,
+ "scenario": "Nimbus Software, a private company, granted compensatory stock options to its employees during the year with an aggregate sales price of $4,200,000. Nimbus reports total assets of $20,000,000.",
+ "cited_span": "an aggregate sales price of $4,200,000"
+}

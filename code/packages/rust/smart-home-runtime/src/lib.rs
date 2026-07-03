@@ -8,31 +8,57 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    tier_for_command, AgentId, AuthorizationDecision, Bridge, BridgeId, Capability,
-    CapabilityGrant, CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult,
-    CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
-    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier,
-    SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
-    VaultRef,
+    tier_for_command, AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary,
+    AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant,
+    CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
+    CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
+    DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId, Health,
+    IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope, SmartHomeError,
+    SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
+use smart_home_discovery::{
+    run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError,
+    DiscoveryPairingPlan, DiscoveryPairingPlanOptions, DiscoveryPairingPlanSummary,
+    DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary, DiscoverySource,
+    DiscoveryUpsert, DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind,
+    DiscoveryWorkerRun, DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary, MdnsScanNetwork,
+    MdnsWorkerScanExecutor, MdnsWorkerScanPlan, MdnsWorkerScanReport, MdnsWorkerScanRequest,
+    UdpMdnsWorkerScanExecutor, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+};
+use smart_home_integration_catalog::first_party_catalog;
 use smart_home_registry::{
-    DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
-    StateRefreshReason,
+    AuthorizationDecisionSelector, DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts,
+    RegistryError, RegistryTopologySummary, StateRefreshPlan, StateRefreshReason,
 };
-use std::collections::{BTreeMap, VecDeque};
-use std::fmt;
+use std::collections::{BTreeMap, BTreeSet, VecDeque};
+use std::{fmt, time::Duration};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeError {
     Registry(Box<RegistryError>),
     Core(Box<SmartHomeError>),
+    Discovery(Box<DiscoveryError>),
     UnknownBridge(BridgeId),
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
+    UnknownScene(SceneId),
     UnknownPairingSession(RuntimePairingSessionId),
     UnknownSubscription(RuntimeSubscriptionId),
+    UnknownDiscoveryWorker(DiscoveryWorkerId),
     DuplicatePairingSession(RuntimePairingSessionId),
     DuplicateSubscription(RuntimeSubscriptionId),
+    InvalidDiscoveryWorkerSchedule {
+        worker_id: DiscoveryWorkerId,
+        field: &'static str,
+        message: String,
+    },
+    DiscoveryWorkerRunMismatch {
+        worker_id: DiscoveryWorkerId,
+        expected_integration_id: IntegrationId,
+        actual_integration_id: IntegrationId,
+        expected_kind: DiscoveryWorkerKind,
+        actual_kind: DiscoveryWorkerKind,
+    },
     PairingSessionExpired {
         session_id: RuntimePairingSessionId,
         expired_at_ms: u64,
@@ -72,13 +98,34 @@ impl fmt::Display for RuntimeError {
         match self {
             Self::Registry(error) => write!(f, "{error}"),
             Self::Core(error) => write!(f, "{error}"),
+            Self::Discovery(error) => write!(f, "{error}"),
             Self::UnknownBridge(id) => write!(f, "unknown runtime bridge {id}"),
             Self::UnknownDevice(id) => write!(f, "unknown runtime device {id}"),
             Self::UnknownEntity(id) => write!(f, "unknown runtime entity {id}"),
+            Self::UnknownScene(id) => write!(f, "unknown runtime scene {id}"),
             Self::UnknownPairingSession(id) => write!(f, "unknown runtime pairing session {id}"),
             Self::UnknownSubscription(id) => write!(f, "unknown runtime subscription {id}"),
+            Self::UnknownDiscoveryWorker(id) => write!(f, "unknown discovery worker {id}"),
             Self::DuplicatePairingSession(id) => write!(f, "duplicate runtime pairing session {id}"),
             Self::DuplicateSubscription(id) => write!(f, "duplicate runtime subscription {id}"),
+            Self::InvalidDiscoveryWorkerSchedule {
+                worker_id,
+                field,
+                message,
+            } => write!(
+                f,
+                "discovery worker {worker_id} has invalid schedule field `{field}`: {message}"
+            ),
+            Self::DiscoveryWorkerRunMismatch {
+                worker_id,
+                expected_integration_id,
+                actual_integration_id,
+                expected_kind,
+                actual_kind,
+            } => write!(
+                f,
+                "discovery worker {worker_id} expected `{expected_integration_id}` {expected_kind} run but received `{actual_integration_id}` {actual_kind}"
+            ),
             Self::PairingSessionExpired {
                 session_id,
                 expired_at_ms,
@@ -134,6 +181,12 @@ impl fmt::Display for RuntimeError {
 }
 
 impl std::error::Error for RuntimeError {}
+
+impl From<DiscoveryError> for RuntimeError {
+    fn from(error: DiscoveryError) -> Self {
+        Self::Discovery(Box::new(error))
+    }
+}
 
 impl From<RegistryError> for RuntimeError {
     fn from(error: RegistryError) -> Self {
@@ -363,6 +416,11 @@ impl RuntimeEventBus {
             .iter()
             .enumerate()
             .skip(start)
+            .filter(|(index, _)| {
+                query
+                    .to_sequence
+                    .is_none_or(|to_sequence| *index as u64 <= to_sequence)
+            })
             .filter(|(_, event)| {
                 query
                     .filter
@@ -852,11 +910,200 @@ impl RuntimeEventLogSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeCommandResultSort {
+    SequenceAsc,
+    SequenceDesc,
+    StatusThenSequenceDesc,
+}
+
+impl Default for RuntimeCommandResultSort {
+    fn default() -> Self {
+        Self::SequenceAsc
+    }
+}
+
+/// Read-side query for command results already captured in the runtime event log.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCommandResultQuery {
+    pub command_id: Option<CommandId>,
+    pub bridge_id: Option<BridgeId>,
+    pub correlation_id: Option<CorrelationId>,
+    pub statuses: Vec<CommandStatus>,
+    pub from_checkpoint: RuntimeEventCheckpoint,
+    pub to_sequence: Option<u64>,
+    pub sort: RuntimeCommandResultSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeCommandResultQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_command(mut self, command_id: CommandId) -> Self {
+        self.command_id = Some(command_id);
+        self
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn for_correlation(mut self, correlation_id: CorrelationId) -> Self {
+        self.correlation_id = Some(correlation_id);
+        self
+    }
+
+    pub fn with_status(mut self, status: CommandStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn from_checkpoint(mut self, checkpoint: RuntimeEventCheckpoint) -> Self {
+        self.from_checkpoint = checkpoint;
+        self
+    }
+
+    pub fn to_sequence(mut self, sequence: u64) -> Self {
+        self.to_sequence = Some(sequence);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeCommandResultSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+impl Default for RuntimeCommandResultQuery {
+    fn default() -> Self {
+        Self {
+            command_id: None,
+            bridge_id: None,
+            correlation_id: None,
+            statuses: Vec::new(),
+            from_checkpoint: RuntimeEventCheckpoint::start(),
+            to_sequence: None,
+            sort: RuntimeCommandResultSort::default(),
+            limit: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCommandResultRecord {
+    pub sequence: u64,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+    pub result: CommandResult,
+}
+
+impl RuntimeCommandResultRecord {
+    pub fn from_entry(entry: RuntimeEventLogEntry<'_>) -> Option<Self> {
+        match entry.event {
+            RuntimeEvent::CommandResult(result) => Some(Self {
+                sequence: entry.sequence,
+                next_checkpoint: entry.next_checkpoint,
+                result: result.clone(),
+            }),
+            _ => None,
+        }
+    }
+}
+
+/// Compact count view over selected command results.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeCommandResultSummary {
+    pub total_results: usize,
+    pub accepted_results: usize,
+    pub rejected_results: usize,
+    pub timed_out_results: usize,
+    pub failed_results: usize,
+    pub first_sequence: Option<u64>,
+    pub latest_sequence: Option<u64>,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+}
+
+impl Default for RuntimeCommandResultSummary {
+    fn default() -> Self {
+        Self {
+            total_results: 0,
+            accepted_results: 0,
+            rejected_results: 0,
+            timed_out_results: 0,
+            failed_results: 0,
+            first_sequence: None,
+            latest_sequence: None,
+            next_checkpoint: RuntimeEventCheckpoint::start(),
+        }
+    }
+}
+
+impl RuntimeCommandResultSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(records: I) -> Self
+    where
+        I: IntoIterator<Item = &'a RuntimeCommandResultRecord>,
+    {
+        let mut summary = Self::empty();
+        for record in records {
+            summary.total_results += 1;
+            summary.first_sequence = Some(
+                summary
+                    .first_sequence
+                    .map(|sequence| sequence.min(record.sequence))
+                    .unwrap_or(record.sequence),
+            );
+            summary.latest_sequence = Some(
+                summary
+                    .latest_sequence
+                    .map(|sequence| sequence.max(record.sequence))
+                    .unwrap_or(record.sequence),
+            );
+            summary.next_checkpoint = RuntimeEventCheckpoint::from_next_sequence(
+                summary
+                    .latest_sequence
+                    .map(|sequence| sequence.saturating_add(1))
+                    .unwrap_or(0),
+            );
+            match record.result.status {
+                CommandStatus::Accepted => summary.accepted_results += 1,
+                CommandStatus::Rejected => summary.rejected_results += 1,
+                CommandStatus::TimedOut => summary.timed_out_results += 1,
+                CommandStatus::Failed => summary.failed_results += 1,
+            }
+        }
+        summary
+    }
+
+    pub fn has_results(&self) -> bool {
+        self.total_results > 0
+    }
+
+    pub fn failure_results(&self) -> usize {
+        self.rejected_results + self.timed_out_results + self.failed_results
+    }
+
+    pub fn has_failures(&self) -> bool {
+        self.failure_results() > 0
+    }
+}
+
 /// Read-side query for the runtime event log.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimeEventQuery {
     pub filter: Option<RuntimeEventFilter>,
     pub from_checkpoint: RuntimeEventCheckpoint,
+    pub to_sequence: Option<u64>,
     pub sort: RuntimeEventSort,
     pub limit: Option<usize>,
 }
@@ -876,6 +1123,11 @@ impl RuntimeEventQuery {
         self
     }
 
+    pub fn to_sequence(mut self, sequence: u64) -> Self {
+        self.to_sequence = Some(sequence);
+        self
+    }
+
     pub fn sorted_by(mut self, sort: RuntimeEventSort) -> Self {
         self.sort = sort;
         self
@@ -892,6 +1144,7 @@ impl Default for RuntimeEventQuery {
         Self {
             filter: None,
             from_checkpoint: RuntimeEventCheckpoint::start(),
+            to_sequence: None,
             sort: RuntimeEventSort::default(),
             limit: None,
         }
@@ -1476,24 +1729,7 @@ impl RuntimeSupervisor {
     }
 
     pub fn snapshot_at(&self, now_ms: u64) -> RuntimeSupervisorSnapshot {
-        let mut snapshot = RuntimeSupervisorSnapshot {
-            generated_at_ms: now_ms,
-            ..RuntimeSupervisorSnapshot::default()
-        };
-        for worker in self.workers.values() {
-            snapshot.worker_count += 1;
-            if worker.is_overdue_at(now_ms) {
-                snapshot.restart_due_count += 1;
-            }
-            match worker.status {
-                WorkerStatus::Starting => snapshot.starting_count += 1,
-                WorkerStatus::Running => snapshot.running_count += 1,
-                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
-                WorkerStatus::Restarting => snapshot.restarting_count += 1,
-                WorkerStatus::Stopped => snapshot.stopped_count += 1,
-            }
-        }
-        snapshot
+        RuntimeSupervisorSnapshot::from_workers_at(self.workers.values(), now_ms)
     }
 
     pub fn query_workers(&self, query: &SupervisedWorkerQuery) -> Vec<&SupervisedBridgeWorker> {
@@ -1589,8 +1825,801 @@ pub struct RuntimeSupervisorSnapshot {
 }
 
 impl RuntimeSupervisorSnapshot {
+    pub fn from_workers_at<'a, I>(workers: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a SupervisedBridgeWorker>,
+    {
+        let mut snapshot = Self {
+            generated_at_ms: now_ms,
+            ..Self::default()
+        };
+        for worker in workers {
+            snapshot.worker_count += 1;
+            if worker.is_overdue_at(now_ms) {
+                snapshot.restart_due_count += 1;
+            }
+            match worker.status {
+                WorkerStatus::Starting => snapshot.starting_count += 1,
+                WorkerStatus::Running => snapshot.running_count += 1,
+                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
+                WorkerStatus::Restarting => snapshot.restarting_count += 1,
+                WorkerStatus::Stopped => snapshot.stopped_count += 1,
+            }
+        }
+        snapshot
+    }
+
     pub fn has_restart_pressure(&self) -> bool {
         self.restart_due_count > 0 || self.unhealthy_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScheduledDiscoveryWorker {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub sources: Vec<DiscoverySource>,
+    pub network_interfaces: Vec<String>,
+    pub status: WorkerStatus,
+    pub interval_ms: u64,
+    pub run_timeout_ms: u64,
+    pub retry_delay_ms: u64,
+    pub max_retry_delay_ms: u64,
+    pub retry_backoff_multiplier: u32,
+    pub next_due_at_ms: u64,
+    pub last_started_at_ms: Option<u64>,
+    pub last_completed_at_ms: Option<u64>,
+    pub last_run_status: Option<DiscoveryWorkerRunStatus>,
+    pub last_record_count: usize,
+    pub last_failure_count: usize,
+    pub last_catalog_change_count: usize,
+    pub total_run_count: u64,
+    pub consecutive_failure_count: u32,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScheduledDiscoveryWorker {
+    pub fn new(
+        worker_id: DiscoveryWorkerId,
+        integration_id: IntegrationId,
+        kind: DiscoveryWorkerKind,
+        interval_ms: u64,
+        run_timeout_ms: u64,
+        first_due_at_ms: u64,
+    ) -> Self {
+        Self {
+            worker_id,
+            integration_id,
+            kind,
+            sources: Vec::new(),
+            network_interfaces: Vec::new(),
+            status: WorkerStatus::Starting,
+            interval_ms,
+            run_timeout_ms,
+            retry_delay_ms: interval_ms,
+            max_retry_delay_ms: interval_ms,
+            retry_backoff_multiplier: 1,
+            next_due_at_ms: first_due_at_ms,
+            last_started_at_ms: None,
+            last_completed_at_ms: None,
+            last_run_status: None,
+            last_record_count: 0,
+            last_failure_count: 0,
+            last_catalog_change_count: 0,
+            total_run_count: 0,
+            consecutive_failure_count: 0,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_source(mut self, source: DiscoverySource) -> Self {
+        if !self.sources.contains(&source) {
+            self.sources.push(source);
+        }
+        self
+    }
+
+    pub fn with_network_interface(mut self, network_interface: impl Into<String>) -> Self {
+        let network_interface = network_interface.into();
+        if !self
+            .network_interfaces
+            .iter()
+            .any(|existing| existing == &network_interface)
+        {
+            self.network_interfaces.push(network_interface);
+        }
+        self
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn with_retry_backoff(
+        mut self,
+        retry_delay_ms: u64,
+        max_retry_delay_ms: u64,
+        retry_backoff_multiplier: u32,
+    ) -> Self {
+        self.retry_delay_ms = retry_delay_ms;
+        self.max_retry_delay_ms = max_retry_delay_ms;
+        self.retry_backoff_multiplier = retry_backoff_multiplier;
+        self
+    }
+
+    pub fn is_due_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.next_due_at_ms
+    }
+
+    pub fn overdue_by_ms_at(&self, now_ms: u64) -> u64 {
+        now_ms.saturating_sub(self.next_due_at_ms)
+    }
+
+    pub fn due_instruction_at(&self, now_ms: u64) -> Option<DiscoveryWorkerRunInstruction> {
+        if !self.is_due_at(now_ms) {
+            return None;
+        }
+        Some(DiscoveryWorkerRunInstruction {
+            worker_id: self.worker_id.clone(),
+            integration_id: self.integration_id.clone(),
+            kind: self.kind,
+            sources: self.sources.clone(),
+            network_interfaces: self.network_interfaces.clone(),
+            status: self.status,
+            due_at_ms: self.next_due_at_ms,
+            planned_at_ms: now_ms,
+            interval_ms: self.interval_ms,
+            run_timeout_ms: self.run_timeout_ms,
+            retry_delay_ms: self.retry_delay_ms,
+            max_retry_delay_ms: self.max_retry_delay_ms,
+            retry_backoff_multiplier: self.retry_backoff_multiplier,
+            consecutive_failure_count: self.consecutive_failure_count,
+            metadata: self.metadata.clone(),
+        })
+    }
+
+    pub fn mark_started_at(&mut self, now_ms: u64) {
+        self.status = WorkerStatus::Running;
+        self.last_started_at_ms = Some(now_ms);
+    }
+
+    pub fn record_run_summary(&mut self, summary: &DiscoveryWorkerRunSummary) {
+        self.total_run_count = self.total_run_count.saturating_add(1);
+        self.last_started_at_ms = Some(summary.started_at_ms);
+        self.last_completed_at_ms = Some(summary.completed_at_ms);
+        self.last_run_status = Some(summary.status);
+        self.last_record_count = summary.record_count;
+        self.last_failure_count = summary.failure_count;
+        self.last_catalog_change_count = summary.accepted_count();
+
+        match summary.status {
+            DiscoveryWorkerRunStatus::Completed => {
+                self.status = WorkerStatus::Running;
+                self.consecutive_failure_count = 0;
+                self.next_due_at_ms = summary.completed_at_ms.saturating_add(self.interval_ms);
+            }
+            DiscoveryWorkerRunStatus::Partial | DiscoveryWorkerRunStatus::Failed => {
+                self.status = WorkerStatus::Unhealthy;
+                self.consecutive_failure_count = self.consecutive_failure_count.saturating_add(1);
+                self.next_due_at_ms = summary.completed_at_ms.saturating_add(
+                    self.retry_delay_for_failure_count(self.consecutive_failure_count),
+                );
+            }
+        }
+    }
+
+    pub fn retry_delay_for_failure_count(&self, consecutive_failure_count: u32) -> u64 {
+        if consecutive_failure_count == 0 {
+            return 0;
+        }
+
+        let mut delay = self.retry_delay_ms;
+        for _ in 1..consecutive_failure_count {
+            delay = delay
+                .saturating_mul(self.retry_backoff_multiplier as u64)
+                .min(self.max_retry_delay_ms);
+        }
+        delay.min(self.max_retry_delay_ms)
+    }
+
+    pub fn validate(&self) -> Result<(), RuntimeError> {
+        if self.interval_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "interval_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.run_timeout_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "run_timeout_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.retry_delay_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "retry_delay_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.max_retry_delay_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "max_retry_delay_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.max_retry_delay_ms < self.retry_delay_ms {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "max_retry_delay_ms",
+                "must be greater than or equal to retry_delay_ms",
+            ));
+        }
+        if self.retry_backoff_multiplier == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "retry_backoff_multiplier",
+                "must be greater than zero",
+            ));
+        }
+        if self.sources.is_empty() {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "sources",
+                "must include at least one discovery source",
+            ));
+        }
+        if self.sources.contains(&DiscoverySource::Mdns) && self.network_interfaces.is_empty() {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "network_interfaces",
+                "mDNS schedules must name the selected interfaces",
+            ));
+        }
+        if self.sources.contains(&DiscoverySource::Mdns)
+            && metadata_value(&self.metadata, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY)
+                .is_none_or(str::is_empty)
+        {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "metadata.smart_home.discovery.service_type",
+                "mDNS schedules must name the DNS-SD service type",
+            ));
+        }
+        if self
+            .network_interfaces
+            .iter()
+            .any(|network_interface| network_interface.trim().is_empty())
+        {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "network_interfaces",
+                "interface names must not be empty",
+            ));
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScheduledDiscoveryWorkerSnapshot {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub sources: Vec<DiscoverySource>,
+    pub network_interfaces: Vec<String>,
+    pub status: WorkerStatus,
+    pub interval_ms: u64,
+    pub run_timeout_ms: u64,
+    pub retry_delay_ms: u64,
+    pub max_retry_delay_ms: u64,
+    pub retry_backoff_multiplier: u32,
+    pub current_retry_delay_ms: Option<u64>,
+    pub next_due_at_ms: u64,
+    pub is_due: bool,
+    pub overdue_by_ms: u64,
+    pub last_started_at_ms: Option<u64>,
+    pub last_completed_at_ms: Option<u64>,
+    pub last_run_status: Option<DiscoveryWorkerRunStatus>,
+    pub last_record_count: usize,
+    pub last_failure_count: usize,
+    pub last_catalog_change_count: usize,
+    pub total_run_count: u64,
+    pub consecutive_failure_count: u32,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScheduledDiscoveryWorkerSnapshot {
+    pub fn from_worker_at(worker: &ScheduledDiscoveryWorker, now_ms: u64) -> Self {
+        Self {
+            worker_id: worker.worker_id.clone(),
+            integration_id: worker.integration_id.clone(),
+            kind: worker.kind,
+            sources: worker.sources.clone(),
+            network_interfaces: worker.network_interfaces.clone(),
+            status: worker.status,
+            interval_ms: worker.interval_ms,
+            run_timeout_ms: worker.run_timeout_ms,
+            retry_delay_ms: worker.retry_delay_ms,
+            max_retry_delay_ms: worker.max_retry_delay_ms,
+            retry_backoff_multiplier: worker.retry_backoff_multiplier,
+            current_retry_delay_ms: if worker.consecutive_failure_count > 0 {
+                Some(worker.retry_delay_for_failure_count(worker.consecutive_failure_count))
+            } else {
+                None
+            },
+            next_due_at_ms: worker.next_due_at_ms,
+            is_due: worker.is_due_at(now_ms),
+            overdue_by_ms: worker.overdue_by_ms_at(now_ms),
+            last_started_at_ms: worker.last_started_at_ms,
+            last_completed_at_ms: worker.last_completed_at_ms,
+            last_run_status: worker.last_run_status,
+            last_record_count: worker.last_record_count,
+            last_failure_count: worker.last_failure_count,
+            last_catalog_change_count: worker.last_catalog_change_count,
+            total_run_count: worker.total_run_count,
+            consecutive_failure_count: worker.consecutive_failure_count,
+            metadata: worker.metadata.clone(),
+        }
+    }
+
+    pub fn has_failure_pressure(&self) -> bool {
+        self.status == WorkerStatus::Unhealthy
+            || self.last_failure_count > 0
+            || self.consecutive_failure_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerRunInstruction {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub sources: Vec<DiscoverySource>,
+    pub network_interfaces: Vec<String>,
+    pub status: WorkerStatus,
+    pub due_at_ms: u64,
+    pub planned_at_ms: u64,
+    pub interval_ms: u64,
+    pub run_timeout_ms: u64,
+    pub retry_delay_ms: u64,
+    pub max_retry_delay_ms: u64,
+    pub retry_backoff_multiplier: u32,
+    pub consecutive_failure_count: u32,
+    pub metadata: Vec<Metadata>,
+}
+
+impl DiscoveryWorkerRunInstruction {
+    pub fn overdue_by_ms(&self) -> u64 {
+        self.planned_at_ms.saturating_sub(self.due_at_ms)
+    }
+
+    pub fn mdns_service_type(&self) -> Option<&str> {
+        metadata_value(&self.metadata, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY)
+    }
+
+    pub fn mdns_scan_requests(&self) -> Result<Vec<MdnsWorkerScanRequest>, RuntimeError> {
+        if self.kind != DiscoveryWorkerKind::MdnsScan
+            || !self.sources.contains(&DiscoverySource::Mdns)
+        {
+            return Ok(Vec::new());
+        }
+        let service_type = self.mdns_service_type().ok_or_else(|| {
+            invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "metadata.smart_home.discovery.service_type",
+                "mDNS schedules must name the DNS-SD service type",
+            )
+        })?;
+        let timeout = Duration::from_millis(self.run_timeout_ms);
+        let mut requests = Vec::new();
+        for network_interface in &self.network_interfaces {
+            for network in [MdnsScanNetwork::Ipv4, MdnsScanNetwork::Ipv6] {
+                requests.push(
+                    MdnsWorkerScanRequest::new(
+                        self.worker_id.clone(),
+                        self.integration_id.clone(),
+                        network_interface.clone(),
+                        network,
+                        service_type,
+                        self.planned_at_ms,
+                        timeout,
+                    )
+                    .map_err(|error| {
+                        invalid_discovery_worker_schedule(
+                            &self.worker_id,
+                            "network_interfaces",
+                            error.to_string(),
+                        )
+                    })?
+                    .with_metadata("smart_home.discovery.due_at_ms", self.due_at_ms.to_string())
+                    .with_metadata(
+                        "smart_home.discovery.planned_at_ms",
+                        self.planned_at_ms.to_string(),
+                    )
+                    .with_metadata("smart_home.discovery.worker_status", self.status.as_str()),
+                );
+            }
+        }
+        Ok(requests)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerRunPlan {
+    pub generated_at_ms: u64,
+    pub instructions: Vec<DiscoveryWorkerRunInstruction>,
+}
+
+impl DiscoveryWorkerRunPlan {
+    pub fn is_empty(&self) -> bool {
+        self.instructions.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.instructions.len()
+    }
+
+    pub fn instructions_for_worker(
+        &self,
+        worker_id: &DiscoveryWorkerId,
+    ) -> Vec<&DiscoveryWorkerRunInstruction> {
+        self.instructions
+            .iter()
+            .filter(|instruction| &instruction.worker_id == worker_id)
+            .collect()
+    }
+
+    pub fn mdns_scan_plan(&self) -> Result<MdnsWorkerScanPlan, RuntimeError> {
+        let mut plan = MdnsWorkerScanPlan::new(self.generated_at_ms);
+        for instruction in &self.instructions {
+            for request in instruction.mdns_scan_requests()? {
+                plan.push_request(request);
+            }
+        }
+        Ok(plan)
+    }
+}
+
+pub trait MdnsDiscoveryRunAdapter {
+    type Error: fmt::Display;
+
+    fn worker_run_from_mdns_scan_report(
+        &mut self,
+        report: &MdnsWorkerScanReport,
+    ) -> Result<DiscoveryWorkerRun, Self::Error>;
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoverySupervisorRunFailure {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoverySupervisorRunReport {
+    pub started_at_ms: u64,
+    pub completed_at_ms: u64,
+    pub ttl_ms: u64,
+    pub planned_instruction_count: usize,
+    pub mdns_request_count: usize,
+    pub mdns_report_count: usize,
+    pub summaries: Vec<DiscoveryWorkerRunSummary>,
+    pub failures: Vec<DiscoverySupervisorRunFailure>,
+}
+
+impl DiscoverySupervisorRunReport {
+    pub fn new(
+        started_at_ms: u64,
+        completed_at_ms: u64,
+        ttl_ms: u64,
+        planned_instruction_count: usize,
+        mdns_request_count: usize,
+        mdns_report_count: usize,
+    ) -> Self {
+        Self {
+            started_at_ms,
+            completed_at_ms,
+            ttl_ms,
+            planned_instruction_count,
+            mdns_request_count,
+            mdns_report_count,
+            summaries: Vec::new(),
+            failures: Vec::new(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.planned_instruction_count == 0
+            && self.mdns_request_count == 0
+            && self.recorded_run_count() == 0
+    }
+
+    pub fn recorded_run_count(&self) -> usize {
+        self.summaries.len()
+    }
+
+    pub fn completed_run_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .filter(|summary| summary.status == DiscoveryWorkerRunStatus::Completed)
+            .count()
+    }
+
+    pub fn partial_run_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .filter(|summary| summary.status == DiscoveryWorkerRunStatus::Partial)
+            .count()
+    }
+
+    pub fn failed_run_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .filter(|summary| summary.status == DiscoveryWorkerRunStatus::Failed)
+            .count()
+    }
+
+    pub fn catalog_change_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .map(DiscoveryWorkerRunSummary::accepted_count)
+            .sum()
+    }
+
+    pub fn has_failures(&self) -> bool {
+        !self.failures.is_empty()
+            || self
+                .summaries
+                .iter()
+                .any(|summary| summary.status != DiscoveryWorkerRunStatus::Completed)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DiscoveryWorkerSort {
+    WorkerId,
+    NextDueAt,
+    StatusThenWorkerId,
+    ConsecutiveFailuresDesc,
+}
+
+impl Default for DiscoveryWorkerSort {
+    fn default() -> Self {
+        Self::WorkerId
+    }
+}
+
+/// Read-side query for scheduled discovery workers.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DiscoveryWorkerQuery {
+    pub worker_id: Option<DiscoveryWorkerId>,
+    pub integration_id: Option<IntegrationId>,
+    pub kinds: Vec<DiscoveryWorkerKind>,
+    pub sources: Vec<DiscoverySource>,
+    pub statuses: Vec<WorkerStatus>,
+    pub due_before_ms: Option<u64>,
+    pub overdue_at_ms: Option<u64>,
+    pub min_consecutive_failure_count: Option<u32>,
+    pub sort: DiscoveryWorkerSort,
+    pub limit: Option<usize>,
+}
+
+impl DiscoveryWorkerQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_worker(mut self, worker_id: DiscoveryWorkerId) -> Self {
+        self.worker_id = Some(worker_id);
+        self
+    }
+
+    pub fn for_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = Some(integration_id);
+        self
+    }
+
+    pub fn with_kind(mut self, kind: DiscoveryWorkerKind) -> Self {
+        self.kinds.push(kind);
+        self
+    }
+
+    pub fn with_source(mut self, source: DiscoverySource) -> Self {
+        self.sources.push(source);
+        self
+    }
+
+    pub fn with_status(mut self, status: WorkerStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn due_before(mut self, due_before_ms: u64) -> Self {
+        self.due_before_ms = Some(due_before_ms);
+        self
+    }
+
+    pub fn overdue_at(mut self, overdue_at_ms: u64) -> Self {
+        self.overdue_at_ms = Some(overdue_at_ms);
+        self
+    }
+
+    pub fn min_consecutive_failure_count(mut self, count: u32) -> Self {
+        self.min_consecutive_failure_count = Some(count);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: DiscoveryWorkerSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct DiscoveryWorkerSchedulerSnapshot {
+    pub generated_at_ms: u64,
+    pub worker_count: usize,
+    pub due_worker_count: usize,
+    pub starting_count: usize,
+    pub running_count: usize,
+    pub unhealthy_count: usize,
+    pub restarting_count: usize,
+    pub stopped_count: usize,
+    pub workers_with_failures: usize,
+}
+
+impl DiscoveryWorkerSchedulerSnapshot {
+    pub fn has_due_work(&self) -> bool {
+        self.due_worker_count > 0
+    }
+
+    pub fn has_worker_pressure(&self) -> bool {
+        self.due_worker_count > 0 || self.unhealthy_count > 0 || self.workers_with_failures > 0
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct RuntimeDiscoveryScheduler {
+    workers: BTreeMap<DiscoveryWorkerId, ScheduledDiscoveryWorker>,
+}
+
+impl RuntimeDiscoveryScheduler {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn register_worker(
+        &mut self,
+        worker: ScheduledDiscoveryWorker,
+    ) -> Result<Option<ScheduledDiscoveryWorker>, RuntimeError> {
+        worker.validate()?;
+        Ok(self.workers.insert(worker.worker_id.clone(), worker))
+    }
+
+    pub fn worker(&self, worker_id: &DiscoveryWorkerId) -> Option<&ScheduledDiscoveryWorker> {
+        self.workers.get(worker_id)
+    }
+
+    pub fn mark_started(
+        &mut self,
+        worker_id: &DiscoveryWorkerId,
+        now_ms: u64,
+    ) -> Result<ScheduledDiscoveryWorker, RuntimeError> {
+        let worker = self
+            .workers
+            .get_mut(worker_id)
+            .ok_or_else(|| RuntimeError::UnknownDiscoveryWorker(worker_id.clone()))?;
+        worker.mark_started_at(now_ms);
+        Ok(worker.clone())
+    }
+
+    pub fn record_run_summary(
+        &mut self,
+        summary: &DiscoveryWorkerRunSummary,
+    ) -> Result<ScheduledDiscoveryWorker, RuntimeError> {
+        let worker = self
+            .workers
+            .get_mut(&summary.worker_id)
+            .ok_or_else(|| RuntimeError::UnknownDiscoveryWorker(summary.worker_id.clone()))?;
+        worker.record_run_summary(summary);
+        Ok(worker.clone())
+    }
+
+    pub fn query_workers(&self, query: &DiscoveryWorkerQuery) -> Vec<&ScheduledDiscoveryWorker> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut workers = self
+            .workers
+            .values()
+            .filter(|worker| scheduled_discovery_worker_matches_query(worker, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            DiscoveryWorkerSort::WorkerId => {
+                workers.sort_by(|left, right| left.worker_id.cmp(&right.worker_id));
+            }
+            DiscoveryWorkerSort::NextDueAt => workers.sort_by(|left, right| {
+                left.next_due_at_ms
+                    .cmp(&right.next_due_at_ms)
+                    .then_with(|| left.worker_id.cmp(&right.worker_id))
+            }),
+            DiscoveryWorkerSort::StatusThenWorkerId => workers.sort_by(|left, right| {
+                left.status
+                    .as_str()
+                    .cmp(right.status.as_str())
+                    .then_with(|| left.worker_id.cmp(&right.worker_id))
+            }),
+            DiscoveryWorkerSort::ConsecutiveFailuresDesc => workers.sort_by(|left, right| {
+                right
+                    .consecutive_failure_count
+                    .cmp(&left.consecutive_failure_count)
+                    .then_with(|| left.worker_id.cmp(&right.worker_id))
+            }),
+        }
+        apply_limit(&mut workers, query.limit);
+        workers
+    }
+
+    pub fn worker_snapshots_at(&self, now_ms: u64) -> Vec<ScheduledDiscoveryWorkerSnapshot> {
+        self.query_workers(&DiscoveryWorkerQuery::new().sorted_by(DiscoveryWorkerSort::NextDueAt))
+            .into_iter()
+            .map(|worker| ScheduledDiscoveryWorkerSnapshot::from_worker_at(worker, now_ms))
+            .collect()
+    }
+
+    pub fn run_plan_at(&self, now_ms: u64) -> DiscoveryWorkerRunPlan {
+        let mut instructions = self
+            .workers
+            .values()
+            .filter_map(|worker| worker.due_instruction_at(now_ms))
+            .collect::<Vec<_>>();
+        instructions.sort_by(|left, right| {
+            left.due_at_ms
+                .cmp(&right.due_at_ms)
+                .then_with(|| left.worker_id.cmp(&right.worker_id))
+        });
+        DiscoveryWorkerRunPlan {
+            generated_at_ms: now_ms,
+            instructions,
+        }
+    }
+
+    pub fn snapshot_at(&self, now_ms: u64) -> DiscoveryWorkerSchedulerSnapshot {
+        let mut snapshot = DiscoveryWorkerSchedulerSnapshot {
+            generated_at_ms: now_ms,
+            worker_count: self.workers.len(),
+            ..DiscoveryWorkerSchedulerSnapshot::default()
+        };
+        for worker in self.workers.values() {
+            if worker.is_due_at(now_ms) {
+                snapshot.due_worker_count += 1;
+            }
+            if worker.consecutive_failure_count > 0 {
+                snapshot.workers_with_failures += 1;
+            }
+            match worker.status {
+                WorkerStatus::Starting => snapshot.starting_count += 1,
+                WorkerStatus::Running => snapshot.running_count += 1,
+                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
+                WorkerStatus::Restarting => snapshot.restarting_count += 1,
+                WorkerStatus::Stopped => snapshot.stopped_count += 1,
+            }
+        }
+        snapshot
     }
 }
 
@@ -1693,6 +2722,54 @@ impl DesiredStateQuery {
     pub fn with_limit(mut self, limit: usize) -> Self {
         self.limit = Some(limit);
         self
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DesiredStateInventorySummary {
+    pub total_desired_states: usize,
+    pub total_desired_capabilities: usize,
+    pub requested_by_count: usize,
+    pub min_command_timeout_ms: Option<u64>,
+    pub max_command_timeout_ms: Option<u64>,
+}
+
+impl DesiredStateInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_states<'a, I>(states: I) -> Self
+    where
+        I: IntoIterator<Item = &'a DesiredEntityState>,
+    {
+        let mut summary = Self::empty();
+        let mut requested_by = BTreeSet::new();
+        for state in states {
+            summary.total_desired_states += 1;
+            summary.total_desired_capabilities += state.desired.len();
+            requested_by.insert(state.requested_by.clone());
+            summary.min_command_timeout_ms = Some(
+                summary
+                    .min_command_timeout_ms
+                    .map_or(state.command_timeout_ms, |current| {
+                        current.min(state.command_timeout_ms)
+                    }),
+            );
+            summary.max_command_timeout_ms = Some(
+                summary
+                    .max_command_timeout_ms
+                    .map_or(state.command_timeout_ms, |current| {
+                        current.max(state.command_timeout_ms)
+                    }),
+            );
+        }
+        summary.requested_by_count = requested_by.len();
+        summary
+    }
+
+    pub fn has_desired_states(&self) -> bool {
+        self.total_desired_states > 0
     }
 }
 
@@ -1929,6 +3006,7 @@ pub struct RuntimeSupervisionPlan {
     pub state_refresh_plan: StateRefreshPlan,
     pub desired_state_drifts: Vec<DesiredStateDriftPlan>,
     pub worker_restart_plan: WorkerRestartPlan,
+    pub discovery_worker_run_plan: DiscoveryWorkerRunPlan,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -1944,6 +3022,7 @@ pub struct RuntimeSupervisionPlanSummary {
     pub desired_stale_state_count: usize,
     pub desired_drifted_state_count: usize,
     pub worker_restart_count: usize,
+    pub discovery_worker_run_count: usize,
 }
 
 impl RuntimeSupervisionPlanSummary {
@@ -1969,6 +3048,10 @@ impl RuntimeSupervisionPlanSummary {
     pub fn has_worker_restart_work(&self) -> bool {
         self.worker_restart_count > 0
     }
+
+    pub fn has_discovery_worker_work(&self) -> bool {
+        self.discovery_worker_run_count > 0
+    }
 }
 
 impl RuntimeSupervisionPlan {
@@ -1977,6 +3060,7 @@ impl RuntimeSupervisionPlan {
             && self.state_refresh_plan.is_empty()
             && self.desired_state_drifts.is_empty()
             && self.worker_restart_plan.is_empty()
+            && self.discovery_worker_run_plan.is_empty()
     }
 
     pub fn action_count(&self) -> usize {
@@ -1984,6 +3068,7 @@ impl RuntimeSupervisionPlan {
             + self.state_refresh_plan.len()
             + self.desired_state_drifts.len()
             + self.worker_restart_plan.len()
+            + self.discovery_worker_run_plan.len()
     }
 
     pub fn summary(&self) -> RuntimeSupervisionPlanSummary {
@@ -1994,6 +3079,7 @@ impl RuntimeSupervisionPlan {
             state_refresh_count: self.state_refresh_plan.len(),
             desired_state_drift_count: self.desired_state_drifts.len(),
             worker_restart_count: self.worker_restart_plan.len(),
+            discovery_worker_run_count: self.discovery_worker_run_plan.len(),
             ..RuntimeSupervisionPlanSummary::default()
         };
 
@@ -2028,6 +3114,8 @@ pub struct RuntimeSupervisionObservation {
     pub generated_at_ms: u64,
     pub plan: RuntimeSupervisionPlan,
     pub heartbeat_schedule: WorkerHeartbeatSchedule,
+    pub discovery_scheduler: DiscoveryWorkerSchedulerSnapshot,
+    pub discovery_workers: Vec<ScheduledDiscoveryWorkerSnapshot>,
 }
 
 impl RuntimeSupervisionObservation {
@@ -2053,6 +3141,29 @@ impl RuntimeSupervisionObservation {
 
     pub fn worker_restart_count(&self) -> usize {
         self.plan.worker_restart_plan.len()
+    }
+
+    pub fn discovery_worker_run_count(&self) -> usize {
+        self.plan.discovery_worker_run_plan.len()
+    }
+
+    pub fn discovery_worker_count(&self) -> usize {
+        self.discovery_scheduler.worker_count
+    }
+
+    pub fn unhealthy_discovery_worker_count(&self) -> usize {
+        self.discovery_scheduler.unhealthy_count
+    }
+
+    pub fn discovery_workers_with_failures_count(&self) -> usize {
+        self.discovery_scheduler.workers_with_failures
+    }
+
+    pub fn next_discovery_worker_due_at_ms(&self) -> Option<u64> {
+        self.discovery_workers
+            .iter()
+            .map(|worker| worker.next_due_at_ms)
+            .min()
     }
 
     pub fn due_worker_deadline_count(&self) -> usize {
@@ -2166,6 +3277,8 @@ impl SupervisionTickReport {
 pub struct RuntimeReadSnapshot {
     pub generated_at_ms: u64,
     pub registry_counts: RegistryCounts,
+    pub discovery_record_count: usize,
+    pub discovery_scheduler: DiscoveryWorkerSchedulerSnapshot,
     pub event_bus: RuntimeEventBusSnapshot,
     pub supervisor: RuntimeSupervisorSnapshot,
     pub pairing_session_count: usize,
@@ -2182,6 +3295,8 @@ impl RuntimeReadSnapshot {
         RuntimePendingWorkSummary {
             event_backlog_count: self.event_bus.pending_delivery_count,
             backlogged_subscription_count: self.event_bus.backlogged_subscription_count,
+            discovery_worker_due_count: self.discovery_scheduler.due_worker_count,
+            unhealthy_discovery_worker_count: self.discovery_scheduler.unhealthy_count,
             restart_due_count: self.supervisor.restart_due_count,
             unhealthy_worker_count: self.supervisor.unhealthy_count,
             expiring_pairing_session_count: self.expiring_pairing_session_count,
@@ -2199,6 +3314,8 @@ impl RuntimeReadSnapshot {
 pub struct RuntimePendingWorkSummary {
     pub event_backlog_count: usize,
     pub backlogged_subscription_count: usize,
+    pub discovery_worker_due_count: usize,
+    pub unhealthy_discovery_worker_count: usize,
     pub restart_due_count: usize,
     pub unhealthy_worker_count: usize,
     pub expiring_pairing_session_count: usize,
@@ -2215,6 +3332,8 @@ impl RuntimePendingWorkSummary {
         self.event_backlog_count
             + self.restart_due_count
             + self.unhealthy_worker_count
+            + self.discovery_worker_due_count
+            + self.unhealthy_discovery_worker_count
             + self.expiring_pairing_session_count
             + self.stale_optimistic_state_count
             + self.state_refresh_target_count
@@ -2227,6 +3346,8 @@ impl RuntimePendingWorkSummary {
     pub fn has_supervision_pressure(&self) -> bool {
         self.restart_due_count > 0
             || self.unhealthy_worker_count > 0
+            || self.discovery_worker_due_count > 0
+            || self.unhealthy_discovery_worker_count > 0
             || self.expiring_pairing_session_count > 0
             || self.stale_optimistic_state_count > 0
             || self.state_refresh_target_count > 0
@@ -2234,12 +3355,419 @@ impl RuntimePendingWorkSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeDiscoverToolRequest {
+    pub integration_id: Option<IntegrationId>,
+    pub source: Option<DiscoverySource>,
+    pub fresh_only: bool,
+    pub ttl_ms: u64,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeDiscoverToolRequest {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = Some(integration_id);
+        self
+    }
+
+    pub fn from_source(mut self, source: DiscoverySource) -> Self {
+        self.source = Some(source);
+        self
+    }
+
+    pub fn fresh_only(mut self, fresh_only: bool) -> Self {
+        self.fresh_only = fresh_only;
+        self
+    }
+
+    pub fn with_ttl_ms(mut self, ttl_ms: u64) -> Self {
+        self.ttl_ms = ttl_ms;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    fn matches_record(&self, record: &DiscoveryRecord, now_ms: u64) -> bool {
+        self.integration_id
+            .as_ref()
+            .is_none_or(|integration_id| &record.integration_id == integration_id)
+            && self.source.is_none_or(|source| record.source == source)
+            && (!self.fresh_only || !record.is_stale_at(now_ms, self.ttl_ms))
+    }
+}
+
+impl Default for RuntimeDiscoverToolRequest {
+    fn default() -> Self {
+        Self {
+            integration_id: None,
+            source: None,
+            fresh_only: false,
+            ttl_ms: 60_000,
+            limit: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairingPlanToolRequest {
+    pub options: DiscoveryPairingPlanOptions,
+    pub ttl_ms: u64,
+}
+
+impl RuntimePairingPlanToolRequest {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_options(mut self, options: DiscoveryPairingPlanOptions) -> Self {
+        self.options = options;
+        self
+    }
+
+    pub fn with_ttl_ms(mut self, ttl_ms: u64) -> Self {
+        self.ttl_ms = ttl_ms;
+        self
+    }
+}
+
+impl Default for RuntimePairingPlanToolRequest {
+    fn default() -> Self {
+        Self {
+            options: DiscoveryPairingPlanOptions::new(),
+            ttl_ms: 60_000,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeDiscoverToolOutput {
+    pub generated_at_ms: u64,
+    pub ttl_ms: u64,
+    pub records: Vec<DiscoveryRecord>,
+    pub bridge_candidates: Vec<Bridge>,
+    pub record_summary: DiscoveryRecordSummary,
+    pub signal_summary: DiscoverySignalSummary,
+}
+
+impl RuntimeDiscoverToolOutput {
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeAuthorizationDecisionSort {
+    DecidedAtAsc,
+    DecidedAtDesc,
+}
+
+impl Default for RuntimeAuthorizationDecisionSort {
+    fn default() -> Self {
+        Self::DecidedAtDesc
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct RuntimeAuthorizationDecisionQuery {
+    pub principal_id: Option<AgentId>,
+    pub outcome: Option<AuthorizationOutcome>,
+    pub sort: RuntimeAuthorizationDecisionSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeAuthorizationDecisionQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_principal(mut self, principal_id: AgentId) -> Self {
+        self.principal_id = Some(principal_id);
+        self
+    }
+
+    pub fn with_outcome(mut self, outcome: AuthorizationOutcome) -> Self {
+        self.outcome = Some(outcome);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeAuthorizationDecisionSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    fn selector(&self) -> AuthorizationDecisionSelector {
+        let mut selector = AuthorizationDecisionSelector::new();
+        if let Some(principal_id) = self.principal_id.clone() {
+            selector = selector.for_principal(principal_id);
+        }
+        if let Some(outcome) = self.outcome {
+            selector = selector.with_outcome(outcome);
+        }
+        selector
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeCapabilityGrantScopeKind {
+    Tool,
+    Capability,
+    EntityCapability,
+    AllSmartHome,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeCapabilityGrantSort {
+    GrantId,
+    PrincipalId,
+    GrantedAtAsc,
+    GrantedAtDesc,
+    ExpiresAtAsc,
+    ExpiresAtDesc,
+}
+
+impl Default for RuntimeCapabilityGrantSort {
+    fn default() -> Self {
+        Self::GrantId
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct RuntimeCapabilityGrantQuery {
+    pub principal_id: Option<AgentId>,
+    pub status: Option<CapabilityGrantStatus>,
+    pub scope_kind: Option<RuntimeCapabilityGrantScopeKind>,
+    pub capability_id: Option<CapabilityId>,
+    pub entity_id: Option<EntityId>,
+    pub sort: RuntimeCapabilityGrantSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeCapabilityGrantQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_principal(mut self, principal_id: AgentId) -> Self {
+        self.principal_id = Some(principal_id);
+        self
+    }
+
+    pub fn with_status(mut self, status: CapabilityGrantStatus) -> Self {
+        self.status = Some(status);
+        self
+    }
+
+    pub fn with_scope_kind(mut self, scope_kind: RuntimeCapabilityGrantScopeKind) -> Self {
+        self.scope_kind = Some(scope_kind);
+        self
+    }
+
+    pub fn with_capability(mut self, capability_id: CapabilityId) -> Self {
+        self.capability_id = Some(capability_id);
+        self
+    }
+
+    pub fn for_entity(mut self, entity_id: EntityId) -> Self {
+        self.entity_id = Some(entity_id);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeCapabilityGrantSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeRoomSort {
+    RoomId,
+    AttentionDesc,
+    EntityCountDesc,
+    SceneCountDesc,
+}
+
+impl Default for RuntimeRoomSort {
+    fn default() -> Self {
+        Self::RoomId
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct RuntimeRoomQuery {
+    pub room_id: Option<String>,
+    pub attention_only: bool,
+    pub state_gaps_only: bool,
+    pub sort: RuntimeRoomSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeRoomQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_room(mut self, room_id: impl Into<String>) -> Self {
+        self.room_id = Some(room_id.into());
+        self
+    }
+
+    pub fn attention_only(mut self, attention_only: bool) -> Self {
+        self.attention_only = attention_only;
+        self
+    }
+
+    pub fn state_gaps_only(mut self, state_gaps_only: bool) -> Self {
+        self.state_gaps_only = state_gaps_only;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeRoomSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeRoomSummary {
+    pub room_id: String,
+    pub device_count: usize,
+    pub online_devices: usize,
+    pub pairing_candidate_devices: usize,
+    pub attention_devices: usize,
+    pub entity_count: usize,
+    pub commandable_entities: usize,
+    pub entities_with_state: usize,
+    pub entities_without_state: usize,
+    pub stale_entities: usize,
+    pub scene_count: usize,
+    pub scene_action_count: usize,
+}
+
+impl RuntimeRoomSummary {
+    pub fn new(room_id: impl Into<String>) -> Self {
+        Self {
+            room_id: room_id.into(),
+            device_count: 0,
+            online_devices: 0,
+            pairing_candidate_devices: 0,
+            attention_devices: 0,
+            entity_count: 0,
+            commandable_entities: 0,
+            entities_with_state: 0,
+            entities_without_state: 0,
+            stale_entities: 0,
+            scene_count: 0,
+            scene_action_count: 0,
+        }
+    }
+
+    fn record_device(&mut self, device: &Device) {
+        self.device_count += 1;
+        if device.health.is_online() {
+            self.online_devices += 1;
+        }
+        if device.health.is_pairing_candidate() {
+            self.pairing_candidate_devices += 1;
+        }
+        if device.health.needs_attention() {
+            self.attention_devices += 1;
+        }
+    }
+
+    fn record_entity(&mut self, entity: &Entity, state: Option<&StateSnapshot>, now_ms: u64) {
+        self.entity_count += 1;
+        if entity.capability_summary().has_command_surface() {
+            self.commandable_entities += 1;
+        }
+        match state {
+            Some(snapshot) => {
+                self.entities_with_state += 1;
+                if snapshot.is_stale_at(now_ms) {
+                    self.stale_entities += 1;
+                }
+            }
+            None => self.entities_without_state += 1,
+        }
+    }
+
+    fn record_scene_actions(&mut self, action_count: usize) {
+        if action_count == 0 {
+            return;
+        }
+        self.scene_count += 1;
+        self.scene_action_count += action_count;
+    }
+
+    pub fn has_attention_items(&self) -> bool {
+        self.attention_devices > 0
+    }
+
+    pub fn has_state_gaps(&self) -> bool {
+        self.entities_without_state > 0 || self.stale_entities > 0
+    }
+
+    pub fn state_gap_count(&self) -> usize {
+        self.entities_without_state + self.stale_entities
+    }
+
+    pub fn has_scene_actions(&self) -> bool {
+        self.scene_action_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
+    GetRuntimeSnapshot,
+    ListDiscoveryWorkers {
+        query: DiscoveryWorkerQuery,
+    },
+    GetDiscoverySummary {
+        request: RuntimeDiscoverToolRequest,
+    },
+    GetPairingPlan {
+        request: RuntimePairingPlanToolRequest,
+    },
     ListBridges,
     ListDevices {
         bridge_id: Option<BridgeId>,
         health: Option<Health>,
         capability_id: Option<CapabilityId>,
+    },
+    ListRooms {
+        query: RuntimeRoomQuery,
+    },
+    ListScenes {
+        scope: Option<SceneScope>,
+        entity_id: Option<EntityId>,
+        capability_id: Option<CapabilityId>,
+    },
+    DescribeScene {
+        scene_id: SceneId,
     },
     GetState {
         entity_id: EntityId,
@@ -2250,17 +3778,78 @@ pub enum RuntimeReadToolRequest {
     GetHealth {
         bridge_id: Option<BridgeId>,
     },
+    ListSubscriptions {
+        query: RuntimeSubscriptionQuery,
+    },
+    InspectEventLog {
+        query: RuntimeEventQuery,
+    },
+    ListCommandResults {
+        query: RuntimeCommandResultQuery,
+    },
+    GetCommandResultSummary {
+        query: RuntimeCommandResultQuery,
+    },
+    ListAuthorizationDecisions {
+        query: RuntimeAuthorizationDecisionQuery,
+    },
+    GetAuthorizationSummary {
+        query: RuntimeAuthorizationDecisionQuery,
+    },
+    ListCapabilityGrants {
+        query: RuntimeCapabilityGrantQuery,
+    },
+    GetCapabilityGrantSummary {
+        query: RuntimeCapabilityGrantQuery,
+    },
+    GetTopologySummary,
+    ListDesiredStates {
+        query: DesiredStateQuery,
+    },
+    ListPairingSessions {
+        query: RuntimePairingSessionQuery,
+    },
+    ListWorkers {
+        query: SupervisedWorkerQuery,
+    },
+    GetWorkerHeartbeatSchedule {
+        bridge_id: Option<BridgeId>,
+        due_at_or_before_ms: Option<u64>,
+        limit: Option<usize>,
+    },
+    GetSupervisionPlan,
     ObserveSupervision,
 }
 
 impl RuntimeReadToolRequest {
     pub fn tool(&self) -> SmartHomeTool {
         match self {
+            Self::GetRuntimeSnapshot => SmartHomeTool::GetRuntimeSnapshot,
+            Self::ListDiscoveryWorkers { .. } => SmartHomeTool::ListDiscoveryWorkers,
+            Self::GetDiscoverySummary { .. } => SmartHomeTool::GetDiscoverySummary,
+            Self::GetPairingPlan { .. } => SmartHomeTool::GetPairingPlan,
             Self::ListBridges => SmartHomeTool::ListBridges,
             Self::ListDevices { .. } => SmartHomeTool::ListDevices,
+            Self::ListRooms { .. } => SmartHomeTool::ListRooms,
+            Self::ListScenes { .. } => SmartHomeTool::ListScenes,
+            Self::DescribeScene { .. } => SmartHomeTool::DescribeScene,
             Self::GetState { .. } => SmartHomeTool::GetState,
             Self::DescribeCapabilities { .. } => SmartHomeTool::DescribeCapabilities,
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
+            Self::ListSubscriptions { .. } => SmartHomeTool::ListSubscriptions,
+            Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
+            Self::ListCommandResults { .. } => SmartHomeTool::ListCommandResults,
+            Self::GetCommandResultSummary { .. } => SmartHomeTool::GetCommandResultSummary,
+            Self::ListAuthorizationDecisions { .. } => SmartHomeTool::ListAuthorizationDecisions,
+            Self::GetAuthorizationSummary { .. } => SmartHomeTool::GetAuthorizationSummary,
+            Self::ListCapabilityGrants { .. } => SmartHomeTool::ListCapabilityGrants,
+            Self::GetCapabilityGrantSummary { .. } => SmartHomeTool::GetCapabilityGrantSummary,
+            Self::GetTopologySummary => SmartHomeTool::GetTopologySummary,
+            Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
+            Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
+            Self::ListWorkers { .. } => SmartHomeTool::ListWorkers,
+            Self::GetWorkerHeartbeatSchedule { .. } => SmartHomeTool::GetWorkerHeartbeatSchedule,
+            Self::GetSupervisionPlan => SmartHomeTool::GetSupervisionPlan,
             Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
     }
@@ -2289,6 +3878,52 @@ impl RuntimeSubscribeToolRequest {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePollEventsToolRequest {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub limit: Option<usize>,
+    pub peek: bool,
+}
+
+impl RuntimePollEventsToolRequest {
+    pub fn new(subscription_id: RuntimeSubscriptionId) -> Self {
+        Self {
+            subscription_id,
+            limit: None,
+            peek: false,
+        }
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn peek(mut self, peek: bool) -> Self {
+        self.peek = peek;
+        self
+    }
+
+    fn delivery_options(&self) -> RuntimeEventDeliveryOptions {
+        let mut options = RuntimeEventDeliveryOptions::new();
+        if let Some(limit) = self.limit {
+            options = options.with_limit(limit);
+        }
+        options
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeUnsubscribeToolRequest {
+    pub subscription_id: RuntimeSubscriptionId,
+}
+
+impl RuntimeUnsubscribeToolRequest {
+    pub fn new(subscription_id: RuntimeSubscriptionId) -> Self {
+        Self { subscription_id }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimePairBridgeToolRequest {
     pub session_id: RuntimePairingSessionId,
     pub bridge_id: BridgeId,
@@ -2313,6 +3948,66 @@ impl RuntimePairBridgeToolRequest {
     pub fn with_metadata(mut self, metadata: Vec<Metadata>) -> Self {
         self.metadata = metadata;
         self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCompletePairingToolRequest {
+    pub completion: RuntimePairingCompletion,
+}
+
+impl RuntimeCompletePairingToolRequest {
+    pub fn new(
+        session_id: RuntimePairingSessionId,
+        vault_ref: VaultRef,
+        completed_at_ms: u64,
+    ) -> Self {
+        Self {
+            completion: RuntimePairingCompletion::new(session_id, vault_ref, completed_at_ms),
+        }
+    }
+
+    pub fn with_metadata(mut self, metadata: Vec<Metadata>) -> Self {
+        self.completion = self.completion.with_metadata(metadata);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeReportEventToolRequest {
+    Device(DeviceEvent),
+    BridgeHealth(BridgeHealthReport),
+}
+
+impl RuntimeReportEventToolRequest {
+    pub fn device(event: DeviceEvent) -> Self {
+        Self::Device(event)
+    }
+
+    pub fn bridge_health(report: BridgeHealthReport) -> Self {
+        Self::BridgeHealth(report)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSetDesiredStateToolRequest {
+    pub desired_state: DesiredEntityState,
+}
+
+impl RuntimeSetDesiredStateToolRequest {
+    pub fn new(desired_state: DesiredEntityState) -> Self {
+        Self { desired_state }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeClearDesiredStateToolRequest {
+    pub entity_id: EntityId,
+}
+
+impl RuntimeClearDesiredStateToolRequest {
+    pub fn new(entity_id: EntityId) -> Self {
+        Self { entity_id }
     }
 }
 
@@ -2368,6 +4063,30 @@ impl RuntimeCommandToolRequest {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeSupervisionToolRequest {
+    ReconcileDesiredStates,
+    RunSupervisionTick,
+}
+
+impl RuntimeSupervisionToolRequest {
+    pub fn tool(self) -> SmartHomeTool {
+        match self {
+            Self::ReconcileDesiredStates => SmartHomeTool::ReconcileDesiredStates,
+            Self::RunSupervisionTick => SmartHomeTool::RunSupervisionTick,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeSupervisionToolOutput {
+    DesiredStateReconciliation {
+        reconciled_at_ms: u64,
+        actions: Vec<DesiredStateAction>,
+    },
+    SupervisionTick(SupervisionTickReport),
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeHealthSnapshot {
     pub bridge_id: BridgeId,
@@ -2388,9 +4107,51 @@ impl BridgeHealthSnapshot {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeEventLogRecord {
+    pub sequence: u64,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+    pub event: RuntimeEvent,
+}
+
+impl RuntimeEventLogRecord {
+    pub fn from_entry(entry: RuntimeEventLogEntry<'_>) -> Self {
+        Self {
+            sequence: entry.sequence,
+            next_checkpoint: entry.next_checkpoint,
+            event: entry.event.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum RuntimeReadToolOutput {
+    RuntimeSnapshot(RuntimeReadSnapshot),
+    DiscoveryWorkers {
+        workers: Vec<ScheduledDiscoveryWorkerSnapshot>,
+        summary: DiscoveryWorkerSchedulerSnapshot,
+    },
+    DiscoverySummary {
+        generated_at_ms: u64,
+        ttl_ms: u64,
+        record_summary: DiscoveryRecordSummary,
+        signal_summary: DiscoverySignalSummary,
+    },
+    PairingPlan {
+        ttl_ms: u64,
+        plan: DiscoveryPairingPlan,
+        summary: DiscoveryPairingPlanSummary,
+    },
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
+    Rooms {
+        rooms: Vec<RuntimeRoomSummary>,
+        topology: RegistryTopologySummary,
+    },
+    Scenes(Vec<Scene>),
+    Scene {
+        scene_id: SceneId,
+        scene: Scene,
+    },
     State {
         entity_id: EntityId,
         snapshot: Option<StateSnapshot>,
@@ -2400,6 +4161,52 @@ pub enum RuntimeReadToolOutput {
         capabilities: Vec<Capability>,
     },
     Health(Vec<BridgeHealthSnapshot>),
+    Subscriptions {
+        subscriptions: Vec<RuntimeSubscriptionSnapshot>,
+        summary: RuntimeSubscriptionInventorySummary,
+    },
+    EventLog {
+        entries: Vec<RuntimeEventLogRecord>,
+        summary: RuntimeEventLogSummary,
+    },
+    CommandResults {
+        results: Vec<RuntimeCommandResultRecord>,
+        summary: RuntimeCommandResultSummary,
+    },
+    CommandResultSummary {
+        summary: RuntimeCommandResultSummary,
+    },
+    AuthorizationDecisions {
+        decisions: Vec<AuthorizationDecision>,
+        summary: AuthorizationDecisionLogSummary,
+    },
+    AuthorizationSummary {
+        summary: AuthorizationDecisionLogSummary,
+    },
+    CapabilityGrants {
+        grants: Vec<CapabilityGrant>,
+        summary: CapabilityGrantInventorySummary,
+    },
+    CapabilityGrantSummary {
+        summary: CapabilityGrantInventorySummary,
+    },
+    TopologySummary {
+        summary: RegistryTopologySummary,
+    },
+    DesiredStates {
+        desired_states: Vec<DesiredEntityState>,
+        summary: DesiredStateInventorySummary,
+    },
+    PairingSessions {
+        sessions: Vec<RuntimePairingSession>,
+        summary: RuntimePairingSessionInventorySummary,
+    },
+    Workers {
+        workers: Vec<SupervisedBridgeWorker>,
+        summary: RuntimeSupervisorSnapshot,
+    },
+    WorkerHeartbeatSchedule(WorkerHeartbeatSchedule),
+    SupervisionPlan(RuntimeSupervisionPlan),
     SupervisionObservation(RuntimeSupervisionObservation),
 }
 
@@ -2411,14 +4218,84 @@ pub struct RuntimeSubscribeToolOutput {
     pub queued_events: usize,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimePollEventsToolOutput {
+    pub batch: RuntimeEventDeliveryBatch,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeUnsubscribeToolOutput {
+    pub batch: RuntimeEventDeliveryBatch,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimePairBridgeToolOutput {
     pub session: RuntimePairingSession,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCompletePairingToolOutput {
+    pub session: RuntimePairingSession,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeReportEventToolOutput {
+    Device(DeviceEvent),
+    BridgeHealth(BridgeHealthReport),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSetDesiredStateToolOutput {
+    pub desired_state: DesiredEntityState,
+    pub replaced: bool,
+    pub previous: Option<DesiredEntityState>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeClearDesiredStateToolOutput {
+    pub entity_id: EntityId,
+    pub removed: Option<DesiredEntityState>,
+}
+
+impl RuntimeClearDesiredStateToolOutput {
+    pub fn removed(&self) -> bool {
+        self.removed.is_some()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairingCompletion {
+    pub session_id: RuntimePairingSessionId,
+    pub vault_ref: VaultRef,
+    pub completed_at_ms: u64,
+    pub metadata: Vec<Metadata>,
+}
+
+impl RuntimePairingCompletion {
+    pub fn new(
+        session_id: RuntimePairingSessionId,
+        vault_ref: VaultRef,
+        completed_at_ms: u64,
+    ) -> Self {
+        Self {
+            session_id,
+            vault_ref,
+            completed_at_ms,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_metadata(mut self, metadata: Vec<Metadata>) -> Self {
+        self.metadata = metadata;
+        self
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
+    discovery: DiscoveryCatalog,
+    discovery_scheduler: RuntimeDiscoveryScheduler,
     event_bus: RuntimeEventBus,
     supervisor: RuntimeSupervisor,
     pairing_sessions: BTreeMap<RuntimePairingSessionId, RuntimePairingSession>,
@@ -2430,6 +4307,8 @@ impl SmartHomeRuntime {
     pub fn new() -> Self {
         Self {
             registry: InMemorySmartHomeRegistry::new(),
+            discovery: DiscoveryCatalog::new(),
+            discovery_scheduler: RuntimeDiscoveryScheduler::new(),
             event_bus: RuntimeEventBus::new(),
             supervisor: RuntimeSupervisor::new(),
             pairing_sessions: BTreeMap::new(),
@@ -2444,6 +4323,22 @@ impl SmartHomeRuntime {
 
     pub fn registry_mut(&mut self) -> &mut InMemorySmartHomeRegistry {
         &mut self.registry
+    }
+
+    pub fn discovery(&self) -> &DiscoveryCatalog {
+        &self.discovery
+    }
+
+    pub fn discovery_mut(&mut self) -> &mut DiscoveryCatalog {
+        &mut self.discovery
+    }
+
+    pub fn discovery_scheduler(&self) -> &RuntimeDiscoveryScheduler {
+        &self.discovery_scheduler
+    }
+
+    pub fn discovery_scheduler_mut(&mut self) -> &mut RuntimeDiscoveryScheduler {
+        &mut self.discovery_scheduler
     }
 
     pub fn event_bus(&self) -> &RuntimeEventBus {
@@ -2478,6 +4373,8 @@ impl SmartHomeRuntime {
         RuntimeReadSnapshot {
             generated_at_ms: now_ms,
             registry_counts: self.registry.counts(),
+            discovery_record_count: self.discovery.len(),
+            discovery_scheduler: self.discovery_scheduler.snapshot_at(now_ms),
             event_bus: self.event_bus.snapshot(),
             supervisor: self.supervisor.snapshot_at(now_ms),
             pairing_session_count: self.pairing_sessions.len(),
@@ -2498,8 +4395,184 @@ impl SmartHomeRuntime {
         }
     }
 
+    pub fn query_discovery_worker_snapshots_at(
+        &self,
+        query: &DiscoveryWorkerQuery,
+        now_ms: u64,
+    ) -> Vec<ScheduledDiscoveryWorkerSnapshot> {
+        self.discovery_scheduler
+            .query_workers(query)
+            .into_iter()
+            .map(|worker| ScheduledDiscoveryWorkerSnapshot::from_worker_at(worker, now_ms))
+            .collect()
+    }
+
+    pub fn discovery_summary_at(
+        &self,
+        request: &RuntimeDiscoverToolRequest,
+        now_ms: u64,
+    ) -> (DiscoveryRecordSummary, DiscoverySignalSummary) {
+        let records = self
+            .discovery
+            .records()
+            .filter(|record| request.matches_record(record, now_ms))
+            .collect::<Vec<_>>();
+        let record_summary =
+            DiscoveryRecordSummary::from_records(records.iter().copied(), now_ms, request.ttl_ms);
+        let signals = records
+            .iter()
+            .map(|record| record.signal(request.ttl_ms))
+            .collect::<Vec<_>>();
+        let signal_summary = DiscoverySignalSummary::from_signals(&signals, now_ms);
+        (record_summary, signal_summary)
+    }
+
+    pub fn discovery_pairing_plan_at(
+        &self,
+        request: &RuntimePairingPlanToolRequest,
+        now_ms: u64,
+    ) -> DiscoveryPairingPlan {
+        let catalog = first_party_catalog();
+        self.discovery.pairing_plan_with_options_at(
+            &catalog,
+            now_ms,
+            request.ttl_ms,
+            &request.options,
+        )
+    }
+
+    pub fn topology_summary(&self) -> RegistryTopologySummary {
+        self.registry.topology_summary()
+    }
+
+    pub fn room_summaries_at(&self, now_ms: u64) -> Vec<RuntimeRoomSummary> {
+        let mut rooms = BTreeMap::new();
+        let mut entity_rooms = BTreeMap::new();
+
+        for device in self.registry.devices() {
+            let Some(room_id) = device.room_id.as_ref() else {
+                continue;
+            };
+            let room = rooms
+                .entry(room_id.clone())
+                .or_insert_with(|| RuntimeRoomSummary::new(room_id.clone()));
+            room.record_device(device);
+
+            for entity in self.registry.entities_for_device(&device.device_id) {
+                room.record_entity(entity, self.registry.state(&entity.entity_id), now_ms);
+                entity_rooms.insert(entity.entity_id.clone(), room_id.clone());
+            }
+        }
+
+        for scene in self.registry.scenes() {
+            let mut room_action_counts: BTreeMap<String, usize> = BTreeMap::new();
+            for action in &scene.actions {
+                if let Some(room_id) = entity_rooms.get(&action.entity_id) {
+                    *room_action_counts.entry(room_id.clone()).or_default() += 1;
+                }
+            }
+
+            for (room_id, action_count) in room_action_counts {
+                rooms
+                    .entry(room_id.clone())
+                    .or_insert_with(|| RuntimeRoomSummary::new(room_id))
+                    .record_scene_actions(action_count);
+            }
+        }
+
+        rooms.into_values().collect()
+    }
+
+    pub fn query_room_summaries_at(
+        &self,
+        query: &RuntimeRoomQuery,
+        now_ms: u64,
+    ) -> Vec<RuntimeRoomSummary> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut rooms = self
+            .room_summaries_at(now_ms)
+            .into_iter()
+            .filter(|room| room_summary_matches_query(room, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeRoomSort::RoomId => {
+                rooms.sort_by(|left, right| left.room_id.cmp(&right.room_id))
+            }
+            RuntimeRoomSort::AttentionDesc => rooms.sort_by(|left, right| {
+                right
+                    .attention_devices
+                    .cmp(&left.attention_devices)
+                    .then_with(|| right.state_gap_count().cmp(&left.state_gap_count()))
+                    .then_with(|| left.room_id.cmp(&right.room_id))
+            }),
+            RuntimeRoomSort::EntityCountDesc => rooms.sort_by(|left, right| {
+                right
+                    .entity_count
+                    .cmp(&left.entity_count)
+                    .then_with(|| left.room_id.cmp(&right.room_id))
+            }),
+            RuntimeRoomSort::SceneCountDesc => rooms.sort_by(|left, right| {
+                right
+                    .scene_count
+                    .cmp(&left.scene_count)
+                    .then_with(|| left.room_id.cmp(&right.room_id))
+            }),
+        }
+        apply_limit(&mut rooms, query.limit);
+        rooms
+    }
+
     pub fn event_bus_health_summary(&self) -> RuntimeEventBusHealthSummary {
         self.event_bus.health_summary()
+    }
+
+    pub fn query_command_results(
+        &self,
+        query: &RuntimeCommandResultQuery,
+    ) -> Vec<RuntimeCommandResultRecord> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut event_query = RuntimeEventQuery::new()
+            .matching(RuntimeEventFilter::Commands)
+            .from_checkpoint(query.from_checkpoint);
+        if let Some(sequence) = query.to_sequence {
+            event_query = event_query.to_sequence(sequence);
+        }
+        let mut results = self
+            .event_bus
+            .query_events(&event_query)
+            .into_iter()
+            .filter_map(RuntimeCommandResultRecord::from_entry)
+            .filter(|record| command_result_matches_query(&record.result, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeCommandResultSort::SequenceAsc => {
+                results.sort_by(|left, right| left.sequence.cmp(&right.sequence));
+            }
+            RuntimeCommandResultSort::SequenceDesc => {
+                results.sort_by(|left, right| right.sequence.cmp(&left.sequence));
+            }
+            RuntimeCommandResultSort::StatusThenSequenceDesc => results.sort_by(|left, right| {
+                command_status_sort_rank(left.result.status)
+                    .cmp(&command_status_sort_rank(right.result.status))
+                    .then_with(|| right.sequence.cmp(&left.sequence))
+            }),
+        }
+        apply_limit(&mut results, query.limit);
+        results
+    }
+
+    pub fn command_result_summary(
+        &self,
+        query: &RuntimeCommandResultQuery,
+    ) -> RuntimeCommandResultSummary {
+        let results = self.query_command_results(query);
+        RuntimeCommandResultSummary::from_records(results.iter())
     }
 
     pub fn pairing_session(
@@ -2556,6 +4629,108 @@ impl SmartHomeRuntime {
     ) -> RuntimePairingSessionInventorySummary {
         RuntimePairingSessionInventorySummary::from_sessions_at(
             self.query_pairing_sessions(query),
+            now_ms,
+        )
+    }
+
+    pub fn query_authorization_decisions(
+        &self,
+        query: &RuntimeAuthorizationDecisionQuery,
+    ) -> Vec<&AuthorizationDecision> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let selector = query.selector();
+        let mut decisions = self.registry.query_authorization_decisions(&selector);
+        match query.sort {
+            RuntimeAuthorizationDecisionSort::DecidedAtAsc => {
+                decisions.sort_by(|left, right| left.decided_at_ms.cmp(&right.decided_at_ms));
+            }
+            RuntimeAuthorizationDecisionSort::DecidedAtDesc => {
+                decisions.sort_by(|left, right| right.decided_at_ms.cmp(&left.decided_at_ms));
+            }
+        }
+        apply_limit(&mut decisions, query.limit);
+        decisions
+    }
+
+    pub fn authorization_decision_summary(
+        &self,
+        query: &RuntimeAuthorizationDecisionQuery,
+    ) -> AuthorizationDecisionLogSummary {
+        AuthorizationDecisionLogSummary::from_decisions(self.query_authorization_decisions(query))
+    }
+
+    pub fn query_capability_grants_at(
+        &self,
+        query: &RuntimeCapabilityGrantQuery,
+        now_ms: u64,
+    ) -> Vec<&CapabilityGrant> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut grants = match &query.principal_id {
+            Some(principal_id) => self.registry.capability_grants_for_principal(principal_id),
+            None => self.registry.capability_grants().collect::<Vec<_>>(),
+        }
+        .into_iter()
+        .filter(|grant| capability_grant_matches_query(grant, query, now_ms))
+        .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeCapabilityGrantSort::GrantId => {
+                grants.sort_by(|left, right| left.grant_id.cmp(&right.grant_id));
+            }
+            RuntimeCapabilityGrantSort::PrincipalId => {
+                grants.sort_by(|left, right| {
+                    left.principal_id
+                        .cmp(&right.principal_id)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::GrantedAtAsc => {
+                grants.sort_by(|left, right| {
+                    left.granted_at_ms
+                        .cmp(&right.granted_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::GrantedAtDesc => {
+                grants.sort_by(|left, right| {
+                    right
+                        .granted_at_ms
+                        .cmp(&left.granted_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::ExpiresAtAsc => {
+                grants.sort_by(|left, right| {
+                    left.expires_at_ms
+                        .cmp(&right.expires_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::ExpiresAtDesc => {
+                grants.sort_by(|left, right| {
+                    right
+                        .expires_at_ms
+                        .cmp(&left.expires_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+        }
+        apply_limit(&mut grants, query.limit);
+        grants
+    }
+
+    pub fn capability_grant_summary_at(
+        &self,
+        query: &RuntimeCapabilityGrantQuery,
+        now_ms: u64,
+    ) -> CapabilityGrantInventorySummary {
+        CapabilityGrantInventorySummary::from_grants_at(
+            self.query_capability_grants_at(query, now_ms),
             now_ms,
         )
     }
@@ -2622,6 +4797,211 @@ impl SmartHomeRuntime {
 
     pub fn upsert_entity(&mut self, entity: Entity) -> Result<Option<Entity>, RuntimeError> {
         self.registry.upsert_entity(entity).map_err(Into::into)
+    }
+
+    pub fn upsert_scene(&mut self, scene: Scene) -> Result<Option<Scene>, RuntimeError> {
+        self.registry.upsert_scene(scene).map_err(Into::into)
+    }
+
+    pub fn record_discovery(
+        &mut self,
+        record: DiscoveryRecord,
+    ) -> Result<DiscoveryUpsert, RuntimeError> {
+        let bridge_candidate = record.to_bridge_candidate();
+        let upsert = self.discovery.record_preferred(record);
+        if !matches!(upsert, DiscoveryUpsert::Ignored(_)) {
+            self.registry.upsert_bridge(bridge_candidate)?;
+        }
+        Ok(upsert)
+    }
+
+    pub fn record_discovery_worker_run(
+        &mut self,
+        run: &DiscoveryWorkerRun,
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> Result<DiscoveryWorkerRunSummary, RuntimeError> {
+        let mut inserted_count = 0;
+        let mut replaced_count = 0;
+        let mut ignored_count = 0;
+
+        for record in &run.records {
+            match self.record_discovery(record.clone())? {
+                DiscoveryUpsert::Inserted => inserted_count += 1,
+                DiscoveryUpsert::Replaced(_) => replaced_count += 1,
+                DiscoveryUpsert::Ignored(_) => ignored_count += 1,
+            }
+        }
+
+        Ok(run.summary_at(
+            now_ms,
+            ttl_ms,
+            inserted_count,
+            replaced_count,
+            ignored_count,
+        ))
+    }
+
+    pub fn register_discovery_worker_schedule(
+        &mut self,
+        worker: ScheduledDiscoveryWorker,
+    ) -> Result<Option<ScheduledDiscoveryWorker>, RuntimeError> {
+        self.discovery_scheduler.register_worker(worker)
+    }
+
+    pub fn discovery_worker_schedule(
+        &self,
+        worker_id: &DiscoveryWorkerId,
+    ) -> Option<&ScheduledDiscoveryWorker> {
+        self.discovery_scheduler.worker(worker_id)
+    }
+
+    pub fn query_discovery_worker_schedules(
+        &self,
+        query: &DiscoveryWorkerQuery,
+    ) -> Vec<&ScheduledDiscoveryWorker> {
+        self.discovery_scheduler.query_workers(query)
+    }
+
+    pub fn discovery_worker_run_plan_at(&self, now_ms: u64) -> DiscoveryWorkerRunPlan {
+        self.discovery_scheduler.run_plan_at(now_ms)
+    }
+
+    pub fn discovery_mdns_scan_plan_at(
+        &self,
+        now_ms: u64,
+    ) -> Result<MdnsWorkerScanPlan, RuntimeError> {
+        self.discovery_worker_run_plan_at(now_ms).mdns_scan_plan()
+    }
+
+    pub fn mark_discovery_worker_started(
+        &mut self,
+        worker_id: &DiscoveryWorkerId,
+        now_ms: u64,
+    ) -> Result<ScheduledDiscoveryWorker, RuntimeError> {
+        self.discovery_scheduler.mark_started(worker_id, now_ms)
+    }
+
+    pub fn record_scheduled_discovery_worker_run(
+        &mut self,
+        run: &DiscoveryWorkerRun,
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> Result<DiscoveryWorkerRunSummary, RuntimeError> {
+        let scheduled = self
+            .discovery_scheduler
+            .worker(&run.worker_id)
+            .ok_or_else(|| RuntimeError::UnknownDiscoveryWorker(run.worker_id.clone()))?;
+        if scheduled.integration_id != run.integration_id || scheduled.kind != run.kind {
+            return Err(RuntimeError::DiscoveryWorkerRunMismatch {
+                worker_id: run.worker_id.clone(),
+                expected_integration_id: scheduled.integration_id.clone(),
+                actual_integration_id: run.integration_id.clone(),
+                expected_kind: scheduled.kind,
+                actual_kind: run.kind,
+            });
+        }
+
+        let summary = self.record_discovery_worker_run(run, now_ms, ttl_ms)?;
+        self.discovery_scheduler.record_run_summary(&summary)?;
+        Ok(summary)
+    }
+
+    pub fn run_due_mdns_discovery_workers_with_executor<E, A>(
+        &mut self,
+        started_at_ms: u64,
+        completed_at_ms: u64,
+        ttl_ms: u64,
+        executor: &mut E,
+        adapter: &mut A,
+    ) -> Result<DiscoverySupervisorRunReport, RuntimeError>
+    where
+        E: MdnsWorkerScanExecutor + ?Sized,
+        A: MdnsDiscoveryRunAdapter,
+    {
+        let instructions = self
+            .discovery_worker_run_plan_at(started_at_ms)
+            .instructions
+            .into_iter()
+            .filter(|instruction| {
+                instruction.kind == DiscoveryWorkerKind::MdnsScan
+                    && instruction.sources.contains(&DiscoverySource::Mdns)
+            })
+            .collect::<Vec<_>>();
+        for instruction in &instructions {
+            self.mark_discovery_worker_started(&instruction.worker_id, started_at_ms)?;
+        }
+
+        let planned_instruction_count = instructions.len();
+        let mdns_scan_plan = DiscoveryWorkerRunPlan {
+            generated_at_ms: started_at_ms,
+            instructions,
+        }
+        .mdns_scan_plan()?;
+        let mdns_request_count = mdns_scan_plan.len();
+        let scan_reports = run_mdns_worker_scan_plan_with_executor(
+            &mdns_scan_plan,
+            started_at_ms,
+            completed_at_ms,
+            executor,
+        )?;
+        let mut report = DiscoverySupervisorRunReport::new(
+            started_at_ms,
+            completed_at_ms,
+            ttl_ms,
+            planned_instruction_count,
+            mdns_request_count,
+            scan_reports.len(),
+        );
+
+        for scan_report in &scan_reports {
+            let worker_run = match adapter.worker_run_from_mdns_scan_report(scan_report) {
+                Ok(run) => run,
+                Err(error) => {
+                    let message = error.to_string();
+                    report.failures.push(DiscoverySupervisorRunFailure {
+                        worker_id: scan_report.worker_id.clone(),
+                        integration_id: scan_report.integration_id.clone(),
+                        kind: DiscoveryWorkerKind::MdnsScan,
+                        message: message.clone(),
+                    });
+                    failed_mdns_discovery_worker_run_from_report(scan_report, message)?
+                }
+            };
+            report
+                .summaries
+                .push(self.record_scheduled_discovery_worker_run(
+                    &worker_run,
+                    completed_at_ms,
+                    ttl_ms,
+                )?);
+        }
+
+        Ok(report)
+    }
+
+    pub fn run_due_mdns_discovery_workers<A>(
+        &mut self,
+        started_at_ms: u64,
+        completed_at_ms: u64,
+        ttl_ms: u64,
+        adapter: &mut A,
+    ) -> Result<DiscoverySupervisorRunReport, RuntimeError>
+    where
+        A: MdnsDiscoveryRunAdapter,
+    {
+        let mut executor = UdpMdnsWorkerScanExecutor;
+        self.run_due_mdns_discovery_workers_with_executor(
+            started_at_ms,
+            completed_at_ms,
+            ttl_ms,
+            &mut executor,
+            adapter,
+        )
+    }
+
+    pub fn discovery_record_count(&self) -> usize {
+        self.discovery.len()
     }
 
     pub fn apply_device_event(&mut self, event: DeviceEvent) -> Result<(), RuntimeError> {
@@ -2734,30 +5114,141 @@ impl SmartHomeRuntime {
         })
     }
 
+    pub fn execute_complete_pairing_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeCompletePairingToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::CompletePairing;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        Ok(RuntimeCompletePairingToolOutput {
+            session: self.complete_pairing_session_with(request.completion)?,
+        })
+    }
+
+    pub fn execute_report_event_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeReportEventToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeReportEventToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::ReportEvent;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        match request {
+            RuntimeReportEventToolRequest::Device(event) => {
+                self.apply_device_event(event.clone())?;
+                Ok(RuntimeReportEventToolOutput::Device(event))
+            }
+            RuntimeReportEventToolRequest::BridgeHealth(report) => {
+                self.apply_bridge_health(report.clone())?;
+                Ok(RuntimeReportEventToolOutput::BridgeHealth(report))
+            }
+        }
+    }
+
+    pub fn execute_set_desired_state_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeSetDesiredStateToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeSetDesiredStateToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::SetDesiredState;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let desired_state = request.desired_state;
+        let previous = self.upsert_desired_state(desired_state.clone())?;
+        Ok(RuntimeSetDesiredStateToolOutput {
+            desired_state,
+            replaced: previous.is_some(),
+            previous,
+        })
+    }
+
+    pub fn execute_clear_desired_state_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeClearDesiredStateToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeClearDesiredStateToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::ClearDesiredState;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let entity_id = request.entity_id;
+        let removed = self.remove_desired_state(&entity_id);
+        Ok(RuntimeClearDesiredStateToolOutput { entity_id, removed })
+    }
+
     pub fn complete_pairing_session(
         &mut self,
         session_id: &RuntimePairingSessionId,
         vault_ref: VaultRef,
         completed_at_ms: u64,
     ) -> Result<RuntimePairingSession, RuntimeError> {
+        self.complete_pairing_session_with(RuntimePairingCompletion::new(
+            session_id.clone(),
+            vault_ref,
+            completed_at_ms,
+        ))
+    }
+
+    pub fn complete_pairing_session_with(
+        &mut self,
+        completion: RuntimePairingCompletion,
+    ) -> Result<RuntimePairingSession, RuntimeError> {
+        let RuntimePairingCompletion {
+            session_id,
+            vault_ref,
+            completed_at_ms,
+            metadata,
+        } = completion;
         let session = self
             .pairing_sessions
-            .get(session_id)
+            .get(&session_id)
             .cloned()
             .ok_or_else(|| RuntimeError::UnknownPairingSession(session_id.clone()))?;
         if session.status != PairingSessionStatus::PendingUserPresence {
             return Err(RuntimeError::PairingSessionNotPending {
-                session_id: session_id.clone(),
+                session_id,
                 status: session.status,
             });
         }
         if completed_at_ms >= session.expires_at_ms {
             let mut expired = session.clone();
             expired.status = PairingSessionStatus::Expired;
-            self.pairing_sessions
-                .insert(session_id.clone(), expired.clone());
+            self.pairing_sessions.insert(session_id.clone(), expired);
             return Err(RuntimeError::PairingSessionExpired {
-                session_id: session_id.clone(),
+                session_id,
                 expired_at_ms: session.expires_at_ms,
                 now_ms: completed_at_ms,
             });
@@ -2766,6 +5257,7 @@ impl SmartHomeRuntime {
         let mut completed = session;
         completed.status = PairingSessionStatus::Completed;
         completed.vault_ref = Some(vault_ref.clone());
+        completed.metadata.extend(metadata.iter().cloned());
         self.pairing_sessions
             .insert(session_id.clone(), completed.clone());
 
@@ -2778,6 +5270,11 @@ impl SmartHomeRuntime {
         bridge.health = Health::Online;
         bridge.last_seen_at_ms = Some(completed_at_ms);
         self.registry.upsert_bridge(bridge)?;
+        let mut event_metadata = vec![Metadata::new(
+            "smart_home.pairing_session",
+            completed.session_id.as_str(),
+        )];
+        event_metadata.extend(metadata);
         self.apply_bridge_health(BridgeHealthReport {
             event_id: EventId::trusted(format!(
                 "pairing.completed.health:{}:{completed_at_ms}",
@@ -2787,10 +5284,7 @@ impl SmartHomeRuntime {
             health: Health::Online,
             observed_at_ms: completed_at_ms,
             received_at_ms: completed_at_ms,
-            metadata: vec![Metadata::new(
-                "smart_home.pairing_session",
-                completed.session_id.as_str(),
-            )],
+            metadata: event_metadata,
         })?;
 
         Ok(completed)
@@ -2826,6 +5320,59 @@ impl SmartHomeRuntime {
         decision
     }
 
+    pub fn execute_discover_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeDiscoverToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeDiscoverToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::Discover;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let mut records = self
+            .discovery
+            .records()
+            .filter(|record| request.matches_record(record, now_ms))
+            .cloned()
+            .collect::<Vec<_>>();
+        records.sort_by(|left, right| {
+            right
+                .discovered_at_ms
+                .cmp(&left.discovered_at_ms)
+                .then_with(|| left.integration_id.cmp(&right.integration_id))
+                .then_with(|| left.native_bridge_id.cmp(&right.native_bridge_id))
+        });
+        apply_limit(&mut records, request.limit);
+
+        let bridge_candidates = records
+            .iter()
+            .map(DiscoveryRecord::to_bridge_candidate)
+            .collect::<Vec<_>>();
+        let record_summary =
+            DiscoveryRecordSummary::from_records(records.iter(), now_ms, request.ttl_ms);
+        let signals = records
+            .iter()
+            .map(|record| record.signal(request.ttl_ms))
+            .collect::<Vec<_>>();
+        let signal_summary = DiscoverySignalSummary::from_signals(&signals, now_ms);
+
+        Ok(RuntimeDiscoverToolOutput {
+            generated_at_ms: now_ms,
+            ttl_ms: request.ttl_ms,
+            records,
+            bridge_candidates,
+            record_summary,
+            signal_summary,
+        })
+    }
+
     pub fn execute_read_tool(
         &mut self,
         principal_id: AgentId,
@@ -2843,6 +5390,33 @@ impl SmartHomeRuntime {
         }
 
         match request {
+            RuntimeReadToolRequest::GetRuntimeSnapshot => Ok(
+                RuntimeReadToolOutput::RuntimeSnapshot(self.read_snapshot_at(now_ms)),
+            ),
+            RuntimeReadToolRequest::ListDiscoveryWorkers { query } => {
+                Ok(RuntimeReadToolOutput::DiscoveryWorkers {
+                    workers: self.query_discovery_worker_snapshots_at(&query, now_ms),
+                    summary: self.discovery_scheduler.snapshot_at(now_ms),
+                })
+            }
+            RuntimeReadToolRequest::GetDiscoverySummary { request } => {
+                let (record_summary, signal_summary) = self.discovery_summary_at(&request, now_ms);
+                Ok(RuntimeReadToolOutput::DiscoverySummary {
+                    generated_at_ms: now_ms,
+                    ttl_ms: request.ttl_ms,
+                    record_summary,
+                    signal_summary,
+                })
+            }
+            RuntimeReadToolRequest::GetPairingPlan { request } => {
+                let plan = self.discovery_pairing_plan_at(&request, now_ms);
+                let summary = plan.summary();
+                Ok(RuntimeReadToolOutput::PairingPlan {
+                    ttl_ms: request.ttl_ms,
+                    plan,
+                    summary,
+                })
+            }
             RuntimeReadToolRequest::ListBridges => Ok(RuntimeReadToolOutput::Bridges(
                 self.registry.bridges().cloned().collect(),
             )),
@@ -2868,6 +5442,39 @@ impl SmartHomeRuntime {
                         .cloned()
                         .collect(),
                 ))
+            }
+            RuntimeReadToolRequest::ListRooms { query } => Ok(RuntimeReadToolOutput::Rooms {
+                rooms: self.query_room_summaries_at(&query, now_ms),
+                topology: self.topology_summary(),
+            }),
+            RuntimeReadToolRequest::ListScenes {
+                scope,
+                entity_id,
+                capability_id,
+            } => Ok(RuntimeReadToolOutput::Scenes(
+                self.registry
+                    .scenes()
+                    .filter(|scene| scope.is_none_or(|scope| scene.scope == scope))
+                    .filter(|scene| {
+                        entity_id
+                            .as_ref()
+                            .is_none_or(|entity_id| scene_has_action_for_entity(scene, entity_id))
+                    })
+                    .filter(|scene| {
+                        capability_id.as_ref().is_none_or(|capability_id| {
+                            scene_has_action_for_capability(&self.registry, scene, capability_id)
+                        })
+                    })
+                    .cloned()
+                    .collect(),
+            )),
+            RuntimeReadToolRequest::DescribeScene { scene_id } => {
+                let scene = self
+                    .registry
+                    .scene(&scene_id)
+                    .ok_or_else(|| RuntimeError::UnknownScene(scene_id.clone()))?
+                    .clone();
+                Ok(RuntimeReadToolOutput::Scene { scene_id, scene })
             }
             RuntimeReadToolRequest::GetState { entity_id } => {
                 if self.registry.entity(&entity_id).is_none() {
@@ -2905,8 +5512,144 @@ impl SmartHomeRuntime {
                         .collect(),
                 )),
             },
+            RuntimeReadToolRequest::ListSubscriptions { query } => {
+                let subscriptions = self.event_bus.query_subscriptions(&query);
+                let summary =
+                    RuntimeSubscriptionInventorySummary::from_snapshots(subscriptions.iter());
+                Ok(RuntimeReadToolOutput::Subscriptions {
+                    subscriptions,
+                    summary,
+                })
+            }
+            RuntimeReadToolRequest::InspectEventLog { query } => {
+                let entries = self
+                    .event_bus
+                    .query_events(&query)
+                    .into_iter()
+                    .map(RuntimeEventLogRecord::from_entry)
+                    .collect::<Vec<_>>();
+                let summary = self.event_bus.event_log_summary(&query);
+                Ok(RuntimeReadToolOutput::EventLog { entries, summary })
+            }
+            RuntimeReadToolRequest::ListCommandResults { query } => {
+                let results = self.query_command_results(&query);
+                let summary = RuntimeCommandResultSummary::from_records(results.iter());
+                Ok(RuntimeReadToolOutput::CommandResults { results, summary })
+            }
+            RuntimeReadToolRequest::GetCommandResultSummary { query } => {
+                Ok(RuntimeReadToolOutput::CommandResultSummary {
+                    summary: self.command_result_summary(&query),
+                })
+            }
+            RuntimeReadToolRequest::ListAuthorizationDecisions { query } => {
+                let decision_refs = self.query_authorization_decisions(&query);
+                let summary =
+                    AuthorizationDecisionLogSummary::from_decisions(decision_refs.iter().copied());
+                let decisions = decision_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary })
+            }
+            RuntimeReadToolRequest::GetAuthorizationSummary { query } => {
+                Ok(RuntimeReadToolOutput::AuthorizationSummary {
+                    summary: self.authorization_decision_summary(&query),
+                })
+            }
+            RuntimeReadToolRequest::ListCapabilityGrants { query } => {
+                let grant_refs = self.query_capability_grants_at(&query, now_ms);
+                let summary = CapabilityGrantInventorySummary::from_grants_at(
+                    grant_refs.iter().copied(),
+                    now_ms,
+                );
+                let grants = grant_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::CapabilityGrants { grants, summary })
+            }
+            RuntimeReadToolRequest::GetCapabilityGrantSummary { query } => {
+                Ok(RuntimeReadToolOutput::CapabilityGrantSummary {
+                    summary: self.capability_grant_summary_at(&query, now_ms),
+                })
+            }
+            RuntimeReadToolRequest::GetTopologySummary => {
+                Ok(RuntimeReadToolOutput::TopologySummary {
+                    summary: self.topology_summary(),
+                })
+            }
+            RuntimeReadToolRequest::ListDesiredStates { query } => {
+                let desired_state_refs = self.query_desired_states(&query);
+                let summary =
+                    DesiredStateInventorySummary::from_states(desired_state_refs.iter().copied());
+                let desired_states = desired_state_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::DesiredStates {
+                    desired_states,
+                    summary,
+                })
+            }
+            RuntimeReadToolRequest::ListPairingSessions { query } => {
+                let session_refs = self.query_pairing_sessions(&query);
+                let summary = RuntimePairingSessionInventorySummary::from_sessions_at(
+                    session_refs.iter().copied(),
+                    now_ms,
+                );
+                let sessions = session_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::PairingSessions { sessions, summary })
+            }
+            RuntimeReadToolRequest::ListWorkers { query } => {
+                let worker_refs = self.supervisor.query_workers(&query);
+                let summary =
+                    RuntimeSupervisorSnapshot::from_workers_at(worker_refs.iter().copied(), now_ms);
+                let workers = worker_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::Workers { workers, summary })
+            }
+            RuntimeReadToolRequest::GetWorkerHeartbeatSchedule {
+                bridge_id,
+                due_at_or_before_ms,
+                limit,
+            } => {
+                let mut schedule = self.worker_heartbeat_schedule_at(now_ms);
+                schedule.deadlines.retain(|deadline| {
+                    bridge_id
+                        .as_ref()
+                        .is_none_or(|bridge_id| &deadline.bridge_id == bridge_id)
+                        && due_at_or_before_ms
+                            .is_none_or(|due_at_ms| deadline.due_at_ms <= due_at_ms)
+                });
+                if let Some(limit) = limit {
+                    schedule.deadlines.truncate(limit);
+                }
+                Ok(RuntimeReadToolOutput::WorkerHeartbeatSchedule(schedule))
+            }
+            RuntimeReadToolRequest::GetSupervisionPlan => Ok(
+                RuntimeReadToolOutput::SupervisionPlan(self.supervision_plan_at(now_ms)?),
+            ),
             RuntimeReadToolRequest::ObserveSupervision => Ok(
                 RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
+            ),
+        }
+    }
+
+    pub fn execute_supervision_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeSupervisionToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeSupervisionToolOutput, RuntimeError> {
+        let tool = request.tool();
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        match request {
+            RuntimeSupervisionToolRequest::ReconcileDesiredStates => {
+                Ok(RuntimeSupervisionToolOutput::DesiredStateReconciliation {
+                    reconciled_at_ms: now_ms,
+                    actions: self.reconcile_desired_states(now_ms)?,
+                })
+            }
+            RuntimeSupervisionToolRequest::RunSupervisionTick => Ok(
+                RuntimeSupervisionToolOutput::SupervisionTick(self.run_supervision_tick(now_ms)?),
             ),
         }
     }
@@ -2945,6 +5688,54 @@ impl SmartHomeRuntime {
             replay_from_checkpoint,
             subscribed_at_checkpoint,
             queued_events,
+        })
+    }
+
+    pub fn execute_poll_events_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimePollEventsToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimePollEventsToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::PollEvents;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let options = request.delivery_options();
+        let batch = if request.peek {
+            self.event_bus
+                .peek_deliveries(&request.subscription_id, options)?
+        } else {
+            self.event_bus
+                .drain_deliveries(&request.subscription_id, options)?
+        };
+        Ok(RuntimePollEventsToolOutput { batch })
+    }
+
+    pub fn execute_unsubscribe_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeUnsubscribeToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeUnsubscribeToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::Unsubscribe;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        Ok(RuntimeUnsubscribeToolOutput {
+            batch: self.event_bus.unsubscribe(&request.subscription_id)?,
         })
     }
 
@@ -3181,6 +5972,7 @@ impl SmartHomeRuntime {
             state_refresh_plan: self.registry.state_refresh_plan_at(now_ms),
             desired_state_drifts: self.desired_state_drift_plan_at(now_ms)?,
             worker_restart_plan: self.supervisor.restart_plan_at(now_ms),
+            discovery_worker_run_plan: self.discovery_scheduler.run_plan_at(now_ms),
         })
     }
 
@@ -3192,6 +5984,8 @@ impl SmartHomeRuntime {
             generated_at_ms: now_ms,
             plan: self.supervision_plan_at(now_ms)?,
             heartbeat_schedule: self.supervisor.heartbeat_schedule_at(now_ms),
+            discovery_scheduler: self.discovery_scheduler.snapshot_at(now_ms),
+            discovery_workers: self.discovery_scheduler.worker_snapshots_at(now_ms),
         })
     }
 
@@ -3324,6 +6118,28 @@ pub fn health_name(health: Health) -> &'static str {
         Health::Unsupported => "unsupported",
         Health::Removed => "removed",
     }
+}
+
+fn scene_has_action_for_entity(scene: &Scene, entity_id: &EntityId) -> bool {
+    scene
+        .actions
+        .iter()
+        .any(|action| &action.entity_id == entity_id)
+}
+
+fn scene_has_action_for_capability(
+    registry: &InMemorySmartHomeRegistry,
+    scene: &Scene,
+    capability_id: &CapabilityId,
+) -> bool {
+    scene.actions.iter().any(|action| {
+        registry.entity(&action.entity_id).is_some_and(|entity| {
+            entity
+                .capabilities
+                .iter()
+                .any(|capability| &capability.capability_id == capability_id)
+        })
+    })
 }
 
 fn validate_command_capabilities(
@@ -3540,6 +6356,70 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
     })
 }
 
+fn invalid_discovery_worker_schedule(
+    worker_id: &DiscoveryWorkerId,
+    field: &'static str,
+    message: impl Into<String>,
+) -> RuntimeError {
+    RuntimeError::InvalidDiscoveryWorkerSchedule {
+        worker_id: worker_id.clone(),
+        field,
+        message: message.into(),
+    }
+}
+
+fn failed_mdns_discovery_worker_run_from_report(
+    report: &MdnsWorkerScanReport,
+    message: impl Into<String>,
+) -> Result<DiscoveryWorkerRun, RuntimeError> {
+    let mut run = DiscoveryWorkerRun::new(
+        report.worker_id.clone(),
+        report.integration_id.clone(),
+        DiscoveryWorkerKind::MdnsScan,
+        report.started_at_ms,
+        report.completed_at_ms,
+    );
+    run.push_failure(DiscoveryWorkerFailure::new(DiscoverySource::Mdns, message)?);
+    Ok(run)
+}
+
+fn metadata_value<'a>(metadata: &'a [Metadata], key: &str) -> Option<&'a str> {
+    metadata
+        .iter()
+        .find(|entry| entry.key == key)
+        .map(|entry| entry.value.as_str().trim())
+}
+
+fn scheduled_discovery_worker_matches_query(
+    worker: &ScheduledDiscoveryWorker,
+    query: &DiscoveryWorkerQuery,
+) -> bool {
+    query
+        .worker_id
+        .as_ref()
+        .is_none_or(|worker_id| &worker.worker_id == worker_id)
+        && query
+            .integration_id
+            .as_ref()
+            .is_none_or(|integration_id| &worker.integration_id == integration_id)
+        && (query.kinds.is_empty() || query.kinds.contains(&worker.kind))
+        && (query.sources.is_empty()
+            || query
+                .sources
+                .iter()
+                .all(|source| worker.sources.contains(source)))
+        && (query.statuses.is_empty() || query.statuses.contains(&worker.status))
+        && query
+            .due_before_ms
+            .is_none_or(|deadline| worker.next_due_at_ms <= deadline)
+        && query
+            .overdue_at_ms
+            .is_none_or(|now_ms| worker.is_due_at(now_ms))
+        && query
+            .min_consecutive_failure_count
+            .is_none_or(|minimum| worker.consecutive_failure_count >= minimum)
+}
+
 fn supervised_worker_matches_query(
     worker: &SupervisedBridgeWorker,
     query: &SupervisedWorkerQuery,
@@ -3566,6 +6446,15 @@ fn supervised_worker_matches_query(
             .is_none_or(|minimum| worker.restart_count >= minimum)
 }
 
+fn room_summary_matches_query(room: &RuntimeRoomSummary, query: &RuntimeRoomQuery) -> bool {
+    query
+        .room_id
+        .as_ref()
+        .is_none_or(|room_id| &room.room_id == room_id)
+        && (!query.attention_only || room.has_attention_items())
+        && (!query.state_gaps_only || room.has_state_gaps())
+}
+
 fn desired_state_matches_query(
     desired_state: &DesiredEntityState,
     query: &DesiredStateQuery,
@@ -3590,6 +6479,63 @@ fn desired_state_matches_query(
         && query
             .max_command_timeout_ms
             .is_none_or(|maximum| desired_state.command_timeout_ms <= maximum)
+}
+
+fn capability_grant_matches_query(
+    grant: &CapabilityGrant,
+    query: &RuntimeCapabilityGrantQuery,
+    now_ms: u64,
+) -> bool {
+    query
+        .status
+        .is_none_or(|status| grant.status_at(now_ms) == status)
+        && query
+            .scope_kind
+            .is_none_or(|scope_kind| capability_grant_scope_matches_kind(&grant.scope, scope_kind))
+        && query
+            .capability_id
+            .as_ref()
+            .is_none_or(|capability_id| match &grant.scope {
+                CapabilityGrantScope::Capability(granted)
+                | CapabilityGrantScope::EntityCapability {
+                    capability_id: granted,
+                    ..
+                } => granted == capability_id,
+                CapabilityGrantScope::Tool(_) | CapabilityGrantScope::AllSmartHome => false,
+            })
+        && query
+            .entity_id
+            .as_ref()
+            .is_none_or(|entity_id| match &grant.scope {
+                CapabilityGrantScope::EntityCapability {
+                    entity_id: granted, ..
+                } => granted == entity_id,
+                CapabilityGrantScope::Tool(_)
+                | CapabilityGrantScope::Capability(_)
+                | CapabilityGrantScope::AllSmartHome => false,
+            })
+}
+
+fn capability_grant_scope_matches_kind(
+    scope: &CapabilityGrantScope,
+    kind: RuntimeCapabilityGrantScopeKind,
+) -> bool {
+    matches!(
+        (scope, kind),
+        (
+            CapabilityGrantScope::Tool(_),
+            RuntimeCapabilityGrantScopeKind::Tool
+        ) | (
+            CapabilityGrantScope::Capability(_),
+            RuntimeCapabilityGrantScopeKind::Capability
+        ) | (
+            CapabilityGrantScope::EntityCapability { .. },
+            RuntimeCapabilityGrantScopeKind::EntityCapability
+        ) | (
+            CapabilityGrantScope::AllSmartHome,
+            RuntimeCapabilityGrantScopeKind::AllSmartHome
+        )
+    )
 }
 
 fn pairing_session_matches_query(
@@ -3619,6 +6565,31 @@ fn pairing_session_matches_query(
         && query
             .expiring_at_ms
             .is_none_or(|now_ms| session.is_expired_at(now_ms))
+}
+
+fn command_result_matches_query(result: &CommandResult, query: &RuntimeCommandResultQuery) -> bool {
+    query
+        .command_id
+        .as_ref()
+        .is_none_or(|command_id| &result.command_id == command_id)
+        && query
+            .bridge_id
+            .as_ref()
+            .is_none_or(|bridge_id| &result.bridge_id == bridge_id)
+        && query
+            .correlation_id
+            .as_ref()
+            .is_none_or(|correlation_id| &result.correlation_id == correlation_id)
+        && (query.statuses.is_empty() || query.statuses.contains(&result.status))
+}
+
+fn command_status_sort_rank(status: CommandStatus) -> u8 {
+    match status {
+        CommandStatus::Accepted => 0,
+        CommandStatus::Rejected => 1,
+        CommandStatus::TimedOut => 2,
+        CommandStatus::Failed => 3,
+    }
 }
 
 fn apply_limit<T>(items: &mut Vec<T>, limit: Option<usize>) {
@@ -3657,10 +6628,75 @@ fn event_entity_id(event: &RuntimeEvent) -> Option<&EntityId> {
 mod tests {
     use super::*;
     use smart_home_core::{
-        AuthorizationOutcome, BridgeTransport, Capability, CapabilityGrantId, CommandId,
-        CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
+        AuthorizationOutcome, AuthorizationSubject, BridgeTransport, Capability, CapabilityGrantId,
+        CommandId, CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier,
+        StateDelta,
+    };
+    use smart_home_discovery::{
+        DiscoveryConfidence, DiscoveryPairingAction, DiscoveryRecord, DiscoverySource,
+        DiscoveryUpsert, DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind,
+        DiscoveryWorkerRun, DiscoveryWorkerRunStatus, MdnsResponsePacket, MdnsScanResult,
+        MdnsWorkerScanRequest, PairingRequirement,
     };
     use smart_home_registry::StateRefreshReason;
+
+    #[derive(Debug)]
+    struct ScriptedMdnsExecutor {
+        outcomes: std::collections::VecDeque<Result<MdnsScanResult, DiscoveryError>>,
+        requests: Vec<MdnsWorkerScanRequest>,
+    }
+
+    impl ScriptedMdnsExecutor {
+        fn new(outcomes: impl IntoIterator<Item = Result<MdnsScanResult, DiscoveryError>>) -> Self {
+            Self {
+                outcomes: outcomes.into_iter().collect(),
+                requests: Vec::new(),
+            }
+        }
+    }
+
+    impl MdnsWorkerScanExecutor for ScriptedMdnsExecutor {
+        fn run_request(
+            &mut self,
+            request: &MdnsWorkerScanRequest,
+        ) -> Result<MdnsScanResult, DiscoveryError> {
+            self.requests.push(request.clone());
+            self.outcomes.pop_front().unwrap_or_else(|| {
+                Err(DiscoveryError::MdnsTransport {
+                    message: "missing scripted mDNS outcome".to_string(),
+                })
+            })
+        }
+    }
+
+    #[derive(Debug)]
+    struct ScriptedMdnsRunAdapter {
+        outcomes: std::collections::VecDeque<Result<DiscoveryWorkerRun, String>>,
+        reports: Vec<MdnsWorkerScanReport>,
+    }
+
+    impl ScriptedMdnsRunAdapter {
+        fn new(outcomes: impl IntoIterator<Item = Result<DiscoveryWorkerRun, String>>) -> Self {
+            Self {
+                outcomes: outcomes.into_iter().collect(),
+                reports: Vec::new(),
+            }
+        }
+    }
+
+    impl MdnsDiscoveryRunAdapter for ScriptedMdnsRunAdapter {
+        type Error = String;
+
+        fn worker_run_from_mdns_scan_report(
+            &mut self,
+            report: &MdnsWorkerScanReport,
+        ) -> Result<DiscoveryWorkerRun, Self::Error> {
+            self.reports.push(report.clone());
+            self.outcomes
+                .pop_front()
+                .unwrap_or_else(|| Err("missing scripted discovery worker run".to_string()))
+        }
+    }
 
     fn bridge(id: &str) -> Bridge {
         let mut bridge = Bridge::new(
@@ -3735,6 +6771,54 @@ mod tests {
             observed_at_ms: at_ms,
             received_at_ms: at_ms,
         }
+    }
+
+    fn hue_discovery_record(native_bridge_id: &str, discovered_at_ms: u64) -> DiscoveryRecord {
+        DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            native_bridge_id,
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            discovered_at_ms,
+        )
+        .unwrap()
+        .with_address("https://192.0.2.10")
+        .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+    }
+
+    fn hue_cloud_discovery_record(
+        native_bridge_id: &str,
+        discovered_at_ms: u64,
+    ) -> DiscoveryRecord {
+        DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            native_bridge_id,
+            DiscoverySource::CloudFallback,
+            BridgeTransport::Cloud,
+            discovered_at_ms,
+        )
+        .unwrap()
+        .with_address("https://192.0.2.20")
+        .with_confidence(DiscoveryConfidence::Candidate)
+        .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+    }
+
+    fn hue_mdns_discovery_worker(first_due_at_ms: u64) -> ScheduledDiscoveryWorker {
+        ScheduledDiscoveryWorker::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            5_000,
+            250,
+            first_due_at_ms,
+        )
+        .with_source(DiscoverySource::Mdns)
+        .with_network_interface("en0")
+        .with_network_interface("bridge0")
+        .with_metadata("smart_home.discovery.service_type", "_hue._tcp.local")
     }
 
     fn device_runtime_event(event_id: &str, at_ms: u64) -> RuntimeEvent {
@@ -3844,6 +6928,18 @@ mod tests {
         assert_eq!(newest_bridge_events[0].sequence, 2);
         assert_eq!(newest_bridge_events[0].next_checkpoint.next_sequence(), 3);
 
+        let early_events = bus.query_events(&RuntimeEventQuery::new().to_sequence(1));
+        assert_eq!(early_events.len(), 2);
+        assert_eq!(early_events[0].sequence, 0);
+        assert_eq!(early_events[1].sequence, 1);
+
+        let empty_window = bus.query_events(
+            &RuntimeEventQuery::new()
+                .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(2))
+                .to_sequence(1),
+        );
+        assert!(empty_window.is_empty());
+
         let backlogs = bus.query_subscriptions(
             &RuntimeSubscriptionQuery::new()
                 .matching(bridge_one)
@@ -3918,11 +7014,103 @@ mod tests {
             RuntimeEventCheckpoint::from_next_sequence(6)
         );
 
+        let early_summary = bus.event_log_summary(&RuntimeEventQuery::new().to_sequence(2));
+        assert_eq!(early_summary.total_events, 3);
+        assert_eq!(early_summary.first_sequence, Some(0));
+        assert_eq!(early_summary.latest_sequence, Some(2));
+        assert_eq!(
+            early_summary.next_checkpoint,
+            RuntimeEventCheckpoint::from_next_sequence(3)
+        );
+
         let empty = bus.event_log_summary(&RuntimeEventQuery::new().with_limit(0));
         assert_eq!(empty, RuntimeEventLogSummary::empty());
         assert!(!empty.has_events());
         assert!(!empty.has_command_results());
         assert!(!empty.has_supervision_events());
+    }
+
+    #[test]
+    fn command_result_queries_filter_sort_and_summarize_runtime_events() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("cmd-accepted"));
+        runtime
+            .event_bus_mut()
+            .publish(RuntimeEvent::CommandResult(CommandResult {
+                command_id: CommandId::trusted("cmd-failed"),
+                status: CommandStatus::Failed,
+                bridge_id: BridgeId::trusted("bridge-1"),
+                correlation_id: CorrelationId::trusted("corr-failed"),
+                message: Some("integration dispatch failed".to_string()),
+            }));
+
+        let newest_failure = runtime.query_command_results(
+            &RuntimeCommandResultQuery::new()
+                .for_bridge(BridgeId::trusted("bridge-1"))
+                .for_correlation(CorrelationId::trusted("corr-failed"))
+                .with_status(CommandStatus::Failed)
+                .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+                .with_limit(1),
+        );
+
+        assert_eq!(newest_failure.len(), 1);
+        assert_eq!(newest_failure[0].sequence, 1);
+        assert_eq!(
+            newest_failure[0].next_checkpoint,
+            RuntimeEventCheckpoint::from_next_sequence(2)
+        );
+        assert_eq!(
+            newest_failure[0].result.command_id,
+            CommandId::trusted("cmd-failed")
+        );
+
+        let first_result =
+            runtime.query_command_results(&RuntimeCommandResultQuery::new().to_sequence(0));
+        assert_eq!(first_result.len(), 1);
+        assert_eq!(first_result[0].sequence, 0);
+        assert_eq!(
+            first_result[0].result.command_id,
+            CommandId::trusted("cmd-accepted")
+        );
+
+        let empty_window = runtime.query_command_results(
+            &RuntimeCommandResultQuery::new()
+                .from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(1))
+                .to_sequence(0),
+        );
+        assert!(empty_window.is_empty());
+
+        let summary = runtime.command_result_summary(
+            &RuntimeCommandResultQuery::new()
+                .for_bridge(BridgeId::trusted("bridge-1"))
+                .sorted_by(RuntimeCommandResultSort::StatusThenSequenceDesc),
+        );
+
+        assert_eq!(
+            summary,
+            RuntimeCommandResultSummary {
+                total_results: 2,
+                accepted_results: 1,
+                rejected_results: 0,
+                timed_out_results: 0,
+                failed_results: 1,
+                first_sequence: Some(0),
+                latest_sequence: Some(1),
+                next_checkpoint: RuntimeEventCheckpoint::from_next_sequence(2),
+            }
+        );
+        assert!(summary.has_results());
+        assert_eq!(summary.failure_results(), 1);
+        assert!(summary.has_failures());
+
+        let empty = runtime.query_command_results(
+            &RuntimeCommandResultQuery::new()
+                .for_command(CommandId::trusted("unknown"))
+                .with_limit(0),
+        );
+        assert!(empty.is_empty());
     }
 
     #[test]
@@ -4510,6 +7698,156 @@ mod tests {
     }
 
     #[test]
+    fn authorization_read_tools_filter_denied_decisions() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        let denied =
+            runtime.authorize_tool_for_principal(principal.clone(), SmartHomeTool::Command, 1_250);
+
+        let decisions = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListAuthorizationDecisions {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(principal.clone())
+                        .with_outcome(AuthorizationOutcome::Denied),
+                },
+                1_500,
+            )
+            .unwrap();
+        let summary = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetAuthorizationSummary {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(principal)
+                        .with_outcome(AuthorizationOutcome::Denied),
+                },
+                1_501,
+            )
+            .unwrap();
+
+        assert_eq!(denied.outcome, AuthorizationOutcome::Denied);
+        assert!(matches!(
+            decisions,
+            RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary }
+                if decisions.len() == 1
+                    && decisions[0].subject == AuthorizationSubject::Tool(SmartHomeTool::Command)
+                    && decisions[0].missing_capabilities
+                        == vec![CapabilityId::trusted("smart_home.command.light")]
+                    && summary.total_decisions == 1
+                    && summary.denied_decisions == 1
+                    && summary.allowed_decisions == 0
+        ));
+        assert!(matches!(
+            summary,
+            RuntimeReadToolOutput::AuthorizationSummary { summary }
+                if summary.total_decisions == 1
+                    && summary.denied_decisions == 1
+                    && summary.decisions_with_missing_capabilities == 1
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 3);
+    }
+
+    #[test]
+    fn capability_grant_read_tools_filter_effective_status_and_scope() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let installer = AgentId::trusted("agent:installer");
+        runtime
+            .registry_mut()
+            .upsert_capability_grant(CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            ));
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_entity_capability(
+                CapabilityGrantId::trusted("grant-light-command"),
+                principal.clone(),
+                EntityId::trusted("entity-light-1"),
+                CapabilityId::trusted("light.on_off"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_100,
+            )
+            .with_expiry(2_000),
+        );
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-installer"),
+                installer,
+                PrivilegeTier::HumanApproval,
+                "chief-of-staff",
+                1_200,
+            )
+            .with_status(CapabilityGrantStatus::Pending),
+        );
+
+        let grants = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListCapabilityGrants {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .for_principal(principal.clone())
+                        .with_status(CapabilityGrantStatus::Expired)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::EntityCapability)
+                        .with_capability(CapabilityId::trusted("light.on_off"))
+                        .for_entity(EntityId::trusted("entity-light-1"))
+                        .sorted_by(RuntimeCapabilityGrantSort::GrantedAtDesc),
+                },
+                2_500,
+            )
+            .unwrap();
+        let summary = runtime
+            .execute_read_tool(
+                principal,
+                RuntimeReadToolRequest::GetCapabilityGrantSummary {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .with_status(CapabilityGrantStatus::Pending)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::AllSmartHome),
+                },
+                2_501,
+            )
+            .unwrap();
+
+        assert!(matches!(
+            grants,
+            RuntimeReadToolOutput::CapabilityGrants { grants, summary }
+                if grants.len() == 1
+                    && grants[0].grant_id == CapabilityGrantId::trusted("grant-light-command")
+                    && summary.total_grants == 1
+                    && summary.expired_grants == 1
+                    && summary.entity_capability_grants == 1
+                    && summary.unique_principals == 1
+        ));
+        assert!(matches!(
+            summary,
+            RuntimeReadToolOutput::CapabilityGrantSummary { summary }
+                if summary.total_grants == 1
+                    && summary.pending_grants == 1
+                    && summary.all_smart_home_grants == 1
+                    && summary.human_approval_tier_grants == 1
+                    && summary.needs_review()
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 2);
+    }
+
+    #[test]
     fn read_tools_require_smart_home_read_grants() {
         let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
         let principal = AgentId::trusted("agent:observer");
@@ -4536,6 +7874,725 @@ mod tests {
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
         assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn discover_tool_requires_smart_home_read_grants() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        runtime
+            .record_discovery(hue_discovery_record("001788fffeabcdef", 1_000))
+            .unwrap();
+
+        let error = runtime
+            .execute_discover_tool(principal.clone(), RuntimeDiscoverToolRequest::new(), 1_500)
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::Discover,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.discovery_record_count(), 1);
+    }
+
+    #[test]
+    fn discovery_records_reconcile_unpaired_bridge_candidates_for_discover_tool() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        let record = hue_discovery_record("001788fffeabcdef", 1_100);
+        let bridge_id = record.bridge_id();
+
+        let upsert = runtime.record_discovery(record.clone()).unwrap();
+        let bridge = runtime.registry().bridge(&bridge_id).unwrap().clone();
+        let output = runtime
+            .execute_discover_tool(
+                principal.clone(),
+                RuntimeDiscoverToolRequest::new()
+                    .for_integration(IntegrationId::trusted("hue"))
+                    .from_source(DiscoverySource::Mdns)
+                    .with_ttl_ms(1_000),
+                1_500,
+            )
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert_eq!(upsert, DiscoveryUpsert::Inserted);
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(bridge.bridge_id, bridge_id);
+        assert_eq!(bridge.health, Health::Unpaired);
+        assert_eq!(bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(bridge.auth_ref, None);
+        assert!(bridge.metadata.iter().any(|metadata| {
+            metadata.key == "smart_home.discovery.source" && metadata.value == "mdns"
+        }));
+        assert_eq!(output.len(), 1);
+        assert_eq!(output.generated_at_ms, 1_500);
+        assert_eq!(output.ttl_ms, 1_000);
+        assert_eq!(output.records[0], record);
+        assert_eq!(output.bridge_candidates[0].bridge_id, bridge_id);
+        assert_eq!(output.record_summary.total, 1);
+        assert_eq!(output.record_summary.with_address, 1);
+        assert_eq!(output.record_summary.fresh, 1);
+        assert_eq!(
+            output
+                .record_summary
+                .count_for_source(DiscoverySource::Mdns),
+            1
+        );
+        assert_eq!(
+            output
+                .record_summary
+                .count_for_pairing_requirement(PairingRequirement::PhysicalPresence),
+            1
+        );
+        assert_eq!(output.signal_summary.fresh, 1);
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+    }
+
+    #[test]
+    fn discover_tool_filters_stale_records_and_limits_results() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(3_000),
+        );
+        runtime
+            .record_discovery(hue_discovery_record("001788fffeold", 1_000))
+            .unwrap();
+        runtime
+            .record_discovery(hue_discovery_record("001788fffefresh", 1_900))
+            .unwrap();
+
+        let output = runtime
+            .execute_discover_tool(
+                principal,
+                RuntimeDiscoverToolRequest::new()
+                    .fresh_only(true)
+                    .with_ttl_ms(500)
+                    .with_limit(1),
+                2_000,
+            )
+            .unwrap();
+
+        assert_eq!(output.len(), 1);
+        assert_eq!(output.records[0].native_bridge_id, "001788fffefresh");
+        assert_eq!(output.record_summary.total, 1);
+        assert_eq!(output.record_summary.fresh, 1);
+        assert_eq!(output.record_summary.stale, 0);
+        assert_eq!(output.bridge_candidates[0].health, Health::Unpaired);
+    }
+
+    #[test]
+    fn runtime_ingests_discovery_worker_runs_as_preferred_bridge_candidates() {
+        let mut runtime = SmartHomeRuntime::new();
+        let replace_bridge_id = BridgeId::trusted("hue.bridge.001788fffereplace");
+        let ignored_bridge_id = BridgeId::trusted("hue.bridge.001788fffeignored");
+        runtime
+            .record_discovery(hue_cloud_discovery_record("001788fffereplace", 1_000))
+            .unwrap();
+        runtime
+            .record_discovery(hue_discovery_record("001788fffeignored", 1_900))
+            .unwrap();
+
+        let mut run = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("hue-composite-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::Composite,
+            1_800,
+            1_950,
+        );
+        run.push_record(hue_discovery_record("001788fffereplace", 1_900))
+            .unwrap();
+        run.push_record(hue_cloud_discovery_record("001788fffeignored", 1_950))
+            .unwrap();
+        run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "ignored malformed packet").unwrap(),
+        );
+
+        let summary = runtime
+            .record_discovery_worker_run(&run, 2_000, 500)
+            .unwrap();
+
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(summary.record_count, 2);
+        assert_eq!(summary.failure_count, 1);
+        assert_eq!(summary.inserted_count, 0);
+        assert_eq!(summary.replaced_count, 1);
+        assert_eq!(summary.ignored_count, 1);
+        assert_eq!(summary.accepted_count(), 1);
+        assert!(summary.has_catalog_changes());
+        assert_eq!(summary.record_summary.total, 2);
+        assert_eq!(summary.signal_summary.fresh, 2);
+        assert_eq!(runtime.discovery_record_count(), 2);
+        assert_eq!(
+            runtime
+                .discovery()
+                .get(&IntegrationId::trusted("hue"), "001788fffereplace")
+                .unwrap()
+                .source,
+            DiscoverySource::Mdns
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&replace_bridge_id)
+                .unwrap()
+                .address
+                .as_deref(),
+            Some("https://192.0.2.10")
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&ignored_bridge_id)
+                .unwrap()
+                .address
+                .as_deref(),
+            Some("https://192.0.2.10")
+        );
+    }
+
+    #[test]
+    fn runtime_supervision_plan_previews_due_discovery_workers_without_mutating() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+
+        let early = runtime.supervision_plan_at(1_099).unwrap();
+        assert!(early.discovery_worker_run_plan.is_empty());
+
+        let plan = runtime.supervision_plan_at(1_125).unwrap();
+        let observation = runtime.observe_supervision_at(1_125).unwrap();
+        let summary = plan.summary();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        let snapshot = runtime.read_snapshot_at(1_125);
+        let pending = snapshot.pending_work_summary();
+        let queried = runtime.query_discovery_worker_schedules(
+            &DiscoveryWorkerQuery::new()
+                .for_integration(IntegrationId::trusted("hue"))
+                .with_source(DiscoverySource::Mdns)
+                .due_before(1_125)
+                .sorted_by(DiscoveryWorkerSort::NextDueAt),
+        );
+
+        assert_eq!(plan.action_count(), 1);
+        assert_eq!(plan.discovery_worker_run_plan.len(), 1);
+        assert_eq!(
+            plan.discovery_worker_run_plan
+                .instructions_for_worker(&worker_id)
+                .len(),
+            1
+        );
+        assert!(matches!(
+            plan.discovery_worker_run_plan.instructions.as_slice(),
+            [instruction] if instruction.worker_id == worker_id
+                && instruction.integration_id == IntegrationId::trusted("hue")
+                && instruction.kind == DiscoveryWorkerKind::MdnsScan
+                && instruction.sources == vec![DiscoverySource::Mdns]
+                && instruction.network_interfaces == vec!["en0".to_string(), "bridge0".to_string()]
+                && instruction.due_at_ms == 1_100
+                && instruction.planned_at_ms == 1_125
+                && instruction.overdue_by_ms() == 25
+                && instruction.run_timeout_ms == 250
+        ));
+        let mdns_scan_plan = plan.discovery_worker_run_plan.mdns_scan_plan().unwrap();
+        let runtime_mdns_scan_plan = runtime.discovery_mdns_scan_plan_at(1_125).unwrap();
+        assert_eq!(mdns_scan_plan, runtime_mdns_scan_plan);
+        assert_eq!(mdns_scan_plan.generated_at_ms, 1_125);
+        assert_eq!(mdns_scan_plan.len(), 4);
+        assert!(matches!(
+            mdns_scan_plan.requests.as_slice(),
+            [en0_ipv4, en0_ipv6, bridge0_ipv4, bridge0_ipv6]
+                if en0_ipv4.worker_id == worker_id
+                    && en0_ipv4.network_interface == "en0"
+                    && en0_ipv4.network == MdnsScanNetwork::Ipv4
+                    && en0_ipv4.service_type == "_hue._tcp.local"
+                    && en0_ipv4.discovered_at_ms == 1_125
+                    && en0_ipv4.timeout == Duration::from_millis(250)
+                    && en0_ipv6.network_interface == "en0"
+                    && en0_ipv6.network == MdnsScanNetwork::Ipv6
+                    && bridge0_ipv4.network_interface == "bridge0"
+                    && bridge0_ipv4.network == MdnsScanNetwork::Ipv4
+                    && bridge0_ipv6.network_interface == "bridge0"
+                    && bridge0_ipv6.network == MdnsScanNetwork::Ipv6
+        ));
+        assert_eq!(summary.total_actions, 1);
+        assert_eq!(summary.discovery_worker_run_count, 1);
+        assert!(summary.has_discovery_worker_work());
+        assert_eq!(observation.discovery_worker_run_count(), 1);
+        assert_eq!(observation.discovery_worker_count(), 1);
+        assert_eq!(observation.unhealthy_discovery_worker_count(), 0);
+        assert_eq!(observation.discovery_workers_with_failures_count(), 0);
+        assert_eq!(observation.next_discovery_worker_due_at_ms(), Some(1_100));
+        assert!(matches!(
+            observation.discovery_workers.as_slice(),
+            [snapshot] if snapshot.worker_id == worker_id
+                && snapshot.integration_id == IntegrationId::trusted("hue")
+                && snapshot.kind == DiscoveryWorkerKind::MdnsScan
+                && snapshot.status == WorkerStatus::Starting
+                && snapshot.is_due
+                && snapshot.overdue_by_ms == 25
+                && snapshot.next_due_at_ms == 1_100
+                && snapshot.last_run_status.is_none()
+                && snapshot.total_run_count == 0
+                && !snapshot.has_failure_pressure()
+        ));
+        assert_eq!(scheduled.status, WorkerStatus::Starting);
+        assert_eq!(scheduled.total_run_count, 0);
+        assert_eq!(snapshot.discovery_scheduler.worker_count, 1);
+        assert_eq!(snapshot.discovery_scheduler.due_worker_count, 1);
+        assert_eq!(pending.discovery_worker_due_count, 1);
+        assert!(pending.has_supervision_pressure());
+        assert_eq!(queried.len(), 1);
+        assert_eq!(queried[0].worker_id, worker_id);
+        assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn runtime_records_scheduled_discovery_worker_runs_and_advances_schedule() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        runtime
+            .mark_discovery_worker_started(&worker_id, 1_100)
+            .unwrap();
+
+        let mut run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_100,
+            1_180,
+        );
+        run.push_record(hue_discovery_record("001788fffescheduled", 1_175))
+            .unwrap();
+
+        let summary = runtime
+            .record_scheduled_discovery_worker_run(&run, 1_200, 500)
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Completed);
+        assert_eq!(summary.inserted_count, 1);
+        assert_eq!(scheduled.status, WorkerStatus::Running);
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Completed)
+        );
+        assert_eq!(scheduled.last_started_at_ms, Some(1_100));
+        assert_eq!(scheduled.last_completed_at_ms, Some(1_180));
+        assert_eq!(scheduled.last_record_count, 1);
+        assert_eq!(scheduled.last_failure_count, 0);
+        assert_eq!(scheduled.last_catalog_change_count, 1);
+        assert_eq!(scheduled.total_run_count, 1);
+        assert_eq!(scheduled.consecutive_failure_count, 0);
+        assert_eq!(scheduled.next_due_at_ms, 6_180);
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(runtime.discovery_worker_run_plan_at(6_179).len(), 0);
+        assert_eq!(runtime.discovery_worker_run_plan_at(6_180).len(), 1);
+
+        let mut failed_run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            6_180,
+            6_220,
+        );
+        failed_run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "timed out waiting for replies")
+                .unwrap(),
+        );
+
+        let failed_summary = runtime
+            .record_scheduled_discovery_worker_run(&failed_run, 6_250, 500)
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(failed_summary.status, DiscoveryWorkerRunStatus::Failed);
+        assert_eq!(scheduled.status, WorkerStatus::Unhealthy);
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Failed)
+        );
+        assert_eq!(scheduled.last_record_count, 0);
+        assert_eq!(scheduled.last_failure_count, 1);
+        assert_eq!(scheduled.last_catalog_change_count, 0);
+        assert_eq!(scheduled.total_run_count, 2);
+        assert_eq!(scheduled.consecutive_failure_count, 1);
+        assert_eq!(scheduled.next_due_at_ms, 11_220);
+        assert_eq!(
+            runtime
+                .query_discovery_worker_schedules(
+                    &DiscoveryWorkerQuery::new()
+                        .with_status(WorkerStatus::Unhealthy)
+                        .min_consecutive_failure_count(1),
+                )
+                .len(),
+            1
+        );
+    }
+
+    #[test]
+    fn runtime_applies_discovery_worker_retry_backoff_after_failures() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(
+                hue_mdns_discovery_worker(1_000).with_retry_backoff(500, 2_000, 2),
+            )
+            .unwrap();
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 1_000)
+            .unwrap();
+        let mut first_failure = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_000,
+            1_100,
+        );
+        first_failure.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "no replies before timeout")
+                .unwrap(),
+        );
+        runtime
+            .record_scheduled_discovery_worker_run(&first_failure, 1_100, 500)
+            .unwrap();
+
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        assert_eq!(scheduled.consecutive_failure_count, 1);
+        assert_eq!(scheduled.retry_delay_for_failure_count(1), 500);
+        assert_eq!(scheduled.next_due_at_ms, 1_600);
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 1_600)
+            .unwrap();
+        let mut second_failure = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_600,
+            1_700,
+        );
+        second_failure.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "multicast route unavailable")
+                .unwrap(),
+        );
+        runtime
+            .record_scheduled_discovery_worker_run(&second_failure, 1_700, 500)
+            .unwrap();
+
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        assert_eq!(scheduled.consecutive_failure_count, 2);
+        assert_eq!(scheduled.retry_delay_for_failure_count(2), 1_000);
+        assert_eq!(scheduled.next_due_at_ms, 2_700);
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 2_700)
+            .unwrap();
+        let mut third_failure = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            2_700,
+            2_800,
+        );
+        third_failure.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "network still unavailable")
+                .unwrap(),
+        );
+        runtime
+            .record_scheduled_discovery_worker_run(&third_failure, 2_800, 500)
+            .unwrap();
+
+        let observation = runtime.observe_supervision_at(2_801).unwrap();
+        assert_eq!(observation.discovery_workers_with_failures_count(), 1);
+        assert_eq!(observation.next_discovery_worker_due_at_ms(), Some(4_800));
+        assert!(matches!(
+            observation.discovery_workers.as_slice(),
+            [snapshot] if snapshot.worker_id == worker_id
+                && snapshot.status == WorkerStatus::Unhealthy
+                && snapshot.retry_delay_ms == 500
+                && snapshot.max_retry_delay_ms == 2_000
+                && snapshot.retry_backoff_multiplier == 2
+                && snapshot.current_retry_delay_ms == Some(2_000)
+                && snapshot.next_due_at_ms == 4_800
+                && snapshot.consecutive_failure_count == 3
+                && snapshot.has_failure_pressure()
+        ));
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 4_800)
+            .unwrap();
+        let mut recovery_run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            4_800,
+            4_900,
+        );
+        recovery_run
+            .push_record(hue_discovery_record("001788fffebackoff", 4_850))
+            .unwrap();
+        runtime
+            .record_scheduled_discovery_worker_run(&recovery_run, 4_900, 500)
+            .unwrap();
+
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        assert_eq!(scheduled.status, WorkerStatus::Running);
+        assert_eq!(scheduled.consecutive_failure_count, 0);
+        assert_eq!(scheduled.next_due_at_ms, 9_900);
+        assert_eq!(scheduled.retry_delay_for_failure_count(0), 0);
+        assert_eq!(
+            runtime
+                .observe_supervision_at(4_901)
+                .unwrap()
+                .discovery_workers[0]
+                .current_retry_delay_ms,
+            None
+        );
+    }
+
+    #[test]
+    fn runtime_supervised_mdns_discovery_run_executes_and_records_due_workers() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        let outcomes = (0..4).map(|_| {
+            MdnsScanResult::from_packets("_hue._tcp.local", 1_125, Vec::<MdnsResponsePacket>::new())
+        });
+        let mut executor = ScriptedMdnsExecutor::new(outcomes);
+        let mut run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_125,
+            1_180,
+        );
+        run.push_record(hue_discovery_record("001788fffesupervised", 1_175))
+            .unwrap();
+        let mut adapter = ScriptedMdnsRunAdapter::new([Ok(run)]);
+
+        let report = runtime
+            .run_due_mdns_discovery_workers_with_executor(
+                1_125,
+                1_180,
+                500,
+                &mut executor,
+                &mut adapter,
+            )
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(executor.requests.len(), 4);
+        assert_eq!(adapter.reports.len(), 1);
+        assert_eq!(adapter.reports[0].completed_scan_count(), 4);
+        assert_eq!(report.planned_instruction_count, 1);
+        assert_eq!(report.mdns_request_count, 4);
+        assert_eq!(report.mdns_report_count, 1);
+        assert_eq!(report.recorded_run_count(), 1);
+        assert_eq!(report.completed_run_count(), 1);
+        assert_eq!(report.partial_run_count(), 0);
+        assert_eq!(report.failed_run_count(), 0);
+        assert_eq!(report.catalog_change_count(), 1);
+        assert!(!report.has_failures());
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(scheduled.status, WorkerStatus::Running);
+        assert_eq!(scheduled.last_started_at_ms, Some(1_125));
+        assert_eq!(scheduled.last_completed_at_ms, Some(1_180));
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Completed)
+        );
+        assert_eq!(scheduled.next_due_at_ms, 6_180);
+    }
+
+    #[test]
+    fn runtime_supervised_mdns_discovery_run_records_adapter_failures() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        let outcomes = (0..4).map(|_| {
+            MdnsScanResult::from_packets("_hue._tcp.local", 1_125, Vec::<MdnsResponsePacket>::new())
+        });
+        let mut executor = ScriptedMdnsExecutor::new(outcomes);
+        let mut adapter =
+            ScriptedMdnsRunAdapter::new([Err("unsupported mDNS service type".to_string())]);
+
+        let report = runtime
+            .run_due_mdns_discovery_workers_with_executor(
+                1_125,
+                1_180,
+                500,
+                &mut executor,
+                &mut adapter,
+            )
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(executor.requests.len(), 4);
+        assert_eq!(adapter.reports.len(), 1);
+        assert_eq!(report.planned_instruction_count, 1);
+        assert_eq!(report.mdns_request_count, 4);
+        assert_eq!(report.mdns_report_count, 1);
+        assert_eq!(report.recorded_run_count(), 1);
+        assert_eq!(report.completed_run_count(), 0);
+        assert_eq!(report.failed_run_count(), 1);
+        assert_eq!(report.failures.len(), 1);
+        assert_eq!(report.failures[0].worker_id, worker_id);
+        assert_eq!(report.failures[0].message, "unsupported mDNS service type");
+        assert!(report.has_failures());
+        assert_eq!(runtime.discovery_record_count(), 0);
+        assert_eq!(scheduled.status, WorkerStatus::Unhealthy);
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Failed)
+        );
+        assert_eq!(scheduled.last_record_count, 0);
+        assert_eq!(scheduled.last_failure_count, 1);
+        assert_eq!(scheduled.consecutive_failure_count, 1);
+        assert_eq!(scheduled.next_due_at_ms, 6_180);
+
+        let observation = runtime.observe_supervision_at(1_181).unwrap();
+        assert_eq!(observation.discovery_worker_count(), 1);
+        assert_eq!(observation.discovery_worker_run_count(), 0);
+        assert_eq!(observation.unhealthy_discovery_worker_count(), 1);
+        assert_eq!(observation.discovery_workers_with_failures_count(), 1);
+        assert_eq!(observation.next_discovery_worker_due_at_ms(), Some(6_180));
+        assert!(matches!(
+            observation.discovery_workers.as_slice(),
+            [snapshot] if snapshot.worker_id == worker_id
+                && snapshot.status == WorkerStatus::Unhealthy
+                && !snapshot.is_due
+                && snapshot.last_run_status == Some(DiscoveryWorkerRunStatus::Failed)
+                && snapshot.last_record_count == 0
+                && snapshot.last_failure_count == 1
+                && snapshot.total_run_count == 1
+                && snapshot.consecutive_failure_count == 1
+                && snapshot.has_failure_pressure()
+        ));
+    }
+
+    #[test]
+    fn scheduled_discovery_workers_validate_scope_and_run_identity() {
+        let mut runtime = SmartHomeRuntime::new();
+        let invalid = ScheduledDiscoveryWorker::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            5_000,
+            250,
+            1_100,
+        )
+        .with_source(DiscoverySource::Mdns);
+
+        let error = runtime
+            .register_discovery_worker_schedule(invalid)
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            RuntimeError::InvalidDiscoveryWorkerSchedule {
+                field: "network_interfaces",
+                ..
+            }
+        ));
+
+        let missing_service_type = ScheduledDiscoveryWorker::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            5_000,
+            250,
+            1_100,
+        )
+        .with_source(DiscoverySource::Mdns)
+        .with_network_interface("en0");
+        assert!(matches!(
+            runtime
+                .register_discovery_worker_schedule(missing_service_type)
+                .unwrap_err(),
+            RuntimeError::InvalidDiscoveryWorkerSchedule {
+                field: "metadata.smart_home.discovery.service_type",
+                ..
+            }
+        ));
+
+        let invalid_retry = hue_mdns_discovery_worker(1_100).with_retry_backoff(1_000, 500, 2);
+        assert!(matches!(
+            runtime.register_discovery_worker_schedule(invalid_retry),
+            Err(RuntimeError::InvalidDiscoveryWorkerSchedule {
+                field: "max_retry_delay_ms",
+                ..
+            })
+        ));
+
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+
+        let unknown_run = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("unknown-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_100,
+            1_125,
+        );
+        assert!(matches!(
+            runtime.record_scheduled_discovery_worker_run(&unknown_run, 1_125, 500),
+            Err(RuntimeError::UnknownDiscoveryWorker(_))
+        ));
+
+        let wrong_kind = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::CloudFallback,
+            1_100,
+            1_125,
+        );
+        assert!(matches!(
+            runtime.record_scheduled_discovery_worker_run(&wrong_kind, 1_125, 500),
+            Err(RuntimeError::DiscoveryWorkerRunMismatch { .. })
+        ));
     }
 
     #[test]
@@ -4568,6 +8625,38 @@ mod tests {
         assert!(matches!(
             runtime.event_bus_mut().drain(&subscription),
             Err(RuntimeError::UnknownSubscription(_))
+        ));
+
+        let poll_error = runtime
+            .execute_poll_events_tool(
+                principal.clone(),
+                RuntimePollEventsToolRequest::new(subscription.clone()),
+                1_000,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            poll_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::PollEvents,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+
+        let unsubscribe_error = runtime
+            .execute_unsubscribe_tool(
+                principal.clone(),
+                RuntimeUnsubscribeToolRequest::new(subscription.clone()),
+                1_000,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            unsubscribe_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::Unsubscribe,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
         ));
     }
 
@@ -4638,7 +8727,94 @@ mod tests {
     }
 
     #[test]
-    fn pair_bridge_tool_requires_pair_grants_before_starting_session() {
+    fn poll_and_unsubscribe_tools_manage_subscription_deliveries() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        let subscription = RuntimeSubscriptionId::trusted("command-stream");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(3_000),
+        );
+        runtime
+            .execute_subscribe_tool(
+                principal.clone(),
+                RuntimeSubscribeToolRequest::new(
+                    subscription.clone(),
+                    RuntimeEventFilter::Commands,
+                ),
+                1_100,
+            )
+            .unwrap();
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("command-1"));
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("command-2"));
+
+        let peeked = runtime
+            .execute_poll_events_tool(
+                principal.clone(),
+                RuntimePollEventsToolRequest::new(subscription.clone())
+                    .with_limit(1)
+                    .peek(true),
+                1_200,
+            )
+            .unwrap();
+        assert_eq!(peeked.batch.len(), 1);
+        assert_eq!(peeked.batch.remaining_events, 1);
+        assert!(peeked.batch.has_more());
+        assert_eq!(runtime.event_bus().queued_events(&subscription).unwrap(), 2);
+
+        let drained = runtime
+            .execute_poll_events_tool(
+                principal.clone(),
+                RuntimePollEventsToolRequest::new(subscription.clone()).with_limit(1),
+                1_300,
+            )
+            .unwrap();
+        assert_eq!(drained.batch.len(), 1);
+        assert_eq!(drained.batch.remaining_events, 1);
+        assert_eq!(
+            drained.batch.summary().command_results,
+            1,
+            "poll tool should expose compact batch counts for Chief status loops"
+        );
+        assert_eq!(runtime.event_bus().queued_events(&subscription).unwrap(), 1);
+
+        let unsubscribed = runtime
+            .execute_unsubscribe_tool(
+                principal.clone(),
+                RuntimeUnsubscribeToolRequest::new(subscription.clone()),
+                1_400,
+            )
+            .unwrap();
+        assert_eq!(unsubscribed.batch.len(), 1);
+        assert_eq!(unsubscribed.batch.remaining_events, 0);
+        assert!(!runtime.event_bus().has_subscription(&subscription));
+        assert!(matches!(
+            runtime.event_bus().queued_events(&subscription),
+            Err(RuntimeError::UnknownSubscription(_))
+        ));
+
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+        assert_eq!(decisions.len(), 4);
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
+    }
+
+    #[test]
+    fn pairing_tools_require_pair_grants_before_mutating_sessions() {
         let mut runtime = SmartHomeRuntime::new();
         runtime.upsert_bridge(bridge("bridge-1")).unwrap();
         let principal = AgentId::trusted("agent:installer");
@@ -4670,6 +8846,46 @@ mod tests {
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
         assert!(runtime.pairing_session(&session).is_none());
+
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                session.clone(),
+                runtime
+                    .registry()
+                    .bridge(&BridgeId::trusted("bridge-1"))
+                    .unwrap(),
+                principal.clone(),
+                1_000,
+                1_500,
+                Vec::new(),
+            ))
+            .unwrap();
+        let complete_error = runtime
+            .execute_complete_pairing_tool(
+                principal.clone(),
+                RuntimeCompletePairingToolRequest::new(
+                    session.clone(),
+                    VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+                    1_200,
+                ),
+                1_200,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            complete_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::CompletePairing,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.pair")]
+        ));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.pairing_session(&session).unwrap().vault_ref, None);
     }
 
     #[test]
@@ -4723,12 +8939,18 @@ mod tests {
         );
 
         let completed = runtime
-            .complete_pairing_session(
-                &session_id,
-                VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+            .execute_complete_pairing_tool(
+                principal.clone(),
+                RuntimeCompletePairingToolRequest::new(
+                    session_id.clone(),
+                    VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+                    1_200,
+                )
+                .with_metadata(vec![Metadata::new("pairing_kind", "hue_link_button")]),
                 1_200,
             )
-            .unwrap();
+            .unwrap()
+            .session;
         let bridge = runtime
             .registry()
             .bridge(&BridgeId::trusted("bridge-1"))
@@ -4752,6 +8974,10 @@ mod tests {
                     && event.metadata.iter().any(|metadata| {
                         metadata.key == "smart_home.pairing_session"
                             && metadata.value == "pairing-1"
+                    })
+                    && event.metadata.iter().any(|metadata| {
+                        metadata.key == "pairing_kind"
+                            && metadata.value == "hue_link_button"
                     })
                     && event.metadata.iter().all(|metadata| {
                         !metadata.value.contains("app-key")
@@ -4778,6 +9004,13 @@ mod tests {
         assert_eq!(
             runtime.pairing_session(&session_id).unwrap().vault_ref,
             Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .authorization_decisions_for_principal(&principal)
+                .len(),
+            2
         );
     }
 
@@ -5050,6 +9283,227 @@ mod tests {
     }
 
     #[test]
+    fn desired_state_tools_require_command_tool_grant_before_mutating_runtime() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+
+        let set_error = runtime
+            .execute_set_desired_state_tool(
+                principal.clone(),
+                RuntimeSetDesiredStateToolRequest::new(DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )),
+                1_500,
+            )
+            .unwrap_err();
+        let clear_error = runtime
+            .execute_clear_desired_state_tool(
+                principal.clone(),
+                RuntimeClearDesiredStateToolRequest::new(EntityId::trusted("entity-1")),
+                1_501,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            set_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::SetDesiredState,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert!(matches!(
+            clear_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ClearDesiredState,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.desired_state_count(), 0);
+    }
+
+    #[test]
+    fn desired_state_tools_authorize_set_replace_and_clear() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-desired-state-command"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+
+        let first_output = runtime
+            .execute_set_desired_state_tool(
+                principal.clone(),
+                RuntimeSetDesiredStateToolRequest::new(
+                    DesiredEntityState::new(
+                        EntityId::trusted("entity-1"),
+                        vec![StateDelta {
+                            capability_id: CapabilityId::trusted("light.on_off"),
+                            value: Value::Bool(true),
+                        }],
+                    )
+                    .requested_by("agent:scene-planner")
+                    .with_command_timeout(750),
+                ),
+                1_500,
+            )
+            .unwrap();
+        let second_output = runtime
+            .execute_set_desired_state_tool(
+                principal.clone(),
+                RuntimeSetDesiredStateToolRequest::new(
+                    DesiredEntityState::new(
+                        EntityId::trusted("entity-1"),
+                        vec![StateDelta {
+                            capability_id: CapabilityId::trusted("light.on_off"),
+                            value: Value::Bool(false),
+                        }],
+                    )
+                    .requested_by("agent:scene-planner")
+                    .with_command_timeout(900),
+                ),
+                1_501,
+            )
+            .unwrap();
+        let clear_output = runtime
+            .execute_clear_desired_state_tool(
+                principal.clone(),
+                RuntimeClearDesiredStateToolRequest::new(EntityId::trusted("entity-1")),
+                1_502,
+            )
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(!first_output.replaced);
+        assert!(first_output.previous.is_none());
+        assert_eq!(
+            first_output.desired_state.requested_by,
+            "agent:scene-planner"
+        );
+        assert!(second_output.replaced);
+        assert_eq!(
+            second_output
+                .previous
+                .as_ref()
+                .map(|state| state.command_timeout_ms),
+            Some(750)
+        );
+        assert!(clear_output.removed());
+        assert_eq!(
+            clear_output
+                .removed
+                .as_ref()
+                .map(|state| state.command_timeout_ms),
+            Some(900)
+        );
+        assert_eq!(runtime.desired_state_count(), 0);
+        assert_eq!(decisions.len(), 3);
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
+    }
+
+    #[test]
+    fn supervision_tool_facade_authorizes_and_reconciles_desired_state() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:supervisor");
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                EntityId::trusted("entity-1"),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+
+        let error = runtime
+            .execute_supervision_tool(
+                principal.clone(),
+                RuntimeSupervisionToolRequest::ReconcileDesiredStates,
+                1_500,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ReconcileDesiredStates,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert!(runtime.event_bus().published().is_empty());
+
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-supervision-command"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_600,
+            )
+            .with_expiry(2_000),
+        );
+
+        let output = runtime
+            .execute_supervision_tool(
+                principal.clone(),
+                RuntimeSupervisionToolRequest::ReconcileDesiredStates,
+                1_700,
+            )
+            .unwrap();
+
+        let RuntimeSupervisionToolOutput::DesiredStateReconciliation {
+            reconciled_at_ms,
+            actions,
+        } = output
+        else {
+            panic!("expected desired-state reconciliation output");
+        };
+        assert_eq!(reconciled_at_ms, 1_700);
+        assert!(matches!(
+            actions.as_slice(),
+            [DesiredStateAction::CommandIssued {
+                reason: ReconciliationReason::MissingState,
+                ..
+            }]
+        ));
+        assert_eq!(
+            runtime
+                .registry()
+                .authorization_decisions_for_principal(&principal)
+                .len(),
+            2
+        );
+        assert_eq!(
+            runtime.event_bus().published().len(),
+            2,
+            "reconciliation publishes drift and command-result events"
+        );
+    }
+
+    #[test]
     fn command_tool_authorizes_and_dispatches_device_commands() {
         let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
         let principal = AgentId::trusted("agent:lighting-planner");
@@ -5128,6 +9582,13 @@ mod tests {
             Capability::light_brightness(),
         ]);
         let principal = AgentId::trusted("agent:observer");
+        let mut kitchen_device = runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        kitchen_device.room_id = Some("kitchen".to_string());
+        runtime.upsert_device(kitchen_device).unwrap();
         runtime.registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-read"),
@@ -5159,6 +9620,56 @@ mod tests {
                 confidence: StateConfidence::Confirmed,
             })
             .unwrap();
+        runtime
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-1"),
+                scope: SceneScope::Room,
+                native_ref: None,
+                actions: vec![smart_home_core::SceneAction {
+                    entity_id: EntityId::trusted("entity-1"),
+                    desired_state: Value::Bool(true),
+                }],
+                metadata: vec![Metadata::new("fixture", "runtime_read_tool_scene")],
+            })
+            .unwrap();
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap()
+            .clone();
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                RuntimePairingSessionId::trusted("pairing-1"),
+                &bridge,
+                principal.clone(),
+                1_100,
+                2_000,
+                vec![Metadata::new("fixture", "runtime_read_tool_pairing")],
+            ))
+            .unwrap();
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )
+                .requested_by("agent:observer")
+                .with_command_timeout(750),
+            )
+            .unwrap();
+        runtime
+            .event_bus_mut()
+            .subscribe(
+                RuntimeSubscriptionId::trusted("commands"),
+                RuntimeEventFilter::Commands,
+            )
+            .unwrap();
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("command-1"));
 
         let bridges = runtime
             .execute_read_tool(
@@ -5178,13 +9689,33 @@ mod tests {
                 1_501,
             )
             .unwrap();
+        let scenes = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListScenes {
+                    scope: Some(SceneScope::Room),
+                    entity_id: Some(EntityId::trusted("entity-1")),
+                    capability_id: Some(CapabilityId::trusted("light.on_off")),
+                },
+                1_502,
+            )
+            .unwrap();
+        let scene = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::DescribeScene {
+                    scene_id: SceneId::trusted("scene-1"),
+                },
+                1_503,
+            )
+            .unwrap();
         let state = runtime
             .execute_read_tool(
                 principal.clone(),
                 RuntimeReadToolRequest::GetState {
                     entity_id: EntityId::trusted("entity-1"),
                 },
-                1_502,
+                1_504,
             )
             .unwrap();
         let capabilities = runtime
@@ -5193,7 +9724,7 @@ mod tests {
                 RuntimeReadToolRequest::DescribeCapabilities {
                     entity_id: EntityId::trusted("entity-1"),
                 },
-                1_503,
+                1_505,
             )
             .unwrap();
         let health = runtime
@@ -5202,11 +9733,240 @@ mod tests {
                 RuntimeReadToolRequest::GetHealth {
                     bridge_id: Some(BridgeId::trusted("bridge-1")),
                 },
-                1_504,
+                1_506,
+            )
+            .unwrap();
+        let subscriptions = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListSubscriptions {
+                    query: RuntimeSubscriptionQuery::new()
+                        .matching(RuntimeEventFilter::Commands)
+                        .with_min_queued_events(1),
+                },
+                1_507,
+            )
+            .unwrap();
+        let event_log = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::InspectEventLog {
+                    query: RuntimeEventQuery::new()
+                        .matching(RuntimeEventFilter::Commands)
+                        .sorted_by(RuntimeEventSort::SequenceDesc)
+                        .with_limit(1),
+                },
+                1_508,
+            )
+            .unwrap();
+        let command_results = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListCommandResults {
+                    query: RuntimeCommandResultQuery::new()
+                        .for_bridge(BridgeId::trusted("bridge-1"))
+                        .with_status(CommandStatus::Accepted)
+                        .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+                        .with_limit(1),
+                },
+                1_509,
+            )
+            .unwrap();
+        let command_result_summary = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetCommandResultSummary {
+                    query: RuntimeCommandResultQuery::new()
+                        .for_command(CommandId::trusted("command-1"))
+                        .with_status(CommandStatus::Accepted),
+                },
+                1_510,
+            )
+            .unwrap();
+        let snapshot = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetRuntimeSnapshot,
+                1_511,
+            )
+            .unwrap();
+        let desired_states = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListDesiredStates {
+                    query: DesiredStateQuery::new()
+                        .requested_by("agent:observer")
+                        .with_capability(CapabilityId::trusted("light.on_off"))
+                        .sorted_by(DesiredStateSort::CommandTimeoutDesc),
+                },
+                1_512,
+            )
+            .unwrap();
+        let pairing_sessions = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListPairingSessions {
+                    query: RuntimePairingSessionQuery::new()
+                        .for_bridge(BridgeId::trusted("bridge-1"))
+                        .with_status(PairingSessionStatus::PendingUserPresence)
+                        .sorted_by(RuntimePairingSessionSort::ExpiresAt),
+                },
+                1_513,
+            )
+            .unwrap();
+        let supervision_plan = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetSupervisionPlan,
+                1_514,
             )
             .unwrap();
         let observation = runtime
-            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_505)
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ObserveSupervision,
+                1_515,
+            )
+            .unwrap();
+        let workers = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListWorkers {
+                    query: SupervisedWorkerQuery::new()
+                        .with_status(WorkerStatus::Starting)
+                        .overdue_at(1_516)
+                        .sorted_by(SupervisedWorkerSort::HeartbeatDueAt),
+                },
+                1_516,
+            )
+            .unwrap();
+        let heartbeat_schedule = runtime
+            .execute_read_tool(
+                principal,
+                RuntimeReadToolRequest::GetWorkerHeartbeatSchedule {
+                    bridge_id: Some(BridgeId::trusted("bridge-1")),
+                    due_at_or_before_ms: Some(1_517),
+                    limit: Some(1),
+                },
+                1_517,
+            )
+            .unwrap();
+        let authorization_decisions = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListAuthorizationDecisions {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(AgentId::trusted("agent:observer"))
+                        .with_outcome(AuthorizationOutcome::Allowed)
+                        .sorted_by(RuntimeAuthorizationDecisionSort::DecidedAtDesc)
+                        .with_limit(2),
+                },
+                1_518,
+            )
+            .unwrap();
+        let authorization_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetAuthorizationSummary {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(AgentId::trusted("agent:observer"))
+                        .with_outcome(AuthorizationOutcome::Allowed),
+                },
+                1_519,
+            )
+            .unwrap();
+        let capability_grants = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListCapabilityGrants {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .for_principal(AgentId::trusted("agent:observer"))
+                        .with_status(CapabilityGrantStatus::Active)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::Capability)
+                        .with_capability(CapabilityId::trusted("smart_home.read")),
+                },
+                1_520,
+            )
+            .unwrap();
+        let capability_grant_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetCapabilityGrantSummary {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .with_status(CapabilityGrantStatus::Active)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::Capability),
+                },
+                1_521,
+            )
+            .unwrap();
+        let rooms = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListRooms {
+                    query: RuntimeRoomQuery::new()
+                        .for_room("kitchen")
+                        .sorted_by(RuntimeRoomSort::SceneCountDesc),
+                },
+                1_522,
+            )
+            .unwrap();
+        let topology_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetTopologySummary,
+                1_523,
+            )
+            .unwrap();
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        let discovery_workers = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListDiscoveryWorkers {
+                    query: DiscoveryWorkerQuery::new()
+                        .for_integration(IntegrationId::trusted("hue"))
+                        .with_kind(DiscoveryWorkerKind::MdnsScan)
+                        .with_source(DiscoverySource::Mdns)
+                        .overdue_at(1_522)
+                        .sorted_by(DiscoveryWorkerSort::NextDueAt),
+                },
+                1_524,
+            )
+            .unwrap();
+        runtime
+            .record_discovery(hue_discovery_record("001788fffediscovered", 1_000))
+            .unwrap();
+        let discovery_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetDiscoverySummary {
+                    request: RuntimeDiscoverToolRequest::new()
+                        .for_integration(IntegrationId::trusted("hue"))
+                        .from_source(DiscoverySource::Mdns)
+                        .fresh_only(true)
+                        .with_ttl_ms(1_000),
+                },
+                1_525,
+            )
+            .unwrap();
+        let pairing_plan = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetPairingPlan {
+                    request: RuntimePairingPlanToolRequest::new()
+                        .with_ttl_ms(1_000)
+                        .with_options(
+                            DiscoveryPairingPlanOptions::new()
+                                .with_integration(IntegrationId::trusted("hue"))
+                                .with_source(DiscoverySource::Mdns)
+                                .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+                                .actionable_only(true)
+                                .limited_to(1),
+                        ),
+                },
+                1_526,
+            )
             .unwrap();
 
         assert!(matches!(
@@ -5218,6 +9978,19 @@ mod tests {
             devices,
             RuntimeReadToolOutput::Devices(devices) if devices.len() == 1
                 && devices[0].device_id == DeviceId::trusted("device-1")
+        ));
+        assert!(matches!(
+            scenes,
+            RuntimeReadToolOutput::Scenes(scenes) if scenes.len() == 1
+                && scenes[0].scene_id == SceneId::trusted("scene-1")
+        ));
+        assert!(matches!(
+            scene,
+            RuntimeReadToolOutput::Scene {
+                scene_id,
+                scene,
+            } if scene_id == SceneId::trusted("scene-1")
+                && scene.actions.len() == 1
         ));
         assert!(matches!(
             state,
@@ -5245,19 +10018,233 @@ mod tests {
             }]
         ));
         assert!(matches!(
+            subscriptions,
+            RuntimeReadToolOutput::Subscriptions {
+                subscriptions,
+                summary,
+            } if subscriptions.len() == 1
+                && subscriptions[0].subscription_id == RuntimeSubscriptionId::trusted("commands")
+                && subscriptions[0].queued_events == 1
+                && summary.command_subscriptions == 1
+                && summary.backlogged_subscriptions == 1
+        ));
+        assert!(matches!(
+            event_log,
+            RuntimeReadToolOutput::EventLog {
+                entries,
+                summary,
+            } if entries.len() == 1
+                && entries[0].sequence == 0
+                && matches!(
+                    &entries[0].event,
+                    RuntimeEvent::CommandResult(result)
+                        if result.command_id == CommandId::trusted("command-1")
+                )
+                && summary.total_events == 1
+                && summary.command_results == 1
+        ));
+        assert!(matches!(
+            command_results,
+            RuntimeReadToolOutput::CommandResults {
+                results,
+                summary,
+            } if results.len() == 1
+                && results[0].sequence == 0
+                && results[0].result.command_id == CommandId::trusted("command-1")
+                && results[0].result.status == CommandStatus::Accepted
+                && summary.total_results == 1
+                && summary.accepted_results == 1
+                && !summary.has_failures()
+        ));
+        assert!(matches!(
+            command_result_summary,
+            RuntimeReadToolOutput::CommandResultSummary { summary }
+                if summary.total_results == 1
+                    && summary.accepted_results == 1
+                    && summary.failure_results() == 0
+                    && summary.next_checkpoint == RuntimeEventCheckpoint::from_next_sequence(1)
+        ));
+        assert!(matches!(
+            snapshot,
+            RuntimeReadToolOutput::RuntimeSnapshot(snapshot)
+                if snapshot.generated_at_ms == 1_511
+                    && snapshot.pairing_session_count == 1
+                    && snapshot.desired_state_count == 1
+                    && snapshot.desired_capability_count == 1
+        ));
+        assert!(matches!(
+            desired_states,
+            RuntimeReadToolOutput::DesiredStates {
+                desired_states,
+                summary,
+            } if desired_states.len() == 1
+                && desired_states[0].entity_id == EntityId::trusted("entity-1")
+                && desired_states[0].requested_by == "agent:observer"
+                && summary.total_desired_states == 1
+                && summary.total_desired_capabilities == 1
+                && summary.requested_by_count == 1
+                && summary.max_command_timeout_ms == Some(750)
+        ));
+        assert!(matches!(
+            pairing_sessions,
+            RuntimeReadToolOutput::PairingSessions {
+                sessions,
+                summary,
+            } if sessions.len() == 1
+                && sessions[0].session_id == RuntimePairingSessionId::trusted("pairing-1")
+                && summary.total_sessions == 1
+                && summary.pending_user_presence_sessions == 1
+                && !summary.has_expiring_sessions()
+        ));
+        assert!(matches!(
+            supervision_plan,
+            RuntimeReadToolOutput::SupervisionPlan(plan)
+                if plan.generated_at_ms == 1_514
+                    && plan.action_count() == 1
+                    && plan.summary().worker_restart_count == 1
+                    && plan.worker_restart_plan.len() == 1
+        ));
+        assert!(matches!(
             observation,
             RuntimeReadToolOutput::SupervisionObservation(observation)
-                if observation.generated_at_ms == 1_505
+                if observation.generated_at_ms == 1_515
                     && observation.worker_restart_count() == 1
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 6);
+        assert!(matches!(
+            workers,
+            RuntimeReadToolOutput::Workers { workers, summary }
+                if workers.len() == 1
+                    && workers[0].bridge_id == BridgeId::trusted("bridge-1")
+                    && workers[0].status == WorkerStatus::Starting
+                    && summary.generated_at_ms == 1_516
+                    && summary.worker_count == 1
+                    && summary.restart_due_count == 1
+        ));
+        assert!(matches!(
+            heartbeat_schedule,
+            RuntimeReadToolOutput::WorkerHeartbeatSchedule(schedule)
+                if schedule.generated_at_ms == 1_517
+                    && schedule.len() == 1
+                    && schedule.next_due_at_ms() == Some(1_100)
+                    && schedule.deadlines[0].bridge_id == BridgeId::trusted("bridge-1")
+                    && schedule.deadlines[0].is_due_at(1_517)
+        ));
+        assert!(matches!(
+            authorization_decisions,
+            RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary }
+                if decisions.len() == 2
+                    && decisions[0].decided_at_ms == 1_518
+                    && decisions[0].subject == AuthorizationSubject::Tool(
+                        SmartHomeTool::ListAuthorizationDecisions
+                    )
+                    && summary.total_decisions == 2
+                    && summary.allowed_decisions == 2
+                    && summary.denied_decisions == 0
+        ));
+        assert!(matches!(
+            authorization_summary,
+            RuntimeReadToolOutput::AuthorizationSummary { summary }
+                if summary.total_decisions == 20
+                    && summary.allowed_decisions == 20
+                    && summary.denied_decisions == 0
+                    && summary.tool_decisions == 20
+        ));
+        assert!(matches!(
+            capability_grants,
+            RuntimeReadToolOutput::CapabilityGrants { grants, summary }
+                if grants.len() == 1
+                    && grants[0].grant_id == CapabilityGrantId::trusted("grant-read")
+                    && summary.total_grants == 1
+                    && summary.active_grants == 1
+                    && summary.capability_grants == 1
+                    && summary.read_only_tier_grants == 1
+        ));
+        assert!(matches!(
+            capability_grant_summary,
+            RuntimeReadToolOutput::CapabilityGrantSummary { summary }
+                if summary.total_grants == 1
+                    && summary.active_grants == 1
+                    && summary.unique_principals == 1
+                    && !summary.needs_review()
+        ));
+        assert!(matches!(
+            rooms,
+            RuntimeReadToolOutput::Rooms { rooms, topology }
+                if rooms.len() == 1
+                    && rooms[0].room_id == "kitchen"
+                    && rooms[0].device_count == 1
+                    && rooms[0].entity_count == 1
+                    && rooms[0].commandable_entities == 1
+                    && rooms[0].entities_with_state == 1
+                    && rooms[0].scene_count == 1
+                    && rooms[0].scene_action_count == 1
+                    && topology.devices_with_room == 1
+                    && topology.unique_rooms == 1
+                    && topology.room_scenes == 1
+        ));
+        assert!(matches!(
+            topology_summary,
+            RuntimeReadToolOutput::TopologySummary { summary }
+                if summary.bridges == 1
+                    && summary.devices == 1
+                    && summary.entities == 1
+                    && summary.scenes == 1
+                    && summary.devices_with_room == 1
+                    && summary.unique_rooms == 1
+                    && summary.scene_actions == 1
+        ));
+        assert!(matches!(
+            discovery_workers,
+            RuntimeReadToolOutput::DiscoveryWorkers { workers, summary }
+                if workers.len() == 1
+                    && workers[0].worker_id == DiscoveryWorkerId::trusted("hue-mdns-worker")
+                    && workers[0].kind == DiscoveryWorkerKind::MdnsScan
+                    && workers[0].is_due
+                    && summary.generated_at_ms == 1_524
+                    && summary.worker_count == 1
+                    && summary.due_worker_count == 1
+        ));
+        assert!(matches!(
+            discovery_summary,
+            RuntimeReadToolOutput::DiscoverySummary {
+                generated_at_ms,
+                ttl_ms,
+                record_summary,
+                signal_summary,
+            } if generated_at_ms == 1_525
+                && ttl_ms == 1_000
+                && record_summary.total == 1
+                && record_summary.fresh == 1
+                && signal_summary.fresh == 1
+        ));
+        assert!(matches!(
+            pairing_plan,
+            RuntimeReadToolOutput::PairingPlan {
+                ttl_ms,
+                plan,
+                summary,
+            } if ttl_ms == 1_000
+                && plan.generated_at_ms == 1_526
+                && plan.targets.len() == 1
+                && plan.targets[0].bridge_id
+                    == BridgeId::trusted("hue.bridge.001788fffediscovered")
+                && plan.targets[0].action == DiscoveryPairingAction::PressPhysicalButton
+                && summary.total == 1
+                && summary.actionable == 1
+                && summary.requires_human_action == 1
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 27);
         assert!(runtime
             .registry()
             .authorization_decisions()
             .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
-        assert!(runtime.event_bus().published().is_empty());
+        assert!(matches!(
+            runtime.event_bus().published(),
+            [RuntimeEvent::CommandResult(result)]
+                if result.command_id == CommandId::trusted("command-1")
+        ));
     }
 
     #[test]
@@ -5349,6 +10336,144 @@ mod tests {
             .unwrap();
         assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
         assert_eq!(runtime.optimistic_state_count(), 0);
+    }
+
+    #[test]
+    fn report_event_tool_requires_ingest_grants_before_mutating_runtime() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:event-worker");
+        let error = runtime
+            .execute_report_event_tool(
+                principal.clone(),
+                RuntimeReportEventToolRequest::device(DeviceEvent {
+                    event_id: EventId::trusted("event-1"),
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    device_id: Some(DeviceId::trusted("device-1")),
+                    entity_id: Some(EntityId::trusted("entity-1")),
+                    observed_at_ms: 1_100,
+                    received_at_ms: 1_101,
+                    event_type: DeviceEventType::Updated,
+                    state_delta: Some(StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }),
+                    raw_ref: None,
+                    correlation_id: None,
+                    metadata: Vec::new(),
+                }),
+                1_101,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ReportEvent,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.ingest")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert!(runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .is_none());
+        assert_eq!(runtime.registry().counts().events, 0);
+    }
+
+    #[test]
+    fn report_event_tool_authorizes_device_and_health_ingest() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:event-worker");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-ingest"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.ingest"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        runtime
+            .submit_command(command(CommandType::TurnOn, Value::Null), 1_000)
+            .unwrap();
+
+        let device_output = runtime
+            .execute_report_event_tool(
+                principal.clone(),
+                RuntimeReportEventToolRequest::device(DeviceEvent {
+                    event_id: EventId::trusted("event-1"),
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    device_id: Some(DeviceId::trusted("device-1")),
+                    entity_id: Some(EntityId::trusted("entity-1")),
+                    observed_at_ms: 1_100,
+                    received_at_ms: 1_101,
+                    event_type: DeviceEventType::Updated,
+                    state_delta: Some(StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }),
+                    raw_ref: Some("event-log://hue/bridge-1/42".to_string()),
+                    correlation_id: Some(CorrelationId::trusted("hue-event-42")),
+                    metadata: vec![Metadata::new("source", "hue_sse")],
+                }),
+                1_101,
+            )
+            .unwrap();
+        let health_output = runtime
+            .execute_report_event_tool(
+                principal.clone(),
+                RuntimeReportEventToolRequest::bridge_health(BridgeHealthReport {
+                    event_id: EventId::trusted("health-1"),
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    health: Health::Offline,
+                    observed_at_ms: 1_200,
+                    received_at_ms: 1_201,
+                    metadata: vec![Metadata::new("source", "heartbeat")],
+                }),
+                1_201,
+            )
+            .unwrap();
+        let snapshot = runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .unwrap();
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            device_output,
+            RuntimeReportEventToolOutput::Device(DeviceEvent { event_id, .. })
+                if event_id == EventId::trusted("event-1")
+        ));
+        assert!(matches!(
+            health_output,
+            RuntimeReportEventToolOutput::BridgeHealth(BridgeHealthReport { event_id, health, .. })
+                if event_id == EventId::trusted("health-1") && health == Health::Offline
+        ));
+        assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
+        assert_eq!(
+            snapshot.value,
+            Value::Object(vec![("light.on_off".to_string(), Value::Bool(false))])
+        );
+        assert_eq!(runtime.optimistic_state_count(), 0);
+        assert_eq!(bridge.health, Health::Offline);
+        assert_eq!(runtime.registry().counts().events, 2);
+        assert_eq!(decisions.len(), 2);
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
     }
 
     #[test]
@@ -5613,6 +10738,7 @@ mod tests {
                 desired_stale_state_count: 1,
                 desired_drifted_state_count: 0,
                 worker_restart_count: 1,
+                discovery_worker_run_count: 0,
             }
         );
         assert!(!summary.is_idle());
@@ -5693,6 +10819,7 @@ mod tests {
                 desired_stale_state_count: 0,
                 desired_drifted_state_count: 0,
                 worker_restart_count: 1,
+                discovery_worker_run_count: 0,
             }
         );
         assert_eq!(observation.heartbeat_schedule.len(), 2);

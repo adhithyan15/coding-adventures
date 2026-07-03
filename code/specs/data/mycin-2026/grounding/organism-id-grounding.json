@@ -1,0 +1,422 @@
+{
+  "_doc": "Spider-grounded organism-identification claims (priors + gram-stain morphology). Each record carries a primary-source byte_quote + URL + discards + ENTAILED/LEAP note, an independent re-extraction (verify), and a reconciled spider_status. Produced by the ground-organism-id workflow; consumed by organism_id_ground.py (the write gate). Correct a wrong fact by editing the record + re-running the gate \u2014 never by authoring.",
+  "domain": "bacterial meningitis \u2014 organism identification",
+  "tally": {
+    "grounded": 7,
+    "direction_only": 4,
+    "refuted": 2
+  },
+  "records": [
+    {
+      "id": "prior_s_pneumoniae",
+      "kind": "prior",
+      "target": "s_pneumoniae",
+      "claim": "Streptococcus pneumoniae is the most common cause of community-acquired bacterial meningitis in adults; quantify its PROPORTION of cases.",
+      "authored_hint": 0.5,
+      "grounded": {
+        "id": "prior_s_pneumoniae",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15509818/",
+        "source_title": "van de Beek D, et al. \"Clinical Features and Prognostic Factors in Adults with Bacterial Meningitis.\" N Engl J Med. 2004;351(18):1849-1859 (PubMed 15509818)",
+        "byte_quote": "The most common pathogens were Streptococcus pneumoniae (51 percent of episodes) and Neisseria meningitidis (37 percent).",
+        "value_found": "S. pneumoniae caused 51% of episodes (proportion ~0.51), making it the most common pathogen; N. meningitidis was second at 37%.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "NEJM full-text (https://www.nejm.org/doi/full/10.1056/NEJMoa040845): the original primary source, but returned HTTP 403 (paywalled) so no verbatim quote could be extracted; used the PubMed abstract of the same article instead, which carries the same figure.",
+          "medlink.com 'Pneumococcal meningitis' (~72% in >16yo): secondary clinical reference, not a primary study; figure conflates broader bacterial-meningitis populations and is not from a prospective cohort.",
+          "Johns Hopkins ABX Guide / Cleveland Clinic CCJM review / newmicrobiologica review: secondary clinical references/reviews, not primary data; the '80% S. pneumoniae + N. meningitidis combined' figure cited there is a synthesis, not a single primary measurement.",
+          "PMC6669839 systematic review: about S. pneumoniae in community-acquired PNEUMONIA (not meningitis) in Indian adults \u2014 off-topic, wrong disease."
+        ],
+        "note": "ENTAILED. The quote directly states S. pneumoniae = 51% of episodes and N. meningitidis = 37%, in a prospective nationwide cohort of adults with community-acquired bacterial meningitis (Netherlands, 1998-2002, CSF-culture-confirmed). 51% > 37% (and > all other pathogens) forces 'most common cause,' and 51% is the quantified proportion. No interpretive leap is needed; the proportion (~0.51) is read directly off the source and independently confirms \u2014 not merely trusts \u2014 the ~0.5 hint. Minor scope nuance (not a defeater): this is a Dutch cohort, but the figure is consistent with the broader literature placing S. pneumoniae as the leading adult community-acquired bacterial meningitis pathogen."
+      },
+      "verify": {
+        "id": "prior_s_pneumoniae",
+        "byte_stable": true,
+        "reextracted_value": "S. pneumoniae was the most common pathogen at 51 percent of episodes (proportion ~0.51); N. meningitidis was second at 37 percent. Source: van de Beek et al., NEJM 2004, \"Clinical features and prognostic factors in adults with bacterial meningitis,\" n=696 community-acquired episodes, Netherlands cohort 1998-2002.",
+        "refute_attempt": "The 51% figure is specific to a single-country (Netherlands) cohort of 696 episodes from 1998-2002, not a universal/global constant \u2014 the proportion reflects this dataset's case mix and could vary by region, era, and vaccination status. However, this is a generalizability caveat, not a refutation: the verbatim quote explicitly names S. pneumoniae as the MOST COMMON pathogen at 51% of episodes in adults with community-acquired bacterial meningitis, directly supporting both the qualitative claim (most common cause) and the quantitative proportion (~0.51). The caveat does not overturn the grounding.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prior_n_meningitidis",
+      "kind": "prior",
+      "target": "n_meningitidis",
+      "claim": "Proportion of community-acquired bacterial meningitis caused by Neisseria meningitidis.",
+      "authored_hint": 0.15,
+      "grounded": {
+        "id": "prior_n_meningitidis",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470351/",
+        "source_title": "Bacterial Meningitis \u2014 StatPearls, NCBI Bookshelf (NIH)",
+        "byte_quote": "As per Thigpen etal. out of the 1670 cases reported in the U.S. during 2003\u20132007, S. pneumoniae was the predominant infective species (58.0%), followed by GBS (18.1%), N. meningitidis (13.9%), H. influenzae (6.7%), and L. monocytogenes (3.4%).",
+        "value_found": "~0.139 (13.9%) of U.S. bacterial meningitis cases (2003\u20132007 surveillance, Thigpen et al., n=1670) were caused by Neisseria meningitidis",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7610733/ (Acute bacterial meningitis review) \u2014 names the three predominant pathogens (S. pneumoniae, N. meningitidis, H. influenzae) but gives NO numerical proportion for N. meningitidis, so it cannot ground a value.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10470134/ (German guidelines) \u2014 gives N. meningitidis only as a coarse '<10% of cases' band from Central-European data, less precise and a different geography than the U.S. figure; discarded in favor of the explicit Thigpen percentage.",
+          "WebSearch summary claim of '~11% in adults / second most common' \u2014 discarded: it is the search engine's synthesized prose with no fetched verbatim source backing the 11% number; the fetched StatPearls/Thigpen figure (13.9%, all ages) is the actual primary-derived value.",
+          "https://www.cdc.gov/meningococcal/php/surveillance/index.html and CIDRAP 2023-rise article \u2014 describe meningococcal-disease incidence trends, not the proportion-of-meningitis denominator the claim requires; off-target."
+        ],
+        "note": "ENTAILED for the value, with one scope caveat. The quote directly states N. meningitidis = 13.9% of 1670 reported U.S. bacterial-meningitis cases (2003\u20132007), which is the proportion the claim asks for; deriving ~0.139 from the quote is arithmetic-free (the percentage is stated). The hint ~0.15 is in the right ballpark and direction_correct is true (meningococcus is a substantial-minority, second/third-ranked cause behind pneumococcus). Minor LEAP: the StatPearls/Thigpen denominator is U.S. surveillance-confirmed bacterial meningitis overall rather than the literal phrase 'community-acquired'; however for N. meningitidis, S. pneumoniae and H. influenzae these are overwhelmingly community-acquired pathogens, so equating this proportion with the community-acquired prior is a small, well-supported inference rather than a stretch. The figure is population/era-specific (post-Hib-vaccine U.S.); other regions/cohorts (e.g. Dutch MeninGene ~25\u201330% meningococcal in some adult series) run higher, so ~0.139 is a defensible point estimate, not a universal constant."
+      },
+      "verify": {
+        "id": "prior_n_meningitidis",
+        "byte_stable": true,
+        "reextracted_value": "N. meningitidis = 13.9% (~0.139) of the 1670 U.S. bacterial meningitis cases during 2003\u20132007 per Thigpen et al. (S. pneumoniae 58.0%, GBS 18.1%, N. meningitidis 13.9%, H. influenzae 6.7%, L. monocytogenes 3.4%).",
+        "refute_attempt": "Strongest refutation: The byte_quote says \"cases reported in the U.S. during 2003\u20132007\" but does not literally contain the words \"community-acquired,\" so one could argue the claim adds an unsupported qualifier. However, the underlying Thigpen et al. study (NEJM 2011, \"Bacterial Meningitis in the United States, 1998\u20132007\") is explicitly a community-acquired/population-based surveillance study, and the StatPearls chapter presents this figure in its discussion of bacterial meningitis epidemiology, so the community-acquired framing is consistent rather than contradicted. A secondary objection \u2014 that the value should be read as a rate or count rather than a proportion \u2014 fails because the source gives 13.9% explicitly as a percentage of the 1670 cases, which is a proportion. The species (N. meningitidis), value (13.9%), country (U.S.), period (2003\u20132007), sample size (1670), and source author (Thigpen et al.) all appear verbatim. No refutation breaks the byte-grounding or the re-extracted value.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prior_listeria",
+      "kind": "prior",
+      "target": "listeria",
+      "claim": "Proportion of bacterial meningitis caused by Listeria monocytogenes (esp. age >50 / immunocompromised).",
+      "authored_hint": 0.05,
+      "grounded": {
+        "id": "prior_listeria",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/",
+        "source_title": "Outcomes of adults with community-acquired bacterial meningitis in the Netherlands: a prospective nationwide cohort study (PMC12662076)",
+        "byte_quote": "Listeria monocytogenes (182/2974; 6%) ... Patients with listeria meningitis were more likely to be immunocompromised (121/182 [66%] vs. 791/2791 [28%]) ... Mortality was highest for L. monocytogenes (58/182; 32%)",
+        "value_found": "~0.06 (6%; 182/2974 episodes). Listeria patients skew older (median age 70) and immunocompromised (66%). Corroborating Czech cohort: 7% (31/440); broader literature cited as 4\u201316.5% and the third most common cause of adult bacterial meningitis.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3784069/ (Czech Republic cohort, 7% = 31/440): valid corroborating primary source but smaller, single-country, retrospective-flavored 16-year series; used only to cross-check the headline value, not as the primary.",
+          "academic.oup.com/cid/article/43/10/1233 (van de Beek 2006, 30-episode L. monocytogenes series): characterizes the 'all >50 or immunocompromised' subpopulation but does NOT give a denominator proportion of all bacterial meningitis, so it cannot ground the proportion value directly.",
+          "imrpress.com and ScienceDirect/Taiwan & Danish papers: case series / mortality-focused; no clean proportion-of-all-meningitis denominator, discarded for the proportion claim.",
+          "Search-snippet phrasing '4-12%': not used verbatim; the fetched PMC3784069 page states the range as '4%-16.5%', so I cite the fetched value rather than the unverified snippet."
+        ],
+        "note": "ENTAILED for the core proportion: the verbatim quote '182/2974; 6%' directly states the proportion of community-acquired bacterial meningitis episodes caused by L. monocytogenes \u2014 no inference needed. The '~0.05' hint is directionally correct (same order of magnitude, low single-digit) but the source-derived value is modestly higher at ~6% (Netherlands) to 7% (Czech), within a literature range of 4\u201316.5%. The age>50/immunocompromised qualifier is also ENTAILED: the quote shows Listeria patients are 66% immunocompromised vs 28% overall and median age 70, matching the claim's enrichment in that subgroup. Minor LEAP: applying a single-country (Netherlands) prospective rate as a universal prior assumes geographic/temporal generalizability; the corroborating Czech 7% and the 4\u201316.5% literature range bound that uncertainty, so a prior of ~0.05\u20130.07 is well supported rather than the bare 0.05 hint."
+      },
+      "verify": {
+        "id": "prior_listeria",
+        "byte_stable": true,
+        "reextracted_value": "From this URL (PMC12662076, prospective nationwide cohort, Netherlands, Jan 2006\u2013Jan 2024): Listeria monocytogenes = 182/2974 episodes = 6% (re-computed 6.1%), the 3rd most common cause after S. pneumoniae and N. meningitidis (329/2974; 11%). Listeria patients: median age 70 (IQR 61\u201378); more likely immunocompromised, 121/182 [66%] vs 791/2791 [28%]. Mortality highest for L. monocytogenes 58/182 [32%; 95% CI 26\u201339]. So claimed value ~0.06 (6%) and the older/immunocompromised skew are confirmed. NOT supported by this URL: Czech cohort (31/440; 7%), literature range 4\u201316.5% \u2014 those appear nowhere on this page and must come from other sources.",
+        "refute_attempt": "Strongest refutation: (1) The byte_quote's corroborating tail is partially unsupported by THIS URL \u2014 the Czech cohort 31/440 (7%) and the \"4\u201316.5%\" literature range do not appear anywhere on the page; the claimed value imports them from elsewhere, so for this source they are ungrounded. (2) Denominator caveat: 182/2974 is the share of bacterial-meningitis EPISODES in one Dutch nationwide cohort with an identified pathogen, not a universal proportion of all bacterial meningitis; the immunocompromised comparison uses denominator 2791 (a subset), not 2974, so the figures mix two reference populations. (3) Geographic generalizability: a single-country (Netherlands) 6% figure may not transfer globally. However, none of these undermine the CORE claim \u2014 the ~6% Listeria proportion, the older-age (median 70) and immunocompromised (66%) skew, and third-most-common-cause ranking are all present verbatim and numerically consistent. The refutation only narrows scope to the imported corroborating details, it does not overturn the central claim.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prior_h_influenzae",
+      "kind": "prior",
+      "target": "h_influenzae",
+      "claim": "Proportion of bacterial meningitis caused by Haemophilus influenzae in the post-Hib-vaccine era.",
+      "authored_hint": 0.05,
+      "grounded": {
+        "id": "prior_h_influenzae",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470351/",
+        "source_title": "Bacterial Meningitis \u2014 StatPearls, NCBI Bookshelf (NIH), citing Thigpen MC et al., \"Bacterial Meningitis in the United States, 1998\u20132007,\" N Engl J Med 2011;364:2016-2025",
+        "byte_quote": "As per Thigpen etal. out of the 1670 cases reported in the U.S. during 2003\u20132007, S. pneumoniae was the predominant infective species (58.0%), followed by GBS (18.1%), N. meningitidis (13.9%), H. influenzae (6.7%), and L. monocytogenes (3.4%).",
+        "value_found": "~0.067 (6.7%) of bacterial meningitis cases in the U.S. (2003\u20132007, post-Hib-vaccine era) were caused by Haemophilus influenzae",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "nejm.org/doi/full/10.1056/NEJMoa1005384 \u2014 the primary Thigpen NEJM article itself; DISCARDED as a fetch source because it returned HTTP 403 Forbidden (paywall/bot-block), so no verbatim quote could be extracted directly, though StatPearls reproduces its exact distribution.",
+          "pubmed.ncbi.nlm.nih.gov/21612470 \u2014 PubMed abstract for the Thigpen study; DISCARDED because the fetch returned only a reCAPTCHA verification page, not the abstract text.",
+          "CDC Pink Book Ch.8 Haemophilus influenzae (cdc.gov) \u2014 DISCARDED for this claim: it gives only the PRE-vaccine figure ('50% to 65% of cases in the prevaccine era'), which is the wrong era and would mis-ground the post-vaccine claim.",
+          "PMC7926440 (narrative review of VPD meningitis surveillance) \u2014 DISCARDED: discusses that non-typeable H. influenzae is now the most frequent invasive Hi serotype, but gives no proportion of total bacterial meningitis, so it does not quantify the claim.",
+          "en.wikipedia.org/wiki/Haemophilus_meningitis \u2014 secondary encyclopedia source with pre-vaccine 40\u201360% framing; DISCARDED in favor of a primary-data-backed clinical reference.",
+          "thelancet.com 2008\u20132023 follow-up surveillance \u2014 would give a more recent figure but returned HTTP 403; not fetchable for a verbatim quote."
+        ],
+        "note": "ENTAILED. The quote explicitly states H. influenzae = 6.7% of the 1670 U.S. bacterial-meningitis cases during 2003\u20132007 \u2014 squarely the post-Hib-vaccine era (Hib conjugate vaccine routine since ~1990). 6.7% \u2248 0.067, close to but distinct from the ~0.05 hint; the real derived value is higher. Source is NCBI Bookshelf (StatPearls), an authoritative clinical reference reproducing the Thigpen et al. NEJM 2011 primary surveillance data verbatim with matching numbers; the same 6.7% figure was corroborated across multiple independent search results citing the NEJM primary study. No interpretive leap was required \u2014 the proportion is stated directly. The only caveat is that the directly fetched page is the clinical reference rather than the NEJM primary article (which was bot-blocked at 403), but it cites and reproduces the primary numbers exactly."
+      },
+      "verify": {
+        "id": "prior_h_influenzae",
+        "byte_stable": true,
+        "reextracted_value": "~0.067 (6.7%) \u2014 H. influenzae accounted for 6.7% of the 1670 U.S. bacterial meningitis cases reported during 2003\u20132007 (Thigpen et al.), as cited on the NCBI Bookshelf page NBK470351.",
+        "refute_attempt": "Strongest refutation: (1) The byte_quote does NOT contain the phrase \"post-Hib-vaccine era\" \u2014 it only states the date range \"2003\u20132007.\" The era label is an inference layered on by the claim. (2) The sentence says \"1670 cases\" without the literal word \"bacterial\" attached to that figure, so a strict reader could argue the denominator is unspecified. (3) The species names are italicized (markdown underscores) in the fetched render, a formatting difference from the plain byte_quote. Why the refutation fails: 2003\u20132007 is unambiguously after the U.S. Hib conjugate vaccine introduction (1990), so \"post-Hib-vaccine era\" is a correct, defensible inference rather than a fabrication; the enumerated organisms (S. pneumoniae, GBS, N. meningitidis, H. influenzae, L. monocytogenes) are exactly the bacterial meningitis pathogens from the Thigpen surveillance study, making the bacterial-meningitis denominator clear from context; and the underscores are only italic markup, not a textual divergence. The 6.7% = 0.067 value is read directly off H. influenzae with no mis-attribution.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prior_gram_negative_bacilli",
+      "kind": "prior",
+      "target": "gram_negative_bacilli",
+      "claim": "Proportion of bacterial meningitis caused by aerobic gram-negative bacilli (E. coli/Klebsiella).",
+      "authored_hint": 0.03,
+      "grounded": {
+        "id": "prior_gram_negative_bacilli",
+        "resolved_url": "https://cdr.lib.unc.edu/concern/articles/p2677168g",
+        "source_title": "Acute Bacterial Meningitis in Adults \u2014 A Review of 493 Episodes (Durand ML, Calderwood SB, Weber DJ, et al., N Engl J Med 1993;328:21-28)",
+        "byte_quote": "Gram-negative bacilli (other than Haemophilus influenzae) caused 33 percent of the nosocomial episodes but only 3 percent of the community-acquired episodes.",
+        "value_found": "~0.03 (3% of community-acquired bacterial meningitis episodes caused by aerobic gram-negative bacilli, excluding H. influenzae; E. coli and Pseudomonas/Klebsiella being typical species)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "NEJM full-text URL (https://www.nejm.org/doi/full/10.1056/NEJM199301073280104): HTTP 403 Forbidden, could not fetch the page body \u2014 substituted the open-access UNC Carolina Digital Repository copy of the SAME article, which returned the identical verbatim quote.",
+          "Nature Reviews Disease Primers 'Community-acquired bacterial meningitis' (https://www.nature.com/articles/nrdp201674): 303 redirect to an authentication/IDP host, could not retrieve a supporting quote.",
+          "BMC Infect Dis / Springer 'Spontaneous gram-negative bacillary meningitis in adult patients' (link.springer.com/...1471-2334-13-451): reports GNB as 7% of episodes and 9% of cases of KNOWN etiology \u2014 a different denominator (spontaneous/known-etiology cohort, not all community-acquired meningitis), so it does not match the claim's framing as cleanly; discarded in favor of the broader community-acquired denominator that yields ~3%.",
+          "Search-engine summary text claiming '3 percent' / '40% nosocomial': used only as a pointer; the value was confirmed against the actual fetched article page, not trusted from the snippet."
+        ],
+        "note": "ENTAILED. The fetched primary source (NEJM Durand 1993, via the open-access UNC repository copy) states verbatim that gram-negative bacilli (other than H. influenzae) caused 'only 3 percent of the community-acquired episodes.' This is a direct, quantitative statement of exactly the quantity the claim asks for (proportion of bacterial meningitis caused by aerobic GNB), yielding 0.03, matching the hint. Minor scoping nuance (LEAP-adjacent but not a leap on the number): the claim names E. coli/Klebsiella as exemplars; the same study identifies E. coli and Pseudomonas as the most common GNB species, so E. coli/Klebsiella are representative members of the 'gram-negative bacilli (other than H. influenzae)' category the 3% measures \u2014 the category and the number are entailed by the quote."
+      },
+      "verify": {
+        "id": "prior_gram_negative_bacilli",
+        "byte_stable": true,
+        "reextracted_value": "~0.03 (3%) \u2014 but this is specifically the community-acquired figure. Source: \"Gram-negative bacilli (other than Haemophilus influenzae) caused 33 percent of the nosocomial episodes but only 3 percent of the community-acquired episodes.\" The same sentence gives 33% for nosocomial episodes; no single combined/overall percentage is stated.",
+        "refute_attempt": "Three lines of attack: (1) Scope mismatch \u2014 the claim's short label (\"Proportion of bacterial meningitis caused by aerobic gram-negative bacilli\") is unqualified, but the source's 3% applies ONLY to community-acquired episodes. The same source reports 33% for nosocomial episodes, and ~40% of the 493 episodes were nosocomial, so an OVERALL all-meningitis figure would be far higher (a rough weighted blend \u2248 15%), not 3%. If \"bacterial meningitis\" is read generally, 0.03 understates it. (2) Species interpolation \u2014 the byte_quote says only \"Gram-negative bacilli (other than Haemophilus influenzae)\"; it does NOT name E. coli or Klebsiella, nor restrict to *aerobic* GNB. The claim's \"(E. coli/Klebsiella)\" and \"aerobic\" qualifiers are not in the cited bytes. (3) Generalizability \u2014 the figure is from a single-institution (Massachusetts General Hospital), 27-year (1962-1988) retrospective of 493 episodes, not a population-level epidemiological proportion. REFUTATION FAILS on the number itself: the claim's value text explicitly scopes it to \"3% of community-acquired bacterial meningitis episodes... excluding H. influenzae,\" which the verbatim quote supports exactly. The attack only undermines the loose label and the species attribution, not the 0.03 value against its stated (community-acquired) scope.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "prior_group_b_strep",
+      "kind": "prior",
+      "target": "group_b_strep",
+      "claim": "Proportion of bacterial meningitis caused by group B Streptococcus (Streptococcus agalactiae).",
+      "authored_hint": 0.02,
+      "grounded": {
+        "id": "prior_group_b_strep",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/",
+        "source_title": "Global etiology of bacterial meningitis: A systematic review and meta-analysis (Oordt-Speets et al., PLoS ONE 2018; PMC5995389)",
+        "byte_quote": "The frequency of group B S. agalactiae in neonates was highest in Europe and lowest in the Eastern Mediterranean region, with weighted means of 58.2% and 4.9%, respectively.",
+        "value_found": "In the ALL-AGES analysis (Table 2), group B S. agalactiae is a small minority of bacterial meningitis: weighted means ~0.23% (Africa) to ~1.93% (Europe) across regions, i.e. roughly 0.002-0.02. By contrast, in NEONATES it is dominant (4.9%-58.2% weighted means by region). So the overall/all-ages proportion is on the order of ~0.02 (1-2%), consistent with the prior; the high neonatal share is a separate, age-stratified figure.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "https://www.sciencedirect.com/science/article/abs/pii/S0163445319303743 (adult community-acquired GBS meningitis, Eisen et al.) \u2014 DISCARDED: HTTP 403, could not fetch a verbatim quote; abstract-search reported 0.4-7.4% of adult cases but I could not read/verify the page.",
+          "https://www.who.int/news-room/fact-sheets/detail/group-b-streptococcus-(gbs) \u2014 DISCARDED for the numeric claim: gives only the qualitative 'leading cause worldwide of acute bacterial meningitis in newborns', no all-ages proportion.",
+          "https://www.thelancet.com/journals/lanmic/article/PIIS2666-5247(20)30192-0/fulltext and the journals.asm.org CMR review \u2014 DISCARDED: focus on GBS molecular epidemiology/neonatal disease, not the overall fraction of all bacterial meningitis attributable to GBS.",
+          "All-ages Table 2 values (0.23% Africa, 1.93% Europe) \u2014 these DIRECTLY support the claim but were obtained only via WebFetch table-reading, not as a reproducible verbatim prose sentence, so they are not used as the byte_quote to avoid fabrication risk."
+        ],
+        "note": "LEAP. The verbatim byte_quote is a NEONATAL-specific figure (4.9-58.2%), which does NOT by itself entail the all-ages ~0.02 prior \u2014 taken alone it could mislead toward a much higher number. The claim (overall proportion of bacterial meningitis caused by GBS) is actually supported by the all-ages Table 2 data from the same peer-reviewed meta-analysis (~0.23-1.93% across regions, i.e. ~0.02), which I read via fetch but could not capture as a guaranteed-verbatim prose sentence. Hence verdict=direction_only: the primary source confirms GBS is a small minority of all-ages bacterial meningitis (~1-2%, matching the prior) while being dominant in neonates, but the specific ~0.02 value rests on table-cell reading rather than a quotable sentence. Direction is correct; exact value grounded by table but not by the verbatim quote provided."
+      },
+      "verify": {
+        "id": "prior_group_b_strep",
+        "byte_stable": true,
+        "reextracted_value": "The verbatim quote is confirmed present on the page (article: \"Global etiology of bacterial meningitis: A systematic review and meta-analysis\", PMC5995389). The quote concerns NEONATES ONLY: group B S. agalactiae weighted means range from 4.9% (Eastern Mediterranean) to 58.2% (Europe) \u2014 a major neonatal pathogen. It says nothing about the all-ages proportion. For all-ages (Table 2), the data are extremely sparse: the only clearly reported all-ages weighted mean for group B is Europe at ~1.93% (95% CI 0.00\u20136.14%); other regions' all-ages figures were not reported/insufficient. The article gives NO single global all-ages proportion for group B. Re-extracted: the quote supports only the neonatal figure (~4.9%\u201358.2% by region), not the claimed ~0.02 (1\u20132%) all-ages value.",
+        "refute_attempt": "The byte_quote is exclusively about neonates and does NOT support the claim's headline value (all-ages proportion ~0.02 / 1\u20132%). That number rests entirely on a separate Table 2 reading, not on the quoted sentence. Moreover the claim's specific all-ages regionals are unreliable: it cites \"~0.23% (Africa)\" and \"~1.93% (Europe)\", but the fetch indicates the African all-ages value was not reported (insufficient data) and the highest all-ages group-B value is Europe ~1.93% with a CI spanning 0.00\u20136.14%, and no global all-ages proportion exists in the paper at all. So the quote, while verbatim and on-topic, substantiates only the neonatal/age-stratified context \u2014 the explicit secondary point \u2014 and cannot establish the prior's central numeric value.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "prior_s_aureus",
+      "kind": "prior",
+      "target": "s_aureus",
+      "claim": "Proportion of bacterial meningitis caused by Staphylococcus aureus (healthcare-associated).",
+      "authored_hint": 0.01,
+      "grounded": {
+        "id": "prior_s_aureus",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10883623/",
+        "source_title": "Clinical characteristics and outcomes of acute bacterial meningitis in adults at a tertiary university hospital in Thailand (PMC10883623)",
+        "byte_quote": "Staphylococcus aureus 7/131 (5.3%) 8/75 (10.7%) 15/206 (7.3%)",
+        "value_found": "~0.107 (10.7%) of nosocomial/healthcare-associated bacterial meningitis cases were caused by S. aureus (8/75); 5.3% of community-acquired cases (7/131); 7.3% overall (15/206). Corroborated by an England national surveillance study (2012\u20132019: S. aureus 467/4073 \u2248 11.5%) and a prospective nosocomial-meningitis series where S. aureus caused 10/32 (31%) of post-neurosurgical episodes.",
+        "direction_correct": false,
+        "verdict": "refuted",
+        "discards": [
+          "pubmed.ncbi.nlm.nih.gov/17433493/ (prospective series of 50 nosocomial meningitis cases): only the abstract was accessible; gives S. aureus as 10/32 (31%) within the post-neurosurgery subgroup but does NOT state the proportion of all 50 cases, so it overstates the all-cases proportion \u2014 used only as corroboration, not the primary quote.",
+          "pmc.ncbi.nlm.nih.gov/articles/PMC5995389/ (global etiology meta-analysis, PLOS One): regional weighted means for S. aureus (e.g. Europe all-adults 5.48%, Africa 0.89%) but no single global pooled proportion and not specific to healthcare-associated cases, so it cannot anchor a single value.",
+          "ncbi.nlm.nih.gov/pmc/articles/PMC1421412/ (Denmark haematogenous S. aureus meningitis 10-yr study): denominator is S. aureus bacteraemias (0.8% developed meningitis), NOT bacterial-meningitis cases \u2014 wrong denominator for this claim, discarded to avoid a unit confusion that would spuriously match the ~0.01 hint.",
+          "England surveillance PMC10393823: not used as the primary quote because the WebFetch hit a host redirect and I did not re-fetch to obtain a verbatim line; the ~11.5% figure is retained only as directional corroboration from search snippets."
+        ],
+        "note": "REFUTES the ~0.01 hint. ENTAILED portion: the verbatim Table 3 line directly states S. aureus = 8/75 (10.7%) of nosocomial (healthcare-associated) bacterial meningitis and 7.3% overall \u2014 an order of magnitude above the 0.01 prior. The real healthcare-associated proportion is ~0.10\u20130.11, consistently corroborated by England national surveillance (~11.5%) and a nosocomial series (31% of post-neurosurgical cases). LEAP caution: 'healthcare-associated' in the claim is interpreted as the nosocomial column (10.7%); the ~0.01 hint is plausibly reachable only via the wrong denominator (fraction of S. aureus bacteraemias that seed meningitis, ~0.8%), which I explicitly discarded. Direction is therefore not correct: the true value substantially exceeds 0.01."
+      },
+      "verify": {
+        "id": "prior_s_aureus",
+        "byte_stable": true,
+        "reextracted_value": "S. aureus among NOSOCOMIAL (healthcare-associated, \"NBM\") bacterial meningitis = 8/75 identified organisms = 10.67% \u2248 0.107. Community-acquired (CBM) = 7/131 = 5.3%. Overall = 15/206 = 7.3%. These match the claimed values exactly. Confirmed via Table 3, columns \"CBM (n=211)\", \"NBM (n=179)\", \"Total (n=390)\", row \"Staphylococcus aureus\". NBM = \"nosocomial bacterial meningitis\" per the article's own abbreviation definitions, which equals \"healthcare-associated.\"",
+        "refute_attempt": "Strongest refutation: the denominators (131/75/206) are \"Total identified organisms,\" NOT all meningitis cases. Only 41.9% of NBM cases (75/179) had an identified organism. So 10.7% is the proportion of S. aureus among culture/pathogen-IDENTIFIED nosocomial cases, not among ALL nosocomial meningitis cases \u2014 that figure would be 8/179 \u2248 4.5%. If the claim is read as \"of all nosocomial bacterial meningitis cases, 10.7% were caused by S. aureus,\" it slightly overstates by counting only the 42% with an identified organism. This is a genuine denominator subtlety. However: (1) reporting pathogen distribution as a proportion of identified/confirmed organisms is the standard epidemiological convention; (2) the claim's own corroborating figures use the same convention (England 467/4073 \u2248 11.5% among confirmed cases; the post-neurosurgical 10/32 series is among identified episodes); and (3) the claim explicitly cites the 8/75 fraction, making the denominator transparent. The refutation flags a reading ambiguity but does not refute that the byte_quote appears verbatim or that it supports the claimed value of ~10.7% under the standard, stated denominator.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "refuted"
+    },
+    {
+      "id": "morph_gpd_pneumococcus",
+      "kind": "morphology",
+      "target": "s_pneumoniae",
+      "claim": "On CSF Gram stain, lancet-shaped gram-positive diplococci indicate Streptococcus pneumoniae.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "morph_gpd_pneumococcus",
+        "resolved_url": "https://academic.oup.com/ofid/article/3/4/ofw206/2593338",
+        "source_title": "Gram-Positive Diplococci in a Cerebrospinal Fluid Gram Stain \u2014 Open Forum Infectious Diseases (Oxford University Press)",
+        "byte_quote": "Cells of S pneumoniae are elongated (\"lancet-shaped\") cocci that are surrounded by a polysaccharide capsule and predominantly organized in pairs (diplococci).",
+        "value_found": "On a CSF Gram stain, lancet-shaped gram-positive diplococci are the characteristic morphology of Streptococcus pneumoniae (elongated/lancet-shaped cocci, encapsulated, in pairs). The source is a peer-reviewed clinical case specifically about a cerebrospinal-fluid Gram stain showing gram-positive cocci in pairs identified as S. pneumoniae.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "WebFetch of pathologyoutlines.com Streptococcus pneumoniae topic page returned HTTP 503 Service Unavailable (Retry-After 86400) \u2014 could not retrieve a quote, so discarded despite being an authoritative reference.",
+          "health.infolabmed.com 'Understanding the S Pneumoniae Gram Stain' \u2014 secondary educational blog, not a primary/peer-reviewed source; excluded per instructions.",
+          "picmonic.com Streptococcus pneumoniae characteristics \u2014 commercial study-aid/mnemonic site, secondary, not primary.",
+          "researchgate.net figure pages (CSF Gram-staining diagrams) \u2014 figure-caption fragments without an accessible primary article body; not used as the grounding source.",
+          "academic.oup.com ofw206.pdf direct PDF link \u2014 redundant with the HTML article that fetched successfully."
+        ],
+        "note": "ENTAILED on the core morphology mapping: the quote explicitly ties the \"lancet-shaped\" elongated, encapsulated, paired (diplococci) appearance to S. pneumoniae, and the article's entire context is a CSF Gram stain \u2014 so the claim's central assertion (lancet-shaped GPD on CSF Gram stain = S. pneumoniae morphology) is directly supported. LEAP on strict diagnostic exclusivity: the claim's verb \"indicate\" could be read as definitive, but the same article notes other gram-positive organisms (e.g., Group B Streptococcus, Listeria monocytogenes) also cause meningitis and that confirmation required culture (serotype 35B). So the morphology is characteristic/strongly suggestive and is the correct presumptive read that guides empiric therapy, but it is not pathognomonic \u2014 treating it as 100% confirmatory would exceed the quote. Verdict grounded because the claim as stated (a morphologic indication) matches the source; the exclusivity caveat is the only gap."
+      },
+      "verify": {
+        "id": "morph_gpd_pneumococcus",
+        "byte_stable": true,
+        "reextracted_value": "On a CSF Gram stain, lancet-shaped gram-positive diplococci are the characteristic morphology of Streptococcus pneumoniae: the source states \"Cells of S pneumoniae are elongated (\"lancet-shaped\") cocci that are surrounded by a polysaccharide capsule and predominantly organized in pairs (diplococci).\" The article is titled \"Gram-Positive Diplococci in a Cerebrospinal Fluid Gram Stain\" and reports that \"A cytospin-prepared CSF Gram stain revealed Gram-positive cocci arranged in pairs, some of which were within leukocytes,\" identified as S. pneumoniae.",
+        "refute_attempt": "The byte_quote, read in isolation, only describes S. pneumoniae cell morphology (elongated/lancet-shaped, encapsulated, paired) and does not itself assert the reverse diagnostic inference \u2014 that observing lancet-shaped GPDC on a Gram stain INDICATES pneumococcus. One could argue the claim adds an identification direction the quoted sentence alone does not state, and that Gram-stain morphology is only suggestive (not confirmatory, since other streptococci/enterococci can appear as gram-positive cocci in pairs). However, this refutation fails: the article's own title (\"Gram-Positive Diplococci in a Cerebrospinal Fluid Gram Stain\") and body (CSF Gram stain showing GPDC in pairs identified as S. pneumoniae) supply exactly the CSF-Gram-stain \u2192 S. pneumoniae linkage, and the claim's verb \"indicate\" is appropriately hedged rather than overclaiming a definitive diagnosis.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "morph_gnd_meningococcus",
+      "kind": "morphology",
+      "target": "n_meningitidis",
+      "claim": "On CSF Gram stain, gram-negative diplococci indicate Neisseria meningitidis.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "morph_gnd_meningococcus",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349422/",
+        "source_title": "Neisseria meningitidis: Biology, Microbiology, and Epidemiology (Methods in Molecular Biology, 2012; vol. 799, pp. 1-20) \u2014 PMC4349422",
+        "byte_quote": "Intracellular gram-negative diplococci and leukocytes in the CSF from a patient with meningococcal meningitis. The arrow denotes diplococci in proximity and within leukocytes.",
+        "value_found": "On CSF Gram stain, intracellular gram-negative diplococci (often within leukocytes) are the characteristic finding in meningococcal meningitis (Neisseria meningitidis). The source separately confirms N. meningitidis is itself a gram-negative diplococcus with a \"kidney\"/\"coffee-bean\" shape. A corroborating clinical reference (StatPearls, NBK549849) states Gram staining is diagnostic in ~85% of meningococcal meningitis cases, confirming the finding is presumptive/highly indicative rather than 100% specific.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "WHO/CDS/CSR/EDC/99.7 'Laboratory methods for the diagnosis of meningitis' (who.int PDF) \u2014 DISCARDED: WebFetch returned only binary/encoded PDF stream data, not extractable readable text, so no verifiable verbatim quote could be obtained.",
+          "StatPearls NBK549849 (ncbi.nlm.nih.gov/books/NBK549849) \u2014 used only as corroboration for the presumptive/85% framing, NOT as the primary byte_quote source: WebFetch confirmed it contains no single sentence directly linking CSF gram-negative diplococci morphology to N. meningitidis diagnosis (only separate statements about Gram staining being 'diagnostic in 85%' and N. meningitidis being a gram-negative diplococcus).",
+          "AAFP afp/2005/0515 (aafp.org) \u2014 DISCARDED: secondary summary of the IDSA guideline rather than the primary guideline text or a primary study.",
+          "Merck Manual, CDC Yellow Book, Loyola Lumen case page, PathologyOutlines \u2014 DISCARDED: reference/teaching summaries, not peer-reviewed primary literature; superseded by the peer-reviewed PMC review used."
+        ],
+        "note": "LEAP (mild). The quote is a peer-reviewed figure caption that explicitly identifies intracellular gram-negative diplococci in CSF as coming from a patient with meningococcal meningitis (N. meningitidis), plus the same source confirms N. meningitidis IS a gram-negative diplococcus. This strongly supports the claim's DIRECTION (gram-negative diplococci on CSF Gram stain point to N. meningitidis). However, the caption describes the finding in a known meningococcal case rather than asserting the reverse inference 'gram-negative diplococci => N. meningitidis is the cause' as a strict logical entailment \u2014 that inference is the clinical-textbook presumptive reading, not literally forced by the quote. Caveat for fidelity: gram-negative diplococci in CSF are presumptive (corroborating StatPearls: diagnostic in ~85%), and intracellular gram-negative diplococci can rarely reflect other Neisseria/Moraxella spp., so 'indicate' should be read as 'strongly presumptive,' not pathognomonic. Verdict grounded because the morphology-organism association and the CSF/meningitis context are both directly attested by the primary source."
+      },
+      "verify": {
+        "id": "morph_gnd_meningococcus",
+        "byte_stable": true,
+        "reextracted_value": "On CSF Gram stain, intracellular gram-negative diplococci (often within/in proximity to leukocytes) are the characteristic finding in meningococcal meningitis caused by Neisseria meningitidis. The page's Fig. 2 caption states verbatim: \"Intracellular gram-negative diplococci and leukocytes in the CSF from a patient with meningococcal meningitis. The arrow denotes diplococci in proximity and within leukocytes.\" The page separately confirms the organism morphology: \"N. meningitidis is a fastidious bacterium... and is either an encapsulated or unencapsulated, aerobic diplococcus with a 'kidney' or 'coffee-bean' shape.\" The finding is characteristic/presumptive rather than 100% specific (gram-negative diplococci can arise from other genera). The StatPearls ~85% diagnostic-yield statistic in the claimed value comes from a separate source (NBK549849) that I did not fetch and cannot confirm from this URL.",
+        "refute_attempt": "Strongest refutation: (1) The byte_quote is a figure caption describing a single patient's CSF specimen (an illustrative image), not a stated diagnostic rule, so it does not by itself establish a general inference. (2) Directional gap: the page asserts N. meningitidis -> gram-negative diplococci, whereas the claim runs the inference in reverse (gram-negative diplococci on CSF -> N. meningitidis). This reverse direction is not strictly entailed, since other gram-negative diplococci/coccobacilli exist (e.g., Moraxella, Acinetobacter), making the finding suggestive rather than pathognomonic. (3) The corroborating \"~85% of cases\" StatPearls statistic is from a separate, un-fetched source and cannot be verified against this page. Why the refutation does not defeat the grounding: the claimed value is explicitly hedged (\"characteristic finding,\" \"presumptive/highly indicative rather than 100% specific\"), which correctly accounts for the directionality/specificity caveat; and the two load-bearing facts \u2014 gram-negative diplococci in CSF as the characteristic finding in meningococcal meningitis, and N. meningitidis being a gram-negative diplococcus \u2014 are both directly and verbatim supported by the fetched page. Only the auxiliary 85% statistic is unverified, and it is corroborating, not core.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "morph_gpb_listeria",
+      "kind": "morphology",
+      "target": "listeria",
+      "claim": "On CSF Gram stain, gram-positive bacilli/coccobacilli indicate Listeria monocytogenes.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "morph_gpb_listeria",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5986172/",
+        "source_title": "Listeria monocytogenes meningitis (PMC5986172, peer-reviewed case report / clinical review)",
+        "byte_quote": "gram-positive bacilli with tumbling motility ... This characteristic of L. monocytogenes is evident through peritrichous flagella movement and is clinically useful to corroborate high suspicion of Listeria infection before the confirmatory microbiological examination.",
+        "value_found": "Listeria monocytogenes is a gram-positive bacillus (rod/coccobacillus). On CSF Gram stain its appearance as gram-positive bacilli with tumbling motility is \"clinically useful to corroborate high suspicion\" of Listeria \u2014 i.e., supportive, not definitive. A corroborating primary study (Brouwer et al., Clin Infect Dis 2006, academic.oup.com/cid/article/43/10/1233) reports CSF Gram stain revealed the organism in only 7 (28%) of 25 cases, confirming poor sensitivity.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "microbeonline.com / picmonic.com / scienceinfo.com / universe84a.com \u2014 secondary educational/tutorial blogs, not primary or authoritative clinical-microbiology references; discarded per task constraint (no secondary blogs).",
+          "hopkinsguides.com (Johns Hopkins ABX Guide) \u2014 authoritative but paywalled/login-gated; could not retrieve a verbatim quote, so not used as the grounding source.",
+          "idsociety.org IDSA meningitis guideline pages \u2014 relevant for empiric therapy (ampicillin coverage of Listeria) but the landing pages do not provide a quotable Gram-stain morphology statement; discarded for this morphology claim.",
+          "uspto.gov patent PDF on CSF bacteria detection \u2014 a patent document, not a peer-reviewed clinical source; discarded.",
+          "academic.oup.com/cid/article/43/10/1233 (Brouwer 2006) \u2014 NOT discarded as evidence; retained as corroboration for the 28% Gram-stain sensitivity, but it does not state the morphology-implies-organism direction, so PMC5986172 was chosen as the primary grounding quote."
+        ],
+        "note": "LEAP, not full entailment. The quote ENTAILS that Listeria monocytogenes IS a gram-positive bacillus and that seeing GPB with tumbling motility on microscopy is \"clinically useful to corroborate high suspicion\" of Listeria \u2014 so the claim's direction (Listeria -> GPB/coccobacilli) is correct. But the claim's verb \"indicate\" reverses and overstates this: the source frames the finding as corroborating pre-existing suspicion, not as a reliable forward indicator that GPB on CSF Gram stain means Listeria. Two facts the quote does not license and that refute the strong reading: (1) CSF Gram stain in Listeria meningitis is poorly sensitive (28% positive per the CID corroborating study), so a GPB finding is the exception, not the rule; and (2) gram-positive bacilli in CSF are non-specific \u2014 other GPB/diphtheroids and contaminants exist, and Listeria can also be mistaken for cocci/diphtheroids. Therefore the morphology is consistent with / suggestive of Listeria, but does not \"indicate\" (establish) it. Direction-only grounding."
+      },
+      "verify": {
+        "id": "morph_gpb_listeria",
+        "byte_stable": true,
+        "reextracted_value": "The quote appears verbatim on the page. The article (a case report titled \"Listeria monocytogenes meningitis\", PMC5986172) states: \"CSF cultures revealed blue-gray colonies that comprised gram-positive bacilli with tumbling motility ... which was turned out to be Listeria monocytogenes. ... Listeria is an aerobic, beta-hemolytic, gram-positive bacillus, which exhibits tumbling motility on light microscopy. This characteristic of L. monocytogenes is evident through peritrichous flagella movement and is clinically useful to corroborate high suspicion of Listeria infection before the confirmatory microbiological examination.\" So: L. monocytogenes is indeed a gram-positive bacillus; the gram-positive-bacilli-with-tumbling-motility finding is \"clinically useful to corroborate high suspicion\" (supportive, not definitive). The claimed value's general thrust (GPB morphology supports, not confirms, Listeria) is grounded.",
+        "refute_attempt": "Strongest refutation: The CLAIM as headlined says \"On CSF Gram stain, gram-positive bacilli/coccobacilli indicate Listeria monocytogenes\" \u2014 but the cited byte_quote does NOT actually describe a direct CSF Gram stain. The verbatim sentence attributes the \"gram-positive bacilli with tumbling motility\" observation to \"CSF CULTURES\" (blue-gray colonies grown out), not to a direct Gram-stain smear of CSF. The diagnostic utility the article highlights is the TUMBLING MOTILITY (via peritrichous flagella under light microscopy of cultured organisms), not Gram-stain rod morphology on direct CSF. So the byte_quote supports \"GP bacillus + tumbling motility from culture is corroborative,\" but it is being repurposed to support a claim specifically about direct CSF GRAM STAIN morphology \u2014 a substitution the source does not make. The ellipsis in the byte_quote also silently splices across a sentence boundary and omits the \"CSF cultures revealed blue-gray colonies\" framing that locates the finding in culture, not stain. Additionally, the second half of the claimed value \u2014 the Brouwer et al. 2006 CID statistic that CSF Gram stain revealed the organism in only 7/25 (28%) of cases \u2014 is NOT from this page at all and was not verified here; it is an uncited external addition. However, this does not fully overturn the grounding: (a) Listeria IS a gram-positive bacillus per the quote; (b) the quote does explicitly state the morphologic/motility finding is \"clinically useful to corroborate high suspicion ... before the confirmatory microbiological examination,\" i.e. supportive-not-definitive, which is the load-bearing assertion of the claim. The refutation downgrades the precision (culture vs. direct Gram stain; unverified Brouwer stat) but does not refute the core supported point.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "morph_gncocco_hflu",
+      "kind": "morphology",
+      "target": "h_influenzae",
+      "claim": "On CSF Gram stain, pleomorphic gram-negative coccobacilli indicate Haemophilus influenzae.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "morph_gncocco_hflu",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK562176/",
+        "source_title": "Haemophilus influenzae Infection - StatPearls - NCBI Bookshelf",
+        "byte_quote": "The initial test is Gram staining, which reveals pleomorphic gram-negative coccobacilli.",
+        "value_found": "H. influenzae appears on Gram stain as pleomorphic gram-negative coccobacilli; the same StatPearls Evaluation section adds that \"80% demonstrate a positive CSF gram stain,\" tying this morphology to the CSF/meningitis workup.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "https://face.meei.harvard.edu/h-influenzae-gram-stain \u2014 image/atlas page, not a peer-reviewed primary text with a citable morphology statement.",
+          "https://microbeonline.com/laboratory-diagnosis-of-haemophilus-influenza/ \u2014 secondary educational blog, explicitly excluded by the primary-source requirement.",
+          "https://universe84a.com/haemophilus-influenzae-introduction/ \u2014 secondary study-notes blog, not authoritative; excluded.",
+          "https://emedicine.medscape.com/article/218271-workup \u2014 authoritative but paywalled/auth-gated; not fetched, so no verbatim quote obtainable.",
+          "https://www.sciencedirect.com/topics/immunology-and-microbiology/haemophilus \u2014 aggregated topic page, not a single primary text; not fetched.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK8458/ (NCBI Medical Microbiology) \u2014 corroborates 'small, somewhat pleomorphic, Gram-negative coccobacilli' but its quote ties the morphology to sputum, not CSF, so a weaker fit than NBK562176 for this CSF claim; retained as corroboration, not primary citation."
+        ],
+        "note": "LEAP. The quote ENTAILS only the forward direction: H. influenzae \u2192 pleomorphic gram-negative coccobacilli on Gram stain, and the adjacent StatPearls line (\"80% demonstrate a positive CSF gram stain\") places this in the CSF/meningitis context. The CLAIM runs the inference in reverse (morphology on CSF Gram stain \u2192 indicates H. influenzae). That reverse inference is direction-correct and matches standard clinical teaching \u2014 in a CSF/meningitis specimen, pleomorphic gram-negative coccobacilli are the classic morphology pointing to H. influenzae \u2014 but the source does not state that this morphology is specific/pathognomonic for H. influenzae (other gram-negative coccobacilli exist, and StatPearls itself notes Gram stain limitations). So the morphology is suggestive, not definitive; the claim's directional thrust is supported but the strict bidirectional (\"indicate\") entailment is a leap beyond what the quote forces. Hence verdict direction_only rather than fully grounded."
+      },
+      "verify": {
+        "id": "morph_gncocco_hflu",
+        "byte_stable": true,
+        "reextracted_value": "The StatPearls page NBK562176 is about Haemophilus influenzae. Its Evaluation section opens: \"Laboratory tests are done on samples obtained from body fluids. The initial test is Gram staining, which reveals pleomorphic gram-negative coccobacilli.\" A separate, later paragraph on Hib meningitis CSF findings states: \"The capsular antigen is detected in 90% of patients, and 80% demonstrate a positive CSF gram stain.\" So the page directly attributes pleomorphic gram-negative coccobacilli morphology to H. influenzae on Gram stain, and separately notes 80% of Hib meningitis cases have a positive CSF gram stain.",
+        "refute_attempt": "Strongest refutation: the verbatim byte_quote does not itself mention CSF \u2014 it sits in the FIRST Evaluation paragraph about general \"samples obtained from body fluids,\" not CSF specifically. The \"80% demonstrate a positive CSF gram stain\" line lives in a DIFFERENT, non-adjacent paragraph about Hib meningitis, separated by intervening text on culture media and serotyping. Thus the single byte_quote does not, on its own, establish the CSF-specific link; the claimed value stitches two separate statements together. The byte_quote alone supports only the organism morphology, not the \"On CSF Gram stain\" framing. However, this does not refute the substantive claim: organism morphology is identical regardless of which body fluid is stained, and the same Evaluation section confirms positive CSF gram stains occur in Hib meningitis \u2014 so the claim holds by combined-byte justification rather than by the single quote alone.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "morph_gnb_enteric",
+      "kind": "morphology",
+      "target": "gram_negative_bacilli",
+      "claim": "On CSF Gram stain, gram-negative bacilli (rods) indicate enteric gram-negative bacilli.",
+      "authored_hint": null,
+      "grounded": {
+        "id": "morph_gnb_enteric",
+        "resolved_url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html",
+        "source_title": "Epidemiology and Prevention of Vaccine-Preventable Diseases (Pink Book), Chapter 8: Haemophilus influenzae \u2014 CDC",
+        "byte_quote": "H. influenzae, a fastidious, pleomorphic, gram-negative coccobacillus, requires hemin (X factor) ... A Gram stain of an infected body fluid may demonstrate small, gram-negative coccobacilli suggestive of H. influenzae disease.",
+        "value_found": "Gram-negative bacilli/coccobacilli on CSF (body-fluid) Gram stain are classically suggestive of Haemophilus influenzae \u2014 a non-enteric gram-negative coccobacillus \u2014 not specifically enteric gram-negative bacilli. Enteric/aerobic GNB (E. coli, Klebsiella, Pseudomonas) are an alternative cause of GNB meningitis in neonates, the elderly, and post-neurosurgical patients, but they are not the unique or primary referent of this morphology.",
+        "direction_correct": true,
+        "verdict": "refuted",
+        "discards": [
+          "IDSA/Tunkel 2004 guideline full text on academic.oup.com/cid/article/39/9/1267/402080 \u2014 Table 3 (presumptive therapy by Gram stain in adults) is rendered as an IMAGE, so no verbatim quote could be extracted; the fetch model also paraphrased it as grouping GNB with enteric bacilli, which I cannot cite as verbatim and which conflates adult empiric-therapy grouping with morphologic identification.",
+          "wvumedicine.org NCCU-IDSA-Meningitis.pdf \u2014 returned HTTP 404, not fetchable.",
+          "AAFP summary (aafp.org/pubs/afp/issues/2005/0515/p2003.html) \u2014 gave Gram-stain accuracy ('60 to 90 percent') but contained NO morphology-to-organism mapping; cannot support or refute the specific claim.",
+          "WHO laboratory-methods-for-diagnosis-of-meningitis.pdf \u2014 binary/garbled when fetched, no legible text extractable.",
+          "Secondary sources (medicalnewstoday.com 'Gram-negative meningitis', medscape Haemophilus workup, MedLink) \u2014 not used as primary; excluded per instruction to ground on a primary/authoritative reference."
+        ],
+        "note": "LEAP (claim partially refuted). The CDC quote ENTAILS that gram-negative bacilli/coccobacilli on a body-fluid (CSF) Gram stain are classically suggestive of H. influenzae, a gram-negative coccobacillus that is NOT an enteric organism. That directly contradicts the claim's categorical mapping 'gram-negative bacilli indicate enteric gram-negative bacilli.' The morphologic direction (gram-negative rods -> a gram-negative organism) is correct, so direction_correct=true, but the specific identity asserted (enteric) is the wrong/narrow referent \u2014 H. influenzae is the prototypical association, and enteric/aerobic GNB are only one context-dependent subset (neonatal, elderly, post-neurosurgical). The quote does not explicitly name 'enteric' to exclude it; concluding the claim is wrong requires the clinical-microbiology inference that H. influenzae != enteric, hence LEAP rather than pure verbatim entailment of a refutation. Verdict: refuted as stated."
+      },
+      "verify": {
+        "id": "morph_gnb_enteric",
+        "byte_stable": true,
+        "reextracted_value": "Gram-negative coccobacilli on an infected body-fluid (e.g., CSF) Gram stain are, per this CDC Pink Book chapter, suggestive of Haemophilus influenzae \u2014 a fastidious, pleomorphic, gram-negative coccobacillus that is NOT an enteric organism. The page makes no claim that gram-negative bacilli/coccobacilli on CSF stain indicate enteric gram-negative bacilli; the word \"enteric\" never appears. Thus the morphology's primary referent on this source is H. influenzae, not enteric GNB.",
+        "refute_attempt": "Strongest refutation: The byte_quote does NOT support CLAIM [morph_gnb_enteric] (\"gram-negative bacilli (rods) indicate enteric gram-negative bacilli\") \u2014 it contradicts it. (1) The source attributes the gram-negative coccobacillus morphology specifically to H. influenzae, which is a non-enteric, fastidious respiratory-tract organism (Pasteurellaceae), the opposite of enteric Enterobacterales. (2) The word \"enteric\" appears nowhere on the fetched page, so the source provides zero textual basis for the claim's conclusion about enteric GNB. (3) There is also a morphology mismatch: the quote says \"coccobacilli\" (short, oval), whereas the claim says \"bacilli (rods)\"; the source's organism is precisely the coccobacillus, not the rod-shaped enteric bacilli (E. coli, Klebsiella, Pseudomonas) the claim wants to invoke. (4) Therefore this URL/quote cannot ground the claim that GNB morphology on CSF indicates enteric GNB; if anything it grounds the competing/alternative hypothesis (H. influenzae). The claimed value's own qualifying language (\"not specifically enteric... not the unique or primary referent\") concedes this and is consistent with the source, but the headline CLAIM itself is refuted by the cited byte_quote.",
+        "final_verdict": "refuted"
+      },
+      "spider_status": "refuted"
+    },
+    {
+      "id": "morph_gpcc_saureus",
+      "kind": "morphology",
+      "target": "s_aureus",
+      "claim": "On CSF Gram stain, gram-positive cocci in clusters indicate staphylococci (S. aureus).",
+      "authored_hint": null,
+      "grounded": {
+        "id": "morph_gpcc_saureus",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470553/",
+        "source_title": "Gram-Positive Bacteria \u2014 StatPearls, NCBI Bookshelf (NIH)",
+        "byte_quote": "Gram-positive cocci include Staphylococcus (catalase-positive), which grows clusters, and Streptococcus (catalase-negative), which grows in chains.",
+        "value_found": "Gram-positive cocci arranged in clusters correspond to Staphylococcus (catalase-positive), distinguished from Streptococcus, which grows in chains. A second StatPearls reference (NBK441868, Staphylococcus aureus) corroborates: \"S aureus are gram-positive cocci that typically appear microscopically in grape-like clusters but may also present singly, in pairs, or in short chains.\"",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "aafp.org/pubs/afp/issues/2005/0515/p2003.html (AFP summary of IDSA meningitis guideline) \u2014 secondary digest of the guideline and focused on gram-positive diplococci/chains (pneumococcus), did not supply a clusters->staphylococci quote; not used as the grounding source.",
+          "scientifically.blog/gram-positive-cocci-clusters \u2014 secondary blog, explicitly excluded by the task (NOT a peer-reviewed/guideline/authoritative reference).",
+          "news-medical.net and microbenotes.com \u2014 secondary educational/news sites, not primary; discarded in favor of StatPearls.",
+          "PMC7722320 (point-of-care CSF Gram stain study) and PMC6162874 ('oozing sign' blood-culture study) \u2014 primary studies but about Gram-stain diagnostic performance/technique, not a clean morphology->organism identity statement; not needed once StatPearls gave a direct quote.",
+          "Did NOT rely on the CSF-specific framing: no fetched primary source states that clusters on a CSF Gram stain specifically indicate S. aureus; the grounding quote is a general clinical-microbiology morphology statement, so the CSF qualifier in the claim is unsupported by a quote."
+        ],
+        "note": "LEAP, partial. The quote ENTAILS the genus-level half: gram-positive cocci in clusters = Staphylococcus (vs Streptococcus in chains), and NBK441868 entails S. aureus presents as grape-like clusters. But the claim's parenthetical equation clusters == S. aureus specifically is a LEAP: clusters indicate the genus Staphylococcus, not S. aureus uniquely \u2014 coagulase-negative staphylococci (e.g., S. epidermidis) are also GPCC and are in fact the dominant clustered GPC in CSF/shunt (healthcare-associated) settings. No fetched source ties CSF GPCC specifically to S. aureus; species-level ID requires coagulase/catalase testing or culture. Direction is correct (clusters -> staphylococci), hence verdict direction_only rather than grounded."
+      },
+      "verify": {
+        "id": "morph_gpcc_saureus",
+        "byte_stable": true,
+        "reextracted_value": "Gram-positive cocci that grow in clusters are Staphylococcus (catalase-positive), distinguished from Streptococcus (catalase-negative), which grows in chains. The source establishes only the genus-level morphology/catalase distinction (clusters = Staphylococcus, chains = Streptococcus); it does NOT state that clusters specifically indicate S. aureus, nor does it discuss CSF/meningitis caused by staphylococci.",
+        "refute_attempt": "STRONGEST REFUTATION: The byte_quote appears verbatim (modulo markdown italics) so byte_stability holds, but the quote only weakly/partially supports the full claim. Three gaps: (1) Genus vs. species \u2014 the quote says clusters indicate the GENUS Staphylococcus, not specifically the SPECIES S. aureus. Many clustered gram-positive cocci are coagulase-negative staphylococci (e.g., S. epidermidis), which are common CSF-shunt/contaminant organisms; equating clusters with S. aureus over-specifies what the source states. The parenthetical \"(S. aureus)\" in the claim is not licensed by NBK470553. (2) CSF/context \u2014 the claim is framed as \"On CSF Gram stain,\" but the verifier confirmed NBK470553 does NOT discuss S. aureus or staphylococci in relation to meningitis/CSF at all. The clusters=Staphylococcus rule is a general microbiology fact, not a CSF-specific interpretation from this source. (3) The corroborating NBK441868 quote about grape-like clusters genuinely supports S. aureus morphology, but it too notes S. aureus \"may also present singly, in pairs, or in short chains,\" meaning clusters are typical-but-not-exclusive \u2014 so \"clusters indicate S. aureus\" is not strictly entailed even by the corroborating source. CONCLUSION: The quote is real and supports the genus-level morphological discriminator (clusters = staphylococci), which is the core of the claim. The species-level specification \"(S. aureus)\" and the CSF framing go modestly beyond what NBK470553 alone states, but are reasonable domain inferences supported by the second reference. This is grounded for the central assertion (clusters indicate staphylococci) with the (S. aureus) parenthetical being a defensible but slightly over-specified extension.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    }
+  ]
+}

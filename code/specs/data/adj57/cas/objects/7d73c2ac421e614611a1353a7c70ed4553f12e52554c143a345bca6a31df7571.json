@@ -1,0 +1,31 @@
+{
+  "hash": "7d73c2ac421e614611a1353a7c70ed4553f12e52554c143a345bca6a31df7571",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+  "title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive (Materials 2025, 18(16), 3747)",
+  "interned_at": "",
+  "content": "Research on axle reliability and damage over the years has found that, in addition to wear and tear, about two-thirds of axle damage is caused by fatigue. The fatigue process is particularly sensitive to microstructure, surface conditions, residual stresses, non-metallic inclusions, and stress concentration factors at geometric transitions.",
+  "citations": [
+    {
+      "start": 101,
+      "end": 153,
+      "quote": "about two-thirds of axle damage is caused by fatigue",
+      "used_for": "prior:fatigue_from_transition_arc_geometry_stress_concentration"
+    },
+    {
+      "start": 101,
+      "end": 153,
+      "quote": "about two-thirds of axle damage is caused by fatigue",
+      "used_for": "PRIOR: base rate of fatigue_from_transition_arc_geometry_stress_concentration among premature fatigue fractures of EA1N/UIC 811-1 in-service axles. No published base rate exists for this specific geometric sub-mode. The nearest literature figure is 'about two-thirds of axle damage is caused by fatigue' (root-cited reference [1]), but that is the rate of fatigue overall, not of arc-geometry stress concentration specifically. Reported value 0.67 is a coarse direction-only anchor (fatigue prevalence), NOT a grounded primary base rate for the specific answer. Within fatigue, fretting fatigue at the wheel seat dominates (>90% per enterprise statistics), so arc-geometry stress concentration is plausibly a minority sub-mode \u2014 the 0.67 anchor likely overstates the true base rate of this specific mode.->fatigue_from_transition_arc_geometry_stress_concentration"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "Paper cites reference [1] for the two-thirds figure (an enterprise/reliability statistic).",
+      "interned_hash": ""
+    },
+    {
+      "citation": "reference [1] (enterprise/reliability statistic)",
+      "interned_hash": ""
+    }
+  ]
+}

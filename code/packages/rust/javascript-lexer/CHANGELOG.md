@@ -2,6 +2,90 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.9.0] - 2026-06-21 — newline-precedence flag (via `lexer` 0.6.0)
+
+JS tokens now carry `TOKEN_PRECEDED_BY_NEWLINE` when a line terminator preceded
+them (the underlying `lexer` crate now populates the flag). No API change here;
+3 tests pin the behaviour: a token after a newline is flagged, same-line tokens
+are not, and a newline *inside* a template does not flag the following token.
+
+## [0.8.0] - 2026-06-15 — gap-044b: complex template substitutions
+
+### Fixed
+- Template literal substitutions with non-identifier expressions now lex without
+  error on es2025.  Affected patterns included `${obj.name}`, `${a + b}`,
+  `${f()}`, `${{a: 1}}`, `${x ? y : z}`, and multiple substitutions in one
+  literal.  Root cause: F10 flat-mode transitions inside `${...}` overwrote the
+  active group (to "div" / "default"), causing the closing `}` to be consumed as
+  RBRACE instead of TEMPLATE_TAIL.  The fix tracks template entry depths in the
+  `lexer` crate (GrammarLexer) and overrides the group at match time.
+- 7 new regression tests covering the above shapes.
+
+## [0.7.0] - 2026-06-14
+
+### Added
+- **Template-substitution lexer modes (gap-044, first slice)** — `es2025.tokens`
+  now wires up template literal `${...}` substitutions via two new flat modes:
+  - `template` — active immediately after `TEMPLATE_HEAD` or `TEMPLATE_MIDDLE`
+    (both of which end with `${`).  It is a *flat* (set-mode) target so it
+    inherits the default group's patterns (NAME, NUMBER, …) while placing its
+    own `TEMPLATE_TAIL` / `TEMPLATE_MIDDLE` patterns first.  An empty body
+    (`` `${}` ``) is handled by the own patterns matching the opening `}`.
+  - `template_div` — active after a NAME is emitted inside `${...}` (mirrors
+    the role of `div` in the outer expression: `SLASH`/`SLASH_EQUALS` override
+    plus `TEMPLATE_TAIL`/`TEMPLATE_MIDDLE` at own priority so the closing `}`
+    is recognised before the inherited `RBRACE`).
+
+  New transitions added (in first-match-wins order before the general
+  value-producing rule):
+  ```
+  on TEMPLATE_HEAD              -> set-mode template
+  on TEMPLATE_MIDDLE            -> set-mode template
+  on NAME in template           -> set-mode template_div
+  on NAME in template_div       -> set-mode template_div
+  on TEMPLATE_TAIL              -> set-mode div
+  ```
+
+  Closes closurec gap-044 for the common `${singleIdentifier}` case.
+  Documented limitation: expressions containing operators (`.`, `+`, `(`, …)
+  or nested `{ }` reset the mode back to `default`/`div`, losing the template
+  context.  Full brace-depth support is a follow-up.
+
+- The compiled `_grammar.rs` was regenerated from `es2025.tokens`.
+
+## [0.6.0] - 2026-06-13
+
+### Added
+- **F10 regex-vs-division mode table (ES2025)** — `es2025.tokens` now
+  declares `start_mode: default`, a flat `div` mode (`group div:` whose
+  `SLASH`/`SLASH_EQUALS` patterns override `REGEX`), and a `transitions:`
+  table encoding Acorn's `exprAllowed`: value-producing tokens
+  (NAME/NUMBER/STRING/REGEX/`)`/`]`/`this`/`super`/`true`/`false`/`null`)
+  enter `div` mode (a following `/` is DIVISION); operators, openers and
+  expression-keywords (`return`/`typeof`/`in`/`new`/…) return to `default`
+  (a following `/` starts a REGEX). The shared `GrammarLexer` interprets
+  the table (no hand-written per-language callback). This makes `a/b/c`
+  lex as three divisions and `return/re/` lex `/re/` as one REGEX token —
+  closing closurec gap-092/gap-115/gap-119.
+- The compiled `_grammar.rs` was regenerated from the grammars. This run
+  also picks up the previously-deferred generic (`""`-version) lexer
+  module that the generator emits but the committed file had been stale
+  against (noted in CLOC12.99's gap-096 resolution).
+
+## [0.5.1] - 2026-06-12
+
+### Fixed
+- **REGEX flag class (CORRECTNESS, ES2024/ES2025)** — the `REGEX` token
+  pattern in `es2024.tokens` and `es2025.tokens` had the flag character
+  class `[dgimsvy]`, which accidentally omitted the ES2015 `u` (unicode)
+  flag — a typo introduced when `v` (unicodeSets, ES2024) was added. As
+  a result a regex such as `/x/gimsuy` lexed as the truncated regex
+  `/x/gims` followed by a stray identifier `uy`. Corrected the class to
+  the full ES2024 set `[dgimsuvy]` (d, g, i, m, s, u, v, y) in both
+  source grammars and regenerated the compiled lexer pattern. New tests
+  `es2025_regex_accepts_all_modern_flags_as_one_token` and
+  `es2024_regex_accepts_u_flag`. Unblocks closurec gap-096.
+
 ## [0.5.0] - 2026-05-21
 
 ### Added

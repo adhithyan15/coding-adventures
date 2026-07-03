@@ -1,0 +1,8 @@
+{
+ "check_id": 3,
+ "idx": 1,
+ "slot": "weight_kg",
+ "claimed_value": 20,
+ "scenario": "A nurse is preparing an acetaminophen dose for a child weighing 20 kg who has not received any acetaminophen in the last 12 hours. The provider has ordered weight-based dosing per protocol.",
+ "cited_span": "a child weighing 20 kg"
+}

@@ -1,0 +1,14 @@
+[package]
+name = "armv7-backend"
+version = "0.1.0"
+edition = "2021"
+description = "ARMv7-A (A32) backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into ARMv7 machine code via `armv7-encoder`.  Emit-only — bytes go to a downstream simulator, `qemu-arm`, or `objcopy`+linker for a phone-class Linux SoC.  Mirror of `ge225-backend` / `intel4004-backend` in shape and intent.  Phase 5 of the historical-arch backend migration."
+
+[lib]
+name = "armv7_backend"
+path = "src/lib.rs"
+
+[dependencies]
+armv7-encoder = { path = "../armv7-encoder" }
+jit-core      = { path = "../jit-core" }
+vm-core       = { path = "../vm-core" }

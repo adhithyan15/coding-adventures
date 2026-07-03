@@ -1,0 +1,8 @@
+{
+ "check_id": 119,
+ "idx": 48,
+ "slot": "food_type",
+ "claimed_value": "whole-muscle intact beef steak",
+ "scenario": "A steakhouse serves a whole-muscle intact ribeye steak cooked to an internal temperature of 145 degrees F at the customer's request for medium-rare. A consumer advisory regarding undercooked meats is posted on the menu.",
+ "cited_span": "A steakhouse serves a whole-muscle intact ribeye steak"
+}

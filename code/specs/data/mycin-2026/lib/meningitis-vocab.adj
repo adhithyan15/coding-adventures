@@ -1,0 +1,82 @@
+% ============================================================================
+% meningitis-vocab — the controlled vocabulary, as an IMPORTABLE LIBRARY.
+% ============================================================================
+% MYCIN-2026 M4. This is a CAS library: a self-contained `.adj` file other
+% libraries `import`. It declares the SHARED vocabulary for the bacterial-vs-
+% viral meningitis differential — the decomposer (LLM) is constrained to these
+% terms via their `surface` forms, and the adj-lang compiler REJECTS any rulebook
+% or case program that names a finding / value / hypothesis not defined here. So
+% the IR the model emits and every rulebook it compiles against share one closed
+% vocabulary by construction; they cannot drift apart.
+%
+% A `dictionary` is a first-class grammar construct (M1). A finding has a CLOSED
+% value domain, so "observed normal/negative" is distinguishable from "not yet
+% observed". `surface` lists the decomposer's prose forms (not engine-semantic).
+%
+% Other libraries use this by:  import "meningitis-vocab.adj"  then  use meningitis_vocab
+% (the rulebook arms import it; see bacterial-arm.adj / viral-arm.adj).
+
+dictionary meningitis_vocab {
+
+    % ======================== Hypotheses ========================
+
+    define bacterial_meningitis : hypothesis
+        surface "bacterial meningitis", "pyogenic meningitis", "acute bacterial meningitis"
+
+    define viral_meningitis : hypothesis
+        surface "viral meningitis", "aseptic meningitis", "enteroviral meningitis"
+
+    % ======================== Findings ==========================
+    % Each finding has a CLOSED value domain. The value the rulebook reasons over
+    % (e.g. csf_glucose(low)) must be one of these; the compiler enforces it.
+
+    % --- CSF microbiology / reference ---
+    define csf_gram_stain : finding values [positive, negative]
+        surface "Gram stain positive", "organisms seen on Gram stain",
+                "gram-positive diplococci on CSF", "no organisms on Gram stain"
+
+    define csf_culture : finding values [positive, negative]
+        surface "CSF culture positive", "positive cerebrospinal fluid culture",
+                "organism grown from CSF", "sterile CSF culture", "no growth"
+
+    define enteroviral_pcr : finding values [positive, negative]
+        surface "enterovirus PCR positive", "CSF enteroviral PCR detected",
+                "positive enterovirus RT-PCR", "negative enterovirus PCR"
+
+    % --- CSF cell counts ---
+    define csf_neutrophilic_pleocytosis : finding values [high, normal]
+        surface "neutrophil-predominant pleocytosis", "PMN predominance",
+                "CSF WBC elevated with neutrophils", "neutrophilic pleocytosis"
+
+    define csf_lymphocytic_pleocytosis : finding values [high, normal]
+        surface "lymphocyte-predominant pleocytosis", "lymphocytic pleocytosis",
+                "mononuclear predominance", "CSF WBC elevated with lymphocytes"
+
+    % --- CSF chemistry (NOTE: these four co-vary — one inflammatory process.
+    %     The bacterial arm encodes them as INDEPENDENT contributions on purpose;
+    %     the cost-to-correct proof (M8) localizes the over-count and adds one
+    %     explaining-away `interacts` clause.) ---
+    define csf_glucose : finding values [low, normal]
+        surface "low CSF glucose", "hypoglycorrhachia", "CSF glucose reduced",
+                "normal CSF glucose"
+
+    define csf_protein : finding values [high, normal]
+        surface "elevated CSF protein", "high CSF protein", "normal CSF protein"
+
+    define csf_lactate : finding values [high, normal]
+        surface "elevated CSF lactate", "high CSF lactate", "normal CSF lactate"
+
+    % --- Serum / clinical ---
+    define serum_procalcitonin : finding values [high, normal]
+        surface "elevated procalcitonin", "high serum procalcitonin",
+                "raised PCT", "normal procalcitonin"
+
+    define seizure : finding values [present, absent]
+        surface "seizure", "convulsion", "seized", "no seizure"
+
+    define fever : finding values [present, absent]
+        surface "fever", "febrile", "afebrile", "no fever"
+
+    define meningismus : finding values [present, absent]
+        surface "neck stiffness", "nuchal rigidity", "meningismus", "no neck stiffness"
+}

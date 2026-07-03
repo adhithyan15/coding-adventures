@@ -1,0 +1,29 @@
+% ============================================================================
+% onco-recall.query.adj — a worked recall query over the oncology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER an oncology recall question:
+% it states no oncologic fact — it only `import`s the grounded library and asks binding
+% queries. The native adj-lang engine resolves each `?` against the imported `relate`
+% edges and returns the binding + the citing clause's source/locator/trust. All
+% knowledge is in the library; none is here. (A cancer with several markers binds
+% multiple answers — the engine returns each with its own citation.)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli onco-recall.query.adj
+% ============================================================================
+
+import "onco-edges.adj"
+
+? tumor_marker(ovarian_cancer, $Marker)                % expect ca_125
+? tumor_marker(medullary_thyroid_carcinoma, $Marker)   % expect calcitonin / cea
+? tumor_marker(hepatocellular_carcinoma, $Marker)      % expect alpha_fetoprotein
+? tumor_marker(colorectal_cancer, $Marker)             % expect cea (expand)
+? tumor_marker(prostate_cancer, $Marker)               % expect psa (expand)
+? tumor_marker(choriocarcinoma, $Marker)               % expect hcg (expand)
+% --- BATCH: high-yield tumor markers ---
+? tumor_marker(pancreatic_cancer, $Marker)             % expect ca_19_9 / cea (expand)
+? tumor_marker(small_cell_lung_cancer, $Marker)        % expect neuron_specific_enolase (expand)
+? tumor_marker(neuroendocrine_tumor, $Marker)          % expect chromogranin_a (expand)
+? tumor_marker(melanoma, $Marker)                      % expect s100 (expand)
+? tumor_marker(yolk_sac_tumor, $Marker)                % expect alpha_fetoprotein (expand)
+? tumor_marker(gastrointestinal_stromal_tumor, $Marker)  % expect cd117 (expand)

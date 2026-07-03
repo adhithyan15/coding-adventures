@@ -5,6 +5,204 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0] - 2026-05-24
+
+### Changed
+
+- ``InMemoryBackend._check_unique`` now emits
+  ``UNIQUE constraint failed: <table>.<col>`` for PRIMARY KEY
+  uniqueness violations.  Previously emitted ``PRIMARY KEY
+  constraint failed: …`` for the PK case, which sqlite3 never
+  produces (PRIMARY KEY implies UNIQUE; SQLite reports both with
+  the unified UNIQUE wording).
+- ``ConstraintViolation`` docstring updated to reflect the unified
+  wording and the addition of ``CHECK constraint failed:`` from
+  sql-backend 0.21.
+
+## [0.21.0] - 2026-05-24
+
+### Added
+
+- ``ColumnDef.check_expr_text: str`` — source-text rendering of the
+  CHECK predicate, populated by the adapter and consumed by the VM
+  so ``ConstraintViolation`` messages read
+  ``CHECK constraint failed: <expr_text>`` (matches SQLite) instead
+  of the older ``CHECK constraint failed: <table>.<col>``.  Defaults
+  to ``""`` for back-compat with externally constructed ColumnDefs;
+  the VM falls back to the older ``table.col`` form when the field
+  is empty.  Non-comparing/non-hashing so existing equality
+  semantics are unchanged.
+
+## [0.20.0] - 2026-05-23
+
+### Changed
+
+- ``InMemoryBackend.insert`` now mutates the caller's input row
+  dict in place to reflect auto-assigned (INTEGER PRIMARY KEY) and
+  default-applied column values.  The hidden ``_ROWID_KEY`` stamp
+  is excluded — the caller's dict represents user-visible columns
+  only.  Required so the VM's ``LoadLastInsertedColumn`` path for
+  ``INSERT … RETURNING`` observes the auto-assigned id instead of
+  the NULL the caller originally passed in.
+
+## [0.19.0] - 2026-05-23
+
+### Added
+
+- ``InMemoryBackend`` synthesizes ``sqlite_sequence`` (name, seq) on
+  demand for AUTOINCREMENT tables.  Matches SQLite's lazy-
+  materialization contract: querying ``sqlite_sequence`` on a fresh
+  database (or one with no AUTOINCREMENT tables) raises
+  ``TableNotFound``; once at least one AUTOINCREMENT table exists,
+  the table appears with one row per AUTOINCREMENT table.
+- The ``seq`` column reports the high-water rowid for each table
+  (``_next_rowid - 1``).  Since the counter is never decremented,
+  the value persists across DELETE operations — matching SQLite's
+  "deleted rowids never reuse" guarantee.
+
+### Changed
+
+- ``create_table('sqlite_sequence', ...)``, ``drop_table('sqlite_sequence')``,
+  and ``insert('sqlite_sequence', ...)`` raise ``ConstraintViolation`` with
+  the same "reserved name" / "may not be modified" messages as the
+  ``sqlite_master`` guards.
+
+## [0.18.0] - 2026-05-23
+
+### Added
+
+- ``InMemoryBackend.insert`` now auto-assigns the next rowid to an
+  ``INTEGER PRIMARY KEY`` column when the supplied value is ``None``
+  or the column is missing from the input row — mirrors SQLite's
+  "INTEGER PRIMARY KEY is an alias for rowid" semantics.  Unblocks
+  ORM-style ``INSERT INTO t(name) VALUES ('alice')`` patterns that
+  previously failed with a NOT NULL violation.
+- When the user supplies an explicit integer id, ``_next_rowid``
+  advances past it so a subsequent auto-assign doesn't collide
+  (SQLite's ``_next_rowid = max(_next_rowid, supplied_id + 1)``).
+- The hidden ``_ROWID_KEY`` stamp is now sourced from the IPK
+  column's value when one exists, so ``SELECT rowid`` and ``SELECT
+  id`` return identical results — required for SQLite compat.
+
+### Changed
+
+- ``_apply_defaults`` now builds the row dict in *column-declaration
+  order* rather than caller-supplied order.  Previously a user
+  insert that omitted a column (now common with IPK auto-assign)
+  would yield a row dict ordered ``(supplied_cols, then_defaults)``,
+  which surfaced as wrong-order ``SELECT *`` output.  Existing
+  callers that supplied all columns are unaffected — only the
+  iteration order of the returned dict changed.
+- ``test_not_null_from_primary_key`` renamed to
+  ``test_not_null_from_primary_key_text_type`` and changed to use a
+  ``TEXT PRIMARY KEY`` column (which still violates NOT NULL on
+  explicit NULL — only ``INTEGER PRIMARY KEY`` gets the rowid-alias
+  exemption).  Added three new tests covering the new auto-assign
+  paths.
+
+## [0.17.0] - 2026-05-23
+
+### Changed
+
+- ``InMemoryBackend._synthesize_master_rows`` now assigns stable
+  monotonic positive integers to the ``rootpage`` column for tables
+  and indexes (matching SQLite's convention that ``rootpage > 0``
+  means the object exists in the b-tree).  Triggers continue to get
+  ``rootpage = 0`` since they're not b-tree objects.  Page numbers
+  are assigned in iteration order at synthesis time and are not
+  stable across schema mutations (matches SQLite's documented
+  behaviour for fresh databases).
+
+## [0.16.0] - 2026-05-23
+
+### Added
+
+- ``InMemoryBackend`` now synthesizes ``sqlite_master`` (and its alias
+  ``sqlite_schema``) on demand from current schema state.  The
+  synthesized table exposes the canonical five-column SQLite layout
+  (``type``, ``name``, ``tbl_name``, ``rootpage``, ``sql``) with one row
+  per user table, user-created index, and trigger.  ORMs and migration
+  tools that query ``SELECT name FROM sqlite_master WHERE type='table'``
+  now get correct results against ``:memory:`` databases.
+- ``rootpage`` is always 0 (the on-disk page-number concept is
+  meaningless for the in-memory backend).  Auto-generated indexes
+  (``sqlite_autoindex_*``) get ``NULL`` in the ``sql`` column, matching
+  real SQLite.
+
+### Changed
+
+- ``create_table('sqlite_master', ...)`` and the same for
+  ``sqlite_schema`` raise ``ConstraintViolation`` with the message
+  ``object name reserved for internal use``.  ``insert``,
+  ``drop_table``, and similar mutations also raise — the table is
+  read-only.
+- ``tables()`` listing continues to return *user* tables only;
+  ``sqlite_master`` is visible by name but not in the listing (matches
+  SQLite's ``.tables`` shell command).
+
+## [0.15.0] - 2026-05-23
+
+### Added
+
+- ``Backend.create_table`` now takes a keyword-only ``strict: bool = False``
+  parameter mirroring SQLite's ``CREATE TABLE ... STRICT`` trailing option.
+  When ``strict=True``:
+  * Every column's declared type must be one of ``INT``, ``INTEGER``,
+    ``REAL``, ``TEXT``, ``BLOB``, or ``ANY`` (case-insensitive).  Anything
+    else raises ``ConstraintViolation`` at CREATE TABLE time with the
+    SQLite-compatible message ``unknown datatype for t.col: "XYZ"``.
+  * Subsequent ``insert`` / ``update`` calls validate each value against
+    the column's declared type, applying SQLite-style lossless coercion:
+    INT ↔ TEXT (decimal), whole REAL → INT, numeric TEXT → REAL, INT → REAL
+    (promotion).  Pinned against ``sqlite3`` 3.50 via oracle tests.
+    ``NULL`` is always permitted unless the column is ``NOT NULL``
+    (enforced separately).  Mismatches raise ``ConstraintViolation`` with
+    the SQLite-compatible message ``cannot store TYPE value in TYPE column
+    t.col`` (value labels use ``INT``, column labels use the declared
+    name).
+- ``InMemoryBackend._Table`` gains a ``strict: bool`` flag; ``ANY``
+  columns inside a STRICT table opt back into lenient typing.
+
+### Changed
+
+- ``Backend.create_table`` signature widened with a default-False kwarg;
+  all existing call sites remain valid.  ``SqliteFileBackend.create_table``
+  accepts the flag for interface conformance but does not yet enforce
+  strict typing on disk — documented as a known limitation.
+
+## [0.14.0] - 2026-05-23
+
+### Added
+
+- ``Backend.rename_table(old_name, new_name)``,
+  ``Backend.rename_column(table, old, new)``, and
+  ``Backend.drop_column(table, column)`` — three new abstract methods
+  on the Backend interface to support the SQLite-3.25+ /
+  3.35+ ALTER TABLE forms.  Each has a default implementation that
+  raises ``NotImplementedError`` so existing backends that don't
+  implement them still compile.
+- ``InMemoryBackend`` implements all three.  Rename operations
+  rewrite any indexes that referenced the old table or column name.
+  ``drop_column`` rejects: PRIMARY KEY columns, the only column of a
+  table, and columns referenced by an index — matching SQLite's
+  restrictions.
+
+## [0.13.0] - 2026-05-23
+
+### Added
+
+- ``ColumnDef.collation: str | None`` field — carries the column's
+  declared ``COLLATE name`` from ``CREATE TABLE``.  Stored upper-cased
+  (or ``None`` for BINARY / unspecified).  Used by the planner to set
+  the default sort collation when an ``ORDER BY`` references the
+  column without an explicit ``COLLATE`` override.
+- ``SchemaProvider.column_collation(table, column)`` — optional
+  method returning the declared collation for a column, or ``None``.
+  Default implementation returns ``None``; the ``_BackendSchemaProvider``
+  override reads the underlying ``ColumnDef.collation`` field, so
+  any Backend wired through ``backend_as_schema_provider`` advertises
+  its column-level collations to the planner automatically.
+
 ## [0.12.0] - 2026-05-12
 
 ### Added

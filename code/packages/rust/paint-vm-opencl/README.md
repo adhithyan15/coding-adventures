@@ -6,9 +6,10 @@ runtime.
 ## Status
 
 OpenCL is modeled as a compute raster path rather than a native vector API. This
-crate now consumes `paint-vm-gpu-core` plans for the Tier 1 solid-vector slice
-while keeping runtime rendering unavailable until an OpenCL context, kernels,
-buffers, and readback path lands.
+crate now consumes `paint-vm-gpu-core` plans for the Tier 1 textured slice:
+indexed meshes, scissor clips, pixel-image uploads, and generated linear/radial
+gradient textures. Runtime rendering remains unavailable until an OpenCL
+context, kernels, buffers, and readback path lands.
 
 The `descriptor()` intentionally remains a Tier 0 scaffold so automatic runtime
 selection does not pick OpenCL before it can execute pixels. Use `profile()` and
@@ -28,5 +29,5 @@ PaintScene
 
 - Build a kernel-side triangle coverage rasterizer for solid meshes.
 - Add buffer upload/readback and device fallback selection.
-- Add texture sampling for `PaintImage`.
+- Execute texture sampling for `PaintImage` and generated gradients.
 - Add glyph atlas buffers once the shared text shaping path is ready.

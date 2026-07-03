@@ -4,10 +4,10 @@
 // code/packages/python/cas-limit-series/tests/.
 
 use cas_limit_series::{
-    limit_advanced, limit_direct, taylor_polynomial, LimitAdvancedOptions, LimitDirection,
-    PolynomialError, LIMIT,
+    limit_advanced, limit_direct, taylor_polynomial, try_series_limit_default,
+    LimitAdvancedOptions, LimitDirection, PolynomialError, LIMIT,
 };
-use symbolic_ir::{apply, int, sym, IRNode, ADD, DIV, EXP, LOG, MUL, POW, SUB};
+use symbolic_ir::{apply, int, sym, IRNode, ADD, COS, DIV, EXP, LOG, MUL, NEG, POW, SIN, SUB, TAN};
 
 // ---------------------------------------------------------------------------
 // limit_direct
@@ -218,11 +218,14 @@ fn limit_advanced_direct_finite_result() {
 }
 
 #[test]
-fn limit_advanced_indeterminate_without_callbacks_is_unevaluated() {
+fn limit_advanced_indeterminate_without_callbacks_closes_via_taylor() {
+    // Track J2: the Taylor-series fallback now closes simple 0/0 forms
+    // without an injected `diff_fn`. `x/x` at x = 0 expands to leading
+    // u^1 / u^1 with ratio 1/1 = 1.
     let x = sym("x");
     let expr = apply(sym(DIV), vec![x.clone(), x.clone()]);
     let out = limit_advanced(expr.clone(), &x, int(0), LimitAdvancedOptions::default());
-    assert_eq!(out, apply(sym(LIMIT), vec![expr, x, int(0)]));
+    assert_eq!(out, int(1));
 }
 
 #[test]
@@ -291,6 +294,44 @@ fn limit_advanced_power_rewrite_falls_back_inside_exp() {
         ],
     );
     assert_eq!(out, apply(sym(EXP), vec![expected_inner]));
+}
+
+#[test]
+fn limit_advanced_bounded_oscillatory_over_diverging_at_infinity() {
+    let x = sym("x");
+    let expr = apply(sym(DIV), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    let out = limit_advanced(
+        expr,
+        &x,
+        sym("inf"),
+        LimitAdvancedOptions {
+            diff_fn: Some(&test_diff),
+            eval_fn: Some(&test_eval),
+            ..Default::default()
+        },
+    );
+    assert_eq!(out, int(0));
+}
+
+#[test]
+fn limit_advanced_bounded_oscillatory_over_quadratic_at_negative_infinity() {
+    let x = sym("x");
+    let denom = apply(
+        sym(ADD),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+    );
+    let expr = apply(sym(DIV), vec![apply(sym(COS), vec![x.clone()]), denom]);
+    let out = limit_advanced(
+        expr,
+        &x,
+        sym("minf"),
+        LimitAdvancedOptions {
+            diff_fn: Some(&test_diff),
+            eval_fn: Some(&test_eval),
+            ..Default::default()
+        },
+    );
+    assert_eq!(out, int(0));
 }
 
 // ---------------------------------------------------------------------------
@@ -457,4 +498,211 @@ fn taylor_order_zero_gives_constant_term() {
     );
     let out = taylor_polynomial(&expr, &x, &int(0), 0).unwrap();
     assert_eq!(out, int(1));
+}
+
+// ---------------------------------------------------------------------------
+// Track J2: Taylor-series limit fallback (`try_series_limit`)
+// ---------------------------------------------------------------------------
+
+fn xs() -> IRNode {
+    sym("x")
+}
+
+#[test]
+fn series_limit_sin_minus_x_over_x_cubed() {
+    // (sin(x) - x)/x^3 → -1/6
+    let x = xs();
+    let numer = apply(sym(SUB), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    let expr = apply(sym(DIV), vec![numer, apply(sym(POW), vec![x.clone(), int(3)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(IRNode::rational(-1, 6)));
+}
+
+#[test]
+fn series_limit_one_minus_cos_over_x_squared() {
+    let x = xs();
+    let numer = apply(sym(SUB), vec![int(1), apply(sym(COS), vec![x.clone()])]);
+    let expr = apply(sym(DIV), vec![numer, apply(sym(POW), vec![x.clone(), int(2)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(IRNode::rational(1, 2)));
+}
+
+#[test]
+fn series_limit_exp_minus_1_minus_x_over_x_squared() {
+    let x = xs();
+    let numer = apply(
+        sym(SUB),
+        vec![
+            apply(sym(SUB), vec![apply(sym(EXP), vec![x.clone()]), int(1)]),
+            x.clone(),
+        ],
+    );
+    let expr = apply(sym(DIV), vec![numer, apply(sym(POW), vec![x.clone(), int(2)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(IRNode::rational(1, 2)));
+}
+
+#[test]
+fn series_limit_tan_minus_x_over_x_cubed() {
+    let x = xs();
+    let numer = apply(sym(SUB), vec![apply(sym(TAN), vec![x.clone()]), x.clone()]);
+    let expr = apply(sym(DIV), vec![numer, apply(sym(POW), vec![x.clone(), int(3)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(IRNode::rational(1, 3)));
+}
+
+#[test]
+fn series_limit_log_one_plus_x_minus_x_over_x_squared() {
+    let x = xs();
+    let one_plus_x = apply(sym(ADD), vec![int(1), x.clone()]);
+    let numer = apply(sym(SUB), vec![apply(sym(LOG), vec![one_plus_x]), x.clone()]);
+    let expr = apply(sym(DIV), vec![numer, apply(sym(POW), vec![x.clone(), int(2)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(IRNode::rational(-1, 2)));
+}
+
+#[test]
+fn series_limit_sin_minus_x_over_exp_x_squared_minus_one() {
+    // (sin(x) - x) / (exp(x^2) - 1) → 0  (leading u^3 / u^2, p > q ⇒ 0)
+    let x = xs();
+    let numer = apply(sym(SUB), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    let denom = apply(
+        sym(SUB),
+        vec![
+            apply(sym(EXP), vec![apply(sym(POW), vec![x.clone(), int(2)])]),
+            int(1),
+        ],
+    );
+    let expr = apply(sym(DIV), vec![numer, denom]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(int(0)));
+}
+
+#[test]
+fn series_limit_sin_over_x_regression() {
+    let x = xs();
+    let expr = apply(sym(DIV), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(int(1)));
+}
+
+#[test]
+fn series_limit_x_squared_over_x_regression() {
+    let x = xs();
+    let expr = apply(
+        sym(DIV),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), x.clone()],
+    );
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(int(0)));
+}
+
+#[test]
+fn series_limit_bare_polynomial_returns_none() {
+    let x = xs();
+    let result = try_series_limit_default(&apply(sym(POW), vec![x.clone(), int(2)]), &x, &int(0));
+    assert!(result.is_none());
+}
+
+#[test]
+fn series_limit_unsupported_head_returns_none() {
+    let x = xs();
+    let weird = apply(sym("Asin"), vec![x.clone()]);
+    let expr = apply(sym(DIV), vec![weird, x.clone()]);
+    assert!(try_series_limit_default(&expr, &x, &int(0)).is_none());
+}
+
+#[test]
+fn series_limit_infinity_point_returns_none() {
+    let x = xs();
+    let expr = apply(sym(DIV), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    assert!(try_series_limit_default(&expr, &x, &sym("inf")).is_none());
+    assert!(try_series_limit_default(&expr, &x, &sym("minf")).is_none());
+}
+
+#[test]
+fn series_limit_limit_advanced_sin_x_unevaluated_at_infinity() {
+    // limit(sin(x), x, inf) — not a quotient that Taylor can handle.
+    // limitAdvanced still falls through to an unevaluated Limit(...).
+    let x = xs();
+    let expr = apply(sym(SIN), vec![x.clone()]);
+    let out = limit_advanced(expr.clone(), &x, sym("inf"), LimitAdvancedOptions::default());
+    // Either it returns an unevaluated Limit or some sentinel; the
+    // critical property is that the dispatcher does not crash and the
+    // Taylor fallback gracefully returns None for non-quotients.
+    if let IRNode::Apply(a) = &out {
+        assert_eq!(a.head, sym(LIMIT));
+    } else {
+        panic!("expected unevaluated Limit, got {out:?}");
+    }
+}
+
+#[test]
+fn series_limit_divergent_one_over_x_squared() {
+    let x = xs();
+    let expr = apply(sym(DIV), vec![int(1), apply(sym(POW), vec![x.clone(), int(2)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(sym("inf")));
+}
+
+#[test]
+fn series_limit_divergent_neg_one_over_x_squared() {
+    let x = xs();
+    let expr = apply(sym(DIV), vec![int(-1), apply(sym(POW), vec![x.clone(), int(2)])]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(sym("minf")));
+}
+
+#[test]
+fn series_limit_polynomial_at_one() {
+    // (x^2 - 1)/(x - 1) at x = 1 → 2.
+    let x = xs();
+    let numer = apply(sym(SUB), vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)]);
+    let denom = apply(sym(SUB), vec![x.clone(), int(1)]);
+    let expr = apply(sym(DIV), vec![numer, denom]);
+    let result = try_series_limit_default(&expr, &x, &int(1));
+    assert_eq!(result, Some(int(2)));
+}
+
+#[test]
+fn series_limit_neg_head_expansion() {
+    // -sin(x)/x → -1
+    let x = xs();
+    let numer = apply(sym(NEG), vec![apply(sym(SIN), vec![x.clone()])]);
+    let expr = apply(sym(DIV), vec![numer, x.clone()]);
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(int(-1)));
+}
+
+#[test]
+fn series_limit_mul_pow_neg_one_recognised_as_quotient() {
+    // sin(x) * x^(-1) → 1
+    let x = xs();
+    let expr = apply(
+        sym(MUL),
+        vec![
+            apply(sym(SIN), vec![x.clone()]),
+            apply(sym(POW), vec![x.clone(), int(-1)]),
+        ],
+    );
+    let result = try_series_limit_default(&expr, &x, &int(0));
+    assert_eq!(result, Some(int(1)));
+}
+
+#[test]
+fn series_limit_dispatcher_no_diff_fn_closes_sin_over_x() {
+    // limit_advanced(sin(x)/x, x, 0) without diff_fn now closes via Taylor.
+    let x = xs();
+    let expr = apply(sym(DIV), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    let out = limit_advanced(expr, &x, int(0), LimitAdvancedOptions::default());
+    assert_eq!(out, int(1));
+}
+
+#[test]
+fn series_limit_dispatcher_no_diff_fn_closes_one_minus_cos_over_x_sq() {
+    let x = xs();
+    let numer = apply(sym(SUB), vec![int(1), apply(sym(COS), vec![x.clone()])]);
+    let expr = apply(sym(DIV), vec![numer, apply(sym(POW), vec![x.clone(), int(2)])]);
+    let out = limit_advanced(expr, &x, int(0), LimitAdvancedOptions::default());
+    assert_eq!(out, IRNode::rational(1, 2));
 }

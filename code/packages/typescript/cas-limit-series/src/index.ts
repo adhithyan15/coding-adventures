@@ -25,6 +25,9 @@ import {
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { trySeriesLimit } from "./seriesLimit";
+
+export { trySeriesLimit } from "./seriesLimit";
 
 export const LIMIT = "Limit";
 export const TAYLOR = "Taylor";
@@ -225,6 +228,9 @@ function handleIndeterminateForm(
     const denomValue = evalAtNumber(denom, variable, exactPoint);
     const zeroZero = numerValue === 0 && denomValue === 0;
     const infInf = isInfiniteLike(numerValue) && isInfiniteLike(denomValue);
+    if (isInfiniteLike(denomValue) && isBoundedAtInfinity(numer, variable)) {
+      return int(0);
+    }
     if ((zeroZero || infInf) && options.differentiate !== undefined) {
       return lhopital(numer, denom, variable, point, options, depth);
     }
@@ -239,6 +245,14 @@ function handleIndeterminateForm(
     const rewritten = rewriteIndeterminatePower(expr.args[0], expr.args[1], variable, point, exactPoint, options, depth);
     if (rewritten !== null) return rewritten;
   }
+
+  // Track J2: Taylor-series fallback. Fires after L'Hopital (or instead
+  // of it if no diff_fn was supplied) and after the product/power
+  // rewrites. Handles transcendental 0/0 forms via local series
+  // expansion. Returns null on anything outside its rational-ring
+  // domain; we then fall through to the unevaluated `Limit(...)` node.
+  const series = trySeriesLimit(expr, variable, point);
+  if (series !== null) return series;
 
   return buildUnevaluatedLimit(expr, variable, point, options.direction);
 }
@@ -318,6 +332,16 @@ function rewriteIndeterminatePower(
     return buildUnevaluatedLimit(app(POW, [base, exponent]), variable, point, options.direction);
   }
   return applyLimitCallbacks(app(EXP, [exponentLimit]), options);
+}
+
+function isBoundedAtInfinity(node: IRNode, variable: IRNode): boolean {
+  if (node.kind === "integer" || node.kind === "rational" || node.kind === "float") return true;
+  if (node.kind === "symbol") return !equals(node, variable);
+  if (node.kind !== "apply") return false;
+  if (equals(node.head, NEG) && node.args.length === 1) return isBoundedAtInfinity(node.args[0], variable);
+  if (equals(node.head, ADD)) return node.args.every((arg) => isBoundedAtInfinity(arg, variable));
+  if (equals(node.head, MUL)) return node.args.every((arg) => isBoundedAtInfinity(arg, variable));
+  return [SIN.name, COS.name, TANH.name, ATAN.name].includes(headName(node.head)) && node.args.length === 1;
 }
 
 function applyLimitCallbacks(node: IRNode, options: LimitAdvancedOptions): IRNode {

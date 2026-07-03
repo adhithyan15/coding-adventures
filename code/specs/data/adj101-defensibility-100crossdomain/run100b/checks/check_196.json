@@ -1,0 +1,8 @@
+{
+ "check_id": 196,
+ "idx": 76,
+ "slot": "covered_by_active_anti_dumping_order",
+ "claimed_value": true,
+ "scenario": "Pinemont Construction imports steel reinforcing bars from the country of Veksia. Veksian steel rebar is covered by an active anti-dumping order. The declared customs value is $100,000.",
+ "cited_span": "Veksian steel rebar is covered by an active anti-dumping order"
+}

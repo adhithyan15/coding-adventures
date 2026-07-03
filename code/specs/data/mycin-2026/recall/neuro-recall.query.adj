@@ -1,0 +1,33 @@
+% ============================================================================
+% neuro-recall.query.adj — a worked recall query over the localization library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "lesion here — which deficit?"
+% question: it states no neurology fact — it only `import`s the grounded library and asks
+% binding queries. The native adj-lang engine resolves each `?` against the imported
+% `relate` edges and returns the binding + the citing clause's source/locator/trust. All
+% knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli neuro-recall.query.adj
+% ============================================================================
+
+import "neuro-edges.adj"
+
+? lesion_causes(wernicke_area, $Deficit)        % expect fluent_aphasia
+? lesion_causes(broca_area, $Deficit)           % expect nonfluent_aphasia
+? lesion_causes(arcuate_fasciculus, $Deficit)   % expect conduction_aphasia
+? lesion_causes(substantia_nigra, $Deficit)     % expect parkinson_disease
+? lesion_causes(subthalamic_nucleus, $Deficit)  % expect hemiballismus
+? lesion_causes(caudate_nucleus, $Deficit)      % expect huntington_disease
+? lesion_causes(midline_cerebellum, $Deficit)   % expect imbalance (expand)
+? lesion_causes(cerebellar_hemisphere, $Deficit) % expect incoordination (expand)
+% --- BATCH: high-yield neuroanatomy localizations ---
+? lesion_causes(mammillary_bodies, $Deficit)               % expect wernicke_korsakoff_syndrome (expand)
+? lesion_causes(amygdala, $Deficit)                        % expect kluver_bucy_syndrome (expand)
+? lesion_causes(hippocampus, $Deficit)                     % expect anterograde_amnesia (expand)
+? lesion_causes(medial_longitudinal_fasciculus, $Deficit)  % expect internuclear_ophthalmoplegia (expand)
+? lesion_causes(internal_capsule, $Deficit)                % expect pure_motor_hemiparesis (expand)
+? lesion_causes(dominant_parietal_lobe, $Deficit)          % expect gerstmann_syndrome (expand)
+? lesion_causes(nondominant_parietal_lobe, $Deficit)       % expect hemispatial_neglect (expand)
+? lesion_causes(frontal_lobe, $Deficit)                    % expect personality_change (expand)
+? lesion_causes(posterior_columns, $Deficit)               % expect loss_of_proprioception (expand)

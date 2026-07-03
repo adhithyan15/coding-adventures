@@ -1,0 +1,7 @@
+{
+ "idx": 7,
+ "id": "MED-8",
+ "scenario": "During a session, Mr. Doyle, a competent adult outpatient, tells his psychiatrist Dr. Marsh in clear and credible terms that he intends to seriously harm his named coworker within the week. Mr. Doyle refuses to sign any release of his records and demands confidentiality.",
+ "policy": "Patient health information may not be disclosed without the patient's written authorization. Notwithstanding this, when a clinician reasonably believes a patient poses an imminent, serious threat to an identifiable third person, the clinician must warn that third person, and such disclosure does not require the patient's authorization.",
+ "question": "May Dr. Marsh warn the coworker despite Mr. Doyle's refusal to authorize disclosure?"
+}

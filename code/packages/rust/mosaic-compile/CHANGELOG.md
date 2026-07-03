@@ -2,6 +2,81 @@
 
 ## Unreleased
 
+### Changed - shared package-reference resolver
+
+Pipeline mode now uses `mosaic-package-resolver::LayoutPackageResolver` for
+`pkg::P::C` layout inlining instead of carrying a private resolver copy inside
+the CLI crate.
+
+### Added — pipeline mode for HTML / WebComponent / SwiftUI / Qt / Flutter (VC2-html bonus)
+
+Pre-existing: pipeline mode (`--interface --layout --style`) only
+supported `--backend react` and `--backend xaml`. The other five
+backends required the legacy single-file `.mosaic` mode.
+
+This release wires every emit-crate's `pipeline::from_pipeline()`
+into the CLI dispatch, so `mosaic-compile --backend html|
+webcomponent|swiftui|qt|flutter` now works in pipeline mode:
+
+```
+mosaic-compile --backend html \
+  --interface code/programs/mosaic/visicalc/FormulaBar.mil \
+  --layout    code/programs/mosaic/visicalc/FormulaBar.desktop.mll \
+  --style     code/programs/mosaic/visicalc/FormulaBar.dark.msl \
+  -o FormulaBar.html
+```
+
+The `paint` backend stays single-file only — it's a raster pipeline
+that bypasses the three-IR compile chain.
+
+A new shared `emit_single_file()` helper unifies the
+"write-and-log" code for every single-file backend (HTML / Webcomp /
+SwiftUI / Qt / Flutter all produce one string per compile). XAML
+still has its own arm because it emits a multi-file triple
+(.xaml + .xaml.cs + .Event.cs) plus per-For RowVm side files.
+
+This unblocks the VisiCalc Phase 2 visual-demo cycle — VC2-html
+needs `mosaic-compile --backend html` to land before it can wire
+its build.sh; VC2-flutter / VC2-qt / VC2-swiftui / VC2-webcomp
+will exercise the same path.
+
+### Added — `--variant` flag for multi-layout pipelines (UI30 / ML1)
+
+New `--variant <name>` flag plus directory-mode resolution on
+`--layout` implements the UI30 multi-layout spec:
+
+- **File-path mode (unchanged):** `--layout path/to/Grid.desktop.mll`
+  uses the file verbatim. Every existing build script keeps working
+  byte-for-byte. Passing `--variant` in this mode logs a warning
+  (the flag is ignored) but doesn't fail.
+- **Directory mode (new):** `--layout path/to/src/ --variant touch`
+  reads the `.mil`'s component declaration to learn the component
+  name C, then resolves `path/to/src/C.touch.mll`. If that file
+  doesn't exist, falls back to bare `path/to/src/C.mll` (the
+  default variant). If neither exists, prints a clear "looked
+  for: <list>" error and exits 1.
+- **Default-variant semantics:** omitting `--variant` is equivalent
+  to `--variant default`, which after the variant-file probe falls
+  through directly to bare `<C>.mll`. The string `default` is
+  reserved and cannot appear in a filename.
+
+The implementation is a single new `resolve_layout_path()` helper
+called once at the top of `run_pipeline()`. The rest of the
+pipeline is unaware of variants — every downstream stage just sees
+the resolved file path. This keeps the diff small and the
+backwards-compatibility surface narrow.
+
+Smoke verified end-to-end against the VisiCalc sources:
+- `--layout code/programs/mosaic/visicalc/FormulaBar.desktop.mll` (file
+  mode) and `--layout code/programs/mosaic/visicalc/ --variant desktop`
+  (directory mode) produce **byte-identical** `.tsx` output.
+- Fallback path: a tempdir with only `FormulaBar.mll` (no
+  `.touch.mll`) compiles cleanly with `--variant touch`,
+  matching the bare-default output exactly.
+- Error path: a directory with neither `FormulaBar.touch.mll`
+  nor `FormulaBar.mll` exits 1 with `looked for:
+  FormulaBar.touch.mll, FormulaBar.mll`.
+
 ### Added — `pkg` subcommand (UI29 §4.3 / U29-R3)
 
 `mosaic-compile pkg <PACKAGE_ROOT> --backend <name> --output <DIR>` compiles
@@ -11,9 +86,11 @@ emitter). The implementation lives in the new
 `mosaic-package-artifact-builder` crate; this CLI is a thin shell that
 maps argv to a `BuildOptions` and prints the resulting artifact paths.
 
-Wired backends: React (`.tsx`), SwiftUI (`.swift`), Qt (`.qml`).
-`webcomponent` and `html` return `UnsupportedBackend` pending their
-respective kernel-completion PRs.
+Wired package backends now match the package artifact builder: React (`.tsx`),
+SwiftUI (`.swift`), Qt (`.qml`), XAML (`.xaml` + code-behind), WebComponent
+(`.js`), HTML (`.html`), and Flutter (`.dart`). The package-scoped
+`--emit-project` flag forwards to the builder so app packages can emit runnable
+project shells, including XAML/WinUI output, from the normal CLI path.
 
 The root-level `--backend` flag is now `required: false` at the spec
 level so the new subcommand can declare its own scoped `--backend`. The

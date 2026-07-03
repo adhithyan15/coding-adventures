@@ -1,0 +1,73 @@
+% ============================================================================
+% heart-valve-edges — the heart-valve→auscultation-site knowledge-graph
+% (MYCIN-2026 HEARTVALVE).
+% ============================================================================
+% A high-yield cardiac-exam board table: each cardiac valve and the chest-wall
+% location where it is best auscultated. "Where is the mitral valve best heard?"
+% becomes the binding query
+%     ? best_heard_at(mitral_valve, $Location).
+%
+% Direction note: the relation is valve -> the chest-wall site where it is
+% loudest / best heard (`best_heard_at`). Each valve here maps to ONE canonical
+% location span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The location object names the literal site the sentence
+% states (aortic "best heard in the 2nd right intercostal space"; pulmonic "best
+% auscultated in the 2nd left intercostal space"; tricuspid "loudest in the 4th
+% left intercostal space"; mitral "loudest in the left 5th intercostal space at
+% the midclavicular line"). The tricuspid and mitral edges cite the SAME
+% self-contained sentence — it names both valves and both sites explicitly. Each
+% span was independently re-fetched and confirmed on two separate fetches of the
+% same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like PHARYNGEAL/FETALSHUNT/
+% LUNGVOLUME/DURALSINUS). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see heart-valve-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary heart_valve_vocab {
+    define valve    : entity   surface "heart valve", "cardiac valve"
+    define location : entity   surface "auscultation site", "chest-wall location"
+
+    define best_heard_at : relation from valve to location  % the chest-wall site this valve is best auscultated
+}
+
+rulebook heart_valve_facts {
+    use heart_valve_vocab
+
+    % --- aortic valve -> right 2nd intercostal space -------------------------
+    relate best_heard_at(aortic_valve, right_second_intercostal_space)
+        source "The aortic valve is best heard in the 2nd right intercostal space."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541010/"
+        trust authoritative
+
+    % --- pulmonic valve -> left 2nd intercostal space -----------------------
+    relate best_heard_at(pulmonic_valve, left_second_intercostal_space)
+        source "The pulmonic valve is best auscultated in the 2nd left intercostal space."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541010/"
+        trust authoritative
+
+    % --- tricuspid valve -> 4th left intercostal space ----------------------
+    relate best_heard_at(tricuspid_valve, fourth_left_intercostal_space)
+        source "The tricuspid valve is loudest in the 4th left intercostal space, and the mitral valve is loudest in the left 5th intercostal space at the midclavicular line."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541010/"
+        trust authoritative
+
+    % --- mitral valve -> 5th intercostal space, midclavicular line ----------
+    relate best_heard_at(mitral_valve, fifth_intercostal_space_midclavicular_line)
+        source "The tricuspid valve is loudest in the 4th left intercostal space, and the mitral valve is loudest in the left 5th intercostal space at the midclavicular line."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK541010/"
+        trust authoritative
+}

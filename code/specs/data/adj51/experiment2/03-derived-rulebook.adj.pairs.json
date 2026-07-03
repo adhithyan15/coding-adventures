@@ -1,0 +1,464 @@
+[
+  {
+    "clause_id": "c1",
+    "head_line": 69,
+    "rationale": "% Base rate for \"there is SOME underlying pulmonary pathology\" given\n% the surface presentation of a referable pulmonary symptom complex.\n% Once such a case reaches adjudication (i.e., past the inclusion gate\n% of being a workup-worthy presentation), the probability that there\n% is a real underlying pathology is high \u2014 most referrals are not\n% spurious.  Prior set just above 0.5 to remain non-committal across\n% subtypes.",
+    "clause": "prior 0.60 for diagnosis(underlying_pulmonary_pathology)\n  source \"Wahbah M, et al. Changing trends in the distribution of the histologic types of lung cancer: a review of 4,439 cases. Ann Diagn Pathol. 2007; and ACCP evidence-based clinical practice guidelines, Chest 2007;132(3 Suppl):20S-22S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c2",
+    "head_line": 80,
+    "rationale": "% Base rate for pulmonary malignancy among adults presenting with an\n% incidentally or symptomatically discovered lung mass.  Across the\n% pulmonary-nodule/mass evaluation literature, the malignancy rate of\n% a non-trivial lung mass in adults is meaningfully high; we anchor\n% to a modest prior reflecting the broader population (including\n% younger adults where the base rate is lower) prior to applying any\n% observation-specific evidence.",
+    "clause": "prior 0.15 for diagnosis(pulmonary_malignancy)\n  source \"Gould MK, et al. Evaluation of patients with pulmonary nodules: When is it lung cancer? ACCP Evidence-Based Clinical Practice Guidelines (2nd ed.). Chest. 2007;132(3 Suppl):108S-130S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c3",
+    "head_line": 88,
+    "rationale": "% Base rate for pulmonary actinomycosis is low at the population\n% level; it is a rare disease (<1 per 100,000 per year) and even\n% within the workup of suspicious lung masses, biopsy-proven\n% actinomycosis is uncommon.",
+    "clause": "prior 0.03 for diagnosis(pulmonary_actinomycosis)\n  source \"Mabeza GF, Macfarlane J. Pulmonary actinomycosis. Eur Respir J. 2003;21(3):545-551.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c4",
+    "head_line": 96,
+    "rationale": "% Base rate for pulmonary tuberculosis among adults presenting with\n% a workup-worthy pulmonary process in a non-endemic high-income\n% setting; deliberately low but non-zero given TB remains a global\n% mimic of malignancy.",
+    "clause": "prior 0.05 for diagnosis(pulmonary_tuberculosis)\n  source \"World Health Organization. Global Tuberculosis Report 2023; CDC. Reported Tuberculosis in the United States, 2022.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c5",
+    "head_line": 104,
+    "rationale": "% Base rate for an underlying primary myeloid hematologic malignancy\n% (CML / CMML / accelerated MPN) among adults presenting with\n% prominent leukocytosis \u2014 low pre-test because most leukocytoses\n% are reactive.",
+    "clause": "prior 0.05 for diagnosis(hematologic_malignancy_myeloid)\n  source \"Granger JM, Kontoyiannis DP. Etiology and outcome of extreme leukocytosis in 758 nonhematologic cancer patients: a retrospective, single-institution study. Cancer. 2009;115(17):3919-3923.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c6",
+    "head_line": 111,
+    "rationale": "% Base rate for the action \"proceed to tissue biopsy or advanced\n% workup\" once a patient is in workup at all.  The very fact that\n% the question is asked suggests prior elevated; set above neutral.",
+    "clause": "prior 0.55 for next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer: Diagnosis and management of lung cancer, 3rd ed: ACCP evidence-based clinical practice guidelines. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c7",
+    "head_line": 123,
+    "rationale": "% Young-adult age substantially lowers the prior for primary lung\n% cancer (whose incidence is heavily age-skewed beyond 55) but\n% raises the relative weight of hematologic neoplasm and infectious\n% mimics on the differential.",
+    "clause": "contributes 0.30 from age(young_adult) to diagnosis(pulmonary_malignancy)\n  source \"Siegel RL, Miller KD, Jemal A. Cancer statistics, 2023. CA Cancer J Clin. 2023;73(1):17-48.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c8",
+    "head_line": 132,
+    "rationale": "% Young-adult age modestly raises hematologic-malignancy posterior\n% because while CML peak incidence is ~60, ~10% of cases occur\n% under 30 and CMML can present in young adults \u2014 a non-trivially\n% larger share of leukocytosis-with-monocytosis cases than in\n% solid-tumor paraneoplastic series.",
+    "clause": "contributes 1.8 from age(young_adult) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Jabbour E, Kantarjian H. Chronic myeloid leukemia: 2022 update on diagnosis, therapy, and monitoring. Am J Hematol. 2022;97(9):1236-1256.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c9",
+    "head_line": 140,
+    "rationale": "% African-American ancestry is associated with elevated incidence\n% of lung cancer in never-smokers (RR ~1.5 for AA women vs.\n% European-American women); this raises the malignancy posterior\n% modestly when integrated with other features.",
+    "clause": "contributes 1.5 from race_ethnicity(african_american) to diagnosis(pulmonary_malignancy)\n  source \"Thun MJ, et al. Lung cancer occurrence in never-smokers: an analysis of 13 cohorts and 22 cancer registry studies. PLoS Med. 2008;5(9):e185.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c10",
+    "head_line": 146,
+    "rationale": "% Female sex in never-smoker lung cancer is enriched (adenocarcinoma\n% with EGFR / ALK alterations) \u2014 modest upward contribution.",
+    "clause": "contributes 1.3 from sex(female) to diagnosis(pulmonary_malignancy)\n  source \"Sun S, Schiller JH, Gazdar AF. Lung cancer in never smokers \u2014 a different disease. Nat Rev Cancer. 2007;7(10):778-790.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c11",
+    "head_line": 152,
+    "rationale": "% Prior asthma is a known weak risk factor for lung cancer\n% (meta-analytic OR ~1.2-1.4) \u2014 small upward contribution.",
+    "clause": "contributes 1.2 from past_medical_history(asthma) to diagnosis(pulmonary_malignancy)\n  source \"Rosenberger A, et al. Asthma and lung cancer risk: a systematic investigation by the International Lung Cancer Consortium. Carcinogenesis. 2012;33(3):587-597.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c12",
+    "head_line": 170,
+    "rationale": "% Absence of tobacco/alcohol/IV-drug history meaningfully lowers\n% the lung-cancer posterior (smoking is the dominant attributable\n% risk factor; never-smoker status drops the population odds by\n% ~10-20x, but partial information from a single history line\n% warrants a more modest LR).",
+    "clause": "contributes 0.40 from substance_use_history(none) to diagnosis(pulmonary_malignancy)\n  source \"Alberg AJ, et al. Epidemiology of lung cancer: Diagnosis and management of lung cancer, 3rd ed: ACCP evidence-based clinical practice guidelines. Chest. 2013;143(5 Suppl):e1S-e29S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c13",
+    "head_line": 181,
+    "rationale": "% Productive cough is non-specific \u2014 present in malignancy,\n% infection, and many benign processes.  Small upward contribution\n% to the broad \"some pathology\" query; otherwise neutral.",
+    "clause": "contributes 1.2 from symptom(productive_cough) to diagnosis(underlying_pulmonary_pathology)\n  source \"Irwin RS, et al. Diagnosis and management of cough: ACCP evidence-based clinical practice guidelines. Chest. 2006;129(1 Suppl):1S-23S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c14",
+    "head_line": 189,
+    "rationale": "% Hemoptysis substantially raises suspicion for both malignancy and\n% TB / chronic infection.  In adult smokers and non-smokers alike\n% it is a red-flag symptom; meta-analyses give an LR ~2.4-6 for\n% lung cancer depending on cohort.  Use a moderate consensus value.",
+    "clause": "contributes 3.0 from symptom(hemoptysis) to diagnosis(pulmonary_malignancy)\n  source \"Hopstaken RM, et al. Clinical prediction rules for adult patients with hemoptysis. Br J Gen Pract. 2007.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c15",
+    "head_line": 195,
+    "rationale": "% Hemoptysis is also a classic TB symptom (cavitary disease,\n% Rasmussen aneurysm); raise TB posterior.",
+    "clause": "contributes 2.5 from symptom(hemoptysis) to diagnosis(pulmonary_tuberculosis)\n  source \"World Health Organization. Treatment of tuberculosis: guidelines, 4th ed. 2010; Bomanji JB, et al. Imaging in tuberculosis. Cold Spring Harb Perspect Med. 2015;5(6).\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c16",
+    "head_line": 201,
+    "rationale": "% Hemoptysis is also reported in ~30-50% of pulmonary actinomycosis\n% case series \u2014 supports invasive disease.",
+    "clause": "contributes 2.0 from symptom(hemoptysis) to diagnosis(pulmonary_actinomycosis)\n  source \"Kim TS, et al. Pulmonary actinomycosis: CT features in 16 patients. Eur Radiol. 2006;16(7):1543-1549.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c17",
+    "head_line": 207,
+    "rationale": "% Dyspnea is non-specific but supports a structurally significant\n% pulmonary process (mass, effusion, consolidation).",
+    "clause": "contributes 1.3 from symptom(dyspnea) to diagnosis(underlying_pulmonary_pathology)\n  source \"Parshall MB, et al. An official American Thoracic Society statement: update on the mechanisms, assessment, and management of dyspnea. Am J Respir Crit Care Med. 2012;185(4):435-452.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c18",
+    "head_line": 216,
+    "rationale": "% New-onset facial swelling, in the context of a mediastinal process,\n% is a hallmark feature of superior vena cava (SVC) syndrome.\n% Malignant SVC obstruction accounts for ~75-80% of SVC syndrome\n% cases; the presence of this finding substantially raises the\n% malignancy posterior.",
+    "clause": "contributes 4.0 from symptom(facial_swelling_new_onset) to diagnosis(pulmonary_malignancy)\n  source \"Wilson LD, Detterbeck FC, Yahalom J. Clinical practice. Superior vena cava syndrome with malignant causes. N Engl J Med. 2007;356(18):1862-1869.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c19",
+    "head_line": 228,
+    "rationale": "% Prevertebral soft-tissue swelling on neck CT supports a deep\n% infectious or infiltrative process (deep neck space infection,\n% retropharyngeal/parapharyngeal mass effect, descending mediastinal\n% extension).  Modest upward contribution to broad pathology.",
+    "clause": "contributes 1.8 from imaging_neck_ct(prevertebral_soft_tissue_swelling) to diagnosis(underlying_pulmonary_pathology)\n  source \"Vural FS, Girdler NM. Deep neck space infections: diagnosis and management. Br J Hosp Med (Lond). 2009;70(6):340-345.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c20",
+    "head_line": 235,
+    "rationale": "% Prevertebral / paratracheal soft-tissue swelling can also reflect\n% bulky mediastinal lymphadenopathy with extracapsular spread \u2014\n% modestly supports malignancy.",
+    "clause": "contributes 1.5 from imaging_neck_ct(prevertebral_soft_tissue_swelling) to diagnosis(pulmonary_malignancy)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c21",
+    "head_line": 255,
+    "rationale": "% Persistent neck and facial swelling despite empirical outpatient\n% antibiotics argues against a straightforward bacterial CAP or\n% simple deep-neck-space infection and modestly raises malignancy\n% and chronic-infection posteriors.",
+    "clause": "contributes 1.8 from symptom_course(persistent_neck_facial_swelling) to diagnosis(pulmonary_malignancy)\n  source \"Detterbeck FC, et al. SVC syndrome with malignant causes. N Engl J Med. 2007;356(18):1862-1869.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c22",
+    "head_line": 262,
+    "rationale": "% Persistent swelling also keeps actinomycosis on the differential\n% (actinomycosis is classically described as a chronic indolent\n% process unresponsive to short courses of antibiotics).",
+    "clause": "contributes 1.5 from symptom_course(persistent_neck_facial_swelling) to diagnosis(pulmonary_actinomycosis)\n  source \"Wong VK, et al. Actinomycosis. BMJ. 2011;343:d6099.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c23",
+    "head_line": 272,
+    "rationale": "% Tooth extraction without improvement: this is a negative test for\n% the dental-source hypothesis.  Lowers the posterior that the\n% process is an odontogenic / cervicofacial actinomycosis pivoting\n% on an active dental source, but does not eliminate pulmonary\n% actinomycosis (which can be primary).  Treat as small downward\n% effect.",
+    "clause": "contributes 0.7 from intervention(tooth_extraction) to diagnosis(pulmonary_actinomycosis)\n  source \"Wong VK, et al. Actinomycosis. BMJ. 2011;343:d6099.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c24",
+    "head_line": 278,
+    "rationale": "% No improvement after a putatively appropriate intervention raises\n% the posterior for non-infectious or chronic processes.",
+    "clause": "contributes 1.8 from response_to_intervention(no_improvement) to diagnosis(pulmonary_malignancy)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c25",
+    "head_line": 283,
+    "rationale": "% No improvement also drives the next-step query toward biopsy.",
+    "clause": "contributes 2.5 from response_to_intervention(no_improvement) to next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c26",
+    "head_line": 292,
+    "rationale": "% Continued facial swelling at three weeks is the same signal as\n% the earlier persistent swelling \u2014 to avoid double-counting we\n% keep the contribution modest.",
+    "clause": "contributes 1.3 from symptom(persistent_facial_swelling) to diagnosis(pulmonary_malignancy)\n  source \"Wilson LD, Detterbeck FC, Yahalom J. SVC syndrome with malignant causes. N Engl J Med. 2007;356(18):1862-1869.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c27",
+    "head_line": 298,
+    "rationale": "% Worsening hemoptysis over weeks is a progressive red flag \u2014\n% incremental upward push on both malignancy and TB.",
+    "clause": "contributes 1.8 from symptom_progression(worsening_hemoptysis) to diagnosis(pulmonary_malignancy)\n  source \"Hopstaken RM, et al. Clinical prediction rules for adult patients with hemoptysis. Br J Gen Pract. 2007.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c28",
+    "head_line": 304,
+    "rationale": "% Worsening hemoptysis is also a TB progression signal (cavitary\n% expansion, Rasmussen aneurysm risk) \u2014 moderate upward push on TB.",
+    "clause": "contributes 1.5 from symptom_progression(worsening_hemoptysis) to diagnosis(pulmonary_tuberculosis)\n  source \"Bomanji JB, et al. Imaging in tuberculosis. Cold Spring Harb Perspect Med. 2015;5(6):a017814.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c29",
+    "head_line": 314,
+    "rationale": "% Night sweats are a classic B-symptom: raises posterior for TB,\n% lymphoma, advanced solid malignancy, and chronic infection.",
+    "clause": "contributes 2.0 from symptom(night_sweats) to diagnosis(pulmonary_tuberculosis)\n  source \"Lewinsohn DM, et al. Official ATS/IDSA/CDC clinical practice guidelines: diagnosis of tuberculosis in adults and children. Clin Infect Dis. 2017;64(2):e1-e33.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c30",
+    "head_line": 320,
+    "rationale": "% Night sweats are also a recognized constitutional symptom of\n% advanced malignancy (B-symptom analog) \u2014 moderate upward push.",
+    "clause": "contributes 1.5 from symptom(night_sweats) to diagnosis(pulmonary_malignancy)\n  source \"Mold JW, et al. Night sweats: a systematic review of the literature. J Am Board Fam Med. 2012;25(6):878-893.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c31",
+    "head_line": 326,
+    "rationale": "% Night sweats are also a B-symptom of myeloid neoplasm (CML,\n% accelerated MPN), independent of solid-tumor pathways.",
+    "clause": "contributes 1.5 from symptom(night_sweats) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Mold JW, et al. Night sweats: a systematic review of the literature. J Am Board Fam Med. 2012;25(6):878-893.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c32",
+    "head_line": 335,
+    "rationale": "% Absence of fever modestly lowers the posterior for acute\n% pyogenic infection but does NOT meaningfully lower TB or\n% malignancy posteriors (both commonly afebrile).  Use a small\n% downward LR only on infection-broad terms; here we apply only\n% to actinomycosis as the dominant infection-on-differential.",
+    "clause": "contributes 0.8 from denies(fever) to diagnosis(pulmonary_actinomycosis)\n  source \"Mabeza GF, Macfarlane J. Pulmonary actinomycosis. Eur Respir J. 2003;21(3):545-551.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c33",
+    "head_line": 343,
+    "rationale": "% No sick contacts \u2014 small downward push on community-acquired\n% infectious etiology in general; routed to actinomycosis where\n% transmission would be epidemiologically irrelevant anyway, so\n% effect is small.",
+    "clause": "contributes 0.9 from denies(sick_contacts) to diagnosis(underlying_pulmonary_pathology)\n  source \"Centers for Disease Control and Prevention. Principles of Epidemiology in Public Health Practice, 3rd ed. 2012.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c34",
+    "head_line": 350,
+    "rationale": "% No recent travel slightly lowers travel-associated infections\n% (endemic mycoses, certain TB exposures).  Modest downward push\n% on TB.",
+    "clause": "contributes 0.7 from denies(recent_travel) to diagnosis(pulmonary_tuberculosis)\n  source \"Lewinsohn DM, et al. ATS/IDSA/CDC TB diagnosis guidelines. Clin Infect Dis. 2017;64(2):e1-e33.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c35",
+    "head_line": 356,
+    "rationale": "% No known TB exposure further lowers TB posterior (key element\n% of TB risk-stratification per CDC).",
+    "clause": "contributes 0.5 from denies(tuberculosis_exposure) to diagnosis(pulmonary_tuberculosis)\n  source \"Lewinsohn DM, et al. ATS/IDSA/CDC TB diagnosis guidelines. Clin Infect Dis. 2017;64(2):e1-e33.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c36",
+    "head_line": 370,
+    "rationale": "% intent_not_encoded: self-attributed-intentional weight loss in a\n% patient who is also losing weight from disease is a notoriously\n% unreliable self-report; the literature treats it as a near-tie\n% between (a) actual intentional loss and (b) involuntary loss\n% rationalized by the patient.  Adj-Lang cannot easily encode \"this\n% observation should be discounted because of self-report bias\" in\n% a single term-grain clause.  We therefore apply a SMALL upward\n% LR (rather than the larger LR that involuntary cancer-cachexia\n% would warrant) reflecting the diagnostic ambiguity, and document\n% the reduction here.",
+    "clause": "contributes 1.3 from symptom(weight_loss_self_attributed_intentional) to diagnosis(pulmonary_malignancy)\n  source \"Nicholson BD, et al. The diagnosis of cancer in primary care after weight loss: a systematic review and individual patient data meta-analysis. Br J Gen Pract. 2018;68(670):e333-e338.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c37",
+    "head_line": 375,
+    "rationale": "% Same observation gives a modest TB upward push (TB cachexia).",
+    "clause": "contributes 1.3 from symptom(weight_loss_self_attributed_intentional) to diagnosis(pulmonary_tuberculosis)\n  source \"Lewinsohn DM, et al. ATS/IDSA/CDC TB diagnosis guidelines. Clin Infect Dis. 2017;64(2):e1-e33.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c38",
+    "head_line": 389,
+    "rationale": "% Dentist confirmed no active dental infection \u2014 meaningfully\n% lowers the posterior for an odontogenic cervicofacial\n% actinomycosis (Actinomyces is dental-flora-derived) but is only\n% weakly informative against PRIMARY pulmonary actinomycosis (which\n% can arise from aspiration of oral flora without active dental\n% disease).  Use a modest downward LR.",
+    "clause": "contributes 0.6 from dental_infection(absent) to diagnosis(pulmonary_actinomycosis)\n  source \"Wong VK, et al. Actinomycosis. BMJ. 2011;343:d6099; Russo TA. Agents of actinomycosis. In: Mandell, Douglas, and Bennett's Principles and Practice of Infectious Diseases, 9th ed. 2020.\"\n  trust consensus"
+  },
+  {
+    "clause_id": "c39",
+    "head_line": 403,
+    "rationale": "% Markedly elevated WBC (extreme leukocytosis \u226540,000) in a young\n% adult without obvious acute pyogenic source: large upward push\n% on hematologic malignancy posterior (CML / CMML / accelerated\n% MPN), and a meaningful but smaller push on paraneoplastic solid\n% tumor (paraneoplastic leukemoid reaction reported in ~1-4% of\n% solid tumors).",
+    "clause": "contributes 4.0 from white_blood_cell_count(markedly_elevated) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Granger JM, Kontoyiannis DP. Etiology and outcome of extreme leukocytosis in 758 nonhematologic cancer patients: a retrospective, single-institution study. Cancer. 2009;115(17):3919-3923; Jabbour E, Kantarjian H. Chronic myeloid leukemia: 2022 update. Am J Hematol. 2022;97(9):1236-1256.\"\n  trust consensus"
+  },
+  {
+    "clause_id": "c40",
+    "head_line": 410,
+    "rationale": "% Extreme leukocytosis also raises solid-tumor malignancy posterior\n% via paraneoplastic leukemoid reaction (reported in 1-4% of solid\n% tumors, with lung cancer over-represented).",
+    "clause": "contributes 1.8 from white_blood_cell_count(markedly_elevated) to diagnosis(pulmonary_malignancy)\n  source \"Granger JM, Kontoyiannis DP. Cancer. 2009;115(17):3919-3923; Chakraborty S, et al. Paraneoplastic leukemoid reaction in solid tumors. Am J Clin Oncol. 2015;38(3):326-330.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c41",
+    "head_line": 416,
+    "rationale": "% Extreme leukocytosis also strongly motivates expedited diagnostic\n% workup (bone marrow biopsy, FISH for BCR-ABL).",
+    "clause": "contributes 2.5 from white_blood_cell_count(markedly_elevated) to next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"NCCN Guidelines: Chronic Myeloid Leukemia, v3.2024; Arber DA, et al. International Consensus Classification of Myeloid Neoplasms and Acute Leukemias. Blood. 2022;140(11):1200-1228.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c42",
+    "head_line": 422,
+    "rationale": "% Neutrophilia alone is non-specific (any inflammatory state).\n% Apply only a small upward contribution.",
+    "clause": "contributes 1.2 from differential(neutrophilia) to diagnosis(hematologic_malignancy_myeloid)\n  source \"George TI. Malignant or benign leukocytosis. Hematology Am Soc Hematol Educ Program. 2012;2012:475-484.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c43",
+    "head_line": 430,
+    "rationale": "% Left shift with circulating myelocyte precursors is a hallmark of\n% a myeloproliferative process (and can occur in severe sepsis, but\n% in an indolent multi-week course argues strongly for a clonal\n% myeloid neoplasm).",
+    "clause": "contributes 3.5 from differential(left_shift_myelocyte_precursors) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Arber DA, et al. International Consensus Classification of Myeloid Neoplasms. Blood. 2022;140(11):1200-1228.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c44",
+    "head_line": 436,
+    "rationale": "% Left shift modestly raises the action posterior (drives bone-\n% marrow / molecular workup).",
+    "clause": "contributes 2.0 from differential(left_shift_myelocyte_precursors) to next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"NCCN Guidelines: Chronic Myeloid Leukemia, v3.2024.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c45",
+    "head_line": 443,
+    "rationale": "% Monocytosis in this context strongly raises CMML on the\n% differential \u2014 CMML is defined in part by persistent monocytosis\n% \u22651.0 \u00d7 10^9/L (WHO/ICC).",
+    "clause": "contributes 3.0 from differential(monocytosis) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Arber DA, et al. International Consensus Classification of Myeloid Neoplasms. Blood. 2022;140(11):1200-1228; Patnaik MM, Tefferi A. Chronic myelomonocytic leukemia: 2022 update. Am J Hematol. 2022;97(3):352-372.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c46",
+    "head_line": 450,
+    "rationale": "% Moderately low hemoglobin \u2014 anemia of chronic disease /\n% inflammation / marrow infiltration.  Small upward on all three\n% disease-class queries; routed to the broad envelope.",
+    "clause": "contributes 1.3 from hemoglobin(moderately_low) to diagnosis(underlying_pulmonary_pathology)\n  source \"Weiss G, Goodnough LT. Anemia of chronic disease. N Engl J Med. 2005;352(10):1011-1023.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c47",
+    "head_line": 457,
+    "rationale": "% Anemia + thrombocytosis pattern is suggestive of chronic\n% inflammation / paraneoplastic / MPN \u2014 modest upward on\n% malignancy and myeloid neoplasm.",
+    "clause": "contributes 1.4 from hemoglobin(moderately_low) to diagnosis(pulmonary_malignancy)\n  source \"Weiss G, Goodnough LT. Anemia of chronic disease. N Engl J Med. 2005;352(10):1011-1023.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c48",
+    "head_line": 464,
+    "rationale": "% Elevated platelets (reactive thrombocytosis or MPN-related\n% thrombocytosis).  Modest upward signal across malignancy and\n% myeloid neoplasm.",
+    "clause": "contributes 1.4 from platelet_count(elevated) to diagnosis(pulmonary_malignancy)\n  source \"Bailey SE, et al. Clinical relevance of thrombocytosis in primary care: a prospective cohort study. Br J Gen Pract. 2017;67(659):e405-e413.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c49",
+    "head_line": 472,
+    "rationale": "% Thrombocytosis is also a MPN-defining feature (essential\n% thrombocythemia, CML chronic phase often has thrombocytosis);\n% somewhat stronger upward push on myeloid neoplasm than on solid\n% tumor.",
+    "clause": "contributes 1.6 from platelet_count(elevated) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Arber DA, et al. International Consensus Classification of Myeloid Neoplasms. Blood. 2022;140(11):1200-1228.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c50",
+    "head_line": 479,
+    "rationale": "% Negative urinalysis modestly lowers urinary-source infection /\n% systemic illness from a renal driver \u2014 minor downward push on\n% broad pathology query; effect is small.",
+    "clause": "contributes 0.95 from urinalysis(negative) to diagnosis(underlying_pulmonary_pathology)\n  source \"Schmiemann G, et al. The diagnosis of urinary tract infection: a systematic review. Dtsch Arztebl Int. 2010;107(21):361-367.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c51",
+    "head_line": 491,
+    "rationale": "% Right upper lobe mass: large upward push on lung malignancy\n% (upper lobes are the most common location for both adenocarcinoma\n% and squamous cell carcinoma), and a moderate upward push on TB\n% (upper-lobe predominance is classic).",
+    "clause": "contributes 5.0 from imaging_chest_ct(right_upper_lobe_mass) to diagnosis(pulmonary_malignancy)\n  source \"Quekel LG, et al. Detection of lung cancer on the chest radiograph: a retrospective study of the chest X-ray missed lung cancer. Chest. 1999;115(3):720-724; Gould MK, et al. ACCP guidelines on pulmonary nodules. Chest. 2007;132(3 Suppl):108S-130S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c52",
+    "head_line": 497,
+    "rationale": "% Upper-lobe predominance is the classical TB radiographic pattern\n% (post-primary cavitary disease).  Moderate upward push on TB.",
+    "clause": "contributes 2.0 from imaging_chest_ct(right_upper_lobe_mass) to diagnosis(pulmonary_tuberculosis)\n  source \"Bomanji JB, et al. Imaging in tuberculosis. Cold Spring Harb Perspect Med. 2015;5(6):a017814.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c53",
+    "head_line": 503,
+    "rationale": "% Pulmonary actinomycosis can also present as an upper-lobe mass-\n% like consolidation; modest upward push.",
+    "clause": "contributes 1.8 from imaging_chest_ct(right_upper_lobe_mass) to diagnosis(pulmonary_actinomycosis)\n  source \"Kim TS, et al. Pulmonary actinomycosis: CT features in 16 patients. Eur Radiol. 2006;16(7):1543-1549.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c54",
+    "head_line": 509,
+    "rationale": "% Mediastinal involvement is a key staging finding strongly\n% suggestive of advanced malignancy or invasive infection.",
+    "clause": "contributes 3.5 from imaging_chest_ct(mediastinal_involvement) to diagnosis(pulmonary_malignancy)\n  source \"Silvestri GA, et al. Methods for staging non-small cell lung cancer: ACCP evidence-based clinical practice guidelines, 3rd ed. Chest. 2013;143(5 Suppl):e211S-e250S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c55",
+    "head_line": 516,
+    "rationale": "% Mediastinal extension is also a recognized (though less common)\n% feature of invasive pulmonary actinomycosis from\n% transfissural / chest-wall extension.  Moderate upward push.",
+    "clause": "contributes 2.0 from imaging_chest_ct(mediastinal_involvement) to diagnosis(pulmonary_actinomycosis)\n  source \"Han JY, et al. Pulmonary actinomycosis with mediastinal involvement: a case report. Korean J Radiol. 2003;4(2):122-125.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c56",
+    "head_line": 522,
+    "rationale": "% Regional lymphadenopathy \u2014 staging concern for malignancy,\n% also seen in TB and lymphoma.",
+    "clause": "contributes 2.5 from imaging_chest_ct(regional_lymphadenopathy) to diagnosis(pulmonary_malignancy)\n  source \"Silvestri GA, et al. Methods for staging non-small cell lung cancer. Chest. 2013;143(5 Suppl):e211S-e250S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c57",
+    "head_line": 529,
+    "rationale": "% Hilar/mediastinal lymphadenopathy is also a hallmark TB finding\n% (especially in primary or post-primary disease).  Moderate\n% upward push on TB.",
+    "clause": "contributes 2.0 from imaging_chest_ct(regional_lymphadenopathy) to diagnosis(pulmonary_tuberculosis)\n  source \"Bomanji JB, et al. Imaging in tuberculosis. Cold Spring Harb Perspect Med. 2015;5(6):a017814.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c58",
+    "head_line": 535,
+    "rationale": "% Right pleural effusion in setting of mass: malignant pleural\n% effusion is a stage IV indicator; raise malignancy posterior.",
+    "clause": "contributes 2.5 from imaging_chest_ct(right_pleural_effusion) to diagnosis(pulmonary_malignancy)\n  source \"Roberts ME, et al. BTS pleural disease guideline 2010: management of a malignant pleural effusion. Thorax. 2010;65(Suppl 2):ii32-ii40.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c59",
+    "head_line": 541,
+    "rationale": "% Pleural effusion is also reported in TB (tuberculous pleurisy)\n% and actinomycosis.",
+    "clause": "contributes 1.5 from imaging_chest_ct(right_pleural_effusion) to diagnosis(pulmonary_tuberculosis)\n  source \"Light RW. Update on tuberculous pleural effusion. Respirology. 2010;15(3):451-458.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c60",
+    "head_line": 547,
+    "rationale": "% Pleural effusion is reported in roughly 20-30% of pulmonary\n% actinomycosis case series.  Small upward push.",
+    "clause": "contributes 1.3 from imaging_chest_ct(right_pleural_effusion) to diagnosis(pulmonary_actinomycosis)\n  source \"Kim TS, et al. Pulmonary actinomycosis: CT features in 16 patients. Eur Radiol. 2006;16(7):1543-1549.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c61",
+    "head_line": 554,
+    "rationale": "% Any of these imaging findings substantially drives next-step\n% toward tissue biopsy; encode on the most informative single\n% finding (mediastinal involvement) to avoid additive double-counting.",
+    "clause": "contributes 3.0 from imaging_chest_ct(mediastinal_involvement) to next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S; Silvestri GA, et al. Chest. 2013;143(5 Suppl):e211S-e250S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c62",
+    "head_line": 566,
+    "rationale": "% Rising WBC despite broad-spectrum antibacterial therapy further\n% suggests non-bacterial driver (myeloid neoplasm, paraneoplastic).",
+    "clause": "contributes 2.5 from white_blood_cell_count_trend(rising_markedly_elevated) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Granger JM, Kontoyiannis DP. Etiology and outcome of extreme leukocytosis. Cancer. 2009;115(17):3919-3923.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c63",
+    "head_line": 573,
+    "rationale": "% Rising WBC despite empirical antibiotics is also consistent with\n% paraneoplastic leukemoid progression as tumor burden grows;\n% modest upward push on solid-tumor malignancy.",
+    "clause": "contributes 1.5 from white_blood_cell_count_trend(rising_markedly_elevated) to diagnosis(pulmonary_malignancy)\n  source \"Chakraborty S, et al. Paraneoplastic leukemoid reaction in solid tumors. Am J Clin Oncol. 2015;38(3):326-330.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c64",
+    "head_line": 580,
+    "rationale": "% Rising extreme leukocytosis is also a clinical trigger for\n% urgent hematologic workup (peripheral smear, FISH for BCR-ABL,\n% bone marrow biopsy) \u2014 moderate upward push on the action query.",
+    "clause": "contributes 2.0 from white_blood_cell_count_trend(rising_markedly_elevated) to next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"NCCN Guidelines: Chronic Myeloid Leukemia, v3.2024.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c65",
+    "head_line": 594,
+    "rationale": "% Sputum culture growing Actinomyces is the central diagnostic\n% pivot for q3.  However, Actinomyces is part of normal oral flora\n% and contaminates expectorated sputum frequently; isolated growth\n% from a non-bronchoscopically-obtained specimen is INSUFFICIENT\n% for diagnosis.  We therefore apply a moderate upward LR (raises\n% suspicion) but explicitly NOT a confirmatory LR.",
+    "clause": "contributes 4.0 from sputum_culture(actinomyces) to diagnosis(pulmonary_actinomycosis)\n  source \"Russo TA. Agents of actinomycosis. In: Mandell, Douglas, and Bennett's Principles and Practice of Infectious Diseases, 9th ed. 2020; Wong VK, et al. Actinomycosis. BMJ. 2011;343:d6099.\"\n  trust consensus"
+  },
+  {
+    "clause_id": "c66",
+    "head_line": 609,
+    "rationale": "% intent_not_encoded: The clinical reality is that an Actinomyces\n% sputum growth WITHOUT histopathology + sulfur granules + invasive\n% disease pattern should not collapse the differential to\n% actinomycosis; in cancer-mimic series, Actinomyces is often a\n% colonizer in an obstructed bronchus distal to a malignancy.\n% Adj-Lang cannot express \"this observation supports BOTH q2 (as\n% post-obstructive colonization) AND q3 (as primary infection)\n% with the relative weight depending on other findings\" in a single\n% clause.  We capture HALF of that by also raising the malignancy\n% posterior \u2014 Actinomyces colonization can be a marker of\n% bronchial obstruction by tumor.",
+    "clause": "contributes 1.5 from sputum_culture(actinomyces) to diagnosis(pulmonary_malignancy)\n  source \"Choi J, et al. Pulmonary actinomycosis presenting with endobronchial obstruction: a clinical mimicker of lung cancer. Respir Med Case Rep. 2018;25:96-99; Mabeza GF, Macfarlane J. Pulmonary actinomycosis. Eur Respir J. 2003;21(3):545-551.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c67",
+    "head_line": 618,
+    "rationale": "% Failure of broad-spectrum inpatient antibiotics to improve the\n% patient is a strong argument AGAINST a straightforward bacterial\n% infection (including a sensitive actinomycosis, which usually\n% responds at least partially to beta-lactams over days-to-weeks)\n% and FOR malignancy or hematologic neoplasm.",
+    "clause": "contributes 2.5 from response_to_inpatient_antibiotics(no_improvement) to diagnosis(pulmonary_malignancy)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c68",
+    "head_line": 628,
+    "rationale": "% Actinomyces is usually susceptible to penicillin-class agents\n% (Augmentin, ceftriaxone, piperacillin-tazobactam) and a true\n% invasive actinomycosis typically shows at least partial response\n% within a week of appropriate therapy.  Failure to improve on\n% these agents argues against actinomycosis being the primary\n% pathology.",
+    "clause": "contributes 0.5 from response_to_inpatient_antibiotics(no_improvement) to diagnosis(pulmonary_actinomycosis)\n  source \"Wong VK, et al. Actinomycosis. BMJ. 2011;343:d6099; Mabeza GF, Macfarlane J. Pulmonary actinomycosis. Eur Respir J. 2003;21(3):545-551.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c69",
+    "head_line": 635,
+    "rationale": "% Antibiotic failure also raises the myeloid neoplasm posterior:\n% if the leukocytosis is clonal rather than reactive it will not\n% resolve with source control / antibacterials.",
+    "clause": "contributes 1.5 from response_to_inpatient_antibiotics(no_improvement) to diagnosis(hematologic_malignancy_myeloid)\n  source \"Jabbour E, Kantarjian H. Chronic myeloid leukemia: 2022 update. Am J Hematol. 2022;97(9):1236-1256.\"\n  trust empirical"
+  },
+  {
+    "clause_id": "c70",
+    "head_line": 641,
+    "rationale": "% Failed empirical antibiotics is a guideline-recognized trigger\n% to escalate to tissue diagnosis \u2014 strong upward push on action.",
+    "clause": "contributes 3.0 from response_to_inpatient_antibiotics(no_improvement) to next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c71",
+    "head_line": 654,
+    "rationale": "% Triad of upper-lobe mass + mediastinal involvement + regional\n% lymphadenopathy: gestalt above sum of parts for malignancy.\n% Modest super-additive boost to malignancy posterior (the\n% individual contributions already account for most of the\n% effect; here we add a small joint kicker).",
+    "clause": "interacts 1.5 when imaging_chest_ct(right_upper_lobe_mass) and imaging_chest_ct(mediastinal_involvement) and imaging_chest_ct(regional_lymphadenopathy)\n  for diagnosis(pulmonary_malignancy)\n  source \"Silvestri GA, et al. Methods for staging non-small cell lung cancer. Chest. 2013;143(5 Suppl):e211S-e250S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c72",
+    "head_line": 662,
+    "rationale": "% Extreme leukocytosis + monocytosis + left shift: this triad is\n% nearly diagnostic of a chronic myeloid neoplasm (CML / CMML).\n% Strong joint kicker on the myeloid posterior.",
+    "clause": "interacts 4.0 when white_blood_cell_count(markedly_elevated) and differential(monocytosis) and differential(left_shift_myelocyte_precursors)\n  for diagnosis(hematologic_malignancy_myeloid)\n  source \"Arber DA, et al. International Consensus Classification of Myeloid Neoplasms. Blood. 2022;140(11):1200-1228; Patnaik MM, Tefferi A. CMML: 2022 update. Am J Hematol. 2022;97(3):352-372.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c73",
+    "head_line": 669,
+    "rationale": "% Lung mass + failure of antibacterial therapy: a strong gestalt\n% argument for biopsy.",
+    "clause": "interacts 2.0 when imaging_chest_ct(right_upper_lobe_mass) and response_to_inpatient_antibiotics(no_improvement)\n  for next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c74",
+    "head_line": 676,
+    "rationale": "% Hemoptysis + upper-lobe mass + B-symptoms: classical triad that\n% mandates tissue diagnosis above standard imaging.",
+    "clause": "interacts 2.0 when symptom(hemoptysis) and imaging_chest_ct(right_upper_lobe_mass) and symptom(night_sweats)\n  for next_diagnostic_step(biopsy_or_advanced_workup)\n  source \"Rivera MP, et al. Establishing the diagnosis of lung cancer. Chest. 2013;143(5 Suppl):e142S-e165S.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c75",
+    "head_line": 683,
+    "rationale": "% Facial swelling + mediastinal involvement strongly argues SVC\n% syndrome from a mediastinal mass \u2014 joint kicker on malignancy.",
+    "clause": "interacts 2.0 when symptom(facial_swelling_new_onset) and imaging_chest_ct(mediastinal_involvement)\n  for diagnosis(pulmonary_malignancy)\n  source \"Wilson LD, Detterbeck FC, Yahalom J. SVC syndrome with malignant causes. N Engl J Med. 2007;356(18):1862-1869.\"\n  trust authoritative"
+  },
+  {
+    "clause_id": "c76",
+    "head_line": 692,
+    "rationale": "% Actinomyces growth + dental infection absent + failure to respond\n% to antibiotics: jointly argues that Actinomyces is a colonizer\n% in this case rather than the primary driver \u2014 joint downward push\n% on actinomycosis posterior.",
+    "clause": "interacts 0.4 when sputum_culture(actinomyces) and dental_infection(absent) and response_to_inpatient_antibiotics(no_improvement)\n  for diagnosis(pulmonary_actinomycosis)\n  source \"Mabeza GF, Macfarlane J. Pulmonary actinomycosis. Eur Respir J. 2003;21(3):545-551; Russo TA. Mandell's Principles and Practice of Infectious Diseases, 9th ed. 2020.\"\n  trust consensus"
+  },
+  {
+    "clause_id": "c77",
+    "head_line": 700,
+    "rationale": "% No-TB-exposure + no-travel + negative epidemiology: jointly\n% lowers TB posterior more than either alone (these are not\n% independent \u2014 they share a common epidemiologic cause).",
+    "clause": "interacts 0.5 when denies(tuberculosis_exposure) and denies(recent_travel)\n  for diagnosis(pulmonary_tuberculosis)\n  source \"Lewinsohn DM, et al. ATS/IDSA/CDC TB diagnosis guidelines. Clin Infect Dis. 2017;64(2):e1-e33.\"\n  trust authoritative"
+  }
+]

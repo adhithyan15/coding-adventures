@@ -1,0 +1,8 @@
+{
+ "idx": 93,
+ "policy": "An injury that occurs while the employee is intoxicated is not compensable only if the intoxication was the proximate cause of the injury. If intoxication was present but was not the proximate cause, the injury remains compensable.",
+ "scenario": "Glenn, a machine operator, was injured when a coworker accidentally backed a forklift into him in the loading bay. A post-incident test showed Glenn had a blood alcohol concentration of 0.09%, above the legal limit. The forklift driver's own conduct was being reviewed separately.",
+ "question": "Is Glenn's injury non-compensable on grounds of intoxication?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether intoxication was the proximate cause"
+}

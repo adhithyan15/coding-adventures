@@ -1,0 +1,37 @@
+// Tooltip.mil — interface for the toolkit Tooltip (v0.4).
+//
+// Plain-text hover-help annotation wrapped around a visible label.
+// Thin wrapper around the UI29-4 HostTooltip kernel primitive plus
+// a Text — the toolkit's contribution is the "tooltip-wrapped text"
+// convenience shape that covers the most common toolkit usage.
+//
+// Why a `label` slot and not a node-typed children slot?
+// -----------------------------------------------------
+// Same reason as Modal: arbitrary children pass-through is a
+// kernel feature that v0.4 doesn't yet have. The "tooltip a
+// piece of text" shape covers a clean majority of toolkit
+// tooltips (info-icon hovers, abbreviation expansions, key-bind
+// hints). Hosts that need to tooltip arbitrary widgets can use
+// the kernel `HostTooltip` directly with their own children.
+//
+// Rich-content tooltips (icons, multiline, formatted) are out
+// of scope for v0.4 per UI29-4 spec §3.2's plain-text-only
+// scope. A follow-up `Popover` toolkit component handles the
+// rich case.
+
+component Tooltip {
+  // The tooltip body text shown on hover / long-press. Plain
+  // text only in v0.4. Named `message` (not `text`) because
+  // `text` is a reserved keyword in the .mil grammar — it's the
+  // type name for textual slots, so it can't double as a slot
+  // identifier. The kernel HostTooltip's slot IS called `text`
+  // since the kernel-side .mosmodel parsing has a smaller
+  // keyword footprint; the toolkit wraps it with a non-keyword
+  // alias.
+  slot message : text ;
+
+  // The visible label the tooltip annotates.
+  slot label : text ;
+
+  // (no emits — tooltips are display-only.)
+}

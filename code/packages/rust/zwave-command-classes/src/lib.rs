@@ -126,6 +126,18 @@ impl ZWaveCommandSummary {
         self.payload_len > 0
     }
 
+    pub fn is_payload_free(self) -> bool {
+        self.payload_len == 0
+    }
+
+    pub fn is_get(self) -> bool {
+        self.command_kind == ZWaveCommandKind::Get
+    }
+
+    pub fn is_set(self) -> bool {
+        self.command_kind == ZWaveCommandKind::Set
+    }
+
     pub fn is_report(self) -> bool {
         self.command_kind == ZWaveCommandKind::Report
     }
@@ -136,6 +148,110 @@ impl ZWaveCommandSummary {
             ZWaveCommandKind::Get | ZWaveCommandKind::Set
         )
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZWaveCommandBatchSummary {
+    pub total_commands: usize,
+    pub get_commands: usize,
+    pub set_commands: usize,
+    pub report_commands: usize,
+    pub other_commands: usize,
+    pub payload_free_commands: usize,
+    pub commands_with_payload: usize,
+    pub extended_command_classes: usize,
+    pub encodable_commands: usize,
+    pub unencodable_commands: usize,
+    pub total_payload_bytes: usize,
+    pub total_encoded_bytes: Option<usize>,
+    pub unique_command_classes: usize,
+}
+
+impl ZWaveCommandBatchSummary {
+    pub fn from_commands<'a>(commands: impl IntoIterator<Item = &'a ZWaveCommand>) -> Self {
+        Self::from_summaries(commands.into_iter().map(ZWaveCommand::summary))
+    }
+
+    pub fn from_summaries(summaries: impl IntoIterator<Item = ZWaveCommandSummary>) -> Self {
+        let mut batch = Self {
+            total_commands: 0,
+            get_commands: 0,
+            set_commands: 0,
+            report_commands: 0,
+            other_commands: 0,
+            payload_free_commands: 0,
+            commands_with_payload: 0,
+            extended_command_classes: 0,
+            encodable_commands: 0,
+            unencodable_commands: 0,
+            total_payload_bytes: 0,
+            total_encoded_bytes: Some(0),
+            unique_command_classes: 0,
+        };
+        let mut command_classes = BTreeSet::new();
+
+        for summary in summaries {
+            batch.record_summary(summary);
+            command_classes.insert(summary.command_class);
+        }
+
+        batch.unique_command_classes = command_classes.len();
+        batch
+    }
+
+    pub fn record_summary(&mut self, summary: ZWaveCommandSummary) {
+        self.total_commands += 1;
+        match summary.command_kind {
+            ZWaveCommandKind::Get => self.get_commands += 1,
+            ZWaveCommandKind::Set => self.set_commands += 1,
+            ZWaveCommandKind::Report => self.report_commands += 1,
+            ZWaveCommandKind::Other => self.other_commands += 1,
+        }
+        if summary.has_payload() {
+            self.commands_with_payload += 1;
+        } else {
+            self.payload_free_commands += 1;
+        }
+        if summary.uses_extended_command_class {
+            self.extended_command_classes += 1;
+        }
+        if summary.can_encode {
+            self.encodable_commands += 1;
+        } else {
+            self.unencodable_commands += 1;
+        }
+        self.total_payload_bytes += summary.payload_len;
+        self.total_encoded_bytes = match (self.total_encoded_bytes, summary.encoded_len) {
+            (Some(total), Some(encoded_len)) => Some(total + encoded_len),
+            _ => None,
+        };
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_commands == 0
+    }
+
+    pub fn has_requests(self) -> bool {
+        self.get_commands + self.set_commands > 0
+    }
+
+    pub fn has_reports(self) -> bool {
+        self.report_commands > 0
+    }
+
+    pub fn has_payloads(self) -> bool {
+        self.commands_with_payload > 0
+    }
+
+    pub fn has_unencodable_commands(self) -> bool {
+        self.unencodable_commands > 0
+    }
+}
+
+pub fn summarize_zwave_commands<'a>(
+    commands: impl IntoIterator<Item = &'a ZWaveCommand>,
+) -> ZWaveCommandBatchSummary {
+    ZWaveCommandBatchSummary::from_commands(commands)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -378,6 +494,296 @@ impl CommandClassProjectionSummary {
     pub fn has_sensor_surface(self) -> bool {
         self.sensor_command_classes > 0
     }
+
+    pub fn has_observe_only_surface(self) -> bool {
+        self.observe_only_capabilities > 0
+    }
+
+    pub fn readiness(self) -> CommandClassProjectionReadinessSummary {
+        CommandClassProjectionReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CommandClassProjectionReadinessSummary {
+    pub projection_summary: CommandClassProjectionSummary,
+    pub required_projection_check_count: usize,
+    pub passed_projection_check_count: usize,
+    pub missing_projection_check_count: usize,
+    pub command_classes_present: bool,
+    pub capability_projection_ready: bool,
+    pub command_surface_ready: bool,
+    pub sensor_surface_ready: bool,
+    pub observe_only_surface_ready: bool,
+    pub projection_ready: bool,
+}
+
+impl CommandClassProjectionReadinessSummary {
+    pub fn from_command_classes<I>(command_classes: I) -> Self
+    where
+        I: IntoIterator<Item = CommandClassId>,
+    {
+        Self::from_summary(CommandClassProjectionSummary::from_command_classes(
+            command_classes,
+        ))
+    }
+
+    pub fn from_summary(projection_summary: CommandClassProjectionSummary) -> Self {
+        let command_classes_present = projection_summary.unique_command_classes > 0;
+        let capability_projection_ready = projection_summary.has_projected_capabilities();
+        let command_surface_ready = projection_summary.has_command_surface();
+        let sensor_surface_ready = projection_summary.has_sensor_surface();
+        let observe_only_surface_ready = projection_summary.has_observe_only_surface();
+        let checks = [
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+        ];
+        let passed_projection_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_projection_check_count = checks.len();
+        let missing_projection_check_count =
+            required_projection_check_count - passed_projection_check_count;
+        let projection_ready = missing_projection_check_count == 0;
+
+        Self {
+            projection_summary,
+            required_projection_check_count,
+            passed_projection_check_count,
+            missing_projection_check_count,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+            projection_ready,
+        }
+    }
+
+    pub fn is_projection_ready(self) -> bool {
+        self.projection_ready
+    }
+
+    pub fn has_missing_projection_checks(self) -> bool {
+        self.missing_projection_check_count > 0
+    }
+
+    pub fn needs_command_class_inventory(self) -> bool {
+        !self.command_classes_present
+    }
+
+    pub fn needs_capability_projection(self) -> bool {
+        !self.capability_projection_ready
+    }
+
+    pub fn needs_command_surface(self) -> bool {
+        !self.command_surface_ready
+    }
+
+    pub fn needs_sensor_surface(self) -> bool {
+        !self.sensor_surface_ready
+    }
+
+    pub fn needs_observe_only_surface(self) -> bool {
+        !self.observe_only_surface_ready
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CommandClassProjectionSignoffSummary {
+    pub readiness_summary: CommandClassProjectionReadinessSummary,
+    pub required_signoff_check_count: usize,
+    pub passed_signoff_check_count: usize,
+    pub missing_signoff_check_count: usize,
+    pub projection_ready: bool,
+    pub command_classes_present: bool,
+    pub capability_projection_ready: bool,
+    pub command_surface_ready: bool,
+    pub sensor_surface_ready: bool,
+    pub observe_only_surface_ready: bool,
+    pub signoff_ready: bool,
+}
+
+impl CommandClassProjectionSignoffSummary {
+    pub fn from_command_classes<I>(command_classes: I) -> Self
+    where
+        I: IntoIterator<Item = CommandClassId>,
+    {
+        Self::from_readiness_summary(
+            CommandClassProjectionReadinessSummary::from_command_classes(command_classes),
+        )
+    }
+
+    pub fn from_readiness_summary(
+        readiness_summary: CommandClassProjectionReadinessSummary,
+    ) -> Self {
+        let projection_ready = readiness_summary.is_projection_ready();
+        let command_classes_present = !readiness_summary.needs_command_class_inventory();
+        let capability_projection_ready = !readiness_summary.needs_capability_projection();
+        let command_surface_ready = !readiness_summary.needs_command_surface();
+        let sensor_surface_ready = !readiness_summary.needs_sensor_surface();
+        let observe_only_surface_ready = !readiness_summary.needs_observe_only_surface();
+        let checks = [
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+        ];
+        let passed_signoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_signoff_check_count = checks.len();
+        let missing_signoff_check_count = required_signoff_check_count - passed_signoff_check_count;
+        let signoff_ready = missing_signoff_check_count == 0;
+
+        Self {
+            readiness_summary,
+            required_signoff_check_count,
+            passed_signoff_check_count,
+            missing_signoff_check_count,
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+            signoff_ready,
+        }
+    }
+
+    pub fn is_signoff_ready(self) -> bool {
+        self.signoff_ready
+    }
+
+    pub fn has_missing_signoff_checks(self) -> bool {
+        self.missing_signoff_check_count > 0
+    }
+
+    pub fn needs_projection_readiness(self) -> bool {
+        !self.projection_ready
+    }
+
+    pub fn needs_command_class_inventory(self) -> bool {
+        !self.command_classes_present
+    }
+
+    pub fn needs_capability_projection(self) -> bool {
+        !self.capability_projection_ready
+    }
+
+    pub fn needs_command_surface(self) -> bool {
+        !self.command_surface_ready
+    }
+
+    pub fn needs_sensor_surface(self) -> bool {
+        !self.sensor_surface_ready
+    }
+
+    pub fn needs_observe_only_surface(self) -> bool {
+        !self.observe_only_surface_ready
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CommandClassProjectionClosureSummary {
+    pub signoff_summary: CommandClassProjectionSignoffSummary,
+    pub required_closure_check_count: usize,
+    pub passed_closure_check_count: usize,
+    pub missing_closure_check_count: usize,
+    pub signoff_ready: bool,
+    pub projection_ready: bool,
+    pub command_classes_present: bool,
+    pub capability_projection_ready: bool,
+    pub command_surface_ready: bool,
+    pub sensor_surface_ready: bool,
+    pub observe_only_surface_ready: bool,
+    pub closure_ready: bool,
+}
+
+impl CommandClassProjectionClosureSummary {
+    pub fn from_command_classes<I>(command_classes: I) -> Self
+    where
+        I: IntoIterator<Item = CommandClassId>,
+    {
+        Self::from_signoff_summary(CommandClassProjectionSignoffSummary::from_command_classes(
+            command_classes,
+        ))
+    }
+
+    pub fn from_signoff_summary(signoff_summary: CommandClassProjectionSignoffSummary) -> Self {
+        let signoff_ready = signoff_summary.is_signoff_ready();
+        let projection_ready = !signoff_summary.needs_projection_readiness();
+        let command_classes_present = !signoff_summary.needs_command_class_inventory();
+        let capability_projection_ready = !signoff_summary.needs_capability_projection();
+        let command_surface_ready = !signoff_summary.needs_command_surface();
+        let sensor_surface_ready = !signoff_summary.needs_sensor_surface();
+        let observe_only_surface_ready = !signoff_summary.needs_observe_only_surface();
+        let checks = [
+            signoff_ready,
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+        ];
+        let passed_closure_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_closure_check_count = checks.len();
+        let missing_closure_check_count = required_closure_check_count - passed_closure_check_count;
+        let closure_ready = missing_closure_check_count == 0;
+
+        Self {
+            signoff_summary,
+            required_closure_check_count,
+            passed_closure_check_count,
+            missing_closure_check_count,
+            signoff_ready,
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+            closure_ready,
+        }
+    }
+
+    pub fn is_closure_ready(self) -> bool {
+        self.closure_ready
+    }
+
+    pub fn has_missing_closure_checks(self) -> bool {
+        self.missing_closure_check_count > 0
+    }
+
+    pub fn needs_projection_signoff(self) -> bool {
+        !self.signoff_ready
+    }
+
+    pub fn needs_projection_readiness(self) -> bool {
+        !self.projection_ready
+    }
+
+    pub fn needs_command_class_inventory(self) -> bool {
+        !self.command_classes_present
+    }
+
+    pub fn needs_capability_projection(self) -> bool {
+        !self.capability_projection_ready
+    }
+
+    pub fn needs_command_surface(self) -> bool {
+        !self.command_surface_ready
+    }
+
+    pub fn needs_sensor_surface(self) -> bool {
+        !self.sensor_surface_ready
+    }
+
+    pub fn needs_observe_only_surface(self) -> bool {
+        !self.observe_only_surface_ready
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -391,6 +797,7 @@ pub enum CommandClassError {
         command_id: u8,
     },
     InvalidExtendedCommandClassId(u16),
+    InvalidReportValue(&'static str),
     InvalidSensorValueSize(u8),
     InvalidMeterValueSize(u8),
 }
@@ -413,6 +820,7 @@ impl fmt::Display for CommandClassError {
             Self::InvalidExtendedCommandClassId(id) => {
                 write!(f, "invalid extended Z-Wave command class id 0x{id:04x}")
             }
+            Self::InvalidReportValue(reason) => write!(f, "invalid Z-Wave report value: {reason}"),
             Self::InvalidSensorValueSize(size) => {
                 write!(f, "invalid Z-Wave multilevel sensor value size {size}")
             }
@@ -585,6 +993,100 @@ pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, Co
             command_class: command.command_class,
             command_id: command.command_id,
         }),
+    }
+}
+
+pub fn encode_value_report(report: &ZWaveValueReport) -> Result<ZWaveCommand, CommandClassError> {
+    match report {
+        ZWaveValueReport::Basic { value } => Ok(ZWaveCommand::new(
+            CommandClassId::BASIC,
+            BASIC_REPORT,
+            vec![*value],
+        )),
+        ZWaveValueReport::BinarySwitch { current_value } => Ok(ZWaveCommand::new(
+            CommandClassId::SWITCH_BINARY,
+            SWITCH_BINARY_REPORT,
+            vec![zwave_bool(*current_value)],
+        )),
+        ZWaveValueReport::MultilevelSwitch {
+            current_level,
+            target_level,
+            duration,
+        } => {
+            let mut payload = vec![*current_level];
+            if let Some(target_level) = target_level {
+                payload.push(*target_level);
+            }
+            if let Some(duration) = duration {
+                if target_level.is_none() {
+                    payload.push(*current_level);
+                }
+                payload.push(*duration);
+            }
+            Ok(ZWaveCommand::new(
+                CommandClassId::SWITCH_MULTILEVEL,
+                SWITCH_MULTILEVEL_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::BinarySensor {
+            detected,
+            sensor_type,
+        } => {
+            let mut payload = vec![zwave_bool(*detected)];
+            if let Some(sensor_type) = sensor_type {
+                payload.push(*sensor_type);
+            }
+            Ok(ZWaveCommand::new(
+                CommandClassId::SENSOR_BINARY,
+                SENSOR_BINARY_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::MultilevelSensor {
+            sensor_type,
+            scale,
+            precision,
+            raw_value,
+        } => {
+            let mut payload = vec![*sensor_type];
+            encode_scaled_value_properties(*precision, *scale, *raw_value, &mut payload)?;
+            Ok(ZWaveCommand::new(
+                CommandClassId::SENSOR_MULTILEVEL,
+                SENSOR_MULTILEVEL_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::DoorLock { mode } => Ok(ZWaveCommand::new(
+            CommandClassId::DOOR_LOCK,
+            DOOR_LOCK_OPERATION_REPORT,
+            vec![door_lock_mode_byte(*mode)],
+        )),
+        ZWaveValueReport::Battery { level } => Ok(ZWaveCommand::new(
+            CommandClassId::BATTERY,
+            BATTERY_REPORT,
+            vec![battery_level_byte(*level)],
+        )),
+        ZWaveValueReport::Meter {
+            meter_type,
+            scale,
+            precision,
+            raw_value,
+        } => {
+            if *meter_type > 0b0001_1111 {
+                return Err(CommandClassError::InvalidReportValue(
+                    "meter type must fit in five bits",
+                ));
+            }
+            let mut payload = vec![*meter_type];
+            encode_scaled_value_properties(*precision, *scale, *raw_value, &mut payload)?;
+            Ok(ZWaveCommand::new(
+                COMMAND_CLASS_METER,
+                METER_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::Notification(report) => encode_notification_report(report),
     }
 }
 
@@ -893,6 +1395,69 @@ fn parse_meter_report(payload: &[u8]) -> Result<ZWaveValueReport, CommandClassEr
     })
 }
 
+fn encode_notification_report(
+    report: &NotificationReport,
+) -> Result<ZWaveCommand, CommandClassError> {
+    if report.event_parameters.len() > u8::MAX as usize {
+        return Err(CommandClassError::InvalidReportValue(
+            "notification event parameters must fit in one length byte",
+        ));
+    }
+
+    let mut payload = vec![
+        report.v1_alarm_type,
+        report.v1_alarm_level,
+        0x00,
+        report.notification_status,
+        report.notification_type.as_byte(),
+        report.event,
+    ];
+    if !report.event_parameters.is_empty() {
+        payload.push(report.event_parameters.len() as u8);
+        payload.extend_from_slice(&report.event_parameters);
+    }
+
+    Ok(ZWaveCommand::new(
+        COMMAND_CLASS_NOTIFICATION,
+        NOTIFICATION_REPORT,
+        payload,
+    ))
+}
+
+fn encode_scaled_value_properties(
+    precision: u8,
+    scale: u8,
+    raw_value: i32,
+    payload: &mut Vec<u8>,
+) -> Result<(), CommandClassError> {
+    if precision > 0b111 {
+        return Err(CommandClassError::InvalidReportValue(
+            "precision must fit in three bits",
+        ));
+    }
+    if scale > 0b11 {
+        return Err(CommandClassError::InvalidReportValue(
+            "scale must fit in two bits",
+        ));
+    }
+
+    let value_bytes = compact_signed_be_bytes(raw_value);
+    let size = value_bytes.len() as u8;
+    payload.push((precision << 5) | (scale << 3) | size);
+    payload.extend_from_slice(&value_bytes);
+    Ok(())
+}
+
+fn compact_signed_be_bytes(value: i32) -> Vec<u8> {
+    if let Ok(value) = i8::try_from(value) {
+        value.to_be_bytes().to_vec()
+    } else if let Ok(value) = i16::try_from(value) {
+        value.to_be_bytes().to_vec()
+    } else {
+        value.to_be_bytes().to_vec()
+    }
+}
+
 fn signed_be_value(bytes: &[u8], size: u8) -> i32 {
     match size {
         1 => i8::from_be_bytes([bytes[0]]) as i32,
@@ -907,6 +1472,22 @@ fn door_lock_mode(value: u8) -> DoorLockMode {
         0x00 => DoorLockMode::Unsecured,
         0xff => DoorLockMode::Secured,
         other => DoorLockMode::Unknown(other),
+    }
+}
+
+fn door_lock_mode_byte(mode: DoorLockMode) -> u8 {
+    match mode {
+        DoorLockMode::Unsecured => 0x00,
+        DoorLockMode::Secured => 0xff,
+        DoorLockMode::Unknown(value) => value,
+    }
+}
+
+fn battery_level_byte(level: BatteryLevel) -> u8 {
+    match level {
+        BatteryLevel::Percentage(value) => value,
+        BatteryLevel::LowWarning => BATTERY_LOW_WARNING,
+        BatteryLevel::Reserved(value) => value,
     }
 }
 
@@ -990,6 +1571,9 @@ mod tests {
             }
         );
         assert!(summary.has_payload());
+        assert!(!summary.is_payload_free());
+        assert!(!summary.is_get());
+        assert!(summary.is_set());
         assert!(summary.is_request());
         assert!(!summary.is_report());
     }
@@ -1032,16 +1616,79 @@ mod tests {
         let summary = command.summary();
 
         assert_eq!(summary.command_kind, ZWaveCommandKind::Report);
+        assert!(!summary.is_get());
+        assert!(!summary.is_set());
         assert!(summary.is_report());
         assert!(!summary.is_request());
     }
 
     #[test]
+    fn command_batch_summary_rolls_up_command_shapes() {
+        let get = binary_switch_get();
+        let set = binary_switch_set(true);
+        let report = ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_REPORT, vec![87]);
+        let extended = ZWaveCommand::new(CommandClassId(0xf102), 0x09, vec![0xaa, 0xbb]);
+
+        let summary = summarize_zwave_commands([&get, &set, &report, &extended]);
+
+        assert_eq!(
+            summary,
+            ZWaveCommandBatchSummary {
+                total_commands: 4,
+                get_commands: 1,
+                set_commands: 1,
+                report_commands: 1,
+                other_commands: 1,
+                payload_free_commands: 1,
+                commands_with_payload: 3,
+                extended_command_classes: 1,
+                encodable_commands: 4,
+                unencodable_commands: 0,
+                total_payload_bytes: 4,
+                total_encoded_bytes: Some(13),
+                unique_command_classes: 3,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_requests());
+        assert!(summary.has_reports());
+        assert!(summary.has_payloads());
+        assert!(!summary.has_unencodable_commands());
+    }
+
+    #[test]
+    fn command_batch_summary_tracks_unencodable_commands() {
+        let invalid = ZWaveCommand::new(CommandClassId(0x0101), 0x01, Vec::new());
+
+        let summary = ZWaveCommandBatchSummary::from_summaries([invalid.summary()]);
+
+        assert_eq!(summary.total_commands, 1);
+        assert_eq!(summary.other_commands, 1);
+        assert_eq!(summary.payload_free_commands, 1);
+        assert_eq!(summary.extended_command_classes, 1);
+        assert_eq!(summary.encodable_commands, 0);
+        assert_eq!(summary.unencodable_commands, 1);
+        assert_eq!(summary.total_encoded_bytes, None);
+        assert_eq!(summary.unique_command_classes, 1);
+        assert!(!summary.has_requests());
+        assert!(!summary.has_reports());
+        assert!(summary.has_unencodable_commands());
+
+        let empty = ZWaveCommandBatchSummary::from_summaries([]);
+        assert!(empty.is_empty());
+        assert_eq!(empty.total_encoded_bytes, Some(0));
+    }
+
+    #[test]
     fn set_builders_normalize_values() {
+        let basic_summary = basic_get().summary();
         assert_eq!(
             basic_get().encode().unwrap(),
             vec![CommandClassId::BASIC.0 as u8, BASIC_GET]
         );
+        assert!(basic_summary.is_get());
+        assert!(!basic_summary.is_set());
+        assert!(basic_summary.is_payload_free());
         assert_eq!(binary_switch_set(false).payload, vec![0x00]);
         assert_eq!(multilevel_switch_set(100).payload, vec![99]);
         assert_eq!(door_lock_operation_set(true).payload, vec![0xff]);
@@ -1237,6 +1884,114 @@ mod tests {
     }
 
     #[test]
+    fn encodes_common_value_reports_for_round_trip_fixtures() {
+        let reports = vec![
+            ZWaveValueReport::Basic { value: 0xff },
+            ZWaveValueReport::BinarySwitch {
+                current_value: true,
+            },
+            ZWaveValueReport::MultilevelSwitch {
+                current_level: 99,
+                target_level: Some(50),
+                duration: Some(0),
+            },
+            ZWaveValueReport::BinarySensor {
+                detected: true,
+                sensor_type: Some(0x0c),
+            },
+            ZWaveValueReport::DoorLock {
+                mode: DoorLockMode::Secured,
+            },
+            ZWaveValueReport::Battery {
+                level: BatteryLevel::LowWarning,
+            },
+        ];
+
+        for report in reports {
+            let command = encode_value_report(&report).unwrap();
+            assert_eq!(parse_value_report(&command).unwrap(), report);
+            assert!(command.summary().is_report());
+        }
+    }
+
+    #[test]
+    fn encodes_scaled_sensor_meter_and_notification_reports() {
+        let sensor = ZWaveValueReport::MultilevelSensor {
+            sensor_type: 0x01,
+            scale: 1,
+            precision: 1,
+            raw_value: 2500,
+        };
+        let meter = ZWaveValueReport::Meter {
+            meter_type: 0x01,
+            scale: 0,
+            precision: 2,
+            raw_value: 1234,
+        };
+        let notification = ZWaveValueReport::Notification(NotificationReport {
+            v1_alarm_type: 0x00,
+            v1_alarm_level: 0x00,
+            notification_status: 0xff,
+            notification_type: NotificationType::HomeSecurity,
+            event: 0x08,
+            event_parameters: vec![0xaa, 0xbb],
+        });
+
+        assert_eq!(
+            encode_value_report(&sensor).unwrap().payload,
+            vec![0x01, 0b0010_1010, 0x09, 0xc4]
+        );
+        assert_eq!(
+            encode_value_report(&meter).unwrap().payload,
+            vec![0x01, 0b0100_0010, 0x04, 0xd2]
+        );
+        assert_eq!(
+            encode_value_report(&notification).unwrap().payload,
+            vec![0x00, 0x00, 0x00, 0xff, 0x07, 0x08, 0x02, 0xaa, 0xbb]
+        );
+
+        for report in [sensor, meter, notification] {
+            let command = encode_value_report(&report).unwrap();
+            assert_eq!(parse_value_report(&command).unwrap(), report);
+        }
+    }
+
+    #[test]
+    fn report_encoder_rejects_unrepresentable_packed_fields() {
+        let bad_precision = ZWaveValueReport::MultilevelSensor {
+            sensor_type: 0x01,
+            scale: 0,
+            precision: 8,
+            raw_value: 1,
+        };
+        let bad_scale = ZWaveValueReport::Meter {
+            meter_type: 0x01,
+            scale: 4,
+            precision: 0,
+            raw_value: 1,
+        };
+        let bad_meter_type = ZWaveValueReport::Meter {
+            meter_type: 0x20,
+            scale: 0,
+            precision: 0,
+            raw_value: 1,
+        };
+
+        assert!(matches!(
+            encode_value_report(&bad_precision),
+            Err(CommandClassError::InvalidReportValue(_))
+        ));
+        assert!(matches!(
+            encode_value_report(&bad_scale),
+            Err(CommandClassError::InvalidReportValue(_))
+        ));
+        assert!(matches!(
+            encode_value_report(&bad_meter_type),
+            Err(CommandClassError::InvalidReportValue(_))
+        ));
+    }
+
+    #[test]
     fn maps_reports_to_d23_state_deltas() {
         let lock = ZWaveValueReport::DoorLock {
             mode: DoorLockMode::Secured,
@@ -1395,6 +2150,199 @@ mod tests {
         assert!(!empty.has_projected_capabilities());
         assert!(!empty.has_command_surface());
         assert!(!empty.has_sensor_surface());
+    }
+
+    #[test]
+    fn command_class_projection_readiness_marks_mixed_surface_ready() {
+        let summary = CommandClassProjectionSummary::from_command_classes([
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::DOOR_LOCK,
+            CommandClassId::BATTERY,
+            COMMAND_CLASS_METER,
+            COMMAND_CLASS_NOTIFICATION,
+        ]);
+
+        let readiness = summary.readiness();
+
+        assert_eq!(readiness.projection_summary, summary);
+        assert_eq!(readiness.required_projection_check_count, 5);
+        assert_eq!(readiness.passed_projection_check_count, 5);
+        assert_eq!(readiness.missing_projection_check_count, 0);
+        assert!(readiness.command_classes_present);
+        assert!(readiness.capability_projection_ready);
+        assert!(readiness.command_surface_ready);
+        assert!(readiness.sensor_surface_ready);
+        assert!(readiness.observe_only_surface_ready);
+        assert!(readiness.projection_ready);
+        assert!(readiness.is_projection_ready());
+        assert!(!readiness.has_missing_projection_checks());
+        assert!(!readiness.needs_command_class_inventory());
+        assert!(!readiness.needs_capability_projection());
+        assert!(!readiness.needs_command_surface());
+        assert!(!readiness.needs_sensor_surface());
+        assert!(!readiness.needs_observe_only_surface());
+    }
+
+    #[test]
+    fn command_class_projection_readiness_routes_sparse_inventory_gaps() {
+        let basic_only = CommandClassProjectionReadinessSummary::from_command_classes([
+            CommandClassId::BASIC,
+            CommandClassId::BASIC,
+        ]);
+
+        assert_eq!(basic_only.required_projection_check_count, 5);
+        assert_eq!(basic_only.passed_projection_check_count, 1);
+        assert_eq!(basic_only.missing_projection_check_count, 4);
+        assert!(basic_only.command_classes_present);
+        assert!(!basic_only.capability_projection_ready);
+        assert!(!basic_only.command_surface_ready);
+        assert!(!basic_only.sensor_surface_ready);
+        assert!(!basic_only.observe_only_surface_ready);
+        assert!(!basic_only.projection_ready);
+        assert!(!basic_only.needs_command_class_inventory());
+        assert!(basic_only.needs_capability_projection());
+        assert!(basic_only.needs_command_surface());
+        assert!(basic_only.needs_sensor_surface());
+        assert!(basic_only.needs_observe_only_surface());
+
+        let empty = CommandClassProjectionReadinessSummary::from_command_classes([]);
+        assert_eq!(empty.passed_projection_check_count, 0);
+        assert!(empty.needs_command_class_inventory());
+        assert!(empty.has_missing_projection_checks());
+    }
+
+    #[test]
+    fn command_class_projection_signoff_marks_mixed_surface_ready() {
+        let readiness = CommandClassProjectionReadinessSummary::from_command_classes([
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::DOOR_LOCK,
+            CommandClassId::BATTERY,
+            COMMAND_CLASS_METER,
+            COMMAND_CLASS_NOTIFICATION,
+        ]);
+
+        let signoff = CommandClassProjectionSignoffSummary::from_readiness_summary(readiness);
+
+        assert_eq!(signoff.readiness_summary, readiness);
+        assert_eq!(signoff.required_signoff_check_count, 6);
+        assert_eq!(signoff.passed_signoff_check_count, 6);
+        assert_eq!(signoff.missing_signoff_check_count, 0);
+        assert!(signoff.projection_ready);
+        assert!(signoff.command_classes_present);
+        assert!(signoff.capability_projection_ready);
+        assert!(signoff.command_surface_ready);
+        assert!(signoff.sensor_surface_ready);
+        assert!(signoff.observe_only_surface_ready);
+        assert!(signoff.signoff_ready);
+        assert!(signoff.is_signoff_ready());
+        assert!(!signoff.has_missing_signoff_checks());
+        assert!(!signoff.needs_projection_readiness());
+        assert!(!signoff.needs_command_class_inventory());
+        assert!(!signoff.needs_capability_projection());
+        assert!(!signoff.needs_command_surface());
+        assert!(!signoff.needs_sensor_surface());
+        assert!(!signoff.needs_observe_only_surface());
+    }
+
+    #[test]
+    fn command_class_projection_signoff_routes_sparse_inventory_gaps() {
+        let basic_only = CommandClassProjectionSignoffSummary::from_command_classes([
+            CommandClassId::BASIC,
+            CommandClassId::BASIC,
+        ]);
+
+        assert_eq!(basic_only.required_signoff_check_count, 6);
+        assert_eq!(basic_only.passed_signoff_check_count, 1);
+        assert_eq!(basic_only.missing_signoff_check_count, 5);
+        assert!(!basic_only.projection_ready);
+        assert!(basic_only.command_classes_present);
+        assert!(!basic_only.capability_projection_ready);
+        assert!(!basic_only.command_surface_ready);
+        assert!(!basic_only.sensor_surface_ready);
+        assert!(!basic_only.observe_only_surface_ready);
+        assert!(!basic_only.signoff_ready);
+        assert!(!basic_only.is_signoff_ready());
+        assert!(basic_only.has_missing_signoff_checks());
+        assert!(basic_only.needs_projection_readiness());
+        assert!(!basic_only.needs_command_class_inventory());
+        assert!(basic_only.needs_capability_projection());
+        assert!(basic_only.needs_command_surface());
+        assert!(basic_only.needs_sensor_surface());
+        assert!(basic_only.needs_observe_only_surface());
+
+        let empty = CommandClassProjectionSignoffSummary::from_command_classes([]);
+        assert_eq!(empty.passed_signoff_check_count, 0);
+        assert!(empty.needs_command_class_inventory());
+        assert!(empty.has_missing_signoff_checks());
+    }
+
+    #[test]
+    fn command_class_projection_closure_marks_mixed_surface_ready() {
+        let signoff = CommandClassProjectionSignoffSummary::from_command_classes([
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::DOOR_LOCK,
+            CommandClassId::BATTERY,
+            COMMAND_CLASS_METER,
+            COMMAND_CLASS_NOTIFICATION,
+        ]);
+
+        let closure = CommandClassProjectionClosureSummary::from_signoff_summary(signoff);
+
+        assert_eq!(closure.signoff_summary, signoff);
+        assert_eq!(closure.required_closure_check_count, 7);
+        assert_eq!(closure.passed_closure_check_count, 7);
+        assert_eq!(closure.missing_closure_check_count, 0);
+        assert!(closure.signoff_ready);
+        assert!(closure.projection_ready);
+        assert!(closure.command_classes_present);
+        assert!(closure.capability_projection_ready);
+        assert!(closure.command_surface_ready);
+        assert!(closure.sensor_surface_ready);
+        assert!(closure.observe_only_surface_ready);
+        assert!(closure.closure_ready);
+        assert!(closure.is_closure_ready());
+        assert!(!closure.has_missing_closure_checks());
+        assert!(!closure.needs_projection_signoff());
+        assert!(!closure.needs_projection_readiness());
+        assert!(!closure.needs_command_class_inventory());
+        assert!(!closure.needs_capability_projection());
+        assert!(!closure.needs_command_surface());
+        assert!(!closure.needs_sensor_surface());
+        assert!(!closure.needs_observe_only_surface());
+    }
+
+    #[test]
+    fn command_class_projection_closure_routes_sparse_inventory_gaps() {
+        let basic_only = CommandClassProjectionClosureSummary::from_command_classes([
+            CommandClassId::BASIC,
+            CommandClassId::BASIC,
+        ]);
+
+        assert_eq!(basic_only.required_closure_check_count, 7);
+        assert_eq!(basic_only.passed_closure_check_count, 1);
+        assert_eq!(basic_only.missing_closure_check_count, 6);
+        assert!(!basic_only.signoff_ready);
+        assert!(!basic_only.projection_ready);
+        assert!(basic_only.command_classes_present);
+        assert!(!basic_only.capability_projection_ready);
+        assert!(!basic_only.command_surface_ready);
+        assert!(!basic_only.sensor_surface_ready);
+        assert!(!basic_only.observe_only_surface_ready);
+        assert!(!basic_only.closure_ready);
+        assert!(!basic_only.is_closure_ready());
+        assert!(basic_only.has_missing_closure_checks());
+        assert!(basic_only.needs_projection_signoff());
+        assert!(basic_only.needs_projection_readiness());
+        assert!(!basic_only.needs_command_class_inventory());
+        assert!(basic_only.needs_capability_projection());
+        assert!(basic_only.needs_command_surface());
+        assert!(basic_only.needs_sensor_surface());
+        assert!(basic_only.needs_observe_only_surface());
+
+        let empty = CommandClassProjectionClosureSummary::from_command_classes([]);
+        assert_eq!(empty.passed_closure_check_count, 0);
+        assert!(empty.needs_command_class_inventory());
+        assert!(empty.has_missing_closure_checks());
     }
 
     #[test]

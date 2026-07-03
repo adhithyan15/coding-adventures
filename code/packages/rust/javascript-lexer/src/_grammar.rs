@@ -8,6 +8,7 @@
 use grammar_tools::token_grammar::TokenGrammar;
 
 pub const SUPPORTED_VERSIONS: &[&str] = &[
+    "",
     "es1",
     "es3",
     "es5",
@@ -26,6 +27,7 @@ pub const SUPPORTED_VERSIONS: &[&str] = &[
 
 pub fn token_grammar(version: &str) -> Option<TokenGrammar> {
     match version {
+        "" => Some(generic::token_grammar()),
         "es1" => Some(v_es1::token_grammar()),
         "es3" => Some(v_es3::token_grammar()),
         "es5" => Some(v_es5::token_grammar()),
@@ -44,6 +46,237 @@ pub fn token_grammar(version: &str) -> Option<TokenGrammar> {
     }
 }
 
+mod generic {
+    // AUTO-GENERATED FILE — DO NOT EDIT
+    // Source: javascript.tokens
+    // Regenerate with: grammar-tools compile-tokens javascript.tokens
+    //
+    // This file embeds a TokenGrammar as native Rust data structures.
+    // Call `token_grammar()` instead of reading and parsing the .tokens file.
+
+    #[allow(unused_imports)]
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
+    #[allow(unused_imports)]
+    use std::collections::HashMap;
+
+    pub fn token_grammar() -> TokenGrammar {
+        TokenGrammar {
+            definitions: vec![
+                TokenDefinition {
+                    name: r#"NAME"#.to_string(),
+                    pattern: r#"[a-zA-Z_$][a-zA-Z0-9_$]*"#.to_string(),
+                    is_regex: true,
+                    line_number: 23,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"NUMBER"#.to_string(),
+                    pattern: r#"[0-9]+"#.to_string(),
+                    is_regex: true,
+                    line_number: 24,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"STRING"#.to_string(),
+                    pattern: r#""([^"\\]|\\.)*""#.to_string(),
+                    is_regex: true,
+                    line_number: 25,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"STRICT_EQUALS"#.to_string(),
+                    pattern: r#"==="#.to_string(),
+                    is_regex: false,
+                    line_number: 28,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"STRICT_NOT_EQUALS"#.to_string(),
+                    pattern: r#"!=="#.to_string(),
+                    is_regex: false,
+                    line_number: 29,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"EQUALS_EQUALS"#.to_string(),
+                    pattern: r#"=="#.to_string(),
+                    is_regex: false,
+                    line_number: 30,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"NOT_EQUALS"#.to_string(),
+                    pattern: r#"!="#.to_string(),
+                    is_regex: false,
+                    line_number: 31,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"LESS_EQUALS"#.to_string(),
+                    pattern: r#"<="#.to_string(),
+                    is_regex: false,
+                    line_number: 32,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"GREATER_EQUALS"#.to_string(),
+                    pattern: r#">="#.to_string(),
+                    is_regex: false,
+                    line_number: 33,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"ARROW"#.to_string(),
+                    pattern: r#"=>"#.to_string(),
+                    is_regex: false,
+                    line_number: 34,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"EQUALS"#.to_string(),
+                    pattern: r#"="#.to_string(),
+                    is_regex: false,
+                    line_number: 37,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"PLUS"#.to_string(),
+                    pattern: r#"+"#.to_string(),
+                    is_regex: false,
+                    line_number: 38,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"MINUS"#.to_string(),
+                    pattern: r#"-"#.to_string(),
+                    is_regex: false,
+                    line_number: 39,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"STAR"#.to_string(),
+                    pattern: r#"*"#.to_string(),
+                    is_regex: false,
+                    line_number: 40,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"SLASH"#.to_string(),
+                    pattern: r#"/"#.to_string(),
+                    is_regex: false,
+                    line_number: 41,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"LESS_THAN"#.to_string(),
+                    pattern: r#"<"#.to_string(),
+                    is_regex: false,
+                    line_number: 42,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"GREATER_THAN"#.to_string(),
+                    pattern: r#">"#.to_string(),
+                    is_regex: false,
+                    line_number: 43,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"BANG"#.to_string(),
+                    pattern: r#"!"#.to_string(),
+                    is_regex: false,
+                    line_number: 44,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"LPAREN"#.to_string(),
+                    pattern: r#"("#.to_string(),
+                    is_regex: false,
+                    line_number: 47,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"RPAREN"#.to_string(),
+                    pattern: r#")"#.to_string(),
+                    is_regex: false,
+                    line_number: 48,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"LBRACE"#.to_string(),
+                    pattern: r#"{"#.to_string(),
+                    is_regex: false,
+                    line_number: 49,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"RBRACE"#.to_string(),
+                    pattern: r#"}"#.to_string(),
+                    is_regex: false,
+                    line_number: 50,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"LBRACKET"#.to_string(),
+                    pattern: r#"["#.to_string(),
+                    is_regex: false,
+                    line_number: 51,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"RBRACKET"#.to_string(),
+                    pattern: r#"]"#.to_string(),
+                    is_regex: false,
+                    line_number: 52,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"COMMA"#.to_string(),
+                    pattern: r#","#.to_string(),
+                    is_regex: false,
+                    line_number: 53,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"COLON"#.to_string(),
+                    pattern: r#":"#.to_string(),
+                    is_regex: false,
+                    line_number: 54,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"SEMICOLON"#.to_string(),
+                    pattern: r#";"#.to_string(),
+                    is_regex: false,
+                    line_number: 55,
+                    alias: None,
+                },
+                TokenDefinition {
+                    name: r#"DOT"#.to_string(),
+                    pattern: r#"."#.to_string(),
+                    is_regex: false,
+                    line_number: 56,
+                    alias: None,
+                },
+            ],
+            keywords: vec![r#"let"#.to_string(), r#"const"#.to_string(), r#"var"#.to_string(), r#"if"#.to_string(), r#"else"#.to_string(), r#"while"#.to_string(), r#"for"#.to_string(), r#"do"#.to_string(), r#"function"#.to_string(), r#"return"#.to_string(), r#"class"#.to_string(), r#"import"#.to_string(), r#"export"#.to_string(), r#"from"#.to_string(), r#"as"#.to_string(), r#"new"#.to_string(), r#"this"#.to_string(), r#"typeof"#.to_string(), r#"instanceof"#.to_string(), r#"true"#.to_string(), r#"false"#.to_string(), r#"null"#.to_string(), r#"undefined"#.to_string()],
+            mode: None,
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups: HashMap::new(),
+            case_sensitive: true,
+            version: 1,
+            case_insensitive: false,
+            context_keywords: vec![],
+            soft_keywords: vec![],
+            layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
+        }
+    }
+}
 
 mod v_es1 {
     // AUTO-GENERATED FILE — DO NOT EDIT
@@ -54,7 +287,7 @@ mod v_es1 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -490,6 +723,8 @@ mod v_es1 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -503,7 +738,7 @@ mod v_es3 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -967,6 +1202,8 @@ mod v_es3 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -980,7 +1217,7 @@ mod v_es5 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -1444,6 +1681,8 @@ mod v_es5 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1457,7 +1696,7 @@ mod v_es2015 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -1990,6 +2229,8 @@ mod v_es2015 {
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2003,7 +2244,7 @@ mod v_es2016 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -2550,6 +2791,8 @@ mod v_es2016 {
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2563,7 +2806,7 @@ mod v_es2017 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -3110,6 +3353,8 @@ mod v_es2017 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3123,7 +3368,7 @@ mod v_es2018 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -3670,6 +3915,8 @@ mod v_es2018 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3683,7 +3930,7 @@ mod v_es2019 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -4230,6 +4477,8 @@ mod v_es2019 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -4243,7 +4492,7 @@ mod v_es2020 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -4832,6 +5081,8 @@ mod v_es2020 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -4845,7 +5096,7 @@ mod v_es2021 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -5455,6 +5706,8 @@ mod v_es2021 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -5468,7 +5721,7 @@ mod v_es2022 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -6085,6 +6338,8 @@ mod v_es2022 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -6098,7 +6353,7 @@ mod v_es2023 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -6722,6 +6977,8 @@ mod v_es2023 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -6735,7 +6992,7 @@ mod v_es2024 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -6870,7 +7127,7 @@ mod v_es2024 {
                 },
                 TokenDefinition {
                     name: r#"REGEX"#.to_string(),
-                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsvy]*"#.to_string(),
+                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsuvy]*"#.to_string(),
                     is_regex: true,
                     line_number: 85,
                     alias: None,
@@ -7359,6 +7616,8 @@ mod v_es2024 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -7372,7 +7631,7 @@ mod v_es2025 {
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
     #[allow(unused_imports)]
-    use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+    use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
     #[allow(unused_imports)]
     use std::collections::HashMap;
 
@@ -7507,7 +7766,7 @@ mod v_es2025 {
                 },
                 TokenDefinition {
                     name: r#"REGEX"#.to_string(),
-                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsvy]*"#.to_string(),
+                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsuvy]*"#.to_string(),
                     is_regex: true,
                     line_number: 112,
                     alias: None,
@@ -7926,58 +8185,77 @@ mod v_es2025 {
                     name: r#"WHITESPACE"#.to_string(),
                     pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
                     is_regex: true,
-                    line_number: 291,
+                    line_number: 399,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
                     pattern: r#"\/\/[^\n]*"#.to_string(),
                     is_regex: true,
-                    line_number: 292,
+                    line_number: 400,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"BLOCK_COMMENT"#.to_string(),
                     pattern: r#"\/\*([^*]|\*[^\/])*\*\/"#.to_string(),
                     is_regex: true,
-                    line_number: 293,
+                    line_number: 401,
                     alias: None,
                 },
             ],
             reserved_keywords: vec![r#"enum"#.to_string()],
-            escapes: None,
+            // gap-090: raw string bodies delivered to whitespace_only.rs
+            // for full ECMAScript escape normalisation (see es2025.tokens).
+            escapes: Some(r#"none"#.to_string()),
             error_definitions: vec![
                 TokenDefinition {
                     name: r#"BAD_STRING_DQ"#.to_string(),
                     pattern: r#""[^"]*$"#.to_string(),
                     is_regex: true,
-                    line_number: 300,
+                    line_number: 408,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"BAD_STRING_SQ"#.to_string(),
                     pattern: r#"'[^']*$"#.to_string(),
                     is_regex: true,
-                    line_number: 301,
+                    line_number: 409,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"BAD_REGEX"#.to_string(),
                     pattern: r#"\/([^\/\\\n]|\\.)*$"#.to_string(),
                     is_regex: true,
-                    line_number: 302,
+                    line_number: 410,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"BAD_TEMPLATE"#.to_string(),
                     pattern: r#"`([^`\\$]|\\.|\$[^{])*$"#.to_string(),
                     is_regex: true,
-                    line_number: 303,
+                    line_number: 411,
                     alias: None,
                 },
             ],
             groups: {
                 let mut __map: HashMap<String, PatternGroup> = HashMap::new();
+                let mut __g_div = PatternGroup { name: r#"div"#.to_string(), definitions: vec![
+                        TokenDefinition {
+                            name: r#"SLASH_EQUALS"#.to_string(),
+                            pattern: r#"/="#.to_string(),
+                            is_regex: false,
+                            line_number: 343,
+                            alias: None,
+                        },
+                        TokenDefinition {
+                            name: r#"SLASH"#.to_string(),
+                            pattern: r#"/"#.to_string(),
+                            is_regex: false,
+                            line_number: 344,
+                            alias: None,
+                        },
+                    ] };
+                __map.insert(r#"div"#.to_string(), __g_div);
                 let mut __g_template = PatternGroup { name: r#"template"#.to_string(), definitions: vec![
                         TokenDefinition {
                             name: r#"TEMPLATE_MIDDLE"#.to_string(),
@@ -7995,6 +8273,37 @@ mod v_es2025 {
                         },
                     ] };
                 __map.insert(r#"template"#.to_string(), __g_template);
+                let mut __g_template_div = PatternGroup { name: r#"template_div"#.to_string(), definitions: vec![
+                        TokenDefinition {
+                            name: r#"SLASH_EQUALS"#.to_string(),
+                            pattern: r#"/="#.to_string(),
+                            is_regex: false,
+                            line_number: 347,
+                            alias: None,
+                        },
+                        TokenDefinition {
+                            name: r#"SLASH"#.to_string(),
+                            pattern: r#"/"#.to_string(),
+                            is_regex: false,
+                            line_number: 348,
+                            alias: None,
+                        },
+                        TokenDefinition {
+                            name: r#"TEMPLATE_MIDDLE"#.to_string(),
+                            pattern: r#"\}([^`\\$]|\\.|\$[^{])*\$\{"#.to_string(),
+                            is_regex: true,
+                            line_number: 349,
+                            alias: None,
+                        },
+                        TokenDefinition {
+                            name: r#"TEMPLATE_TAIL"#.to_string(),
+                            pattern: r#"\}([^`\\$]|\\.|\$[^{])*`"#.to_string(),
+                            is_regex: true,
+                            line_number: 350,
+                            alias: None,
+                        },
+                    ] };
+                __map.insert(r#"template_div"#.to_string(), __g_template_div);
                 __map
             },
             case_sensitive: true,
@@ -8003,6 +8312,177 @@ mod v_es2025 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"using"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: Some(r#"default"#.to_string()),
+            transitions: vec![
+                ModeTransition {
+                    on_tokens: vec![r#"TEMPLATE_HEAD"#.to_string()],
+                    on_value: None,
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"template"#.to_string())],
+                    line_number: 356,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"TEMPLATE_MIDDLE"#.to_string()],
+                    on_value: None,
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"template"#.to_string())],
+                    line_number: 357,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"NAME"#.to_string()],
+                    on_value: None,
+                    in_mode: Some(r#"template"#.to_string()),
+                    actions: vec![TransitionAction::SetMode(r#"template_div"#.to_string())],
+                    line_number: 363,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"NAME"#.to_string()],
+                    on_value: None,
+                    in_mode: Some(r#"template_div"#.to_string()),
+                    actions: vec![TransitionAction::SetMode(r#"template_div"#.to_string())],
+                    line_number: 364,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"TEMPLATE_TAIL"#.to_string()],
+                    on_value: None,
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 367,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"NAME"#.to_string(), r#"NUMBER"#.to_string(), r#"STRING"#.to_string(), r#"REGEX"#.to_string(), r#"TEMPLATE_NO_SUB"#.to_string(), r#"PRIVATE_NAME"#.to_string(), r#"RPAREN"#.to_string(), r#"RBRACKET"#.to_string()],
+                    on_value: None,
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 372,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"this"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 373,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"super"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 374,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"true"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 375,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"false"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 376,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"null"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"div"#.to_string())],
+                    line_number: 377,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"LPAREN"#.to_string(), r#"LBRACKET"#.to_string(), r#"LBRACE"#.to_string(), r#"COMMA"#.to_string(), r#"SEMICOLON"#.to_string(), r#"COLON"#.to_string(), r#"DOT"#.to_string(), r#"EQUALS"#.to_string(), r#"ARROW"#.to_string(), r#"QUESTION"#.to_string(), r#"ELLIPSIS"#.to_string(), r#"AT"#.to_string(), r#"PLUS"#.to_string(), r#"MINUS"#.to_string(), r#"STAR"#.to_string(), r#"SLASH"#.to_string(), r#"PERCENT"#.to_string(), r#"STAR_STAR"#.to_string(), r#"EQUALS_EQUALS"#.to_string(), r#"NOT_EQUALS"#.to_string(), r#"STRICT_EQUALS"#.to_string(), r#"STRICT_NOT_EQUALS"#.to_string(), r#"LESS_THAN"#.to_string(), r#"GREATER_THAN"#.to_string(), r#"LESS_EQUALS"#.to_string(), r#"GREATER_EQUALS"#.to_string(), r#"AND_AND"#.to_string(), r#"OR_OR"#.to_string(), r#"NULLISH_COALESCE"#.to_string(), r#"OPTIONAL_CHAIN"#.to_string(), r#"BANG"#.to_string(), r#"TILDE"#.to_string(), r#"AMPERSAND"#.to_string(), r#"PIPE"#.to_string(), r#"CARET"#.to_string(), r#"LEFT_SHIFT"#.to_string(), r#"RIGHT_SHIFT"#.to_string(), r#"UNSIGNED_RIGHT_SHIFT"#.to_string(), r#"PLUS_EQUALS"#.to_string(), r#"MINUS_EQUALS"#.to_string(), r#"STAR_EQUALS"#.to_string(), r#"SLASH_EQUALS"#.to_string(), r#"PERCENT_EQUALS"#.to_string(), r#"STAR_STAR_EQUALS"#.to_string(), r#"AMPERSAND_EQUALS"#.to_string(), r#"PIPE_EQUALS"#.to_string(), r#"CARET_EQUALS"#.to_string(), r#"LEFT_SHIFT_EQUALS"#.to_string(), r#"RIGHT_SHIFT_EQUALS"#.to_string(), r#"UNSIGNED_RIGHT_SHIFT_EQUALS"#.to_string(), r#"AND_AND_EQUALS"#.to_string(), r#"OR_OR_EQUALS"#.to_string(), r#"NULLISH_COALESCE_EQUALS"#.to_string()],
+                    on_value: None,
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 380,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"return"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 381,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"typeof"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 382,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"delete"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 383,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"void"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 384,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"in"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 385,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"instanceof"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 386,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"new"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 387,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"do"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 388,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"else"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 389,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"case"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 390,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"yield"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 391,
+                },
+                ModeTransition {
+                    on_tokens: vec![r#"KEYWORD"#.to_string()],
+                    on_value: Some(r#"throw"#.to_string()),
+                    in_mode: None,
+                    actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
+                    line_number: 392,
+                },
+            ],
         }
     }
 }

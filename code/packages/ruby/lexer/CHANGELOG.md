@@ -1,5 +1,32 @@
 # Changelog
 
+## [Unreleased] — F10 declarative lexer mode transitions
+
+### Added
+- `GrammarLexer` now interprets the declarative mode-transition table on a
+  `TokenGrammar` (F10), the Ruby port of the Rust `grammar_lexer.rs` and
+  Python `grammar_lexer.py` interpreters. After each token is emitted it
+  consults the table and may `set-mode` (flat toggle of the active group),
+  `push`/`pop` (F04 nested regions), or toggle skip — enabling
+  context-sensitive lexing (JavaScript regex-vs-division, template
+  substitutions) without a hand-written on-token callback. New
+  `apply_transitions` + `transition_key`; start mode from
+  `grammar.start_mode`.
+- **Flat-mode inheritance**: a group reached via `set-mode` inherits the
+  default group's patterns (own patterns take priority), so a JS `div` mode
+  can override `SLASH`/`SLASH_EQUALS` ahead of `REGEX` without duplicating
+  the grammar. `push` targets stay exclusive (F04 region semantics).
+  Derived automatically from the transition table (`@inheriting_modes`).
+- Because every `TokenType` constant IS its UPPER_SNAKE string
+  (`TokenType::NAME == "NAME"`) and custom token types are already strings,
+  the transition key is the token's type directly — no inverse mapping.
+
+### Notes
+- Fully backward compatible: a grammar with no `transitions:` table yields
+  an identical token stream (every F10 helper early-returns). Verified by
+  the existing suite + 7 new F10 tests. Consumes the grammar_tools F10 data
+  model added in the Ruby grammar_tools port.
+
 ## [0.3.0] - 2026-04-04
 
 ### Added

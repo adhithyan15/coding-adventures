@@ -1,0 +1,24 @@
+# Cargo.toml — irc_native_node
+#
+# N-API cdylib that embeds the all-Rust irc-net-reactor IRC engine and exposes a
+# lifecycle control surface to Node.js.  Loaded via require('./irc_native_node.node').
+#
+# No napi-rs / napi-sys — just node-bridge's extern "C" declarations resolved at
+# dlopen() time when Node.js loads the addon.  Because all IRC + TCP logic lives in
+# Rust and there is NO callback back into JS, this binding needs no threadsafe
+# functions — just a background thread to run the blocking event loop.
+
+[workspace]
+
+[package]
+name = "irc_native_node"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+irc-net-reactor = { path = "../../../../rust/irc-net-reactor" }
+node-bridge     = { path = "../../../../rust/node-bridge" }

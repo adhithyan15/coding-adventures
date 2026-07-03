@@ -1,0 +1,19 @@
+{
+  "hash": "2ab8c8e293a71456",
+  "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+  "title": "AVELOX (moxifloxacin hydrochloride) tablet, film coated — FDA label (DailyMed)",
+  "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "This source is the FDA product label for AVELOX (moxifloxacin hydrochloride), an oral/IV fluoroquinolone antibiotic — not a meningitis-specific reference.",
+      "byte_quote": "AVELOX (moxifloxacin hydrochloride) tablet, film coated"
+    },
+    {
+      "id": "c2",
+      "text": "General (non-meningitis) AVELOX dosing for adults is 400 mg orally or IV once every 24 hours.",
+      "byte_quote": "The dose of AVELOX is 400 mg (orally or as an intravenous infusion) once every 24 hours."
+    }
+  ],
+  "cites": []
+}

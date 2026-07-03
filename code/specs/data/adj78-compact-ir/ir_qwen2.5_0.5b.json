@@ -1,0 +1,152 @@
+{
+  "leave": {
+    "nodes": [
+      {
+        "kind": "FACT",
+        "status": "stated",
+        "text": "The passage states that Acme Corp offers a generous paid-leave policy with a standard annual allotment of 20 days, accrued monthly, and unused days may be carried over up to five into the next year. It also mentions that part-time staff hired after January 2020 accrue at a reduced rate of 12 days per year. Jordan joined Acme as a part-time employee in March 2022 and is asking how much leave will accrue this year",
+        "span": [
+          283,
+          391
+        ],
+        "anchor_conf": 0.35
+      },
+      {
+        "kind": "FACT",
+        "status": "inferred",
+        "text": "The standard annual allotment is 20 days. The reduced rate for part-time staff is 12 days per year. Jordan joined Acme as a part-time employee in March 2022",
+        "span": [
+          283,
+          391
+        ],
+        "anchor_conf": 0.56
+      },
+      {
+        "kind": "UNCERTAINTY",
+        "status": null,
+        "text": "The passage does not provide information about accrued annual leave for part-time staff hired after January 2020. It only mentions that part-time staff hired in March 2022 accrue at a reduced rate of 12 days per year",
+        "span": [
+          196,
+          282
+        ],
+        "anchor_conf": 0.5
+      },
+      {
+        "kind": "QUESTION",
+        "status": null,
+        "text": "The passage is implicitly asking for information about accrued paid-leave days for Jordan based on his employment status with Acme Corp",
+        "span": null,
+        "anchor_conf": 0.27
+      }
+    ],
+    "n_sentences": 4,
+    "coverage": 0.5,
+    "stated_anchor_rate": 1.0,
+    "counts": {
+      "FACT": 2,
+      "UNCERTAINTY": 1,
+      "QUESTION": 1
+    },
+    "monolithic_lines": 7
+  },
+  "clinic": {
+    "nodes": [
+      {
+        "kind": "FACT",
+        "status": "stated",
+        "text": "The 26-year-old patient presents with productive cough, intermittent fevers for two weeks, and night sweats. A chest x-ray shows right upper-lobe opacity. The team must decide whether this is a bacterial pneumonia or something else",
+        "span": [
+          0,
+          108
+        ],
+        "anchor_conf": 0.44
+      },
+      {
+        "kind": "FACT",
+        "status": "inferred",
+        "text": "The patient has a productive cough",
+        "span": [
+          0,
+          108
+        ],
+        "anchor_conf": 0.75
+      },
+      {
+        "kind": "FACT",
+        "status": "inferred",
+        "text": "The patient has intermittent fevers",
+        "span": [
+          0,
+          108
+        ],
+        "anchor_conf": 0.75
+      },
+      {
+        "kind": "FACT",
+        "status": "inferred",
+        "text": "The patient has night sweats",
+        "span": [
+          0,
+          108
+        ],
+        "anchor_conf": 0.75
+      },
+      {
+        "kind": "FACT",
+        "status": "inferred",
+        "text": "The chest x-ray shows a right upper-lobe opacity",
+        "span": [
+          109,
+          156
+        ],
+        "anchor_conf": 1.0
+      },
+      {
+        "kind": "UNCERTAINTY",
+        "status": null,
+        "text": "unclear: What is the patient's age? ambiguous: Does the patient have any other medical conditions besides pneumonia? missing: Is there any information about the patient's travel history?",
+        "span": null,
+        "anchor_conf": 0.06
+      },
+      {
+        "kind": "QUESTION",
+        "status": null,
+        "text": "The patient presents with productive cough, intermittent fevers for two weeks, and night sweats",
+        "span": [
+          0,
+          108
+        ],
+        "anchor_conf": 1.0
+      },
+      {
+        "kind": "QUESTION",
+        "status": null,
+        "text": "The chest x-ray shows a right upper-lobe opacity",
+        "span": [
+          109,
+          156
+        ],
+        "anchor_conf": 1.0
+      },
+      {
+        "kind": "QUESTION",
+        "status": null,
+        "text": "The team must decide whether this is a bacterial pneumonia or something else",
+        "span": [
+          241,
+          318
+        ],
+        "anchor_conf": 1.0
+      }
+    ],
+    "n_sentences": 5,
+    "coverage": 0.6,
+    "stated_anchor_rate": 1.0,
+    "counts": {
+      "FACT": 5,
+      "UNCERTAINTY": 1,
+      "QUESTION": 3
+    },
+    "monolithic_lines": 7
+  }
+}

@@ -46,6 +46,15 @@ alphabet = [
   "=", "!", "<", ">", "&", "|", "^", "~",
   # delimiters
   "\"", "'", "#", "\\",
+  # Phase 4i — sigils for instance variables (`@x`), class variables
+  # (`@@x`), and (Phase 4j) global variables (`$x`).  These have been
+  # part of Ruby since 1.0, so they're not era-gated — they were
+  # simply missing from the baseline lexer until now.
+  "@", "$",
+  # Phase 4m — backtick (`` ` ``) opens a command-execution literal
+  # (`` `ls -la` `` runs the shell command).  Ruby has had this since
+  # 1.0, so no era gating — just a new dispatch from `data`.
+  "`",
   # string-escape letters (n, t, r) — referenced as `literal` matchers
   # inside string_d_escape.  range matchers don't need alphabet entries
   # but literal matchers do.
@@ -56,7 +65,9 @@ alphabet = [
   # percent-literal type letters: `w` for `%w[...]`, `q` for `%q{...}`.
   # `i` and `I` (2.0+ symbol arrays) are recognised by the lexer
   # unconditionally; era < 2.0 downgrades them in the post-pass.
-  "w", "q", "i", "I",
+  # Phase 4n adds `s` (symbol), `x` (command).  `r` (regex) reuses the
+  # existing `r` alphabet entry (added earlier for the `\r` escape).
+  "w", "q", "i", "I", "s", "x",
 ]
 
 # ── Token vocabulary ──────────────────────────────────────────────
@@ -101,6 +112,29 @@ fields = ["value"]
 
 [[tokens]]
 name = "PercentBigI"   # %I[a b c]   — interpolating symbol array (2.0+)
+fields = ["value"]
+
+# Phase 4m — `` `cmd` `` command-execution literal.  Lexically it
+# resembles a string: open backtick, body with escapes, close backtick.
+# Semantically it runs the body as a shell command — but that's the
+# runtime's concern.  The lexer just emits a `Backtick` token carrying
+# the raw body (without the surrounding backticks).
+[[tokens]]
+name = "Backtick"      # `` `ls -la` `` — command-execution literal
+fields = ["value"]
+
+# Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals.
+# Emit handler maps these onto TokenType::String carrying the verbatim
+# source (`%r{pat}`, etc.) so the parser can distinguish them from
+# plain strings by lexeme prefix — same encoding as `%w[…]` / `%q{…}`.
+[[tokens]]
+name = "PercentR"      # %r{regex}   — interpolation-free regex literal
+fields = ["value"]
+[[tokens]]
+name = "PercentS"      # %s{symbol}  — symbol literal (no interpolation)
+fields = ["value"]
+[[tokens]]
+name = "PercentX"      # %x{cmd}     — command-execution literal
 fields = ["value"]
 
 [[tokens]]
@@ -240,6 +274,25 @@ id = "percent_i_body"    # inside `%i[...]` — accumulating symbol-array body.
 id = "percent_big_i_open"# saw `%I`, peeking for `[` opening delim (2.0+).
 [[states]]
 id = "percent_big_i_body"# inside `%I[...]` — accumulating interpolating symbol-array body.
+# Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}`.  Like `%q{…}`
+# these use `{` as the canonical v0 delimiter.  Open states peek
+# for the `{`; if absent, the `%` falls back to a modulo operator
+# (the action interpreter unwinds the buffer accordingly).  Body
+# states accumulate the literal up to the matching `}` and emit
+# the verbatim source (`%r{pat}` etc.) as a `TokenType::String`,
+# matching the existing percent-literal encoding.
+[[states]]
+id = "percent_r_open"    # saw `%r`, peeking for `{` opening delim.
+[[states]]
+id = "percent_r_body"    # inside `%r{...}` — accumulating regex body.
+[[states]]
+id = "percent_s_open"    # saw `%s`, peeking for `{` opening delim.
+[[states]]
+id = "percent_s_body"    # inside `%s{...}` — accumulating symbol body.
+[[states]]
+id = "percent_x_open"    # saw `%x`, peeking for `{` opening delim.
+[[states]]
+id = "percent_x_body"    # inside `%x{...}` — accumulating command body.
 
 [[states]]
 id = "comment_body"      # # to end-of-line
@@ -252,6 +305,12 @@ id = "after_eq_eq"       # saw `==`, peeking for `===`
 id = "after_bang"        # saw `!`, peeking for `!=`
 [[states]]
 id = "after_lt"          # saw `<`, peeking for `<=` (no `<<` yet — Phase 3 heredocs)
+# Phase 4o — `<<-EOF` and `<<~EOF` heredoc opener variants.
+# After `<<` we peek one more char: `-` → emit `<<-` (indent-tolerant
+# terminator), `~` → emit `<<~` (indent-stripping body); otherwise
+# emit plain `<<` and re-dispatch the follower as before.
+[[states]]
+id = "after_lt_lt"       # saw `<<`, peeking for `-` or `~` (heredoc opener modifiers)
 [[states]]
 id = "after_gt"          # saw `>`, peeking for `>=`
 [[states]]
@@ -262,6 +321,44 @@ id = "after_pipe"        # saw `|`, peeking for `||`
 id = "after_colon"       # saw `:`, peeking for `::` or a symbol body
 [[states]]
 id = "after_star"        # saw `*`, peeking for `**`
+
+# Phase 4i — sigil-variable sub-machines.  Ruby instance variables
+# (`@x`), class variables (`@@x`), and (Phase 4j) global variables
+# (`$x`) all share an "identifier-body-after-sigil" shape, so each
+# gets its own tiny sub-machine.  All three flavors emit a Name
+# token whose value is the *full lexeme including the sigil*
+# (e.g. `@count`, `@@all`, `$LOAD_PATH`).  Downstream code (parser
+# / SIR lowerer) dispatches by inspecting the leading character —
+# same trick the lexer already uses for `::` (encoded as
+# TokenType::Colon with value `::`).
+[[states]]
+id = "after_at"          # saw `@`, peeking for `@@` (cvar) or ident-start (ivar)
+[[states]]
+id = "ivar_body"         # inside `@x` — slurp ident chars then emit Name
+[[states]]
+id = "cvar_body"         # inside `@@x` — slurp ident chars then emit Name
+# Phase 4j — global variable sub-machine.  Ruby allows special
+# globals like `$~`, `$&`, `$_`, `$0`..`$9` plus regular `$ident`
+# names.  v0 handles the regular `$<ident>` shape only; special
+# punctuation globals are out of scope for this chunk (followup).
+[[states]]
+id = "after_dollar"      # saw `$`, peeking for an ident-starter first char
+[[states]]
+id = "dollar_body"       # inside `$x` — slurp ident chars then emit Name
+
+# Phase 4m — backtick command literal `` `cmd args` ``.  Two states:
+# the body collects raw bytes (with minimal escape handling), and the
+# escape state processes a single escape sequence then returns.  The
+# shape mirrors `string_d_body` / `string_d_escape` — same idea, but:
+#   - the close terminator is a backtick, not a double quote, and
+#   - we don't peek for `#` interpolation in v0.  Real Ruby allows
+#     `#{}` interpolation inside backticks; the parser-side phase
+#     (7a) can promote `#` handling once the rest of backtick lexing
+#     is in place.  For now, `#` is a literal character.
+[[states]]
+id = "backtick_body"     # inside `` `…` `` — accumulating command body
+[[states]]
+id = "backtick_escape"   # inside `` `…` `` after a `\` — processing one escape char
 
 [[states]]
 id = "done"
@@ -338,6 +435,15 @@ actions = ["clear_text"]
 from = "data"
 matcher = { literal = "'" }
 to = "string_s_body"
+actions = ["clear_text"]
+
+# Phase 4m — backtick opens a command-execution literal.  Clear the
+# text buffer (the value field carries the body *without* the
+# surrounding backticks, matching how `String` carries it).
+[[transitions]]
+from = "data"
+matcher = { literal = "`" }
+to = "backtick_body"
 actions = ["clear_text"]
 
 # Punctuation that emits immediately.
@@ -481,6 +587,25 @@ to = "after_colon"
 from = "data"
 matcher = { literal = "*" }
 to = "after_star"
+
+# Phase 4i — `@` opens an instance-var (`@x`) or class-var (`@@x`)
+# lexeme.  The dispatcher seeds the text buffer with the sigil and
+# defers to `after_at` to decide between the two flavors based on
+# whether the next char is a second `@`.
+[[transitions]]
+from = "data"
+matcher = { literal = "@" }
+to = "after_at"
+actions = ["clear_text", "append_text(@)"]
+
+# Phase 4j — `$` opens a global-var (`$x`) lexeme.  v0 only accepts
+# `$<ident>`; punctuation globals (`$~`, `$&`, `$0`..`$9`, etc.)
+# are out of scope for this chunk and will follow up.
+[[transitions]]
+from = "data"
+matcher = { literal = "$" }
+to = "after_dollar"
+actions = ["clear_text", "append_text($)"]
 
 # Catch-all for unknown characters: emit a diagnostic and stay in
 # `data`.  Avoids the engine "no transition" error blowing up the
@@ -771,6 +896,105 @@ consume = false
 actions = ["parse_error(unterminated_string)", "emit(Eof)"]
 
 # ─────────────────────────────────────────────────────────────────
+# Backtick command literal (Phase 4m) — `` `cmd args` ``.
+#
+# Shape mirrors `string_d_body`:
+#   - `\` opens an escape (one of `\\`, `` \` ``, `\n`, `\t`, `\r`,
+#     literal otherwise).
+#   - The matching `` ` `` closes the literal and we emit `Backtick`.
+#   - `\n` is permitted inside the body (multi-line shell commands).
+#   - EOF mid-body is an unterminated-literal error.
+#
+# Differences from `string_d_body`:
+#   - `#` is *not* treated as an interpolation opener in v0.  Real
+#     Ruby allows `#{}` inside backticks; the post-pass / parser
+#     phase 7a can layer interpolation on later when needed.
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "\\" }
+to = "backtick_escape"
+
+# Closing backtick — emit the buffered body as a Backtick token and
+# return to the dispatcher.
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "`" }
+to = "data"
+actions = ["emit(Backtick)"]
+
+# Multi-line backticks: a literal newline inside the body becomes
+# part of the buffered command — same behaviour as `string_d_body`.
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "\n" }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "backtick_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_backtick)", "emit(Eof)"]
+
+# Everything else is body content.
+[[transitions]]
+from = "backtick_body"
+matcher = { anything = true }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+# Escape handling: the same five escapes string_d_escape recognises
+# (`n`, `t`, `r`, `\\`, plus `` ` `` instead of `"` since that's
+# the close char here).  Anything else carries the escape through
+# verbatim — matching how Ruby handles unknown escapes in `` `…` ``.
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "n" }
+to = "backtick_body"
+actions = ["append_text(\\n)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "t" }
+to = "backtick_body"
+actions = ["append_text(\\t)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "r" }
+to = "backtick_body"
+actions = ["append_text(\\r)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "\\" }
+to = "backtick_body"
+actions = ["append_text(\\\\)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "`" }
+to = "backtick_body"
+actions = ["append_text(`)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { anything = true }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_backtick)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
 # Regex body  (Phase 2)
 #
 # The action interpreter (src/lib.rs) decides when `/` in `data`
@@ -886,6 +1110,28 @@ actions = ["append_text(current)"]
 from = "after_percent"
 matcher = { literal = "I" }
 to = "percent_big_i_open"
+actions = ["append_text(current)"]
+
+# Phase 4n — `%r` (regex), `%s` (symbol), `%x` (command).  All three
+# dispatch to a `_open` peek state that requires `{` as the v0
+# canonical delimiter.  Any other follower falls through to the
+# catch-all below ("% is modulo, letter is identifier").
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "r" }
+to = "percent_r_open"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "s" }
+to = "percent_s_open"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "x" }
+to = "percent_x_open"
 actions = ["append_text(current)"]
 
 # Any other follower: `%` is a modulo operator.  Re-dispatch the
@@ -1071,6 +1317,132 @@ matcher = { anything = true }
 to = "percent_big_i_body"
 actions = ["append_text(current)"]
 
+# ─── %r{…}, %s{…}, %x{…} (Phase 4n) ─────────────────────────────
+# All three share the same shape — open peek state requires `{`,
+# body slurps until matching `}`, emit verbatim source as the
+# corresponding PercentR/PercentS/PercentX token (which the emit
+# handler maps to TokenType::String with the verbatim lexeme).
+
+# %r{...} — regex literal
+[[transitions]]
+from = "percent_r_open"
+matcher = { literal = "{" }
+to = "percent_r_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_r_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_r_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_r_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_r_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentR)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_r)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { anything = true }
+to = "percent_r_body"
+actions = ["append_text(current)"]
+
+# %s{...} — symbol literal (no interpolation)
+[[transitions]]
+from = "percent_s_open"
+matcher = { literal = "{" }
+to = "percent_s_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_s_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_s_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_s_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_s_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentS)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_s)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { anything = true }
+to = "percent_s_body"
+actions = ["append_text(current)"]
+
+# %x{...} — command-execution literal
+[[transitions]]
+from = "percent_x_open"
+matcher = { literal = "{" }
+to = "percent_x_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_x_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_x_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_x_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_x_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentX)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_x)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { anything = true }
+to = "percent_x_body"
+actions = ["append_text(current)"]
+
 # ─────────────────────────────────────────────────────────────────
 # Line comment
 # ─────────────────────────────────────────────────────────────────
@@ -1173,11 +1545,44 @@ actions = ["set_text(<=)", "emit(Op)"]
 # combination with the prior lex_state to decide whether to start a
 # heredoc capture (expression-start positions) or treat it as plain
 # left-shift (anywhere else).
+#
+# Phase 4o — defer the emit by one peek: enter `after_lt_lt` so we
+# can fold `<<-` and `<<~` into single tokens.
 [[transitions]]
 from = "after_lt"
 matcher = { literal = "<" }
+to = "after_lt_lt"
+
+# Phase 4o — `<<-TAG` (indent-tolerant terminator).
+[[transitions]]
+from = "after_lt_lt"
+matcher = { literal = "-" }
 to = "data"
+actions = ["set_text(<<-)", "emit(Op)"]
+
+# Phase 4o — `<<~TAG` (indent-stripping body + indent-tolerant terminator).
+[[transitions]]
+from = "after_lt_lt"
+matcher = { literal = "~" }
+to = "data"
+actions = ["set_text(<<~)", "emit(Op)"]
+
+# Anything else: plain `<<` (heredoc opener OR left-shift, decided
+# downstream by lex-state and follower kind).  Re-dispatch the
+# follower so it lexes normally.
+[[transitions]]
+from = "after_lt_lt"
+matcher = { anything = true }
+to = "data"
+consume = false
 actions = ["set_text(<<)", "emit(Op)"]
+
+[[transitions]]
+from = "after_lt_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(<<)", "emit(Op)", "emit(Eof)"]
 
 [[transitions]]
 from = "after_lt"
@@ -1292,3 +1697,221 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = ["set_text(*)", "emit(Op)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Phase 4i — instance / class variables  (`@x`, `@@x`)
+# ─────────────────────────────────────────────────────────────────
+# When `@` is seen at `data`, the dispatcher transitions to
+# `after_at` with the text buffer pre-seeded as `@`.  This peek
+# state then disambiguates:
+#
+#   @@x   →  cvar_body   (second `@` appended, then ident body)
+#   @x    →  ivar_body   (ident-starter appended, then ident body)
+#   @<X>  →  parse_error (and `@` falls back to a bare Op so the
+#                          caller still gets a token stream)
+#
+# Both bodies emit `Name` with the full lexeme (e.g. `@count`,
+# `@@all`).  The parser / SIR lowerer dispatch on the sigil prefix.
+
+[[transitions]]
+from = "after_at"
+matcher = { literal = "@" }
+to = "cvar_body"
+actions = ["append_text(@)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { literal = "_" }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { range = ["a", "z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { range = ["A", "Z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+# `@` followed by a digit (`@1`) or anything else: not a valid
+# ivar.  Record a diagnostic and emit `@` as a generic Op so the
+# parser still gets a clean stream.
+[[transitions]]
+from = "after_at"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(invalid_ivar)", "set_text(@)", "emit(Op)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(invalid_ivar)", "set_text(@)", "emit(Op)", "emit(Eof)"]
+
+# ivar / cvar body share the same ident-char acceptance pattern as
+# `ident_body`, minus the trailing `?` / `!` characters (those are
+# method-name decorations and don't apply to variable names).
+[[transitions]]
+from = "ivar_body"
+matcher = { literal = "_" }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { range = ["a", "z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { range = ["A", "Z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { range = ["0", "9"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]
+
+# cvar_body — entered after the second `@` has been appended.
+# We still need at least one ident character to follow; if not,
+# the lexeme `@@` alone is invalid and gets reported.
+[[transitions]]
+from = "cvar_body"
+matcher = { literal = "_" }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { range = ["a", "z"] }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { range = ["A", "Z"] }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { range = ["0", "9"] }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Phase 4j — global variables  (`$x`)
+# ─────────────────────────────────────────────────────────────────
+# When `$` is seen at `data`, the dispatcher seeds the text buffer
+# with `$` and transitions to `after_dollar`, which requires at
+# least one ident-starter to follow.  Any other follower falls back
+# to emitting `$` as a bare Op token with a diagnostic, so the
+# parser still gets a clean stream.  Future phases can extend
+# `after_dollar` to handle Ruby's punctuation globals (`$~`, `$&`,
+# `$_`, `$0`..`$9`, `$LOAD_PATH`-style names, etc.).
+[[transitions]]
+from = "after_dollar"
+matcher = { literal = "_" }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { range = ["a", "z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { range = ["A", "Z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(invalid_gvar)", "set_text($)", "emit(Op)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(invalid_gvar)", "set_text($)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { literal = "_" }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { range = ["a", "z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { range = ["A", "Z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { range = ["0", "9"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]

@@ -1,0 +1,41 @@
+{
+  "question": "The thermal pericyclic cascade converting the heptaene into endiandric acid B methyl ester involves three steps: two electrocyclizations then a cycloaddition. Give each electrocyclization as [n\u03c0]-con or [n\u03c0]-dis (n = \u03c0 electrons, con/dis = conrotatory/disrotatory) and the cycloaddition as [m+n] (atoms on each component).",
+  "ground_truth": "[8\u03c0]-con, [6\u03c0]-dis, [4+2] (order established: 8\u03c0 conrotatory first, then 6\u03c0 disrotatory; Nicolaou JACS 1982)",
+  "n_grounded_facts": 3,
+  "arm_A_defensibility": [
+    3,
+    9
+  ],
+  "arm_B_defensibility": [
+    6,
+    7
+  ],
+  "audit": [
+    {
+      "label": "Answer 1",
+      "claims_total": 9,
+      "claims_unsupported": 6,
+      "unsupported_list": [
+        "\"This is the classic Nicolaou biomimetic synthesis of the endiandric acids (Black's hypothesis)\" \u2014 identity of the synthesis asserted from memory with no citation.",
+        "Step 1: that a conjugated octatetraene unit closes to a cyclooctatriene as the first step \u2014 stated with no citation a reader could check.",
+        "Step 2: that the cyclooctatriene contains a 1,3,5-hexatriene unit that closes to a cyclohexadiene forming the bicyclo[4.2.0] system \u2014 asserted from memory, no citation.",
+        "Step 3: that the bicyclic diene engages a pendant dienophile in an intramolecular Diels-Alder building the tetracyclic framework of endiandric acid B methyl ester \u2014 asserted with no citation.",
+        "The Woodward-Hoffmann thermal selection rule (8pi thermal = conrotatory / 4n; 6pi thermal = disrotatory / 4n+2) \u2014 stated as fact but attributed to no checkable source.",
+        "Electron-count assignments (8 = 4n, n=2; 6 = 4n+2, n=1) are arithmetic and self-checkable, but the application to rotatory outcome depends on the uncited WH rule above, so the conclusions [8pi]-con and [6pi]-dis are not independently verifiable."
+      ],
+      "verdict": "FAIL",
+      "note": "Answer 1 contains zero citations. Every factual claim \u2014 the synthesis identity, which polyene units close in which step, and the Woodward-Hoffmann thermal selection rule itself \u2014 is asserted from apparent memory. The only self-checkable links are the bare arithmetic (8=4n, 6=4n+2), but the rotatory conclusions rest on an uncited rule, so a reader cannot verify the chain end-to-end. Correctness is irrelevant to the verdict; defensibility fails."
+    },
+    {
+      "label": "Answer 2",
+      "claims_total": 7,
+      "claims_unsupported": 1,
+      "unsupported_list": [
+        "Node 6: the sub-claim that in the Diels-Alder [4+2] \"the diene contributes 4 atoms and the dienophile contributes 2\" is NOT supported by the cited Cycloaddition Wikipedia page. That page confirms only that Diels-Alder is a [4+2]-cycloaddition; it does not state the specific diene=4 / dienophile=2 atom assignment. The citation is partially mismatched to the claim it backs."
+      ],
+      "unsupported_list_note": "",
+      "verdict": "FAIL",
+      "note": "Nodes 1-5 and 7 are fully verifiable: node 1 (step order 8pi -> 6pi -> Diels-Alder) is confirmed verbatim by the PMC source, which even states 'conrotatory 8pi' and 'disrotatory 6pi'; node 2's Woodward-Hoffmann rule matches the cited Wikipedia text exactly; node 3 is valid arithmetic; nodes 4, 5, 7 are sound derivations from prior nodes. The single break is node 6: the '[4+2]' label is supported by the cited page, but the appended 'diene contributes 4 atoms / dienophile contributes 2' assignment is not stated on that page, so that specific link cannot be verified against its citation. One unsupported link => FAIL, though Answer 2 is far more defensible than Answer 1 (6 of 7 links verifiable vs. 0 of 9 cited)."
+    }
+  ]
+}

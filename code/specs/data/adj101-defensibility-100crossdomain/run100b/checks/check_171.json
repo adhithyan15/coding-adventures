@@ -1,0 +1,8 @@
+{
+ "check_id": 171,
+ "idx": 67,
+ "slot": "is_initial_applicant",
+ "claimed_value": true,
+ "scenario": "An applicant holds a current valid barber license from a state that has a standing examination-reciprocity agreement with this state, and applies for an initial license here.",
+ "cited_span": "applies for an initial license here"
+}

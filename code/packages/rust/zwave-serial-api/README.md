@@ -24,6 +24,18 @@ control-plane layer:
 - request tracker with callback correlation and timeout expiry
 - request tracker summaries for pending callback/response distribution and
   next-timeout diagnostics
+- request tracker summary helpers for idle, callback/response wait mix, and
+  dominant pending-function checks
+- request tracker readiness summaries for idle request-loop, pending wait, and
+  timeout-queue drain checks
+- request tracker drain summaries for controller dispatch handoff checks across
+  request-loop, callback, response, timeout, and pending-function drains
+- request tracker dispatch summaries that turn completed drain checks into a
+  payload-free controller dispatch readiness view
+- request tracker operator summaries that turn dispatch readiness into final
+  host-controller operator checks
+- request tracker supervisor summaries that turn operator readiness into final
+  supervised host-controller checks
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.

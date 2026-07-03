@@ -1,5 +1,13 @@
 # Changelog - @coding-adventures/mini-sqlite
 
+## [0.1.1] - 2026-06-30
+
+### Fixed
+- Removed `\s*;?\s*$` trailer from five DDL/DML parsing regexes; trailing
+  semicolon + whitespace are now stripped imperatively before matching.
+  The old form caused polynomial backtracking on adversarial whitespace-only
+  input (codeql `js/polynomial-redos`).
+
 ## [0.1.0] - 2026-04-29
 
 ### Added

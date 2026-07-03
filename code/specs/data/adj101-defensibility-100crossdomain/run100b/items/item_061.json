@@ -1,0 +1,7 @@
+{
+ "idx": 61,
+ "id": "PRO-2",
+ "scenario": "An applicant submits an initial license application listing three disciplines: hairstyling, esthetics, and nail technology.",
+ "policy": "The cosmetology board charges a $90 initial license fee plus a $25 per-discipline endorsement fee for each additional discipline beyond the first listed on the application.",
+ "question": "What total fee is owed?"
+}

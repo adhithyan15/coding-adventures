@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 30 \u2014 body mass index from a single anthropometric measurement (a NEW panel: anthropometric / nutritional). From two stated quantities (body weight WEIGHT in kg, height HEIGHT in m) compute the body mass index (WEIGHT/(HEIGHT*HEIGHT)), the weight-to-height ratio (WEIGHT/HEIGHT), or height squared (HEIGHT*HEIGHT). Each item is a compute_dimensioned program (observe the two quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, a quantity DIVIDED BY A SQUARE (WEIGHT/(HEIGHT*HEIGHT)), so a PRODUCT in the denominator is contrasted with a plain division \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the two observed quantities via * and / \u2014 no constant leaks (metric BMI is exactly kg/m^2), and HEIGHT appears twice only as the observed identifier \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same quantities, so the distractors are exactly the slips students make: the inverted BMI ((HEIGHT*HEIGHT)/WEIGHT) and the weight-times-height product (WEIGHT*HEIGHT, multiplying instead of dividing). The core confusion tested is remembering to square the height before dividing (the classic WEIGHT/HEIGHT slip).",
+  "items": [
+    {
+      "id": "r30bmi-01",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 72 kg and is 1.8 m tall. What is the patient's body mass index?",
+      "program": "observe weight(72)\nobserve height(1.8)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.22222222222222,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.045000000000000005,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 129.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r30bmi-02",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 72 kg and is 1.8 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(72)\nobserve height(1.8)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.22222222222222,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.045000000000000005,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 129.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r30bmi-03",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 72 kg and is 1.8 m tall. What is the patient's height squared?",
+      "program": "observe weight(72)\nobserve height(1.8)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 22.22222222222222,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.045000000000000005,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 129.6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r30bmi-04",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 80 kg and is 2 m tall. What is the patient's body mass index?",
+      "program": "observe weight(80)\nobserve height(2)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 160.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r30bmi-05",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 80 kg and is 2 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(80)\nobserve height(2)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 160.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r30bmi-06",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 80 kg and is 2 m tall. What is the patient's height squared?",
+      "program": "observe weight(80)\nobserve height(2)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 160.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r30bmi-07",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 90 kg and is 1.8 m tall. What is the patient's body mass index?",
+      "program": "observe weight(90)\nobserve height(1.8)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 27.777777777777775,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.036000000000000004,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 162.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r30bmi-08",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 90 kg and is 1.8 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(90)\nobserve height(1.8)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.777777777777775,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.036000000000000004,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 162.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r30bmi-09",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 90 kg and is 1.8 m tall. What is the patient's height squared?",
+      "program": "observe weight(90)\nobserve height(1.8)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 27.777777777777775,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.036000000000000004,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 162.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r30bmi-10",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 60 kg and is 1.5 m tall. What is the patient's body mass index?",
+      "program": "observe weight(60)\nobserve height(1.5)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.0375,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r30bmi-11",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 60 kg and is 1.5 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(60)\nobserve height(1.5)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.0375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 90.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r30bmi-12",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 60 kg and is 1.5 m tall. What is the patient's height squared?",
+      "program": "observe weight(60)\nobserve height(1.5)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26.666666666666668,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.0375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 90.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r30bmi-13",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 100 kg and is 2 m tall. What is the patient's body mass index?",
+      "program": "observe weight(100)\nobserve height(2)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r30bmi-14",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 100 kg and is 2 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(100)\nobserve height(2)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 200.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r30bmi-15",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 100 kg and is 2 m tall. What is the patient's height squared?",
+      "program": "observe weight(100)\nobserve height(2)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.04,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 200.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r30bmi-16",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 50 kg and is 1.6 m tall. What is the patient's body mass index?",
+      "program": "observe weight(50)\nobserve height(1.6)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 19.531249999999996,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 31.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5600000000000005,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05120000000000001,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r30bmi-17",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 50 kg and is 1.6 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(50)\nobserve height(1.6)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 19.531249999999996,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 31.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5600000000000005,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05120000000000001,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r30bmi-18",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 50 kg and is 1.6 m tall. What is the patient's height squared?",
+      "program": "observe weight(50)\nobserve height(1.6)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 19.531249999999996,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 31.25,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5600000000000005,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.05120000000000001,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 80.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r30bmi-19",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 77 kg and is 1.75 m tall. What is the patient's body mass index?",
+      "program": "observe weight(77)\nobserve height(1.75)\nlet answer = weight / (height * height)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 44.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0625,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.03977272727272727,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 25.142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 134.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r30bmi-20",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 77 kg and is 1.75 m tall. What is the patient's weight-to-height ratio?",
+      "program": "observe weight(77)\nobserve height(1.75)\nlet answer = weight / height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 25.142857142857142,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0625,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.03977272727272727,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 134.75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 44.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r30bmi-21",
+      "qtype": "body_mass_index",
+      "stem": "A patient weighs 77 kg and is 1.75 m tall. What is the patient's height squared?",
+      "program": "observe weight(77)\nobserve height(1.75)\nlet answer = height * height\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0625,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 25.142857142857142,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 44.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.03977272727272727,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 134.75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

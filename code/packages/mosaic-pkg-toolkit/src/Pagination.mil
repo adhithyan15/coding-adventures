@@ -1,0 +1,40 @@
+// Pagination.mil — interface for the toolkit's Pagination (v0.5).
+//
+// Page navigation control: « prev | 1 2 3 ... | next ». Bootstrap's
+// `<ul class="pagination">` equivalent. Tracks the current page via
+// a slot the host owns; clicks fire onPageChange with the new index.
+//
+// Like Nav and Breadcrumb (v0.4), Pagination wraps the UI29-4
+// `HostLink` kernel primitive for every page-number / prev / next
+// chip. Bootstrap's real-world DOM renders these as `<a>` tags too —
+// `role="link"` + browser-native keyboard semantics (Tab + Enter)
+// come from the kernel for free.
+//
+// v0.5 takes a flat list<text> of visible page labels — the host
+// decides what to show ("1, 2, 3, 4, 5", "1, 2, ..., 99, 100", etc).
+// A future PR may add a `total-pages: number` slot + compute the
+// visible window from the current page in the .mll.
+
+component Pagination {
+  // The visible page-label strings in order. Each becomes a chip.
+  // Typically these are "1", "2", "3" etc. but any text works
+  // (e.g. an ellipsis "..." that doesn't navigate anywhere).
+  slot pages : list<text> ;
+
+  // Label for the "previous" chip. Default: "←".
+  slot prev-label : text ;
+
+  // Label for the "next" chip. Default: "→".
+  slot next-label : text ;
+
+  // Index of the currently-active page (or -1). Drives active-state
+  // styling once the variant sub-part syntax lands.
+  slot active-index : number ;
+
+  // Fired when prev is activated.
+  emit onPrev ;
+  // Fired when next is activated.
+  emit onNext ;
+  // Fired when a page-number chip is activated. Payload: index.
+  emit onPageSelect ( index : number ) ;
+}

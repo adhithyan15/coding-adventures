@@ -1,0 +1,37 @@
+// Toast.light.msl — default light-theme styling for Toast.
+//
+// Sits at the bottom-right of its container with white background
+// and subtle shadow. Width is bounded so long messages wrap rather
+// than fill the viewport.
+
+style Toast {
+  part toast {
+    padding       : 12 ;
+    border-radius : 6 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    width         : 320 ;
+  }
+  part toast-column {
+    padding : 0 ;
+  }
+  part toast-header {
+    padding : 0 ;
+  }
+  part toast-title {
+    font-weight : 600 ;
+  }
+  part toast-close-btn {
+    padding      : 2 ;
+    background   : "transparent" ;
+    border-width : 0 ;
+    color        : "#6c757d" ;
+  }
+  part toast-body {
+    padding : 8 ;
+  }
+  part toast-message {
+  }
+}

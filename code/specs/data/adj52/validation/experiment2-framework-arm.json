@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "what": "Framework arm: the adj52 runner over the ADJ51 experiment-2 rulebook, rendered into the neutral answer schema for the blind judge. Run 2026-06-03.",
+    "arm": "framework (was OUTPUT B to the blind judge)",
+    "IMPORTANT": "This is a LOSSY prose rendering. The REAL framework output is the runner's full per-query fired-clause trace WITH citations (see ../adj51/experiment2/05-run-output.txt). Rendering it as prose stripped the audit trail and caused the judge to dock it for 'false rigor'. The orchestrator MUST feed the judge the actual audit trail. See experiment2-blind-ab.md finding 1.",
+    "raw_engine_posteriors": {
+      "diagnosis(pulmonary_malignancy)": 1.0,
+      "diagnosis(underlying_pulmonary_pathology)": 0.824,
+      "diagnosis(pulmonary_actinomycosis)": 0.105,
+      "diagnosis(pulmonary_tuberculosis)": 0.35,
+      "diagnosis(hematologic_malignancy_myeloid)": 0.994,
+      "next_diagnostic_step(biopsy_or_advanced_workup)": 0.999
+    }
+  },
+  "answers": [
+    {
+      "question": "What is the most likely diagnosis?",
+      "answer": "Pulmonary/thoracic malignancy — posterior ~100%. A hematologic malignancy with myeloid features is also strongly supported (~99%). Pulmonary actinomycosis is rejected (~10%) despite the positive Actinomyces sputum culture; tuberculosis is low (~35%). The infectious reading is not supported once persistence, the mediastinal mass, lymphadenopathy, and failure of multiple antibiotics are weighed.",
+      "confidence": "~100% malignancy; actinomycosis ~10%; TB ~35%"
+    },
+    {
+      "question": "What is the recommended next action?",
+      "answer": "Pursue tissue diagnosis — biopsy / advanced workup. Posterior ~99.9%.",
+      "confidence": "~99.9%"
+    }
+  ],
+  "reasoning": "Each finding contributes a likelihood ratio drawn from a cited medical source; the posterior is the deterministic aggregation of the prior with every applicable finding. Mediastinal mass, regional lymphadenopathy, B-symptoms, leukocytosis with left shift, and lack of antibiotic response drive malignancy up; the positive Actinomyces culture contributes only weakly and is outweighed, consistent with colonization. Every probability shift traces to a specific finding and citation."
+}

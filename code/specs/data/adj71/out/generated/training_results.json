@@ -1,0 +1,2463 @@
+[
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Asha",
+    "case_id": "case_001_clean_pass",
+    "eligible": true,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": true,
+    "failed_requirements": [],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 0,
+          "text": "Applicant Asha claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 100,
+          "text": "Applicant Asha has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 5.4,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 289,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 167,
+          "text": "Applicant Asha has resided continuously in the United States after LPR admission for 5.4 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 31.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 411,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 289,
+          "text": "Applicant Asha was physically present in the United States for 31 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 4.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 486,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 411,
+          "text": "Applicant Asha resided in the filing state or USCIS district for 4 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 593,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 486,
+          "text": "Applicant Asha has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 634,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 593,
+          "text": "Applicant Asha has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 721,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 634,
+          "text": "Applicant Asha is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 807,
+          "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+          "start": 721,
+          "text": "Applicant Asha is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Bela",
+    "case_id": "case_002_short_residence",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "continuous_residence_5y"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 0,
+          "text": "Applicant Bela claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 100,
+          "text": "Applicant Bela has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 4.9,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 289,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 167,
+          "text": "Applicant Bela has resided continuously in the United States after LPR admission for 4.9 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": false,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 34.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 411,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 289,
+          "text": "Applicant Bela was physically present in the United States for 34 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 8.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 486,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 411,
+          "text": "Applicant Bela resided in the filing state or USCIS district for 8 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 593,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 486,
+          "text": "Applicant Bela has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 634,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 593,
+          "text": "Applicant Bela has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 721,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 634,
+          "text": "Applicant Bela is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 807,
+          "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+          "start": 721,
+          "text": "Applicant Bela is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Ciro",
+    "case_id": "case_003_not_lpr",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "lpr_status"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 0,
+          "text": "Applicant Ciro claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": false,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 171,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 100,
+          "text": "Applicant Ciro has not been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": false,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 6.2,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 293,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 171,
+          "text": "Applicant Ciro has resided continuously in the United States after LPR admission for 6.2 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 40.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 415,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 293,
+          "text": "Applicant Ciro was physically present in the United States for 40 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 9.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 490,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 415,
+          "text": "Applicant Ciro resided in the filing state or USCIS district for 9 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 597,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 490,
+          "text": "Applicant Ciro has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 638,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 597,
+          "text": "Applicant Ciro has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 725,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 638,
+          "text": "Applicant Ciro is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 811,
+          "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+          "start": 725,
+          "text": "Applicant Ciro is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Dina",
+    "case_id": "case_004_short_physical_presence",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "physical_presence_half_of_5y"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 0,
+          "text": "Applicant Dina claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 100,
+          "text": "Applicant Dina has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 6.0,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 287,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 167,
+          "text": "Applicant Dina has resided continuously in the United States after LPR admission for 6 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 29.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 409,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 287,
+          "text": "Applicant Dina was physically present in the United States for 29 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": false,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 5.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 484,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 409,
+          "text": "Applicant Dina resided in the filing state or USCIS district for 5 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 591,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 484,
+          "text": "Applicant Dina has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 632,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 591,
+          "text": "Applicant Dina has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 719,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 632,
+          "text": "Applicant Dina is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 805,
+          "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+          "start": 719,
+          "text": "Applicant Dina is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Emil",
+    "case_id": "case_005_short_state_residence",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "state_or_district_3m"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 0,
+          "text": "Applicant Emil claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 100,
+          "text": "Applicant Emil has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 5.8,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 289,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 167,
+          "text": "Applicant Emil has resided continuously in the United States after LPR admission for 5.8 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 35.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 411,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 289,
+          "text": "Applicant Emil was physically present in the United States for 35 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 2.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 486,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 411,
+          "text": "Applicant Emil resided in the filing state or USCIS district for 2 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": false,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 593,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 486,
+          "text": "Applicant Emil has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 634,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 593,
+          "text": "Applicant Emil has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 721,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 634,
+          "text": "Applicant Emil is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 807,
+          "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+          "start": 721,
+          "text": "Applicant Emil is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Fara",
+    "case_id": "case_006_not_continuous_after_filing",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "continuous_until_admission"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 0,
+          "text": "Applicant Fara claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 100,
+          "text": "Applicant Fara has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 7.0,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 287,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 167,
+          "text": "Applicant Fara has resided continuously in the United States after LPR admission for 7 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 42.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 409,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 287,
+          "text": "Applicant Fara was physically present in the United States for 42 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 7.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 484,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 409,
+          "text": "Applicant Fara resided in the filing state or USCIS district for 7 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": false,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 595,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 484,
+          "text": "Applicant Fara has not resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": false,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 636,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 595,
+          "text": "Applicant Fara has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 723,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 636,
+          "text": "Applicant Fara is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 809,
+          "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+          "start": 723,
+          "text": "Applicant Fara is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Gita",
+    "case_id": "case_007_no_good_moral_character",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "good_moral_character"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 0,
+          "text": "Applicant Gita claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 100,
+          "text": "Applicant Gita has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 6.1,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 289,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 167,
+          "text": "Applicant Gita has resided continuously in the United States after LPR admission for 6.1 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 33.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 411,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 289,
+          "text": "Applicant Gita was physically present in the United States for 33 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 6.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 486,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 411,
+          "text": "Applicant Gita resided in the filing state or USCIS district for 6 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 593,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 486,
+          "text": "Applicant Gita has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": false,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 644,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 593,
+          "text": "Applicant Gita does not have good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": false,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 731,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 644,
+          "text": "Applicant Gita is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 817,
+          "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+          "start": 731,
+          "text": "Applicant Gita is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Hugo",
+    "case_id": "case_008_not_attached",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "constitutional_attachment"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 0,
+          "text": "Applicant Hugo claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 100,
+          "text": "Applicant Hugo has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 5.5,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 289,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 167,
+          "text": "Applicant Hugo has resided continuously in the United States after LPR admission for 5.5 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 32.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 411,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 289,
+          "text": "Applicant Hugo was physically present in the United States for 32 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 4.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 486,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 411,
+          "text": "Applicant Hugo resided in the filing state or USCIS district for 4 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 593,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 486,
+          "text": "Applicant Hugo has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 634,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 593,
+          "text": "Applicant Hugo has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": false,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 725,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 634,
+          "text": "Applicant Hugo is not attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": false,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 811,
+          "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+          "start": 725,
+          "text": "Applicant Hugo is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Ilya",
+    "case_id": "case_009_not_well_disposed",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "well_disposed"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 100,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 0,
+          "text": "Applicant Ilya claims no statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": true,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 167,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 100,
+          "text": "Applicant Ilya has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 5.5,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 289,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 167,
+          "text": "Applicant Ilya has resided continuously in the United States after LPR admission for 5.5 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": true,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 32.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 411,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 289,
+          "text": "Applicant Ilya was physically present in the United States for 32 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": true,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 4.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 486,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 411,
+          "text": "Applicant Ilya resided in the filing state or USCIS district for 4 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": true,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 593,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 486,
+          "text": "Applicant Ilya has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 634,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 593,
+          "text": "Applicant Ilya has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 721,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 634,
+          "text": "Applicant Ilya is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": false,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 811,
+          "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+          "start": 721,
+          "text": "Applicant Ilya is not well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": false,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  },
+  {
+    "answer_time_model_calls": 0,
+    "applicant": "Jae",
+    "case_id": "case_010_exception_claimed",
+    "eligible": false,
+    "engine": "generated_python_rule_library",
+    "expected_eligible": false,
+    "failed_requirements": [
+      "ordinary_path_scope",
+      "continuous_residence_5y",
+      "physical_presence_half_of_5y",
+      "state_or_district_3m"
+    ],
+    "matched_expected": true,
+    "proof_trace": [
+      {
+        "actual": false,
+        "derived_arithmetic": null,
+        "description": "no statutory exception path is claimed",
+        "expected": true,
+        "fact_span": {
+          "end": 98,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 0,
+          "text": "Applicant Jae claims a statutory exception to the ordinary five-year naturalization requirements.\n"
+        },
+        "field": "no_exception_claimed",
+        "passed": false,
+        "requirement_id": "ordinary_path_scope",
+        "source_span": {
+          "end": 557,
+          "id": "scope_ordinary_path",
+          "length": 102,
+          "quote": "No person, except as otherwise provided in this subchapter, shall be naturalized unless such applicant",
+          "quote_sha256": "6829e27f09dedbdbfb2adc278f990ae98d42226dba6106242b5fcf326b380a76",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 455,
+          "used_for": "ordinary naturalization rule applies only when no exception path is claimed"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "applicant has been lawfully admitted for permanent residence",
+        "expected": true,
+        "fact_span": {
+          "end": 164,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 98,
+          "text": "Applicant Jae has been lawfully admitted for permanent residence.\n"
+        },
+        "field": "lpr",
+        "passed": true,
+        "requirement_id": "lpr_status",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 3.0,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence after LPR admission for at least five years before filing",
+        "expected": {
+          ">=": 5.0
+        },
+        "fact_span": {
+          "end": 283,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 164,
+          "text": "Applicant Jae has resided continuously in the United States after LPR admission for 3 years immediately before filing.\n"
+        },
+        "field": "continuous_residence_years",
+        "passed": false,
+        "requirement_id": "continuous_residence_5y",
+        "source_span": {
+          "end": 768,
+          "id": "lpr_continuous_residence_5y",
+          "length": 205,
+          "quote": "immediately preceding the date of filing his application for naturalization has resided continuously, after being lawfully admitted for permanent residence, within the United States for at least five years",
+          "quote_sha256": "b15784a9d540c352b6aad52b3adedf48d8c6fcfbcbdf971982157a6688a209a2",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 563,
+          "used_for": "requires LPR status and at least five years continuous residence before filing"
+        }
+      },
+      {
+        "actual": 20.0,
+        "derived_arithmetic": "5 years * 12 months/year / 2 = 30 months",
+        "description": "physical presence for at least half of five years",
+        "expected": {
+          ">=": 30.0
+        },
+        "fact_span": {
+          "end": 404,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 283,
+          "text": "Applicant Jae was physically present in the United States for 20 months during the five years immediately before filing.\n"
+        },
+        "field": "physical_presence_months",
+        "passed": false,
+        "requirement_id": "physical_presence_half_of_5y",
+        "source_span": {
+          "end": 935,
+          "id": "physical_presence_half",
+          "length": 162,
+          "quote": "during the five years immediately preceding the date of filing his application has been physically present therein for periods totaling at least half of that time",
+          "quote_sha256": "e758d6dac33467f934a9834e329725036e3e0f363c4ca7c90518c6f1ad83ce5e",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 773,
+          "used_for": "requires physical presence for at least half of the five-year period"
+        }
+      },
+      {
+        "actual": 1.0,
+        "derived_arithmetic": null,
+        "description": "residence in filing state or USCIS district for at least three months",
+        "expected": {
+          ">=": 3.0
+        },
+        "fact_span": {
+          "end": 478,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 404,
+          "text": "Applicant Jae resided in the filing state or USCIS district for 1 months.\n"
+        },
+        "field": "state_district_residence_months",
+        "passed": false,
+        "requirement_id": "state_or_district_3m",
+        "source_span": {
+          "end": 1103,
+          "id": "state_or_district_3m",
+          "length": 158,
+          "quote": "has resided within the State or within the district of the Service in the United States in which the applicant filed the application for at least three months",
+          "quote_sha256": "d845f4bf3812a8a5724c1d17d1dd7c939c8217ff0157055371756c7bc96a896c",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 945,
+          "used_for": "requires at least three months residence in filing state or USCIS district"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "continuous U.S. residence from application to admission to citizenship",
+        "expected": true,
+        "fact_span": {
+          "end": 584,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 478,
+          "text": "Applicant Jae has resided continuously in the United States from application to admission to citizenship.\n"
+        },
+        "field": "continuous_until_admission",
+        "passed": true,
+        "requirement_id": "continuous_until_admission",
+        "source_span": {
+          "end": 1234,
+          "id": "continuous_until_admission",
+          "length": 125,
+          "quote": "has resided continuously within the United States from the date of the application up to the time of admission to citizenship",
+          "quote_sha256": "cb77a3a78a34a49501161d07ce69088dc6d1d7adafc6a177759f91156420dc39",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1109,
+          "used_for": "requires continuous residence from filing through admission to citizenship"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "good moral character",
+        "expected": true,
+        "fact_span": {
+          "end": 624,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 584,
+          "text": "Applicant Jae has good moral character.\n"
+        },
+        "field": "good_moral_character",
+        "passed": true,
+        "requirement_id": "good_moral_character",
+        "source_span": {
+          "end": 1352,
+          "id": "good_moral_character",
+          "length": 54,
+          "quote": "has been and still is a person of good moral character",
+          "quote_sha256": "0b2ef6aa1c8531130ee756551f8ac31f7a5e5bb80e1a7cc13693da24a79db503",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1298,
+          "used_for": "requires good moral character during the relevant periods"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "attachment to constitutional principles",
+        "expected": true,
+        "fact_span": {
+          "end": 710,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 624,
+          "text": "Applicant Jae is attached to the principles of the Constitution of the United States.\n"
+        },
+        "field": "attached_constitution",
+        "passed": true,
+        "requirement_id": "constitutional_attachment",
+        "source_span": {
+          "end": 1421,
+          "id": "constitutional_attachment",
+          "length": 67,
+          "quote": "attached to the principles of the Constitution of the United States",
+          "quote_sha256": "71f118b37d4bf4585203693de1552ccff4eb89f2aa692f4eb8dbc022801d7c5f",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1354,
+          "used_for": "requires attachment to constitutional principles"
+        }
+      },
+      {
+        "actual": true,
+        "derived_arithmetic": null,
+        "description": "well disposed to the good order and happiness of the United States",
+        "expected": true,
+        "fact_span": {
+          "end": 795,
+          "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+          "start": 710,
+          "text": "Applicant Jae is well disposed to the good order and happiness of the United States.\n"
+        },
+        "field": "well_disposed",
+        "passed": true,
+        "requirement_id": "well_disposed",
+        "source_span": {
+          "end": 1493,
+          "id": "well_disposed",
+          "length": 66,
+          "quote": "well disposed to the good order and happiness of the United States",
+          "quote_sha256": "4cff612580c1bfc09ba0de471c3a491d3c737de6147ad47aa24657e54f8b0f99",
+          "source_hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+          "start": 1427,
+          "used_for": "requires disposition to the good order and happiness of the United States"
+        }
+      }
+    ],
+    "query": "eligible_under_8usc1427a_ordinary_five_year_path"
+  }
+]

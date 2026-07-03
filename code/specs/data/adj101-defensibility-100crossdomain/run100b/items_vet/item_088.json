@@ -1,0 +1,8 @@
+{
+ "idx": 88,
+ "policy": "A controller transferring personal data to a recipient in a third country must put in place appropriate safeguards such as standard contractual clauses, except where the data subject has explicitly consented to the proposed transfer after being informed of the possible risks of such a transfer due to the absence of safeguards.",
+ "scenario": "Voyagr, a travel platform, transfers user Leah's booking details to a hotel partner in a country with no adequacy decision and has not signed any standard contractual clauses. Before the transfer, Voyagr showed Leah a notice explaining the absence of safeguards and the resulting risks, and Leah explicitly consented to this specific transfer.",
+ "question": "Is the transfer of Leah's data permitted under the policy despite the lack of standard contractual clauses?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "yes"
+}

@@ -9,8 +9,18 @@ module CodingAdventures
         sql.lstrip[/\A[A-Za-z]+/].to_s.upcase
       end
 
+      # Trim leading whitespace, one optional trailing semicolon, and any
+      # surrounding whitespace.  Imperative because a `\s*;?\s*\z` regex tail
+      # triggers polynomial backtracking (codeql rb/polynomial-redos) on
+      # adversarial whitespace-heavy inputs.
+      def strip_terminator(sql)
+        text = sql.strip
+        text = text.chomp(";").strip if text.end_with?(";")
+        text
+      end
+
       def parse_create(sql)
-        match = /\A\s*CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?([A-Za-z_]\w*)\s*\((.*)\)\s*;?\s*\z/im.match(sql)
+        match = /\ACREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?([A-Za-z_]\w*)\s*\((.*)\)\z/im.match(strip_terminator(sql))
         raise ProgrammingError, "invalid CREATE TABLE statement" unless match
 
         columns = split_top_level(match[3], ",").map { |part| part.strip[/\A[A-Za-z_]\w*/] }.compact
@@ -20,14 +30,14 @@ module CodingAdventures
       end
 
       def parse_drop(sql)
-        match = /\A\s*DROP\s+TABLE\s+(IF\s+EXISTS\s+)?([A-Za-z_]\w*)\s*;?\s*\z/im.match(sql)
+        match = /\ADROP\s+TABLE\s+(IF\s+EXISTS\s+)?([A-Za-z_]\w*)\z/im.match(strip_terminator(sql))
         raise ProgrammingError, "invalid DROP TABLE statement" unless match
 
         {kind: :drop, table: match[2], if_exists: !match[1].nil?}
       end
 
       def parse_insert(sql)
-        match = /\A\s*INSERT\s+INTO\s+([A-Za-z_]\w*)(?:\s*\(([^)]*)\))?\s+VALUES\s+(.*?)\s*;?\s*\z/im.match(sql)
+        match = /\AINSERT\s+INTO\s+([A-Za-z_]\w*)(?:\s*\(([^)]*)\))?\s+VALUES\s+(.*)\z/im.match(strip_terminator(sql))
         raise ProgrammingError, "invalid INSERT statement" unless match
 
         columns = match[2] ? split_top_level(match[2], ",").map { |part| identifier(part.strip) } : nil
@@ -35,8 +45,7 @@ module CodingAdventures
       end
 
       def parse_update(sql)
-        text = sql.strip.delete_suffix(";").strip
-        match = /\A\s*UPDATE\s+([A-Za-z_]\w*)\s+SET\s+(.*)\z/im.match(text)
+        match = /\AUPDATE\s+([A-Za-z_]\w*)\s+SET\s+(.*)\z/im.match(strip_terminator(sql))
         raise ProgrammingError, "invalid UPDATE statement" unless match
 
         assignment_sql, where_sql = split_top_level_keyword(match[2], "WHERE")
@@ -53,7 +62,7 @@ module CodingAdventures
       end
 
       def parse_delete(sql)
-        match = /\A\s*DELETE\s+FROM\s+([A-Za-z_]\w*)(?:\s+WHERE\s+(.*?))?\s*;?\s*\z/im.match(sql)
+        match = /\ADELETE\s+FROM\s+([A-Za-z_]\w*)(?:\s+WHERE\s+(.*))?\z/im.match(strip_terminator(sql))
         raise ProgrammingError, "invalid DELETE statement" unless match
 
         {kind: :delete, table: match[1], where: match[2].to_s.strip}

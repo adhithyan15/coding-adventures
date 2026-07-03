@@ -1,0 +1,39 @@
+{
+  "hash": "5ae32142679b6ddd",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/",
+  "title": "Skin rash in meningitis and meningoencephalitis (Tsai, Nagel, Gilden; Neurology 2013;80(19):1808-1811)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "An erythematous macular and petechial rash on the legs that quickly disseminates and becomes purpuric/necrotic indicates meningococcal infection (Neisseria meningitidis) with untreated meningococcemia.",
+      "byte_quote": "Meningococcal rash is similar, an erythematous macular and petechial rash on the legs that quickly disseminates, becoming purpuric and even necrotic if meningococcemia remains untreated"
+    },
+    {
+      "id": "c2",
+      "text": "Rocky Mountain spotted fever rash begins as erythematous macules on the wrists, hands, and feet.",
+      "byte_quote": "The classic rash of Rocky Mountain spotted fever usually begins as erythematous macules on the wrists, hands, and feet"
+    },
+    {
+      "id": "c3",
+      "text": "A maculopapular rash on the palms and soles that is scaly without much erythema indicates secondary or tertiary syphilis.",
+      "byte_quote": "The maculopapular rash of secondary or tertiary syphilis is seen mostly on the palms of the hands and soles of the feet and is scaly without much erythema"
+    },
+    {
+      "id": "c4",
+      "text": "HSV cutaneous lesions cluster in patches.",
+      "byte_quote": "HSV lesions cluster in patches"
+    },
+    {
+      "id": "c5",
+      "text": "VZV produces lesions in a dermatomal distribution.",
+      "byte_quote": "VZV produces lesions in a dermatomal distribution"
+    },
+    {
+      "id": "c6",
+      "text": "Lyme disease skin rash has a characteristic 'target' appearance.",
+      "byte_quote": "The skin rash in Lyme disease has a characteristic 'target' appearance"
+    }
+  ],
+  "cites": []
+}

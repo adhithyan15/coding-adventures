@@ -45,6 +45,14 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   is the sequence of lowered statements.  If the final source-level
   statement is a bare expression, it becomes the block's *value*;
   otherwise the value is `NilLit`.
+- **Parameters** — positional, splat (`*rest`), and double-splat
+  (`**kwrest`), plus **default / optional parameters** (P7, Ruby-1.0):
+  `def f(a = 1)` lowers `a`'s default to `Param.default = Some(IntLit 1)`.
+  Ruby defaults are call-time and may reference earlier params
+  (`def f(a, b = a + 1)`), so the default expression is lowered in the
+  parameter scope and resolves earlier params as `Scope::Param`.  A
+  defaulted param observes `Feature::DefaultParams`; a call that omits a
+  defaulted arg (`f(5)`) lowers to a call with fewer args (no padding).
 
 ## Usage
 
@@ -57,13 +65,40 @@ let module = ruby_to_semantic_ir::compile_source(
 // `module` is a `semantic_ir::Module` — pass it to any SIR backend.
 ```
 
+## Object orientation (O2)
+
+Real object-oriented Ruby now lowers to executable SIR — the frontend PRODUCES
+the OOP wiring (all via the existing `BuiltinCall` envelope; no core-IR change),
+which the `sir-runtime-oop` runtime + Python/TypeScript backend emit arms
+consume:
+
+- **Method registration.**  Each `def m` in `class C` hoists to a
+  class-qualified top-level function (`C__m`) and is registered right after the
+  `ClassDef` with `__def_method__("C", "m", MakeClosure { fn_name })`.  The
+  runtime table is keyed on `(class, bare_method)`.
+- **`Foo.new(args)`** → `__new__("Foo", …args)` (allocate → run inherited
+  `initialize` under a pushed self → return the object).  Chains:
+  `Foo.new(x).meth` = `__method__(__new__("Foo", x), "meth")`.
+- **`super(args)` / bare `super`** → `__super__(method, class, …args)`, threading
+  the enclosing method + class; bare `super` forwards the method's params.
+- **`self`** → `__self__()` (the receiver on the runtime self-stack).
+- **`attr_reader` / `attr_writer` / `attr_accessor :x`** expand into synthesized
+  getter (`def x; @x; end`) and/or setter (`def x=(v); @x = v; end`) methods,
+  hoisted and registered like hand-written ones.
+
+Three golden programs (a `Dog#speak`, an Animal/Cat inheritance+`super`, and a
+`Counter` with `attr_accessor`/`self`-chaining) are proven end to end through
+the Python backend (and P1 through TypeScript/node).
+
+**Deferred within OOP:** `def self.m` class methods (the grammar's `def` rule
+has no receiver production yet — the `__def_class_method__` path is implemented
+and ready); `super` as a sub-expression (statement-only today); and cross-class
+same-name *intra-class* bare-name calls (which resolve to the qualified hoisted
+function).
+
 ## What's deferred
 
-- `def` / `end` method definitions (the v0 ruby-parser grammar
-  doesn't accept them; Phase 6+ will extend the grammar).
-- Control flow (`if` / `while` / `case`).
-- Blocks (`do...end`, `{...}`).
-- Modules, classes, mixins.
+- Control flow beyond v0, mixins, and refinements.
 - The full set of Ruby's literal forms (regex, ranges, arrays,
   hashes, symbols, heredocs as runtime values — heredocs ARE lexed
   per Phase 3c, just not yet lowered to IR shape).

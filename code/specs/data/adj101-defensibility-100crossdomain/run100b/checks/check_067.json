@@ -1,0 +1,8 @@
+{
+ "check_id": 67,
+ "idx": 29,
+ "slot": "max_capacity_percent",
+ "claimed_value": 72,
+ "scenario": "Raj's phone battery degraded to 72% of its maximum rated capacity 8 months after purchase, confirmed by the manufacturer's diagnostic tool. He requested a free battery replacement.",
+ "cited_span": "degraded to 72% of its maximum rated capacity"
+}

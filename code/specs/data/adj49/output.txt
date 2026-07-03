@@ -1,0 +1,123 @@
+================================================================
+  ADJ49 — M&A deal completion: investment-banker objection demo
+================================================================
+
+Question:       P(deal_completes_by_drop_dead) — does this deal close before parties walk?
+Rulebook:       rulebook.adj (7172 bytes)
+Threshold:      50% — "would IC approve pursuing on these odds?"
+
+----------------------------------------------------------------
+  Deal: 01-friendly-tech-acquisition
+----------------------------------------------------------------
+  Vignette 1 — friendly all-cash tech acquisition by strategic buyer.
+  
+  $4.2B all-cash acquisition of a mid-cap enterprise SaaS company by
+  a larger strategic acquirer in an adjacent vertical. HHI delta < 100
+  (no overlap). Debt commitment letters with no market MAC outs.
+  Broad MAC carveouts including industry headwinds. RTF of 4% of
+  deal value. Founder + private-equity rollover covers 42% of votes.
+  No activist position.
+  
+  Expected behaviour: posterior well above prior (78%); no kickback
+  at any reasonable threshold.
+
+Posterior:  P(deal_completes_by_drop_dead) = 0.9753  (logodds = +3.6753)
+
+Fired clauses:
+  prior +1.2657    source: SRS Acquiom 2023 M&A Deal Terms Study — 78% of announced public-target deals close within stated outside date
+  +0.3365      [regulatory(no_antitrust_concern)]  source: FTC/DOJ HSR Annual Reports — early-termination grants for low-concentration deals
+  +0.4055      [deal_structure(all_cash)]  source: SRS Acquiom 2023 — all-cash deals close at 84% vs 71% for stock-element deals
+  +0.4700      [financing(committed_debt_no_market_out)]  source: ABA 2023 Strategic Buyer/Public Target Deal Points Study — debt commitment letters with no market MAC outs
+  +0.2624      [mac_clause(broad_industry_carveouts)]  source: Akorn v. Fresenius (Del. Ch. 2018) — narrow MAC carveouts allowed buyer to walk; broad carveouts protect deal
+  +0.3365      [rtf_present_above_3pct]  source: ABA 2023 Deal Points — reverse termination fees >3% of deal value strongly disincentivize buyer abandonment
+  +0.2624      [shareholders(major_holders_locked_up)]  source: [empirical] voting/support agreements covering >30% of shares meaningfully de-risk shareholder vote
+  +0.3365      [joint, 2 terms]  source: [empirical] all-cash deal with no-market-out financing eliminates the two most common buyer-walk paths
+
+----------------------------------------------------------------
+  Deal: 02-healthcare-megamerger
+----------------------------------------------------------------
+  Vignette 2 — healthcare megamerger with high concentration.
+  
+  $48B combination of two major health insurers. Significant HHI
+  overlap in 14 state markets — HSR Second Request highly likely.
+  Stock-and-cash mix (65% stock). Narrow MAC carveouts without
+  industry headwind protection (negotiated when target had
+  leverage). RTF of 2.5%. No announced activist position yet but
+  major holders not locked up. Regulated industry (state DOIs +
+  federal HHS review).
+  
+  Expected behaviour: posterior well below prior; multiple
+  uncertainties (mostly about whether divestitures will be
+  acceptable to FTC). The joint interaction term (industry
+  concentration + narrow MAC) should fire and further suppress.
+  Kickback strongly recommended.
+
+Posterior:  P(deal_completes_by_drop_dead) = 0.1001  (logodds = -2.1962)
+
+Fired clauses:
+  prior +1.2657    source: SRS Acquiom 2023 M&A Deal Terms Study — 78% of announced public-target deals close within stated outside date
+  -0.4308      [regulatory(hsr_second_request_likely)]  source: FTC/DOJ HSR Annual Reports — Second Requests extend median timeline by 10-12 months; ~25% of Second Request deals abandoned or restructured
+  -0.7985      [regulatory(industry_concentration_high)]  source: Kwoka 2015, Mergers, Merger Control, and Remedies — HHI delta >200 doubles probability of antitrust challenge
+  -0.6931      [regulatory(regulated_industry_target)]  source: [empirical] healthcare, defense, banking acquisitions face industry-specific approval (HHS, DOD, OCC) extending timelines
+  -0.2877      [deal_structure(stock_component_above_50pct)]  source: SRS Acquiom 2023 — stock deals more sensitive to acquirer-share-price decline triggering closing conditions
+  -0.2231      [mac_clause(narrow_carveouts_no_industry)]  source: Akorn v. Fresenius (Del. Ch. 2018) — narrow MAC was determinative in walk decision
+  -0.4308      [rtf_below_2pct]  source: ABA 2023 Deal Points — low RTF asymmetry signals buyer-leaning deal terms
+  -0.5978      [joint, 2 terms]  source: [empirical] narrow MAC + high concentration = buyer has both regulatory risk and the contractual right to walk on industry headwinds — Akorn-style outcome plausible
+
+Active uncertainties (VOI ranked):
+  voi = +1.0678 logits over 2 candidates
+       +0.4700   if observed: financing(committed_debt_no_market_out)
+       -0.5978   if observed: financing(financing_condition_in_merger_agreement)
+  voi = +0.8602 logits over 2 candidates
+       -0.5978   if observed: shareholders(known_activist_position)
+       +0.2624   if observed: shareholders(major_holders_locked_up)
+
+No kickback at 50% — uncertainties exist but the decision is robust.
+
+Counterfactual (most favorable resolution):
+  if financing(committed_debt_no_market_out) were observed, posterior → 0.1511 (Δ = +0.0510)
+
+----------------------------------------------------------------
+  Deal: 03-cross-border-cfius
+----------------------------------------------------------------
+  Vignette 3 — cross-border acquisition triggering CFIUS review.
+  
+  $1.8B acquisition of a US semiconductor design company by a foreign
+  strategic acquirer based in a US-allied jurisdiction. CFIUS
+  mandatory filing applies (critical technology). Low HHI overlap
+  in addressable market — no HSR Second Request expected. All-cash
+  deal with committed financing. Broad MAC carveouts. RTF of 5%.
+  No activist position.
+  
+  Expected behaviour: posterior between Jane Doe friendly (vignette
+  1) and healthcare merger (vignette 2). CFIUS suppresses but other
+  factors support. The user's question: "do I admit a deal to my
+  pipeline at these odds?" — kickback at 50% threshold likely fires
+  because CFIUS outcome is the load-bearing uncertainty.
+
+Posterior:  P(deal_completes_by_drop_dead) = 0.9551  (logodds = +3.0562)
+
+Fired clauses:
+  prior +1.2657    source: SRS Acquiom 2023 M&A Deal Terms Study — 78% of announced public-target deals close within stated outside date
+  -0.3567      [regulatory(cfius_jurisdiction)]  source: CFIUS Annual Report to Congress — foreign-buyer deals with critical-tech targets averaged 90-day mitigation delay in CY2022
+  +0.3365      [regulatory(no_antitrust_concern)]  source: FTC/DOJ HSR Annual Reports — early-termination grants for low-concentration deals
+  +0.4055      [deal_structure(all_cash)]  source: SRS Acquiom 2023 — all-cash deals close at 84% vs 71% for stock-element deals
+  +0.4700      [financing(committed_debt_no_market_out)]  source: ABA 2023 Strategic Buyer/Public Target Deal Points Study — debt commitment letters with no market MAC outs
+  +0.2624      [mac_clause(broad_industry_carveouts)]  source: Akorn v. Fresenius (Del. Ch. 2018) — narrow MAC carveouts allowed buyer to walk; broad carveouts protect deal
+  +0.3365      [rtf_present_above_3pct]  source: ABA 2023 Deal Points — reverse termination fees >3% of deal value strongly disincentivize buyer abandonment
+  +0.3365      [joint, 2 terms]  source: [empirical] all-cash deal with no-market-out financing eliminates the two most common buyer-walk paths
+
+================================================================
+  The investment-banker argument
+================================================================
+Status-quo AI: a prose memo with no per-claim provenance.
+The analyst re-reads everything and re-runs every model. No
+verification leverage. AI saves drafting time but not
+verification time. Net: marginal.
+
+Framework output: every claim above is a citation. Every
+derived posterior is reproducible by running this binary.
+The analyst verifies inputs once, trusts the engine, and
+spends saved time on the cases where kickback flagged a
+decision-relevant uncertainty. That is the productivity
+delta.

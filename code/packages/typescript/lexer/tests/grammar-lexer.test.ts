@@ -28,7 +28,7 @@ import {
   parseTokenGrammar,
   type TokenGrammar,
   type TokenDefinition,
-} from "../../../../src/typescript/grammar-tools/index.js";
+} from "@coding-adventures/grammar-tools";
 
 import { grammarTokenize, GrammarLexer, LexerContext } from "../src/grammar-lexer.js";
 import { tokenize, LexerError } from "../src/tokenizer.js";
@@ -1333,5 +1333,218 @@ describe("GrammarLexer — rich source preservation", () => {
         endOffset: 11,
       },
     ]);
+  });
+});
+
+// ============================================================================
+
+// ============================================================================
+// F10 — declarative lexer mode transitions
+// ============================================================================
+
+describe("grammarTokenize — F10 declarative lexer modes", () => {
+  // A tiny grammar with two flat modes (default + div) and a transitions
+  // table that toggles between them. NAME emits a SLASH in div mode (post-
+  // name); the default mode also defines SLASH for simplicity.
+  function flatToggleGrammar(): TokenGrammar {
+    return parseTokenGrammar(
+      [
+        "start_mode: default",
+        "NAME = /[A-Za-z_][A-Za-z0-9_]*/",
+        "NUMBER = /[0-9]+/",
+        "SLASH = /\\//",
+        "EQUALS = /=/",
+        "skip:",
+        "  WS = /\\s+/",
+        "group div:",
+        "  SLASH = /\\//",
+        "transitions:",
+        "  on NAME -> set-mode div",
+        "  on EQUALS -> set-mode default",
+      ].join("\n"),
+    );
+  }
+
+  // tokenize() resets the group stack to start_mode on exit so the instance
+  // is reusable. To observe mid-stream mode we register an on-token callback
+  // and snapshot active group + stack depth after each token.
+  type Snapshot = { type: string; value: string; mode: string; depth: number };
+  function snapshotMidStream(
+    source: string,
+    grammar: TokenGrammar,
+  ): Snapshot[] {
+    const lexer = new GrammarLexer(source, grammar);
+    const snaps: Snapshot[] = [];
+    lexer.setOnToken((token, ctx) => {
+      // The on-token callback runs BEFORE _applyTransitions, but we can read
+      // post-transition state by snapshotting the next token's pre-fire
+      // state. Simpler: snapshot after the lexer's internal apply by
+      // queuing the read until the *next* call. Use ctx for an indirect
+      // read: ctx.activeGroup() reflects pre-action state, which the next
+      // tick will reveal as transitions are applied between tokens.
+      // For our purposes, recording (type, value, mode-at-call, depth)
+      // captures enough to detect the mode AFTER the previous token's
+      // transition ran. See the assertions below for what that means.
+      snaps.push({
+        type: token.type,
+        value: token.value,
+        mode: ctx.activeGroup(),
+        depth: ctx.groupStackDepth(),
+      });
+    });
+    lexer.tokenize();
+    return snaps;
+  }
+
+  it("initial active group is the configured start_mode", () => {
+    // Pre-tokenize: groupStack = [start_mode]. After tokenize() the lexer
+    // resets so we sample BEFORE calling tokenize.
+    const lexer = new GrammarLexer("", flatToggleGrammar());
+    expect(lexer.activeGroup()).toBe("default");
+    expect(lexer.groupStackDepth()).toBe(1);
+  });
+
+  it("set-mode is a flat toggle — depth stays 1 across the stream", () => {
+    // Stream: NAME, EQUALS, NAME — each fires a set-mode rule. Depth must
+    // never exceed 1 because set-mode mutates in place rather than pushing.
+    const snaps = snapshotMidStream("x = y", flatToggleGrammar());
+    for (const s of snaps) {
+      expect(s.depth).toBe(1);
+    }
+    // After the first NAME, the mode the callback sees on the NEXT token
+    // (EQUALS) is "div" — the transition fired.
+    const eqIdx = snaps.findIndex((s) => s.type === "EQUALS");
+    expect(eqIdx).toBeGreaterThanOrEqual(0);
+    expect(snaps[eqIdx].mode).toBe("div");
+    // After EQUALS, the second NAME sees mode "default" again.
+    const secondName = snaps[eqIdx + 1];
+    expect(secondName).toBeDefined();
+    expect(secondName.type).toBe("NAME");
+    expect(secondName.mode).toBe("default");
+  });
+
+  it("set-mode targets inherit default patterns (flat mode)", () => {
+    // In `div` mode only SLASH is declared; matching a NAME there requires
+    // F10's flat-mode inheritance of the default patterns. The token
+    // stream MUST succeed and contain the trailing NAME.
+    const tokens = grammarTokenize("x = y", flatToggleGrammar());
+    expect(types(tokens)).toEqual(["NAME", "EQUALS", "NAME", "EOF"]);
+  });
+
+  // Grammar covering push/pop semantics — `push` targets do NOT inherit.
+  function pushPopGrammar(): TokenGrammar {
+    return parseTokenGrammar(
+      [
+        "NAME = /[A-Za-z_][A-Za-z0-9_]*/",
+        "BACKTICK = /`/",
+        "skip:",
+        "  WS = /\\s+/",
+        "group template:",
+        "  RAW = /[^`]+/",
+        "  BACKTICK = /`/",
+        "transitions:",
+        "  on BACKTICK in default -> push template",
+        "  on BACKTICK in template -> pop",
+      ].join("\n"),
+    );
+  }
+
+  it("push deepens the stack; pop restores it", () => {
+    const snaps = snapshotMidStream("`abc`", pushPopGrammar());
+    // BACKTICK (first) — callback runs before the push, mode is `default`,
+    // depth 1.
+    expect(snaps[0]).toMatchObject({ type: "BACKTICK", mode: "default", depth: 1 });
+    // RAW — depth 2, mode `template`. The push fired before this token.
+    expect(snaps[1]).toMatchObject({ type: "RAW", mode: "template", depth: 2 });
+    // BACKTICK (second) — still depth 2, mode `template` (the pop runs
+    // AFTER the callback).
+    expect(snaps[2]).toMatchObject({ type: "BACKTICK", mode: "template", depth: 2 });
+  });
+
+  it("in MODE guard scopes the rule to that active mode", () => {
+    // The push rule fires only `in default`, the pop only `in template`.
+    // We rely on the resulting token sequence: source ` `abc` ` lexes
+    // BACKTICK, RAW("abc"), BACKTICK with no LexerError, proving both
+    // guarded rules fired in their proper modes.
+    const tokens = grammarTokenize("`abc`", pushPopGrammar());
+    expect(types(tokens)).toEqual(["BACKTICK", "RAW", "BACKTICK", "EOF"]);
+    expect(values(tokens)).toEqual(["`", "abc", "`", ""]);
+  });
+
+  it("KEYWORD=\"value\" guard filters by token value", () => {
+    // `return` is registered as a keyword (so it tokenizes as KEYWORD),
+    // and the rule fires only on KEYWORD with value "return".
+    const grammar = parseTokenGrammar(
+      [
+        "NAME = /[A-Za-z_][A-Za-z0-9_]*/",
+        "keywords:",
+        "  return",
+        "skip:",
+        "  WS = /\\s+/",
+        "group seen_return:",
+        "  NAME = /[A-Za-z_][A-Za-z0-9_]*/",
+        "transitions:",
+        '  on KEYWORD="return" -> set-mode seen_return',
+      ].join("\n"),
+    );
+    const triggered = snapshotMidStream("return x", grammar);
+    expect(triggered[0].type).toBe("KEYWORD");
+    // After the KEYWORD("return") fires the rule, the next token's
+    // callback should observe mode seen_return.
+    expect(triggered[1].mode).toBe("seen_return");
+
+    // Without the keyword `return` in the input, the transition never fires.
+    const untriggered = snapshotMidStream("foo bar", grammar);
+    expect(untriggered[1].mode).toBe("default");
+  });
+
+  it("empty transitions table preserves F04 behavior exactly", () => {
+    const grammar = parseTokenGrammar(
+      [
+        "NAME = /[A-Za-z_][A-Za-z0-9_]*/",
+        "skip:",
+        "  WS = /\\s+/",
+      ].join("\n"),
+    );
+    const lexer = new GrammarLexer("hello world", grammar);
+    const tokens = lexer.tokenize();
+    expect(types(tokens)).toEqual(["NAME", "NAME", "EOF"]);
+    expect(lexer.groupStackDepth()).toBe(1);
+    expect(lexer.activeGroup()).toBe("default");
+  });
+
+  it("unknown start_mode falls back to default", () => {
+    // Validator rejects unknown modes in a real pipeline. The lexer is
+    // defence in depth — start in default rather than an undeclared group.
+    const grammar: TokenGrammar = {
+      definitions: [
+        { name: "NAME", pattern: "[A-Za-z_]+", isRegex: true },
+      ],
+      skipDefinitions: [{ name: "WS", pattern: "\\s+", isRegex: true }],
+      keywords: [],
+      startMode: "nonexistent_mode",
+    };
+    const lexer = new GrammarLexer("hi", grammar);
+    expect(lexer.activeGroup()).toBe("default");
+  });
+
+  it("a custom start_mode is honored at construction", () => {
+    // Define a group `div`, set it as start_mode. Pre-tokenize active
+    // group must be `div`. We don't need to tokenize anything to verify.
+    const grammar = parseTokenGrammar(
+      [
+        "start_mode: div",
+        "NAME = /[A-Za-z_][A-Za-z0-9_]*/",
+        "SLASH = /\\//",
+        "skip:",
+        "  WS = /\\s+/",
+        "group div:",
+        "  SLASH = /\\//",
+        "transitions:",
+        "  on NAME -> set-mode div",
+      ].join("\n"),
+    );
+    const lexer = new GrammarLexer("", grammar);
+    expect(lexer.activeGroup()).toBe("div");
   });
 });

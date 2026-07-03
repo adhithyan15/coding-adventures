@@ -39,12 +39,14 @@
 //! | `EmptyModule`           | Module has zero functions |
 //! | `EmptyFunction`         | A function has zero instructions |
 //! | `UntypedInstruction`    | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType`       | `type_hint` is `"str"` or starts with `"ref<"` but is not `"ref<LispyPair>"` |
+//! | `UnsupportedType`       | `type_hint` is unsupported (`"str"` except `str_const`, or unsupported `ref<...>`) |
 //! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
 //! | `UnsupportedOp`         | op is a runtime/memory/IO/GC opcode that hasn't been promoted (list below) |
 //!
 //! Remaining unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`,
-//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`.
+//! `load_mem`, `store_mem`, `box`, `unbox`, `safepoint`, and the byte-oriented
+//! E4 string algebra beyond `str_const` + `str_len` + `str_index` +
+//! `str_eq` + `str_cmp` + `str_concat` + `print_str`.
 //! Previously unsupported but now accepted: `alloc` (LispyPair only),
 //! `field_load`, `field_store`, `is_null`.
 
@@ -97,8 +99,7 @@ const UNSUPPORTED_OPS: &[&str] = &[
     // "load_mem"   — Brainfuck: now supported (ldelem.u1 over env.BFRuntime::__tape).
     // "store_mem"  — Brainfuck: now supported (stelem.i1 over env.BFRuntime::__tape).
     // "alloc"      — promoted in Phase 2 (ref<LispyPair> only)
-    "box",
-    "unbox",
+    // "box" / "unbox" — promoted in McCarthy W6b (box [int32] / unbox.any [int32]).
     // "field_load" — promoted in Phase 2
     // "field_store" — promoted in Phase 2
     // "is_null"    — promoted in Phase 2
@@ -112,17 +113,28 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// lowering time via reserved metadata tokens (MemberRef table rows on
 /// the simulated `env.BFRuntime` class):
 ///
-/// | Builtin     | CIL call                                            |
-/// |-------------|------------------------------------------------------|
-/// | `"putchar"` | `call void env.BFRuntime::putchar(int32)`            |
-/// | `"getchar"` | `call int32 env.BFRuntime::getchar()`                |
+/// | Builtin       | CIL call                                              |
+/// |---------------|-------------------------------------------------------|
+/// | `"putchar"`   | `call void env.BFRuntime::putchar(int32)`             |
+/// | `"getchar"`   | `call int32 env.BFRuntime::getchar()`                 |
+/// | `"print_i64"` | `call void env.BasicRuntime::PrintI64(int64)`         |
 ///
 /// Adding a new builtin requires:
 ///   1. Listing the name here so the validator accepts it.
 ///   2. Reserving a new metadata-token constant in `lower.rs`.
 ///   3. Adding a matching `case` to lower.rs's `call_builtin` arm
 ///      that emits the right `call <token>` sequence.
-pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar"];
+///
+/// G4 note: `print_i64` is the CLR counterpart to wasm's `env.__print_i64`
+/// (iir-to-wasm v0.8.0) and JVM's `env/BasicRuntime.println(J)V`
+/// (iir-to-jvm-class-file v0.7.0).  Together the three lower BASIC's
+/// `PRINT` statement to real backend bytecode without the backend itself
+/// owning a stdout.  We pick a dedicated `env.BasicRuntime` host class
+/// (distinct from `env.BFRuntime`) because BASIC's I/O model is
+/// line/value oriented while Brainfuck's is byte-stream oriented; a CLR
+/// runtime can stub or provide either independently.
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
+    &["putchar", "getchar", "print_i64", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // Heap ops that need special validation (type-restricted)
@@ -321,8 +333,11 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
 
             // ── Check 4: UnsupportedType ─────────────────────────────────────
             //
-            // `"str"` — String operations require System.String method calls;
-            // we do not emit them in v1.
+            // `"str"` — The textual CLR path can now load ASCII literals and
+            // concatenate them through `System.String` for the narrow E4
+            // foothold. `str_len`, `str_eq`, and `str_cmp` produce integers. Other
+            // string-typed producers still need a fuller byte-oriented
+            // representation before we can map them to `System.String` safely.
             //
             // `"ref<…>"` — Heap pointer types require GC-managed references.
             // In Phase 2 we lower `ref<LispyPair>` to `object[]` cons cells.
@@ -340,27 +355,38 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             //   - `jmp_if_true` / `jmp_if_false` — used for pattern-match dispatch
             //
             // All other ops remain rejected for `ref<LispyPair>`.
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str"
+                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+            {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     string operations are not supported in this CLR backend",
+                     only str_const, str_concat, and str_slice literals are supported in this CLR backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
-                // Phase 2: `ref<LispyPair>` is supported for specific ops.
-                let is_pair = instr.type_hint == LISTY_PAIR_TYPE;
+                // Phase 2: `ref<LispyPair>` lowers to System.Object[2].
+                // `ref<any>` lowers to System.Object (the field-load result
+                // type — cons-cell fields are System.Object, matching
+                // iir-builtin-lowering's Phase 2 convention and BEAM).
+                let is_supported_ref = instr.type_hint == LISTY_PAIR_TYPE
+                    || instr.type_hint == "ref<any>";
                 let is_heap_op = matches!(
                     instr.op.as_str(),
                     "alloc" | "field_load" | "field_store" | "is_null"
                     | "const" | "ret" | "load_reg" | "store_reg"
-                    | "jmp_if_true" | "jmp_if_false"
+                    | "jmp_if_true" | "jmp_if_false" | "mov"
+                    // McCarthy W6b: `box` produces a `ref<any>` (boxed int32).
+                    | "box" | "unbox"
+                    // McCarthy W8b (lambda): a lisp `call` returns `ref<any>`
+                    // (the callee's uniform-reference result).
+                    | "call"
                 );
-                if !(is_pair && is_heap_op) {
+                if !(is_supported_ref && is_heap_op) {
                     errors.push(format!(
                         "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                         heap pointer types require ref<LispyPair> and a supported heap op \
-                         (alloc, field_load, field_store, is_null, const, ret, load_reg, \
-                         store_reg, jmp_if_true, jmp_if_false)",
+                         heap pointer types require ref<LispyPair> or ref<any> and a \
+                         supported heap op (alloc, field_load, field_store, is_null, \
+                         const, ret, load_reg, store_reg, jmp_if_true, jmp_if_false, mov)",
                         func.name, instr.op, instr.type_hint
                     ));
                 }
@@ -383,19 +409,24 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
 
             // ── Check 5: float const ─────────────────────────────────────────
             //
-            // CIL does support floating-point, but loading a float immediate
-            // requires `ldc.r4` (4-byte float) or `ldc.r8` (8-byte double),
-            // which this v1 lowering does not emit.  Rejecting float constants
-            // here gives a clear error rather than silently truncating the
-            // value to an integer (which would be a silent semantic bug).
+            // A floating-point constant is loaded with `ldc.r4`/`ldc.r8`. The
+            // **textual `.il` emitter** ([`crate::il_text`]) supports `f32`/`f64`
+            // (LANG-FULL E3 — ALGOL `real`), so a float const with a float
+            // `type_hint` is accepted. A float const with a *non-float* type_hint
+            // is still a bug (it would silently truncate), and is rejected.
+            //
+            // (The structured *bytecode* emitter [`crate::lower`] does not yet
+            // emit `ldc.r8` and keeps its own guard; the real-CLR matrix path
+            // uses the textual emitter, which this check unblocks.)
             if instr.op == "const" {
                 if let Some(Operand::Float(_)) = instr.srcs.first() {
-                    errors.push(format!(
-                        "UnsupportedType: function {:?}, const instruction has a Float \
-                         operand; float constants are not supported in CLR v1 \
-                         (use integer arithmetic or a separate fp lowering pass)",
-                        func.name
-                    ));
+                    if instr.type_hint != "f64" && instr.type_hint != "f32" {
+                        errors.push(format!(
+                            "UnsupportedType: function {:?}, const has a Float operand but a \
+                             non-float type_hint {:?} (would truncate)",
+                            func.name, instr.type_hint
+                        ));
+                    }
                 }
             }
 
@@ -415,7 +446,85 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             // [`CALL_BUILTIN_SUPPORTED_NAMES`].  This lets Brainfuck's
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
-            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+            if instr.op == "str_len" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls System.String::get_Length().
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_len\" requires \
+                             dest, one Operand::Var source, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_concat" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "str") => {
+                        // Accepted — il_text.rs calls System.String::Concat(string,string).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_concat\" requires \
+                             dest, two Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_slice" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_), Operand::Var(_)], "str") => {
+                        // Accepted — il_text.rs calls System.String::Substring(int32,int32).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_slice\" requires \
+                             dest, string/start/end Operand::Var sources, and str result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_index" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls System.String::get_Chars(int32).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_index\" requires \
+                             dest, string Operand::Var, index Operand::Var, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_eq" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls System.String::Equals(string,string).
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_eq\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if instr.op == "str_cmp" {
+                match (instr.dest.as_ref(), instr.srcs.as_slice(), instr.type_hint.as_str()) {
+                    (Some(_), [Operand::Var(_), Operand::Var(_)], "i64" | "i32") => {
+                        // Accepted — il_text.rs calls String.CompareOrdinal and Math.Sign.
+                    }
+                    _ => {
+                        errors.push(format!(
+                            "UnsupportedOp: function {:?}, op \"str_cmp\" requires \
+                             dest, two Operand::Var sources, and i64/i32 result type",
+                            func.name
+                        ));
+                    }
+                }
+            } else if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
                 errors.push(format!(
                     "UnsupportedOp: function {:?}, op {:?} is not supported by \
                      the CLR backend; it requires a P/Invoke or .NET BCL call",
@@ -513,12 +622,26 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
     }
 
+    /// An `f64` float const is now ACCEPTED (LANG-FULL E3 — the textual `.il`
+    /// emitter lowers it to `ldc.r8`). (Was `float_const_rejected`.)
     #[test]
-    fn float_const_rejected() {
+    fn f64_float_const_accepted() {
         let errs = validate_iir_for_clr(&single_fn_module(vec![
             IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
         ]));
-        assert!(errs.iter().any(|e| e.contains("Float")));
+        assert!(!errs.iter().any(|e| e.contains("Float")),
+            "an f64 float const should be accepted; got: {errs:?}");
+    }
+
+    /// A Float operand with a *non-float* type_hint is still rejected (it would
+    /// silently truncate).
+    #[test]
+    fn float_const_with_int_hint_rejected() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "i32"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("Float")),
+            "a Float with an int type_hint should be rejected; got: {errs:?}");
     }
 
     #[test]
@@ -527,6 +650,199 @@ mod tests {
             IIRInstr::new("ret_void", None, vec![], "str"),
         ]));
         assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn str_const_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "str_const + print_str should pass: {:?}", errs);
+    }
+
+    #[test]
+    fn str_len_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_len over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_eq_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("HELLO".into())],
+                "str",
+            ),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_eq over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_cmp_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("ALPHA".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("BETA".into())],
+                "str",
+            ),
+            IIRInstr::new("str_cmp", Some("ord".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ord".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_cmp over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_concat_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("a".into()),
+                vec![Operand::Str("AB".into())],
+                "str",
+            ),
+            IIRInstr::new(
+                "str_const",
+                Some("b".into()),
+                vec![Operand::Str("CDE".into())],
+                "str",
+            ),
+            IIRInstr::new("str_concat", Some("s".into()), vec![
+                Operand::Var("a".into()),
+                Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_concat over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_slice_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABCDE".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new(
+                "str_slice",
+                Some("sub".into()),
+                vec![
+                    Operand::Var("s".into()),
+                    Operand::Var("start".into()),
+                    Operand::Var("end".into()),
+                ],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("sub".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_slice over direct literals should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn str_index_literal_accepted() {
+        let errs = validate_iir_for_clr(&single_fn_module(vec![
+            IIRInstr::new(
+                "str_const",
+                Some("s".into()),
+                vec![Operand::Str("ABC".into())],
+                "str",
+            ),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![
+                Operand::Var("s".into()),
+                Operand::Var("i".into()),
+            ], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i64"),
+        ]));
+        assert!(
+            errs.is_empty(),
+            "str_index over a direct literal should pass: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn byte_string_algebra_still_rejected() {
+        for op in ["str_index"] {
+            let errs = validate_iir_for_clr(&single_fn_module(vec![
+                IIRInstr::new(
+                    op,
+                    Some("v".into()),
+                    vec![Operand::Var("s".into())],
+                    "i32",
+                ),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "{op} should require the literal-index shape: {:?}",
+                errs
+            );
+        }
     }
 
     #[test]

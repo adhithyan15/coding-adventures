@@ -1,0 +1,408 @@
+% ============================================================================
+% genetics-edges — the medical-genetics knowledge-graph (MYCIN-2026 GENETICS).
+% ============================================================================
+% A Tier-1 recall domain (USMLE-DOMAIN-MAP §"To build"): inheritance patterns,
+% trinucleotide-repeat expansions, parent-of-origin imprinting, and the gene behind a
+% classic Mendelian disorder. "How is Huntington disease inherited?" becomes the
+% binding query  ? inheritance(huntington_disease, $Pattern).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the fourth ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see genetics-recall.query.adj. Nothing here is
+% asserted "from memory": every edge is defended by a span a reader can re-fetch and
+% check. (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: relations chosen so the cited span NAMES both endpoints. gene_defect
+% reuses the same relation the IMMUNO library uses (the engine binds any grounded
+% `relate(rel, args)`); the disorders here are disjoint from immunology's. Edges with
+% no clean self-contained span are deferred rather than over-claimed — currently the
+% Duchenne→X-linked-recessive inheritance edge (the page states the inheritance in a
+% separate anaphoric "It is inherited..." sentence, not alongside the disease name).
+% ============================================================================
+
+dictionary genetics_vocab {
+    define disorder : entity   surface "genetic disorder", "Mendelian disorder"
+    define pattern  : entity   surface "inheritance pattern"
+    define gene     : entity   surface "gene"
+    define repeat   : entity   surface "trinucleotide repeat"
+    define parent   : entity   surface "parent of origin"
+
+    define inheritance         : relation from disorder to pattern  % how the disorder is transmitted
+    define gene_defect         : relation from disorder to gene     % the mutated gene
+    define trinucleotide_repeat : relation from disorder to repeat  % the expanded triplet
+    define imprinting          : relation from disorder to parent   % the parent-of-origin lesion
+}
+
+rulebook genetics_facts {
+    use genetics_vocab
+
+    % --- Huntington disease (AD, CAG expansion in HTT) -------------------
+    relate inheritance(huntington_disease, autosomal_dominant)
+        source "Huntington disease, an autosomal dominant inherited neurodegenerative disorder, is characterized by the clinical triad of involuntary choreiform movements with cognitive and behavioral disturbances."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+        trust authoritative
+    relate gene_defect(huntington_disease, htt)
+        source "Huntington disease is an autosomal dominant inherited neurodegenerative disorder caused by the elongation of CAG repeats on the short arm of chromosome 4p16.3 in the HTT gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559166/"
+        trust authoritative
+    relate trinucleotide_repeat(huntington_disease, cag)
+        source "Huntington disease is an autosomal dominant disorder that results from CAG repeat expansions, usually of paternal origin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559254/"
+        trust authoritative
+
+    % --- Marfan syndrome (autosomal dominant) ----------------------------
+    relate inheritance(marfan_syndrome, autosomal_dominant)
+        source "One of the most common inherited disorders affecting connective tissue, Marfan syndrome (MFS), is an autosomal dominant condition with a reported incidence of 1 in 3000 to 5000 individuals."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537339/"
+        trust authoritative
+
+    % --- Fragile X syndrome (CGG expansion in FMR1) ----------------------
+    relate trinucleotide_repeat(fragile_x_syndrome, cgg)
+        source "Fragile X syndrome: This condition results from CGG repeats in the noncoding region of the Fragile X mental retardation 1 ( FMR1 ) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559254/"
+        trust authoritative
+    relate gene_defect(fragile_x_syndrome, fmr1)
+        source "Fragile X syndrome: This condition results from CGG repeats in the noncoding region of the Fragile X mental retardation 1 ( FMR1 ) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559254/"
+        trust authoritative
+
+    % --- Prader-Willi syndrome (loss of PATERNAL 15q11-q13; imprinting) --
+    relate imprinting(prader_willi_syndrome, paternal)
+        source "PWS results from the loss of expression of paternally inherited genes on chromosome 15q11.2–q13, most commonly due to paternal deletion, maternal uniparental disomy, or imprinting defects."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK553161/"
+        trust authoritative
+
+    % --- EXPAND: cystic fibrosis (autosomal recessive; CFTR) — one span names both ---
+    relate inheritance(cystic_fibrosis, autosomal_recessive)
+        source "Modern understanding began in 1949 when scientists identified the autosomal recessive inheritance pattern of cystic fibrosis and linked the disease to a defect in the CFTR protein, a chloride channel crucial for regulating salt and water balance in the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493206/"
+        trust authoritative
+    relate gene_defect(cystic_fibrosis, cftr)
+        source "Modern understanding began in 1949 when scientists identified the autosomal recessive inheritance pattern of cystic fibrosis and linked the disease to a defect in the CFTR protein, a chloride channel crucial for regulating salt and water balance in the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK493206/"
+        trust authoritative
+
+    % --- EXPAND: Duchenne muscular dystrophy (dystrophin gene) -----------
+    relate gene_defect(duchenne_muscular_dystrophy, dystrophin)
+        source "Mutations in the dystrophin gene result in diseases known as dystrophinopathies, which encompass Duchenne muscular dystrophy, Becker muscular dystrophy, and an intermediate form."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482346/"
+        trust authoritative
+
+    % --- EXPAND: myotonic dystrophy (CTG expansion in DMPK) — one span names both --
+    % The page's defined abbreviation DM1 = myotonic dystrophy type 1; one declarative
+    % names the CTG repeat AND the DMPK gene, grounding both edges.
+    relate trinucleotide_repeat(myotonic_dystrophy, ctg)
+        source "DM1 is caused by expansion of cytosine-thymine-guanine (CTG) repeat in the 3'-untranslated region of the DM1 protein kinase (DMPK) gene on chromosome 19q13.3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557446/"
+        trust authoritative
+    relate gene_defect(myotonic_dystrophy, dmpk)
+        source "DM1 is caused by expansion of cytosine-thymine-guanine (CTG) repeat in the 3'-untranslated region of the DM1 protein kinase (DMPK) gene on chromosome 19q13.3."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK557446/"
+        trust authoritative
+
+    % --- EXPAND: Friedreich ataxia (FXN gene) ---------------------------
+    relate gene_defect(friedreich_ataxia, fxn)
+        source "Friedreich ataxia results from loss-of-function mutations in the frataxin (FXN) gene, located in the centromeric region of chromosome 9q (9q13 to 21.1)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+
+    % --- EXPAND: Marfan syndrome gene (FBN1) — rounds out the existing AD edge -------
+    % The page's defined abbreviation MFS = Marfan syndrome; this declarative names the
+    % FBN1 gene as the de-novo-mutation cause, grounding the gene_defect edge.
+    relate gene_defect(marfan_syndrome, fbn1)
+        source "While most individuals with MFS have an affected parent, 25% of patients develop the disease due to a de novo mutation involving the gene (FBN1) encoding the connective tissue protein fibrillin-1."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537339/"
+        trust authoritative
+    % --- EXPAND: Angelman syndrome (maternal imprinting; UBE3A) — PWS counterpart ---
+    relate imprinting(angelman_syndrome, maternal)
+        source "Angelman syndrome is a rare neurodevelopmental disorder caused by loss of maternal UBE3A expression on chromosome 15q11.2–q13"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560870/"
+        trust authoritative
+    relate gene_defect(angelman_syndrome, ube3a)
+        source "Angelman syndrome is a rare neurodevelopmental disorder caused by loss of maternal UBE3A expression on chromosome 15q11.2–q13"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK560870/"
+        trust authoritative
+
+    % --- EXPAND: Friedreich ataxia inheritance + GAA repeat (one span names both) ----
+    relate inheritance(friedreich_ataxia, autosomal_recessive)
+        source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+    relate trinucleotide_repeat(friedreich_ataxia, gaa)
+        source "Friedreich ataxia is an autosomal recessive neurodegenerative disorder caused by guanine-adenine-adenine repeat expansion in the frataxin gene, leading to mitochondrial dysfunction."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563199/"
+        trust authoritative
+
+    % --- EXPAND: Wilson disease (autosomal recessive; ATP7B) — one span names both ----
+    relate inheritance(wilson_disease, autosomal_recessive)
+        source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
+        trust authoritative
+    relate gene_defect(wilson_disease, atp7b)
+        source "Wilson disease is an autosomal recessive condition caused by 1 of several mutations in ATP7B gene which encodes the ATP7B protein transporter on the long arm of chromosome 13 (13q) responsible for excreting excess copper into bile and out of the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441990/"
+        trust authoritative
+
+    % --- EXPAND: hereditary hemochromatosis (autosomal recessive; HFE gene) -----------
+    relate inheritance(hereditary_hemochromatosis, autosomal_recessive)
+        source "This is considered the classic form of hereditary hemochromatosis, is inherited in an autosomal recessive fashion, and disproportionately affects males."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
+        trust authoritative
+    relate gene_defect(hereditary_hemochromatosis, hfe)
+        source "Type 1 hereditary hemochromatosis occurs in patients who are typically homozygous for loss-of-function mutations in HFE."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430862/"
+        trust authoritative
+
+    % --- EXPAND: Tay-Sachs disease (autosomal recessive; HEXA gene) — one span both ---
+    relate inheritance(tay_sachs_disease, autosomal_recessive)
+        source "Tay-Sachs disease is an autosomal recessive disorder caused by a mutation in HEXA, which encodes the enzymes beta-hexosaminidase A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
+        trust authoritative
+    relate gene_defect(tay_sachs_disease, hexa)
+        source "Tay-Sachs disease is an autosomal recessive disorder caused by a mutation in HEXA, which encodes the enzymes beta-hexosaminidase A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
+        trust authoritative
+
+    % --- EXPAND: phenylketonuria gene defect — the PAH gene (phenylalanine hydroxylase) --
+    % The span names the disease and "the gene encoding phenylalanine hydroxylase" (PAH).
+    % inheritance(autosomal_recessive) declined: the page states it in a separate sentence
+    % anaphoric to "The disorder", not a self-contained both-endpoints span.
+    relate gene_defect(phenylketonuria, pah)
+        source "Phenylketonuria, also known as phenylalanine hydroxylase deficiency, is an inborn error of metabolism most commonly caused by pathogenic or pathogenic variants in the gene encoding phenylalanine hydroxylase—the hepatic enzyme that converts phenylalanine to tyrosine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535378/"
+        trust authoritative
+
+    % ============================================================================
+    % BATCH: high-yield single-gene disorders + lysosomal storage diseases.
+    % Each edge is grounded from its disease's StatPearls page by a self-contained
+    % span naming BOTH the disease and the gene/inheritance. Edges with only an
+    % anaphoric span (Niemann-Pick "NPD"; Pompe gene; sickle-cell inheritance;
+    % alpha-1 gene) were declined — honest scope.
+    % ============================================================================
+
+    % --- Achondroplasia (autosomal dominant; FGFR3) ------------------------------
+    relate gene_defect(achondroplasia, fgfr3)
+        source "Achondroplasia results from a point mutation in the gene coding for the transmembrane portion of fibroblast growth factor receptor-3 (FGFR3), which resides on the short arm of chromosome 4."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559263/"
+        trust authoritative
+    relate inheritance(achondroplasia, autosomal_dominant)
+        source "Achondroplasia is inherited in an autosomal dominant manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559263/"
+        trust authoritative
+
+    % --- Gaucher disease (autosomal recessive; GBA1) -----------------------------
+    relate gene_defect(gaucher_disease, gba1)
+        source "Gaucher disease results from mutations in the GBA1 gene, leading to deficient glucocerebrosidase activity within lysosomes."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        trust authoritative
+    relate inheritance(gaucher_disease, autosomal_recessive)
+        source "Gaucher disease (pronounced as GO-SHEY) is an autosomal recessive inborn error of metabolism caused by mutations in the glucocerebrosidase (GBA1) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        trust authoritative
+
+    % --- Fabry disease (X-linked; GLA / alpha-galactosidase A) -------------------
+    relate inheritance(fabry_disease, x_linked)
+        source "Fabry disease represents an X-linked, multisystem lysosomal storage disorder caused by defective function of the enzyme alpha-galactosidase A (α-Gal A)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
+        trust authoritative
+    relate gene_defect(fabry_disease, gla)
+        source "Researchers have identified hundreds of mutations in the gene encoding α-Gal A on the X chromosome that cause Fabry disease."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK435996/"
+        trust authoritative
+
+    % --- Pompe disease (autosomal recessive); gene_defect recovered below (GeneReviews)
+    relate inheritance(pompe_disease, autosomal_recessive)
+        source "Glycogen storage disease type II, also known as Pompe disease, is a rare and progressive neuromuscular disorder inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470558/"
+        trust authoritative
+
+    % --- Sickle cell disease (HBB); inheritance recovered below (GeneReviews AR)
+    relate gene_defect(sickle_cell_disease, hbb)
+        source "Sickle cell disease (SCD) refers to a group of hemoglobinopathies that include mutations in the gene encoding the beta subunit of hemoglobin."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482164/"
+        trust authoritative
+
+    % --- Retinoblastoma (autosomal dominant familial; RB1 tumor suppressor) -------
+    relate gene_defect(retinoblastoma, rb1)
+        source "Retinoblastoma is primarily caused by mutations in the RB1 tumor suppressor gene located on chromosome 13q14."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545276/"
+        trust authoritative
+    relate inheritance(retinoblastoma, autosomal_dominant)
+        source "Familial retinoblastoma follows an autosomal dominant inheritance pattern with high penetrance."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK545276/"
+        trust authoritative
+
+    % --- Von Hippel-Lindau (autosomal dominant; VHL tumor suppressor) ------------
+    relate gene_defect(von_hippel_lindau, vhl)
+        source "Mutations in the VHL tumor suppressor gene located on chromosome 3 cause VHL."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459242/"
+        trust authoritative
+    relate inheritance(von_hippel_lindau, autosomal_dominant)
+        source "Von Hippel-Lindau (VHL) syndrome is a hereditary autosomal dominant disease affecting several organ systems."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459242/"
+        trust authoritative
+
+    % --- Hemophilia A (X-linked recessive; factor VIII / F8) ---------------------
+    relate gene_defect(hemophilia_a, factor_viii)
+        source "A hereditary hemorrhagic disorder resulting from a congenital deficit or scarcity of factor VIII, hemophilia A, which is known as classical hemophilia, manifests as protracted and excessive bleeding either spontaneously or secondary to trauma."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470265/"
+        trust authoritative
+    relate inheritance(hemophilia_a, x_linked)
+        source "An X-linked, recessive hemorrhagic trait or gene induces Hemophilia A."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470265/"
+        trust authoritative
+
+    % --- Alpha-1 antitrypsin deficiency (autosomal codominant) — gene edge declined
+    % AAT = alpha-1 antitrypsin (page-defined abbreviation).
+    relate inheritance(alpha_1_antitrypsin_deficiency, autosomal_codominant)
+        source "AAT deficiency is inherited through autosomal codominant transmission, which indicates that affected individuals have inherited an abnormal AAT gene from both parents."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK442030/"
+        trust authoritative
+
+    % --- Tuberous sclerosis complex (autosomal dominant; TSC1/TSC2) --------------
+    relate gene_defect(tuberous_sclerosis, tsc1_tsc2)
+        source "Tuberous sclerosis complex arises from mutations in the genes TSC1 (9q34) or TSC2 (16p13.3), encoding hamartin and tuberin, respectively."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538492/"
+        trust authoritative
+    relate inheritance(tuberous_sclerosis, autosomal_dominant)
+        source "Tuberous sclerosis complex (TSC) is a genetic disorder inherited in an autosomal dominant fashion and is characterized by an increased predisposition to hamartoma formation."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538492/"
+        trust authoritative
+
+    % --- RECOVERED deferrals (re-grounded against alternate authoritative pages) --
+    % These were declined in the first pass because the first page used only an
+    % abbreviation/anaphor; the facts are board-relevant and DO ground against another
+    % NCBI Bookshelf source (StatPearls or GeneReviews). A deferral is a backlog item to
+    % clear, not a drop. (Only alpha-1 antitrypsin gene_defect remains deferred — its
+    % disease name and SERPINA1 never co-occur in one sentence across NBK442030 + NBK1519.)
+
+    % Niemann-Pick disease — SMPD1 (NPD = page-defined abbrev on NBK556129) + AR (GeneReviews)
+    relate gene_defect(niemann_pick_disease, smpd1)
+        source "NPD types A and B are caused by missense mutations in the sphingomyelin phosphodiesterase 1 (SMPD1) gene."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556129/"
+        trust authoritative
+    relate inheritance(niemann_pick_disease, autosomal_recessive)
+        source "All forms of acid sphingomyelinase deficiency (ASMD), including infantile neurovisceral ASMD (Niemann-Pick disease type A, or NPD-A), chronic neurovisceral ASMD (NPD-A/B), and chronic visceral ASMD (Niemann-Pick disease type B, or NPD-B), are inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1370/"
+        trust authoritative
+
+    % Pompe disease — GAA gene (GeneReviews names "Pompe" + GAA in one diagnosis sentence)
+    relate gene_defect(pompe_disease, gaa)
+        source "The diagnosis of Pompe disease is established in a proband who has deficiency of acid alpha-glucosidase (GAA) enzyme activity in isolated lymphocytes or mixed leukocytes and/or by identification of biallelic pathogenic (or likely pathogenic) variants in GAA by molecular genetic testing in a proband with an out-of-range newborn screening result and/or suggestive clinical features."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1261/"
+        trust authoritative
+
+    % Sickle cell disease — autosomal recessive (GeneReviews; the StatPearls "codominant" phrasing was the deferral source)
+    relate inheritance(sickle_cell_disease, autosomal_recessive)
+        source "Sickle cell disease (SCD) is inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1377/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH 2: high-yield single-gene disorders (gene + inheritance), each
+    % grounded to a self-contained verbatim NCBI Bookshelf span (GeneReviews
+    % where available) naming both the disease and the gene / inheritance.
+    % ------------------------------------------------------------------------
+
+    % Neurofibromatosis type 1 — NF1, autosomal dominant.
+    relate gene_defect(neurofibromatosis_type_1, nf1)
+        source "The diagnosis of NF1 is established in a proband with two or more of the features described in Suggestive Findings or one characteristic clinical feature and a heterozygous NF1 pathogenic variant."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1109/"
+        trust authoritative
+    relate inheritance(neurofibromatosis_type_1, autosomal_dominant)
+        source "NF1 is inherited in an autosomal dominant manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1109/"
+        trust authoritative
+
+    % Neurofibromatosis type 2 — NF2, autosomal dominant.
+    relate gene_defect(neurofibromatosis_type_2, nf2)
+        source "NF2 is caused by mutations in the NF2 gene located in the long arm of chromosome number 22 (22q12.2)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470350/"
+        trust authoritative
+    relate inheritance(neurofibromatosis_type_2, autosomal_dominant)
+        source "Neurofibromatosis type 2 (NF2) is an autosomal dominant disorder characterized by the development of multiple tumors involving the central nervous system (CNS)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470350/"
+        trust authoritative
+
+    % Osteogenesis imperfecta — COL1A1 (classic dominant forms). Inheritance edge
+    % deferred: GeneReviews states it only via the "COL1A1-OI" abbreviation, never
+    % a span with the spelled-out disease + "autosomal dominant" together.
+    relate gene_defect(osteogenesis_imperfecta, col1a1)
+        source "_COL1A1_- and _COL1A2_-related osteogenesis imperfecta (_COL1A1_/_COL1A2_-OI) is characterized by fractures (often with minimal or absent trauma), variable dentinogenesis imperfecta (DI), and hearing loss (typically in adult years)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1295/"
+        trust authoritative
+
+    % Familial adenomatous polyposis — APC, autosomal dominant.
+    relate gene_defect(familial_adenomatous_polyposis, apc)
+        source "FAP results from mutations in the APC gene, a tumor suppressor gene located on chromosome 5, exhibiting autosomal dominant inheritance."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538233/"
+        trust authoritative
+    relate inheritance(familial_adenomatous_polyposis, autosomal_dominant)
+        source "FAP is inherited in an autosomal dominant pattern."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538233/"
+        trust authoritative
+
+    % Multiple endocrine neoplasia type 2 — RET, autosomal dominant.
+    relate gene_defect(multiple_endocrine_neoplasia_type_2, ret)
+        source "The diagnosis of MEN2 is established in a proband who fulfills existing clinical diagnostic criteria or by identification of a heterozygous germline gain-of-function variant in RET on molecular genetic testing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1257/"
+        trust authoritative
+    relate inheritance(multiple_endocrine_neoplasia_type_2, autosomal_dominant)
+        source "All MEN2 phenotypes are inherited in an autosomal dominant manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1257/"
+        trust authoritative
+
+    % Li-Fraumeni syndrome — autosomal dominant. gene_defect(TP53) deferred:
+    % the TP53 diagnosis span on NBK1311 does not name Li-Fraumeni within itself.
+    relate inheritance(li_fraumeni_syndrome, autosomal_dominant)
+        source "Li-Fraumeni syndrome (LFS) is inherited in an autosomal dominant manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1311/"
+        trust authoritative
+
+    % Familial hypercholesterolemia — LDLR (the classic/most common FH gene; the
+    % span lists APOB/LDLR/PCSK9), autosomal dominant.
+    relate gene_defect(familial_hypercholesterolemia, ldlr)
+        source "The molecular diagnosis of FH can be established by identification of heterozygous or biallelic pathogenic variants in APOB (variants that impair binding of LDL-C to the LDL receptor), LDLR, or PCSK9 (gain of function); or rarely, identification of biallelic pathogenic variants in LDLRAP1."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK174884/"
+        trust authoritative
+    relate inheritance(familial_hypercholesterolemia, autosomal_dominant)
+        source "APOB-, LDLR-, and PCSK9-related familial hypercholesterolemia (FH) are inherited in an autosomal dominant manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK174884/"
+        trust authoritative
+
+    % Spinal muscular atrophy — SMN1, autosomal recessive.
+    relate gene_defect(spinal_muscular_atrophy, smn1)
+        source "SMA is caused by loss of SMN1 because SMN2 cannot fully compensate for loss of SMN1-produced protein."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1352/"
+        trust authoritative
+    relate inheritance(spinal_muscular_atrophy, autosomal_recessive)
+        source "Spinal muscular atrophy is inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1352/"
+        trust authoritative
+
+    % Rett syndrome — MECP2, X-linked (dominant; lethal in hemizygous males).
+    relate gene_defect(rett_syndrome, mecp2)
+        source "Rett syndrome (RTT) is a neurodevelopmental disorder in which regression of previously acquired skills follows a period of typical development due to mutations of methylated CpG binding protein 2 (MECP2) gene on the X chromosome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482252/"
+        trust authoritative
+    relate inheritance(rett_syndrome, x_linked)
+        source "RTT is an X-linked dominant condition with lethal consequences in hemizygous males."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482252/"
+        trust authoritative
+
+    % G6PD deficiency — G6PD gene, X-linked.
+    relate gene_defect(g6pd_deficiency, g6pd)
+        source "The G6PD gene, located on the distal long arm of the X chromosome (Xq28), encodes G6PD, and therefore, pathogenic variants follow X-linked inheritance."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470315/"
+        trust authoritative
+    relate inheritance(g6pd_deficiency, x_linked)
+        source "Glucose-6-phosphate dehydrogenase (G6PD) deficiency is an X-linked enzymatic disorder affecting cellular defense against oxidative stress."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470315/"
+        trust authoritative
+}

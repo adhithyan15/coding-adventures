@@ -1,0 +1,8 @@
+{
+ "check_id": 9,
+ "idx": 4,
+ "slot": "hospital_network_status",
+ "claimed_value": "out_of_network",
+ "scenario": "Tom went to an out-of-network hospital ER with chest pain and shortness of breath. The ER billed his plan. The claim is now being adjudicated for the correct cost-sharing level.",
+ "cited_span": "out-of-network hospital ER"
+}

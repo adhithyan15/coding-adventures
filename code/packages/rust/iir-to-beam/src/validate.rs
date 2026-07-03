@@ -94,8 +94,16 @@ use interpreter_ir::{IIRModule, Operand};
 // - `call_closure`  — lowered to get_list + call_ext erlang:'++'/2 +
 //                     call_ext erlang:apply/3.
 
+/// McCarthy W10: the `call_builtin` names the BEAM backend lowers (the predicate
+/// set → `is_nonempty_list`/`is_eq_exact` 0/1 synthesis). `call_builtin` with any
+/// OTHER name is rejected by the validator (Check 6b) so that validation stays in
+/// sync with the lowering arm — `IIRBeamCodeGenerator::generate` assumes a
+/// validated module never reaches an unsupported op.
+const BEAM_PREDICATE_BUILTINS: &[&str] = &["pair?", "equal?", "not"];
+
 const UNSUPPORTED_OPS: &[&str] = &[
-    "call_builtin",
+    // "call_builtin"  — McCarthy W10: conditionally supported (see Check 6b /
+    //   BEAM_PREDICATE_BUILTINS). Handled below, not via this blanket list.
     "io_in",
     // "io_out"       — LANG32: now supported (erlang:display/1).
     // "global_store" — LANG32: now supported (erlang:put/2).
@@ -371,6 +379,27 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                      the BEAM backend; it requires a NIF or Erlang standard-library call",
                     func.name, instr.op
                 ));
+            }
+
+            // ── Check 6b: call_builtin — predicate set only (McCarthy W10) ───
+            //
+            // `call_builtin` is supported ONLY for the McCarthy predicate set
+            // (`pair?`/`equal?`/`not`); any other builtin name has no BEAM
+            // lowering. We reject it here (not just at lowering) so that a
+            // validated module is always lowerable — `generate()` panics on a
+            // lowering error, assuming validation already screened the module.
+            if instr.op == "call_builtin" {
+                let supported = matches!(
+                    instr.srcs.first(),
+                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str())
+                );
+                if !supported {
+                    errors.push(format!(
+                        "UnsupportedOp: function {:?}, call_builtin {:?} is not in the \
+                         BEAM predicate set (pair?/equal?/not)",
+                        func.name, instr.srcs.first()
+                    ));
+                }
             }
         }
     }

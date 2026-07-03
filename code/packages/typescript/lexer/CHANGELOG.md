@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-06-13
+
+### Added
+
+- **F10 declarative lexer mode transitions** (TypeScript port mirroring the
+  Rust reference (#5662), Python (#5668), and Ruby (#5694) ports). When a
+  `.tokens` grammar declares a `transitions:` table plus optional
+  `start_mode:`, the lexer now consults the table after each emitted token
+  to switch the active mode — no host-language callback required. The
+  generic group stack is initialized to `start_mode` (or `"default"` when
+  unset) and reset to it between `tokenize()` calls.
+  - New `_transitions` / `_startMode` / `_inheritingModes` fields on
+    `GrammarLexer` (read-only, computed at construction).
+  - New private `_applyTransitions(token)` runs the first-matching rule
+    after each token in standard and indentation tokenize loops; supports
+    `set_mode` (flat toggle, mutates top-of-stack in place), `push`/`pop`
+    (nested), and `enable_skip`/`disable_skip`.
+  - `_tryMatchTokenInGroup` honors F10 flat-mode inheritance: targets
+    reached via `set-mode` (and never via `push`) inherit the `default`
+    group's patterns; their own patterns take priority, the default
+    patterns fall through. `push` targets stay exclusive (F04 / XML
+    semantics).
+  - Empty `transitions:` table is a no-op — F04 behavior is preserved
+    exactly. Backward compatible: all existing grammars and tests
+    unchanged.
+  - +9 unit tests covering start-mode init, flat-toggle depth invariance,
+    flat-mode inheritance, `push`/`pop` depth changes, `in MODE` guards,
+    `KEYWORD="value"` guards, empty-table no-op, unknown-start-mode
+    fallback, and a custom non-`"default"` start mode.
+
+  Existing test imports were retargeted from a stale sibling copy of
+  `grammar-tools` to the published `@coding-adventures/grammar-tools`
+  package so the F10 surface (`startMode`/`transitions`) is visible to
+  parser tests.
+
 ## [0.3.0] - 2026-04-18
 
 ### Added

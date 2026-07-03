@@ -26,13 +26,17 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process;
 
+// UI34 PR-3 — package-reference resolver.  Wired into the
+// `run_pipeline` path between `moslayout_compiler::compile()` and the
+// backend emitter so every `pkg::P::C` reference in the consumer's
+// layout is substituted before any emitter sees it.
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
+use mosaic_emit_paint;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
-use mosaic_emit_paint;
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
 use mosaic_vm::MosaicVM;
 
@@ -89,11 +93,15 @@ fn main() {
 
     let root = find_root();
     let spec_path = root.join("code/specs/mosaic-compile.json");
-    let spec = load_spec_from_file(spec_path.to_str().unwrap_or("code/specs/mosaic-compile.json"))
-        .unwrap_or_else(|e| {
-            eprintln!("mosaic-compile: failed to load CLI spec: {e}");
-            process::exit(1);
-        });
+    let spec = load_spec_from_file(
+        spec_path
+            .to_str()
+            .unwrap_or("code/specs/mosaic-compile.json"),
+    )
+    .unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: failed to load CLI spec: {e}");
+        process::exit(1);
+    });
 
     let parser = Parser::new(spec);
     let argv: Vec<String> = std::env::args().collect();
@@ -153,14 +161,25 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    if backend != "webcomponent"
-        && backend != "html"
-        && backend != "react"
-        && backend != "paint"
-        && backend != "xaml"
-    {
+    // UI30: pipeline mode now supports every emit-only backend
+    // (react, html, webcomponent, swiftui, qt, xaml, flutter). The
+    // legacy "paint" backend is single-file SOURCE mode only and is
+    // also kept here for back-compat.
+    let allowed_backends = [
+        "webcomponent",
+        "html",
+        "react",
+        "paint",
+        "xaml",
+        "swiftui",
+        "qt",
+        "flutter",
+        "compose",
+    ];
+    if !allowed_backends.contains(&backend) {
         eprintln!(
-            "mosaic-compile: --backend must be 'webcomponent', 'html', 'react', 'paint', or 'xaml', got '{backend}'"
+            "mosaic-compile: --backend must be one of {allowed:?}, got '{backend}'",
+            allowed = allowed_backends,
         );
         process::exit(1);
     }
@@ -182,6 +201,9 @@ fn run(result: cli_builder::types::ParseResult) {
     let style_path = flags.get("style").and_then(|v| v.as_str());
     let source_path = args.get("source").and_then(|v| v.as_str());
     let output_path = flags.get("output").and_then(|v| v.as_str());
+    // UI30 --variant: layout-variant selector. Only used when --layout
+    // points at a directory; resolved via resolve_layout_path() below.
+    let variant = flags.get("variant").and_then(|v| v.as_str());
     // --emit-project: when set on a pipeline xaml build, emit a full
     // WinUI 3 host shell (csproj + App + MainWindow + manifest +
     // build.ps1 + README) alongside the component triple. Fix B1.
@@ -198,9 +220,16 @@ fn run(result: cli_builder::types::ParseResult) {
         .get("package-manifest")
         .and_then(|v| v.as_str())
         .map(str::to_string);
+    // UI34 --package-search-path: colon-separated list of directories
+    // to search for `mosaic-package.toml` manifests.  Used by the
+    // package-reference resolver (resolver.rs) to locate packages
+    // named in `pkg::P::C` references inside the consumer's layout.
+    let package_search_path = flags
+        .get("package-search-path")
+        .and_then(|v| v.as_str())
+        .map(str::to_string);
 
-    let pipeline_any =
-        interface_path.is_some() || layout_path.is_some() || style_path.is_some();
+    let pipeline_any = interface_path.is_some() || layout_path.is_some() || style_path.is_some();
 
     if pipeline_any && source_path.is_some() {
         eprintln!(
@@ -220,9 +249,11 @@ fn run(result: cli_builder::types::ParseResult) {
             interface,
             layout,
             style,
+            variant,
             output_path,
             emit_project,
             package_manifest_path.as_deref(),
+            package_search_path.as_deref(),
         );
         return;
     }
@@ -397,9 +428,7 @@ fn build_self_package_registry(
     let manifest = match mosaic_package_manifest::parse_path(std::path::Path::new(path)) {
         Ok(m) => m,
         Err(e) => {
-            eprintln!(
-                "mosaic-compile: warning: ignoring --package-manifest {path}: {e:?}"
-            );
+            eprintln!("mosaic-compile: warning: ignoring --package-manifest {path}: {e:?}");
             return None;
         }
     };
@@ -441,20 +470,153 @@ fn build_self_package_registry(
 /// other backends (swiftui, qt) will follow when they're added. The legacy
 /// `--backend X SOURCE.mosaic` path continues to work unchanged for any of
 /// the four backends.
+/// UI30 multi-layout — resolve `--layout` to a concrete file path.
+///
+/// **Decision table:**
+///
+/// | `--layout` is | `--variant` is | Result                                                        |
+/// |---|---|---|
+/// | file path     | any / none     | unchanged (back-compat; warn if variant is set)               |
+/// | directory     | None           | `<dir>/<Component>.mll`                                       |
+/// | directory     | `Some("desktop")` | `<dir>/<Component>.desktop.mll`, fallback `<Component>.mll`|
+/// | directory     | `Some("touch")`   | `<dir>/<Component>.touch.mll`, fallback `<Component>.mll`  |
+///
+/// **Fallback rationale.** Per UI30 §3.1, a missing variant file falls
+/// back to the bare `<Component>.mll` (the default variant). This lets
+/// a touch host gracefully degrade to the desktop layout when no
+/// touch-specific layout was authored. If BOTH the variant file AND
+/// the bare default are missing, this function `process::exit(1)`s
+/// with a clear error listing both paths tried.
+///
+/// **Why not just always exit on missing variant.** The fallback rule
+/// is the multi-layout equivalent of CSS's `@media` cascade — most
+/// components don't need every form factor, and forcing authors to
+/// duplicate the desktop layout into every variant would defeat the
+/// purpose. Authors who DO want strict-mode behavior can omit the
+/// bare `<Component>.mll` and ship only the variant files; the
+/// fallback then provably can't fire.
+fn resolve_layout_path(layout_arg: &str, component_name: &str, variant: Option<&str>) -> String {
+    // Defense-in-depth: validate component_name + variant against a
+    // strict identifier shape before interpolating into path joins.
+    // The mosmodel grammar already enforces PascalCase on component
+    // declarations (`NAME` token = `[A-Za-z_][A-Za-z0-9_]*`) and the
+    // CLI spec describes variant as a kebab-case identifier. Re-
+    // checking here costs essentially nothing and would catch:
+    //   - a grammar regression that admitted slashes / `..`
+    //   - a future codepath that passed a synthetic component name
+    //   - hostile `.mil` files in a hypothetical multi-tenant build
+    //     server (out of scope today but cheap to guard against)
+    // The shape we accept: ASCII letters, digits, `_`, `-`. No `/`,
+    // no `.`, no null bytes, no `..`, no shell metacharacters.
+    fn is_safe_segment(s: &str) -> bool {
+        !s.is_empty()
+            && s.chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
+    }
+    if !is_safe_segment(component_name) {
+        eprintln!(
+            "mosaic-compile: refusing to resolve layout for component name \
+             '{component_name}' — must be ASCII alphanumeric / _ / -. This \
+             usually means the .mil grammar admitted a name it shouldn't \
+             have; please file a bug."
+        );
+        process::exit(1);
+    }
+    if let Some(v) = variant {
+        if v != "default" && !is_safe_segment(v) {
+            eprintln!(
+                "mosaic-compile: --variant '{v}' contains characters outside \
+                 the allowed ASCII alphanumeric / _ / - set"
+            );
+            process::exit(1);
+        }
+    }
+
+    let path = Path::new(layout_arg);
+
+    // File-path mode — unchanged behavior. If --variant is set we warn
+    // (it's ignored when --layout points at a file) but proceed normally.
+    if path.is_file() {
+        if variant.is_some() {
+            eprintln!(
+                "mosaic-compile: warning: --variant is ignored when --layout \
+                 points at a file (only meaningful with directory --layout); \
+                 using {layout_arg} verbatim"
+            );
+        }
+        return layout_arg.to_string();
+    }
+
+    // Directory mode — UI30 resolution.
+    if !path.is_dir() {
+        eprintln!(
+            "mosaic-compile: --layout '{layout_arg}' is neither a file nor a \
+             directory (does it exist?)"
+        );
+        process::exit(1);
+    }
+
+    // The reserved variant string `default` is the same as omitting
+    // --variant entirely; per spec §3.2 it cannot appear in a filename
+    // (`Grid.default.mll` would be redundant with `Grid.mll`).
+    let want_variant = variant.filter(|v| *v != "default");
+
+    // Try `<dir>/<Component>.<variant>.mll` first.
+    if let Some(v) = want_variant {
+        let candidate = path.join(format!("{component_name}.{v}.mll"));
+        if candidate.is_file() {
+            return candidate.to_string_lossy().into_owned();
+        }
+    }
+
+    // Fallback: bare `<dir>/<Component>.mll`.
+    let bare = path.join(format!("{component_name}.mll"));
+    if bare.is_file() {
+        return bare.to_string_lossy().into_owned();
+    }
+
+    // Neither found — error with a clear "looked for these paths" message.
+    let tried: Vec<String> = match want_variant {
+        Some(v) => vec![
+            format!("{component_name}.{v}.mll"),
+            format!("{component_name}.mll"),
+        ],
+        None => vec![format!("{component_name}.mll")],
+    };
+    eprintln!(
+        "mosaic-compile: no layout file for component '{component_name}'\
+         {variant_suffix} in {layout_arg}\n  looked for: {tried}",
+        variant_suffix = match want_variant {
+            Some(v) => format!(" with variant '{v}'"),
+            None => String::new(),
+        },
+        tried = tried.join(", "),
+    );
+    process::exit(1);
+}
+
 fn run_pipeline(
     backend: &str,
     interface_path: &str,
     layout_path: &str,
     style_path: &str,
+    variant: Option<&str>,
     output_path: Option<&str>,
     emit_project: bool,
     package_manifest_path: Option<&str>,
+    package_search_path: Option<&str>,
 ) {
-    if backend != "react" && backend != "xaml" {
+    // Pipeline mode supports every backend with a `pipeline::from_pipeline`
+    // entry point. The mosaic-package-artifact-builder crate calls each
+    // backend through the same surface, so they're all wire-compatible
+    // here. The `match backend` below dispatches to each. Reject only
+    // genuinely-unwired backends ("paint", which is legacy single-file
+    // only) with a clear "use legacy SOURCE mode" error.
+    if backend == "paint" {
         eprintln!(
-            "mosaic-compile: pipeline mode (--interface/--layout/--style) \
-             currently supports --backend react or --backend xaml (got '{backend}'). \
-             Use legacy SOURCE mode for other backends."
+            "mosaic-compile: pipeline mode does not support --backend paint \
+             (raster output flows through the legacy single-file pipeline). \
+             Use SOURCE mode with a .mosaic file."
         );
         process::exit(1);
     }
@@ -472,12 +634,22 @@ fn run_pipeline(
         process::exit(1);
     });
 
+    // -- 1b. Resolve the layout file (UI30 multi-layout) -------------------
+    //
+    // When `--layout` is a file path, this is a no-op (back-compat with
+    // every existing build script). When it's a directory, we resolve
+    // <Component>.<variant>.mll inside it with fallback to bare
+    // <Component>.mll. See `resolve_layout_path` for the rules.
+    let resolved_layout_path =
+        resolve_layout_path(layout_path, &mosmodel_out.component.component, variant);
+
     // -- 2. Compile the moslayout file --------------------------------------
     //
     // We pass the descriptor JSON so the moslayout compiler can check that
     // every `@slot` and `emit onX` reference resolves correctly.
+    let layout_path = resolved_layout_path.as_str();
     let layout_src = read_file_or_die(layout_path);
-    let layout_out =
+    let mut layout_out =
         moslayout_compiler::compile(&layout_src, Some(&mosmodel_out.descriptor_json))
             .unwrap_or_else(|errs| {
                 eprintln!("mosaic-compile: moslayout error(s) in {layout_path}:");
@@ -486,6 +658,71 @@ fn run_pipeline(
                 }
                 process::exit(1);
             });
+
+    // -- 2b. UI34 — resolve `pkg::P::C` qualified references -------------
+    //
+    // Walk the freshly-parsed `LayoutDef` and substitute every qualified
+    // reference with the package's resolved sub-tree.  After this pass
+    // the layout contains only kernel primitives and same-file local
+    // references — exactly the surface every backend emitter already
+    // handles.  The resolver is a no-op when the consumer's layout
+    // contains zero `pkg::` references, so unqualified-only builds
+    // (every pre-UI34 demo) are byte-identical to before.
+    //
+    // Search paths: explicit `--package-search-path` wins; otherwise
+    // we default to `code/packages/` relative to the cwd, which makes
+    // monorepo builds work out of the box.  The default is empty (no
+    // search) only when `code/packages/` does not exist, so single-file
+    // projects without any packages do not pay an I/O cost.
+    let search_paths: Vec<PathBuf> = match package_search_path {
+        Some(s) => s.split(':').map(PathBuf::from).collect(),
+        None => {
+            let default = PathBuf::from("code/packages");
+            if default.is_dir() {
+                vec![default]
+            } else {
+                Vec::new()
+            }
+        }
+    };
+    let resolver = mosaic_package_resolver::LayoutPackageResolver::new(search_paths);
+    if let Err(e) = resolver.resolve(&mut layout_out.def) {
+        eprintln!("mosaic-compile: package-resolver error in {layout_path}:");
+        eprintln!("  {e:?}");
+        process::exit(1);
+    }
+    if let Some(t) = mosaic_package_resolver::first_qualified_tag(&layout_out.def.root) {
+        // Defensive — the resolver should leave no qualified tags
+        // behind.  If one slips through we exit cleanly rather than
+        // letting it confuse the backend emitter.
+        eprintln!(
+            "mosaic-compile: internal error: package-resolver left \
+             qualified tag `{t}` in the layout"
+        );
+        process::exit(1);
+    }
+    // Re-run `validate()` on the resolved tree so the part-map JSON
+    // reflects the package's inlined parts.  Without this, the
+    // consumer's `.msl` would reject the package's part names as
+    // unknown — they came from the package's `.mll`, not the
+    // consumer's.  Resolution is also a chance for the validator to
+    // catch any slot/emit mismatches that survived the package call,
+    // surfacing them with the same UnknownSlot / UnknownEmit
+    // diagnostics that pre-UI34 builds get.
+    let resolved_parts =
+        moslayout_compiler::validate(&layout_out.def, Some(&mosmodel_out.descriptor_json))
+            .unwrap_or_else(|errs| {
+                eprintln!(
+                    "mosaic-compile: moslayout post-resolver validation error(s) in {layout_path}:"
+                );
+                for e in errs {
+                    eprintln!("  {e:?}");
+                }
+                process::exit(1);
+            });
+    layout_out.parts = resolved_parts;
+    layout_out.part_map_json =
+        moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
 
     // -- 3. Compile the mosstyle file ---------------------------------------
     //
@@ -506,10 +743,18 @@ fn run_pipeline(
     // files (one per `For` block).
     match backend {
         "react" => {
-            let result = mosaic_emit_react::pipeline::from_pipeline(
+            // UI32-K-react: route through `from_pipeline_with_options`
+            // so the `--emit-project` flag activates the Vite shell
+            // emission. Bare invocation (emit_project: false) is
+            // behaviourally identical to the pre-UI32 single-file
+            // path — same TSX bytes, same exit code.
+            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
+            react_opts.emit_project = emit_project;
+            let result = mosaic_emit_react::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
                 &style_out.def,
+                &react_opts,
             )
             .unwrap_or_else(|e| {
                 eprintln!("mosaic-compile: react pipeline emit error: {e}");
@@ -520,6 +765,44 @@ fn run_pipeline(
                 .unwrap_or_else(|| format!("{}.tsx", result.component_name));
             write_file_or_die(&out, &result.output);
             eprintln!("Written: {out}");
+
+            // UI32-K-react: when --emit-project is on, write the
+            // five Vite shell side-files into the same directory
+            // as the component TSX. Mirrors the XAML path below.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                // Flat side-files: package.json / vite.config.ts /
+                // index.html / README.md sit next to the .tsx.
+                let flat: [(String, &str); 4] = [
+                    (side_file_path("package.json"), &proj.package_json),
+                    (side_file_path("vite.config.ts"), &proj.vite_config),
+                    (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                // src/main.tsx is nested per Vite convention.
+                let main_tsx_path = side_file_path("src/main.tsx");
+                if let Some(parent) = std::path::Path::new(&main_tsx_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&main_tsx_path, &proj.main_tsx);
+                eprintln!("Written: {main_tsx_path}");
+            }
         }
         "xaml" => {
             let mut opts = mosaic_emit_xaml::EmitOptions::default();
@@ -610,24 +893,338 @@ fn run_pipeline(
                 eprintln!("Written: {readme_path}");
             }
         }
+        // -------- HTML / WebComponent / SwiftUI / Qt / Flutter -------------
+        //
+        // All five share the same "single-file output" shape: each
+        // backend's `pipeline::from_pipeline` returns one string, we
+        // write it to `output_path` (or `<Component>.<ext>` if omitted).
+        // Output extensions per backend match the artifact-builder.
+        "html" => {
+            // UI32-K-html: route through `from_pipeline_with_options`
+            // so the `--emit-project` flag activates the standalone-
+            // HTML shell emission. Bare invocation (emit_project:
+            // false) is byte-identical to pre-UI32 behaviour — same
+            // .html fragment, same exit code.
+            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
+            html_opts.emit_project = emit_project;
+            let result = mosaic_emit_html::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &html_opts,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: html pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.html", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-html: when --emit-project is on, write the two
+            // shell side-files (index.html + README.md) flat next to
+            // the component .html fragment.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+            }
+        }
+        "webcomponent" => {
+            // UI32-K-webcomp: route through `from_pipeline_with_options`
+            // so the `--emit-project` flag activates the standalone-
+            // HTML shell. Bare invocation (emit_project: false) is
+            // byte-identical to pre-UI32 behaviour — same .js, no
+            // new files.
+            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
+            wc_opts.emit_project = emit_project;
+            let result = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &wc_opts,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: webcomponent pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.js", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-webcomp: when --emit-project is on, write the
+            // two shell side-files (index.html + README.md) flat
+            // next to the component .js.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+            }
+        }
+        "swiftui" => {
+            // UI32-K-swiftui: route through from_pipeline_with_options
+            // so --emit-project activates the SwiftPM macOS shell.
+            // Bare invocation is byte-identical to pre-UI32.
+            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
+            sw_opts.emit_project = emit_project;
+            let result = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &sw_opts,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: swiftui pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.swift", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-swiftui: emit Package.swift + README.md flat;
+            // Sources/App/App.swift nested per SwiftPM convention.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("Package.swift"), &proj.package_swift),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                let app_swift_path = side_file_path("Sources/App/App.swift");
+                if let Some(parent) = std::path::Path::new(&app_swift_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&app_swift_path, &proj.app_swift);
+                eprintln!("Written: {app_swift_path}");
+            }
+        }
+        "qt" => {
+            // UI32-K-qt: route through `from_pipeline_with_options`
+            // so --emit-project activates the Qt6 + CMake shell.
+            // Bare invocation is byte-identical to pre-UI32.
+            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
+            qt_opts.emit_project = emit_project;
+            let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &qt_opts,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: qt pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.qml", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-qt: emit CMakeLists.txt + main.cpp + qmldir +
+            // README.md flat next to the .qml.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 4] = [
+                    (side_file_path("CMakeLists.txt"), &proj.cmake_lists),
+                    (side_file_path("main.cpp"), &proj.main_cpp),
+                    (side_file_path("qmldir"), &proj.qmldir),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+            }
+        }
+        "flutter" => {
+            // UI32-K-flutter: route through `from_pipeline_with_options`
+            // so --emit-project activates the Flutter app shell.
+            // Bare invocation is byte-identical to pre-UI32.
+            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
+            fl_opts.emit_project = emit_project;
+            let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &fl_opts,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: flutter pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.dart", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+
+            // UI32-K-flutter: emit pubspec.yaml + README.md flat
+            // next to .dart; lib/main.dart nested per Flutter
+            // convention.
+            if let Some(proj) = &result.project {
+                let side_file_path = |relative: &str| -> String {
+                    match std::path::Path::new(&out).parent() {
+                        Some(p) if !p.as_os_str().is_empty() => {
+                            p.join(relative).to_string_lossy().into_owned()
+                        }
+                        _ => relative.to_string(),
+                    }
+                };
+                let flat: [(String, &str); 2] = [
+                    (side_file_path("pubspec.yaml"), &proj.pubspec_yaml),
+                    (side_file_path("README.md"), &proj.readme),
+                ];
+                for (path, src) in &flat {
+                    write_file_or_die(path, src);
+                    eprintln!("Written: {path}");
+                }
+                let main_dart_path = side_file_path("lib/main.dart");
+                if let Some(parent) = std::path::Path::new(&main_dart_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&main_dart_path, &proj.main_dart);
+                eprintln!("Written: {main_dart_path}");
+            }
+        }
+        "compose" => {
+            // mosaic-emit-compose v0.1.0 — Jetpack Compose /
+            // Compose Multiplatform Kotlin codegen.  Targets both
+            // Android (Jetpack Compose) and Desktop / iOS / Web
+            // (Compose Multiplatform) from the same `.kt` output.
+            let result = mosaic_emit_compose::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: compose pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.kt", result.component_name));
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+        }
         _ => {
-            // Already validated above; defensive.
             eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");
             process::exit(1);
         }
     }
 }
 
+/// Shared helper for backends whose pipeline emit produces a single
+/// output file. Resolves the output path (override or default
+/// `<Component>.<ext>`), writes the bytes, and logs to stderr.
+///
+/// Splitting this out keeps the per-backend match arms one-liner-like
+/// — pre-UI30 the React arm was the only single-file path, but with
+/// HTML/WebComponent/SwiftUI/Qt/Flutter all wired the same way, a
+/// shared helper avoids five copies of the same write+log boilerplate.
+fn emit_single_file<E: std::fmt::Display>(
+    backend: &str,
+    output_path: Option<&str>,
+    component_name: &str,
+    ext: &str,
+    result: Result<String, E>,
+) {
+    let body = result.unwrap_or_else(|e| {
+        eprintln!("mosaic-compile: {backend} pipeline emit error: {e}");
+        process::exit(1);
+    });
+    let out = output_path
+        .map(str::to_string)
+        .unwrap_or_else(|| format!("{component_name}.{ext}"));
+    write_file_or_die(&out, &body);
+    eprintln!("Written: {out}");
+}
+
 // ===========================================================================
 // `pkg` subcommand — package-artifact build (UI29 §4.3)
 // ===========================================================================
+
+const PKG_BACKENDS: &str = "react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose";
+
+fn pkg_backend_from_str(value: &str) -> Option<Backend> {
+    match value {
+        "react" => Some(Backend::React),
+        "electron" => Some(Backend::Electron),
+        "swiftui" => Some(Backend::SwiftUI),
+        "qt" => Some(Backend::Qt),
+        "xaml" => Some(Backend::Xaml),
+        "webcomponent" => Some(Backend::WebComponent),
+        "html" => Some(Backend::Html),
+        "flutter" => Some(Backend::Flutter),
+        "compose" => Some(Backend::Compose),
+        _ => None,
+    }
+}
 
 /// Drive `mosaic_package_artifact_builder::build_package` from the CLI.
 ///
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|swiftui|qt> --output <DIR>
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project]
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -662,29 +1259,32 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    // Map the string to the typed `Backend`. The artifact builder accepts
-    // the un-wired variants too (so callers can type the API surface
-    // uniformly) but they return `UnsupportedBackend` immediately; we
-    // forward that as-is below.
-    let backend = match backend_str {
-        "react" => Backend::React,
-        "swiftui" => Backend::SwiftUI,
-        "qt" => Backend::Qt,
-        "webcomponent" => Backend::WebComponent,
-        "html" => Backend::Html,
-        other => {
-            eprintln!(
-                "mosaic-compile pkg: --backend must be one of \
-                 react|swiftui|qt|webcomponent|html, got '{other}'"
-            );
-            process::exit(1);
-        }
-    };
+    // UI32-M: read the same `--emit-project` flag that the single-
+    // component path uses. When on, the artifact-builder will write
+    // a per-backend project shell mounting the first component
+    // alongside the per-component artifacts.
+    let emit_project = flags
+        .get("emit-project")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+
+    // Map the string to the typed `Backend`.
+    let backend = pkg_backend_from_str(backend_str).unwrap_or_else(|| {
+        eprintln!(
+            "mosaic-compile pkg: --backend must be one of {PKG_BACKENDS}, got '{backend_str}'"
+        );
+        process::exit(1);
+    });
 
     let opts = BuildOptions {
         package_root: PathBuf::from(package_root),
         output_root: PathBuf::from(output),
         backend,
+        // UI32-M: forward the CLI's --emit-project flag into the
+        // artifact-builder. When on, the builder writes a per-
+        // backend project shell mounting the first component
+        // alongside the per-component artifacts.
+        emit_project,
     };
 
     match build_package(&opts) {
@@ -721,7 +1321,10 @@ fn write_file_or_die(path: &str, content: &str) {
     if let Some(parent) = Path::new(path).parent() {
         if !parent.as_os_str().is_empty() {
             fs::create_dir_all(parent).unwrap_or_else(|e| {
-                eprintln!("mosaic-compile: cannot create directory {}: {e}", parent.display());
+                eprintln!(
+                    "mosaic-compile: cannot create directory {}: {e}",
+                    parent.display()
+                );
                 process::exit(1);
             });
         }
@@ -741,7 +1344,10 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
     if let Some(parent) = Path::new(path).parent() {
         if !parent.as_os_str().is_empty() {
             fs::create_dir_all(parent).unwrap_or_else(|e| {
-                eprintln!("mosaic-compile: cannot create directory {}: {e}", parent.display());
+                eprintln!(
+                    "mosaic-compile: cannot create directory {}: {e}",
+                    parent.display()
+                );
                 process::exit(1);
             });
         }
@@ -755,6 +1361,23 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn pkg_backend_mapping_exposes_native_and_web_package_backends() {
+        assert_eq!(pkg_backend_from_str("react"), Some(Backend::React));
+        assert_eq!(pkg_backend_from_str("electron"), Some(Backend::Electron));
+        assert_eq!(pkg_backend_from_str("swiftui"), Some(Backend::SwiftUI));
+        assert_eq!(pkg_backend_from_str("qt"), Some(Backend::Qt));
+        assert_eq!(pkg_backend_from_str("xaml"), Some(Backend::Xaml));
+        assert_eq!(
+            pkg_backend_from_str("webcomponent"),
+            Some(Backend::WebComponent)
+        );
+        assert_eq!(pkg_backend_from_str("html"), Some(Backend::Html));
+        assert_eq!(pkg_backend_from_str("flutter"), Some(Backend::Flutter));
+        assert_eq!(pkg_backend_from_str("compose"), Some(Backend::Compose));
+        assert_eq!(pkg_backend_from_str("paint"), None);
+    }
 
     /// `build_self_package_registry` returns None when no manifest
     /// path is provided.
@@ -794,13 +1417,13 @@ version = "1"
         )
         .unwrap();
 
-        let r = build_self_package_registry(
-            Some(mpath.to_str().unwrap()),
-            "Field",
-            "Mosaic.Generated",
-        );
+        let r =
+            build_self_package_registry(Some(mpath.to_str().unwrap()), "Field", "Mosaic.Generated");
         let reg = r.expect("registry built from valid manifest");
-        assert!(reg.lookup("Button").is_some(), "Button should be registered");
+        assert!(
+            reg.lookup("Button").is_some(),
+            "Button should be registered"
+        );
         assert!(reg.lookup("Input").is_some(), "Input should be registered");
         assert!(
             reg.lookup("Field").is_none(),
@@ -844,11 +1467,8 @@ version = "1"
 "#,
         )
         .unwrap();
-        let r = build_self_package_registry(
-            Some(mpath.to_str().unwrap()),
-            "Card",
-            "Mosaic.Generated",
-        );
+        let r =
+            build_self_package_registry(Some(mpath.to_str().unwrap()), "Card", "Mosaic.Generated");
         assert!(r.is_none());
         std::fs::remove_dir_all(&tmp).ok();
     }
@@ -862,5 +1482,101 @@ version = "1"
             "Mosaic.Generated",
         );
         assert!(r.is_none());
+    }
+
+    // -- UI30 multi-layout — resolve_layout_path tests ----------------------
+    //
+    // The error paths in resolve_layout_path() call process::exit(1)
+    // which would terminate the test runner. We only cover the happy
+    // paths here; error behaviour is verified in CHANGELOG via manual
+    // smoke tests + would deserve an integration-test harness using
+    // std::process::Command in a follow-up if we wanted full coverage.
+
+    fn unique_tmpdir(label: &str) -> std::path::PathBuf {
+        let p = std::env::temp_dir().join(format!(
+            "ui30-resolve-{label}-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&p).unwrap();
+        p
+    }
+
+    /// File-path mode: `resolve_layout_path` returns the path
+    /// unchanged regardless of variant. This is the back-compat
+    /// guarantee for every existing build script.
+    #[test]
+    fn resolve_file_path_returns_unchanged() {
+        let dir = unique_tmpdir("file-mode");
+        let file = dir.join("Grid.desktop.mll");
+        std::fs::write(&file, "layout Grid { Box }").unwrap();
+        let s = file.to_str().unwrap();
+
+        // Without --variant.
+        let r1 = resolve_layout_path(s, "Grid", None);
+        assert_eq!(r1, s);
+
+        // With --variant (warning logged; flag ignored).
+        let r2 = resolve_layout_path(s, "Grid", Some("touch"));
+        assert_eq!(r2, s);
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Directory mode with the requested variant file present: the
+    /// variant file is preferred over the bare default.
+    #[test]
+    fn resolve_directory_picks_variant_file_when_present() {
+        let dir = unique_tmpdir("variant-present");
+        std::fs::write(dir.join("Grid.touch.mll"), "layout Grid { Box }").unwrap();
+        std::fs::write(dir.join("Grid.mll"), "layout Grid { Box }").unwrap();
+
+        let r = resolve_layout_path(dir.to_str().unwrap(), "Grid", Some("touch"));
+        assert!(
+            r.ends_with("Grid.touch.mll"),
+            "expected variant-suffixed path, got {r}"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Directory mode with no variant file: falls back to bare
+    /// `<Component>.mll` (the default variant). Mirrors CSS's
+    /// `@media` cascade — touch host gracefully degrades to desktop.
+    #[test]
+    fn resolve_directory_falls_back_to_bare_default() {
+        let dir = unique_tmpdir("fallback");
+        std::fs::write(dir.join("Grid.mll"), "layout Grid { Box }").unwrap();
+
+        let r = resolve_layout_path(dir.to_str().unwrap(), "Grid", Some("touch"));
+        // Path should end with `/Grid.mll` (not `Grid.touch.mll`).
+        let pb = std::path::PathBuf::from(&r);
+        assert_eq!(
+            pb.file_name().unwrap().to_str().unwrap(),
+            "Grid.mll",
+            "expected fallback to bare Grid.mll, got {r}"
+        );
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    /// Directory mode without `--variant` looks only at the bare
+    /// default file. The string `default` is reserved per spec §3.2
+    /// — supplying it explicitly is equivalent to omitting the flag.
+    #[test]
+    fn resolve_directory_no_variant_uses_bare_default() {
+        let dir = unique_tmpdir("no-variant");
+        std::fs::write(dir.join("Grid.mll"), "layout Grid { Box }").unwrap();
+        // Decoy: a variant file exists but isn't requested.
+        std::fs::write(dir.join("Grid.touch.mll"), "layout Grid { Box }").unwrap();
+
+        let r1 = resolve_layout_path(dir.to_str().unwrap(), "Grid", None);
+        let r2 = resolve_layout_path(dir.to_str().unwrap(), "Grid", Some("default"));
+        assert!(r1.ends_with("Grid.mll") && !r1.ends_with("Grid.touch.mll"));
+        assert_eq!(r1, r2, "--variant default must equal omitting --variant");
+
+        std::fs::remove_dir_all(&dir).ok();
     }
 }

@@ -1,0 +1,235 @@
+# Changelog
+
+All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
+
+## [0.12.1] - 2026-07-02
+
+### Changed — CLOC12.158: exhaustiveness for new `Expression::UpdateExpression`
+
+Handle the new `Expression::UpdateExpression` (`++x` / `x++` / `--x` / `x--`)
+variant added to `javascript-ast` (0.17.0): the pass recurses into the operand for classification and rewriting. No behaviour
+change for existing inputs — the bridge does not yet produce update
+expressions (that lands in the CLOC12.158 PR2 bridge-enable), so these arms
+are exercised only via hand-constructed AST today.
+
+## [0.12.0] - 2026-07-02
+
+### Added — CLOC12.154: `TemplateLiteral` traversal
+
+Handle the new `Expression::TemplateLiteral` variant by recursing into its `${{…}}` sub-expressions (the `expressions` vector); the `quasis` are fixed leaf string segments with nothing to recurse. Part of the atomic `TemplateLiteral` enum-variant rollout (javascript-ast 0.16.0) — adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR. Template literals introduce no bindings or scopes, so the renaming/inlining arms need no map reduction.
+
+## [0.11.0] - 2026-07-02
+
+### Added — CLOC12.151: `ArrowFunctionExpression` traversal
+
+Handle the new `Expression::ArrowFunctionExpression` variant by recursing into arrow bodies — both the block form (`x => { ... }`) and the concise/expression form (`x => expr`) — mirroring this pass's existing `FunctionExpression` handling. Part of the atomic `ArrowFunctionExpression` enum-variant rollout (javascript-ast 0.15.0); adding the variant makes every exhaustive `match` on `Expression` non-exhaustive, so all consumers gain their arm in one PR. (Params are variable names, never property names, so no map reduction is needed.)
+
+## [0.10.0] - 2026-07-01
+
+### Added — CLOC12.149: rename properties inside `FunctionExpression`
+
+`classify_expr` and `rewrite_expr` recurse into a `FunctionExpression`
+body so a quoted `o["foo"]` written there still disables renaming of
+`foo`, and dotted accesses inside are rewritten. Variable bindings
+(name/params) never touch the property namespace.
+
+## [0.9.1] - 2026-07-01
+
+### Added — CLOC12 upstream test port (`RenamePropertiesTest`)
+
+Ported the applicable cases from Google Closure Compiler's
+`RenamePropertiesTest.java` into `tests/upstream/rename_properties_test.rs`,
+following the CLOC12.01 convention (header cites the Java source; `UPSTREAM_SHA`
+pins the tracked commit; `ATTRIBUTION.md` records Apache-2.0 provenance; a
+`[[test]]` entry wires the file in). Like the `rename-globals` port, the pass
+exposes a source-string surface through public crate APIs, so each case drives
+the real `source → bridge → rename → emit` chain and asserts on the emitted
+string.
+
+- **8 active `#[test]`s pass**: a private property renamed consistently across
+  dotted reads, reads-and-object-literal-keys collapsing to one short name,
+  distinct names assigned down a member chain (`a.a.b`), quoted-access poisoning
+  the rename (`o["mode"]` leaves `.mode` alone), built-in / DOM names left
+  untouched, a single-character property un-shortened, a computed-subscript
+  index untouched, and an externs property preserved.
+- **No new closurec bug** — every active expectation matched the pass on the
+  first run.
+- **3 `#[ignore = "blocked on gap-NNN"]` placeholders** for upstream behavior the
+  name-based pass does not cover: type-/heap-aware disambiguation of same-named
+  properties (gap-138), frequency-ordered short-name assignment (gap-139), and a
+  cross-module shared rename map (gap-140). Pinned to
+  `code/specs/CLOC12-gaps.md` §CLOC12.140; run with `--include-ignored` to track
+  progress as they close.
+
+No library code changed — this release is test coverage plus docs.
+
+## [0.9.0] - 2026-06-30
+
+### Added — correlation-vector rename provenance (#89)
+
+Mirrors the rename-globals pass. Renaming is a transformation, not a deletion,
+so this pass now records each property rename as a `renamed` **contribution**
+carrying `{from, to}`. Before, `run()` returned `contributions: Vec::new()` and
+never touched the CV log, so property renaming silently erased the link between
+a minified property (`o.a`) and its original name (`o.longProp`): a
+`--correlation_vector` consumer had no way to recover it.
+
+`rename_properties` now returns its applied rename table (`(from, to)` pairs,
+sorted by original name for deterministic output) alongside the `changed` flag,
+and `run` maps each pair to a `Contribution{source:"rename-properties",
+tag:"renamed", meta:{from, to}}`. The pipeline attaches these to the
+program-root CV entry, so the rename table becomes queryable provenance.
+
+- **Byte-for-byte identical program output** — the renames applied are exactly
+  as before; only the returned `contributions` list is now populated. All 24
+  existing output tests are unchanged.
+- Two new tests: a renamed property emits one `renamed` contribution with the
+  right `from`/shorter `to`; a program whose only property is a built-in
+  (`o.length`) emits none.
+- `correlation-vector` moved from dev- to regular dependency; `serde_json` added
+  (for `Contribution.meta`). Crate version 0.8.0 → 0.9.0.
+
+**Scope / follow-up.** This attaches the rename *table* at the program root.
+Per-output-span provenance — contributing to each renamed property occurrence's
+own CV id — needs the log threaded through the `rewrite_*` recursion and is a
+documented follow-up.
+
+## [0.8.0] - 2026-06-20
+
+### Added — CLOC23: property renaming recurses through `for`-`of`
+
+`classify_stmt` and `rewrite_stmt` recurse through `ForOfStatement` (left / right
+/ body) so property accesses inside a for-of loop and in the iterable expression
+are renamed consistently — identical to the `for`-`in` handling.
+
+## [0.7.0] - 2026-06-20
+
+### Added — CLOC22: property renaming recurses through `for`-`in`
+
+`classify_stmt` and `rewrite_stmt` recurse through `ForInStatement` (left / right
+/ body) so property accesses inside a for-in loop — including `obj[key]` member
+reads in the body and the enumerated right-hand expression — are renamed
+consistently.
+
+## [0.6.0] - 2026-06-20
+
+### Added — CLOC21: handle `DebuggerStatement`
+
+`classify_stmt` and `rewrite_stmt` now cover `DebuggerStatement` (grouped with
+the other childless leaf statements) as a no-op. A `debugger;` has no property
+accesses — added to keep the matches exhaustive over the new AST variant.
+
+## [0.5.0] - 2026-06-20
+
+### Added — CLOC20: property renaming recurses through `do`/`while`
+
+`classify_stmt` and `rewrite_stmt` recurse through `DoWhileStatement` (loop body
+and test) so property accesses inside a do-while loop are renamed consistently.
+
+## [0.4.0] - 2026-06-20
+
+### Added — CLOC19: property renaming recurses through `try`/`catch`/`finally`
+
+`classify_stmt` and `rewrite_stmt` recurse through `TryStatement` so property
+accesses inside the protected block, catch handler, and finalizer are renamed
+consistently. No catch-param handling is required here: property renaming
+operates on member/key names, not variable bindings, so the catch `param` (a
+variable binding) is irrelevant to this pass.
+
+## [0.3.0] - 2026-06-18
+
+### Added (CLOC13.L — bundled DOM/host property boundary, `DOM_PROPERTIES`)
+
+A curated `DOM_PROPERTIES` list (~300 names) is now **always protected**
+alongside the ECMAScript `BUILTIN_PROPERTIES`, closing the documented gap
+that "the built-in list covers ECMAScript but NOT the DOM/host." Common
+browser-surface property names — `innerHTML`, `textContent`, `classList`,
+`addEventListener`, `onclick`/`onload`/… inline handlers, `querySelector`,
+`getAttribute`, `style`, `dataset`, Window/Document/Location/History/
+Storage/Navigator members, XHR/fetch/Response fields, drag-and-drop, and
+event-object properties — are kept out of the box, so the pass no longer
+renames a DOM property the author never listed in `--externs` (which would
+silently break browser code).
+
+- **Always-on, additive, sound.** The protected baseline is now
+  `BUILTIN_PROPERTIES ∪ DOM_PROPERTIES`; `--externs` still unions on top.
+  Over-protecting a program-private property that happens to share a DOM
+  name merely forgoes a rename — never a miscompile (the same posture the
+  ECMAScript list already had). The bundle is a safety net, not a
+  replacement: vendor-/library-specific external properties still need a
+  `--externs` file, which remains the authoritative boundary.
+- Grouped by host area (EventTarget/events, inline `on*` handlers,
+  Node/Element, classList, form/input, attributes, CSSOM, Document, Window,
+  Location/History/Storage/Navigator, XHR/fetch/Response, drag-and-drop) for
+  auditability.
+- 2 new tests: a DOM property (`innerHTML`/`addEventListener`/`onclick`) is
+  kept with no `--externs` while a program-private property is still
+  renamed; a lone unlisted DOM property is kept (the safety net).
+
+## [0.2.0] - 2026-06-18
+
+### Added (CLOC13.K — `collect_property_names`, the externs property boundary)
+
+A public function `collect_property_names(program) -> HashSet<String>` that
+returns **every property name appearing anywhere** in a program — dotted member
+accesses (`el.innerHTML`), quoted member accesses (`obj["data-id"]`), unquoted
+object keys (`{ onload: f }`), and quoted object keys (`{ "aria-label": s }`).
+
+This is the property-namespace analogue of collecting an externs file's
+top-level variable/function names (the value-namespace boundary). A driver
+(closurec) walks each `--externs` file through this function and unions the
+results into the `do_not_rename` set it hands `RenamePropertiesPass::new`, so the
+external host/library property surface is preserved while program-private
+properties are still shortened.
+
+- **Over-collects on purpose.** Both renameable (dotted) and off-limits (quoted)
+  occurrences are returned: as an externs boundary, every named property is
+  external and must be protected. Forgoing a rename is never a miscompile;
+  renaming a genuinely external property is. Dynamic computed keys
+  (`obj[runtimeExpr]`) contribute nothing — there is no static name to protect.
+- Reuses the pass's existing whole-program `classify_item` walk (no second
+  traversal implementation to keep in sync).
+- 9 new unit tests + 1 doctest covering each occurrence shape, dynamic-key
+  exclusion, function-body recursion, and an end-to-end "collected externs
+  protect a property" round-trip.
+
+## [0.1.0] - 2026-06-18
+
+### Added (CLOC13.J — aggressive property renaming, algorithmic core)
+
+New crate per CLOC06's canonical pass set — Closure Compiler's `RENAME_PROPERTIES`
+in miniature. `RenamePropertiesPass::run` consistently shortens program-private
+object **property names** across the whole program (every dotted `obj.x` member
+access and every unquoted `{ x: … }` key of a renameable name → a fresh short
+name). Property access is by name, so renaming a name at every occurrence is
+semantics-preserving regardless of which objects carry it.
+
+- **ADVANCED-only, sound under the externs contract.** A property name is
+  renamed only when it: appears dotted/unquoted; is NOT quoted via a computed
+  string member (`obj["x"]` — the bridge preserves this signal); is not a
+  `BUILTIN_PROPERTIES` (a bundled ECMAScript default-externs substitute —
+  `length`, `prototype`, `toString`, `push`, …); is not in the externs
+  do-not-rename set; and is longer than one character. Each renameable property
+  gets a distinct fresh name. Property names live in their own namespace, so the
+  fresh name only avoids other property names + the built-ins + the externs set.
+- **Honest limitations (documented in the crate):**
+  - The built-in list covers ECMAScript but NOT the DOM/host — host property
+    names (`innerHTML`, `addEventListener`, …) must be supplied via `--externs`.
+  - The parser bridge currently collapses a *quoted object key* `{ "x": 1 }` to
+    an identifier key, so object-key quoting is not a usable do-not-rename
+    signal (only computed-member quoting `obj["x"]` is); protect such names via
+    externs. (A separate bridge fix is tracked.)
+  - Dynamic computed access `obj[runtimeString]` is the author's contract
+    responsibility, exactly as in Closure.
+- `name = "rename-properties"`, `depends_on = []`, `iteration_policy = OneShot`,
+  `cost = 3`. `new(do_not_rename)` / `with_builtins_only()`.
+
+This is the algorithmic core; wiring into ADVANCED (collecting externs property
+names + deciding the safe-by-default policy — require externs / bundle DOM
+externs) is a deliberate follow-up.
+
+### Tests
+- 13 tests: metadata contract + source → bridge → rename-properties → emit
+  roundtrips covering consistent dotted+object-key renaming, computed-member
+  quoting decline, built-in protection, externs protection, dynamic computed
+  key, single-char skip, and a nested property chain.

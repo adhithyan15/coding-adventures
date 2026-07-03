@@ -1,0 +1,23 @@
+{
+  "_doc": "FHIR code -> dictionary-finding map. The open chart format EHRs expose is HL7 FHIR; its labs/vitals/problems carry CODED data (LOINC for observations, SNOMED for conditions) plus an INTERPRETATION flag (HL7 v3 ObservationInterpretation: H=high, L=low, N=normal, POS=positive, NEG=negative). When the chart is already coded we can map it to typed findings DETERMINISTICALLY — 0 model calls even for the decompose step (the ultimate privacy/efficiency case: structured chart in, typed findings out, no model at all). Only narrative/uncoded resources fall back to the small-model decomposer. Codes here are real LOINC/SNOMED; the value-derivation rule per finding is named. Authored from standard code systems (not spider-grounded) — one edit overridable, the same honesty boundary as the rest of MYCIN-2026.",
+  "interpretation_system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+  "loinc_system": "http://loinc.org",
+  "snomed_system": "http://snomed.info/sct",
+  "observations": {
+    "2342-4":  {"functor": "csf_glucose", "from": "interpretation", "map": {"L": "low", "N": "normal"}, "label": "CSF glucose (LOINC 2342-4)"},
+    "2880-3":  {"functor": "csf_protein", "from": "interpretation", "map": {"H": "high", "N": "normal"}, "label": "CSF protein (LOINC 2880-3)"},
+    "2520-5":  {"functor": "csf_lactate", "from": "interpretation", "map": {"H": "high", "N": "normal"}, "label": "CSF lactate (LOINC 2520-5)"},
+    "30451-9": {"functor": "csf_neutrophilic_pleocytosis", "from": "interpretation", "map": {"H": "high", "N": "normal"}, "label": "CSF neutrophils (LOINC 30451-9, neutrophils/100 leukocytes in CSF)"},
+    "26478-8": {"functor": "csf_lymphocytic_pleocytosis", "from": "interpretation", "map": {"H": "high", "N": "normal"}, "label": "CSF lymphocytes (LOINC 26478-8)"},
+    "664-3":   {"functor": "csf_gram_stain", "from": "interpretation", "map": {"POS": "positive", "NEG": "negative", "A": "positive"}, "label": "CSF Gram stain (LOINC 664-3)"},
+    "600-7":   {"functor": "csf_culture", "from": "interpretation", "map": {"POS": "positive", "NEG": "negative"}, "label": "CSF bacterial culture (LOINC 600-7)"},
+    "82198-1": {"functor": "enteroviral_pcr", "from": "interpretation", "map": {"POS": "positive", "NEG": "negative"}, "label": "Enterovirus RNA in CSF by PCR (LOINC 82198-1)"},
+    "33959-8": {"functor": "serum_procalcitonin", "from": "interpretation", "map": {"H": "high", "N": "normal"}, "label": "Serum procalcitonin (LOINC 33959-8)"},
+    "8310-5":  {"functor": "fever", "from": "temperature_celsius", "threshold": 38.0, "above": "present", "at_or_below": "absent", "label": "Body temperature (LOINC 8310-5); fever if > 38 °C"}
+  },
+  "conditions": {
+    "91175000":  {"functor": "seizure", "value": "present", "label": "Seizure (SNOMED 91175000)"},
+    "161115002": {"functor": "meningismus", "value": "present", "label": "Neck stiffness / nuchal rigidity (SNOMED 161115002)"},
+    "386661006": {"functor": "fever", "value": "present", "label": "Fever symptom (SNOMED 386661006)"}
+  }
+}

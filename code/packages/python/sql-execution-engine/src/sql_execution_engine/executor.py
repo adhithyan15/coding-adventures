@@ -655,31 +655,77 @@ def _extract_order_item(item: ASTNode) -> tuple[ASTNode | Token, bool]:
 # ---------------------------------------------------------------------------
 
 
+def _signed_number_value(node: ASTNode) -> int:
+    """Resolve a ``signed_number = [ "-" ] NUMBER`` AST node to an int.
+
+    The grammar now wraps each LIMIT number in a ``signed_number``
+    rule so a leading ``-`` can be parsed without ambiguity.  We walk
+    the children: collect the optional MINUS sign, then parse the
+    NUMBER token.
+    """
+    negative = False
+    number_text: str | None = None
+    for c in node.children:
+        if isinstance(c, Token):
+            if c.value == "-":
+                negative = True
+            elif c.value.isdigit() or c.value.startswith("0x") or c.value.startswith("0X"):
+                number_text = c.value
+            else:
+                # Fallback: any non-empty numeric-looking value.
+                number_text = c.value
+    if number_text is None:
+        return 0
+    value = int(number_text, 0) if number_text.startswith(("0x", "0X")) else int(number_text)
+    return -value if negative else value
+
+
 def _apply_limit(
     rows: list[dict[str, Any]],
     limit_clause: ASTNode,
 ) -> list[dict[str, Any]]:
     """Apply LIMIT and optional OFFSET to the row list.
 
-    Grammar: ``limit_clause = "LIMIT" NUMBER [ "OFFSET" NUMBER ]``
+    Grammar (updated in sql-parser 0.43)::
+
+        limit_clause  = "LIMIT" signed_number
+                        [ "OFFSET" signed_number | "," signed_number ] ;
+        signed_number = [ "-" ] NUMBER ;
+
+    Semantics:
+    * Negative count → "no limit" (treat as None).
+    * Negative offset → clamp to 0.
+    * Comma form ``LIMIT m, n`` → offset = m, count = n (note swap).
     """
     limit: int | None = None
     offset: int = 0
 
-    children = limit_clause.children
-    i = 0
-    while i < len(children):
-        child = children[i]
-        if isinstance(child, Token):
-            if child.value.upper() == "LIMIT":
-                i += 1
-                if i < len(children):
-                    limit = int(children[i].value)  # type: ignore[union-attr]
-            elif child.value.upper() == "OFFSET":
-                i += 1
-                if i < len(children):
-                    offset = int(children[i].value)  # type: ignore[union-attr]
-        i += 1
+    # Pull out the (in-order) signed_number AST nodes and detect the
+    # comma form by the presence of a COMMA token in the children list.
+    signed_nodes = [
+        c for c in limit_clause.children
+        if isinstance(c, ASTNode) and c.rule_name == "signed_number"
+    ]
+    has_comma = any(
+        isinstance(c, Token) and c.value == "," for c in limit_clause.children
+    )
+
+    if signed_nodes:
+        if has_comma and len(signed_nodes) == 2:
+            # MySQL form: LIMIT offset, count
+            offset = _signed_number_value(signed_nodes[0])
+            limit = _signed_number_value(signed_nodes[1])
+        else:
+            limit = _signed_number_value(signed_nodes[0])
+            if len(signed_nodes) > 1:
+                offset = _signed_number_value(signed_nodes[1])
+
+    # SQLite semantics: negative count means "no limit".
+    if limit is not None and limit < 0:
+        limit = None
+    # Negative offsets clamp to zero.
+    if offset < 0:
+        offset = 0
 
     if limit is None:
         return rows[offset:]

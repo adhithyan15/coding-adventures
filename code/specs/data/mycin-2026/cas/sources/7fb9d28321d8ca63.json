@@ -1,0 +1,64 @@
+{
+  "hash": "7fb9d28321d8ca63",
+  "source_id": "https://www.who.int/news-room/fact-sheets/detail/listeriosis",
+  "title": "Listeriosis — WHO Fact Sheet",
+  "resolved_url": "https://www.who.int/news-room/fact-sheets/detail/listeriosis",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Listeriosis is caused by the bacterium Listeria monocytogenes.",
+      "byte_quote": "It is caused by the bacteria  Listeria monocytogenes ."
+    },
+    {
+      "id": "c2",
+      "text": "Listeriosis is rare, with 0.1 to 10 cases per 1 million people per year depending on country/region.",
+      "byte_quote": "It is a relatively rare disease with 0.1 to 10 cases per 1 million people per year depending on the countries and regions of the world."
+    },
+    {
+      "id": "c3",
+      "text": "Highest-risk hosts for severe listeriosis are pregnant women, the elderly, and the immunocompromised (HIV, leukaemia, cancer, kidney transplant, steroid therapy).",
+      "byte_quote": "Pregnant women, the elderly or individuals with a weakened immune system, such as people with immuno-compromised status due to HIV, leukaemia, cancer, kidney transplant and steroid therapy, are at greatest risk of severe listeriosis and should avoid high risk foods."
+    },
+    {
+      "id": "c4",
+      "text": "Invasive listeriosis affects high-risk groups: pregnant women, cancer/HIV/organ-transplant patients, the elderly, and infants.",
+      "byte_quote": "These include pregnant women, patients undergoing treatment for cancer, HIV and organ transplants, elderly people and infants."
+    },
+    {
+      "id": "c5",
+      "text": "Invasive listeriosis symptoms include fever, myalgia, septicaemia, and meningitis; mortality is 20-30%.",
+      "byte_quote": "This form of disease is characterized by severe symptoms and a high mortality rate (20–30%). The symptoms include fever, myalgia (muscle pain), septicemia, meningitis."
+    },
+    {
+      "id": "c6",
+      "text": "Pregnant women are about 20 times more likely to contract listeriosis than other healthy adults.",
+      "byte_quote": "Pregnant women are about 20 times more likely to contract listeriosis than other healthy adults."
+    },
+    {
+      "id": "c7",
+      "text": "People with HIV are at least 300 times more likely to get listeriosis than the immunocompetent.",
+      "byte_quote": "People with HIV are at least 300 times more likely to get ill than those with a normally functioning immune system."
+    },
+    {
+      "id": "c8",
+      "text": "Newborns may develop low birth weight, septicaemia, and meningitis from listeriosis.",
+      "byte_quote": "Newborn may also have low birth weight, septicaemia and meningitis."
+    },
+    {
+      "id": "c9",
+      "text": "Diagnosis is by detecting the bacteria in a smear from blood, cerebrospinal fluid (CSF), or meconium of newborns, among other specimens.",
+      "byte_quote": "detection of the bacteria in a smear from blood, cerebrospinal fluid (CSF), meconium of newborns (or the fetus in abortion cases), as well as from faeces, vomitus, foods or animal feed"
+    },
+    {
+      "id": "c10",
+      "text": "Listeriosis is acquired mainly by eating contaminated food; can also transmit from pregnant woman to unborn baby.",
+      "byte_quote": "Eating contaminated food with high numbers of  L. monocytogenes  is the main route of infection. Infection can also be transmitted between humans, notably from pregnant women to unborn babies."
+    },
+    {
+      "id": "c11",
+      "text": "High-risk food exposures include deli/ready-to-eat meats, soft cheeses, and cold-smoked fishery products.",
+      "byte_quote": "High risk foods include deli meat and ready-to-eat meat products (such as cooked, cured and/or fermented meats and sausages), soft cheeses and cold smoked fishery products."
+    }
+  ],
+  "cites": []
+}

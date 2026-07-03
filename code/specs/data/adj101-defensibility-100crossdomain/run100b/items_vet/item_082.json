@@ -1,0 +1,8 @@
+{
+ "idx": 82,
+ "policy": "Processing of special-category personal data (including data concerning health) is prohibited unless the data subject has given explicit consent to the processing for one or more specified purposes.",
+ "scenario": "Cardio-Track, a wellness app, processes users' resting heart-rate and blood-pressure readings to generate health reports. During signup, user Priya was shown a checkbox reading 'I explicitly consent to processing of my health data to generate my health reports,' which she actively ticked before continuing.",
+ "question": "Is Cardio-Track's processing of Priya's health data permitted under the policy?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "yes"
+}

@@ -1,0 +1,9 @@
+{
+ "n_cells": 96,
+ "haiku_items_both_wrong_selected": 32,
+ "opus_items_both_wrong_selected": 16,
+ "chrome_tell_present_on_normalized": 1,
+ "regex_acc_chrome": 0.5104,
+ "regex_acc_structure": 0.9792,
+ "note": "chrome accuracy ~0.5 confirms the citation-format confound is removed; any structure accuracy above chance is the stepwise-decomposition TREATMENT, not chrome \u2014 reported openly, not hidden."
+}

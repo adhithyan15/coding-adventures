@@ -269,4 +269,18 @@ subtest 'UNIT-6: literals section round-trip (short, medium, large)' => sub {
     }
 };
 
+# ============================================================================
+# SEC-1: oversized input rejected before unpack (memory-amplification guard)
+# ============================================================================
+# unpack('C*', $data) converts every byte into a Perl scalar (~56 bytes each
+# on 64-bit builds). A 64 MB input would balloon to ~3.5 GB before any
+# frame-header check could fire. The guard must fire on length alone.
+
+subtest 'SEC-1: oversized input rejected before unpack' => sub {
+    my $big = "\x00" x (64 * 1024 * 1024 + 1);
+    my $ok = eval { decompress($big); 1 };
+    ok(!$ok, "decompress of 65 MB input throws");
+    like($@, qr/too large/i, "error message mentions 'too large'");
+};
+
 done_testing;

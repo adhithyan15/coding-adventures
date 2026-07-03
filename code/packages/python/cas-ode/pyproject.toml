@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-ode"
-version = "0.6.0"
-description = "Symbolic ODE solver for the MACSYMA CAS system — separable, first-order linear, Bernoulli, exact, homogeneous-type, second-order constant-coefficient, Euler-Cauchy, variation-of-parameters, and named variable-coefficient ODEs (Legendre, Bessel, Hermite, Chebyshev)."
+version = "0.8.0"
+description = "Symbolic ODE solver for the MACSYMA CAS system — separable, first-order linear, Bernoulli, exact, homogeneous-type, second-order constant-coefficient, Euler-Cauchy, variation-of-parameters, named variable-coefficient ODEs (Legendre, Bessel, Hermite, Chebyshev), Frobenius / power-series for regular singular points, and Lie point-symmetry fallback for first-order ODEs."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

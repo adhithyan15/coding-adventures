@@ -656,3 +656,35 @@ describe("complex module structures", () => {
     expect(names).toHaveLength(3);
   });
 });
+
+// =============================================================================
+// VERSION SELECTION
+// =============================================================================
+//
+// parseVerilog optionally takes a grammar version.  Default is 2005; explicit
+// "1995" and "2001" load the per-standard grammar bundles; an unknown version
+// raises.  These tests cover every case in `loadVerilogGrammar`'s switch and
+// the SUPPORTED_VERSIONS guard.
+
+describe("grammar version selection", () => {
+  it("accepts the 1995 grammar", () => {
+    const ast = parseVerilog("module a; endmodule", "1995");
+    expect(ast.ruleName).toBe("source_text");
+  });
+
+  it("accepts the 2001 grammar", () => {
+    const ast = parseVerilog("module a; endmodule", "2001");
+    expect(ast.ruleName).toBe("source_text");
+  });
+
+  it("accepts the 2005 grammar explicitly (matches default)", () => {
+    const ast = parseVerilog("module a; endmodule", "2005");
+    expect(ast.ruleName).toBe("source_text");
+  });
+
+  it("throws on an unknown version", () => {
+    expect(() => parseVerilog("module a; endmodule", "1990")).toThrow(
+      /Unknown Verilog version/,
+    );
+  });
+});

@@ -558,6 +558,7 @@ mod tests {
             supported_ops: 0xFFFF_FFFF,
             supported_dtypes: 0x07,
             gflops_f32: 40,
+            gflops_f64: 40,
             gflops_u8: 40,
             gflops_i32: 40,
             host_to_device_bw: 100,
@@ -618,6 +619,7 @@ mod tests {
             supported_ops: 0xFFFF_FFFF,
             supported_dtypes: 0x07,
             gflops_f32: 40,
+            gflops_f64: 40,
             gflops_u8: 40,
             gflops_i32: 40,
             host_to_device_bw: 100,
@@ -641,6 +643,7 @@ mod tests {
             // F32 only — matches matrix-metal V1.
             supported_dtypes: 0b001,
             gflops_f32: 5_000,
+            gflops_f64: 0,
             gflops_u8: 0,
             gflops_i32: 0,
             host_to_device_bw: 50,

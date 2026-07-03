@@ -6,12 +6,21 @@
 
 #![forbid(unsafe_code)]
 
+use hue_core::{
+    hue_discovery_record_from_mdns, hue_discovery_worker_run_from_mdns_scan_report,
+    HUE_MDNS_SERVICE_TYPE,
+};
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId, CommandResult,
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
     DeviceId, Entity, EntityId, EntityKind, EventId, Health, IntegrationId, Metadata,
-    ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
-    Value,
+    ProtocolFamily, ProtocolIdentifier, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
+    StateDelta, StateSnapshot, StateSource, Value,
+};
+use smart_home_discovery::{
+    DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind,
+    DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanNetwork, MdnsScanResult, MdnsWorkerScanExecutor,
+    MdnsWorkerScanReport, MdnsWorkerScanRequest,
 };
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
@@ -19,8 +28,10 @@ use smart_home_event_streams::{
 };
 use smart_home_local_http::{LocalHttpMethod, LocalHttpRequestPlan};
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
-use smart_home_runtime::{BridgeHealthReport, RuntimeError, SmartHomeRuntime};
-use std::collections::VecDeque;
+use smart_home_runtime::{
+    BridgeHealthReport, RuntimeError, ScheduledDiscoveryWorker, SmartHomeRuntime,
+};
+use std::{collections::VecDeque, time::Duration};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FixtureClock {
@@ -54,6 +65,7 @@ pub struct SmartHomeFixture {
     pub device: Device,
     pub light: Entity,
     pub sensor: Entity,
+    pub scene: Scene,
 }
 
 impl SmartHomeFixture {
@@ -62,17 +74,23 @@ impl SmartHomeFixture {
         let device = hue_device("device-1", &bridge.bridge_id, "device-native-1");
         let light = light_entity("entity-light-1", &device.device_id);
         let sensor = occupancy_sensor_entity("entity-sensor-1", &device.device_id);
+        let scene = room_scene("scene-kitchen-bright", &light.entity_id);
 
         Self {
             bridge,
             device,
             light,
             sensor,
+            scene,
         }
     }
 
     pub fn entities(&self) -> [&Entity; 2] {
         [&self.light, &self.sensor]
+    }
+
+    pub fn scenes(&self) -> [&Scene; 1] {
+        [&self.scene]
     }
 
     pub fn install_in_registry(
@@ -982,6 +1000,169 @@ pub fn hue_bridge(id: &'static str, native_id: &'static str) -> Bridge {
     bridge
 }
 
+pub fn hue_bridge_discovery_record(
+    native_id: impl Into<String>,
+    discovered_at_ms: u64,
+) -> DiscoveryRecord {
+    hue_discovery_record_from_mdns(&hue_bridge_mdns_advertisement(native_id, discovered_at_ms))
+        .expect("fixture Hue mDNS advertisement maps to a discovery record")
+        .with_metadata("fixture", "hue_bridge_discovery")
+}
+
+pub fn hue_bridge_mdns_advertisement(
+    native_id: impl Into<String>,
+    discovered_at_ms: u64,
+) -> MdnsAdvertisement {
+    let native_id = native_id.into();
+    MdnsAdvertisement::new(
+        HUE_MDNS_SERVICE_TYPE,
+        "Hue Bridge",
+        "hue-bridge.local",
+        443,
+        discovered_at_ms,
+    )
+    .expect("fixture Hue mDNS advertisement is valid")
+    .with_address("192.0.2.10")
+    .expect("fixture Hue mDNS address is valid")
+    .with_txt("bridgeid", native_id)
+    .expect("fixture Hue bridge id TXT is valid")
+    .with_txt("modelid", "BSB002")
+    .expect("fixture Hue model TXT is valid")
+    .with_txt("swversion", "1.66.1960062030")
+    .expect("fixture Hue firmware TXT is valid")
+}
+
+pub fn hue_bridge_mdns_scan_result(
+    native_id: impl Into<String>,
+    discovered_at_ms: u64,
+) -> MdnsScanResult {
+    MdnsScanResult {
+        service_type: HUE_MDNS_SERVICE_TYPE.to_string(),
+        discovered_at_ms,
+        datagram_count: 1,
+        advertisements: vec![hue_bridge_mdns_advertisement(native_id, discovered_at_ms)],
+        failures: Vec::new(),
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct ScriptedMdnsWorkerScanExecutor {
+    outcomes: VecDeque<Result<MdnsScanResult, DiscoveryError>>,
+    observed_requests: Vec<MdnsWorkerScanRequest>,
+}
+
+impl ScriptedMdnsWorkerScanExecutor {
+    pub fn new(outcomes: impl IntoIterator<Item = Result<MdnsScanResult, DiscoveryError>>) -> Self {
+        Self {
+            outcomes: outcomes.into_iter().collect(),
+            observed_requests: Vec::new(),
+        }
+    }
+
+    pub fn push_outcome(mut self, outcome: Result<MdnsScanResult, DiscoveryError>) -> Self {
+        self.outcomes.push_back(outcome);
+        self
+    }
+
+    pub fn record_outcome(&mut self, outcome: Result<MdnsScanResult, DiscoveryError>) {
+        self.outcomes.push_back(outcome);
+    }
+
+    pub fn observed_requests(&self) -> &[MdnsWorkerScanRequest] {
+        &self.observed_requests
+    }
+
+    pub fn pending_outcome_count(&self) -> usize {
+        self.outcomes.len()
+    }
+}
+
+impl MdnsWorkerScanExecutor for ScriptedMdnsWorkerScanExecutor {
+    fn run_request(
+        &mut self,
+        request: &MdnsWorkerScanRequest,
+    ) -> Result<MdnsScanResult, DiscoveryError> {
+        self.observed_requests.push(request.clone());
+        self.outcomes.pop_front().unwrap_or_else(|| {
+            Err(DiscoveryError::MdnsTransport {
+                message: "missing scripted mDNS scan outcome".to_string(),
+            })
+        })
+    }
+}
+
+pub fn hue_bridge_mdns_scan_report(
+    native_id: impl Into<String>,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> MdnsWorkerScanReport {
+    let worker_id = DiscoveryWorkerId::trusted("fixture-hue-discovery-worker");
+    let integration_id = IntegrationId::trusted("hue");
+    let request = MdnsWorkerScanRequest::new(
+        worker_id.clone(),
+        integration_id.clone(),
+        "fixture-lan0",
+        MdnsScanNetwork::Ipv4,
+        HUE_MDNS_SERVICE_TYPE,
+        completed_at_ms,
+        Duration::from_millis(250),
+    )
+    .expect("fixture Hue mDNS scan request is valid")
+    .with_metadata("fixture", "hue_bridge_mdns_scan_report");
+    let mut report = MdnsWorkerScanReport::new(
+        worker_id,
+        integration_id,
+        HUE_MDNS_SERVICE_TYPE,
+        started_at_ms,
+        completed_at_ms,
+    )
+    .expect("fixture Hue mDNS scan report is valid")
+    .with_metadata("fixture", "hue_bridge_mdns_scan_report");
+    report
+        .push_success(
+            request,
+            hue_bridge_mdns_scan_result(native_id, completed_at_ms),
+        )
+        .expect("fixture Hue mDNS scan result matches its request");
+    report
+}
+
+pub fn hue_bridge_discovery_worker_run(
+    native_id: impl Into<String>,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> DiscoveryWorkerRun {
+    let report = hue_bridge_mdns_scan_report(native_id, started_at_ms, completed_at_ms);
+    let mut run = hue_discovery_worker_run_from_mdns_scan_report(&report)
+        .expect("fixture Hue discovery worker run is valid")
+        .with_metadata("fixture", "hue_bridge_discovery_worker");
+    for record in &mut run.records {
+        record
+            .metadata
+            .push(Metadata::new("fixture", "hue_bridge_discovery"));
+    }
+    run
+}
+
+pub fn hue_bridge_discovery_worker_schedule(
+    first_due_at_ms: u64,
+    interval_ms: u64,
+    run_timeout_ms: u64,
+) -> ScheduledDiscoveryWorker {
+    ScheduledDiscoveryWorker::new(
+        DiscoveryWorkerId::trusted("fixture-hue-discovery-worker"),
+        IntegrationId::trusted("hue"),
+        DiscoveryWorkerKind::MdnsScan,
+        interval_ms,
+        run_timeout_ms,
+        first_due_at_ms,
+    )
+    .with_source(DiscoverySource::Mdns)
+    .with_network_interface("fixture-lan0")
+    .with_metadata("fixture", "hue_bridge_discovery_worker_schedule")
+    .with_metadata("smart_home.discovery.service_type", HUE_MDNS_SERVICE_TYPE)
+}
+
 pub fn hue_device(id: &'static str, bridge_id: &BridgeId, native_id: &'static str) -> Device {
     Device {
         device_id: DeviceId::trusted(id),
@@ -1024,6 +1205,25 @@ pub fn occupancy_sensor_entity(id: &'static str, device_id: &DeviceId) -> Entity
         capabilities: vec![Capability::sensor_occupancy()],
         state: None,
         metadata: vec![Metadata::new("fixture", "occupancy_sensor")],
+    }
+}
+
+pub fn room_scene(id: &'static str, entity_id: &EntityId) -> Scene {
+    Scene {
+        scene_id: SceneId::trusted(id),
+        scope: SceneScope::Room,
+        native_ref: Some(protocol_id(ProtocolFamily::Hue, "scene", id)),
+        actions: vec![SceneAction {
+            entity_id: entity_id.clone(),
+            desired_state: Value::Object(vec![
+                ("light.on_off".to_string(), Value::Bool(true)),
+                ("light.brightness".to_string(), Value::Percentage(80)),
+            ]),
+        }],
+        metadata: vec![
+            Metadata::new("fixture", "room_scene"),
+            Metadata::new("fixture.room_id", "kitchen"),
+        ],
     }
 }
 
@@ -1183,6 +1383,9 @@ pub fn install_fixture_in_registry(
     for entity in fixture.entities() {
         registry.upsert_entity(entity.clone())?;
     }
+    for scene in fixture.scenes() {
+        registry.upsert_scene(scene.clone())?;
+    }
     Ok(())
 }
 
@@ -1207,12 +1410,27 @@ pub fn runtime_with_fixture(fixture: &SmartHomeFixture) -> Result<SmartHomeRunti
     for entity in fixture.entities() {
         runtime.upsert_entity(entity.clone())?;
     }
+    for scene in fixture.scenes() {
+        runtime.upsert_scene(scene.clone())?;
+    }
     Ok(runtime)
 }
 
 pub fn hue_lighting_runtime() -> SmartHomeRuntime {
     runtime_with_fixture(&SmartHomeFixture::hue_lighting())
         .expect("hue lighting fixture records are internally consistent")
+}
+
+pub fn hue_discovery_runtime() -> SmartHomeRuntime {
+    let mut runtime = SmartHomeRuntime::new();
+    runtime
+        .register_discovery_worker_schedule(hue_bridge_discovery_worker_schedule(950, 5_000, 250))
+        .expect("Hue discovery fixture worker schedule can be registered");
+    let run = hue_bridge_discovery_worker_run("001788fffeabcdef", 950, 1_000);
+    runtime
+        .record_scheduled_discovery_worker_run(&run, 1_000, 1_000)
+        .expect("Hue discovery fixture worker run can advance its schedule");
+    runtime
 }
 
 pub fn hue_sse_stream_spec(fixture: &SmartHomeFixture) -> EventStreamSpec {
@@ -1385,6 +1603,18 @@ fn protocol_id(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use hue_core::{
+        hue_application_credentials_from_registration_response,
+        hue_pairing_plan_for_discovered_bridge, hue_pairing_registration_request_plan,
+        DiscoveredHueBridge,
+    };
+    use smart_home_core::{AgentId, VaultRef};
+    use smart_home_discovery::{DiscoverySource, DiscoveryWorkerRunStatus, PairingRequirement};
+    use smart_home_local_http::LocalHttpEndpoint;
+    use smart_home_runtime::{
+        PairingSessionStatus, RuntimeEvent, RuntimePairingCompletion, RuntimePairingSession,
+        RuntimePairingSessionId, WorkerStatus,
+    };
 
     #[test]
     fn hue_fixture_projects_normalized_bridge_device_and_entities() {
@@ -1614,7 +1844,7 @@ mod tests {
         assert_eq!(registry.counts().bridges, 1);
         assert_eq!(registry.counts().devices, 1);
         assert_eq!(registry.counts().entities, 2);
-        assert_eq!(registry.counts().protocol_identifiers, 2);
+        assert_eq!(registry.counts().protocol_identifiers, 3);
         assert_eq!(
             registry
                 .bridge(&fixture.bridge.bridge_id)
@@ -1640,6 +1870,199 @@ mod tests {
             registry.entity(&fixture.sensor.entity_id).unwrap().kind,
             EntityKind::Sensor
         );
+    }
+
+    #[test]
+    fn hue_discovery_fixture_records_unpaired_bridge_candidate() {
+        let runtime = hue_discovery_runtime();
+        let bridge_id = BridgeId::trusted("hue.bridge.001788fffeabcdef");
+        let bridge = runtime.registry().bridge(&bridge_id).unwrap();
+        let record = runtime
+            .discovery()
+            .get(&IntegrationId::trusted("hue"), "001788fffeabcdef")
+            .unwrap();
+        let worker = runtime
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("fixture-hue-discovery-worker"))
+            .unwrap();
+
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(bridge.health, Health::Unpaired);
+        assert_eq!(bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(bridge.transport, BridgeTransport::LanHttp);
+        assert_eq!(bridge.hardware_model.as_deref(), Some("BSB002"));
+        assert_eq!(record.source, DiscoverySource::Mdns);
+        assert_eq!(
+            record.pairing_requirement,
+            PairingRequirement::PhysicalPresence
+        );
+        assert!(bridge.metadata.iter().any(|metadata| {
+            metadata.key == "fixture" && metadata.value == "hue_bridge_discovery"
+        }));
+        assert_eq!(worker.status, WorkerStatus::Running);
+        assert_eq!(
+            worker.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Completed)
+        );
+        assert_eq!(worker.total_run_count, 1);
+        assert_eq!(worker.next_due_at_ms, 6_000);
+    }
+
+    #[test]
+    fn hue_discovery_worker_fixture_reports_canonical_mdns_records() {
+        let run = hue_bridge_discovery_worker_run("001788fffediscovered", 975, 1_000);
+
+        assert_eq!(run.worker_id.as_str(), "fixture-hue-discovery-worker");
+        assert_eq!(run.len(), 1);
+        assert!(!run.has_failures());
+        assert_eq!(run.records[0].native_bridge_id, "001788fffediscovered");
+        assert_eq!(run.records[0].source, DiscoverySource::Mdns);
+        assert!(run.records[0].metadata.iter().any(|metadata| {
+            metadata.key == "fixture" && metadata.value == "hue_bridge_discovery"
+        }));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "fixture" && metadata.value == "hue_bridge_discovery_worker"
+        }));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.scan_datagram_count" && metadata.value == "1"
+        }));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.scan_report" && metadata.value == "true"
+        }));
+    }
+
+    #[test]
+    fn hue_mdns_scan_report_fixture_reports_interface_scope() {
+        let report = hue_bridge_mdns_scan_report("001788fffereport", 975, 1_000);
+        let aggregate = report.aggregate_result();
+
+        assert_eq!(report.worker_id.as_str(), "fixture-hue-discovery-worker");
+        assert_eq!(report.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(report.completed_scan_count(), 1);
+        assert_eq!(report.failed_scan_count(), 0);
+        assert_eq!(report.datagram_count(), 1);
+        assert_eq!(report.advertisement_count(), 1);
+        assert_eq!(aggregate.len(), 1);
+        assert_eq!(
+            report.successes[0].request.network_interface,
+            "fixture-lan0"
+        );
+        assert_eq!(report.successes[0].request.network, MdnsScanNetwork::Ipv4);
+        assert_eq!(
+            aggregate.advertisements[0].txt_value("bridgeid"),
+            Some("001788fffereport")
+        );
+    }
+
+    #[test]
+    fn hue_discovery_worker_schedule_fixture_reports_due_mdns_scope() {
+        let schedule = hue_bridge_discovery_worker_schedule(1_000, 5_000, 250);
+        let mut runtime = SmartHomeRuntime::new();
+        runtime
+            .register_discovery_worker_schedule(schedule)
+            .expect("fixture schedule can be registered");
+
+        let idle = runtime.discovery_worker_run_plan_at(999);
+        let due = runtime.discovery_worker_run_plan_at(1_000);
+        let mdns_scan_plan = runtime
+            .discovery_mdns_scan_plan_at(1_000)
+            .expect("fixture mDNS scan plan can be projected");
+        let worker = runtime
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("fixture-hue-discovery-worker"))
+            .unwrap();
+
+        assert!(idle.is_empty());
+        assert_eq!(due.len(), 1);
+        assert!(matches!(
+            due.instructions.as_slice(),
+            [instruction] if instruction.integration_id == IntegrationId::trusted("hue")
+                && instruction.kind == DiscoveryWorkerKind::MdnsScan
+                && instruction.sources == vec![DiscoverySource::Mdns]
+                && instruction.network_interfaces == vec!["fixture-lan0".to_string()]
+                && instruction.run_timeout_ms == 250
+                && instruction.metadata.iter().any(|metadata| {
+                    metadata.key == "smart_home.discovery.service_type"
+                        && metadata.value == HUE_MDNS_SERVICE_TYPE
+                })
+        ));
+        assert_eq!(mdns_scan_plan.len(), 2);
+        assert!(matches!(
+            mdns_scan_plan.requests.as_slice(),
+            [ipv4, ipv6] if ipv4.network_interface == "fixture-lan0"
+                && ipv4.network == MdnsScanNetwork::Ipv4
+                && ipv4.service_type == HUE_MDNS_SERVICE_TYPE
+                && ipv4.timeout == Duration::from_millis(250)
+                && ipv6.network_interface == "fixture-lan0"
+                && ipv6.network == MdnsScanNetwork::Ipv6
+        ));
+        assert_eq!(worker.interval_ms, 5_000);
+        assert_eq!(worker.status, WorkerStatus::Starting);
+    }
+
+    #[test]
+    fn scripted_mdns_worker_executor_runs_runtime_scan_plan() {
+        let schedule = hue_bridge_discovery_worker_schedule(1_000, 5_000, 250);
+        let worker_id = DiscoveryWorkerId::trusted("fixture-hue-discovery-worker");
+        let mut runtime = SmartHomeRuntime::new();
+        runtime
+            .register_discovery_worker_schedule(schedule)
+            .expect("fixture schedule can be registered");
+        let plan = runtime
+            .discovery_mdns_scan_plan_at(1_000)
+            .expect("fixture mDNS scan plan can be projected");
+        let mut executor = ScriptedMdnsWorkerScanExecutor::new([
+            Ok(hue_bridge_mdns_scan_result("001788fffescripted", 1_000)),
+            Err(DiscoveryError::MdnsTransport {
+                message: "IPv6 multicast route is unavailable".to_string(),
+            }),
+        ]);
+
+        let reports = smart_home_discovery::run_mdns_worker_scan_plan_with_executor(
+            &plan,
+            1_000,
+            1_030,
+            &mut executor,
+        )
+        .expect("scripted executor can run the fixture mDNS scan plan");
+        let run = hue_discovery_worker_run_from_mdns_scan_report(&reports[0])
+            .expect("scripted Hue report can be converted to a worker run");
+        let summary = runtime
+            .record_scheduled_discovery_worker_run(&run, 1_030, 500)
+            .expect("scripted discovery worker run can be recorded");
+        let worker = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(executor.pending_outcome_count(), 0);
+        assert_eq!(executor.observed_requests().len(), 2);
+        assert_eq!(reports.len(), 1);
+        assert_eq!(reports[0].completed_scan_count(), 1);
+        assert_eq!(reports[0].failed_scan_count(), 1);
+        assert_eq!(reports[0].advertisement_count(), 1);
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(summary.record_count, 1);
+        assert_eq!(summary.failure_count, 1);
+        assert_eq!(summary.inserted_count, 1);
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(worker.status, WorkerStatus::Unhealthy);
+        assert_eq!(
+            worker.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Partial)
+        );
+        assert_eq!(worker.consecutive_failure_count, 1);
+        assert_eq!(worker.next_due_at_ms, 6_030);
+    }
+
+    #[test]
+    fn hue_mdns_scan_fixture_reports_canonical_advertisements() {
+        let scan = hue_bridge_mdns_scan_result("001788fffescan", 1_000);
+
+        assert_eq!(scan.service_type, HUE_MDNS_SERVICE_TYPE);
+        assert_eq!(scan.datagram_count, 1);
+        assert_eq!(scan.len(), 1);
+        assert!(!scan.has_failures());
+        assert_eq!(
+            scan.advertisements[0].txt_value("bridgeid"),
+            Some("001788fffescan")
+        );
+        assert_eq!(scan.advertisements[0].preferred_address(), "192.0.2.10");
     }
 
     #[test]
@@ -1896,6 +2319,101 @@ mod tests {
         assert_eq!(matched, response);
         assert_eq!(matched.body_utf8(), Some(r#"{"data":[]}"#));
         assert!(server.is_empty());
+    }
+
+    #[test]
+    fn hue_pairing_fixture_completes_runtime_session_without_secret_metadata() {
+        let pairing_plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.66.1960062030".to_string()),
+            },
+            "chief-of-staff",
+            "desktop",
+        );
+        let endpoint =
+            LocalHttpEndpoint::hue_bridge(pairing_plan.bridge_id().clone(), "192.0.2.10")
+                .unwrap()
+                .accept_invalid_certs(true);
+        let request_plan = hue_pairing_registration_request_plan(&pairing_plan, &endpoint).unwrap();
+        let response = ScriptedLocalHttpResponse::ok_json(
+            LocalHttpMethod::Post,
+            request_plan.url.clone(),
+            br#"[{"success":{"username":"raw-hue-application-key","clientkey":"client-key-1"}}]"#
+                .to_vec(),
+            1_250,
+        );
+        let mut server = FakeLocalHttpServer::new().push_response(response);
+
+        let matched = server.respond_to_plan(&request_plan).unwrap();
+        let credentials =
+            hue_application_credentials_from_registration_response(&matched.body).unwrap();
+        let vault_payload = credentials.vault_secret_json();
+        let vault_payload_text = std::str::from_utf8(&vault_payload).unwrap();
+        assert!(vault_payload_text.contains("raw-hue-application-key"));
+
+        let handoff = credentials.vault_handoff(
+            &pairing_plan,
+            VaultRef::trusted("vault://smart-home/hue/001788fffeabcdef/application-key"),
+            matched.observed_at_ms,
+        );
+        assert!(handoff.metadata.iter().all(|metadata| {
+            !metadata.value.contains("raw-hue-application-key")
+                && !metadata.value.contains("client-key-1")
+        }));
+
+        let mut runtime = SmartHomeRuntime::new();
+        let mut unpaired_bridge = pairing_plan.bridge.clone();
+        unpaired_bridge.health = Health::Unpaired;
+        runtime.upsert_bridge(unpaired_bridge).unwrap();
+        let session_id = RuntimePairingSessionId::trusted("hue-pairing-1");
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                session_id.clone(),
+                &pairing_plan.bridge,
+                AgentId::trusted("chief-agent"),
+                1_200,
+                2_000,
+                vec![Metadata::new("pairing_kind", "hue_link_button")],
+            ))
+            .unwrap();
+
+        let completed = runtime
+            .complete_pairing_session_with(
+                RuntimePairingCompletion::new(
+                    session_id.clone(),
+                    handoff.vault_ref.clone(),
+                    matched.observed_at_ms,
+                )
+                .with_metadata(handoff.metadata.clone()),
+            )
+            .unwrap();
+        let bridge = runtime.registry().bridge(pairing_plan.bridge_id()).unwrap();
+
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert_eq!(completed.vault_ref, Some(handoff.vault_ref.clone()));
+        assert!(completed.metadata.iter().any(|metadata| {
+            metadata.key == "hue.pairing.credential_kind" && metadata.value == "application_key"
+        }));
+        assert_eq!(bridge.health, Health::Online);
+        assert_eq!(bridge.auth_ref.as_ref(), Some(&handoff.vault_ref));
+        assert!(matches!(
+            runtime.event_bus().published(),
+            [RuntimeEvent::Device(event), RuntimeEvent::BridgeHealth { bridge_id, health, .. }]
+                if event.event_type == DeviceEventType::Health
+                    && bridge_id == pairing_plan.bridge_id()
+                    && *health == Health::Online
+                    && event.metadata.iter().any(|metadata| {
+                        metadata.key == "hue.pairing.phase"
+                            && metadata.value == "credential_stored"
+                    })
+                    && event.metadata.iter().all(|metadata| {
+                        !metadata.value.contains("raw-hue-application-key")
+                            && !metadata.value.contains("client-key-1")
+                    })
+        ));
     }
 
     #[test]

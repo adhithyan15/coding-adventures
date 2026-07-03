@@ -1,40 +1,99 @@
 // Grid.mil — interface for the spreadsheet-style data grid.
 //
-// Grid is the headline composition of UI29: a Cell-and-Column composer
-// built entirely from kernel primitives (HostTable + HostTableHead +
-// HostTableBody + Row + For + Cell).  No bespoke per-backend code; the
-// React, SwiftUI, Qt, WebComponent and HTML emitters lower this purely
-// by running their kernel-primitive lowerings.
+// Grid is the headline composition of UI28-1: a Cell-and-Column
+// composer built entirely from kernel primitives (HostTable +
+// HostTableColGroup + HostTableHead + HostTableBody + Row + For +
+// HostInput + If/Else + Box + Text) plus the userland Cell + Column
+// components from this same package.
+//
+// No bespoke per-backend code.  Every Mosaic backend (React, HTML,
+// WebComponent, Flutter, Qt, SwiftUI, XAML) lowers this purely by
+// running its kernel-primitive lowerings.  The three enabling
+// dependencies UI28-1 §6 names are all live on main as of v0.2.0:
+//
+//   - §6.1 UI29 §3.4 For-binding scope (PR #4398)
+//   - §6.2 Flutter For/If/Else lowering (PR #4393)
+//   - §6.3 React For auto-key from `index:` (PR #4396)
+//
+// v0.2.0 changes from v0.1.0
+// --------------------------
+//
+//   Added two parallel-array column slots so the header row can
+//   actually render and per-column widths reach the `<colgroup>`:
+//
+//     slot column-headers : list<text>    one header label per column
+//     slot column-widths  : list<number>  pixel width per column
+//
+//   UI28-1 §9 calls this out as a v0.2.0 pragmatism — record types
+//   would let us declare `list<column-meta>` instead of two parallel
+//   arrays, but mosmodel doesn't have records yet (a v0.3.0 language
+//   concern).  Parallel arrays let the host wire concrete data today.
+//
+//   The Grid layout (Grid.mll) now does the **nested** body iteration
+//   that v0.1.0 deferred: outer For over rows, inner For over each
+//   row's cells, producing one Cell per (row, col) intersection.  This
+//   uses UI29 §3.4 (For-binding-as-iterable in nested For's `each:`)
+//   which landed in PR #4398.
 //
 // Slot vocabulary
 // ---------------
+//
 //   viewport-rows   the data to render, one inner list per row.  Each
-//                   row[c] is the cell text for column c.  In v0.1.0
-//                   only row[0] is wired (see Grid.mll comment) — full
-//                   per-column iteration arrives with the v0.2.0
-//                   `columns` metadata slot.
-//   selected-row    the row index currently selected (for highlight)
-//   selected-col    the column index currently selected (for highlight)
-//   edit-row        the row index currently being edited (-1 = none)
-//   edit-col        the column index currently being edited (-1 = none)
+//                   row[c] is the cell text for column c.  In v0.2.0
+//                   ALL cells render (was: row[0] only in v0.1.0).
+//                   The host slices to the viewport BEFORE pushing,
+//                   so a 1,000,000-row sheet with a 30-row viewport
+//                   pushes a 30-row viewport-rows per render.
+//   column-headers  one header label per column.  Drives the `<thead>`
+//                   row.  Must be parallel-shaped to column-widths
+//                   AND to each viewport-rows[r]'s length.
+//   column-widths   per-column pixel widths.  Threaded through the
+//                   `<colgroup>` (or the platform equivalent) so cells
+//                   align even when content is short.
+//   selected-row    the row index currently selected (for highlight).
+//                   -1 = none.
+//   selected-col    the column index currently selected (-1 = none).
+//   edit-row        the row index currently being edited (-1 = none).
+//   edit-col        the column index currently being edited (-1 = none).
 //   edit-content    the in-progress edit value (echoed back to the cell
-//                   so the host owns the edit-buffer state)
+//                   so the host owns the edit-buffer state).
 //
 // Emit vocabulary
 // ---------------
-//   onNavigate      fired when a different cell is activated
-//   onEditCommit    fired when the in-progress edit confirms
-//   onEditCancel    fired when the in-progress edit is abandoned
+//
+//   onNavigate      fired when a cell is clicked.  Payload (row, col)
+//                   is the clicked-cell coordinate.  The host updates
+//                   selected-row / selected-col in response.
+//   onEditCommit    fired when an in-progress edit confirms (Enter).
+//   onEditCancel    fired when an in-progress edit is abandoned (Esc).
+//
+// Encapsulation note (UI28-1 §2 constraint 4)
+// -------------------------------------------
+//
+// The host pushes ONLY the plain coordinate numbers (`edit-row`,
+// `edit-col`, `selected-row`, `selected-col`).  The host does NOT
+// compute per-cell `is-editing` / `is-selected` masks — Grid does that
+// internally at the Cell call site using expression-in-slot-binding
+// (see Grid.mll's body Cell args).  Host code stays portable across
+// any Grid implementation that exposes the same slot interface.
 
 component Grid {
-  slot viewport-rows : list<list<text>> ;
-  slot selected-row  : number ;
-  slot selected-col  : number ;
-  slot edit-row      : number ;
-  slot edit-col      : number ;
-  slot edit-content  : text ;
+  slot viewport-rows  : list<list<text>> ;
+  slot column-headers : list<text> ;
+  slot column-widths  : list<number> ;
+  slot selected-row   : number ;
+  slot selected-col   : number ;
+  slot edit-row       : number ;
+  slot edit-col       : number ;
+  slot edit-content   : text ;
 
-  emit onNavigate    ( row : number , col : number ) ;
-  emit onEditCommit  ( value : text ) ;
+  emit onNavigate       ( row : number , col : number ) ;
+  // onFormulaChange fires every keystroke inside an editing cell;
+  // the host's reducer updates `edit-content` in response, and the
+  // value flows back into the cell on the next render.  Without
+  // this round-trip the cell's HostInput freezes — see Cell.mil
+  // for the controlled-input rationale.
+  emit onFormulaChange  ( value : text ) ;
+  emit onEditCommit     ( value : text ) ;
   emit onEditCancel ;
 }

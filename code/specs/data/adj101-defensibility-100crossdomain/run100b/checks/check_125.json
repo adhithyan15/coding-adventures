@@ -1,0 +1,8 @@
+{
+ "check_id": 125,
+ "idx": 49,
+ "slot": "proceeded_to_subsequent_task_without_washing",
+ "claimed_value": true,
+ "scenario": "A prep cook handles raw chicken while wearing gloves, then removes and discards the gloves. Inspection confirms the cook's hands underneath the gloves were visibly clean and dry. The cook proceeds directly to chopping vegetables without washing hands first.",
+ "cited_span": "The cook proceeds directly to chopping vegetables without washing hands first."
+}

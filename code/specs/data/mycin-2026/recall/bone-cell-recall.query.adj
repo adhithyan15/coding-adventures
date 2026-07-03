@@ -1,0 +1,19 @@
+% ============================================================================
+% bone-cell-recall.query.adj — a worked recall query over the bone-cell library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what does cell X do?"
+% question: it states no histology fact — it only `import`s the grounded library
+% and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli bone-cell-recall.query.adj
+% ============================================================================
+
+import "bone-cell-edges.adj"
+
+? has_function(osteoblast, $Function)   % expect bone_formation
+? has_function(osteoclast, $Function)   % expect bone_resorption
+? has_function(osteocyte, $Function)    % expect regulates_bone_remodeling
+? has_function(chondrocyte, $Function)  % expect produces_cartilage_matrix

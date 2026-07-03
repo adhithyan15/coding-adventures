@@ -294,6 +294,75 @@ A frontend that doesn't know whether a call site is direct or
 indirect **must** commit to `IndirectCall`.  The IR has no "maybe
 direct" node.
 
+#### Default parameters and call arity (P2a)
+
+A parameter may carry a default-value expression (`Param.default`, the
+`1` in Ruby `def f(a = 1)` and the Python / JavaScript equivalents).
+This raises two questions the IR answers explicitly: *when* is a default
+evaluated, and *how many* arguments a call may pass.
+
+**Evaluation model — call-time, parameter scope (Ruby/JS semantics).**
+A default expression is conceptually evaluated **when the call runs**, in
+the **callee's parameter scope**, and may reference parameters declared
+*earlier* in the list (`def f(a, b = a)`).  It is *not* a caller-side
+expression and *not* a definition-time constant: two calls that both omit
+`a` each re-evaluate the default.  The validator enforces the scope half
+of this — a default is checked against the params declared before it, so
+it may name an earlier param but never a later one or itself.
+
+**Call-arity rule for `DirectCall` to a known function.**  Let
+
+- **R** = the number of *required* leading params — the longest leading
+  run of plain positional params with **no** default
+  (`Function::required_param_count`), and
+- **M** = the total positional param count.
+
+A `DirectCall` is arity-valid iff
+
+```text
+    R <= args.len() <= M
+```
+
+i.e. a caller may omit trailing arguments **only** where the
+corresponding params have defaults.  Omitting a *required* param
+(`args.len() < R`) or over-supplying (`args.len() > M`) is a validation
+error.  Passing a defaulted param explicitly is fine (the caller simply
+supplied it).  The omitted trailing params (positions `args.len()..M`)
+are exactly the ones a backend must fill with their defaults;
+`Function::missing_defaults(args.len())` returns that slice.
+
+**Defaults must be trailing.**  For the rule above to hold by
+construction — so every param `missing_defaults` returns actually
+carries a default — a no-default `Required` param may **not** follow a
+defaulted `Required` param.  Such a "hole" (`def f(a = 1, b)`) is a
+**validation error**: its leading no-default run is empty, so `R` would
+be 0 and the validator would otherwise accept `f()`, yet `b` has no
+default for a backend to fill.  This matches Python and JavaScript
+exactly and the common Ruby case; Ruby's required-after-optional form is
+a **deferred v0 limitation**.  The synthetic trailing block param
+(`__sir_block__`) is a no-default `Required` appended last and is exempt.
+
+Exact-arity calls (`args.len() == M`) are always valid (`R <= M <= M`),
+so this rule is **behavior-neutral** for every module written before
+defaults existed.
+
+**Scope and deferrals (v0).**
+
+- The rule applies to `DirectCall` only — the validator can look up the
+  callee's params by name.  For **`IndirectCall`** (a call through a
+  closure value) the target's params are not known statically, so
+  default-arity resolution is **deferred**: `IndirectCall` keeps its
+  prior arity behavior for now.
+- The strict bounds are **skipped** when the callee is variadic
+  (`*rest` / `**opts`) or carries the synthetic trailing block param
+  (`__sir_block__`) — a `*rest` removes the upper bound and the block
+  param is supplied by the lowerer, not positionally — or when any
+  argument is not statically a single positional value: a splat
+  (`splat` / `double_splat`), argument forwarding (`forward_args`),
+  block-pass (`block_pass`), or an implicit block handle (`MakeClosure`)
+  appended to the argument list.  These call-position lowerings have no
+  statically meaningful `args.len()`; checking them against M is deferred.
+
 ### Closure construction
 
 ```text

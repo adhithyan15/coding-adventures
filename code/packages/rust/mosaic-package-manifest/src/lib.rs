@@ -93,6 +93,7 @@ pub struct MosaicPackage {
     pub package: PackageMeta,
     pub components: ComponentsSection,
     pub dependencies: HashMap<String, String>,
+    pub host_assets: HostAssetsSection,
     pub kernel: KernelSection,
 }
 
@@ -116,6 +117,20 @@ pub struct PackageMeta {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ComponentsSection {
     pub exports: Vec<String>,
+}
+
+/// Optional files a package wants copied into generated host project shells.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct HostAssetsSection {
+    pub files: Vec<HostAsset>,
+}
+
+/// A single package-relative file copy into one backend output directory.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostAsset {
+    pub backend: String,
+    pub source: String,
+    pub target: String,
 }
 
 /// The `[kernel]` table: which ABI version of the primitive kernel this
@@ -163,13 +178,19 @@ impl std::fmt::Display for ManifestError {
                 write!(f, "missing required field [{section}].{field}")
             }
             Self::InvalidPackageName(n) => {
-                write!(f, "invalid package name `{n}` (must be kebab-case starting with a letter)")
+                write!(
+                    f,
+                    "invalid package name `{n}` (must be kebab-case starting with a letter)"
+                )
             }
             Self::InvalidComponentName(n) => {
                 write!(f, "invalid component name `{n}` (must be PascalCase)")
             }
             Self::InvalidKernelVersion(v) => {
-                write!(f, "invalid kernel version `{v}` (only \"1\" is currently supported)")
+                write!(
+                    f,
+                    "invalid kernel version `{v}` (only \"1\" is currently supported)"
+                )
             }
             Self::InvalidSemverString(v) => {
                 write!(f, "invalid semver-like version string `{v}`")
@@ -194,6 +215,7 @@ struct RawManifest {
     package: Option<RawPackage>,
     components: Option<RawComponents>,
     dependencies: Option<HashMap<String, String>>,
+    host_assets: Option<RawHostAssets>,
     kernel: Option<RawKernel>,
 }
 
@@ -208,6 +230,18 @@ struct RawPackage {
 #[derive(Debug, Deserialize)]
 struct RawComponents {
     exports: Option<Vec<String>>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RawHostAssets {
+    files: Option<Vec<RawHostAsset>>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RawHostAsset {
+    backend: Option<String>,
+    source: Option<String>,
+    target: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -282,6 +316,7 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
     // with no deps still has to declare *something* for the kernel to read,
     // but TOML conventionally lets you omit empty tables.  We accept either.
     let raw_deps = raw.dependencies.unwrap_or_default();
+    let raw_host_assets = raw.host_assets;
 
     // Step 3: validate the `[package]` section field by field.
     let package = validate_package(raw_pkg)?;
@@ -293,13 +328,17 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
     // satisfy the same kebab/semver rules as `[package]`.
     let dependencies = validate_dependencies(raw_deps)?;
 
-    // Step 6: validate `[kernel]`.
+    // Step 6: validate optional host asset declarations.
+    let host_assets = validate_host_assets(raw_host_assets)?;
+
+    // Step 7: validate `[kernel]`.
     let kernel = validate_kernel(raw_kernel)?;
 
     Ok(MosaicPackage {
         package,
         components,
         dependencies,
+        host_assets,
         kernel,
     })
 }
@@ -384,6 +423,27 @@ fn validate_dependencies(
     Ok(raw)
 }
 
+fn validate_host_assets(raw: Option<RawHostAssets>) -> Result<HostAssetsSection, ManifestError> {
+    let Some(raw) = raw else {
+        return Ok(HostAssetsSection::default());
+    };
+    let raw_files = raw.files.unwrap_or_default();
+    let mut files = Vec::with_capacity(raw_files.len());
+
+    for file in raw_files {
+        let backend = require_non_empty(file.backend, "host_assets.files", "backend")?;
+        let source = require_non_empty(file.source, "host_assets.files", "source")?;
+        let target = require_non_empty(file.target, "host_assets.files", "target")?;
+        files.push(HostAsset {
+            backend,
+            source,
+            target,
+        });
+    }
+
+    Ok(HostAssetsSection { files })
+}
+
 fn validate_kernel(raw: RawKernel) -> Result<KernelSection, ManifestError> {
     let version = require(raw.version, "kernel", "version")?;
     // Only "1" is recognized today.  When the kernel ABI advances we'll add
@@ -402,6 +462,21 @@ fn require<T>(opt: Option<T>, section: &str, field: &str) -> Result<T, ManifestE
         section: section.into(),
         field: field.into(),
     })
+}
+
+fn require_non_empty(
+    opt: Option<String>,
+    section: &str,
+    field: &str,
+) -> Result<String, ManifestError> {
+    let value = require(opt, section, field)?;
+    if value.is_empty() {
+        return Err(ManifestError::MissingField {
+            section: section.into(),
+            field: field.into(),
+        });
+    }
+    Ok(value)
 }
 
 // ---------------------------------------------------------------------------
@@ -438,6 +513,7 @@ version = "1"
         assert_eq!(pkg.package.license, "MIT OR Apache-2.0");
         assert_eq!(pkg.components.exports, vec!["Grid", "Cell", "Column"]);
         assert!(pkg.dependencies.is_empty());
+        assert!(pkg.host_assets.files.is_empty());
         assert_eq!(pkg.kernel.version, "1");
     }
 
@@ -507,7 +583,10 @@ exports = []
 version = "1"
 "#;
         let err = parse(src).unwrap_err();
-        assert!(matches!(err, ManifestError::InvalidPackageName(_)), "got {err:?}");
+        assert!(
+            matches!(err, ManifestError::InvalidPackageName(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -524,7 +603,10 @@ exports = []
 version = "1"
 "#;
         let err = parse(src).unwrap_err();
-        assert!(matches!(err, ManifestError::InvalidSemverString(_)), "got {err:?}");
+        assert!(
+            matches!(err, ManifestError::InvalidSemverString(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -589,6 +671,58 @@ version = "1"
     }
 
     #[test]
+    fn parses_optional_host_asset_files() {
+        let src = r#"
+[package]
+name = "mosaic-pkg-form"
+version = "0.1.0"
+description = "Form package"
+license = "MIT"
+[components]
+exports = ["Form"]
+[dependencies]
+[host_assets]
+files = [
+  { backend = "react", source = "host/web/form-host.ts", target = "src/form-host.ts" },
+  { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
+]
+[kernel]
+version = "1"
+"#;
+        let pkg = parse(src).expect("manifest valid");
+        assert_eq!(pkg.host_assets.files.len(), 2);
+        assert_eq!(pkg.host_assets.files[0].backend, "react");
+        assert_eq!(pkg.host_assets.files[0].source, "host/web/form-host.ts");
+        assert_eq!(pkg.host_assets.files[0].target, "src/form-host.ts");
+        assert_eq!(pkg.host_assets.files[1].backend, "xaml");
+    }
+
+    #[test]
+    fn host_asset_files_require_source_and_target() {
+        let src = r#"
+[package]
+name = "mosaic-pkg-form"
+version = "0.1.0"
+description = "Form package"
+license = "MIT"
+[components]
+exports = ["Form"]
+[dependencies]
+[host_assets]
+files = [
+  { backend = "react", source = "host/web/form-host.ts" },
+]
+[kernel]
+version = "1"
+"#;
+        let err = parse(src).unwrap_err();
+        assert!(
+            matches!(err, ManifestError::MissingField { ref section, ref field } if section == "host_assets.files" && field == "target"),
+            "got {err:?}"
+        );
+    }
+
+    #[test]
     fn rejects_bad_dependency_name() {
         let src = r#"
 [package]
@@ -604,7 +738,10 @@ NotKebab = "0.1.0"
 version = "1"
 "#;
         let err = parse(src).unwrap_err();
-        assert!(matches!(err, ManifestError::InvalidPackageName(_)), "got {err:?}");
+        assert!(
+            matches!(err, ManifestError::InvalidPackageName(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -623,7 +760,10 @@ mosaic-pkg-grid = "not-a-version"
 version = "1"
 "#;
         let err = parse(src).unwrap_err();
-        assert!(matches!(err, ManifestError::InvalidSemverString(_)), "got {err:?}");
+        assert!(
+            matches!(err, ManifestError::InvalidSemverString(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -643,7 +783,10 @@ version = "{bad}"
 "#
             );
             let err = parse(&src).unwrap_err();
-            assert!(matches!(err, ManifestError::InvalidKernelVersion(_)), "for {bad:?} got {err:?}");
+            assert!(
+                matches!(err, ManifestError::InvalidKernelVersion(_)),
+                "for {bad:?} got {err:?}"
+            );
         }
     }
 

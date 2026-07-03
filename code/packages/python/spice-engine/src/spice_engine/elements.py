@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import bisect
 import math
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, field
 
 # ---------------------------------------------------------------------------
 # Source waveforms — SPICE3 transient source forms
@@ -244,9 +245,8 @@ def waveform_period(waveform: Waveform) -> float | None:
         ):
             return 1.0 / waveform.frequency
         return None
-    if isinstance(waveform, PulseWaveform):
-        if math.isfinite(waveform.period) and waveform.period > 0.0:
-            return waveform.period
+    if isinstance(waveform, PulseWaveform) and math.isfinite(waveform.period) and waveform.period > 0.0:
+        return waveform.period
     return None
 
 
@@ -292,6 +292,29 @@ class Inductor:
     n_minus: str
     inductance: float  # henries
     initial_current: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
+class MutualInductor:
+    """K<name> L1 L2 coupling"""
+
+    name: str
+    primary: str
+    secondary: str
+    coupling: float
+
+
+@dataclass(frozen=True, slots=True)
+class TransmissionLine:
+    """T<name> n1 n2 n3 n4 Z0=<ohms> TD=<seconds>"""
+
+    name: str
+    n1: str
+    n2: str
+    n3: str
+    n4: str
+    characteristic_impedance: float
+    delay: float
 
 
 @dataclass(frozen=True, slots=True)
@@ -366,6 +389,68 @@ class BSource:
 
 
 @dataclass(frozen=True, slots=True)
+class CustomModelContext:
+    """Operating-point context passed to a custom two-terminal model."""
+
+    voltage: float
+    temperature_kelvin: float = 300.15
+    parameters: Mapping[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class CustomModelEvaluation:
+    """Residual/Jacobian contribution for a two-terminal custom current model."""
+
+    current_amps: float
+    conductance_siemens: float
+
+
+CustomModelEvaluator = Callable[[CustomModelContext], CustomModelEvaluation]
+
+
+@dataclass(frozen=True, slots=True)
+class CustomModel:
+    """Sandbox-friendly two-terminal custom current model foothold.
+
+    Positive current flows from ``n_plus`` to ``n_minus``.  The first portable
+    residual/Jacobian hook returns model current and differential conductance at
+    the current operating-point voltage.
+    """
+
+    name: str
+    n_plus: str
+    n_minus: str
+    model_name: str = "custom"
+    parameters: Mapping[str, float] = field(default_factory=dict)
+    evaluator: CustomModelEvaluator | None = None
+    conductance_siemens: float | None = None
+    current_offset_amps: float = 0.0
+
+
+def custom_linear_conductance_model(
+    name: str,
+    n_plus: str,
+    n_minus: str,
+    conductance_siemens: float,
+    *,
+    current_offset_amps: float = 0.0,
+    model_name: str = "linear_conductance",
+    parameters: Mapping[str, float] | None = None,
+) -> CustomModel:
+    """Return the Rust-compatible custom-model fast path: I = g*V + I0."""
+
+    return CustomModel(
+        name=name,
+        n_plus=n_plus,
+        n_minus=n_minus,
+        model_name=model_name,
+        parameters={} if parameters is None else parameters,
+        conductance_siemens=conductance_siemens,
+        current_offset_amps=current_offset_amps,
+    )
+
+
+@dataclass(frozen=True, slots=True)
 class SubcircuitDefinition:
     """Reusable hierarchical circuit cell.
 
@@ -398,6 +483,27 @@ class Diode:
     cathode: str
     Is: float = 1e-15  # saturation current
     Vt: float = 0.02585  # thermal voltage
+    N: float = 1.0  # emission coefficient
+    BV: float | None = None  # reverse breakdown voltage
+    IBV: float = 1e-3  # reverse current at breakdown voltage
+    Cjo: float = 0.0  # zero-bias junction capacitance
+    Tt: float = 0.0  # transit time / diffusion capacitance coefficient
+
+
+@dataclass(frozen=True, slots=True)
+class JFET:
+    """Junction FET instance parsed from a SPICE ``J`` card."""
+
+    name: str
+    drain: str
+    gate: str
+    source: str
+    polarity: str = "NJF"
+    beta: float = 1.0e-4
+    vto: float = -2.0
+    lambda_: float = 0.0
+    Cgs: float = 0.0
+    Cgd: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -468,6 +574,16 @@ class BJT:
         Forward current gain hFE (default 100).
     Vt:
         Thermal voltage in Volts.  At 300 K, Vt = kT/q ≈ 25.85 mV.
+    Cje:
+        Base-emitter junction capacitance in Farads.
+    Cjc:
+        Base-collector junction capacitance in Farads.
+    Tf:
+        Forward transit time in seconds; contributes diffusion capacitance in
+        small-signal AC analysis.
+    Tr:
+        Reverse transit time in seconds; contributes base-collector diffusion
+        capacitance in small-signal AC analysis.
     """
 
     name: str
@@ -478,6 +594,10 @@ class BJT:
     Is: float = 1e-14       # saturation current (A)
     beta_f: float = 100.0   # forward current gain hFE
     Vt: float = 0.02585     # thermal voltage (V) at ~300 K
+    Cje: float = 0.0        # base-emitter junction capacitance (F)
+    Cjc: float = 0.0        # base-collector junction capacitance (F)
+    Tf: float = 0.0         # forward transit time (s)
+    Tr: float = 0.0         # reverse transit time (s)
 
 
 # ---------------------------------------------------------------------------
@@ -715,11 +835,15 @@ Element = (
     Resistor
     | Capacitor
     | Inductor
+    | MutualInductor
+    | TransmissionLine
     | VoltageSource
     | CurrentSource
     | BSource
+    | CustomModel
     | XInstance
     | Diode
+    | JFET
     | Mosfet
     | BJT
     | VCVS

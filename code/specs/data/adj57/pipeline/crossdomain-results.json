@@ -1,0 +1,773 @@
+{
+  "per_domain": [
+    {
+      "domain": "engineering",
+      "ingest": {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+        "ground_truth": "Confirmed root cause: high-stress (high-cycle bending) fatigue fracture driven by stress concentration and poor surface finish at the wheel-seat to axle-body transition arc. Established by: (1) fractographic evidence \u2014 beach marks plus dual fatigue initiation sites at the transition's rounded corners and a fatigue propagation zone parallel to machining/extrusion marks, indicating bending fatigue; (2) ruling out material defects \u2014 chemistry and mechanical properties met UIC 811-1 for EA1N steel and no porosity/slag/inclusions were found at the crack source, so it was not a material defect; (3) FEA showing maximum equivalent stress at the wheel-seat arc of ~298.7 MPa exceeding the ~200 MPa fatigue limit; (4) measured residual tensile stress (~72-99 MPa circumferential) at the arc; and (5) rough machining marks (blade marks ~0.95 mm pitch, 342 um height difference) acting as surface stress concentrators. The fix was improving the transition-arc surface finish / reducing stress concentration. So the answer is fatigue (high-cycle bending fatigue), initiated at a machining-induced surface stress concentration at the transition arc, NOT a material/metallurgical defect.",
+        "case_text": "During the development of a prototype PMDD electric locomotive, the newly designed axles exhibited premature failures during wheel-seat\u2013axle fatigue testing. The failed axle was made of EA1N steel, which conforms to the UIC 811-1 standard. Complete fracture occurred in one axle at 3 million cycles, and in the other two axles, cracks appeared and were observed through magnetic particle detection at 3.5 million and 1.6 million cycles, respectively. The axle exhibits a complete through-thickness fracture, and the fracture occurred in the arc transitional stage. The fracture surfaces show metallic luster without any detectable porosity, slag inclusions, or pre-existing process-induced cracks. On fracture surface B, beach marks are present at both the top and bottom regions of the fracture section. The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns. The fatigue propagation zone is parallel to the extrusion marks. The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1. No porosity, slag inclusion, and other raw material defects were found at the crack source.",
+        "segments": [
+          {
+            "text": "During the development of a prototype PMDD electric locomotive, the newly designed axles exhibited premature failures during wheel-seat\u2013axle fatigue testing.",
+            "kind": "fact",
+            "term": "component(railway_axle, pmdd_electric_locomotive, premature_in_service_failure)"
+          },
+          {
+            "text": " The failed axle was made of EA1N steel, which conforms to the UIC 811-1 standard.",
+            "kind": "fact",
+            "term": "material(ea1n_steel, conforms_uic_811_1)"
+          },
+          {
+            "text": " Complete fracture occurred in one axle at 3 million cycles, and in the other two axles, cracks appeared and were observed through magnetic particle detection at 3.5 million and 1.6 million cycles, respectively.",
+            "kind": "fact",
+            "term": "cyclic_failure(complete_fracture_3M_cycles, cracks_detected_1_6M_and_3_5M_cycles)"
+          },
+          {
+            "text": " The axle exhibits a complete through-thickness fracture, and the fracture occurred in the arc transitional stage.",
+            "kind": "fact",
+            "term": "fracture_location(through_thickness, transition_arc)"
+          },
+          {
+            "text": " The fracture surfaces show metallic luster without any detectable porosity, slag inclusions, or pre-existing process-induced cracks.",
+            "kind": "fact",
+            "term": "fracture_surface(metallic_luster, no_porosity_no_slag_no_preexisting_cracks)"
+          },
+          {
+            "text": " On fracture surface B, beach marks are present at both the top and bottom regions of the fracture section.",
+            "kind": "fact",
+            "term": "fracture_surface(beach_marks)"
+          },
+          {
+            "text": " The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns.",
+            "kind": "fact",
+            "term": "initiation(dual_fatigue_sites_at_transition_rounded_corners, bending_fatigue_pattern)"
+          },
+          {
+            "text": " The fatigue propagation zone is parallel to the extrusion marks.",
+            "kind": "fact",
+            "term": "propagation(zone_parallel_to_machining_extrusion_marks)"
+          },
+          {
+            "text": " The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1.",
+            "kind": "fact",
+            "term": "material_check(chemistry_meets_standard)"
+          },
+          {
+            "text": " No porosity, slag inclusion, and other raw material defects were found at the crack source.",
+            "kind": "fact",
+            "term": "material_check(no_raw_material_defect_at_crack_source)"
+          }
+        ],
+        "candidate_diagnoses": [
+          "high_cycle_bending_fatigue_from_surface_stress_concentration",
+          "fatigue_from_transition_arc_geometry_stress_concentration",
+          "material_defect_inclusion_or_porosity",
+          "stress_corrosion_cracking",
+          "hydrogen_embrittlement",
+          "overload_fracture",
+          "manufacturing_machining_defect_surface_finish"
+        ]
+      },
+      "derived": {
+        "leading_diagnosis": "fatigue_from_transition_arc_geometry_stress_concentration",
+        "prior_population": "in-service railway axles of EA1N steel conforming to UIC 811-1 that suffer premature fatigue fracture",
+        "fact_dispositions": [
+          {
+            "fact": "component(railway_axle, pmdd_electric_locomotive, premature_in_service_failure)",
+            "used": true,
+            "role": "establishes the prior reference class: an in-service railway axle failing prematurely, where rotating-bending fatigue is the dominant failure mode"
+          },
+          {
+            "fact": "material(ea1n_steel, conforms_uic_811_1)",
+            "used": true,
+            "role": "rules out wrong/substandard material; specified axle steel meeting standard shifts cause away from material toward design/geometry"
+          },
+          {
+            "fact": "cyclic_failure(complete_fracture_3M_cycles, cracks_detected_1_6M_and_3_5M_cycles)",
+            "used": true,
+            "role": "cyclic, progressive cracking over millions of cycles is the signature of fatigue, not single overload or environmental cracking"
+          },
+          {
+            "fact": "fracture_location(through_thickness, transition_arc)",
+            "used": true,
+            "role": "decisive: failure localizes at the transition arc (fillet/radius), the geometric stress-concentration feature, pinpointing arc geometry over generic surface or material cause"
+          },
+          {
+            "fact": "fracture_surface(metallic_luster, no_porosity_no_slag_no_preexisting_cracks)",
+            "used": true,
+            "role": "excludes material-defect/inclusion/porosity and pre-existing crack causes; surface is clean fatigue, not corrosion or embrittlement"
+          },
+          {
+            "fact": "fracture_surface(beach_marks)",
+            "used": true,
+            "role": "beach marks are the hallmark of progressive fatigue crack growth, confirming fatigue mechanism"
+          },
+          {
+            "fact": "initiation(dual_fatigue_sites_at_transition_rounded_corners, bending_fatigue_pattern)",
+            "used": true,
+            "role": "decisive: dual symmetric fatigue origins at the transition rounded corners indicate a bending stress concentration driven by the arc geometry, not a random surface flaw"
+          },
+          {
+            "fact": "propagation(zone_parallel_to_machining_extrusion_marks)",
+            "used": true,
+            "role": "supporting: propagation aligned with machining/extrusion direction, consistent with stress-raiser at the geometric transition rather than an isolated machining defect being the initiator"
+          },
+          {
+            "fact": "material_check(chemistry_meets_standard)",
+            "used": true,
+            "role": "confirms material is in-spec, eliminating material-defect and corrosion-chemistry causes"
+          },
+          {
+            "fact": "material_check(no_raw_material_defect_at_crack_source)",
+            "used": true,
+            "role": "decisive exclusion of material_defect_inclusion_or_porosity: crack origin is free of raw-material defects, so cause is geometry-driven stress concentration"
+          }
+        ],
+        "finding_links": [
+          {
+            "finding": "fracture_location(through_thickness, transition_arc)",
+            "expected_metric": "P(fracture origin at the transition arc | arc-geometry stress concentration) >> P(at arc | random surface or material defect); localization at the geometric feature strongly favors arc geometry",
+            "decisive": true
+          },
+          {
+            "finding": "initiation(dual_fatigue_sites_at_transition_rounded_corners, bending_fatigue_pattern)",
+            "expected_metric": "P(symmetric dual fatigue origins at the transition corners with bending pattern | arc-geometry stress concentration under bending) >> alternatives; dual symmetric origins are produced by the geometric stress raiser, not a lone defect",
+            "decisive": true
+          },
+          {
+            "finding": "fracture_surface(beach_marks)",
+            "expected_metric": "P(beach marks | fatigue) >> P(beach marks | overload or SCC or hydrogen embrittlement); confirms fatigue family",
+            "decisive": false
+          },
+          {
+            "finding": "fracture_surface(metallic_luster, no_porosity_no_slag_no_preexisting_cracks)",
+            "expected_metric": "P(clean lustrous surface, no porosity/slag/pre-existing cracks | mechanical fatigue) >> P(| SCC, hydrogen embrittlement, or inclusion/porosity defect)",
+            "decisive": false
+          },
+          {
+            "finding": "material_check(no_raw_material_defect_at_crack_source)",
+            "expected_metric": "P(no defect at crack source | geometry-driven fatigue) >> P(no defect at source | material_defect_inclusion_or_porosity \u2248 0); decisively excludes the defect hypothesis",
+            "decisive": true
+          },
+          {
+            "finding": "material_check(chemistry_meets_standard)",
+            "expected_metric": "P(in-spec chemistry | non-material cause) > P(| material-defect or corrosion-chemistry cause); down-weights material and environmental hypotheses",
+            "decisive": false
+          },
+          {
+            "finding": "cyclic_failure(complete_fracture_3M_cycles, cracks_detected_1_6M_and_3_5M_cycles)",
+            "expected_metric": "P(progressive cracking over millions of cycles | fatigue) >> P(| single overload fracture); excludes overload",
+            "decisive": false
+          }
+        ]
+      },
+      "spidered": {
+        "prior": {
+          "value": 0.67,
+          "verdict": "direction_only",
+          "chain": [
+            {
+              "hop": 0,
+              "source_title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive (Materials 2025, 18(16), 3747)",
+              "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+              "content_excerpt": "Research on axle reliability and damage over the years has found that, in addition to wear and tear, about two-thirds of axle damage is caused by fatigue. The fatigue process is particularly sensitive to microstructure, surface conditions, residual stresses, non-metallic inclusions, and stress concentration factors at geometric transitions.",
+              "cited_quote": "about two-thirds of axle damage is caused by fatigue",
+              "onward_citation": "Paper cites reference [1] for the two-thirds figure (an enterprise/reliability statistic).",
+              "gives_root_data": false
+            }
+          ]
+        },
+        "grounded_findings": [
+          {
+            "finding": "PRIOR: base rate of fatigue_from_transition_arc_geometry_stress_concentration among premature fatigue fractures of EA1N/UIC 811-1 in-service axles. No published base rate exists for this specific geometric sub-mode. The nearest literature figure is 'about two-thirds of axle damage is caused by fatigue' (root-cited reference [1]), but that is the rate of fatigue overall, not of arc-geometry stress concentration specifically. Reported value 0.67 is a coarse direction-only anchor (fatigue prevalence), NOT a grounded primary base rate for the specific answer. Within fatigue, fretting fatigue at the wheel seat dominates (>90% per enterprise statistics), so arc-geometry stress concentration is plausibly a minority sub-mode \u2014 the 0.67 anchor likely overstates the true base rate of this specific mode.",
+            "computed_lr": 0.67,
+            "lr_formula": "prior = P(fatigue overall) = 0.67 (direction-only proxy; no primary number for the arc-geometry sub-mode specifically)",
+            "verdict": "direction_only",
+            "reached_root": false,
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+                "content_excerpt": "about two-thirds of axle damage is caused by fatigue ... particularly sensitive to ... stress concentration factors at geometric transitions.",
+                "cited_quote": "about two-thirds of axle damage is caused by fatigue",
+                "onward_citation": "reference [1] (enterprise/reliability statistic)",
+                "gives_root_data": false
+              }
+            ]
+          },
+          {
+            "finding": "LR1 - fracture_location(through_thickness, transition_arc): The root primary source confirms the complete through-thickness fracture originated at the wheel-seat-to-axle-body transition arc in all three axles. This is the numerator condition P(arc fracture location | arc-geometry stress concentration) ~ 1. Direction strongly favors arc geometry (localization at the geometric feature), but the single case study provides NO denominator P(arc location | not arc-geometry, e.g. random surface/material defect). No primary study reports this conditional probability, so the LR is direction_only (qualitatively >>1, numerically uncomputable). Numeric value 1.0 is a placeholder meaning 'no usable likelihood ratio'.",
+            "computed_lr": 1,
+            "lr_formula": "LR = P(arc location | arc-geometry) / P(arc location | not) ; numerator ~1 from source, denominator unpublished => direction_only, not computable",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+                "content_excerpt": "The axle exhibits a complete through-thickness fracture, and the fracture occurred in the arc transitional stage. Fractures were consistently initiated at the wheel-seat transition arc due to multi-origin fatigue crack nucleation.",
+                "cited_quote": "The axle exhibits a complete through-thickness fracture, and the fracture occurred in the arc transitional stage.",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "LR2 - initiation(dual_fatigue_sites_at_transition_rounded_corners, bending_fatigue_pattern): The root source confirms dual symmetric fatigue origins at the transition's rounded corners (surfaces A and B) exhibiting bending fatigue patterns, with the two sources expanding inward and converging at an intersection step. Numerator P(dual symmetric origins + bending pattern | arc-geometry under bending) ~ 1. Symmetric dual origins are characteristic of a geometric stress raiser under bending rather than a lone defect, so direction strongly favors arc geometry. But no primary denominator P(dual symmetric bending origins | not) exists. Direction_only; placeholder LR 1.0.",
+            "computed_lr": 1,
+            "lr_formula": "LR = P(dual symmetric bending origins | arc-geometry) / P(... | not) ; numerator ~1 from source, denominator unpublished => direction_only",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+                "content_excerpt": "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns. There are two fracture sources in the fracture section. Fracture sources A and B expanded inward and converged to form an intersection step.",
+                "cited_quote": "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns.",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "LR3 - material_check(no_raw_material_defect_at_crack_source): The root source confirms no porosity, slag inclusion, or other raw-material defects at the crack source; chemical composition conforms to EA1N in UIC 811-1; steel purity rated A0.5/DH0.5 (axle 1) and A1.0/DH0.5 (axle 2), 'good purity'. This decisively excludes the material-defect/inclusion/porosity hypothesis at the origin: P(no defect at source | material_defect hypothesis) ~ 0, so the LR for distinguishing geometry-driven vs defect-driven is large in direction (numerator ~1, alternative denominator ~0). But this is a single case observation with no published conditional-probability denominator across a population, so it remains direction_only numerically. Placeholder LR 1.0; direction is the strongest of the three (near-categorical exclusion of the defect hypothesis).",
+            "computed_lr": 1,
+            "lr_formula": "LR = P(no defect at source | geometry-driven) / P(no defect at source | material-defect) ; numerator ~1, denominator ~0 => direction strongly favors geometry, but no population number => direction_only",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+                "content_excerpt": "No porosity, slag inclusion, and other raw material defects were found at the crack source. The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1. ... their purity can reach A0.5 and DH0.5, with good purity.",
+                "cited_quote": "No porosity, slag inclusion, and other raw material defects were found at the crack source.",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "CORROBORATING (mechanism, not an LR): FEA maximum equivalent stress at the axle-wheel-seat transition arc was 298.7, 272.8, and 284.8 MPa across three load conditions, all exceeding the 200 MPa design requirement and the notched-specimen fatigue limit of 265 MPa (smooth-specimen 273 MPa), with complete through-thickness fracture at 3 million cycles and cracks at 3.5M and 1.6M cycles. These are root primary measured/computed numbers (authors' own FEA and fatigue tests, not borrowed) and confirm the arc geometry produced stress concentration above the fatigue limit, mechanistically supporting the answer.",
+            "computed_lr": 1,
+            "lr_formula": "mechanistic corroboration: local stress (298.7 MPa) > fatigue limit (265 MPa) at the arc; not a likelihood ratio",
+            "verdict": "grounded",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Premature Fatigue Failure Analysis of Axle in Permanent Magnet Direct-Drive Electric Locomotive",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+                "content_excerpt": "The maximum equivalent stress values at the arc of the axle and wheel seat are 298.7 MPa, 272.8 MPa, and 284.8 MPa, respectively. ... fatigue limit value is 265 MPa (notched specimens). ... Complete fracture occurred in one axle at 3 million cycles.",
+                "cited_quote": "The maximum equivalent stress values at the arc of the axle and wheel seat are 298.7 MPa, 272.8 MPa, and 284.8 MPa, respectively.",
+                "gives_root_data": true
+              }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "answer": "The most likely root cause is a stress-concentration / design (and machining) defect at the wheel-seat-to-body transition fillet, NOT a material-quality problem. Specifically: the rounded-corner (arc) transition radius at the wheel seat is too small (insufficient/sub-standard fillet radius), creating a high local stress concentration. Combined with the press-fit (interference/extrusion) wheel-seat assembly producing fretting and high contact/clamping stress plus axial extrusion marks at the seat edge, rotating-bending fatigue cracks initiated at the fillet corners. The axles therefore failed by high-cycle rotating-bending fatigue originating at the transition fillet stress raiser \u2014 a geometry/design and surface-finish (machining) deficiency \u2014 rather than from steel defects.",
+        "reasoning": "Key evidence all points away from material and toward geometry/stress concentration:\n1. Chemistry conforms to EA1N/UIC 811-1; no porosity, slag, or pre-existing process cracks at the crack source \u2014 rules out raw-material/metallurgical defects.\n2. Fracture surfaces show clean metallic luster, beach marks, and classic bending-fatigue patterns with dual initiation sites \u2014 this is textbook fatigue, not overload or material flaw.\n3. Crack initiated at the \"arc transitional stage\" / rounded corners of the transition \u2014 fillets are the canonical stress-concentration site on railway axles. Initiation at the fillet means Kt (geometry) is the driver.\n4. \"Fatigue propagation zone parallel to the extrusion marks\" and the wheel-seat (press-fit/interference) context indicate fretting fatigue from the wheel seat plus machining extrusion marks elevating local stress and providing crack-nucleation surfaces.\n5. Dual initiation at opposite corners (top and bottom beach marks on surface B) is consistent with rotating-bending loading concentrated by an inadequate transition radius.\nPutting these together: with material exonerated, the remaining controllable variables are the transition-fillet radius (too small \u2192 high Kt), the surface finish at the seat (extrusion/machining marks), and the press-fit-induced fretting \u2014 i.e., a design/manufacturing stress-concentration failure. Premature failure at only 1.6-3.5M cycles (well below the expected >10^7 endurance) is consistent with a geometric stress raiser cutting fatigue life. The corrective action would be increasing the transition fillet radius, improving surface finish/rolling at the seat edge, and reducing fretting at the wheel seat.",
+        "confidence": "Moderate-to-high (~70%) for \"fatigue failure driven by a stress concentration at the wheel-seat transition fillet (geometry/surface, not material).\" Lower confidence (~50%) on the precise dominant sub-cause among {fillet radius too small, machining/extrusion marks, press-fit fretting}, as the case likely identifies one specifically."
+      }
+    },
+    {
+      "domain": "astronomy",
+      "ingest": {
+        "source_url": "https://www.astronomerstelegram.org/?read=8183",
+        "case_text": "We obtained SALT (+RSS) spectroscopy of PS15cjr (=LSQ15bgf) on 2015 Oct 16.9 UT, covering the wavelength range 350-950 nm. Cross-correlation of the spectrum with a template library using SNID (Blondin & Tonry 2007, ApJ, 666, 1024) shows PS15cjr is likely a type-IIb a few days past maximum light, with a good match to the spectrum of SN 1993J at +4 days. However, the He I 587.6 nm absorption is not as strong in PS15cjr as in SN 1993J and SNID also returns reasonable matches to normal type II-P supernovae like SN 2006bp at an age of two weeks past maximum. Adopting a redshift of z = 0.0229 for the host galaxy UGC 2120 (Huchra, Vogeley, & Geller 1999, ApJS, 121, 287) yields an expansion velocity for PS15cjr of 13,300 km/s, measured to the trough of the H-alpha P-Cygni profile. This high velocity, combined with the recently rising light curve, suggests that PS15cjr is young, ",
+        "ground_truth": "Classification: Type IIb supernova (SN IIb). Established in Astronomer's Telegram #8183 (\"SALT spectroscopic classification of PS15cjr (=LSQ15bgf) as a type-IIb supernova near maximum light\"). The authors conclude verbatim: \"...and thus we favor the type-IIb classification over a type-II classification.\" The classification rests on: (1) SNID cross-correlation giving a good match to SN 1993J (the prototypical Type IIb) at +4 days; (2) presence but relative weakness of the He I 587.6 nm absorption, consistent with an early/transitional IIb whose helium features have not yet fully developed; (3) a high H-alpha P-Cygni expansion velocity of 13,300 km/s; and (4) a recently rising light curve indicating the object is young. The competing hypothesis was a normal Type II-P (SNID also returned reasonable matches to SN 2006bp), disfavored because the young age inferred from the rising light curve and high velocity is inconsistent with a IIP two weeks past maximum. Further spectroscopy was encouraged to confirm whether the helium features strengthen as expected for a SN IIb.",
+        "segments": [
+          {
+            "text": "We obtained SALT (+RSS) spectroscopy of PS15cjr (=LSQ15bgf) on 2015 Oct 16.9 UT, ",
+            "kind": "fact",
+            "term": "spectroscopy_obtained(salt_rss, date_2015_oct_16)"
+          },
+          {
+            "text": "covering the wavelength range 350-950 nm. ",
+            "kind": "fact",
+            "term": "wavelength_coverage(350_950_nm)"
+          },
+          {
+            "text": "Cross-correlation of the spectrum with a template library using SNID (Blondin & Tonry 2007, ApJ, 666, 1024) ",
+            "kind": "fact",
+            "term": "classification_method(snid_cross_correlation)"
+          },
+          {
+            "text": "shows PS15cjr is likely a type-IIb a few days past maximum light, ",
+            "kind": "fact",
+            "term": "snid_best_type(type_iib, few_days_past_max)"
+          },
+          {
+            "text": "with a good match to the spectrum of SN 1993J at +4 days. ",
+            "kind": "fact",
+            "term": "template_match(sn1993j_iib_prototype, plus4_days)"
+          },
+          {
+            "text": "However, the He I 587.6 nm absorption is not as strong in PS15cjr as in SN 1993J ",
+            "kind": "fact",
+            "term": "he_i_absorption(present_but_weaker_than_1993j)"
+          },
+          {
+            "text": "and SNID also returns reasonable matches to normal type II-P supernovae like SN 2006bp at an age of two weeks past maximum. ",
+            "kind": "fact",
+            "term": "competing_match(type_iip_sn2006bp, plus2_weeks)"
+          },
+          {
+            "text": "Adopting a redshift of z = 0.0229 for the host galaxy UGC 2120 (Huchra, Vogeley, & Geller 1999, ApJS, 121, 287) ",
+            "kind": "fact",
+            "term": "host_redshift(z_0_0229, ugc_2120)"
+          },
+          {
+            "text": "yields an expansion velocity for PS15cjr of 13,300 km/s, ",
+            "kind": "fact",
+            "term": "expansion_velocity(13300_km_s)"
+          },
+          {
+            "text": "measured to the trough of the H-alpha P-Cygni profile. ",
+            "kind": "fact",
+            "term": "velocity_measured_from(h_alpha_p_cygni_trough)"
+          },
+          {
+            "text": "This high velocity, combined with the recently rising light curve, ",
+            "kind": "fact",
+            "term": "lightcurve_state(recently_rising)"
+          },
+          {
+            "text": "suggests that PS15cjr is young, ",
+            "kind": "fact",
+            "term": "inferred_age(young)"
+          }
+        ],
+        "candidate_diagnoses": [
+          "type_iib_supernova",
+          "type_iip_supernova",
+          "type_ii_supernova",
+          "type_ib_supernova"
+        ]
+      },
+      "derived": {
+        "leading_diagnosis": "type_iib_supernova",
+        "prior_population": "young extragalactic core-collapse supernovae submitted for spectroscopic classification via SNID cross-correlation",
+        "fact_dispositions": [
+          {
+            "fact": "spectroscopy_obtained(salt_rss, date_2015_oct_16)",
+            "used": true,
+            "role": "provenance: establishes the classification spectrum (SALT RSS instrument, epoch) that all spectral findings derive from"
+          },
+          {
+            "fact": "wavelength_coverage(350_950_nm)",
+            "used": true,
+            "role": "context: confirms coverage spans the He I (587.6 nm) and H-alpha (656.3 nm) lines that drive the IIb-vs-IIP discrimination, so absence of features is informative not instrumental"
+          },
+          {
+            "fact": "classification_method(snid_cross_correlation)",
+            "used": true,
+            "role": "method: identifies the template-matching engine producing the best-type and competing-match findings"
+          },
+          {
+            "fact": "snid_best_type(type_iib, few_days_past_max)",
+            "used": true,
+            "role": "decisive link: the cross-correlation best fit is Type IIb, directly favoring the leading answer over all competitors"
+          },
+          {
+            "fact": "template_match(sn1993j_iib_prototype, plus4_days)",
+            "used": true,
+            "role": "decisive link: best template is SN1993J, the canonical Type IIb prototype, strongly raising likelihood of IIb over IIP/Ib"
+          },
+          {
+            "fact": "he_i_absorption(present_but_weaker_than_1993j)",
+            "used": true,
+            "role": "link: He I presence supports He-bearing IIb/Ib; being weaker than 1993J slightly tempers but does not overturn the IIb call"
+          },
+          {
+            "fact": "competing_match(type_iip_sn2006bp, plus2_weeks)",
+            "used": true,
+            "role": "link (against IIP): the alternative IIP template is only a secondary/competing match at a worse epoch, lowering IIP likelihood relative to IIb"
+          },
+          {
+            "fact": "expansion_velocity(13300_km_s)",
+            "used": true,
+            "role": "link: high photospheric velocity consistent with stripped-envelope core-collapse (IIb) ejecta"
+          },
+          {
+            "fact": "velocity_measured_from(h_alpha_p_cygni_trough)",
+            "used": true,
+            "role": "link (against Ib): presence of an H-alpha P Cygni profile confirms hydrogen, ruling out the H-free Type Ib and supporting hydrogen-bearing IIb over Ib"
+          },
+          {
+            "fact": "lightcurve_state(recently_rising)",
+            "used": true,
+            "role": "context: young, pre/near-peak phase consistent with the few-days-past-max spectral epoch"
+          },
+          {
+            "fact": "inferred_age(young)",
+            "used": true,
+            "role": "context: corroborates the early epoch underlying the spectral classification"
+          },
+          {
+            "fact": "host_redshift(z_0_0229, ugc_2120)",
+            "used": true,
+            "role": "context: host redshift used to deredshift the spectrum for template matching; not type-discriminating itself"
+          },
+          {
+            "fact": "expansion_velocity(13300_km_s)",
+            "used": false,
+            "reason": "DUPLICATE of the velocity fact already dispositioned above"
+          }
+        ],
+        "finding_links": [
+          {
+            "finding": "snid_best_type(type_iib, few_days_past_max)",
+            "expected_metric": "SNID best-fit type = IIb at appropriate epoch; expected for IIb, not for IIP/Ib best fits",
+            "decisive": true
+          },
+          {
+            "finding": "template_match(sn1993j_iib_prototype, plus4_days)",
+            "expected_metric": "top template = SN1993J (IIb prototype) at +4d; high LR for IIb vs other types",
+            "decisive": true
+          },
+          {
+            "finding": "he_i_absorption(present_but_weaker_than_1993j)",
+            "expected_metric": "He I 587.6 nm present; expected in IIb/Ib, absent in IIP",
+            "decisive": false
+          },
+          {
+            "finding": "competing_match(type_iip_sn2006bp, plus2_weeks)",
+            "expected_metric": "IIP only a secondary match at worse epoch; lowers IIP posterior relative to IIb",
+            "decisive": false
+          },
+          {
+            "finding": "velocity_measured_from(h_alpha_p_cygni_trough)",
+            "expected_metric": "H-alpha P Cygni present -> hydrogen present; expected in II/IIb, absent in Ib",
+            "decisive": true
+          },
+          {
+            "finding": "expansion_velocity(13300_km_s)",
+            "expected_metric": "~13300 km/s photospheric velocity consistent with stripped-envelope IIb",
+            "decisive": false
+          }
+        ]
+      },
+      "spidered": {
+        "prior": {
+          "value": 0.106,
+          "verdict": "grounded",
+          "chain": [
+            {
+              "hop": 1,
+              "source_title": "Smith et al. 2011, MNRAS 412, 1522 \u2014 Observed fractions of core-collapse supernova types (LOSS volume-limited sample, within 60 Mpc)",
+              "source_url": "https://academic.oup.com/mnras/article/412/3/1522/1049969",
+              "content_excerpt": "Table 1 lists volume-limited core-collapse SN fractions from the LOSS sample within 60 Mpc; the entry for Type IIb is 'IIb: 10.6 +3.6/-3.1' (percent).",
+              "cited_quote": "IIb: 10.6 +3.6/-3.1",
+              "gives_root_data": true,
+              "onward_citation": ""
+            },
+            {
+              "hop": 1,
+              "source_title": "Li et al. 2011, MNRAS 412, 1441 \u2014 Nearby Supernova Rates from LOSS III (volume-limited sample of 175 SNe)",
+              "source_url": "https://arxiv.org/pdf/1006.4612",
+              "content_excerpt": "We derive the observed fractions for the different subclasses in a complete SN sample, and find significant fractions of SNe II-L (10%), IIb (12%), and IIn (9%) in the SN II sample. We select a volume-limited sample of 175 SNe ... cutoff distance ... 60 Mpc for SNe Ibc and II.",
+              "cited_quote": "we derive the observed fractions for the different subclasses in a complete SN sample, and find significant fractions of SNe II-L (10%), IIb (12%), and IIn (9%) in the SN II sample.",
+              "gives_root_data": true,
+              "onward_citation": ""
+            }
+          ]
+        },
+        "grounded_findings": [
+          {
+            "finding": "snid_best_type(type_iib, few_days_past_max): SNID best-fit type = IIb at appropriate epoch. SNID determines the SN type as the type of the best-match template(s) above a reliability cutoff (rlap > 5), and determines spectral age to within ~3 days. This is the expected signature for a IIb and not for a IIP/Ib best fit. ROOT METHODOLOGY is grounded (Blondin & Tonry 2007), but no published numeric likelihood ratio P(SNID best=IIb | IIb)/P(SNID best=IIb | not) exists. Direction strongly favors IIb. LR set to placeholder; honest verdict is direction_only.",
+            "computed_lr": 1,
+            "lr_formula": "P(snid_best=IIb at correct epoch | IIb) / P(snid_best=IIb | not IIb) \u2014 no published value; SNID reliability characterized only as rlap>5 discard threshold + ~3 day age accuracy, not as a per-type LR",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 1,
+                "source_title": "Blondin & Tonry 2007, ApJ 666, 1024 \u2014 Determining the Type, Redshift, and Age of a Supernova Spectrum (SNID)",
+                "source_url": "https://arxiv.org/pdf/0709.4488",
+                "content_excerpt": "The SN type (subtype) is simply determined as the type (subtype) of the best-match template(s) for rlap greater than some cutoff value rlap_min. We usually discard correlations with rlap < 5. Last, the age of an input spectrum is determined with a typical accuracy sigma_t <= 3 days.",
+                "cited_quote": "The SN type (subtype) is simply determined as the type (subtype) of the best-match template(s) for rlap greater than some cutoff value rlapmin.",
+                "gives_root_data": true,
+                "onward_citation": ""
+              },
+              {
+                "hop": 1,
+                "source_title": "Blondin & Tonry 2007 \u2014 rlap reliability threshold (root primary)",
+                "source_url": "https://arxiv.org/pdf/0709.4488",
+                "content_excerpt": "We usually discard correlations with rlap < 5 (and lap < 0.4). For good correlations (rlap >~ 5), the distribution of redshift residuals is a Gaussian centered at delta_z = 0.",
+                "cited_quote": "We usually discard correlations with rlap < 5",
+                "gives_root_data": true,
+                "onward_citation": ""
+              }
+            ]
+          },
+          {
+            "finding": "template_match(sn1993j_iib_prototype, plus4_days): top SNID template = SN 1993J (the IIb prototype) at +4d. SN 1993J is the canonical Type IIb prototype, included as a IIb template in the SNID/CfA template library. A top template match to SN 1993J at the correct epoch is strong evidence for IIb. ROOT classification of SN1993J as IIb is grounded (Filippenko et al. 1993; reaffirmed Fox et al. 2014), and its inclusion as a SNID IIb template is grounded (Liu & Modjaz / Modjaz et al. 2014 SNID template set). However NO published numeric LR for 'top template = 1993J -> IIb' exists. Direction strongly favors IIb. Honest verdict: direction_only.",
+            "computed_lr": 1,
+            "lr_formula": "P(top template = SN1993J at +4d | IIb) / P(top template = SN1993J | not IIb) \u2014 no published value; only qualitative 'prototype template' grounding available",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 1,
+                "source_title": "Fox et al. 2014, ApJ \u2014 Uncovering the B-star companion of SN 1993J (states the defining IIb property and that 1993J is the prototype)",
+                "source_url": "https://arxiv.org/pdf/1405.4863",
+                "content_excerpt": "The Type IIb supernova (SN IIb; see Filippenko 1997 for a review) subclass exhibits spectroscopic evidence for hydrogen emission at early times (the defining property of Type II supernovae, SNe II), He I absorption at later times (as in SNe Ib), and renewed broad H-alpha emission in the nebular phase. The Type IIb supernova (SN) 1993J is one of only a few stripped-envelope supernovae with a progenitor star identified in pre-explosion images.",
+                "cited_quote": "The Type IIb supernova (SN) 1993J is one of only a few stripped-envelope supernovae with a progenitor star identified in pre-explosion images.",
+                "gives_root_data": true,
+                "onward_citation": "Filippenko, Matheson & Ho 1993, ApJ 415, L103 (original IIb classification of SN1993J)"
+              },
+              {
+                "hop": 2,
+                "source_title": "Modjaz et al. 2014 / Liu & Modjaz 2014, arXiv:1405.1437 \u2014 SNID spectral templates of 70 stripped-envelope CCSNe (root: 1993J included as IIb template)",
+                "source_url": "https://ar5iv.labs.arxiv.org/html/1405.1437",
+                "content_excerpt": "The CfA SNID template set contains 13 Type IIb supernovae out of 70 stripped-envelope core-collapse SNe, including SN 1993J. The paper notes for SN 1993J that its CfA spectra were taken at very late phases and advises caution when overwriting its templates-2.0 IIb template.",
+                "cited_quote": "the CfA templates contain 13 Type IIb supernovae out of 70 total stripped-envelope core-collapse SNe",
+                "gives_root_data": true,
+                "onward_citation": ""
+              }
+            ]
+          },
+          {
+            "finding": "velocity_measured_from(h_alpha_p_cygni_trough): an H-alpha P Cygni profile is present, implying hydrogen is present, and the ejecta velocity is read from the blueshifted H-alpha absorption trough. Hydrogen (H-alpha) is the DEFINING feature separating Type II/IIb from Type Ib (which lacks hydrogen). This is grounded in primary observation of the IIb prototype SN 1993J (early prominent H-alpha P Cygni weakening as He I appears). ROOT primary observation is grounded (Filippenko et al. 1993, reaffirmed Fox et al. 2014: H-alpha max velocity ~5000-6000 km/s). NO published numeric LR P(H-alpha P Cygni | IIb)/P(H-alpha P Cygni | Ib) exists, though qualitatively H present in IIb and absent in Ib makes the direction decisively toward II/IIb and away from Ib. Honest verdict: direction_only.",
+            "computed_lr": 1,
+            "lr_formula": "P(H-alpha P Cygni present | IIb) / P(H-alpha P Cygni present | Ib/other-no-H) \u2014 qualitatively near-1 vs near-0 (H defining feature) but no published quantitative LR; reported as direction_only",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 1,
+                "source_title": "Fox et al. 2014 \u2014 IIb defining property: hydrogen at early times; H-alpha velocity measured",
+                "source_url": "https://arxiv.org/pdf/1405.4863",
+                "content_excerpt": "The Type IIb subclass exhibits spectroscopic evidence for hydrogen emission at early times (the defining property of Type II supernovae)... H-alpha has a larger width on both the red and blue sides, with a maximum velocity of 5000-6000 km s^-1.",
+                "cited_quote": "H\u03b1 has a larger width on both the red and blue sides, with a maximum velocity of 5000\u20136000 km s\u22121.",
+                "gives_root_data": true,
+                "onward_citation": "Filippenko, Matheson & Ho 1993, ApJ 415, L103"
+              },
+              {
+                "hop": 2,
+                "source_title": "Filippenko, Matheson & Ho 1993, ApJ 415, L103 \u2014 The 'Type IIb' Supernova 1993J in M81 (root primary spectroscopy: H-alpha P Cygni weakening, He I P Cygni appearing)",
+                "source_url": "https://ui.adsabs.harvard.edu/abs/1993ApJ...415L.103F/abstract",
+                "content_excerpt": "Spectra of SN 1993J at three epochs within the first 1.5 months after explosion reveal the onset of a remarkable transformation: the prominent H-alpha emission line visible at early times became progressively weaker as P Cygni features of He I gradually appeared, classifying SN 1993J as a hydrogen-poor, helium-rich 'Type IIb' supernova linking Type II and Type Ib.",
+                "cited_quote": "the prominent H\u03b1 emission line visible at early times became progressively weaker as P Cygni features of He I gradually appeared",
+                "gives_root_data": true,
+                "onward_citation": ""
+              }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "answer": "PS15cjr is a young (recently exploded, caught near or before maximum light), high-velocity core-collapse supernova whose spectrum most resembles a Type IIb like SN 1993J \u2014 but the classification is somewhat ambiguous between Type IIb and a normal Type II-P. The cut-off sentence most likely completes to the effect that \"...PS15cjr is young, having exploded only ~1-2 weeks ago\" (i.e., the explosion epoch is recent / within roughly the last couple of weeks).",
+        "reasoning": "The text walks through a standard classification telegram (ATel/TNS-style) logic:\n\n1. SALT+RSS optical spectrum, SNID cross-correlation gives best match to SN 1993J at +4d \u2192 Type IIb, a few days past maximum.\n2. A caveat: the He I 587.6 nm absorption is weaker than in SN 1993J, and SNID also matches normal Type II-P templates (SN 2006bp ~2 weeks past max). So the IIb-vs-IIP distinction is genuinely uncertain \u2014 weak/absent strong He I and a plausible II-P match argues this could be a hydrogen-rich II rather than a stripped IIb.\n3. A high H\u03b1 P-Cygni trough velocity of ~13,300 km/s is measured. Such high photospheric/line velocities are characteristic of the early phases of a supernova, when the fastest-moving outer ejecta dominate the line-forming region; velocities decline monotonically as the photosphere recedes.\n4. \"Combined with the recently rising light curve\" \u2014 a still-rising (pre-maximum or near-maximum) light curve plus high ejecta velocity are the two classic indicators that an event was caught early.\n\nThe natural completion of \"this high velocity, combined with the recently rising light curve, suggests that PS15cjr is young\" is a statement that the explosion occurred only recently \u2014 i.e., the SN is at an early epoch, on the order of one to two weeks (or less) post-explosion, and was therefore caught young. The whole purpose of citing both the high velocity AND the rising light curve is to date the explosion as recent. So the single most likely answer is that PS15cjr is a young, recently-exploded high-velocity core-collapse SN (probable Type IIb \u00e0 la SN 1993J, with Type II ambiguity), discovered within roughly the last ~1-2 weeks of explosion.\n\nI am deliberately not retrieving the published classification. Based purely on the internal logic of the passage, the high-velocity + rising-light-curve argument is a standard youth argument, and weak He I plus II-P matches keep the IIb/IIP type uncertain.",
+        "confidence": "Moderate-to-high (~75%) that the intended conclusion is \"young/recently exploded, caught early (~1-2 weeks post-explosion)\" and that the object is a high-velocity Type IIb-like core-collapse SN with residual IIb-vs-IIP ambiguity. Lower confidence (~50%) on the exact numerical explosion age and on whether the final classification settled on IIb versus II."
+      }
+    },
+    {
+      "domain": "cybersecurity",
+      "ingest": {
+        "source_url": "https://www.sentinelone.com/labs/acidrain-a-modem-wiper-rains-down-on-europe/",
+        "ground_truth": "SentinelOne (SentinelLabs) assessed with MEDIUM CONFIDENCE that AcidRain has developmental and code overlaps with a VPNFilter stage 3 'dstr' destructive plugin. VPNFilter was previously attributed by the FBI/US government to the Russian GRU-linked threat actor Sandworm (a.k.a. cluster overlapping with APT28/Fancy Bear in some reporting). The overlap basis: AcidRain (MIPS ELF, SHA256 9b4dfaca...4fd9a) and the VPNFilter 'dstr' plugin (SHA256 47f521bd...a83d6) share a 55% TLSH fuzzy-hash similarity (no other VT samples flagged), identical Section Headers Strings Tables (suggesting a shared compiler), the same MEMGETINFO/MEMUNLOCK/MEMERASE mtd-erase IOCTLs, and an identical developer quirk of storing the previous syscall number to a global before each new syscall. SentinelOne explicitly cautioned this is only a medium-confidence link and not a definitive formal attribution. AcidRain was the malware deployed in the Feb 24, 2022 Viasat KA-SAT modem-wiping attack at the start of Russia's invasion of Ukraine. ANSWER: the malware is the AcidRain modem wiper; the threat-actor attribution (medium confidence) is Sandworm / Russian GRU, established via code+developmental overlap with the Sandworm-linked VPNFilter 'dstr' plugin.",
+        "case_text": "On Tuesday, March 15th, 2022, a suspicious upload caught our attention. A MIPS ELF binary was uploaded to VirusTotal from Italy with the name 'ukrop'. AcidRain's functionality is relatively straightforward and takes a bruteforce attempt that possibly signifies that the attackers were either unfamiliar with the particulars of the target firmware or wanted the tool to remain generic and reusable. This wiper iterates over all possible device file identifiers (e.g., mtdblock0 \u2013 mtdblock99), opens the device file, and either overwrites it with up to 0x40000 bytes of data or (in the case of the /dev/mtd* device file) uses the following IOCTLS to erase it: MEMGETINFO, MEMUNLOCK, MEMERASE, and MEMWRITEOOB. The similarity was at 55% to AcidRain with no other samples being flagged in the VT corpus. It appears that they may also share a compiler, most clearly evidenced by the identical Section Headers Strings Tables. Both binaries make use of the MEMGETINFO, MEMUNLOCK, and MEMERASE IOCTLS to erase mtd device files.",
+        "segments": [
+          {
+            "text": "On Tuesday, March 15th, 2022, a suspicious upload caught our attention. ",
+            "kind": "fact",
+            "term": "sample_uploaded(virustotal, date_2022_03_15)"
+          },
+          {
+            "text": "A MIPS ELF binary was uploaded to VirusTotal from Italy with the name 'ukrop'. ",
+            "kind": "fact",
+            "term": "file_type(mips_elf_binary); upload_origin(italy); file_name(ukrop)"
+          },
+          {
+            "text": "AcidRain's functionality is relatively straightforward and takes a bruteforce attempt that possibly signifies that the attackers were either unfamiliar with the particulars of the target firmware or wanted the tool to remain generic and reusable. ",
+            "kind": "fact",
+            "term": "wipe_strategy(bruteforce_generic_reusable)"
+          },
+          {
+            "text": "This wiper iterates over all possible device file identifiers (e.g., mtdblock0 \u2013 mtdblock99), opens the device file, and either overwrites it with up to 0x40000 bytes of data ",
+            "kind": "fact",
+            "term": "behavior(iterate_device_ids_overwrite, max_0x40000_bytes)"
+          },
+          {
+            "text": "or (in the case of the /dev/mtd* device file) uses the following IOCTLS to erase it: MEMGETINFO, MEMUNLOCK, MEMERASE, and MEMWRITEOOB. ",
+            "kind": "fact",
+            "term": "mtd_erase_ioctls(memgetinfo, memunlock, memerase, memwriteoob)"
+          },
+          {
+            "text": "The similarity was at 55% to AcidRain with no other samples being flagged in the VT corpus. ",
+            "kind": "fact",
+            "term": "tlsh_similarity(vpnfilter_dstr_plugin, 55_percent, unique_in_corpus)"
+          },
+          {
+            "text": "It appears that they may also share a compiler, most clearly evidenced by the identical Section Headers Strings Tables. ",
+            "kind": "fact",
+            "term": "shared_compiler_evidence(identical_section_headers_strings_tables)"
+          },
+          {
+            "text": "Both binaries make use of the MEMGETINFO, MEMUNLOCK, and MEMERASE IOCTLS to erase mtd device files.",
+            "kind": "fact",
+            "term": "shared_mtd_erase_ioctls(memgetinfo, memunlock, memerase)"
+          }
+        ],
+        "candidate_diagnoses": [
+          "acidrain_sandworm_gru",
+          "vpnfilter_sandworm",
+          "apt28_fancy_bear",
+          "generic_unattributed_wiper",
+          "industroyer_caddywiper_cluster"
+        ]
+      },
+      "derived": {
+        "leading_diagnosis": "acidrain_sandworm_gru",
+        "prior_population": "MIPS ELF wiper binaries targeting embedded/router/modem devices submitted to VirusTotal in 2022, in the universe of the five candidate attributions",
+        "fact_dispositions": [
+          {
+            "fact": "sample_uploaded(virustotal, date_2022_03_15)",
+            "used": true,
+            "role": "Anchors the sample to the exact window of the Viasat KA-SAT modem outage (Feb 24 / discovered March 2022); AcidRain was first uploaded to VirusTotal on 2022-03-15. Strong timeline-of-event link favoring acidrain over the older vpnfilter/apt28 families."
+          },
+          {
+            "fact": "file_type(mips_elf_binary); upload_origin(italy); file_name(ukrop)",
+            "used": true,
+            "role": "MIPS ELF matches the SurfBeam2 modem CPU architecture; 'ukrop' (a Russian slur/abbreviation tied to Ukraine) and Italian (Viasat EU footprint) upload origin are the documented AcidRain submission metadata. Identifies the specific sample."
+          },
+          {
+            "fact": "wipe_strategy(bruteforce_generic_reusable)",
+            "used": true,
+            "role": "Distinguishing trait: AcidRain uses a generic, reusable brute-force overwrite (not device-model-specific like CaddyWiper/Industroyer Windows-grid tooling), supporting the acidrain answer over the industroyer_caddywiper_cluster."
+          },
+          {
+            "fact": "behavior(iterate_device_ids_overwrite, max_0x40000_bytes)",
+            "used": true,
+            "role": "Specific AcidRain behavior \u2014 iterates device file IDs and overwrites in 0x40000-byte chunks. Fingerprint-level behavioral link."
+          },
+          {
+            "fact": "mtd_erase_ioctls(memgetinfo, memunlock, memerase, memwriteoob)",
+            "used": true,
+            "role": "AcidRain's flash-destruction routine targets MTD (memory technology device) flash via these ioctls including MEMWRITEOOB; characteristic of embedded-flash wipers, consistent with acidrain."
+          },
+          {
+            "fact": "tlsh_similarity(vpnfilter_dstr_plugin, 55_percent, unique_in_corpus)",
+            "used": true,
+            "role": "Decisive code-similarity link: 55% TLSH match to VPNFilter's 'dstr' stage-3 wiper plugin, unique in the corpus, is the exact SentinelLabs basis for tying AcidRain to the VPNFilter/Sandworm developers (GRU)."
+          },
+          {
+            "fact": "shared_compiler_evidence(identical_section_headers_strings_tables)",
+            "used": true,
+            "role": "Identical section headers/strings tables indicate shared build toolchain/developer with VPNFilter 'dstr', reinforcing common Sandworm authorship \u2014 supports GRU attribution."
+          },
+          {
+            "fact": "shared_mtd_erase_ioctls(memgetinfo, memunlock, memerase)",
+            "used": true,
+            "role": "Overlap of the same MTD erase ioctl set with VPNFilter's dstr plugin is the shared technique link cementing developer continuity from VPNFilter to AcidRain (both Sandworm/GRU)."
+          }
+        ],
+        "finding_links": [
+          {
+            "finding": "tlsh_similarity(vpnfilter_dstr_plugin, 55_percent, unique_in_corpus)",
+            "expected_metric": "~55% TLSH similarity to VPNFilter dstr and unique in corpus is expected almost only if the author reused the dstr code base (Sandworm); near-zero under unattributed-wiper or non-Sandworm APT28 hypotheses",
+            "decisive": true
+          },
+          {
+            "finding": "sample_uploaded(virustotal, date_2022_03_15)",
+            "expected_metric": "Upload date coinciding with the Viasat outage window is highly expected for AcidRain, low for the older vpnfilter/apt28/industroyer samples",
+            "decisive": false
+          },
+          {
+            "finding": "file_type(mips_elf_binary); upload_origin(italy); file_name(ukrop)",
+            "expected_metric": "MIPS ELF + 'ukrop' name + Italy origin jointly match the known AcidRain sample metadata; very unlikely under generic_unattributed_wiper or Windows-targeting industroyer/caddywiper",
+            "decisive": true
+          },
+          {
+            "finding": "behavior(iterate_device_ids_overwrite, max_0x40000_bytes)",
+            "expected_metric": "0x40000-byte chunked device-ID iteration is AcidRain's signature overwrite loop; not characteristic of the other candidates",
+            "decisive": false
+          },
+          {
+            "finding": "shared_compiler_evidence(identical_section_headers_strings_tables)",
+            "expected_metric": "Identical section headers/strings tables with VPNFilter dstr expected under shared-developer (Sandworm) hypothesis, near-zero for unattributed or distinct-actor hypotheses",
+            "decisive": false
+          },
+          {
+            "finding": "shared_mtd_erase_ioctls(memgetinfo, memunlock, memerase)",
+            "expected_metric": "Same MTD ioctl set as VPNFilter dstr expected under code-lineage continuity; weaker alone (common embedded technique) but corroborative",
+            "decisive": false
+          }
+        ]
+      },
+      "spidered": {
+        "prior": {
+          "value": 0.7,
+          "verdict": "direction_only",
+          "chain": [
+            {
+              "hop": 1,
+              "source_title": "AcidRain | A Modem Wiper Rains Down on Europe | SentinelOne (SentinelLabs)",
+              "source_url": "https://www.sentinelone.com/labs/acidrain-a-modem-wiper-rains-down-on-europe/",
+              "content_excerpt": "We assess with medium-confidence that there are developmental similarities between AcidRain and a VPNFilter stage 3 destructive plugin. In 2018, the FBI and Department of Justice attributed the VPNFilter campaign to the Russian government.",
+              "cited_quote": "We assess with medium-confidence that there are developmental similarities between AcidRain and a VPNFilter stage 3 destructive plugin.",
+              "gives_root_data": false,
+              "onward_citation": "FBI/DOJ 2018 VPNFilter attribution; EU + Five Eyes May 10 2022 attribution"
+            },
+            {
+              "hop": 2,
+              "source_title": "Viasat KA-SAT attack (2022) - CCDCOE International cyber law toolkit / EU + Five Eyes attribution",
+              "source_url": "https://cyberlaw.ccdcoe.org/wiki/Viasat_KA-SAT_attack_(2022)",
+              "content_excerpt": "On May 10, the EU and the Five Eyes governments (US, UK, Australia, New Zealand, Canada) released public statements attributing AcidRain to the Russian military intelligence (GRU), linking it to multiple families of destructive wiper malware including WhisperGate.",
+              "cited_quote": "the EU and the Five Eyes governments ... released public statements attributing AcidRain to the Russian military intelligence (GRU)",
+              "gives_root_data": false,
+              "onward_citation": "EU Council / national MFA statements (no published base-rate fraction)"
+            }
+          ]
+        },
+        "grounded_findings": [
+          {
+            "finding": "TLSH similarity ~55% between AcidRain and the VPNFilter 'dstr' destructive plugin, with NO other samples flagged in the VirusTotal corpus (i.e. unique match). This is the primary measured fuzzy-hash datum supporting reuse of the Sandworm/VPNFilter dstr code base.",
+            "lr_formula": "LR = P(55% unique TLSH match to dstr | Sandworm/GRU) / P(same | not-Sandworm). dstr is private, non-public VPNFilter (FBI-attributed Sandworm) code; unique-in-corpus uniqueness means the only known code sharing this lineage is Sandworm's own. P(numerator) high (code reuse expected if same author lineage); P(denominator) near-zero (an unattributed wiper or non-Sandworm APT28/Industroyer author would have no access to the private dstr base). Directionally LR >> 1 (qualitatively ~10^1-10^2), but no published P(feature|H) values exist.",
+            "computed_lr": 30,
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 1,
+                "source_title": "AcidRain | A Modem Wiper Rains Down on Europe | SentinelOne (SentinelLabs) \u2014 ROOT primary measurement",
+                "source_url": "https://www.sentinelone.com/labs/acidrain-a-modem-wiper-rains-down-on-europe/",
+                "content_excerpt": "Researchers used TLSH fuzzy hashing to compare AcidRain against the VirusTotal corpus; a VPNFilter 'dstr' (destruction) stage-3 plugin was flagged. The similarity was at 55% to AcidRain with no other samples being flagged in the VT corpus. The dstr plugin is a previously-unknown destruction module meant to supplement stage 2 plugins lacking a 'kill' command to wipe devices.",
+                "cited_quote": "The similarity was at 55% to AcidRain with no other samples being flagged in the VT corpus.",
+                "gives_root_data": true,
+                "onward_citation": "(root: SentinelLabs primary TLSH measurement on VT corpus \u2014 no onward citation needed)"
+              }
+            ]
+          },
+          {
+            "finding": "AcidRain file metadata jointly matching the known sample: 32-bit MIPS ELF binary, uploaded to VirusTotal from Italy, filename 'ukrop', first seen 2022-03-15 15:08:02 UTC. These three primary metadata facts (file type + origin country + file name) jointly identify the AcidRain/KA-SAT sample.",
+            "lr_formula": "LR = P(MIPS ELF + Italy upload + name 'ukrop' | AcidRain=Sandworm/GRU embedded-modem op) / P(same joint metadata | not). Numerator ~1 (this IS the metadata of the attributed sample). Denominator very small: generic unattributed wipers or Windows-targeting Industroyer/CaddyWiper would not be MIPS ELF, and the joint Italy+'ukrop' (Ukraine-Operation) coincidence is highly specific. Directionally LR >> 1, but P(feature|not) is not a published quantity.",
+            "computed_lr": 20,
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 1,
+                "source_title": "AcidRain | A Modem Wiper Rains Down on Europe | SentinelOne (SentinelLabs) \u2014 ROOT primary metadata",
+                "source_url": "https://www.sentinelone.com/labs/acidrain-a-modem-wiper-rains-down-on-europe/",
+                "content_excerpt": "A MIPS ELF binary was uploaded to VirusTotal from Italy with the name 'ukrop'. First Seen: 2022-03-15 15:08:02 UTC. Magic: ELF 32-bit MSB executable, MIPS, MIPS-I version 1 (SYSV), statically linked, stripped. The name 'ukrop' may be an abbreviation of 'Ukraine Operation'.",
+                "cited_quote": "A MIPS ELF binary was uploaded to VirusTotal from Italy with the name 'ukrop'.",
+                "gives_root_data": true,
+                "onward_citation": "(root: SentinelLabs primary VirusTotal sample metadata \u2014 no onward citation needed)"
+              }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "answer": "AcidRain",
+        "reasoning": "ukrop MIPS ELF from Italy 2022-03-15 = AcidRain (Viasat KA-SAT wiper, Sandworm); 55% match is VPNFilter dstr plugin.",
+        "confidence": "High"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+var w=4;var s=3;report(w*s);

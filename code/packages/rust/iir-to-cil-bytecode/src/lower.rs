@@ -60,7 +60,7 @@ use std::collections::{BTreeMap, HashMap};
 use interpreter_ir::{IIRModule, Operand};
 use ir_to_cil_bytecode::backend::{CILMethodArtifact, CILProgramArtifact};
 use ir_to_cil_bytecode::builder::{CILBranchKind, CILBytecodeBuilder, CILOpcode};
-use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN};
+use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN, INT32_TYPE_TOKEN};
 
 /// Sentinel token for `System.Console.WriteLine(int64)`.
 ///
@@ -95,6 +95,23 @@ const CONSOLE_WRITELINE_I64_TOKEN: u32 = 0x0A00_0002;
 const BF_TAPE_TOKEN: u32     = 0x0400_0001; // FieldRef row 1
 const BF_PUTCHAR_TOKEN: u32  = 0x0A00_0003; // MemberRef row 3 (after WriteLine @ row 2)
 const BF_GETCHAR_TOKEN: u32  = 0x0A00_0004; // MemberRef row 4
+
+// ─── BASIC host-class metadata token (G4) ─────────────────────────────────────
+//
+// Sentinel for `env.BasicRuntime::PrintI64(int64)` — the CLR counterpart to
+// wasm's `env.__print_i64` import (iir-to-wasm v0.8.0) and JVM's
+// `env/BasicRuntime.println(J)V` invokestatic target (iir-to-jvm-class-file
+// v0.7.0).  Reserved at MemberRef row 5 (next after BF_GETCHAR_TOKEN @ row 4).
+//
+// Host contract: a CLR runtime / launcher must provide `env.BasicRuntime`
+// with:
+//
+//   * `public static void PrintI64(int64)`  ← print one i64 followed by a newline
+//
+// We pick a separate class from `env.BFRuntime` because BASIC's I/O model
+// (line/value, mostly numeric) differs from Brainfuck's (byte-stream); a CLR
+// runtime can stub or provide either one independently.
+const BASIC_PRINT_I64_TOKEN: u32 = 0x0A00_0005; // MemberRef row 5
 
 use crate::validate::validate_iir_for_clr;
 
@@ -270,6 +287,53 @@ fn emit_store(builder: &mut CILBytecodeBuilder, info: &RegInfo, fn_name: &str) -
         builder.emit_stloc(idx);
     }
     Ok(())
+}
+
+/// The bit-mask for a narrow unsigned integer width, or `None` if the width
+/// needs no masking.
+///
+/// LANG-FULL **E2 — register width & wrap**.  A CIL arithmetic op (`add`,
+/// `mul`, `shl`, …) operates on a full 32-bit `int32` stack slot, so a narrow
+/// unsigned value can overflow its declared width: `200u8 + 100u8` evaluates
+/// to `300` on the stack, but the `u8` contract says it must wrap to
+/// `300 & 0xFF = 44`.  We restore the contract by AND-masking the result down
+/// to the width after the op:
+///
+/// ```text
+///   ldc.i4 <mask>     ; push 0xFF (u8) / 0xFFFF (u16) / 0xF (u4)
+///   and               ; result &= mask  → back inside the width
+/// ```
+///
+/// | type_hint | mask     | example                       |
+/// |-----------|----------|-------------------------------|
+/// | `u4`      | `0xF`    | `15u4 + 1u4` → `16 & 0xF = 0`  |
+/// | `u8`      | `0xFF`   | `200u8 + 100u8` → `44`        |
+/// | `u16`     | `0xFFFF` | `~0u16` → `65535`             |
+/// | `u32`,`i32`| —       | the i32 op already wraps mod-2³² |
+/// | `i64`,…   | —        | wider/signed: left unchanged  |
+///
+/// This mirrors the JVM (`iand`), wasm (`i32.and`), VM, and JIT backends — a
+/// positive mask + `and` (never `conv.u1`/`conv.i1`, which would sign-extend a
+/// signed narrow value) keeps the unsigned widths unsigned.  `u32`/`i32`
+/// already wrap mod-2³² because the underlying CIL op is 32-bit, so they need
+/// no mask.
+fn narrow_width_mask(type_hint: &str) -> Option<i32> {
+    match type_hint {
+        "u4" => Some(0xF),
+        "u8" => Some(0xFF),
+        "u16" => Some(0xFFFF),
+        _ => None,
+    }
+}
+
+/// Emit `ldc.i4 <mask>; and` to wrap a just-computed narrow-width result back
+/// into its declared width.  A no-op for `u32`/`i32`/`i64`/signed hints (see
+/// [`narrow_width_mask`]).
+fn emit_narrow_width_mask(builder: &mut CILBytecodeBuilder, type_hint: &str) {
+    if let Some(mask) = narrow_width_mask(type_hint) {
+        builder.emit_ldc_i4(mask);
+        builder.emit_and();
+    }
 }
 
 // ===========================================================================
@@ -691,6 +755,8 @@ pub fn lower_iir_to_cil(
                         _ => unreachable!(),
                     }
 
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ.
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -719,6 +785,8 @@ pub fn lower_iir_to_cil(
                     emit_load(&mut builder, &rhs, fn_name)?;
                     // `rem` opcode: 0x5D.  Not in CILOpcode enum, emitted raw.
                     builder.emit_raw(vec![0x5D]);
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ.
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -739,6 +807,9 @@ pub fn lower_iir_to_cil(
                     emit_load(&mut builder, &src, fn_name)?;
                     // `neg` opcode: 0x65.
                     builder.emit_raw(vec![0x65]);
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ
+                    // (`-1u8` → `0xFF` = 255, not the i32 `-1`).
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -770,6 +841,9 @@ pub fn lower_iir_to_cil(
                         _ => unreachable!(),
                     }
 
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ
+                    // (`1u8 << 8` → `0`).
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -795,6 +869,10 @@ pub fn lower_iir_to_cil(
                     emit_load(&mut builder, &src, fn_name)?;
                     // `not` opcode: 0x66.
                     builder.emit_raw(vec![0x66]);
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ — `not`
+                    // flips all 32 bits, so `~0u8` is `0xFFFFFFFF`; the mask
+                    // brings it back to `0xFF` = 255 (Nib's unary `~`).
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -1344,6 +1422,41 @@ pub fn lower_iir_to_cil(
                     builder.emit_stelem_ref();                   // array[idx] = value
                 }
 
+                // ── box dest src ; unbox.any dest src (McCarthy W6b) ──────────
+                //
+                // The uniform-reference value model's atom boxing — the CLR
+                // counterpart of the wasm `i31ref` and the JVM `Integer`. The
+                // shared structural pass emits these `box`/`unbox` ops; on the CLR
+                // a boxed `int32` lives in an `object[]` cons cell.
+                //   box      → ldloc src ; box [int32] ; stloc dest
+                //   unbox.any→ ldloc src ; unbox.any [int32] ; stloc dest
+                "box" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "box instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    builder.emit_box(INT32_TYPE_TOKEN);
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+                "unbox" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "unbox instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+
                 // ── is_null dest x ────────────────────────────────────────────
                 //
                 // Test whether `x` is a null reference (the IIR nil value).
@@ -1695,8 +1808,9 @@ pub fn lower_iir_to_cil(
                 //
                 // | Builtin   | Operand layout                        | CIL emitted                                                  |
                 // |-----------|----------------------------------------|---------------------------------------------------------------|
-                // | `putchar` | srcs = [Var("putchar"), Var(val)]; no dest | `ldloc val; call <BF_PUTCHAR_TOKEN>`                          |
-                // | `getchar` | srcs = [Var("getchar")]; dest = byte slot  | `call <BF_GETCHAR_TOKEN>; stloc dest`                         |
+                // | `putchar`   | srcs = [Var("putchar"), Var(val)]; no dest    | `ldloc val; call <BF_PUTCHAR_TOKEN>`                          |
+                // | `getchar`   | srcs = [Var("getchar")]; dest = byte slot     | `call <BF_GETCHAR_TOKEN>; stloc dest`                         |
+                // | `print_i64` | srcs = [Var("print_i64"), Var(val:i64)]; no dest | `ldloc val; call <BASIC_PRINT_I64_TOKEN>`                     |
                 "call_builtin" => {
                     let builtin_name = match instr.srcs.first() {
                         Some(Operand::Var(s)) => s.clone(),
@@ -1728,6 +1842,101 @@ pub fn lower_iir_to_cil(
                             let dest_info = reg_info!(dest_name).clone();
                             builder.emit_call(BF_GETCHAR_TOKEN);
                             emit_store(&mut builder, &dest_info, fn_name)?;
+                        }
+                        "print_i64" => {
+                            // G4: BASIC PRINT → env.BasicRuntime::PrintI64(int64).
+                            // Layout: srcs = [Var("print_i64"), Var(val: i64)],
+                            // dest = None.  Emits `ldloc val; call <token>` — the
+                            // load opcode chosen by emit_load already matches the
+                            // val's register width (long → ldloc / ldarg etc.).
+                            //
+                            // Mirrors iir-to-wasm v0.8.0 (env.__print_i64 import)
+                            // and iir-to-jvm-class-file v0.7.0
+                            // (invokestatic env/BasicRuntime.println(J)V).
+                            let val_name = match instr.srcs.get(1) {
+                                Some(Operand::Var(v)) => v.clone(),
+                                _ => return Err(IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"print_i64\" requires srcs[1] = Operand::Var(val:i64)".to_string(),
+                                }),
+                            };
+                            let val_info = reg_info!(val_name).clone();
+                            emit_load(&mut builder, &val_info, fn_name)?;
+                            builder.emit_call(BASIC_PRINT_I64_TOKEN);
+                        }
+
+                        // ── McCarthy W7 predicates (F3–F5) ────────────────────
+                        //
+                        // The CLR twins of the JVM `instanceof`/`ixor`/`if_icmpeq`
+                        // and the wasm `ref.test`/`i32.eqz`/`i32.eq`. The shared
+                        // structural pass decomposes `ATOM x` → `not (pair? x)`
+                        // and `EQ a b` → `equal? a b`; `COND` lowers to the
+                        // already-supported `jmp_if_true`/`jmp_if_false`.
+                        //
+                        // | builtin | layout                         | CIL |
+                        // |---------|--------------------------------|-----|
+                        // | `pair?` | [Var("pair?"), Var(x)]; dest   | `ldloc x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
+                        // | `not`   | [Var("not"), Var(x)]; dest     | `ldloc x; ldc.i4.1; xor` |
+                        // | `equal?`| [Var("equal?"), Var(a), Var(b)]; dest | `ldloc a; unbox.any int32; ldloc b; unbox.any int32; ceq` |
+                        "pair?" => {
+                            // Is the (boxed) lisp value a cons cell? A cons is an
+                            // `object[]` (heap ref); an atom is a boxed int; nil is
+                            // null. `isinst` leaves the ref or null; the two `ceq`s
+                            // turn that into a clean 1 (pair) / 0 (not) — the first
+                            // `ceq ldnull` answers "is it null (≠ pair)?", the
+                            // second flips it (`== 0` ⇒ "was a pair").
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"pair?\" requires a dest".into(),
+                                }
+                            })?;
+                            let dest = reg_info!(dest_name).clone();
+                            let arg = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
+                            emit_load(&mut builder, &arg, fn_name)?;
+                            builder.emit_isinst(OBJECT_ARRAY_TYPE_TOKEN);
+                            builder.emit_ldnull();
+                            builder.emit_ceq();        // 1 if null (not a pair)
+                            builder.emit_ldc_i4(0);
+                            builder.emit_ceq();        // flip → 1 if it was a pair
+                            emit_store(&mut builder, &dest, fn_name)?;
+                        }
+                        "not" => {
+                            // Logical not of a 0/1 bool: `x ^ 1`. (Distinct from the
+                            // top-level Twig `not` op, which is bitwise complement.)
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"not\" requires a dest".into(),
+                                }
+                            })?;
+                            let dest = reg_info!(dest_name).clone();
+                            let arg = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
+                            emit_load(&mut builder, &arg, fn_name)?;
+                            builder.emit_ldc_i4(1);
+                            builder.emit_xor();
+                            emit_store(&mut builder, &dest, fn_name)?;
+                        }
+                        "equal?" => {
+                            // `EQ` on atoms: unbox both and compare. The structural
+                            // pass guarantees both args are boxed atoms (symbols
+                            // interned to ints, integers as ints), so identity
+                            // reduces to integer equality.
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"equal?\" requires a dest".into(),
+                                }
+                            })?;
+                            let dest = reg_info!(dest_name).clone();
+                            let a = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
+                            let b = get_operand_reg(&instr.srcs, 2, &reg_map, fn_name)?;
+                            emit_load(&mut builder, &a, fn_name)?;
+                            builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                            emit_load(&mut builder, &b, fn_name)?;
+                            builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                            builder.emit_ceq();
+                            emit_store(&mut builder, &dest, fn_name)?;
                         }
                         _ => {
                             // Validator should have rejected this; defense in depth.
@@ -1980,6 +2189,70 @@ mod tests {
         ]);
         let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
         assert!(artifact.methods[0].body.contains(&0x58), "add = 0x58");
+    }
+
+    /// `c = <op>(a, b); ret c` with the op (and ret) carrying width `hint`.
+    fn typed_binop(op: &str, hint: &str) -> IIRModule {
+        single_fn(vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i32"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i32"),
+            IIRInstr::new(op, Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], hint),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], hint),
+        ])
+    }
+
+    #[test]
+    fn e2_u8_add_masks_with_ldc_0xff_and() {
+        // LANG-FULL E2: a `u8` add must wrap mod-256. After `add` (0x58) the
+        // body carries `ldc.i4 0xFF` (full form: 0x20, FF, 00, 00, 00) then
+        // `and` (0x5F) — so `200u8+100u8` evaluates to 44 on real CoreCLR.
+        let artifact = lower_iir_to_cil(&typed_binop("add", "u8"), &default_cfg()).unwrap();
+        let body = &artifact.methods[0].body;
+        let mask = [0x20u8, 0xFF, 0x00, 0x00, 0x00, 0x5F];
+        assert!(body.windows(6).any(|w| w == mask),
+            "u8 add must emit `ldc.i4 0xFF; and` after `add`: {body:?}");
+    }
+
+    #[test]
+    fn e2_u16_and_u4_masks_match_width() {
+        // u16 → 0xFFFF (full ldc.i4); u4 → 0xF (short ldc.i4.s).
+        let body16 = lower_iir_to_cil(&typed_binop("mul", "u16"), &default_cfg())
+            .unwrap().methods[0].body.clone();
+        assert!(body16.windows(6).any(|w| w == [0x20, 0xFF, 0xFF, 0x00, 0x00, 0x5F]),
+            "u16 mul must mask with `ldc.i4 0xFFFF; and`: {body16:?}");
+        let body4 = lower_iir_to_cil(&typed_binop("mul", "u4"), &default_cfg())
+            .unwrap().methods[0].body.clone();
+        // ldc.i4.s 0x0F = [0x1F, 0x0F]; and = 0x5F.
+        assert!(body4.windows(3).any(|w| w == [0x1F, 0x0F, 0x5F]),
+            "u4 mul must mask with `ldc.i4.s 0xF; and`: {body4:?}");
+    }
+
+    #[test]
+    fn e2_wide_widths_emit_no_mask() {
+        // u32/i32 already wrap mod-2³² via the 32-bit op; no `and` is appended,
+        // so the body is byte-identical to the legacy (pre-E2) output.
+        for hint in ["i32", "u32", "i64"] {
+            let body = lower_iir_to_cil(&typed_binop("add", hint), &default_cfg())
+                .unwrap().methods[0].body.clone();
+            assert!(!body.contains(&0x5F),
+                "{hint} add must NOT emit an `and` (0x5F) mask: {body:?}");
+        }
+    }
+
+    #[test]
+    fn e2_not_masks_to_width() {
+        // Nib unary `~`: `~0u8` is 0xFFFFFFFF after the 32-bit `not` (0x66);
+        // the mask brings it back to 0xFF = 255.
+        let m = single_fn(vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("not", Some("c".into()), vec![Operand::Var("a".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "u8"),
+        ]);
+        let body = &lower_iir_to_cil(&m, &default_cfg()).unwrap().methods[0].body;
+        // not (0x66) then ldc.i4 0xFF (0x20 FF 00 00 00) then and (0x5F).
+        assert!(body.windows(7).any(|w| w == [0x66, 0x20, 0xFF, 0x00, 0x00, 0x00, 0x5F]),
+            "u8 not must emit `not; ldc.i4 0xFF; and`: {body:?}");
     }
 
     #[test]

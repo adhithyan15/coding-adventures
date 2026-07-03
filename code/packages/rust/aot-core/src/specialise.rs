@@ -76,6 +76,10 @@ use jit_core::cir::{CIRInstr, CIROperand};
 /// Only types in this set are embedded in CIR mnemonics.  Unknown types fall
 /// back to `"any"` (the generic runtime-call path).
 const ALLOWED_TYPES: &[&str] = &[
+    // `u4` → `add_u4`/`not_u4`/… mnemonics; the aarch64/x86_64 backends mask the
+    // result to 0xF (LANG-FULL E2). Without this, a `u4` op falls back to the
+    // generic `any` runtime-call path and the native backend refuses it.
+    "u4",
     "u8",  "u16", "u32",  "u64",
     "i8",  "i16", "i32",  "i64",
     "f32", "f64",

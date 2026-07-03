@@ -1,0 +1,175 @@
+# @version 1
+
+# =============================================================================
+# r.grammar — Parser grammar for the R language
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from the r-lexer. See code/specs/R00-r-language.md.
+#
+# DESIGN RULE — RULE NAMES MIRROR s.grammar EXACTLY.
+# R is "an implementation of the S language" and shares S's semantics, so this
+# grammar deliberately uses the SAME rule names as code/grammars/s.grammar
+# (assignment, comparison, additive, …, postfix, call_suffix, primary, …). That
+# lets the shared s-runtime tree-walker — which dispatches on rule_name —
+# evaluate R programs unchanged. The only differences from s.grammar are the
+# handful of places R departs from S (assignment operators, typed NA atoms).
+#
+# Token names (UPPERCASE) come from the R lexer (code/grammars/r.tokens):
+#   NUMBER STRING NAME                literals and identifiers (NAME may contain _)
+#   ASSIGN (<-)  SUPER_ASSIGN (<<-)  RIGHT_ASSIGN (->)  RIGHT_SUPER_ASSIGN (->>)
+#   EQ (=)  — in R, `=` is ALSO assignment (and named-arg binding)
+#   EQEQ (==)  NE (!=)  LT (<)  GT (>)  LE (<=)  GE (>=)
+#   PLUS MINUS STAR SLASH CARET  COLON (:)  PERCENT_OP (%op%)
+#   LPAREN RPAREN  LBRACE RBRACE  LBRACKET RBRACKET  COMMA SEMICOLON  DOLLAR  NEWLINE
+# KEYWORD tokens (matched by exact value, case-sensitively):
+#   "if" "else" "for" "while" "repeat" "function" "break" "next" "in"
+#   "TRUE" "FALSE" "T" "F" "NULL" "NA" "NA_integer_" "NA_real_" "NA_character_"
+#   "Inf" "NaN"
+#
+# (There is NO UNDERSCORE token in R — `_` is part of NAME.)
+#
+# Precedence cascade (lowest binds loosest -> highest binds tightest)
+# -------------------------------------------------------------------
+#   assignment      <-  =  <<-  ->  ->>     (right-associative)
+#   comparison      == != < > <= >=
+#   additive        + -
+#   multiplicative  * /
+#   special         %op%
+#   range           :
+#   unary           - (prefix)
+#   power           ^                       (right-associative)
+#   postfix         f(...)  x[...]  x[[...]]  x$name
+#   primary         atoms, function, if/for/while, blocks, groups
+# =============================================================================
+
+program = { statement_line } ;
+
+statement_line = statement ( NEWLINE | SEMICOLON )
+               | statement
+               | NEWLINE
+               | SEMICOLON ;
+
+statement = expr ;
+
+expr = assignment ;
+
+# =============================================================================
+# assignment — loosest-binding, right-associative. R's assignment operators are
+# `<-`, `<<-`, `->`, `->>`, and `=` (the last also binds named call arguments;
+# the `arg` rule, which tries `NAME EQ expr` first, disambiguates inside calls).
+# `->` / `->>` assign right-to-left; the runtime reverses the direction.
+# =============================================================================
+
+assignment = comparison [ ( ASSIGN | SUPER_ASSIGN | RIGHT_ASSIGN | RIGHT_SUPER_ASSIGN | EQ ) assignment ] ;
+
+comparison = additive [ ( EQEQ | NE | LE | GE | LT | GT ) additive ] ;
+
+additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+
+multiplicative = special { ( STAR | SLASH ) special } ;
+
+# `%op%` infix: tighter than `* /`, looser than `:`, matching R.
+special = pipe { PERCENT_OP pipe } ;
+
+# The native pipe `|>` shares the special-operator precedence level in R.
+# Left-associative: `x |> f() |> g()` is `g(f(x))`. The right operand must be a
+# call; the evaluator desugars `lhs |> f(a)` to `f(lhs, a)`.
+pipe = range { PIPE_OP range } ;
+
+# `:` binds tighter than arithmetic, so `1:3+1` is c(2,3,4).
+range = unary [ COLON unary ] ;
+
+unary = MINUS unary
+      | power ;
+
+# `^` right-associative; the right operand is `unary` so `2^-3` parses.
+power = postfix [ CARET unary ] ;
+
+# =============================================================================
+# postfix — calls, single/double indexing, and `$`, left-to-right and tightest.
+# `dindex_suffix` precedes `index_suffix` so `[[` matches as a double bracket.
+# =============================================================================
+
+postfix = primary { call_suffix | dindex_suffix | index_suffix | dollar_suffix } ;
+
+call_suffix   = LPAREN [ arg_list ] RPAREN ;
+dindex_suffix = LBRACKET LBRACKET expr RBRACKET RBRACKET ;
+# Single `[ … ]` indexing. Each comma-separated position is OPTIONAL, so a whole
+# row / column can be selected with an empty subscript: `m[i, ]`, `m[, j]`,
+# `m[, ]`. The number of positions is (number of commas + 1); a position with no
+# `subscript` means "select everything along that dimension".
+index_suffix  = LBRACKET [ subscript ] { COMMA [ subscript ] } RBRACKET ;
+subscript     = expr ;
+dollar_suffix = DOLLAR NAME ;
+
+arg_list = arg { COMMA arg } ;
+
+# Named argument (NAME = expr) tried before a positional expression. `==` is the
+# EQEQ token (distinct from EQ), so `f(x == 1)` is a positional comparison.
+#
+# The value after `NAME EQ` is OPTIONAL: `NAME EQ [expr]`. This admits an EMPTY
+# named argument — `a = ,` or `a = )` — which `switch` uses for fall-through:
+# `switch("a", a = , b = "hit")` returns `"hit"` (an empty arm falls through to
+# the next non-empty arm's value). The empty form parses everywhere an arg list
+# appears, but is only MEANINGFUL in `switch`; an empty arg in an ordinary call
+# (`f(x = )`) is rejected at eval time, matching R. The optional `expr` is only
+# ever followed by `COMMA` or `RPAREN` (the arg_list / call_suffix terminators),
+# so the rule stays LL(1).
+arg = NAME EQ [ expr ]
+    | expr ;
+
+# =============================================================================
+# primary — atoms and bracketed/keyword-introduced forms. R adds the typed-NA
+# constants (`NA_integer_` etc.), which are KEYWORD tokens here.
+# =============================================================================
+
+primary = NUMBER
+        | HEX_LIT
+        | INT_LIT
+        | COMPLEX_LIT
+        | STRING
+        | "TRUE"
+        | "FALSE"
+        | "T"
+        | "F"
+        | "NULL"
+        | "NA"
+        | "NA_integer_"
+        | "NA_real_"
+        | "NA_character_"
+        | "Inf"
+        | "NaN"
+        | func_def
+        | if_expr
+        | for_expr
+        | while_expr
+        | repeat_expr
+        | "break"
+        | "next"
+        | block
+        | group
+        | NAME ;
+
+group = LPAREN expr RPAREN ;
+
+block = LBRACE { statement_line } RBRACE ;
+
+# A function definition, in either the classic `function(x) …` form or the
+# R 4.1+ backslash shorthand `\(x) …`. Both produce a `func_def` node with the
+# same `param_list` and body children, so the evaluator handles them identically.
+func_def = "function" LPAREN [ param_list ] RPAREN expr
+         | BACKSLASH LPAREN [ param_list ] RPAREN expr ;
+
+param_list = param { COMMA param } ;
+
+param = NAME EQ expr
+      | NAME ;
+
+if_expr = "if" LPAREN expr RPAREN expr [ "else" expr ] ;
+
+for_expr = "for" LPAREN NAME "in" expr RPAREN expr ;
+
+while_expr = "while" LPAREN expr RPAREN expr ;
+
+repeat_expr = "repeat" expr ;

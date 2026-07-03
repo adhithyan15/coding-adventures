@@ -57,9 +57,14 @@ use regex::{Regex, RegexBuilder};
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
-use grammar_tools::token_grammar::{TokenGrammar, TokenDefinition};
+use grammar_tools::token_grammar::{
+    ModeTransition, TokenDefinition, TokenGrammar, TransitionAction,
+};
 
-use crate::token::{LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD};
+use crate::token::{
+    LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD,
+    TOKEN_PRECEDED_BY_NEWLINE,
+};
 
 // ===========================================================================
 // ContextAction — deferred mutations from the on-token callback
@@ -545,12 +550,46 @@ pub struct GrammarLexer<'a> {
     /// via [`LexerContext::previous_token()`].
     last_emitted_token: Option<Token>,
 
+    /// Whether a line terminator has been consumed *as trivia* since the last
+    /// emitted token. Set in [`GrammarLexer::try_skip`] when the skipped text
+    /// contains `\n`/`\r`/U+2028/U+2029; read into the next token's
+    /// [`TOKEN_PRECEDED_BY_NEWLINE`] flag and then cleared.
+    ///
+    /// Detecting it from *trivia* (not token start-line arithmetic) is what
+    /// makes it correct across multi-line tokens: a `\n` inside a string or
+    /// template literal is consumed by token matching, not `try_skip`, so it
+    /// never sets this flag — the token *after* a multi-line template is only
+    /// "preceded by a newline" if there is an actual line break between them.
+    /// Languages with automatic semicolon insertion (JavaScript) rely on this.
+    newline_before_next: bool,
+
     /// Per-type bracket nesting depth counters.
     ///
     /// Tracks `()`, `[]`, and `{}` independently. Updated after each
     /// token match in both standard and indentation modes. Exposed to
     /// callbacks via [`LexerContext::bracket_depth()`].
     bracket_depths: BracketDepths,
+
+    /// Brace depths at which template literal substitutions (`${...}`) were opened.
+    ///
+    /// Each `${` in a template literal opens a JS expression context that ends at
+    /// the matching `}`. We record the brace depth *at the time TEMPLATE_HEAD or
+    /// TEMPLATE_MIDDLE was matched* so we can recognise when a subsequent `}` at
+    /// that same depth should be tokenised as TEMPLATE_TAIL / TEMPLATE_MIDDLE
+    /// rather than a plain RBRACE.
+    ///
+    /// This is necessary because F10 flat-mode transitions such as
+    /// `on NAME -> set-mode div` fire inside the `${...}` expression and silently
+    /// overwrite the active mode to "div" or "default", losing the information
+    /// that we are still inside a template substitution.  Without this stack, a
+    /// template like `` `${obj.name}` `` causes a LexerError because the closing
+    /// `}` is consumed as RBRACE (in "div" mode) instead of TEMPLATE_TAIL.
+    ///
+    /// Invariant: the stack is empty outside any template literal.  It is pushed
+    /// after TEMPLATE_HEAD or TEMPLATE_MIDDLE, and popped after TEMPLATE_TAIL.
+    /// TEMPLATE_MIDDLE pops then pushes at the same depth (net no-op on depth).
+    /// Nested templates push additional entries, one per open substitution level.
+    template_entry_depths: Vec<usize>,
 
     /// Context-sensitive keywords -- words that are keywords in some
     /// syntactic positions but identifiers in others.
@@ -563,6 +602,21 @@ pub struct GrammarLexer<'a> {
     context_keyword_set: HashSet<String>,
     /// Keywords that introduce Haskell-style layout contexts.
     layout_keyword_set: HashSet<String>,
+    /// F10: declarative lexer mode transition table, cloned from the grammar.
+    /// Empty means no transitions — the lexer never switches modes on its own
+    /// (F04 behaviour). Consulted after each token is emitted; see
+    /// [`apply_transitions`](GrammarLexer::apply_transitions).
+    transitions: Vec<ModeTransition>,
+    /// F10: the mode (active group) the lexer starts in and resets to.
+    /// Resolved from `grammar.start_mode` (default `"default"`).
+    start_mode: String,
+    /// F10: groups that are *flat modes* (reached via `set-mode`) rather than
+    /// *nested regions* (reached via `push`). A flat mode's own patterns are
+    /// tried first, then the default group's patterns are inherited — so a JS
+    /// `div` mode can override `SLASH`/`SLASH_EQUALS` ahead of `REGEX` without
+    /// duplicating the whole grammar. Nested regions (XML `tag`/`cdata`) stay
+    /// exclusive. Derived automatically from the transition table in `new`.
+    inheriting_modes: HashSet<String>,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -641,6 +695,40 @@ impl<'a> GrammarLexer<'a> {
             .iter()
             .cloned()
             .collect();
+
+        // F10: the mode the lexer starts in. Defaults to "default" (the base
+        // group). Validated upstream by `validate_token_grammar`; if a grammar
+        // names a non-existent start mode we still fall back to "default" so
+        // tokenization never panics on a malformed compiled artifact.
+        let start_mode = match &grammar.start_mode {
+            Some(m) if group_patterns.contains_key(m) || m == "default" => m.clone(),
+            _ => "default".to_string(),
+        };
+
+        // F10: a group targeted by a `set-mode` action is a *flat mode* that
+        // inherits the default patterns; a group targeted only by `push` is a
+        // *nested region* that stays exclusive (F04). `push` targets win the
+        // classification when a group is both (it is then treated as exclusive).
+        let mut set_mode_targets: HashSet<String> = HashSet::new();
+        let mut push_targets: HashSet<String> = HashSet::new();
+        for rule in &grammar.transitions {
+            for action in &rule.actions {
+                match action {
+                    TransitionAction::SetMode(m) => {
+                        set_mode_targets.insert(m.clone());
+                    }
+                    TransitionAction::Push(g) => {
+                        push_targets.insert(g.clone());
+                    }
+                    _ => {}
+                }
+            }
+        }
+        let inheriting_modes: HashSet<String> = set_mode_targets
+            .into_iter()
+            .filter(|m| m != "default" && !push_targets.contains(m))
+            .collect();
+
         GrammarLexer {
             chars: source.chars().collect(),
             source: Cow::Borrowed(source),
@@ -657,16 +745,21 @@ impl<'a> GrammarLexer<'a> {
             escape_mode,
             group_patterns,
             group_names,
-            group_stack: vec!["default".to_string()],
+            group_stack: vec![start_mode.clone()],
             on_token: None,
             skip_enabled: true,
             pre_tokenize_hooks: Vec::new(),
             post_tokenize_hooks: Vec::new(),
             case_insensitive,
             last_emitted_token: None,
+            newline_before_next: false,
             bracket_depths: BracketDepths::default(),
+            template_entry_depths: Vec::new(),
             context_keyword_set,
             layout_keyword_set,
+            transitions: grammar.transitions.clone(),
+            start_mode,
+            inheriting_modes,
         }
     }
 
@@ -858,14 +951,27 @@ impl<'a> GrammarLexer<'a> {
     /// Returns true if something was skipped.
     fn try_skip(&mut self) -> bool {
         let remaining = &self.source[self.byte_pos..];
-        for p in &self.skip_patterns {
-            if let Some(m) = p.pattern.find(remaining) {
-                let char_count = m.as_str().chars().count();
+        // Compute everything from the immutable borrow first, then mutate, so
+        // the `&self.source` borrow does not conflict with `&mut self`.
+        let matched: Option<(usize, bool)> = self.skip_patterns.iter().find_map(|p| {
+            p.pattern.find(remaining).map(|m| {
+                let s = m.as_str();
+                let has_line_terminator =
+                    s.contains(['\n', '\r', '\u{2028}', '\u{2029}']);
+                (s.chars().count(), has_line_terminator)
+            })
+        });
+        match matched {
+            Some((char_count, has_line_terminator)) => {
+                // Record that a line terminator preceded the next token (ASI).
+                if has_line_terminator {
+                    self.newline_before_next = true;
+                }
                 self.advance_n(char_count);
-                return true;
+                true
             }
+            None => false,
         }
-        false
     }
 
     /// Try to match a token pattern at the current position using the
@@ -902,14 +1008,133 @@ impl<'a> GrammarLexer<'a> {
         };
         for p in patterns {
             if let Some(m) = p.pattern.find(remaining) {
-                return Some((
-                    p.name.clone(),
-                    p.alias.clone(),
-                    m.as_str().to_string(),
-                ));
+                return Some((p.name.clone(), p.alias.clone(), m.as_str().to_string()));
+            }
+        }
+        // F10: a flat mode (set-mode target) inherits the default patterns —
+        // its own patterns above take priority, the rest fall through here.
+        // Nested regions (push targets) are NOT in `inheriting_modes` and so
+        // remain exclusive, preserving F04 semantics for XML-style grammars.
+        if group_name != "default" && self.inheriting_modes.contains(group_name) {
+            for p in &self.patterns {
+                if let Some(m) = p.pattern.find(remaining) {
+                    return Some((p.name.clone(), p.alias.clone(), m.as_str().to_string()));
+                }
             }
         }
         None
+    }
+
+    // -----------------------------------------------------------------------
+    // F10: declarative mode transitions
+    // -----------------------------------------------------------------------
+
+    /// The name used to match a token against transition rules (F10).
+    ///
+    /// Token identity in a `.tokens` grammar is UPPER_SNAKE (e.g. `NAME`,
+    /// `SLASH`, `RPAREN`). Custom token names that don't map to a built-in
+    /// `TokenType` are carried verbatim in `type_name` (and `KEYWORD` for
+    /// promoted keywords), so those are returned directly. Tokens whose name
+    /// *does* map to a built-in `TokenType` carry `type_name == None` and only
+    /// the enum — so we invert [`string_to_token_type`] to recover the grammar
+    /// name. Anything unrecognised returns `""` and matches no rule.
+    fn transition_key(token: &Token) -> &str {
+        if let Some(name) = token.type_name.as_deref() {
+            return name;
+        }
+        match token.type_ {
+            TokenType::Name => "NAME",
+            TokenType::Number => "NUMBER",
+            TokenType::String => "STRING",
+            TokenType::Keyword => "KEYWORD",
+            TokenType::Plus => "PLUS",
+            TokenType::Minus => "MINUS",
+            TokenType::Star => "STAR",
+            TokenType::Slash => "SLASH",
+            TokenType::Equals => "EQUALS",
+            TokenType::EqualsEquals => "EQUALS_EQUALS",
+            TokenType::LParen => "LPAREN",
+            TokenType::RParen => "RPAREN",
+            TokenType::Comma => "COMMA",
+            TokenType::Colon => "COLON",
+            TokenType::Semicolon => "SEMICOLON",
+            TokenType::LBrace => "LBRACE",
+            TokenType::RBrace => "RBRACE",
+            TokenType::LBracket => "LBRACKET",
+            TokenType::RBracket => "RBRACKET",
+            TokenType::Dot => "DOT",
+            TokenType::Bang => "BANG",
+            TokenType::Newline => "NEWLINE",
+            TokenType::Indent => "INDENT",
+            TokenType::Dedent => "DEDENT",
+            TokenType::Eof => "EOF",
+        }
+    }
+
+    /// Apply the declarative mode transition table after `token` is emitted (F10).
+    ///
+    /// The first rule whose trigger token, optional `in MODE` guard, and
+    /// optional keyword-value guard all match wins; its actions mutate the
+    /// active-mode register (top of `group_stack`) and/or the skip flag:
+    ///
+    /// - `SetMode(m)` — replace the active mode in place (flat toggle, no depth
+    ///   change). This is how regex-vs-division position is tracked.
+    /// - `Push(g)` / `Pop` — F04 nested-region save/restore (templates).
+    /// - `EnableSkip` / `DisableSkip` — toggle `skip_enabled`.
+    ///
+    /// No-op when the table is empty (F04 behaviour).
+    fn apply_transitions(&mut self, token: &Token) {
+        if self.transitions.is_empty() {
+            return;
+        }
+        let key = Self::transition_key(token);
+        let active = self
+            .group_stack
+            .last()
+            .map(|s| s.as_str())
+            .unwrap_or("default")
+            .to_string();
+
+        // Find the first matching rule, cloning its actions so the immutable
+        // borrow of `self.transitions` ends before we mutate `self.group_stack`.
+        let mut matched: Option<Vec<TransitionAction>> = None;
+        for rule in &self.transitions {
+            if !rule.on_tokens.iter().any(|t| t == key) {
+                continue;
+            }
+            if let Some(m) = &rule.in_mode {
+                if m != &active {
+                    continue;
+                }
+            }
+            if let Some(v) = &rule.on_value {
+                if v != &token.value {
+                    continue;
+                }
+            }
+            matched = Some(rule.actions.clone());
+            break;
+        }
+
+        if let Some(actions) = matched {
+            for action in actions {
+                match action {
+                    TransitionAction::SetMode(m) => {
+                        if let Some(top) = self.group_stack.last_mut() {
+                            *top = m;
+                        }
+                    }
+                    TransitionAction::Push(g) => self.group_stack.push(g),
+                    TransitionAction::Pop => {
+                        if self.group_stack.len() > 1 {
+                            self.group_stack.pop();
+                        }
+                    }
+                    TransitionAction::EnableSkip => self.skip_enabled = true,
+                    TransitionAction::DisableSkip => self.skip_enabled = false,
+                }
+            }
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -943,7 +1168,7 @@ impl<'a> GrammarLexer<'a> {
 
             // --- Newlines ---
             if ch == '\n' {
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: TokenType::Newline,
                     value: "\\n".to_string(),
                     line: self.line,
@@ -958,7 +1183,33 @@ impl<'a> GrammarLexer<'a> {
             // The active group is the top of the group stack. When no
             // groups are defined, this is always "default" (the top-level
             // definitions), preserving backward compatibility.
-            let active_group = self.group_stack.last().cloned().unwrap_or_else(|| "default".to_string());
+            //
+            // Template-substitution override (gap-044b): F10 flat-mode
+            // transitions like `on NAME -> set-mode div` can fire inside a
+            // template `${...}` expression and overwrite the active mode to
+            // "div" or "default", losing the template context.  When we are
+            // inside at least one open template substitution AND the current
+            // brace depth equals the depth recorded when that substitution
+            // was opened, the `}` at this position MUST be TEMPLATE_TAIL or
+            // TEMPLATE_MIDDLE rather than RBRACE.  We restore the template
+            // group so those patterns take priority.
+            let active_group = {
+                let base = self.group_stack.last().cloned()
+                    .unwrap_or_else(|| "default".to_string());
+                if let Some(&entry_depth) = self.template_entry_depths.last() {
+                    if self.bracket_depths.brace == entry_depth {
+                        match base.as_str() {
+                            "div"     => "template_div".to_string(),
+                            "default" => "template".to_string(),
+                            _         => base,
+                        }
+                    } else {
+                        base
+                    }
+                } else {
+                    base
+                }
+            };
             if let Some((name, alias, matched)) = self.try_match_token_in_group(&active_group) {
                 let start_line = self.line;
                 let start_col = self.column;
@@ -1004,20 +1255,28 @@ impl<'a> GrammarLexer<'a> {
                 let char_count = matched.chars().count();
                 self.advance_n(char_count);
 
-                // Set the TOKEN_CONTEXT_KEYWORD flag for context-sensitive
-                // keywords. These are NAME tokens whose value appears in
-                // the `context_keywords:` section of the grammar. The flag
-                // tells the parser that this identifier might be a keyword
-                // depending on syntactic context.
-                let flags = if (token_type == TokenType::Name || type_name.as_deref() == Some("NAME"))
+                // Compute the token's flag bits.
+                //
+                // - TOKEN_CONTEXT_KEYWORD: a NAME token whose value appears in
+                //   the grammar's `context_keywords:` section, so the parser
+                //   knows it might be a keyword depending on syntactic context.
+                // - TOKEN_PRECEDED_BY_NEWLINE: a line terminator was consumed as
+                //   trivia since the previous token (tracked in `try_skip`).
+                //   Read here and cleared, so it reflects only the gap between
+                //   the previous token and this one. Used for ASI.
+                let mut flag_bits = 0u32;
+                if (token_type == TokenType::Name || type_name.as_deref() == Some("NAME"))
                     && self.context_keyword_set.contains(&final_value)
                 {
-                    Some(TOKEN_CONTEXT_KEYWORD)
-                } else {
-                    None
-                };
+                    flag_bits |= TOKEN_CONTEXT_KEYWORD;
+                }
+                if self.newline_before_next {
+                    flag_bits |= TOKEN_PRECEDED_BY_NEWLINE;
+                }
+                self.newline_before_next = false;
+                let flags = if flag_bits == 0 { None } else { Some(flag_bits) };
 
-                let token = Token {
+                let token = Token { cv: None,
                     type_: token_type,
                     value: final_value,
                     line: start_line,
@@ -1055,8 +1314,27 @@ impl<'a> GrammarLexer<'a> {
 
                     // Apply suppression: if the callback suppressed this
                     // token, don't add it to the output.
+                    //
+                    // F10: capture the (emitted) main token so the declarative
+                    // table can fire on IT after the callback's own actions —
+                    // not on a callback-synthetic Emit token.
+                    let main_token_for_trans = if ctx.suppressed {
+                        None
+                    } else {
+                        Some(token.clone())
+                    };
                     if !ctx.suppressed {
                         self.bracket_depths.update(&token.value);
+                        // Template-substitution depth tracking (gap-044b).
+                        match name.as_str() {
+                            "TEMPLATE_HEAD" | "TEMPLATE_MIDDLE" => {
+                                self.template_entry_depths.push(self.bracket_depths.brace);
+                            }
+                            "TEMPLATE_TAIL" => {
+                                self.template_entry_depths.pop();
+                            }
+                            _ => {}
+                        }
                         self.last_emitted_token = Some(token.clone());
                         tokens.push(token);
                     }
@@ -1085,8 +1363,29 @@ impl<'a> GrammarLexer<'a> {
                             }
                         }
                     }
+
+                    // F10: the declarative table is the default; a registered
+                    // callback runs first (above) and the table refines.
+                    if let Some(t) = main_token_for_trans {
+                        self.apply_transitions(&t);
+                    }
                 } else {
                     self.bracket_depths.update(&token.value);
+                    // Template-substitution depth tracking (gap-044b): push the
+                    // current brace depth after TEMPLATE_HEAD/MIDDLE so the next
+                    // `}` at that depth is intercepted as TEMPLATE_TAIL/MIDDLE.
+                    match name.as_str() {
+                        "TEMPLATE_HEAD" | "TEMPLATE_MIDDLE" => {
+                            self.template_entry_depths.push(self.bracket_depths.brace);
+                        }
+                        "TEMPLATE_TAIL" => {
+                            self.template_entry_depths.pop();
+                        }
+                        _ => {}
+                    }
+                    // F10: consult the declarative table before the token is
+                    // moved into `tokens`, so the new mode governs the NEXT match.
+                    self.apply_transitions(&token);
                     self.last_emitted_token = Some(token.clone());
                     tokens.push(token);
                 }
@@ -1100,7 +1399,7 @@ impl<'a> GrammarLexer<'a> {
             });
         }
 
-        tokens.push(Token {
+        tokens.push(Token { cv: None,
             type_: TokenType::Eof,
             value: String::new(),
             line: self.line,
@@ -1108,8 +1407,10 @@ impl<'a> GrammarLexer<'a> {
             type_name: None, flags: None,
         });
 
-        // Reset group stack and skip_enabled for reuse.
-        self.group_stack = vec!["default".to_string()];
+        // Reset group stack, template depth stack, and skip_enabled for reuse.
+        // F10: reset to the configured start mode, not the bare "default".
+        self.group_stack = vec![self.start_mode.clone()];
+        self.template_entry_depths.clear();
         self.skip_enabled = true;
 
         Ok(tokens)
@@ -1193,7 +1494,7 @@ impl<'a> GrammarLexer<'a> {
 
                 if spaces > current_indent {
                     indent_stack.push(spaces);
-                    tokens.push(Token {
+                    tokens.push(Token { cv: None,
                         type_: TokenType::Indent,
                         value: String::new(),
                         line: indent_line,
@@ -1204,7 +1505,7 @@ impl<'a> GrammarLexer<'a> {
                     // Emit DEDENT for each level we're leaving.
                     while indent_stack.len() > 1 && *indent_stack.last().unwrap() > spaces {
                         indent_stack.pop();
-                        tokens.push(Token {
+                        tokens.push(Token { cv: None,
                             type_: TokenType::Dedent,
                             value: String::new(),
                             line: indent_line,
@@ -1242,7 +1543,7 @@ impl<'a> GrammarLexer<'a> {
             // --- Newlines ---
             if ch == '\n' {
                 if bracket_depth == 0 {
-                    tokens.push(Token {
+                    tokens.push(Token { cv: None,
                         type_: TokenType::Newline,
                         value: "\\n".to_string(),
                         line: self.line,
@@ -1297,7 +1598,7 @@ impl<'a> GrammarLexer<'a> {
                     matched.clone()
                 };
 
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: token_type,
                     value: final_value,
                     line: start_line,
@@ -1323,7 +1624,7 @@ impl<'a> GrammarLexer<'a> {
             // Emit a final NEWLINE if the last token isn't one.
             let need_newline = tokens.last().map_or(false, |t| t.type_ != TokenType::Newline);
             if need_newline {
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: TokenType::Newline,
                     value: "\\n".to_string(),
                     line: self.line,
@@ -1334,7 +1635,7 @@ impl<'a> GrammarLexer<'a> {
 
             while indent_stack.len() > 1 {
                 indent_stack.pop();
-                tokens.push(Token {
+                tokens.push(Token { cv: None,
                     type_: TokenType::Dedent,
                     value: String::new(),
                     line: self.line,
@@ -1344,7 +1645,7 @@ impl<'a> GrammarLexer<'a> {
             }
         }
 
-        tokens.push(Token {
+        tokens.push(Token { cv: None,
             type_: TokenType::Eof,
             value: String::new(),
             line: self.line,
@@ -1462,7 +1763,7 @@ impl<'a> GrammarLexer<'a> {
     }
 
     fn virtual_layout_token(&self, type_name: &str, value: &str, anchor: &Token) -> Token {
-        Token {
+        Token { cv: None,
             type_: TokenType::Name,
             value: value.to_string(),
             line: anchor.line,
@@ -2182,7 +2483,7 @@ PLUS = "+""#,
             bracket_depths: BracketDepths::default(),
             current_token_line: 1,
         };
-        let synthetic = Token {
+        let synthetic = Token { cv: None,
             type_: TokenType::Name,
             value: "!".to_string(),
             line: 1,
@@ -2445,7 +2746,7 @@ PLUS = "+""#,
         let mut lexer = GrammarLexer::new("<hello", &grammar);
         lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
             if token.type_name.as_deref() == Some("OPEN_TAG") {
-                ctx.emit(Token {
+                ctx.emit(Token { cv: None,
                     type_: TokenType::Name,
                     value: "[start]".to_string(),
                     line: token.line,
@@ -2476,7 +2777,7 @@ PLUS = "+""#,
         lexer.set_on_token(Some(Box::new(|token: &Token, ctx: &mut LexerContext| {
             if token.type_name.as_deref() == Some("OPEN_TAG") {
                 ctx.suppress();
-                ctx.emit(Token {
+                ctx.emit(Token { cv: None,
                     type_: TokenType::Name,
                     value: "<".to_string(),
                     line: token.line,
@@ -2833,5 +3134,133 @@ PLUS = "+""#,
             (TokenType::Keyword, "FROM"),
             (TokenType::Name,    "users"),
         ]);
+    }
+
+    // -----------------------------------------------------------------------
+    // F10: declarative lexer mode transitions
+    // -----------------------------------------------------------------------
+
+    /// A small JS-shaped grammar that exercises regex-vs-division. `default`
+    /// (expression position) lists `REGEX` before `SLASH`; the `div` mode
+    /// (operand position) overrides only the slash tokens and inherits the
+    /// rest from `default`.
+    fn regex_div_grammar() -> TokenGrammar {
+        parse_token_grammar(
+            "\
+NAME = /[a-z]+/
+REGEX = /\\/[a-z]+\\//
+SLASH_EQUALS = \"/=\"
+SLASH = \"/\"
+EQUALS = \"=\"
+PLUS = \"+\"
+
+group div:
+  SLASH_EQUALS = \"/=\"
+  SLASH = \"/\"
+
+start_mode: default
+transitions:
+  on NAME -> set-mode div
+  on (EQUALS | PLUS | SLASH | SLASH_EQUALS | REGEX) -> set-mode default
+",
+        )
+        .unwrap()
+    }
+
+    fn names(tokens: &[Token]) -> Vec<String> {
+        // Use the same canonical UPPER_SNAKE identity the matcher uses.
+        tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .map(|t| GrammarLexer::transition_key(t).to_string())
+            .collect()
+    }
+
+    #[test]
+    fn f10_division_chain_lexed_as_slashes() {
+        // `a/b/c` in operand position: each `/` is division, not a regex.
+        let g = regex_div_grammar();
+        let toks = GrammarLexer::new("a/b/c", &g).tokenize().unwrap();
+        assert_eq!(
+            names(&toks),
+            vec!["NAME", "SLASH", "NAME", "SLASH", "NAME"]
+        );
+    }
+
+    #[test]
+    fn f10_regex_in_expression_position() {
+        // After `=`, a `/.../`  is a regex literal.
+        let g = regex_div_grammar();
+        let toks = GrammarLexer::new("x=/ab/", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "EQUALS", "REGEX"]);
+    }
+
+    #[test]
+    fn f10_flat_mode_inherits_default_patterns() {
+        // In `div` mode a NAME has no override, so it must be matched via
+        // inheritance from the default group. If inheritance were off, the
+        // second identifier would fail to lex.
+        let g = regex_div_grammar();
+        let toks = GrammarLexer::new("ab cd", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "NAME"]);
+    }
+
+    #[test]
+    fn f10_slash_equals_override_beats_inherited_regex() {
+        // `a/=b` — in div mode the `/=` override wins over the inherited
+        // `REGEX`/`SLASH` patterns.
+        let g = regex_div_grammar();
+        let toks = GrammarLexer::new("a/=b", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "SLASH_EQUALS", "NAME"]);
+    }
+
+    #[test]
+    fn f10_no_transitions_is_backward_compatible() {
+        // The SAME tokens without a transitions table: `REGEX` greedily wins,
+        // so `a/b/c` lexes as NAME REGEX NAME (the pre-F10 behaviour). This
+        // pins that an empty table changes nothing.
+        let g = parse_token_grammar(
+            "NAME = /[a-z]+/\nREGEX = /\\/[a-z]+\\//\nSLASH = \"/\"\n",
+        )
+        .unwrap();
+        let toks = GrammarLexer::new("a/b/c", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "REGEX", "NAME"]);
+    }
+
+    #[test]
+    fn f10_push_region_stays_exclusive() {
+        // A `push`ed region is NOT a flat mode: it does NOT inherit default,
+        // preserving F04 exclusivity. Here the `tag` region only knows `WORD`
+        // and `CLOSE`; the default `BANG` is invisible inside it, so a `!`
+        // inside the region is a lex error.
+        let g = parse_token_grammar(
+            "\
+OPEN = \"<\"
+BANG = \"!\"
+group tag:
+  WORD = /[a-z]+/
+  CLOSE = \">\"
+transitions:
+  on OPEN -> push tag
+  on CLOSE -> pop
+",
+        )
+        .unwrap();
+        // Inside the region, `!` (a default token) must NOT match.
+        assert!(GrammarLexer::new("<a!>", &g).tokenize().is_err());
+        // A well-formed region tokenizes; after `>` we pop back to default
+        // where `!` is valid again.
+        let toks = GrammarLexer::new("<ab>!", &g).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["OPEN", "WORD", "CLOSE", "BANG"]);
+    }
+
+    #[test]
+    fn f10_start_mode_is_respected() {
+        // Starting directly in `div` means the first `/` is a division slash.
+        let g = regex_div_grammar();
+        let mut g2 = g.clone();
+        g2.start_mode = Some("div".to_string());
+        let toks = GrammarLexer::new("a/b", &g2).tokenize().unwrap();
+        assert_eq!(names(&toks), vec!["NAME", "SLASH", "NAME"]);
     }
 }

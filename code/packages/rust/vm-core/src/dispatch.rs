@@ -32,6 +32,7 @@
 //! is masked with `& 0xFF`.  The mask is applied inside each arithmetic handler,
 //! not in the dispatch loop.
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use crate::errors::VMError;
@@ -54,6 +55,12 @@ pub struct DispatchCtx<'a> {
     pub frames: &'a mut Vec<VMFrame>,
     pub module_fns: &'a mut Vec<interpreter_ir::function::IIRFunction>,
     pub memory: &'a mut HashMap<i64, Value>,
+    /// Module-level globals (LANG-FULL E6), keyed by name. `global_store`/
+    /// `global_load` read+write here. See [`crate::core::VMCore`].
+    pub globals: &'a mut HashMap<String, Value>,
+    /// Heap of bounds-checked arrays (LANG-FULL E5). Indexed by the array
+    /// *handle* (`alloc_array`'s 0-based result). See [`crate::core::VMCore`].
+    pub arrays: &'a mut Vec<Vec<Value>>,
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
@@ -128,9 +135,32 @@ fn resolve_src(frame: &VMFrame, srcs: &[Operand], idx: usize) -> Result<Value, V
 // Arithmetic helpers
 // ---------------------------------------------------------------------------
 
+/// Mask an integer result to the width named by an instruction's `type_hint`,
+/// then apply the legacy whole-module `u8_wrap` flag.
+///
+/// This is the register-arithmetic analogue of the byte-tape wrap (`store_byte`
+/// masks `& 0xFF`): a `u8`-typed `add` of `200 + 100` yields `44`, a `u4` op
+/// wraps mod-16, and `~x` on a `u8` flips only its 8 low bits.  Widths follow
+/// the same table as [`handle_cast`] (`u4`→`0xF`, `u8`→`0xFF`, `u16`→`0xFFFF`,
+/// `u32`→`0xFFFF_FFFF`); any other hint (`i64`, `u64`, `any`, …) is left at full
+/// machine width.  Signed narrow types (`i8`/`i16`/`i32`) are intentionally NOT
+/// masked here — correct two's-complement wrap needs sign-extension, which the
+/// `cast` op provides; the LANG-FULL frontends use the unsigned widths.
+///
+/// `u8_wrap` is the existing Brainfuck cell flag (the BF frontend widens its
+/// cell hint to `i64`, so its wrap comes from the flag, not the hint); applying
+/// it last keeps that behaviour intact while the hint mask handles typed
+/// register arithmetic.
 #[inline]
-fn wrap_int(v: i64, u8_wrap: bool) -> Value {
-    if u8_wrap { Value::Int(v & 0xFF) } else { Value::Int(v) }
+fn mask_result(v: i64, type_hint: &str, u8_wrap: bool) -> Value {
+    let v = match type_hint {
+        "u4" => v & 0xF,
+        "u8" => v & 0xFF,
+        "u16" => v & 0xFFFF,
+        "u32" => v & 0xFFFF_FFFF,
+        _ => v,
+    };
+    Value::Int(if u8_wrap { v & 0xFF } else { v })
 }
 
 fn int_srcs(
@@ -144,6 +174,42 @@ fn int_srcs(
         .as_i64()
         .ok_or_else(|| VMError::Custom("arithmetic on non-integer".into()))?;
     Ok((a, b))
+}
+
+/// Decide whether a binary op should run on the **float** track and, if so,
+/// return its two operands as `f64`.
+///
+/// The IIR is type-hint driven: a `real` (f64) arithmetic op from a frontend
+/// such as ALGOL 60 carries `type_hint == "f64"` and `Operand::Float` literals
+/// (or variables already holding a `Value::Float`).  We take the float path
+/// when *either* signal is present — the hint, or a float operand — so a typed
+/// op is correct even if a literal was folded, and an untyped op over float
+/// values still does the sensible thing.  An integer operand on the float path
+/// is widened (`i as f64`) so a future mixed expression degrades gracefully;
+/// the ALGOL v1 frontend never mixes (it rejects int/real mixing), so in
+/// practice both operands are already floats.
+///
+/// Returns `Ok(None)` to signal "use the integer path" (the common case for
+/// every existing i64/u8/… program — zero behaviour change there).
+fn float_srcs(
+    frame: &VMFrame,
+    srcs: &[Operand],
+    type_hint: &str,
+) -> Result<Option<(f64, f64)>, VMError> {
+    let a = resolve_src(frame, srcs, 0)?;
+    let b = resolve_src(frame, srcs, 1)?;
+    let is_float = matches!(type_hint, "f64" | "f32")
+        || matches!(a, Value::Float(_))
+        || matches!(b, Value::Float(_));
+    if !is_float {
+        return Ok(None);
+    }
+    let widen = |v: &Value| -> Option<f64> {
+        v.as_f64().or_else(|| v.as_i64().map(|n| n as f64))
+    };
+    let af = widen(&a).ok_or_else(|| VMError::Custom("float arithmetic on non-number".into()))?;
+    let bf = widen(&b).ok_or_else(|| VMError::Custom("float arithmetic on non-number".into()))?;
+    Ok(Some((af, bf)))
 }
 
 // ---------------------------------------------------------------------------
@@ -170,11 +236,17 @@ fn handle_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
 macro_rules! binary_arith_handler {
     ($name:ident, $op:tt) => {
         fn $name(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-            let (a, b) = {
+            // Float track first: an f64-typed op (or one over float operands)
+            // computes in `f64` and yields a `Value::Float` — never width-masked.
+            let result = {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-                int_srcs(frame, &instr.srcs)?
+                if let Some((a, b)) = float_srcs(frame, &instr.srcs, &instr.type_hint)? {
+                    Value::Float(a $op b)
+                } else {
+                    let (a, b) = int_srcs(frame, &instr.srcs)?;
+                    mask_result(a $op b, &instr.type_hint, ctx.u8_wrap)
+                }
             };
-            let result = wrap_int(a $op b, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }
@@ -188,12 +260,20 @@ binary_arith_handler!(handle_sub, -);
 binary_arith_handler!(handle_mul, *);
 
 fn handle_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let (a, b) = {
+    // Float division follows IEEE-754: `x / 0.0` is `±inf`/`NaN`, never an
+    // error — this matches the LLVM/WASM/JVM `fdiv` the other backends emit, so
+    // a real-division program agrees across every backend. Only *integer*
+    // division traps on a zero divisor.
+    let result = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-        int_srcs(frame, &instr.srcs)?
+        if let Some((a, b)) = float_srcs(frame, &instr.srcs, &instr.type_hint)? {
+            Value::Float(a / b)
+        } else {
+            let (a, b) = int_srcs(frame, &instr.srcs)?;
+            if b == 0 { return Err(VMError::DivisionByZero); }
+            mask_result(a / b, &instr.type_hint, ctx.u8_wrap)
+        }
     };
-    if b == 0 { return Err(VMError::DivisionByZero); }
-    let result = wrap_int(a / b, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -206,7 +286,7 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         int_srcs(frame, &instr.srcs)?
     };
     if b == 0 { return Err(VMError::DivisionByZero); }
-    let result = wrap_int(a % b, ctx.u8_wrap);
+    let result = mask_result(a % b, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -214,13 +294,21 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 }
 
 fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let a = {
+    let result = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-        resolve_src(frame, &instr.srcs, 0)?
-            .as_i64()
-            .ok_or_else(|| VMError::Custom("neg on non-integer".into()))?
+        let v = resolve_src(frame, &instr.srcs, 0)?;
+        // Negating a float (or an f64-typed op) stays in `f64`; integer neg is
+        // width-masked as before.
+        if instr.type_hint == "f64" || instr.type_hint == "f32" || matches!(v, Value::Float(_)) {
+            let f = v.as_f64().or_else(|| v.as_i64().map(|n| n as f64))
+                .ok_or_else(|| VMError::Custom("neg on non-number".into()))?;
+            Value::Float(-f)
+        } else {
+            let a = v.as_i64()
+                .ok_or_else(|| VMError::Custom("neg on non-integer".into()))?;
+            mask_result(-a, &instr.type_hint, ctx.u8_wrap)
+        }
     };
-    let result = wrap_int(-a, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -236,7 +324,10 @@ macro_rules! binary_bitwise_handler {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
                 int_srcs(frame, &instr.srcs)?
             };
-            let result = Value::Int(a $op b);
+            // Mask to the result width so a narrow-typed bitwise op stays in
+            // range (`&`/`|`/`^` of in-range operands can't grow, but a typed
+            // result is kept canonical for downstream width-sensitive ops).
+            let result = mask_result(a $op b, &instr.type_hint, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }
@@ -256,7 +347,9 @@ fn handle_not(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
             .as_i64()
             .ok_or_else(|| VMError::Custom("not on non-integer".into()))?
     };
-    let result = Value::Int(!a);
+    // Bitwise NOT is the op that most needs the width mask: `~x` on a `u8`
+    // must flip exactly 8 bits (`~0 == 255`, not `-1`).
+    let result = mask_result(!a, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -272,7 +365,9 @@ fn handle_shl(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // Clamp to 0..63 to prevent a panic in debug mode.  Rust panics on
     // `i64 << n` when n >= 64, and `n as u32` wraps negative n to a huge value.
     let shift = n.clamp(0, 63) as u32;
-    let result = Value::Int(a << shift);
+    // A left shift can push bits past the result width — mask them off so
+    // `1u8 << 7` stays `128` and `1u8 << 8` wraps to `0`.
+    let result = mask_result(a << shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -287,7 +382,9 @@ fn handle_shr(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     };
     // Same clamp as shl — prevents panic for out-of-range shift amounts.
     let shift = n.clamp(0, 63) as u32;
-    let result = Value::Int(a >> shift);
+    // A right shift never grows the value, but mask for consistency so the
+    // result stays canonical for its width.
+    let result = mask_result(a >> shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -299,11 +396,20 @@ fn handle_shr(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 macro_rules! int_cmp_handler {
     ($name:ident, $op:tt) => {
         fn $name(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-            let (a, b) = {
+            // Ordered comparison takes the float track on an f64-typed op (or
+            // over float operands), so `real` relational tests (`r < 5.0`) work;
+            // otherwise it compares as i64 exactly as before. (`cmp_eq`/`cmp_ne`
+            // are handled separately via `Value`'s `PartialEq`, which already
+            // compares floats.)
+            let result = {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-                int_srcs(frame, &instr.srcs)?
+                if let Some((a, b)) = float_srcs(frame, &instr.srcs, &instr.type_hint)? {
+                    Value::Bool(a $op b)
+                } else {
+                    let (a, b) = int_srcs(frame, &instr.srcs)?;
+                    Value::Bool(a $op b)
+                }
             };
-            let result = Value::Bool(a $op b);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }
@@ -572,6 +678,402 @@ fn handle_store_mem(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     Ok(None)
 }
 
+// Module globals (LANG-FULL E6) ---------------------------------------------
+//
+// `global_load("g") -> %dest` reads the module global named `g`; `global_store
+// ("g", %v)` writes it. The name is an `Operand::Str` literal (NOT a register —
+// it must never be looked up in the frame), mirroring how the code-gen backends
+// carry it. A global that was never stored reads as `Int(0)`, matching the
+// zero-initialised `_twig_globals` slots / static fields the other backends use.
+
+/// Extract the string-literal global name at `srcs[idx]`.
+fn global_name(instr: &IIRInstr, idx: usize) -> Result<String, VMError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Str(s)) => Ok(s.clone()),
+        other => Err(VMError::Custom(format!(
+            "global op expected a string name at srcs[{idx}], got {other:?}"
+        ))),
+    }
+}
+
+fn handle_global_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let name = global_name(instr, 0)?;
+    let value = ctx.globals.get(&name).cloned().unwrap_or(Value::Int(0));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_global_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let name = global_name(instr, 0)?;
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 1)?
+    };
+    ctx.globals.insert(name, value);
+    Ok(None)
+}
+
+// Strings (LANG-FULL E4) -----------------------------------------------------
+//
+// A VM string is `Value::Str(String)`. The IIR semantics are byte-based:
+// `str_len` returns the UTF-8 byte count and `str_index` returns one unsigned
+// byte. Backends are free to use native managed strings or length-prefixed
+// buffers, but this is the reference behaviour they must match.
+
+fn string_src(frame: &VMFrame, srcs: &[Operand], idx: usize, op: &str) -> Result<String, VMError> {
+    match resolve_src(frame, srcs, idx)? {
+        Value::Str(s) => Ok(s),
+        other => Err(VMError::TypeError {
+            expected: "str".into(),
+            actual: other.iir_type_name().into(),
+            context: op.into(),
+        }),
+    }
+}
+
+fn handle_str_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let s = instr.srcs.first()
+        .and_then(Operand::as_str_lit)
+        .ok_or_else(|| VMError::Custom("str_const expects srcs[0] to be Operand::Str".into()))?
+        .to_string();
+    let value = Value::Str(s);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let len = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        string_src(frame, &instr.srcs, 0, "str_len")?.len() as i64
+    };
+    let value = Value::Int(len);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let byte = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let s = string_src(frame, &instr.srcs, 0, "str_index")?;
+        let idx_value = resolve_src(frame, &instr.srcs, 1)?;
+        let idx = idx_value
+            .as_i64()
+            .ok_or_else(|| VMError::TypeError {
+                expected: "i64".into(),
+                actual: idx_value.iir_type_name().into(),
+                context: "str_index".into(),
+            })?;
+        if idx < 0 || idx as usize >= s.len() {
+            return Err(VMError::Custom(format!(
+                "str_index: index {idx} out of bounds for string of length {}",
+                s.len()
+            )));
+        }
+        s.as_bytes()[idx as usize] as i64
+    };
+    let value = Value::Int(byte);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let mut a = string_src(frame, &instr.srcs, 0, "str_concat")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_concat")?;
+        a.push_str(&b);
+        Value::Str(a)
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let value = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let s = string_src(frame, &instr.srcs, 0, "str_slice")?;
+        let start_value = resolve_src(frame, &instr.srcs, 1)?;
+        let end_value = resolve_src(frame, &instr.srcs, 2)?;
+        let start = start_value.as_i64().ok_or_else(|| VMError::TypeError {
+            expected: "i64".into(),
+            actual: start_value.iir_type_name().into(),
+            context: "str_slice".into(),
+        })?;
+        let end = end_value.as_i64().ok_or_else(|| VMError::TypeError {
+            expected: "i64".into(),
+            actual: end_value.iir_type_name().into(),
+            context: "str_slice".into(),
+        })?;
+        if start < 0 || end < start || end as usize > s.len() {
+            return Err(VMError::Custom(format!(
+                "str_slice: range {start}..{end} out of bounds for string of length {}",
+                s.len()
+            )));
+        }
+        let bytes = &s.as_bytes()[start as usize..end as usize];
+        let sliced = String::from_utf8(bytes.to_vec()).map_err(|_| {
+            VMError::Custom("str_slice: range does not preserve UTF-8 boundaries".into())
+        })?;
+        Value::Str(sliced)
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let same = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let a = string_src(frame, &instr.srcs, 0, "str_eq")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_eq")?;
+        a == b
+    };
+    let value = Value::Int(if same { 1 } else { 0 });
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_str_cmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let ordering = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let a = string_src(frame, &instr.srcs, 0, "str_cmp")?;
+        let b = string_src(frame, &instr.srcs, 1, "str_cmp")?;
+        a.as_bytes().cmp(b.as_bytes())
+    };
+    let value = Value::Int(match ordering {
+        Ordering::Less => -1,
+        Ordering::Equal => 0,
+        Ordering::Greater => 1,
+    });
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+fn handle_print_str(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let s = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        Value::Str(string_src(frame, &instr.srcs, 0, "print_str")?)
+    };
+    ctx.builtins.call("print_str", &[s])?;
+    Ok(None)
+}
+
+// Byte-tape memory (the shared-IIR byte buffer) ----------------------------
+//
+// `alloc_bytes` / `load_byte` / `store_byte` are the lowered byte-tape ops that
+// `lang-aot::lower_brainfuck_for_aot` rewrites Brainfuck's tape into — the same
+// ops every code-gen backend grew (LLVM `@calloc`+`getelementptr`, wasm linear
+// memory, JVM `byte[]`, CLR `unsigned int8[]`). The VM implements them over its
+// existing flat `memory` address space (the same `HashMap<i64, Value>` that
+// `load_mem`/`store_mem` use): a tape cell is the entry at `base + idx`, default
+// `Int(0)` (Brainfuck's zero-cell convention). Byte width lives only at the tape
+// boundary — `store_byte` masks the value to 8 bits (the cell wrap-around
+// `255 + 1 == 0`), `load_byte` returns the masked cell — so the surrounding
+// arithmetic stays plain machine-word `Int`. Generic: any frontend that emits
+// these ops runs unchanged.
+
+/// `alloc_bytes dest <- size` — allocate a byte tape and bind `dest` to its base
+/// address. The base is `0`: each function allocates exactly one tape (the BF
+/// frontend emits a single `alloc_bytes`), and the cells live as sparse entries
+/// in `memory` keyed by `base + idx`, so nothing is pre-filled — an untouched
+/// cell reads `0`. `size` is advisory; the sparse map grows on demand, bounded by
+/// `max_memory_entries` (the `store_byte` cap below).
+fn handle_alloc_bytes(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let base = Value::Int(0);
+    if let Some(dest) = &instr.dest {
+        ctx.frames
+            .last_mut()
+            .ok_or_else(|| VMError::Custom("no frame".into()))?
+            .assign(dest, base.clone());
+    }
+    Ok(Some(base))
+}
+
+/// `load_byte dest <- base, idx` — read one tape cell, unsigned (0..=255). Reads
+/// `memory[base + idx]` (default `Int(0)`) and masks to a byte. The VM analog of
+/// wasm `i32.load8_u` / CLR `ldelem.u1` / JVM `baload`+mask / LLVM `load i8`+`zext`.
+fn handle_load_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let addr = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let base = resolve_src(frame, &instr.srcs, 0)?.as_i64().unwrap_or(0);
+        let idx = resolve_src(frame, &instr.srcs, 1)?.as_i64().unwrap_or(0);
+        base.wrapping_add(idx)
+    };
+    let cell = ctx.memory.get(&addr).and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF;
+    let value = Value::Int(cell);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `store_byte base, idx, val` (no dest) — write the low byte of `val` into
+/// `memory[base + idx]`. The mask to 8 bits is Brainfuck's cell wrap-around. The
+/// VM analog of wasm `i32.store8` / CLR `stelem.i1` / JVM `bastore` / LLVM
+/// `trunc i8`+`store`. Reuses `store_mem`'s memory-entry cap.
+fn handle_store_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (addr, value) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let base = resolve_src(frame, &instr.srcs, 0)?.as_i64().unwrap_or(0);
+        let idx = resolve_src(frame, &instr.srcs, 1)?.as_i64().unwrap_or(0);
+        let val = resolve_src(frame, &instr.srcs, 2)?.as_i64().unwrap_or(0) & 0xFF;
+        (base.wrapping_add(idx), Value::Int(val))
+    };
+    // Same cap as `store_mem`: a loop storing to distinct cells could otherwise
+    // grow the HashMap without bound and OOM the process.
+    if !ctx.memory.contains_key(&addr) && ctx.memory.len() >= ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "memory entry limit {} exceeded", ctx.max_memory_entries
+        )));
+    }
+    ctx.memory.insert(addr, value);
+    Ok(None)
+}
+
+// Arrays (LANG-FULL E5) ------------------------------------------------------
+//
+// A bounded, indexable aggregate. `alloc_array count` allocates a fresh
+// `count`-element array (default-initialised by element type) and binds its
+// *handle* — the 0-based index into `ctx.arrays` — to `dest` as an `Int`.
+// `array_get`/`array_set` are **bounds-checked**: an out-of-range (or negative)
+// index is a `VMError` (the interpreter's analogue of the managed runtimes'
+// `IndexOutOfBoundsException` and the native backends' trap). This is the
+// representation-agnostic IIR array's reference implementation; see
+// `code/specs/lang-full-e5-arrays.md`.
+
+/// `alloc_array dest <- count : array<T>` — allocate a `count`-element array,
+/// each element the default for `T` (`f64` → `0.0`, everything else → `0`).
+fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let count = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("alloc_array count must be an integer".into()))?
+    };
+    if count < 0 {
+        return Err(VMError::Custom(format!("alloc_array negative count {count}")));
+    }
+    // Make `max_memory_entries` a true **aggregate** ceiling for array storage,
+    // so neither a single huge `alloc_array i64::MAX` nor a loop allocating many
+    // arrays can OOM the process. We bound (a) the number of arrays (so an
+    // `alloc_array 0` spam loop can't grow the outer Vec unbounded) and (b) the
+    // running total of elements across every live array. The sum walks at most
+    // `arrays.len()` entries, itself bounded by the cap. (Parallels the byte-tape's
+    // `max_memory_entries` guard, generalised across allocations.)
+    if ctx.arrays.len() >= ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "array count exceeds the {} allocation cap", ctx.max_memory_entries
+        )));
+    }
+    let live_elems: usize = ctx.arrays.iter().map(|a| a.len()).sum();
+    if live_elems.saturating_add(count as usize) > ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "array length {count} would exceed the {} total-element cap (live: {live_elems})",
+            ctx.max_memory_entries
+        )));
+    }
+    // The element default: `f64` arrays zero to `0.0`; integer/other to `Int(0)`.
+    let elem = interpreter_ir::opcodes::array_elem_type(&instr.type_hint);
+    let default = if elem.as_deref() == Some("f64") || elem.as_deref() == Some("f32") {
+        Value::Float(0.0)
+    } else {
+        Value::Int(0)
+    };
+    let handle = ctx.arrays.len() as i64;
+    ctx.arrays.push(vec![default; count as usize]);
+    let value = Value::Int(handle);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `array_len dest <- arr` — the element count of array `arr`.
+fn handle_array_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let handle = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_len: arr handle must be an integer".into()))?
+    };
+    let arr = array_ref(ctx, handle)?;
+    let value = Value::Int(arr.len() as i64);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `array_get dest <- arr, idx` — bounds-checked load `dest = arr[idx]`.
+fn handle_array_get(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (handle, idx) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let h = resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_get: arr handle must be an integer".into()))?;
+        let i = resolve_src(frame, &instr.srcs, 1)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_get: index must be an integer".into()))?;
+        (h, i)
+    };
+    let arr = array_ref(ctx, handle)?;
+    let value = bounds_checked(arr, idx, "array_get")?.clone();
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `array_set arr, idx, val` (no dest) — bounds-checked store `arr[idx] = val`.
+fn handle_array_set(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (handle, idx, val) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let h = resolve_src(frame, &instr.srcs, 0)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_set: arr handle must be an integer".into()))?;
+        let i = resolve_src(frame, &instr.srcs, 1)?.as_i64()
+            .ok_or_else(|| VMError::Custom("array_set: index must be an integer".into()))?;
+        let v = resolve_src(frame, &instr.srcs, 2)?;
+        (h, i, v)
+    };
+    // Bounds-check before mutating.
+    {
+        let arr = array_ref(ctx, handle)?;
+        bounds_checked(arr, idx, "array_set")?;
+    }
+    ctx.arrays[handle as usize][idx as usize] = val;
+    Ok(None)
+}
+
+/// Resolve an array handle to its backing `Vec`, or a clean error.
+fn array_ref<'c>(ctx: &'c DispatchCtx, handle: i64) -> Result<&'c Vec<Value>, VMError> {
+    if handle < 0 {
+        return Err(VMError::Custom(format!("invalid array handle {handle}")));
+    }
+    ctx.arrays.get(handle as usize)
+        .ok_or_else(|| VMError::Custom(format!("invalid array handle {handle}")))
+}
+
+/// Range-check `idx` against `arr` and return the element reference, or a trap.
+fn bounds_checked<'c>(arr: &'c [Value], idx: i64, op: &str) -> Result<&'c Value, VMError> {
+    if idx < 0 || idx as usize >= arr.len() {
+        return Err(VMError::Custom(format!(
+            "{op}: index {idx} out of bounds for array of length {}", arr.len()
+        )));
+    }
+    Ok(&arr[idx as usize])
+}
+
 // Function calls ------------------------------------------------------------
 
 /// Handle a `call fn_name arg1 arg2 …` instruction.
@@ -749,6 +1251,168 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 }
 
 // ---------------------------------------------------------------------------
+// E8 — numeric conversions (`integer` ↔ `real`)
+//
+// E3 gave the VM f64 *arithmetic*; these are the convert opcodes that sit next
+// to it (see `code/specs/lang-full-e8-numeric-conversions.md`).  Every backend
+// has a one-instruction equivalent (`sitofp`/`fptosi`/`floor`, `i2d`/`d2l`,
+// `conv.r8`/`conv.i8`, `cvtsi2sd`/`cvttsd2si`/`roundsd`, `scvtf`/`fcvtzs`/
+// `frintm`); this is the VM's reference semantics they must agree with.
+// ---------------------------------------------------------------------------
+
+/// Convert an already-rounded integral `f64` to `i64`, trapping (fail-closed,
+/// like the array-bounds and divide-by-zero traps) on a non-finite operand or
+/// one outside the `i64` range — never a silent wrap or garbage integer.  The
+/// caller passes a value that has *already* been `trunc()`'d or `floor()`'d, so
+/// `t` is integral; this only range-checks and casts.
+///
+/// The bounds are written so the rejection is **exact**: `i64::MIN as f64` is
+/// exactly −2⁶³, but `i64::MAX` (2⁶³−1) is not representable as an `f64`, so
+/// `i64::MAX as f64` rounds *up* to 2⁶³.  Comparing against `-(i64::MIN as f64)`
+/// (= +2⁶³) therefore rejects 2⁶³ and above; the largest accepted value is the
+/// greatest integral `f64` strictly below 2⁶³.  (`t as i64` for an in-range
+/// integral `t` is exact — Rust's saturating cast never fires here.)
+fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
+    if !t.is_finite() {
+        return Err(VMError::Custom(
+            "real_to_int: operand is not finite".into(),
+        ));
+    }
+    if t < i64::MIN as f64 || t >= -(i64::MIN as f64) {
+        return Err(VMError::Custom(format!(
+            "real_to_int: {t} is outside the i64 range"
+        )));
+    }
+    Ok(t as i64)
+}
+
+/// `int_to_real` — widen an `i64` to `f64` (IEEE-754 round-to-nearest-even;
+/// exact for |x| < 2⁵³).
+fn handle_int_to_real(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let n = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_i64()
+            .ok_or_else(|| VMError::Custom("int_to_real: operand is not an integer".into()))?
+    };
+    let result = Value::Float(n as f64);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `real_to_int_trunc` — round a `real` toward **zero** (C / most BASIC
+/// `INT()`): `2.7 → 2`, `-2.7 → -2`.  Traps on NaN/±∞/out-of-range.
+fn handle_real_to_int_trunc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("real_to_int_trunc: operand is not a real".into()))?
+    };
+    let result = Value::Int(real_to_i64_checked(f.trunc())?);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `real_to_int_floor` — round a `real` toward **−∞** (ALGOL `entier`):
+/// `2.7 → 2`, `-2.7 → -3`.  Traps on NaN/±∞/out-of-range.
+fn handle_real_to_int_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("real_to_int_floor: operand is not a real".into()))?
+    };
+    let result = Value::Int(real_to_i64_checked(f.floor())?);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `f64_sqrt` — IEEE-754 square root.  The operand must be a `Value::Float`
+/// (the ALGOL `real` model).  Returns `Value::Float(sqrt(x))`.  NaN
+/// propagates naturally; negative operands produce NaN per IEEE-754.
+fn handle_f64_sqrt(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let f = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_sqrt: operand is not a real".into()))?
+    };
+    let result = Value::Float(f.sqrt());
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// Generic helper for the AL8 transcendental ops `f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`.
+/// Each takes one `Value::Float` operand, applies `f`, and stores the result.
+fn handle_f64_transcendental(
+    ctx: &mut DispatchCtx,
+    instr: &IIRInstr,
+    op_name: &str,
+    f: fn(f64) -> f64,
+) -> Result<Option<Value>, VMError> {
+    let x = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom(format!("{op_name}: operand is not a real")))?
+    };
+    let result = Value::Float(f(x));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `f64_pow` — IEEE-754 `pow(base, exp)`.  Both operands must be `Value::Float`.
+/// Maps to Rust `f64::powf`.  NaN / ±inf propagate per IEEE-754 (same as libm `pow`).
+fn handle_f64_pow(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (base, exp_) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let b = resolve_src(frame, &instr.srcs, 0)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_pow: srcs[0] is not a real".into()))?;
+        let e = resolve_src(frame, &instr.srcs, 1)?
+            .as_f64()
+            .ok_or_else(|| VMError::Custom("f64_pow: srcs[1] is not a real".into()))?;
+        (b, e)
+    };
+    let result = Value::Float(base.powf(exp_));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+fn handle_f64_sin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_sin", f64::sin)
+}
+fn handle_f64_cos(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_cos", f64::cos)
+}
+fn handle_f64_ln(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_ln", f64::ln)
+}
+fn handle_f64_exp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_exp", f64::exp)
+}
+fn handle_f64_atan(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_atan", f64::atan)
+}
+fn handle_f64_tan(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_transcendental(ctx, instr, "f64_tan", f64::tan)
+}
+
+
+// ---------------------------------------------------------------------------
 // Standard opcode dispatch table
 // ---------------------------------------------------------------------------
 
@@ -786,11 +1450,39 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "store_reg"    => Some(handle_store_reg),
         "load_mem"     => Some(handle_load_mem),
         "store_mem"    => Some(handle_store_mem),
+        "alloc_bytes"  => Some(handle_alloc_bytes),
+        "load_byte"    => Some(handle_load_byte),
+        "store_byte"   => Some(handle_store_byte),
+        "global_load"  => Some(handle_global_load),
+        "global_store" => Some(handle_global_store),
+        "str_const"    => Some(handle_str_const),
+        "str_len"      => Some(handle_str_len),
+        "str_index"    => Some(handle_str_index),
+        "str_concat"   => Some(handle_str_concat),
+        "str_slice"    => Some(handle_str_slice),
+        "str_eq"       => Some(handle_str_eq),
+        "str_cmp"      => Some(handle_str_cmp),
+        "print_str"    => Some(handle_print_str),
+        "alloc_array"  => Some(handle_alloc_array),
+        "array_len"    => Some(handle_array_len),
+        "array_get"    => Some(handle_array_get),
+        "array_set"    => Some(handle_array_set),
         "call_builtin" => Some(handle_call_builtin),
         "io_in"        => Some(handle_io_in),
         "io_out"       => Some(handle_io_out),
         "cast"         => Some(handle_cast),
         "type_assert"  => Some(handle_type_assert),
+        "int_to_real"       => Some(handle_int_to_real),
+        "real_to_int_trunc" => Some(handle_real_to_int_trunc),
+        "real_to_int_floor" => Some(handle_real_to_int_floor),
+        "f64_sqrt"          => Some(handle_f64_sqrt),
+        "f64_sin"           => Some(handle_f64_sin),
+        "f64_cos"           => Some(handle_f64_cos),
+        "f64_ln"            => Some(handle_f64_ln),
+        "f64_exp"           => Some(handle_f64_exp),
+        "f64_atan"          => Some(handle_f64_atan),
+        "f64_tan"           => Some(handle_f64_tan),
+        "f64_pow"           => Some(handle_f64_pow),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

@@ -1,0 +1,8 @@
+{
+ "idx": 63,
+ "policy": "A nursing license lapses if not renewed by the expiration date. A lapsed license may be reinstated by paying back fees if the lapse is under 12 months; if the lapse is 12 months or longer, the holder must re-take the licensing examination.",
+ "scenario": "A registered nurse's license expired and was never renewed. She now wishes to return to practice and asks what reinstatement requires.",
+ "question": "Can she reinstate by paying back fees, or must she re-take the examination?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "length of lapse not stated"
+}

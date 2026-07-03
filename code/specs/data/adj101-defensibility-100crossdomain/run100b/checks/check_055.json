@@ -1,0 +1,8 @@
+{
+ "check_id": 55,
+ "idx": 25,
+ "slot": "defect_present",
+ "claimed_value": true,
+ "scenario": "Liam's espresso machine, manufactured on a date stamped clearly on its base 14 months ago, developed a confirmed internal seal defect. He submitted a claim with photos and the serial number. Liam mentions that the machine 'works perfectly otherwise' and that he has always taken good care of it.",
+ "cited_span": "developed a confirmed internal seal defect"
+}

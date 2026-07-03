@@ -26,18 +26,60 @@ through a deprecated intermediate.
 
 ## Features
 
-- **Full numeric type support**: `i8/i16/i32/u8/u16/u32/bool → i32`,
+- **Full numeric type support**: `u4/i8/i16/i32/u8/u16/u32/bool → i32`,
   `i64/u64 → i64`, `f32 → f32`, `f64 → f64`.
 - **Float constants supported** (unlike the BEAM backend): `f64.const` is
   emitted for `Operand::Float` and `f32.const` for narrower floats.
 - **All arithmetic and bitwise ops**: add, sub, mul, div, rem, and, or, xor,
-  shl, shr, for all numeric types.
+  shl, shr, for all numeric types. **Narrow-width results wrap mod-2ⁿ**
+  (LANG-FULL E2): narrow **unsigned** integers (`u4`/`u8`/`u16`/`u32`) ride the
+  **i64 register model** — i64 locals and `i64.*` ops over their i64-slot
+  operands — and the result is masked with `i64.const <mask>; i64.and`, so
+  `200u8+100u8=44` and `~0u8=255`. Computing wide and masking the *value* (not
+  typing the op narrow) is operand-width-agnostic: it works whatever width the
+  operands arrive at — crucial because real frontends (Nib, …) carry every
+  `const`/`let` as `i64` and put the narrow width only on the op. This matches
+  the vm-core/jit-core/LLVM/native backends. *(v0.15.0 replaced the earlier
+  i32-op-plus-`i32.and` approach, which trapped over i64 operands.)*
 - **All comparison ops**: eq, ne, lt, le, gt, ge (signed and unsigned variants
   where applicable).
 - **Function calls**: `call` instructions are lowered to WASM `call`
   opcodes with the correct function index.
 - **Control flow**: dispatch-loop pattern for functions with labels and jumps;
-  plain linear emission for straight-line functions.
+  plain linear emission for straight-line functions. Branch conditions are
+  width-correct: an `i32` guard tests directly / via `i32.eqz`, an `i64` guard
+  (a widened Brainfuck cell) via `i64.eqz` (v0.13.0).
+- **Byte-tape memory (v0.13.0 — Brainfuck)**: `alloc_bytes` (tape base in linear
+  memory), `load_byte` (`i32.load8_u` + `i64.extend_i32_u`), `store_byte`
+  (`i32.wrap_i64` + `i32.store8`), plus the `env.putchar`/`env.getchar` host
+  imports for `.`/`,`. Byte width lives only at the tape boundary; registers in
+  between are uniform `i64`. This is the wasm sibling of the LLVM byte-tape
+  lowering, so **Brainfuck runs on wasm** (LANG-MATRIX LM-W Brainfuck).
+- **Bounds-checked arrays (v0.16.0 — LANG-FULL E5)**: the *static* array model in
+  linear memory. A synthetic mutable `i64` global `__array_bump` hands each
+  `alloc_array` a fresh `[i64 length][elem 0][elem 1]…` region (the handle is the
+  block's byte offset); `array_get`/`array_set` emit an **explicit** unsigned
+  bounds check `idx >=u len` (`i64.ge_u`) → `if … unreachable` (the wasm trap, since
+  there is no managed runtime to bounds-check for it) then an `i64.load`/`i64.store`
+  (or `f64`) at `wrap(handle)+idx*elemsize` offset 8; `array_len` reads the header.
+  The wasm sibling of the LLVM `@calloc` + `icmp uge` + `llvm.trap` lowering. `i64`
+  and `f64` elements (the ALGOL `integer`/`real` arrays).
+- **String literal foothold (v0.23.0 — LANG-FULL E4 / BA4)**: `str_const` writes
+  printable ASCII literal bytes into a linear-memory data segment and stores the
+  byte pointer in an `i32` local; `print_str` calls the host import
+  `env.__print_str(ptr,len)`. `str_len` over a direct literal materialises that
+  literal's byte count as an integer constant, `str_eq` over two direct literals
+  materialises byte equality as `1`/`0`, `str_cmp` materialises `-1`/`0`/`1`
+  from byte ordering, and literal `str_concat` creates another
+  data entry for the combined bytes. Literal `str_slice` derives another data
+  entry for a constant byte range. `str_index` over a direct literal emits a
+  guarded `i32.load8_u` from the same data segment. This covers BASIC
+  `PRINT "HELLO"` plus Twig `(string-length "HELLO")` and
+  `(string-ref "ABC" 1)`, `(string=? "HELLO" "HELLO")`,
+  `(string<? "ALPHA" "BETA")`, and
+  `(string-length (string-append "AB" "CDE"))`, plus
+  `(string-ref (substring "ABCDE" 1 4) 1)`; non-literal string values still fail
+  closed until the full byte-string runtime lands.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
@@ -105,7 +147,7 @@ tests/
 | `ClosureOpcode` | op is `alloc_closure` or `call_closure` — closures require the BEAM backend |
 | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
 | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
-| `UnsupportedOp` | op is `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`, `alloc`, `box`, `unbox`, `field_load`, `field_store`, `is_null`, or `safepoint` |
+| `UnsupportedOp` | op is `io_in`, `cast`, or `safepoint` (and `call_builtin` with a non-whitelisted name). Note: `alloc`/`field_load`/`field_store`/`is_null` are accepted for `ref<LispyPair>`; `box`/`unbox` are accepted and lower to WasmGC `ref.i31`/`i31.get_s` (LANG77 L3b-3a); `io_out`/`global_*`/`load_mem`/`store_mem` and the byte-tape ops `alloc_bytes`/`load_byte`/`store_byte` (v0.13.0) are supported |
 
 > **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
 > closure opcodes) are BEAM-only.  Using them in a WASM module returns a clear

@@ -95,12 +95,16 @@ class ColumnAlreadyExists(BackendError):
 class ConstraintViolation(BackendError):
     """Raised for NOT NULL / UNIQUE / PRIMARY KEY violations.
 
-    The ``message`` field carries a human-readable explanation so the facade
-    can surface it without reformatting. Typical messages::
+    The ``message`` field carries a human-readable explanation so the
+    facade can surface it without reformatting.  Typical messages
+    (matching SQLite's wording exactly — note that PRIMARY KEY
+    uniqueness violations surface as ``UNIQUE constraint failed``,
+    because PRIMARY KEY *implies* UNIQUE in SQL semantics)::
 
         "NOT NULL constraint failed: users.name"
         "UNIQUE constraint failed: users.email"
-        "PRIMARY KEY constraint failed: users.id"
+        "UNIQUE constraint failed: users.id"     # PK uniqueness
+        "CHECK constraint failed: a > 0"
     """
 
     table: str

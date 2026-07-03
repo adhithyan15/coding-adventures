@@ -1,0 +1,101 @@
+// Grid.dark.msl — dark theme for the spreadsheet grid (UI26 §4.2 +
+// UI28-1 / Task #35 part-naming conventions).
+//
+// Sub-part vocabulary
+// -------------------
+//
+//   sheet         — the outer <table> (HostTable's part name)
+//   cell          — every body <td>'s Box wrapper (the v0.2.0
+//                   composition uses bare `Box [cell]`; the legacy
+//                   monolithic Grid emitter that used `sheet/cell`
+//                   was removed in U29-X1)
+//   header-cell   — every column-header <th>'s Box wrapper
+//   header-row    — the <tr> inside <thead>
+//   data-row      — every <tr> inside <tbody>
+//
+// State blocks (selected / editing / hover) are now driven by the
+// generic `state-when-X: ( expr )` mechanism — Task #35 in
+// mosaic-emit-react. The author declares `state-when-selected` /
+// `state-when-editing` predicates on the Box [cell] in
+// Grid.{desktop,touch}.mll; the React emitter reads the matching
+// `cell:selected` / `cell:editing` entries from this stylesheet's
+// part-style map and emits a conditional `...((<expr>) ? {...} : {})`
+// spread inside the cell's `style={{...}}` JSX object.
+//
+// Result: selected/editing cells now visually highlight without the
+// legacy Grid emitter's monolithic per-cell special-case code path.
+
+style Grid {
+  part sheet {
+    font-family:     monospace ;
+    font-size:       12px ;
+    color:           #cccccc ;
+    background:      #1e1e1e ;
+    border-collapse: collapse ;
+    width:           100% ;
+  }
+
+  // Body cells. The `border-*` triplet draws the gridlines that
+  // were missing in the first demo cut.
+  part cell {
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    padding:      2px ;
+    height:       22px ;
+    // Right-align cell contents — the spreadsheet convention for
+    // numeric data.  Backends that understand text-align (HTML/React
+    // via CSS, SwiftUI via .frame(alignment:)) push the value to the
+    // trailing edge so columns of numbers line up on their ones digit.
+    text-align:   right ;
+
+    // Active-cell highlight. Task #35 — `mosaic-emit-react` looks up
+    // `cell:selected` in the part-style map and inlines these
+    // properties into the per-cell `style={{...}}` spread when the
+    // Box's `state-when-selected: ( expr )` predicate evaluates true.
+    state selected {
+      background: #264f78 ;
+      color:      #ffffff ;
+      outline:    1px solid #007acc ;
+    }
+
+    // In-progress edit highlight. Same mechanism via
+    // `state-when-editing: ( expr )` and the `cell:editing` map entry.
+    state editing {
+      background: #1f4f3f ;
+      outline:    1px solid #007acc ;
+    }
+  }
+
+  // Column-header cells (the labels A, B, C, ... at the top).
+  part header-cell {
+    background:  #2d2d30 ;
+    color:       #9d9d9d ;
+    font-weight: normal ;
+    text-align:  center ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    // Give the header cell an explicit height like the body `cell` has —
+    // without it, backends that size a cell box from its style height (Qt
+    // emits the Rectangle with no height, an anchor-filled Text inside) collapse
+    // the header row to a sliver and the A/B/C… letters clip. Matches header-row.
+    height:      24px ;
+  }
+
+  // The header row itself sets the row height; useful when the
+  // first column eventually gains row numbers.
+  part header-row {
+    height: 24px ;
+  }
+
+  // Body data rows share the cell height and alternate between two
+  // backgrounds for readability. (Stripe state blocks `state even` /
+  // `state odd` would need `state-when-even` / `state-when-odd`
+  // predicates on the Row in Grid.{desktop,touch}.mll — currently
+  // not wired since the visual stripes weren't part of the L10
+  // baseline. Adding them is a small follow-up.)
+  part data-row {
+    height: 22px ;
+  }
+}

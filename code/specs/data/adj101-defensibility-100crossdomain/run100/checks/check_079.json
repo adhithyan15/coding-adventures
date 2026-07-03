@@ -1,0 +1,8 @@
+{
+ "check_id": 79,
+ "idx": 33,
+ "slot": "disability_duration_months",
+ "claimed_value": 24,
+ "scenario": "Priya was diagnosed with a chronic condition that her physician confirms will persist for several years. She submits a complete application including her medical certification. The caseworker notes her file contains a residency questionnaire that has not yet been processed.",
+ "cited_span": "diagnosed with a chronic condition that her physician confirms will persist for several years"
+}

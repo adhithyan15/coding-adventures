@@ -1,0 +1,8 @@
+{
+ "check_id": 89,
+ "idx": 39,
+ "slot": "attendance_pct",
+ "claimed_value": 40,
+ "scenario": "Lena attended only 40% of her scheduled Job Training sessions last month because she was hospitalized for three weeks, which she documented with hospital records. She requests her monthly stipend.",
+ "cited_span": "attended only 40% of her scheduled Job Training sessions last month"
+}

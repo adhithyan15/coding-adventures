@@ -1,0 +1,20 @@
+% Worked example — mortgage debt-to-income ratio (computed value → predicate).
+%
+% The model extracted the two dollar amounts; the engine computes the ratio on
+% the CPU (a derivation tree cites both facts) and the ratio — dimensionless,
+% because money/money cancels — drives the eligibility rule.
+%
+% Expected: dti = 1800/6000 = 0.30 <= 0.43 fires → mortgage_eligible ≈ 1.0.
+
+prior 0.20 for mortgage_eligible
+  source "CFPB Qualified Mortgage rule" trust authoritative
+
+observe monthly_debt(money(1800, usd))
+observe monthly_income(money(6000, usd))
+
+let dti = monthly_debt / monthly_income
+
+contributes 1000000 from dti <= 0.43 to mortgage_eligible
+  source "12 CFR 1026.43(e)(2)(vi) — 43% DTI limit" trust authoritative
+
+? mortgage_eligible

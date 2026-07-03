@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VisiCalc — Infinite Virtualized Sheet (Rust engine, WASM)</title>
+  <!--
+    infinite.html — a VIRTUALIZED, effectively-infinite spreadsheet rendered on
+    the shared Rust engine (spreadsheet-core) compiled to WebAssembly.
+
+    Where index.html renders the fixed 5x5 parity grid, this page proves the
+    "infinite sheet" abstraction: the sheet is u32 x u32 (~4.3 billion each way)
+    and sparse, and only the VISIBLE window of cells is ever in the DOM. Scroll
+    thousands of rows / dozens of columns and the DOM-cell counter stays small.
+
+    How it works (all engine-driven; no data is hard-coded into the renderer):
+      - workbook.usedRange()        sizes the scrollable area to the data.
+      - workbook.getDisplayWindow(r0,c0,r1,c1) returns ONLY the visible
+        rectangle's cells as ready-to-paint DISPLAY STRINGS — each value already
+        rendered through its format code by the engine (e.g. 1234.5 with
+        "#,##0.00" -> "1,234.50") — so the renderer paints text directly and
+        never re-derives number formatting. We reposition just those on scroll.
+      - workbook.setFormat(a1,code) attaches an Excel-style format code to a cell.
+      - workbook.columnLetters(i)   labels the frozen header (A..Z, AA, AB, ...).
+      - workbook.changedSince(rev)  tells us which cells an edit dirtied.
+
+    Dependency-free; opens directly from disk (file://) — the .wasm is embedded
+    as base64 in vendor/spreadsheet-engine-wasm.js.
+  -->
+  <style>
+    /* ── Design tokens ──────────────────────────────────────────────
+       One palette + spacing/typography scale, so the whole demo reads as a
+       single, considered surface (and so the native demos can mirror it). */
+    :root {
+      --bg: #16181d;            /* app background                     */
+      --panel: #1b1e24;         /* sheet + toolbar surface            */
+      --surface: #21252c;       /* buttons, pill                      */
+      --surface-hover: #2b313a; /* button hover                       */
+      --surface-active: #14171c;/* button pressed                     */
+      --line: #2c313a;          /* hairline borders                   */
+      --line-strong: #3a404b;   /* control borders                    */
+      --head-bg: #20242b;       /* row/column headers                 */
+      --head-bg-sel: #2b3340;   /* header of the selected row/column  */
+      --ink: #e8eaed;           /* primary text                       */
+      --muted: #9aa3b2;         /* labels, headers                    */
+      --accent: #4aa3ff;        /* selection + focus                  */
+      --accent-soft: rgba(74,163,255,0.14);
+      --sel: rgba(74,163,255,0.18);
+      --row-alt: rgba(255,255,255,0.022); /* zebra band            */
+      --ok: #4ec9a8;
+      --r: 8px; --r-sm: 5px;    /* radii                              */
+      --mono: ui-monospace, SFMono-Regular, Menlo, "Cascadia Code", monospace;
+      --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --row-h: 26px; --col-w: 88px; --gutter-w: 60px; --head-h: 28px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--ui); font-size: 13px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 22px 20px 28px; }
+
+    /* Title: a small accent dot + spaced label, like an app header. */
+    h1 {
+      font-size: 12px; letter-spacing: 1.5px; color: var(--muted); font-weight: 600;
+      margin: 0 0 14px; display: flex; align-items: center; gap: 9px; text-transform: uppercase;
+    }
+    h1::before {
+      content: ""; width: 9px; height: 9px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 10px var(--accent-soft);
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────────────────
+       Address pill + fx formula field on the left (the field grows), then
+       segmented button groups pushed to the right, divided by thin rules. */
+    .bar {
+      display: flex; gap: 10px; align-items: center; margin-bottom: 12px;
+      padding: 8px; background: var(--panel);
+      border: 1px solid var(--line); border-radius: var(--r);
+    }
+    .addr {
+      font-family: var(--mono); color: var(--ink); font-weight: 600;
+      min-width: 44px; text-align: center; padding: 6px 8px;
+      background: var(--surface); border: 1px solid var(--line-strong);
+      border-radius: var(--r-sm);
+    }
+    .fx { color: var(--muted); font-style: italic; font-family: var(--mono); padding-left: 2px; }
+    .bar input {
+      flex: 1; min-width: 120px; background: #0f1115; color: var(--ink);
+      border: 1px solid var(--line-strong); padding: 7px 10px;
+      font-family: var(--mono); font-size: 13px; border-radius: var(--r-sm);
+      transition: border-color .12s, box-shadow .12s;
+    }
+    .bar input::placeholder { color: #5f6672; }
+    .bar input:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .sep { width: 1px; align-self: stretch; background: var(--line); margin: 2px 2px; }
+
+    /* Segmented button group: buttons share borders, ends rounded. */
+    .grp { display: inline-flex; }
+    .bar button {
+      background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong);
+      padding: 7px 11px; font-family: var(--ui); font-size: 12px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; border-radius: 0; margin-left: -1px;
+      transition: background .12s, color .12s;
+    }
+    .grp button:first-child { border-top-left-radius: var(--r-sm); border-bottom-left-radius: var(--r-sm); margin-left: 0; }
+    .grp button:last-child { border-top-right-radius: var(--r-sm); border-bottom-right-radius: var(--r-sm); }
+    .bar button:hover:not(:disabled) { background: var(--surface-hover); color: #fff; position: relative; z-index: 1; }
+    .bar button:active:not(:disabled) { background: var(--surface-active); }
+    .bar button:disabled { opacity: .38; cursor: default; }
+
+    /* ── Status line ─────────────────────────────────────────────────*/
+    .status {
+      color: var(--muted); margin: 12px 0 0; font-size: 12px; font-family: var(--mono);
+      padding-top: 10px; border-top: 1px solid var(--line);
+    }
+    .status b { color: var(--ink); font-weight: 600; }
+
+    /* ── Sheet tab bar ───────────────────────────────────────────────*/
+    .sheettabs {
+      display: flex; align-items: flex-end; gap: 2px; margin: 10px 0 0;
+      padding-bottom: 0; border-bottom: 1px solid var(--line);
+    }
+    .sheettab {
+      background: var(--surface); color: var(--muted);
+      border: 1px solid var(--line-strong); border-bottom: none;
+      border-top-left-radius: var(--r-sm); border-top-right-radius: var(--r-sm);
+      padding: 6px 12px; font-family: var(--ui); font-size: 12px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; transition: background .12s, color .12s;
+    }
+    .sheettab:hover { background: var(--surface-hover); color: var(--ink); }
+    .sheettab.active {
+      background: var(--panel); color: var(--ink);
+      border-color: var(--line-strong); position: relative; z-index: 1;
+      box-shadow: inset 0 2px 0 var(--accent);
+    }
+    .sheettab.add { color: var(--muted); font-weight: 600; padding: 6px 10px; }
+
+    /* ── Sheet panel ─────────────────────────────────────────────────
+       The scroll container; its single child .canvas is sized to the (huge)
+       virtual content, which gives the scrollbar its range. */
+    .sheet {
+      position: relative; overflow: auto; height: 62vh;
+      border: 1px solid var(--line); border-radius: var(--r); background: var(--panel);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .canvas { position: relative; }
+
+    /* Cells / headers are absolutely positioned inside .canvas. Only the
+       visible window's worth ever exist in the DOM at once. */
+    .cell, .colhead, .rowhead, .corner {
+      position: absolute; height: var(--row-h); line-height: var(--row-h);
+      border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    }
+    .cell { width: var(--col-w); text-align: right; cursor: cell; font-family: var(--mono); }
+    .cell.even { background: var(--row-alt); }      /* zebra banding */
+    .cell.sel {
+      outline: 2px solid var(--accent); outline-offset: -2px;
+      background: var(--sel); color: #fff; font-weight: 600; z-index: 1;
+    }
+    .colhead {
+      width: var(--col-w); height: var(--head-h); line-height: var(--head-h);
+      background: var(--head-bg); color: var(--muted); text-align: center; z-index: 2;
+      font-family: var(--ui); font-size: 11px; font-weight: 600; letter-spacing: .5px;
+    }
+    .rowhead {
+      width: var(--gutter-w); background: var(--head-bg); color: var(--muted);
+      text-align: center; z-index: 2; font-family: var(--ui); font-size: 11px;
+    }
+    /* The header of the selected cell's row/column gets an accent tint. */
+    .colhead.selhdr, .rowhead.selhdr { background: var(--head-bg-sel); color: var(--accent); }
+    .corner {
+      width: var(--gutter-w); height: var(--head-h); background: var(--head-bg);
+      z-index: 3; border-right-color: var(--line-strong); border-bottom-color: var(--line-strong);
+    }
+    /* Drag handles to resize a column (a thin strip on a column header's right
+       edge) or a row (the bottom edge of a row-number gutter cell). They sit
+       just inside the header, above it (z-index), and show a resize cursor; a
+       double-click clears the custom size (auto-fit back to the default). */
+    .colresize {
+      position: absolute; width: 6px; height: var(--head-h); z-index: 4;
+      cursor: col-resize; margin-left: -3px;
+    }
+    .rowresize {
+      position: absolute; width: var(--gutter-w); height: 6px; z-index: 4;
+      cursor: row-resize; margin-top: -3px;
+    }
+    .colresize:hover, .rowresize:hover, .resizing { background: var(--accent); opacity: .5; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>VISICALC · INFINITE VIRTUALIZED SHEET · RUST ENGINE (WASM)</h1>
+
+    <div class="bar">
+      <span class="addr" id="addr">A1</span>
+      <span class="fx">fx</span>
+      <input id="formula" placeholder="Enter a value or formula (e.g. =SUM(A1:A4)) and press Enter" />
+      <span class="sep"></span>
+      <div class="grp">
+        <button id="fillDown" title="Replicate the selected cell into the 10 rows below it (drag-fill)">↓ Fill 10</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Clipboard">
+        <button id="copyCell" title="Copy the selected cell to the clipboard">Copy</button>
+        <button id="cutCell" title="Cut the selected cell (cleared when you paste)">Cut</button>
+        <button id="pasteCell" title="Paste the clipboard at the selected cell, shifting relative references">Paste</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="File">
+        <button id="saveBook" title="Serialize the whole workbook (formulas + formats) to browser storage">Save</button>
+        <button id="loadBook" title="Reload the workbook from the last saved snapshot">Load</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Structure">
+        <button id="insRow" title="Insert a row above the selected cell (references shift down)">+ Row</button>
+        <button id="delRow" title="Delete the selected cell's row (references shift up; refs into it become #REF!)">− Row</button>
+        <button id="insCol" title="Insert a column left of the selected cell (references shift right)">+ Col</button>
+        <button id="delCol" title="Delete the selected cell's column (references shift left; refs into it become #REF!)">− Col</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Format">
+        <button id="fmtDecimal" title="Format the selected cell with thousands separators + 2 decimals (#,##0.00)">.00</button>
+        <button id="fmtPercent" title="Format the selected cell as a percent (0.0%)">%</button>
+        <button id="fmtCurrency" title="Format the selected cell as currency ($#,##0.00)">$</button>
+        <button id="fmtGeneral" title="Clear the selected cell's format (General)">Gen</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Sort">
+        <button id="sortAsc" title="Sort the budget block A1:E4 by the selected column, ascending (rows move as records; formulas track)">▲ Sort</button>
+        <button id="sortDesc" title="Sort the budget block A1:E4 by the selected column, descending">▼ Sort</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="Find / replace">
+        <input id="findInput" placeholder="find" title="Text to find in cell sources" style="width:84px;margin-right:6px" />
+        <input id="replaceInput" placeholder="replace" title="Replacement text" style="width:84px;margin-right:6px" />
+        <button id="findBtn" title="Select the first cell whose source contains the find text (count in the status bar)">Find</button>
+        <button id="replaceBtn" title="Replace the find text with the replacement in every matching cell's source">Replace all</button>
+      </div>
+      <span class="sep"></span>
+      <div class="grp" role="group" aria-label="History">
+        <button id="undoBtn" title="Undo the last edit">↶ Undo</button>
+        <button id="redoBtn" title="Redo the last undone edit">↷ Redo</button>
+      </div>
+    </div>
+
+    <!-- Sheet tab bar: one tab per sheet, the active one highlighted. Click a tab
+         to switch (bare-A1 cell ops then address that sheet); a formula can still
+         reference another sheet by name (=Summary!A1). Double-click to rename,
+         right-click to delete, + to add. -->
+    <div class="sheettabs" id="sheettabs" role="tablist" aria-label="Sheets"></div>
+
+    <div class="sheet" id="sheet">
+      <div class="canvas" id="canvas">
+        <div id="cells"></div>
+        <div id="heads"></div>
+      </div>
+    </div>
+
+    <p class="status" id="status">Booting the Rust engine…</p>
+  </div>
+
+  <script src="vendor/spreadsheet-engine-wasm.js"></script>
+  <script>
+    "use strict";
+
+    // Geometry. COL_W / ROW_H are the DEFAULT sizes (must match the CSS
+    // variables above); a column / row can override its size — that lives in the
+    // engine (workbook.columnWidth / rowHeight), persists through save/load, and
+    // shifts with its column / row on an insert/delete. Resize clamps:
+    var ROW_H = 26, COL_W = 88, GUTTER_W = 60, HEAD_H = 28, OVERSCAN = 3;
+    var MIN_COL_W = 40, MAX_COL_W = 600, MIN_ROW_H = 16, MAX_ROW_H = 240;
+
+    // Per-index size overrides + cumulative-offset prefix arrays, rebuilt by
+    // resize() whenever the extent or a size changes. The grid is bounded (~1k
+    // rows × ~60 cols here), so full prefix arrays are tiny and exact — no
+    // uniform-grid assumption. colLefts[c] is the x of column c's left edge;
+    // rowTops[r] is the y of row r's top edge. Lengths are TOTAL_*+2 so the
+    // sentinel [TOTAL_*+1] holds the canvas extent.
+    var colOverride = {}, rowOverride = {};   // {index: size} from the engine
+    var colLefts = [0, GUTTER_W], rowTops = [0, HEAD_H];
+    function colW(c) { return colOverride[c] || COL_W; }
+    function rowH(r) { return rowOverride[r] || ROW_H; }
+    // First index whose start offset is ≤ `px` (the visible window's leading
+    // edge): binary search the prefix array. `arr` is colLefts / rowTops.
+    function indexAt(arr, total, px) {
+      var lo = 1, hi = total;
+      while (lo < hi) {
+        var mid = (lo + hi + 1) >> 1;
+        if (arr[mid] <= px) lo = mid; else hi = mid - 1;
+      }
+      return lo;
+    }
+
+    var sheet = document.getElementById("sheet");
+    var canvas = document.getElementById("canvas");
+    var cellsEl = document.getElementById("cells");
+    var headsEl = document.getElementById("heads");
+    var statusEl = document.getElementById("status");
+    var addrEl = document.getElementById("addr");
+    var formulaEl = document.getElementById("formula");
+
+    var workbook = null;
+    var TOTAL_ROWS = 1000, TOTAL_COLS = 60; // recomputed from usedRange after seeding
+    var selRow = 1, selCol = 1;
+    var lastRev = 0;
+
+    // Escape text before it goes into innerHTML — cell *text* is user data.
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function a1(r, c) { return workbook.columnLetters(c) + r; }
+
+    // Size the virtual canvas to the data extent plus a comfortable margin, so
+    // you can scroll past the data into blank space and it still feels endless.
+    function resize() {
+      var u = workbook.usedRange();
+      var maxRow = u ? u.maxRow : 1, maxCol = u ? u.maxCol : 1;
+      TOTAL_ROWS = Math.max(maxRow + 200, 1000);
+      TOTAL_COLS = Math.max(maxCol + 30, 60);
+
+      // Pull the sparse per-column / per-row size overrides for the whole extent
+      // in two engine calls (the readers return only the customized indices), then
+      // build exact cumulative-offset prefix arrays. colLefts[c+1]-colLefts[c] is
+      // column c's width; the last entry is the canvas width.
+      colOverride = {}; rowOverride = {};
+      workbook.columnWidths(1, TOTAL_COLS).forEach(function (e) { colOverride[e.col] = e.w; });
+      workbook.rowHeights(1, TOTAL_ROWS).forEach(function (e) { rowOverride[e.row] = e.h; });
+      rebuildPrefix();
+    }
+
+    // Rebuild the cumulative-offset prefix arrays + canvas size from the current
+    // colOverride / rowOverride maps. Split out from resize() so a live drag can
+    // preview a new size (mutate the local map, rebuild, re-render) WITHOUT an
+    // engine round-trip per mouse-move — the engine is written once, on release,
+    // so a drag is a single undo step rather than dozens.
+    function rebuildPrefix() {
+      colLefts = new Array(TOTAL_COLS + 2); colLefts[1] = GUTTER_W;
+      for (var c = 1; c <= TOTAL_COLS; c++) colLefts[c + 1] = colLefts[c] + colW(c);
+      rowTops = new Array(TOTAL_ROWS + 2); rowTops[1] = HEAD_H;
+      for (var r = 1; r <= TOTAL_ROWS; r++) rowTops[r + 1] = rowTops[r] + rowH(r);
+      canvas.style.width = colLefts[TOTAL_COLS + 1] + "px";
+      canvas.style.height = rowTops[TOTAL_ROWS + 1] + "px";
+    }
+
+    // Paint ONLY the visible window. Cells are positioned in canvas space (they
+    // scroll naturally); headers/gutter are positioned at the live scroll offset
+    // so they stay pinned to the top/left edge.
+    function render() {
+      var st = sheet.scrollTop, sl = sheet.scrollLeft;
+      var vh = sheet.clientHeight, vw = sheet.clientWidth;
+
+      // The visible window in variable-size space: binary-search the prefix
+      // arrays for the first row/col at the scroll edge, then walk until past the
+      // viewport. OVERSCAN pads a few extra so a partial row/col at the edge and a
+      // fast scroll never flash blank.
+      var firstRow = Math.max(1, indexAt(rowTops, TOTAL_ROWS, st) - OVERSCAN);
+      var lastRow = firstRow;
+      while (lastRow < TOTAL_ROWS && rowTops[lastRow + 1] < st + vh) lastRow++;
+      lastRow = Math.min(TOTAL_ROWS, lastRow + OVERSCAN);
+      var firstCol = Math.max(1, indexAt(colLefts, TOTAL_COLS, sl) - OVERSCAN);
+      var lastCol = firstCol;
+      while (lastCol < TOTAL_COLS && colLefts[lastCol + 1] < sl + vw) lastCol++;
+      lastCol = Math.min(TOTAL_COLS, lastCol + OVERSCAN);
+
+      // Display strings: each cell is already rendered through its format code
+      // by the engine, so we paint row[...] directly (no client-side formatting).
+      var win = workbook.getDisplayWindow(firstRow, firstCol, lastRow, lastCol);
+      if (win.error) { statusEl.textContent = "window error: " + win.error; return; }
+
+      var cellHtml = "";
+      for (var r = firstRow; r <= lastRow; r++) {
+        var row = win.cells[r - firstRow];
+        var top = rowTops[r], h = rowH(r);
+        var band = (r % 2 === 0) ? " even" : ""; // zebra row banding
+        for (var c = firstCol; c <= lastCol; c++) {
+          var sel = (r === selRow && c === selCol) ? " sel" : "";
+          cellHtml += '<div class="cell' + band + sel + '" data-r="' + r + '" data-c="' + c +
+            '" style="top:' + top + 'px;left:' + colLefts[c] + 'px;width:' + colW(c) +
+            'px;height:' + h + 'px;line-height:' + h + 'px">' +
+            esc(row[c - firstCol]) + "</div>";
+        }
+      }
+      cellsEl.innerHTML = cellHtml;
+
+      // Frozen chrome: column letters across the top, row numbers down the left.
+      // Each header carries a drag handle (.colresize on its right edge,
+      // .rowresize on its bottom edge) to resize that column / row.
+      var headHtml = '<div class="corner" style="top:' + st + 'px;left:' + sl + 'px"></div>';
+      for (var hc = firstCol; hc <= lastCol; hc++) {
+        var colSel = (hc === selCol) ? " selhdr" : ""; // highlight selected column
+        headHtml += '<div class="colhead' + colSel + '" style="top:' + st + 'px;left:' +
+          colLefts[hc] + 'px;width:' + colW(hc) + 'px">' + esc(workbook.columnLetters(hc)) + "</div>" +
+          '<div class="colresize" data-c="' + hc + '" title="Drag to resize, double-click to auto-fit"' +
+          ' style="top:' + st + 'px;left:' + colLefts[hc + 1] + 'px"></div>';
+      }
+      for (var hr = firstRow; hr <= lastRow; hr++) {
+        var rowSel = (hr === selRow) ? " selhdr" : ""; // highlight selected row
+        headHtml += '<div class="rowhead' + rowSel + '" style="top:' + rowTops[hr] +
+          'px;left:' + sl + 'px;height:' + rowH(hr) + 'px;line-height:' + rowH(hr) + 'px">' + hr + "</div>" +
+          '<div class="rowresize" data-r="' + hr + '" title="Drag to resize, double-click to auto-fit"' +
+          ' style="top:' + rowTops[hr + 1] + 'px;left:' + sl + 'px"></div>';
+      }
+      headsEl.innerHTML = headHtml;
+
+      statusEl.innerHTML =
+        "Virtual grid: <b>" + TOTAL_ROWS.toLocaleString() + "</b> rows × <b>" +
+        TOTAL_COLS + "</b> cols &nbsp;·&nbsp; DOM cells materialized: <b>" +
+        cellsEl.children.length + "</b> &nbsp;·&nbsp; revision <b>" +
+        workbook.currentRevision() + "</b>";
+
+      refreshHistoryButtons(); // keep Undo/Redo enabled state in step with history
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { render(); ticking = false; });
+    }
+
+    function selectCell(r, c) {
+      selRow = r; selCol = c;
+      addrEl.textContent = a1(r, c);
+      formulaEl.value = workbook.getRaw(a1(r, c));
+      render();
+    }
+
+    cellsEl.addEventListener("click", function (e) {
+      var t = e.target.closest(".cell");
+      if (!t) return;
+      selectCell(+t.dataset.r, +t.dataset.c);
+    });
+
+    // ── Column / row resize (drag a header handle) ───────────────────────────
+    // Mousedown on a .colresize / .rowresize starts a drag: while dragging we
+    // PREVIEW the new size in the local override map + rebuild (no engine call),
+    // and on mouseup we commit it ONCE through the engine (one undo step). The
+    // size is clamped to [MIN,MAX]. A double-click clears the size (auto-fit back
+    // to the default). The committed size persists through save/load and shifts
+    // with its column/row on an insert/delete — all handled by the engine.
+    var drag = null;
+    headsEl.addEventListener("mousedown", function (e) {
+      var col = e.target.closest(".colresize"), row = e.target.closest(".rowresize");
+      if (!col && !row) return;
+      e.preventDefault(); // don't start a text selection
+      document.body.style.userSelect = "none";
+      e.target.classList.add("resizing");
+      if (col) {
+        var c = +col.dataset.c;
+        drag = { kind: "col", i: c, start: e.clientX, size: colW(c), el: e.target };
+      } else {
+        var r = +row.dataset.r;
+        drag = { kind: "row", i: r, start: e.clientY, size: rowH(r), el: e.target };
+      }
+    });
+    window.addEventListener("mousemove", function (e) {
+      if (!drag) return;
+      if (drag.kind === "col") {
+        var w = Math.round(drag.size + (e.clientX - drag.start));
+        colOverride[drag.i] = Math.max(MIN_COL_W, Math.min(MAX_COL_W, w));
+      } else {
+        var h = Math.round(drag.size + (e.clientY - drag.start));
+        rowOverride[drag.i] = Math.max(MIN_ROW_H, Math.min(MAX_ROW_H, h));
+      }
+      rebuildPrefix(); // live preview, no engine write yet
+      render();
+    });
+    window.addEventListener("mouseup", function () {
+      if (!drag) return;
+      // Commit the previewed size to the engine once → a single undo step.
+      if (drag.kind === "col") workbook.setColumnWidth(drag.i, colOverride[drag.i]);
+      else workbook.setRowHeight(drag.i, rowOverride[drag.i]);
+      if (drag.el) drag.el.classList.remove("resizing");
+      document.body.style.userSelect = "";
+      drag = null;
+      resize(); render(); // re-pull from the engine (authoritative) + repaint
+    });
+    headsEl.addEventListener("dblclick", function (e) {
+      var col = e.target.closest(".colresize"), row = e.target.closest(".rowresize");
+      if (col) { workbook.clearColumnWidth(+col.dataset.c); resize(); render(); }
+      else if (row) { workbook.clearRowHeight(+row.dataset.r); resize(); render(); }
+    });
+
+    formulaEl.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      var rev = workbook.currentRevision();
+      workbook.setCell(a1(selRow, selCol), formulaEl.value);
+      // Demonstrate the change-diff: which cells did that edit dirty?
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) recomputed: " + diff.changed.slice(0, 8).join(", ");
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; last edit → " + esc(note);
+    });
+
+    // Drag-fill: replicate the selected cell into the 10 rows below it. The
+    // engine shifts each copy's relative references (=A1 → =A2, …), pins absolute
+    // ($) refs, and carries the format — all in one engine call.
+    document.getElementById("fillDown").addEventListener("click", function () {
+      var src = a1(selRow, selCol);
+      var first = a1(selRow + 1, selCol);
+      var last = a1(selRow + 10, selCol);
+      var rev = workbook.currentRevision();
+      workbook.fill(src, first, last);
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) filled: " + diff.changed.slice(0, 8).join(", ");
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; filled " + esc(src) + " ↓ → " + esc(note);
+    });
+
+    // Clipboard: copy/cut the selected cell, then paste it at the selection. The
+    // engine shifts the pasted formula's relative references by the destination's
+    // offset (=A1 copied two rows down pastes as =A3), pins absolute ($) refs, and
+    // carries the format; a cut clears the source on paste. Single-cell here, but
+    // the engine handles whole rectangles.
+    document.getElementById("copyCell").addEventListener("click", function () {
+      var a = a1(selRow, selCol);
+      workbook.copy(a, a);
+      statusEl.innerHTML += " &nbsp;·&nbsp; copied " + esc(a);
+    });
+    document.getElementById("cutCell").addEventListener("click", function () {
+      var a = a1(selRow, selCol);
+      workbook.cut(a, a);
+      statusEl.innerHTML += " &nbsp;·&nbsp; cut " + esc(a) + " (clears on paste)";
+    });
+    document.getElementById("pasteCell").addEventListener("click", function () {
+      var dst = a1(selRow, selCol);
+      var rev = workbook.currentRevision();
+      var ok = workbook.paste(dst);
+      if (!ok) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; nothing to paste";
+        return;
+      }
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s): " + diff.changed.slice(0, 8).join(", ");
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; pasted at " + esc(dst) + " → " + esc(note);
+    });
+
+    // Structural edits: insert / delete the selected cell's row or column. The
+    // engine shifts every formula reference at or after the band and recomputes;
+    // a reference whose entire band is deleted becomes #REF!. We operate on a
+    // single row/column at the cursor (the engine handles any count).
+    document.getElementById("insRow").addEventListener("click", function () {
+      workbook.insertRows(selRow, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; inserted a row at " + selRow;
+    });
+    document.getElementById("delRow").addEventListener("click", function () {
+      workbook.deleteRows(selRow, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted row " + selRow;
+    });
+    document.getElementById("insCol").addEventListener("click", function () {
+      workbook.insertCols(selCol, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; inserted a column at " + esc(workbook.columnLetters(selCol));
+    });
+    document.getElementById("delCol").addEventListener("click", function () {
+      workbook.deleteCols(selCol, 1);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted column " + esc(workbook.columnLetters(selCol));
+    });
+
+    // Number formatting: attach an Excel-style format code to the selected cell.
+    // The code is display-only — the stored value is unchanged, the engine just
+    // renders it differently (getDisplayWindow applies the code). "" clears it.
+    function applyFormat(code, label) {
+      var a = a1(selRow, selCol);
+      workbook.setFormat(a, code);
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; formatted " + esc(a) + " as " + esc(label);
+    }
+    document.getElementById("fmtDecimal").addEventListener("click", function () { applyFormat("#,##0.00", "#,##0.00"); });
+    document.getElementById("fmtPercent").addEventListener("click", function () { applyFormat("0.0%", "0.0%"); });
+    document.getElementById("fmtCurrency").addEventListener("click", function () { applyFormat("$#,##0.00", "$#,##0.00"); });
+    document.getElementById("fmtGeneral").addEventListener("click", function () { applyFormat("", "General"); });
+
+    // Range sort: reorder the rows of the seeded budget block A1:E4 by the
+    // SELECTED column (clamped into the block's columns A..E; defaults to A).
+    // Each row moves as a record — the E-column SUM formulas travel with their
+    // row and have their relative refs shifted, so every total stays correct.
+    // The stored values are unchanged; only the row order (and the dependent
+    // recompute) changes. sortRange returns false for a no-op (already sorted /
+    // bad range), which we surface in the status line.
+    function sortBlock(asc) {
+      var keyCol = Math.min(5, Math.max(1, selCol)); // clamp into A..E
+      var rev = workbook.currentRevision();
+      var ok = workbook.sortRange("A1", "E4", keyCol, asc);
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) moved";
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; sorted A1:E4 by column " +
+        esc(workbook.columnLetters(keyCol)) + (asc ? " ▲" : " ▼") +
+        (ok ? " → " + esc(note) : " (no-op)");
+    }
+    document.getElementById("sortAsc").addEventListener("click", function () { sortBlock(true); });
+    document.getElementById("sortDesc").addEventListener("click", function () { sortBlock(false); });
+
+    // Find / replace: locate cells whose SOURCE contains the find text and
+    // bulk-edit them, over the loader's findAll/replaceAll (engine find_all/
+    // replace_all). Find (case-insensitive, searches sources) selects the first
+    // match and reports the count; Replace all rewrites find → replacement in
+    // every matching cell's source — the engine recomputes — then re-renders.
+    function parseA1(s) {
+      var m = /^([A-Za-z]+)(\d+)$/.exec(s);
+      if (!m) return null;
+      var letters = m[1].toUpperCase(), col = 0;
+      for (var i = 0; i < letters.length; i++) col = col * 26 + (letters.charCodeAt(i) - 64);
+      return { row: parseInt(m[2], 10), col: col };
+    }
+    document.getElementById("findBtn").addEventListener("click", function () {
+      var q = document.getElementById("findInput").value;
+      if (!q) { statusEl.innerHTML += " &nbsp;·&nbsp; find: (empty)"; return; }
+      var matches = workbook.findAll(q, true, false); // sources, case-insensitive
+      if (matches.length === 0) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; find " + esc(q) + ": no matches";
+        return;
+      }
+      var first = parseA1(matches[0]);
+      if (first) selectCell(first.row, first.col);
+      statusEl.innerHTML += " &nbsp;·&nbsp; find " + esc(q) + ": " + matches.length +
+        " match(es), first " + esc(matches[0]);
+    });
+    document.getElementById("replaceBtn").addEventListener("click", function () {
+      var q = document.getElementById("findInput").value;
+      var r = document.getElementById("replaceInput").value;
+      if (!q) { statusEl.innerHTML += " &nbsp;·&nbsp; replace: (empty find)"; return; }
+      var n = workbook.replaceAll(q, r, false); // case-insensitive
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      // The find/replace terms are user-controlled, so keep them out of the HTML
+      // sink entirely: append them as a DOM text node (which can never be parsed
+      // as markup) rather than concatenating into innerHTML. The static separator
+      // still goes through insertAdjacentHTML so its entities render.
+      statusEl.insertAdjacentHTML("beforeend", " &nbsp;·&nbsp; replaced ");
+      statusEl.appendChild(document.createTextNode(q + " → " + r + " in " + n + " cell(s)"));
+    });
+
+    // Save / load: serialize the whole workbook to a single JSON document and
+    // stash it in the browser's localStorage; Load deserializes it back. The
+    // document captures only the SOURCE (formula text + typed literals) and
+    // per-cell formats — not the computed values, which the engine recomputes on
+    // load (so the snapshot is small and can never disagree with itself). A
+    // loaded formula stays live: edit a precedent and its dependents recompute.
+    var SAVE_KEY = "visicalc-infinite-save";
+    document.getElementById("saveBook").addEventListener("click", function () {
+      var json = workbook.serialize();
+      try {
+        localStorage.setItem(SAVE_KEY, json);
+        statusEl.innerHTML += " &nbsp;·&nbsp; saved " + json.length + " bytes to browser storage";
+      } catch (e) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; save failed: " + esc(String(e));
+      }
+    });
+    document.getElementById("loadBook").addEventListener("click", function () {
+      var json = null;
+      try { json = localStorage.getItem(SAVE_KEY); } catch (e) { /* storage off */ }
+      if (!json) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; nothing saved yet (press Save first)";
+        return;
+      }
+      var ok = workbook.deserialize(json);
+      if (!ok) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; load failed (corrupt or unsupported snapshot)";
+        return;
+      }
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol)); // refresh the bar
+      statusEl.innerHTML += " &nbsp;·&nbsp; loaded snapshot (" + json.length + " bytes)";
+    });
+
+    // Undo / redo: walk the engine's snapshot history. After a successful
+    // undo/redo the whole visible window is re-read (any cell could have changed)
+    // and the formula bar re-synced; the buttons disable at the ends of history.
+    function refreshHistoryButtons() {
+      document.getElementById("undoBtn").disabled = !workbook.canUndo();
+      document.getElementById("redoBtn").disabled = !workbook.canRedo();
+    }
+    document.getElementById("undoBtn").addEventListener("click", function () {
+      if (!workbook.undo()) return;
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; undo";
+    });
+    document.getElementById("redoBtn").addEventListener("click", function () {
+      if (!workbook.redo()) return;
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; redo";
+    });
+
+    // The classic cross-footing budget, PLUS deliberately far-flung cells to
+    // prove the sheet is sparse and unbounded: a formula at Z1000 and a couple
+    // near BA50/BB50 — thousands of rows and dozens of columns from the origin,
+    // with nothing materialized in between.
+    var SEED = {
+      A1: "15", B1: "3", C1: "12", D1: "8", E1: "=SUM(A1:D1)",
+      A2: "8", B2: "14", C2: "7", D2: "22", E2: "=SUM(A2:D2)",
+      A3: "12", B3: "9", C3: "18", D3: "6", E3: "=SUM(A3:D3)",
+      A4: "4", B4: "11", C4: "3", D4: "17", E4: "=SUM(A4:D4)",
+      A5: "=SUM(A1:A4)", B5: "=SUM(B1:B4)", C5: "=SUM(C1:C4)", D5: "=SUM(D1:D4)", E5: "=SUM(E1:E4)",
+      Z1000: "=SUM(A1:A4)",       // a formula 1000 rows down: 15+8+12+4 = 39
+      BA50: "far cell", BB50: "=Z1000*2" // col 53/54, row 50: 78
+    };
+
+    // Attach Excel-style format codes to a few cells so the engine's display
+    // path is visible: the cross-foot totals read with thousands grouping and
+    // two decimals, and the far-flung Z1000 total as a percent. The values are
+    // unchanged — only how getDisplayWindow renders them.
+    var FORMATS = {
+      E1: "#,##0.00", E2: "#,##0.00", E3: "#,##0.00", E4: "#,##0.00", E5: "#,##0.00",
+      A5: "#,##0.00", B5: "#,##0.00", C5: "#,##0.00", D5: "#,##0.00",
+      Z1000: "0.0%", // 39 -> "3900.0%": proves the format applies far off-origin
+    };
+
+    // ── Sheet tab bar ───────────────────────────────────────────────
+    // One tab per sheet, the active one highlighted. Clicking a tab switches the
+    // sheet bare-A1 cell ops address; a formula can still reference another sheet
+    // by name (=Summary!A1) and recomputes live when that sheet changes.
+    var tabsEl = document.getElementById("sheettabs");
+    function renderTabs() {
+      var info = workbook.sheetNames(); // { sheets: [...], active: idx }
+      tabsEl.innerHTML = "";
+      info.sheets.forEach(function (name, i) {
+        var tab = document.createElement("button");
+        tab.className = "sheettab" + (i === info.active ? " active" : "");
+        tab.textContent = name;
+        tab.setAttribute("role", "tab");
+        tab.title = "Switch to " + name + " · double-click to rename · right-click to delete";
+        tab.addEventListener("click", function () { switchSheet(i); });
+        tab.addEventListener("dblclick", function () { renameSheet(i, name); });
+        tab.addEventListener("contextmenu", function (e) { e.preventDefault(); deleteSheet(i, name); });
+        tabsEl.appendChild(tab);
+      });
+      var add = document.createElement("button");
+      add.className = "sheettab add";
+      add.textContent = "+";
+      add.title = "Add a sheet";
+      add.addEventListener("click", addSheet);
+      tabsEl.appendChild(add);
+    }
+    // After any sheet op the grid re-reads the (new) active sheet from row 1, the
+    // formula bar re-syncs, and the tabs repaint.
+    function afterSheetOp() {
+      resize();
+      selectCell(1, 1);
+      renderTabs();
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+    }
+    function switchSheet(i) {
+      if (workbook.setActiveSheet(i)) afterSheetOp();
+    }
+    function addSheet() {
+      var name = prompt("New sheet name:", "Sheet" + (workbook.sheetNames().sheets.length + 1));
+      if (name == null) return;
+      if (!workbook.addSheet(name)) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; couldn't add sheet (empty or duplicate name)";
+        return;
+      }
+      afterSheetOp();
+      statusEl.innerHTML += " &nbsp;·&nbsp; added sheet " + esc(name);
+    }
+    function renameSheet(i, old) {
+      var name = prompt("Rename sheet:", old);
+      if (name == null || name === old) return;
+      if (!workbook.renameSheet(i, name)) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; couldn't rename (empty or duplicate name)";
+        return;
+      }
+      renderTabs();
+      render();
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      statusEl.innerHTML += " &nbsp;·&nbsp; renamed " + esc(old) + " → " + esc(name);
+    }
+    function deleteSheet(i, name) {
+      if (workbook.sheetNames().sheets.length <= 1) {
+        statusEl.innerHTML += " &nbsp;·&nbsp; can't delete the last sheet";
+        return;
+      }
+      if (!confirm("Delete sheet " + name + "? References to it become #REF!.")) return;
+      if (!workbook.deleteSheet(i)) return;
+      afterSheetOp();
+      statusEl.innerHTML += " &nbsp;·&nbsp; deleted sheet " + esc(name);
+    }
+
+    function boot() {
+      var Engine = window.SpreadsheetEngine;
+      workbook = Engine.createSpreadsheet();
+      workbook.setCells(SEED);
+      for (var key in FORMATS) workbook.setFormat(key, FORMATS[key]);
+      // Seed a second sheet so cross-sheet references are demoable: type
+      // =Summary!A3 on Sheet1 and it tracks Summary's running total.
+      workbook.addSheet("Summary");
+      workbook.setCells({ A1: "100", A2: "200", A3: "=A1+A2" });
+      workbook.setActiveSheet(0); // back to Sheet1 as the active tab
+      // Seed a wide column C (140px) and a tall row 2 (40px) so the grid opens
+      // non-uniform — drag any column header's right edge or a row number's
+      // bottom edge to resize; double-click the handle to auto-fit.
+      workbook.setColumnWidth(3, 140);
+      workbook.setRowHeight(2, 40);
+      renderTabs();
+      resize();
+      selectCell(1, 1);
+      sheet.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", render);
+      render();
+    }
+
+    if (window.__spreadsheetEngineReady) {
+      window.__spreadsheetEngineReady.then(boot).catch(function (e) {
+        statusEl.textContent = "Failed to load the engine: " + e;
+      });
+    } else {
+      statusEl.textContent = "Engine bundle missing (run scripts/bundle-wasm-engine.sh).";
+    }
+  </script>
+</body>
+</html>

@@ -100,8 +100,10 @@ use std::cell::Cell;
 use std::collections::HashMap;
 use std::fmt::Write as _;
 
-use mosmodel_compiler::MosmodelComponent;
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use mosmodel_compiler::{
+    EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
+};
 use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
@@ -164,10 +166,7 @@ pub struct PipelineEmitResult {
 pub enum PipelineEmitError {
     /// The mosmodel component name and the moslayout component name disagree.
     /// Almost always a manifest authoring error.
-    ComponentNameMismatch {
-        mosmodel: String,
-        moslayout: String,
-    },
+    ComponentNameMismatch { mosmodel: String, moslayout: String },
     /// A moslayout primitive tag is not recognised by the HTML backend yet.
     /// See the module-level table for the current coverage.
     UnknownPrimitive(String),
@@ -176,7 +175,10 @@ pub enum PipelineEmitError {
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            PipelineEmitError::ComponentNameMismatch { mosmodel, moslayout } => write!(
+            PipelineEmitError::ComponentNameMismatch {
+                mosmodel,
+                moslayout,
+            } => write!(
                 f,
                 "component name mismatch: mosmodel says '{mosmodel}', moslayout says '{moslayout}'"
             ),
@@ -189,6 +191,629 @@ impl std::fmt::Display for PipelineEmitError {
 }
 
 impl std::error::Error for PipelineEmitError {}
+
+// =====================================================================
+// UI32-K-html — `--emit-project` standalone-HTML shell
+//
+// Lifts the `index-shell.html` pattern from UI31-M (PR #4219, which
+// added it to mosaic-package-artifact-builder) into mosaic-compile's
+// single-component path. After this, `mosaic-compile --backend html
+// --emit-project` produces a complete `<!DOCTYPE html>` document
+// that inlines the component's fragment — open in a browser, see
+// the component. No tooling, no install step.
+//
+// Mirrors the L2 (React) shape (PR #4297): EmitOptions /
+// ProjectFiles / from_pipeline_with_options. The HTML row in UI32
+// §2.2 has no per-backend identifier-shape constraints (HTML is
+// permissive), so the validation surface is the smallest of any
+// backend.
+// =====================================================================
+
+/// Options controlling the HTML emitter's behaviour.
+///
+/// Default: emits only the component fragment; no project shell.
+/// `from_pipeline(...)` is unchanged.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EmitOptions {
+    /// Also emit `index.html` (complete `<!DOCTYPE html>` document
+    /// inlining the component fragment), `main.js`, and `README.md`
+    /// alongside the component `.html` file. Default `false`.
+    pub emit_project: bool,
+}
+
+impl Default for EmitOptions {
+    fn default() -> Self {
+        Self {
+            emit_project: false,
+        }
+    }
+}
+
+/// Project-shaped artifacts emitted when `EmitOptions::emit_project`
+/// is on. Two files only — HTML has no build step, so there is no
+/// `package.json` / `vite.config.ts` / etc. equivalent.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProjectFiles {
+    /// `index.html` — a complete `<!DOCTYPE html>` document with
+    /// `<head>` + `<body>` that inlines the component's emitted
+    /// HTML fragment inside a `<section data-component="X">`
+    /// wrapper. Author opens it in a browser; no install step.
+    pub index_html: String,
+    /// `main.js` — a tiny dependency-free runtime that hydrates
+    /// `{{slot}}` placeholders from `window.mosaicHost.getProps`,
+    /// expands Mosaic `For` / `If` comment markers, normalises
+    /// host-driven boolean attributes, and dispatches `data-on-*`
+    /// events through `window.mosaicHost.handleEvent`.
+    pub main_js: String,
+    /// `README.md` — one-paragraph "open index.html in your
+    /// browser" prose plus the file-map.
+    pub readme: String,
+}
+
+/// Extended pipeline result — same as `PipelineEmitResult` but
+/// carries the optional `ProjectFiles` when `emit_project` is on.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PipelineEmitResultWithProject {
+    pub output: String,
+    pub component_name: String,
+    pub project: Option<ProjectFiles>,
+}
+
+/// Compile a three-file Mosaic pipeline triple to a static HTML
+/// fragment, optionally with a standalone-document project shell.
+///
+/// `from_pipeline(...)` calls this with `EmitOptions::default()` —
+/// existing single-file callers see no behaviour change.
+pub fn from_pipeline_with_options(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    options: &EmitOptions,
+) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
+    let component = from_pipeline(interface, layout, style)?;
+
+    let project = if options.emit_project {
+        Some(build_html_project_files(interface, &component.output))
+    } else {
+        None
+    };
+
+    Ok(PipelineEmitResultWithProject {
+        output: component.output,
+        component_name: component.component_name,
+        project,
+    })
+}
+
+/// Build the standalone-shell side files for a single component.
+/// No validation surface beyond the upstream
+/// `validate_component_name` (UI32 spec §3.6.2 HTML row: "None
+/// beyond ASCII — identifier appears only in HTML comments + data-
+/// attrs"). The component name lands in `<title>` content and in
+/// a `data-component="X"` attribute; both positions are safe for
+/// the upstream-validated ASCII-identifier shape.
+fn build_html_project_files(interface: &MosmodelComponent, fragment: &str) -> ProjectFiles {
+    let component_name = &interface.component;
+    ProjectFiles {
+        index_html: build_index_html(component_name, fragment),
+        main_js: build_main_js(component_name, &interface.slots, &interface.emits),
+        readme: build_html_readme(component_name),
+    }
+}
+
+const BANNER_HTML: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+const BANNER_JS: &str = "// AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\n";
+const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. Edits will be overwritten on next emit. -->\n<!-- Fork the file (remove this banner) to customise. -->\n";
+
+/// Build the complete `<!DOCTYPE html>` shell that inlines the
+/// component fragment.
+///
+/// The fragment lines get a 4-space indent so the shell stays
+/// human-readable when opened in a text editor. The fragment is
+/// the emitter's own previous output (passed in from the caller),
+/// not user-controlled content — the HTML-escape responsibility
+/// lives in the emitter's per-primitive code, not here.
+fn build_index_html(component_name: &str, fragment: &str) -> String {
+    let mut shell = String::new();
+    shell.push_str("<!DOCTYPE html>\n");
+    shell.push_str(BANNER_HTML);
+    shell.push_str("<html lang=\"en\">\n");
+    shell.push_str("<head>\n");
+    shell.push_str("  <meta charset=\"utf-8\">\n");
+    shell
+        .push_str("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
+    shell.push_str(&format!("  <title>{component_name}</title>\n"));
+    shell.push_str("</head>\n");
+    shell.push_str("<body>\n");
+    shell.push_str(&format!(
+        "  <section data-component=\"{component_name}\" data-mosaic-html-root=\"{component_name}\">\n"
+    ));
+    for line in fragment.lines() {
+        shell.push_str("    ");
+        shell.push_str(line);
+        shell.push('\n');
+    }
+    shell.push_str("  </section>\n");
+    shell.push_str("  <script type=\"module\" src=\"./main.js\"></script>\n");
+    shell.push_str("</body>\n");
+    shell.push_str("</html>\n");
+    shell
+}
+
+fn build_main_js(component_name: &str, slots: &[SlotDecl], emits: &[EmitDecl]) -> String {
+    let component_name_json = serde_json::to_string(component_name).unwrap();
+    let fallback_props_json = build_fallback_props_json(slots);
+    let emit_payloads_json = build_emit_payloads_json(emits);
+    HTML_RUNTIME_TEMPLATE
+        .replace("__BANNER_JS__", BANNER_JS)
+        .replace("__COMPONENT_NAME_JSON__", &component_name_json)
+        .replace("__FALLBACK_PROPS_JSON__", &fallback_props_json)
+        .replace("__EMIT_PAYLOADS_JSON__", &emit_payloads_json)
+}
+
+fn build_fallback_props_json(slots: &[SlotDecl]) -> String {
+    let mut props = serde_json::Map::new();
+    for slot in slots {
+        props.insert(camel(&slot.name), sample_json_value_for_slot(slot));
+    }
+    serde_json::to_string_pretty(&serde_json::Value::Object(props)).unwrap()
+}
+
+fn sample_json_value_for_slot(slot: &SlotDecl) -> serde_json::Value {
+    match &slot.default {
+        Some(SlotDefault::Text(value)) => serde_json::Value::String(value.clone()),
+        Some(SlotDefault::Number(value)) if value.is_finite() => {
+            serde_json::Number::from_f64(*value)
+                .map(serde_json::Value::Number)
+                .unwrap_or_else(|| serde_json::Value::Number(0.into()))
+        }
+        Some(SlotDefault::Number(_)) => serde_json::Value::Number(0.into()),
+        Some(SlotDefault::Bool(value)) => serde_json::Value::Bool(*value),
+        None => sample_json_value_for_slot_type(&slot.r#type, &slot.name),
+    }
+}
+
+fn sample_json_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> serde_json::Value {
+    match slot_type {
+        SlotType::Text => serde_json::Value::String(format!(
+            "Sample {}",
+            kebab_to_pascal_case_for_label(slot_name)
+        )),
+        SlotType::Number => serde_json::Value::Number(0.into()),
+        SlotType::Bool => serde_json::Value::Bool(false),
+        SlotType::Image => serde_json::Value::String("sample-image".to_string()),
+        SlotType::Color => serde_json::Value::String("#808080".to_string()),
+        SlotType::Node | SlotType::Component(_) => serde_json::Value::Null,
+        SlotType::List(_) => serde_json::Value::Array(Vec::new()),
+    }
+}
+
+fn kebab_to_pascal_case_for_label(s: &str) -> String {
+    let mut out = String::new();
+    for part in s.split('-').filter(|part| !part.is_empty()) {
+        let mut chars = part.chars();
+        if let Some(first) = chars.next() {
+            out.push(first.to_ascii_uppercase());
+            out.extend(chars);
+        }
+    }
+    if out.is_empty() {
+        "Value".to_string()
+    } else {
+        out
+    }
+}
+
+fn build_emit_payloads_json(emits: &[EmitDecl]) -> String {
+    let mut payloads = serde_json::Map::new();
+    for emit in emits {
+        let params = emit
+            .params
+            .iter()
+            .map(|param| {
+                let mut entry = serde_json::Map::new();
+                entry.insert(
+                    "name".to_string(),
+                    serde_json::Value::String(camel(&param.name)),
+                );
+                entry.insert(
+                    "type".to_string(),
+                    serde_json::Value::String(emit_payload_type_name(&param.r#type).to_string()),
+                );
+                serde_json::Value::Object(entry)
+            })
+            .collect::<Vec<_>>();
+        payloads.insert(emit.name.clone(), serde_json::Value::Array(params));
+    }
+    serde_json::to_string_pretty(&serde_json::Value::Object(payloads)).unwrap()
+}
+
+fn emit_payload_type_name(t: &EmitPayloadType) -> &'static str {
+    match t {
+        EmitPayloadType::Text => "text",
+        EmitPayloadType::Number => "number",
+        EmitPayloadType::Bool => "bool",
+        EmitPayloadType::Color => "color",
+        EmitPayloadType::Component(_) => "component",
+    }
+}
+
+/// Build `README.md` — open-in-browser prose + file map.
+fn build_html_readme(component_name: &str) -> String {
+    format!(
+        "{BANNER_MD}# {component_name} — standalone HTML shell\n\nAuto-generated by `mosaic-compile --backend html --emit-project`.\n\n## Prerequisites\n\nNone. The shell is a static HTML document.\n\n## View\n\nOpen `index.html` in any browser:\n\n```sh\nopen index.html      # macOS\nxdg-open index.html  # Linux\nstart index.html     # Windows\n```\n\n## Host integration\n\n`main.js` hydrates `{{slot}}` placeholders from `window.mosaicHost.getProps` and sends `data-on-*` events to `window.mosaicHost.handleEvent`. If no host is installed, it uses deterministic sample props for every slot.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{component_name}.html` | The Mosaic-compiled HTML fragment. Embed this in your own page. |\n| `index.html` | A complete `<!DOCTYPE html>` shell that inlines the fragment. Open in a browser to view. |\n| `main.js` | Dependency-free Mosaic HTML runtime for slot hydration and host event dispatch. |\n| `README.md` | This file. |\n\n## Editing\n\n`index.html`, `main.js`, and `README.md` carry an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+    )
+}
+
+const HTML_RUNTIME_TEMPLATE: &str = r#"__BANNER_JS__const componentName = __COMPONENT_NAME_JSON__;
+const fallbackProps = __FALLBACK_PROPS_JSON__;
+const emitPayloads = __EMIT_PAYLOADS_JSON__;
+const MOSAIC_HOST_READY_EVENT = "mosaic-host-ready";
+const MOSAIC_HOST_INTENT_EVENT = "mosaic-host-intent";
+
+const root = findRoot(componentName);
+if (root === null) {
+  throw new Error(`Mosaic HTML root not found for ${componentName}`);
+}
+
+const template = root.innerHTML;
+let props = { ...fallbackProps };
+
+root.addEventListener("click", event => {
+  const target = closestEventTarget(event.target, "[data-on-click], [data-on-activate]");
+  if (target === null || !root.contains(target)) {
+    return;
+  }
+  const emitName = target.dataset.onClick ?? target.dataset.onActivate;
+  if (target.dataset.onActivate && target.dataset.external === "false") {
+    event.preventDefault();
+  }
+  void dispatchMosaicEvent(emitName, target);
+});
+
+root.addEventListener("input", event => {
+  const target = closestEventTarget(event.target, "[data-on-change]");
+  if (target === null || !root.contains(target)) {
+    return;
+  }
+  void dispatchMosaicEvent(target.dataset.onChange, target);
+});
+
+root.addEventListener("change", event => {
+  const target = closestEventTarget(event.target, "[data-on-toggle], [data-on-select]");
+  if (target === null || !root.contains(target)) {
+    return;
+  }
+  const emitName = target.dataset.onToggle ?? target.dataset.onSelect;
+  void dispatchMosaicEvent(emitName, target);
+});
+
+root.addEventListener("keydown", event => {
+  const target = closestEventTarget(event.target, "[data-on-commit], [data-on-cancel]");
+  if (target === null || !root.contains(target)) {
+    return;
+  }
+  if (event.key === "Enter" && target.dataset.onCommit) {
+    void dispatchMosaicEvent(target.dataset.onCommit, target);
+  }
+  if (event.key === "Escape" && target.dataset.onCancel) {
+    void dispatchMosaicEvent(target.dataset.onCancel, target);
+  }
+});
+
+window.addEventListener(MOSAIC_HOST_READY_EVENT, () => {
+  void refreshProps();
+});
+
+render();
+void refreshProps();
+
+function findRoot(name) {
+  for (const candidate of document.querySelectorAll("[data-mosaic-html-root]")) {
+    if (candidate.getAttribute("data-mosaic-html-root") === name) {
+      return candidate;
+    }
+  }
+  for (const candidate of document.querySelectorAll("[data-component]")) {
+    if (candidate.getAttribute("data-component") === name) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+async function refreshProps() {
+  const response = await window.mosaicHost?.getProps?.({ component: componentName });
+  applyHostResponse(response);
+}
+
+async function dispatchMosaicEvent(emitName, source) {
+  if (!emitName || typeof window.mosaicHost?.handleEvent !== "function") {
+    return;
+  }
+  const event = buildEvent(emitName, source);
+  const response = await window.mosaicHost.handleEvent({ component: componentName, event });
+  applyHostResponse(response);
+}
+
+function applyHostResponse(response) {
+  if (response === undefined || response === null) {
+    return;
+  }
+  const nextProps = normalizeHostProps(response);
+  if (nextProps !== undefined) {
+    props = { ...props, ...nextProps };
+    render();
+  }
+  if (response.hostIntent !== undefined) {
+    window.dispatchEvent(
+      new CustomEvent(MOSAIC_HOST_INTENT_EVENT, {
+        detail: { intent: response.hostIntent, result: response },
+      }),
+    );
+  }
+}
+
+function normalizeHostProps(response) {
+  if (response === undefined || response === null) {
+    return undefined;
+  }
+  if (typeof response === "object" && "props" in response && response.props !== undefined) {
+    return response.props;
+  }
+  return response;
+}
+
+function render() {
+  root.innerHTML = renderTemplate(template, props);
+  normalizeHostAttributes(root);
+}
+
+function renderTemplate(source, context) {
+  return renderMustaches(renderIfs(renderLoops(source, context), context), context);
+}
+
+function renderLoops(source, context) {
+  return source.replace(
+    /<!--\s*mosaic-for\s+each="([^"]*)"\s+as="([^"]*)"(?:\s+index="([^"]*)")?\s*-->([\s\S]*?)<!--\s*\/mosaic-for\s*-->/g,
+    (_match, eachExpr, asName, indexName, body) => {
+      const items = readPath(context, cleanExpression(eachExpr));
+      if (!Array.isArray(items)) {
+        return "";
+      }
+      return items
+        .map((item, index) => {
+          const childContext = { ...context, [asName]: item };
+          if (indexName) {
+            childContext[indexName] = index;
+          }
+          return stampLoopMetadata(renderTemplate(body, childContext), index, item);
+        })
+        .join("");
+    },
+  );
+}
+
+function renderIfs(source, context) {
+  return source.replace(
+    /<!--\s*mosaic-if\s+when="([^"]*)"\s*-->([\s\S]*?)<!--\s*\/mosaic-if\s*-->/g,
+    (_match, whenExpr, body) => {
+      const marker = "<!-- mosaic-else -->";
+      const markerIndex = body.indexOf(marker);
+      const thenBody = markerIndex >= 0 ? body.slice(0, markerIndex) : body;
+      const elseBody = markerIndex >= 0 ? body.slice(markerIndex + marker.length) : "";
+      return renderTemplate(evaluateCondition(whenExpr, context) ? thenBody : elseBody, context);
+    },
+  );
+}
+
+function renderMustaches(source, context) {
+  return source.replace(/\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}/g, (_match, key) =>
+    escapeHtml(formatValue(readPath(context, key))),
+  );
+}
+
+function stampLoopMetadata(html, index, item) {
+  return html.replace(/(<[A-Za-z][^\s/>]*)/, match =>
+    `${match} data-mosaic-loop-index="${index}" data-mosaic-loop-item="${escapeHtmlAttr(formatValue(item))}"`,
+  );
+}
+
+function normalizeHostAttributes(scope) {
+  for (const element of scope.querySelectorAll("[data-disabled]")) {
+    element.disabled = truthy(element.dataset.disabled);
+  }
+  for (const element of scope.querySelectorAll("[data-readonly]")) {
+    element.readOnly = truthy(element.dataset.readonly);
+  }
+  for (const element of scope.querySelectorAll("[data-checked]")) {
+    element.checked = truthy(element.dataset.checked);
+  }
+  for (const element of scope.querySelectorAll("[data-indeterminate]")) {
+    element.indeterminate = truthy(element.dataset.indeterminate);
+  }
+  for (const dialog of scope.querySelectorAll("dialog[open]")) {
+    if (!truthy(dialog.getAttribute("open"))) {
+      dialog.removeAttribute("open");
+    }
+  }
+}
+
+function buildEvent(emitName, source) {
+  const event = { type: eventTypeFor(emitName) };
+  const params = emitPayloads[emitName] ?? [];
+  for (const param of params) {
+    event[param.name] = readPayloadValue(param, source);
+  }
+  return event;
+}
+
+function readPayloadValue(param, source) {
+  if (param.name === "checked" || param.type === "bool") {
+    return readChecked(source);
+  }
+  if (param.name === "index") {
+    return readLoopIndex(source);
+  }
+  if (param.name === "href") {
+    return source.getAttribute("href") ?? "";
+  }
+  if (param.type === "number") {
+    return readNumber(source);
+  }
+  return readText(source);
+}
+
+function readChecked(source) {
+  if ("checked" in source) {
+    return Boolean(source.checked);
+  }
+  return truthy(readText(source));
+}
+
+function readLoopIndex(source) {
+  const loop = source.closest("[data-mosaic-loop-index]");
+  const index = Number(loop?.dataset.mosaicLoopIndex ?? NaN);
+  return Number.isFinite(index) ? index : 0;
+}
+
+function readNumber(source) {
+  if ("valueAsNumber" in source && Number.isFinite(source.valueAsNumber)) {
+    return source.valueAsNumber;
+  }
+  const value = Number(readText(source));
+  return Number.isFinite(value) ? value : readLoopIndex(source);
+}
+
+function readText(source) {
+  if ("value" in source) {
+    return source.value;
+  }
+  const loopItem = source.closest("[data-mosaic-loop-item]")?.dataset.mosaicLoopItem;
+  return loopItem ?? source.textContent ?? "";
+}
+
+function eventTypeFor(emitName) {
+  const raw = String(emitName);
+  const stripped = raw.startsWith("on") && raw.length > 2 ? raw.slice(2) : raw;
+  return stripped.length === 0 ? raw : stripped[0].toLowerCase() + stripped.slice(1);
+}
+
+function closestEventTarget(target, selector) {
+  return target instanceof Element ? target.closest(selector) : null;
+}
+
+function readPath(context, rawPath) {
+  const path = cleanExpression(rawPath);
+  if (path === "") {
+    return undefined;
+  }
+  let current = context;
+  for (const part of path.split(".")) {
+    if (current === undefined || current === null) {
+      return undefined;
+    }
+    current = current[part];
+  }
+  return current;
+}
+
+function cleanExpression(raw) {
+  let expr = String(raw ?? "").trim();
+  while (expr.startsWith("(") && expr.endsWith(")") && balancedOuterParens(expr)) {
+    expr = expr.slice(1, -1).trim();
+  }
+  return expr;
+}
+
+function balancedOuterParens(expr) {
+  let depth = 0;
+  for (let index = 0; index < expr.length; index += 1) {
+    const ch = expr[index];
+    if (ch === "(") {
+      depth += 1;
+    }
+    if (ch === ")") {
+      depth -= 1;
+      if (depth === 0 && index < expr.length - 1) {
+        return false;
+      }
+    }
+  }
+  return depth === 0;
+}
+
+function evaluateCondition(rawExpr, context) {
+  const expr = cleanExpression(rawExpr);
+  const equality = expr.match(/^(.+?)(?:={2,3})(.+)$/);
+  if (equality) {
+    return String(readTerm(equality[1], context)) === String(readTerm(equality[2], context));
+  }
+  const inequality = expr.match(/^(.+?)(?:!={1,2})(.+)$/);
+  if (inequality) {
+    return String(readTerm(inequality[1], context)) !== String(readTerm(inequality[2], context));
+  }
+  if (expr.startsWith("!")) {
+    return !truthy(readTerm(expr.slice(1), context));
+  }
+  return truthy(readTerm(expr, context));
+}
+
+function readTerm(rawTerm, context) {
+  const term = cleanExpression(rawTerm);
+  if ((term.startsWith("\"") && term.endsWith("\"")) || (term.startsWith("'") && term.endsWith("'"))) {
+    return term.slice(1, -1);
+  }
+  if (term === "true") {
+    return true;
+  }
+  if (term === "false") {
+    return false;
+  }
+  const number = Number(term);
+  if (term !== "" && Number.isFinite(number)) {
+    return number;
+  }
+  return readPath(context, term);
+}
+
+function truthy(value) {
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "number") {
+    return value !== 0;
+  }
+  const text = String(value ?? "").trim().toLowerCase();
+  return text !== "" && text !== "false" && text !== "0" && text !== "off" && text !== "no";
+}
+
+function formatValue(value) {
+  if (value === undefined || value === null) {
+    return "";
+  }
+  if (Array.isArray(value)) {
+    return value.map(formatValue).join(", ");
+  }
+  if (typeof value === "object") {
+    return JSON.stringify(value);
+  }
+  return String(value);
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function escapeHtmlAttr(value) {
+  return escapeHtml(value);
+}
+"#;
 
 /// Compile a three-file Mosaic pipeline triple to a static HTML fragment.
 ///
@@ -354,6 +979,22 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
             extra_attrs: "",
             void: false,
         },
+        // UI31 §3.2 / UI28-1 / U29-D1 — `Col` is the cell-definition
+        // sub-tag inside HostTableColGroup. The colgroup walker
+        // (above) handles direct Col children specially, but when Col
+        // is wrapped in a For (e.g. mosaic-pkg-grid v0.2.0's `For
+        // (each: slot: column-widths, as: w) { Col [col] (width: ( w
+        // )) }`), the generic walker recurses into the For body and
+        // hits Col here as a standalone primitive. `<col>` is HTML's
+        // canonical void column-definition element — emit it as a
+        // void tag with no built-in style; per-column width comes
+        // from the part-style merge if the author bound one.
+        "Col" => HtmlTag {
+            tag_name: "col",
+            builtin_style: "",
+            extra_attrs: "",
+            void: true,
+        },
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
 }
@@ -387,11 +1028,7 @@ fn emit_html_tree(
     // what the React backend would have wired up.
     for prop in &node.props {
         if let LayoutPropValue::EmitRef(name) = &prop.value {
-            writeln!(
-                out,
-                "{pad}<!-- emit \"{name}\" dropped: HTML is static -->"
-            )
-            .unwrap();
+            writeln!(out, "{pad}<!-- emit \"{name}\" dropped: HTML is static -->").unwrap();
         }
     }
 
@@ -408,12 +1045,19 @@ fn emit_html_tree(
         return Ok(out);
     }
 
-    // UI29 §3.2 — `If ( when: <expr> ) { ... } Else { ... }`. We emit one
-    // wrapper covering the `If` and its (optional) sibling `Else`. The
-    // `Else` itself is handled by the parent's child-walk loop — it never
-    // reaches `emit_html_tree` directly because of the sibling-context.
+    // UI29 §3.2 — `If ( when: <expr> ) { ... } Else { ... }`.
+    //
+    // The parent walker `emit_children` is the authoritative entry
+    // point for If/Else because it has the sibling context — it
+    // peeks ahead for a paired `Else` and passes both branches
+    // together.  Reaching `emit_html_tree` here means the caller
+    // walked a single `If` without going through `emit_children`
+    // (a test fixture, for example).  We emit the If branch only
+    // and pass `None` for the else branch so the resulting markup
+    // is structurally valid.  The intra-sibling case is handled by
+    // `emit_children` directly.
     if node.tag == "If" {
-        out.push_str(&emit_if_node(node, indent, part_styles)?);
+        out.push_str(&emit_if_node(node, None, indent, part_styles)?);
         return Ok(out);
     }
 
@@ -425,11 +1069,7 @@ fn emit_html_tree(
     // bare `<tbody>` fragment), so we expose them as first-class cases.
     if matches!(
         node.tag.as_str(),
-        "HostTable"
-            | "HostTableColGroup"
-            | "HostTableHead"
-            | "HostTableBody"
-            | "HostTableFoot"
+        "HostTable" | "HostTableColGroup" | "HostTableHead" | "HostTableBody" | "HostTableFoot"
     ) {
         out.push_str(&emit_table_node(node, indent, part_styles)?);
         return Ok(out);
@@ -444,6 +1084,47 @@ fn emit_html_tree(
     }
     if node.tag == "HostButton" {
         out.push_str(&emit_host_button(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
+    // `<input type="checkbox|radio">` form controls, optionally wrapped
+    // in a `<label>` when a `label:` slot is supplied. Static HTML
+    // can't wire `onChange`-style emit handlers (no JS runtime), so
+    // emit-typed props become `data-on-*` markers the host's template
+    // engine can use to attach handlers after-the-fact. Mirrors how
+    // `read-only` and `disabled` are surfaced on `HostInput`/
+    // `HostButton`.
+    if node.tag == "HostCheckbox" {
+        out.push_str(&emit_host_checkbox(node, indent, part_styles));
+        return Ok(out);
+    }
+    if node.tag == "HostRadio" {
+        out.push_str(&emit_host_radio(node, indent, part_styles));
+        return Ok(out);
+    }
+
+    // UI29-4 — `HostLink` lowers to `<a href ...>label</a>`.
+    // `target="_blank"` always pairs with `rel="noopener
+    // noreferrer"` as a security default (HTML5 living-standard
+    // recommendation; same shape the React backend emits).
+    if node.tag == "HostLink" {
+        out.push_str(&emit_host_link(node, indent, part_styles));
+        return Ok(out);
+    }
+    // UI29-4 — `HostTooltip` wraps its single child in `<span
+    // title={text}>...</span>`. The DOM's `title=` attribute is the
+    // simplest cross-browser tooltip; rich content is v2.
+    if node.tag == "HostTooltip" {
+        out.push_str(&emit_host_tooltip(node, indent, part_styles)?);
+        return Ok(out);
+    }
+    // UI29-4 — `HostNumberInput` lowers to `<input type="number"
+    // inputmode="numeric" ...>`. The inputmode triggers the mobile
+    // numeric keyboard (one of the "what composition loses" items
+    // from the UI29-4 survey).
+    if node.tag == "HostNumberInput" {
+        out.push_str(&emit_host_number_input(node, indent, part_styles));
         return Ok(out);
     }
 
@@ -464,11 +1145,7 @@ fn emit_html_tree(
     // test). Surface it as an HTML comment rather than erroring, so the
     // generated output stays diagnosable.
     if node.tag == "Else" {
-        writeln!(
-            out,
-            "{pad}<!-- mosaic-else (orphan — no preceding If) -->"
-        )
-        .unwrap();
+        writeln!(out, "{pad}<!-- mosaic-else (orphan — no preceding If) -->").unwrap();
         return Ok(out);
     }
 
@@ -513,8 +1190,39 @@ fn emit_html_tree(
         return Ok(out);
     }
 
-    // Text node with a `content: slot: x` prop lowers to a `<span>` whose
-    // text is `{{x}}`. A literal-string content becomes escaped text.
+    // Text node with a `content: …` prop.  Lowers depending on the
+    // prop-value shape:
+    //
+    //   * `SlotRef(x)`  → `<span>{{x}}</span>` — host's template
+    //     engine (or the demo's JS shim) substitutes the camelCased
+    //     slot name.
+    //   * `String(lit)` → `<span>escaped-literal</span>`.
+    //   * `Expr(e)`     → `<span>{{e}}</span>` — same mustache shape
+    //     as the slot-ref path so the runtime template engine can
+    //     evaluate the expression against the current loop / slot
+    //     scope.  Without this case, layouts like the visicalc grid
+    //     (which use `Text ( content: ( v ) )` to render a `For`-
+    //     loop binding) would lower to an empty `<span></span>` and
+    //     the demo would show empty cells.
+    //
+    //     The expression text passes through `escape_html_text` AND
+    //     `escape_mustache_braces` — the second pass turns any
+    //     literal `{` / `}` inside the expression into the HTML
+    //     entity sequence `&#123;` / `&#125;`.  Without that step, a
+    //     STRING literal inside the parsed expression (e.g.
+    //     `Text ( content: ( "}}…{{" ) )` — `reconstruct_expr_text`
+    //     keeps the STRING's body in the Expr text) could close the
+    //     mustache placeholder early and confuse the runtime
+    //     template engine.  The HTML browser decodes the entities
+    //     back to `{` / `}` after parsing, so the rendered DOM is
+    //     visually unchanged on legitimate inputs (which contain
+    //     neither brace); the template engine sees the entities in
+    //     the raw HTML string and treats them as opaque.
+    //   * `Keyword(k)`  → `<span>{{k}}</span>` — a bare NAME in
+    //     prop-value position is typically a loop binding or
+    //     value keyword; emit the same mustache so the runtime
+    //     resolves it.  This was previously dropped to an empty
+    //     `<span>` for the same reason as Expr.
     if node.tag == "Text" && node.children.is_empty() {
         match find_prop(node, "content") {
             Some(LayoutPropValue::SlotRef(s)) => {
@@ -531,6 +1239,40 @@ fn emit_html_tree(
                     out,
                     "{pad}<{tag_name}{extra_attrs}{style_attr}>{esc}</{tag_name}>",
                     esc = escape_html_text(lit)
+                )
+                .unwrap();
+                return Ok(out);
+            }
+            Some(LayoutPropValue::Expr(e)) => {
+                // Strip whitespace + outer parens so `( v )` reduces
+                // to `v` in the mustache — the runtime expander
+                // then resolves the bare identifier in the active
+                // loop scope.  Complex expressions (`row.cells`,
+                // `r == editRow`) survive the strip and reach the
+                // expander as the original text.
+                let trimmed = strip_outer_parens(e.trim());
+                let safe = escape_mustache_braces(&escape_html_text(trimmed));
+                writeln!(
+                    out,
+                    "{pad}<{tag_name}{extra_attrs}{style_attr}>{{{{{e}}}}}</{tag_name}>",
+                    e = safe,
+                )
+                .unwrap();
+                return Ok(out);
+            }
+            Some(LayoutPropValue::Keyword(k)) => {
+                // Symmetry with the Expr path — even though the
+                // moslayout NAME grammar admits only
+                // `[a-zA-Z][a-zA-Z0-9-]*` today (so no braces can
+                // sneak in), routing through the same escape
+                // discipline keeps the contract identical and
+                // future-proofs against grammar widening or
+                // programmatically constructed nodes.
+                let safe = escape_mustache_braces(&escape_html_text(k));
+                writeln!(
+                    out,
+                    "{pad}<{tag_name}{extra_attrs}{style_attr}>{{{{{k}}}}}</{tag_name}>",
+                    k = safe
                 )
                 .unwrap();
                 return Ok(out);
@@ -555,33 +1297,51 @@ fn emit_html_tree(
     Ok(out)
 }
 
-/// Walk a list of sibling children, *consuming* the `Else` that follows
-/// an `If` (the `If` handler picks up its sibling explicitly). All other
-/// nodes flow through `emit_html_tree` unchanged.
+/// Walk a list of sibling children with explicit If/Else pairing.
 ///
-/// This lifts the if/else pairing out of `emit_html_tree` so the walker
-/// is the only place that knows about the sibling-context. Without this
-/// helper, a parent like `Box { If(...){} Else {} Box {} }` would emit
-/// the `Else` twice (once as part of the `If` wrapper, once as a
-/// standalone sibling).
+/// When the walker encounters an `If`, it peeks at the next sibling.
+/// If that sibling is `Else`, both branches are handed to
+/// [`emit_if_node`] (the `else_node` argument), which emits a
+/// `<!-- mosaic-if … --> … <!-- mosaic-else --> … <!-- /mosaic-if -->`
+/// triple.  Previously the `Else` branch was silently dropped —
+/// `emit_if_node` only knew about the `If`, and the parent walker
+/// "consumed" the `Else` after it had already been lost.  That made
+/// the HTML emitter's static-template output unusable for layouts
+/// like the spreadsheet grid (UI28-1), where the `If/Else` carries
+/// the "edit vs display" Cell branch.
+///
+/// Orphan `Else` (an `Else` not preceded by an `If`) flows through
+/// `emit_html_tree`, which emits a `<!-- mosaic-else (orphan) -->`
+/// diagnostic marker.
 fn emit_children(
     children: &[LayoutNode],
     indent: usize,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
-    let mut skip_next_else = false;
-    for child in children {
-        // An `Else` immediately after an `If` was already consumed by
-        // the `If`'s lowering (compile-time fold or comment wrapper);
-        // skip it here. An orphan `Else` falls through to
-        // `emit_html_tree`, which emits a diagnostic comment marker.
-        if child.tag == "Else" && skip_next_else {
-            skip_next_else = false;
+    let mut i = 0;
+    while i < children.len() {
+        let child = &children[i];
+        if child.tag == "If" {
+            // Look ahead for a sibling Else.  If present, hand both
+            // branches to `emit_if_node` and advance past both.
+            let next_is_else = children
+                .get(i + 1)
+                .map(|n| n.tag == "Else")
+                .unwrap_or(false);
+            let else_node = if next_is_else {
+                Some(&children[i + 1])
+            } else {
+                None
+            };
+            out.push_str(&emit_if_node(child, else_node, indent, part_styles)?);
+            i += if next_is_else { 2 } else { 1 };
             continue;
         }
-        skip_next_else = child.tag == "If";
+        // Bare Else (no preceding If sibling) falls through to
+        // `emit_html_tree`'s orphan-diagnostic path.
         out.push_str(&emit_html_tree(child, indent, part_styles)?);
+        i += 1;
     }
     Ok(out)
 }
@@ -589,6 +1349,12 @@ fn emit_children(
 // =====================================================================
 // UI29 §2.1 — HostInput / HostButton lowerings
 // =====================================================================
+
+fn append_emit_marker(attrs: &mut String, node: &LayoutNode, prop_name: &str, attr_name: &str) {
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, prop_name) {
+        write!(attrs, " {attr_name}=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+}
 
 /// Lower a UI29 `HostInput` node to an `<input type="text" ...>` line.
 ///
@@ -650,6 +1416,9 @@ fn emit_host_input(
         }
         _ => {}
     }
+    append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
 
     let style_attr = build_style_attr(node, "", part_styles);
     format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
@@ -683,12 +1452,18 @@ fn emit_host_button(
         }
         _ => {}
     }
+    if find_prop(node, "onClick").is_some() {
+        append_emit_marker(&mut attrs, node, "onClick", "data-on-click");
+    } else {
+        append_emit_marker(&mut attrs, node, "onTap", "data-on-click");
+    }
 
     let style_attr = build_style_attr(node, "", part_styles);
 
     // Body: `label:` prop wins over children. Slot ref → `{{slot}}`,
-    // string literal → escaped text. When neither prop nor children are
-    // present, we still emit the open+close on one line for compactness.
+    // string literal → escaped text, and Keyword/Expr values follow the
+    // Text primitive's mustache-binding path so `label: item` inside a
+    // `For (as: item)` renders the current row.
     match find_prop(node, "label") {
         Some(LayoutPropValue::SlotRef(s)) => Ok(format!(
             "{pad}<button{attrs}{style_attr}>{{{{{slot}}}}}</button>\n",
@@ -698,6 +1473,19 @@ fn emit_host_button(
             "{pad}<button{attrs}{style_attr}>{esc}</button>\n",
             esc = escape_html_text(lit)
         )),
+        Some(LayoutPropValue::Keyword(k)) => {
+            let safe = escape_mustache_braces(&escape_html_text(k));
+            Ok(format!(
+                "{pad}<button{attrs}{style_attr}>{{{{{safe}}}}}</button>\n"
+            ))
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            let safe = escape_mustache_braces(&escape_html_text(trimmed));
+            Ok(format!(
+                "{pad}<button{attrs}{style_attr}>{{{{{safe}}}}}</button>\n"
+            ))
+        }
         _ => {
             if node.children.is_empty() {
                 Ok(format!("{pad}<button{attrs}{style_attr}></button>\n"))
@@ -710,6 +1498,395 @@ fn emit_host_button(
             }
         }
     }
+}
+
+// =====================================================================
+// UI29-2 — HostCheckbox / HostRadio lowerings
+// =====================================================================
+
+/// Lower a UI29-2 `HostCheckbox` node to an `<input type="checkbox">`.
+/// Optionally wrap in a `<label>` element when `label:` is bound.
+///
+/// ## Prop handling
+///
+/// | Prop            | SlotRef                            | String / Keyword              |
+/// |---|---|---|
+/// | `checked`       | `data-checked="{{slot}}"` marker   | keyword `true` → `checked`; `false` → omit |
+/// | `disabled`      | `data-disabled="{{slot}}"` marker  | keyword `true` → `disabled`; `false` → omit |
+/// | `indeterminate` | `data-indeterminate="{{slot}}"` marker | keyword `true` → `data-indeterminate` (HTML has no `indeterminate` attr) |
+/// | `label`         | wraps input in `<label>{{slot}} </label>` | wraps in `<label>escaped-text</label>` |
+/// | `onToggle`      | `data-on-toggle="{{emit-name}}"` marker | (n/a)                  |
+///
+/// ## Why data-* markers
+///
+/// Static HTML can't attach JavaScript event handlers without a runtime.
+/// Mirrors how `HostInput` / `HostButton` surface their slot-driven
+/// `read-only` / `disabled` props — emit a neutral `data-*` marker the
+/// host's template engine or hydration pass can post-process to wire
+/// real `onchange` handlers if it wants to.
+///
+/// ## `indeterminate` is JS-API-only
+///
+/// There is no HTML attribute for `indeterminate` — it's a property on
+/// the DOM `HTMLInputElement` instance, set imperatively. Static HTML
+/// can't reach it. We emit `data-indeterminate` so the host knows the
+/// author wanted tri-state, and any hydration script can set
+/// `el.indeterminate = el.dataset.indeterminate === "true"` on mount.
+fn emit_host_checkbox(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"checkbox\"");
+
+    match find_prop(node, "checked") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" checked"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-checked=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // `indeterminate` is a JS property, not an HTML attribute. We emit
+    // `data-indeterminate` (literal "true" for the keyword case, or a
+    // template marker for the slot case) so hydration scripts can set
+    // the imperative property on mount.
+    match find_prop(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" data-indeterminate=\"true\"");
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-indeterminate=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // `onToggle` → `data-on-toggle` marker. The host's template engine
+    // (or a hydration pass) can read this and attach a real `onchange`
+    // listener that dispatches `{ type: <emit-name>, checked: el.checked }`.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onToggle") {
+        write!(attrs, " data-on-toggle=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    // Compute optional label wrapping. Same wrap pattern as the React
+    // backend: `<label><input … /> {labelText}</label>` keeps the
+    // visual association tight without inventing id+for couples.
+    let label_body: Option<String> = match find_prop(node, "label") {
+        Some(LayoutPropValue::String(lit)) => Some(escape_html_text(lit)),
+        Some(LayoutPropValue::SlotRef(s)) => Some(format!("{{{{{}}}}}", camel(s))),
+        _ => None,
+    };
+
+    match label_body {
+        Some(body) => format!("{pad}<label><input{attrs}{style_attr}> {body}</label>\n"),
+        None => format!("{pad}<input{attrs}{style_attr}>\n"),
+    }
+}
+
+/// Lower a UI29-2 `HostRadio` node to an `<input type="radio">`,
+/// optionally wrapped in a `<label>`.
+///
+/// ## Prop handling
+///
+/// | Prop       | SlotRef                          | String literal                  |
+/// |---|---|---|
+/// | `checked`  | `data-checked="{{slot}}"`        | keyword `true` → `checked`; `false` → omit |
+/// | `group`    | `name="{{slot}}"`                | `name="literal"` (escaped HTML attr) |
+/// | `value`    | `value="{{slot}}"`               | `value="literal"`                |
+/// | `disabled` | `data-disabled="{{slot}}"`       | keyword `true` → `disabled`      |
+/// | `label`    | wraps in `<label>{{slot}} </label>` | wraps in `<label>escaped</label>` |
+/// | `onSelect` | `data-on-select="{{emit-name}}"` | (n/a)                            |
+///
+/// ## Group coordination
+///
+/// HTML radios with the same `name` attribute form a browser-enforced
+/// mutex set automatically (the browser deselects the previously
+/// checked radio when a new one is checked). This matches UI29-2's v1
+/// design exactly: the `group:` prop maps to `name=`, and the browser
+/// does the visual coordination for free.
+fn emit_host_radio(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"radio\"");
+
+    // name="group" or name="{{slot}}" — couples radios into a
+    // browser-enforced mutex set.
+    match find_prop(node, "group") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " name=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " name=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // value="v" or value="{{slot}}".
+    match find_prop(node, "value") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "checked") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" checked"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-checked=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onSelect") {
+        write!(attrs, " data-on-select=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    let label_body: Option<String> = match find_prop(node, "label") {
+        Some(LayoutPropValue::String(lit)) => Some(escape_html_text(lit)),
+        Some(LayoutPropValue::SlotRef(s)) => Some(format!("{{{{{}}}}}", camel(s))),
+        _ => None,
+    };
+
+    match label_body {
+        Some(body) => format!("{pad}<label><input{attrs}{style_attr}> {body}</label>\n"),
+        None => format!("{pad}<input{attrs}{style_attr}>\n"),
+    }
+}
+
+// =====================================================================
+// UI29-4 — HostLink / HostTooltip / HostNumberInput lowerings
+// =====================================================================
+
+/// Lower a UI29-4 `HostLink` node to a static `<a href ...>` element.
+///
+/// ## Property handling
+///
+/// | Prop             | SlotRef                       | String literal              | Keyword               |
+/// |---|---|---|---|
+/// | `href`           | `href="{{slot}}"` template    | `href="..."` (attr-escaped) | (n/a)                 |
+/// | `label`          | `{{slot}}` text body          | escaped text body           | (n/a)                 |
+/// | `target: new-tab`| (n/a)                         | (n/a)                       | `target="_blank" rel="noopener noreferrer"` (security default) |
+/// | `target: parent` | (n/a)                         | (n/a)                       | `target="_parent"`    |
+/// | `target: top`    | (n/a)                         | (n/a)                       | `target="_top"`       |
+/// | `target: same`   | (n/a)                         | (n/a)                       | (no attribute)        |
+/// | `external: false`| (n/a)                         | (n/a)                       | `data-external="false"` marker for the host's hydration to intercept |
+/// | `onActivate`     | (n/a)                         | (n/a)                       | `data-on-activate="<emit-name>"` marker |
+///
+/// ## Security — `rel="noopener noreferrer"` security default
+///
+/// HTML's `target="_blank"` opens a window-opener relationship that
+/// lets the new tab script back into the opener via `window.opener`
+/// (reverse-tabnabbing attack). `rel="noopener"` severs the opener;
+/// `noreferrer` also strips the Referer header. We emit BOTH for
+/// `target: new-tab` to match the HTML5 living-standard recommendation
+/// and every modern browser-security linter (eslint react/jsx-no-
+/// target-blank, html-validate, etc.).
+fn emit_host_link(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    // href= — string literal or slot ref template marker.
+    match find_prop(node, "href") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " href=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " href=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {
+            // No href bound — emit `#` placeholder so the file
+            // still parses as HTML and renders as an inert anchor.
+            attrs.push_str(" href=\"#\"");
+        }
+    }
+
+    // target= + paired rel= (security default for _blank).
+    if let Some(LayoutPropValue::Keyword(k)) = find_prop(node, "target") {
+        match k.as_str() {
+            "new-tab" => attrs.push_str(" target=\"_blank\" rel=\"noopener noreferrer\""),
+            "parent" => attrs.push_str(" target=\"_parent\""),
+            "top" => attrs.push_str(" target=\"_top\""),
+            "same" => {} // default; no attr
+            _ => {}
+        }
+    }
+
+    // external: false → data-external="false" marker. The host's
+    // hydration pass reads this to intercept clicks and route in-app.
+    if let Some(LayoutPropValue::Keyword(k)) = find_prop(node, "external") {
+        if k == "false" {
+            attrs.push_str(" data-external=\"false\"");
+        }
+    }
+
+    // onActivate → data-on-activate marker (static-HTML pattern).
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onActivate") {
+        write!(
+            attrs,
+            " data-on-activate=\"{}\"",
+            escape_html_attr(emit_name)
+        )
+        .unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    // Body: label string literal or slot template marker.
+    let body: String = match find_prop(node, "label") {
+        Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
+        Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+        Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
+        _ => String::new(),
+    };
+
+    format!("{pad}<a{attrs}{style_attr}>{body}</a>\n")
+}
+
+/// Lower a UI29-4 `HostTooltip` node to `<span title="text">child(ren)
+/// </span>`. The DOM's `title=` attribute gives a hover/long-press
+/// tooltip on every browser for free. Plain-text only in v1.
+///
+/// ## Property handling
+///
+/// | Prop    | SlotRef                          | String literal              |
+/// |---|---|---|
+/// | `text`  | `title="{{slot}}"` template       | `title="..."` (attr-escaped)|
+fn emit_host_tooltip(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    match find_prop(node, "text") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " title=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " title=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    if node.children.is_empty() {
+        return Ok(format!("{pad}<span{attrs}{style_attr}></span>\n"));
+    }
+
+    let mut out = format!("{pad}<span{attrs}{style_attr}>\n");
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    out.push_str(&format!("{pad}</span>\n"));
+    Ok(out)
+}
+
+/// Lower a UI29-4 `HostNumberInput` node to `<input type="number"
+/// inputmode="numeric" ...>`. The `inputmode="numeric"` triggers the
+/// mobile numeric keyboard.
+///
+/// ## Property handling
+///
+/// | Prop          | SlotRef                       | String / Number / Keyword                 |
+/// |---|---|---|
+/// | `value`       | `value="{{slot}}"` template   | number → `value="N"` literal              |
+/// | `min`         | (n/a)                         | number → `min="N"` literal                |
+/// | `max`         | (n/a)                         | number → `max="N"` literal                |
+/// | `step`        | (n/a)                         | number → `step="N"` literal               |
+/// | `placeholder` | `placeholder="{{slot}}"`      | string → `placeholder="..."` (escaped)    |
+/// | `disabled`    | `data-disabled="{{slot}}"` marker | keyword `true` → `disabled`           |
+/// | `onChange`    | (n/a)                         | emit ref → `data-on-change="<emit-name>"` |
+fn emit_host_number_input(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::from(" type=\"number\" inputmode=\"numeric\"");
+
+    // value: slot ref → template marker; number literal → literal value
+    match find_prop(node, "value") {
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        Some(LayoutPropValue::Number(n)) => {
+            write!(attrs, " value=\"{n}\"").unwrap();
+        }
+        _ => {}
+    }
+
+    // min / max / step: numeric literals only (per UI29-4 §3.3
+    // they're compile-time choices, not host-driven).
+    for prop_name in ["min", "max", "step"] {
+        if let Some(LayoutPropValue::Number(n)) = find_prop(node, prop_name) {
+            write!(attrs, " {prop_name}=\"{n}\"").unwrap();
+        }
+    }
+
+    // placeholder.
+    match find_prop(node, "placeholder") {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " placeholder=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " placeholder=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // disabled.
+    match find_prop(node, "disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" disabled"),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => {}
+        Some(LayoutPropValue::SlotRef(s)) => {
+            write!(attrs, " data-disabled=\"{{{{{}}}}}\"", camel(s)).unwrap();
+        }
+        _ => {}
+    }
+
+    // onChange → data-on-change hydration marker.
+    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onChange") {
+        write!(attrs, " data-on-change=\"{}\"", escape_html_attr(emit_name)).unwrap();
+    }
+
+    let style_attr = build_style_attr(node, "", part_styles);
+    format!("{pad}<input{attrs}{style_attr}>\n")
 }
 
 // =====================================================================
@@ -832,11 +2009,7 @@ fn emit_host_dialog(
         )
         .unwrap();
     } else {
-        writeln!(
-            out,
-            "{pad}<dialog id=\"{id}\"{open_attr}{style_attr}>"
-        )
-        .unwrap();
+        writeln!(out, "{pad}<dialog id=\"{id}\"{open_attr}{style_attr}>").unwrap();
         if let Some(h2) = title_html {
             out.push_str(&h2);
         }
@@ -857,9 +2030,9 @@ fn emit_host_dialog(
     // one another.
     if modal_true {
         let should_init = match &open_attr[..] {
-            " open" => true,                       // literal open: true
-            s if s.starts_with(" open=") => true,  // slot ref — host decides at runtime
-            _ => false,                            // literal false / absent
+            " open" => true,                      // literal open: true
+            s if s.starts_with(" open=") => true, // slot ref — host decides at runtime
+            _ => false,                           // literal false / absent
         };
         if should_init {
             writeln!(
@@ -940,12 +2113,42 @@ fn emit_table_node(
 
     let style_attr = build_style_attr(node, "", part_styles);
 
+    // UI31 — `dir` slot for right-to-left layout. Only meaningful on
+    // the root `HostTable`; sub-tags inherit direction from the
+    // enclosing `<table>` so we'd be wasting bytes (and risking
+    // direction conflicts) to emit `dir` on `<thead>`/`<tbody>`.
+    //
+    // Spec: `code/specs/UI31-host-table.md` §3.2 — the non-negotiable
+    // RTL contract. HTML's `dir` attribute on `<table>` is special-
+    // cased by browsers to flip column order, scrollbar side, focus-
+    // ring side, and selection-band positioning. Screen readers
+    // announce navigation mode (LTR vs RTL) from this attribute.
+    //
+    // Allow-list `ltr`/`rtl`/`auto` per the HTML spec. Slot refs lower
+    // to a Mustache placeholder `{{dir}}` that the host substitutes
+    // at render time. Unknown keywords drop silently (defence in
+    // depth against attribute injection via unknown values).
+    let dir_attr = if tag_name == "table" {
+        match find_prop(node, "dir") {
+            Some(LayoutPropValue::Keyword(k)) if matches!(k.as_str(), "ltr" | "rtl" | "auto") => {
+                format!(" dir=\"{k}\"")
+            }
+            Some(LayoutPropValue::SlotRef(s)) => {
+                let c = camel(s);
+                format!(" dir=\"{{{{{c}}}}}\"")
+            }
+            _ => String::new(),
+        }
+    } else {
+        String::new()
+    };
+
     if node.children.is_empty() {
-        writeln!(out, "{pad}<{tag_name}{style_attr}></{tag_name}>").unwrap();
+        writeln!(out, "{pad}<{tag_name}{style_attr}{dir_attr}></{tag_name}>").unwrap();
         return Ok(out);
     }
 
-    writeln!(out, "{pad}<{tag_name}{style_attr}>").unwrap();
+    writeln!(out, "{pad}<{tag_name}{style_attr}{dir_attr}>").unwrap();
 
     match (tag_name, cell_tag) {
         ("colgroup", _) => {
@@ -965,12 +2168,28 @@ fn emit_table_node(
         (_, Some(cell)) => {
             // thead/tbody/tfoot: each direct `Row` child becomes a
             // `<tr>` whose direct children become `<th>` or `<td>`.
-            // Non-`Row` children (For, If, etc.) pass through to the
-            // generic walker; their template markers carry the row
-            // structure inside themselves.
+            //
+            // UI31-L10 seam — a `For (each:…, as: r) { Row { … } }`
+            // child becomes the same template-bracket form as a bare
+            // For, but with the inner Row pre-lowered through
+            // `emit_table_row` so the body emits `<tr>` rather than
+            // a flex-`<div>`. The generic walker (the else branch)
+            // would have produced the latter — structurally invalid
+            // inside a `<tbody>` and rejected by the HTML parser.
             for child in &node.children {
                 if child.tag == "Row" {
                     out.push_str(&emit_table_row(child, indent + 2, cell, part_styles)?);
+                } else if child.tag == "For" {
+                    if let Some(for_block) =
+                        try_emit_table_for_row_html(child, cell, indent + 2, part_styles)?
+                    {
+                        out.push_str(&for_block);
+                        continue;
+                    }
+                    // Pattern didn't match — recurse via the generic
+                    // walker (preserves the bracket but with a
+                    // structurally-broken body — author error path).
+                    out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
                 } else {
                     out.push_str(&emit_html_tree(child, indent + 2, part_styles)?);
                 }
@@ -1010,12 +2229,35 @@ fn emit_table_row(
     for cell in &row.children {
         if cell.tag == "Text" {
             // Unwrap Text so the cell text is content-only.
+            //
+            // UI31-L10 — Keyword content (`Text (content: header)`)
+            // carries the name of a For-binding in scope; lower it to
+            // `{{name}}` (same shape as SlotRef) so the downstream
+            // template engine substitutes the bound value at render
+            // time. Without this the cell would render blank.
             let body = match find_prop(cell, "content") {
                 Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+                Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
                 Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
                 _ => String::new(),
             };
             writeln!(out, "{cell_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+        } else if cell.tag == "For" {
+            // UI31-L10 seam — `For` inside a Row. Emit the canonical
+            // template marker bracket so the downstream template
+            // engine iterates over `each`'s collection at render
+            // time, producing one `<th>`/`<td>` per item. For shapes
+            // that don't match (multi-child, Row-child) fall through
+            // to wrapping the whole For in a single cell.
+            if let Some(for_block) =
+                try_emit_table_for_cell_html(cell, cell_tag, indent + 2, part_styles)?
+            {
+                out.push_str(&for_block);
+                continue;
+            }
+            writeln!(out, "{cell_pad}<{cell_tag}>").unwrap();
+            out.push_str(&emit_html_tree(cell, indent + 4, part_styles)?);
+            writeln!(out, "{cell_pad}</{cell_tag}>").unwrap();
         } else {
             writeln!(out, "{cell_pad}<{cell_tag}>").unwrap();
             out.push_str(&emit_html_tree(cell, indent + 4, part_styles)?);
@@ -1024,6 +2266,151 @@ fn emit_table_row(
     }
     writeln!(out, "{pad}</tr>").unwrap();
     Ok(out)
+}
+
+/// Try to lower `For (each: …, as: r) { Row { … } }` inside a section
+/// (`thead` / `tbody` / `tfoot`) to:
+///
+/// ```html
+/// <!-- mosaic-for each="rows" as="row" -->
+///   <tr>
+///     <td>{{row}}</td>
+///   </tr>
+/// <!-- /mosaic-for -->
+/// ```
+///
+/// Returns `Ok(Some(html))` when the For's body is exactly one Row,
+/// `Ok(None)` otherwise (caller falls back to generic recursion,
+/// which would produce a `<div>` body — invalid inside `<tbody>`).
+///
+/// The downstream template engine sees the bracketed comments and
+/// expands the loop, producing one `<tr>` per element.
+fn try_emit_table_for_row_html(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
+        return Ok(None);
+    }
+    let row = &for_node.children[0];
+
+    let each_str = match find_prop(for_node, "each") {
+        Some(LayoutPropValue::SlotRef(s)) => camel(s),
+        Some(LayoutPropValue::Expr(e)) => e.clone(),
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        _ => return Ok(None),
+    };
+    let as_str = match find_prop(for_node, "as") {
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        Some(LayoutPropValue::SlotRef(s)) => s.clone(),
+        _ => return Ok(None),
+    };
+    let index_str = match find_prop(for_node, "index") {
+        Some(LayoutPropValue::Keyword(k)) => Some(k.clone()),
+        Some(LayoutPropValue::SlotRef(s)) => Some(s.clone()),
+        _ => None,
+    };
+
+    let pad = " ".repeat(indent);
+
+    let mut header = format!(
+        "<!-- mosaic-for each=\"{}\" as=\"{}\"",
+        escape_html_attr(&each_str),
+        escape_html_attr(&as_str)
+    );
+    if let Some(idx) = &index_str {
+        write!(header, " index=\"{}\"", escape_html_attr(idx)).unwrap();
+    }
+    header.push_str(" -->");
+
+    let mut out = String::new();
+    writeln!(out, "{pad}{header}").unwrap();
+    out.push_str(&emit_table_row(row, indent + 2, cell_tag, part_styles)?);
+    writeln!(out, "{pad}<!-- /mosaic-for -->").unwrap();
+    Ok(Some(out))
+}
+
+/// Try to lower `For (each: …, as: c) { <cell-leaf> }` inside a Row
+/// to the Mustache-loop bracket form:
+///
+/// ```html
+/// <!-- mosaic-for each="coll" as="c" -->
+///   <th>{{c}}</th>
+/// <!-- /mosaic-for -->
+/// ```
+///
+/// Returns `Ok(Some(html))` when the For's body is a single non-Row
+/// leaf (Text, HostButton, etc.), `Ok(None)` otherwise (caller falls
+/// back to wrapping the For in a single cell, which is structurally
+/// invalid HTML inside a `<tr>` but preserves the For's intent).
+///
+/// The downstream template engine sees the bracketed comments and
+/// expands the loop, producing one `<th>` / `<td>` per element. The
+/// engine must support Mustache-style `{{name}}` interpolation
+/// inside For-binding scope — same contract `emit_for_node` relies
+/// on for non-table contexts.
+fn try_emit_table_for_cell_html(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag == "Row" {
+        return Ok(None);
+    }
+    let leaf = &for_node.children[0];
+
+    let each_str = match find_prop(for_node, "each") {
+        Some(LayoutPropValue::SlotRef(s)) => camel(s),
+        Some(LayoutPropValue::Expr(e)) => e.clone(),
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        _ => return Ok(None),
+    };
+    let as_str = match find_prop(for_node, "as") {
+        Some(LayoutPropValue::Keyword(k)) => k.clone(),
+        Some(LayoutPropValue::SlotRef(s)) => s.clone(),
+        _ => return Ok(None),
+    };
+    let index_str = match find_prop(for_node, "index") {
+        Some(LayoutPropValue::Keyword(k)) => Some(k.clone()),
+        Some(LayoutPropValue::SlotRef(s)) => Some(s.clone()),
+        _ => None,
+    };
+
+    let pad = " ".repeat(indent);
+    let inner_pad = " ".repeat(indent + 2);
+
+    let mut header = format!(
+        "<!-- mosaic-for each=\"{}\" as=\"{}\"",
+        escape_html_attr(&each_str),
+        escape_html_attr(&as_str)
+    );
+    if let Some(idx) = &index_str {
+        write!(header, " index=\"{}\"", escape_html_attr(idx)).unwrap();
+    }
+    header.push_str(" -->");
+
+    let mut out = String::new();
+    writeln!(out, "{pad}{header}").unwrap();
+
+    if leaf.tag == "Text" {
+        let body = match find_prop(leaf, "content") {
+            Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
+            Some(LayoutPropValue::Keyword(k)) => format!("{{{{{}}}}}", camel(k)),
+            Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
+            _ => String::new(),
+        };
+        writeln!(out, "{inner_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+    } else {
+        writeln!(out, "{inner_pad}<{cell_tag}>").unwrap();
+        out.push_str(&emit_html_tree(leaf, indent + 4, part_styles)?);
+        writeln!(out, "{inner_pad}</{cell_tag}>").unwrap();
+    }
+
+    writeln!(out, "{pad}<!-- /mosaic-for -->").unwrap();
+    Ok(Some(out))
 }
 
 // =====================================================================
@@ -1052,6 +2439,7 @@ fn emit_table_row(
 /// and is dropped; revisit when If/Else gets first-class support.
 fn emit_if_node(
     node: &LayoutNode,
+    else_node: Option<&LayoutNode>,
     indent: usize,
     part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
@@ -1066,6 +2454,10 @@ fn emit_if_node(
     // (per U29-G3 only SlotRef/Expr are allowed for `when:`), but the
     // emitter is downstream of validation and we still want to do the
     // right thing if a test builder ever produces one.
+    //
+    // With the `else_node` argument now flowing through, the literal
+    // fold also handles the else side: `when: true` drops the else,
+    // `when: false` emits the else (or nothing if absent).
     if let Some(LayoutPropValue::Keyword(k)) = when {
         match k.as_str() {
             "true" => {
@@ -1073,7 +2465,9 @@ fn emit_if_node(
                 return Ok(out);
             }
             "false" => {
-                // Then-branch is dropped; nothing to emit.
+                if let Some(e) = else_node {
+                    out.push_str(&emit_children(&e.children, indent, part_styles)?);
+                }
                 return Ok(out);
             }
             _ => {}
@@ -1098,6 +2492,14 @@ fn emit_if_node(
     )
     .unwrap();
     out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    if let Some(e) = else_node {
+        // The `mosaic-else` marker mirrors `mosaic-if` — a
+        // runtime template engine (or the JS shim a static demo
+        // ships) inverts the `when` predicate to pick this branch
+        // when the if predicate is false.
+        writeln!(out, "{pad}<!-- mosaic-else -->").unwrap();
+        out.push_str(&emit_children(&e.children, indent + 2, part_styles)?);
+    }
     writeln!(out, "{pad}<!-- /mosaic-if -->").unwrap();
     Ok(out)
 }
@@ -1226,10 +2628,133 @@ fn build_inline_css_fragment(props: &[StyleProp]) -> String {
         // that to `background-color` so the resulting HTML attribute is
         // canonical CSS, not mixed-case.
         let key = camel_to_kebab(&p.name);
-        let value = escape_html_attr(&p.value);
+        let value = normalize_css_value(&key, &p.value);
+        let value = escape_html_attr(&value);
         parts.push(format!("{key}: {value}"));
     }
     parts.join("; ")
+}
+
+fn normalize_css_value(property: &str, value: &str) -> String {
+    let trimmed = value.trim();
+    if is_plain_number(trimmed) && !is_zero(trimmed) && css_property_needs_px(property) {
+        format!("{trimmed}px")
+    } else {
+        value.to_string()
+    }
+}
+
+fn is_plain_number(value: &str) -> bool {
+    !value.is_empty()
+        && value
+            .chars()
+            .all(|c| c.is_ascii_digit() || matches!(c, '+' | '-' | '.'))
+        && value.parse::<f64>().is_ok()
+}
+
+fn is_zero(value: &str) -> bool {
+    value.parse::<f64>() == Ok(0.0)
+}
+
+fn css_property_needs_px(property: &str) -> bool {
+    matches!(
+        property,
+        "block-size"
+            | "border-block-end-width"
+            | "border-block-start-width"
+            | "border-bottom-left-radius"
+            | "border-bottom-right-radius"
+            | "border-bottom-width"
+            | "border-end-end-radius"
+            | "border-end-start-radius"
+            | "border-inline-end-width"
+            | "border-inline-start-width"
+            | "border-left-width"
+            | "border-radius"
+            | "border-right-width"
+            | "border-start-end-radius"
+            | "border-start-start-radius"
+            | "border-top-left-radius"
+            | "border-top-right-radius"
+            | "border-top-width"
+            | "border-width"
+            | "bottom"
+            | "column-gap"
+            | "column-width"
+            | "flex-basis"
+            | "font-size"
+            | "gap"
+            | "height"
+            | "inline-size"
+            | "inset"
+            | "inset-block"
+            | "inset-block-end"
+            | "inset-block-start"
+            | "inset-inline"
+            | "inset-inline-end"
+            | "inset-inline-start"
+            | "left"
+            | "letter-spacing"
+            | "margin"
+            | "margin-block"
+            | "margin-block-end"
+            | "margin-block-start"
+            | "margin-bottom"
+            | "margin-inline"
+            | "margin-inline-end"
+            | "margin-inline-start"
+            | "margin-left"
+            | "margin-right"
+            | "margin-top"
+            | "max-block-size"
+            | "max-height"
+            | "max-inline-size"
+            | "max-width"
+            | "min-block-size"
+            | "min-height"
+            | "min-inline-size"
+            | "min-width"
+            | "outline-offset"
+            | "outline-width"
+            | "padding"
+            | "padding-block"
+            | "padding-block-end"
+            | "padding-block-start"
+            | "padding-bottom"
+            | "padding-inline"
+            | "padding-inline-end"
+            | "padding-inline-start"
+            | "padding-left"
+            | "padding-right"
+            | "padding-top"
+            | "right"
+            | "row-gap"
+            | "scroll-margin"
+            | "scroll-margin-block"
+            | "scroll-margin-block-end"
+            | "scroll-margin-block-start"
+            | "scroll-margin-bottom"
+            | "scroll-margin-inline"
+            | "scroll-margin-inline-end"
+            | "scroll-margin-inline-start"
+            | "scroll-margin-left"
+            | "scroll-margin-right"
+            | "scroll-margin-top"
+            | "scroll-padding"
+            | "scroll-padding-block"
+            | "scroll-padding-block-end"
+            | "scroll-padding-block-start"
+            | "scroll-padding-bottom"
+            | "scroll-padding-inline"
+            | "scroll-padding-inline-end"
+            | "scroll-padding-inline-start"
+            | "scroll-padding-left"
+            | "scroll-padding-right"
+            | "scroll-padding-top"
+            | "top"
+            | "width"
+            | "word-spacing"
+    )
 }
 
 /// Concatenate two CSS declaration lists, semicolon-separated, dropping
@@ -1247,6 +2772,84 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 // =====================================================================
 // Name conversion
 // =====================================================================
+
+/// Escape `{` / `}` in interpolated content so a STRING literal
+/// inside a parsed expression cannot close a surrounding mustache
+/// placeholder.
+///
+/// The moslayout grammar admits STRING tokens inside expressions
+/// (UI29 §3.3 — `primary = … | STRING | …`).  `reconstruct_expr_text`
+/// keeps the STRING body in the Expr text without re-escaping, so a
+/// `.mll` author who wrote `Text ( content: ( "}}…{{" ) )` would —
+/// without this step — produce output that closes the surrounding
+/// `<span>{{ … }}</span>` early.
+///
+/// Escaping to `&#123;` / `&#125;` is HTML-entity neutral: the
+/// browser decodes the entities back to the literal characters
+/// when parsing the DOM, so legitimate content (which never
+/// contains `{` / `}`) renders unchanged visually.  The runtime
+/// template engine — which processes the raw HTML string before
+/// browser parsing — sees the entities and ignores them as
+/// non-delimiters.
+fn escape_mustache_braces(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '{' => out.push_str("&#123;"),
+            '}' => out.push_str("&#125;"),
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
+/// Strip a single layer of surrounding parentheses + interior
+/// whitespace from an expression text.
+///
+/// `( v )`  → `v`
+/// `( a + b )` → `a + b`
+/// `(((nested)))` → `((nested))` (one layer only — the runtime
+///   evaluator handles further unwrapping if it wants to)
+/// `a + b` → `a + b` (no change when there is no outer pair)
+/// `(a) + (b)` → `(a) + (b)` (the outer characters are `(` and
+///   `)` but they are NOT a matching pair — guarded by the
+///   walk-depth check)
+///
+/// Used by the Text-with-Expr-content lowering so a bare
+/// parenthesised identifier (which is by far the most common
+/// shape from a `For`-loop binding pass-through like
+/// `Text ( content: ( v ) )`) reaches the mustache marker as a
+/// clean `{{v}}` instead of `{{( v )}}`.  Complex expressions
+/// (`r == editRow`) survive — the strip only fires when the
+/// first/last characters are matching parens.
+fn strip_outer_parens(s: &str) -> &str {
+    let bytes = s.as_bytes();
+    if bytes.len() < 2 || bytes[0] != b'(' || bytes[bytes.len() - 1] != b')' {
+        return s;
+    }
+    // Verify the outer `(` actually matches the outer `)` (not, say,
+    // `(a) + (b)` where the outer chars happen to be parens but the
+    // pair isn't matched).
+    let mut depth = 0i32;
+    for (i, &b) in bytes.iter().enumerate() {
+        match b {
+            b'(' => depth += 1,
+            b')' => {
+                depth -= 1;
+                // If depth hits zero BEFORE the last char, the outer
+                // parens aren't a matched pair.
+                if depth == 0 && i + 1 < bytes.len() {
+                    return s;
+                }
+            }
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return s; // unbalanced — leave alone
+    }
+    s[1..s.len() - 1].trim()
+}
 
 /// Convert kebab-case to camelCase (first letter lowered). Used to
 /// produce the slot-reference identifier inside `{{...}}` placeholders.
@@ -1364,7 +2967,9 @@ fn find_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a LayoutProp
 mod tests {
     use super::*;
     use moslayout_compiler::LayoutProp;
-    use mosmodel_compiler::{EmitDecl, SlotDecl, SlotType};
+    use mosmodel_compiler::{
+        EmitDecl, EmitParam, EmitPayloadType, ListInnerType, SlotDecl, SlotType,
+    };
     use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
 
     // ---------------------------------------------------------------
@@ -1383,6 +2988,32 @@ mod tests {
             component: name.to_string(),
             slots,
             emits: Vec::new(),
+        }
+    }
+
+    fn component_with_emits(
+        name: &str,
+        slots: Vec<SlotDecl>,
+        emits: Vec<EmitDecl>,
+    ) -> MosmodelComponent {
+        MosmodelComponent {
+            component: name.to_string(),
+            slots,
+            emits,
+        }
+    }
+
+    fn emit(name: &str, params: Vec<EmitParam>) -> EmitDecl {
+        EmitDecl {
+            name: name.to_string(),
+            params,
+        }
+    }
+
+    fn param(name: &str, t: EmitPayloadType) -> EmitParam {
+        EmitParam {
+            name: name.to_string(),
+            r#type: t,
         }
     }
 
@@ -1453,7 +3084,9 @@ mod tests {
         )
         .expect("emit ok");
         assert!(
-            result.output.contains("<div data-mosaic-component=\"Empty\">"),
+            result
+                .output
+                .contains("<div data-mosaic-component=\"Empty\">"),
             "expected component wrapper, got:\n{}",
             result.output
         );
@@ -1593,8 +3226,7 @@ mod tests {
             }],
         };
         let l = layout("Card", node_with_part("Box", "root"));
-        let result =
-            from_pipeline(&component("Card", vec![]), &l, &style).expect("emit ok");
+        let result = from_pipeline(&component("Card", vec![]), &l, &style).expect("emit ok");
         assert!(
             result
                 .output
@@ -1608,6 +3240,76 @@ mod tests {
     // 7. Kebab → CSS mapping: camelCase author input becomes kebab-case
     //    CSS, plain kebab-case input passes through unchanged.
     // ---------------------------------------------------------------
+    #[test]
+    fn unitless_mosstyle_numbers_gain_css_units_when_required() {
+        let style = StyleDef {
+            component_name: "Card".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![
+                    StyleProp {
+                        name: "padding".to_string(),
+                        value: "8".to_string(),
+                    },
+                    StyleProp {
+                        name: "font-size".to_string(),
+                        value: "14".to_string(),
+                    },
+                    StyleProp {
+                        name: "font-weight".to_string(),
+                        value: "700".to_string(),
+                    },
+                    StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.75".to_string(),
+                    },
+                    StyleProp {
+                        name: "line-height".to_string(),
+                        value: "1.4".to_string(),
+                    },
+                    StyleProp {
+                        name: "border-radius".to_string(),
+                        value: "6".to_string(),
+                    },
+                    StyleProp {
+                        name: "padding-bottom".to_string(),
+                        value: "0".to_string(),
+                    },
+                ],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout("Card", node_with_part("Box", "root"));
+        let result = from_pipeline(&component("Card", vec![]), &l, &style).expect("emit ok");
+        let out = result.output;
+
+        assert!(out.contains("padding: 8px"), "expected padding px:\n{out}");
+        assert!(
+            out.contains("font-size: 14px"),
+            "expected font-size px:\n{out}"
+        );
+        assert!(
+            out.contains("font-weight: 700"),
+            "font-weight must stay unitless:\n{out}"
+        );
+        assert!(
+            out.contains("opacity: 0.75"),
+            "opacity must stay unitless:\n{out}"
+        );
+        assert!(
+            out.contains("line-height: 1.4"),
+            "line-height must stay unitless:\n{out}"
+        );
+        assert!(
+            out.contains("border-radius: 6px"),
+            "expected border-radius px:\n{out}"
+        );
+        assert!(
+            out.contains("padding-bottom: 0"),
+            "zero lengths should remain valid unitless zero:\n{out}"
+        );
+    }
+
     #[test]
     fn camel_case_style_keys_normalise_to_kebab() {
         let style = StyleDef {
@@ -1679,7 +3381,10 @@ mod tests {
         )
         .expect_err("expected ComponentNameMismatch");
         match err {
-            PipelineEmitError::ComponentNameMismatch { mosmodel, moslayout } => {
+            PipelineEmitError::ComponentNameMismatch {
+                mosmodel,
+                moslayout,
+            } => {
                 assert_eq!(mosmodel, "Foo");
                 assert_eq!(moslayout, "Bar");
             }
@@ -1887,10 +3592,7 @@ mod tests {
     fn host_input_with_placeholder_string_literal() {
         let l = layout(
             "F",
-            node_with_props(
-                "HostInput",
-                vec![prop_string("placeholder", "Enter name")],
-            ),
+            node_with_props("HostInput", vec![prop_string("placeholder", "Enter name")]),
         );
         let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
             .unwrap()
@@ -1932,6 +3634,27 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_input_emit_refs_become_hydration_markers() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostInput",
+                vec![
+                    prop_emit("onChange", "onQueryChange"),
+                    prop_emit("onCommit", "onSearch"),
+                    prop_emit("onCancel", "onCancelSearch"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains("data-on-change=\"onQueryChange\""));
+        assert!(out.contains("data-on-commit=\"onSearch\""));
+        assert!(out.contains("data-on-cancel=\"onCancelSearch\""));
+    }
+
     // -------------------------------------------------------------------
     // U29-K-html test 5 — HostButton with label slot ref emits
     // `<button>{{label}}</button>`.
@@ -1940,20 +3663,161 @@ mod tests {
     fn host_button_with_label_slot_ref() {
         let l = layout(
             "B",
-            node_with_props("HostButton", vec![prop_slot("label", "label")]),
+            node_with_props(
+                "HostButton",
+                vec![prop_slot("label", "label"), prop_emit("onClick", "onSave")],
+            ),
         );
         let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
             .unwrap()
             .output;
         assert!(
-            out.contains("<button>{{label}}</button>"),
-            "expected button with label placeholder, got:\n{out}"
+            out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
+            "expected button with label placeholder and hydration marker, got:\n{out}"
         );
     }
 
     // -------------------------------------------------------------------
     // U29-K-html test 6 — HostScroll lowers to `<div style="overflow: auto">`.
     // -------------------------------------------------------------------
+    #[test]
+    fn host_button_on_tap_alias_becomes_click_hydration_marker() {
+        let l = layout(
+            "B",
+            node_with_props(
+                "HostButton",
+                vec![prop_slot("label", "label"), prop_emit("onTap", "onSave")],
+            ),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
+            "expected button with onTap alias hydration marker, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_inside_indexed_for_emits_label_and_index_payload_runtime() {
+        let m = component_with_emits(
+            "ListGroup",
+            vec![SlotDecl {
+                name: "items".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "ListGroup",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("items".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("item".to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword("i".to_string()),
+                    },
+                ],
+                children: vec![node_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        prop_emit("onClick", "onSelect"),
+                    ],
+                )],
+            },
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result = from_pipeline_with_options(&m, &l, &empty_style("ListGroup"), &opts).unwrap();
+        assert!(
+            result
+                .output
+                .contains("<button data-on-click=\"onSelect\">{{item}}</button>"),
+            "expected HostButton label to use For item binding, got:\n{}",
+            result.output
+        );
+        let project = result.project.unwrap();
+        assert!(project.main_js.contains("\"onSelect\""));
+        assert!(project.main_js.contains("\"name\": \"index\""));
+        assert!(project.main_js.contains("readLoopIndex(source)"));
+    }
+
+    #[test]
+    fn host_button_inside_for_emits_label_and_text_payload_runtime() {
+        let m = component_with_emits(
+            "SelectMenu",
+            vec![SlotDecl {
+                name: "options".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+            vec![emit(
+                "onChange",
+                vec![param("value", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "SelectMenu",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("options".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("option".to_string()),
+                    },
+                ],
+                children: vec![node_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("option".to_string()),
+                        },
+                        prop_emit("onClick", "onChange"),
+                    ],
+                )],
+            },
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result = from_pipeline_with_options(&m, &l, &empty_style("SelectMenu"), &opts).unwrap();
+        assert!(
+            result
+                .output
+                .contains("<button data-on-click=\"onChange\">{{option}}</button>"),
+            "expected HostButton label to use For option binding, got:\n{}",
+            result.output
+        );
+        let project = result.project.unwrap();
+        assert!(project.main_js.contains("\"onChange\""));
+        assert!(project.main_js.contains("\"name\": \"value\""));
+        assert!(project.main_js.contains("readText(source)"));
+    }
+
     #[test]
     fn host_scroll_lowers_to_overflow_auto_div() {
         let out = from_pipeline(
@@ -1978,7 +3842,10 @@ mod tests {
         let head_row = node_with_props_and_children(
             "Row",
             vec![],
-            vec![node_with_props("Text", vec![prop_string("content", "Name")])],
+            vec![node_with_props(
+                "Text",
+                vec![prop_string("content", "Name")],
+            )],
         );
         let head = node_with_props_and_children("HostTableHead", vec![], vec![head_row]);
         let table = node_with_props_and_children("HostTable", vec![], vec![head]);
@@ -2004,7 +3871,10 @@ mod tests {
         let body_row = node_with_props_and_children(
             "Row",
             vec![],
-            vec![node_with_props("Text", vec![prop_slot("content", "row-name")])],
+            vec![node_with_props(
+                "Text",
+                vec![prop_slot("content", "row-name")],
+            )],
         );
         let body = node_with_props_and_children("HostTableBody", vec![], vec![body_row]);
         let table = node_with_props_and_children("HostTable", vec![], vec![body]);
@@ -2025,8 +3895,11 @@ mod tests {
     // -------------------------------------------------------------------
     #[test]
     fn host_table_colgroup_emits_col_void_elements() {
-        let colgroup =
-            node_with_props_and_children("HostTableColGroup", vec![], vec![node("Col"), node("Col")]);
+        let colgroup = node_with_props_and_children(
+            "HostTableColGroup",
+            vec![],
+            vec![node("Col"), node("Col")],
+        );
         let table = node_with_props_and_children("HostTable", vec![], vec![colgroup]);
         let l = layout("T", table);
         let out = from_pipeline(&component("T", vec![]), &l, &empty_style("T"))
@@ -2043,6 +3916,318 @@ mod tests {
         );
     }
 
+    // =====================================================================
+    // UI31-L10 — For-in-HostTable section seam (HTML backend)
+    //
+    // Without these seams `HostTableBody { For (each:…, as: row) { Row
+    // { … } } }` produced `<tbody><div>…</div></tbody>` (the generic
+    // walker's Row → flex-div mapping inside a For-comment bracket).
+    // That's structurally invalid inside `<tbody>` — browsers reject
+    // `<div>` as a direct child of `<tbody>`. The seam recognises For-
+    // of-Row in a section and emits `<!-- mosaic-for … --> <tr>…</tr>
+    // <!-- /mosaic-for -->`, which the downstream template engine
+    // expands to one `<tr>` per row.
+    //
+    // Companion seam (For-in-Row) handles per-cell iteration in
+    // header / body rows: `Row { For (as: c) { Text (content: c) } }`
+    // → `<!-- mosaic-for … --> <th>{{c}}</th> <!-- /mosaic-for -->`.
+    //
+    // Keyword-content extension on the Text branch lowers `content:
+    // <binding>` to `{{binding}}` (the Mustache template form) so
+    // cells iterated by a For actually render the bound value rather
+    // than blank.
+    // =====================================================================
+
+    /// L10 §1 — `For (each:…, as: row) { Row { … } }` inside a
+    /// `HostTableBody` lowers to a `<!-- mosaic-for … -->` bracket
+    /// whose body is a `<tr>` (not a flex-`<div>`).
+    #[test]
+    fn host_table_for_of_row_in_body_emits_for_bracket_around_tr() {
+        let row = node_with_props_and_children(
+            "Row",
+            vec![],
+            vec![node_with_props(
+                "Text",
+                vec![prop_keyword("content", "row")],
+            )],
+        );
+        let for_of_row = node_with_props_and_children(
+            "For",
+            vec![
+                prop_slot("each", "viewport-rows"),
+                prop_keyword("as", "row"),
+            ],
+            vec![row],
+        );
+        let body = node_with_props_and_children("HostTableBody", vec![], vec![for_of_row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![body]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<!-- mosaic-for each=\"viewportRows\" as=\"row\" -->"),
+            "expected mosaic-for bracket, got:\n{out}"
+        );
+        assert!(
+            out.contains("<tr>"),
+            "expected `<tr>` inside the For body, got:\n{out}"
+        );
+        assert!(
+            out.contains("<td>{{row}}</td>"),
+            "expected `<td>{{row}}</td>` Mustache cell, got:\n{out}"
+        );
+        // The pipeline-path output wraps the component in a
+        // `<div data-mosaic-component="…">`, so a bare `!contains("<div")`
+        // false-fires on the wrapper. We want the more specific
+        // regression check: no flex-direction div inside the For body.
+        assert!(
+            !out.contains("flex-direction: row"),
+            "for-of-Row in tbody must NOT emit a flex-direction `<div>` body, got:\n{out}"
+        );
+    }
+
+    /// L10 §2 — `For (each:…, as: header) { Text (content: header) }`
+    /// inside a head Row lowers to `<!-- mosaic-for … --> <th>{{header}}</th>
+    /// <!-- /mosaic-for -->`. The seam produces one `<th>` per item;
+    /// the generic walker would have wrapped the entire For in a
+    /// single `<th>` instead.
+    #[test]
+    fn host_table_for_of_cell_in_head_row_emits_for_bracket_around_th() {
+        let for_of_text = node_with_props_and_children(
+            "For",
+            vec![
+                prop_slot("each", "column-headers"),
+                prop_keyword("as", "header"),
+            ],
+            vec![node_with_props(
+                "Text",
+                vec![prop_keyword("content", "header")],
+            )],
+        );
+        let head_row = node_with_props_and_children("Row", vec![], vec![for_of_text]);
+        let head = node_with_props_and_children("HostTableHead", vec![], vec![head_row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![head]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<!-- mosaic-for each=\"columnHeaders\" as=\"header\" -->"),
+            "expected mosaic-for bracket inside <tr>, got:\n{out}"
+        );
+        assert!(
+            out.contains("<th>{{header}}</th>"),
+            "expected per-iteration `<th>{{header}}</th>`, got:\n{out}"
+        );
+    }
+
+    /// L10 §3 — Text content as a For-binding name (Keyword form)
+    /// lowers to `{{name}}` (Mustache) in cell contexts, matching the
+    /// SlotRef form. Without it the cell rendered blank.
+    #[test]
+    fn text_with_keyword_content_in_cell_lowers_to_mustache_placeholder() {
+        let row = node_with_props_and_children(
+            "Row",
+            vec![],
+            vec![node_with_props(
+                "Text",
+                vec![prop_keyword("content", "row")],
+            )],
+        );
+        let body = node_with_props_and_children("HostTableBody", vec![], vec![row]);
+        let table = node_with_props_and_children("HostTable", vec![], vec![body]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<td>{{row}}</td>"),
+            "expected `<td>{{row}}</td>` Mustache cell, got:\n{out}"
+        );
+    }
+
+    // =====================================================================
+    // UI31 gates — a11y (native <table> semantics) + RTL (`dir` slot)
+    // =====================================================================
+    //
+    // UI31 §3.1 + §3.2 lock down two non-negotiable contracts for the
+    // HTML HostTable lowering: (1) MUST produce real `<table>` markup
+    // (NOT `<div role="grid">` div-soup); (2) MUST honour the `dir`
+    // slot so RTL locales flip column order via the browser's native
+    // handling. The tests below grep-assert each contract and block
+    // the merge whenever the emitter regresses either.
+
+    /// UI31 a11y gate — a HostTable with head + body MUST produce real
+    /// `<table>/<thead>/<tbody>/<tr>/<th>/<td>` elements, NEVER
+    /// `<div role="grid">` div-soup. AT software (NVDA, JAWS,
+    /// VoiceOver) special-cases real `<table>` and the entire table-
+    /// navigation mode depends on these element names.
+    #[test]
+    fn host_table_emits_native_semantic_table_elements_not_div_soup() {
+        let head = node_with_props_and_children(
+            "HostTableHead",
+            vec![],
+            vec![node_with_props_and_children(
+                "Row",
+                vec![],
+                vec![node_with_props(
+                    "Text",
+                    vec![prop_string("content", "Name")],
+                )],
+            )],
+        );
+        let body = node_with_props_and_children(
+            "HostTableBody",
+            vec![],
+            vec![node_with_props_and_children(
+                "Row",
+                vec![],
+                vec![node_with_props("Text", vec![prop_string("content", "A")])],
+            )],
+        );
+        let table = node_with_props_and_children("HostTable", vec![], vec![head, body]);
+        let l = layout("T", table);
+        let out = from_pipeline(&component("T", vec![]), &l, &empty_style("T"))
+            .unwrap()
+            .output;
+        for tag in &["<table", "<thead", "<tbody", "<tr", "<th", "<td"] {
+            assert!(
+                out.contains(tag),
+                "UI31 a11y gate: expected {tag}> in HTML output, got:\n{out}"
+            );
+        }
+        assert!(
+            !out.contains("role=\"grid\""),
+            "UI31 a11y gate: HTML HostTable must NOT emit `role=\"grid\"` div-soup, got:\n{out}"
+        );
+    }
+
+    /// UI31 RTL gate — `dir: rtl` keyword on HostTable emits
+    /// `dir="rtl"` on the `<table>` element so the browser flips
+    /// column order and selection-band positioning natively.
+    #[test]
+    fn host_table_with_dir_rtl_keyword_emits_dir_attr_on_table() {
+        let table =
+            node_with_props_and_children("HostTable", vec![prop_keyword("dir", "rtl")], vec![]);
+        let l = layout("T", table);
+        let out = from_pipeline(&component("T", vec![]), &l, &empty_style("T"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<table dir=\"rtl\""),
+            "UI31 RTL gate: expected `<table dir=\"rtl\"`, got:\n{out}"
+        );
+    }
+
+    /// UI31 RTL gate — `dir: ltr` keyword emits explicit `dir="ltr"`.
+    #[test]
+    fn host_table_with_dir_ltr_keyword_emits_explicit_attr() {
+        let table =
+            node_with_props_and_children("HostTable", vec![prop_keyword("dir", "ltr")], vec![]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("<table dir=\"ltr\""));
+    }
+
+    /// UI31 RTL gate — a slot-ref `dir` lowers to a Mustache
+    /// placeholder `dir="{{dirSlot}}"` so the host substitutes
+    /// direction at render time (e.g. from user locale).
+    #[test]
+    fn host_table_with_dir_slot_ref_emits_mustache_placeholder() {
+        let table =
+            node_with_props_and_children("HostTable", vec![prop_slot("dir", "table-dir")], vec![]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<table dir=\"{{tableDir}}\""),
+            "expected `<table dir=\"{{{{tableDir}}}}\"` for slot-ref dir, got:\n{out}"
+        );
+    }
+
+    /// UI31 RTL gate — `auto` is a valid HTML `dir` value (lets the
+    /// browser pick direction based on content), passes through.
+    #[test]
+    fn host_table_with_dir_auto_keyword_passes_through() {
+        let table =
+            node_with_props_and_children("HostTable", vec![prop_keyword("dir", "auto")], vec![]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("<table dir=\"auto\""));
+    }
+
+    /// Security regression — unknown `dir` keyword (e.g. attempting
+    /// attribute injection via `rtl" onclick="evil()`) drops silently.
+    /// The kw allow-list in the emitter restricts to `ltr`/`rtl`/`auto`;
+    /// anything else produces no `dir` attribute and the browser falls
+    /// back to inheritance.
+    #[test]
+    fn host_table_with_unknown_dir_keyword_drops_the_attr() {
+        let table =
+            node_with_props_and_children("HostTable", vec![prop_keyword("dir", "ttb")], vec![]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !out.contains("dir="),
+            "UI31 RTL gate: unknown dir keyword must NOT emit a dir attr, got:\n{out}"
+        );
+    }
+
+    /// `dir` on a sub-tag (e.g. `HostTableBody`) is a no-op — only
+    /// the root `<table>` carries direction. Sub-tags inherit from
+    /// the table per HTML's normal cascade, so emitting `dir` on
+    /// `<thead>`/`<tbody>` would be either redundant (matching the
+    /// table) or harmful (conflicting with the table).
+    #[test]
+    fn host_table_body_with_dir_keyword_does_not_emit_dir_attr() {
+        // Bare HostTableBody — sub-tags lower standalone for the
+        // "emit a `<tbody>` fragment" pattern.
+        let body =
+            node_with_props_and_children("HostTableBody", vec![prop_keyword("dir", "rtl")], vec![]);
+        let out = from_pipeline(
+            &component("T", vec![]),
+            &layout("T", body),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        // The `<tbody>` opening tag should NOT carry a dir attr
+        // (search for `<tbody dir=` would catch a regression).
+        assert!(
+            !out.contains("<tbody dir="),
+            "UI31 RTL gate: sub-tags must NOT emit their own dir attr; got:\n{out}"
+        );
+    }
+
     // -------------------------------------------------------------------
     // U29-K-html test 10 — `If` with a slot-ref `when:` emits the
     // comment-bracketed `<!-- mosaic-if when="..." -->` wrapper.
@@ -2054,7 +4239,10 @@ mod tests {
             vec![prop_slot("when", "visible")],
             vec![node_with_props("Text", vec![prop_string("content", "Hi")])],
         );
-        let l = layout("X", node_with_props_and_children("Box", vec![], vec![if_node]));
+        let l = layout(
+            "X",
+            node_with_props_and_children("Box", vec![], vec![if_node]),
+        );
         let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
             .unwrap()
             .output;
@@ -2079,9 +4267,15 @@ mod tests {
         let if_node = node_with_props_and_children(
             "If",
             vec![prop_keyword("when", "true")],
-            vec![node_with_props("Text", vec![prop_string("content", "AlwaysOn")])],
+            vec![node_with_props(
+                "Text",
+                vec![prop_string("content", "AlwaysOn")],
+            )],
         );
-        let l = layout("X", node_with_props_and_children("Box", vec![], vec![if_node]));
+        let l = layout(
+            "X",
+            node_with_props_and_children("Box", vec![], vec![if_node]),
+        );
         let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
             .unwrap()
             .output;
@@ -2109,7 +4303,10 @@ mod tests {
                 prop_keyword("as", "row"),
                 prop_keyword("index", "i"),
             ],
-            vec![node_with_props("Text", vec![prop_string("content", "item")])],
+            vec![node_with_props(
+                "Text",
+                vec![prop_string("content", "item")],
+            )],
         );
         let l = layout(
             "X",
@@ -2265,10 +4462,7 @@ mod tests {
             "D",
             node_with_props(
                 "HostDialog",
-                vec![
-                    prop_keyword("open", "true"),
-                    prop_keyword("modal", "false"),
-                ],
+                vec![prop_keyword("open", "true"), prop_keyword("modal", "false")],
             ),
         );
         let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
@@ -2308,7 +4502,10 @@ mod tests {
         .output;
         // Open + close tags wrap a body, body contains children in order.
         assert!(out.contains("<dialog"), "expected open dialog, got:\n{out}");
-        assert!(out.contains("</dialog>"), "expected close dialog, got:\n{out}");
+        assert!(
+            out.contains("</dialog>"),
+            "expected close dialog, got:\n{out}"
+        );
         let i_hello = out.find("Hello").expect("Hello present");
         let i_hr = out.find("<hr>").expect("<hr> present");
         let i_close = out.find("</dialog>").expect("</dialog> present");
@@ -2330,7 +4527,10 @@ mod tests {
             node_with_props_and_children(
                 "HostDialog",
                 vec![prop_slot("title", "dialog-title")],
-                vec![node_with_props("Text", vec![prop_string("content", "body")])],
+                vec![node_with_props(
+                    "Text",
+                    vec![prop_string("content", "body")],
+                )],
             ),
         );
         let out = from_pipeline(&component("D", vec![]), &l, &empty_style("D"))
@@ -2343,10 +4543,7 @@ mod tests {
         // h2 must precede the body children.
         let i_h2 = out.find("<h2>").expect("h2 present");
         let i_body = out.find("body").expect("body present");
-        assert!(
-            i_h2 < i_body,
-            "expected title h2 before body, got:\n{out}"
-        );
+        assert!(i_h2 < i_body, "expected title h2 before body, got:\n{out}");
     }
 
     // -------------------------------------------------------------------
@@ -2460,5 +4657,1154 @@ mod tests {
         .unwrap()
         .output;
         assert_eq!(first, second, "emits must be deterministic across calls");
+    }
+
+    // =====================================================================
+    // UI29-2 — HostCheckbox / HostRadio (static `<input>` lowerings)
+    // =====================================================================
+
+    /// UI29-2 HTML test 1 — bare HostCheckbox lowers to a minimal
+    /// `<input type="checkbox">`. No data-* markers, no `checked`, no
+    /// label wrap.
+    #[test]
+    fn host_checkbox_empty_lowers_to_bare_input() {
+        let out = from_pipeline(
+            &component("X", vec![]),
+            &layout("X", node("HostCheckbox")),
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<input type=\"checkbox\">"),
+            "expected bare `<input type=\"checkbox\">`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 2 — `checked: true` keyword adds the bare
+    /// `checked` HTML attribute (the canonical static form).
+    #[test]
+    fn host_checkbox_checked_true_emits_bare_attr() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_keyword("checked", "true")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<input type=\"checkbox\" checked>"),
+            "expected `<input type=\"checkbox\" checked>`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 3 — `checked: slot: c` emits a
+    /// `data-checked="{{c}}"` marker that the host template engine can
+    /// post-process. Static HTML has no JS to write a real `checked`
+    /// attribute from a runtime value.
+    #[test]
+    fn host_checkbox_checked_slot_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_slot("checked", "is-checked")]),
+        );
+        let out = from_pipeline(
+            &component(
+                "X",
+                vec![SlotDecl {
+                    name: "is-checked".to_string(),
+                    r#type: SlotType::Bool,
+                    required: true,
+                    default: None,
+                }],
+            ),
+            &l,
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("data-checked=\"{{isChecked}}\""),
+            "expected `data-checked=\"{{{{isChecked}}}}\"`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 4 — `label: "Agree"` wraps the input in a
+    /// `<label>…</label>`. Idiomatic HTML form pattern that doesn't
+    /// require unique id+for pairs.
+    #[test]
+    fn host_checkbox_string_label_wraps_in_label_element() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_string("label", "Agree")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<label><input type=\"checkbox\"> Agree</label>"),
+            "expected label-wrapped input, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 5 — `onToggle: emit: onChange` surfaces as a
+    /// `data-on-toggle="onChange"` marker. Static HTML can't bind a
+    /// real listener; hydration scripts read the marker.
+    #[test]
+    fn host_checkbox_on_toggle_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_emit("onToggle", "onChange")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-on-toggle=\"onChange\""),
+            "expected data-on-toggle marker, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 6 — `indeterminate: true` emits a
+    /// `data-indeterminate="true"` marker. HTML has no `indeterminate`
+    /// attribute (it's a JS DOM property only); hydration can read the
+    /// marker and set `el.indeterminate = true` imperatively.
+    #[test]
+    fn host_checkbox_indeterminate_keyword_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostCheckbox", vec![prop_keyword("indeterminate", "true")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-indeterminate=\"true\""),
+            "expected data-indeterminate marker, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 7 — bare HostRadio lowers to a minimal
+    /// `<input type="radio">`.
+    #[test]
+    fn host_radio_empty_lowers_to_bare_input() {
+        let out = from_pipeline(
+            &component("X", vec![]),
+            &layout("X", node("HostRadio")),
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<input type=\"radio\">"),
+            "expected bare `<input type=\"radio\">`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 8 — `group: "flavor"` becomes the real HTML
+    /// `name="flavor"` attribute. The browser enforces the radio-mutex
+    /// for free (no script needed) when multiple radios share `name`.
+    #[test]
+    fn host_radio_group_string_lowers_to_name_attribute() {
+        let l = layout(
+            "X",
+            node_with_props("HostRadio", vec![prop_string("group", "flavor")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("name=\"flavor\""),
+            "expected `name=\"flavor\"`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 9 — `value: "vanilla"` lowers to the standard
+    /// HTML `value="vanilla"` attribute (the form-submit value).
+    #[test]
+    fn host_radio_value_string_lowers_to_value_attribute() {
+        let l = layout(
+            "X",
+            node_with_props("HostRadio", vec![prop_string("value", "vanilla")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("value=\"vanilla\""),
+            "expected `value=\"vanilla\"`, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 HTML test 10 — `onSelect: emit: onPick` surfaces as a
+    /// `data-on-select="onPick"` marker.
+    #[test]
+    fn host_radio_on_select_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostRadio", vec![prop_emit("onSelect", "onPick")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-on-select=\"onPick\""),
+            "expected data-on-select marker, got:\n{out}"
+        );
+    }
+
+    // =====================================================================
+    // UI29-4 — HostLink / HostTooltip / HostNumberInput
+    // =====================================================================
+
+    /// UI29-4 HTML test 1 — `href: "..."` + `label: "..."` lowers to a
+    /// standard `<a href="..." style="">label</a>` element.
+    #[test]
+    fn host_link_string_href_and_label_emits_anchor() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostLink",
+                vec![
+                    prop_string("href", "https://example.com"),
+                    prop_string("label", "Click me"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<a href=\"https://example.com\""),
+            "expected anchor with href, got:\n{out}"
+        );
+        assert!(
+            out.contains(">Click me</a>"),
+            "expected label as text body, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 2 — SECURITY PIN: `target: new-tab` MUST emit
+    /// the paired `rel="noopener noreferrer"` to prevent reverse-
+    /// tabnabbing. Matches the React backend's identical guard.
+    #[test]
+    fn host_link_target_new_tab_emits_noopener_noreferrer() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostLink",
+                vec![
+                    prop_string("href", "https://example.com"),
+                    prop_keyword("target", "new-tab"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("target=\"_blank\""),
+            "expected target=\"_blank\", got:\n{out}"
+        );
+        assert!(
+            out.contains("rel=\"noopener noreferrer\""),
+            "expected rel=\"noopener noreferrer\" security default, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 3 — `external: false` + `onActivate: emit:
+    /// onX` emit `data-external="false"` and `data-on-activate="onX"`
+    /// markers for the host's hydration to intercept clicks and
+    /// route in-app. Pure static HTML can't do the click-handling
+    /// inline; the data-* markers are the established pattern.
+    #[test]
+    fn host_link_external_false_with_on_activate_emits_data_markers() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostLink",
+                vec![
+                    prop_string("href", "/about"),
+                    prop_keyword("external", "false"),
+                    prop_emit("onActivate", "onNavigate"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-external=\"false\""),
+            "expected data-external=\"false\" marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("data-on-activate=\"onNavigate\""),
+            "expected data-on-activate=\"onNavigate\" marker, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 4 — a link inside an indexed `For` renders
+    /// the loop item as its label and lets the runtime read the loop
+    /// index payload.
+    #[test]
+    fn host_link_inside_indexed_for_emits_label_and_index_payload_runtime() {
+        let m = component_with_emits(
+            "Nav",
+            vec![SlotDecl {
+                name: "items".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+            vec![emit(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "Nav",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    prop_slot("each", "items"),
+                    prop_keyword("as", "item"),
+                    prop_keyword("index", "i"),
+                ],
+                children: vec![node_with_props(
+                    "HostLink",
+                    vec![
+                        prop_string("href", "#"),
+                        prop_keyword("label", "item"),
+                        prop_keyword("external", "false"),
+                        prop_emit("onActivate", "onSelect"),
+                    ],
+                )],
+            },
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result = from_pipeline_with_options(&m, &l, &empty_style("Nav"), &opts).unwrap();
+        assert!(
+            result.output.contains(
+                "<a href=\"#\" data-external=\"false\" data-on-activate=\"onSelect\">{{item}}</a>"
+            ),
+            "expected HostLink label to use For item binding, got:\n{}",
+            result.output
+        );
+        let project = result.project.unwrap();
+        assert!(project.main_js.contains("\"onSelect\""));
+        assert!(project.main_js.contains("\"name\": \"index\""));
+        assert!(project.main_js.contains("readLoopIndex(source)"));
+    }
+
+    /// UI29-4 HTML test 5 — bare HostTooltip wraps no child in
+    /// `<span title=...></span>` (empty span). The single-child
+    /// case wraps the child inside.
+    #[test]
+    fn host_tooltip_with_string_text_emits_span_title_attr() {
+        let l = layout(
+            "X",
+            node_with_props_and_children(
+                "HostTooltip",
+                vec![prop_string("text", "Click to submit")],
+                vec![node_with_props(
+                    "Text",
+                    vec![prop_string("content", "Submit")],
+                )],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<span title=\"Click to submit\""),
+            "expected `<span title=\"Click to submit\"`, got:\n{out}"
+        );
+        assert!(
+            out.contains("</span>"),
+            "expected closing </span>, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 5 — bare HostNumberInput emits `<input
+    /// type="number" inputmode="numeric" style="">`. The
+    /// `inputmode="numeric"` triggers the mobile numeric keyboard.
+    #[test]
+    fn host_number_input_empty_emits_input_with_inputmode_numeric() {
+        let l = layout("X", node("HostNumberInput"));
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<input type=\"number\" inputmode=\"numeric\""),
+            "expected input type=number with inputmode=numeric, got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 6 — numeric `min`/`max`/`step` literals
+    /// emit matching HTML attribute values.
+    #[test]
+    fn host_number_input_min_max_step_numeric_literals_emit_attrs() {
+        let l = layout(
+            "X",
+            node_with_props(
+                "HostNumberInput",
+                vec![
+                    LayoutProp {
+                        name: "min".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".to_string(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("min=\"0\""), "expected min=\"0\", got:\n{out}");
+        assert!(
+            out.contains("max=\"100\""),
+            "expected max=\"100\", got:\n{out}"
+        );
+        assert!(
+            out.contains("step=\"5\""),
+            "expected step=\"5\", got:\n{out}"
+        );
+    }
+
+    /// UI29-4 HTML test 7 — `onChange: emit: onSet` surfaces as a
+    /// `data-on-change="onSet"` marker; hydration reads it and binds
+    /// a real listener that dispatches `{type:"set", value: ...}`.
+    #[test]
+    fn host_number_input_on_change_emits_data_marker() {
+        let l = layout(
+            "X",
+            node_with_props("HostNumberInput", vec![prop_emit("onChange", "onSet")]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &l, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-on-change=\"onSet\""),
+            "expected data-on-change=\"onSet\" marker, got:\n{out}"
+        );
+    }
+
+    // =================================================================
+    // UI32-K-html — `--emit-project` standalone-HTML shell tests
+    //
+    // Covers per-PR gates from UI32 spec §3.1-§3.8 mandates for L3:
+    //   §3.4 Composable     : default options = no project shell.
+    //   §3.5 Banner          : every emitted file starts with banner.
+    //   §3.1 Reproducible    : two runs produce byte-identical output.
+    //   §3.6.2 HTML row      : no validation surface beyond ASCII
+    //                          (no per-PR contract beyond upstream).
+    //   §3.7 Output paths    : only the spec §2.2 HTML row enumeration.
+    //   §3.8 No env reads    : no /Users/, $HOME, etc. in output.
+    // =================================================================
+
+    /// §3.4 Composable. `from_pipeline_with_options(..., default())`
+    /// produces the same bytes as `from_pipeline(...)`, with
+    /// `project: None`.
+    #[test]
+    fn ui32_emit_project_false_is_backward_compatible_with_from_pipeline() {
+        let m = component("X", vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+
+        let legacy = from_pipeline(&m, &l, &s).unwrap();
+        let extended = from_pipeline_with_options(&m, &l, &s, &EmitOptions::default()).unwrap();
+
+        assert_eq!(legacy.output, extended.output, "fragment bytes diverged");
+        assert_eq!(legacy.component_name, extended.component_name);
+        assert!(
+            extended.project.is_none(),
+            "default options must NOT emit a project shell"
+        );
+    }
+
+    #[test]
+    fn ui32_emit_project_true_returns_project_files() {
+        let m = component("Hello", vec![]);
+        let l = layout("Hello", node("Box"));
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let r = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert!(
+            r.project.is_some(),
+            "emit_project: true must produce a shell"
+        );
+    }
+
+    /// §3.5 Banner. Every emitted file starts with the
+    /// AUTO-GENERATED banner (HTML-comment syntax).
+    #[test]
+    fn ui32_every_emitted_side_file_carries_auto_generated_banner() {
+        let m = component("Hello", vec![]);
+        let l = layout("Hello", node("Box"));
+        let s = empty_style("Hello");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .expect("project shell expected");
+
+        // index.html starts with <!DOCTYPE html> then the banner.
+        assert!(
+            proj.index_html.starts_with("<!DOCTYPE html>"),
+            "index.html must start with <!DOCTYPE html>"
+        );
+        assert!(
+            proj.index_html
+                .contains("<!-- AUTO-GENERATED by mosaic-compile --emit-project"),
+            "index.html missing banner"
+        );
+        // README.md starts with banner directly.
+        assert!(
+            proj.readme.starts_with("<!-- AUTO-GENERATED"),
+            "README.md must START with banner"
+        );
+        assert!(
+            proj.main_js.starts_with("// AUTO-GENERATED"),
+            "main.js must START with banner"
+        );
+    }
+
+    /// §3.1 Reproducible. Two runs produce byte-identical output.
+    #[test]
+    fn ui32_emit_project_is_byte_deterministic() {
+        let m = component("Deterministic", vec![]);
+        let l = layout("Deterministic", node("Box"));
+        let s = empty_style("Deterministic");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+
+        let a = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        let b = from_pipeline_with_options(&m, &l, &s, &opts).unwrap();
+        assert_eq!(a.output, b.output, "fragment is not deterministic");
+        assert_eq!(a.project, b.project, "project shell is not deterministic");
+    }
+
+    /// The shell actually inlines the component fragment (not a
+    /// `<!-- See Component.html -->` reference) so opening the
+    /// shell in a browser shows the component without any
+    /// additional file loads.
+    #[test]
+    fn ui32_index_html_inlines_component_fragment() {
+        let m = component("Demo", vec![]);
+        let l = layout("Demo", node("Box"));
+        let s = empty_style("Demo");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        // The component fragment is wrapped in <section
+        // data-component="Demo"> and its <div> body lands inside.
+        assert!(
+            proj.index_html
+                .contains("<section data-component=\"Demo\" data-mosaic-html-root=\"Demo\">"),
+            "shell missing <section data-component> wrapper, got:\n{}",
+            proj.index_html
+        );
+        assert!(
+            proj.index_html
+                .contains("<div data-mosaic-component=\"Demo\">"),
+            "shell missing inlined fragment marker, got:\n{}",
+            proj.index_html
+        );
+    }
+
+    /// §3.7 Output paths. The ProjectFiles struct exposes exactly
+    /// the UI32 spec §2.2 HTML-row shell files. Tripwire forces a
+    /// spec amendment if a field is added.
+    #[test]
+    fn ui32_project_files_struct_exposes_runtime_shell_files() {
+        let m = component("X", vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let ProjectFiles {
+            index_html,
+            main_js,
+            readme,
+        } = proj;
+        assert!(!index_html.is_empty(), "index.html empty");
+        assert!(!main_js.is_empty(), "main.js empty");
+        assert!(!readme.is_empty(), "README.md empty");
+    }
+
+    #[test]
+    fn ui32_main_js_hydrates_host_props_and_dispatches_events() {
+        let m = MosmodelComponent {
+            component: "SearchBox".to_string(),
+            slots: vec![
+                SlotDecl {
+                    name: "query".to_string(),
+                    r#type: SlotType::Text,
+                    required: true,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "count".to_string(),
+                    r#type: SlotType::Number,
+                    required: true,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "enabled".to_string(),
+                    r#type: SlotType::Bool,
+                    required: true,
+                    default: None,
+                },
+            ],
+            emits: vec![
+                EmitDecl {
+                    name: "onQueryChange".to_string(),
+                    params: vec![EmitParam {
+                        name: "value".to_string(),
+                        r#type: EmitPayloadType::Text,
+                    }],
+                },
+                EmitDecl {
+                    name: "onSearch".to_string(),
+                    params: Vec::new(),
+                },
+            ],
+        };
+        let l = layout(
+            "SearchBox",
+            node_with_props(
+                "HostInput",
+                vec![
+                    prop_slot("value", "query"),
+                    prop_emit("onChange", "onQueryChange"),
+                    prop_emit("onCommit", "onSearch"),
+                ],
+            ),
+        );
+        let s = empty_style("SearchBox");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.index_html.contains("src=\"./main.js\""));
+        assert!(proj
+            .index_html
+            .contains("data-mosaic-html-root=\"SearchBox\""));
+        assert!(proj
+            .main_js
+            .contains("window.mosaicHost?.getProps?.({ component: componentName })"));
+        assert!(proj
+            .main_js
+            .contains("window.mosaicHost.handleEvent({ component: componentName, event })"));
+        assert!(proj.main_js.contains("\"query\": \"Sample Query\""));
+        assert!(proj.main_js.contains("\"count\": 0"));
+        assert!(proj.main_js.contains("\"enabled\": false"));
+        assert!(proj.main_js.contains("\"onQueryChange\""));
+        assert!(proj.main_js.contains("\"name\": \"value\""));
+        assert!(proj.main_js.contains("eventTypeFor(emitName)"));
+    }
+
+    #[test]
+    fn ui32_main_js_expands_loops_and_stamps_loop_indices() {
+        let m = component(
+            "ListBox",
+            vec![SlotDecl {
+                name: "items".to_string(),
+                r#type: SlotType::List(Box::new(ListInnerType::Text)),
+                required: true,
+                default: None,
+            }],
+        );
+        let l = layout(
+            "ListBox",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef("items".to_string()),
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword("item".to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword("i".to_string()),
+                    },
+                ],
+                children: vec![node_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Keyword("item".to_string()),
+                        },
+                        prop_emit("onClick", "onSelect"),
+                    ],
+                )],
+            },
+        );
+        let s = empty_style("ListBox");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+
+        assert!(proj.main_js.contains("renderLoops(source, context)"));
+        assert!(proj.main_js.contains("data-mosaic-loop-index"));
+        assert!(proj.main_js.contains("readLoopIndex(source)"));
+        assert!(proj.main_js.contains("\"items\": []"));
+    }
+
+    /// §3.8 No environment reads. Indirectly proven by §3.1
+    /// determinism + this check: no /Users/, /home/, $HOME, etc.
+    /// in the emitted output.
+    #[test]
+    fn ui32_emitted_files_contain_no_environment_specific_strings() {
+        let m = component("X", vec![]);
+        let l = layout("X", node("Box"));
+        let s = empty_style("X");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        let all = format!("{}\n{}", proj.index_html, proj.readme);
+        for banned in ["/Users/", "/home/", "C:\\Users\\", "$HOME"] {
+            assert!(
+                !all.contains(banned),
+                "emitted shell contains environment-specific fragment `{banned}`"
+            );
+        }
+    }
+
+    /// The README mentions the component name in the file map and
+    /// the open-in-browser instructions. This is the only place a
+    /// component name lands in markdown body content.
+    #[test]
+    fn ui32_readme_mentions_component_name() {
+        let m = component("MyComponent", vec![]);
+        let l = layout("MyComponent", node("Box"));
+        let s = empty_style("MyComponent");
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let proj = from_pipeline_with_options(&m, &l, &s, &opts)
+            .unwrap()
+            .project
+            .unwrap();
+        assert!(
+            proj.readme.contains("MyComponent"),
+            "README.md must mention component name, got:\n{}",
+            proj.readme
+        );
+        // And it should reference the per-component file too.
+        assert!(
+            proj.readme.contains("MyComponent.html"),
+            "README.md must reference {{name}}.html"
+        );
+    }
+
+    // ── Else-branch emission (bug fix) ─────────────────────────────
+
+    /// A `Box { If (...) { Text } Else { Box } }` parent has both
+    /// branches rendered into the static HTML, separated by a
+    /// `<!-- mosaic-else -->` marker.  Before this fix, the Else
+    /// children were silently dropped.
+    fn if_node_with_when_expr(expr: &str, then_children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            }],
+            children: then_children,
+        }
+    }
+
+    fn else_node(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Else".to_string(),
+            part_name: None,
+            props: vec![],
+            children,
+        }
+    }
+
+    fn box_node_with_children(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: vec![],
+            children,
+        }
+    }
+
+    #[test]
+    fn if_else_pair_emits_both_branches_with_markers() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                if_node_with_when_expr(
+                    "( a == 1 )",
+                    vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"yes\"".to_string()),
+                        }],
+                    )],
+                ),
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"no\"".to_string()),
+                    }],
+                )]),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<!-- mosaic-if when=\"( a == 1 )\" -->"),
+            "expected mosaic-if marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("<!-- mosaic-else -->"),
+            "expected mosaic-else marker, got:\n{out}"
+        );
+        assert!(
+            out.contains("<!-- /mosaic-if -->"),
+            "expected /mosaic-if closer, got:\n{out}"
+        );
+        // Both branches' content must appear — `yes` for the then-
+        // branch and `no` for the else-branch.  Before the fix, only
+        // `yes` was present and the else children were dropped.
+        assert!(out.contains("yes"), "then-branch content missing:\n{out}");
+        assert!(out.contains("no"), "else-branch content missing:\n{out}");
+    }
+
+    /// `when: true` literal folds at compile time — the Else branch
+    /// is dropped, only the then-branch survives.
+    #[test]
+    fn if_else_compile_time_fold_when_true_drops_else() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                LayoutNode {
+                    tag: "If".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "when".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    }],
+                    children: vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"then\"".to_string()),
+                        }],
+                    )],
+                },
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"never\"".to_string()),
+                    }],
+                )]),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("then"), "then-branch must render:\n{out}");
+        assert!(
+            !out.contains("never"),
+            "else-branch must be dropped:\n{out}"
+        );
+        assert!(
+            !out.contains("mosaic-if"),
+            "literal fold must skip the marker:\n{out}"
+        );
+    }
+
+    /// `when: false` literal folds the other way — the then-branch
+    /// is dropped and the Else branch renders inline.
+    #[test]
+    fn if_else_compile_time_fold_when_false_emits_else() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                LayoutNode {
+                    tag: "If".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "when".to_string(),
+                        value: LayoutPropValue::Keyword("false".to_string()),
+                    }],
+                    children: vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"never\"".to_string()),
+                        }],
+                    )],
+                },
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"yes\"".to_string()),
+                    }],
+                )]),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("yes"), "else-branch must render:\n{out}");
+        assert!(
+            !out.contains("never"),
+            "then-branch must be dropped:\n{out}"
+        );
+        assert!(
+            !out.contains("mosaic-if"),
+            "literal fold must skip the marker:\n{out}"
+        );
+    }
+
+    /// An `If/Else` pair followed by a non-Else sibling: the trailing
+    /// sibling must render normally — the index walk must not
+    /// accidentally consume it as part of the if/else fusion.
+    #[test]
+    fn if_else_pair_does_not_consume_trailing_sibling() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![
+                if_node_with_when_expr(
+                    "( a )",
+                    vec![node_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("\"then\"".to_string()),
+                        }],
+                    )],
+                ),
+                else_node(vec![node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"else\"".to_string()),
+                    }],
+                )]),
+                // The trailing sibling — must end up in the output
+                // as a normal child of the parent Box, not be
+                // accidentally consumed by the if/else lookahead.
+                node_with_props(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("\"after\"".to_string()),
+                    }],
+                ),
+            ]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("then"));
+        assert!(out.contains("else"));
+        assert!(
+            out.contains("after"),
+            "trailing sibling must render — the if/else pair must \
+             not swallow it. Got:\n{out}"
+        );
+    }
+
+    // ── Text content with Expr / Keyword value (bug fix) ─────────
+
+    /// `Text ( content: ( v ) )` — where the For loop binding `v`
+    /// would have produced an empty `<span></span>` previously —
+    /// now renders `{{v}}` so the runtime template engine (or the
+    /// demo's JS shim) can substitute the cell value.
+    #[test]
+    fn text_with_paren_expr_content_emits_mustache_placeholder() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( v )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("{{v}}"),
+            "expected `{{{{v}}}}` placeholder, got:\n{out}"
+        );
+        // The empty-span regression — fail loudly if it ever
+        // returns.
+        assert!(
+            !out.contains("<span></span>"),
+            "Text with Expr content must NOT emit empty <span></span>:\n{out}"
+        );
+    }
+
+    /// A bare-NAME prop value parses as `Keyword`, not `Expr` (see
+    /// the moslayout grammar discussion in UI29 §3.3).  Same fix:
+    /// emit `{{name}}` instead of an empty `<span>`.
+    #[test]
+    fn text_with_keyword_content_emits_mustache_placeholder() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Keyword("h".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("{{h}}"), "expected `{{{{h}}}}`:\n{out}");
+        assert!(!out.contains("<span></span>"));
+    }
+
+    /// Complex expressions reach the runtime intact — only the
+    /// outer wrapping `( … )` is stripped.
+    #[test]
+    fn text_with_complex_expr_content_preserves_expression() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( row.cells )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("{{row.cells}}"),
+            "expected `{{{{row.cells}}}}`:\n{out}"
+        );
+    }
+
+    /// Brace injection via a STRING literal inside the parsed
+    /// expression — confirmed structurally possible per the
+    /// security review.  This test pins the mitigation:
+    /// `escape_mustache_braces` neutralises `{` / `}` to
+    /// `&#123;` / `&#125;` so the mustache placeholder around
+    /// the expression text remains a single matched pair.
+    #[test]
+    fn text_with_string_literal_expr_cannot_break_mustache() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    // The author's expression text is the literal
+                    // STRING `"}}…{{"` wrapped in parens.  Without
+                    // brace escaping the output would close the
+                    // surrounding mustache early.
+                    value: LayoutPropValue::Expr("( \"}}<b>oops</b>{{\" )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        // The literal `}}` and `{{` must be entity-escaped so the
+        // outer mustache `{{ … }}` stays a single pair.
+        assert!(
+            out.contains("&#125;&#125;") && out.contains("&#123;&#123;"),
+            "expected mustache-brace entities, got:\n{out}"
+        );
+        // The XSS-dangerous chars are also escaped (existing
+        // behaviour, but checked here to lock both layers in).
+        assert!(out.contains("&lt;b&gt;"));
+        assert!(!out.contains("<b>oops</b>"));
+        // Exactly one open + one close `{{`/`}}` pair survives in
+        // the output line for the Text node.  Strip the
+        // entity-escaped braces and count what's left.
+        let line = out.lines().find(|l| l.contains("{{")).unwrap_or("");
+        let stripped = line.replace("&#123;", "").replace("&#125;", "");
+        assert_eq!(stripped.matches("{{").count(), 1);
+        assert_eq!(stripped.matches("}}").count(), 1);
+    }
+
+    /// `strip_outer_parens` only fires when the outer parens are
+    /// a matched pair — `(a) + (b)` survives intact so the runtime
+    /// gets the full expression for evaluation.
+    #[test]
+    fn strip_outer_parens_only_when_matched_pair() {
+        assert_eq!(strip_outer_parens("( v )"), "v");
+        assert_eq!(strip_outer_parens("(a + b)"), "a + b");
+        assert_eq!(strip_outer_parens("(a) + (b)"), "(a) + (b)");
+        assert_eq!(strip_outer_parens("a + b"), "a + b");
+        assert_eq!(strip_outer_parens(""), "");
+        assert_eq!(strip_outer_parens("("), "(");
+        assert_eq!(strip_outer_parens(")"), ")");
+    }
+
+    /// A bare `If` without an Else sibling still works — the
+    /// emitter writes the if branch and the closing marker, with
+    /// no `mosaic-else` line.
+    #[test]
+    fn if_alone_without_else_still_works() {
+        let layout_def = layout(
+            "X",
+            box_node_with_children(vec![if_node_with_when_expr("( ready )", vec![node("Box")])]),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("<!-- mosaic-if when=\"( ready )\" -->"));
+        assert!(out.contains("<!-- /mosaic-if -->"));
+        assert!(
+            !out.contains("<!-- mosaic-else -->"),
+            "lone If must not emit a phantom else marker:\n{out}"
+        );
     }
 }

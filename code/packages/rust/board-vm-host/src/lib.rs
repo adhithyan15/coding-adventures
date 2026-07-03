@@ -1487,6 +1487,10 @@ impl HostSession {
         self.request_frame(MessageType::STOP, &[], frame_out)
     }
 
+    pub fn ping_frame(&mut self, frame_out: &mut [u8]) -> Result<WrittenFrame, HostError> {
+        self.request_frame(MessageType::PING, &[], frame_out)
+    }
+
     pub fn bootloader_reboot_frame(
         &mut self,
         frame_out: &mut [u8],
@@ -5536,6 +5540,20 @@ mod tests {
         assert_eq!(written.request_id, 42);
         assert_eq!(decoded.flags, FLAG_RESPONSE_REQUIRED);
         assert_eq!(decoded.message_type, MessageType::BOOTLOADER_REBOOT);
+        assert!(decoded.payload.is_empty());
+    }
+
+    #[test]
+    fn writes_ping_frame() {
+        let mut session = HostSession::with_next_request_id(77);
+        let mut frame = [0u8; 32];
+
+        let written = session.ping_frame(&mut frame).unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+
+        assert_eq!(written.request_id, 77);
+        assert_eq!(decoded.flags, FLAG_RESPONSE_REQUIRED);
+        assert_eq!(decoded.message_type, MessageType::PING);
         assert!(decoded.payload.is_empty());
     }
 

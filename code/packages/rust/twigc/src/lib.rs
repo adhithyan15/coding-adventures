@@ -234,7 +234,7 @@ pub fn twigc_run(path: &Path, search_paths: &[PathBuf]) -> Result<i64, TwigcErro
 /// use twigc::twigc_self_check;
 /// use std::path::Path;
 ///
-/// let passed = twigc_self_check(Path::new("code/twig/compiler"), &[]).unwrap();
+/// let passed = twigc_self_check(Path::new("code/packages/twig/compiler"), &[]).unwrap();
 /// assert!(passed, "fixed-point check should always pass on pure Twig");
 /// ```
 pub fn twigc_self_check(
@@ -446,14 +446,13 @@ mod twigc_tests {
     }
 
     fn compiler_src_dir() -> PathBuf {
-        // Navigate: twigc/ → rust/ → packages/ → code/ → twig/compiler/
+        // Navigate: twigc/ → rust/ → packages/ → twig/compiler/
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent().unwrap()  // rust/
             .parent().unwrap()  // packages/
-            .parent().unwrap()  // code/
             .join("twig/compiler")
             .canonicalize()
-            .expect("code/twig/compiler/ must exist")
+            .expect("code/packages/twig/compiler/ must exist")
     }
 
     fn copy_tw(twig_src: &Path, dest_dir: &Path, name: &str) {

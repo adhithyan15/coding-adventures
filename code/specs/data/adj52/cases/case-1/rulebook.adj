@@ -1,0 +1,201 @@
+% ============================================================================
+% ADJ52 case-1 derived rulebook.
+% Clinical area: pulmonary vascular filling defect with recurrent haemoptysis.
+% Differential built from the IR alone (no answer given), recursing into
+% subcategories of "what makes a filling defect in the pulmonary artery".
+% Every clause carries a % rationale + source + trust.
+%
+% Magnitudes are encoded QUALITATIVELY to satisfy the adj-lang IDENT grammar
+% (identifiers are lowercase /[a-z_][a-z0-9_]*/, no uppercase, no leading digit).
+% e.g. inflammatory_markers(elevated), d_dimer(elevated), age over_50 etc.
+%
+% CORRELATED EVIDENCE: findings that are joint manifestations of ONE mechanism
+% (the "this is a tumour, not a clot" syndrome) are grouped under a single
+% "% mechanism ... lr ..." directive so the combined likelihood ratio fires
+% ONCE rather than being double-counted per finding.
+% ============================================================================
+
+% ===== PRIORS (base rates for a pulmonary-artery filling defect) =====
+
+% rationale: among pulmonary-artery filling defects, simple acute thromboembolism is by far the commonest, so it carries the largest prior.
+prior 0.45 for diagnosis(acute_pulmonary_thromboembolism)
+  source "Frontiers Oncol 2026 PMC (filling defect on CTPA most often interpreted as PE); JTD 2020 PAS-PE 20yr analysis" trust authoritative
+
+% rationale: organized chronic thromboembolic disease causing fixed occlusion / pulmonary hypertension is the chronic sibling of acute PE.
+prior 0.20 for diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "CTEPH PMC11612049 (V/Q scan in CTEPH); JACC 2018 CTEPH review" trust authoritative
+
+% rationale: pulmonary artery (intimal) sarcoma is rare but is THE classic malignant mimic of a PA filling defect; prior is low but nontrivial in a defect without VTE risk.
+prior 0.12 for diagnosis(pulmonary_artery_sarcoma)
+  source "Pulm artery sarcoma masquerading as PE, PMC9843169; JTO 2015 'not every filling defect is PTE'" trust authoritative
+
+% rationale: a pulmonary-artery filling defect can be tumour thrombus / intraluminal extension from an extrapulmonary malignancy (RCC, HCC, sarcoma elsewhere).
+prior 0.05 for diagnosis(tumor_thrombus_from_extrapulmonary_malignancy)
+  source "PMC6538954 PA sarcoma review (differential includes tumour embolus from distant primary)" trust authoritative
+
+% rationale: infective / inflammatory endovascular process (pulmonary artery mycotic aneurysm, vasculitis) can mimic a mass with fever and raised inflammatory markers.
+prior 0.04 for diagnosis(infective_or_inflammatory_endovascular_process)
+  source "PMC9843169 (constitutional symptoms / inflammatory markers in the differential of PA filling defects)" trust inferred
+
+% ===== ACUTE PULMONARY THROMBOEMBOLISM =====
+
+% rationale: an elevated D-dimer is the expected biomarker of acute thrombotic burden.
+contributes 1.8 from d_dimer(elevated) to diagnosis(acute_pulmonary_thromboembolism)
+  source "CTEPH PMC11612049 (D-dimer reflects thrombotic activity)" trust authoritative
+
+% rationale: classic acute PE presents with pleuritic chest pain and haemoptysis from peripheral infarction.
+contributes 1.5 from symptom(sharp_chest_pain) to diagnosis(acute_pulmonary_thromboembolism)
+  source "CTEPH/PE PMC11612049 (pleuritic pain, infarction in PE)" trust authoritative
+
+% rationale: a NEGATIVE bilateral venous duplex (no DVT) removes the commonest embolic source and argues against simple thromboembolism.
+contributes 0.55 from venous_duplex(negative_for_dvt) to diagnosis(acute_pulmonary_thromboembolism)
+  source "PMC9843169 (lack of DVT / VTE risk argues against thromboembolic origin of a PA filling defect)" trust authoritative
+
+% rationale: complete ABSENCE of any VTE risk factor (no clot history, no immobilization/surgery/travel, no hormonal Rx) is atypical for unprovoked simple PE and is a documented red flag against it.
+contributes 0.5 from vte_risk_factors(absent) to diagnosis(acute_pulmonary_thromboembolism)
+  source "PMC9843169 (high suspicion of PAS when filling defect lacks VTE risk factors)" trust authoritative
+
+% rationale: a filling defect that neither resolves nor stabilizes after months of therapeutic anticoagulation is the cardinal feature AGAINST simple acute thromboembolism.
+contributes 0.25 from obstruction_course(refractory_to_anticoagulation) to diagnosis(acute_pulmonary_thromboembolism)
+  source "PMC9843169 (symptoms persisting despite anticoagulation suggest PAS, not PE); Frontiers Oncol 2026" trust authoritative
+
+% rationale: an EXPANDED / dilated involved pulmonary artery and a discrete intraluminal mass are NOT features of bland thrombus.
+contributes 0.5 from imaging(expanded_pulmonary_artery) to diagnosis(acute_pulmonary_thromboembolism)
+  source "JBSR jbsr.4114 (vessel expansion atypical for thrombus); In Vivo 2022 36(3):1519" trust authoritative
+
+% ===== CHRONIC THROMBOEMBOLIC PULMONARY HYPERTENSION (CTEPH) =====
+
+% rationale: a fixed complete occlusion that persists despite anticoagulation, plus RV hypertrophy, fits organized chronic thromboembolic obstruction.
+contributes 2.5 from obstruction_course(refractory_to_anticoagulation) to diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "JACC 2018 CTEPH (organized thromboembolic occlusion despite >=3 months anticoagulation)" trust authoritative
+
+% rationale: right ventricular hypertrophy and a dilated main pulmonary artery reflect the pulmonary hypertension of CTEPH.
+contributes 2.5 from imaging(right_ventricular_hypertrophy) to diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "JACC 2018 CTEPH (RV hypertrophy from chronic pulmonary hypertension)" trust authoritative
+contributes 1.6 from imaging(dilated_main_pulmonary_artery) to diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "CTEPH PMC11612049 (main PA dilation in pulmonary hypertension)" trust authoritative
+
+% rationale: complete unilateral absence of perfusion to an ENTIRE lung is explicitly stated NOT to be a typical thromboembolic pattern, arguing against CTEPH as well.
+contributes 0.4 from imaging(absent_perfusion_entire_lung) to diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "CTEPH PMC8936142 (entire-lung absent perfusion is not the typical PE/CTEPH pattern)" trust authoritative
+
+% rationale: CTEPH almost always follows prior thromboembolism; complete absence of VTE history/risk argues against it.
+contributes 0.6 from vte_risk_factors(absent) to diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "JACC 2018 CTEPH (typically a sequel of prior acute PE)" trust authoritative
+
+% rationale: a discrete intraluminal MASS (rather than mural webs/stenoses) is not the morphology of organized chronic thrombus.
+contributes 0.5 from imaging(discrete_intraluminal_mass) to diagnosis(chronic_thromboembolic_pulmonary_hypertension)
+  source "Wikipedia/JACC CTEPH (webs, slits, pouch lesions — not a discrete mass)" trust authoritative
+
+% ===== PULMONARY ARTERY SARCOMA (intimal sarcoma — the malignant mimic) =====
+
+% rationale: a discrete intraluminal mass within the pulmonary trunk (vs bland clot) is the defining radiologic feature of PA sarcoma.
+contributes 4.0 from imaging(discrete_intraluminal_mass) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC7245970 (PA sarcoma = intraluminal mass); JBSR jbsr.4114" trust authoritative
+
+% rationale: an EXPANDED / dilated pulmonary artery and a lobulated mass projecting along flow (acute angle, 'wall eclipsing sign') are characteristic of sarcoma, not thrombus.
+contributes 3.0 from imaging(expanded_pulmonary_artery) to diagnosis(pulmonary_artery_sarcoma)
+  source "In Vivo 2022 36(3):1519; JBSR jbsr.4114 (vessel expansion, lobulated bulging margins, wall-eclipsing sign)" trust authoritative
+
+% rationale: failure to resolve or stabilize despite months of anticoagulation is a key clinical clue toward PAS over thromboembolism.
+contributes 3.5 from obstruction_course(refractory_to_anticoagulation) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC9843169 (persistence despite anticoagulation suggests PAS); Frontiers Oncol 2026" trust authoritative
+
+% rationale: absence of any VTE risk factor in a patient with a PA filling defect is a documented red flag specifically raising PAS.
+contributes 2.5 from vte_risk_factors(absent) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC9843169 (high suspicion of PAS when defect lacks VTE risk factors)" trust authoritative
+
+% rationale: a negative DVT duplex removes the embolic source expected for thrombus and shifts probability toward an in-situ mass.
+contributes 1.8 from venous_duplex(negative_for_dvt) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC9843169 (no DVT supports in-situ tumour over embolus)" trust authoritative
+
+% rationale: recurrent / escalating haemoptysis and migratory haemorrhagic consolidations reflect tumour-related vascular invasion and distal embolization of sarcoma fragments.
+contributes 2.2 from symptom(recurrent_haemoptysis) to diagnosis(pulmonary_artery_sarcoma)
+  source "ERJ 35(2):444 FDG-PET in PAS; PMC7383050 (subsegmental haemorrhagic infarcts in PAS)" trust authoritative
+contributes 2.0 from imaging(migratory_pulmonary_consolidation) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC7383050 (multiple shifting areas of haemorrhagic infarction in PAS)" trust authoritative
+
+% rationale: high FDG uptake (SUVmax markedly above thrombus) at the filling defect is the single best non-invasive discriminator for sarcoma.
+contributes 5.0 from fdg_pet(high_uptake_at_filling_defect) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMID 19680740 (SUV cutoff 2.9: sens 100%, spec 93.9%); AJR AJR.05.0874" trust authoritative
+% rationale: LOW FDG uptake at the defect argues against malignancy and back toward bland thrombus (resolves the imaging uncertainty).
+contributes 0.3 from fdg_pet(low_uptake_at_filling_defect) to diagnosis(pulmonary_artery_sarcoma)
+  source "In Vivo 2022 36(3):1519 (low-cellularity PAS can have low SUV, but low uptake generally favours thrombus)" trust authoritative
+
+% rationale: a biopsy/resection specimen showing intimal sarcoma (spindle cells, MDM2 amplification) is the confirmatory pathology.
+contributes 8.0 from pathology(intimal_sarcoma_spindle_cell) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC9843169 (spindle-cell intimal sarcoma, MDM2 FISH positive on surgical pathology)" trust authoritative
+% rationale: tissue showing only bland thrombus / no malignancy argues strongly against sarcoma.
+contributes 0.15 from pathology(bland_thrombus_no_malignancy) to diagnosis(pulmonary_artery_sarcoma)
+  source "PMC9843169 (histology adjudicates thrombus vs sarcoma)" trust authoritative
+
+% ===== TUMOR THROMBUS FROM EXTRAPULMONARY MALIGNANCY =====
+
+% rationale: an intraluminal mass can be tumour thrombus extending from a distant primary; a discrete mass supports an intraluminal tumour of SOME kind.
+contributes 2.0 from imaging(discrete_intraluminal_mass) to diagnosis(tumor_thrombus_from_extrapulmonary_malignancy)
+  source "PMC6538954 (intraluminal tumour thrombus in the PA differential)" trust authoritative
+% rationale: high FDG uptake is consistent with malignant intraluminal tissue of any source.
+contributes 2.0 from fdg_pet(high_uptake_at_filling_defect) to diagnosis(tumor_thrombus_from_extrapulmonary_malignancy)
+  source "PMC8980148 (FDG-avid intraluminal malignant tissue)" trust authoritative
+% rationale: pathology proving a PRIMARY intimal sarcoma (not metastatic) argues against an extrapulmonary primary.
+contributes 0.5 from pathology(intimal_sarcoma_spindle_cell) to diagnosis(tumor_thrombus_from_extrapulmonary_malignancy)
+  source "PMC9843169 (intimal sarcoma is a primary PA tumour, not metastatic thrombus)" trust inferred
+
+% ===== INFECTIVE / INFLAMMATORY ENDOVASCULAR PROCESS =====
+
+% rationale: fever and elevated inflammatory markers raise an infective/inflammatory mimic.
+contributes 1.6 from symptom(fever) to diagnosis(infective_or_inflammatory_endovascular_process)
+  source "PMC9843169 (constitutional/inflammatory features in PA filling-defect differential)" trust inferred
+% rationale: a discrete fixed mass with progressive vascular occlusion is not the typical course of an infective process under no antimicrobial therapy.
+contributes 0.6 from imaging(discrete_intraluminal_mass) to diagnosis(infective_or_inflammatory_endovascular_process)
+  source "PMC9843169 (discrete intraluminal mass favours tumour over infection)" trust inferred
+% rationale: high FDG uptake is non-specific (infection is also FDG-avid), so it does not discriminate strongly here.
+contributes 1.2 from fdg_pet(high_uptake_at_filling_defect) to diagnosis(infective_or_inflammatory_endovascular_process)
+  source "AJR AJR.05.0874 (FDG avidity is non-specific for malignancy vs inflammation)" trust authoritative
+
+% ===== CORRELATED EVIDENCE: the 'this is a tumour, not a clot' syndrome =====
+% These findings are NOT independent — the literature describes them as a single
+% coherent gestalt distinguishing PA sarcoma from thromboembolism. Grouping them
+% under one mechanism directive fires the combined LR ONCE, avoiding the
+% Naive-Bayes saturation that independent contributes would cause. (The discrete
+% mass / vessel expansion / refractoriness / VTE-absence still carry their own
+% contributes above; the inflammatory + constitutional cluster is the genuinely
+% redundant set folded here.)
+
+% mechanism inflammatory_constitutional_tumour_signature for diagnosis(pulmonary_artery_sarcoma) lr 2.2 : inflammatory_markers(elevated), symptom(intermittent_low_grade_fever), symptom(profound_fatigue), symptom(fever)
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: FDG-PET/CT is the best non-invasive discriminator of sarcoma vs thrombus and is the recommended next step before committing to surgery.
+prior 0.30 for next_step(fdg_pet_ct)
+  source "PMID 19680740 (SUV cutoff 2.9: sens 100% spec 93.9%); ERJ 35(2):444 (FDG-PET in PAS work-up)" trust authoritative
+contributes 4.0 from obstruction_course(refractory_to_anticoagulation) to next_step(fdg_pet_ct)
+  source "PMC9843169 (anticoagulation-refractory defect should prompt PET to look for tumour)" trust authoritative
+contributes 3.5 from imaging(discrete_intraluminal_mass) to next_step(fdg_pet_ct)
+  source "AJR AJR.05.0874 (discrete intraluminal mass -> PET to confirm metabolic activity)" trust authoritative
+contributes 2.5 from vte_risk_factors(absent) to next_step(fdg_pet_ct)
+  source "PMC9843169 (no VTE risk -> escalate imaging toward tumour work-up)" trust authoritative
+
+% rationale: surgical resection (pulmonary endarterectomy / pneumonectomy with PA reconstruction) is BOTH diagnostic and therapeutic for a confirmed PA mass; percutaneous biopsy is discouraged.
+prior 0.18 for next_step(surgical_resection_with_histology)
+  source "PMC7383050 (pneumonectomy + PA reconstruction; transluminal biopsy avoided due to bleeding risk)" trust authoritative
+contributes 3.0 from imaging(discrete_intraluminal_mass) to next_step(surgical_resection_with_histology)
+  source "PMC7383050 (resection is definitive for a discrete PA mass)" trust authoritative
+contributes 3.0 from fdg_pet(high_uptake_at_filling_defect) to next_step(surgical_resection_with_histology)
+  source "ERJ 35(2):444 (FDG-avid PA mass -> proceed to resection)" trust authoritative
+
+% rationale: empirically continuing/intensifying anticoagulation alone is the WRONG path once refractoriness is documented; kept as a low-prior comparator.
+prior 0.08 for next_step(continue_anticoagulation_only)
+  source "PMC9843169 (continued anticoagulation fails in PAS; reassessment needed)" trust authoritative
+contributes 0.3 from obstruction_course(refractory_to_anticoagulation) to next_step(continue_anticoagulation_only)
+  source "PMC9843169 (refractoriness argues against more of the same anticoagulation)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u2: nature of the pulmonary-trunk filling defect — thrombus vs intraluminal tumour — pending FDG-PET and tissue.
+uncertain { fdg_pet(high_uptake_at_filling_defect), fdg_pet(low_uptake_at_filling_defect), pathology(intimal_sarcoma_spindle_cell), pathology(bland_thrombus_no_malignancy) } for diagnosis(pulmonary_artery_sarcoma)
+  source "PMID 19680740 + PMC9843169 (FDG-PET then histology adjudicate thrombus vs sarcoma)"
+
+% u1: the same imaging resolution decides whether the obstruction is bland thromboembolism instead.
+uncertain { fdg_pet(low_uptake_at_filling_defect), pathology(bland_thrombus_no_malignancy) } for diagnosis(acute_pulmonary_thromboembolism)
+  source "PMID 19680740 (low FDG uptake / bland thrombus would re-favour thromboembolism)"

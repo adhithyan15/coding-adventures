@@ -1,0 +1,8 @@
+{
+ "check_id": 141,
+ "idx": 55,
+ "slot": "defect_type",
+ "claimed_value": "heating",
+ "scenario": "On January 12, the heat in Omar's apartment stopped working. A repair technician arrived and fixed it 40 hours after the landlord first learned of the problem. Omar is now seeking a rent abatement.",
+ "cited_span": "the heat in Omar's apartment stopped working"
+}

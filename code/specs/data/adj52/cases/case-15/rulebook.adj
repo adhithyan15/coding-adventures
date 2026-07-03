@@ -1,0 +1,235 @@
+% ============================================================================
+% ADJ52 case-15 derived rulebook.
+% Clinical area: adult NEPHROTIC-SYNDROME glomerular disease (the AREA, not a
+% specific diagnosis). The vignette stages a serology-vs-histology DISCORDANCE:
+% markedly elevated anti-PLA2R + granular IgG/C3 + foot-process effacement
+% (-> primary membranous nephropathy) versus subepithelial "hump"-shaped EM
+% deposits + an antecedent treated UTI (-> resolving post-infectious GN).
+%
+% Differential built from the IR alone (no answer given), recursing into
+% subcategories of the heavy-proteinuria / membranous-pattern differential:
+%   - primary_membranous_nephropathy_pla2r   (anti-PLA2R-associated primary MN)
+%   - post_infectious_glomerulonephritis      (initial tissue impression / decoy)
+%   - secondary_membranous_malignancy         (occult cancer-associated MN)
+%   - secondary_membranous_autoimmune         (lupus/Sjogren-spectrum MN)
+%
+% Magnitudes are QUALITATIVE atoms to satisfy the adj-lang IDENT grammar
+% (lowercase, no leading digit, no uppercase). e.g.
+%   anti_pla2r_antibody(590 RU/mL, ref <14)  -> anti_pla2r(markedly_elevated)
+%   serum_albumin(22 g/L) + urine_albumin>3500 -> nephrotic_range(present)
+%   eGFR 24 / creatinine 188                  -> renal_function(impaired)
+%   C3 1.10 / C4 0.21 within range            -> complement(normal)
+%   patient_age(64) + 18-month 16 kg loss     -> age(over_60), weight_loss(unintentional)
+%
+% CORRELATED EVIDENCE (anti-double-count): the granular IgG/C3 along capillary
+% walls, widespread foot-process effacement, nephrotic-range proteinuria and
+% hypoalbuminaemia are NOT independent readouts — they are correlated
+% manifestations of ONE subepithelial-immune-complex / podocyte-injury
+% mechanism of membranous nephropathy (the sources describe them together as the
+% MN lesion). They are grouped under ONE mechanism directive so the combined LR
+% fires ONCE. Likewise the poor diuretic response + persistence of edema/
+% proteinuria are correlated readouts of ONE "non-resolving process" mechanism
+% that argues AGAINST a simply-resolving post-infectious GN.
+% ============================================================================
+
+% ===== PRIORS (base rates within the adult nephrotic-syndrome MN-pattern area) =====
+
+% rationale: in an adult with nephrotic syndrome and a membranous pattern,
+% PLA2R-associated PRIMARY MN is the single most common entity (~70-75% of
+% primary MN is anti-PLA2R), so it anchors the area.
+prior 0.34 for diagnosis(primary_membranous_nephropathy_pla2r)
+  source "NEJM 2009 Beck et al, PLA2R target antigen in idiopathic MN; PLA2R in 70-75% primary MN (NEJMoa0810457)" trust authoritative
+
+% rationale: the initial tissue impression was resolving post-infectious GN
+% (subepithelial humps + antecedent treated UTI); it must carry real prior mass
+% because a pathologist favored it.
+prior 0.22 for diagnosis(post_infectious_glomerulonephritis)
+  source "AJKD Atlas of Renal Pathology: postinfectious GN, hump-type subepithelial deposits (S0272-6386(15)01042-2)" trust authoritative
+
+% rationale: malignancy-associated SECONDARY MN must stay on the differential in
+% an older adult; cancer is found in ~1/4 of MN patients presenting over 65.
+prior 0.16 for diagnosis(secondary_membranous_malignancy)
+  source "Malignancy in Membranous Nephropathy: incidence; cancer in 1/4 of MN over age 65 (PMC5534270)" trust authoritative
+
+% rationale: autoimmune (lupus/Sjogren-spectrum) SECONDARY MN enters because of
+% the weakly reactive ANA with anti-Ro specificity.
+prior 0.10 for diagnosis(secondary_membranous_autoimmune)
+  source "Antigen-specific IgG subclasses in primary vs secondary MN; secondary MN incl. autoimmune (PMC6306563)" trust authoritative
+
+% ============================================================================
+% LATENT MECHANISM 1 — subepithelial-immune-complex / podocyte-injury lesion of
+% membranous nephropathy. Granular IgG/C3 along capillary walls, widespread
+% foot-process effacement, nephrotic-range proteinuria and hypoalbuminaemia are
+% correlated readouts of ONE MN lesion, so a single combined LR fires once if
+% ANY is observed (anti-double-count). The PLA2R serology is handled separately
+% as a genuinely independent immunologic readout.
+% ============================================================================
+% mechanism mn_podocyte_injury for diagnosis(primary_membranous_nephropathy_pla2r) lr 6.0 : immunofluorescence(granular_igg_c3_capillary_walls), podocyte(foot_process_effacement), nephrotic_range(present), serum_albumin(low)
+
+% ============================================================================
+% LATENT MECHANISM 2 — non-resolving clinical course. Poor diuretic response AND
+% persistence of edema/proteinuria without expected improvement are correlated
+% readouts of ONE "this is not a simply-resolving process" mechanism. Resolving
+% post-infectious GN should improve; a persistent nephrotic process should not.
+% Fires ONCE AGAINST post-infectious GN (lr < 1).
+% ============================================================================
+% mechanism non_resolving_course for diagnosis(post_infectious_glomerulonephritis) lr 0.35 : diuretic_response(poor), course(persistent_no_improvement)
+
+% ===== PRIMARY MEMBRANOUS NEPHROPATHY (anti-PLA2R) =====
+
+% rationale: a markedly elevated serum anti-PLA2R antibody is ~99% specific for
+% PLA2R-associated MN (PLR ~96); this is the dominant discriminator and, with
+% nephrotic syndrome + preserved-ish function, can confirm MN without biopsy.
+contributes 40.0 from anti_pla2r(markedly_elevated) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "Du et al meta-analysis: anti-PLA2R sensitivity 78%, specificity 99%, PLR 96 for idiopathic MN; KDIGO 2021 serology-based dx (PMC9955960)" trust consensus
+
+% rationale: subepithelial hump-shaped EM deposits, classically read as
+% post-infectious GN, are also reported in elderly MN where mixed/evolving
+% glomerular pathology occurs; in the presence of MN serology they are weakly
+% compatible rather than exclusionary.
+contributes 1.1 from electron_microscopy(subepithelial_humps) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "Cureus 2025: PLA2R-positive MN mimicking post-infectious GN; mixed/evolving pathology in elderly (PMC12717524)" trust authoritative
+
+% rationale: DISCRIMINATOR — complement is NORMAL here. Primary MN is driven by
+% IgG4 immune complexes that do not efficiently fix classical complement, so C3/C4
+% are characteristically normal; normal complement is therefore COMPATIBLE with
+% primary MN (mild support).
+contributes 1.3 from complement(normal) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "Role of complement in MN; IgG4 deposits, C1q usually absent/low, complement typically normal (PMC4274996)" trust authoritative
+
+% rationale: insidious heavy (nephrotic-range) proteinuria with hypoalbuminaemia
+% and edema is the cardinal primary-MN presentation (handled mostly by mechanism;
+% this captures the non-nephritic, bland nephrotic phenotype).
+contributes 1.6 from presentation(nephrotic_not_nephritic) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "Merck Manual: MN presents with insidious edema/heavy proteinuria, bland sediment (membranous-nephropathy)" trust authoritative
+
+% rationale: a prior deep-vein thrombosis fits the hypercoagulable nephrotic
+% state, of which MN carries the HIGHEST VTE risk among glomerulonephritides
+% (adjusted HR ~10.8); supports a chronic nephrotic (MN) process.
+contributes 1.5 from history(venous_thromboembolism) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "Lionaki et al: MN has highest VTE risk, HR 10.8; hypoalbuminaemia <2.8 g/dL strongest predictor (PMID 22076873)" trust authoritative
+
+% ===== POST-INFECTIOUS GLOMERULONEPHRITIS (initial tissue impression / decoy) =====
+
+% rationale: subepithelial hump-shaped EM deposits are the hallmark ultrastructural
+% finding of post-infectious GN — the single strongest pull toward this diagnosis
+% and the reason the pathologist favored it.
+contributes 6.0 from electron_microscopy(subepithelial_humps) to diagnosis(post_infectious_glomerulonephritis)
+  source "AJKD Atlas of Renal Pathology: hump-type subepithelial deposits hallmark of postinfectious GN (S0272-6386(15)01042-2)" trust authoritative
+
+% rationale: granular IgG and C3 along capillary walls (starry-sky / garland
+% immunofluorescence) is compatible with post-infectious GN.
+contributes 2.0 from immunofluorescence(granular_igg_c3_capillary_walls) to diagnosis(post_infectious_glomerulonephritis)
+  source "Revisiting post-infectious GN: IgG+C3 starry-sky/garland IF patterns (CKJ 9(3):397)" trust authoritative
+
+% rationale: an antecedent, recently treated bacterial infection (the co-amoxiclav
+% UTI ~10 days prior) is the temporal trigger that makes a post-infectious GN
+% plausible.
+contributes 2.2 from antecedent(recent_treated_infection) to diagnosis(post_infectious_glomerulonephritis)
+  source "Infection-Related Glomerulonephritis: GN follows antecedent infection (StatPearls NBK538255)" trust authoritative
+
+% rationale: DISCRIMINATOR (decisive against PIGN) — post-infectious GN is
+% complement-mediated with characteristically LOW C3 in the acute phase that
+% normalises by 6-8 weeks. This patient's complement is NORMAL, which argues
+% AGAINST an active post-infectious GN.
+contributes 0.35 from complement(normal) to diagnosis(post_infectious_glomerulonephritis)
+  source "Infection-Related GN: low C3 in acute phase, normalises 6-8 weeks (StatPearls NBK538255); atypical PIGN alt-pathway (PMC3561505)" trust authoritative
+
+% rationale: DISCRIMINATOR — post-infectious GN is a PROLIFERATIVE, NEPHRITIC
+% process with usually SUB-nephrotic proteinuria. A bland, nephrotic-not-nephritic
+% presentation with heavy proteinuria argues against PIGN.
+contributes 0.45 from presentation(nephrotic_not_nephritic) to diagnosis(post_infectious_glomerulonephritis)
+  source "Infection-Related GN: proliferative/exudative GN, usually sub-nephrotic proteinuria, nephritic (StatPearls NBK538255)" trust authoritative
+
+% rationale: DISCRIMINATOR — a markedly elevated anti-PLA2R antibody is highly
+% specific for primary MN and is NOT a feature of post-infectious GN; it argues
+% strongly against PIGN being the true lesion.
+contributes 0.2 from anti_pla2r(markedly_elevated) to diagnosis(post_infectious_glomerulonephritis)
+  source "Anti-PLA2R ~99% specific for primary MN, not a feature of postinfectious GN (PMC9955960; NEJMoa0810457)" trust authoritative
+
+% ===== SECONDARY MEMBRANOUS NEPHROPATHY — MALIGNANCY-ASSOCIATED =====
+
+% rationale: MN with a markedly elevated anti-PLA2R is usually PRIMARY, but PLA2R
+% positivity does NOT exclude a coincident malignancy; the antibody supports an
+% MN lesion that could still be cancer-associated (weaker than for primary).
+contributes 3.0 from anti_pla2r(markedly_elevated) to diagnosis(secondary_membranous_malignancy)
+  source "Malignancy-associated MN with positive anti-PLA2R reported; PLA2R does not exclude cancer (PMC8738902)" trust authoritative
+
+% rationale: age over ~60-65 is the dominant clinical pull toward malignancy-
+% associated secondary MN.
+contributes 2.5 from age(over_60) to diagnosis(secondary_membranous_malignancy)
+  source "Malignancy in MN: cancer in ~1/4 over age 65 vs 1/50 under 55 (PMC5534270)" trust authoritative
+
+% rationale: unintentional, sustained weight loss is a constitutional red flag for
+% an occult malignancy underlying secondary MN.
+contributes 2.5 from weight_loss(unintentional) to diagnosis(secondary_membranous_malignancy)
+  source "Cancer screening in glomerular disease: constitutional weight loss raises occult cancer (CJASN 2020.06.22)" trust authoritative
+
+% rationale: long-standing heavy smoking is a strong predictor of cancer-associated
+% MN (heavy smoking >20 pack-years a strong predictor) and a lung-cancer risk.
+contributes 2.5 from history(long_standing_smoker) to diagnosis(secondary_membranous_malignancy)
+  source "Lefaucheur et al: heavy smoking strong predictor of cancer in MN; prostate/lung first-priority screen (kidney-international S0085-2538(15)52167-4)" trust authoritative
+
+% ===== SECONDARY MEMBRANOUS NEPHROPATHY — AUTOIMMUNE (lupus/Sjogren spectrum) =====
+
+% rationale: a positive ANA with anti-Ro specificity raises lupus/Sjogren-spectrum
+% autoimmune secondary MN.
+contributes 2.0 from autoantibody(ana_anti_ro_weak) to diagnosis(secondary_membranous_autoimmune)
+  source "Secondary MN includes autoimmune (lupus/Sjogren); anti-Ro autoimmunity (PMC6306563)" trust authoritative
+
+% rationale: DISCRIMINATOR — secondary autoimmune (e.g. lupus) MN classically
+% shows a "full-house" IF and is often complement-consuming; NORMAL complement and
+% no rash/arthritis/fever make active lupus-spectrum disease less likely.
+contributes 0.5 from complement(normal) to diagnosis(secondary_membranous_autoimmune)
+  source "Lupus MN typically full-house IF / complement consumption; normal complement argues against active lupus (PMC4274996)" trust inferred
+
+% rationale: DISCRIMINATOR — a markedly elevated anti-PLA2R points to primary MN
+% rather than a purely autoimmune-secondary lesion.
+contributes 0.6 from anti_pla2r(markedly_elevated) to diagnosis(secondary_membranous_autoimmune)
+  source "Anti-PLA2R favours primary over secondary MN (NEJMoa0810457; PMC9955960)" trust authoritative
+
+% ===== NEXT STEP (definitive investigation that settles the discordance) =====
+
+% rationale: the directly indicated next step to RECONCILE serology with tissue is
+% PLA2R IMMUNOSTAINING of the existing biopsy (and/or IgG-subclass staining): MN
+% shows PLA2R antigen + IgG4-dominant deposits, post-infectious GN does not. This
+% settles the discordance on the tissue already obtained.
+prior 0.30 for next_step(pla2r_tissue_staining_and_igg_subclass)
+  source "Immunostaining detects PLA2R/THSD7A in deposits incl. seronegative cases; IgG4-dominant in primary MN (PMC6306563; ScienceDirect S0085253816306172)" trust authoritative
+contributes 6.0 from anti_pla2r(markedly_elevated) to next_step(pla2r_tissue_staining_and_igg_subclass)
+  source "Discordant serology vs histology -> stain tissue for PLA2R to reconcile (Cureus PMC12717524)" trust authoritative
+contributes 4.0 from electron_microscopy(subepithelial_humps) to next_step(pla2r_tissue_staining_and_igg_subclass)
+  source "Hump deposits read as PIGN but PLA2R-positive on tissue -> staining reconciles (Cureus PMC12717524)" trust authoritative
+contributes 2.0 from immunofluorescence(granular_igg_c3_capillary_walls) to next_step(pla2r_tissue_staining_and_igg_subclass)
+  source "IgG-subclass IF (IgG4 vs IgG1/3) separates primary MN from secondary/PIGN (PMC6306563)" trust authoritative
+
+% rationale: a malignancy screen (age-appropriate, prostate/lung-focused given the
+% smoking + weight loss) is the parallel secondary-cause work-up.
+prior 0.12 for next_step(age_appropriate_malignancy_screen)
+  source "MN over 65: systematic prostate/lung tumour screen first priority (kidney-international S0085-2538(15)52167-4)" trust authoritative
+contributes 3.0 from weight_loss(unintentional) to next_step(age_appropriate_malignancy_screen)
+  source "Unexplained weight loss in MN warrants occult-cancer screen (CJASN 2020.06.22)" trust authoritative
+contributes 2.0 from history(long_standing_smoker) to next_step(age_appropriate_malignancy_screen)
+  source "Heavy smoking predicts cancer-associated MN; screen lung (kidney-international S0085-2538(15)52167-4)" trust authoritative
+contributes 1.8 from age(over_60) to next_step(age_appropriate_malignancy_screen)
+  source "Cancer in 1/4 of MN over 65 -> age-appropriate screen (PMC5534270)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u1: PLA2R tissue staining / IgG-subclass of the EXISTING biopsy is not yet done;
+% it is the readout that discriminates primary MN from post-infectious GN and from
+% secondary MN. Each candidate result carries its own LR for primary MN.
+contributes 30.0 from tissue_pla2r_stain(positive_igg4_dominant) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "Tissue PLA2R-positive, IgG4-dominant deposits = primary PLA2R-associated MN (PMC6306563; S0085253816306172)" trust authoritative
+contributes 0.1 from tissue_pla2r_stain(negative_igg1_c3_dominant) to diagnosis(primary_membranous_nephropathy_pla2r)
+  source "PLA2R-negative, IgG1/C3-dominant deposits point to post-infectious/secondary, not primary MN (PMC6306563)" trust authoritative
+uncertain { tissue_pla2r_stain(positive_igg4_dominant), tissue_pla2r_stain(negative_igg1_c3_dominant) } for diagnosis(primary_membranous_nephropathy_pla2r)
+  source "PLA2R tissue staining / IgG-subclass not yet performed on the obtained biopsy (IR u1)"
+
+% u2: occult malignancy not yet excluded; resolving it moves secondary-malignancy MN.
+contributes 12.0 from malignancy_screen(occult_cancer_found) to diagnosis(secondary_membranous_malignancy)
+  source "Detected occult cancer reclassifies MN as malignancy-associated secondary (PMC5534270)" trust authoritative
+contributes 0.3 from malignancy_screen(negative) to diagnosis(secondary_membranous_malignancy)
+  source "Negative age-appropriate screen lowers likelihood of cancer-associated MN (CJASN 2020.06.22)" trust authoritative
+uncertain { malignancy_screen(occult_cancer_found), malignancy_screen(negative) } for diagnosis(secondary_membranous_malignancy)
+  source "Malignancy screen not yet performed in a weight-losing long-standing smoker (IR u2)"

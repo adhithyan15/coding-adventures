@@ -1,0 +1,167 @@
+# Wolfram Language Token Grammar
+# ============================================================================
+#
+# Tokenizes a subset of the Wolfram Language (Mathematica). Wolfram's surface
+# syntax differs from Macsyma's — function application uses SQUARE brackets
+# (`f[x]`), lists use BRACES (`{a, b}`), and the language is built around the
+# replacement operators `/.`, `->`, `:>` and the pattern blanks `_`/`x_`. So,
+# unlike Maxima (which reuses the Macsyma frontend), Wolfram gets its own lexer
+# and parser; only the symbolic engine underneath is shared. See
+# code/specs/MA04-wolfram-language.md.
+#
+# Wolfram is CASE-SENSITIVE (`Sin` is the builtin, `sin` is an ordinary symbol),
+# so case_sensitive is left at its default (true).
+#
+# @version 1
+
+# Strings keep their backslash escapes as raw text; the runtime decodes them.
+escapes: none
+
+# ============================================================================
+# SECTION 1: Multi-character operators
+#
+# Longest-match-first: every multi-character operator is listed before the
+# shorter operator(s) it begins with, so `:=`/`:>` win over a bare `:`, `->`
+# over `-`, `==` over `=`, `/.` over `/`, and `&&`/`||` are the only `&`/`|`
+# forms in this subset.
+# ============================================================================
+
+SETDELAYED  = ":="
+RULEDELAYED = ":>"
+RULE        = "->"
+
+# `//.` (ReplaceRepeated sugar, W-21) is the LONGEST `/`-prefixed operator, so it
+# MUST be declared before every shorter `/`-form below — `/@` (MAP), `/.`
+# (REPLACEALL), `/;` (CONDITION), and the bare `/` (SLASH, SECTION 2). The lexer
+# is FIRST-MATCH-WINS by declaration order (see lexer/grammar_lexer.rs), so a
+# later, shorter pattern can never pre-empt this: otherwise `//.` would lex as
+# `/` then `/.`, never as one ReplaceRepeated token. `e //. r` ⇒ ReplaceRepeated.
+REPLACEREPEATED = "//."
+
+# `/@` (Map sugar) and `/.` (ReplaceAll) both begin with `/`; both must precede
+# the bare `/` (SLASH) below. Their order relative to each other does not matter
+# (the second char differs: `@` vs `.`), but keep them grouped here so the
+# longest-match-first contract for the `/`-family is obvious at a glance. Both are
+# two chars, so they win over `/` but lose to the three-char `//.` above (which
+# is declared first).
+MAP         = "/@"
+REPLACEALL  = "/."
+
+# `/;` (Condition sugar, W-21) is a two-char `/`-form. It must precede the bare
+# `/` (SLASH) and the bare `;` (SEMI, SECTION 2) so `patt /; test` lexes as one
+# CONDITION token, never `/` then `;`. It shares the `/` prefix with `//.` above
+# (three chars, declared first, so unreachable past it) and with `/@`/`/.` (its
+# second char `;` is distinct from `@`/`.`, so order among the two-char forms is
+# immaterial). `p /; t` ⇒ Condition[p, t].
+CONDITION   = "/;"
+
+# `@@` (Apply sugar). There is no bare `@` token in this subset, so `@@` is the
+# only `@`-form; it is listed here in SECTION 1 alongside the other multi-char
+# operators for consistency.
+APPLY       = "@@"
+
+# `[[` (Part sugar opener) must precede the single `[` (LBRACKET) in SECTION 2,
+# so `x[[i]]` lexes as LDBRACKET … rather than two LBRACKETs.
+#
+# There is deliberately NO `]]` token. A closing `]]` is lexed as TWO RBRACKET
+# tokens, and the grammar's `[[ … ]]` rule consumes `RBRACKET RBRACKET` to close.
+# This avoids a fatal longest-match ambiguity: `f[g[x]]` ends in two ordinary
+# single `]`, and a greedy `]]` token would mis-lex that tail as one RDBRACKET,
+# breaking every nested ordinary application. Openers are safe — `[[` only forms
+# where two `[` are genuinely adjacent (a part access), which a single `[` apply
+# never produces — so only the opener gets a dedicated token.
+LDBRACKET   = "[["
+
+EQUAL       = "=="
+UNEQUAL     = "!="
+LE          = "<="
+GE          = ">="
+
+AND         = "&&"
+OR          = "||"
+
+# `|` (Alternatives sugar, W-21) is a SINGLE `|`. The two-char `||` (OR) is
+# declared just above, so first-match-wins keeps `||` winning where two `|` are
+# adjacent; a lone `|` (not part of `||`) lexes as ALTERNATIVES. `a | b | c` ⇒
+# Alternatives[a, b, c].
+ALTERNATIVES = "|"
+
+# `##` (SlotSequence) must precede the single `#` (HASH, in SECTION 2) so
+# longest-match wins: `##` lexes as one SLOTSEQ, never two HASH. There is no
+# `&&`-vs-`&` ambiguity for the `&` pure-function postfix — the two-char `AND`
+# above is already listed first, so a lone `&` (AMP) only ever forms where it is
+# NOT part of `&&`. (W-11 pure functions)
+SLOTSEQ     = "##"
+
+# ============================================================================
+# SECTION 2: Single-character operators and delimiters
+# ============================================================================
+
+PLUS      = "+"
+MINUS     = "-"
+TIMES     = "*"
+SLASH     = "/"
+POWER     = "^"
+SET       = "="
+LESS      = "<"
+GREATER   = ">"
+NOT       = "!"
+
+# `?` (PatternTest sugar, W-21). A brand-new single-character lexeme with no
+# overlap with any other token (no `??` form in this subset), so its position
+# here is for grouping only. `patt ? fn` ⇒ PatternTest[patt, fn]; it binds very
+# tightly (just below application) so `_?EvenQ` attaches `?EvenQ` to the blank.
+PATTERNTEST = "?"
+
+# `_` is the pattern Blank — it is NOT a symbol/name character in Wolfram
+# (unlike R). `x_` therefore lexes as NAME `x` followed by BLANK.
+BLANK     = "_"
+
+LBRACKET  = "["
+RBRACKET  = "]"
+LBRACE    = "{"
+RBRACE    = "}"
+LPAREN    = "("
+RPAREN    = ")"
+
+COMMA     = ","
+SEMI      = ";"
+
+# Pure-function syntax (W-11). `#` is the argument-slot opener — a following
+# NUMBER (`#2`) is read by the parser's `slot` rule (no dedicated slot-number
+# token, so the lexer stays unchanged otherwise). `&` is the postfix that turns
+# the preceding expression into a pure `Function` (`#^2 &`). The two-char `##`
+# (SLOTSEQ) is in SECTION 1 *before* this `#`, and the two-char `&&` (AND) is in
+# SECTION 1 before this `&`, so longest-match-first keeps both singles
+# unambiguous.
+HASH      = "#"
+AMP       = "&"
+
+# ============================================================================
+# SECTION 3: Literal value tokens
+#
+# NUMBER requires a leading digit, so `.5` is not a number and `/.` is never
+# mistaken for the start of a float. NAME is a case-sensitive identifier; builtin
+# heads (Sin, Plus, If, True) are ordinary capitalized NAMEs resolved by the
+# runtime, so there is no `keywords:` block.
+# ============================================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+NAME   = /[a-zA-Z][a-zA-Z0-9]*/
+STRING = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# SECTION 4: Significant newlines + skip patterns
+#
+# A newline terminates a top-level statement (Wolfram has no required statement
+# terminator), so NEWLINE is a real token — but the W-2 lexer drops newlines that
+# fall inside `[ ]`/`{ }`/`( )` so a call or list may span lines. Spaces/tabs and
+# `(* … *)` comments are consumed silently. (The comment regex is non-nesting for
+# simplicity; true Wolfram comments nest.)
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /\(\*([^*]|\*[^)])*\*\)/

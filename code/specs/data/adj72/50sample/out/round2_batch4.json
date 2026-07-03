@@ -1,0 +1,79 @@
+[
+  {
+    "id": "Q40",
+    "verbatim_source_passage": null,
+    "source_citation": "No verbatim source in Gandhi's writings. The closest authentic passage is in Gandhi's 'General Knowledge About Health' (collected in The Collected Works of Mahatma Gandhi, Vol. 13, 1913), where he writes about reforming oneself: 'We but mirror the world. All the tendencies present in the outer world are to be found in the world of our body. If we could change ourselves, the tendencies in the world would also change.' The popular aphorism 'Be the change you wish to see in the world' is a paraphrase/condensation not found verbatim in Gandhi's works.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q41",
+    "verbatim_source_passage": "It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material.",
+    "source_citation": "J. D. Watson and F. H. C. Crick, 'Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid,' Nature, vol. 171, no. 4356, pp. 737–738 (25 April 1953). This is the famous penultimate sentence; the actual final sentence is a procedural one. The sentence quoted is the celebrated closing scientific statement.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q42",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/misattributed. The sentence was written by Evelyn Beatrice Hall (under the pseudonym S. G. Tallentyre) in 'The Friends of Voltaire' (1906) as a summary of Voltaire's attitude, not a quotation of Voltaire: 'I disapprove of what you say, but I will defend to the death your right to say it.' Voltaire himself never wrote these words.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q43",
+    "verbatim_source_passage": null,
+    "source_citation": "Not found in Sun Tzu's The Art of War. The phrase 'Keep your friends close and your enemies closer' does not appear in The Art of War; it is a modern saying popularized by the film The Godfather Part II (1974), spoken by Michael Corleone.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q44",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal. There is no contemporary record that Galileo said 'Eppur si muove' at his 1633 trial. The story first appears more than a century later (notably attributed by Giuseppe Baretti in 1757). No verbatim trial-transcript source exists.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q45",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/misattributed. There is no reliable record of P. T. Barnum ever saying 'There's a sucker born every minute.' The phrase is commonly attributed to him but has no documented verbatim source; it has been variously credited to rival showmen (e.g., David Hannum during the Cardiff Giant affair) and others.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q46",
+    "verbatim_source_passage": null,
+    "source_citation": "Misattributed to Edmund Burke. This exact sentence ('The only thing necessary for the triumph of evil is for good men to do nothing') is not found in any of Burke's known writings or speeches. The attribution is regarded as spurious by quotation scholars (e.g., editors of Oxford and the Burke editors). A frequently cited (but only loosely related) passage from Burke's 'Thoughts on the Cause of the Present Discontents' (1770) reads: 'When bad men combine, the good must associate; else they will fall one by one, an unpitied sacrifice in a contemptible struggle.'",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q47",
+    "verbatim_source_passage": "The report of my death was an exaggeration.",
+    "source_citation": "Mark Twain, in a note/statement to a reporter (Frank Marshall White) of the New York Journal, 1897, regarding rumors of his death. The popular form 'The reports of my death have been greatly exaggerated' is a misquotation; Twain's actual wording was 'The report of my death was an exaggeration.' (White's article quotes Twain; some accounts render it 'The report of my death was greatly exaggerated.')",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.7
+  },
+  {
+    "id": "Q48",
+    "verbatim_source_passage": null,
+    "source_citation": "Misquotation. In Star Wars: Episode V — The Empire Strikes Back (1980), not the 1977 A New Hope, Darth Vader says: 'No. I am your father.' The line 'Luke, I am your father' is never spoken in any Star Wars film. The premise (that it occurs in the 1977 film A New Hope) is also false.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q49",
+    "verbatim_source_passage": null,
+    "source_citation": "Attributed to Winston Churchill but with no documented source. The saying 'If you're going through hell, keep going' has no verified citation in Churchill's speeches or writings; quotation researchers (e.g., the International Churchill Society) classify it as a quote Churchill did not say (or 'Red Herrings' / falsely attributed).",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q50",
+    "verbatim_source_passage": null,
+    "source_citation": "Mary Shelley, Frankenstein (1818 text). The chapter referenced is ambiguous because the 1818 edition is divided into three volumes, each restarting chapter numbering. I cannot reproduce the exact opening sentence of Chapter 2 verbatim with high confidence, so I decline to assert a verbatim passage rather than risk fabrication.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.2
+  }
+]

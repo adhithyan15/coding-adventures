@@ -1,0 +1,8 @@
+{
+ "check_id": 105,
+ "idx": 44,
+ "slot": "is_personal_property",
+ "claimed_value": true,
+ "scenario": "A renter's apartment was burglarized and a covered item with a documented replacement cost of $4,000 was taken. The theft is confirmed by a police report and the claim is otherwise valid.",
+ "cited_span": "a covered item with a documented replacement cost of $4,000 was taken"
+}

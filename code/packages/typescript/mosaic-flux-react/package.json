@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/mosaic-flux-react",
+  "version": "0.1.0",
+  "description": "Strict-Flux runtime for Mosaic UI's React emitter. Implements the MosaicAction Command Pattern, MosaicStore with fine-grained subscriptions, middleware, selectors, and React hooks integration.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^19.2.15",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.6"
+  }
+}

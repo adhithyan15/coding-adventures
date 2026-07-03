@@ -43,12 +43,24 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
 Item {
+    id: mosaicRoot
     // Component: ProfileCard
+    property var mosaicHost: null
+
+    function applyMosaicProps(props) {
+        if (props === null || props === undefined) { return; }
+        for (var key in props) {
+            mosaicRoot[key] = props[key];
+        }
+    }
 
     property string displayName: ""
     property url avatarUrl: ""
 
     signal avatarClick()
+    signal mosaicEvent(var event)
+    onMosaicEvent: applyMosaicProps(mosaicHost ? mosaicHost.handleEvent(event) : null)
+    onAvatarClick: mosaicEvent({ "event": "onAvatarClick" })
 
     ColumnLayout {
         Text {
@@ -72,7 +84,14 @@ Three things to notice:
 3. **Slots become `property` declarations**, **emits become `signal`
    declarations**. This is the QML analogue of React's `props` and
    event dispatch — the host application binds the properties and
-   connects handlers to the signals.
+   connects handlers to the signals. Components with emits also expose a
+   generic `mosaicEvent(var event)` signal that re-emits each specific signal
+   as an event object such as `{ "event": "onAvatarClick" }`, preserving
+   payload keys for native host bridges.
+4. `mosaicHost` is optional. If a generated Qt project includes a
+   `MosaicHost.h/.cpp` adapter, `main.cpp` injects it and hydrates initial
+   props through `applyMosaicProps`; emitted events round-trip through
+   `mosaicHost.handleEvent(event)`.
 
 ## Primitive lowering table
 

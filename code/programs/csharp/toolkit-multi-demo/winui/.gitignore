@@ -1,0 +1,3 @@
+# Build artifacts — regeneratable via `dotnet build Button.csproj`.
+bin/
+obj/

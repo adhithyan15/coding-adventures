@@ -1,0 +1,9 @@
+[package]
+name = "basic-semantic-tokens"
+version = "0.1.0"
+edition = "2021"
+description = "BASIC-ST01 — semantic-token extraction for Dartmouth BASIC.  Walks the dartmouth-basic-lexer's token stream and emits a typed token stream (line numbers / keywords / numbers / strings / variables / builtins) suitable for LSP semantic-tokens, syntax highlighters, and editor extensions."
+
+[dependencies]
+coding-adventures-dartmouth-basic-lexer = { path = "../dartmouth-basic-lexer" }
+lexer                                   = { path = "../lexer" }

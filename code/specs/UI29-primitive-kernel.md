@@ -386,7 +386,7 @@ demos opt into the userland-package path by:
 2. Compiling with `mosaic-compile --kernel-only` (or whatever flag the
    resolver uses to refuse-bespoke-lowerings)
 
-### 5.2 demo/visicalc
+### 5.2 code/programs/typescript/visicalc
 
 The VisiCalc demo migrates as part of proving `mosaic-pkg-grid`. Its
 `Grid.mil`/`Grid.mll`/`Grid.dark.msl` files are *deleted* — they are
@@ -433,7 +433,7 @@ renumbers to U29-CLI).
 | U29-K-webcomp | mosaic-emit-webcomponent: pipeline path + same | same |
 | U29-K-html | mosaic-emit-html: pipeline path + same | same |
 | U29-P1 | First userland package: `mosaic-pkg-grid` (Grid, Cell, Column) | U29-R2, all U29-K-* |
-| U29-D1 | Migrate `demo/visicalc` to consume `mosaic-pkg-grid` | U29-P1 |
+| U29-D1 | Migrate `code/programs/typescript/visicalc` to consume `mosaic-pkg-grid` | U29-P1 |
 | U29-X1 | Sweep PR: remove dead Grid/Cell/Column/Input code from each backend | U29-D1 |
 
 **Parallelism:** U29-G1 / U29-G2 / U29-G3 are sequential (each touches

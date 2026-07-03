@@ -1,0 +1,51 @@
+{
+  "id": "14-executemany",
+  "description": "executemany() executes the same statement for each parameter tuple",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE tags (item_id, tag)"
+    },
+    {
+      "op": "executemany",
+      "sql": "INSERT INTO tags VALUES (?, ?)",
+      "param_seq": [
+        [1, "red"],
+        [1, "large"],
+        [2, "blue"],
+        [2, "small"],
+        [3, "green"]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS n FROM tags",
+      "expected_columns": ["n"],
+      "expected_rows": [[5]]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT item_id, tag FROM tags WHERE item_id = 1 ORDER BY tag",
+      "expected_columns": ["item_id", "tag"],
+      "expected_rows": [
+        [1, "large"],
+        [1, "red"]
+      ]
+    },
+    {
+      "op": "executemany",
+      "sql": "DELETE FROM tags WHERE item_id = ? AND tag = ?",
+      "param_seq": [
+        [2, "blue"],
+        [3, "green"]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT COUNT(*) AS n FROM tags",
+      "expected_columns": ["n"],
+      "expected_rows": [[3]]
+    }
+  ]
+}

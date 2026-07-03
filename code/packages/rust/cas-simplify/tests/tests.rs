@@ -35,6 +35,12 @@ fn b() -> IRNode {
 fn c() -> IRNode {
     sym("c")
 }
+fn greater_zero(node: IRNode) -> IRNode {
+    apply(sym(GREATER), vec![node, int(0)])
+}
+fn greater_equal_zero(node: IRNode) -> IRNode {
+    apply(sym(GREATER_EQUAL), vec![node, int(0)])
+}
 fn zero() -> IRNode {
     int(0)
 }
@@ -510,7 +516,7 @@ fn radcan_simplifies_square_roots_and_exp_log_pairs() {
     );
 
     let mut ctx = AssumptionContext::new();
-    ctx.assume_relation(&apply(sym(GREATER), vec![x(), int(0)]));
+    ctx.assume_relation(&greater_zero(x()));
     let x_sq = apply(sym(POW), vec![x(), int(2)]);
     assert_eq!(
         radcan(apply(sym(SQRT), vec![x_sq.clone()]), Some(&ctx)),
@@ -518,8 +524,24 @@ fn radcan_simplifies_square_roots_and_exp_log_pairs() {
     );
     assert_ne!(radcan(apply(sym(SQRT), vec![x_sq]), None), x());
 
+    let mut nonneg_ctx = AssumptionContext::new();
+    nonneg_ctx.assume_relation(&greater_equal_zero(x()));
+    let x_sq = apply(sym(POW), vec![x(), int(2)]);
+    assert_eq!(radcan(apply(sym(SQRT), vec![x_sq]), Some(&nonneg_ctx)), x());
+
     let inner = apply(sym(MUL), vec![apply(sym(POW), vec![x(), int(2)]), y()]);
     let result = radcan(apply(sym(SQRT), vec![inner]), Some(&ctx));
+    match result {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(MUL));
+            assert!(ap.args.contains(&x()));
+            assert!(ap.args.contains(&apply(sym(SQRT), vec![y()])));
+        }
+        other => panic!("expected Mul, got {other:?}"),
+    }
+
+    let inner = apply(sym(MUL), vec![apply(sym(POW), vec![x(), int(2)]), y()]);
+    let result = radcan(apply(sym(SQRT), vec![inner]), Some(&nonneg_ctx));
     match result {
         IRNode::Apply(ap) => {
             assert_eq!(ap.head, sym(MUL));
@@ -707,4 +729,179 @@ fn demoivre_splits_pure_and_mixed_complex_exponentials() {
 
     let real_only = apply(sym(EXP), vec![x()]);
     assert_eq!(demoivre(real_only.clone()), real_only);
+}
+
+// ---------------------------------------------------------------------------
+// Track G2 — compound-relation assumption store.
+//
+// Mirrors the Python tests in
+// `code/packages/python/cas-simplify/tests/test_assumptions_compound.py`.
+// Until G2 the Rust `AssumptionContext` only understood
+// plain-symbol-vs-zero relations (`assume(x > 0)`).  Compound relations
+// such as `assume(a^2 > b^2)` were silently dropped, which prevented
+// the symbolic-coefficient Weierstrass integrator from learning the
+// discriminant sign at integration time.
+// ---------------------------------------------------------------------------
+
+fn a_sq() -> IRNode {
+    apply(sym(POW), vec![a(), int(2)])
+}
+
+fn b_sq() -> IRNode {
+    apply(sym(POW), vec![b(), int(2)])
+}
+
+fn gt(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(GREATER), vec![lhs, rhs])
+}
+
+fn lt(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(LESS), vec![lhs, rhs])
+}
+
+fn ge(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(GREATER_EQUAL), vec![lhs, rhs])
+}
+
+fn le(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym("LessEqual"), vec![lhs, rhs])
+}
+
+fn eq_rel(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(EQUAL), vec![lhs, rhs])
+}
+
+fn ne_rel(lhs: IRNode, rhs: IRNode) -> IRNode {
+    apply(sym(NOT_EQUAL), vec![lhs, rhs])
+}
+
+#[test]
+fn compound_assume_greater_direct() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&gt(a_sq(), b_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_equal_direct() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&eq_rel(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&eq_rel(a_sq(), b_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_less_direct() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&lt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&lt(a_sq(), b_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_greater_equal_direct() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&ge(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&ge(a_sq(), b_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_not_equal_direct() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&ne_rel(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&ne_rel(a_sq(), b_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_greater_commutes_to_less() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&lt(b_sq(), a_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_less_commutes_to_greater() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&lt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&gt(b_sq(), a_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_ge_commutes_to_le() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&ge(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&le(b_sq(), a_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_equal_is_commutative() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&eq_rel(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&eq_rel(b_sq(), a_sq())), Some(true));
+}
+
+#[test]
+fn compound_assume_not_equal_is_commutative() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&ne_rel(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&ne_rel(b_sq(), a_sq())), Some(true));
+}
+
+#[test]
+fn compound_unknown_returns_none() {
+    let ctx = AssumptionContext::new();
+    let c_sq = apply(sym(POW), vec![c(), int(2)]);
+    let d_sq = apply(sym(POW), vec![sym("d"), int(2)]);
+    assert_eq!(ctx.is_true_relation(&gt(c_sq, d_sq)), None);
+}
+
+#[test]
+fn compound_assume_greater_does_not_imply_less_false() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    // No negative-knowledge inference — asserting `a^2 > b^2` says
+    // nothing about `a^2 < b^2` until the user explicitly asserts it.
+    assert_eq!(ctx.is_true_relation(&lt(a_sq(), b_sq())), None);
+}
+
+#[test]
+fn compound_forget_relation() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&gt(a_sq(), b_sq())), Some(true));
+    ctx.forget_relation(&gt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&gt(a_sq(), b_sq())), None);
+}
+
+#[test]
+fn compound_forget_all_clears_compound_relations() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    ctx.assume_relation(&greater_zero(x()));
+    ctx.forget_all();
+    assert_eq!(ctx.is_true_relation(&gt(a_sq(), b_sq())), None);
+    assert_eq!(ctx.is_positive("x"), None);
+}
+
+#[test]
+fn compound_plain_symbol_path_still_works() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&greater_zero(x()));
+    assert_eq!(ctx.is_positive("x"), Some(true));
+    assert_eq!(ctx.is_true_relation(&greater_zero(x())), Some(true));
+    assert_eq!(
+        ctx.is_true_relation(&apply(sym(LESS), vec![x(), int(0)])),
+        Some(false)
+    );
+}
+
+#[test]
+fn compound_assume_dedupes() {
+    let mut ctx = AssumptionContext::new();
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    ctx.assume_relation(&gt(a_sq(), b_sq()));
+    // Re-assert via the commuted form — canonicalisation should fold.
+    ctx.assume_relation(&lt(b_sq(), a_sq()));
+    // A single forget should zero out the fact regardless of which
+    // surface form was used.
+    ctx.forget_relation(&gt(a_sq(), b_sq()));
+    assert_eq!(ctx.is_true_relation(&gt(a_sq(), b_sq())), None);
 }

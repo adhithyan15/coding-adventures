@@ -70,6 +70,16 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: Some(r#"NOT_EQUALS"#.to_string()),
             },
             TokenDefinition {
+                // SQL string concatenation operator.  Must be declared BEFORE
+                // any single-pipe (|) token so the lexer always prefers the
+                // longer two-character match.
+                name: r#"CONCAT_OP"#.to_string(),
+                pattern: r#"||"#.to_string(),
+                is_regex: false,
+                line_number: 26,
+                alias: None,
+            },
+            TokenDefinition {
                 name: r#"EQUALS"#.to_string(),
                 pattern: r#"="#.to_string(),
                 is_regex: false,
@@ -196,5 +206,7 @@ pub fn token_grammar() -> TokenGrammar {
         context_keywords: vec![],
         soft_keywords: vec![],
         layout_keywords: vec![],
+        start_mode: None,
+        transitions: vec![],
     }
 }

@@ -1,0 +1,18 @@
+[package]
+name = "aot-debug"
+version = "0.1.0"
+edition = "2021"
+description = "Bridge between IIR source-locations and the native-debug-info emitter — builds a debug-sidecar blob from an IIRModule's source_map, then hands it to native-debug-info to embed DWARF or CodeView sections into AOT-compiled binaries.  v0.1.0 (AOT-DBG-01): bridge + sidecar builder; twig-aot wiring follows in v0.2.0."
+
+[lib]
+name = "aot_debug"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir     = { path = "../interpreter-ir" }
+debug-sidecar      = { path = "../debug-sidecar" }
+native-debug-info  = { path = "../native-debug-info" }
+
+[[test]]
+name = "bridge"
+path = "tests/bridge.rs"

@@ -1,5 +1,216 @@
 # Changelog — `x86_64-backend`
 
+## 0.21.0 — 2026-07-01 — TWIG-GC: `gc_alloc` + `gc_safepoint` in V1_BUILTINS
+
+**V1_BUILTINS additions** (TWIG-GC, native-aot-substrate PR-1): Added
+`gc_alloc` (1 arg, returns) and `gc_safepoint` (0 args, no return) so
+frontends that emit `call_builtin "gc_alloc"` / `"gc_safepoint"` are dispatched
+to `__twig_gc_alloc` / `__twig_gc_safepoint` in `twig_gc.c`.  Mirrors the same
+additions made to `aarch64-backend v0.19.0`.
+
+## 0.20.0 — 2026-07-01 — BA-pow `f64_pow` + LANG-STR-RT `str_eq` builtin
+
+**LANG-STR-RT `str_eq`**: Added `BuiltinSig { name: "str_eq", n_args: 2,
+returns: true }` to `V1_BUILTINS`.  Matches the aarch64-backend addition —
+the callee is `__twig_str_eq` in `twig_runtime.c`.
+
+**BA-pow `f64_pow` (LANG-FULL)**: Loads base into xmm0 via
+`load_fp_operand(Rax)`, loads exponent into xmm1 via `load_fp_operand(Rcx)`,
+emits `call_rel32("pow", PltRel32)` (System V: xmm0=base, xmm1=exp, result in
+xmm0), and stores xmm0 to the dest stack slot.
+## 0.19.0 — 2026-06-29 — `f64_atan/f64_tan` via libm `call rel32` (LANG-FULL AL8-arctan)
+
+Extended the transcendental match arm to cover two more ops:
+- `f64_atan` → `call atan`  (libm inverse tangent, `PltRel32` external reloc)
+- `f64_tan`  → `call tan`   (libm tangent, `PltRel32` external reloc)
+
+Pattern: `movsd xmm0,[src]; call rel32 atan/tan; movsd [dest],xmm0`.
+System V AMD64 and MS x64 both pass/return the first f64 in xmm0.
+
+## 0.18.0 — 2026-06-28 — `f64_sin/cos/ln/exp` via libm `call rel32` (LANG-FULL AL8-trig)
+
+Transcendentals call libm via `call_rel32` with `PltRel32` external relocs:
+`movsd xmm0,[src]; call sin/cos/log/exp; movsd [dest],xmm0`.
+Both System V AMD64 and MS x64 pass/return the first f64 in xmm0.
+Mapping: `f64_ln` → `call log` (libm natural log is `log`, not `ln`).
+libm is pre-linked on Linux (`-lm`) and macOS (`-lSystem`).
+
+## 0.17.0 — 2026-06-28 — `f64_sqrt` via `SQRTSD` hardware instruction (LANG-FULL AL8-sqrt)
+
+The x86_64 backend now lowers `f64_sqrt dest <- src` to:
+`movsd xmm0,[src]; sqrtsd xmm0,xmm0; movsd [dest],xmm0` — one SSE2 hardware
+instruction, no libm call.  Uses the new `x86_64-encoder v0.6.0` `sqrtsd` method.
+
+## 0.16.0 — 2026-06-27 — `array<f64>` element support (LANG-FULL BA7)
+
+Native x86_64 arrays now accept `f64` element types in `alloc_array`,
+`array_get`, and `array_set`. The layout remains the E5 8-byte
+length-prefixed block; f64 elements ride those slots as raw IEEE-754 bits, and
+later floating-point operations load them through the existing SSE path.
+
+- Keeps the same explicit unsigned bounds checks and `ud2` trap behavior from
+  E5.
+- Retains fixed 8-byte native array elements and rejects non-8-byte types.
+- Verified by `x86_64-backend` unit tests and the BASIC BA7 matrix cell that
+  stores fractional `DATA` through `array<f64>` on the native column.
+
+## 0.15.0 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
+
+Dispatch the three IIR numeric-conversion ops to x86_64 SSE — completing E8's
+**seventh and final backend** (after VM/JIT, LLVM, WASM, JVM, CLR, aarch64):
+
+| IIR op | x86_64 sequence |
+|--------|-----------------|
+| `int_to_real` | `mov rax,[src]; cvtsi2sd xmm0,rax; movsd [dest],xmm0` |
+| `real_to_int_trunc` | `movsd xmm0,[src]; cvttsd2si rax,xmm0; mov [dest],rax` |
+| `real_to_int_floor` | `movsd xmm0,[src]; roundsd xmm0,xmm0,1; cvttsd2si rax,xmm0; mov [dest],rax` |
+
+True 64-bit i64↔f64 (full registers), like aarch64. The ops arrive with their
+bare IIR names (the `specialise` pass passes unrecognised ops through unchanged),
+so the backend matches them directly. `roundsd …,1` rounds toward −∞ (floor);
+`cvttsd2si` truncates toward zero and yields the integer-indefinite `0x8000…0`
+on NaN/±∞/out-of-range (no trap) — documented divergence, shared with
+JVM/aarch64.
+
+RUN-verified end-to-end through real x86_64 codegen executed in the
+**x86-simulator** (`tests/sse_floats.rs`): `floor(int_to_real(45) − 2.7) ⇒ 42`
+and `trunc(42.3) ⇒ 42`, matching the LLVM/WASM/VM/JVM/CLR/aarch64 matrix-cell
+value. Requires x86_64-encoder ≥ 0.5.0 and x86-simulator ≥ 0.7.6.
+
+## 0.14.0 — 2026-06-21 — bounds-checked arrays (LANG-FULL E5 PR-4c) — completes E5
+
+The four E5 array opcodes now lower to raw x86_64, using the **static**
+length-prefixed model with an **explicit** `ud2` bounds trap (the native target
+has no managed runtime to bounds-check for it, unlike JVM/CLR):
+
+| op | x86_64 |
+|----|--------|
+| `alloc_array dest <- count` | `mov rdi,count; shl rdi,3; add rdi,8; call __twig_alloc_bytes; mov [rax],count; dest=rax` |
+| `array_get dest <- handle, idx` | `mov rdx,[base]; cmp idx,rdx; jb ok; ud2; ok: shl idx,3; add base,idx; mov dest,[base+8]` |
+| `array_set handle, idx, val` | same bounds check; `mov [base+idx*8+8], val` |
+| `array_len dest <- handle` | `mov dest,[base]` |
+
+- Layout `[i64 length][elem 0][elem 1]…`, handle = block base; the length header
+  is at `[base+0]`, elements at `[base + 8 + idx*8]`. Allocation reuses the same
+  `__twig_alloc_bytes` runtime helper the Brainfuck byte-tape calls.
+- **Bounds check**: one **unsigned** `cmp idx, len` + `jb` skips a `ud2` trap when
+  in range — `jb` (below = unsigned `<`) catches both `>= len` and a negative
+  index. The x86_64 twin of LLVM's `icmp uge`+`llvm.trap` / WASM's `i64.ge_u`+
+  `unreachable`.
+- Element width is a fixed **8 bytes** (the AOT specialiser drops the `array<T>`
+  result type to `any`, so the stride isn't on `instr.ty`; `array_get`/`array_set`
+  validate the element is `i64`/`u64`; 0.16.0 adds `f64`). Only
+  **pre-existing, byte-verified encoders** are
+  reused (`shl_imm8`/`add_imm32`/`cmp`/`jcc`/`mov_*`/`ud2`/`call_rel32`) — no new
+  encodings.
+- 2 new unit tests (≥2 `ud2` traps emitted; non-`i64` element refused). The ALGOL
+  array matrix `Prog` runs on **NativeAot** — aarch64 locally, **x86_64 on the
+  Linux CI runner** → exit 42. **This completes E5 across all 7 backends.**
+
+## 0.13.0 — 2026-06-20 — `f64` (ALGOL `real`) SSE2 codegen (LANG-FULL E3) — completes E3
+
+### Added — native double-precision codegen on x86_64
+
+Mirrors the aarch64-backend f64 lowering with SSE2:
+
+- **`const_f64`** materialises the IEEE-754 bits in a GPR and stores them — a
+  double rides its 8-byte stack slot as raw bits (no XMM reg to load a constant).
+- **`add`/`sub`/`mul`/`div_f64`** → `movsd xmm0/xmm1, [slot]`; `addsd`/`subsd`/
+  `mulsd`/`divsd`; `movsd [slot], xmm0`. IEEE division by zero is `±inf`/`NaN`.
+- **`cmp_*_f64`** → `ucomisd` + `setcc`, with operand-order + condition chosen for
+  IEEE-**ordered** semantics: `<`/`<=` compare reversed (`ucomisd b,a` + `seta`/
+  `setae`), `>`/`>=` direct (`seta`/`setae`), `==` = `sete` AND `setnp` (ZF=1 &&
+  PF=0), `!=` = `setne` OR `setp` (ZF=0 || PF=1) — a NaN operand makes ordered
+  compares false (`!=` true), matching every other backend.
+
+**This completes E3-native — ALGOL reals now run on all 7 backends.** x86_64 is
+not locally runnable (no x86 ISA simulator), so this is verified by **structural
+exact-opcode tests** + **byte-for-byte encoding checks against the system
+assembler**, and **executed on the lang-aot matrix `NativeAot` column on the
+Linux-x86 CI runner** (the aarch64 half runs the same matrix cell on Apple
+Silicon). Integer programs are untouched (FP path keys on `ty == "f64"`). Uses
+`x86_64-encoder` 0.4.0's SSE2 instructions.
+
+## 0.12.0 — 2026-06-15 — narrow-width unsigned masking (LANG-FULL E2, native-AOT leg)
+
+Mirrors the `aarch64-backend` 0.10.0 change so narrow-width wrap is uniform across
+both native host arches. A 64-bit register holds the full result of `add_u8
+200, 100` (= 300); to make `uⁿ` types wrap mod-2ⁿ like the other backends, every
+narrow **unsigned** op now appends `movabs rcx, <mask>; and <dst>, rcx`:
+
+- `add_u8 200, 100` → `44`, `sub_u8 0, 1` → `255`, `mul_u8 16, 16` → `0`
+- `not_u8 0` → `255`, `shl_u8 1, 8` → `0`; `u16`/`u32` wrap at their widths
+
+Masking covers `add`/`sub`/`mul`/`div`/`mod`/`and`/`or`/`xor`/`shl`/`shr`/`neg`/`not`
+for `u4`/`u8`/`u16`/`u32`; full-width and signed types are unchanged. See
+`mask_narrow`. New structural tests prove the mask bytes are emitted (and that
+`i64` is never masked); the **executed** value proof for x86_64 is the `lang-aot`
+matrix on a Linux x86_64 CI runner (no in-repo x86 JIT loader — the `aarch64-backend`
+provides the directly-executed value proof). Unblocks Nib **N6** / Oct **O2**.
+
+## 0.11.0 — 2026-06-10 — McCarthy lambda (F7): `lispy_to_exit_code` builtin (LANG77 / W14b)
+
+Adds `lispy_to_exit_code` to `V1_BUILTINS` (→ `call __twig_lispy_to_exit_code`), the
+universal program-exit coercion for a polymorphic lambda result (W13b) — mirroring
+the `aarch64-backend` change so native McCarthy lambda is uniform across both host
+arches. New unit test `lispy_to_exit_code_lowers`.
+
+## 0.10.0 — 2026-06-04 — ATOM/EQ predicate + truthy helpers (LANG77 / McCarthy L3b-2c-2)
+
+Adds four `V1_BUILTINS` rows — `lispy_pair_p` (1), `lispy_not` (1),
+`lispy_equal` (2), `lispy_truthy` (1), all returning a value → `CALL
+__twig_lispy_*`. These back `ATOM` (`not(pair?)`), `EQ` (`equal?`) and the
+`COND` truthiness normaliser the `lower_lisp_repr` pass inserts before
+`jmp_if_false`. No new opcodes — the generic `call_builtin` dispatch handles
+them. New host-independent test: the ATOM/EQ predicate + truthy sequence
+lowers and emits the four external relocs.
+
+## 0.9.0 — 2026-06-04 — lisp int unbox helper (LANG77 / McCarthy L3b-2c-1)
+
+Adds one `V1_BUILTINS` row — `lispy_unbox_int` (1 arg, returns) → `CALL
+__twig_lispy_unbox_int` — the helper the new `lower_lisp_repr` pass inserts
+at the program-exit boundary to turn a tagged integer back into a raw
+machine word for the process exit code. No new opcodes; the generic
+`call_builtin` dispatch handles it.
+
+New host-independent test: the full boxed `(CAR (CONS 7 9))` sequence (boxed
+atoms → `lispy_cons` → `lispy_car` → `lispy_unbox_int` → ret) lowers and
+emits external relocs to all three runtime symbols.
+
+## 0.8.0 — 2026-06-04 — lisp runtime calls (LANG77 / McCarthy L3b-2b)
+
+Adds three rows to the `V1_BUILTINS` helper table — `lispy_cons` (2 args),
+`lispy_car` (1), `lispy_cdr` (1), all returning a value — so `call_builtin
+"lispy_cons"` etc. dispatch to `CALL __twig_lispy_cons` in the linked C lisp
+runtime (`twig-aot/runtime/lispy_runtime.c`). These are the runtime-call
+form of cons/car/cdr (produced by
+`iir_builtin_lowering::lower_heap_builtins_runtime`), keeping lisp values
+NaN-box tagged rather than raw words.
+
+**No new opcodes or emitter logic** — the existing generic `call_builtin`
+dispatch marshals the args into the SysV/MsX64 arg registers and emits the
+CALL with a `PltRel32` external relocation; the table rows are the entire
+change. The L3b-1 `alloc`/`field_*` emitters remain as general-purpose heap
+ops (no longer on the McCarthy cons path).
+
+Two new host-independent tests: `(CAR (CONS 7 9))` via the runtime path
+emits external relocations to `__twig_lispy_cons`/`__twig_lispy_car`, and a
+wrong-arity `lispy_cons` call is softly refused.
+
+## 0.7.0 — 2026-06-04 — heap cons cells (McCarthy Lisp L3b)
+
+Mirror of the aarch64-backend 0.5.0 change: lower `alloc` / `field_store` /
+`field_load` / `is_null` (the heap ops `lower_heap_builtins` produces from
+`cons`/`car`/`cdr`/`null?`) on x86-64.
+
+* **`alloc`** — `mov arg0, 16; call __twig_alloc_bytes; mov [rbp+slot], rax`.
+* **`field_store ptr, idx, val`** — `mov [ptr + idx*8], val` (`mov_mem_r64`).
+* **`field_load ptr, idx -> dest`** — `mov dest, [ptr + idx*8]`
+  (`mov_r64_mem`); field 0 = car, field 1 = cdr.
+* **`is_null x -> dest`** — `cmp x, 0; sete al; movzx rax, al`.
+* Raw-word values (no NaN-boxing); `(CAR (CONS 7 9))` → raw `7`.  3 new
+  unit tests mirroring the aarch64 ones.
+
 ## 0.6.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
 
 Three new CIR opcodes that complete the substrate for Brainfuck and

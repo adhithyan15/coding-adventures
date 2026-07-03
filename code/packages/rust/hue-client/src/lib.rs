@@ -11,10 +11,10 @@ use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
     validate_brightness, HueBridgeResource, HueButtonResource, HueButtonStateUpdate, HueCommand,
-    HueDeviceResource, HueGroupedLightResource, HueGroupedLightStateUpdate, HueLightResource,
-    HueLightStateUpdate, HueMethod, HueMotionResource, HueMotionStateUpdate, HueRequest,
-    HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
-    HueSceneAction, HueSceneResource, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
+    HueCommandPlan, HueDeviceResource, HueGroupedLightResource, HueGroupedLightStateUpdate,
+    HueLightResource, HueLightStateUpdate, HueMethod, HueMotionResource, HueMotionStateUpdate,
+    HueRequest, HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
+    HueSceneAction, HueSceneResource, HueStateUpdate, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
     CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
@@ -288,16 +288,50 @@ impl HueSnapshotSummary {
         self.light_resources > 0 || self.grouped_light_resources > 0
     }
 
+    pub fn lighting_resource_count(&self) -> usize {
+        self.light_resources + self.grouped_light_resources
+    }
+
+    pub fn mixes_direct_and_grouped_light_resources(&self) -> bool {
+        self.light_resources > 0 && self.grouped_light_resources > 0
+    }
+
     pub fn has_area_resources(&self) -> bool {
         self.room_resources > 0 || self.zone_resources > 0
+    }
+
+    pub fn area_resource_count(&self) -> usize {
+        self.room_resources + self.zone_resources
     }
 
     pub fn has_scene_actions(&self) -> bool {
         self.scene_actions > 0
     }
 
+    pub fn has_relationship_refs(&self) -> bool {
+        self.device_service_refs > 0 || self.area_child_refs > 0 || self.area_service_refs > 0
+    }
+
+    pub fn has_scene_state_projection(&self) -> bool {
+        self.stateful_scene_actions > 0 || self.desired_scene_state_fields > 0
+    }
+
     pub fn has_sensor_or_input_resources(&self) -> bool {
         self.motion_resources > 0 || self.button_resources > 0
+    }
+
+    pub fn sensor_or_input_resource_count(&self) -> usize {
+        self.motion_resources + self.button_resources
+    }
+
+    pub fn projectable_resource_count(&self) -> usize {
+        self.lighting_resource_count()
+            + self.scene_resources
+            + self.sensor_or_input_resource_count()
+    }
+
+    pub fn has_projectable_resources(&self) -> bool {
+        self.projectable_resource_count() > 0
     }
 
     pub fn has_state_projection(&self) -> bool {
@@ -306,6 +340,107 @@ impl HueSnapshotSummary {
             || self.motion_resources_with_state > 0
             || self.button_resources_with_state > 0
             || self.stateful_scene_actions > 0
+    }
+
+    pub fn has_partial_lighting_state_projection(&self) -> bool {
+        let lighting_resources = self.lighting_resource_count();
+        let stateful_lighting_resources =
+            self.stateful_light_resources + self.stateful_grouped_light_resources;
+        stateful_lighting_resources > 0 && stateful_lighting_resources < lighting_resources
+    }
+
+    pub fn readiness(self) -> HueSnapshotReadinessSummary {
+        HueSnapshotReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueSnapshotReadinessSummary {
+    pub snapshot_summary: HueSnapshotSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub bridge_identity_ready: bool,
+    pub lighting_surface_ready: bool,
+    pub relationship_refs_ready: bool,
+    pub scene_projection_ready: bool,
+    pub sensor_or_input_surface_ready: bool,
+    pub state_projection_ready: bool,
+    pub snapshot_ready: bool,
+}
+
+impl HueSnapshotReadinessSummary {
+    pub fn from_snapshot(snapshot: &HueSnapshot) -> Self {
+        Self::from_summary(snapshot.summary())
+    }
+
+    pub fn from_summary(snapshot_summary: HueSnapshotSummary) -> Self {
+        let bridge_identity_ready = snapshot_summary.bridge_resources > 0;
+        let lighting_surface_ready = snapshot_summary.has_lighting_resources();
+        let relationship_refs_ready = snapshot_summary.has_relationship_refs();
+        let scene_projection_ready = snapshot_summary.has_scene_state_projection();
+        let sensor_or_input_surface_ready = snapshot_summary.has_sensor_or_input_resources();
+        let state_projection_ready = snapshot_summary.has_state_projection();
+        let projectable_resources_ready = snapshot_summary.has_projectable_resources();
+        let checks = [
+            bridge_identity_ready,
+            lighting_surface_ready,
+            relationship_refs_ready,
+            scene_projection_ready,
+            sensor_or_input_surface_ready,
+            state_projection_ready,
+            projectable_resources_ready,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let snapshot_ready = missing_check_count == 0;
+
+        Self {
+            snapshot_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            bridge_identity_ready,
+            lighting_surface_ready,
+            relationship_refs_ready,
+            scene_projection_ready,
+            sensor_or_input_surface_ready,
+            state_projection_ready,
+            snapshot_ready,
+        }
+    }
+
+    pub fn is_snapshot_ready(self) -> bool {
+        self.snapshot_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_bridge_identity(self) -> bool {
+        !self.bridge_identity_ready
+    }
+
+    pub fn needs_lighting_surface(self) -> bool {
+        !self.lighting_surface_ready
+    }
+
+    pub fn needs_relationship_refs(self) -> bool {
+        !self.relationship_refs_ready
+    }
+
+    pub fn needs_scene_projection(self) -> bool {
+        !self.scene_projection_ready
+    }
+
+    pub fn needs_sensor_or_input_surface(self) -> bool {
+        !self.sensor_or_input_surface_ready
+    }
+
+    pub fn needs_state_projection(self) -> bool {
+        !self.state_projection_ready
     }
 }
 
@@ -410,6 +545,30 @@ impl HueEventStreamSummary {
 
     pub fn has_unknown_resource_items(&self) -> bool {
         self.unknown_resource_items > 0
+    }
+
+    pub fn typed_resource_item_count(&self) -> usize {
+        self.total_resource_items
+            .saturating_sub(self.unknown_resource_items)
+    }
+
+    pub fn has_typed_resource_items(&self) -> bool {
+        self.typed_resource_item_count() > 0
+    }
+
+    pub fn has_multiple_resource_types(&self) -> bool {
+        usize::from(self.bridge_resource_items > 0)
+            + usize::from(self.device_resource_items > 0)
+            + usize::from(self.light_resource_items > 0)
+            + usize::from(self.grouped_light_resource_items > 0)
+            + usize::from(self.room_resource_items > 0)
+            + usize::from(self.zone_resource_items > 0)
+            + usize::from(self.scene_resource_items > 0)
+            + usize::from(self.motion_resource_items > 0)
+            + usize::from(self.button_resource_items > 0)
+            + usize::from(self.smart_scene_resource_items > 0)
+            + usize::from(self.unknown_resource_items > 0)
+            > 1
     }
 
     fn record_resource_item(&mut self, resource: &JsonValue) {
@@ -651,6 +810,13 @@ impl<T: HueTransport> HueClient<T> {
         parse_light_state_updates_from_envelope(&envelope)
     }
 
+    pub fn get_grouped_light_state_updates(
+        &mut self,
+    ) -> Result<Vec<HueGroupedLightStateUpdate>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::GroupedLight)?;
+        parse_grouped_light_state_updates_from_envelope(&envelope)
+    }
+
     pub fn get_motion_state_updates(
         &mut self,
     ) -> Result<Vec<HueMotionStateUpdate>, HueClientError> {
@@ -665,12 +831,28 @@ impl<T: HueTransport> HueClient<T> {
         parse_button_state_updates_from_envelope(&envelope)
     }
 
+    pub fn get_state_updates(&mut self) -> Result<Vec<HueStateUpdate>, HueClientError> {
+        let envelope = self.get_resources()?;
+        parse_state_updates_from_envelope(&envelope)
+    }
+
     pub fn send_command(&mut self, command: HueCommand) -> Result<HueEnvelope, HueClientError> {
         let request = command.to_request();
         let response = self
             .transport
             .send(hue_request_to_http(request, Some(self.application_key()?))?)?;
         parse_envelope_response(response)
+    }
+
+    pub fn send_command_plan(
+        &mut self,
+        plan: &HueCommandPlan,
+    ) -> Result<Vec<HueEnvelope>, HueClientError> {
+        if plan.is_empty() {
+            return Ok(Vec::new());
+        }
+        let application_key = self.application_key()?.to_string();
+        send_command_plan(&mut self.transport, &application_key, plan)
     }
 
     pub fn event_stream_request(&self) -> Result<HueHttpRequest, HueClientError> {
@@ -756,6 +938,22 @@ pub fn event_stream_request(application_key: &str) -> Result<HueHttpRequest, Hue
         value: ACCEPT_EVENT_STREAM.to_string(),
     });
     Ok(request)
+}
+
+pub fn send_command_plan<T: HueTransport>(
+    transport: &mut T,
+    application_key: &str,
+    plan: &HueCommandPlan,
+) -> Result<Vec<HueEnvelope>, HueClientError> {
+    let mut envelopes = Vec::with_capacity(plan.commands.len());
+    for command in &plan.commands {
+        let response = transport.send(hue_request_to_http(
+            command.to_request(),
+            Some(application_key),
+        )?)?;
+        envelopes.push(parse_envelope_response(response)?);
+    }
+    Ok(envelopes)
 }
 
 pub fn hue_request_to_http(
@@ -1103,6 +1301,18 @@ pub fn parse_button_state_updates_from_envelope(
     Ok(updates)
 }
 
+pub fn parse_state_updates_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for resource in &envelope.data {
+        if let Some(update) = parse_state_update(resource)? {
+            updates.push(update);
+        }
+    }
+    Ok(updates)
+}
+
 pub fn parse_light_state_updates_from_event_batches(
     batches: &[HueEventStreamBatch],
 ) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
@@ -1168,6 +1378,22 @@ pub fn parse_button_state_updates_from_event_batches(
                     == Some(HueResourceType::Button.as_hue_type())
                 {
                     updates.push(parse_button_state_update(resource)?);
+                }
+            }
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_state_updates_from_event_batches(
+    batches: &[HueEventStreamBatch],
+) -> Result<Vec<HueStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for batch in batches {
+        for event in &batch.events {
+            for resource in &event.data {
+                if let Some(update) = parse_state_update(resource)? {
+                    updates.push(update);
                 }
             }
         }
@@ -1327,6 +1553,29 @@ fn parse_light_state_update(resource: &JsonValue) -> Result<HueLightStateUpdate,
         brightness,
         color_temperature_mirek,
     })
+}
+
+fn parse_state_update(resource: &JsonValue) -> Result<Option<HueStateUpdate>, HueClientError> {
+    let Some(resource_type) =
+        object_string_field(resource, "type").map(HueResourceType::from_hue_type)
+    else {
+        return Ok(None);
+    };
+    match resource_type {
+        HueResourceType::Light => parse_light_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        HueResourceType::GroupedLight => parse_grouped_light_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        HueResourceType::Motion => parse_motion_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        HueResourceType::Button => parse_button_state_update(resource)
+            .map(HueStateUpdate::from)
+            .map(Some),
+        _ => Ok(None),
+    }
 }
 
 fn parse_grouped_light_state_update(
@@ -1740,9 +1989,13 @@ mod tests {
 
     impl RecordingTransport {
         fn with_response(body: &'static str) -> Self {
+            Self::with_responses(vec![HueHttpResponse::json(200, body.as_bytes())])
+        }
+
+        fn with_responses(responses: Vec<HueHttpResponse>) -> Self {
             Self {
                 requests: Vec::new(),
-                responses: vec![HueHttpResponse::json(200, body.as_bytes())],
+                responses,
             }
         }
     }
@@ -1809,6 +2062,75 @@ mod tests {
             hue_request_to_http(command.to_request(), Some("app-key")),
             Err(HueClientError::InvalidRequest { .. })
         ));
+    }
+
+    #[test]
+    fn client_sends_command_plan_in_order() {
+        let plan = HueCommandPlan {
+            target: HueResourceRef::new(HueResourceType::Light, HueResourceId::trusted("light-1")),
+            commands: vec![
+                HueCommand::SetLightOn {
+                    light_id: HueResourceId::trusted("light-1"),
+                    on: true,
+                },
+                HueCommand::SetLightBrightness {
+                    light_id: HueResourceId::trusted("light-1"),
+                    brightness: 42,
+                },
+            ],
+            ignored_capability_ids: Vec::new(),
+        };
+        let transport = RecordingTransport::with_responses(vec![
+            HueHttpResponse::json(200, br#"{"data":[{"rid":"on"}],"errors":[]}"#.to_vec()),
+            HueHttpResponse::json(
+                200,
+                br#"{"data":[{"rid":"brightness"}],"errors":[]}"#.to_vec(),
+            ),
+        ]);
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let envelopes = client.send_command_plan(&plan).unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(envelopes.len(), 2);
+        assert_eq!(
+            object_string_field(&envelopes[0].data[0], "rid"),
+            Some("on")
+        );
+        assert_eq!(
+            object_string_field(&envelopes[1].data[0], "rid"),
+            Some("brightness")
+        );
+        assert_eq!(transport.requests.len(), 2);
+        assert_eq!(transport.requests[0].method, HueMethod::Put);
+        assert_eq!(
+            transport.requests[0].path,
+            "/clip/v2/resource/light/light-1"
+        );
+        assert_eq!(
+            std::str::from_utf8(&transport.requests[0].body).unwrap(),
+            r#"{"on":{"on":true}}"#
+        );
+        assert_eq!(
+            std::str::from_utf8(&transport.requests[1].body).unwrap(),
+            r#"{"dimming":{"brightness":42}}"#
+        );
+    }
+
+    #[test]
+    fn client_empty_command_plan_is_noop_without_application_key() {
+        let plan = HueCommandPlan::empty(HueResourceRef::new(
+            HueResourceType::Light,
+            HueResourceId::trusted("light-1"),
+        ));
+        let transport = RecordingTransport::default();
+        let mut client = HueClient::new(HueClientConfig::default(), transport);
+
+        let envelopes = client.send_command_plan(&plan).unwrap();
+        let transport = client.into_transport();
+
+        assert!(envelopes.is_empty());
+        assert!(transport.requests.is_empty());
     }
 
     #[test]
@@ -1885,6 +2207,9 @@ mod tests {
         assert!(summary.has_resource_items());
         assert!(summary.has_empty_records());
         assert!(summary.has_unknown_resource_items());
+        assert_eq!(summary.typed_resource_item_count(), 2);
+        assert!(summary.has_typed_resource_items());
+        assert!(summary.has_multiple_resource_types());
 
         let empty = HueEventStreamSummary::empty();
         assert!(empty.is_empty());
@@ -1892,6 +2217,9 @@ mod tests {
         assert!(!empty.has_resource_items());
         assert!(!empty.has_empty_records());
         assert!(!empty.has_unknown_resource_items());
+        assert_eq!(empty.typed_resource_item_count(), 0);
+        assert!(!empty.has_typed_resource_items());
+        assert!(!empty.has_multiple_resource_types());
     }
 
     #[test]
@@ -2018,6 +2346,30 @@ mod tests {
     }
 
     #[test]
+    fn parses_unified_state_updates_from_event_stream_batches() {
+        let batches = parse_event_stream(
+            b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[{\"id\":\"button-1\",\"type\":\"button\",\"button\":{\"last_event\":\"short_release\"}},{\"id\":\"grouped-light-1\",\"type\":\"grouped_light\",\"dimming\":{\"brightness\":67}},{\"id\":\"light-1\",\"type\":\"light\",\"on\":{\"on\":false}},{\"id\":\"motion-1\",\"type\":\"motion\",\"motion\":{\"motion\":true}}]}]\n\n",
+        )
+        .unwrap();
+
+        let updates = parse_state_updates_from_event_batches(&batches).unwrap();
+
+        assert_eq!(updates.len(), 4);
+        assert!(matches!(updates[0], HueStateUpdate::Button(_)));
+        assert!(matches!(updates[1], HueStateUpdate::GroupedLight(_)));
+        assert!(matches!(updates[2], HueStateUpdate::Light(_)));
+        assert!(matches!(updates[3], HueStateUpdate::Motion(_)));
+        assert!(updates.iter().all(HueStateUpdate::has_state));
+        assert_eq!(
+            updates
+                .iter()
+                .flat_map(HueStateUpdate::state_deltas)
+                .count(),
+            4
+        );
+    }
+
+    #[test]
     fn event_stream_parser_accepts_multiline_data() {
         let batches = parse_event_stream(
             b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[]}\ndata: ,{\"id\":\"event-2\",\"type\":\"add\",\"data\":[]}]\n\n",
@@ -2102,6 +2454,48 @@ mod tests {
             transport.requests[0].path,
             "/clip/v2/resource/grouped_light"
         );
+    }
+
+    #[test]
+    fn client_reads_grouped_light_state_updates_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"grouped-light-1","type":"grouped_light","metadata":{"name":"Kitchen"},"owner":{"rid":"room-1","rtype":"room"},"on":{"on":true},"dimming":{"brightness":84}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let updates = client.get_grouped_light_state_updates().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(updates.len(), 1);
+        assert_eq!(updates[0].id.as_str(), "grouped-light-1");
+        assert_eq!(updates[0].name.as_deref(), Some("Kitchen"));
+        assert_eq!(updates[0].on, Some(true));
+        assert_eq!(updates[0].brightness, Some(84));
+        assert_eq!(updates[0].state_deltas().len(), 2);
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(
+            transport.requests[0].path,
+            "/clip/v2/resource/grouped_light"
+        );
+    }
+
+    #[test]
+    fn client_reads_unified_state_updates_through_single_snapshot_request() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"motion-1","type":"motion","motion":{"motion":false}},{"id":"light-1","type":"light","on":{"on":true}},{"id":"button-1","type":"button","button":{"last_event":"initial_press"}},{"id":"grouped-light-1","type":"grouped_light","dimming":{"brightness":84}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let updates = client.get_state_updates().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(updates.len(), 4);
+        assert_eq!(updates[0].resource_type(), HueResourceType::Motion);
+        assert_eq!(updates[1].resource_type(), HueResourceType::Light);
+        assert_eq!(updates[2].resource_type(), HueResourceType::Button);
+        assert_eq!(updates[3].resource_type(), HueResourceType::GroupedLight);
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource");
     }
 
     #[test]
@@ -2283,18 +2677,85 @@ mod tests {
         );
         assert!(!summary.is_empty());
         assert!(summary.has_lighting_resources());
+        assert_eq!(summary.lighting_resource_count(), 2);
+        assert!(summary.mixes_direct_and_grouped_light_resources());
         assert!(summary.has_area_resources());
+        assert_eq!(summary.area_resource_count(), 2);
         assert!(summary.has_scene_actions());
+        assert!(summary.has_relationship_refs());
+        assert!(summary.has_scene_state_projection());
         assert!(summary.has_sensor_or_input_resources());
+        assert_eq!(summary.sensor_or_input_resource_count(), 2);
+        assert_eq!(summary.projectable_resource_count(), 5);
+        assert!(summary.has_projectable_resources());
         assert!(summary.has_state_projection());
+        assert!(!summary.has_partial_lighting_state_projection());
+        let readiness = summary.readiness();
+        assert_eq!(readiness.snapshot_summary, summary);
+        assert_eq!(readiness.required_check_count, 7);
+        assert_eq!(readiness.passed_check_count, 7);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.bridge_identity_ready);
+        assert!(readiness.lighting_surface_ready);
+        assert!(readiness.relationship_refs_ready);
+        assert!(readiness.scene_projection_ready);
+        assert!(readiness.sensor_or_input_surface_ready);
+        assert!(readiness.state_projection_ready);
+        assert!(readiness.snapshot_ready);
+        assert!(readiness.is_snapshot_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_bridge_identity());
+        assert!(!readiness.needs_lighting_surface());
+        assert!(!readiness.needs_relationship_refs());
+        assert!(!readiness.needs_scene_projection());
+        assert!(!readiness.needs_sensor_or_input_surface());
+        assert!(!readiness.needs_state_projection());
 
         let empty = HueSnapshotSummary::empty();
         assert!(empty.is_empty());
         assert!(!empty.has_lighting_resources());
+        assert_eq!(empty.lighting_resource_count(), 0);
+        assert!(!empty.mixes_direct_and_grouped_light_resources());
         assert!(!empty.has_area_resources());
+        assert_eq!(empty.area_resource_count(), 0);
         assert!(!empty.has_scene_actions());
+        assert!(!empty.has_relationship_refs());
+        assert!(!empty.has_scene_state_projection());
         assert!(!empty.has_sensor_or_input_resources());
+        assert_eq!(empty.sensor_or_input_resource_count(), 0);
+        assert_eq!(empty.projectable_resource_count(), 0);
+        assert!(!empty.has_projectable_resources());
         assert!(!empty.has_state_projection());
+        assert!(!empty.has_partial_lighting_state_projection());
+
+        let partial_lighting = HueSnapshotSummary {
+            light_resources: 2,
+            grouped_light_resources: 1,
+            stateful_light_resources: 1,
+            ..HueSnapshotSummary::empty()
+        };
+        assert_eq!(partial_lighting.lighting_resource_count(), 3);
+        assert!(partial_lighting.mixes_direct_and_grouped_light_resources());
+        assert!(partial_lighting.has_partial_lighting_state_projection());
+        let partial_readiness = HueSnapshotReadinessSummary::from_summary(partial_lighting);
+        assert_eq!(partial_readiness.required_check_count, 7);
+        assert_eq!(partial_readiness.passed_check_count, 3);
+        assert_eq!(partial_readiness.missing_check_count, 4);
+        assert!(!partial_readiness.bridge_identity_ready);
+        assert!(partial_readiness.lighting_surface_ready);
+        assert!(!partial_readiness.relationship_refs_ready);
+        assert!(!partial_readiness.scene_projection_ready);
+        assert!(!partial_readiness.sensor_or_input_surface_ready);
+        assert!(partial_readiness.state_projection_ready);
+        assert!(!partial_readiness.snapshot_ready);
+        assert!(!partial_readiness.is_snapshot_ready());
+        assert!(partial_readiness.has_missing_checks());
+        assert!(partial_readiness.needs_bridge_identity());
+        assert!(!partial_readiness.needs_lighting_surface());
+        assert!(partial_readiness.needs_relationship_refs());
+        assert!(partial_readiness.needs_scene_projection());
+        assert!(partial_readiness.needs_sensor_or_input_surface());
+        assert!(!partial_readiness.needs_state_projection());
     }
 
     #[test]
@@ -2553,6 +3014,34 @@ mod tests {
         assert_eq!(updates[0].id.as_str(), "light-1");
         assert_eq!(updates[0].on, Some(true));
         assert!(updates[0].has_state());
+    }
+
+    #[test]
+    fn parses_unified_state_updates_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"light-1","type":"light","on":{"on":true}},{"id":"grouped-light-1","type":"grouped_light","dimming":{"brightness":84}},{"id":"motion-1","type":"motion","motion":{"motion":false}},{"id":"button-1","type":"button","button":{"last_event":"initial_press"}},{"id":"room-1","type":"room"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let updates = parse_state_updates_from_envelope(&envelope).unwrap();
+
+        assert_eq!(updates.len(), 4);
+        assert_eq!(
+            updates[0].summary().resource.resource_type,
+            HueResourceType::Light
+        );
+        assert_eq!(
+            updates[1].summary().resource.resource_type,
+            HueResourceType::GroupedLight
+        );
+        assert_eq!(
+            updates[2].summary().resource.resource_type,
+            HueResourceType::Motion
+        );
+        assert_eq!(
+            updates[3].summary().resource.resource_type,
+            HueResourceType::Button
+        );
     }
 
     #[test]

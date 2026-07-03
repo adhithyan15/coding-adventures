@@ -1,0 +1,20 @@
+[package]
+name = "conduit-capi"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable C ABI for the Conduit web framework (web-core/WEB08) — consumed by Swift, C++, Go, C#, F#, Dart, Haskell"
+publish = false
+
+[lib]
+# staticlib (.a) — compile-time linking for Swift Package Manager / C++ / Haskell
+# cdylib     (.so/.dylib/.dll) — dynamic linking for Go (cgo), .NET P/Invoke, Dart FFI
+# lib        — so `cargo test --lib` can exercise the pure-Rust helpers (header_safe,
+#              pct/utf8 handling) without building the C artifacts.
+crate-type = ["staticlib", "cdylib", "lib"]
+name = "conduit_capi"
+
+[dependencies]
+conduit                = { path = "../conduit" }
+web-core               = { path = "../web-core" }
+embeddable-http-server = { path = "../embeddable-http-server" }
+tcp-runtime            = { path = "../tcp-runtime" }

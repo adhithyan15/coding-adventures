@@ -1,0 +1,7 @@
+[
+  {"type": "KEYWORD", "value": "var"},
+  {"type": "NAME", "value": "x"},
+  {"type": "EQUALS", "value": "="},
+  {"type": "NUMBER", "value": "1"},
+  {"type": "SEMICOLON", "value": ";"}
+]

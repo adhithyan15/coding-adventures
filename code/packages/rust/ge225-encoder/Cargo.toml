@@ -1,0 +1,11 @@
+[package]
+name = "ge225-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust GE-225 instruction encoder.  Covers the 12 opcodes the LANG VM ge225-backend uses to lower CIR to 20-bit GE-225 instruction words (packed 3 bytes per word, big-endian, top 4 bits of byte 0 always zero).  No IR knowledge — consumed by `ge225-backend` to produce machine code, by `ge225-simulator` for round-trip testing, and by any downstream decoder.  The GE-225 (1959) was the General Electric mainframe at Dartmouth College where Dartmouth BASIC was DESIGNED in 1964 by Kemeny and Kurtz.  Mirror of `aarch64-encoder` / `x86_64-encoder` in shape and intent — see code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
+
+[lib]
+name = "ge225_encoder"
+path = "src/lib.rs"
+
+[dependencies]

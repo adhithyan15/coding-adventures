@@ -1,0 +1,37 @@
+{
+  "model": "llama3.1:8b",
+  "n_cases": 4,
+  "decompose_calls": 4,
+  "answer_time_model_calls": 0,
+  "passed": 3,
+  "cases": [
+    {
+      "id": "relief_allocation",
+      "solver_path": "maximize",
+      "compiled": true,
+      "passed": true,
+      "detail": "value 44 vs 44"
+    },
+    {
+      "id": "workshop_break_even",
+      "solver_path": "solve",
+      "compiled": true,
+      "passed": false,
+      "detail": "expected solved, got unsupported"
+    },
+    {
+      "id": "schedule_feasibility",
+      "solver_path": "check",
+      "compiled": true,
+      "passed": true,
+      "detail": "check unsat vs unsat"
+    },
+    {
+      "id": "production_cost",
+      "solver_path": "minimize",
+      "compiled": true,
+      "passed": true,
+      "detail": "value 980 vs 980"
+    }
+  ]
+}

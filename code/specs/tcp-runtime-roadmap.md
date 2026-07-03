@@ -311,19 +311,43 @@ well-controlled transport engine.
 The current `tcp-reactor` proves correctness and architecture, but a serious
 runtime needs a scaling story.
 
-Missing pieces:
-
-- one-reactor-per-core or one-reactor-per-shard architecture
-- listener sharding policy
-- connection affinity policy
-- cross-thread wakeups
-- lock-minimal metrics and connection handoff paths
-
-The key decision:
+The key decision (held to):
 
 - keep each connection owned by exactly one reactor thread
 - communicate across reactors with explicit wakeups and queues, not shared
   mutable connection state
+
+Status:
+
+- **Done** — one-reactor-per-shard architecture (`ShardedTcpRuntime`: N reactors
+  on N threads, each with its own kqueue/epoll/IOCP instance).
+- **Done** — listener sharding policy. On Linux, `SO_REUSEPORT` is auto-enabled
+  when `worker_count > 1` and the kernel load-balances accepts across the
+  per-shard listeners. On macOS/BSD, where plain `SO_REUSEPORT` does *not*
+  load-balance (it delivers every connection to one socket — measured by
+  `sharded-echo-bench`, which showed `[0% … 100%]` shard balance), the runtime
+  instead uses an explicit **accept fan-out**: one acceptor owns the listener and
+  round-robins each accepted socket to a worker reactor via `adopt_stream` /
+  `StreamMailbox::adopt_connection`. With the fan-out the macOS shard balance is
+  even (`[13% × 8]`).
+- **Done** — connection affinity / routing. Each reactor stamps its shard index
+  into the low `shard_bits` of every `ConnectionId`
+  (`id = (sequence << shard_bits) | shard_index`), so `TcpMailbox` routes an
+  off-reactor write to the one owning reactor with a single mask — no shared
+  registry and no O(N) broadcast. This replaced the earlier shared-`AtomicU64`
+  connection-id seed.
+- **Done** — cross-thread wakeups. `transport-platform` exposes a `Send + Sync`
+  `WakeHandle` (a duplicated kqueue fd / `eventfd`); each reactor hands one to its
+  mailbox, which fires it on enqueue so an off-reactor write interrupts `poll` and
+  flushes in milliseconds instead of waiting the poll timeout. macOS/Linux only so
+  far; Windows/IOCP falls back to the poll timeout (a follow-up). Validated under
+  ThreadSanitizer.
+
+Missing pieces:
+
+- IOCP cross-thread wake (share the completion port so `PostQueuedCompletionStatus`
+  can fire from a `WakeHandle`)
+- lock-minimal metrics and connection handoff paths
 
 ### 5. Hardening, observability, and benchmarking
 

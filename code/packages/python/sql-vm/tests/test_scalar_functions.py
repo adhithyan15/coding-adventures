@@ -226,11 +226,17 @@ class TestCast:
     def test_cast_float_to_text(self) -> None:
         assert fn("cast", 3.14, "text") == "3.14"
 
-    def test_cast_blob_to_text_is_hex(self) -> None:
-        # bytes → hex string per our CAST implementation.
-        result = fn("cast", b"\xde\xad", "text")
-        assert isinstance(result, str)
-        assert result.lower() == "dead"
+    def test_cast_blob_to_text_utf8_decodes(self) -> None:
+        # bytes → UTF-8-decoded text (matches SQLite, replaces the
+        # earlier hex-encoding behaviour as of sql-vm 1.59.0).
+        assert fn("cast", b"Hello", "text") == "Hello"
+        assert fn("cast", b"42", "text") == "42"
+        # Empty BLOB round-trips to empty string.
+        assert fn("cast", b"", "text") == ""
+        # Invalid UTF-8 bytes are replaced with U+FFFD rather than
+        # raising — keeps the cast total and matches SQLite's
+        # "decode lazily, never error mid-query" stance.
+        assert fn("cast", b"\xff", "text") == "�"
 
     def test_cast_string_to_blob(self) -> None:
         result = fn("cast", "hi", "blob")

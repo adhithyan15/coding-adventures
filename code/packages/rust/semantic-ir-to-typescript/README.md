@@ -46,6 +46,23 @@ The TypeScript backend accepts these SIR features:
   `__Sir.Val`; type-narrowing in generated code is a future change.
 - `MutualRecursion` — JS hoisting handles this naturally.
 - `Globals` — module-level `let` + a `_init()` invocation.
+- `DefaultParams` (P2b) — a parameter's default lowers to a TypeScript-native
+  default: `name: __Sir.Val = <default>`. The SIR semantics (evaluated per call
+  in the callee's parameter scope, free to reference *earlier* params) match TS
+  native defaults exactly, so it is a direct inline. A `DirectCall` may omit
+  trailing defaulted arguments; the emitter emits only the args present (no
+  padding) and the native default fills the rest. So `def f(a, b = a + 1)`
+  emits `function f(a: __Sir.Val, b: __Sir.Val = __Sir.add(a, 1))`, and `f(5)`
+  emits `f(5)`.
+- `KeywordParams` (KW3) — keyword parameters and arguments lower to the
+  conventional "options object". TypeScript has no native keyword arguments, so
+  a function's `Keyword` params collapse into ONE trailing `__kw` parameter,
+  destructured in the body prologue (required keyword → bare name, optional →
+  its default): `def f(a, x:, y: 1)` emits
+  `function f(a: __Sir.Val, __kw: __Sir.Val)` with
+  `const { x, y = 1 } = (__kw ?? {}) as { [k: string]: __Sir.Val };`. On the
+  call side every `KeywordArg` collapses into one trailing object literal:
+  `f(1, y: 2)` emits `f(1, { y: 2 })`. Direct lowering, no runtime helper.
 
 It **rejects**:
 

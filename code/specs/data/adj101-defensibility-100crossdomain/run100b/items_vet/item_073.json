@@ -1,0 +1,8 @@
+{
+ "idx": 73,
+ "policy": "Imported goods that originate in a country with which the importing nation has a Free Trade Agreement (FTA) are eligible for a 0% preferential duty rate, provided the importer presents a valid Certificate of Origin at the time of entry. Without a valid Certificate of Origin, the standard 6% duty rate applies regardless of where the goods were made.",
+ "scenario": "Brightline Apparel imports cotton shirts manufactured in Calavia, a country that has a Free Trade Agreement with the importing nation. The shirts have a declared customs value of $80,000 and the goods clearly qualify as originating in Calavia under the FTA's rules of origin.",
+ "question": "What duty rate applies to Brightline's shirts?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether a valid Certificate of Origin was presented"
+}

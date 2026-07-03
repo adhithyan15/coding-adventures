@@ -1,0 +1,8 @@
+{
+ "check_id": 137,
+ "idx": 53,
+ "slot": "late_fee_amount",
+ "claimed_value": 40,
+ "scenario": "Rent was due on the 1st. Marcus paid on the 9th, eight days late. The landlord assessed a $40 late fee. The lease is a written, signed residential lease.",
+ "cited_span": "The landlord assessed a $40 late fee"
+}

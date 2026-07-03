@@ -1,0 +1,23 @@
+% ============================================================================
+% rheum-recall.query.adj — a worked recall query over the rheumatology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a rheumatology recall question:
+% it states no immunologic fact — it only `import`s the grounded library and asks
+% binding queries. The native adj-lang engine resolves each `?` against the imported
+% `relate` edges and returns the binding + the citing clause's source/locator/trust.
+% All knowledge is in the library; none is here. (A disease with several markers binds
+% multiple answers — the engine returns each with its own citation.)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli rheum-recall.query.adj
+% ============================================================================
+
+import "rheum-edges.adj"
+
+? associated_autoantibody(systemic_lupus_erythematosus, $Antibody)   % expect anti_dsdna / anti_smith / anti_ribosomal_p
+? associated_autoantibody(granulomatosis_with_polyangiitis, $Antibody)  % expect pr3
+? associated_autoantibody(systemic_sclerosis, $Antibody)             % expect anti_scl70 / anti_centromere
+? associated_autoantibody(rheumatoid_arthritis, $Antibody)           % expect anti_ccp        (backfill)
+? associated_autoantibody(sjogren_syndrome, $Antibody)               % expect anti_ro / anti_la (backfill)
+? associated_autoantibody(primary_biliary_cholangitis, $Antibody)    % expect anti_mitochondrial (backfill)
+? associated_autoantibody(dermatomyositis, $Antibody)                % expect anti_jo1 (backfill)

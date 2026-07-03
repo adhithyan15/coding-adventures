@@ -2,6 +2,286 @@
 
 ## Unreleased
 
+### Added — MX10 benchmark / profiling script
+
+Adds `scripts/benchmark_mx10.py` — a standalone runnable script (not
+a pytest test) that times each MX10-dispatched op on both the Rust
+and pure-Python paths and reports a markdown table with per-op
+median wallclock and speedup ratio.
+
+#### Usage
+
+```bash
+# Compare both paths side-by-side (requires C extension):
+python scripts/benchmark_mx10.py
+
+# Pure-Python only (works without the extension):
+python scripts/benchmark_mx10.py --mode fallback
+
+# Rust only:
+python scripts/benchmark_mx10.py --mode rust
+
+# CI smoke-test mode (N=2 iterations, no warmup):
+python scripts/benchmark_mx10.py --quick
+```
+
+#### What gets benchmarked
+
+Every op that received an MX10 Rust fast path:
+
+- **Matmul**: 200×200 @ 200×200 = 8M multiply-adds (≫ 4096 threshold)
+- **Activations forward**: ReLU, Sigmoid, Tanh, GELU, Softmax — all
+  on `(500, 200) = 100_000`-cell tensors
+- **Activations forward+backward**: same five, full SGD-step cost
+- **Reductions forward**: Sum/Mean reduce-all + axis-specific
+- **Reductions forward+backward**: reduce-all and axis-specific
+- **Elementwise backward**: Mul, Div (the two with real arithmetic)
+- **PowFunction**: scalar exponent forward+backward
+
+#### Methodology
+
+- **Dispatch path toggled** via the same
+  `_rust_backend._RUST_AVAILABLE` flag the parity tests use, so the
+  two paths exercise the identical envelope/dispatch machinery they
+  do in production.
+- **`time.perf_counter()`** for monotonic high-resolution timing.
+- **2 warmup iterations** (discarded) + **10 timed iterations** by
+  default; `--quick` cuts to 2 iterations no warmup for CI.
+- **Median** of timed iterations to suppress GC-pause and
+  OS-scheduling outliers without needing a huge iteration count.
+
+#### Graceful degradation
+
+If `coding_adventures_matrix_rust_python` isn't installed, the script
+prints a warning to stderr and automatically falls back to
+`--mode fallback` so it produces useful output on any machine.  The
+table header adapts: single column for one-path runs, three columns
+(both + speedup) when both are measured.
+
+#### Smoke-tested on darwin-arm64
+
+The `--quick --mode fallback` smoke test runs all 20 benchmark cases
+in ~5 seconds total and produces a clean markdown table with no
+errors — confirms the dispatch hooks, autograd integration, and
+timing harness all work end-to-end without the C extension.  When
+the extension is available, the same invocation drops to `--mode
+both` and reports speedup ratios per op.
+
+### Added — MX11 implementation: NumPy interop for `Tensor`
+
+Implements the spec from `code/specs/MX11-numpy-interop.md` (landed
+in a prior PR).  Three new methods on `Tensor`:
+
+- `Tensor.from_numpy(arr, *, requires_grad=False, device=None)` —
+  classmethod; copies the ndarray into a new Tensor.
+- `Tensor.to_numpy()` — instance method; returns a fresh `np.float64`
+  copy.
+- `Tensor.numpy()` — PyTorch-style alias for `to_numpy()`.
+
+#### Behaviour summary (full contract in the spec)
+
+- **Soft dependency on numpy.**  Try/except `import numpy as np` at
+  call time inside each method; on `ImportError` we re-raise with the
+  message `"numpy is required for Tensor.{from,to}_numpy; install it
+  with 'pip install numpy'"`.  The package itself imports cleanly
+  without numpy installed.
+- **Both directions copy.**  No view sharing; mutating the returned
+  ndarray does not affect the source Tensor and vice versa.
+- **Output dtype always f64.**  Callers cast with
+  `arr.astype(np.float32)` if they need f32.
+- **0-d arrays → shape `(1,)`** to match the
+  `SumFunction(dim=None)` scalar convention.
+- **Empty arrays → ValueError** (Tensor's `numel >= 1` invariant).
+- **Unsupported dtypes** (complex/object/string/structured) →
+  `TypeError` with a message listing the supported set
+  (floats/ints/uints/bool).
+- **Non-contiguous arrays** are copied via `np.ascontiguousarray`
+  before flattening — transposed/strided inputs round-trip with the
+  expected C-order layout.
+
+#### Tests
+
+- `tests/test_numpy_interop.py` — 17 round-trip and error-case tests
+  (skip if numpy isn't installed; matches the
+  `test_rust_backend_parity.py` skip pattern).  Covers each numpy
+  dtype in the spec's matrix, the unsupported-dtype error paths,
+  empty/scalar/non-contiguous edge cases, copy-not-view, dtype-is-f64,
+  and the `requires_grad`/`device` parameter propagation.
+- `tests/test_numpy_interop_no_numpy.py` — 2 tests that **always
+  run**.  Monkey-patch `sys.modules["numpy"] = None`, call
+  `Tensor.from_numpy(...)` and `t.to_numpy()`, confirm each raises
+  `ImportError` with `"pip install numpy"` in the message.
+
+Full suite locally: **388 passed + 57 skipped** + the pre-existing
+`test_device.py` failure that's on main throughout this work.
+
+### Added — MX11 spec: NumPy interop for `Tensor`
+
+Spec-only PR (`code/specs/MX11-numpy-interop.md`) defining the
+public API for round-tripping `ml-framework-core.Tensor` ↔ `numpy.ndarray`.
+Implementation follows in a separate MX11-impl PR.
+
+#### Public API surface
+
+- `Tensor.from_numpy(arr, *, requires_grad=False, device=None)` —
+  classmethod; copies the ndarray into a new Tensor; raises
+  `ImportError` if numpy isn't installed, `TypeError` for unsupported
+  dtypes, `ValueError` for empty arrays.
+- `Tensor.to_numpy()` — instance method; always returns a fresh
+  `np.float64` copy.
+- `Tensor.numpy()` — PyTorch-style alias for `to_numpy()`.
+
+#### Key design decisions
+
+- **Numpy is a soft dependency.**  Not in `install_requires`; resolved
+  via try/except `import numpy` at call time so the package imports
+  cleanly without numpy installed.
+- **Copying both directions.**  Zero-copy views would need a Tensor
+  storage rewrite (`list[float]` → `array.array('d')` or numpy-backed
+  buffer) — out of scope for MX11.  `O(numel)` copy cost is acceptable
+  at the dataset I/O boundary.
+- **Output dtype always f64** to match Tensor's internal precision;
+  callers cast with `arr.astype(np.float32)` if they want f32.
+- **0-d arrays → shape `(1,)`** to match the existing
+  `SumFunction.forward(dim=None)` scalar convention.
+- **Empty arrays → `ValueError`** because Tensor's `numel >= 1`
+  invariant.
+- **Unsupported dtypes** (complex, object, string): `TypeError` with
+  a message explaining the supported set.
+
+#### What's NOT in MX11
+
+- `Tensor.from_torch` / `Tensor.from_jax` — same pattern for other
+  frameworks; each gets its own spec/PR if useful.
+- Zero-copy / view semantics — Tensor storage redesign required.
+- Multi-dim shape with `(0,)` cells — empty tensors aren't a thing
+  in `ml-framework-core` today.
+- In-place numpy operations — doesn't fit the pure-Python
+  immutable-Tensor autograd contract.
+
+The full test plan (16 tests + the no-numpy `ImportError` test) is
+spelled out in the spec.  Implementation sketch in the spec is ~30
+LOC of straightforward Python.
+
+### Added — MX10 Phase 2-back: optional Rust fast path for `MulFunction.backward` + `DivFunction.backward`
+
+Wires the two elementwise backwards where the FFI round-trip is
+actually worth paying.  Add/Sub/Neg backwards are pass-through or
+negation only — pure-Python list comprehensions beat the dispatch
+for those.  Mul and Div are the two cases with real arithmetic
+per cell:
+
+- `MulFunction.backward`: `grad_a = g * b`, `grad_b = g * a` (2 muls per pair)
+- `DivFunction.backward`: `grad_a = g / b`, `grad_b = -g * a / b²` (1 div + 1 mul + 1 div + 1 mul + 1 neg)
+
+#### First helpers to use matrix-ir-json's multi-output graphs
+
+Both backwards need to produce **two** output tensors (grad_a and
+grad_b).  Earlier MX10 helpers all had single outputs.
+matrix-ir-json's `outputs` field is already a list — so both
+helpers ship a single envelope with two output tensor IDs and
+unpack them as a `(Tensor, Tensor)` tuple from one FFI call.  No
+schema change needed.
+
+#### Graph topologies
+
+```
+MulFunction.backward (2 ops, 5 tensors):
+  g ─┬─Mul(g, b)──> grad_a
+  b ─┘
+  Mul(g, a)──> grad_b
+
+DivFunction.backward (5 ops, 8 tensors):
+  Div(g, b)──> grad_a
+  Mul(b, b)──> b²
+  Div(g, b²)──> t1
+  Mul(t1, a)──> t2
+  Neg(t2)──> grad_b
+```
+
+#### `requires_grad` handling
+
+The dispatch still respects `requires_grad`: if only one of the
+two inputs needs a gradient, we still call the helper (cheaper to
+compute both grads in one FFI call than two), then return `None`
+for the side that doesn't need it.  Preserves the existing
+backward contract.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000`, either input requires grad | **Rust** (one 2-op or 5-op envelope, two outputs) |
+| Extension installed, `numel < 100_000` | Pure-Python list comp |
+| Extension NOT installed | Pure-Python list comp |
+| Neither input requires grad | Skip entirely (existing autograd behaviour) |
+
+#### What's NOT in Phase 2-back
+
+- **Add/Sub/Neg/Abs backwards**: trivial scalar arithmetic
+  (`grad`, `-grad`, `-grad`, `grad * sign(x)`).  Likely net-loss
+  vs the FFI overhead even at 100_000 cells — kept pure-Python.
+
+#### Tests (98 total MX10 tests, was 92)
+
+- **`ElementwiseBackwardParityTests`** (2 cases, skip if extension
+  missing): forward+backward parity for `(a * b).backward(grad)`
+  and `(a / b).backward(grad)` at `(500, 200) = 100_000` cells.
+  Both inputs require grad so we exercise the full two-output
+  envelope.  Standard `rtol=1e-3, atol=1e-4`.
+- **`ElementwiseBackwardFallbackTests`** (5 cases, always run):
+  defence-in-depth `RuntimeError` for both helpers, hand-computed
+  Mul backward (`a=[2,3], b=[4,5], grad=[1,1]` → `(4,5), (2,3)`),
+  hand-computed Div backward (`a=[1,2], b=[2,4], grad=[1,1]` →
+  `(0.5, 0.25), (-0.25, -0.125)`), plus a `requires_grad`
+  short-circuit test confirming the dispatch returns `None` for the
+  non-requiring side.
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**386 passed + 39 skipped + the pre-existing test_device.py failure
+on main**.
+
+### Added — MX10 Phase 2b: optional Rust fast path for `PowFunction` scalar-exponent (forward + backward)
+
+Closes the only remaining forward op in the MX10 dispatch table.
+Phase 2 had deferred `PowFunction` because matrix-cpu's `Pow` op
+is binary (`output[i] = lhs[i] ^ rhs[i]`, no scalar broadcast) and
+`PowFunction`'s public API takes a `float` exponent.
+
+This PR ships the **broadcast-the-scalar workaround**: materialise
+the scalar exponent as a full-shape constant tensor in Python before
+the FFI call, then route through matrix-cpu's binary `Pow`.  Costs
+`numel * 4` bytes per call to ship the broadcast scalar, dwarfed by
+the `numel` f32 exponentiations the Rust op then runs.
+
+Backward uses the **power rule** `grad_in = n * x^(n-1) * grad`
+composed as a 3-op graph (`Pow(x, c_(n-1)) → Mul(by c_n) →
+Mul(by grad)`) with two scalar constants broadcast to full shape.
+
+#### Behaviour matrix
+
+| Situation | Path taken |
+|-----------|-----------|
+| Extension installed, `numel ≥ 100_000` | **Rust** (single binary `Pow` for forward; 3-op composed for backward) |
+| Extension installed, `numel < 100_000` | Pure-Python `x**n` loop |
+| Extension NOT installed | Pure-Python `x**n` loop |
+
+#### Tests (92 total MX10 tests, was 88)
+
+- **`PowParityTests`** (2 cases, skip if extension missing):
+  forward and backward parity for `a ** 2.5` (non-integer exponent
+  exercises the actual `Pow` op, not just trivial squaring) on a
+  `(500, 200)` tensor of positive values, with `rtol=1e-3,
+  atol=1e-4` tolerance.
+- **`PowFallbackTests`** (4 cases, always run): defence-in-depth
+  `RuntimeError` for both helpers, plus hand-computed forward
+  correctness (`[1,2,3].pow(2) == [1,4,9]`) and backward
+  correctness (`d(x²)/dx = 2x` on `[1,2,3]` → `[2,4,6]`).
+
+All passing locally on darwin-arm64 py 3.10.6.  Full suite:
+**381 passed + 37 skipped + the pre-existing test_device.py failure
+on main**.
+
 ### Added — MX10 acceptance gate: end-to-end MLP training integration test
 
 Adds `tests/test_end_to_end_training.py` — **the broadest correctness

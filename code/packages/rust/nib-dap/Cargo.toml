@@ -1,0 +1,18 @@
+[package]
+name = "nib-dap"
+version = "0.1.0"
+edition = "2021"
+description = "NIB-DAP01 — Nib Debug Adapter: compile + launch hooks over dap-adapter-core; produces the nib-dap binary VS Code drives over stdio.  Modelled on twig-dap and built on the same dap-adapter-core / debug-sidecar / vm-debug substrate."
+
+[dependencies]
+dap-adapter-core = { path = "../dap-adapter-core" }
+nib-iir-compiler = { path = "../nib-iir-compiler" }
+interpreter-ir   = { path = "../interpreter-ir" }
+debug-sidecar    = { path = "../debug-sidecar" }
+
+[[bin]]
+name = "nib-dap"
+path = "bin/nib_dap.rs"
+
+[dev-dependencies]
+tempfile = "3"

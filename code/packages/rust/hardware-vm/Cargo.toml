@@ -1,0 +1,8 @@
+[package]
+name = "hardware-vm"
+version = "0.1.0"
+edition = "2021"
+description = "Event-driven simulation kernel for HIR — combinational ContAssign evaluation with subscriber callbacks"
+
+[dependencies]
+hdl-ir = { path = "../hdl-ir" }

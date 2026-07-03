@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-summation"
-version = "0.8.0"
+version = "2.28.0"
 description = "Symbolic summation: closed-form evaluation of sum(f,k,a,b) and product(f,k,a,b) — polynomial (Faulhaber), geometric, classic series."
 requires-python = ">=3.12"
 license = "MIT"

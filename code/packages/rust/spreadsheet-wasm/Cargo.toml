@@ -1,0 +1,14 @@
+[package]
+name = "spreadsheet-wasm"
+version = "0.13.0"
+edition = "2021"
+description = "extern \"C\" + linear-memory WASM ABI over the spreadsheet-core-wasm JSON facade"
+license = "MIT"
+
+[lib]
+# cdylib → the `.wasm` (and a host `.dylib`/`.so` so CI can link it);
+# rlib   → so the crate's own tests can call the ABI on the host target.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+spreadsheet-core-wasm = { path = "../spreadsheet-core-wasm" }

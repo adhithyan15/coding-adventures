@@ -1,0 +1,45 @@
+% ADJ52 case-16 — patient observations + queries.
+% Same vocabulary as rulebook.adj. Observations ONLY for what THIS 81-year-old
+% diabetic woman actually has. The skin biopsy was OBTAINED but its result is
+% NOT given (the vignette ends at "a skin biopsy was obtained"), so neither
+% biopsy(...) value is observed — it is the open uncertainty / next step.
+
+% --- demographics / host ---
+observe age(over_50)
+observe patient_sex(female)
+observe history(diabetes_mellitus)
+observe medication(therapeutic_warfarin)
+
+% --- presentation / site ---
+observe anatomic_site(lower_leg)
+observe history(skin_break_portal_of_entry)
+observe symptom(pain_out_of_proportion)
+observe symptom(cloudy_nonpurulent_drainage)
+observe skin(scattered_papules_and_macules)
+
+% --- course: three antibiotic regimens failed ---
+observe course(refractory_to_multiple_antibiotics)
+
+% --- constitutional / labs (discordant with infection) ---
+observe vital(afebrile)
+observe wbc(normal)
+observe ldh(elevated_and_rising)
+
+% --- imaging ---
+observe imaging(discrete_intramuscular_lesion)
+observe imaging(deep_muscle_infiltration)
+observe imaging(regional_lymphadenopathy)
+observe imaging(no_gas_in_tissues)
+
+% ===== QUERIES =====
+% q1 — unifying underlying diagnosis (each candidate)
+? diagnosis(primary_cutaneous_dlbcl_leg_type)
+? diagnosis(bacterial_cellulitis)
+? diagnosis(anticoagulation_intramuscular_hematoma)
+? diagnosis(soft_tissue_sarcoma)
+? diagnosis(necrotizing_soft_tissue_infection)
+
+% q3 — recommended next step
+? next_step(skin_biopsy_histopathology)
+? next_step(continue_broaden_antibiotics)
+? next_step(surgical_exploration_fasciotomy)

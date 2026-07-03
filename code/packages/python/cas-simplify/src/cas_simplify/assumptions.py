@@ -112,6 +112,13 @@ class AssumptionContext:
     def __init__(self) -> None:
         # Maps symbol name → set of fact strings.
         self._facts: dict[str, set[str]] = {}
+        # Phase G1 — store compound relations as ``(lhs, op, rhs)`` triples.
+        # ``op`` is one of the six string constants ``">"``, ``"<"``, ``">="``,
+        # ``"<="``, ``"="``, ``"!="``.  IR nodes use structural equality
+        # (frozen dataclasses), so set membership deduplicates automatically.
+        # See :meth:`assume_relation` for the canonicalisation rules that
+        # decide what shape gets stored.
+        self._general_relations: set[tuple[IRNode, str, IRNode]] = set()
 
     # ------------------------------------------------------------------
     # Mutation API — called by VM handlers
@@ -120,37 +127,54 @@ class AssumptionContext:
     def assume_relation(self, expr: IRNode) -> None:
         """Parse a relational IR node and record the implied fact.
 
-        Handles::
+        Two paths:
 
-            Greater(x, 0)      → x is positive
-            Less(x, 0)         → x is negative
-            GreaterEqual(x, 0) → x is nonneg
-            LessEqual(x, 0)    → x is nonpos
-            Equal(x, 0)        → x is zero
-            NotEqual(x, 0)     → x is nonzero
+        1.  **Plain-symbol path** (original Phase 21 behaviour) — recognises
+            comparisons of a bare ``IRSymbol`` against literal zero and folds
+            them into the per-symbol fact table::
 
-        Non-relational nodes and comparisons not against 0 are silently
-        ignored (the VM handler returns ``done`` regardless).
+                Greater(x, 0)      → x is positive
+                Less(x, 0)         → x is negative
+                GreaterEqual(x, 0) → x is nonneg
+                LessEqual(x, 0)    → x is nonpos
+                Equal(x, 0)        → x is zero
+                NotEqual(x, 0)     → x is nonzero
+
+        2.  **Compound-relation path** (Track G1) — any relational shape
+            that the plain-symbol path doesn't accept (e.g. ``a^2 > b^2``,
+            ``f(x) = g(x)``) is stored verbatim in ``_general_relations`` as
+            a canonicalised ``(lhs, op, rhs)`` triple.  No semantic inference
+            is attempted; only exact structural matches via
+            :meth:`is_true_relation` succeed.
+
+        Non-relational nodes are silently ignored (the VM handler returns
+        ``done`` regardless).
         """
         if not isinstance(expr, IRApply) or len(expr.args) != 2:
             return
+        head = expr.head
+        op = _RELATION_HEAD_TO_OP.get(head)
+        if op is None:
+            return
         lhs, rhs = expr.args
         sym_name = _sym_name(lhs)
-        if sym_name is None or rhs != _ZERO_IR:
+        # Plain-symbol-vs-zero path: fold into the per-symbol fact table.
+        if sym_name is not None and rhs == _ZERO_IR:
+            if op == ">":
+                self._add(sym_name, _POS)
+            elif op == "<":
+                self._add(sym_name, _NEG)
+            elif op == ">=":
+                self._add(sym_name, _NNG)
+            elif op == "<=":
+                self._add(sym_name, _NNP)
+            elif op == "=":
+                self._add(sym_name, _ZERO)
+            elif op == "!=":
+                self._add(sym_name, _NNZ)
             return
-        head = expr.head
-        if head == GREATER:
-            self._add(sym_name, _POS)
-        elif head == LESS:
-            self._add(sym_name, _NEG)
-        elif head == GREATER_EQUAL:
-            self._add(sym_name, _NNG)
-        elif head == LESS_EQUAL:
-            self._add(sym_name, _NNP)
-        elif head == EQUAL:
-            self._add(sym_name, _ZERO)
-        elif head == NOT_EQUAL:
-            self._add(sym_name, _NNZ)
+        # Compound-relation path: store the canonicalised triple verbatim.
+        self._general_relations.add(_canon_relation(lhs, op, rhs))
 
     def assume_property(self, sym: IRNode, prop: IRNode) -> None:
         """Record a property declaration: ``assume(x, positive)``.
@@ -169,32 +193,41 @@ class AssumptionContext:
     def forget_relation(self, expr: IRNode) -> None:
         """Remove the fact implied by a relational expression.
 
-        Uses the same parsing logic as :meth:`assume_relation` — only
-        comparisons against 0 are handled.
+        Mirrors :meth:`assume_relation` — drops plain-symbol-vs-zero facts
+        from the per-symbol table, and removes the canonicalised triple
+        from ``_general_relations`` for compound shapes.  Silently no-ops
+        for non-relational input or for relations that were never
+        recorded.
         """
         if not isinstance(expr, IRApply) or len(expr.args) != 2:
             return
+        head = expr.head
+        op = _RELATION_HEAD_TO_OP.get(head)
+        if op is None:
+            return
         lhs, rhs = expr.args
         sym_name = _sym_name(lhs)
-        if sym_name is None or rhs != _ZERO_IR:
+        if sym_name is not None and rhs == _ZERO_IR:
+            if op == ">":
+                self._remove(sym_name, _POS)
+            elif op == "<":
+                self._remove(sym_name, _NEG)
+            elif op == ">=":
+                self._remove(sym_name, _NNG)
+            elif op == "<=":
+                self._remove(sym_name, _NNP)
+            elif op == "=":
+                self._remove(sym_name, _ZERO)
+            elif op == "!=":
+                self._remove(sym_name, _NNZ)
             return
-        head = expr.head
-        if head == GREATER:
-            self._remove(sym_name, _POS)
-        elif head == LESS:
-            self._remove(sym_name, _NEG)
-        elif head == GREATER_EQUAL:
-            self._remove(sym_name, _NNG)
-        elif head == LESS_EQUAL:
-            self._remove(sym_name, _NNP)
-        elif head == EQUAL:
-            self._remove(sym_name, _ZERO)
-        elif head == NOT_EQUAL:
-            self._remove(sym_name, _NNZ)
+        self._general_relations.discard(_canon_relation(lhs, op, rhs))
 
     def forget_all(self) -> None:
-        """Remove every recorded assumption."""
+        """Remove every recorded assumption — both plain-symbol facts and
+        compound relations."""
         self._facts.clear()
+        self._general_relations.clear()
 
     # ------------------------------------------------------------------
     # Query API — called by radcan, logexpand, is_handler, sign_handler
@@ -254,8 +287,20 @@ class AssumptionContext:
     def is_true_relation(self, expr: IRNode) -> bool | None:
         """Evaluate a relational IR node to True / False / None.
 
-        Uses the currently recorded facts.  Only evaluates comparisons of
-        a plain symbol against 0.  Returns None for anything more complex.
+        Three paths, tried in order:
+
+        1.  **Plain-symbol-vs-zero** (original Phase 21 behaviour): folds
+            against the per-symbol fact table and may return ``True`` or
+            ``False`` depending on what the user has asserted (or its
+            logical contradiction).
+        2.  **Compound-relation lookup** (Track G1): when the plain-symbol
+            path doesn't apply, checks ``_general_relations`` for a stored
+            triple matching the query.  Honours commutativity of ``=`` and
+            ``!=`` and the dual rewrite ``a < b ↔ b > a``,
+            ``a ≤ b ↔ b ≥ a``.  Returns ``True`` on hit.
+        3.  **Unknown** — returns ``None``.  No negative-knowledge
+            inference: an assertion of ``a^2 > b^2`` says nothing about
+            ``a^2 < b^2`` until the user explicitly asserts it.
 
         Examples::
 
@@ -263,16 +308,44 @@ class AssumptionContext:
             is_true_relation(Greater(x, 0))  # True
             is_true_relation(Less(x, 0))     # False
             is_true_relation(Equal(x, 0))    # False
+
+            # After assume(a^2 > b^2):
+            is_true_relation(Greater(a^2, b^2))  # True
+            is_true_relation(Less(b^2, a^2))     # True  (commute)
+            is_true_relation(Less(a^2, b^2))     # None  (no negative inference)
         """
         if not isinstance(expr, IRApply) or len(expr.args) != 2:
             return None
+        head = expr.head
+        op = _RELATION_HEAD_TO_OP.get(head)
+        if op is None:
+            return None
         lhs, rhs = expr.args
         sym_name = _sym_name(lhs)
-        if sym_name is None or rhs != _ZERO_IR:
-            return None
 
+        # Plain-symbol-vs-zero path — original Phase 21 behaviour.
+        if sym_name is not None and rhs == _ZERO_IR:
+            plain = self._is_true_plain(sym_name, head)
+            if plain is not None:
+                return plain
+            # Fall through to compound-relation lookup in case the user
+            # asserted the comparison verbatim against a non-symbol shape
+            # that happens to canonicalise to the same triple.
+
+        # Compound-relation path — structural lookup with commutativity.
+        return self._lookup_general(lhs, op, rhs)
+
+    def _is_true_plain(
+        self, sym_name: str, head: IRNode
+    ) -> bool | None:
+        """Resolve a plain-symbol-vs-zero query against the fact table.
+
+        Extracted so :meth:`is_true_relation` can fall through to the
+        compound-relation path when the per-symbol table has nothing to
+        say (every branch returning ``None``).  Kept private; the public
+        entry point is :meth:`is_true_relation`.
+        """
         facts = self._facts.get(sym_name, frozenset())
-        head = expr.head
 
         if head == GREATER:
             # x > 0 → True iff positive; False iff negative or zero
@@ -344,10 +417,93 @@ class AssumptionContext:
             if not self._facts[sym_name]:
                 del self._facts[sym_name]
 
+    def _lookup_general(
+        self, lhs: IRNode, op: str, rhs: IRNode
+    ) -> bool | None:
+        """Structural lookup against ``_general_relations`` with
+        commutativity-aware rewriting.
+
+        Returns ``True`` when the query (or an equivalent rewrite) was
+        previously asserted, else ``None``.  The rewrites mirror the
+        canonical-form rules in :func:`_canon_relation`:
+
+        +-------------------+-----------------------------+
+        | Query             | Matches stored fact         |
+        +===================+=============================+
+        | ``a > b``         | ``(a, >, b)`` or ``(b, <, a)`` |
+        | ``a < b``         | ``(a, <, b)`` or ``(b, >, a)`` |
+        | ``a >= b``        | ``(a, >=, b)`` or ``(b, <=, a)`` |
+        | ``a <= b``        | ``(a, <=, b)`` or ``(b, >=, a)`` |
+        | ``a = b``         | ``(a, =, b)`` or ``(b, =, a)`` |
+        | ``a != b``        | ``(a, !=, b)`` or ``(b, !=, a)`` |
+        +-------------------+-----------------------------+
+
+        Because :meth:`assume_relation` always canonicalises before
+        insertion, a single set lookup per equivalence class is enough —
+        the table above tells us which canonical form to probe.
+        """
+        canon = _canon_relation(lhs, op, rhs)
+        if canon in self._general_relations:
+            return True
+        return None
+
 
 # ---------------------------------------------------------------------------
-# Module-level helper
+# Module-level helpers
 # ---------------------------------------------------------------------------
+
+
+# Maps the relation IR head symbol to the short op string used in the
+# canonical triple.  Centralised so :meth:`assume_relation`,
+# :meth:`forget_relation`, and :meth:`is_true_relation` agree on the
+# vocabulary in one place.
+_RELATION_HEAD_TO_OP: dict[IRNode, str] = {
+    GREATER: ">",
+    LESS: "<",
+    GREATER_EQUAL: ">=",
+    LESS_EQUAL: "<=",
+    EQUAL: "=",
+    NOT_EQUAL: "!=",
+}
+
+
+def _canon_relation(
+    lhs: IRNode, op: str, rhs: IRNode
+) -> tuple[IRNode, str, IRNode]:
+    """Return a canonical ``(lhs, op, rhs)`` triple for the relation.
+
+    Canonicalisation rules:
+
+    - ``a < b`` is stored as ``(b, ">", a)`` — every strict inequality
+      becomes a ``>``.
+    - ``a <= b`` is stored as ``(b, ">=", a)`` — every non-strict
+      inequality becomes a ``>=``.
+    - ``a = b`` and ``a != b`` are commutative; we pick the lexicographic
+      order of ``str(...)`` so duplicates from either argument order
+      collapse to the same triple.
+    - ``a > b`` and ``a >= b`` are stored verbatim.
+
+    This is purely a deduplication strategy — it does not assert any
+    semantic equivalence the caller didn't already imply.
+    """
+    if op == "<":
+        return (rhs, ">", lhs)
+    if op == "<=":
+        return (rhs, ">=", lhs)
+    if op in ("=", "!="):
+        # Pick a deterministic order so a = b and b = a collapse.
+        if _node_key(lhs) <= _node_key(rhs):
+            return (lhs, op, rhs)
+        return (rhs, op, lhs)
+    return (lhs, op, rhs)
+
+
+def _node_key(node: IRNode) -> str:
+    """Deterministic ordering key for the commutativity tiebreak in
+    :func:`_canon_relation`.  We use ``str(node)`` because every IR node
+    has a structural ``__str__`` already (see ``symbolic_ir.nodes``).
+    """
+    return str(node)
 
 
 def _sym_name(node: IRNode) -> str | None:

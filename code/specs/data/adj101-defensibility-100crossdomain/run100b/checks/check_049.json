@@ -1,0 +1,8 @@
+{
+ "check_id": 49,
+ "idx": 21,
+ "slot": "has_original_receipt",
+ "claimed_value": true,
+ "scenario": "Devon received a defective desk lamp on June 1. He returned it on June 12 along with the original paper receipt from the purchase. The store confirmed the lamp was defective.",
+ "cited_span": "along with the original paper receipt from the purchase"
+}

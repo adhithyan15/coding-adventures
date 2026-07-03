@@ -1,0 +1,8 @@
+{
+ "check_id": 102,
+ "idx": 41,
+ "slot": "diagnosed_norovirus",
+ "claimed_value": true,
+ "scenario": "A line cook was diagnosed with Norovirus. Her vomiting and diarrhea fully resolved on Monday at 8:00 AM. She reports for a food-handling shift on Tuesday at 9:00 AM, which is 25 hours after her symptoms resolved.",
+ "cited_span": "A line cook was diagnosed with Norovirus."
+}

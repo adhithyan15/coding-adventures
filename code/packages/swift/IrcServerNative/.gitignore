@@ -1,0 +1,3 @@
+.build/
+Sources/CIrcServer/libirc_server_capi.a
+Sources/CIrcServer/irc_server_capi.lib

@@ -2,31 +2,44 @@
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 from dataclasses import fields as dataclass_fields
+from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
-    AcSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
+    AcResult,
+    AcSource,
     Capacitor,
     Circuit,
     CurrentSource,
+    DcResult,
+    DcSweepResult,
     Diode,
     ExpWaveform,
     Inductor,
     Mosfet,
+    MutualInductor,
     PulseWaveform,
     PwlWaveform,
     Resistor,
     SinWaveform,
+    TransientResult,
+    TransmissionLine,
     VoltageSource,
     Waveform,
+    ac_sweep,
+    dc_op,
+    dc_sweep,
+    transient,
 )
 
 
@@ -41,10 +54,11 @@ class OpAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class TranAnalysis:
-    """A `.tran tstep tstop` transient analysis card."""
+    """A `.tran tstep tstop [method=<euler|trap|gear2>]` transient card."""
 
     t_step: float
     t_stop: float
+    method: TransientMethod | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -101,9 +115,101 @@ class NoiseAnalysis:
     input_source: str
     freqs: tuple[float, ...] = ()
     temperature: float = 300.0
+    temperature_is_explicit: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class TempAnalysis:
+    """A `.temp <celsius> [celsius ...]` operating-temperature card."""
+
+    temperatures_celsius: tuple[float, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class OutputProbe:
+    """A voltage-node or branch-current output probe."""
+
+    kind: Literal["voltage", "current"]
+    target: str
+
+
+@dataclass(frozen=True, slots=True)
+class PrintAnalysis:
+    """A `.print <analysis> <V(node)|I(source)>...` output card."""
+
+    analysis: str
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class PlotAnalysis:
+    """A `.plot <analysis> <V(node)|I(source)>...` output card."""
+
+    analysis: str
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class SaveAnalysis:
+    """A `.save <V(node)|I(source)>...` persistent output-selection card."""
+
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ProbeAnalysis:
+    """A `.probe [analysis] <V(node)|I(source)>...` output-selection card."""
+
+    analysis: str | None
+    probes: tuple[OutputProbe, ...]
+
+
+type MeasureOperation = Literal["find", "max", "min", "avg", "rms"]
+
+
+@dataclass(frozen=True, slots=True)
+class MeasureAnalysis:
+    """A `.measure <analysis> <name> <operation> <probe> ...` card."""
+
+    analysis: str
+    name: str
+    operation: MeasureOperation
+    probe: OutputProbe
+    at: float | None = None
+    start: float | None = None
+    stop: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class FourAnalysis:
+    """A `.four <frequency> <V(node)|I(source)>...` Fourier-analysis card."""
+
+    frequency_hz: float
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class DistortionAnalysis:
+    """A `.disto mode points start stop <V(node)|I(source)>...` card."""
+
+    mode: str
+    points: int
+    start_hz: float
+    stop_hz: float
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class PoleZeroAnalysis:
+    """A `.pz V(output_node) input_source [pole|zero|pz]` card."""
+
+    output_node: str
+    input_source: str
+    kind: Literal["pole", "zero", "pz"] = "pz"
 
 
 type OptionValue = float | str | bool
+type TransientMethod = Literal["euler", "trap", "gear2"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -122,8 +228,72 @@ type Analysis = (
     | SensAnalysis
     | McAnalysis
     | NoiseAnalysis
+    | TempAnalysis
+    | PrintAnalysis
+    | PlotAnalysis
+    | SaveAnalysis
+    | ProbeAnalysis
+    | MeasureAnalysis
+    | FourAnalysis
+    | DistortionAnalysis
+    | PoleZeroAnalysis
     | OptionsAnalysis
 )
+type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
+type AnalysisKind = Literal["op", "tran", "dc", "ac"]
+type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult
+type SelectedOutputValue = float | complex
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisPlanStep:
+    """One executable `.op`, `.dc`, `.ac`, or `.tran` card in deck order."""
+
+    index: int
+    kind: AnalysisKind
+    analysis: RunnableAnalysis
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisExecutionResult:
+    """Result from executing one analysis-plan step."""
+
+    index: int
+    kind: AnalysisKind
+    analysis: RunnableAnalysis
+    result: AnalysisResult
+
+
+@dataclass(frozen=True, slots=True)
+class SelectedOutputRow:
+    """One row from a selected `.print`, `.plot`, `.save`, or `.probe` output."""
+
+    index: int
+    axis_name: str | None
+    axis_value: float | None
+    values: dict[str, SelectedOutputValue]
+
+
+@dataclass(frozen=True, slots=True)
+class SelectedAnalysisOutput:
+    """Selected output rows for one executed analysis result."""
+
+    index: int
+    kind: AnalysisKind
+    probes: tuple[OutputProbe, ...]
+    rows: tuple[SelectedOutputRow, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class MeasureResult:
+    """Computed result from one `.measure` card."""
+
+    analysis_index: int
+    analysis: str
+    name: str
+    operation: MeasureOperation
+    probe: OutputProbe
+    value: float
 
 
 @dataclass(frozen=True, slots=True)
@@ -189,8 +359,177 @@ class ParsedNetlist:
     def noise_cards(self) -> list[NoiseAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, NoiseAnalysis)]
 
+    def temp_cards(self) -> list[TempAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, TempAnalysis)]
+
+    def print_cards(self) -> list[PrintAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, PrintAnalysis)]
+
+    def plot_cards(self) -> list[PlotAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, PlotAnalysis)]
+
+    def save_cards(self) -> list[SaveAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, SaveAnalysis)]
+
+    def probe_cards(self) -> list[ProbeAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, ProbeAnalysis)]
+
+    def measure_cards(self) -> list[MeasureAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, MeasureAnalysis)]
+
+    def four_cards(self) -> list[FourAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, FourAnalysis)]
+
+    def distortion_cards(self) -> list[DistortionAnalysis]:
+        return [
+            analysis
+            for analysis in self.analyses
+            if isinstance(analysis, DistortionAnalysis)
+        ]
+
+    def pole_zero_cards(self) -> list[PoleZeroAnalysis]:
+        return [
+            analysis
+            for analysis in self.analyses
+            if isinstance(analysis, PoleZeroAnalysis)
+        ]
+
     def options_cards(self) -> list[OptionsAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OptionsAnalysis)]
+
+    def transient_method(self, tran: TranAnalysis | None = None) -> TransientMethod | None:
+        """Return the explicit `.tran` method or fallback `.options method` value."""
+
+        if tran is not None and tran.method is not None:
+            return tran.method
+        for options in self.options_cards():
+            value = options.values.get("method")
+            if isinstance(value, str):
+                return _parse_transient_method(value, ".options method")
+        return None
+
+    def dc_op_kwargs(self) -> dict[str, object]:
+        """Return selected `.options` values as :func:`spice_engine.dc_op` kwargs."""
+
+        values = _merged_options(self.options_cards())
+        kwargs: dict[str, object] = {}
+        tol = _option_number(values, ("reltol", "tol"))
+        if tol is not None:
+            kwargs["tol"] = tol
+        max_iterations = _option_int(values, ("itl1", "maxiter", "maxiters", "max_iterations"))
+        if max_iterations is not None:
+            kwargs["max_iterations"] = max_iterations
+        gmin = _option_number(values, ("gmin",))
+        if gmin is not None:
+            kwargs["pseudo_transient_shunt_conductance"] = gmin
+        pseudo_steps = _option_int(values, ("srcsteps", "pseudo_transient_steps"))
+        if pseudo_steps is not None:
+            kwargs["pseudo_transient_steps"] = pseudo_steps
+        pseudo_iterations = _option_int(values, ("itl6", "pseudo_transient_max_iterations"))
+        if pseudo_iterations is not None:
+            kwargs["pseudo_transient_max_iterations"] = pseudo_iterations
+        return kwargs
+
+    def transient_kwargs(
+        self,
+        tran: TranAnalysis | None = None,
+        *,
+        adaptive: bool = False,
+    ) -> dict[str, object]:
+        """Return selected `.options` values as :func:`spice_engine.transient` kwargs."""
+
+        values = _merged_options(self.options_cards())
+        kwargs: dict[str, object] = {}
+        method = self.transient_method(tran)
+        if method is not None:
+            kwargs["method"] = method
+        tol = _option_number(values, ("reltol", "tol"))
+        if tol is not None:
+            kwargs["tol"] = tol
+        tol_lte = _option_number(values, ("trtol", "lte", "tol_lte"))
+        if tol_lte is not None:
+            kwargs["tol_lte"] = tol_lte
+        min_step = _option_number(values, ("minstep", "tmin", "min_step"))
+        if min_step is not None:
+            kwargs["min_step"] = min_step
+        max_step = _option_number(values, ("maxstep", "tmax", "max_step"))
+        if max_step is not None:
+            kwargs["max_step"] = max_step
+        max_iterations = _option_int(values, ("itl4", "maxiter", "maxiters", "max_iterations"))
+        if max_iterations is not None:
+            kwargs["max_iterations"] = max_iterations
+        if adaptive:
+            kwargs["adaptive"] = True
+        return kwargs
+
+    def operating_temperature_kelvin(
+        self,
+        temperature_index: int = 0,
+        *,
+        default: float = 300.0,
+    ) -> float:
+        """Return the selected `.temp` operating temperature in Kelvin."""
+
+        if temperature_index < 0:
+            raise NetlistParseError("temperature index must be non-negative")
+        temperatures = [
+            celsius
+            for card in self.temp_cards()
+            for celsius in card.temperatures_celsius
+        ]
+        if not temperatures:
+            return default
+        try:
+            return temperatures[temperature_index] + 273.15
+        except IndexError as exc:
+            raise NetlistParseError(
+                f"temperature index {temperature_index} exceeds .temp entries"
+            ) from exc
+
+    def noise_temperature_kelvin(
+        self,
+        noise: NoiseAnalysis | None = None,
+        *,
+        temperature_index: int = 0,
+        default: float = 300.0,
+    ) -> float:
+        """Return the temperature to pass to `spice_engine.noise_ac`."""
+
+        if noise is not None and noise.temperature_is_explicit:
+            return noise.temperature
+        return self.operating_temperature_kelvin(
+            temperature_index=temperature_index,
+            default=default,
+        )
+
+    def analysis_plan(self) -> list[AnalysisPlanStep]:
+        """Return runnable `.op`, `.dc`, `.ac`, and `.tran` cards in deck order."""
+
+        return build_analysis_plan(self)
+
+    def run_analysis_plan(
+        self,
+        plan: list[AnalysisPlanStep] | None = None,
+    ) -> list[AnalysisExecutionResult]:
+        """Execute runnable analysis cards against this parsed circuit."""
+
+        return run_analysis_plan(self, plan)
+
+    def select_outputs(
+        self,
+        results: list[AnalysisExecutionResult] | None = None,
+    ) -> list[SelectedAnalysisOutput]:
+        """Apply `.print`, `.plot`, `.save`, and `.probe` cards to results."""
+
+        return select_outputs(self, results)
+
+    def measure_results(
+        self,
+        results: list[AnalysisExecutionResult] | None = None,
+    ) -> list[MeasureResult]:
+        """Evaluate supported `.measure` cards against executed results."""
+
+        return measure_results(self, results)
 
 
 _VALUE_RE = re.compile(
@@ -209,6 +548,34 @@ _SUFFIXES = {
     "p": 1.0e-12,
     "f": 1.0e-15,
 }
+
+
+def _merged_options(options_cards: list[OptionsAnalysis]) -> dict[str, OptionValue]:
+    values: dict[str, OptionValue] = {}
+    for options in options_cards:
+        values.update(options.values)
+    return values
+
+
+def _option_number(
+    values: dict[str, OptionValue],
+    keys: tuple[str, ...],
+) -> float | None:
+    for key in keys:
+        value = values.get(key)
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (float, int)):
+            return float(value)
+    return None
+
+
+def _option_int(
+    values: dict[str, OptionValue],
+    keys: tuple[str, ...],
+) -> int | None:
+    value = _option_number(values, keys)
+    return None if value is None else int(value)
 
 
 def parse_netlist(text: str) -> ParsedNetlist:
@@ -290,7 +657,90 @@ def parse_netlist(text: str) -> ParsedNetlist:
                 parsed.circuit.add(_parse_element(statement.fields, parsed.models))
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {statement.line_number}: {exc}") from exc
+    _validate_mutual_inductors(parsed.circuit)
+    _validate_transmission_lines(parsed.circuit)
     return parsed
+
+
+def build_analysis_plan(parsed: ParsedNetlist) -> list[AnalysisPlanStep]:
+    """Build the executable `.op`, `.dc`, `.ac`, and `.tran` plan for a deck."""
+
+    plan: list[AnalysisPlanStep] = []
+    for index, analysis in enumerate(parsed.analyses):
+        step = _analysis_plan_step(index, analysis)
+        if step is not None:
+            plan.append(step)
+    return plan
+
+
+def run_analysis_plan(
+    parsed: ParsedNetlist,
+    plan: list[AnalysisPlanStep] | None = None,
+) -> list[AnalysisExecutionResult]:
+    """Execute the runnable plan for a parsed netlist."""
+
+    return [
+        AnalysisExecutionResult(
+            index=step.index,
+            kind=step.kind,
+            analysis=step.analysis,
+            result=_execute_analysis_step(parsed, step),
+        )
+        for step in (build_analysis_plan(parsed) if plan is None else plan)
+    ]
+
+
+def run_netlist(text: str) -> list[AnalysisExecutionResult]:
+    """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, and `.tran` cards."""
+
+    return run_analysis_plan(parse_netlist(text))
+
+
+def select_outputs(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult] | None = None,
+) -> list[SelectedAnalysisOutput]:
+    """Apply deck output-selection cards to executed analysis results."""
+
+    selected: list[SelectedAnalysisOutput] = []
+    execution_results = run_analysis_plan(parsed) if results is None else results
+    for result in execution_results:
+        probes = _selected_output_probes(parsed, result.kind)
+        if not probes:
+            continue
+        selected.append(
+            SelectedAnalysisOutput(
+                index=result.index,
+                kind=result.kind,
+                probes=tuple(probes),
+                rows=tuple(_selected_output_rows(result, probes)),
+            )
+        )
+    return selected
+
+
+def measure_results(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult] | None = None,
+) -> list[MeasureResult]:
+    """Evaluate supported `.measure` cards against executed analysis results."""
+
+    execution_results = run_analysis_plan(parsed) if results is None else results
+    measured: list[MeasureResult] = []
+    for card in parsed.measure_cards():
+        execution_result = _find_measure_execution_result(card, execution_results)
+        value = _evaluate_measure(card, execution_result)
+        measured.append(
+            MeasureResult(
+                analysis_index=execution_result.index,
+                analysis=card.analysis,
+                name=card.name,
+                operation=card.operation,
+                probe=card.probe,
+                value=value,
+            )
+        )
+    return measured
 
 
 def parse_value(token: str) -> float:
@@ -303,6 +753,429 @@ def parse_value(token: str) -> float:
     if suffix not in _SUFFIXES:
         raise NetlistParseError(f"unsupported numeric suffix {match.group(2)!r}")
     return float(match.group(1)) * _SUFFIXES[suffix]
+
+
+def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | None:
+    if isinstance(analysis, OpAnalysis):
+        return AnalysisPlanStep(index=index, kind="op", analysis=analysis)
+    if isinstance(analysis, TranAnalysis):
+        return AnalysisPlanStep(index=index, kind="tran", analysis=analysis)
+    if isinstance(analysis, DcAnalysis):
+        return AnalysisPlanStep(index=index, kind="dc", analysis=analysis)
+    if isinstance(analysis, AcAnalysis):
+        return AnalysisPlanStep(index=index, kind="ac", analysis=analysis)
+    return None
+
+
+def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> AnalysisResult:
+    analysis = step.analysis
+    if isinstance(analysis, OpAnalysis):
+        return dc_op(parsed.circuit, **parsed.dc_op_kwargs())
+    if isinstance(analysis, DcAnalysis):
+        dc_kwargs = parsed.dc_op_kwargs()
+        sweep_kwargs = {
+            key: dc_kwargs[key] for key in ("max_iterations", "tol") if key in dc_kwargs
+        }
+        return dc_sweep(
+            parsed.circuit,
+            analysis.source_name,
+            analysis.start,
+            analysis.stop,
+            analysis.step,
+            **sweep_kwargs,
+        )
+    if isinstance(analysis, AcAnalysis):
+        return ac_sweep(
+            parsed.circuit,
+            f_start=analysis.start_hz,
+            f_stop=analysis.stop_hz,
+            n_points=analysis.points,
+            sweep=_ac_sweep_mode(analysis),
+        )
+    if isinstance(analysis, TranAnalysis):
+        transient_kwargs = parsed.transient_kwargs(analysis)
+        transient_kwargs.setdefault("method", "euler")
+        return transient(
+            parsed.circuit,
+            t_step=analysis.t_step,
+            t_stop=analysis.t_stop,
+            **transient_kwargs,
+        )
+    raise NetlistParseError(f"analysis card at index {step.index} is not executable")
+
+
+def _ac_sweep_mode(analysis: AcAnalysis) -> Literal["log", "lin"]:
+    if analysis.mode in ("dec", "log"):
+        return "log"
+    raise NetlistParseError(
+        f".ac mode {analysis.mode!r} is not executable; supported modes are 'dec' and 'log'"
+    )
+
+
+def _selected_output_probes(parsed: ParsedNetlist, kind: AnalysisKind) -> list[OutputProbe]:
+    probes: list[OutputProbe] = []
+    seen: set[tuple[str, str]] = set()
+
+    def add(new_probes: tuple[OutputProbe, ...]) -> None:
+        for probe in new_probes:
+            key = (probe.kind, probe.target.lower())
+            if key not in seen:
+                probes.append(probe)
+                seen.add(key)
+
+    for card in parsed.analyses:
+        if isinstance(card, SaveAnalysis):
+            add(card.probes)
+        elif isinstance(card, ProbeAnalysis):
+            if card.analysis is None or _analysis_name_matches(card.analysis, kind):
+                add(card.probes)
+        elif isinstance(card, (PrintAnalysis, PlotAnalysis)) and _analysis_name_matches(
+            card.analysis,
+            kind,
+        ):
+            add(card.probes)
+    return probes
+
+
+def _analysis_name_matches(requested: str, kind: AnalysisKind) -> bool:
+    aliases = {
+        "op": "op",
+        "dcop": "op",
+        "dc": "dc",
+        "ac": "ac",
+        "tran": "tran",
+        "transient": "tran",
+    }
+    return aliases.get(requested.lower(), requested.lower()) == kind
+
+
+def _selected_output_rows(
+    execution: AnalysisExecutionResult,
+    probes: list[OutputProbe],
+) -> list[SelectedOutputRow]:
+    result = execution.result
+    if isinstance(result, DcResult):
+        return [
+            SelectedOutputRow(
+                index=0,
+                axis_name=None,
+                axis_value=None,
+                values=_selected_output_values(
+                    result.node_voltages,
+                    result.branch_currents,
+                    probes,
+                    ".op output selection",
+                ),
+            )
+        ]
+    if isinstance(result, DcSweepResult):
+        return [
+            SelectedOutputRow(
+                index=index,
+                axis_name="source",
+                axis_value=point.source_value,
+                values=_selected_output_values(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probes,
+                    ".dc output selection",
+                ),
+            )
+            for index, point in enumerate(result.points)
+        ]
+    if isinstance(result, AcResult):
+        return [
+            SelectedOutputRow(
+                index=index,
+                axis_name="frequency",
+                axis_value=point.freq,
+                values=_selected_output_values(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probes,
+                    ".ac output selection",
+                ),
+            )
+            for index, point in enumerate(result.points)
+        ]
+    if isinstance(result, TransientResult):
+        return [
+            SelectedOutputRow(
+                index=index,
+                axis_name="time",
+                axis_value=point.time,
+                values=_selected_output_values(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probes,
+                    ".tran output selection",
+                ),
+            )
+            for index, point in enumerate(result.points)
+        ]
+    raise NetlistParseError(f"analysis result at index {execution.index} is not selectable")
+
+
+def _selected_output_values(
+    node_voltages: dict[str, SelectedOutputValue],
+    branch_currents: dict[str, SelectedOutputValue],
+    probes: list[OutputProbe],
+    context: str,
+) -> dict[str, SelectedOutputValue]:
+    return {
+        _probe_label(probe): _probe_value(probe, node_voltages, branch_currents, context)
+        for probe in probes
+    }
+
+
+def _find_measure_execution_result(
+    card: MeasureAnalysis,
+    results: list[AnalysisExecutionResult],
+) -> AnalysisExecutionResult:
+    for result in results:
+        if _analysis_name_matches(card.analysis, result.kind):
+            return result
+    raise NetlistParseError(f".measure {card.name!r} references missing {card.analysis} analysis")
+
+
+def _evaluate_measure(card: MeasureAnalysis, result: AnalysisExecutionResult) -> float:
+    samples = _measure_samples(card, result)
+    if not samples:
+        raise NetlistParseError(f".measure {card.name!r} has no samples")
+    if card.operation == "find":
+        if result.kind == "op" and card.at is None:
+            return _measure_numeric_value(samples[0][1])
+        if card.at is None:
+            raise NetlistParseError(f".measure {card.name!r} FIND requires AT=<value>")
+        return _measure_numeric_value(_interpolate_measure_value(samples, card.at, card))
+
+    ranged = _range_measure_samples(samples, card)
+    values = [_measure_numeric_value(value) for _, value in ranged]
+    if not values:
+        raise NetlistParseError(f".measure {card.name!r} range has no samples")
+    if card.operation == "max":
+        return max(values)
+    if card.operation == "min":
+        return min(values)
+    if card.operation == "avg":
+        return _average_measure_value(ranged)
+    if card.operation == "rms":
+        return _rms_measure_value(ranged)
+    raise NetlistParseError(f"unsupported .measure operation {card.operation!r}")
+
+
+def _measure_samples(
+    card: MeasureAnalysis,
+    execution: AnalysisExecutionResult,
+) -> list[tuple[float | None, SelectedOutputValue]]:
+    result = execution.result
+    if isinstance(result, DcResult):
+        return [
+            (
+                None,
+                _probe_value(
+                    card.probe,
+                    result.node_voltages,
+                    result.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+        ]
+    if isinstance(result, DcSweepResult):
+        return [
+            (
+                point.source_value,
+                _probe_value(
+                    card.probe,
+                    point.node_voltages,
+                    point.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+            for point in result.points
+        ]
+    if isinstance(result, AcResult):
+        return [
+            (
+                point.freq,
+                _probe_value(
+                    card.probe,
+                    point.node_voltages,
+                    point.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+            for point in result.points
+        ]
+    if isinstance(result, TransientResult):
+        return [
+            (
+                point.time,
+                _probe_value(
+                    card.probe,
+                    point.node_voltages,
+                    point.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+            for point in result.points
+        ]
+    return []
+
+
+def _range_measure_samples(
+    samples: list[tuple[float | None, SelectedOutputValue]],
+    card: MeasureAnalysis,
+) -> list[tuple[float | None, SelectedOutputValue]]:
+    if any(axis is None for axis, _ in samples):
+        if card.start is not None or card.stop is not None:
+            raise NetlistParseError(f".measure {card.name!r} range requires swept samples")
+        return samples
+    axis_samples = sorted((axis, value) for axis, value in samples if axis is not None)
+    lower = axis_samples[0][0] if card.start is None else card.start
+    upper = axis_samples[-1][0] if card.stop is None else card.stop
+    if lower > upper:
+        raise NetlistParseError(f".measure {card.name!r} FROM must be <= TO")
+    ranged: list[tuple[float | None, SelectedOutputValue]] = []
+    if card.start is not None:
+        ranged.append((lower, _interpolate_measure_value(samples, lower, card)))
+    ranged.extend(
+        (axis, value)
+        for axis, value in axis_samples
+        if lower <= axis <= upper and not _axis_already_present(ranged, axis)
+    )
+    if card.stop is not None and not _axis_already_present(ranged, upper):
+        ranged.append((upper, _interpolate_measure_value(samples, upper, card)))
+    return sorted(ranged, key=lambda sample: -math.inf if sample[0] is None else sample[0])
+
+
+def _axis_already_present(
+    samples: list[tuple[float | None, SelectedOutputValue]],
+    axis: float,
+) -> bool:
+    return any(
+        existing_axis is not None and math.isclose(existing_axis, axis)
+        for existing_axis, _ in samples
+    )
+
+
+def _interpolate_measure_value(
+    samples: list[tuple[float | None, SelectedOutputValue]],
+    target: float,
+    card: MeasureAnalysis,
+) -> SelectedOutputValue:
+    axis_samples = sorted((axis, value) for axis, value in samples if axis is not None)
+    if not axis_samples:
+        raise NetlistParseError(f".measure {card.name!r} AT requires swept samples")
+    if target < axis_samples[0][0] or target > axis_samples[-1][0]:
+        raise NetlistParseError(f".measure {card.name!r} AT is outside the analysis range")
+    for axis, value in axis_samples:
+        if math.isclose(axis, target):
+            return value
+    for (left_axis, left_value), (right_axis, right_value) in zip(
+        axis_samples,
+        axis_samples[1:],
+        strict=False,
+    ):
+        if left_axis <= target <= right_axis:
+            fraction = (target - left_axis) / (right_axis - left_axis)
+            return _interpolate_output_values(left_value, right_value, fraction)
+    return axis_samples[-1][1]
+
+
+def _interpolate_output_values(
+    left: SelectedOutputValue,
+    right: SelectedOutputValue,
+    fraction: float,
+) -> SelectedOutputValue:
+    if isinstance(left, complex) or isinstance(right, complex):
+        left_complex = complex(left)
+        right_complex = complex(right)
+        return left_complex + (right_complex - left_complex) * fraction
+    return float(left) + (float(right) - float(left)) * fraction
+
+
+def _average_measure_value(samples: list[tuple[float | None, SelectedOutputValue]]) -> float:
+    numeric = [(axis, _measure_numeric_value(value)) for axis, value in samples]
+    if len(numeric) < 2 or any(axis is None for axis, _ in numeric):
+        return sum(value for _, value in numeric) / len(numeric)
+    span = float(numeric[-1][0]) - float(numeric[0][0])
+    if span <= 0.0:
+        return sum(value for _, value in numeric) / len(numeric)
+    area = sum(
+        0.5 * (left_value + right_value) * (float(right_axis) - float(left_axis))
+        for (left_axis, left_value), (right_axis, right_value) in zip(
+            numeric,
+            numeric[1:],
+            strict=False,
+        )
+    )
+    return area / span
+
+
+def _rms_measure_value(samples: list[tuple[float | None, SelectedOutputValue]]) -> float:
+    numeric = [(axis, _measure_numeric_value(value)) for axis, value in samples]
+    if len(numeric) < 2 or any(axis is None for axis, _ in numeric):
+        return math.sqrt(sum(value * value for _, value in numeric) / len(numeric))
+    span = float(numeric[-1][0]) - float(numeric[0][0])
+    if span <= 0.0:
+        return math.sqrt(sum(value * value for _, value in numeric) / len(numeric))
+    area = sum(
+        0.5
+        * (left_value * left_value + right_value * right_value)
+        * (float(right_axis) - float(left_axis))
+        for (left_axis, left_value), (right_axis, right_value) in zip(
+            numeric,
+            numeric[1:],
+            strict=False,
+        )
+    )
+    return math.sqrt(area / span)
+
+
+def _measure_numeric_value(value: SelectedOutputValue) -> float:
+    return abs(value) if isinstance(value, complex) else float(value)
+
+
+def _probe_value(
+    probe: OutputProbe,
+    node_voltages: dict[str, SelectedOutputValue],
+    branch_currents: dict[str, SelectedOutputValue],
+    context: str,
+) -> SelectedOutputValue:
+    if probe.kind == "voltage":
+        if probe.target.lower() in ("0", "gnd"):
+            return 0j if _contains_complex_values(node_voltages) else 0.0
+        value = _case_insensitive_get(node_voltages, probe.target)
+        if value is None:
+            raise NetlistParseError(f"{context}: missing voltage probe V({probe.target})")
+        return value
+    key = probe.target if probe.target.lower().startswith("i(") else f"I({probe.target})"
+    value = _case_insensitive_get(branch_currents, key)
+    if value is None:
+        raise NetlistParseError(f"{context}: missing branch current probe I({probe.target})")
+    return value
+
+
+def _contains_complex_values(values: dict[str, SelectedOutputValue]) -> bool:
+    return any(isinstance(value, complex) for value in values.values())
+
+
+def _case_insensitive_get(
+    values: dict[str, SelectedOutputValue],
+    key: str,
+) -> SelectedOutputValue | None:
+    if key in values:
+        return values[key]
+    lower_key = key.lower()
+    for candidate, value in values.items():
+        if candidate.lower() == lower_key:
+            return value
+    return None
+
+
+def _probe_label(probe: OutputProbe) -> str:
+    return f"V({probe.target})" if probe.kind == "voltage" else f"I({probe.target})"
 
 
 def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
@@ -341,6 +1214,30 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             parse_value(fields[3]),
             initial_current=params.get("IC", 0.0),
         )
+    if prefix == "K":
+        _require_fields(fields, 4, "mutual inductor")
+        return MutualInductor(name, fields[1], fields[2], parse_value(fields[3]))
+    if prefix == "T":
+        _require_min_fields(fields, 6, "transmission line")
+        params = _parse_element_params(fields[5:], "transmission line")
+        unsupported = set(params) - {"Z0", "TD"}
+        if unsupported:
+            raise NetlistParseError(
+                f"unsupported transmission line parameter {sorted(unsupported)[0]!r}"
+            )
+        if "Z0" not in params:
+            raise NetlistParseError(f"{name}: transmission line requires Z0")
+        if "TD" not in params:
+            raise NetlistParseError(f"{name}: transmission line requires TD")
+        return TransmissionLine(
+            name,
+            fields[1],
+            fields[2],
+            fields[3],
+            fields[4],
+            params["Z0"],
+            params["TD"],
+        )
     if prefix == "V":
         _require_min_fields(fields, 4, "voltage source")
         source = _parse_source_value(fields[3:])
@@ -368,6 +1265,11 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             fields[2],
             Is=model.params.get("IS", 1e-15),
             Vt=model.params.get("VT", 0.02585),
+            N=model.params.get("N", 1.0),
+            BV=model.params.get("BV"),
+            IBV=model.params.get("IBV", 1e-3),
+            Cjo=model.params.get("CJO", model.params.get("CJ0", 0.0)),
+            Tt=model.params.get("TT", 0.0),
         )
     if prefix == "Q":
         _require_fields(fields, 5, "BJT")
@@ -387,6 +1289,29 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Is=model.params.get("IS", 1e-14),
             beta_f=model.params.get("BETA_F", model.params.get("BF", 100.0)),
             Vt=model.params.get("VT", 0.02585),
+            Cje=model.params.get("CJE", model.params.get("CBE", 0.0)),
+            Cjc=model.params.get("CJC", model.params.get("CBC", 0.0)),
+            Tf=model.params.get("TF", 0.0),
+            Tr=model.params.get("TR", 0.0),
+        )
+    if prefix == "J":
+        _require_fields(fields, 5, "JFET")
+        model = models.get(fields[4].lower())
+        if model is None:
+            raise NetlistParseError(f"unknown model {fields[4]!r} for JFET {name!r}")
+        if model.kind not in {"NJF", "PJF"}:
+            raise NetlistParseError(
+                f"model {model.name!r} has kind {model.kind!r}, expected 'NJF' or 'PJF'"
+            )
+        return JFET(
+            name,
+            fields[1],
+            fields[2],
+            fields[3],
+            polarity=model.kind,
+            beta=model.params.get("BETA", model.params.get("B", 1.0e-4)),
+            vto=model.params.get("VTO", -2.0 if model.kind == "NJF" else 2.0),
+            lambda_=model.params.get("LAMBDA", 0.0),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -419,6 +1344,45 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
         _require_fields(fields, 5, "CCVS")
         return CCVS(name, fields[1], fields[2], fields[3], parse_value(fields[4]))
     raise NetlistParseError(f"unsupported element {name!r}")
+
+
+def _validate_mutual_inductors(circuit: Circuit) -> None:
+    inductors = {
+        element.name: element for element in circuit.elements if isinstance(element, Inductor)
+    }
+    for element in circuit.elements:
+        if not isinstance(element, MutualInductor):
+            continue
+        if not math.isfinite(element.coupling):
+            raise NetlistParseError(f"{element.name}: coupling must be finite")
+        if abs(element.coupling) >= 1.0:
+            raise NetlistParseError(
+                f"{element.name}: coupling magnitude must be less than one"
+            )
+        if element.primary == element.secondary:
+            raise NetlistParseError(f"{element.name}: coupled inductors must be distinct")
+        if element.primary not in inductors:
+            raise NetlistParseError(
+                f"{element.name}: referenced inductor {element.primary!r} was not found"
+            )
+        if element.secondary not in inductors:
+            raise NetlistParseError(
+                f"{element.name}: referenced inductor {element.secondary!r} was not found"
+            )
+
+
+def _validate_transmission_lines(circuit: Circuit) -> None:
+    for element in circuit.elements:
+        if not isinstance(element, TransmissionLine):
+            continue
+        if not math.isfinite(element.characteristic_impedance):
+            raise NetlistParseError(f"{element.name}: characteristic impedance must be finite")
+        if element.characteristic_impedance <= 0.0:
+            raise NetlistParseError(f"{element.name}: characteristic impedance must be positive")
+        if not math.isfinite(element.delay):
+            raise NetlistParseError(f"{element.name}: delay must be finite")
+        if element.delay <= 0.0:
+            raise NetlistParseError(f"{element.name}: delay must be positive")
 
 
 def _start_subckt(
@@ -493,8 +1457,8 @@ def _map_subckt_fields(
         _require_min_fields(fields, 3, "subcircuit element")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
-    elif prefix == "Q":
-        _require_min_fields(fields, 4, "subcircuit BJT")
+    elif prefix in {"Q", "J"}:
+        _require_min_fields(fields, 4, "subcircuit BJT" if prefix == "Q" else "subcircuit JFET")
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
         mapped[3] = _map_subckt_node(fields[3], instance_name, node_map)
@@ -511,6 +1475,14 @@ def _map_subckt_fields(
         mapped[1] = _map_subckt_node(fields[1], instance_name, node_map)
         mapped[2] = _map_subckt_node(fields[2], instance_name, node_map)
         mapped[3] = _map_subckt_source_ref(fields[3], instance_name)
+    elif prefix == "K":
+        _require_fields(fields, 4, "subcircuit mutual inductor")
+        mapped[1] = _map_subckt_source_ref(fields[1], instance_name)
+        mapped[2] = _map_subckt_source_ref(fields[2], instance_name)
+    elif prefix == "T":
+        _require_min_fields(fields, 6, "subcircuit transmission line")
+        for index in range(1, 5):
+            mapped[index] = _map_subckt_node(fields[index], instance_name, node_map)
     elif prefix == "X":
         mapped[1:-1] = [
             _map_subckt_node(node, instance_name, node_map) for node in fields[1:-1]
@@ -619,8 +1591,12 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_fields(fields, 1, ".op")
         return OpAnalysis()
     if directive == ".tran":
-        _require_fields(fields, 3, ".tran")
-        return TranAnalysis(t_step=parse_value(fields[1]), t_stop=parse_value(fields[2]))
+        _require_min_fields(fields, 3, ".tran")
+        return TranAnalysis(
+            t_step=parse_value(fields[1]),
+            t_stop=parse_value(fields[2]),
+            method=_parse_tran_method_options(fields[3:]),
+        )
     if directive == ".dc":
         _require_fields(fields, 5, ".dc")
         return DcAnalysis(
@@ -665,6 +1641,7 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_min_fields(fields, 3, ".noise")
         freqs: list[float] = []
         temperature = 300.0
+        temperature_is_explicit = False
         tail_index = 3
         while tail_index < len(fields):
             token = fields[tail_index]
@@ -673,10 +1650,12 @@ def _parse_directive(fields: list[str]) -> Analysis:
                 if tail_index + 1 >= len(fields):
                     raise NetlistParseError(".noise temp requires a temperature value")
                 temperature = parse_value(fields[tail_index + 1])
+                temperature_is_explicit = True
                 tail_index += 2
                 continue
             if lower_token.startswith("temp="):
                 temperature = parse_value(token.split("=", 1)[1])
+                temperature_is_explicit = True
                 tail_index += 1
                 continue
             freqs.append(parse_value(token))
@@ -686,11 +1665,129 @@ def _parse_directive(fields: list[str]) -> Analysis:
             input_source=fields[2],
             freqs=tuple(freqs),
             temperature=temperature,
+            temperature_is_explicit=temperature_is_explicit,
+        )
+    if directive == ".temp":
+        _require_min_fields(fields, 2, ".temp")
+        return TempAnalysis(
+            temperatures_celsius=tuple(parse_value(token) for token in fields[1:])
+        )
+    if directive == ".print":
+        _require_min_fields(fields, 3, ".print")
+        return PrintAnalysis(
+            analysis=fields[1].lower(),
+            probes=tuple(_parse_output_probe(token, ".print") for token in fields[2:]),
+        )
+    if directive == ".plot":
+        _require_min_fields(fields, 3, ".plot")
+        return PlotAnalysis(
+            analysis=fields[1].lower(),
+            probes=tuple(_parse_output_probe(token, ".plot") for token in fields[2:]),
+        )
+    if directive == ".save":
+        _require_min_fields(fields, 2, ".save")
+        return SaveAnalysis(
+            probes=tuple(_parse_output_probe(token, ".save") for token in fields[1:])
+        )
+    if directive == ".probe":
+        return _parse_probe_card(fields)
+    if directive in (".measure", ".meas"):
+        return _parse_measure_card(fields)
+    if directive == ".four":
+        _require_min_fields(fields, 3, ".four")
+        return FourAnalysis(
+            frequency_hz=parse_value(fields[1]),
+            probes=tuple(_parse_output_probe(token, ".four") for token in fields[2:]),
+        )
+    if directive == ".disto":
+        _require_min_fields(fields, 6, ".disto")
+        return DistortionAnalysis(
+            mode=fields[1].lower(),
+            points=int(parse_value(fields[2])),
+            start_hz=parse_value(fields[3]),
+            stop_hz=parse_value(fields[4]),
+            probes=tuple(_parse_output_probe(token, ".disto") for token in fields[5:]),
+        )
+    if directive == ".pz":
+        _require_min_fields(fields, 3, ".pz")
+        _require_max_fields(fields, 4, ".pz")
+        kind = fields[3].lower() if len(fields) >= 4 else "pz"
+        if kind not in ("pole", "zero", "pz"):
+            raise NetlistParseError(
+                f".pz kind must be 'pole', 'zero', or 'pz', got {fields[3]!r}"
+            )
+        return PoleZeroAnalysis(
+            output_node=_parse_voltage_probe(fields[1], ".pz"),
+            input_source=fields[2],
+            kind=kind,
         )
     if directive == ".options":
         _require_min_fields(fields, 2, ".options")
         return OptionsAnalysis(values=_parse_options(fields[1:]))
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_probe_card(fields: list[str]) -> ProbeAnalysis:
+    _require_min_fields(fields, 2, ".probe")
+    analysis: str | None = None
+    probe_tokens = fields[1:]
+    if len(fields) >= 3 and _is_analysis_selector(fields[1]):
+        analysis = fields[1].lower()
+        probe_tokens = fields[2:]
+    return ProbeAnalysis(
+        analysis=analysis,
+        probes=tuple(_parse_output_probe(token, ".probe") for token in probe_tokens),
+    )
+
+
+def _parse_measure_card(fields: list[str]) -> MeasureAnalysis:
+    directive = fields[0].lower()
+    _require_min_fields(fields, 5, directive)
+    operation = _parse_measure_operation(fields[3], directive)
+    options = _parse_measure_options(fields[5:], directive)
+    if operation == "find" and "at" not in options and fields[1].lower() not in ("op", "dcop"):
+        raise NetlistParseError(f"{directive} FIND requires AT=<value>")
+    if operation != "find" and "at" in options:
+        raise NetlistParseError(f"{directive} {operation.upper()} does not support AT=<value>")
+    return MeasureAnalysis(
+        analysis=fields[1].lower(),
+        name=fields[2],
+        operation=operation,
+        probe=_parse_output_probe(fields[4], directive),
+        at=options.get("at"),
+        start=options.get("from"),
+        stop=options.get("to"),
+    )
+
+
+def _parse_measure_operation(token: str, directive: str) -> MeasureOperation:
+    operation = token.lower()
+    if operation not in ("find", "max", "min", "avg", "rms"):
+        raise NetlistParseError(
+            f"{directive} operation must be FIND, MAX, MIN, AVG, or RMS, got {token!r}"
+        )
+    return operation
+
+
+def _parse_measure_options(tokens: list[str], directive: str) -> dict[str, float]:
+    options: dict[str, float] = {}
+    for token in tokens:
+        if "=" not in token:
+            raise NetlistParseError(f"{directive} option must be KEY=value, got {token!r}")
+        key, raw_value = token.split("=", 1)
+        key = key.strip().lower()
+        if key not in ("at", "from", "to"):
+            raise NetlistParseError(f"{directive} unsupported option {key!r}")
+        if key in options:
+            raise NetlistParseError(f"{directive} duplicate option {key!r}")
+        if raw_value == "":
+            raise NetlistParseError(f"{directive} option {key!r} requires a value")
+        options[key] = parse_value(raw_value)
+    return options
+
+
+def _is_analysis_selector(token: str) -> bool:
+    return token.lower() in {"op", "dcop", "dc", "ac", "tran", "transient"}
 
 
 def _parse_options(tokens: list[str]) -> dict[str, OptionValue]:
@@ -703,13 +1800,41 @@ def _parse_options(tokens: list[str]) -> dict[str, OptionValue]:
                 raise NetlistParseError(f".options contains empty option name in {token!r}")
             if raw_value == "":
                 raise NetlistParseError(f".options {key!r} requires a value")
-            values[key] = _parse_option_value(raw_value)
+            values[key] = (
+                _parse_transient_method(raw_value, ".options method")
+                if key == "method"
+                else _parse_option_value(raw_value)
+            )
         else:
             key = token.strip().lower()
             if not key:
                 raise NetlistParseError(".options contains an empty flag")
             values[key] = True
     return values
+
+
+def _parse_tran_method_options(tokens: list[str]) -> TransientMethod | None:
+    method: TransientMethod | None = None
+    for token in tokens:
+        if "=" not in token:
+            raise NetlistParseError(
+                f".tran unsupported trailing option {token!r}; use method=<euler|trap|gear2>"
+            )
+        key, raw_value = token.split("=", 1)
+        key = key.strip().lower()
+        if key != "method":
+            raise NetlistParseError(f".tran unsupported option {key!r}")
+        if raw_value == "":
+            raise NetlistParseError(".tran method requires a value")
+        method = _parse_transient_method(raw_value, ".tran method")
+    return method
+
+
+def _parse_transient_method(raw_value: str, context: str) -> TransientMethod:
+    method = raw_value.strip().lower()
+    if method in ("euler", "trap", "gear2"):
+        return method
+    raise NetlistParseError(f"{context} must be euler, trap, or gear2, got {raw_value!r}")
 
 
 def _parse_option_value(raw_value: str) -> OptionValue:
@@ -726,6 +1851,16 @@ def _parse_voltage_probe(token: str, directive: str) -> str:
             f"{directive} output must be a voltage probe V(node), got {token!r}"
         )
     return match.group(1)
+
+
+def _parse_output_probe(token: str, directive: str) -> OutputProbe:
+    match = re.fullmatch(r"(?i)([vi])\(([^()\s]+)\)", token)
+    if match is None:
+        raise NetlistParseError(
+            f"{directive} probe must be V(node) or I(source), got {token!r}"
+        )
+    kind = "voltage" if match.group(1).lower() == "v" else "current"
+    return OutputProbe(kind=kind, target=match.group(2))
 
 
 def _parse_model_card(fields: list[str]) -> ModelCard:

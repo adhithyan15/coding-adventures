@@ -1,0 +1,43 @@
+{
+  "domain": "materials-failure-analysis (metallurgical fractography)",
+  "leading_answer": "The axle failures are most plausibly a case of bending-fatigue cracking initiated at the machined transition fillet, where the leading hypothesis is that the failure was driven by manufacturing/surface condition rather than material defect: rough machining textures, blade marks, surface notches/roughness, corrosion pits, and detrimental residual tensile stress at the fillet acted together as stress concentrators that nucleated dual fatigue cracks, while chemical composition and microstructure were normal and conforming.",
+  "coverage": {
+    "covered": true,
+    "clean": true,
+    "bytes": 1975
+  },
+  "input_extraction": {
+    "n": 32,
+    "grounded": 32,
+    "rejected": 0,
+    "by_kind": {
+      "extracted": 24,
+      "inferred": 8
+    }
+  },
+  "output_grounding": {
+    "n": 13,
+    "grounded": 13,
+    "rejected": 0,
+    "by_kind": {
+      "evidence": 7,
+      "conclusion": 6
+    }
+  },
+  "input_attempts": [
+    {
+      "attempt": 1,
+      "n": 32,
+      "n_rejected": 0
+    }
+  ],
+  "output_attempts": [
+    {
+      "attempt": 1,
+      "leading_answer": "The axle failures are most plausibly a case of bending-fatigue cracking initiated at the machined transition fillet, where the leading hypothesis is that the failure was driven by manufacturing/surface condition rather than material defect: rough machining textures, blade marks, surface notches/roughness, corrosion pits, and detrimental residual tensile stress at the fillet acted together as stress concentrators that nucleated dual fatigue cracks, while chemical composition and microstructure were normal and conforming.",
+      "n": 13,
+      "n_rejected": 0
+    }
+  ],
+  "complete": true
+}

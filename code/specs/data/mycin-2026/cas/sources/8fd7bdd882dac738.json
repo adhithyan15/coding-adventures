@@ -1,0 +1,52 @@
+{
+  "hash": "8fd7bdd882dac738",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/",
+  "title": "Global etiology of bacterial meningitis: A systematic review and meta-analysis",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Across all age groups, S. pneumoniae and N. meningitidis are the predominant pathogens in all regions, accounting for 25.1-41.2% and 9.1-36.2% of bacterial meningitis cases respectively.",
+      "byte_quote": "In all age groups, *S*. *pneumoniae* and *N*. *meningitidis* were the predominant pathogens in all regions, accounting for 25.1–41.2% and 9.1–36.2% of bacterial meningitis cases, respectively."
+    },
+    {
+      "id": "c2",
+      "text": "S. pneumoniae is the most common cause of bacterial meningitis in the 'all children' group, ranging from 22.5% (Europe) to 41.1% (Africa).",
+      "byte_quote": "*S*. *pneumoniae* infection was the most common cause of bacterial meningitis in the 'all children' group, ranging from 22.5% (Europe) to 41.1% (Africa)"
+    },
+    {
+      "id": "c3",
+      "text": "In all adults, S. pneumoniae frequency ranges from 9.6% (Western Pacific) to 75.2% (Africa).",
+      "byte_quote": "in all adults ranging from 9.6% (Western Pacific) to 75.2% (Africa)"
+    },
+    {
+      "id": "c4",
+      "text": "In neonates in Africa, E. coli and S. pneumoniae were the most common pathogens (17.7% and 20.4% respectively).",
+      "byte_quote": "*E*. *coli* and *S*. *pneumoniae* were the most common pathogens that caused bacterial meningitis in neonates in Africa (17.7% and 20.4%, respectively)."
+    },
+    {
+      "id": "c5",
+      "text": "N. meningitidis was the most common pathogen in children aged ~1-5 years in Europe (47.0%).",
+      "byte_quote": "*N*. *meningitidis* was the most common in children aged ±1–5 years in Europe (47.0%)."
+    },
+    {
+      "id": "c6",
+      "text": "Most neonatal bacterial meningitis is due to group B Streptococcus agalactiae, Escherichia coli, and Listeria monocytogenes, while most cases in children and adults are caused by Streptococcus pneumoniae and Neisseria meningitidis.",
+      "byte_quote": "Among neonates, most cases of bacterial meningitis are due to group B *Streptococcus agalactiae*, *Escherichia coli*, and *Listeria monocytogenes*, while most cases in children and adults are caused by *Streptococcus pneumoniae* and *Neisseria meningitidis*."
+    },
+    {
+      "id": "c7",
+      "text": "Haemophilus influenzae is implicated in bacterial meningitis across all age groups but is preponderant in children under 5 years of age.",
+      "byte_quote": "Although *Haemophilus influenzae* is implicated in bacterial meningitis in all age groups, it is preponderant in children <5 years of age."
+    },
+    {
+      "id": "c8",
+      "text": "Weighted-mean frequency across regions/age groups ranged 3.2-47.0% for N. meningitidis and 9.6-75.2% for S. pneumoniae; H. influenzae ranged 0.2-15.5%.",
+      "byte_quote": "*N*. *meningitidis*, and *S*. *pneumoniae*; with weighted means for frequency across geographical regions and age groups ranging from 3.2–47.0%, and 9.6–75.2%, respectively. The range of weighted means for frequency of *H*. *influenzae* was 0.2–15.5%"
+    }
+  ],
+  "cites": [
+    "Thigpen et al. (USA bacterial meningitis incidence, 2003-2007: estimated 4100 cases and 500 deaths annually)",
+    "WHO (African Meningitis Belt, 2009: estimated 80,000 suspected meningitis cases and more than 4000 deaths)"
+  ]
+}

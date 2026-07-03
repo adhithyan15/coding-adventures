@@ -1,0 +1,8 @@
+{
+ "check_id": 164,
+ "idx": 66,
+ "slot": "two_weeks_notice_given",
+ "claimed_value": false,
+ "scenario": "Carlos resigned with only 3 days' notice. He provided documentation that his household relocated 250 miles away for his spouse's job, which is why he could not give two weeks' notice.",
+ "cited_span": "Carlos resigned with only 3 days' notice."
+}

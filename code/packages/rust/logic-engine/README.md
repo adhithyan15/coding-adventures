@@ -16,6 +16,17 @@ proof-DAG return type, full search modes, and the weighted-model-counting
 backend land in subsequent PRs. The data shapes are in place from day
 one so that adding them is purely additive.
 
+### Differential decisions (v0.7)
+
+`lr_aggregate(query, kb)` scores **one** hypothesis. `differential(hypotheses,
+kb)` scores a set of **competing** hypotheses, ranks them by posterior, picks
+the argmax, and reports the between-hypothesis margin — the operation MYCIN
+performs. The decision is `Determinate` when the leader beats the runner-up
+even under the worst-case resolution of every open uncertainty, and `Kickback`
+(with ranked markers to resolve) when an unresolved finding could flip the
+ranking. Deterministic, CPU-only, and each ranked hypothesis keeps its proof
+DAG.
+
 ## How It Fits in the Stack
 
 ```
@@ -52,6 +63,88 @@ let query = compound("father", vec![atom("homer"), Term::Var(x.clone())]);
 let answer = find_first(&query, &kb).expect("there is at least one answer");
 assert_eq!(answer.walk_var(&x), atom("bart"));  // first matching clause
 ```
+
+### Defeasible precedence (v0.18, ADJ73)
+
+Most real rulebooks are **defaults with exceptions**: two rules derive conclusions that
+cannot both hold, and a priority decides which one *governs*. Declare the predicate
+**functional** (at most one value per key) and give the rules a `Priority` **tier**; then
+`enumerate_governing` resolves the conflict as a post-pass over `enumerate_all`:
+
+```rust
+use logic_engine::{enumerate_governing, GovernStatus, KnowledgeBase, Priority, Rule};
+
+let mut kb = KnowledgeBase::new();
+kb.declare_functional("timing", 1);                       // one timing decision may hold
+kb.add_fact(/* stable_routine_pending */);
+kb.add_rule(Rule::certain(/* timing(await) when stable_routine_pending */)
+    .with_priority(Priority::Specific));                  // beats the default
+kb.add_rule(Rule::certain(/* timing(treat_now) — default */));            // Priority::Default
+
+let res = enumerate_governing(&/* timing($D) */, &kb);
+// timing(await) governs; timing(treat_now) is Defeated { by: timing(await) }.
+// A tie at the top tier yields ConflictPeer (never silently resolved) — abstain/ask.
+```
+
+Priority is a **named enum tier** (`Default < Specific < Authoritative < Mandatory`), not a raw
+integer; a ground fact (`Standing::Asserted`) outranks every rule tier. A predicate that is
+**not** declared functional never conflicts, so every answer governs and `enumerate_all`
+semantics are unchanged — precedence is opt-in per predicate.
+
+**Grounded context precedence (v0.19, lex superior).** A rule can be grounded in a *context*
+(`Rule::with_context("ninth_circuit")`), and a partial order over contexts
+(`kb.add_context_outranks("ninth_circuit", "district_court")`) makes the rule in the **greater**
+context defeat a conflicting one in a lesser context — *before* the tier is consulted (the tier
+breaks ties the context order leaves open):
+
+```rust
+kb.declare_functional("means", 2);
+kb.add_context_outranks("ninth_circuit", "district_court");  // grounded precedence edge
+kb.add_rule(Rule::certain(/* means(waters, broad) */).with_context("ninth_circuit"));
+kb.add_rule(Rule::certain(/* means(waters, narrow) */).with_context("district_court"));
+// → means(waters, broad) governs; the district reading is Defeated { by: … }.
+```
+
+`context_outranks` is cycle-safe; a cyclic order (`context_order_has_cycle`) crowns nothing
+rather than picking wrong. With no context order declared, resolution is pure-tier (back-compat).
+
+**Grounded precedence edges (v0.20).** `add_context_outranks` edges carry no provenance. The
+*grounded* way to declare precedence is a `relate outranks_context(higher, lower)` clause — an
+ordinary [`Fact`] carrying `source`/`locator`/`trust`, queryable and one CAS edit from
+correctable. Such a fact participates in the context order exactly like an explicit edge, so the
+*reason* one context outranks another rides on the edge itself:
+
+```rust
+// federal outranks state BECAUSE of the Supremacy Clause — the citation is on the edge.
+kb.add_fact(
+    Fact::certain(/* outranks_context(federal, state) */)
+        .with_provenance(Provenance::new(
+            "U.S. Const. art. VI, cl. 2 (Supremacy Clause)", Some("cl. 2".into()),
+            TrustTier::Authoritative)),
+);
+// a federal rule now governs a conflicting state rule even at a lower tier; the edge is auditable.
+```
+
+`context_adjacency()` unions the explicit and grounded edges into one directed graph, so the
+cycle check (a single Kahn pass) and `context_outranks` (a cycle-safe DFS) span both sources.
+
+**Derived precedence — meta-rules (v0.21).** Most precedence is not a standing hierarchy but is
+*derived* from a primitive fact about the two authorities (which came later, which reversed which).
+So `context_adjacency` also reads **rule-derived** `outranks_context` edges: when the KB has any
+`outranks_context/2` rule, it enumerates every provable edge (subsuming the ground facts). A
+grounded meta-rule then turns a primitive into precedence — `outranks_context($H, $L) :-
+reverses($H, $L)` (citing the overruling doctrine) makes a `reverses(a, b)` fact an edge `a > b`:
+
+```rust
+kb.add_rule(/* outranks_context(H, L) :- reverses(H, L) */);   // the appeal-status canon
+kb.add_fact(/* reverses(scotus_2023, ninth_circuit_2019) */);   // a primitive grounded fact
+assert!(kb.context_outranks("scotus_2023", "ninth_circuit_2019")); // edge DERIVED, not asserted
+```
+
+The recursion bottoms out at the primitive grounded facts, each byte-provenanced — an edge that can
+be derived is derived (and cited), not duplicated. The grounded `context-precedence` rulebook + its
+meta-rules + worked legal/medical examples live in `code/specs/data/context-precedence/`
+(`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3, §7).
 
 ## Why Probability From Day One
 

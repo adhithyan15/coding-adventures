@@ -681,6 +681,17 @@ pub struct LanguageInputCallbackPlanError {
     pub kind: LanguageInputCallbackPlanErrorKind,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackPlanDiagnostic {
+    pub selector: String,
+    pub pin: u8,
+    pub kind: LanguageInputCallbackPlanErrorKind,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub message: String,
+    pub error: LanguageInputCallbackPlanError,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackLevel {
     Low,
@@ -750,6 +761,23 @@ pub struct LanguageInputCallbackQueuePlan {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionQueueSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub queue_label: String,
+    pub action: LanguageInputCallbackQueueAction,
+    pub queue_policy: LanguageInputCallbackQueuePolicy,
+    pub queued: bool,
+    pub dropped_existing_event: bool,
+    pub dropped_incoming_event: bool,
+    pub dispatch_required: bool,
+    pub queue_depth_before: u8,
+    pub queue_depth_after: u8,
+    pub message: String,
+    pub queue_plan: LanguageInputCallbackQueuePlan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageInputCallbackDispatchPlan {
     pub board_id: String,
     pub pin: u8,
@@ -765,6 +793,24 @@ pub struct LanguageInputCallbackDispatchPlan {
     pub dropped_existing_event: bool,
     pub interrupt_backed: bool,
     pub dispatch_model: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionDispatchSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub dispatch_label: String,
+    pub dispatch_reason: String,
+    pub callback_program_id: u16,
+    pub callback_instruction_budget: u32,
+    pub sequence: u32,
+    pub queue_depth_after: u8,
+    pub queue_action: LanguageInputCallbackQueueAction,
+    pub dropped_existing_event: bool,
+    pub interrupt_backed: bool,
+    pub dispatch_model: String,
+    pub message: String,
+    pub dispatch_plan: LanguageInputCallbackDispatchPlan,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -801,6 +847,1802 @@ pub struct LanguageInputCallbackResultSummary {
     pub message: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportResultSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub callback_label: String,
+    pub result: LanguageInputCallbackResultSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackCompletionAction {
+    Complete,
+    KeepRunning,
+    DropAfterBudgetExceeded,
+    DropAfterFailure,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackCompletionPlan {
+    pub action: LanguageInputCallbackCompletionAction,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_completion: u8,
+    pub message: String,
+    pub result: LanguageInputCallbackResultSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionCompletionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub callback_label: String,
+    pub completion_label: String,
+    pub action: LanguageInputCallbackCompletionAction,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_completion: u8,
+    pub result: LanguageInputCallbackResultSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionLifecycleSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub lifecycle_label: String,
+    pub queued: bool,
+    pub dispatch_required: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_summary: LanguageInputCallbackSessionQueueSummary,
+    pub dispatch_summary: Option<LanguageInputCallbackSessionDispatchSummary>,
+    pub result: Option<LanguageInputCallbackResultSummary>,
+    pub completion_summary: Option<LanguageInputCallbackSessionCompletionSummary>,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportAction {
+    DropBeforeDispatch,
+    DispatchCallback,
+    CompleteCallback,
+    KeepCallbackRunning,
+    DropAfterBudgetExceeded,
+    DropAfterFailure,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportActionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub action_label: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub queued: bool,
+    pub dispatch_required: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after: u8,
+    pub queue_depth_after_completion: Option<u8>,
+    pub message: String,
+    pub lifecycle_summary: LanguageInputCallbackSessionLifecycleSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportEffectSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub effect_label: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub emit_drop: bool,
+    pub emit_result: bool,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_effect: u8,
+    pub message: String,
+    pub action_summary: LanguageInputCallbackTransportActionSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportReportKind {
+    Dispatch,
+    Drop,
+    Completion,
+    Running,
+    BudgetExceeded,
+    Failure,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportReportSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub report_label: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub emit_report: bool,
+    pub emit_drop: bool,
+    pub emit_result: bool,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_report: u8,
+    pub message: String,
+    pub effect_summary: LanguageInputCallbackTransportEffectSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportEventKind {
+    DispatchScheduled,
+    CallbackDropped,
+    CallbackCompleted,
+    CallbackRunning,
+    CallbackBudgetExceeded,
+    CallbackFailed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportEventSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub event_label: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub emit_report: bool,
+    pub emit_drop: bool,
+    pub emit_result: bool,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_event: u8,
+    pub message: String,
+    pub report_summary: LanguageInputCallbackTransportReportSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportDeliveryRoute {
+    CallbackRunner,
+    AdapterEvent,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportDeliverySummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub delivery_label: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub publish_event: bool,
+    pub emit_drop: bool,
+    pub emit_result: bool,
+    pub remove_from_queue: bool,
+    pub keep_dispatch_scheduled: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_delivery: u8,
+    pub message: String,
+    pub event_summary: LanguageInputCallbackTransportEventSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportAcknowledgementKind {
+    CallbackRunnerAccepted,
+    AdapterEventPublished,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportAcknowledgementSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub acknowledgement_label: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub dispatch_callback: bool,
+    pub publish_event: bool,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_acknowledgement: u8,
+    pub message: String,
+    pub delivery_summary: LanguageInputCallbackTransportDeliverySummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportReceiptKind {
+    CallbackRunnerHandoff,
+    AdapterEventPublication,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportReceiptSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub receipt_label: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_receipt: u8,
+    pub message: String,
+    pub acknowledgement_summary: LanguageInputCallbackTransportAcknowledgementSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportOutcomeKind {
+    CallbackRunnerHandoffRecorded,
+    AdapterEventPublicationRecorded,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportOutcomeSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub outcome_label: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_outcome: u8,
+    pub message: String,
+    pub receipt_summary: LanguageInputCallbackTransportReceiptSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportTraceKind {
+    CallbackRunnerHandoffTrace,
+    AdapterEventPublicationTrace,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportTraceSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub trace_label: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_trace: u8,
+    pub message: String,
+    pub outcome_summary: LanguageInputCallbackTransportOutcomeSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportAuditKind {
+    CallbackRunnerHandoffAudit,
+    AdapterEventPublicationAudit,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportAuditSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub audit_label: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_audit: u8,
+    pub message: String,
+    pub trace_summary: LanguageInputCallbackTransportTraceSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportLogKind {
+    CallbackRunnerHandoffLog,
+    AdapterEventPublicationLog,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportLogSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub log_label: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_log: u8,
+    pub message: String,
+    pub audit_summary: LanguageInputCallbackTransportAuditSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportJournalKind {
+    CallbackRunnerHandoffJournal,
+    AdapterEventPublicationJournal,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportJournalSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub journal_label: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_journal: u8,
+    pub message: String,
+    pub log_summary: LanguageInputCallbackTransportLogSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportArchiveKind {
+    CallbackRunnerHandoffArchive,
+    AdapterEventPublicationArchive,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportArchiveSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub archive_label: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_archive: u8,
+    pub message: String,
+    pub journal_summary: LanguageInputCallbackTransportJournalSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportSnapshotKind {
+    CallbackRunnerHandoffSnapshot,
+    AdapterEventPublicationSnapshot,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportSnapshotSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub snapshot_label: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_snapshot: u8,
+    pub message: String,
+    pub archive_summary: LanguageInputCallbackTransportArchiveSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportCheckpointKind {
+    CallbackRunnerHandoffCheckpoint,
+    AdapterEventPublicationCheckpoint,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportCheckpointSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub checkpoint_label: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_checkpoint: u8,
+    pub message: String,
+    pub snapshot_summary: LanguageInputCallbackTransportSnapshotSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportMarkerKind {
+    CallbackRunnerHandoffMarker,
+    AdapterEventPublicationMarker,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportMarkerSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub marker_label: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_marker: u8,
+    pub message: String,
+    pub checkpoint_summary: LanguageInputCallbackTransportCheckpointSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportCursorKind {
+    CallbackRunnerHandoffCursor,
+    AdapterEventPublicationCursor,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportCursorSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub cursor_label: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_cursor: u8,
+    pub message: String,
+    pub marker_summary: LanguageInputCallbackTransportMarkerSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportBookmarkKind {
+    CallbackRunnerHandoffBookmark,
+    AdapterEventPublicationBookmark,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportBookmarkSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub bookmark_label: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_bookmark: u8,
+    pub message: String,
+    pub cursor_summary: LanguageInputCallbackTransportCursorSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportReferenceKind {
+    CallbackRunnerHandoffReference,
+    AdapterEventPublicationReference,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportReferenceSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub reference_label: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_reference: u8,
+    pub message: String,
+    pub bookmark_summary: LanguageInputCallbackTransportBookmarkSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportLogicKind {
+    CallbackRunnerHandoffLogic,
+    AdapterEventPublicationLogic,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportLogicSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub logic_label: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_logic: u8,
+    pub message: String,
+    pub reference_summary: LanguageInputCallbackTransportReferenceSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportDecisionKind {
+    CallbackRunnerHandoffDecision,
+    AdapterEventPublicationDecision,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportDecisionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub decision_label: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_decision: u8,
+    pub message: String,
+    pub logic_summary: LanguageInputCallbackTransportLogicSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportResolutionKind {
+    CallbackRunnerHandoffResolution,
+    AdapterEventPublicationResolution,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportResolutionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub resolution_label: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_resolution: u8,
+    pub message: String,
+    pub decision_summary: LanguageInputCallbackTransportDecisionSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportFinalizationKind {
+    CallbackRunnerHandoffFinalization,
+    AdapterEventPublicationFinalization,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportFinalizationSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub finalization_label: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_finalization: u8,
+    pub message: String,
+    pub resolution_summary: LanguageInputCallbackTransportResolutionSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportCompletionKind {
+    CallbackRunnerHandoffCompletion,
+    AdapterEventPublicationCompletion,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportCompletionSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub completion_label: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_completion: u8,
+    pub message: String,
+    pub finalization_summary: LanguageInputCallbackTransportFinalizationSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportDiagnosticKind {
+    CallbackRunnerHandoffDiagnostic,
+    AdapterEventPublicationDiagnostic,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportDiagnosticSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub diagnostic_label: String,
+    pub diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+    pub diagnostic_name: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub diagnostic_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_diagnostic: u8,
+    pub message: String,
+    pub completion_summary: LanguageInputCallbackTransportCompletionSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportHealthKind {
+    CallbackRunnerHandoffHealth,
+    AdapterEventPublicationHealth,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportHealthSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub health_label: String,
+    pub health_kind: LanguageInputCallbackTransportHealthKind,
+    pub health_name: String,
+    pub diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+    pub diagnostic_name: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub diagnostic_recorded: bool,
+    pub health_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_health: u8,
+    pub message: String,
+    pub diagnostic_summary: LanguageInputCallbackTransportDiagnosticSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportReadinessKind {
+    CallbackRunnerHandoffReadiness,
+    AdapterEventPublicationReadiness,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportReadinessSummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub readiness_label: String,
+    pub readiness_kind: LanguageInputCallbackTransportReadinessKind,
+    pub readiness_name: String,
+    pub health_kind: LanguageInputCallbackTransportHealthKind,
+    pub health_name: String,
+    pub diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+    pub diagnostic_name: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub diagnostic_recorded: bool,
+    pub health_recorded: bool,
+    pub readiness_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_readiness: u8,
+    pub message: String,
+    pub health_summary: LanguageInputCallbackTransportHealthSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportAvailabilityKind {
+    CallbackRunnerHandoffAvailability,
+    AdapterEventPublicationAvailability,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportAvailabilitySummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub availability_label: String,
+    pub availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+    pub availability_name: String,
+    pub readiness_kind: LanguageInputCallbackTransportReadinessKind,
+    pub readiness_name: String,
+    pub health_kind: LanguageInputCallbackTransportHealthKind,
+    pub health_name: String,
+    pub diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+    pub diagnostic_name: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub diagnostic_recorded: bool,
+    pub health_recorded: bool,
+    pub readiness_recorded: bool,
+    pub availability_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_availability: u8,
+    pub message: String,
+    pub readiness_summary: LanguageInputCallbackTransportReadinessSummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackTransportCapacityKind {
+    CallbackRunnerHandoffCapacity,
+    AdapterEventPublicationCapacity,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackTransportCapacitySummary {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub capacity_label: String,
+    pub capacity_kind: LanguageInputCallbackTransportCapacityKind,
+    pub capacity_name: String,
+    pub availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+    pub availability_name: String,
+    pub readiness_kind: LanguageInputCallbackTransportReadinessKind,
+    pub readiness_name: String,
+    pub health_kind: LanguageInputCallbackTransportHealthKind,
+    pub health_name: String,
+    pub diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+    pub diagnostic_name: String,
+    pub completion_kind: LanguageInputCallbackTransportCompletionKind,
+    pub completion_name: String,
+    pub finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+    pub finalization_name: String,
+    pub resolution_kind: LanguageInputCallbackTransportResolutionKind,
+    pub resolution_name: String,
+    pub decision_kind: LanguageInputCallbackTransportDecisionKind,
+    pub decision_name: String,
+    pub logic_kind: LanguageInputCallbackTransportLogicKind,
+    pub logic_name: String,
+    pub reference_kind: LanguageInputCallbackTransportReferenceKind,
+    pub reference_name: String,
+    pub bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+    pub bookmark_name: String,
+    pub cursor_kind: LanguageInputCallbackTransportCursorKind,
+    pub cursor_name: String,
+    pub marker_kind: LanguageInputCallbackTransportMarkerKind,
+    pub marker_name: String,
+    pub checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+    pub checkpoint_name: String,
+    pub snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+    pub snapshot_name: String,
+    pub archive_kind: LanguageInputCallbackTransportArchiveKind,
+    pub archive_name: String,
+    pub journal_kind: LanguageInputCallbackTransportJournalKind,
+    pub journal_name: String,
+    pub log_kind: LanguageInputCallbackTransportLogKind,
+    pub log_name: String,
+    pub audit_kind: LanguageInputCallbackTransportAuditKind,
+    pub audit_name: String,
+    pub trace_kind: LanguageInputCallbackTransportTraceKind,
+    pub trace_name: String,
+    pub outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+    pub outcome_name: String,
+    pub receipt_kind: LanguageInputCallbackTransportReceiptKind,
+    pub receipt_name: String,
+    pub acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+    pub acknowledgement_name: String,
+    pub delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    pub delivery_route_name: String,
+    pub event_kind: LanguageInputCallbackTransportEventKind,
+    pub event_name: String,
+    pub report_kind: LanguageInputCallbackTransportReportKind,
+    pub report_name: String,
+    pub action: LanguageInputCallbackTransportAction,
+    pub action_name: String,
+    pub callback_runner_handoff: bool,
+    pub adapter_event_published: bool,
+    pub delivery_acknowledged: bool,
+    pub receipt_recorded: bool,
+    pub outcome_recorded: bool,
+    pub trace_recorded: bool,
+    pub audit_recorded: bool,
+    pub log_recorded: bool,
+    pub journal_recorded: bool,
+    pub archive_recorded: bool,
+    pub snapshot_recorded: bool,
+    pub checkpoint_recorded: bool,
+    pub marker_recorded: bool,
+    pub cursor_recorded: bool,
+    pub bookmark_recorded: bool,
+    pub reference_recorded: bool,
+    pub logic_recorded: bool,
+    pub decision_recorded: bool,
+    pub resolution_recorded: bool,
+    pub finalization_recorded: bool,
+    pub completion_recorded: bool,
+    pub diagnostic_recorded: bool,
+    pub health_recorded: bool,
+    pub readiness_recorded: bool,
+    pub availability_recorded: bool,
+    pub capacity_recorded: bool,
+    pub terminal: bool,
+    pub retryable: bool,
+    pub queue_depth_after_capacity: u8,
+    pub message: String,
+    pub availability_summary: LanguageInputCallbackTransportAvailabilitySummary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageInputCallbackDiagnosticStage {
+    Plan,
+    Event,
+    QueuePlan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackSessionDiagnostic {
+    pub endpoint: LanguageHostEndpointSummary,
+    pub connection_label: String,
+    pub diagnostic_stage: LanguageInputCallbackDiagnosticStage,
+    pub stage_name: String,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub source_diagnostic_label: String,
+    pub message: String,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LanguageInputCallbackQueuePlanErrorKind {
     EmptyQueue,
@@ -815,6 +2657,20 @@ pub struct LanguageInputCallbackQueuePlanError {
     pub queue_capacity: u8,
     pub queue_depth: u8,
     pub kind: LanguageInputCallbackQueuePlanErrorKind,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackQueuePlanDiagnostic {
+    pub board_id: String,
+    pub pin: u8,
+    pub callback_program_id: u16,
+    pub queue_capacity: u8,
+    pub queue_depth: u8,
+    pub kind: LanguageInputCallbackQueuePlanErrorKind,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub message: String,
+    pub error: LanguageInputCallbackQueuePlanError,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -832,6 +2688,20 @@ pub struct LanguageInputCallbackEventError {
     pub event_pin: u8,
     pub event_kind: String,
     pub kind: LanguageInputCallbackEventErrorKind,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageInputCallbackEventDiagnostic {
+    pub plan_board_id: String,
+    pub event_board_id: String,
+    pub plan_pin: u8,
+    pub event_pin: u8,
+    pub event_kind: String,
+    pub kind: LanguageInputCallbackEventErrorKind,
+    pub kind_name: String,
+    pub diagnostic_label: String,
+    pub message: String,
+    pub error: LanguageInputCallbackEventError,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1134,6 +3004,440 @@ pub const fn run_status_name(status: RunStatus) -> &'static str {
         RunStatus::Stopped => "stopped",
         RunStatus::BudgetExceeded => "budget_exceeded",
         RunStatus::Faulted => "faulted",
+    }
+}
+
+pub const fn input_callback_queue_action_name(
+    action: LanguageInputCallbackQueueAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackQueueAction::Enqueue => "enqueue",
+        LanguageInputCallbackQueueAction::DropNewest => "drop_newest",
+        LanguageInputCallbackQueueAction::DropOldestThenEnqueue => "drop_oldest_then_enqueue",
+    }
+}
+
+pub const fn input_callback_plan_error_kind_name(
+    kind: LanguageInputCallbackPlanErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackPlanErrorKind::UnknownTarget => "unknown_target",
+        LanguageInputCallbackPlanErrorKind::UnknownPin => "unknown_pin",
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInput => "pin_does_not_support_input",
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInterrupt => {
+            "pin_does_not_support_interrupt"
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportPull => "pin_does_not_support_pull",
+        LanguageInputCallbackPlanErrorKind::EmptyQueue => "empty_queue",
+        LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget => "empty_callback_budget",
+    }
+}
+
+pub const fn input_callback_queue_plan_error_kind_name(
+    kind: LanguageInputCallbackQueuePlanErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackQueuePlanErrorKind::EmptyQueue => "empty_queue",
+        LanguageInputCallbackQueuePlanErrorKind::QueueDepthExceedsCapacity => {
+            "queue_depth_exceeds_capacity"
+        }
+    }
+}
+
+pub const fn input_callback_event_error_kind_name(
+    kind: LanguageInputCallbackEventErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackEventErrorKind::BoardMismatch => "board_mismatch",
+        LanguageInputCallbackEventErrorKind::PinMismatch => "pin_mismatch",
+        LanguageInputCallbackEventErrorKind::EventKindMismatch => "event_kind_mismatch",
+    }
+}
+
+pub const fn input_callback_diagnostic_stage_name(
+    stage: LanguageInputCallbackDiagnosticStage,
+) -> &'static str {
+    match stage {
+        LanguageInputCallbackDiagnosticStage::Plan => "plan",
+        LanguageInputCallbackDiagnosticStage::Event => "event",
+        LanguageInputCallbackDiagnosticStage::QueuePlan => "queue_plan",
+    }
+}
+
+pub const fn input_callback_completion_action_name(
+    action: LanguageInputCallbackCompletionAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackCompletionAction::Complete => "complete",
+        LanguageInputCallbackCompletionAction::KeepRunning => "keep_running",
+        LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded => {
+            "drop_after_budget_exceeded"
+        }
+        LanguageInputCallbackCompletionAction::DropAfterFailure => "drop_after_failure",
+    }
+}
+
+pub const fn input_callback_transport_action_name(
+    action: LanguageInputCallbackTransportAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackTransportAction::DropBeforeDispatch => "drop_before_dispatch",
+        LanguageInputCallbackTransportAction::DispatchCallback => "dispatch_callback",
+        LanguageInputCallbackTransportAction::CompleteCallback => "complete_callback",
+        LanguageInputCallbackTransportAction::KeepCallbackRunning => "keep_callback_running",
+        LanguageInputCallbackTransportAction::DropAfterBudgetExceeded => {
+            "drop_after_budget_exceeded"
+        }
+        LanguageInputCallbackTransportAction::DropAfterFailure => "drop_after_failure",
+    }
+}
+
+pub const fn input_callback_transport_report_kind_name(
+    kind: LanguageInputCallbackTransportReportKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportReportKind::Dispatch => "dispatch",
+        LanguageInputCallbackTransportReportKind::Drop => "drop",
+        LanguageInputCallbackTransportReportKind::Completion => "completion",
+        LanguageInputCallbackTransportReportKind::Running => "running",
+        LanguageInputCallbackTransportReportKind::BudgetExceeded => "budget_exceeded",
+        LanguageInputCallbackTransportReportKind::Failure => "failure",
+    }
+}
+
+pub const fn input_callback_transport_event_kind_name(
+    kind: LanguageInputCallbackTransportEventKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportEventKind::DispatchScheduled => "dispatch_scheduled",
+        LanguageInputCallbackTransportEventKind::CallbackDropped => "callback_dropped",
+        LanguageInputCallbackTransportEventKind::CallbackCompleted => "callback_completed",
+        LanguageInputCallbackTransportEventKind::CallbackRunning => "callback_running",
+        LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded => {
+            "callback_budget_exceeded"
+        }
+        LanguageInputCallbackTransportEventKind::CallbackFailed => "callback_failed",
+    }
+}
+
+pub const fn input_callback_transport_delivery_route_name(
+    route: LanguageInputCallbackTransportDeliveryRoute,
+) -> &'static str {
+    match route {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner => "callback_runner",
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent => "adapter_event",
+    }
+}
+
+pub const fn input_callback_transport_acknowledgement_kind_name(
+    kind: LanguageInputCallbackTransportAcknowledgementKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted => {
+            "callback_runner_accepted"
+        }
+        LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished => {
+            "adapter_event_published"
+        }
+    }
+}
+
+pub const fn input_callback_transport_receipt_kind_name(
+    kind: LanguageInputCallbackTransportReceiptKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff => {
+            "callback_runner_handoff"
+        }
+        LanguageInputCallbackTransportReceiptKind::AdapterEventPublication => {
+            "adapter_event_publication"
+        }
+    }
+}
+
+pub const fn input_callback_transport_outcome_kind_name(
+    kind: LanguageInputCallbackTransportOutcomeKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded => {
+            "callback_runner_handoff_recorded"
+        }
+        LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded => {
+            "adapter_event_publication_recorded"
+        }
+    }
+}
+
+pub const fn input_callback_transport_trace_kind_name(
+    kind: LanguageInputCallbackTransportTraceKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace => {
+            "callback_runner_handoff_trace"
+        }
+        LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace => {
+            "adapter_event_publication_trace"
+        }
+    }
+}
+
+pub const fn input_callback_transport_audit_kind_name(
+    kind: LanguageInputCallbackTransportAuditKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit => {
+            "callback_runner_handoff_audit"
+        }
+        LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit => {
+            "adapter_event_publication_audit"
+        }
+    }
+}
+
+pub const fn input_callback_transport_log_kind_name(
+    kind: LanguageInputCallbackTransportLogKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog => {
+            "callback_runner_handoff_log"
+        }
+        LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog => {
+            "adapter_event_publication_log"
+        }
+    }
+}
+
+pub const fn input_callback_transport_journal_kind_name(
+    kind: LanguageInputCallbackTransportJournalKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportJournalKind::CallbackRunnerHandoffJournal => {
+            "callback_runner_handoff_journal"
+        }
+        LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal => {
+            "adapter_event_publication_journal"
+        }
+    }
+}
+
+pub const fn input_callback_transport_archive_kind_name(
+    kind: LanguageInputCallbackTransportArchiveKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportArchiveKind::CallbackRunnerHandoffArchive => {
+            "callback_runner_handoff_archive"
+        }
+        LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive => {
+            "adapter_event_publication_archive"
+        }
+    }
+}
+
+pub const fn input_callback_transport_snapshot_kind_name(
+    kind: LanguageInputCallbackTransportSnapshotKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportSnapshotKind::CallbackRunnerHandoffSnapshot => {
+            "callback_runner_handoff_snapshot"
+        }
+        LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot => {
+            "adapter_event_publication_snapshot"
+        }
+    }
+}
+
+pub const fn input_callback_transport_checkpoint_kind_name(
+    kind: LanguageInputCallbackTransportCheckpointKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportCheckpointKind::CallbackRunnerHandoffCheckpoint => {
+            "callback_runner_handoff_checkpoint"
+        }
+        LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint => {
+            "adapter_event_publication_checkpoint"
+        }
+    }
+}
+
+pub const fn input_callback_transport_marker_kind_name(
+    kind: LanguageInputCallbackTransportMarkerKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportMarkerKind::CallbackRunnerHandoffMarker => {
+            "callback_runner_handoff_marker"
+        }
+        LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker => {
+            "adapter_event_publication_marker"
+        }
+    }
+}
+
+pub const fn input_callback_transport_cursor_kind_name(
+    kind: LanguageInputCallbackTransportCursorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportCursorKind::CallbackRunnerHandoffCursor => {
+            "callback_runner_handoff_cursor"
+        }
+        LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor => {
+            "adapter_event_publication_cursor"
+        }
+    }
+}
+
+pub const fn input_callback_transport_bookmark_kind_name(
+    kind: LanguageInputCallbackTransportBookmarkKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark => {
+            "callback_runner_handoff_bookmark"
+        }
+        LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark => {
+            "adapter_event_publication_bookmark"
+        }
+    }
+}
+
+pub const fn input_callback_transport_reference_kind_name(
+    kind: LanguageInputCallbackTransportReferenceKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference => {
+            "callback_runner_handoff_reference"
+        }
+        LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference => {
+            "adapter_event_publication_reference"
+        }
+    }
+}
+
+pub const fn input_callback_transport_logic_kind_name(
+    kind: LanguageInputCallbackTransportLogicKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportLogicKind::CallbackRunnerHandoffLogic => {
+            "callback_runner_handoff_logic"
+        }
+        LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic => {
+            "adapter_event_publication_logic"
+        }
+    }
+}
+
+pub const fn input_callback_transport_decision_kind_name(
+    kind: LanguageInputCallbackTransportDecisionKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision => {
+            "callback_runner_handoff_decision"
+        }
+        LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision => {
+            "adapter_event_publication_decision"
+        }
+    }
+}
+
+pub const fn input_callback_transport_resolution_kind_name(
+    kind: LanguageInputCallbackTransportResolutionKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution => {
+            "callback_runner_handoff_resolution"
+        }
+        LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution => {
+            "adapter_event_publication_resolution"
+        }
+    }
+}
+
+pub const fn input_callback_transport_finalization_kind_name(
+    kind: LanguageInputCallbackTransportFinalizationKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization => {
+            "callback_runner_handoff_finalization"
+        }
+        LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization => {
+            "adapter_event_publication_finalization"
+        }
+    }
+}
+
+pub const fn input_callback_transport_completion_kind_name(
+    kind: LanguageInputCallbackTransportCompletionKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion => {
+            "callback_runner_handoff_completion"
+        }
+        LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion => {
+            "adapter_event_publication_completion"
+        }
+    }
+}
+
+pub const fn input_callback_transport_diagnostic_kind_name(
+    kind: LanguageInputCallbackTransportDiagnosticKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic => {
+            "callback_runner_handoff_diagnostic"
+        }
+        LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic => {
+            "adapter_event_publication_diagnostic"
+        }
+    }
+}
+
+pub const fn input_callback_transport_health_kind_name(
+    kind: LanguageInputCallbackTransportHealthKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportHealthKind::CallbackRunnerHandoffHealth => {
+            "callback_runner_handoff_health"
+        }
+        LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth => {
+            "adapter_event_publication_health"
+        }
+    }
+}
+
+pub const fn input_callback_transport_readiness_kind_name(
+    kind: LanguageInputCallbackTransportReadinessKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportReadinessKind::CallbackRunnerHandoffReadiness => {
+            "callback_runner_handoff_readiness"
+        }
+        LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness => {
+            "adapter_event_publication_readiness"
+        }
+    }
+}
+
+pub const fn input_callback_transport_availability_kind_name(
+    kind: LanguageInputCallbackTransportAvailabilityKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability => {
+            "callback_runner_handoff_availability"
+        }
+        LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability => {
+            "adapter_event_publication_availability"
+        }
+    }
+}
+
+pub const fn input_callback_transport_capacity_kind_name(
+    kind: LanguageInputCallbackTransportCapacityKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity => {
+            "callback_runner_handoff_capacity"
+        }
+        LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity => {
+            "adapter_event_publication_capacity"
+        }
     }
 }
 
@@ -2054,6 +4358,27 @@ pub fn input_callback_queue_plan_for_invocation(
     })
 }
 
+pub fn input_callback_session_queue_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+) -> LanguageInputCallbackSessionQueueSummary {
+    LanguageInputCallbackSessionQueueSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        queue_label: input_callback_session_queue_label(session, queue_plan),
+        action: queue_plan.action,
+        queue_policy: queue_plan.queue_policy,
+        queued: queue_plan.queued,
+        dropped_existing_event: queue_plan.dropped_existing_event,
+        dropped_incoming_event: queue_plan.dropped_incoming_event,
+        dispatch_required: queue_plan.dispatch_required,
+        queue_depth_before: queue_plan.queue_depth_before,
+        queue_depth_after: queue_plan.queue_depth_after,
+        message: input_callback_queue_message(queue_plan.action).to_owned(),
+        queue_plan: queue_plan.clone(),
+    }
+}
+
 pub fn input_callback_dispatch_plan_for_queue_plan(
     queue_plan: &LanguageInputCallbackQueuePlan,
 ) -> Option<LanguageInputCallbackDispatchPlan> {
@@ -2077,6 +4402,28 @@ pub fn input_callback_dispatch_plan_for_queue_plan(
         interrupt_backed: queue_plan.interrupt_backed,
         dispatch_model: queue_plan.dispatch_model.clone(),
     })
+}
+
+pub fn input_callback_session_dispatch_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    dispatch: &LanguageInputCallbackDispatchPlan,
+) -> LanguageInputCallbackSessionDispatchSummary {
+    LanguageInputCallbackSessionDispatchSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        dispatch_label: input_callback_session_dispatch_label(session, dispatch),
+        dispatch_reason: dispatch.dispatch_reason.clone(),
+        callback_program_id: dispatch.callback_program_id,
+        callback_instruction_budget: dispatch.callback_instruction_budget,
+        sequence: dispatch.sequence,
+        queue_depth_after: dispatch.queue_depth_after,
+        queue_action: dispatch.queue_action,
+        dropped_existing_event: dispatch.dropped_existing_event,
+        interrupt_backed: dispatch.interrupt_backed,
+        dispatch_model: dispatch.dispatch_model.clone(),
+        message: input_callback_dispatch_message(dispatch.dropped_existing_event).to_owned(),
+        dispatch_plan: dispatch.clone(),
+    }
 }
 
 pub fn input_callback_result_for_dispatch_plan(
@@ -2114,6 +4461,1948 @@ pub fn input_callback_result_for_dispatch_plan(
         retryable,
         message: input_callback_result_message(result_kind).to_owned(),
     }
+}
+
+pub fn input_callback_transport_result_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    result: &LanguageInputCallbackResultSummary,
+) -> LanguageInputCallbackTransportResultSummary {
+    LanguageInputCallbackTransportResultSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        callback_label: input_callback_transport_result_label(session, result),
+        result: result.clone(),
+    }
+}
+
+pub fn input_callback_completion_plan_for_result(
+    result: &LanguageInputCallbackResultSummary,
+) -> LanguageInputCallbackCompletionPlan {
+    let action = input_callback_completion_action(result.result_kind);
+    let remove_from_queue = input_callback_completion_removes_queue_item(action);
+    let keep_dispatch_scheduled = action == LanguageInputCallbackCompletionAction::KeepRunning;
+    let terminal = remove_from_queue;
+    let queue_depth_after_completion = if remove_from_queue {
+        result.queue_depth_after.saturating_sub(1)
+    } else {
+        result.queue_depth_after
+    };
+
+    LanguageInputCallbackCompletionPlan {
+        action,
+        remove_from_queue,
+        keep_dispatch_scheduled,
+        terminal,
+        retryable: result.retryable,
+        queue_depth_after_completion,
+        message: input_callback_completion_message(action).to_owned(),
+        result: result.clone(),
+    }
+}
+
+pub fn input_callback_session_completion_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    result: &LanguageInputCallbackResultSummary,
+) -> LanguageInputCallbackSessionCompletionSummary {
+    let transport = input_callback_transport_result_summary(session, result);
+    let completion = input_callback_completion_plan_for_result(result);
+    let completion_label = input_callback_session_completion_label(
+        &transport.callback_label,
+        completion.action,
+        completion.queue_depth_after_completion,
+    );
+
+    LanguageInputCallbackSessionCompletionSummary {
+        endpoint: transport.endpoint,
+        connection_label: transport.connection_label,
+        callback_label: transport.callback_label,
+        completion_label,
+        action: completion.action,
+        remove_from_queue: completion.remove_from_queue,
+        keep_dispatch_scheduled: completion.keep_dispatch_scheduled,
+        terminal: completion.terminal,
+        retryable: completion.retryable,
+        queue_depth_after_completion: completion.queue_depth_after_completion,
+        result: completion.result,
+    }
+}
+
+pub fn input_callback_session_lifecycle_summary(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+    run_status: Option<RunStatus>,
+    instructions_executed: u32,
+    elapsed_ms: u32,
+) -> LanguageInputCallbackSessionLifecycleSummary {
+    let queue_summary = input_callback_session_queue_summary(session, queue_plan);
+    let dispatch_plan = input_callback_dispatch_plan_for_queue_plan(queue_plan);
+    let dispatch_summary = dispatch_plan
+        .as_ref()
+        .map(|dispatch| input_callback_session_dispatch_summary(session, dispatch));
+    let result = dispatch_plan.as_ref().and_then(|dispatch| {
+        run_status.map(|status| {
+            input_callback_result_for_dispatch_plan(
+                dispatch,
+                status,
+                instructions_executed,
+                elapsed_ms,
+            )
+        })
+    });
+    let completion_summary = result
+        .as_ref()
+        .map(|result| input_callback_session_completion_summary(session, result));
+    let terminal = completion_summary
+        .as_ref()
+        .map_or(!queue_plan.dispatch_required, |summary| summary.terminal);
+    let retryable = completion_summary
+        .as_ref()
+        .map_or(false, |summary| summary.retryable);
+    let message = input_callback_session_lifecycle_message(
+        queue_plan.queued,
+        queue_plan.dispatch_required,
+        completion_summary.as_ref().map(|summary| summary.action),
+    )
+    .to_owned();
+
+    LanguageInputCallbackSessionLifecycleSummary {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        lifecycle_label: input_callback_session_lifecycle_label(session, queue_plan, terminal),
+        queued: queue_plan.queued,
+        dispatch_required: queue_plan.dispatch_required,
+        terminal,
+        retryable,
+        queue_summary,
+        dispatch_summary,
+        result,
+        completion_summary,
+        message,
+    }
+}
+
+pub fn input_callback_transport_action_summary(
+    lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+) -> LanguageInputCallbackTransportActionSummary {
+    let action = input_callback_transport_action_for_lifecycle(lifecycle);
+    let queue_depth_after_completion = lifecycle
+        .completion_summary
+        .as_ref()
+        .map(|summary| summary.queue_depth_after_completion);
+
+    LanguageInputCallbackTransportActionSummary {
+        endpoint: lifecycle.endpoint.clone(),
+        connection_label: lifecycle.connection_label.clone(),
+        action_label: input_callback_transport_action_label(lifecycle, action),
+        action,
+        action_name: input_callback_transport_action_name(action).to_owned(),
+        queued: lifecycle.queued,
+        dispatch_required: lifecycle.dispatch_required,
+        terminal: lifecycle.terminal,
+        retryable: lifecycle.retryable,
+        queue_depth_after: lifecycle.queue_summary.queue_depth_after,
+        queue_depth_after_completion,
+        message: input_callback_transport_action_message(action).to_owned(),
+        lifecycle_summary: lifecycle.clone(),
+    }
+}
+
+pub fn input_callback_transport_effect_summary(
+    action_summary: &LanguageInputCallbackTransportActionSummary,
+) -> LanguageInputCallbackTransportEffectSummary {
+    let action = action_summary.action;
+
+    LanguageInputCallbackTransportEffectSummary {
+        endpoint: action_summary.endpoint.clone(),
+        connection_label: action_summary.connection_label.clone(),
+        effect_label: input_callback_transport_effect_label(action_summary),
+        action,
+        action_name: action_summary.action_name.clone(),
+        dispatch_callback: input_callback_transport_effect_dispatches_callback(action),
+        emit_drop: input_callback_transport_effect_emits_drop(action),
+        emit_result: input_callback_transport_effect_emits_result(action),
+        remove_from_queue: input_callback_transport_effect_removes_queue_item(action),
+        keep_dispatch_scheduled: input_callback_transport_effect_keeps_dispatch_scheduled(action),
+        terminal: action_summary.terminal,
+        retryable: action_summary.retryable,
+        queue_depth_after_effect: action_summary
+            .queue_depth_after_completion
+            .unwrap_or(action_summary.queue_depth_after),
+        message: input_callback_transport_effect_message(action).to_owned(),
+        action_summary: action_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_report_summary(
+    effect_summary: &LanguageInputCallbackTransportEffectSummary,
+) -> LanguageInputCallbackTransportReportSummary {
+    let report_kind = input_callback_transport_report_kind(effect_summary.action);
+
+    LanguageInputCallbackTransportReportSummary {
+        endpoint: effect_summary.endpoint.clone(),
+        connection_label: effect_summary.connection_label.clone(),
+        report_label: input_callback_transport_report_label(effect_summary, report_kind),
+        report_kind,
+        report_name: input_callback_transport_report_kind_name(report_kind).to_owned(),
+        action: effect_summary.action,
+        action_name: effect_summary.action_name.clone(),
+        dispatch_callback: effect_summary.dispatch_callback,
+        emit_report: input_callback_transport_report_emits_report(effect_summary),
+        emit_drop: effect_summary.emit_drop,
+        emit_result: effect_summary.emit_result,
+        remove_from_queue: effect_summary.remove_from_queue,
+        keep_dispatch_scheduled: effect_summary.keep_dispatch_scheduled,
+        terminal: effect_summary.terminal,
+        retryable: effect_summary.retryable,
+        queue_depth_after_report: effect_summary.queue_depth_after_effect,
+        message: input_callback_transport_report_message(report_kind).to_owned(),
+        effect_summary: effect_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_event_summary(
+    report_summary: &LanguageInputCallbackTransportReportSummary,
+) -> LanguageInputCallbackTransportEventSummary {
+    let event_kind = input_callback_transport_event_kind(report_summary.report_kind);
+
+    LanguageInputCallbackTransportEventSummary {
+        endpoint: report_summary.endpoint.clone(),
+        connection_label: report_summary.connection_label.clone(),
+        event_label: input_callback_transport_event_label(report_summary, event_kind),
+        event_kind,
+        event_name: input_callback_transport_event_kind_name(event_kind).to_owned(),
+        report_kind: report_summary.report_kind,
+        report_name: report_summary.report_name.clone(),
+        action: report_summary.action,
+        action_name: report_summary.action_name.clone(),
+        dispatch_callback: report_summary.dispatch_callback,
+        emit_report: report_summary.emit_report,
+        emit_drop: report_summary.emit_drop,
+        emit_result: report_summary.emit_result,
+        remove_from_queue: report_summary.remove_from_queue,
+        keep_dispatch_scheduled: report_summary.keep_dispatch_scheduled,
+        terminal: report_summary.terminal,
+        retryable: report_summary.retryable,
+        queue_depth_after_event: report_summary.queue_depth_after_report,
+        message: input_callback_transport_event_message(event_kind).to_owned(),
+        report_summary: report_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_delivery_summary(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+) -> LanguageInputCallbackTransportDeliverySummary {
+    let delivery_route = input_callback_transport_delivery_route(event_summary);
+
+    LanguageInputCallbackTransportDeliverySummary {
+        endpoint: event_summary.endpoint.clone(),
+        connection_label: event_summary.connection_label.clone(),
+        delivery_label: input_callback_transport_delivery_label(event_summary, delivery_route),
+        delivery_route,
+        delivery_route_name: input_callback_transport_delivery_route_name(delivery_route)
+            .to_owned(),
+        event_kind: event_summary.event_kind,
+        event_name: event_summary.event_name.clone(),
+        report_kind: event_summary.report_kind,
+        report_name: event_summary.report_name.clone(),
+        action: event_summary.action,
+        action_name: event_summary.action_name.clone(),
+        dispatch_callback: event_summary.dispatch_callback,
+        publish_event: input_callback_transport_delivery_publishes_event(event_summary),
+        emit_drop: event_summary.emit_drop,
+        emit_result: event_summary.emit_result,
+        remove_from_queue: event_summary.remove_from_queue,
+        keep_dispatch_scheduled: event_summary.keep_dispatch_scheduled,
+        terminal: event_summary.terminal,
+        retryable: event_summary.retryable,
+        queue_depth_after_delivery: event_summary.queue_depth_after_event,
+        message: input_callback_transport_delivery_message(
+            delivery_route,
+            event_summary.event_kind,
+        )
+        .to_owned(),
+        event_summary: event_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_acknowledgement_summary(
+    delivery_summary: &LanguageInputCallbackTransportDeliverySummary,
+) -> LanguageInputCallbackTransportAcknowledgementSummary {
+    let acknowledgement_kind =
+        input_callback_transport_acknowledgement_kind(delivery_summary.delivery_route);
+
+    LanguageInputCallbackTransportAcknowledgementSummary {
+        endpoint: delivery_summary.endpoint.clone(),
+        connection_label: delivery_summary.connection_label.clone(),
+        acknowledgement_label: input_callback_transport_acknowledgement_label(
+            delivery_summary,
+            acknowledgement_kind,
+        ),
+        acknowledgement_kind,
+        acknowledgement_name: input_callback_transport_acknowledgement_kind_name(
+            acknowledgement_kind,
+        )
+        .to_owned(),
+        delivery_route: delivery_summary.delivery_route,
+        delivery_route_name: delivery_summary.delivery_route_name.clone(),
+        event_kind: delivery_summary.event_kind,
+        event_name: delivery_summary.event_name.clone(),
+        report_kind: delivery_summary.report_kind,
+        report_name: delivery_summary.report_name.clone(),
+        action: delivery_summary.action,
+        action_name: delivery_summary.action_name.clone(),
+        dispatch_callback: delivery_summary.dispatch_callback,
+        publish_event: delivery_summary.publish_event,
+        callback_runner_handoff: input_callback_transport_acknowledges_callback_runner(
+            delivery_summary,
+        ),
+        adapter_event_published: input_callback_transport_acknowledges_adapter_event(
+            delivery_summary,
+        ),
+        delivery_acknowledged: true,
+        terminal: delivery_summary.terminal,
+        retryable: delivery_summary.retryable,
+        queue_depth_after_acknowledgement: delivery_summary.queue_depth_after_delivery,
+        message: input_callback_transport_acknowledgement_message(acknowledgement_kind).to_owned(),
+        delivery_summary: delivery_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_receipt_summary(
+    acknowledgement_summary: &LanguageInputCallbackTransportAcknowledgementSummary,
+) -> LanguageInputCallbackTransportReceiptSummary {
+    let receipt_kind =
+        input_callback_transport_receipt_kind(acknowledgement_summary.acknowledgement_kind);
+
+    LanguageInputCallbackTransportReceiptSummary {
+        endpoint: acknowledgement_summary.endpoint.clone(),
+        connection_label: acknowledgement_summary.connection_label.clone(),
+        receipt_label: input_callback_transport_receipt_label(
+            acknowledgement_summary,
+            receipt_kind,
+        ),
+        receipt_kind,
+        receipt_name: input_callback_transport_receipt_kind_name(receipt_kind).to_owned(),
+        acknowledgement_kind: acknowledgement_summary.acknowledgement_kind,
+        acknowledgement_name: acknowledgement_summary.acknowledgement_name.clone(),
+        delivery_route: acknowledgement_summary.delivery_route,
+        delivery_route_name: acknowledgement_summary.delivery_route_name.clone(),
+        event_kind: acknowledgement_summary.event_kind,
+        event_name: acknowledgement_summary.event_name.clone(),
+        report_kind: acknowledgement_summary.report_kind,
+        report_name: acknowledgement_summary.report_name.clone(),
+        action: acknowledgement_summary.action,
+        action_name: acknowledgement_summary.action_name.clone(),
+        callback_runner_handoff: acknowledgement_summary.callback_runner_handoff,
+        adapter_event_published: acknowledgement_summary.adapter_event_published,
+        delivery_acknowledged: acknowledgement_summary.delivery_acknowledged,
+        receipt_recorded: true,
+        terminal: acknowledgement_summary.terminal,
+        retryable: acknowledgement_summary.retryable,
+        queue_depth_after_receipt: acknowledgement_summary.queue_depth_after_acknowledgement,
+        message: input_callback_transport_receipt_message(receipt_kind).to_owned(),
+        acknowledgement_summary: acknowledgement_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_outcome_summary(
+    receipt_summary: &LanguageInputCallbackTransportReceiptSummary,
+) -> LanguageInputCallbackTransportOutcomeSummary {
+    let outcome_kind = input_callback_transport_outcome_kind(receipt_summary.receipt_kind);
+
+    LanguageInputCallbackTransportOutcomeSummary {
+        endpoint: receipt_summary.endpoint.clone(),
+        connection_label: receipt_summary.connection_label.clone(),
+        outcome_label: input_callback_transport_outcome_label(receipt_summary, outcome_kind),
+        outcome_kind,
+        outcome_name: input_callback_transport_outcome_kind_name(outcome_kind).to_owned(),
+        receipt_kind: receipt_summary.receipt_kind,
+        receipt_name: receipt_summary.receipt_name.clone(),
+        acknowledgement_kind: receipt_summary.acknowledgement_kind,
+        acknowledgement_name: receipt_summary.acknowledgement_name.clone(),
+        delivery_route: receipt_summary.delivery_route,
+        delivery_route_name: receipt_summary.delivery_route_name.clone(),
+        event_kind: receipt_summary.event_kind,
+        event_name: receipt_summary.event_name.clone(),
+        report_kind: receipt_summary.report_kind,
+        report_name: receipt_summary.report_name.clone(),
+        action: receipt_summary.action,
+        action_name: receipt_summary.action_name.clone(),
+        callback_runner_handoff: receipt_summary.callback_runner_handoff,
+        adapter_event_published: receipt_summary.adapter_event_published,
+        delivery_acknowledged: receipt_summary.delivery_acknowledged,
+        receipt_recorded: receipt_summary.receipt_recorded,
+        outcome_recorded: true,
+        terminal: receipt_summary.terminal,
+        retryable: receipt_summary.retryable,
+        queue_depth_after_outcome: receipt_summary.queue_depth_after_receipt,
+        message: input_callback_transport_outcome_message(outcome_kind).to_owned(),
+        receipt_summary: receipt_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_trace_summary(
+    outcome_summary: &LanguageInputCallbackTransportOutcomeSummary,
+) -> LanguageInputCallbackTransportTraceSummary {
+    let trace_kind = input_callback_transport_trace_kind(outcome_summary.outcome_kind);
+
+    LanguageInputCallbackTransportTraceSummary {
+        endpoint: outcome_summary.endpoint.clone(),
+        connection_label: outcome_summary.connection_label.clone(),
+        trace_label: input_callback_transport_trace_label(outcome_summary, trace_kind),
+        trace_kind,
+        trace_name: input_callback_transport_trace_kind_name(trace_kind).to_owned(),
+        outcome_kind: outcome_summary.outcome_kind,
+        outcome_name: outcome_summary.outcome_name.clone(),
+        receipt_kind: outcome_summary.receipt_kind,
+        receipt_name: outcome_summary.receipt_name.clone(),
+        acknowledgement_kind: outcome_summary.acknowledgement_kind,
+        acknowledgement_name: outcome_summary.acknowledgement_name.clone(),
+        delivery_route: outcome_summary.delivery_route,
+        delivery_route_name: outcome_summary.delivery_route_name.clone(),
+        event_kind: outcome_summary.event_kind,
+        event_name: outcome_summary.event_name.clone(),
+        report_kind: outcome_summary.report_kind,
+        report_name: outcome_summary.report_name.clone(),
+        action: outcome_summary.action,
+        action_name: outcome_summary.action_name.clone(),
+        callback_runner_handoff: outcome_summary.callback_runner_handoff,
+        adapter_event_published: outcome_summary.adapter_event_published,
+        delivery_acknowledged: outcome_summary.delivery_acknowledged,
+        receipt_recorded: outcome_summary.receipt_recorded,
+        outcome_recorded: outcome_summary.outcome_recorded,
+        trace_recorded: true,
+        terminal: outcome_summary.terminal,
+        retryable: outcome_summary.retryable,
+        queue_depth_after_trace: outcome_summary.queue_depth_after_outcome,
+        message: input_callback_transport_trace_message(trace_kind).to_owned(),
+        outcome_summary: outcome_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_audit_summary(
+    trace_summary: &LanguageInputCallbackTransportTraceSummary,
+) -> LanguageInputCallbackTransportAuditSummary {
+    let audit_kind = input_callback_transport_audit_kind(trace_summary.trace_kind);
+
+    LanguageInputCallbackTransportAuditSummary {
+        endpoint: trace_summary.endpoint.clone(),
+        connection_label: trace_summary.connection_label.clone(),
+        audit_label: input_callback_transport_audit_label(trace_summary, audit_kind),
+        audit_kind,
+        audit_name: input_callback_transport_audit_kind_name(audit_kind).to_owned(),
+        trace_kind: trace_summary.trace_kind,
+        trace_name: trace_summary.trace_name.clone(),
+        outcome_kind: trace_summary.outcome_kind,
+        outcome_name: trace_summary.outcome_name.clone(),
+        receipt_kind: trace_summary.receipt_kind,
+        receipt_name: trace_summary.receipt_name.clone(),
+        acknowledgement_kind: trace_summary.acknowledgement_kind,
+        acknowledgement_name: trace_summary.acknowledgement_name.clone(),
+        delivery_route: trace_summary.delivery_route,
+        delivery_route_name: trace_summary.delivery_route_name.clone(),
+        event_kind: trace_summary.event_kind,
+        event_name: trace_summary.event_name.clone(),
+        report_kind: trace_summary.report_kind,
+        report_name: trace_summary.report_name.clone(),
+        action: trace_summary.action,
+        action_name: trace_summary.action_name.clone(),
+        callback_runner_handoff: trace_summary.callback_runner_handoff,
+        adapter_event_published: trace_summary.adapter_event_published,
+        delivery_acknowledged: trace_summary.delivery_acknowledged,
+        receipt_recorded: trace_summary.receipt_recorded,
+        outcome_recorded: trace_summary.outcome_recorded,
+        trace_recorded: trace_summary.trace_recorded,
+        audit_recorded: true,
+        terminal: trace_summary.terminal,
+        retryable: trace_summary.retryable,
+        queue_depth_after_audit: trace_summary.queue_depth_after_trace,
+        message: input_callback_transport_audit_message(audit_kind).to_owned(),
+        trace_summary: trace_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_log_summary(
+    audit_summary: &LanguageInputCallbackTransportAuditSummary,
+) -> LanguageInputCallbackTransportLogSummary {
+    let log_kind = input_callback_transport_log_kind(audit_summary.audit_kind);
+
+    LanguageInputCallbackTransportLogSummary {
+        endpoint: audit_summary.endpoint.clone(),
+        connection_label: audit_summary.connection_label.clone(),
+        log_label: input_callback_transport_log_label(audit_summary, log_kind),
+        log_kind,
+        log_name: input_callback_transport_log_kind_name(log_kind).to_owned(),
+        audit_kind: audit_summary.audit_kind,
+        audit_name: audit_summary.audit_name.clone(),
+        trace_kind: audit_summary.trace_kind,
+        trace_name: audit_summary.trace_name.clone(),
+        outcome_kind: audit_summary.outcome_kind,
+        outcome_name: audit_summary.outcome_name.clone(),
+        receipt_kind: audit_summary.receipt_kind,
+        receipt_name: audit_summary.receipt_name.clone(),
+        acknowledgement_kind: audit_summary.acknowledgement_kind,
+        acknowledgement_name: audit_summary.acknowledgement_name.clone(),
+        delivery_route: audit_summary.delivery_route,
+        delivery_route_name: audit_summary.delivery_route_name.clone(),
+        event_kind: audit_summary.event_kind,
+        event_name: audit_summary.event_name.clone(),
+        report_kind: audit_summary.report_kind,
+        report_name: audit_summary.report_name.clone(),
+        action: audit_summary.action,
+        action_name: audit_summary.action_name.clone(),
+        callback_runner_handoff: audit_summary.callback_runner_handoff,
+        adapter_event_published: audit_summary.adapter_event_published,
+        delivery_acknowledged: audit_summary.delivery_acknowledged,
+        receipt_recorded: audit_summary.receipt_recorded,
+        outcome_recorded: audit_summary.outcome_recorded,
+        trace_recorded: audit_summary.trace_recorded,
+        audit_recorded: audit_summary.audit_recorded,
+        log_recorded: true,
+        terminal: audit_summary.terminal,
+        retryable: audit_summary.retryable,
+        queue_depth_after_log: audit_summary.queue_depth_after_audit,
+        message: input_callback_transport_log_message(log_kind).to_owned(),
+        audit_summary: audit_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_journal_summary(
+    log_summary: &LanguageInputCallbackTransportLogSummary,
+) -> LanguageInputCallbackTransportJournalSummary {
+    let journal_kind = input_callback_transport_journal_kind(log_summary.log_kind);
+
+    LanguageInputCallbackTransportJournalSummary {
+        endpoint: log_summary.endpoint.clone(),
+        connection_label: log_summary.connection_label.clone(),
+        journal_label: input_callback_transport_journal_label(log_summary, journal_kind),
+        journal_kind,
+        journal_name: input_callback_transport_journal_kind_name(journal_kind).to_owned(),
+        log_kind: log_summary.log_kind,
+        log_name: log_summary.log_name.clone(),
+        audit_kind: log_summary.audit_kind,
+        audit_name: log_summary.audit_name.clone(),
+        trace_kind: log_summary.trace_kind,
+        trace_name: log_summary.trace_name.clone(),
+        outcome_kind: log_summary.outcome_kind,
+        outcome_name: log_summary.outcome_name.clone(),
+        receipt_kind: log_summary.receipt_kind,
+        receipt_name: log_summary.receipt_name.clone(),
+        acknowledgement_kind: log_summary.acknowledgement_kind,
+        acknowledgement_name: log_summary.acknowledgement_name.clone(),
+        delivery_route: log_summary.delivery_route,
+        delivery_route_name: log_summary.delivery_route_name.clone(),
+        event_kind: log_summary.event_kind,
+        event_name: log_summary.event_name.clone(),
+        report_kind: log_summary.report_kind,
+        report_name: log_summary.report_name.clone(),
+        action: log_summary.action,
+        action_name: log_summary.action_name.clone(),
+        callback_runner_handoff: log_summary.callback_runner_handoff,
+        adapter_event_published: log_summary.adapter_event_published,
+        delivery_acknowledged: log_summary.delivery_acknowledged,
+        receipt_recorded: log_summary.receipt_recorded,
+        outcome_recorded: log_summary.outcome_recorded,
+        trace_recorded: log_summary.trace_recorded,
+        audit_recorded: log_summary.audit_recorded,
+        log_recorded: log_summary.log_recorded,
+        journal_recorded: true,
+        terminal: log_summary.terminal,
+        retryable: log_summary.retryable,
+        queue_depth_after_journal: log_summary.queue_depth_after_log,
+        message: input_callback_transport_journal_message(journal_kind).to_owned(),
+        log_summary: log_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_archive_summary(
+    journal_summary: &LanguageInputCallbackTransportJournalSummary,
+) -> LanguageInputCallbackTransportArchiveSummary {
+    let archive_kind = input_callback_transport_archive_kind(journal_summary.journal_kind);
+
+    LanguageInputCallbackTransportArchiveSummary {
+        endpoint: journal_summary.endpoint.clone(),
+        connection_label: journal_summary.connection_label.clone(),
+        archive_label: input_callback_transport_archive_label(journal_summary, archive_kind),
+        archive_kind,
+        archive_name: input_callback_transport_archive_kind_name(archive_kind).to_owned(),
+        journal_kind: journal_summary.journal_kind,
+        journal_name: journal_summary.journal_name.clone(),
+        log_kind: journal_summary.log_kind,
+        log_name: journal_summary.log_name.clone(),
+        audit_kind: journal_summary.audit_kind,
+        audit_name: journal_summary.audit_name.clone(),
+        trace_kind: journal_summary.trace_kind,
+        trace_name: journal_summary.trace_name.clone(),
+        outcome_kind: journal_summary.outcome_kind,
+        outcome_name: journal_summary.outcome_name.clone(),
+        receipt_kind: journal_summary.receipt_kind,
+        receipt_name: journal_summary.receipt_name.clone(),
+        acknowledgement_kind: journal_summary.acknowledgement_kind,
+        acknowledgement_name: journal_summary.acknowledgement_name.clone(),
+        delivery_route: journal_summary.delivery_route,
+        delivery_route_name: journal_summary.delivery_route_name.clone(),
+        event_kind: journal_summary.event_kind,
+        event_name: journal_summary.event_name.clone(),
+        report_kind: journal_summary.report_kind,
+        report_name: journal_summary.report_name.clone(),
+        action: journal_summary.action,
+        action_name: journal_summary.action_name.clone(),
+        callback_runner_handoff: journal_summary.callback_runner_handoff,
+        adapter_event_published: journal_summary.adapter_event_published,
+        delivery_acknowledged: journal_summary.delivery_acknowledged,
+        receipt_recorded: journal_summary.receipt_recorded,
+        outcome_recorded: journal_summary.outcome_recorded,
+        trace_recorded: journal_summary.trace_recorded,
+        audit_recorded: journal_summary.audit_recorded,
+        log_recorded: journal_summary.log_recorded,
+        journal_recorded: journal_summary.journal_recorded,
+        archive_recorded: true,
+        terminal: journal_summary.terminal,
+        retryable: journal_summary.retryable,
+        queue_depth_after_archive: journal_summary.queue_depth_after_journal,
+        message: input_callback_transport_archive_message(archive_kind).to_owned(),
+        journal_summary: journal_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_snapshot_summary(
+    archive_summary: &LanguageInputCallbackTransportArchiveSummary,
+) -> LanguageInputCallbackTransportSnapshotSummary {
+    let snapshot_kind = input_callback_transport_snapshot_kind(archive_summary.archive_kind);
+
+    LanguageInputCallbackTransportSnapshotSummary {
+        endpoint: archive_summary.endpoint.clone(),
+        connection_label: archive_summary.connection_label.clone(),
+        snapshot_label: input_callback_transport_snapshot_label(archive_summary, snapshot_kind),
+        snapshot_kind,
+        snapshot_name: input_callback_transport_snapshot_kind_name(snapshot_kind).to_owned(),
+        archive_kind: archive_summary.archive_kind,
+        archive_name: archive_summary.archive_name.clone(),
+        journal_kind: archive_summary.journal_kind,
+        journal_name: archive_summary.journal_name.clone(),
+        log_kind: archive_summary.log_kind,
+        log_name: archive_summary.log_name.clone(),
+        audit_kind: archive_summary.audit_kind,
+        audit_name: archive_summary.audit_name.clone(),
+        trace_kind: archive_summary.trace_kind,
+        trace_name: archive_summary.trace_name.clone(),
+        outcome_kind: archive_summary.outcome_kind,
+        outcome_name: archive_summary.outcome_name.clone(),
+        receipt_kind: archive_summary.receipt_kind,
+        receipt_name: archive_summary.receipt_name.clone(),
+        acknowledgement_kind: archive_summary.acknowledgement_kind,
+        acknowledgement_name: archive_summary.acknowledgement_name.clone(),
+        delivery_route: archive_summary.delivery_route,
+        delivery_route_name: archive_summary.delivery_route_name.clone(),
+        event_kind: archive_summary.event_kind,
+        event_name: archive_summary.event_name.clone(),
+        report_kind: archive_summary.report_kind,
+        report_name: archive_summary.report_name.clone(),
+        action: archive_summary.action,
+        action_name: archive_summary.action_name.clone(),
+        callback_runner_handoff: archive_summary.callback_runner_handoff,
+        adapter_event_published: archive_summary.adapter_event_published,
+        delivery_acknowledged: archive_summary.delivery_acknowledged,
+        receipt_recorded: archive_summary.receipt_recorded,
+        outcome_recorded: archive_summary.outcome_recorded,
+        trace_recorded: archive_summary.trace_recorded,
+        audit_recorded: archive_summary.audit_recorded,
+        log_recorded: archive_summary.log_recorded,
+        journal_recorded: archive_summary.journal_recorded,
+        archive_recorded: archive_summary.archive_recorded,
+        snapshot_recorded: true,
+        terminal: archive_summary.terminal,
+        retryable: archive_summary.retryable,
+        queue_depth_after_snapshot: archive_summary.queue_depth_after_archive,
+        message: input_callback_transport_snapshot_message(snapshot_kind).to_owned(),
+        archive_summary: archive_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_checkpoint_summary(
+    snapshot_summary: &LanguageInputCallbackTransportSnapshotSummary,
+) -> LanguageInputCallbackTransportCheckpointSummary {
+    let checkpoint_kind = input_callback_transport_checkpoint_kind(snapshot_summary.snapshot_kind);
+
+    LanguageInputCallbackTransportCheckpointSummary {
+        endpoint: snapshot_summary.endpoint.clone(),
+        connection_label: snapshot_summary.connection_label.clone(),
+        checkpoint_label: input_callback_transport_checkpoint_label(
+            snapshot_summary,
+            checkpoint_kind,
+        ),
+        checkpoint_kind,
+        checkpoint_name: input_callback_transport_checkpoint_kind_name(checkpoint_kind).to_owned(),
+        snapshot_kind: snapshot_summary.snapshot_kind,
+        snapshot_name: snapshot_summary.snapshot_name.clone(),
+        archive_kind: snapshot_summary.archive_kind,
+        archive_name: snapshot_summary.archive_name.clone(),
+        journal_kind: snapshot_summary.journal_kind,
+        journal_name: snapshot_summary.journal_name.clone(),
+        log_kind: snapshot_summary.log_kind,
+        log_name: snapshot_summary.log_name.clone(),
+        audit_kind: snapshot_summary.audit_kind,
+        audit_name: snapshot_summary.audit_name.clone(),
+        trace_kind: snapshot_summary.trace_kind,
+        trace_name: snapshot_summary.trace_name.clone(),
+        outcome_kind: snapshot_summary.outcome_kind,
+        outcome_name: snapshot_summary.outcome_name.clone(),
+        receipt_kind: snapshot_summary.receipt_kind,
+        receipt_name: snapshot_summary.receipt_name.clone(),
+        acknowledgement_kind: snapshot_summary.acknowledgement_kind,
+        acknowledgement_name: snapshot_summary.acknowledgement_name.clone(),
+        delivery_route: snapshot_summary.delivery_route,
+        delivery_route_name: snapshot_summary.delivery_route_name.clone(),
+        event_kind: snapshot_summary.event_kind,
+        event_name: snapshot_summary.event_name.clone(),
+        report_kind: snapshot_summary.report_kind,
+        report_name: snapshot_summary.report_name.clone(),
+        action: snapshot_summary.action,
+        action_name: snapshot_summary.action_name.clone(),
+        callback_runner_handoff: snapshot_summary.callback_runner_handoff,
+        adapter_event_published: snapshot_summary.adapter_event_published,
+        delivery_acknowledged: snapshot_summary.delivery_acknowledged,
+        receipt_recorded: snapshot_summary.receipt_recorded,
+        outcome_recorded: snapshot_summary.outcome_recorded,
+        trace_recorded: snapshot_summary.trace_recorded,
+        audit_recorded: snapshot_summary.audit_recorded,
+        log_recorded: snapshot_summary.log_recorded,
+        journal_recorded: snapshot_summary.journal_recorded,
+        archive_recorded: snapshot_summary.archive_recorded,
+        snapshot_recorded: snapshot_summary.snapshot_recorded,
+        checkpoint_recorded: true,
+        terminal: snapshot_summary.terminal,
+        retryable: snapshot_summary.retryable,
+        queue_depth_after_checkpoint: snapshot_summary.queue_depth_after_snapshot,
+        message: input_callback_transport_checkpoint_message(checkpoint_kind).to_owned(),
+        snapshot_summary: snapshot_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_marker_summary(
+    checkpoint_summary: &LanguageInputCallbackTransportCheckpointSummary,
+) -> LanguageInputCallbackTransportMarkerSummary {
+    let marker_kind = input_callback_transport_marker_kind(checkpoint_summary.checkpoint_kind);
+
+    LanguageInputCallbackTransportMarkerSummary {
+        endpoint: checkpoint_summary.endpoint.clone(),
+        connection_label: checkpoint_summary.connection_label.clone(),
+        marker_label: input_callback_transport_marker_label(checkpoint_summary, marker_kind),
+        marker_kind,
+        marker_name: input_callback_transport_marker_kind_name(marker_kind).to_owned(),
+        checkpoint_kind: checkpoint_summary.checkpoint_kind,
+        checkpoint_name: checkpoint_summary.checkpoint_name.clone(),
+        snapshot_kind: checkpoint_summary.snapshot_kind,
+        snapshot_name: checkpoint_summary.snapshot_name.clone(),
+        archive_kind: checkpoint_summary.archive_kind,
+        archive_name: checkpoint_summary.archive_name.clone(),
+        journal_kind: checkpoint_summary.journal_kind,
+        journal_name: checkpoint_summary.journal_name.clone(),
+        log_kind: checkpoint_summary.log_kind,
+        log_name: checkpoint_summary.log_name.clone(),
+        audit_kind: checkpoint_summary.audit_kind,
+        audit_name: checkpoint_summary.audit_name.clone(),
+        trace_kind: checkpoint_summary.trace_kind,
+        trace_name: checkpoint_summary.trace_name.clone(),
+        outcome_kind: checkpoint_summary.outcome_kind,
+        outcome_name: checkpoint_summary.outcome_name.clone(),
+        receipt_kind: checkpoint_summary.receipt_kind,
+        receipt_name: checkpoint_summary.receipt_name.clone(),
+        acknowledgement_kind: checkpoint_summary.acknowledgement_kind,
+        acknowledgement_name: checkpoint_summary.acknowledgement_name.clone(),
+        delivery_route: checkpoint_summary.delivery_route,
+        delivery_route_name: checkpoint_summary.delivery_route_name.clone(),
+        event_kind: checkpoint_summary.event_kind,
+        event_name: checkpoint_summary.event_name.clone(),
+        report_kind: checkpoint_summary.report_kind,
+        report_name: checkpoint_summary.report_name.clone(),
+        action: checkpoint_summary.action,
+        action_name: checkpoint_summary.action_name.clone(),
+        callback_runner_handoff: checkpoint_summary.callback_runner_handoff,
+        adapter_event_published: checkpoint_summary.adapter_event_published,
+        delivery_acknowledged: checkpoint_summary.delivery_acknowledged,
+        receipt_recorded: checkpoint_summary.receipt_recorded,
+        outcome_recorded: checkpoint_summary.outcome_recorded,
+        trace_recorded: checkpoint_summary.trace_recorded,
+        audit_recorded: checkpoint_summary.audit_recorded,
+        log_recorded: checkpoint_summary.log_recorded,
+        journal_recorded: checkpoint_summary.journal_recorded,
+        archive_recorded: checkpoint_summary.archive_recorded,
+        snapshot_recorded: checkpoint_summary.snapshot_recorded,
+        checkpoint_recorded: checkpoint_summary.checkpoint_recorded,
+        marker_recorded: true,
+        terminal: checkpoint_summary.terminal,
+        retryable: checkpoint_summary.retryable,
+        queue_depth_after_marker: checkpoint_summary.queue_depth_after_checkpoint,
+        message: input_callback_transport_marker_message(marker_kind).to_owned(),
+        checkpoint_summary: checkpoint_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_cursor_summary(
+    marker_summary: &LanguageInputCallbackTransportMarkerSummary,
+) -> LanguageInputCallbackTransportCursorSummary {
+    let cursor_kind = input_callback_transport_cursor_kind(marker_summary.marker_kind);
+
+    LanguageInputCallbackTransportCursorSummary {
+        endpoint: marker_summary.endpoint.clone(),
+        connection_label: marker_summary.connection_label.clone(),
+        cursor_label: input_callback_transport_cursor_label(marker_summary, cursor_kind),
+        cursor_kind,
+        cursor_name: input_callback_transport_cursor_kind_name(cursor_kind).to_owned(),
+        marker_kind: marker_summary.marker_kind,
+        marker_name: marker_summary.marker_name.clone(),
+        checkpoint_kind: marker_summary.checkpoint_kind,
+        checkpoint_name: marker_summary.checkpoint_name.clone(),
+        snapshot_kind: marker_summary.snapshot_kind,
+        snapshot_name: marker_summary.snapshot_name.clone(),
+        archive_kind: marker_summary.archive_kind,
+        archive_name: marker_summary.archive_name.clone(),
+        journal_kind: marker_summary.journal_kind,
+        journal_name: marker_summary.journal_name.clone(),
+        log_kind: marker_summary.log_kind,
+        log_name: marker_summary.log_name.clone(),
+        audit_kind: marker_summary.audit_kind,
+        audit_name: marker_summary.audit_name.clone(),
+        trace_kind: marker_summary.trace_kind,
+        trace_name: marker_summary.trace_name.clone(),
+        outcome_kind: marker_summary.outcome_kind,
+        outcome_name: marker_summary.outcome_name.clone(),
+        receipt_kind: marker_summary.receipt_kind,
+        receipt_name: marker_summary.receipt_name.clone(),
+        acknowledgement_kind: marker_summary.acknowledgement_kind,
+        acknowledgement_name: marker_summary.acknowledgement_name.clone(),
+        delivery_route: marker_summary.delivery_route,
+        delivery_route_name: marker_summary.delivery_route_name.clone(),
+        event_kind: marker_summary.event_kind,
+        event_name: marker_summary.event_name.clone(),
+        report_kind: marker_summary.report_kind,
+        report_name: marker_summary.report_name.clone(),
+        action: marker_summary.action,
+        action_name: marker_summary.action_name.clone(),
+        callback_runner_handoff: marker_summary.callback_runner_handoff,
+        adapter_event_published: marker_summary.adapter_event_published,
+        delivery_acknowledged: marker_summary.delivery_acknowledged,
+        receipt_recorded: marker_summary.receipt_recorded,
+        outcome_recorded: marker_summary.outcome_recorded,
+        trace_recorded: marker_summary.trace_recorded,
+        audit_recorded: marker_summary.audit_recorded,
+        log_recorded: marker_summary.log_recorded,
+        journal_recorded: marker_summary.journal_recorded,
+        archive_recorded: marker_summary.archive_recorded,
+        snapshot_recorded: marker_summary.snapshot_recorded,
+        checkpoint_recorded: marker_summary.checkpoint_recorded,
+        marker_recorded: marker_summary.marker_recorded,
+        cursor_recorded: true,
+        terminal: marker_summary.terminal,
+        retryable: marker_summary.retryable,
+        queue_depth_after_cursor: marker_summary.queue_depth_after_marker,
+        message: input_callback_transport_cursor_message(cursor_kind).to_owned(),
+        marker_summary: marker_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_bookmark_summary(
+    cursor_summary: &LanguageInputCallbackTransportCursorSummary,
+) -> LanguageInputCallbackTransportBookmarkSummary {
+    let bookmark_kind = input_callback_transport_bookmark_kind(cursor_summary.cursor_kind);
+
+    LanguageInputCallbackTransportBookmarkSummary {
+        endpoint: cursor_summary.endpoint.clone(),
+        connection_label: cursor_summary.connection_label.clone(),
+        bookmark_label: input_callback_transport_bookmark_label(cursor_summary, bookmark_kind),
+        bookmark_kind,
+        bookmark_name: input_callback_transport_bookmark_kind_name(bookmark_kind).to_owned(),
+        cursor_kind: cursor_summary.cursor_kind,
+        cursor_name: cursor_summary.cursor_name.clone(),
+        marker_kind: cursor_summary.marker_kind,
+        marker_name: cursor_summary.marker_name.clone(),
+        checkpoint_kind: cursor_summary.checkpoint_kind,
+        checkpoint_name: cursor_summary.checkpoint_name.clone(),
+        snapshot_kind: cursor_summary.snapshot_kind,
+        snapshot_name: cursor_summary.snapshot_name.clone(),
+        archive_kind: cursor_summary.archive_kind,
+        archive_name: cursor_summary.archive_name.clone(),
+        journal_kind: cursor_summary.journal_kind,
+        journal_name: cursor_summary.journal_name.clone(),
+        log_kind: cursor_summary.log_kind,
+        log_name: cursor_summary.log_name.clone(),
+        audit_kind: cursor_summary.audit_kind,
+        audit_name: cursor_summary.audit_name.clone(),
+        trace_kind: cursor_summary.trace_kind,
+        trace_name: cursor_summary.trace_name.clone(),
+        outcome_kind: cursor_summary.outcome_kind,
+        outcome_name: cursor_summary.outcome_name.clone(),
+        receipt_kind: cursor_summary.receipt_kind,
+        receipt_name: cursor_summary.receipt_name.clone(),
+        acknowledgement_kind: cursor_summary.acknowledgement_kind,
+        acknowledgement_name: cursor_summary.acknowledgement_name.clone(),
+        delivery_route: cursor_summary.delivery_route,
+        delivery_route_name: cursor_summary.delivery_route_name.clone(),
+        event_kind: cursor_summary.event_kind,
+        event_name: cursor_summary.event_name.clone(),
+        report_kind: cursor_summary.report_kind,
+        report_name: cursor_summary.report_name.clone(),
+        action: cursor_summary.action,
+        action_name: cursor_summary.action_name.clone(),
+        callback_runner_handoff: cursor_summary.callback_runner_handoff,
+        adapter_event_published: cursor_summary.adapter_event_published,
+        delivery_acknowledged: cursor_summary.delivery_acknowledged,
+        receipt_recorded: cursor_summary.receipt_recorded,
+        outcome_recorded: cursor_summary.outcome_recorded,
+        trace_recorded: cursor_summary.trace_recorded,
+        audit_recorded: cursor_summary.audit_recorded,
+        log_recorded: cursor_summary.log_recorded,
+        journal_recorded: cursor_summary.journal_recorded,
+        archive_recorded: cursor_summary.archive_recorded,
+        snapshot_recorded: cursor_summary.snapshot_recorded,
+        checkpoint_recorded: cursor_summary.checkpoint_recorded,
+        marker_recorded: cursor_summary.marker_recorded,
+        cursor_recorded: cursor_summary.cursor_recorded,
+        bookmark_recorded: true,
+        terminal: cursor_summary.terminal,
+        retryable: cursor_summary.retryable,
+        queue_depth_after_bookmark: cursor_summary.queue_depth_after_cursor,
+        message: input_callback_transport_bookmark_message(bookmark_kind).to_owned(),
+        cursor_summary: cursor_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_reference_summary(
+    bookmark_summary: &LanguageInputCallbackTransportBookmarkSummary,
+) -> LanguageInputCallbackTransportReferenceSummary {
+    let reference_kind = input_callback_transport_reference_kind(bookmark_summary.bookmark_kind);
+
+    LanguageInputCallbackTransportReferenceSummary {
+        endpoint: bookmark_summary.endpoint.clone(),
+        connection_label: bookmark_summary.connection_label.clone(),
+        reference_label: input_callback_transport_reference_label(bookmark_summary, reference_kind),
+        reference_kind,
+        reference_name: input_callback_transport_reference_kind_name(reference_kind).to_owned(),
+        bookmark_kind: bookmark_summary.bookmark_kind,
+        bookmark_name: bookmark_summary.bookmark_name.clone(),
+        cursor_kind: bookmark_summary.cursor_kind,
+        cursor_name: bookmark_summary.cursor_name.clone(),
+        marker_kind: bookmark_summary.marker_kind,
+        marker_name: bookmark_summary.marker_name.clone(),
+        checkpoint_kind: bookmark_summary.checkpoint_kind,
+        checkpoint_name: bookmark_summary.checkpoint_name.clone(),
+        snapshot_kind: bookmark_summary.snapshot_kind,
+        snapshot_name: bookmark_summary.snapshot_name.clone(),
+        archive_kind: bookmark_summary.archive_kind,
+        archive_name: bookmark_summary.archive_name.clone(),
+        journal_kind: bookmark_summary.journal_kind,
+        journal_name: bookmark_summary.journal_name.clone(),
+        log_kind: bookmark_summary.log_kind,
+        log_name: bookmark_summary.log_name.clone(),
+        audit_kind: bookmark_summary.audit_kind,
+        audit_name: bookmark_summary.audit_name.clone(),
+        trace_kind: bookmark_summary.trace_kind,
+        trace_name: bookmark_summary.trace_name.clone(),
+        outcome_kind: bookmark_summary.outcome_kind,
+        outcome_name: bookmark_summary.outcome_name.clone(),
+        receipt_kind: bookmark_summary.receipt_kind,
+        receipt_name: bookmark_summary.receipt_name.clone(),
+        acknowledgement_kind: bookmark_summary.acknowledgement_kind,
+        acknowledgement_name: bookmark_summary.acknowledgement_name.clone(),
+        delivery_route: bookmark_summary.delivery_route,
+        delivery_route_name: bookmark_summary.delivery_route_name.clone(),
+        event_kind: bookmark_summary.event_kind,
+        event_name: bookmark_summary.event_name.clone(),
+        report_kind: bookmark_summary.report_kind,
+        report_name: bookmark_summary.report_name.clone(),
+        action: bookmark_summary.action,
+        action_name: bookmark_summary.action_name.clone(),
+        callback_runner_handoff: bookmark_summary.callback_runner_handoff,
+        adapter_event_published: bookmark_summary.adapter_event_published,
+        delivery_acknowledged: bookmark_summary.delivery_acknowledged,
+        receipt_recorded: bookmark_summary.receipt_recorded,
+        outcome_recorded: bookmark_summary.outcome_recorded,
+        trace_recorded: bookmark_summary.trace_recorded,
+        audit_recorded: bookmark_summary.audit_recorded,
+        log_recorded: bookmark_summary.log_recorded,
+        journal_recorded: bookmark_summary.journal_recorded,
+        archive_recorded: bookmark_summary.archive_recorded,
+        snapshot_recorded: bookmark_summary.snapshot_recorded,
+        checkpoint_recorded: bookmark_summary.checkpoint_recorded,
+        marker_recorded: bookmark_summary.marker_recorded,
+        cursor_recorded: bookmark_summary.cursor_recorded,
+        bookmark_recorded: bookmark_summary.bookmark_recorded,
+        reference_recorded: true,
+        terminal: bookmark_summary.terminal,
+        retryable: bookmark_summary.retryable,
+        queue_depth_after_reference: bookmark_summary.queue_depth_after_bookmark,
+        message: input_callback_transport_reference_message(reference_kind).to_owned(),
+        bookmark_summary: bookmark_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_logic_summary(
+    reference_summary: &LanguageInputCallbackTransportReferenceSummary,
+) -> LanguageInputCallbackTransportLogicSummary {
+    let logic_kind = input_callback_transport_logic_kind(reference_summary.reference_kind);
+
+    LanguageInputCallbackTransportLogicSummary {
+        endpoint: reference_summary.endpoint.clone(),
+        connection_label: reference_summary.connection_label.clone(),
+        logic_label: input_callback_transport_logic_label(reference_summary, logic_kind),
+        logic_kind,
+        logic_name: input_callback_transport_logic_kind_name(logic_kind).to_owned(),
+        reference_kind: reference_summary.reference_kind,
+        reference_name: reference_summary.reference_name.clone(),
+        bookmark_kind: reference_summary.bookmark_kind,
+        bookmark_name: reference_summary.bookmark_name.clone(),
+        cursor_kind: reference_summary.cursor_kind,
+        cursor_name: reference_summary.cursor_name.clone(),
+        marker_kind: reference_summary.marker_kind,
+        marker_name: reference_summary.marker_name.clone(),
+        checkpoint_kind: reference_summary.checkpoint_kind,
+        checkpoint_name: reference_summary.checkpoint_name.clone(),
+        snapshot_kind: reference_summary.snapshot_kind,
+        snapshot_name: reference_summary.snapshot_name.clone(),
+        archive_kind: reference_summary.archive_kind,
+        archive_name: reference_summary.archive_name.clone(),
+        journal_kind: reference_summary.journal_kind,
+        journal_name: reference_summary.journal_name.clone(),
+        log_kind: reference_summary.log_kind,
+        log_name: reference_summary.log_name.clone(),
+        audit_kind: reference_summary.audit_kind,
+        audit_name: reference_summary.audit_name.clone(),
+        trace_kind: reference_summary.trace_kind,
+        trace_name: reference_summary.trace_name.clone(),
+        outcome_kind: reference_summary.outcome_kind,
+        outcome_name: reference_summary.outcome_name.clone(),
+        receipt_kind: reference_summary.receipt_kind,
+        receipt_name: reference_summary.receipt_name.clone(),
+        acknowledgement_kind: reference_summary.acknowledgement_kind,
+        acknowledgement_name: reference_summary.acknowledgement_name.clone(),
+        delivery_route: reference_summary.delivery_route,
+        delivery_route_name: reference_summary.delivery_route_name.clone(),
+        event_kind: reference_summary.event_kind,
+        event_name: reference_summary.event_name.clone(),
+        report_kind: reference_summary.report_kind,
+        report_name: reference_summary.report_name.clone(),
+        action: reference_summary.action,
+        action_name: reference_summary.action_name.clone(),
+        callback_runner_handoff: reference_summary.callback_runner_handoff,
+        adapter_event_published: reference_summary.adapter_event_published,
+        delivery_acknowledged: reference_summary.delivery_acknowledged,
+        receipt_recorded: reference_summary.receipt_recorded,
+        outcome_recorded: reference_summary.outcome_recorded,
+        trace_recorded: reference_summary.trace_recorded,
+        audit_recorded: reference_summary.audit_recorded,
+        log_recorded: reference_summary.log_recorded,
+        journal_recorded: reference_summary.journal_recorded,
+        archive_recorded: reference_summary.archive_recorded,
+        snapshot_recorded: reference_summary.snapshot_recorded,
+        checkpoint_recorded: reference_summary.checkpoint_recorded,
+        marker_recorded: reference_summary.marker_recorded,
+        cursor_recorded: reference_summary.cursor_recorded,
+        bookmark_recorded: reference_summary.bookmark_recorded,
+        reference_recorded: reference_summary.reference_recorded,
+        logic_recorded: true,
+        terminal: reference_summary.terminal,
+        retryable: reference_summary.retryable,
+        queue_depth_after_logic: reference_summary.queue_depth_after_reference,
+        message: input_callback_transport_logic_message(logic_kind).to_owned(),
+        reference_summary: reference_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_decision_summary(
+    logic_summary: &LanguageInputCallbackTransportLogicSummary,
+) -> LanguageInputCallbackTransportDecisionSummary {
+    let decision_kind = input_callback_transport_decision_kind(logic_summary.logic_kind);
+
+    LanguageInputCallbackTransportDecisionSummary {
+        endpoint: logic_summary.endpoint.clone(),
+        connection_label: logic_summary.connection_label.clone(),
+        decision_label: input_callback_transport_decision_label(logic_summary, decision_kind),
+        decision_kind,
+        decision_name: input_callback_transport_decision_kind_name(decision_kind).to_owned(),
+        logic_kind: logic_summary.logic_kind,
+        logic_name: logic_summary.logic_name.clone(),
+        reference_kind: logic_summary.reference_kind,
+        reference_name: logic_summary.reference_name.clone(),
+        bookmark_kind: logic_summary.bookmark_kind,
+        bookmark_name: logic_summary.bookmark_name.clone(),
+        cursor_kind: logic_summary.cursor_kind,
+        cursor_name: logic_summary.cursor_name.clone(),
+        marker_kind: logic_summary.marker_kind,
+        marker_name: logic_summary.marker_name.clone(),
+        checkpoint_kind: logic_summary.checkpoint_kind,
+        checkpoint_name: logic_summary.checkpoint_name.clone(),
+        snapshot_kind: logic_summary.snapshot_kind,
+        snapshot_name: logic_summary.snapshot_name.clone(),
+        archive_kind: logic_summary.archive_kind,
+        archive_name: logic_summary.archive_name.clone(),
+        journal_kind: logic_summary.journal_kind,
+        journal_name: logic_summary.journal_name.clone(),
+        log_kind: logic_summary.log_kind,
+        log_name: logic_summary.log_name.clone(),
+        audit_kind: logic_summary.audit_kind,
+        audit_name: logic_summary.audit_name.clone(),
+        trace_kind: logic_summary.trace_kind,
+        trace_name: logic_summary.trace_name.clone(),
+        outcome_kind: logic_summary.outcome_kind,
+        outcome_name: logic_summary.outcome_name.clone(),
+        receipt_kind: logic_summary.receipt_kind,
+        receipt_name: logic_summary.receipt_name.clone(),
+        acknowledgement_kind: logic_summary.acknowledgement_kind,
+        acknowledgement_name: logic_summary.acknowledgement_name.clone(),
+        delivery_route: logic_summary.delivery_route,
+        delivery_route_name: logic_summary.delivery_route_name.clone(),
+        event_kind: logic_summary.event_kind,
+        event_name: logic_summary.event_name.clone(),
+        report_kind: logic_summary.report_kind,
+        report_name: logic_summary.report_name.clone(),
+        action: logic_summary.action,
+        action_name: logic_summary.action_name.clone(),
+        callback_runner_handoff: logic_summary.callback_runner_handoff,
+        adapter_event_published: logic_summary.adapter_event_published,
+        delivery_acknowledged: logic_summary.delivery_acknowledged,
+        receipt_recorded: logic_summary.receipt_recorded,
+        outcome_recorded: logic_summary.outcome_recorded,
+        trace_recorded: logic_summary.trace_recorded,
+        audit_recorded: logic_summary.audit_recorded,
+        log_recorded: logic_summary.log_recorded,
+        journal_recorded: logic_summary.journal_recorded,
+        archive_recorded: logic_summary.archive_recorded,
+        snapshot_recorded: logic_summary.snapshot_recorded,
+        checkpoint_recorded: logic_summary.checkpoint_recorded,
+        marker_recorded: logic_summary.marker_recorded,
+        cursor_recorded: logic_summary.cursor_recorded,
+        bookmark_recorded: logic_summary.bookmark_recorded,
+        reference_recorded: logic_summary.reference_recorded,
+        logic_recorded: logic_summary.logic_recorded,
+        decision_recorded: true,
+        terminal: logic_summary.terminal,
+        retryable: logic_summary.retryable,
+        queue_depth_after_decision: logic_summary.queue_depth_after_logic,
+        message: input_callback_transport_decision_message(decision_kind).to_owned(),
+        logic_summary: logic_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_resolution_summary(
+    decision_summary: &LanguageInputCallbackTransportDecisionSummary,
+) -> LanguageInputCallbackTransportResolutionSummary {
+    let resolution_kind = input_callback_transport_resolution_kind(decision_summary.decision_kind);
+
+    LanguageInputCallbackTransportResolutionSummary {
+        endpoint: decision_summary.endpoint.clone(),
+        connection_label: decision_summary.connection_label.clone(),
+        resolution_label: input_callback_transport_resolution_label(
+            decision_summary,
+            resolution_kind,
+        ),
+        resolution_kind,
+        resolution_name: input_callback_transport_resolution_kind_name(resolution_kind).to_owned(),
+        decision_kind: decision_summary.decision_kind,
+        decision_name: decision_summary.decision_name.clone(),
+        logic_kind: decision_summary.logic_kind,
+        logic_name: decision_summary.logic_name.clone(),
+        reference_kind: decision_summary.reference_kind,
+        reference_name: decision_summary.reference_name.clone(),
+        bookmark_kind: decision_summary.bookmark_kind,
+        bookmark_name: decision_summary.bookmark_name.clone(),
+        cursor_kind: decision_summary.cursor_kind,
+        cursor_name: decision_summary.cursor_name.clone(),
+        marker_kind: decision_summary.marker_kind,
+        marker_name: decision_summary.marker_name.clone(),
+        checkpoint_kind: decision_summary.checkpoint_kind,
+        checkpoint_name: decision_summary.checkpoint_name.clone(),
+        snapshot_kind: decision_summary.snapshot_kind,
+        snapshot_name: decision_summary.snapshot_name.clone(),
+        archive_kind: decision_summary.archive_kind,
+        archive_name: decision_summary.archive_name.clone(),
+        journal_kind: decision_summary.journal_kind,
+        journal_name: decision_summary.journal_name.clone(),
+        log_kind: decision_summary.log_kind,
+        log_name: decision_summary.log_name.clone(),
+        audit_kind: decision_summary.audit_kind,
+        audit_name: decision_summary.audit_name.clone(),
+        trace_kind: decision_summary.trace_kind,
+        trace_name: decision_summary.trace_name.clone(),
+        outcome_kind: decision_summary.outcome_kind,
+        outcome_name: decision_summary.outcome_name.clone(),
+        receipt_kind: decision_summary.receipt_kind,
+        receipt_name: decision_summary.receipt_name.clone(),
+        acknowledgement_kind: decision_summary.acknowledgement_kind,
+        acknowledgement_name: decision_summary.acknowledgement_name.clone(),
+        delivery_route: decision_summary.delivery_route,
+        delivery_route_name: decision_summary.delivery_route_name.clone(),
+        event_kind: decision_summary.event_kind,
+        event_name: decision_summary.event_name.clone(),
+        report_kind: decision_summary.report_kind,
+        report_name: decision_summary.report_name.clone(),
+        action: decision_summary.action,
+        action_name: decision_summary.action_name.clone(),
+        callback_runner_handoff: decision_summary.callback_runner_handoff,
+        adapter_event_published: decision_summary.adapter_event_published,
+        delivery_acknowledged: decision_summary.delivery_acknowledged,
+        receipt_recorded: decision_summary.receipt_recorded,
+        outcome_recorded: decision_summary.outcome_recorded,
+        trace_recorded: decision_summary.trace_recorded,
+        audit_recorded: decision_summary.audit_recorded,
+        log_recorded: decision_summary.log_recorded,
+        journal_recorded: decision_summary.journal_recorded,
+        archive_recorded: decision_summary.archive_recorded,
+        snapshot_recorded: decision_summary.snapshot_recorded,
+        checkpoint_recorded: decision_summary.checkpoint_recorded,
+        marker_recorded: decision_summary.marker_recorded,
+        cursor_recorded: decision_summary.cursor_recorded,
+        bookmark_recorded: decision_summary.bookmark_recorded,
+        reference_recorded: decision_summary.reference_recorded,
+        logic_recorded: decision_summary.logic_recorded,
+        decision_recorded: decision_summary.decision_recorded,
+        resolution_recorded: true,
+        terminal: decision_summary.terminal,
+        retryable: decision_summary.retryable,
+        queue_depth_after_resolution: decision_summary.queue_depth_after_decision,
+        message: input_callback_transport_resolution_message(resolution_kind).to_owned(),
+        decision_summary: decision_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_finalization_summary(
+    resolution_summary: &LanguageInputCallbackTransportResolutionSummary,
+) -> LanguageInputCallbackTransportFinalizationSummary {
+    let finalization_kind =
+        input_callback_transport_finalization_kind(resolution_summary.resolution_kind);
+
+    LanguageInputCallbackTransportFinalizationSummary {
+        endpoint: resolution_summary.endpoint.clone(),
+        connection_label: resolution_summary.connection_label.clone(),
+        finalization_label: input_callback_transport_finalization_label(
+            resolution_summary,
+            finalization_kind,
+        ),
+        finalization_kind,
+        finalization_name: input_callback_transport_finalization_kind_name(finalization_kind)
+            .to_owned(),
+        resolution_kind: resolution_summary.resolution_kind,
+        resolution_name: resolution_summary.resolution_name.clone(),
+        decision_kind: resolution_summary.decision_kind,
+        decision_name: resolution_summary.decision_name.clone(),
+        logic_kind: resolution_summary.logic_kind,
+        logic_name: resolution_summary.logic_name.clone(),
+        reference_kind: resolution_summary.reference_kind,
+        reference_name: resolution_summary.reference_name.clone(),
+        bookmark_kind: resolution_summary.bookmark_kind,
+        bookmark_name: resolution_summary.bookmark_name.clone(),
+        cursor_kind: resolution_summary.cursor_kind,
+        cursor_name: resolution_summary.cursor_name.clone(),
+        marker_kind: resolution_summary.marker_kind,
+        marker_name: resolution_summary.marker_name.clone(),
+        checkpoint_kind: resolution_summary.checkpoint_kind,
+        checkpoint_name: resolution_summary.checkpoint_name.clone(),
+        snapshot_kind: resolution_summary.snapshot_kind,
+        snapshot_name: resolution_summary.snapshot_name.clone(),
+        archive_kind: resolution_summary.archive_kind,
+        archive_name: resolution_summary.archive_name.clone(),
+        journal_kind: resolution_summary.journal_kind,
+        journal_name: resolution_summary.journal_name.clone(),
+        log_kind: resolution_summary.log_kind,
+        log_name: resolution_summary.log_name.clone(),
+        audit_kind: resolution_summary.audit_kind,
+        audit_name: resolution_summary.audit_name.clone(),
+        trace_kind: resolution_summary.trace_kind,
+        trace_name: resolution_summary.trace_name.clone(),
+        outcome_kind: resolution_summary.outcome_kind,
+        outcome_name: resolution_summary.outcome_name.clone(),
+        receipt_kind: resolution_summary.receipt_kind,
+        receipt_name: resolution_summary.receipt_name.clone(),
+        acknowledgement_kind: resolution_summary.acknowledgement_kind,
+        acknowledgement_name: resolution_summary.acknowledgement_name.clone(),
+        delivery_route: resolution_summary.delivery_route,
+        delivery_route_name: resolution_summary.delivery_route_name.clone(),
+        event_kind: resolution_summary.event_kind,
+        event_name: resolution_summary.event_name.clone(),
+        report_kind: resolution_summary.report_kind,
+        report_name: resolution_summary.report_name.clone(),
+        action: resolution_summary.action,
+        action_name: resolution_summary.action_name.clone(),
+        callback_runner_handoff: resolution_summary.callback_runner_handoff,
+        adapter_event_published: resolution_summary.adapter_event_published,
+        delivery_acknowledged: resolution_summary.delivery_acknowledged,
+        receipt_recorded: resolution_summary.receipt_recorded,
+        outcome_recorded: resolution_summary.outcome_recorded,
+        trace_recorded: resolution_summary.trace_recorded,
+        audit_recorded: resolution_summary.audit_recorded,
+        log_recorded: resolution_summary.log_recorded,
+        journal_recorded: resolution_summary.journal_recorded,
+        archive_recorded: resolution_summary.archive_recorded,
+        snapshot_recorded: resolution_summary.snapshot_recorded,
+        checkpoint_recorded: resolution_summary.checkpoint_recorded,
+        marker_recorded: resolution_summary.marker_recorded,
+        cursor_recorded: resolution_summary.cursor_recorded,
+        bookmark_recorded: resolution_summary.bookmark_recorded,
+        reference_recorded: resolution_summary.reference_recorded,
+        logic_recorded: resolution_summary.logic_recorded,
+        decision_recorded: resolution_summary.decision_recorded,
+        resolution_recorded: resolution_summary.resolution_recorded,
+        finalization_recorded: true,
+        terminal: resolution_summary.terminal,
+        retryable: resolution_summary.retryable,
+        queue_depth_after_finalization: resolution_summary.queue_depth_after_resolution,
+        message: input_callback_transport_finalization_message(finalization_kind).to_owned(),
+        resolution_summary: resolution_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_completion_summary(
+    finalization_summary: &LanguageInputCallbackTransportFinalizationSummary,
+) -> LanguageInputCallbackTransportCompletionSummary {
+    let completion_kind =
+        input_callback_transport_completion_kind(finalization_summary.finalization_kind);
+
+    LanguageInputCallbackTransportCompletionSummary {
+        endpoint: finalization_summary.endpoint.clone(),
+        connection_label: finalization_summary.connection_label.clone(),
+        completion_label: input_callback_transport_completion_label(
+            finalization_summary,
+            completion_kind,
+        ),
+        completion_kind,
+        completion_name: input_callback_transport_completion_kind_name(completion_kind).to_owned(),
+        finalization_kind: finalization_summary.finalization_kind,
+        finalization_name: finalization_summary.finalization_name.clone(),
+        resolution_kind: finalization_summary.resolution_kind,
+        resolution_name: finalization_summary.resolution_name.clone(),
+        decision_kind: finalization_summary.decision_kind,
+        decision_name: finalization_summary.decision_name.clone(),
+        logic_kind: finalization_summary.logic_kind,
+        logic_name: finalization_summary.logic_name.clone(),
+        reference_kind: finalization_summary.reference_kind,
+        reference_name: finalization_summary.reference_name.clone(),
+        bookmark_kind: finalization_summary.bookmark_kind,
+        bookmark_name: finalization_summary.bookmark_name.clone(),
+        cursor_kind: finalization_summary.cursor_kind,
+        cursor_name: finalization_summary.cursor_name.clone(),
+        marker_kind: finalization_summary.marker_kind,
+        marker_name: finalization_summary.marker_name.clone(),
+        checkpoint_kind: finalization_summary.checkpoint_kind,
+        checkpoint_name: finalization_summary.checkpoint_name.clone(),
+        snapshot_kind: finalization_summary.snapshot_kind,
+        snapshot_name: finalization_summary.snapshot_name.clone(),
+        archive_kind: finalization_summary.archive_kind,
+        archive_name: finalization_summary.archive_name.clone(),
+        journal_kind: finalization_summary.journal_kind,
+        journal_name: finalization_summary.journal_name.clone(),
+        log_kind: finalization_summary.log_kind,
+        log_name: finalization_summary.log_name.clone(),
+        audit_kind: finalization_summary.audit_kind,
+        audit_name: finalization_summary.audit_name.clone(),
+        trace_kind: finalization_summary.trace_kind,
+        trace_name: finalization_summary.trace_name.clone(),
+        outcome_kind: finalization_summary.outcome_kind,
+        outcome_name: finalization_summary.outcome_name.clone(),
+        receipt_kind: finalization_summary.receipt_kind,
+        receipt_name: finalization_summary.receipt_name.clone(),
+        acknowledgement_kind: finalization_summary.acknowledgement_kind,
+        acknowledgement_name: finalization_summary.acknowledgement_name.clone(),
+        delivery_route: finalization_summary.delivery_route,
+        delivery_route_name: finalization_summary.delivery_route_name.clone(),
+        event_kind: finalization_summary.event_kind,
+        event_name: finalization_summary.event_name.clone(),
+        report_kind: finalization_summary.report_kind,
+        report_name: finalization_summary.report_name.clone(),
+        action: finalization_summary.action,
+        action_name: finalization_summary.action_name.clone(),
+        callback_runner_handoff: finalization_summary.callback_runner_handoff,
+        adapter_event_published: finalization_summary.adapter_event_published,
+        delivery_acknowledged: finalization_summary.delivery_acknowledged,
+        receipt_recorded: finalization_summary.receipt_recorded,
+        outcome_recorded: finalization_summary.outcome_recorded,
+        trace_recorded: finalization_summary.trace_recorded,
+        audit_recorded: finalization_summary.audit_recorded,
+        log_recorded: finalization_summary.log_recorded,
+        journal_recorded: finalization_summary.journal_recorded,
+        archive_recorded: finalization_summary.archive_recorded,
+        snapshot_recorded: finalization_summary.snapshot_recorded,
+        checkpoint_recorded: finalization_summary.checkpoint_recorded,
+        marker_recorded: finalization_summary.marker_recorded,
+        cursor_recorded: finalization_summary.cursor_recorded,
+        bookmark_recorded: finalization_summary.bookmark_recorded,
+        reference_recorded: finalization_summary.reference_recorded,
+        logic_recorded: finalization_summary.logic_recorded,
+        decision_recorded: finalization_summary.decision_recorded,
+        resolution_recorded: finalization_summary.resolution_recorded,
+        finalization_recorded: finalization_summary.finalization_recorded,
+        completion_recorded: true,
+        terminal: finalization_summary.terminal,
+        retryable: finalization_summary.retryable,
+        queue_depth_after_completion: finalization_summary.queue_depth_after_finalization,
+        message: input_callback_transport_completion_message(completion_kind).to_owned(),
+        finalization_summary: finalization_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_diagnostic_summary(
+    completion_summary: &LanguageInputCallbackTransportCompletionSummary,
+) -> LanguageInputCallbackTransportDiagnosticSummary {
+    let diagnostic_kind =
+        input_callback_transport_diagnostic_kind(completion_summary.completion_kind);
+
+    LanguageInputCallbackTransportDiagnosticSummary {
+        endpoint: completion_summary.endpoint.clone(),
+        connection_label: completion_summary.connection_label.clone(),
+        diagnostic_label: input_callback_transport_diagnostic_label(
+            completion_summary,
+            diagnostic_kind,
+        ),
+        diagnostic_kind,
+        diagnostic_name: input_callback_transport_diagnostic_kind_name(diagnostic_kind).to_owned(),
+        completion_kind: completion_summary.completion_kind,
+        completion_name: completion_summary.completion_name.clone(),
+        finalization_kind: completion_summary.finalization_kind,
+        finalization_name: completion_summary.finalization_name.clone(),
+        resolution_kind: completion_summary.resolution_kind,
+        resolution_name: completion_summary.resolution_name.clone(),
+        decision_kind: completion_summary.decision_kind,
+        decision_name: completion_summary.decision_name.clone(),
+        logic_kind: completion_summary.logic_kind,
+        logic_name: completion_summary.logic_name.clone(),
+        reference_kind: completion_summary.reference_kind,
+        reference_name: completion_summary.reference_name.clone(),
+        bookmark_kind: completion_summary.bookmark_kind,
+        bookmark_name: completion_summary.bookmark_name.clone(),
+        cursor_kind: completion_summary.cursor_kind,
+        cursor_name: completion_summary.cursor_name.clone(),
+        marker_kind: completion_summary.marker_kind,
+        marker_name: completion_summary.marker_name.clone(),
+        checkpoint_kind: completion_summary.checkpoint_kind,
+        checkpoint_name: completion_summary.checkpoint_name.clone(),
+        snapshot_kind: completion_summary.snapshot_kind,
+        snapshot_name: completion_summary.snapshot_name.clone(),
+        archive_kind: completion_summary.archive_kind,
+        archive_name: completion_summary.archive_name.clone(),
+        journal_kind: completion_summary.journal_kind,
+        journal_name: completion_summary.journal_name.clone(),
+        log_kind: completion_summary.log_kind,
+        log_name: completion_summary.log_name.clone(),
+        audit_kind: completion_summary.audit_kind,
+        audit_name: completion_summary.audit_name.clone(),
+        trace_kind: completion_summary.trace_kind,
+        trace_name: completion_summary.trace_name.clone(),
+        outcome_kind: completion_summary.outcome_kind,
+        outcome_name: completion_summary.outcome_name.clone(),
+        receipt_kind: completion_summary.receipt_kind,
+        receipt_name: completion_summary.receipt_name.clone(),
+        acknowledgement_kind: completion_summary.acknowledgement_kind,
+        acknowledgement_name: completion_summary.acknowledgement_name.clone(),
+        delivery_route: completion_summary.delivery_route,
+        delivery_route_name: completion_summary.delivery_route_name.clone(),
+        event_kind: completion_summary.event_kind,
+        event_name: completion_summary.event_name.clone(),
+        report_kind: completion_summary.report_kind,
+        report_name: completion_summary.report_name.clone(),
+        action: completion_summary.action,
+        action_name: completion_summary.action_name.clone(),
+        callback_runner_handoff: completion_summary.callback_runner_handoff,
+        adapter_event_published: completion_summary.adapter_event_published,
+        delivery_acknowledged: completion_summary.delivery_acknowledged,
+        receipt_recorded: completion_summary.receipt_recorded,
+        outcome_recorded: completion_summary.outcome_recorded,
+        trace_recorded: completion_summary.trace_recorded,
+        audit_recorded: completion_summary.audit_recorded,
+        log_recorded: completion_summary.log_recorded,
+        journal_recorded: completion_summary.journal_recorded,
+        archive_recorded: completion_summary.archive_recorded,
+        snapshot_recorded: completion_summary.snapshot_recorded,
+        checkpoint_recorded: completion_summary.checkpoint_recorded,
+        marker_recorded: completion_summary.marker_recorded,
+        cursor_recorded: completion_summary.cursor_recorded,
+        bookmark_recorded: completion_summary.bookmark_recorded,
+        reference_recorded: completion_summary.reference_recorded,
+        logic_recorded: completion_summary.logic_recorded,
+        decision_recorded: completion_summary.decision_recorded,
+        resolution_recorded: completion_summary.resolution_recorded,
+        finalization_recorded: completion_summary.finalization_recorded,
+        completion_recorded: completion_summary.completion_recorded,
+        diagnostic_recorded: true,
+        terminal: completion_summary.terminal,
+        retryable: completion_summary.retryable,
+        queue_depth_after_diagnostic: completion_summary.queue_depth_after_completion,
+        message: input_callback_transport_diagnostic_message(diagnostic_kind).to_owned(),
+        completion_summary: completion_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_health_summary(
+    diagnostic_summary: &LanguageInputCallbackTransportDiagnosticSummary,
+) -> LanguageInputCallbackTransportHealthSummary {
+    let health_kind = input_callback_transport_health_kind(diagnostic_summary.diagnostic_kind);
+
+    LanguageInputCallbackTransportHealthSummary {
+        endpoint: diagnostic_summary.endpoint.clone(),
+        connection_label: diagnostic_summary.connection_label.clone(),
+        health_label: input_callback_transport_health_label(diagnostic_summary, health_kind),
+        health_kind,
+        health_name: input_callback_transport_health_kind_name(health_kind).to_owned(),
+        diagnostic_kind: diagnostic_summary.diagnostic_kind,
+        diagnostic_name: diagnostic_summary.diagnostic_name.clone(),
+        completion_kind: diagnostic_summary.completion_kind,
+        completion_name: diagnostic_summary.completion_name.clone(),
+        finalization_kind: diagnostic_summary.finalization_kind,
+        finalization_name: diagnostic_summary.finalization_name.clone(),
+        resolution_kind: diagnostic_summary.resolution_kind,
+        resolution_name: diagnostic_summary.resolution_name.clone(),
+        decision_kind: diagnostic_summary.decision_kind,
+        decision_name: diagnostic_summary.decision_name.clone(),
+        logic_kind: diagnostic_summary.logic_kind,
+        logic_name: diagnostic_summary.logic_name.clone(),
+        reference_kind: diagnostic_summary.reference_kind,
+        reference_name: diagnostic_summary.reference_name.clone(),
+        bookmark_kind: diagnostic_summary.bookmark_kind,
+        bookmark_name: diagnostic_summary.bookmark_name.clone(),
+        cursor_kind: diagnostic_summary.cursor_kind,
+        cursor_name: diagnostic_summary.cursor_name.clone(),
+        marker_kind: diagnostic_summary.marker_kind,
+        marker_name: diagnostic_summary.marker_name.clone(),
+        checkpoint_kind: diagnostic_summary.checkpoint_kind,
+        checkpoint_name: diagnostic_summary.checkpoint_name.clone(),
+        snapshot_kind: diagnostic_summary.snapshot_kind,
+        snapshot_name: diagnostic_summary.snapshot_name.clone(),
+        archive_kind: diagnostic_summary.archive_kind,
+        archive_name: diagnostic_summary.archive_name.clone(),
+        journal_kind: diagnostic_summary.journal_kind,
+        journal_name: diagnostic_summary.journal_name.clone(),
+        log_kind: diagnostic_summary.log_kind,
+        log_name: diagnostic_summary.log_name.clone(),
+        audit_kind: diagnostic_summary.audit_kind,
+        audit_name: diagnostic_summary.audit_name.clone(),
+        trace_kind: diagnostic_summary.trace_kind,
+        trace_name: diagnostic_summary.trace_name.clone(),
+        outcome_kind: diagnostic_summary.outcome_kind,
+        outcome_name: diagnostic_summary.outcome_name.clone(),
+        receipt_kind: diagnostic_summary.receipt_kind,
+        receipt_name: diagnostic_summary.receipt_name.clone(),
+        acknowledgement_kind: diagnostic_summary.acknowledgement_kind,
+        acknowledgement_name: diagnostic_summary.acknowledgement_name.clone(),
+        delivery_route: diagnostic_summary.delivery_route,
+        delivery_route_name: diagnostic_summary.delivery_route_name.clone(),
+        event_kind: diagnostic_summary.event_kind,
+        event_name: diagnostic_summary.event_name.clone(),
+        report_kind: diagnostic_summary.report_kind,
+        report_name: diagnostic_summary.report_name.clone(),
+        action: diagnostic_summary.action,
+        action_name: diagnostic_summary.action_name.clone(),
+        callback_runner_handoff: diagnostic_summary.callback_runner_handoff,
+        adapter_event_published: diagnostic_summary.adapter_event_published,
+        delivery_acknowledged: diagnostic_summary.delivery_acknowledged,
+        receipt_recorded: diagnostic_summary.receipt_recorded,
+        outcome_recorded: diagnostic_summary.outcome_recorded,
+        trace_recorded: diagnostic_summary.trace_recorded,
+        audit_recorded: diagnostic_summary.audit_recorded,
+        log_recorded: diagnostic_summary.log_recorded,
+        journal_recorded: diagnostic_summary.journal_recorded,
+        archive_recorded: diagnostic_summary.archive_recorded,
+        snapshot_recorded: diagnostic_summary.snapshot_recorded,
+        checkpoint_recorded: diagnostic_summary.checkpoint_recorded,
+        marker_recorded: diagnostic_summary.marker_recorded,
+        cursor_recorded: diagnostic_summary.cursor_recorded,
+        bookmark_recorded: diagnostic_summary.bookmark_recorded,
+        reference_recorded: diagnostic_summary.reference_recorded,
+        logic_recorded: diagnostic_summary.logic_recorded,
+        decision_recorded: diagnostic_summary.decision_recorded,
+        resolution_recorded: diagnostic_summary.resolution_recorded,
+        finalization_recorded: diagnostic_summary.finalization_recorded,
+        completion_recorded: diagnostic_summary.completion_recorded,
+        diagnostic_recorded: diagnostic_summary.diagnostic_recorded,
+        health_recorded: true,
+        terminal: diagnostic_summary.terminal,
+        retryable: diagnostic_summary.retryable,
+        queue_depth_after_health: diagnostic_summary.queue_depth_after_diagnostic,
+        message: input_callback_transport_health_message(health_kind).to_owned(),
+        diagnostic_summary: diagnostic_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_readiness_summary(
+    health_summary: &LanguageInputCallbackTransportHealthSummary,
+) -> LanguageInputCallbackTransportReadinessSummary {
+    let readiness_kind = input_callback_transport_readiness_kind(health_summary.health_kind);
+
+    LanguageInputCallbackTransportReadinessSummary {
+        endpoint: health_summary.endpoint.clone(),
+        connection_label: health_summary.connection_label.clone(),
+        readiness_label: input_callback_transport_readiness_label(health_summary, readiness_kind),
+        readiness_kind,
+        readiness_name: input_callback_transport_readiness_kind_name(readiness_kind).to_owned(),
+        health_kind: health_summary.health_kind,
+        health_name: health_summary.health_name.clone(),
+        diagnostic_kind: health_summary.diagnostic_kind,
+        diagnostic_name: health_summary.diagnostic_name.clone(),
+        completion_kind: health_summary.completion_kind,
+        completion_name: health_summary.completion_name.clone(),
+        finalization_kind: health_summary.finalization_kind,
+        finalization_name: health_summary.finalization_name.clone(),
+        resolution_kind: health_summary.resolution_kind,
+        resolution_name: health_summary.resolution_name.clone(),
+        decision_kind: health_summary.decision_kind,
+        decision_name: health_summary.decision_name.clone(),
+        logic_kind: health_summary.logic_kind,
+        logic_name: health_summary.logic_name.clone(),
+        reference_kind: health_summary.reference_kind,
+        reference_name: health_summary.reference_name.clone(),
+        bookmark_kind: health_summary.bookmark_kind,
+        bookmark_name: health_summary.bookmark_name.clone(),
+        cursor_kind: health_summary.cursor_kind,
+        cursor_name: health_summary.cursor_name.clone(),
+        marker_kind: health_summary.marker_kind,
+        marker_name: health_summary.marker_name.clone(),
+        checkpoint_kind: health_summary.checkpoint_kind,
+        checkpoint_name: health_summary.checkpoint_name.clone(),
+        snapshot_kind: health_summary.snapshot_kind,
+        snapshot_name: health_summary.snapshot_name.clone(),
+        archive_kind: health_summary.archive_kind,
+        archive_name: health_summary.archive_name.clone(),
+        journal_kind: health_summary.journal_kind,
+        journal_name: health_summary.journal_name.clone(),
+        log_kind: health_summary.log_kind,
+        log_name: health_summary.log_name.clone(),
+        audit_kind: health_summary.audit_kind,
+        audit_name: health_summary.audit_name.clone(),
+        trace_kind: health_summary.trace_kind,
+        trace_name: health_summary.trace_name.clone(),
+        outcome_kind: health_summary.outcome_kind,
+        outcome_name: health_summary.outcome_name.clone(),
+        receipt_kind: health_summary.receipt_kind,
+        receipt_name: health_summary.receipt_name.clone(),
+        acknowledgement_kind: health_summary.acknowledgement_kind,
+        acknowledgement_name: health_summary.acknowledgement_name.clone(),
+        delivery_route: health_summary.delivery_route,
+        delivery_route_name: health_summary.delivery_route_name.clone(),
+        event_kind: health_summary.event_kind,
+        event_name: health_summary.event_name.clone(),
+        report_kind: health_summary.report_kind,
+        report_name: health_summary.report_name.clone(),
+        action: health_summary.action,
+        action_name: health_summary.action_name.clone(),
+        callback_runner_handoff: health_summary.callback_runner_handoff,
+        adapter_event_published: health_summary.adapter_event_published,
+        delivery_acknowledged: health_summary.delivery_acknowledged,
+        receipt_recorded: health_summary.receipt_recorded,
+        outcome_recorded: health_summary.outcome_recorded,
+        trace_recorded: health_summary.trace_recorded,
+        audit_recorded: health_summary.audit_recorded,
+        log_recorded: health_summary.log_recorded,
+        journal_recorded: health_summary.journal_recorded,
+        archive_recorded: health_summary.archive_recorded,
+        snapshot_recorded: health_summary.snapshot_recorded,
+        checkpoint_recorded: health_summary.checkpoint_recorded,
+        marker_recorded: health_summary.marker_recorded,
+        cursor_recorded: health_summary.cursor_recorded,
+        bookmark_recorded: health_summary.bookmark_recorded,
+        reference_recorded: health_summary.reference_recorded,
+        logic_recorded: health_summary.logic_recorded,
+        decision_recorded: health_summary.decision_recorded,
+        resolution_recorded: health_summary.resolution_recorded,
+        finalization_recorded: health_summary.finalization_recorded,
+        completion_recorded: health_summary.completion_recorded,
+        diagnostic_recorded: health_summary.diagnostic_recorded,
+        health_recorded: health_summary.health_recorded,
+        readiness_recorded: true,
+        terminal: health_summary.terminal,
+        retryable: health_summary.retryable,
+        queue_depth_after_readiness: health_summary.queue_depth_after_health,
+        message: input_callback_transport_readiness_message(readiness_kind).to_owned(),
+        health_summary: health_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_availability_summary(
+    readiness_summary: &LanguageInputCallbackTransportReadinessSummary,
+) -> LanguageInputCallbackTransportAvailabilitySummary {
+    let availability_kind =
+        input_callback_transport_availability_kind(readiness_summary.readiness_kind);
+
+    LanguageInputCallbackTransportAvailabilitySummary {
+        endpoint: readiness_summary.endpoint.clone(),
+        connection_label: readiness_summary.connection_label.clone(),
+        availability_label: input_callback_transport_availability_label(
+            readiness_summary,
+            availability_kind,
+        ),
+        availability_kind,
+        availability_name: input_callback_transport_availability_kind_name(availability_kind)
+            .to_owned(),
+        readiness_kind: readiness_summary.readiness_kind,
+        readiness_name: readiness_summary.readiness_name.clone(),
+        health_kind: readiness_summary.health_kind,
+        health_name: readiness_summary.health_name.clone(),
+        diagnostic_kind: readiness_summary.diagnostic_kind,
+        diagnostic_name: readiness_summary.diagnostic_name.clone(),
+        completion_kind: readiness_summary.completion_kind,
+        completion_name: readiness_summary.completion_name.clone(),
+        finalization_kind: readiness_summary.finalization_kind,
+        finalization_name: readiness_summary.finalization_name.clone(),
+        resolution_kind: readiness_summary.resolution_kind,
+        resolution_name: readiness_summary.resolution_name.clone(),
+        decision_kind: readiness_summary.decision_kind,
+        decision_name: readiness_summary.decision_name.clone(),
+        logic_kind: readiness_summary.logic_kind,
+        logic_name: readiness_summary.logic_name.clone(),
+        reference_kind: readiness_summary.reference_kind,
+        reference_name: readiness_summary.reference_name.clone(),
+        bookmark_kind: readiness_summary.bookmark_kind,
+        bookmark_name: readiness_summary.bookmark_name.clone(),
+        cursor_kind: readiness_summary.cursor_kind,
+        cursor_name: readiness_summary.cursor_name.clone(),
+        marker_kind: readiness_summary.marker_kind,
+        marker_name: readiness_summary.marker_name.clone(),
+        checkpoint_kind: readiness_summary.checkpoint_kind,
+        checkpoint_name: readiness_summary.checkpoint_name.clone(),
+        snapshot_kind: readiness_summary.snapshot_kind,
+        snapshot_name: readiness_summary.snapshot_name.clone(),
+        archive_kind: readiness_summary.archive_kind,
+        archive_name: readiness_summary.archive_name.clone(),
+        journal_kind: readiness_summary.journal_kind,
+        journal_name: readiness_summary.journal_name.clone(),
+        log_kind: readiness_summary.log_kind,
+        log_name: readiness_summary.log_name.clone(),
+        audit_kind: readiness_summary.audit_kind,
+        audit_name: readiness_summary.audit_name.clone(),
+        trace_kind: readiness_summary.trace_kind,
+        trace_name: readiness_summary.trace_name.clone(),
+        outcome_kind: readiness_summary.outcome_kind,
+        outcome_name: readiness_summary.outcome_name.clone(),
+        receipt_kind: readiness_summary.receipt_kind,
+        receipt_name: readiness_summary.receipt_name.clone(),
+        acknowledgement_kind: readiness_summary.acknowledgement_kind,
+        acknowledgement_name: readiness_summary.acknowledgement_name.clone(),
+        delivery_route: readiness_summary.delivery_route,
+        delivery_route_name: readiness_summary.delivery_route_name.clone(),
+        event_kind: readiness_summary.event_kind,
+        event_name: readiness_summary.event_name.clone(),
+        report_kind: readiness_summary.report_kind,
+        report_name: readiness_summary.report_name.clone(),
+        action: readiness_summary.action,
+        action_name: readiness_summary.action_name.clone(),
+        callback_runner_handoff: readiness_summary.callback_runner_handoff,
+        adapter_event_published: readiness_summary.adapter_event_published,
+        delivery_acknowledged: readiness_summary.delivery_acknowledged,
+        receipt_recorded: readiness_summary.receipt_recorded,
+        outcome_recorded: readiness_summary.outcome_recorded,
+        trace_recorded: readiness_summary.trace_recorded,
+        audit_recorded: readiness_summary.audit_recorded,
+        log_recorded: readiness_summary.log_recorded,
+        journal_recorded: readiness_summary.journal_recorded,
+        archive_recorded: readiness_summary.archive_recorded,
+        snapshot_recorded: readiness_summary.snapshot_recorded,
+        checkpoint_recorded: readiness_summary.checkpoint_recorded,
+        marker_recorded: readiness_summary.marker_recorded,
+        cursor_recorded: readiness_summary.cursor_recorded,
+        bookmark_recorded: readiness_summary.bookmark_recorded,
+        reference_recorded: readiness_summary.reference_recorded,
+        logic_recorded: readiness_summary.logic_recorded,
+        decision_recorded: readiness_summary.decision_recorded,
+        resolution_recorded: readiness_summary.resolution_recorded,
+        finalization_recorded: readiness_summary.finalization_recorded,
+        completion_recorded: readiness_summary.completion_recorded,
+        diagnostic_recorded: readiness_summary.diagnostic_recorded,
+        health_recorded: readiness_summary.health_recorded,
+        readiness_recorded: readiness_summary.readiness_recorded,
+        availability_recorded: true,
+        terminal: readiness_summary.terminal,
+        retryable: readiness_summary.retryable,
+        queue_depth_after_availability: readiness_summary.queue_depth_after_readiness,
+        message: input_callback_transport_availability_message(availability_kind).to_owned(),
+        readiness_summary: readiness_summary.clone(),
+    }
+}
+
+pub fn input_callback_transport_capacity_summary(
+    availability_summary: &LanguageInputCallbackTransportAvailabilitySummary,
+) -> LanguageInputCallbackTransportCapacitySummary {
+    let capacity_kind =
+        input_callback_transport_capacity_kind(availability_summary.availability_kind);
+
+    LanguageInputCallbackTransportCapacitySummary {
+        endpoint: availability_summary.endpoint.clone(),
+        connection_label: availability_summary.connection_label.clone(),
+        capacity_label: input_callback_transport_capacity_label(
+            availability_summary,
+            capacity_kind,
+        ),
+        capacity_kind,
+        capacity_name: input_callback_transport_capacity_kind_name(capacity_kind).to_owned(),
+        availability_kind: availability_summary.availability_kind,
+        availability_name: availability_summary.availability_name.clone(),
+        readiness_kind: availability_summary.readiness_kind,
+        readiness_name: availability_summary.readiness_name.clone(),
+        health_kind: availability_summary.health_kind,
+        health_name: availability_summary.health_name.clone(),
+        diagnostic_kind: availability_summary.diagnostic_kind,
+        diagnostic_name: availability_summary.diagnostic_name.clone(),
+        completion_kind: availability_summary.completion_kind,
+        completion_name: availability_summary.completion_name.clone(),
+        finalization_kind: availability_summary.finalization_kind,
+        finalization_name: availability_summary.finalization_name.clone(),
+        resolution_kind: availability_summary.resolution_kind,
+        resolution_name: availability_summary.resolution_name.clone(),
+        decision_kind: availability_summary.decision_kind,
+        decision_name: availability_summary.decision_name.clone(),
+        logic_kind: availability_summary.logic_kind,
+        logic_name: availability_summary.logic_name.clone(),
+        reference_kind: availability_summary.reference_kind,
+        reference_name: availability_summary.reference_name.clone(),
+        bookmark_kind: availability_summary.bookmark_kind,
+        bookmark_name: availability_summary.bookmark_name.clone(),
+        cursor_kind: availability_summary.cursor_kind,
+        cursor_name: availability_summary.cursor_name.clone(),
+        marker_kind: availability_summary.marker_kind,
+        marker_name: availability_summary.marker_name.clone(),
+        checkpoint_kind: availability_summary.checkpoint_kind,
+        checkpoint_name: availability_summary.checkpoint_name.clone(),
+        snapshot_kind: availability_summary.snapshot_kind,
+        snapshot_name: availability_summary.snapshot_name.clone(),
+        archive_kind: availability_summary.archive_kind,
+        archive_name: availability_summary.archive_name.clone(),
+        journal_kind: availability_summary.journal_kind,
+        journal_name: availability_summary.journal_name.clone(),
+        log_kind: availability_summary.log_kind,
+        log_name: availability_summary.log_name.clone(),
+        audit_kind: availability_summary.audit_kind,
+        audit_name: availability_summary.audit_name.clone(),
+        trace_kind: availability_summary.trace_kind,
+        trace_name: availability_summary.trace_name.clone(),
+        outcome_kind: availability_summary.outcome_kind,
+        outcome_name: availability_summary.outcome_name.clone(),
+        receipt_kind: availability_summary.receipt_kind,
+        receipt_name: availability_summary.receipt_name.clone(),
+        acknowledgement_kind: availability_summary.acknowledgement_kind,
+        acknowledgement_name: availability_summary.acknowledgement_name.clone(),
+        delivery_route: availability_summary.delivery_route,
+        delivery_route_name: availability_summary.delivery_route_name.clone(),
+        event_kind: availability_summary.event_kind,
+        event_name: availability_summary.event_name.clone(),
+        report_kind: availability_summary.report_kind,
+        report_name: availability_summary.report_name.clone(),
+        action: availability_summary.action,
+        action_name: availability_summary.action_name.clone(),
+        callback_runner_handoff: availability_summary.callback_runner_handoff,
+        adapter_event_published: availability_summary.adapter_event_published,
+        delivery_acknowledged: availability_summary.delivery_acknowledged,
+        receipt_recorded: availability_summary.receipt_recorded,
+        outcome_recorded: availability_summary.outcome_recorded,
+        trace_recorded: availability_summary.trace_recorded,
+        audit_recorded: availability_summary.audit_recorded,
+        log_recorded: availability_summary.log_recorded,
+        journal_recorded: availability_summary.journal_recorded,
+        archive_recorded: availability_summary.archive_recorded,
+        snapshot_recorded: availability_summary.snapshot_recorded,
+        checkpoint_recorded: availability_summary.checkpoint_recorded,
+        marker_recorded: availability_summary.marker_recorded,
+        cursor_recorded: availability_summary.cursor_recorded,
+        bookmark_recorded: availability_summary.bookmark_recorded,
+        reference_recorded: availability_summary.reference_recorded,
+        logic_recorded: availability_summary.logic_recorded,
+        decision_recorded: availability_summary.decision_recorded,
+        resolution_recorded: availability_summary.resolution_recorded,
+        finalization_recorded: availability_summary.finalization_recorded,
+        completion_recorded: availability_summary.completion_recorded,
+        diagnostic_recorded: availability_summary.diagnostic_recorded,
+        health_recorded: availability_summary.health_recorded,
+        readiness_recorded: availability_summary.readiness_recorded,
+        availability_recorded: availability_summary.availability_recorded,
+        capacity_recorded: true,
+        terminal: availability_summary.terminal,
+        retryable: availability_summary.retryable,
+        queue_depth_after_capacity: availability_summary.queue_depth_after_availability,
+        message: input_callback_transport_capacity_message(capacity_kind).to_owned(),
+        availability_summary: availability_summary.clone(),
+    }
+}
+
+pub fn input_callback_plan_diagnostic(
+    error: &LanguageInputCallbackPlanError,
+) -> LanguageInputCallbackPlanDiagnostic {
+    LanguageInputCallbackPlanDiagnostic {
+        selector: error.selector.clone(),
+        pin: error.pin,
+        kind: error.kind,
+        kind_name: input_callback_plan_error_kind_name(error.kind).to_owned(),
+        diagnostic_label: input_callback_plan_diagnostic_label(error),
+        message: input_callback_plan_error_message(error.kind).to_owned(),
+        error: error.clone(),
+    }
+}
+
+pub fn input_callback_event_diagnostic(
+    error: &LanguageInputCallbackEventError,
+) -> LanguageInputCallbackEventDiagnostic {
+    LanguageInputCallbackEventDiagnostic {
+        plan_board_id: error.plan_board_id.clone(),
+        event_board_id: error.event_board_id.clone(),
+        plan_pin: error.plan_pin,
+        event_pin: error.event_pin,
+        event_kind: error.event_kind.clone(),
+        kind: error.kind,
+        kind_name: input_callback_event_error_kind_name(error.kind).to_owned(),
+        diagnostic_label: input_callback_event_diagnostic_label(error),
+        message: input_callback_event_error_message(error.kind).to_owned(),
+        error: error.clone(),
+    }
+}
+
+pub fn input_callback_queue_plan_diagnostic(
+    error: &LanguageInputCallbackQueuePlanError,
+) -> LanguageInputCallbackQueuePlanDiagnostic {
+    LanguageInputCallbackQueuePlanDiagnostic {
+        board_id: error.board_id.clone(),
+        pin: error.pin,
+        callback_program_id: error.callback_program_id,
+        queue_capacity: error.queue_capacity,
+        queue_depth: error.queue_depth,
+        kind: error.kind,
+        kind_name: input_callback_queue_plan_error_kind_name(error.kind).to_owned(),
+        diagnostic_label: input_callback_queue_plan_diagnostic_label(error),
+        message: input_callback_queue_plan_error_message(error.kind).to_owned(),
+        error: error.clone(),
+    }
+}
+
+pub fn input_callback_session_plan_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    diagnostic: &LanguageInputCallbackPlanDiagnostic,
+) -> LanguageInputCallbackSessionDiagnostic {
+    input_callback_session_diagnostic(
+        session,
+        LanguageInputCallbackDiagnosticStage::Plan,
+        &diagnostic.kind_name,
+        &diagnostic.diagnostic_label,
+        &diagnostic.message,
+    )
+}
+
+pub fn input_callback_session_event_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    diagnostic: &LanguageInputCallbackEventDiagnostic,
+) -> LanguageInputCallbackSessionDiagnostic {
+    input_callback_session_diagnostic(
+        session,
+        LanguageInputCallbackDiagnosticStage::Event,
+        &diagnostic.kind_name,
+        &diagnostic.diagnostic_label,
+        &diagnostic.message,
+    )
+}
+
+pub fn input_callback_session_queue_plan_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    diagnostic: &LanguageInputCallbackQueuePlanDiagnostic,
+) -> LanguageInputCallbackSessionDiagnostic {
+    input_callback_session_diagnostic(
+        session,
+        LanguageInputCallbackDiagnosticStage::QueuePlan,
+        &diagnostic.kind_name,
+        &diagnostic.diagnostic_label,
+        &diagnostic.message,
+    )
 }
 
 pub fn parse_serial_endpoint(endpoint: &str) -> Option<LanguageSerialEndpoint> {
@@ -2685,6 +6974,182 @@ fn input_callback_queue_plan_error(
     }
 }
 
+fn input_callback_plan_error_message(kind: LanguageInputCallbackPlanErrorKind) -> &'static str {
+    match kind {
+        LanguageInputCallbackPlanErrorKind::UnknownTarget => "Input callback target is not known.",
+        LanguageInputCallbackPlanErrorKind::UnknownPin => {
+            "Input callback pin is not available on the selected target."
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInput => {
+            "Input callback pin does not support digital input."
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportInterrupt => {
+            "Input callback pin does not support interrupt-backed callbacks."
+        }
+        LanguageInputCallbackPlanErrorKind::PinDoesNotSupportPull => {
+            "Input callback pull mode is not supported by the pin."
+        }
+        LanguageInputCallbackPlanErrorKind::EmptyQueue => {
+            "Input callback queue capacity must be greater than zero."
+        }
+        LanguageInputCallbackPlanErrorKind::EmptyCallbackBudget => {
+            "Input callback instruction budget must be greater than zero."
+        }
+    }
+}
+
+fn input_callback_plan_diagnostic_label(error: &LanguageInputCallbackPlanError) -> String {
+    format!(
+        "input_callback_plan selector={} pin={} error={}",
+        error.selector,
+        error.pin,
+        input_callback_plan_error_kind_name(error.kind)
+    )
+}
+
+fn input_callback_event_error_message(kind: LanguageInputCallbackEventErrorKind) -> &'static str {
+    match kind {
+        LanguageInputCallbackEventErrorKind::BoardMismatch => {
+            "Input callback event board does not match the planned callback board."
+        }
+        LanguageInputCallbackEventErrorKind::PinMismatch => {
+            "Input callback event pin does not match the planned callback pin."
+        }
+        LanguageInputCallbackEventErrorKind::EventKindMismatch => {
+            "Input callback event kind is not supported by this callback planner."
+        }
+    }
+}
+
+fn input_callback_event_diagnostic_label(error: &LanguageInputCallbackEventError) -> String {
+    format!(
+        "input_callback_event plan_board={} event_board={} plan_pin={} event_pin={} event_kind={} error={}",
+        error.plan_board_id,
+        error.event_board_id,
+        error.plan_pin,
+        error.event_pin,
+        error.event_kind,
+        input_callback_event_error_kind_name(error.kind)
+    )
+}
+
+fn input_callback_queue_plan_error_message(
+    kind: LanguageInputCallbackQueuePlanErrorKind,
+) -> &'static str {
+    match kind {
+        LanguageInputCallbackQueuePlanErrorKind::EmptyQueue => {
+            "Input callback queue capacity must be greater than zero."
+        }
+        LanguageInputCallbackQueuePlanErrorKind::QueueDepthExceedsCapacity => {
+            "Input callback queue depth exceeds the configured queue capacity."
+        }
+    }
+}
+
+fn input_callback_queue_plan_diagnostic_label(
+    error: &LanguageInputCallbackQueuePlanError,
+) -> String {
+    format!(
+        "input_callback_queue board={} pin={} program={} queue_depth={} queue_capacity={} error={}",
+        error.board_id,
+        error.pin,
+        error.callback_program_id,
+        error.queue_depth,
+        error.queue_capacity,
+        input_callback_queue_plan_error_kind_name(error.kind)
+    )
+}
+
+fn input_callback_session_diagnostic(
+    session: &LanguageHostEndpointSessionSummary,
+    stage: LanguageInputCallbackDiagnosticStage,
+    kind_name: &str,
+    source_diagnostic_label: &str,
+    message: &str,
+) -> LanguageInputCallbackSessionDiagnostic {
+    let stage_name = input_callback_diagnostic_stage_name(stage);
+    LanguageInputCallbackSessionDiagnostic {
+        endpoint: session.endpoint.clone(),
+        connection_label: session.connection_label.clone(),
+        diagnostic_stage: stage,
+        stage_name: stage_name.to_owned(),
+        kind_name: kind_name.to_owned(),
+        diagnostic_label: input_callback_session_diagnostic_label(
+            session,
+            stage_name,
+            source_diagnostic_label,
+        ),
+        source_diagnostic_label: source_diagnostic_label.to_owned(),
+        message: message.to_owned(),
+    }
+}
+
+fn input_callback_session_diagnostic_label(
+    session: &LanguageHostEndpointSessionSummary,
+    stage_name: &str,
+    source_diagnostic_label: &str,
+) -> String {
+    format!(
+        "{} callback_diagnostic_stage={} {}",
+        session.connection_label, stage_name, source_diagnostic_label
+    )
+}
+
+fn input_callback_queue_message(action: LanguageInputCallbackQueueAction) -> &'static str {
+    match action {
+        LanguageInputCallbackQueueAction::Enqueue => {
+            "Input callback enqueued; wake cooperative dispatch."
+        }
+        LanguageInputCallbackQueueAction::DropNewest => {
+            "Input callback dropped because the queue is full and drop-newest policy is active."
+        }
+        LanguageInputCallbackQueueAction::DropOldestThenEnqueue => {
+            "Input callback enqueued after dropping the oldest queued callback."
+        }
+    }
+}
+
+fn input_callback_session_queue_label(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} queue_action={} queue_depth_before={} queue_depth_after={}",
+        session.connection_label,
+        queue_plan.board_id,
+        queue_plan.label,
+        queue_plan.sequence,
+        input_callback_queue_action_name(queue_plan.action),
+        queue_plan.queue_depth_before,
+        queue_plan.queue_depth_after
+    )
+}
+
+fn input_callback_dispatch_message(dropped_existing_event: bool) -> &'static str {
+    if dropped_existing_event {
+        "Input callback dispatch replaces the oldest queued callback."
+    } else {
+        "Input callback dispatch is ready for the cooperative runner."
+    }
+}
+
+fn input_callback_session_dispatch_label(
+    session: &LanguageHostEndpointSessionSummary,
+    dispatch: &LanguageInputCallbackDispatchPlan,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} dispatch_reason={} queue_action={} queue_depth_after={} instruction_budget={}",
+        session.connection_label,
+        dispatch.board_id,
+        dispatch.label,
+        dispatch.sequence,
+        dispatch.dispatch_reason,
+        input_callback_queue_action_name(dispatch.queue_action),
+        dispatch.queue_depth_after,
+        dispatch.callback_instruction_budget
+    )
+}
+
 fn input_callback_result_kind(run_status: RunStatus) -> LanguageInputCallbackResultKind {
     match run_status {
         RunStatus::Halted => LanguageInputCallbackResultKind::Completed,
@@ -2704,6 +7169,1390 @@ fn input_callback_result_message(kind: LanguageInputCallbackResultKind) -> &'sta
             "Input callback is still running; keep cooperative dispatch scheduled."
         }
         LanguageInputCallbackResultKind::Failed => "Input callback stopped before completion.",
+    }
+}
+
+fn input_callback_transport_result_label(
+    session: &LanguageHostEndpointSessionSummary,
+    result: &LanguageInputCallbackResultSummary,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} status={}",
+        session.connection_label, result.board_id, result.label, result.sequence, result.run_status
+    )
+}
+
+fn input_callback_completion_action(
+    kind: LanguageInputCallbackResultKind,
+) -> LanguageInputCallbackCompletionAction {
+    match kind {
+        LanguageInputCallbackResultKind::Completed => {
+            LanguageInputCallbackCompletionAction::Complete
+        }
+        LanguageInputCallbackResultKind::BudgetExceeded => {
+            LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded
+        }
+        LanguageInputCallbackResultKind::Incomplete => {
+            LanguageInputCallbackCompletionAction::KeepRunning
+        }
+        LanguageInputCallbackResultKind::Failed => {
+            LanguageInputCallbackCompletionAction::DropAfterFailure
+        }
+    }
+}
+
+fn input_callback_completion_removes_queue_item(
+    action: LanguageInputCallbackCompletionAction,
+) -> bool {
+    !matches!(action, LanguageInputCallbackCompletionAction::KeepRunning)
+}
+
+fn input_callback_completion_message(
+    action: LanguageInputCallbackCompletionAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackCompletionAction::Complete => {
+            "Input callback completed; remove it from the cooperative queue."
+        }
+        LanguageInputCallbackCompletionAction::KeepRunning => {
+            "Input callback is still running; keep cooperative dispatch scheduled."
+        }
+        LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded => {
+            "Input callback exhausted its budget; drop it from the cooperative queue after reporting."
+        }
+        LanguageInputCallbackCompletionAction::DropAfterFailure => {
+            "Input callback stopped before completion; remove it from the cooperative queue."
+        }
+    }
+}
+
+fn input_callback_session_completion_label(
+    callback_label: &str,
+    action: LanguageInputCallbackCompletionAction,
+    queue_depth_after_completion: u8,
+) -> String {
+    format!(
+        "{callback_label} action={} queue_depth_after_completion={queue_depth_after_completion}",
+        input_callback_completion_action_name(action)
+    )
+}
+
+fn input_callback_session_lifecycle_label(
+    session: &LanguageHostEndpointSessionSummary,
+    queue_plan: &LanguageInputCallbackQueuePlan,
+    terminal: bool,
+) -> String {
+    format!(
+        "{} callback={}:{} sequence={} queued={} dispatch_required={} terminal={}",
+        session.connection_label,
+        queue_plan.board_id,
+        queue_plan.label,
+        queue_plan.sequence,
+        queue_plan.queued,
+        queue_plan.dispatch_required,
+        terminal
+    )
+}
+
+fn input_callback_session_lifecycle_message(
+    queued: bool,
+    dispatch_required: bool,
+    completion_action: Option<LanguageInputCallbackCompletionAction>,
+) -> &'static str {
+    if let Some(action) = completion_action {
+        return input_callback_completion_message(action);
+    }
+    if queued && dispatch_required {
+        "Input callback is queued for cooperative dispatch."
+    } else {
+        "Input callback was not queued; lifecycle ended before dispatch."
+    }
+}
+
+fn input_callback_transport_action_for_lifecycle(
+    lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+) -> LanguageInputCallbackTransportAction {
+    if !lifecycle.queued && !lifecycle.dispatch_required {
+        return LanguageInputCallbackTransportAction::DropBeforeDispatch;
+    }
+    match lifecycle
+        .completion_summary
+        .as_ref()
+        .map(|summary| summary.action)
+    {
+        Some(LanguageInputCallbackCompletionAction::Complete) => {
+            LanguageInputCallbackTransportAction::CompleteCallback
+        }
+        Some(LanguageInputCallbackCompletionAction::KeepRunning) => {
+            LanguageInputCallbackTransportAction::KeepCallbackRunning
+        }
+        Some(LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded) => {
+            LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+        }
+        Some(LanguageInputCallbackCompletionAction::DropAfterFailure) => {
+            LanguageInputCallbackTransportAction::DropAfterFailure
+        }
+        None => LanguageInputCallbackTransportAction::DispatchCallback,
+    }
+}
+
+fn input_callback_transport_action_label(
+    lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+    action: LanguageInputCallbackTransportAction,
+) -> String {
+    let queue_plan = &lifecycle.queue_summary.queue_plan;
+    format!(
+        "{} callback={}:{} sequence={} transport_action={} terminal={} retryable={}",
+        lifecycle.connection_label,
+        queue_plan.board_id,
+        queue_plan.label,
+        queue_plan.sequence,
+        input_callback_transport_action_name(action),
+        lifecycle.terminal,
+        lifecycle.retryable
+    )
+}
+
+fn input_callback_transport_action_message(
+    action: LanguageInputCallbackTransportAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackTransportAction::DropBeforeDispatch => {
+            "Transport should report the dropped input callback without dispatch."
+        }
+        LanguageInputCallbackTransportAction::DispatchCallback => {
+            "Transport should dispatch the queued input callback."
+        }
+        LanguageInputCallbackTransportAction::CompleteCallback => {
+            "Transport should report completion and remove the callback."
+        }
+        LanguageInputCallbackTransportAction::KeepCallbackRunning => {
+            "Transport should keep the callback scheduled for cooperative dispatch."
+        }
+        LanguageInputCallbackTransportAction::DropAfterBudgetExceeded => {
+            "Transport should report the budget exhaustion and remove the callback."
+        }
+        LanguageInputCallbackTransportAction::DropAfterFailure => {
+            "Transport should report the callback failure and remove the callback."
+        }
+    }
+}
+
+fn input_callback_transport_effect_dispatches_callback(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::DispatchCallback
+    )
+}
+
+fn input_callback_transport_effect_emits_drop(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::DropBeforeDispatch
+    )
+}
+
+fn input_callback_transport_effect_emits_result(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::CompleteCallback
+            | LanguageInputCallbackTransportAction::KeepCallbackRunning
+            | LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+            | LanguageInputCallbackTransportAction::DropAfterFailure
+    )
+}
+
+fn input_callback_transport_effect_removes_queue_item(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::CompleteCallback
+            | LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+            | LanguageInputCallbackTransportAction::DropAfterFailure
+    )
+}
+
+fn input_callback_transport_effect_keeps_dispatch_scheduled(
+    action: LanguageInputCallbackTransportAction,
+) -> bool {
+    matches!(
+        action,
+        LanguageInputCallbackTransportAction::DispatchCallback
+            | LanguageInputCallbackTransportAction::KeepCallbackRunning
+    )
+}
+
+fn input_callback_transport_effect_label(
+    action_summary: &LanguageInputCallbackTransportActionSummary,
+) -> String {
+    format!(
+        "{} dispatch_callback={} emit_drop={} emit_result={} remove_from_queue={} keep_dispatch_scheduled={} queue_depth_after_effect={}",
+        action_summary.action_label,
+        input_callback_transport_effect_dispatches_callback(action_summary.action),
+        input_callback_transport_effect_emits_drop(action_summary.action),
+        input_callback_transport_effect_emits_result(action_summary.action),
+        input_callback_transport_effect_removes_queue_item(action_summary.action),
+        input_callback_transport_effect_keeps_dispatch_scheduled(action_summary.action),
+        action_summary
+            .queue_depth_after_completion
+            .unwrap_or(action_summary.queue_depth_after)
+    )
+}
+
+fn input_callback_transport_effect_message(
+    action: LanguageInputCallbackTransportAction,
+) -> &'static str {
+    match action {
+        LanguageInputCallbackTransportAction::DropBeforeDispatch => {
+            "Transport should emit a drop notice without touching the existing queue."
+        }
+        LanguageInputCallbackTransportAction::DispatchCallback => {
+            "Transport should dispatch the queued callback and keep dispatch scheduled."
+        }
+        LanguageInputCallbackTransportAction::CompleteCallback => {
+            "Transport should emit the result and remove the completed callback from the queue."
+        }
+        LanguageInputCallbackTransportAction::KeepCallbackRunning => {
+            "Transport should emit the running result and keep dispatch scheduled."
+        }
+        LanguageInputCallbackTransportAction::DropAfterBudgetExceeded => {
+            "Transport should emit the budget result and remove the callback from the queue."
+        }
+        LanguageInputCallbackTransportAction::DropAfterFailure => {
+            "Transport should emit the failure result and remove the callback from the queue."
+        }
+    }
+}
+
+fn input_callback_transport_report_kind(
+    action: LanguageInputCallbackTransportAction,
+) -> LanguageInputCallbackTransportReportKind {
+    match action {
+        LanguageInputCallbackTransportAction::DropBeforeDispatch => {
+            LanguageInputCallbackTransportReportKind::Drop
+        }
+        LanguageInputCallbackTransportAction::DispatchCallback => {
+            LanguageInputCallbackTransportReportKind::Dispatch
+        }
+        LanguageInputCallbackTransportAction::CompleteCallback => {
+            LanguageInputCallbackTransportReportKind::Completion
+        }
+        LanguageInputCallbackTransportAction::KeepCallbackRunning => {
+            LanguageInputCallbackTransportReportKind::Running
+        }
+        LanguageInputCallbackTransportAction::DropAfterBudgetExceeded => {
+            LanguageInputCallbackTransportReportKind::BudgetExceeded
+        }
+        LanguageInputCallbackTransportAction::DropAfterFailure => {
+            LanguageInputCallbackTransportReportKind::Failure
+        }
+    }
+}
+
+fn input_callback_transport_report_emits_report(
+    effect_summary: &LanguageInputCallbackTransportEffectSummary,
+) -> bool {
+    effect_summary.emit_drop || effect_summary.emit_result
+}
+
+fn input_callback_transport_report_label(
+    effect_summary: &LanguageInputCallbackTransportEffectSummary,
+    report_kind: LanguageInputCallbackTransportReportKind,
+) -> String {
+    format!(
+        "{} transport_report={} emit_report={} queue_depth_after_report={}",
+        effect_summary.effect_label,
+        input_callback_transport_report_kind_name(report_kind),
+        input_callback_transport_report_emits_report(effect_summary),
+        effect_summary.queue_depth_after_effect
+    )
+}
+
+fn input_callback_transport_report_message(
+    report_kind: LanguageInputCallbackTransportReportKind,
+) -> &'static str {
+    match report_kind {
+        LanguageInputCallbackTransportReportKind::Dispatch => {
+            "Transport should dispatch the callback runner; no report is emitted yet."
+        }
+        LanguageInputCallbackTransportReportKind::Drop => {
+            "Transport should emit a dropped-callback report."
+        }
+        LanguageInputCallbackTransportReportKind::Completion => {
+            "Transport should emit a completed-callback report."
+        }
+        LanguageInputCallbackTransportReportKind::Running => {
+            "Transport should emit a running-callback report and keep dispatch scheduled."
+        }
+        LanguageInputCallbackTransportReportKind::BudgetExceeded => {
+            "Transport should emit a budget-exceeded callback report."
+        }
+        LanguageInputCallbackTransportReportKind::Failure => {
+            "Transport should emit a failed-callback report."
+        }
+    }
+}
+
+fn input_callback_transport_event_kind(
+    report_kind: LanguageInputCallbackTransportReportKind,
+) -> LanguageInputCallbackTransportEventKind {
+    match report_kind {
+        LanguageInputCallbackTransportReportKind::Dispatch => {
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        }
+        LanguageInputCallbackTransportReportKind::Drop => {
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        }
+        LanguageInputCallbackTransportReportKind::Completion => {
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        }
+        LanguageInputCallbackTransportReportKind::Running => {
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        }
+        LanguageInputCallbackTransportReportKind::BudgetExceeded => {
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        }
+        LanguageInputCallbackTransportReportKind::Failure => {
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        }
+    }
+}
+
+fn input_callback_transport_event_label(
+    report_summary: &LanguageInputCallbackTransportReportSummary,
+    event_kind: LanguageInputCallbackTransportEventKind,
+) -> String {
+    format!(
+        "{} transport_event={} queue_depth_after_event={}",
+        report_summary.report_label,
+        input_callback_transport_event_kind_name(event_kind),
+        report_summary.queue_depth_after_report
+    )
+}
+
+fn input_callback_transport_event_message(
+    event_kind: LanguageInputCallbackTransportEventKind,
+) -> &'static str {
+    match event_kind {
+        LanguageInputCallbackTransportEventKind::DispatchScheduled => {
+            "Adapter should schedule the callback dispatch runner."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackDropped => {
+            "Adapter should emit a dropped input callback event."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackCompleted => {
+            "Adapter should emit a completed input callback event."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackRunning => {
+            "Adapter should emit a running input callback event and keep dispatch scheduled."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded => {
+            "Adapter should emit a budget-exceeded input callback event."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackFailed => {
+            "Adapter should emit a failed input callback event."
+        }
+    }
+}
+
+fn input_callback_transport_delivery_route(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+) -> LanguageInputCallbackTransportDeliveryRoute {
+    if event_summary.dispatch_callback && !event_summary.emit_report {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+    } else {
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+    }
+}
+
+fn input_callback_transport_delivery_publishes_event(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+) -> bool {
+    event_summary.emit_report
+}
+
+fn input_callback_transport_delivery_label(
+    event_summary: &LanguageInputCallbackTransportEventSummary,
+    delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+) -> String {
+    format!(
+        "{} transport_delivery={} publish_event={} queue_depth_after_delivery={}",
+        event_summary.event_label,
+        input_callback_transport_delivery_route_name(delivery_route),
+        input_callback_transport_delivery_publishes_event(event_summary),
+        event_summary.queue_depth_after_event
+    )
+}
+
+fn input_callback_transport_delivery_message(
+    delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+    event_kind: LanguageInputCallbackTransportEventKind,
+) -> &'static str {
+    match delivery_route {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner => {
+            "Transport should deliver this event to the callback runner."
+        }
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent => {
+            input_callback_transport_adapter_event_delivery_message(event_kind)
+        }
+    }
+}
+
+fn input_callback_transport_adapter_event_delivery_message(
+    event_kind: LanguageInputCallbackTransportEventKind,
+) -> &'static str {
+    match event_kind {
+        LanguageInputCallbackTransportEventKind::DispatchScheduled => {
+            "Transport should publish the dispatch event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackDropped => {
+            "Transport should publish the dropped-callback event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackCompleted => {
+            "Transport should publish the completed-callback event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackRunning => {
+            "Transport should publish the running-callback event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded => {
+            "Transport should publish the budget-exceeded event to the adapter."
+        }
+        LanguageInputCallbackTransportEventKind::CallbackFailed => {
+            "Transport should publish the failed-callback event to the adapter."
+        }
+    }
+}
+
+fn input_callback_transport_acknowledgement_kind(
+    delivery_route: LanguageInputCallbackTransportDeliveryRoute,
+) -> LanguageInputCallbackTransportAcknowledgementKind {
+    match delivery_route {
+        LanguageInputCallbackTransportDeliveryRoute::CallbackRunner => {
+            LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted
+        }
+        LanguageInputCallbackTransportDeliveryRoute::AdapterEvent => {
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        }
+    }
+}
+
+fn input_callback_transport_acknowledges_callback_runner(
+    delivery_summary: &LanguageInputCallbackTransportDeliverySummary,
+) -> bool {
+    delivery_summary.delivery_route == LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+}
+
+fn input_callback_transport_acknowledges_adapter_event(
+    delivery_summary: &LanguageInputCallbackTransportDeliverySummary,
+) -> bool {
+    delivery_summary.delivery_route == LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+}
+
+fn input_callback_transport_acknowledgement_label(
+    delivery_summary: &LanguageInputCallbackTransportDeliverySummary,
+    acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+) -> String {
+    format!(
+        "{} transport_acknowledgement={} delivery_acknowledged=true callback_runner_handoff={} adapter_event_published={} queue_depth_after_acknowledgement={}",
+        delivery_summary.delivery_label,
+        input_callback_transport_acknowledgement_kind_name(acknowledgement_kind),
+        input_callback_transport_acknowledges_callback_runner(delivery_summary),
+        input_callback_transport_acknowledges_adapter_event(delivery_summary),
+        delivery_summary.queue_depth_after_delivery
+    )
+}
+
+fn input_callback_transport_acknowledgement_message(
+    acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+) -> &'static str {
+    match acknowledgement_kind {
+        LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted => {
+            "Transport should acknowledge the callback-runner handoff."
+        }
+        LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished => {
+            "Transport should acknowledge the adapter event publication."
+        }
+    }
+}
+
+fn input_callback_transport_receipt_kind(
+    acknowledgement_kind: LanguageInputCallbackTransportAcknowledgementKind,
+) -> LanguageInputCallbackTransportReceiptKind {
+    match acknowledgement_kind {
+        LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted => {
+            LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff
+        }
+        LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished => {
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        }
+    }
+}
+
+fn input_callback_transport_receipt_label(
+    acknowledgement_summary: &LanguageInputCallbackTransportAcknowledgementSummary,
+    receipt_kind: LanguageInputCallbackTransportReceiptKind,
+) -> String {
+    format!(
+        "{} transport_receipt={} receipt_recorded=true queue_depth_after_receipt={}",
+        acknowledgement_summary.acknowledgement_label,
+        input_callback_transport_receipt_kind_name(receipt_kind),
+        acknowledgement_summary.queue_depth_after_acknowledgement
+    )
+}
+
+fn input_callback_transport_receipt_message(
+    receipt_kind: LanguageInputCallbackTransportReceiptKind,
+) -> &'static str {
+    match receipt_kind {
+        LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff => {
+            "Transport should record the callback-runner handoff receipt."
+        }
+        LanguageInputCallbackTransportReceiptKind::AdapterEventPublication => {
+            "Transport should record the adapter event publication receipt."
+        }
+    }
+}
+
+fn input_callback_transport_outcome_kind(
+    receipt_kind: LanguageInputCallbackTransportReceiptKind,
+) -> LanguageInputCallbackTransportOutcomeKind {
+    match receipt_kind {
+        LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff => {
+            LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded
+        }
+        LanguageInputCallbackTransportReceiptKind::AdapterEventPublication => {
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        }
+    }
+}
+
+fn input_callback_transport_outcome_label(
+    receipt_summary: &LanguageInputCallbackTransportReceiptSummary,
+    outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+) -> String {
+    format!(
+        "{} transport_outcome={} outcome_recorded=true queue_depth_after_outcome={}",
+        receipt_summary.receipt_label,
+        input_callback_transport_outcome_kind_name(outcome_kind),
+        receipt_summary.queue_depth_after_receipt
+    )
+}
+
+fn input_callback_transport_outcome_message(
+    outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+) -> &'static str {
+    match outcome_kind {
+        LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded => {
+            "Transport should report the recorded callback-runner handoff outcome."
+        }
+        LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded => {
+            "Transport should report the recorded adapter event publication outcome."
+        }
+    }
+}
+
+fn input_callback_transport_trace_kind(
+    outcome_kind: LanguageInputCallbackTransportOutcomeKind,
+) -> LanguageInputCallbackTransportTraceKind {
+    match outcome_kind {
+        LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded => {
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        }
+        LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded => {
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        }
+    }
+}
+
+fn input_callback_transport_trace_label(
+    outcome_summary: &LanguageInputCallbackTransportOutcomeSummary,
+    trace_kind: LanguageInputCallbackTransportTraceKind,
+) -> String {
+    format!(
+        "{} transport_trace={} trace_recorded=true queue_depth_after_trace={}",
+        outcome_summary.outcome_label,
+        input_callback_transport_trace_kind_name(trace_kind),
+        outcome_summary.queue_depth_after_outcome
+    )
+}
+
+fn input_callback_transport_trace_message(
+    trace_kind: LanguageInputCallbackTransportTraceKind,
+) -> &'static str {
+    match trace_kind {
+        LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace => {
+            "Transport should retain the callback-runner handoff trace."
+        }
+        LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace => {
+            "Transport should retain the adapter event publication trace."
+        }
+    }
+}
+
+fn input_callback_transport_audit_kind(
+    trace_kind: LanguageInputCallbackTransportTraceKind,
+) -> LanguageInputCallbackTransportAuditKind {
+    match trace_kind {
+        LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace => {
+            LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit
+        }
+        LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace => {
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        }
+    }
+}
+
+fn input_callback_transport_audit_label(
+    trace_summary: &LanguageInputCallbackTransportTraceSummary,
+    audit_kind: LanguageInputCallbackTransportAuditKind,
+) -> String {
+    format!(
+        "{} transport_audit={} audit_recorded=true queue_depth_after_audit={}",
+        trace_summary.trace_label,
+        input_callback_transport_audit_kind_name(audit_kind),
+        trace_summary.queue_depth_after_trace
+    )
+}
+
+fn input_callback_transport_audit_message(
+    audit_kind: LanguageInputCallbackTransportAuditKind,
+) -> &'static str {
+    match audit_kind {
+        LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit => {
+            "Transport audit should retain the callback-runner handoff path."
+        }
+        LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit => {
+            "Transport audit should retain the adapter event publication path."
+        }
+    }
+}
+
+fn input_callback_transport_log_kind(
+    audit_kind: LanguageInputCallbackTransportAuditKind,
+) -> LanguageInputCallbackTransportLogKind {
+    match audit_kind {
+        LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit => {
+            LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog
+        }
+        LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit => {
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        }
+    }
+}
+
+fn input_callback_transport_log_label(
+    audit_summary: &LanguageInputCallbackTransportAuditSummary,
+    log_kind: LanguageInputCallbackTransportLogKind,
+) -> String {
+    format!(
+        "{} transport_log={} log_recorded=true queue_depth_after_log={}",
+        audit_summary.audit_label,
+        input_callback_transport_log_kind_name(log_kind),
+        audit_summary.queue_depth_after_audit
+    )
+}
+
+fn input_callback_transport_log_message(
+    log_kind: LanguageInputCallbackTransportLogKind,
+) -> &'static str {
+    match log_kind {
+        LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog => {
+            "Transport log should include the callback-runner handoff audit."
+        }
+        LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog => {
+            "Transport log should include the adapter event publication audit."
+        }
+    }
+}
+
+fn input_callback_transport_journal_kind(
+    log_kind: LanguageInputCallbackTransportLogKind,
+) -> LanguageInputCallbackTransportJournalKind {
+    match log_kind {
+        LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog => {
+            LanguageInputCallbackTransportJournalKind::CallbackRunnerHandoffJournal
+        }
+        LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog => {
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        }
+    }
+}
+
+fn input_callback_transport_journal_label(
+    log_summary: &LanguageInputCallbackTransportLogSummary,
+    journal_kind: LanguageInputCallbackTransportJournalKind,
+) -> String {
+    format!(
+        "{} transport_journal={} journal_recorded=true queue_depth_after_journal={}",
+        log_summary.log_label,
+        input_callback_transport_journal_kind_name(journal_kind),
+        log_summary.queue_depth_after_log
+    )
+}
+
+fn input_callback_transport_journal_message(
+    journal_kind: LanguageInputCallbackTransportJournalKind,
+) -> &'static str {
+    match journal_kind {
+        LanguageInputCallbackTransportJournalKind::CallbackRunnerHandoffJournal => {
+            "Transport journal should index the callback-runner handoff log."
+        }
+        LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal => {
+            "Transport journal should index the adapter event publication log."
+        }
+    }
+}
+
+fn input_callback_transport_archive_kind(
+    journal_kind: LanguageInputCallbackTransportJournalKind,
+) -> LanguageInputCallbackTransportArchiveKind {
+    match journal_kind {
+        LanguageInputCallbackTransportJournalKind::CallbackRunnerHandoffJournal => {
+            LanguageInputCallbackTransportArchiveKind::CallbackRunnerHandoffArchive
+        }
+        LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal => {
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        }
+    }
+}
+
+fn input_callback_transport_archive_label(
+    journal_summary: &LanguageInputCallbackTransportJournalSummary,
+    archive_kind: LanguageInputCallbackTransportArchiveKind,
+) -> String {
+    format!(
+        "{} transport_archive={} archive_recorded=true queue_depth_after_archive={}",
+        journal_summary.journal_label,
+        input_callback_transport_archive_kind_name(archive_kind),
+        journal_summary.queue_depth_after_journal
+    )
+}
+
+fn input_callback_transport_archive_message(
+    archive_kind: LanguageInputCallbackTransportArchiveKind,
+) -> &'static str {
+    match archive_kind {
+        LanguageInputCallbackTransportArchiveKind::CallbackRunnerHandoffArchive => {
+            "Transport archive should retain the callback-runner handoff journal."
+        }
+        LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive => {
+            "Transport archive should retain the adapter event publication journal."
+        }
+    }
+}
+
+fn input_callback_transport_snapshot_kind(
+    archive_kind: LanguageInputCallbackTransportArchiveKind,
+) -> LanguageInputCallbackTransportSnapshotKind {
+    match archive_kind {
+        LanguageInputCallbackTransportArchiveKind::CallbackRunnerHandoffArchive => {
+            LanguageInputCallbackTransportSnapshotKind::CallbackRunnerHandoffSnapshot
+        }
+        LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive => {
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        }
+    }
+}
+
+fn input_callback_transport_snapshot_label(
+    archive_summary: &LanguageInputCallbackTransportArchiveSummary,
+    snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+) -> String {
+    format!(
+        "{} transport_snapshot={} snapshot_recorded=true queue_depth_after_snapshot={}",
+        archive_summary.archive_label,
+        input_callback_transport_snapshot_kind_name(snapshot_kind),
+        archive_summary.queue_depth_after_archive
+    )
+}
+
+fn input_callback_transport_snapshot_message(
+    snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+) -> &'static str {
+    match snapshot_kind {
+        LanguageInputCallbackTransportSnapshotKind::CallbackRunnerHandoffSnapshot => {
+            "Transport snapshot should capture the callback-runner handoff archive."
+        }
+        LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot => {
+            "Transport snapshot should capture the adapter event publication archive."
+        }
+    }
+}
+
+fn input_callback_transport_checkpoint_kind(
+    snapshot_kind: LanguageInputCallbackTransportSnapshotKind,
+) -> LanguageInputCallbackTransportCheckpointKind {
+    match snapshot_kind {
+        LanguageInputCallbackTransportSnapshotKind::CallbackRunnerHandoffSnapshot => {
+            LanguageInputCallbackTransportCheckpointKind::CallbackRunnerHandoffCheckpoint
+        }
+        LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot => {
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        }
+    }
+}
+
+fn input_callback_transport_checkpoint_label(
+    snapshot_summary: &LanguageInputCallbackTransportSnapshotSummary,
+    checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+) -> String {
+    format!(
+        "{} transport_checkpoint={} checkpoint_recorded=true queue_depth_after_checkpoint={}",
+        snapshot_summary.snapshot_label,
+        input_callback_transport_checkpoint_kind_name(checkpoint_kind),
+        snapshot_summary.queue_depth_after_snapshot
+    )
+}
+
+fn input_callback_transport_checkpoint_message(
+    checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+) -> &'static str {
+    match checkpoint_kind {
+        LanguageInputCallbackTransportCheckpointKind::CallbackRunnerHandoffCheckpoint => {
+            "Transport checkpoint should preserve the callback-runner handoff snapshot."
+        }
+        LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint => {
+            "Transport checkpoint should preserve the adapter event publication snapshot."
+        }
+    }
+}
+
+fn input_callback_transport_marker_kind(
+    checkpoint_kind: LanguageInputCallbackTransportCheckpointKind,
+) -> LanguageInputCallbackTransportMarkerKind {
+    match checkpoint_kind {
+        LanguageInputCallbackTransportCheckpointKind::CallbackRunnerHandoffCheckpoint => {
+            LanguageInputCallbackTransportMarkerKind::CallbackRunnerHandoffMarker
+        }
+        LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint => {
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        }
+    }
+}
+
+fn input_callback_transport_marker_label(
+    checkpoint_summary: &LanguageInputCallbackTransportCheckpointSummary,
+    marker_kind: LanguageInputCallbackTransportMarkerKind,
+) -> String {
+    format!(
+        "{} transport_marker={} marker_recorded=true queue_depth_after_marker={}",
+        checkpoint_summary.checkpoint_label,
+        input_callback_transport_marker_kind_name(marker_kind),
+        checkpoint_summary.queue_depth_after_checkpoint
+    )
+}
+
+fn input_callback_transport_marker_message(
+    marker_kind: LanguageInputCallbackTransportMarkerKind,
+) -> &'static str {
+    match marker_kind {
+        LanguageInputCallbackTransportMarkerKind::CallbackRunnerHandoffMarker => {
+            "Transport marker should tag the callback-runner handoff checkpoint."
+        }
+        LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker => {
+            "Transport marker should tag the adapter event publication checkpoint."
+        }
+    }
+}
+
+fn input_callback_transport_cursor_kind(
+    marker_kind: LanguageInputCallbackTransportMarkerKind,
+) -> LanguageInputCallbackTransportCursorKind {
+    match marker_kind {
+        LanguageInputCallbackTransportMarkerKind::CallbackRunnerHandoffMarker => {
+            LanguageInputCallbackTransportCursorKind::CallbackRunnerHandoffCursor
+        }
+        LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker => {
+            LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor
+        }
+    }
+}
+
+fn input_callback_transport_cursor_label(
+    marker_summary: &LanguageInputCallbackTransportMarkerSummary,
+    cursor_kind: LanguageInputCallbackTransportCursorKind,
+) -> String {
+    format!(
+        "{} transport_cursor={} cursor_recorded=true queue_depth_after_cursor={}",
+        marker_summary.marker_label,
+        input_callback_transport_cursor_kind_name(cursor_kind),
+        marker_summary.queue_depth_after_marker
+    )
+}
+
+fn input_callback_transport_cursor_message(
+    cursor_kind: LanguageInputCallbackTransportCursorKind,
+) -> &'static str {
+    match cursor_kind {
+        LanguageInputCallbackTransportCursorKind::CallbackRunnerHandoffCursor => {
+            "Transport cursor should point at the callback-runner handoff marker."
+        }
+        LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor => {
+            "Transport cursor should point at the adapter event publication marker."
+        }
+    }
+}
+
+fn input_callback_transport_bookmark_kind(
+    cursor_kind: LanguageInputCallbackTransportCursorKind,
+) -> LanguageInputCallbackTransportBookmarkKind {
+    match cursor_kind {
+        LanguageInputCallbackTransportCursorKind::CallbackRunnerHandoffCursor => {
+            LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark
+        }
+        LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor => {
+            LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark
+        }
+    }
+}
+
+fn input_callback_transport_bookmark_label(
+    cursor_summary: &LanguageInputCallbackTransportCursorSummary,
+    bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+) -> String {
+    format!(
+        "{} transport_bookmark={} bookmark_recorded=true queue_depth_after_bookmark={}",
+        cursor_summary.cursor_label,
+        input_callback_transport_bookmark_kind_name(bookmark_kind),
+        cursor_summary.queue_depth_after_cursor
+    )
+}
+
+fn input_callback_transport_bookmark_message(
+    bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+) -> &'static str {
+    match bookmark_kind {
+        LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark => {
+            "Transport bookmark should save the callback-runner handoff cursor."
+        }
+        LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark => {
+            "Transport bookmark should save the adapter event publication cursor."
+        }
+    }
+}
+
+fn input_callback_transport_reference_kind(
+    bookmark_kind: LanguageInputCallbackTransportBookmarkKind,
+) -> LanguageInputCallbackTransportReferenceKind {
+    match bookmark_kind {
+        LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark => {
+            LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference
+        }
+        LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark => {
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        }
+    }
+}
+
+fn input_callback_transport_reference_label(
+    bookmark_summary: &LanguageInputCallbackTransportBookmarkSummary,
+    reference_kind: LanguageInputCallbackTransportReferenceKind,
+) -> String {
+    format!(
+        "{} transport_reference={} reference_recorded=true queue_depth_after_reference={}",
+        bookmark_summary.bookmark_label,
+        input_callback_transport_reference_kind_name(reference_kind),
+        bookmark_summary.queue_depth_after_bookmark
+    )
+}
+
+fn input_callback_transport_reference_message(
+    reference_kind: LanguageInputCallbackTransportReferenceKind,
+) -> &'static str {
+    match reference_kind {
+        LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference => {
+            "Transport reference should bind the callback-runner handoff bookmark."
+        }
+        LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference => {
+            "Transport reference should bind the adapter event publication bookmark."
+        }
+    }
+}
+
+fn input_callback_transport_logic_kind(
+    reference_kind: LanguageInputCallbackTransportReferenceKind,
+) -> LanguageInputCallbackTransportLogicKind {
+    match reference_kind {
+        LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference => {
+            LanguageInputCallbackTransportLogicKind::CallbackRunnerHandoffLogic
+        }
+        LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference => {
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        }
+    }
+}
+
+fn input_callback_transport_logic_label(
+    reference_summary: &LanguageInputCallbackTransportReferenceSummary,
+    logic_kind: LanguageInputCallbackTransportLogicKind,
+) -> String {
+    format!(
+        "{} transport_logic={} logic_recorded=true queue_depth_after_logic={}",
+        reference_summary.reference_label,
+        input_callback_transport_logic_kind_name(logic_kind),
+        reference_summary.queue_depth_after_reference
+    )
+}
+
+fn input_callback_transport_logic_message(
+    logic_kind: LanguageInputCallbackTransportLogicKind,
+) -> &'static str {
+    match logic_kind {
+        LanguageInputCallbackTransportLogicKind::CallbackRunnerHandoffLogic => {
+            "Transport logic should route the callback-runner handoff reference."
+        }
+        LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic => {
+            "Transport logic should route the adapter event publication reference."
+        }
+    }
+}
+
+fn input_callback_transport_decision_kind(
+    logic_kind: LanguageInputCallbackTransportLogicKind,
+) -> LanguageInputCallbackTransportDecisionKind {
+    match logic_kind {
+        LanguageInputCallbackTransportLogicKind::CallbackRunnerHandoffLogic => {
+            LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision
+        }
+        LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic => {
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        }
+    }
+}
+
+fn input_callback_transport_decision_label(
+    logic_summary: &LanguageInputCallbackTransportLogicSummary,
+    decision_kind: LanguageInputCallbackTransportDecisionKind,
+) -> String {
+    format!(
+        "{} transport_decision={} decision_recorded=true queue_depth_after_decision={}",
+        logic_summary.logic_label,
+        input_callback_transport_decision_kind_name(decision_kind),
+        logic_summary.queue_depth_after_logic
+    )
+}
+
+fn input_callback_transport_decision_message(
+    decision_kind: LanguageInputCallbackTransportDecisionKind,
+) -> &'static str {
+    match decision_kind {
+        LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision => {
+            "Transport decision should choose the callback-runner handoff logic."
+        }
+        LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision => {
+            "Transport decision should choose the adapter event publication logic."
+        }
+    }
+}
+
+fn input_callback_transport_resolution_kind(
+    decision_kind: LanguageInputCallbackTransportDecisionKind,
+) -> LanguageInputCallbackTransportResolutionKind {
+    match decision_kind {
+        LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision => {
+            LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution
+        }
+        LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision => {
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        }
+    }
+}
+
+fn input_callback_transport_resolution_label(
+    decision_summary: &LanguageInputCallbackTransportDecisionSummary,
+    resolution_kind: LanguageInputCallbackTransportResolutionKind,
+) -> String {
+    format!(
+        "{} transport_resolution={} resolution_recorded=true queue_depth_after_resolution={}",
+        decision_summary.decision_label,
+        input_callback_transport_resolution_kind_name(resolution_kind),
+        decision_summary.queue_depth_after_decision
+    )
+}
+
+fn input_callback_transport_resolution_message(
+    resolution_kind: LanguageInputCallbackTransportResolutionKind,
+) -> &'static str {
+    match resolution_kind {
+        LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution => {
+            "Transport resolution should finalize the callback-runner handoff decision."
+        }
+        LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution => {
+            "Transport resolution should finalize the adapter event publication decision."
+        }
+    }
+}
+
+fn input_callback_transport_finalization_kind(
+    resolution_kind: LanguageInputCallbackTransportResolutionKind,
+) -> LanguageInputCallbackTransportFinalizationKind {
+    match resolution_kind {
+        LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution => {
+            LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization
+        }
+        LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution => {
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        }
+    }
+}
+
+fn input_callback_transport_finalization_label(
+    resolution_summary: &LanguageInputCallbackTransportResolutionSummary,
+    finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+) -> String {
+    format!(
+        "{} transport_finalization={} finalization_recorded=true queue_depth_after_finalization={}",
+        resolution_summary.resolution_label,
+        input_callback_transport_finalization_kind_name(finalization_kind),
+        resolution_summary.queue_depth_after_resolution
+    )
+}
+
+fn input_callback_transport_finalization_message(
+    finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+) -> &'static str {
+    match finalization_kind {
+        LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization => {
+            "Transport finalization should complete the callback-runner handoff resolution."
+        }
+        LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization => {
+            "Transport finalization should complete the adapter event publication resolution."
+        }
+    }
+}
+
+fn input_callback_transport_completion_kind(
+    finalization_kind: LanguageInputCallbackTransportFinalizationKind,
+) -> LanguageInputCallbackTransportCompletionKind {
+    match finalization_kind {
+        LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization => {
+            LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion
+        }
+        LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization => {
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        }
+    }
+}
+
+fn input_callback_transport_completion_label(
+    finalization_summary: &LanguageInputCallbackTransportFinalizationSummary,
+    completion_kind: LanguageInputCallbackTransportCompletionKind,
+) -> String {
+    format!(
+        "{} transport_completion={} completion_recorded=true queue_depth_after_completion={}",
+        finalization_summary.finalization_label,
+        input_callback_transport_completion_kind_name(completion_kind),
+        finalization_summary.queue_depth_after_finalization
+    )
+}
+
+fn input_callback_transport_completion_message(
+    completion_kind: LanguageInputCallbackTransportCompletionKind,
+) -> &'static str {
+    match completion_kind {
+        LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion => {
+            "Transport completion should close the callback-runner handoff finalization."
+        }
+        LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion => {
+            "Transport completion should close the adapter event publication finalization."
+        }
+    }
+}
+
+fn input_callback_transport_diagnostic_kind(
+    completion_kind: LanguageInputCallbackTransportCompletionKind,
+) -> LanguageInputCallbackTransportDiagnosticKind {
+    match completion_kind {
+        LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion => {
+            LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic
+        }
+        LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion => {
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        }
+    }
+}
+
+fn input_callback_transport_diagnostic_label(
+    completion_summary: &LanguageInputCallbackTransportCompletionSummary,
+    diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+) -> String {
+    format!(
+        "{} transport_diagnostic={} diagnostic_recorded=true queue_depth_after_diagnostic={}",
+        completion_summary.completion_label,
+        input_callback_transport_diagnostic_kind_name(diagnostic_kind),
+        completion_summary.queue_depth_after_completion
+    )
+}
+
+fn input_callback_transport_diagnostic_message(
+    diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+) -> &'static str {
+    match diagnostic_kind {
+        LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic => {
+            "Transport diagnostic should report the completed callback-runner handoff state."
+        }
+        LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic => {
+            "Transport diagnostic should report the completed adapter event publication state."
+        }
+    }
+}
+
+fn input_callback_transport_health_kind(
+    diagnostic_kind: LanguageInputCallbackTransportDiagnosticKind,
+) -> LanguageInputCallbackTransportHealthKind {
+    match diagnostic_kind {
+        LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic => {
+            LanguageInputCallbackTransportHealthKind::CallbackRunnerHandoffHealth
+        }
+        LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic => {
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        }
+    }
+}
+
+fn input_callback_transport_health_label(
+    diagnostic_summary: &LanguageInputCallbackTransportDiagnosticSummary,
+    health_kind: LanguageInputCallbackTransportHealthKind,
+) -> String {
+    format!(
+        "{} transport_health={} health_recorded=true queue_depth_after_health={}",
+        diagnostic_summary.diagnostic_label,
+        input_callback_transport_health_kind_name(health_kind),
+        diagnostic_summary.queue_depth_after_diagnostic
+    )
+}
+
+fn input_callback_transport_health_message(
+    health_kind: LanguageInputCallbackTransportHealthKind,
+) -> &'static str {
+    match health_kind {
+        LanguageInputCallbackTransportHealthKind::CallbackRunnerHandoffHealth => {
+            "Transport health should track the callback-runner handoff diagnostic state."
+        }
+        LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth => {
+            "Transport health should track the adapter event publication diagnostic state."
+        }
+    }
+}
+
+fn input_callback_transport_readiness_kind(
+    health_kind: LanguageInputCallbackTransportHealthKind,
+) -> LanguageInputCallbackTransportReadinessKind {
+    match health_kind {
+        LanguageInputCallbackTransportHealthKind::CallbackRunnerHandoffHealth => {
+            LanguageInputCallbackTransportReadinessKind::CallbackRunnerHandoffReadiness
+        }
+        LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth => {
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        }
+    }
+}
+
+fn input_callback_transport_readiness_label(
+    health_summary: &LanguageInputCallbackTransportHealthSummary,
+    readiness_kind: LanguageInputCallbackTransportReadinessKind,
+) -> String {
+    format!(
+        "{} transport_readiness={} readiness_recorded=true queue_depth_after_readiness={}",
+        health_summary.health_label,
+        input_callback_transport_readiness_kind_name(readiness_kind),
+        health_summary.queue_depth_after_health
+    )
+}
+
+fn input_callback_transport_readiness_message(
+    readiness_kind: LanguageInputCallbackTransportReadinessKind,
+) -> &'static str {
+    match readiness_kind {
+        LanguageInputCallbackTransportReadinessKind::CallbackRunnerHandoffReadiness => {
+            "Transport readiness should track the callback-runner handoff health state."
+        }
+        LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness => {
+            "Transport readiness should track the adapter event publication health state."
+        }
+    }
+}
+
+fn input_callback_transport_availability_kind(
+    readiness_kind: LanguageInputCallbackTransportReadinessKind,
+) -> LanguageInputCallbackTransportAvailabilityKind {
+    match readiness_kind {
+        LanguageInputCallbackTransportReadinessKind::CallbackRunnerHandoffReadiness => {
+            LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability
+        }
+        LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness => {
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        }
+    }
+}
+
+fn input_callback_transport_availability_label(
+    readiness_summary: &LanguageInputCallbackTransportReadinessSummary,
+    availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+) -> String {
+    format!(
+        "{} transport_availability={} availability_recorded=true queue_depth_after_availability={}",
+        readiness_summary.readiness_label,
+        input_callback_transport_availability_kind_name(availability_kind),
+        readiness_summary.queue_depth_after_readiness
+    )
+}
+
+fn input_callback_transport_availability_message(
+    availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+) -> &'static str {
+    match availability_kind {
+        LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability => {
+            "Transport availability should expose the callback-runner handoff readiness state."
+        }
+        LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability => {
+            "Transport availability should expose the adapter event publication readiness state."
+        }
+    }
+}
+
+fn input_callback_transport_capacity_kind(
+    availability_kind: LanguageInputCallbackTransportAvailabilityKind,
+) -> LanguageInputCallbackTransportCapacityKind {
+    match availability_kind {
+        LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability => {
+            LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity
+        }
+        LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability => {
+            LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity
+        }
+    }
+}
+
+fn input_callback_transport_capacity_label(
+    availability_summary: &LanguageInputCallbackTransportAvailabilitySummary,
+    capacity_kind: LanguageInputCallbackTransportCapacityKind,
+) -> String {
+    format!(
+        "{} transport_capacity={} capacity_recorded=true queue_depth_after_capacity={}",
+        availability_summary.availability_label,
+        input_callback_transport_capacity_kind_name(capacity_kind),
+        availability_summary.queue_depth_after_availability
+    )
+}
+
+fn input_callback_transport_capacity_message(
+    capacity_kind: LanguageInputCallbackTransportCapacityKind,
+) -> &'static str {
+    match capacity_kind {
+        LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity => {
+            "Transport capacity should preserve the callback-runner handoff availability state."
+        }
+        LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity => {
+            "Transport capacity should preserve the adapter event publication availability state."
+        }
     }
 }
 
@@ -6691,6 +12540,321 @@ mod tests {
     }
 
     #[test]
+    fn input_callback_diagnostics_are_owned_by_rust_language_core() {
+        let plan_error = input_callback_plan_for_target("not-a-board", 3, 7, 64).unwrap_err();
+        let plan_diagnostic = input_callback_plan_diagnostic(&plan_error);
+        assert_eq!(
+            input_callback_plan_error_kind_name(plan_error.kind),
+            "unknown_target"
+        );
+        assert_eq!(plan_diagnostic.selector, "not-a-board");
+        assert_eq!(plan_diagnostic.pin, 3);
+        assert_eq!(plan_diagnostic.kind, plan_error.kind);
+        assert_eq!(plan_diagnostic.kind_name, "unknown_target");
+        assert_eq!(
+            plan_diagnostic.diagnostic_label,
+            "input_callback_plan selector=not-a-board pin=3 error=unknown_target"
+        );
+        assert_eq!(
+            plan_diagnostic.message,
+            "Input callback target is not known."
+        );
+        assert_eq!(plan_diagnostic.error, plan_error);
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let mut wrong_pin =
+            input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        wrong_pin.pin = 4;
+        let event_error = input_callback_invocation_for_event(&plan, &wrong_pin).unwrap_err();
+        let event_diagnostic = input_callback_event_diagnostic(&event_error);
+        assert_eq!(
+            input_callback_event_error_kind_name(event_error.kind),
+            "pin_mismatch"
+        );
+        assert_eq!(event_diagnostic.plan_board_id, "arduino-uno-r4-wifi");
+        assert_eq!(event_diagnostic.event_board_id, "arduino-uno-r4-wifi");
+        assert_eq!(event_diagnostic.plan_pin, 3);
+        assert_eq!(event_diagnostic.event_pin, 4);
+        assert_eq!(
+            event_diagnostic.event_kind,
+            LANGUAGE_INPUT_CALLBACK_EVENT_KIND
+        );
+        assert_eq!(event_diagnostic.kind_name, "pin_mismatch");
+        assert_eq!(
+            event_diagnostic.diagnostic_label,
+            "input_callback_event plan_board=arduino-uno-r4-wifi event_board=arduino-uno-r4-wifi plan_pin=3 event_pin=4 event_kind=digital_input_change error=pin_mismatch"
+        );
+        assert_eq!(
+            event_diagnostic.message,
+            "Input callback event pin does not match the planned callback pin."
+        );
+        assert_eq!(event_diagnostic.error, event_error);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let invocation = input_callback_invocation_for_event(&custom, &event).unwrap();
+        let queue_error = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap_err();
+        let queue_diagnostic = input_callback_queue_plan_diagnostic(&queue_error);
+        assert_eq!(
+            input_callback_queue_plan_error_kind_name(queue_error.kind),
+            "queue_depth_exceeds_capacity"
+        );
+        assert_eq!(queue_diagnostic.board_id, "arduino-uno-r4-wifi");
+        assert_eq!(queue_diagnostic.pin, 3);
+        assert_eq!(queue_diagnostic.callback_program_id, 9);
+        assert_eq!(queue_diagnostic.queue_capacity, 1);
+        assert_eq!(queue_diagnostic.queue_depth, 2);
+        assert_eq!(queue_diagnostic.kind_name, "queue_depth_exceeds_capacity");
+        assert_eq!(
+            queue_diagnostic.diagnostic_label,
+            "input_callback_queue board=arduino-uno-r4-wifi pin=3 program=9 queue_depth=2 queue_capacity=1 error=queue_depth_exceeds_capacity"
+        );
+        assert_eq!(
+            queue_diagnostic.message,
+            "Input callback queue depth exceeds the configured queue capacity."
+        );
+        assert_eq!(queue_diagnostic.error, queue_error);
+    }
+
+    #[test]
+    fn input_callback_session_diagnostics_are_owned_by_rust_language_core() {
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+
+        let plan_error = input_callback_plan_for_target("not-a-board", 3, 7, 64).unwrap_err();
+        let plan_diagnostic = input_callback_plan_diagnostic(&plan_error);
+        let session_plan =
+            input_callback_session_plan_diagnostic(&serial_session, &plan_diagnostic);
+        assert_eq!(
+            input_callback_diagnostic_stage_name(session_plan.diagnostic_stage),
+            "plan"
+        );
+        assert_eq!(
+            session_plan.endpoint.endpoint,
+            "serial:///dev/cu.usbmodem1101"
+        );
+        assert_eq!(
+            session_plan.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            session_plan.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(session_plan.stage_name, "plan");
+        assert_eq!(session_plan.kind_name, "unknown_target");
+        assert_eq!(
+            session_plan.source_diagnostic_label,
+            "input_callback_plan selector=not-a-board pin=3 error=unknown_target"
+        );
+        assert_eq!(
+            session_plan.diagnostic_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback_diagnostic_stage=plan input_callback_plan selector=not-a-board pin=3 error=unknown_target"
+        );
+        assert_eq!(session_plan.message, "Input callback target is not known.");
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let mut wrong_pin =
+            input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        wrong_pin.pin = 4;
+        let event_error = input_callback_invocation_for_event(&plan, &wrong_pin).unwrap_err();
+        let event_diagnostic = input_callback_event_diagnostic(&event_error);
+        let session_event =
+            input_callback_session_event_diagnostic(&tcp_session, &event_diagnostic);
+        assert_eq!(session_event.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            session_event.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(
+            session_event.connection_label,
+            "endpoint=tcp://board-vm.local:4170"
+        );
+        assert_eq!(
+            session_event.diagnostic_stage,
+            LanguageInputCallbackDiagnosticStage::Event
+        );
+        assert_eq!(session_event.stage_name, "event");
+        assert_eq!(session_event.kind_name, "pin_mismatch");
+        assert_eq!(
+            session_event.source_diagnostic_label,
+            "input_callback_event plan_board=arduino-uno-r4-wifi event_board=arduino-uno-r4-wifi plan_pin=3 event_pin=4 event_kind=digital_input_change error=pin_mismatch"
+        );
+        assert_eq!(
+            session_event.diagnostic_label,
+            "endpoint=tcp://board-vm.local:4170 callback_diagnostic_stage=event input_callback_event plan_board=arduino-uno-r4-wifi event_board=arduino-uno-r4-wifi plan_pin=3 event_pin=4 event_kind=digital_input_change error=pin_mismatch"
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let invocation = input_callback_invocation_for_event(&custom, &event).unwrap();
+        let queue_error = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap_err();
+        let queue_diagnostic = input_callback_queue_plan_diagnostic(&queue_error);
+        let session_queue =
+            input_callback_session_queue_plan_diagnostic(&tcp_session, &queue_diagnostic);
+        assert_eq!(
+            session_queue.diagnostic_stage,
+            LanguageInputCallbackDiagnosticStage::QueuePlan
+        );
+        assert_eq!(session_queue.stage_name, "queue_plan");
+        assert_eq!(session_queue.kind_name, "queue_depth_exceeds_capacity");
+        assert_eq!(
+            session_queue.source_diagnostic_label,
+            "input_callback_queue board=arduino-uno-r4-wifi pin=3 program=9 queue_depth=2 queue_capacity=1 error=queue_depth_exceeds_capacity"
+        );
+        assert_eq!(
+            session_queue.diagnostic_label,
+            "endpoint=tcp://board-vm.local:4170 callback_diagnostic_stage=queue_plan input_callback_queue board=arduino-uno-r4-wifi pin=3 program=9 queue_depth=2 queue_capacity=1 error=queue_depth_exceeds_capacity"
+        );
+        assert_eq!(
+            session_queue.message,
+            "Input callback queue depth exceeds the configured queue capacity."
+        );
+    }
+
+    #[test]
+    fn input_callback_session_queue_summaries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial = input_callback_session_queue_summary(&serial_session, &queue_plan);
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.queue_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queue_action=enqueue queue_depth_before=2 queue_depth_after=3"
+        );
+        assert_eq!(serial.action, LanguageInputCallbackQueueAction::Enqueue);
+        assert_eq!(
+            serial.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropOldest
+        );
+        assert!(serial.queued);
+        assert!(!serial.dropped_existing_event);
+        assert!(!serial.dropped_incoming_event);
+        assert!(serial.dispatch_required);
+        assert_eq!(serial.queue_depth_before, 2);
+        assert_eq!(serial.queue_depth_after, 3);
+        assert_eq!(
+            serial.message,
+            "Input callback enqueued; wake cooperative dispatch."
+        );
+        assert_eq!(serial.queue_plan, queue_plan);
+
+        let full_queue =
+            input_callback_queue_plan_for_invocation(&invocation, invocation.queue_capacity)
+                .unwrap();
+        let full = input_callback_session_queue_summary(&serial_session, &full_queue);
+        assert_eq!(
+            full.queue_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queue_action=drop_oldest_then_enqueue queue_depth_before=8 queue_depth_after=8"
+        );
+        assert_eq!(
+            full.action,
+            LanguageInputCallbackQueueAction::DropOldestThenEnqueue
+        );
+        assert!(full.queued);
+        assert!(full.dropped_existing_event);
+        assert!(!full.dropped_incoming_event);
+        assert!(full.dispatch_required);
+        assert_eq!(
+            full.message,
+            "Input callback enqueued after dropping the oldest queued callback."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_session_queue_summary(&tcp_session, &newest_drop);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.queue_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 queue_action=drop_newest queue_depth_before=1 queue_depth_after=1"
+        );
+        assert_eq!(tcp.action, LanguageInputCallbackQueueAction::DropNewest);
+        assert_eq!(
+            tcp.queue_policy,
+            LanguageInputCallbackQueuePolicy::DropNewest
+        );
+        assert!(!tcp.queued);
+        assert!(!tcp.dropped_existing_event);
+        assert!(tcp.dropped_incoming_event);
+        assert!(!tcp.dispatch_required);
+        assert_eq!(tcp.queue_depth_before, 1);
+        assert_eq!(tcp.queue_depth_after, 1);
+        assert_eq!(
+            tcp.message,
+            "Input callback dropped because the queue is full and drop-newest policy is active."
+        );
+        assert_eq!(tcp.queue_plan, newest_drop);
+    }
+
+    #[test]
     fn input_callback_dispatch_plans_are_owned_by_rust_language_core() {
         let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
         let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
@@ -6756,6 +12920,86 @@ mod tests {
             input_callback_invocation_for_event(&custom, &custom_event).unwrap();
         let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
         assert!(input_callback_dispatch_plan_for_queue_plan(&newest_drop).is_none());
+    }
+
+    #[test]
+    fn input_callback_session_dispatch_summaries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+        let serial = input_callback_session_dispatch_summary(&serial_session, &dispatch);
+
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.dispatch_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 dispatch_reason=queued_input_event queue_action=enqueue queue_depth_after=3 instruction_budget=64"
+        );
+        assert_eq!(
+            serial.dispatch_reason,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_REASON
+        );
+        assert_eq!(serial.callback_program_id, 7);
+        assert_eq!(serial.callback_instruction_budget, 64);
+        assert_eq!(serial.sequence, 42);
+        assert_eq!(serial.queue_depth_after, 3);
+        assert_eq!(
+            serial.queue_action,
+            LanguageInputCallbackQueueAction::Enqueue
+        );
+        assert!(!serial.dropped_existing_event);
+        assert!(serial.interrupt_backed);
+        assert_eq!(
+            serial.dispatch_model,
+            LANGUAGE_INPUT_CALLBACK_DISPATCH_MODEL
+        );
+        assert_eq!(
+            serial.message,
+            "Input callback dispatch is ready for the cooperative runner."
+        );
+        assert_eq!(serial.dispatch_plan, dispatch);
+
+        let full_queue =
+            input_callback_queue_plan_for_invocation(&invocation, invocation.queue_capacity)
+                .unwrap();
+        let full_dispatch = input_callback_dispatch_plan_for_queue_plan(&full_queue).unwrap();
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_session_dispatch_summary(&tcp_session, &full_dispatch);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.dispatch_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 dispatch_reason=queued_input_event queue_action=drop_oldest_then_enqueue queue_depth_after=8 instruction_budget=64"
+        );
+        assert_eq!(
+            tcp.queue_action,
+            LanguageInputCallbackQueueAction::DropOldestThenEnqueue
+        );
+        assert!(tcp.dropped_existing_event);
+        assert!(tcp.interrupt_backed);
+        assert_eq!(
+            tcp.message,
+            "Input callback dispatch replaces the oldest queued callback."
+        );
+        assert_eq!(tcp.dispatch_plan, full_dispatch);
     }
 
     #[test]
@@ -6834,6 +13078,7279 @@ mod tests {
         let faulted = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Faulted, 6, 2);
         assert_eq!(faulted.run_status, "faulted");
         assert_eq!(faulted.result_kind, LanguageInputCallbackResultKind::Failed);
+    }
+
+    #[test]
+    fn input_callback_transport_results_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let serial = input_callback_transport_result_summary(&serial_session, &completed);
+
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.transport,
+            LanguageConnectionTransport::Serial
+        );
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.callback_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 status=halted"
+        );
+        assert_eq!(serial.result, completed);
+
+        let budget =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::BudgetExceeded, 64, 9);
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_transport_result_summary(&tcp_session, &budget);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(tcp.endpoint.transport, LanguageConnectionTransport::Wifi);
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.callback_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 status=budget_exceeded"
+        );
+        assert_eq!(
+            tcp.result.result_kind,
+            LanguageInputCallbackResultKind::BudgetExceeded
+        );
+    }
+
+    #[test]
+    fn input_callback_completion_plans_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        let completed_plan = input_callback_completion_plan_for_result(&completed);
+        assert_eq!(
+            completed_plan.action,
+            LanguageInputCallbackCompletionAction::Complete
+        );
+        assert!(completed_plan.remove_from_queue);
+        assert!(!completed_plan.keep_dispatch_scheduled);
+        assert!(completed_plan.terminal);
+        assert!(!completed_plan.retryable);
+        assert_eq!(completed_plan.queue_depth_after_completion, 2);
+        assert_eq!(completed_plan.result, completed);
+        assert_eq!(
+            completed_plan.message,
+            "Input callback completed; remove it from the cooperative queue."
+        );
+
+        let running = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Running, 12, 4);
+        let running_plan = input_callback_completion_plan_for_result(&running);
+        assert_eq!(
+            running_plan.action,
+            LanguageInputCallbackCompletionAction::KeepRunning
+        );
+        assert!(!running_plan.remove_from_queue);
+        assert!(running_plan.keep_dispatch_scheduled);
+        assert!(!running_plan.terminal);
+        assert!(running_plan.retryable);
+        assert_eq!(running_plan.queue_depth_after_completion, 3);
+
+        let budget =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::BudgetExceeded, 64, 9);
+        let budget_plan = input_callback_completion_plan_for_result(&budget);
+        assert_eq!(
+            budget_plan.action,
+            LanguageInputCallbackCompletionAction::DropAfterBudgetExceeded
+        );
+        assert!(budget_plan.remove_from_queue);
+        assert!(!budget_plan.keep_dispatch_scheduled);
+        assert!(budget_plan.terminal);
+        assert!(!budget_plan.retryable);
+        assert_eq!(budget_plan.queue_depth_after_completion, 2);
+
+        let stopped = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Stopped, 6, 2);
+        let stopped_plan = input_callback_completion_plan_for_result(&stopped);
+        assert_eq!(
+            stopped_plan.action,
+            LanguageInputCallbackCompletionAction::DropAfterFailure
+        );
+        assert!(stopped_plan.remove_from_queue);
+        assert_eq!(stopped_plan.queue_depth_after_completion, 2);
+
+        let mut empty_queue = completed_plan.result.clone();
+        empty_queue.queue_depth_after = 0;
+        let empty_queue_plan = input_callback_completion_plan_for_result(&empty_queue);
+        assert_eq!(empty_queue_plan.queue_depth_after_completion, 0);
+    }
+
+    #[test]
+    fn input_callback_session_completions_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let dispatch = input_callback_dispatch_plan_for_queue_plan(&queue_plan).unwrap();
+
+        let completed =
+            input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Halted, 11, 3);
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let serial = input_callback_session_completion_summary(&serial_session, &completed);
+
+        assert_eq!(serial.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            serial.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            serial.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            serial.callback_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 status=halted"
+        );
+        assert_eq!(
+            serial.completion_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 status=halted action=complete queue_depth_after_completion=2"
+        );
+        assert_eq!(
+            serial.action,
+            LanguageInputCallbackCompletionAction::Complete
+        );
+        assert!(serial.remove_from_queue);
+        assert!(!serial.keep_dispatch_scheduled);
+        assert!(serial.terminal);
+        assert!(!serial.retryable);
+        assert_eq!(serial.queue_depth_after_completion, 2);
+        assert_eq!(serial.result, completed);
+
+        let running = input_callback_result_for_dispatch_plan(&dispatch, RunStatus::Running, 12, 4);
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let tcp = input_callback_session_completion_summary(&tcp_session, &running);
+
+        assert_eq!(tcp.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(tcp.connection_label, "endpoint=tcp://board-vm.local:4170");
+        assert_eq!(
+            tcp.callback_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 status=running"
+        );
+        assert_eq!(
+            tcp.completion_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 status=running action=keep_running queue_depth_after_completion=3"
+        );
+        assert_eq!(
+            tcp.action,
+            LanguageInputCallbackCompletionAction::KeepRunning
+        );
+        assert!(!tcp.remove_from_queue);
+        assert!(tcp.keep_dispatch_scheduled);
+        assert!(!tcp.terminal);
+        assert!(tcp.retryable);
+        assert_eq!(tcp.queue_depth_after_completion, 3);
+    }
+
+    #[test]
+    fn input_callback_session_lifecycle_summaries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.lifecycle_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queued=true dispatch_required=true terminal=true"
+        );
+        assert!(completed.queued);
+        assert!(completed.dispatch_required);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(
+            completed.queue_summary.queue_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 queue_action=enqueue queue_depth_before=2 queue_depth_after=3"
+        );
+        let dispatch = completed
+            .dispatch_summary
+            .as_ref()
+            .expect("dispatch summary");
+        assert_eq!(
+            dispatch.dispatch_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 dispatch_reason=queued_input_event queue_action=enqueue queue_depth_after=3 instruction_budget=64"
+        );
+        let result = completed.result.as_ref().expect("callback result");
+        assert_eq!(result.run_status, "halted");
+        assert_eq!(
+            result.result_kind,
+            LanguageInputCallbackResultKind::Completed
+        );
+        let completion = completed
+            .completion_summary
+            .as_ref()
+            .expect("completion summary");
+        assert_eq!(
+            completion.action,
+            LanguageInputCallbackCompletionAction::Complete
+        );
+        assert_eq!(
+            completed.message,
+            "Input callback completed; remove it from the cooperative queue."
+        );
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        assert_eq!(pending.endpoint.endpoint, "tcp://board-vm.local:4170");
+        assert_eq!(
+            pending.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::TcpSocket
+        );
+        assert_eq!(
+            pending.connection_label,
+            "endpoint=tcp://board-vm.local:4170"
+        );
+        assert_eq!(
+            pending.lifecycle_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 queued=true dispatch_required=true terminal=false"
+        );
+        assert!(pending.queued);
+        assert!(pending.dispatch_required);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert!(pending.dispatch_summary.is_some());
+        assert!(pending.result.is_none());
+        assert!(pending.completion_summary.is_none());
+        assert_eq!(
+            pending.message,
+            "Input callback is queued for cooperative dispatch."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &newest_drop,
+            Some(RunStatus::Halted),
+            1,
+            1,
+        );
+        assert_eq!(
+            dropped.lifecycle_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 queued=false dispatch_required=false terminal=true"
+        );
+        assert_eq!(
+            dropped.queue_summary.action,
+            LanguageInputCallbackQueueAction::DropNewest
+        );
+        assert!(!dropped.queued);
+        assert!(!dropped.dispatch_required);
+        assert!(dropped.terminal);
+        assert!(!dropped.retryable);
+        assert!(dropped.dispatch_summary.is_none());
+        assert!(dropped.result.is_none());
+        assert!(dropped.completion_summary.is_none());
+        assert_eq!(
+            dropped.message,
+            "Input callback was not queued; lifecycle ended before dispatch."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_actions_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed = input_callback_transport_action_summary(&completed_lifecycle);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::SerialPort
+        );
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert_eq!(
+            completed.action_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=complete_callback terminal=true retryable=false"
+        );
+        assert!(completed.queued);
+        assert!(completed.dispatch_required);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after, 3);
+        assert_eq!(completed.queue_depth_after_completion, Some(2));
+        assert_eq!(
+            completed.message,
+            "Transport should report completion and remove the callback."
+        );
+        assert_eq!(completed.lifecycle_summary, completed_lifecycle);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending = input_callback_transport_action_summary(&pending_lifecycle);
+        assert_eq!(
+            pending.action,
+            LanguageInputCallbackTransportAction::DispatchCallback
+        );
+        assert_eq!(pending.action_name, "dispatch_callback");
+        assert_eq!(
+            pending.action_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false"
+        );
+        assert!(pending.queued);
+        assert!(pending.dispatch_required);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after, 3);
+        assert_eq!(pending.queue_depth_after_completion, None);
+        assert_eq!(
+            pending.message,
+            "Transport should dispatch the queued input callback."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running = input_callback_transport_action_summary(&running_lifecycle);
+        assert_eq!(
+            running.action,
+            LanguageInputCallbackTransportAction::KeepCallbackRunning
+        );
+        assert_eq!(running.action_name, "keep_callback_running");
+        assert!(!running.terminal);
+        assert!(running.retryable);
+        assert_eq!(running.queue_depth_after_completion, Some(3));
+        assert_eq!(
+            running.message,
+            "Transport should keep the callback scheduled for cooperative dispatch."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget = input_callback_transport_action_summary(&budget_lifecycle);
+        assert_eq!(
+            budget.action,
+            LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+        );
+        assert_eq!(budget.action_name, "drop_after_budget_exceeded");
+        assert!(budget.terminal);
+        assert!(!budget.retryable);
+        assert_eq!(budget.queue_depth_after_completion, Some(2));
+        assert_eq!(
+            budget.message,
+            "Transport should report the budget exhaustion and remove the callback."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped = input_callback_transport_action_summary(&stopped_lifecycle);
+        assert_eq!(
+            stopped.action,
+            LanguageInputCallbackTransportAction::DropAfterFailure
+        );
+        assert_eq!(stopped.action_name, "drop_after_failure");
+        assert!(stopped.terminal);
+        assert!(!stopped.retryable);
+        assert_eq!(
+            stopped.message,
+            "Transport should report the callback failure and remove the callback."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped = input_callback_transport_action_summary(&dropped_lifecycle);
+        assert_eq!(
+            dropped.action,
+            LanguageInputCallbackTransportAction::DropBeforeDispatch
+        );
+        assert_eq!(dropped.action_name, "drop_before_dispatch");
+        assert_eq!(
+            dropped.action_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false"
+        );
+        assert!(!dropped.queued);
+        assert!(!dropped.dispatch_required);
+        assert!(dropped.terminal);
+        assert!(!dropped.retryable);
+        assert_eq!(dropped.queue_depth_after, 1);
+        assert_eq!(dropped.queue_depth_after_completion, None);
+        assert_eq!(
+            dropped.message,
+            "Transport should report the dropped input callback without dispatch."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_effects_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed = input_callback_transport_effect_summary(&completed_action);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert_eq!(
+            completed.effect_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=complete_callback terminal=true retryable=false dispatch_callback=false emit_drop=false emit_result=true remove_from_queue=true keep_dispatch_scheduled=false queue_depth_after_effect=2"
+        );
+        assert!(!completed.dispatch_callback);
+        assert!(!completed.emit_drop);
+        assert!(completed.emit_result);
+        assert!(completed.remove_from_queue);
+        assert!(!completed.keep_dispatch_scheduled);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_effect, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should emit the result and remove the completed callback from the queue."
+        );
+        assert_eq!(completed.action_summary, completed_action);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending = input_callback_transport_effect_summary(&pending_action);
+        assert_eq!(
+            pending.action,
+            LanguageInputCallbackTransportAction::DispatchCallback
+        );
+        assert_eq!(pending.action_name, "dispatch_callback");
+        assert!(pending.dispatch_callback);
+        assert!(!pending.emit_drop);
+        assert!(!pending.emit_result);
+        assert!(!pending.remove_from_queue);
+        assert!(pending.keep_dispatch_scheduled);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_effect, 3);
+        assert_eq!(
+            pending.message,
+            "Transport should dispatch the queued callback and keep dispatch scheduled."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running = input_callback_transport_effect_summary(&running_action);
+        assert_eq!(
+            running.action,
+            LanguageInputCallbackTransportAction::KeepCallbackRunning
+        );
+        assert!(!running.dispatch_callback);
+        assert!(!running.emit_drop);
+        assert!(running.emit_result);
+        assert!(!running.remove_from_queue);
+        assert!(running.keep_dispatch_scheduled);
+        assert!(!running.terminal);
+        assert!(running.retryable);
+        assert_eq!(running.queue_depth_after_effect, 3);
+        assert_eq!(
+            running.message,
+            "Transport should emit the running result and keep dispatch scheduled."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget = input_callback_transport_effect_summary(&budget_action);
+        assert_eq!(
+            budget.action,
+            LanguageInputCallbackTransportAction::DropAfterBudgetExceeded
+        );
+        assert!(!budget.dispatch_callback);
+        assert!(!budget.emit_drop);
+        assert!(budget.emit_result);
+        assert!(budget.remove_from_queue);
+        assert!(!budget.keep_dispatch_scheduled);
+        assert!(budget.terminal);
+        assert!(!budget.retryable);
+        assert_eq!(budget.queue_depth_after_effect, 2);
+        assert_eq!(
+            budget.message,
+            "Transport should emit the budget result and remove the callback from the queue."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped = input_callback_transport_effect_summary(&stopped_action);
+        assert_eq!(
+            stopped.action,
+            LanguageInputCallbackTransportAction::DropAfterFailure
+        );
+        assert!(stopped.emit_result);
+        assert!(stopped.remove_from_queue);
+        assert_eq!(stopped.queue_depth_after_effect, 2);
+        assert_eq!(
+            stopped.message,
+            "Transport should emit the failure result and remove the callback from the queue."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped = input_callback_transport_effect_summary(&dropped_action);
+        assert_eq!(
+            dropped.action,
+            LanguageInputCallbackTransportAction::DropBeforeDispatch
+        );
+        assert_eq!(
+            dropped.effect_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1"
+        );
+        assert!(!dropped.dispatch_callback);
+        assert!(dropped.emit_drop);
+        assert!(!dropped.emit_result);
+        assert!(!dropped.remove_from_queue);
+        assert!(!dropped.keep_dispatch_scheduled);
+        assert!(dropped.terminal);
+        assert!(!dropped.retryable);
+        assert_eq!(dropped.queue_depth_after_effect, 1);
+        assert_eq!(
+            dropped.message,
+            "Transport should emit a drop notice without touching the existing queue."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_reports_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed = input_callback_transport_report_summary(&completed_effect);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(completed.report_name, "completion");
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert!(!completed.dispatch_callback);
+        assert!(completed.emit_report);
+        assert!(!completed.emit_drop);
+        assert!(completed.emit_result);
+        assert!(completed.remove_from_queue);
+        assert!(!completed.keep_dispatch_scheduled);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_report, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should emit a completed-callback report."
+        );
+        assert_eq!(completed.effect_summary, completed_effect);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending = input_callback_transport_report_summary(&pending_effect);
+        assert_eq!(
+            pending.report_kind,
+            LanguageInputCallbackTransportReportKind::Dispatch
+        );
+        assert_eq!(pending.report_name, "dispatch");
+        assert!(pending.dispatch_callback);
+        assert!(!pending.emit_report);
+        assert!(!pending.emit_drop);
+        assert!(!pending.emit_result);
+        assert!(!pending.remove_from_queue);
+        assert!(pending.keep_dispatch_scheduled);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_report, 3);
+        assert_eq!(
+            pending.report_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should dispatch the callback runner; no report is emitted yet."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running = input_callback_transport_report_summary(&running_effect);
+        assert_eq!(
+            running.report_kind,
+            LanguageInputCallbackTransportReportKind::Running
+        );
+        assert_eq!(running.report_name, "running");
+        assert!(running.emit_report);
+        assert!(running.emit_result);
+        assert!(!running.remove_from_queue);
+        assert!(running.keep_dispatch_scheduled);
+        assert!(running.retryable);
+        assert_eq!(
+            running.message,
+            "Transport should emit a running-callback report and keep dispatch scheduled."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget = input_callback_transport_report_summary(&budget_effect);
+        assert_eq!(
+            budget.report_kind,
+            LanguageInputCallbackTransportReportKind::BudgetExceeded
+        );
+        assert_eq!(budget.report_name, "budget_exceeded");
+        assert!(budget.emit_report);
+        assert!(budget.emit_result);
+        assert!(budget.remove_from_queue);
+        assert!(budget.terminal);
+        assert_eq!(
+            budget.message,
+            "Transport should emit a budget-exceeded callback report."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped = input_callback_transport_report_summary(&stopped_effect);
+        assert_eq!(
+            stopped.report_kind,
+            LanguageInputCallbackTransportReportKind::Failure
+        );
+        assert_eq!(stopped.report_name, "failure");
+        assert!(stopped.emit_report);
+        assert!(stopped.emit_result);
+        assert!(stopped.remove_from_queue);
+        assert_eq!(
+            stopped.message,
+            "Transport should emit a failed-callback report."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped = input_callback_transport_report_summary(&dropped_effect);
+        assert_eq!(
+            dropped.report_kind,
+            LanguageInputCallbackTransportReportKind::Drop
+        );
+        assert_eq!(dropped.report_name, "drop");
+        assert!(!dropped.dispatch_callback);
+        assert!(dropped.emit_report);
+        assert!(dropped.emit_drop);
+        assert!(!dropped.emit_result);
+        assert!(!dropped.remove_from_queue);
+        assert!(!dropped.keep_dispatch_scheduled);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_report, 1);
+        assert_eq!(
+            dropped.report_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1"
+        );
+        assert_eq!(
+            dropped.message,
+            "Transport should emit a dropped-callback report."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_events_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed = input_callback_transport_event_summary(&completed_report);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(completed.event_name, "callback_completed");
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(completed.report_name, "completion");
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert!(!completed.dispatch_callback);
+        assert!(completed.emit_report);
+        assert!(!completed.emit_drop);
+        assert!(completed.emit_result);
+        assert!(completed.remove_from_queue);
+        assert!(!completed.keep_dispatch_scheduled);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_event, 2);
+        assert_eq!(
+            completed.message,
+            "Adapter should emit a completed input callback event."
+        );
+        assert_eq!(completed.report_summary, completed_report);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending = input_callback_transport_event_summary(&pending_report);
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert_eq!(pending.event_name, "dispatch_scheduled");
+        assert_eq!(
+            pending.report_kind,
+            LanguageInputCallbackTransportReportKind::Dispatch
+        );
+        assert!(pending.dispatch_callback);
+        assert!(!pending.emit_report);
+        assert!(!pending.emit_drop);
+        assert!(!pending.emit_result);
+        assert!(!pending.remove_from_queue);
+        assert!(pending.keep_dispatch_scheduled);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_event, 3);
+        assert_eq!(
+            pending.event_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Adapter should schedule the callback dispatch runner."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running = input_callback_transport_event_summary(&running_report);
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert_eq!(running.event_name, "callback_running");
+        assert!(running.emit_report);
+        assert!(running.emit_result);
+        assert!(!running.remove_from_queue);
+        assert!(running.keep_dispatch_scheduled);
+        assert!(running.retryable);
+        assert_eq!(
+            running.message,
+            "Adapter should emit a running input callback event and keep dispatch scheduled."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget = input_callback_transport_event_summary(&budget_report);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert_eq!(budget.event_name, "callback_budget_exceeded");
+        assert!(budget.emit_report);
+        assert!(budget.emit_result);
+        assert!(budget.remove_from_queue);
+        assert!(budget.terminal);
+        assert_eq!(
+            budget.message,
+            "Adapter should emit a budget-exceeded input callback event."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped = input_callback_transport_event_summary(&stopped_report);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert_eq!(stopped.event_name, "callback_failed");
+        assert!(stopped.emit_report);
+        assert!(stopped.emit_result);
+        assert!(stopped.remove_from_queue);
+        assert_eq!(
+            stopped.message,
+            "Adapter should emit a failed input callback event."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped = input_callback_transport_event_summary(&dropped_report);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(dropped.event_name, "callback_dropped");
+        assert_eq!(
+            dropped.report_kind,
+            LanguageInputCallbackTransportReportKind::Drop
+        );
+        assert!(!dropped.dispatch_callback);
+        assert!(dropped.emit_report);
+        assert!(dropped.emit_drop);
+        assert!(!dropped.emit_result);
+        assert!(!dropped.remove_from_queue);
+        assert!(!dropped.keep_dispatch_scheduled);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_event, 1);
+        assert_eq!(
+            dropped.event_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1"
+        );
+        assert_eq!(
+            dropped.message,
+            "Adapter should emit a dropped input callback event."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_deliveries_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed = input_callback_transport_delivery_summary(&completed_event);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(completed.delivery_route_name, "adapter_event");
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(completed.event_name, "callback_completed");
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert_eq!(completed.action_name, "complete_callback");
+        assert!(!completed.dispatch_callback);
+        assert!(completed.publish_event);
+        assert!(!completed.emit_drop);
+        assert!(completed.emit_result);
+        assert!(completed.remove_from_queue);
+        assert!(!completed.keep_dispatch_scheduled);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_delivery, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should publish the completed-callback event to the adapter."
+        );
+        assert_eq!(completed.event_summary, completed_event);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending = input_callback_transport_delivery_summary(&pending_event);
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(pending.delivery_route_name, "callback_runner");
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert_eq!(pending.event_name, "dispatch_scheduled");
+        assert!(pending.dispatch_callback);
+        assert!(!pending.publish_event);
+        assert!(!pending.emit_drop);
+        assert!(!pending.emit_result);
+        assert!(!pending.remove_from_queue);
+        assert!(pending.keep_dispatch_scheduled);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_delivery, 3);
+        assert_eq!(
+            pending.delivery_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should deliver this event to the callback runner."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running = input_callback_transport_delivery_summary(&running_event);
+        assert_eq!(
+            running.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.publish_event);
+        assert!(running.emit_result);
+        assert!(!running.remove_from_queue);
+        assert!(running.keep_dispatch_scheduled);
+        assert!(running.retryable);
+        assert_eq!(
+            running.message,
+            "Transport should publish the running-callback event to the adapter."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget = input_callback_transport_delivery_summary(&budget_event);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert_eq!(budget.delivery_route_name, "adapter_event");
+        assert!(budget.publish_event);
+        assert!(budget.emit_result);
+        assert!(budget.remove_from_queue);
+        assert!(budget.terminal);
+        assert_eq!(
+            budget.message,
+            "Transport should publish the budget-exceeded event to the adapter."
+        );
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped = input_callback_transport_delivery_summary(&stopped_event);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.publish_event);
+        assert!(stopped.emit_result);
+        assert!(stopped.remove_from_queue);
+        assert_eq!(
+            stopped.message,
+            "Transport should publish the failed-callback event to the adapter."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped = input_callback_transport_delivery_summary(&dropped_event);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert!(!dropped.dispatch_callback);
+        assert!(dropped.publish_event);
+        assert!(dropped.emit_drop);
+        assert!(!dropped.emit_result);
+        assert!(!dropped.remove_from_queue);
+        assert!(!dropped.keep_dispatch_scheduled);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_delivery, 1);
+        assert_eq!(
+            dropped.delivery_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1"
+        );
+        assert_eq!(
+            dropped.message,
+            "Transport should publish the dropped-callback event to the adapter."
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_acknowledgements_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed = input_callback_transport_acknowledgement_summary(&completed_delivery);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(completed.acknowledgement_name, "adapter_event_published");
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(completed.delivery_route_name, "adapter_event");
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(completed.event_name, "callback_completed");
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.dispatch_callback);
+        assert!(completed.publish_event);
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_acknowledgement, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should acknowledge the adapter event publication."
+        );
+        assert_eq!(completed.delivery_summary, completed_delivery);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending = input_callback_transport_acknowledgement_summary(&pending_delivery);
+
+        assert_eq!(
+            pending.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted
+        );
+        assert_eq!(pending.acknowledgement_name, "callback_runner_accepted");
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.dispatch_callback);
+        assert!(!pending.publish_event);
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_acknowledgement, 3);
+        assert_eq!(
+            pending.acknowledgement_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should acknowledge the callback-runner handoff."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running_delivery = input_callback_transport_delivery_summary(&running_event);
+        let running = input_callback_transport_acknowledgement_summary(&running_delivery);
+        assert_eq!(
+            running.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.adapter_event_published);
+        assert!(running.retryable);
+        assert_eq!(
+            running.message,
+            "Transport should acknowledge the adapter event publication."
+        );
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget_delivery = input_callback_transport_delivery_summary(&budget_event);
+        let budget = input_callback_transport_acknowledgement_summary(&budget_delivery);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert!(budget.adapter_event_published);
+        assert!(budget.terminal);
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped_delivery = input_callback_transport_delivery_summary(&stopped_event);
+        let stopped = input_callback_transport_acknowledgement_summary(&stopped_delivery);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.adapter_event_published);
+        assert!(stopped.terminal);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_acknowledgement, 1);
+        assert_eq!(
+            dropped.acknowledgement_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_receipts_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed = input_callback_transport_receipt_summary(&completed_ack);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(completed.receipt_name, "adapter_event_publication");
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(completed.acknowledgement_name, "adapter_event_published");
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_receipt, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should record the adapter event publication receipt."
+        );
+        assert_eq!(completed.acknowledgement_summary, completed_ack);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending = input_callback_transport_receipt_summary(&pending_ack);
+
+        assert_eq!(
+            pending.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff
+        );
+        assert_eq!(pending.receipt_name, "callback_runner_handoff");
+        assert_eq!(
+            pending.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_receipt, 3);
+        assert_eq!(
+            pending.receipt_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should record the callback-runner handoff receipt."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running_delivery = input_callback_transport_delivery_summary(&running_event);
+        let running_ack = input_callback_transport_acknowledgement_summary(&running_delivery);
+        let running = input_callback_transport_receipt_summary(&running_ack);
+        assert_eq!(
+            running.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.adapter_event_published);
+        assert!(running.retryable);
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget_delivery = input_callback_transport_delivery_summary(&budget_event);
+        let budget_ack = input_callback_transport_acknowledgement_summary(&budget_delivery);
+        let budget = input_callback_transport_receipt_summary(&budget_ack);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert!(budget.adapter_event_published);
+        assert!(budget.terminal);
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped_delivery = input_callback_transport_delivery_summary(&stopped_event);
+        let stopped_ack = input_callback_transport_acknowledgement_summary(&stopped_delivery);
+        let stopped = input_callback_transport_receipt_summary(&stopped_ack);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.adapter_event_published);
+        assert!(stopped.terminal);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped = input_callback_transport_receipt_summary(&dropped_ack);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_receipt, 1);
+        assert_eq!(
+            dropped.receipt_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_outcomes_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed = input_callback_transport_outcome_summary(&completed_receipt);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(completed.outcome_name, "adapter_event_publication_recorded");
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(completed.receipt_name, "adapter_event_publication");
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_outcome, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should report the recorded adapter event publication outcome."
+        );
+        assert_eq!(completed.receipt_summary, completed_receipt);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending = input_callback_transport_outcome_summary(&pending_receipt);
+
+        assert_eq!(
+            pending.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded
+        );
+        assert_eq!(pending.outcome_name, "callback_runner_handoff_recorded");
+        assert_eq!(
+            pending.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff
+        );
+        assert_eq!(
+            pending.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_outcome, 3);
+        assert_eq!(
+            pending.outcome_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should report the recorded callback-runner handoff outcome."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running_delivery = input_callback_transport_delivery_summary(&running_event);
+        let running_ack = input_callback_transport_acknowledgement_summary(&running_delivery);
+        let running_receipt = input_callback_transport_receipt_summary(&running_ack);
+        let running = input_callback_transport_outcome_summary(&running_receipt);
+        assert_eq!(
+            running.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.adapter_event_published);
+        assert!(running.retryable);
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget_delivery = input_callback_transport_delivery_summary(&budget_event);
+        let budget_ack = input_callback_transport_acknowledgement_summary(&budget_delivery);
+        let budget_receipt = input_callback_transport_receipt_summary(&budget_ack);
+        let budget = input_callback_transport_outcome_summary(&budget_receipt);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert!(budget.adapter_event_published);
+        assert!(budget.terminal);
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped_delivery = input_callback_transport_delivery_summary(&stopped_event);
+        let stopped_ack = input_callback_transport_acknowledgement_summary(&stopped_delivery);
+        let stopped_receipt = input_callback_transport_receipt_summary(&stopped_ack);
+        let stopped = input_callback_transport_outcome_summary(&stopped_receipt);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.adapter_event_published);
+        assert!(stopped.terminal);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped = input_callback_transport_outcome_summary(&dropped_receipt);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_outcome, 1);
+        assert_eq!(
+            dropped.outcome_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_traces_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed = input_callback_transport_trace_summary(&completed_outcome);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(completed.trace_name, "adapter_event_publication_trace");
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(completed.outcome_name, "adapter_event_publication_recorded");
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_trace, 2);
+        assert_eq!(
+            completed.message,
+            "Transport should retain the adapter event publication trace."
+        );
+        assert_eq!(completed.outcome_summary, completed_outcome);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending = input_callback_transport_trace_summary(&pending_outcome);
+
+        assert_eq!(
+            pending.trace_kind,
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        );
+        assert_eq!(pending.trace_name, "callback_runner_handoff_trace");
+        assert_eq!(
+            pending.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded
+        );
+        assert_eq!(
+            pending.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::CallbackRunnerHandoff
+        );
+        assert_eq!(
+            pending.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::CallbackRunnerAccepted
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_trace, 3);
+        assert_eq!(
+            pending.trace_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport should retain the callback-runner handoff trace."
+        );
+
+        let running_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Running),
+            12,
+            4,
+        );
+        let running_action = input_callback_transport_action_summary(&running_lifecycle);
+        let running_effect = input_callback_transport_effect_summary(&running_action);
+        let running_report = input_callback_transport_report_summary(&running_effect);
+        let running_event = input_callback_transport_event_summary(&running_report);
+        let running_delivery = input_callback_transport_delivery_summary(&running_event);
+        let running_ack = input_callback_transport_acknowledgement_summary(&running_delivery);
+        let running_receipt = input_callback_transport_receipt_summary(&running_ack);
+        let running_outcome = input_callback_transport_outcome_summary(&running_receipt);
+        let running = input_callback_transport_trace_summary(&running_outcome);
+        assert_eq!(
+            running.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            running.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackRunning
+        );
+        assert!(running.adapter_event_published);
+        assert!(running.retryable);
+
+        let budget_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::BudgetExceeded),
+            64,
+            9,
+        );
+        let budget_action = input_callback_transport_action_summary(&budget_lifecycle);
+        let budget_effect = input_callback_transport_effect_summary(&budget_action);
+        let budget_report = input_callback_transport_report_summary(&budget_effect);
+        let budget_event = input_callback_transport_event_summary(&budget_report);
+        let budget_delivery = input_callback_transport_delivery_summary(&budget_event);
+        let budget_ack = input_callback_transport_acknowledgement_summary(&budget_delivery);
+        let budget_receipt = input_callback_transport_receipt_summary(&budget_ack);
+        let budget_outcome = input_callback_transport_outcome_summary(&budget_receipt);
+        let budget = input_callback_transport_trace_summary(&budget_outcome);
+        assert_eq!(
+            budget.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackBudgetExceeded
+        );
+        assert!(budget.adapter_event_published);
+        assert!(budget.terminal);
+        assert!(budget.trace_recorded);
+
+        let stopped_lifecycle = input_callback_session_lifecycle_summary(
+            &tcp_session,
+            &queue_plan,
+            Some(RunStatus::Stopped),
+            6,
+            2,
+        );
+        let stopped_action = input_callback_transport_action_summary(&stopped_lifecycle);
+        let stopped_effect = input_callback_transport_effect_summary(&stopped_action);
+        let stopped_report = input_callback_transport_report_summary(&stopped_effect);
+        let stopped_event = input_callback_transport_event_summary(&stopped_report);
+        let stopped_delivery = input_callback_transport_delivery_summary(&stopped_event);
+        let stopped_ack = input_callback_transport_acknowledgement_summary(&stopped_delivery);
+        let stopped_receipt = input_callback_transport_receipt_summary(&stopped_ack);
+        let stopped_outcome = input_callback_transport_outcome_summary(&stopped_receipt);
+        let stopped = input_callback_transport_trace_summary(&stopped_outcome);
+        assert_eq!(
+            stopped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackFailed
+        );
+        assert!(stopped.adapter_event_published);
+        assert!(stopped.terminal);
+        assert!(stopped.trace_recorded);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped = input_callback_transport_trace_summary(&dropped_outcome);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_trace, 1);
+        assert_eq!(
+            dropped.trace_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_audits_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed = input_callback_transport_audit_summary(&completed_trace);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(completed.audit_name, "adapter_event_publication_audit");
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_audit, 2);
+        assert_eq!(
+            completed.message,
+            "Transport audit should retain the adapter event publication path."
+        );
+        assert_eq!(completed.trace_summary, completed_trace);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending = input_callback_transport_audit_summary(&pending_trace);
+
+        assert_eq!(
+            pending.audit_kind,
+            LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit
+        );
+        assert_eq!(pending.audit_name, "callback_runner_handoff_audit");
+        assert_eq!(
+            pending.trace_kind,
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        );
+        assert_eq!(
+            pending.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::CallbackRunnerHandoffRecorded
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_audit, 3);
+        assert_eq!(
+            pending.audit_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3 transport_audit=callback_runner_handoff_audit audit_recorded=true queue_depth_after_audit=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport audit should retain the callback-runner handoff path."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped = input_callback_transport_audit_summary(&dropped_trace);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_audit, 1);
+        assert_eq!(
+            dropped.audit_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1 transport_audit=adapter_event_publication_audit audit_recorded=true queue_depth_after_audit=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_logs_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed = input_callback_transport_log_summary(&completed_audit);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(completed.log_name, "adapter_event_publication_log");
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_log, 2);
+        assert_eq!(
+            completed.message,
+            "Transport log should include the adapter event publication audit."
+        );
+        assert_eq!(completed.audit_summary, completed_audit);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending = input_callback_transport_log_summary(&pending_audit);
+
+        assert_eq!(
+            pending.log_kind,
+            LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog
+        );
+        assert_eq!(pending.log_name, "callback_runner_handoff_log");
+        assert_eq!(
+            pending.audit_kind,
+            LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit
+        );
+        assert_eq!(
+            pending.trace_kind,
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_log, 3);
+        assert_eq!(
+            pending.log_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3 transport_audit=callback_runner_handoff_audit audit_recorded=true queue_depth_after_audit=3 transport_log=callback_runner_handoff_log log_recorded=true queue_depth_after_log=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport log should include the callback-runner handoff audit."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped = input_callback_transport_log_summary(&dropped_audit);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_log, 1);
+        assert_eq!(
+            dropped.log_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1 transport_audit=adapter_event_publication_audit audit_recorded=true queue_depth_after_audit=1 transport_log=adapter_event_publication_log log_recorded=true queue_depth_after_log=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_journals_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed_log = input_callback_transport_log_summary(&completed_audit);
+        let completed = input_callback_transport_journal_summary(&completed_log);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(completed.journal_name, "adapter_event_publication_journal");
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_journal, 2);
+        assert_eq!(
+            completed.message,
+            "Transport journal should index the adapter event publication log."
+        );
+        assert_eq!(completed.log_summary, completed_log);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending_log = input_callback_transport_log_summary(&pending_audit);
+        let pending = input_callback_transport_journal_summary(&pending_log);
+
+        assert_eq!(
+            pending.journal_kind,
+            LanguageInputCallbackTransportJournalKind::CallbackRunnerHandoffJournal
+        );
+        assert_eq!(pending.journal_name, "callback_runner_handoff_journal");
+        assert_eq!(
+            pending.log_kind,
+            LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog
+        );
+        assert_eq!(
+            pending.audit_kind,
+            LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit
+        );
+        assert_eq!(
+            pending.trace_kind,
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_journal, 3);
+        assert_eq!(
+            pending.journal_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3 transport_audit=callback_runner_handoff_audit audit_recorded=true queue_depth_after_audit=3 transport_log=callback_runner_handoff_log log_recorded=true queue_depth_after_log=3 transport_journal=callback_runner_handoff_journal journal_recorded=true queue_depth_after_journal=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport journal should index the callback-runner handoff log."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped_log = input_callback_transport_log_summary(&dropped_audit);
+        let dropped = input_callback_transport_journal_summary(&dropped_log);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_journal, 1);
+        assert_eq!(
+            dropped.journal_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1 transport_audit=adapter_event_publication_audit audit_recorded=true queue_depth_after_audit=1 transport_log=adapter_event_publication_log log_recorded=true queue_depth_after_log=1 transport_journal=adapter_event_publication_journal journal_recorded=true queue_depth_after_journal=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_archives_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed_log = input_callback_transport_log_summary(&completed_audit);
+        let completed_journal = input_callback_transport_journal_summary(&completed_log);
+        let completed = input_callback_transport_archive_summary(&completed_journal);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(completed.archive_name, "adapter_event_publication_archive");
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_archive, 2);
+        assert_eq!(
+            completed.message,
+            "Transport archive should retain the adapter event publication journal."
+        );
+        assert_eq!(completed.journal_summary, completed_journal);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending_log = input_callback_transport_log_summary(&pending_audit);
+        let pending_journal = input_callback_transport_journal_summary(&pending_log);
+        let pending = input_callback_transport_archive_summary(&pending_journal);
+
+        assert_eq!(
+            pending.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::CallbackRunnerHandoffArchive
+        );
+        assert_eq!(pending.archive_name, "callback_runner_handoff_archive");
+        assert_eq!(
+            pending.journal_kind,
+            LanguageInputCallbackTransportJournalKind::CallbackRunnerHandoffJournal
+        );
+        assert_eq!(
+            pending.log_kind,
+            LanguageInputCallbackTransportLogKind::CallbackRunnerHandoffLog
+        );
+        assert_eq!(
+            pending.audit_kind,
+            LanguageInputCallbackTransportAuditKind::CallbackRunnerHandoffAudit
+        );
+        assert_eq!(
+            pending.trace_kind,
+            LanguageInputCallbackTransportTraceKind::CallbackRunnerHandoffTrace
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_archive, 3);
+        assert_eq!(
+            pending.archive_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3 transport_audit=callback_runner_handoff_audit audit_recorded=true queue_depth_after_audit=3 transport_log=callback_runner_handoff_log log_recorded=true queue_depth_after_log=3 transport_journal=callback_runner_handoff_journal journal_recorded=true queue_depth_after_journal=3 transport_archive=callback_runner_handoff_archive archive_recorded=true queue_depth_after_archive=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport archive should retain the callback-runner handoff journal."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped_log = input_callback_transport_log_summary(&dropped_audit);
+        let dropped_journal = input_callback_transport_journal_summary(&dropped_log);
+        let dropped = input_callback_transport_archive_summary(&dropped_journal);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_archive, 1);
+        assert_eq!(
+            dropped.archive_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1 transport_audit=adapter_event_publication_audit audit_recorded=true queue_depth_after_audit=1 transport_log=adapter_event_publication_log log_recorded=true queue_depth_after_log=1 transport_journal=adapter_event_publication_journal journal_recorded=true queue_depth_after_journal=1 transport_archive=adapter_event_publication_archive archive_recorded=true queue_depth_after_archive=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_snapshots_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed_log = input_callback_transport_log_summary(&completed_audit);
+        let completed_journal = input_callback_transport_journal_summary(&completed_log);
+        let completed_archive = input_callback_transport_archive_summary(&completed_journal);
+        let completed = input_callback_transport_snapshot_summary(&completed_archive);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.snapshot_name,
+            "adapter_event_publication_snapshot"
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_snapshot, 2);
+        assert_eq!(
+            completed.message,
+            "Transport snapshot should capture the adapter event publication archive."
+        );
+        assert_eq!(completed.archive_summary, completed_archive);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending_log = input_callback_transport_log_summary(&pending_audit);
+        let pending_journal = input_callback_transport_journal_summary(&pending_log);
+        let pending_archive = input_callback_transport_archive_summary(&pending_journal);
+        let pending = input_callback_transport_snapshot_summary(&pending_archive);
+
+        assert_eq!(
+            pending.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::CallbackRunnerHandoffSnapshot
+        );
+        assert_eq!(pending.snapshot_name, "callback_runner_handoff_snapshot");
+        assert_eq!(
+            pending.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::CallbackRunnerHandoffArchive
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_snapshot, 3);
+        assert_eq!(
+            pending.snapshot_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3 transport_audit=callback_runner_handoff_audit audit_recorded=true queue_depth_after_audit=3 transport_log=callback_runner_handoff_log log_recorded=true queue_depth_after_log=3 transport_journal=callback_runner_handoff_journal journal_recorded=true queue_depth_after_journal=3 transport_archive=callback_runner_handoff_archive archive_recorded=true queue_depth_after_archive=3 transport_snapshot=callback_runner_handoff_snapshot snapshot_recorded=true queue_depth_after_snapshot=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport snapshot should capture the callback-runner handoff archive."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped_log = input_callback_transport_log_summary(&dropped_audit);
+        let dropped_journal = input_callback_transport_journal_summary(&dropped_log);
+        let dropped_archive = input_callback_transport_archive_summary(&dropped_journal);
+        let dropped = input_callback_transport_snapshot_summary(&dropped_archive);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_snapshot, 1);
+        assert_eq!(
+            dropped.snapshot_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1 transport_audit=adapter_event_publication_audit audit_recorded=true queue_depth_after_audit=1 transport_log=adapter_event_publication_log log_recorded=true queue_depth_after_log=1 transport_journal=adapter_event_publication_journal journal_recorded=true queue_depth_after_journal=1 transport_archive=adapter_event_publication_archive archive_recorded=true queue_depth_after_archive=1 transport_snapshot=adapter_event_publication_snapshot snapshot_recorded=true queue_depth_after_snapshot=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_checkpoints_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed_log = input_callback_transport_log_summary(&completed_audit);
+        let completed_journal = input_callback_transport_journal_summary(&completed_log);
+        let completed_archive = input_callback_transport_archive_summary(&completed_journal);
+        let completed_snapshot = input_callback_transport_snapshot_summary(&completed_archive);
+        let completed = input_callback_transport_checkpoint_summary(&completed_snapshot);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert_eq!(
+            completed.checkpoint_name,
+            "adapter_event_publication_checkpoint"
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_checkpoint, 2);
+        assert_eq!(
+            completed.message,
+            "Transport checkpoint should preserve the adapter event publication snapshot."
+        );
+        assert_eq!(completed.snapshot_summary, completed_snapshot);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending_log = input_callback_transport_log_summary(&pending_audit);
+        let pending_journal = input_callback_transport_journal_summary(&pending_log);
+        let pending_archive = input_callback_transport_archive_summary(&pending_journal);
+        let pending_snapshot = input_callback_transport_snapshot_summary(&pending_archive);
+        let pending = input_callback_transport_checkpoint_summary(&pending_snapshot);
+
+        assert_eq!(
+            pending.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::CallbackRunnerHandoffCheckpoint
+        );
+        assert_eq!(
+            pending.checkpoint_name,
+            "callback_runner_handoff_checkpoint"
+        );
+        assert_eq!(
+            pending.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::CallbackRunnerHandoffSnapshot
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_checkpoint, 3);
+        assert_eq!(
+            pending.checkpoint_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=42 transport_action=dispatch_callback terminal=false retryable=false dispatch_callback=true emit_drop=false emit_result=false remove_from_queue=false keep_dispatch_scheduled=true queue_depth_after_effect=3 transport_report=dispatch emit_report=false queue_depth_after_report=3 transport_event=dispatch_scheduled queue_depth_after_event=3 transport_delivery=callback_runner publish_event=false queue_depth_after_delivery=3 transport_acknowledgement=callback_runner_accepted delivery_acknowledged=true callback_runner_handoff=true adapter_event_published=false queue_depth_after_acknowledgement=3 transport_receipt=callback_runner_handoff receipt_recorded=true queue_depth_after_receipt=3 transport_outcome=callback_runner_handoff_recorded outcome_recorded=true queue_depth_after_outcome=3 transport_trace=callback_runner_handoff_trace trace_recorded=true queue_depth_after_trace=3 transport_audit=callback_runner_handoff_audit audit_recorded=true queue_depth_after_audit=3 transport_log=callback_runner_handoff_log log_recorded=true queue_depth_after_log=3 transport_journal=callback_runner_handoff_journal journal_recorded=true queue_depth_after_journal=3 transport_archive=callback_runner_handoff_archive archive_recorded=true queue_depth_after_archive=3 transport_snapshot=callback_runner_handoff_snapshot snapshot_recorded=true queue_depth_after_snapshot=3 transport_checkpoint=callback_runner_handoff_checkpoint checkpoint_recorded=true queue_depth_after_checkpoint=3"
+        );
+        assert_eq!(
+            pending.message,
+            "Transport checkpoint should preserve the callback-runner handoff snapshot."
+        );
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped_log = input_callback_transport_log_summary(&dropped_audit);
+        let dropped_journal = input_callback_transport_journal_summary(&dropped_log);
+        let dropped_archive = input_callback_transport_archive_summary(&dropped_journal);
+        let dropped_snapshot = input_callback_transport_snapshot_summary(&dropped_archive);
+        let dropped = input_callback_transport_checkpoint_summary(&dropped_snapshot);
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_checkpoint, 1);
+        assert_eq!(
+            dropped.checkpoint_label,
+            "endpoint=tcp://board-vm.local:4170 callback=arduino-uno-r4-wifi:D3 sequence=77 transport_action=drop_before_dispatch terminal=true retryable=false dispatch_callback=false emit_drop=true emit_result=false remove_from_queue=false keep_dispatch_scheduled=false queue_depth_after_effect=1 transport_report=drop emit_report=true queue_depth_after_report=1 transport_event=callback_dropped queue_depth_after_event=1 transport_delivery=adapter_event publish_event=true queue_depth_after_delivery=1 transport_acknowledgement=adapter_event_published delivery_acknowledged=true callback_runner_handoff=false adapter_event_published=true queue_depth_after_acknowledgement=1 transport_receipt=adapter_event_publication receipt_recorded=true queue_depth_after_receipt=1 transport_outcome=adapter_event_publication_recorded outcome_recorded=true queue_depth_after_outcome=1 transport_trace=adapter_event_publication_trace trace_recorded=true queue_depth_after_trace=1 transport_audit=adapter_event_publication_audit audit_recorded=true queue_depth_after_audit=1 transport_log=adapter_event_publication_log log_recorded=true queue_depth_after_log=1 transport_journal=adapter_event_publication_journal journal_recorded=true queue_depth_after_journal=1 transport_archive=adapter_event_publication_archive archive_recorded=true queue_depth_after_archive=1 transport_snapshot=adapter_event_publication_snapshot snapshot_recorded=true queue_depth_after_snapshot=1 transport_checkpoint=adapter_event_publication_checkpoint checkpoint_recorded=true queue_depth_after_checkpoint=1"
+        );
+    }
+
+    #[test]
+    fn input_callback_transport_markers_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed_log = input_callback_transport_log_summary(&completed_audit);
+        let completed_journal = input_callback_transport_journal_summary(&completed_log);
+        let completed_archive = input_callback_transport_archive_summary(&completed_journal);
+        let completed_snapshot = input_callback_transport_snapshot_summary(&completed_archive);
+        let completed_checkpoint = input_callback_transport_checkpoint_summary(&completed_snapshot);
+        let completed = input_callback_transport_marker_summary(&completed_checkpoint);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        );
+        assert_eq!(completed.marker_name, "adapter_event_publication_marker");
+        assert_eq!(
+            completed.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_marker, 2);
+        assert_eq!(
+            completed.marker_label,
+            format!(
+                "{} transport_marker=adapter_event_publication_marker marker_recorded=true queue_depth_after_marker=2",
+                completed_checkpoint.checkpoint_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport marker should tag the adapter event publication checkpoint."
+        );
+        assert_eq!(completed.checkpoint_summary, completed_checkpoint);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending_log = input_callback_transport_log_summary(&pending_audit);
+        let pending_journal = input_callback_transport_journal_summary(&pending_log);
+        let pending_archive = input_callback_transport_archive_summary(&pending_journal);
+        let pending_snapshot = input_callback_transport_snapshot_summary(&pending_archive);
+        let pending_checkpoint = input_callback_transport_checkpoint_summary(&pending_snapshot);
+        let pending = input_callback_transport_marker_summary(&pending_checkpoint);
+
+        assert_eq!(
+            pending.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::CallbackRunnerHandoffMarker
+        );
+        assert_eq!(pending.marker_name, "callback_runner_handoff_marker");
+        assert_eq!(
+            pending.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::CallbackRunnerHandoffCheckpoint
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_marker, 3);
+        assert_eq!(
+            pending.marker_label,
+            format!(
+                "{} transport_marker=callback_runner_handoff_marker marker_recorded=true queue_depth_after_marker=3",
+                pending_checkpoint.checkpoint_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport marker should tag the callback-runner handoff checkpoint."
+        );
+        assert_eq!(pending.checkpoint_summary, pending_checkpoint);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped_log = input_callback_transport_log_summary(&dropped_audit);
+        let dropped_journal = input_callback_transport_journal_summary(&dropped_log);
+        let dropped_archive = input_callback_transport_archive_summary(&dropped_journal);
+        let dropped_snapshot = input_callback_transport_snapshot_summary(&dropped_archive);
+        let dropped_checkpoint = input_callback_transport_checkpoint_summary(&dropped_snapshot);
+        let dropped = input_callback_transport_marker_summary(&dropped_checkpoint);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_marker, 1);
+        assert_eq!(
+            dropped.marker_label,
+            format!(
+                "{} transport_marker=adapter_event_publication_marker marker_recorded=true queue_depth_after_marker=1",
+                dropped_checkpoint.checkpoint_label
+            )
+        );
+        assert_eq!(dropped.checkpoint_summary, dropped_checkpoint);
+    }
+
+    #[test]
+    fn input_callback_transport_cursors_are_owned_by_rust_language_core() {
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_action = input_callback_transport_action_summary(&completed_lifecycle);
+        let completed_effect = input_callback_transport_effect_summary(&completed_action);
+        let completed_report = input_callback_transport_report_summary(&completed_effect);
+        let completed_event = input_callback_transport_event_summary(&completed_report);
+        let completed_delivery = input_callback_transport_delivery_summary(&completed_event);
+        let completed_ack = input_callback_transport_acknowledgement_summary(&completed_delivery);
+        let completed_receipt = input_callback_transport_receipt_summary(&completed_ack);
+        let completed_outcome = input_callback_transport_outcome_summary(&completed_receipt);
+        let completed_trace = input_callback_transport_trace_summary(&completed_outcome);
+        let completed_audit = input_callback_transport_audit_summary(&completed_trace);
+        let completed_log = input_callback_transport_log_summary(&completed_audit);
+        let completed_journal = input_callback_transport_journal_summary(&completed_log);
+        let completed_archive = input_callback_transport_archive_summary(&completed_journal);
+        let completed_snapshot = input_callback_transport_snapshot_summary(&completed_archive);
+        let completed_checkpoint = input_callback_transport_checkpoint_summary(&completed_snapshot);
+        let completed_marker = input_callback_transport_marker_summary(&completed_checkpoint);
+        let completed = input_callback_transport_cursor_summary(&completed_marker);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor
+        );
+        assert_eq!(completed.cursor_name, "adapter_event_publication_cursor");
+        assert_eq!(
+            completed.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        );
+        assert_eq!(
+            completed.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_cursor, 2);
+        assert_eq!(
+            completed.cursor_label,
+            format!(
+                "{} transport_cursor=adapter_event_publication_cursor cursor_recorded=true queue_depth_after_cursor=2",
+                completed_marker.marker_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport cursor should point at the adapter event publication marker."
+        );
+        assert_eq!(completed.marker_summary, completed_marker);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_action = input_callback_transport_action_summary(&pending_lifecycle);
+        let pending_effect = input_callback_transport_effect_summary(&pending_action);
+        let pending_report = input_callback_transport_report_summary(&pending_effect);
+        let pending_event = input_callback_transport_event_summary(&pending_report);
+        let pending_delivery = input_callback_transport_delivery_summary(&pending_event);
+        let pending_ack = input_callback_transport_acknowledgement_summary(&pending_delivery);
+        let pending_receipt = input_callback_transport_receipt_summary(&pending_ack);
+        let pending_outcome = input_callback_transport_outcome_summary(&pending_receipt);
+        let pending_trace = input_callback_transport_trace_summary(&pending_outcome);
+        let pending_audit = input_callback_transport_audit_summary(&pending_trace);
+        let pending_log = input_callback_transport_log_summary(&pending_audit);
+        let pending_journal = input_callback_transport_journal_summary(&pending_log);
+        let pending_archive = input_callback_transport_archive_summary(&pending_journal);
+        let pending_snapshot = input_callback_transport_snapshot_summary(&pending_archive);
+        let pending_checkpoint = input_callback_transport_checkpoint_summary(&pending_snapshot);
+        let pending_marker = input_callback_transport_marker_summary(&pending_checkpoint);
+        let pending = input_callback_transport_cursor_summary(&pending_marker);
+
+        assert_eq!(
+            pending.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::CallbackRunnerHandoffCursor
+        );
+        assert_eq!(pending.cursor_name, "callback_runner_handoff_cursor");
+        assert_eq!(
+            pending.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::CallbackRunnerHandoffMarker
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_cursor, 3);
+        assert_eq!(
+            pending.cursor_label,
+            format!(
+                "{} transport_cursor=callback_runner_handoff_cursor cursor_recorded=true queue_depth_after_cursor=3",
+                pending_marker.marker_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport cursor should point at the callback-runner handoff marker."
+        );
+        assert_eq!(pending.marker_summary, pending_marker);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_action = input_callback_transport_action_summary(&dropped_lifecycle);
+        let dropped_effect = input_callback_transport_effect_summary(&dropped_action);
+        let dropped_report = input_callback_transport_report_summary(&dropped_effect);
+        let dropped_event = input_callback_transport_event_summary(&dropped_report);
+        let dropped_delivery = input_callback_transport_delivery_summary(&dropped_event);
+        let dropped_ack = input_callback_transport_acknowledgement_summary(&dropped_delivery);
+        let dropped_receipt = input_callback_transport_receipt_summary(&dropped_ack);
+        let dropped_outcome = input_callback_transport_outcome_summary(&dropped_receipt);
+        let dropped_trace = input_callback_transport_trace_summary(&dropped_outcome);
+        let dropped_audit = input_callback_transport_audit_summary(&dropped_trace);
+        let dropped_log = input_callback_transport_log_summary(&dropped_audit);
+        let dropped_journal = input_callback_transport_journal_summary(&dropped_log);
+        let dropped_archive = input_callback_transport_archive_summary(&dropped_journal);
+        let dropped_snapshot = input_callback_transport_snapshot_summary(&dropped_archive);
+        let dropped_checkpoint = input_callback_transport_checkpoint_summary(&dropped_snapshot);
+        let dropped_marker = input_callback_transport_marker_summary(&dropped_checkpoint);
+        let dropped = input_callback_transport_cursor_summary(&dropped_marker);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_cursor, 1);
+        assert_eq!(
+            dropped.cursor_label,
+            format!(
+                "{} transport_cursor=adapter_event_publication_cursor cursor_recorded=true queue_depth_after_cursor=1",
+                dropped_marker.marker_label
+            )
+        );
+        assert_eq!(dropped.marker_summary, dropped_marker);
+    }
+
+    #[test]
+    fn input_callback_transport_bookmarks_are_owned_by_rust_language_core() {
+        fn cursor_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportCursorSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            input_callback_transport_cursor_summary(&marker)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_cursor = cursor_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_bookmark_summary(&completed_cursor);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark
+        );
+        assert_eq!(
+            completed.bookmark_name,
+            "adapter_event_publication_bookmark"
+        );
+        assert_eq!(
+            completed.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor
+        );
+        assert_eq!(completed.cursor_name, "adapter_event_publication_cursor");
+        assert_eq!(
+            completed.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        );
+        assert_eq!(
+            completed.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_bookmark, 2);
+        assert_eq!(
+            completed.bookmark_label,
+            format!(
+                "{} transport_bookmark=adapter_event_publication_bookmark bookmark_recorded=true queue_depth_after_bookmark=2",
+                completed_cursor.cursor_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport bookmark should save the adapter event publication cursor."
+        );
+        assert_eq!(completed.cursor_summary, completed_cursor);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_cursor = cursor_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_bookmark_summary(&pending_cursor);
+
+        assert_eq!(
+            pending.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark
+        );
+        assert_eq!(pending.bookmark_name, "callback_runner_handoff_bookmark");
+        assert_eq!(
+            pending.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::CallbackRunnerHandoffCursor
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_bookmark, 3);
+        assert_eq!(
+            pending.bookmark_label,
+            format!(
+                "{} transport_bookmark=callback_runner_handoff_bookmark bookmark_recorded=true queue_depth_after_bookmark=3",
+                pending_cursor.cursor_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport bookmark should save the callback-runner handoff cursor."
+        );
+        assert_eq!(pending.cursor_summary, pending_cursor);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_cursor = cursor_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_bookmark_summary(&dropped_cursor);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_bookmark, 1);
+        assert_eq!(
+            dropped.bookmark_label,
+            format!(
+                "{} transport_bookmark=adapter_event_publication_bookmark bookmark_recorded=true queue_depth_after_bookmark=1",
+                dropped_cursor.cursor_label
+            )
+        );
+        assert_eq!(dropped.cursor_summary, dropped_cursor);
+    }
+
+    #[test]
+    fn input_callback_transport_references_are_owned_by_rust_language_core() {
+        fn bookmark_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportBookmarkSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            input_callback_transport_bookmark_summary(&cursor)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_bookmark = bookmark_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_reference_summary(&completed_bookmark);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.reference_name,
+            "adapter_event_publication_reference"
+        );
+        assert_eq!(
+            completed.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark
+        );
+        assert_eq!(
+            completed.bookmark_name,
+            "adapter_event_publication_bookmark"
+        );
+        assert_eq!(
+            completed.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor
+        );
+        assert_eq!(
+            completed.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        );
+        assert_eq!(
+            completed.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_reference, 2);
+        assert_eq!(
+            completed.reference_label,
+            format!(
+                "{} transport_reference=adapter_event_publication_reference reference_recorded=true queue_depth_after_reference=2",
+                completed_bookmark.bookmark_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport reference should bind the adapter event publication bookmark."
+        );
+        assert_eq!(completed.bookmark_summary, completed_bookmark);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_bookmark = bookmark_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_reference_summary(&pending_bookmark);
+
+        assert_eq!(
+            pending.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference
+        );
+        assert_eq!(pending.reference_name, "callback_runner_handoff_reference");
+        assert_eq!(
+            pending.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_reference, 3);
+        assert_eq!(
+            pending.reference_label,
+            format!(
+                "{} transport_reference=callback_runner_handoff_reference reference_recorded=true queue_depth_after_reference=3",
+                pending_bookmark.bookmark_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport reference should bind the callback-runner handoff bookmark."
+        );
+        assert_eq!(pending.bookmark_summary, pending_bookmark);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_bookmark = bookmark_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_reference_summary(&dropped_bookmark);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_reference, 1);
+        assert_eq!(
+            dropped.reference_label,
+            format!(
+                "{} transport_reference=adapter_event_publication_reference reference_recorded=true queue_depth_after_reference=1",
+                dropped_bookmark.bookmark_label
+            )
+        );
+        assert_eq!(dropped.bookmark_summary, dropped_bookmark);
+    }
+
+    #[test]
+    fn input_callback_transport_logic_is_owned_by_rust_language_core() {
+        fn reference_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportReferenceSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            input_callback_transport_reference_summary(&bookmark)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_reference = reference_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_logic_summary(&completed_reference);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(completed.logic_name, "adapter_event_publication_logic");
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark
+        );
+        assert_eq!(
+            completed.cursor_kind,
+            LanguageInputCallbackTransportCursorKind::AdapterEventPublicationCursor
+        );
+        assert_eq!(
+            completed.marker_kind,
+            LanguageInputCallbackTransportMarkerKind::AdapterEventPublicationMarker
+        );
+        assert_eq!(
+            completed.checkpoint_kind,
+            LanguageInputCallbackTransportCheckpointKind::AdapterEventPublicationCheckpoint
+        );
+        assert_eq!(
+            completed.snapshot_kind,
+            LanguageInputCallbackTransportSnapshotKind::AdapterEventPublicationSnapshot
+        );
+        assert_eq!(
+            completed.archive_kind,
+            LanguageInputCallbackTransportArchiveKind::AdapterEventPublicationArchive
+        );
+        assert_eq!(
+            completed.journal_kind,
+            LanguageInputCallbackTransportJournalKind::AdapterEventPublicationJournal
+        );
+        assert_eq!(
+            completed.log_kind,
+            LanguageInputCallbackTransportLogKind::AdapterEventPublicationLog
+        );
+        assert_eq!(
+            completed.audit_kind,
+            LanguageInputCallbackTransportAuditKind::AdapterEventPublicationAudit
+        );
+        assert_eq!(
+            completed.trace_kind,
+            LanguageInputCallbackTransportTraceKind::AdapterEventPublicationTrace
+        );
+        assert_eq!(
+            completed.outcome_kind,
+            LanguageInputCallbackTransportOutcomeKind::AdapterEventPublicationRecorded
+        );
+        assert_eq!(
+            completed.receipt_kind,
+            LanguageInputCallbackTransportReceiptKind::AdapterEventPublication
+        );
+        assert_eq!(
+            completed.acknowledgement_kind,
+            LanguageInputCallbackTransportAcknowledgementKind::AdapterEventPublished
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_logic, 2);
+        assert_eq!(
+            completed.logic_label,
+            format!(
+                "{} transport_logic=adapter_event_publication_logic logic_recorded=true queue_depth_after_logic=2",
+                completed_reference.reference_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport logic should route the adapter event publication reference."
+        );
+        assert_eq!(completed.reference_summary, completed_reference);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_reference = reference_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_logic_summary(&pending_reference);
+
+        assert_eq!(
+            pending.logic_kind,
+            LanguageInputCallbackTransportLogicKind::CallbackRunnerHandoffLogic
+        );
+        assert_eq!(pending.logic_name, "callback_runner_handoff_logic");
+        assert_eq!(
+            pending.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference
+        );
+        assert_eq!(
+            pending.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::CallbackRunnerHandoffBookmark
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_logic, 3);
+        assert_eq!(
+            pending.logic_label,
+            format!(
+                "{} transport_logic=callback_runner_handoff_logic logic_recorded=true queue_depth_after_logic=3",
+                pending_reference.reference_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport logic should route the callback-runner handoff reference."
+        );
+        assert_eq!(pending.reference_summary, pending_reference);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_reference = reference_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_logic_summary(&dropped_reference);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_logic, 1);
+        assert_eq!(
+            dropped.logic_label,
+            format!(
+                "{} transport_logic=adapter_event_publication_logic logic_recorded=true queue_depth_after_logic=1",
+                dropped_reference.reference_label
+            )
+        );
+        assert_eq!(dropped.reference_summary, dropped_reference);
+    }
+
+    #[test]
+    fn input_callback_transport_decision_is_owned_by_rust_language_core() {
+        fn logic_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportLogicSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            input_callback_transport_logic_summary(&reference)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_logic = logic_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_decision_summary(&completed_logic);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.connection_label,
+            "endpoint=serial:///dev/cu.usbmodem1101 baud=57600"
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.decision_name,
+            "adapter_event_publication_decision"
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(completed.logic_name, "adapter_event_publication_logic");
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.bookmark_kind,
+            LanguageInputCallbackTransportBookmarkKind::AdapterEventPublicationBookmark
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.report_kind,
+            LanguageInputCallbackTransportReportKind::Completion
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_decision, 2);
+        assert_eq!(
+            completed.decision_label,
+            format!(
+                "{} transport_decision=adapter_event_publication_decision decision_recorded=true queue_depth_after_decision=2",
+                completed_logic.logic_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport decision should choose the adapter event publication logic."
+        );
+        assert_eq!(completed.logic_summary, completed_logic);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_logic = logic_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_decision_summary(&pending_logic);
+
+        assert_eq!(
+            pending.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision
+        );
+        assert_eq!(pending.decision_name, "callback_runner_handoff_decision");
+        assert_eq!(
+            pending.logic_kind,
+            LanguageInputCallbackTransportLogicKind::CallbackRunnerHandoffLogic
+        );
+        assert_eq!(
+            pending.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::CallbackRunnerHandoffReference
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_decision, 3);
+        assert_eq!(
+            pending.decision_label,
+            format!(
+                "{} transport_decision=callback_runner_handoff_decision decision_recorded=true queue_depth_after_decision=3",
+                pending_logic.logic_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport decision should choose the callback-runner handoff logic."
+        );
+        assert_eq!(pending.logic_summary, pending_logic);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_logic = logic_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_decision_summary(&dropped_logic);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            dropped.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_decision, 1);
+        assert_eq!(
+            dropped.decision_label,
+            format!(
+                "{} transport_decision=adapter_event_publication_decision decision_recorded=true queue_depth_after_decision=1",
+                dropped_logic.logic_label
+            )
+        );
+        assert_eq!(dropped.logic_summary, dropped_logic);
+    }
+
+    #[test]
+    fn input_callback_transport_resolution_is_owned_by_rust_language_core() {
+        fn decision_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportDecisionSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            input_callback_transport_decision_summary(&logic)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_decision = decision_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_resolution_summary(&completed_decision);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.resolution_name,
+            "adapter_event_publication_resolution"
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_resolution, 2);
+        assert_eq!(
+            completed.resolution_label,
+            format!(
+                "{} transport_resolution=adapter_event_publication_resolution resolution_recorded=true queue_depth_after_resolution=2",
+                completed_decision.decision_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport resolution should finalize the adapter event publication decision."
+        );
+        assert_eq!(completed.decision_summary, completed_decision);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_decision = decision_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_resolution_summary(&pending_decision);
+
+        assert_eq!(
+            pending.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution
+        );
+        assert_eq!(
+            pending.resolution_name,
+            "callback_runner_handoff_resolution"
+        );
+        assert_eq!(
+            pending.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::CallbackRunnerHandoffDecision
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_resolution, 3);
+        assert_eq!(
+            pending.resolution_label,
+            format!(
+                "{} transport_resolution=callback_runner_handoff_resolution resolution_recorded=true queue_depth_after_resolution=3",
+                pending_decision.decision_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport resolution should finalize the callback-runner handoff decision."
+        );
+        assert_eq!(pending.decision_summary, pending_decision);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_decision = decision_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_resolution_summary(&dropped_decision);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            dropped.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_resolution, 1);
+        assert_eq!(
+            dropped.resolution_label,
+            format!(
+                "{} transport_resolution=adapter_event_publication_resolution resolution_recorded=true queue_depth_after_resolution=1",
+                dropped_decision.decision_label
+            )
+        );
+        assert_eq!(dropped.decision_summary, dropped_decision);
+    }
+
+    #[test]
+    fn input_callback_transport_finalization_is_owned_by_rust_language_core() {
+        fn resolution_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportResolutionSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            input_callback_transport_resolution_summary(&decision)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_resolution = resolution_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_finalization_summary(&completed_resolution);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert_eq!(
+            completed.finalization_name,
+            "adapter_event_publication_finalization"
+        );
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_finalization, 2);
+        assert_eq!(
+            completed.finalization_label,
+            format!(
+                "{} transport_finalization=adapter_event_publication_finalization finalization_recorded=true queue_depth_after_finalization=2",
+                completed_resolution.resolution_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport finalization should complete the adapter event publication resolution."
+        );
+        assert_eq!(completed.resolution_summary, completed_resolution);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_resolution = resolution_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_finalization_summary(&pending_resolution);
+
+        assert_eq!(
+            pending.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization
+        );
+        assert_eq!(
+            pending.finalization_name,
+            "callback_runner_handoff_finalization"
+        );
+        assert_eq!(
+            pending.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::CallbackRunnerHandoffResolution
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(pending.finalization_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_finalization, 3);
+        assert_eq!(
+            pending.finalization_label,
+            format!(
+                "{} transport_finalization=callback_runner_handoff_finalization finalization_recorded=true queue_depth_after_finalization=3",
+                pending_resolution.resolution_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport finalization should complete the callback-runner handoff resolution."
+        );
+        assert_eq!(pending.resolution_summary, pending_resolution);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_resolution = resolution_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_finalization_summary(&dropped_resolution);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert_eq!(
+            dropped.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.finalization_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_finalization, 1);
+        assert_eq!(
+            dropped.finalization_label,
+            format!(
+                "{} transport_finalization=adapter_event_publication_finalization finalization_recorded=true queue_depth_after_finalization=1",
+                dropped_resolution.resolution_label
+            )
+        );
+        assert_eq!(dropped.resolution_summary, dropped_resolution);
+    }
+
+    #[test]
+    fn input_callback_transport_completion_is_owned_by_rust_language_core() {
+        fn finalization_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportFinalizationSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            input_callback_transport_finalization_summary(&resolution)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_finalization = finalization_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_completion_summary(&completed_finalization);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            completed.completion_name,
+            "adapter_event_publication_completion"
+        );
+        assert_eq!(
+            completed.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_completion, 2);
+        assert_eq!(
+            completed.completion_label,
+            format!(
+                "{} transport_completion=adapter_event_publication_completion completion_recorded=true queue_depth_after_completion=2",
+                completed_finalization.finalization_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport completion should close the adapter event publication finalization."
+        );
+        assert_eq!(completed.finalization_summary, completed_finalization);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_finalization = finalization_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_completion_summary(&pending_finalization);
+
+        assert_eq!(
+            pending.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion
+        );
+        assert_eq!(
+            pending.completion_name,
+            "callback_runner_handoff_completion"
+        );
+        assert_eq!(
+            pending.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(pending.finalization_recorded);
+        assert!(pending.completion_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_completion, 3);
+        assert_eq!(
+            pending.completion_label,
+            format!(
+                "{} transport_completion=callback_runner_handoff_completion completion_recorded=true queue_depth_after_completion=3",
+                pending_finalization.finalization_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport completion should close the callback-runner handoff finalization."
+        );
+        assert_eq!(pending.finalization_summary, pending_finalization);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_finalization = finalization_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_completion_summary(&dropped_finalization);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            dropped.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.finalization_recorded);
+        assert!(dropped.completion_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_completion, 1);
+        assert_eq!(
+            dropped.completion_label,
+            format!(
+                "{} transport_completion=adapter_event_publication_completion completion_recorded=true queue_depth_after_completion=1",
+                dropped_finalization.finalization_label
+            )
+        );
+        assert_eq!(dropped.finalization_summary, dropped_finalization);
+    }
+
+    #[test]
+    fn input_callback_transport_diagnostics_are_owned_by_rust_language_core() {
+        fn completion_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportCompletionSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            let finalization = input_callback_transport_finalization_summary(&resolution);
+            input_callback_transport_completion_summary(&finalization)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_completion = completion_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_diagnostic_summary(&completed_completion);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        );
+        assert_eq!(
+            completed.diagnostic_name,
+            "adapter_event_publication_diagnostic"
+        );
+        assert_eq!(
+            completed.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            completed.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.diagnostic_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_diagnostic, 2);
+        assert_eq!(
+            completed.diagnostic_label,
+            format!(
+                "{} transport_diagnostic=adapter_event_publication_diagnostic diagnostic_recorded=true queue_depth_after_diagnostic=2",
+                completed_completion.completion_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport diagnostic should report the completed adapter event publication state."
+        );
+        assert_eq!(completed.completion_summary, completed_completion);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_completion = completion_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_diagnostic_summary(&pending_completion);
+
+        assert_eq!(
+            pending.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic
+        );
+        assert_eq!(
+            pending.diagnostic_name,
+            "callback_runner_handoff_diagnostic"
+        );
+        assert_eq!(
+            pending.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion
+        );
+        assert_eq!(
+            pending.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(pending.finalization_recorded);
+        assert!(pending.completion_recorded);
+        assert!(pending.diagnostic_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_diagnostic, 3);
+        assert_eq!(
+            pending.diagnostic_label,
+            format!(
+                "{} transport_diagnostic=callback_runner_handoff_diagnostic diagnostic_recorded=true queue_depth_after_diagnostic=3",
+                pending_completion.completion_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport diagnostic should report the completed callback-runner handoff state."
+        );
+        assert_eq!(pending.completion_summary, pending_completion);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_completion = completion_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_diagnostic_summary(&dropped_completion);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        );
+        assert_eq!(
+            dropped.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            dropped.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.finalization_recorded);
+        assert!(dropped.completion_recorded);
+        assert!(dropped.diagnostic_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_diagnostic, 1);
+        assert_eq!(
+            dropped.diagnostic_label,
+            format!(
+                "{} transport_diagnostic=adapter_event_publication_diagnostic diagnostic_recorded=true queue_depth_after_diagnostic=1",
+                dropped_completion.completion_label
+            )
+        );
+        assert_eq!(dropped.completion_summary, dropped_completion);
+    }
+
+    #[test]
+    fn input_callback_transport_health_is_owned_by_rust_language_core() {
+        fn diagnostic_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportDiagnosticSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            let finalization = input_callback_transport_finalization_summary(&resolution);
+            let completion = input_callback_transport_completion_summary(&finalization);
+            input_callback_transport_diagnostic_summary(&completion)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_diagnostic = diagnostic_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_health_summary(&completed_diagnostic);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert_eq!(completed.health_name, "adapter_event_publication_health");
+        assert_eq!(
+            completed.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        );
+        assert_eq!(
+            completed.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            completed.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.diagnostic_recorded);
+        assert!(completed.health_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_health, 2);
+        assert_eq!(
+            completed.health_label,
+            format!(
+                "{} transport_health=adapter_event_publication_health health_recorded=true queue_depth_after_health=2",
+                completed_diagnostic.diagnostic_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport health should track the adapter event publication diagnostic state."
+        );
+        assert_eq!(completed.diagnostic_summary, completed_diagnostic);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_diagnostic = diagnostic_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_health_summary(&pending_diagnostic);
+
+        assert_eq!(
+            pending.health_kind,
+            LanguageInputCallbackTransportHealthKind::CallbackRunnerHandoffHealth
+        );
+        assert_eq!(pending.health_name, "callback_runner_handoff_health");
+        assert_eq!(
+            pending.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic
+        );
+        assert_eq!(
+            pending.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion
+        );
+        assert_eq!(
+            pending.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(pending.finalization_recorded);
+        assert!(pending.completion_recorded);
+        assert!(pending.diagnostic_recorded);
+        assert!(pending.health_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_health, 3);
+        assert_eq!(
+            pending.health_label,
+            format!(
+                "{} transport_health=callback_runner_handoff_health health_recorded=true queue_depth_after_health=3",
+                pending_diagnostic.diagnostic_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport health should track the callback-runner handoff diagnostic state."
+        );
+        assert_eq!(pending.diagnostic_summary, pending_diagnostic);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_diagnostic = diagnostic_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_health_summary(&dropped_diagnostic);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert_eq!(
+            dropped.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.finalization_recorded);
+        assert!(dropped.completion_recorded);
+        assert!(dropped.diagnostic_recorded);
+        assert!(dropped.health_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_health, 1);
+        assert_eq!(
+            dropped.health_label,
+            format!(
+                "{} transport_health=adapter_event_publication_health health_recorded=true queue_depth_after_health=1",
+                dropped_diagnostic.diagnostic_label
+            )
+        );
+        assert_eq!(dropped.diagnostic_summary, dropped_diagnostic);
+    }
+
+    #[test]
+    fn input_callback_transport_readiness_is_owned_by_rust_language_core() {
+        fn health_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportHealthSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            let finalization = input_callback_transport_finalization_summary(&resolution);
+            let completion = input_callback_transport_completion_summary(&finalization);
+            let diagnostic = input_callback_transport_diagnostic_summary(&completion);
+            input_callback_transport_health_summary(&diagnostic)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_health = health_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_readiness_summary(&completed_health);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        );
+        assert_eq!(
+            completed.readiness_name,
+            "adapter_event_publication_readiness"
+        );
+        assert_eq!(
+            completed.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert_eq!(
+            completed.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        );
+        assert_eq!(
+            completed.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            completed.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::AdapterEventPublicationFinalization
+        );
+        assert_eq!(
+            completed.resolution_kind,
+            LanguageInputCallbackTransportResolutionKind::AdapterEventPublicationResolution
+        );
+        assert_eq!(
+            completed.decision_kind,
+            LanguageInputCallbackTransportDecisionKind::AdapterEventPublicationDecision
+        );
+        assert_eq!(
+            completed.logic_kind,
+            LanguageInputCallbackTransportLogicKind::AdapterEventPublicationLogic
+        );
+        assert_eq!(
+            completed.reference_kind,
+            LanguageInputCallbackTransportReferenceKind::AdapterEventPublicationReference
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.diagnostic_recorded);
+        assert!(completed.health_recorded);
+        assert!(completed.readiness_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_readiness, 2);
+        assert_eq!(
+            completed.readiness_label,
+            format!(
+                "{} transport_readiness=adapter_event_publication_readiness readiness_recorded=true queue_depth_after_readiness=2",
+                completed_health.health_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport readiness should track the adapter event publication health state."
+        );
+        assert_eq!(completed.health_summary, completed_health);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_health = health_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_readiness_summary(&pending_health);
+
+        assert_eq!(
+            pending.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::CallbackRunnerHandoffReadiness
+        );
+        assert_eq!(pending.readiness_name, "callback_runner_handoff_readiness");
+        assert_eq!(
+            pending.health_kind,
+            LanguageInputCallbackTransportHealthKind::CallbackRunnerHandoffHealth
+        );
+        assert_eq!(
+            pending.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::CallbackRunnerHandoffDiagnostic
+        );
+        assert_eq!(
+            pending.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::CallbackRunnerHandoffCompletion
+        );
+        assert_eq!(
+            pending.finalization_kind,
+            LanguageInputCallbackTransportFinalizationKind::CallbackRunnerHandoffFinalization
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.receipt_recorded);
+        assert!(pending.outcome_recorded);
+        assert!(pending.trace_recorded);
+        assert!(pending.audit_recorded);
+        assert!(pending.log_recorded);
+        assert!(pending.journal_recorded);
+        assert!(pending.archive_recorded);
+        assert!(pending.snapshot_recorded);
+        assert!(pending.checkpoint_recorded);
+        assert!(pending.marker_recorded);
+        assert!(pending.cursor_recorded);
+        assert!(pending.bookmark_recorded);
+        assert!(pending.reference_recorded);
+        assert!(pending.logic_recorded);
+        assert!(pending.decision_recorded);
+        assert!(pending.resolution_recorded);
+        assert!(pending.finalization_recorded);
+        assert!(pending.completion_recorded);
+        assert!(pending.diagnostic_recorded);
+        assert!(pending.health_recorded);
+        assert!(pending.readiness_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_readiness, 3);
+        assert_eq!(
+            pending.readiness_label,
+            format!(
+                "{} transport_readiness=callback_runner_handoff_readiness readiness_recorded=true queue_depth_after_readiness=3",
+                pending_health.health_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport readiness should track the callback-runner handoff health state."
+        );
+        assert_eq!(pending.health_summary, pending_health);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_health = health_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_readiness_summary(&dropped_health);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        );
+        assert_eq!(
+            dropped.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.finalization_recorded);
+        assert!(dropped.completion_recorded);
+        assert!(dropped.diagnostic_recorded);
+        assert!(dropped.health_recorded);
+        assert!(dropped.readiness_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_readiness, 1);
+        assert_eq!(
+            dropped.readiness_label,
+            format!(
+                "{} transport_readiness=adapter_event_publication_readiness readiness_recorded=true queue_depth_after_readiness=1",
+                dropped_health.health_label
+            )
+        );
+        assert_eq!(dropped.health_summary, dropped_health);
+    }
+
+    #[test]
+    fn input_callback_transport_availability_is_owned_by_rust_language_core() {
+        fn readiness_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportReadinessSummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            let finalization = input_callback_transport_finalization_summary(&resolution);
+            let completion = input_callback_transport_completion_summary(&finalization);
+            let diagnostic = input_callback_transport_diagnostic_summary(&completion);
+            let health = input_callback_transport_health_summary(&diagnostic);
+            input_callback_transport_readiness_summary(&health)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_readiness = readiness_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_availability_summary(&completed_readiness);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        );
+        assert_eq!(
+            completed.availability_name,
+            "adapter_event_publication_availability"
+        );
+        assert_eq!(
+            completed.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        );
+        assert_eq!(
+            completed.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert_eq!(
+            completed.diagnostic_kind,
+            LanguageInputCallbackTransportDiagnosticKind::AdapterEventPublicationDiagnostic
+        );
+        assert_eq!(
+            completed.completion_kind,
+            LanguageInputCallbackTransportCompletionKind::AdapterEventPublicationCompletion
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.diagnostic_recorded);
+        assert!(completed.health_recorded);
+        assert!(completed.readiness_recorded);
+        assert!(completed.availability_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_availability, 2);
+        assert_eq!(
+            completed.availability_label,
+            format!(
+                "{} transport_availability=adapter_event_publication_availability availability_recorded=true queue_depth_after_availability=2",
+                completed_readiness.readiness_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport availability should expose the adapter event publication readiness state."
+        );
+        assert_eq!(completed.readiness_summary, completed_readiness);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_readiness = readiness_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_availability_summary(&pending_readiness);
+
+        assert_eq!(
+            pending.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability
+        );
+        assert_eq!(
+            pending.availability_name,
+            "callback_runner_handoff_availability"
+        );
+        assert_eq!(
+            pending.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::CallbackRunnerHandoffReadiness
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.readiness_recorded);
+        assert!(pending.availability_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_availability, 3);
+        assert_eq!(
+            pending.availability_label,
+            format!(
+                "{} transport_availability=callback_runner_handoff_availability availability_recorded=true queue_depth_after_availability=3",
+                pending_readiness.readiness_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport availability should expose the callback-runner handoff readiness state."
+        );
+        assert_eq!(pending.readiness_summary, pending_readiness);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_readiness = readiness_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_availability_summary(&dropped_readiness);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        );
+        assert_eq!(
+            dropped.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.receipt_recorded);
+        assert!(dropped.outcome_recorded);
+        assert!(dropped.trace_recorded);
+        assert!(dropped.audit_recorded);
+        assert!(dropped.log_recorded);
+        assert!(dropped.journal_recorded);
+        assert!(dropped.archive_recorded);
+        assert!(dropped.snapshot_recorded);
+        assert!(dropped.checkpoint_recorded);
+        assert!(dropped.marker_recorded);
+        assert!(dropped.cursor_recorded);
+        assert!(dropped.bookmark_recorded);
+        assert!(dropped.reference_recorded);
+        assert!(dropped.logic_recorded);
+        assert!(dropped.decision_recorded);
+        assert!(dropped.resolution_recorded);
+        assert!(dropped.finalization_recorded);
+        assert!(dropped.completion_recorded);
+        assert!(dropped.diagnostic_recorded);
+        assert!(dropped.health_recorded);
+        assert!(dropped.readiness_recorded);
+        assert!(dropped.availability_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_availability, 1);
+        assert_eq!(
+            dropped.availability_label,
+            format!(
+                "{} transport_availability=adapter_event_publication_availability availability_recorded=true queue_depth_after_availability=1",
+                dropped_readiness.readiness_label
+            )
+        );
+        assert_eq!(dropped.readiness_summary, dropped_readiness);
+    }
+
+    #[test]
+    fn input_callback_transport_capacity_is_owned_by_rust_language_core() {
+        fn availability_for_lifecycle(
+            lifecycle: &LanguageInputCallbackSessionLifecycleSummary,
+        ) -> LanguageInputCallbackTransportAvailabilitySummary {
+            let action = input_callback_transport_action_summary(lifecycle);
+            let effect = input_callback_transport_effect_summary(&action);
+            let report = input_callback_transport_report_summary(&effect);
+            let event = input_callback_transport_event_summary(&report);
+            let delivery = input_callback_transport_delivery_summary(&event);
+            let acknowledgement = input_callback_transport_acknowledgement_summary(&delivery);
+            let receipt = input_callback_transport_receipt_summary(&acknowledgement);
+            let outcome = input_callback_transport_outcome_summary(&receipt);
+            let trace = input_callback_transport_trace_summary(&outcome);
+            let audit = input_callback_transport_audit_summary(&trace);
+            let log = input_callback_transport_log_summary(&audit);
+            let journal = input_callback_transport_journal_summary(&log);
+            let archive = input_callback_transport_archive_summary(&journal);
+            let snapshot = input_callback_transport_snapshot_summary(&archive);
+            let checkpoint = input_callback_transport_checkpoint_summary(&snapshot);
+            let marker = input_callback_transport_marker_summary(&checkpoint);
+            let cursor = input_callback_transport_cursor_summary(&marker);
+            let bookmark = input_callback_transport_bookmark_summary(&cursor);
+            let reference = input_callback_transport_reference_summary(&bookmark);
+            let logic = input_callback_transport_logic_summary(&reference);
+            let decision = input_callback_transport_decision_summary(&logic);
+            let resolution = input_callback_transport_resolution_summary(&decision);
+            let finalization = input_callback_transport_finalization_summary(&resolution);
+            let completion = input_callback_transport_completion_summary(&finalization);
+            let diagnostic = input_callback_transport_diagnostic_summary(&completion);
+            let health = input_callback_transport_health_summary(&diagnostic);
+            let readiness = input_callback_transport_readiness_summary(&health);
+            input_callback_transport_availability_summary(&readiness)
+        }
+
+        let plan = input_callback_plan_for_target("uno-r4-wifi", 3, 7, 64).unwrap();
+        let event = input_callback_event_for_plan(&plan, LanguageInputCallbackLevel::Low, 42, 9001);
+        let invocation = input_callback_invocation_for_event(&plan, &event).unwrap();
+        let queue_plan = input_callback_queue_plan_for_invocation(&invocation, 2).unwrap();
+        let serial_session = host_endpoint_session_summary("serial:///dev/cu.usbmodem1101", 57_600)
+            .expect("serial endpoint session");
+        let completed_lifecycle = input_callback_session_lifecycle_summary(
+            &serial_session,
+            &queue_plan,
+            Some(RunStatus::Halted),
+            11,
+            3,
+        );
+        let completed_availability = availability_for_lifecycle(&completed_lifecycle);
+        let completed = input_callback_transport_capacity_summary(&completed_availability);
+
+        assert_eq!(completed.endpoint.endpoint, "serial:///dev/cu.usbmodem1101");
+        assert_eq!(
+            completed.capacity_kind,
+            LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity
+        );
+        assert_eq!(
+            completed.capacity_name,
+            "adapter_event_publication_capacity"
+        );
+        assert_eq!(
+            completed.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        );
+        assert_eq!(
+            completed.readiness_kind,
+            LanguageInputCallbackTransportReadinessKind::AdapterEventPublicationReadiness
+        );
+        assert_eq!(
+            completed.health_kind,
+            LanguageInputCallbackTransportHealthKind::AdapterEventPublicationHealth
+        );
+        assert_eq!(
+            completed.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::AdapterEvent
+        );
+        assert_eq!(
+            completed.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackCompleted
+        );
+        assert_eq!(
+            completed.action,
+            LanguageInputCallbackTransportAction::CompleteCallback
+        );
+        assert!(!completed.callback_runner_handoff);
+        assert!(completed.adapter_event_published);
+        assert!(completed.delivery_acknowledged);
+        assert!(completed.receipt_recorded);
+        assert!(completed.outcome_recorded);
+        assert!(completed.trace_recorded);
+        assert!(completed.audit_recorded);
+        assert!(completed.log_recorded);
+        assert!(completed.journal_recorded);
+        assert!(completed.archive_recorded);
+        assert!(completed.snapshot_recorded);
+        assert!(completed.checkpoint_recorded);
+        assert!(completed.marker_recorded);
+        assert!(completed.cursor_recorded);
+        assert!(completed.bookmark_recorded);
+        assert!(completed.reference_recorded);
+        assert!(completed.logic_recorded);
+        assert!(completed.decision_recorded);
+        assert!(completed.resolution_recorded);
+        assert!(completed.finalization_recorded);
+        assert!(completed.completion_recorded);
+        assert!(completed.diagnostic_recorded);
+        assert!(completed.health_recorded);
+        assert!(completed.readiness_recorded);
+        assert!(completed.availability_recorded);
+        assert!(completed.capacity_recorded);
+        assert!(completed.terminal);
+        assert!(!completed.retryable);
+        assert_eq!(completed.queue_depth_after_capacity, 2);
+        assert_eq!(
+            completed.capacity_label,
+            format!(
+                "{} transport_capacity=adapter_event_publication_capacity capacity_recorded=true queue_depth_after_capacity=2",
+                completed_availability.availability_label
+            )
+        );
+        assert_eq!(
+            completed.message,
+            "Transport capacity should preserve the adapter event publication availability state."
+        );
+        assert_eq!(completed.availability_summary, completed_availability);
+
+        let tcp_session = host_endpoint_session_summary("tcp://board-vm.local:4170", 57_600)
+            .expect("tcp endpoint session");
+        let pending_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &queue_plan, None, 0, 0);
+        let pending_availability = availability_for_lifecycle(&pending_lifecycle);
+        let pending = input_callback_transport_capacity_summary(&pending_availability);
+
+        assert_eq!(
+            pending.capacity_kind,
+            LanguageInputCallbackTransportCapacityKind::CallbackRunnerHandoffCapacity
+        );
+        assert_eq!(pending.capacity_name, "callback_runner_handoff_capacity");
+        assert_eq!(
+            pending.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::CallbackRunnerHandoffAvailability
+        );
+        assert_eq!(
+            pending.delivery_route,
+            LanguageInputCallbackTransportDeliveryRoute::CallbackRunner
+        );
+        assert_eq!(
+            pending.event_kind,
+            LanguageInputCallbackTransportEventKind::DispatchScheduled
+        );
+        assert!(pending.callback_runner_handoff);
+        assert!(!pending.adapter_event_published);
+        assert!(pending.delivery_acknowledged);
+        assert!(pending.capacity_recorded);
+        assert!(!pending.terminal);
+        assert!(!pending.retryable);
+        assert_eq!(pending.queue_depth_after_capacity, 3);
+        assert_eq!(
+            pending.capacity_label,
+            format!(
+                "{} transport_capacity=callback_runner_handoff_capacity capacity_recorded=true queue_depth_after_capacity=3",
+                pending_availability.availability_label
+            )
+        );
+        assert_eq!(
+            pending.message,
+            "Transport capacity should preserve the callback-runner handoff availability state."
+        );
+        assert_eq!(pending.availability_summary, pending_availability);
+
+        let custom = input_callback_plan_with_options_for_target(
+            "uno-r4-wifi",
+            3,
+            LanguageInputCallbackOptions {
+                trigger: LanguageInputCallbackTrigger::RisingEdge,
+                pull: LanguageInputCallbackPull::Floating,
+                debounce_ms: 5,
+                queue_capacity: 1,
+                queue_policy: LanguageInputCallbackQueuePolicy::DropNewest,
+                callback_program_id: 9,
+                callback_instruction_budget: 32,
+            },
+        )
+        .unwrap();
+        let custom_event =
+            input_callback_event_for_plan(&custom, LanguageInputCallbackLevel::High, 77, 12_345);
+        let custom_invocation =
+            input_callback_invocation_for_event(&custom, &custom_event).unwrap();
+        let newest_drop = input_callback_queue_plan_for_invocation(&custom_invocation, 1).unwrap();
+        let dropped_lifecycle =
+            input_callback_session_lifecycle_summary(&tcp_session, &newest_drop, None, 0, 0);
+        let dropped_availability = availability_for_lifecycle(&dropped_lifecycle);
+        let dropped = input_callback_transport_capacity_summary(&dropped_availability);
+
+        assert_eq!(
+            dropped.event_kind,
+            LanguageInputCallbackTransportEventKind::CallbackDropped
+        );
+        assert_eq!(
+            dropped.capacity_kind,
+            LanguageInputCallbackTransportCapacityKind::AdapterEventPublicationCapacity
+        );
+        assert_eq!(
+            dropped.availability_kind,
+            LanguageInputCallbackTransportAvailabilityKind::AdapterEventPublicationAvailability
+        );
+        assert!(!dropped.callback_runner_handoff);
+        assert!(dropped.adapter_event_published);
+        assert!(dropped.delivery_acknowledged);
+        assert!(dropped.availability_recorded);
+        assert!(dropped.capacity_recorded);
+        assert!(dropped.terminal);
+        assert_eq!(dropped.queue_depth_after_capacity, 1);
+        assert_eq!(
+            dropped.capacity_label,
+            format!(
+                "{} transport_capacity=adapter_event_publication_capacity capacity_recorded=true queue_depth_after_capacity=1",
+                dropped_availability.availability_label
+            )
+        );
+        assert_eq!(dropped.availability_summary, dropped_availability);
     }
 
     #[test]

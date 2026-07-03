@@ -67,7 +67,9 @@ strict mode ``Integrate`` falls through to
 from __future__ import annotations
 
 import math
+from contextvars import ContextVar
 from fractions import Fraction
+from typing import Any
 
 from polynomial import (
     Polynomial,
@@ -90,8 +92,11 @@ from symbolic_ir import (
     COTH,
     CSCH,
     DIV,
+    EQUAL,
     EXP,
+    GREATER,
     INTEGRATE,
+    LESS,
     LOG,
     MUL,
     NEG,
@@ -125,12 +130,14 @@ from symbolic_vm.exp_hyp_integral import (
 )
 from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
+from symbolic_vm.derivative import _diff as _vm_diff  # noqa: F401 — used in handler
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.hyp_power_integral import (
     cosh_power_integral,
     sinh_power_integral,
     sinh_times_cosh_power,
 )
+from symbolic_vm.ibp_tabular import try_ibp_tabular
 from symbolic_vm.log_integral import log_poly_integral
 from symbolic_vm.mixed_integral import mixed_integral
 from symbolic_vm.polynomial_bridge import (
@@ -159,6 +166,30 @@ _ELLIPTIC_K = IRSymbol("EllipticK")
 _ELLIPTIC_E = IRSymbol("EllipticE")
 _ELLIPTIC_PI = IRSymbol("EllipticPi")
 
+# ---------------------------------------------------------------------------
+# Track G1 — current-VM context variable
+#
+# Most pattern helpers operate on pure IR and don't need the VM at all.
+# A few new ones (Track G1's symbolic-coefficient Weierstrass) need to
+# query ``vm.assumptions`` to decide which branch to emit.  Threading
+# ``vm`` through every helper signature would touch ~30 call sites; we
+# instead publish the live VM via a single :class:`ContextVar` that the
+# top-level ``Integrate`` handler sets for the duration of one
+# evaluation.  Helpers read it with :func:`_current_vm` and treat
+# ``None`` as "no assumption context available" (the historical
+# behaviour for callers that integrate without a VM, e.g. unit tests on
+# the helper directly).
+# ---------------------------------------------------------------------------
+_CURRENT_VM: ContextVar[Any] = ContextVar("symbolic_vm_current_integrate_vm")
+
+
+def _current_vm() -> Any:
+    """Return the VM that the outermost ``Integrate`` handler is
+    currently driving, or ``None`` if integration is being exercised
+    outside the handler (legacy callers + direct unit-test usage).
+    """
+    return _CURRENT_VM.get(None)
+
 
 def integrate() -> Handler:
     """Return the ``Integrate`` handler for the symbolic backend."""
@@ -169,6 +200,18 @@ def integrate() -> Handler:
             raise TypeError(
                 f"Integrate expects 2 or 4 arguments, got {nargs}"
             )
+        # Track G1: publish the live VM for helpers that need
+        # ``vm.assumptions`` (currently: symbolic-coefficient
+        # Weierstrass).  The token is reset in the ``finally`` clause of
+        # ``_run`` below so nested calls and exceptions can't strand the
+        # contextvar in an inconsistent state.
+        _vm_token = _CURRENT_VM.set(vm)
+        try:
+            return _run(vm, expr, nargs)
+        finally:
+            _CURRENT_VM.reset(_vm_token)
+
+    def _run(vm, expr: IRApply, nargs: int) -> IRNode:
 
         if nargs == 4:
             # ---------------------------------------------------------------
@@ -254,6 +297,18 @@ def integrate() -> Handler:
             _elliptic_e_result = _try_incomplete_elliptic_e(f, x)
             if _elliptic_e_result is not None:
                 return _elliptic_e_result
+            # Track E1: generic tabular IBP fallback.  Fires after every
+            # shape-specific handler has returned None.  See
+            # ``ibp_tabular.py`` for the algorithm.
+            ibp_result = try_ibp_tabular(
+                f,
+                x,
+                integrate_fn=lambda g: _integrate(g, x),
+                diff_fn=lambda g: vm.eval(_vm_diff(g, x)),
+                simplify_fn=vm.eval,
+            )
+            if ibp_result is not None:
+                return vm.eval(ibp_result)
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 
@@ -1029,6 +1084,10 @@ def _parse_a_plus_b_sincos(
     trig function of a linear-in-``x`` argument.  Phase 38 supersedes
     the bare-``x``-only predecessor.
     """
+    trig_parse = _parse_const_times_trig_linear(node, x)
+    if trig_parse is not None:
+        b, head, alpha, beta = trig_parse
+        return Fraction(0), b, head, alpha, beta
     if not isinstance(node, IRApply) or len(node.args) != 2:
         return None
     if node.head == ADD:
@@ -1173,7 +1232,10 @@ def _try_weierstrass_log_form(
 
         a·u² + 2b·u + a = a·(u − u₁)·(u − u₂)
 
-    Partial fractions give
+    When ``a = 0``, the integrand is the csc form
+    ``c/(b·sin x)`` and closes directly to ``(c/b)·log|tan(x/2)|``.
+
+    For ``a ≠ 0``, partial fractions give
 
         ∫ 2/(a·(u−u₁)(u−u₂)) du
           =  (1/D) · log| (a·u + b − D) / (a·u + b + D) | + C
@@ -1211,7 +1273,7 @@ def _try_weierstrass_log_form(
     ``b > |a|`` strictly.
 
     Returns ``None`` when the matched shape doesn't satisfy the
-    above sign preconditions (``a ≠ 0`` for sin; ``b > |a|`` for cos).
+    above sign preconditions.
     """
     # b² − a² > 0 must hold (caller passes disc = a² − b² < 0).
     disc_sq = b * b - a * a
@@ -1222,9 +1284,11 @@ def _try_weierstrass_log_form(
     abs_head = IRSymbol("Abs")
     if trig_head == SIN:
         if a == 0:
-            # Integrand reduces to c/(b·sin x); special-cased elsewhere or
-            # left for the elementary table.  Defer.
-            return None
+            # ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|, with any linear
+            # argument scaling already absorbed into c by the dispatcher.
+            coef_ir = _frac_ir(c / b)
+            log_arg = IRApply(abs_head, (tan_half,))
+            return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
         # log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
         a_tan = IRApply(MUL, (_frac_ir(a), tan_half))
         a_tan_plus_b = IRApply(ADD, (a_tan, _frac_ir(b)))
@@ -1315,6 +1379,7 @@ def _try_weierstrass_one_over_linear_trig(
         return None
     sqrt_disc_ir = _sqrt_fraction_ir(disc)
     tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    coef_sign = Fraction(1)
     if trig_head == SIN:
         # arctan argument: (a·tan(x/2) + b) / √(a²−b²)
         atan_arg_top = IRApply(
@@ -1324,22 +1389,429 @@ def _try_weierstrass_one_over_linear_trig(
         atan_arg = IRApply(DIV, (atan_arg_top, sqrt_disc_ir))
     else:  # COS
         # arctan argument: √((a−b)/(a+b)) · tan(x/2)
-        # Since a² > b², we have a+b ≠ 0; sign of (a−b)/(a+b) is positive
-        # iff a > 0 (and both numerator and denominator share the sign).
-        # When a < 0 the standard form needs adjustment; rather than chase
-        # branch issues, require a > 0 here and defer the a < 0 case.
-        if a <= 0:
-            return None
+        # Since a² > b², a-b and a+b share sign(a), so the ratio is positive.
+        # When a < 0, flip the outer coefficient to account for the negative
+        # factor introduced by the tangent-half-angle denominator quadratic.
+        if a < 0:
+            coef_sign = Fraction(-1)
         ratio = (a - b) / (a + b)
         if ratio <= 0:
-            # Cannot happen when a² > b² and a > 0, but defensive.
+            # Cannot happen when a² > b² with nonzero a, but defensive.
             return None
         sqrt_ratio_ir = _sqrt_fraction_ir(ratio)
         atan_arg = IRApply(MUL, (sqrt_ratio_ir, tan_half))
     # Final result: (2c/√(a²−b²)) · arctan(...)
-    coef_frac = c * 2
+    coef_frac = c * 2 * coef_sign
     coef_ir = IRApply(DIV, (_frac_ir(coef_frac), sqrt_disc_ir))
     return IRApply(MUL, (coef_ir, IRApply(ATAN, (atan_arg,))))
+
+
+# ---------------------------------------------------------------------------
+# Track G1 — symbolic-coefficient Weierstrass lift.
+#
+# The numeric helpers above parse ``a, b`` as ``Fraction`` and bail out
+# when either is not numeric.  Track G1 generalises them: when the
+# numeric path returns ``None`` because ``a`` and/or ``b`` is a free
+# IR symbol (or any non-numeric IR expression), we re-try by:
+#
+#   1.  Reparsing ``a + b·trig(α·x+β)`` keeping ``a, b`` as IR nodes
+#       (``α, β, c`` stay rational — only the "outer" coefficient pair
+#       around the trig function is allowed to be symbolic).
+#   2.  Constructing the discriminant ``disc_expr = a² − b²`` as IR.
+#   3.  Querying ``vm.assumptions.is_true_relation(Greater(disc_expr, 0))``,
+#       ``Less(...)`` and ``Equal(...)`` to decide the branch:
+#         - True for ``>``   → arctan form with ``√(a²−b²)``.
+#         - True for ``<``   → log form with ``√(b²−a²)``.
+#         - True for ``=``   → degenerate form.
+#         - All None         → return ``None`` (unevaluated).
+#   4.  Emitting the closed form with IR-level arithmetic; no
+#       ``Fraction``-only fast path is taken on the symbolic branch.
+#
+# Linear-argument lifting ``α·x + β`` composes unchanged — the inner
+# substitution ``u = tan((α·x+β)/2)`` does not depend on the values of
+# the outer coefficients ``a, b``, so we still fold ``1/α`` into the
+# leading numerator scaling exactly as the numeric path does.
+# ---------------------------------------------------------------------------
+
+
+def _parse_const_times_trig_linear_symbolic(
+    node: IRNode, x: IRSymbol
+) -> tuple[IRNode, IRSymbol, Fraction, Fraction] | None:
+    """Match ``c·sin(α·x + β)`` / ``c·cos(α·x + β)`` returning ``c`` as an
+    IR node (instead of a :class:`Fraction`).
+
+    The ``α, β`` coefficients still have to be rational — keeping the
+    inner-argument linear-form rational is what makes the
+    Weierstrass substitution composable in closed form.  Only the
+    "outer" scalar ``c`` is allowed to be symbolic, since that's what
+    threads into ``a, b`` for the symbolic dispatcher below.
+
+    Recognises the same shapes as :func:`_parse_const_times_trig_linear`,
+    plus the bare ``trig(...)`` case (``c = 1``) and a leading ``Neg``.
+    """
+    if (
+        isinstance(node, IRApply)
+        and node.head in (SIN, COS)
+        and len(node.args) == 1
+    ):
+        lin = _parse_linear_in_x(node.args[0], x)
+        if lin is not None:
+            alpha, beta = lin
+            return ONE, node.head, alpha, beta
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        left, right = node.args
+        for const_side, trig_side in ((left, right), (right, left)):
+            if _depends_on(const_side, x):
+                continue
+            if (
+                isinstance(trig_side, IRApply)
+                and trig_side.head in (SIN, COS)
+                and len(trig_side.args) == 1
+            ):
+                lin = _parse_linear_in_x(trig_side.args[0], x)
+                if lin is not None:
+                    alpha, beta = lin
+                    return const_side, trig_side.head, alpha, beta
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner = _parse_const_times_trig_linear_symbolic(node.args[0], x)
+        if inner is not None:
+            c, head, alpha, beta = inner
+            return IRApply(NEG, (c,)), head, alpha, beta
+    return None
+
+
+def _parse_a_plus_b_sincos_symbolic(
+    node: IRNode, x: IRSymbol
+) -> tuple[IRNode, IRNode, IRSymbol, Fraction, Fraction] | None:
+    """Symbolic-coefficient sibling of :func:`_parse_a_plus_b_sincos`.
+
+    Parses ``a + b·sin(α·x+β)`` / ``a + b·cos(α·x+β)`` (any operand
+    order, also ``ADD`` and ``SUB``) into ``(a, b, head, α, β)`` where
+    ``a`` and ``b`` are IR nodes free of ``x`` and ``α, β`` are
+    rational with ``α ≠ 0``.  Returns ``None`` if the shape doesn't
+    fit.
+    """
+    trig_parse = _parse_const_times_trig_linear_symbolic(node, x)
+    if trig_parse is not None:
+        b, head, alpha, beta = trig_parse
+        return ZERO, b, head, alpha, beta
+    if not isinstance(node, IRApply) or len(node.args) != 2:
+        return None
+    if node.head == ADD:
+        left, right = node.args
+        for const_side, trig_side in ((left, right), (right, left)):
+            if _depends_on(const_side, x):
+                continue
+            trig = _parse_const_times_trig_linear_symbolic(trig_side, x)
+            if trig is None:
+                continue
+            b, head, alpha, beta = trig
+            return const_side, b, head, alpha, beta
+        return None
+    if node.head == SUB:
+        # ``a − b·trig(...)`` → ``(a, −b, head, α, β)``.
+        left, right = node.args
+        if not _depends_on(left, x):
+            trig = _parse_const_times_trig_linear_symbolic(right, x)
+            if trig is not None:
+                b, head, alpha, beta = trig
+                return left, IRApply(NEG, (b,)), head, alpha, beta
+        # ``b·trig(...) − a`` → ``(−a, b, head, α, β)``.
+        if not _depends_on(right, x):
+            trig = _parse_const_times_trig_linear_symbolic(left, x)
+            if trig is not None:
+                b, head, alpha, beta = trig
+                return IRApply(NEG, (right,)), b, head, alpha, beta
+        return None
+    return None
+
+
+def _disc_expr(a: IRNode, b: IRNode) -> IRNode:
+    """Return the discriminant ``a² − b²`` as IR.  Used both as the
+    operand of the assumption-context query and as the radicand of the
+    closed-form ``√`` term.
+    """
+    a_sq = IRApply(POW, (a, TWO))
+    b_sq = IRApply(POW, (b, TWO))
+    return IRApply(SUB, (a_sq, b_sq))
+
+
+def _neg_disc_expr(a: IRNode, b: IRNode) -> IRNode:
+    """Return ``b² − a²``.  Used as the radicand of the log-branch
+    ``√(b²−a²)`` when ``disc < 0`` (i.e. ``a² < b²``).
+    """
+    a_sq = IRApply(POW, (a, TWO))
+    b_sq = IRApply(POW, (b, TWO))
+    return IRApply(SUB, (b_sq, a_sq))
+
+
+def _try_weierstrass_arctan_symbolic(
+    c_scaled: IRNode,
+    a: IRNode,
+    b: IRNode,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode:
+    """Symbolic-coefficient arctan branch: ``a² > b²``.
+
+    Emits
+
+        ∫ 1/(a + b·sin(arg)) dx
+          =  (2·c_scaled / √(a²−b²))
+             · arctan( (a·tan(arg/2) + b) / √(a²−b²) )
+
+    for the sin branch, and the structurally analogous cos branch with
+
+        arctan-arg = (a − b·tan(arg/2)·...) / ...
+
+    actually the textbook cos formula is symmetric; for symbolic
+    coefficients we use the form valid on the whole disc > 0 region:
+
+        (2·c_scaled / √(a²−b²))
+          · arctan( (a·tan(arg/2) − b·sin(...)) / ... )
+
+    For maximum reuse we use the same shape as the sin branch but with
+    ``cos``-specific algebra.  See the inline derivation below.
+    """
+    sqrt_disc = IRApply(SQRT, (_disc_expr(a, b),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    if trig_head == SIN:
+        # arctan argument: (a·tan(arg/2) + b) / √(a²−b²)
+        atan_arg_top = IRApply(
+            ADD,
+            (IRApply(MUL, (a, tan_half)), b),
+        )
+    else:
+        # cos branch.  Derivation: with u = tan(arg/2),
+        #   1/(a + b·cos(arg)) = (1+u²) / ((a+b) + (a−b)·u²),
+        # an antiderivative is
+        #   (2/√(a²−b²)) · arctan( ((a−b)·u + 0) / √(a²−b²) )
+        # which simplifies (when scaled by ``c_scaled``) to
+        #   (2c/√(a²−b²)) · arctan( (a−b)·tan(arg/2) / √(a²−b²) ).
+        # This form is sign-clean for both a > 0 and a < 0 because the
+        # outer arctan absorbs the global sign of the argument.
+        atan_arg_top = IRApply(
+            MUL,
+            (IRApply(SUB, (a, b)), tan_half),
+        )
+    atan_arg = IRApply(DIV, (atan_arg_top, sqrt_disc))
+    coef = IRApply(
+        DIV,
+        (IRApply(MUL, (IRInteger(2), c_scaled)), sqrt_disc),
+    )
+    return IRApply(MUL, (coef, IRApply(ATAN, (atan_arg,))))
+
+
+def _try_weierstrass_log_symbolic(
+    c_scaled: IRNode,
+    a: IRNode,
+    b: IRNode,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode:
+    """Symbolic-coefficient log branch: ``a² < b²``.
+
+    Emits
+
+        ∫ 1/(a + b·sin(arg)) dx
+          =  (c_scaled / √(b²−a²))
+             · log| (a·tan(arg/2) + b − D) / (a·tan(arg/2) + b + D) |
+
+    where ``D = √(b² − a²)``.  The cos-branch closed form uses
+    ``(b−a)·tan(arg/2)`` in the log argument; same outer ``c/D`` factor.
+    See the numeric :func:`_try_weierstrass_log_form` for the
+    underlying derivations.
+    """
+    sqrt_neg_disc = IRApply(SQRT, (_neg_disc_expr(a, b),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    abs_head = IRSymbol("Abs")
+    if trig_head == SIN:
+        a_tan = IRApply(MUL, (a, tan_half))
+        a_tan_plus_b = IRApply(ADD, (a_tan, b))
+        numer = IRApply(SUB, (a_tan_plus_b, sqrt_neg_disc))
+        denom = IRApply(ADD, (a_tan_plus_b, sqrt_neg_disc))
+    else:
+        b_minus_a = IRApply(SUB, (b, a))
+        bma_tan = IRApply(MUL, (b_minus_a, tan_half))
+        numer = IRApply(ADD, (sqrt_neg_disc, bma_tan))
+        denom = IRApply(SUB, (sqrt_neg_disc, bma_tan))
+    log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
+    coef = IRApply(DIV, (c_scaled, sqrt_neg_disc))
+    return IRApply(MUL, (coef, IRApply(LOG, (log_arg,))))
+
+
+def _try_weierstrass_degenerate_symbolic(
+    c_scaled: IRNode,
+    a: IRNode,
+    b: IRNode,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode:
+    """Symbolic-coefficient degenerate branch: ``a² = b²``.
+
+    With ``a² = b²`` the substitution-quadratic in ``u = tan(arg/2)``
+    has a double root and the antiderivative collapses to a rational
+    function of ``tan(arg/2)``.  The four cases (b = ±a × sin/cos) are
+    indistinguishable structurally at the IR level without further
+    sign information on ``a + b`` and ``a − b``, so we emit the most
+    general "rational in ``tan(arg/2)``" form that's correct on the
+    whole ``a² = b²`` manifold:
+
+        sin branch:  −2·c / ( (a+b)·tan(arg/2) + (a−b) ) is not valid
+                     when ``a+b = 0``; we therefore emit the symmetric
+                     form
+                       2·c / (a·(1 + tan²(arg/2))) · ... is also wrong;
+        rather, we use the partial-fraction representative that
+        reduces to the numeric formulas in :func:`_try_weierstrass_degenerate`
+        when ``a, b`` are concrete numbers and the user has guaranteed
+        ``a² = b²``:
+
+            sin: ∫ 1/(a + b·sin(arg)) dx
+                 =  −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+
+        For cos, we use
+
+            cos: ∫ 1/(a + b·cos(arg)) dx
+                 =  c·tan(arg/2) · 2/( (a−b)·tan²(arg/2) + (a+b) )
+
+        Both reduce to the same numeric forms by direct substitution.
+    """
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    a_plus_b = IRApply(ADD, (a, b))
+    a_minus_b = IRApply(SUB, (a, b))
+    if trig_head == SIN:
+        # −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+        numer = IRApply(MUL, (IRInteger(-2), c_scaled))
+        denom = IRApply(
+            ADD,
+            (IRApply(MUL, (a_plus_b, tan_half)), a_minus_b),
+        )
+        return IRApply(DIV, (numer, denom))
+    # cos branch: 2·c·tan(arg/2) / ( (a−b)·tan²(arg/2) + (a+b) )
+    tan_sq = IRApply(POW, (tan_half, TWO))
+    numer = IRApply(
+        MUL,
+        (IRApply(MUL, (IRInteger(2), c_scaled)), tan_half),
+    )
+    denom = IRApply(
+        ADD,
+        (IRApply(MUL, (a_minus_b, tan_sq)), a_plus_b),
+    )
+    return IRApply(DIV, (numer, denom))
+
+
+def _try_weierstrass_symbolic_coefficients(
+    integrand: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Track G1: symbolic-coefficient Weierzstrass.
+
+    Mirrors :func:`_try_weierstrass_one_over_linear_trig` but accepts
+    non-numeric ``a, b`` (IR nodes free of ``x``).  Consults the live
+    ``vm.assumptions`` (published by the ``Integrate`` handler via the
+    :data:`_CURRENT_VM` contextvar) to decide which branch — arctan,
+    log, degenerate — to emit.
+
+    Returns ``None`` when:
+
+    - the integrand doesn't match the ``c / (a + b·trig(α·x+β))`` shape,
+    - the numerator ``c`` depends on ``x``,
+    - ``α, β`` aren't rational,
+    - no VM context is available (called outside the handler),
+    - or no assumption pin down the sign of ``a² − b²``.
+
+    The numeric branch is left untouched: the dispatcher in
+    :func:`_integrate` tries it first and only falls through to here if
+    it returns ``None``, so the existing test suite (with concrete
+    rational ``a, b``) continues to fire the fast path.
+    """
+    if not isinstance(integrand, IRApply) or integrand.head != DIV:
+        return None
+    if len(integrand.args) != 2:
+        return None
+    num, den = integrand.args
+    if _depends_on(num, x):
+        return None
+    parsed = _parse_a_plus_b_sincos_symbolic(den, x)
+    if parsed is None:
+        return None
+    a, b, trig_head, alpha, beta = parsed
+    if alpha == 0:
+        return None
+    # Numeric path is tried first; if either ``a`` or ``b`` is fully
+    # numeric and both pass, that path would already have closed the
+    # integral.  Bail out gracefully in that case so we don't emit a
+    # second (potentially uglier) result.
+    if _node_to_frac(a) is not None and _node_to_frac(b) is not None:
+        return None
+    vm = _current_vm()
+    if vm is None:
+        return None
+    # Apply ``u = α·x + β`` change of variable: scale the numerator by
+    # ``1/α``.  We do this at the IR level — for rational ``α`` this is
+    # a literal division by a Fraction, kept exact.
+    scale = Fraction(1) / alpha
+    c_scaled = IRApply(MUL, (_frac_ir(scale), num)) if scale != 1 else num
+    arg_node = _build_linear_arg_ir(alpha, beta, x)
+    assumptions = vm.assumptions
+    # Branch on the assumption-context verdict for the discriminant sign.
+    # We probe the natural surface form ``a² > b²`` (and its log / equal
+    # duals) plus the canonical-against-zero form ``a²−b² > 0`` so the
+    # helper fires regardless of which surface syntax the user typed.
+    a_sq = IRApply(POW, (a, TWO))
+    b_sq = IRApply(POW, (b, TWO))
+    disc = IRApply(SUB, (a_sq, b_sq))
+    if _is_discriminant_positive(assumptions, a_sq, b_sq, disc):
+        return _try_weierstrass_arctan_symbolic(
+            c_scaled, a, b, trig_head, arg_node
+        )
+    if _is_discriminant_negative(assumptions, a_sq, b_sq, disc):
+        return _try_weierstrass_log_symbolic(
+            c_scaled, a, b, trig_head, arg_node
+        )
+    if _is_discriminant_zero(assumptions, a_sq, b_sq, disc):
+        return _try_weierstrass_degenerate_symbolic(
+            c_scaled, a, b, trig_head, arg_node
+        )
+    return None
+
+
+def _is_discriminant_positive(
+    assumptions, a_sq: IRNode, b_sq: IRNode, disc: IRNode
+) -> bool:
+    """Did the user pin down ``a² > b²`` (the disc > 0 region)?
+
+    We accept either surface form — the natural ``a² > b²`` written by
+    the user via ``assume(a^2 > b^2)``, or the canonical-against-zero
+    form ``a² − b² > 0`` that someone might write programmatically.
+    Both are looked up against the compound-relation store.
+    """
+    if assumptions.is_true_relation(IRApply(GREATER, (a_sq, b_sq))) is True:
+        return True
+    if assumptions.is_true_relation(IRApply(GREATER, (disc, ZERO))) is True:
+        return True
+    return False
+
+
+def _is_discriminant_negative(
+    assumptions, a_sq: IRNode, b_sq: IRNode, disc: IRNode
+) -> bool:
+    """Did the user pin down ``a² < b²`` (the disc < 0 region)?"""
+    if assumptions.is_true_relation(IRApply(LESS, (a_sq, b_sq))) is True:
+        return True
+    if assumptions.is_true_relation(IRApply(LESS, (disc, ZERO))) is True:
+        return True
+    return False
+
+
+def _is_discriminant_zero(
+    assumptions, a_sq: IRNode, b_sq: IRNode, disc: IRNode
+) -> bool:
+    """Did the user pin down ``a² = b²`` (the degenerate case)?"""
+    if assumptions.is_true_relation(IRApply(EQUAL, (a_sq, b_sq))) is True:
+        return True
+    if assumptions.is_true_relation(IRApply(EQUAL, (disc, ZERO))) is True:
+        return True
+    return False
 
 
 def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
@@ -1516,6 +1988,13 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         # Phase 34: Weierstrass substitution for c / (a + b·sin(x)) and
         # c / (a + b·cos(x)) when a, b numeric and a² > b².
         result = _try_weierstrass_one_over_linear_trig(f, x)
+        if result is not None:
+            return result
+        # Track G1: symbolic-coefficient Weierstrass.  Fires only when
+        # the numeric path returns None and ``vm.assumptions`` records a
+        # sign for ``a² − b²``.  See
+        # :func:`_try_weierstrass_symbolic_coefficients`.
+        result = _try_weierstrass_symbolic_coefficients(f, x)
         if result is not None:
             return result
         return None

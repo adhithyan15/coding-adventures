@@ -1,0 +1,75 @@
+% ============================================================================
+% uti-vocab — controlled vocabulary for ORGANISM IDENTIFICATION in urinary-tract
+% infection (UTI), as an IMPORTABLE CAS library.
+% ============================================================================
+% MYCIN-2026 G4 — the FIRST specialty expansion beyond meningitis/bacteremia.
+% A new disease enters the system the same way every fact does: point the spider
+% at its primary sources (the IDSA/ESCMID uncomplicated-cystitis guideline,
+% StatPearls, peer-reviewed UTI etiology series), byte-provenance + adversarially
+% gate each prior + urinalysis finding, and emit a rulebook — never hand-author one.
+%
+% Same closed-vocabulary discipline as organism-vocab.adj: the decomposer is
+% constrained to these `surface` forms, and the compiler rejects any rulebook or
+% case that names a term not defined here, so the IR and the rulebook cannot drift.
+% The organism hypothesis names align with the (future) UTI formulary so the
+% identified set maps directly onto drug coverage: identify → cover → dose.
+%
+% Other libraries use this by:  import "uti-vocab.adj"  then  use uti_vocab
+
+dictionary uti_vocab {
+
+    % ======================== Hypotheses (the uropathogens) ========================
+    % The classic community uncomplicated-UTI organisms + the complicated/catheter
+    % context (Pseudomonas). E. coli dominates; S. saprophyticus is the #2 in young
+    % women; the rest are the Enterobacterales + enterococci + GBS tail.
+
+    define e_coli : hypothesis
+        surface "Escherichia coli", "E. coli", "uropathogenic E. coli", "UPEC"
+
+    define s_saprophyticus : hypothesis
+        surface "Staphylococcus saprophyticus", "S. saprophyticus", "coagulase-negative staph"
+
+    define klebsiella : hypothesis
+        surface "Klebsiella pneumoniae", "Klebsiella"
+
+    define proteus : hypothesis
+        surface "Proteus mirabilis", "Proteus"
+
+    define enterococcus : hypothesis
+        surface "Enterococcus", "Enterococcus faecalis", "enterococci"
+
+    define pseudomonas : hypothesis
+        surface "Pseudomonas aeruginosa", "Pseudomonas"
+
+    define group_b_strep : hypothesis
+        surface "group B Streptococcus", "Streptococcus agalactiae", "GBS"
+
+    % ======================== Findings ==========================
+    % Each finding has a CLOSED value domain; the value the rulebook reasons over
+    % must be one of these and the compiler enforces it.
+
+    % --- Urine dipstick NITRITE: nitrate-reducing Enterobacterales turn urinary
+    %     nitrate into nitrite. A positive test points at the gram-negative enteric
+    %     uropathogens (E. coli, Klebsiella, Proteus); enterococci and S.
+    %     saprophyticus do NOT reduce nitrate, so they are nitrite-negative. ---
+    define urine_nitrite : finding values [positive, negative]
+        surface "positive nitrite", "nitrite positive", "negative nitrite", "nitrite negative"
+
+    % --- Urine LEUKOCYTE ESTERASE: marks pyuria (WBCs); supports that an infection
+    %     is present, but does NOT discriminate the organism. ---
+    define urine_leukocyte_esterase : finding values [positive, negative]
+        surface "positive leukocyte esterase", "leukocyte esterase positive", "pyuria",
+                "negative leukocyte esterase", "no pyuria"
+
+    % --- UREASE / alkaline urine / struvite: a urease-producing organism splits urea,
+    %     alkalinizes the urine and forms struvite stones — classically Proteus. ---
+    define urine_urease_alkaline : finding values [present, absent]
+        surface "alkaline urine", "urease positive", "struvite stones", "staghorn calculus",
+                "no struvite", "acidic urine"
+
+    % --- UTI complexity / care setting (the prior shifter: catheter & complicated
+    %     UTI raise Pseudomonas and the resistant Enterobacterales). ---
+    define uti_complexity : finding values [uncomplicated, complicated, catheter_associated]
+        surface "uncomplicated cystitis", "uncomplicated UTI", "complicated UTI",
+                "pyelonephritis", "catheter-associated", "CAUTI", "indwelling catheter"
+}

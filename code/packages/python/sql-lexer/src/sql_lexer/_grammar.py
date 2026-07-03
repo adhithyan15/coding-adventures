@@ -1,6 +1,6 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
 # ruff: noqa: E501, F401
-# Source: code/grammars/sql.tokens
+# Source: /Users/adhithya/Documents/coding-adventures/.claude/worktrees/nice-wing-09855c/code/grammars/sql.tokens
 # Regenerate with: grammar-tools compile-tokens <source.tokens>
 #
 # This file embeds a TokenGrammar as native Python data structures.
@@ -241,7 +241,7 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias=None,
         ),
     ],
-    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'ESCAPE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'INDEX', 'CHECK', 'REFERENCES', 'DEFAULT', 'COLLATE', 'ATTACH', 'DETACH', 'DATABASE', 'STRICT', 'WITHOUT', 'VIEW', 'BEGIN', 'COMMIT', 'ROLLBACK', 'TRANSACTION', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION', 'TRIGGER', 'BEFORE', 'AFTER', 'FOR', 'EACH', 'ROW', 'RETURNING', 'CAST', 'GLOB', 'NATURAL', 'USING', 'REPLACE', 'IGNORE', 'ABORT', 'FAIL', 'CONFLICT', 'DO', 'NOTHING', 'ROWS', 'RANGE', 'GROUPS', 'PRECEDING', 'FOLLOWING', 'UNBOUNDED', 'CURRENT', 'MATERIALIZED', 'NULLS'],
+    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'RENAME', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'ESCAPE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'AUTOINCREMENT', 'UNIQUE', 'INDEX', 'INDEXED', 'CHECK', 'REFERENCES', 'DEFAULT', 'COLLATE', 'ATTACH', 'DETACH', 'DATABASE', 'STRICT', 'WITHOUT', 'VIEW', 'BEGIN', 'COMMIT', 'ROLLBACK', 'TRANSACTION', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION', 'TRIGGER', 'BEFORE', 'AFTER', 'FOR', 'EACH', 'ROW', 'RETURNING', 'CAST', 'GLOB', 'NATURAL', 'USING', 'REPLACE', 'IGNORE', 'ABORT', 'FAIL', 'CONFLICT', 'DO', 'NOTHING', 'ROWS', 'RANGE', 'GROUPS', 'PRECEDING', 'FOLLOWING', 'UNBOUNDED', 'CURRENT', 'MATERIALIZED', 'NULLS'],
     mode=None,
     escape_mode='none',
     skip_definitions=[
@@ -249,21 +249,21 @@ TOKEN_GRAMMAR = TokenGrammar(
             name='WHITESPACE',
             pattern='[ \\t\\r\\n]+',
             is_regex=True,
-            line_number=190,
+            line_number=193,
             alias=None,
         ),
         TokenDefinition(
             name='LINE_COMMENT',
             pattern='--[^\\n]*',
             is_regex=True,
-            line_number=191,
+            line_number=194,
             alias=None,
         ),
         TokenDefinition(
             name='BLOCK_COMMENT',
             pattern='\\x2f\\*([^*]|\\*[^\\x2f])*\\*\\x2f',
             is_regex=True,
-            line_number=192,
+            line_number=195,
             alias=None,
         ),
     ],

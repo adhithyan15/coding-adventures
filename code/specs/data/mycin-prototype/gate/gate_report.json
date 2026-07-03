@@ -1,0 +1,191 @@
+{
+ "summary": {
+  "object": "cas/objects/286c17aaf48ff32d.json",
+  "clauses": 14,
+  "accepted_at_declared_tier": 8,
+  "flagged_downgraded_to_inferred": [
+   "bacterial_meningitis::prior",
+   "bacterial_meningitis::csf_culture(positive)",
+   "viral_meningitis::csf_glucose(normal)",
+   "viral_meningitis::csf_lactate(normal)",
+   "viral_meningitis::csf_lymphocytic_pleocytosis(high)",
+   "viral_meningitis::enteroviral_pcr(positive)"
+  ]
+ },
+ "report": [
+  {
+   "idx": 0,
+   "key": "bacterial_meningitis::prior",
+   "lr": 0.037,
+   "status": "FLAG",
+   "earned_trust": "inferred",
+   "reason": "readers: byte_quote does not entail the LR (LEAP) — downgraded to 'inferred'",
+   "votes": [
+    "LEAP",
+    "LEAP",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 1,
+   "key": "bacterial_meningitis::csf_gram_stain(positive)",
+   "lr": 85,
+   "status": "ACCEPT",
+   "earned_trust": "consensus",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 2,
+   "key": "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)",
+   "lr": 15,
+   "status": "ACCEPT",
+   "earned_trust": "authoritative",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 3,
+   "key": "bacterial_meningitis::csf_glucose(low)",
+   "lr": 18,
+   "status": "ACCEPT",
+   "earned_trust": "authoritative",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 4,
+   "key": "bacterial_meningitis::csf_protein(elevated)",
+   "lr": 9.33,
+   "status": "ACCEPT",
+   "earned_trust": "empirical",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 5,
+   "key": "bacterial_meningitis::csf_lactate(elevated)",
+   "lr": 22.9,
+   "status": "ACCEPT",
+   "earned_trust": "authoritative",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 6,
+   "key": "bacterial_meningitis::serum_procalcitonin(elevated)",
+   "lr": 27.3,
+   "status": "ACCEPT",
+   "earned_trust": "authoritative",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 7,
+   "key": "bacterial_meningitis::seizure(present)",
+   "lr": 5.84,
+   "status": "ACCEPT",
+   "earned_trust": "empirical",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "ENTAILED",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 8,
+   "key": "bacterial_meningitis::csf_culture(positive)",
+   "lr": 271,
+   "status": "FLAG",
+   "earned_trust": "inferred",
+   "reason": "readers: byte_quote does not entail the LR (LEAP) — downgraded to 'inferred'",
+   "votes": [
+    "ENTAILED",
+    "LEAP",
+    "LEAP"
+   ]
+  },
+  {
+   "idx": 9,
+   "key": "viral_meningitis::prior",
+   "lr": 0.963,
+   "status": "ACCEPT",
+   "earned_trust": "authoritative",
+   "reason": "byte_quote entails the LR (reader majority)",
+   "votes": [
+    "ENTAILED",
+    "LEAP",
+    "ENTAILED"
+   ]
+  },
+  {
+   "idx": 10,
+   "key": "viral_meningitis::csf_glucose(normal)",
+   "lr": 4.9,
+   "status": "FLAG",
+   "earned_trust": "inferred",
+   "reason": "readers: byte_quote does not entail the LR (LEAP) — downgraded to 'inferred'",
+   "votes": [
+    "LEAP",
+    "ENTAILED",
+    "LEAP"
+   ]
+  },
+  {
+   "idx": 11,
+   "key": "viral_meningitis::csf_lactate(normal)",
+   "lr": 13.7,
+   "status": "FLAG",
+   "earned_trust": "inferred",
+   "reason": "readers: byte_quote does not entail the LR (LEAP) — downgraded to 'inferred'",
+   "votes": [
+    "ENTAILED",
+    "LEAP",
+    "LEAP"
+   ]
+  },
+  {
+   "idx": 12,
+   "key": "viral_meningitis::csf_lymphocytic_pleocytosis(high)",
+   "lr": 5.0,
+   "status": "FLAG",
+   "earned_trust": "inferred",
+   "reason": "ungrounded (no byte_quote) — admitted at 'inferred', flagged for grounding",
+   "votes": null
+  },
+  {
+   "idx": 13,
+   "key": "viral_meningitis::enteroviral_pcr(positive)",
+   "lr": 50,
+   "status": "FLAG",
+   "earned_trust": "inferred",
+   "reason": "ungrounded (no byte_quote) — admitted at 'inferred', flagged for grounding",
+   "votes": null
+  }
+ ]
+}

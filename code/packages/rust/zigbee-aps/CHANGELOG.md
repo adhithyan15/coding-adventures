@@ -6,10 +6,20 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `ApsFrameBatchSummary` for payload-free APS frame-stream delivery, profile,
+  cluster, security, ack-request, and payload-volume rollups.
+- `ApsFrameBatchReadinessSummary` for application-delivery, home-automation,
+  cluster, and payload capture readiness checks.
+- `ApsDeliveryHandoffSummary` for combining frame-batch readiness with
+  application-delivery, payload, and security/ack context checks.
 - `ApsFrameSummary` for payload-free APS routing, delivery, profile, and
   cluster read models.
+- `ApsCommandFrame`, `ApsCommandId`, and `ApsCommandSummary` for APS command
+  identifiers, key-management classification, and command payload preservation.
 - `BindingTableSummary` for counting group/device bindings, cluster families,
   unique APS binding endpoints, source endpoint shapes, and cluster coverage.
+- `BindingTableReadinessSummary` for application-source, destination, cluster,
+  and source-endpoint hygiene checks.
 
 ## [0.1.0] - 2026-05-06
 

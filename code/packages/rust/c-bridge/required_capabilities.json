@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/c-bridge",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "export",
+      "target": "extern C symbols",
+      "justification": "Exposes matrix_cpu_run_graph and matrix_cpu_free_string as C ABI entry points that any FFI-capable language (Ruby, Lua, Go, Swift, Kotlin, ...) can call to drive the Rust matrix-cpu engine."
+    }
+  ],
+  "justification": "Foreign-language bridge crate. The only outward-facing surface is a pair of extern \"C\" functions; no inbound FFI, no network, no filesystem. The pure-Rust core (run_graph_on_cpu_via_json_envelope) is identical to matrix-rust-python's and reuses already-vetted matrix-ir / matrix-ir-json / matrix-runtime / matrix-cpu crates."
+}

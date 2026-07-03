@@ -2,6 +2,163 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added - Mosaic event envelopes for SwiftUI hosts
+
+Generated non-empty `{Component}Event` enums now include `mosaicName`,
+`mosaicPayload`, and `mosaicEnvelope` helpers. `Sources/App/App.swift` uses the
+envelope in its sample dispatch closure, giving SwiftUI native hosts a stable
+wire shape to JSON-encode into shared Mosaic/Engram business logic.
+
+### Fixed - `--emit-project` SwiftPM shell supplies view inputs
+
+`Sources/App/App.swift` now mounts `{Component}View(...)` with deterministic
+sample values for every declared slot plus a dispatch closure. Previously the
+project shell emitted `{Component}View()` even though generated SwiftUI views
+store each slot and `dispatch` as required initializer inputs, so any component
+with slots (including EngramApp) produced a SwiftPM shell that was not
+compile-shaped.
+
+### Fixed — editable `HostInput` (the formula-bar issue)
+
+A `HostInput` with an `onChange` handler and a bound `value` slot now lowers to
+a **writable** `TextField` binding — `Binding(get: { value }, set: { dispatch(.onChange(value: $0)) })`
+— instead of the read-only `text: .constant(value)`. Previously the generated
+`TextField` could not be typed into at all (the constant binding discarded
+every keystroke, and the separate `.onChange(of:)` modifier only fired when the
+*prop* changed). The setter now dispatches the change per keystroke, so hosts
+get a genuinely editable field; the redundant `.onChange(of:)` modifier is no
+longer emitted for editable inputs (emitting both would feed back: setter →
+host updates slot → `.onChange` fires → dispatches again). Inputs without an
+`onChange` handler keep the read-only `.constant(...)` form (label-like
+display). This is what makes the VisiCalc SwiftUI demo's formula bar actually
+editable.
+
+### Added — UI32-K-swiftui — `--emit-project` SwiftPM macOS shell
+
+L7 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2-L6: #4297, #4309, #4315, #4319, #4325). `mosaic-compile --backend swiftui --emit-project` now produces a SwiftPM scaffold:
+
+- `Package.swift` — pinned `swift-tools-version: 5.10` + `platforms: [.macOS(.v13)]` per UI32 §3.6.3. Single executable target `App` at `Sources/App/`.
+- `Sources/App/App.swift` — SwiftUI `@main App` + `WindowGroup` mounting `{Component}View()` (matches the emitter's `{name}View` struct convention).
+- `README.md` — `swift run` recipe + file map. Notes the user must move `{Component}.swift` into `Sources/App/` for SwiftPM to compile it (v1 layout doesn't auto-place the component file).
+
+New public API (matches L2-L6 pattern):
+
+- `pub struct EmitOptions` — `emit_project`, `pinned_swift_tools`, `pinned_macos_min`.
+- `pub struct ProjectFiles` — `package_swift`, `app_swift`, `readme`.
+- `pub enum ProjectShellError` — `SwiftKeywordCollision(String)` surfaced through `PipelineEmitError::UnsafeSlotName`.
+- `pub struct PipelineEmitResultWithProject`.
+- `pub fn from_pipeline_with_options(...)`. Existing `from_pipeline(...)` unchanged.
+
+UI32 §3.6.2 SwiftUI row contract: Swift reserved keywords (`Class`, `Protocol`, `Actor`, `Self`, `Any`, `Type`, etc. — PascalCase subset) MUST be rejected to avoid backtick-quoting in identifier positions. `SWIFT_RESERVED_KEYWORDS` reject-list enforces this; collision → fail-loud via `ProjectShellError::SwiftKeywordCollision`.
+
+10 new tests cover the spec §3 gates plus a Swift-keyword truth table (10 accept/reject vectors) and an App.swift structural test (@main + WindowGroup + `<Component>View()` mount). Total tests: 81 (was 71, +10).
+
+### Added — UI31-K-swiftui — `HostTable` RTL contract
+
+The SwiftUI `HostTable` lowering (which produces a structural
+`VStack(alignment: .leading, spacing: 0)` of `HStack` rows) now
+honours the UI31 §3.2 RTL contract via SwiftUI's `Environment`
+key-path knob `\.layoutDirection`:
+
+- `dir: rtl` → `.environment(\.layoutDirection, .rightToLeft)`
+  modifier attached to the VStack; flips horizontal layout
+  direction for the whole table.
+- `dir: ltr` → `.environment(\.layoutDirection, .leftToRight)` —
+  explicit-LTR, useful for tables that should stay LTR inside an
+  RTL window (e.g. data-heavy spreadsheets).
+- `dir: auto` → no modifier; the spec-mandated "let the host
+  decide" semantic is the SwiftUI default — the ambient
+  `Environment(\.layoutDirection)` flows through from the system
+  locale → app → ancestor view cascade.
+- `dir: slot: layout-direction` →
+  `.environment(\.layoutDirection, layoutDirection)`, where the
+  slot must evaluate to a `LayoutDirection`. The slot name passes
+  through `is_safe_swift_identifier` so it can't smuggle malicious
+  Swift through the modifier's expression position.
+- Unknown keywords drop silently — the allow-list is the security
+  gate. Test #6 feeds the literal payload
+  `".rightToLeft).onAppear { pwn() }"` (specifically shaped to
+  break out of the modifier-call argument list) and asserts `pwn()`
+  never reaches the output.
+
+7 new tests cover the a11y gate (VStack + HStack structure
+preserved — not a flat ZStack or Group), the three allow-listed
+keywords (incl. the SwiftUI-unique no-emit for `auto` and the
+explicit `.leftToRight` for cross-locale tables), the slot-ref
+binding, the silent-drop with an injection-shaped payload, and a
+no-`dir` regression guard. Total tests: 71 (was 64).
+
+### Added — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-swiftui)
+
+Three new UI29-4 kernel primitives lower to native SwiftUI views:
+
+- **`HostLink` → `Link(label, destination: URL(string: href)!)`**
+  (iOS 14+/macOS 11+). OS-managed URL open by default. When
+  `external: false` + `onActivate` are bound, the lowering swaps
+  to a `Button(action: { dispatch(.x(href: "...")) }) { Text(label) }`
+  so the host's in-app router takes over instead of opening
+  externally. When `external != false` but `onActivate` is bound,
+  the v1 emitter currently drops the dispatch (SwiftUI's `Link`
+  has no click-hook closure); documented as a v2 follow-up.
+- **`HostTooltip` → `VStack { child(ren) }.help("text")`** (macOS
+  / iOS 16+). Hovering (macOS) or long-pressing (iOS) the wrapped
+  view shows the tooltip; screen readers read it via
+  `accessibilityHint`.
+- **`HostNumberInput` → `TextField(placeholder, value: .constant(slot),
+  format: .number)`** (iOS 15+/macOS 12+). `disabled` adds a
+  trailing `.disabled(...)` modifier; `onChange` adds an
+  `.onChange(of: slot) { dispatch(.x(value: slot)) }` modifier
+  (pre-iOS-17 closure shape — host can adapt to the new
+  `(old, new)` shape if needed).
+
+5 new tests cover: bare HostLink with Link + URL, the
+external-false + onActivate Button swap, HostTooltip's VStack +
+.help wrapper, HostNumberInput's TextField + .number format, and
+the .onChange modifier wiring.
+
+### Added — UI29-2 `HostCheckbox` + `HostRadio` kernel primitives (U29-2-K-swiftui)
+
+Both new primitives lower to SwiftUI `Toggle` with the platform's
+default toggle style. The semantic distinction is in the dispatched
+payload:
+
+- `HostCheckbox` dispatches `checked: Bool` on every flip via a
+  `Binding(get:set:)` whose setter calls `dispatch(.x(checked:
+  newValue))`. Without an `onToggle` emit the binding degrades to
+  `.constant(checked)` (read-only but type-checks).
+- `HostRadio` dispatches `value: String` only on positive transition
+  via a `Binding(get:set:)` whose setter wraps the call in `if
+  newValue { dispatch(.x(value: …)) }` — flips to `false` (a sibling
+  radio caused this one to deselect) are silently dropped to match
+  the kernel-canonical `onSelect = "this radio was chosen"`
+  semantics.
+- The `group:` prop on `HostRadio` is preserved as a `// group: …`
+  Swift comment ahead of the `Toggle`. SwiftUI has no implicit radio
+  grouping; the comment keeps the metadata visible for a future
+  structural pass that synthesises a `Picker` from sibling radios
+  sharing a `group:`.
+- `label:` becomes the first positional `Toggle(...)` argument
+  (string literal or slot identifier); `disabled:` becomes a trailing
+  `.disabled(...)` modifier.
+
+Deferred to a follow-up:
+
+- `HostCheckbox.indeterminate` slot. SwiftUI's `Toggle` has no
+  tri-state visual; rendering a "mixed" state needs a custom
+  `ToggleStyle` or an `Image` of `checkmark.square.fill`.
+- `.toggleStyle(.checkbox)` for an actual checkbox look on macOS.
+  That style is macOS-only and breaks iOS compilation; a follow-up
+  can add platform-conditional emission or move the choice to a
+  userland modifier.
+
+9 new tests cover the bare-toggle shape, slot-driven `.constant(…)`
+binding, the `Binding(get:set:)` setter for `onToggle`, string label,
+`.disabled(…)` modifier, the radio's `// group:` comment, the
+positive-transition setter for `onSelect`, and the slot-typed
+`value:` flowing into the dispatch payload.
+
 ## [0.5.0] - 2026-05-21
 
 ### Added — UI29-1 `HostDialog` kernel primitive (U29-1-K-swiftui)

@@ -11,6 +11,7 @@ use symbolic_ir::{
     SQRT, SUB, TAN, TANH,
 };
 
+use crate::series_limit::try_series_limit_default;
 use crate::LIMIT;
 
 const EPS: f64 = 1e-300;
@@ -129,6 +130,9 @@ fn handle_form(
             let d_val = eval_at_float(denom, var, exact_pt);
             let zero_zero = n_val == 0.0 && d_val == 0.0;
             let inf_inf = is_effectively_inf(n_val) && is_effectively_inf(d_val);
+            if is_effectively_inf(d_val) && is_bounded_at_infinity(numer, var) {
+                return int(0);
+            }
             if zero_zero || inf_inf {
                 if let Some(diff_fn) = options.diff_fn {
                     return lhopital_step(
@@ -153,6 +157,13 @@ fn handle_form(
                 return result;
             }
         }
+    }
+
+    // Track J2: Taylor-series fallback. Fires after L'Hopital (or instead
+    // of it if no diff_fn was supplied) and the product/power rewrites.
+    // Handles transcendental 0/0 via bounded local series expansion.
+    if let Some(result) = try_series_limit_default(&expr, var, &point) {
+        return result;
     }
 
     build_unevaluated(expr, var, point, options.direction)
@@ -271,6 +282,27 @@ fn pow_exp_log(
         result = eval_fn(result);
     }
     Some(result)
+}
+
+fn is_bounded_at_infinity(node: &IRNode, var: &IRNode) -> bool {
+    match node {
+        IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) => true,
+        IRNode::Symbol(_) => node != var,
+        IRNode::Str(_) => false,
+        IRNode::Apply(a) if a.head == sym(NEG) && a.args.len() == 1 => {
+            is_bounded_at_infinity(&a.args[0], var)
+        }
+        IRNode::Apply(a) if a.head == sym(ADD) => {
+            a.args.iter().all(|arg| is_bounded_at_infinity(arg, var))
+        }
+        IRNode::Apply(a) if a.head == sym(MUL) => {
+            a.args.iter().all(|arg| is_bounded_at_infinity(arg, var))
+        }
+        IRNode::Apply(a) if a.args.len() == 1 => {
+            a.head == sym(SIN) || a.head == sym(COS) || a.head == sym(TANH) || a.head == sym(ATAN)
+        }
+        _ => false,
+    }
 }
 
 fn build_unevaluated(

@@ -1,0 +1,48 @@
+% ADJ52 case-22 program (this patient's observations + queries only; no rules).
+% 61-year-old man, recently retired, referred to ENT after ~5 months of steadily
+% worsening BILATERAL nasal obstruction and bilateral hearing reduction with
+% intermittent aural fullness; otherwise well (no B-symptoms: no fever, no night
+% sweats, no weight loss; no epistaxis, no dysphagia). Exam: enlarged inferior
+% turbinates, BILATERAL middle-ear effusions, and a smooth soft fleshy mass filling
+% the ROOF of the nasopharynx. Audiometry: bilateral CONDUCTIVE hearing loss
+% (48 dB R / 52 dB L). Bloods: mild anaemia (Hb 9.9), mild leucocytosis, normal
+% LDH/ESR/albumin. Blood film + immunophenotyping: a SMALL (~8%) CLONAL B-cell
+% population with a distinctive surface marker profile. Nasopharyngeal biopsy:
+% architecture EFFACED by a MONOTONOUS population of small mature lymphocytes with
+% coarse clumped chromatin and scattered pale PROLIFERATION CENTRES. IHC: CD20+
+% diffuse, CD5+, CD23 variably+, BCL2+, CD3-, CD10-, cyclin D1 NEGATIVE.
+% Targeted molecular work undertaken on the clonal cells — results PENDING.
+
+% --- immunophenotype (the clonal CD5+ B-cell gestalt) ---
+observe ihc(cd20_positive_diffuse)
+observe ihc(cd5_positive)
+observe ihc(cd23_positive_variable)
+observe ihc(bcl2_positive)
+observe ihc(cd3_negative)
+observe ihc(cd10_negative)
+observe ihc(cyclin_d1_negative)
+
+% --- circulating clonal compartment ---
+observe finding(clonal_b_cell_population_small_circulating)
+observe finding(distinctive_surface_marker_profile)
+
+% --- histology ---
+observe histology(architecture_effacement_monotonous)
+observe histology(monotonous_small_lymphocytes_clumped_chromatin)
+observe histology(proliferation_centres_present)
+
+% --- clinical / ENT presentation (nasopharyngeal mass -> Eustachian obstruction) ---
+observe exam_finding(nasopharyngeal_mass)
+observe exam_finding(bilateral_middle_ear_effusion)
+observe audiometry_result(bilateral_conductive_hearing_loss)
+observe mass_location(nasopharynx_roof)
+
+% NOT observed (open, decision-relevant, u1): molecular_t1114(...) and ighv_status(...)
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+? diagnosis(mantle_cell_lymphoma)
+? diagnosis(marginal_zone_lymphoma)
+? diagnosis(follicular_lymphoma)
+? diagnosis(reactive_lymphoid_hyperplasia)
+? next_step(cll_fish_ighv_tp53_and_t1114_exclusion_panel)

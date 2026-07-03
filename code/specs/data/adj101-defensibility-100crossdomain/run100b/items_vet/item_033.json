@@ -1,0 +1,8 @@
+{
+ "idx": 33,
+ "policy": "Liability for insider trading under Rule 10b-5 requires that the person traded while in possession of material nonpublic information AND that the person owed a duty of trust or confidence that was breached by trading. Both elements must be present for liability.",
+ "scenario": "Morgan, a research analyst with no employment or contractual relationship to TitanPharma, overheard two strangers in a coffee shop discussing TitanPharma's unannounced FDA approval. Morgan immediately bought TitanPharma call options before the news became public and profited substantially when the approval was announced.",
+ "question": "Is Morgan liable for insider trading under Rule 10b-5?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether Morgan owed a duty of trust or confidence"
+}

@@ -1,0 +1,10 @@
+% Illustrative differential (board-eval REL-7): an equivocal CSF that should NOT
+% commit — one bacterial-leaning and one viral-leaning finding of equal weight.
+prior 0.5 for bacterial_meningitis
+prior 0.5 for viral_meningitis
+contributes 4 from csf_neutrophils(high) to bacterial_meningitis
+contributes 4 from csf_lymphocytes(high) to viral_meningitis
+observe csf_neutrophils(high)
+observe csf_lymphocytes(high)
+? bacterial_meningitis
+? viral_meningitis

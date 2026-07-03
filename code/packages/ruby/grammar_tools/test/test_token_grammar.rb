@@ -880,4 +880,142 @@ class TestTokenGrammar < Minitest::Test
     assert grammar.soft_keywords.include?("match"), "Expected 'match' in soft_keywords"
     assert grammar.soft_keywords.include?("case"), "Expected 'case' in soft_keywords"
   end
+
+  # -----------------------------------------------------------------------
+  # F10 — declarative lexer mode transitions
+  # -----------------------------------------------------------------------
+
+  def test_parse_start_mode_directive
+    grammar = GT.parse_token_grammar("NAME = /[a-z]+/\nstart_mode: div\n")
+    assert_equal "div", grammar.start_mode
+  end
+
+  def test_start_mode_defaults_to_nil
+    grammar = GT.parse_token_grammar("NAME = /[a-z]+/\n")
+    assert_nil grammar.start_mode
+    assert_empty grammar.transitions
+  end
+
+  def test_missing_start_mode_value_raises
+    err = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("start_mode:\n")
+    end
+    assert_match(/Missing mode name/, err.message)
+  end
+
+  def test_parse_simple_transition
+    source = "NAME = /[a-z]+/\ntransitions:\n  on NAME -> set-mode div\n"
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 1, grammar.transitions.length
+    rule = grammar.transitions[0]
+    assert_equal ["NAME"], rule.on_tokens
+    assert_nil rule.on_value
+    assert_nil rule.in_mode
+    assert_equal 1, rule.actions.length
+    assert_equal "set_mode", rule.actions[0].kind
+    assert_equal "div", rule.actions[0].target
+  end
+
+  def test_parse_alternation_transition
+    source = "NAME = /[a-z]+/\ntransitions:\n  on (NAME | NUMBER | RPAREN) -> set-mode div\n"
+    grammar = GT.parse_token_grammar(source)
+    rule = grammar.transitions[0]
+    assert_equal %w[NAME NUMBER RPAREN], rule.on_tokens
+  end
+
+  def test_parse_keyword_value_guard
+    source = "NAME = /[a-z]+/\ntransitions:\n  on KEYWORD=\"return\" -> set-mode default\n"
+    grammar = GT.parse_token_grammar(source)
+    rule = grammar.transitions[0]
+    assert_equal ["KEYWORD"], rule.on_tokens
+    assert_equal "return", rule.on_value
+  end
+
+  def test_parse_in_mode_guard
+    source = "NAME = /[a-z]+/\ntransitions:\n  on RBRACE in template -> pop\n"
+    grammar = GT.parse_token_grammar(source)
+    rule = grammar.transitions[0]
+    assert_equal ["RBRACE"], rule.on_tokens
+    assert_equal "template", rule.in_mode
+    assert_equal "pop", rule.actions[0].kind
+    assert_nil rule.actions[0].target
+  end
+
+  def test_parse_multiple_actions
+    source = "NAME = /[a-z]+/\ntransitions:\n  on TEMPLATE_HEAD -> push template, set-mode default\n"
+    grammar = GT.parse_token_grammar(source)
+    rule = grammar.transitions[0]
+    assert_equal 2, rule.actions.length
+    assert_equal "push", rule.actions[0].kind
+    assert_equal "template", rule.actions[0].target
+    assert_equal "set_mode", rule.actions[1].kind
+    assert_equal "default", rule.actions[1].target
+  end
+
+  def test_parse_skip_toggle_actions
+    source = "NAME = /[a-z]+/\ntransitions:\n  on OPEN -> disable-skip\n  on CLOSE -> enable-skip\n"
+    grammar = GT.parse_token_grammar(source)
+    assert_equal "disable_skip", grammar.transitions[0].actions[0].kind
+    assert_equal "enable_skip", grammar.transitions[1].actions[0].kind
+  end
+
+  def test_transition_missing_arrow_raises
+    err = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("transitions:\n  on NAME set-mode div\n")
+    end
+    assert_match(/missing '->'/, err.message)
+  end
+
+  def test_transition_unknown_action_raises
+    err = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("transitions:\n  on NAME -> teleport div\n")
+    end
+    assert_match(/Unknown transition action/, err.message)
+  end
+
+  def test_transition_must_start_with_on_raises
+    err = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("transitions:\n  when NAME -> pop\n")
+    end
+    assert_match(/must start with 'on '/, err.message)
+  end
+
+  def test_reserved_group_name_transitions
+    err = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("group transitions:\n  X = \"x\"\n")
+    end
+    assert_match(/Reserved group name/, err.message)
+  end
+
+  # ---- validation ----
+
+  def test_validate_undefined_start_mode
+    grammar = GT.parse_token_grammar("NAME = /[a-z]+/\nstart_mode: nope\n")
+    issues = GT.validate_token_grammar(grammar)
+    assert(issues.any? { |i| i.include?("start_mode 'nope'") })
+  end
+
+  def test_validate_undefined_target_mode
+    source = "NAME = /[a-z]+/\ntransitions:\n  on NAME -> set-mode ghost\n"
+    grammar = GT.parse_token_grammar(source)
+    issues = GT.validate_token_grammar(grammar)
+    assert(issues.any? { |i| i.include?("undeclared mode 'ghost'") })
+  end
+
+  def test_validate_undefined_in_mode_guard
+    source = "NAME = /[a-z]+/\ntransitions:\n  on NAME in ghost -> pop\n"
+    grammar = GT.parse_token_grammar(source)
+    issues = GT.validate_token_grammar(grammar)
+    assert(issues.any? { |i| i.include?("'in ghost'") })
+  end
+
+  def test_validate_accepts_declared_group_mode
+    source = +"NAME = /[a-z]+/\n"
+    source << "group div:\n  SLASH = \"/\"\n"
+    source << "start_mode: default\n"
+    source << "transitions:\n  on NAME -> set-mode div\n"
+    grammar = GT.parse_token_grammar(source)
+    issues = GT.validate_token_grammar(grammar)
+    refute(issues.any? { |i| i.include?("undeclared") || i.include?("start_mode") })
+  end
 end

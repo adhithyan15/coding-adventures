@@ -1,0 +1,48 @@
+<!-- Showcase host for mosaic-pkg-toolkit components. -->
+<Window
+    x:Class="Mosaic.Generated.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:gen="using:Mosaic.Generated"
+    Title="Mosaic toolkit — WinUI 3 showcase">
+    <ScrollViewer>
+        <StackPanel Padding="32" Spacing="24">
+
+            <TextBlock Text="mosaic-pkg-toolkit — Bootstrap-shape components rendered in WinUI 3"
+                       FontSize="20" FontWeight="600"/>
+            <TextBlock Text="Every component below is auto-generated from .mil/.mll/.msl by mosaic-emit-xaml."
+                       Foreground="#6c757d"/>
+
+            <!-- Button -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="Button" FontWeight="500" Foreground="#6c757d"/>
+                <gen:Button x:Name="MyButton" Label="Click me" Disabled="False"/>
+            </StackPanel>
+
+            <!-- Alert -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="Alert (dismissible)" FontWeight="500" Foreground="#6c757d"/>
+                <gen:Alert x:Name="MyAlert" Message="This is an info alert from the Mosaic toolkit." Variant="info" Dismissible="True"/>
+            </StackPanel>
+
+            <!-- Badge -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="Badge:" FontWeight="500" Foreground="#6c757d" VerticalAlignment="Center"/>
+                <gen:Badge x:Name="MyBadge" Label="New" Variant="primary"/>
+            </StackPanel>
+
+            <!-- Spinner -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="Spinner:" FontWeight="500" Foreground="#6c757d" VerticalAlignment="Center"/>
+                <gen:Spinner x:Name="MySpinner" Size="md" Variant="primary"/>
+                <TextBlock Text="Loading…" Foreground="#6c757d" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Status echo -->
+            <Border Padding="12" Background="#f1f3f5" CornerRadius="4" Margin="0,12,0,0">
+                <TextBlock x:Name="StatusText" Text="Status: waiting for dispatch…" Foreground="#495057"/>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -987,6 +987,41 @@ fn derivative_elementary_chain_rules() {
             ],
         )
     );
+    assert_eq!(
+        d(apply(sym(ASIN), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(
+                    sym(SQRT),
+                    vec![apply(
+                        sym(SUB),
+                        vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])],
+                    )],
+                ),
+            ],
+        )
+    );
+    assert_eq!(
+        d(apply(sym(ACOS), vec![sym("x")])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(
+                        sym(SQRT),
+                        vec![apply(
+                            sym(SUB),
+                            vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])],
+                        )],
+                    ),
+                ],
+            )],
+        )
+    );
 
     assert_eq!(
         d(apply(
@@ -1318,6 +1353,23 @@ fn integrate_constant_base_power() {
 }
 
 #[test]
+fn integrate_phase23_erf_erfi_quadratic_exponentials() {
+    let xsq = apply(sym(POW), vec![sym("x"), int(2)]);
+
+    let erf_out = integrate(apply(sym(EXP), vec![apply(sym(NEG), vec![xsq.clone()])]));
+    assert!(!is_unevaluated_integrate(&erf_out));
+    assert!(contains_head(&erf_out, "Erf"));
+
+    let erfi_out = integrate(apply(sym(EXP), vec![xsq.clone()]));
+    assert!(!is_unevaluated_integrate(&erfi_out));
+    assert!(contains_head(&erfi_out, "Erfi"));
+
+    let scaled = integrate(apply(sym(EXP), vec![apply(sym(MUL), vec![int(-4), xsq])]));
+    assert!(!is_unevaluated_integrate(&scaled));
+    assert!(contains_head(&scaled, "Erf"));
+}
+
+#[test]
 fn integrate_elliptic_first_kind_forms() {
     let theta = sym("theta");
     let k = sym("k");
@@ -1397,9 +1449,21 @@ fn eval_at(node: &symbolic_ir::IRNode, xval: f64) -> f64 {
                 ("Neg", [v]) => -eval_at(v, xval),
                 ("Pow", [b, e]) => eval_at(b, xval).powf(eval_at(e, xval)),
                 ("Log", [v]) => eval_at(v, xval).ln(),
+                ("Sqrt", [v]) => eval_at(v, xval).sqrt(),
                 ("Sin", [v]) => eval_at(v, xval).sin(),
                 ("Cos", [v]) => eval_at(v, xval).cos(),
+                ("Asin", [v]) => eval_at(v, xval).asin(),
+                ("Acos", [v]) => eval_at(v, xval).acos(),
                 ("Atan", [v]) => eval_at(v, xval).atan(),
+                ("Sinh", [v]) => eval_at(v, xval).sinh(),
+                ("Cosh", [v]) => eval_at(v, xval).cosh(),
+                ("Tanh", [v]) => eval_at(v, xval).tanh(),
+                ("Coth", [v]) => {
+                    let u = eval_at(v, xval);
+                    u.cosh() / u.sinh()
+                }
+                ("Sech", [v]) => 1.0 / eval_at(v, xval).cosh(),
+                ("Csch", [v]) => 1.0 / eval_at(v, xval).sinh(),
                 _ => panic!("eval_at: unsupported head {h}"),
             }
         }
@@ -1644,15 +1708,350 @@ fn phase28_regression_log_x_still_phase3() {
 }
 
 #[test]
-fn phase28_regression_atan_x_stays_unevaluated() {
-    // ∫ atan(x) dx — linear Q, Phase 28 must NOT intercept this.
-    // TypeScript has no Phase 11 so the result stays unevaluated.
+fn phase11_atan_x_is_closed() {
+    // ∫ atan(x) dx = x*atan(x) - 1/2*log(1+x^2).
     let result = integrate(apply(sym(ATAN), vec![sym("x")]));
-    let original = apply(
-        sym(INTEGRATE),
-        vec![apply(sym(ATAN), vec![sym("x")]), sym("x")],
+    assert!(
+        !is_unevaluated_integrate(&result),
+        "Phase 11 should close ∫ atan(x) dx; got {result:?}"
     );
-    assert_eq!(result, original, "Phase 28 must not intercept linear atan(x)");
+    assert!(contains_head(&result, ATAN), "Expected Atan in {result:?}");
+    assert!(contains_head(&result, LOG), "Expected Log in {result:?}");
+}
+
+#[test]
+fn phase11_shifted_atan_derivative_matches() {
+    // The shifted case exercises the shifted-quadratic residual closure:
+    // D = 1 + (x+1)^2.
+    let integrand = apply(sym(ATAN), vec![apply(sym(ADD), vec![sym("x"), int(1)])]);
+    let phi = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&phi),
+        "Phase 11 should close ∫ atan(x+1) dx; got {phi:?}"
+    );
+    for &x_val in &[-0.5_f64, 0.0, 0.5, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (x_val + 1.0).atan();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase11_x_atan_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ATAN), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&phi),
+        "Phase 11 should close ∫ x*atan(x) dx; got {phi:?}"
+    );
+    for &x_val in &[-1.0_f64, -0.25, 0.25, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.atan();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_asin_x_derivative_matches() {
+    let phi = integrate(apply(sym(ASIN), vec![sym("x")]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ asin(x) dx; got {phi:?}");
+    for &x_val in &[0.0_f64, 0.25, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val.asin();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_x_asin_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ASIN), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ x*asin(x) dx; got {phi:?}");
+    for &x_val in &[0.0_f64, 0.25, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.asin();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_x_acos_x_derivative_matches_and_keeps_asin_residual() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ACOS), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ x*acos(x) dx; got {phi:?}");
+    assert!(contains_head(&phi, ASIN), "expected Asin residual in {phi:?}");
+    for &x_val in &[0.0_f64, 0.25, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.acos();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_shifted_linear_asin_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let phi = integrate(apply(sym(ASIN), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ asin(2x+1) dx; got {phi:?}");
+    for &x_val in &[-0.4_f64, -0.25, -0.1] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (2.0 * x_val + 1.0).asin();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_nonlinear_asin_falls_through() {
+    let integrand = apply(sym(ASIN), vec![apply(sym(POW), vec![sym("x"), int(2)])]);
+    let result = integrate(integrand.clone());
+    let original = apply(sym(INTEGRATE), vec![integrand, sym("x")]);
+    assert_eq!(result, original);
+}
+
+#[test]
+fn phase13_x_sinh_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(SINH), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close x*sinh(x); got {phi:?}");
+    assert!(contains_head(&phi, COSH), "expected Cosh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.sinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_x_cosh_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(COSH), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close x*cosh(x); got {phi:?}");
+    assert!(contains_head(&phi, SINH), "expected Sinh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.cosh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_asinh_x_derivative_matches() {
+    let phi = integrate(apply(sym(ASINH), vec![sym("x")]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close asinh(x); got {phi:?}");
+    assert!(contains_head(&phi, SQRT), "expected Sqrt term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val.asinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_x_acosh_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ACOSH), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close x*acosh(x); got {phi:?}");
+    assert!(contains_head(&phi, SQRT), "expected Sqrt term in {phi:?}");
+    for &x_val in &[1.3_f64, 1.7, 2.2] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.acosh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_tanh_linear_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let phi = integrate(apply(sym(TANH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close tanh(2x+1); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.1, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (2.0 * x_val + 1.0).tanh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_atanh_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![rat(1, 2), sym("x")]);
+    let phi = integrate(apply(sym(ATANH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close atanh(x/2); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    for &x_val in &[-0.5_f64, 0.2, 0.7] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (x_val / 2.0).atanh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_x_tanh_x_falls_through() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(TANH), vec![sym("x")])]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "x*tanh(x) should remain deferred; got {result:?}");
+}
+
+#[test]
+fn phase15_coth_linear_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let phi = integrate(apply(sym(COTH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 15 should close coth(2x+1); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    assert!(contains_head(&phi, SINH), "expected Sinh term in {phi:?}");
+    for &x_val in &[0.2_f64, 0.6, 1.0] {
+        let u = 2.0 * x_val + 1.0;
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = u.cosh() / u.sinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase15_sech_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![int(3), sym("x")]);
+    let phi = integrate(apply(sym(SECH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 15 should close sech(3x); got {phi:?}");
+    assert!(contains_head(&phi, ATAN), "expected Atan term in {phi:?}");
+    assert!(contains_head(&phi, SINH), "expected Sinh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (3.0 * x_val).cosh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase15_csch_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![rat(1, 2), sym("x")]);
+    let phi = integrate(apply(sym(CSCH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 15 should close csch(x/2); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    assert!(contains_head(&phi, TANH), "expected Tanh term in {phi:?}");
+    for &x_val in &[0.6_f64, 1.2, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (x_val / 2.0).sinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase15_x_coth_x_falls_through() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(COTH), vec![sym("x")])]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "x*coth(x) should remain deferred; got {result:?}");
+}
+
+#[test]
+fn phase16_sech_squared_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![int(3), sym("x")]);
+    let integrand = apply(sym(POW), vec![apply(sym(SECH), vec![arg]), int(2)]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 16 should close sech^2(3x); got {phi:?}");
+    assert!(contains_head(&phi, TANH), "expected Tanh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (3.0 * x_val).cosh().powi(2);
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase16_sech_cubed_derivative_matches() {
+    let integrand = apply(sym(POW), vec![apply(sym(SECH), vec![sym("x")]), int(3)]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 16 should close sech^3(x); got {phi:?}");
+    assert!(contains_head(&phi, ATAN), "expected Atan term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / x_val.cosh().powi(3);
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase16_csch_squared_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![rat(1, 2), sym("x")]);
+    let integrand = apply(sym(POW), vec![apply(sym(CSCH), vec![arg]), int(2)]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 16 should close csch^2(x/2); got {phi:?}");
+    assert!(contains_head(&phi, COTH), "expected Coth term in {phi:?}");
+    for &x_val in &[0.6_f64, 1.2, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (x_val / 2.0).sinh().powi(2);
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase16_csch_cubed_derivative_matches() {
+    let integrand = apply(sym(POW), vec![apply(sym(CSCH), vec![sym("x")]), int(3)]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 16 should close csch^3(x); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    for &x_val in &[0.6_f64, 1.2, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / x_val.sinh().powi(3);
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase16_coth_powers_derivative_match() {
+    for power in [2_i64, 3] {
+        let integrand = apply(sym(POW), vec![apply(sym(COTH), vec![sym("x")]), int(power)]);
+        let phi = integrate(integrand);
+        assert!(!is_unevaluated_integrate(&phi), "Phase 16 should close coth^{power}(x); got {phi:?}");
+        for &x_val in &[0.6_f64, 1.2, 2.0] {
+            let coth = x_val.cosh() / x_val.sinh();
+            let got = phase34_numerical_derivative(&phi, x_val);
+            let expected = coth.powi(power as i32);
+            assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+        }
+    }
+}
+
+#[test]
+fn phase16_nonlinear_sech_power_falls_through() {
+    let nonlinear_arg = apply(sym(POW), vec![sym("x"), int(2)]);
+    let integrand = apply(sym(POW), vec![apply(sym(SECH), vec![nonlinear_arg]), int(2)]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "sech^2(x^2) should remain deferred; got {result:?}");
+}
+
+#[test]
+fn phase17_tanh_powers_derivative_match() {
+    for power in [2_i64, 3, 4] {
+        let integrand = apply(sym(POW), vec![apply(sym(TANH), vec![sym("x")]), int(power)]);
+        let phi = integrate(integrand);
+        assert!(!is_unevaluated_integrate(&phi), "Phase 17 should close tanh^{power}(x); got {phi:?}");
+        for &x_val in &[-0.4_f64, 0.2, 0.8] {
+            let got = phase34_numerical_derivative(&phi, x_val);
+            let expected = x_val.tanh().powi(power as i32);
+            assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+        }
+    }
+}
+
+#[test]
+fn phase17_tanh_squared_linear_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let integrand = apply(sym(POW), vec![apply(sym(TANH), vec![arg]), int(2)]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 17 should close tanh^2(2x+1); got {phi:?}");
+    assert!(contains_head(&phi, TANH), "expected Tanh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.1, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (2.0 * x_val + 1.0).tanh().powi(2);
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase17_nonlinear_tanh_power_falls_through() {
+    let nonlinear_arg = apply(sym(POW), vec![sym("x"), int(2)]);
+    let integrand = apply(sym(POW), vec![apply(sym(TANH), vec![nonlinear_arg]), int(2)]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "tanh^2(x^2) should remain deferred; got {result:?}");
 }
 
 // ---------------------------------------------------------------------------
@@ -2502,6 +2901,28 @@ fn phase34_cos_five_plus_three_cos_sqrt_free() {
 }
 
 #[test]
+fn phase34_cos_negative_a_arctan_branch_closes() {
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(-2), apply(sym(COS), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&phi),
+        "Phase 34 should close 1/(-2 + cos x); got {phi:?}"
+    );
+    assert!(contains_head(&phi, ATAN), "Expected Atan in {phi:?}");
+    for &x_val in &[-1.5_f64, -0.4, 0.0, 0.4, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (-2.0 + x_val.cos());
+        assert!(
+            (got - expected).abs() < 1e-4,
+            "At x={x_val}: derivative={got}, expected={expected}"
+        );
+    }
+}
+
+#[test]
 fn phase34_sin_operand_order_swapped() {
     // ∫ 1/(sin x + 2) dx — constant on the right.  Must still close.
     let integrand = apply(
@@ -2680,21 +3101,36 @@ fn phase34_regression_pure_sin_unchanged() {
 }
 
 #[test]
-fn phase34_regression_one_over_cos_not_misinterpreted() {
-    // ∫ 1/cos(x) dx — denominator has no additive constant; Phase 34 must NOT
-    // fire and produce a spurious arctan of tan(x/2).
+fn phase34_regression_one_over_cos_now_closes() {
+    // ∫ 1/cos(x) dx — a = 0 cosine log branch.
     let integrand = apply(sym(DIV), vec![int(1), apply(sym(COS), vec![sym("x")])]);
     let result = integrate(integrand);
-    if let symbolic_ir::IRNode::Apply(apply) = &result {
-        if apply.head == symbolic_ir::IRNode::Symbol(ATAN.to_string()) {
-            panic!("Phase 34 incorrectly fired on ∫ 1/cos(x) dx: {result:?}");
-        }
+    assert!(!is_unevaluated_integrate(&result));
+    assert!(contains_head(&result, LOG), "Expected Log in {result:?}");
+    for &x_val in &[-1.0_f64, -0.4, 0.0, 0.4, 1.0] {
+        let got = phase34_numerical_derivative(&result, x_val);
+        let expected = 1.0 / x_val.cos();
+        assert!((got - expected).abs() < 1e-3, "x={x_val}: got={got}, expected={expected}");
     }
 }
 
 // ---------------------------------------------------------------------------
 // Phase 36 — Weierstrass log form for a² < b² (cos + edge cases)
 // ---------------------------------------------------------------------------
+
+#[test]
+fn phase36_one_over_sin_now_closes() {
+    // ∫ 1/sin(x) dx = log|tan(x/2)|.
+    let integrand = apply(sym(DIV), vec![int(1), apply(sym(SIN), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    assert!(contains_head(&phi, LOG), "Expected Log in {phi:?}");
+    for &x_val in &[0.4_f64, 0.8, 1.2, 1.6, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / x_val.sin();
+        assert!((got - expected).abs() < 1e-3, "x={x_val}: got={got}, expected={expected}");
+    }
+}
 
 #[test]
 fn phase36_a_less_than_b_cos_now_closes() {
@@ -2866,6 +3302,21 @@ fn phase38_sin_two_x_closes() {
         let got = phase34_numerical_derivative(&phi, x_val);
         let expected = 1.0 / (2.0 + (2.0 * x_val).sin());
         assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase38_scaled_csc_branch_closes() {
+    // ∫ 3/(2·sin(2x+1)) dx — c, b, and alpha scaling.
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let denominator = apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![arg])]);
+    let phi = integrate(apply(sym(DIV), vec![int(3), denominator]));
+    assert!(!is_unevaluated_integrate(&phi));
+    assert!(contains_head(&phi, LOG), "Expected Log in {phi:?}");
+    for &x_val in &[0.0_f64, 0.2, 0.5, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 3.0 / (2.0 * (2.0 * x_val + 1.0).sin());
+        assert!((got - expected).abs() < 1e-3, "x={x_val}: got={got}, expected={expected}");
     }
 }
 

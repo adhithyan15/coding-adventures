@@ -1111,6 +1111,30 @@ fn dispatch(
                 exec_const(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_const" => {
+                exec_str_const(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_len" => {
+                exec_str_len(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_index" => {
+                exec_str_index(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_concat" => {
+                exec_str_concat(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_eq" => {
+                exec_str_eq(instr, &mut frame)?;
+                pc += 1;
+            }
+            "print_str" => {
+                exec_print_str(instr, &frame)?;
+                pc += 1;
+            }
             "call_builtin" => {
                 exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
@@ -1187,6 +1211,37 @@ fn dispatch(
             // For `mov` specifically, the synthesised call_builtin form is
             // `call_builtin "_move" src`, which the existing dispatch
             // already handles correctly.
+            // ── Path A increment 6b: typed heap-allocation opcodes ─────
+            //
+            // The Twig IIR compiler now emits `(cons head tail)` as a
+            // three-instruction sequence:
+            //
+            //     alloc cell [ref<LispyPair>]
+            //     field_store cell, 0, head [void]    -- car
+            //     field_store cell, 1, tail [void]    -- cdr
+            //
+            // matching the IIR-to-{wasm,jvm,clr,beam} backends' Phase 2
+            // heap-lowering convention.  twig-vm executes the sequence
+            // by allocating a fresh (NIL,NIL) cons cell at `alloc` and
+            // mutating the fields in place at `field_store`.  Both
+            // opcodes also accept `type_hint == "ref<*>"`-shaped variants
+            // for forward-compatibility with future record types, but
+            // the current path only specialises ref<LispyPair>.
+            "alloc" => {
+                exec_alloc(instr, &mut frame)?;
+                pc += 1;
+            }
+            "field_store" => {
+                exec_field_store(instr, &mut frame)?;
+                pc += 1;
+            }
+            // Path A increment 6c: typed `field_load[idx]` replaces
+            // `call_builtin "car"` / `call_builtin "cdr"`.
+            "field_load" => {
+                exec_field_load(instr, &mut frame)?;
+                pc += 1;
+            }
+
             "add" | "sub" | "mul" | "div"
             | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le" | "cmp_ge"
             | "mov" => {
@@ -1272,6 +1327,27 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let src = instr.srcs.first().ok_or_else(|| {
         RunError::MalformedInstruction("const requires srcs[0]".into())
     })?;
+    // ── Path A increment 6a (twig-vm dispatch wrapper) ──────────────
+    //
+    // The twig-ir-compiler now emits `const 0 [ref<LispyPair>]` for
+    // every `(make_nil)` / `nil` site (matching the IIR-to-{wasm,jvm,
+    // clr,beam} backends' Phase 2 heap-lowering convention).  Under
+    // the plain `Operand::Int(0)` path that would produce
+    // `LispyValue::int(0)` — but the runtime semantic is "the empty
+    // list", which is `LispyValue::NIL`.  Fix: special-case the
+    // typed-const-of-zero into NIL when `type_hint == "ref<LispyPair>"`.
+    //
+    // This is the symmetric companion to the increment 2 dispatch
+    // wrapper that synthesised `call_builtin "+"` from typed `add`.
+    // Without this, HOF builtins like `map` / `filter` / `fold-*`
+    // see Int(0) where they expect a NIL sentinel and bail out with
+    // `"list tail 0 is not a cons cell"`.
+    if instr.type_hint == "ref<LispyPair>" {
+        if let Operand::Int(0) = src {
+            frame.set(dest.clone(), LispyValue::NIL)?;
+            return Ok(());
+        }
+    }
     let value = match src {
         Operand::Int(n) => {
             // Same range check as operand_to_value — keep behaviour
@@ -1333,6 +1409,277 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         Operand::Str(text) => {
             lispy_runtime::heap::alloc_string(text.as_bytes())
         }
+    };
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn exec_str_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("str_const requires dest".into())
+    })?;
+    let src = instr.srcs.first().ok_or_else(|| {
+        RunError::MalformedInstruction("str_const requires srcs[0]".into())
+    })?;
+    let Operand::Str(text) = src else {
+        return Err(RunError::MalformedInstruction(format!(
+            "str_const requires Operand::Str, got {src:?}"
+        )));
+    };
+    let value = lispy_runtime::heap::alloc_string(text.as_bytes());
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn e4_dest<'a>(instr: &'a IIRInstr, op: &str) -> Result<&'a String, RunError> {
+    instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires dest"))
+    })
+}
+
+fn e4_value_arg(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<LispyValue, RunError> {
+    let src = instr.srcs.get(pos).ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
+    })?;
+    operand_to_value(src, &|n| frame.get(n)).map_err(RunError::OperandConversion)
+}
+
+fn e4_string_arg(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<Vec<u8>, RunError> {
+    let src = instr.srcs.get(pos).ok_or_else(|| {
+        RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
+    })?;
+    if let Operand::Str(text) = src {
+        return Ok(text.as_bytes().to_vec());
+    }
+    let value = e4_value_arg(op, instr, frame, pos)?;
+    // SAFETY: dispatch values come from the VM's tagged value space.
+    unsafe { lispy_runtime::heap::string_bytes(value) }
+        .map(|bytes| bytes.to_vec())
+        .ok_or_else(|| {
+            RunError::Runtime(RuntimeError::TypeError(format!(
+                "{op}: expected str at srcs[{pos}], got {value}"
+            )))
+        })
+}
+
+fn e4_int_arg(op: &str, instr: &IIRInstr, frame: &Frame, pos: usize) -> Result<i64, RunError> {
+    let value = e4_value_arg(op, instr, frame, pos)?;
+    value.as_int().ok_or_else(|| {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "{op}: expected i64 at srcs[{pos}], got {value}"
+        )))
+    })
+}
+
+fn exec_str_len(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_len")?;
+    let bytes = e4_string_arg("str_len", instr, frame, 0)?;
+    frame.set(dest.clone(), LispyValue::int(bytes.len() as i64))?;
+    Ok(())
+}
+
+fn exec_str_index(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_index")?;
+    let bytes = e4_string_arg("str_index", instr, frame, 0)?;
+    let idx = e4_int_arg("str_index", instr, frame, 1)?;
+    if idx < 0 || idx as usize >= bytes.len() {
+        return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+            "str_index: index {idx} out of bounds for string of length {}",
+            bytes.len()
+        ))));
+    }
+    frame.set(dest.clone(), LispyValue::int(i64::from(bytes[idx as usize])))?;
+    Ok(())
+}
+
+fn exec_str_concat(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_concat")?;
+    let mut bytes = e4_string_arg("str_concat", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_concat", instr, frame, 1)?;
+    bytes.extend_from_slice(&rhs);
+    frame.set(dest.clone(), lispy_runtime::heap::alloc_string(&bytes))?;
+    Ok(())
+}
+
+fn exec_str_eq(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_eq")?;
+    let lhs = e4_string_arg("str_eq", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_eq", instr, frame, 1)?;
+    frame.set(dest.clone(), LispyValue::bool(lhs == rhs))?;
+    Ok(())
+}
+
+fn exec_print_str(instr: &IIRInstr, frame: &Frame) -> Result<(), RunError> {
+    let bytes = e4_string_arg("print_str", instr, frame, 0)?;
+    use std::io::Write as _;
+    std::io::stdout()
+        .write_all(&bytes)
+        .map_err(|e| RunError::HostIo(e.to_string()))?;
+    Ok(())
+}
+
+/// ── Path A increment 6b: `alloc [ref<LispyPair>]` ─────────────────
+///
+/// Allocates a fresh cons cell with NIL placeholders for both fields.
+/// The following two `field_store` instructions overwrite those
+/// placeholders with the head and tail values.
+///
+/// This matches the Phase 2 heap-lowering convention used by the
+/// IIR-to-{wasm,jvm,clr,beam} backends: a `call_builtin "cons"`
+/// instruction lowers to `alloc + 2× field_store`, and twig-vm now
+/// executes that same form natively.
+fn exec_alloc(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("alloc requires dest".into())
+    })?;
+    // Only `ref<LispyPair>` is currently supported.  Future record
+    // types would extend this match.
+    match instr.type_hint.as_str() {
+        "ref<LispyPair>" => {
+            let cell = lispy_runtime::heap::alloc_cons(
+                LispyValue::NIL,
+                LispyValue::NIL,
+            );
+            frame.set(dest.clone(), cell)?;
+            Ok(())
+        }
+        other => Err(RunError::MalformedInstruction(format!(
+            "alloc: unsupported type_hint {other:?} (only ref<LispyPair> is wired)"
+        ))),
+    }
+}
+
+/// ── Path A increment 6b: `field_store dest_unused, idx, value [void]` ──
+///
+/// Writes `value` (srcs[2]) into field `idx` (srcs[1], an integer
+/// operand) of the cons cell named by srcs[0].  Returns no result.
+///
+/// `dest` is intentionally unused — `field_store` is a side-effecting
+/// opcode.  In twig-vm we keep the side-table-update semantics in
+/// `lispy_runtime::heap::set_field_unchecked` to centralise the
+/// "mutate a leaked cons" path.
+fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "field_store requires 3 srcs [pair, idx, value]; got {}",
+            instr.srcs.len()
+        )));
+    }
+    // srcs[0] — the pair register.
+    let pair_name = match &instr.srcs[0] {
+        Operand::Var(name) => name.clone(),
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_store srcs[0] must be Var(pair_register); got {other:?}"
+        ))),
+    };
+    let pair = frame.get(&pair_name).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!(
+            "field_store: undefined pair register {pair_name:?}"
+        )))
+    })?;
+    // srcs[1] — the field index (must be 0 or 1).
+    let index: usize = match &instr.srcs[1] {
+        Operand::Int(0) => 0,
+        Operand::Int(1) => 1,
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_store srcs[1] must be Int(0|1); got {other:?}"
+        ))),
+    };
+    // srcs[2] — the value to write.  Resolve to LispyValue using the
+    // same operand-to-value bridge that exec_call_builtin uses.
+    let value = match &instr.srcs[2] {
+        Operand::Var(name) => frame.get(name).ok_or_else(|| {
+            RunError::Runtime(RuntimeError::Custom(format!(
+                "field_store: undefined value register {name:?}"
+            )))
+        })?,
+        Operand::Int(n) => LispyValue::int(*n),
+        Operand::Bool(b) => LispyValue::bool(*b),
+        Operand::Float(_) => return Err(RunError::OperandConversion(
+            RuntimeError::TypeError("field_store: floats not supported".into()),
+        )),
+        Operand::Str(_) => return Err(RunError::OperandConversion(
+            RuntimeError::TypeError("field_store: string operands not supported".into()),
+        )),
+    };
+    // SAFETY: `pair` is the value last written into `pair_name` by
+    // either `exec_alloc` (which uses `alloc_cons`) or a previous
+    // value-flow that itself came from a heap-allocating builtin.  In
+    // PR 2's Box::leak model every such value is a live cons forever.
+    // `set_field_unchecked` re-validates the class id internally and
+    // returns Err on non-cons input, so misuse surfaces as a
+    // MalformedInstruction rather than memory corruption.
+    unsafe {
+        lispy_runtime::heap::set_field_unchecked(pair, index, value)
+            .map_err(|e| RunError::MalformedInstruction(format!(
+                "field_store: {e}"
+            )))?;
+    }
+    Ok(())
+}
+
+/// ── Path A increment 6c: `field_load dest, pair, idx [ref<any>]` ─────
+///
+/// Reads `car` (idx 0) or `cdr` (idx 1) from a cons cell.  This is the
+/// runtime companion to twig-ir-compiler's increment 6c typed accessor
+/// emission, matching the Phase 2 heap-lowering convention used by the
+/// IIR-to-{wasm,jvm,clr,beam} backends.
+///
+/// srcs layout: `[Var(pair_register), Int(idx)]`
+fn exec_field_load(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("field_load requires dest".into())
+    })?;
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "field_load requires 2 srcs [pair, idx]; got {}",
+            instr.srcs.len()
+        )));
+    }
+    let pair_name = match &instr.srcs[0] {
+        Operand::Var(name) => name,
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_load srcs[0] must be Var(pair_register); got {other:?}"
+        ))),
+    };
+    let pair = frame.get(pair_name).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!(
+            "field_load: undefined pair register {pair_name:?}"
+        )))
+    })?;
+    let value = match &instr.srcs[1] {
+        Operand::Int(0) => {
+            // SAFETY: `pair` came from `alloc_cons` (via exec_alloc or a
+            // heap-allocating builtin).  In PR 2's Box::leak model every
+            // such value is a live cons forever.  `heap::car` returns
+            // None on non-cons input, which we surface as Err.
+            unsafe { lispy_runtime::heap::car(pair) }.ok_or_else(|| {
+                RunError::Runtime(RuntimeError::TypeError(format!(
+                    "field_load[0] (car): {pair_name:?} is not a cons cell"
+                )))
+            })?
+        }
+        Operand::Int(1) => {
+            // SAFETY: same as above for `cdr`.
+            unsafe { lispy_runtime::heap::cdr(pair) }.ok_or_else(|| {
+                RunError::Runtime(RuntimeError::TypeError(format!(
+                    "field_load[1] (cdr): {pair_name:?} is not a cons cell"
+                )))
+            })?
+        }
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_load srcs[1] must be Int(0|1); got {other:?}"
+        ))),
     };
     frame.set(dest.clone(), value)?;
     Ok(())
@@ -3205,37 +3552,54 @@ mod tests {
 
     #[test]
     fn deep_recursion_surfaces_depth_exceeded() {
-        // Self-recursion that never terminates — should hit the depth cap
-        // rather than blowing the host stack.  We don't assert the exact
-        // depth (the limit is intentionally generous for the self-hosted
-        // compiler's lex-loop), only that we get the right error variant.
-        //
-        // With MAX_DISPATCH_DEPTH = 65536 (LANG64), infinite recursion needs
-        // 65537 nested Rust `dispatch` frames before the guard fires.  The
-        // default test-thread stack (8 MiB on macOS/Linux) is too small for
-        // that, so we spawn a dedicated thread with 1 GiB of stack.  Each
-        // dispatch frame is conservatively ≤ 10 KiB, so 65536 frames ≤
-        // 640 MiB — well within the 1 GiB budget.  (In practice frames are
-        // much smaller; the 10 KiB upper bound is a worst-case estimate.)
-        let result = std::thread::Builder::new()
-            .stack_size(1024 * 1024 * 1024) // 1 GiB
-            .spawn(|| {
-                let src = "
-                    (define (loop n) (loop (+ n 1)))
-                    (loop 0)
-                ";
-                run_source(src).unwrap_err()
-            })
-            .expect("thread spawn failed")
-            .join()
-            .expect("thread panicked");
+        // Exercise the dispatcher guard directly instead of building
+        // 131k native stack frames.  The self-hosted compiler needs the
+        // large production depth limit, but the test only needs to prove
+        // that a frame past the ceiling returns a VM error before doing
+        // any more work.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
 
-        // Depth or instruction limit — both are acceptable termination
-        // signals for an infinite-recursion test.
-        assert!(
-            matches!(result, RunError::DepthExceeded | RunError::InstructionLimitExceeded),
-            "expected DepthExceeded or InstructionLimitExceeded, got {result:?}",
-        );
+        let entry = IIRFunction {
+            name: "loop".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 0,
+            instructions: vec![],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![entry],
+            entry_point: Some("loop".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let mut budget = ExecutionBudget::new();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        let mut debug = None;
+
+        let err = dispatch(
+            &module,
+            &module.functions[0],
+            &[],
+            MAX_DISPATCH_DEPTH + 1,
+            &mut budget,
+            &mut globals,
+            &mut ic_table,
+            &mut profile,
+            &mut debug,
+        )
+        .unwrap_err();
+
+        assert!(matches!(err, RunError::DepthExceeded));
     }
 
     // ── Internal helpers ────────────────────────────────────────────
@@ -3634,13 +3998,18 @@ mod tests {
 
     #[test]
     fn defines_then_run_with_seeded_globals_writes_more() {
-        // (define x 5) (+ x 10) → 15.  Verifies that global_set
-        // works when the dispatcher receives a non-empty initial
-        // globals table, and that the new entry coexists with
-        // pre-seeded ones.
+        // `(define x 5) (define (f) x) (+ (f) 10)` → 15.  Verifies that
+        // global_set works when the dispatcher receives a non-empty initial
+        // globals table, and that the new entry coexists with pre-seeded ones.
+        //
+        // `x` is *captured* by `f`, so it stays on the host global table.
+        // (twig-ir-compiler 0.24.0 / LANG-FULL TW2 lowers only main-only value
+        // defines to typed locals; a captured one keeps its `global_set` — which
+        // is exactly the dispatch path this test exercises.  Before TW2 a bare
+        // `(define x 5)` also emitted `global_set`, but that is now a local.)
         let mut g = Globals::new();
         g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
-        let module = compile_source("(define x 5) (+ x 10)", "test").unwrap();
+        let module = compile_source("(define x 5) (define (f) x) (+ (f) 10)", "test").unwrap();
         let v = run_with_globals(&module, &mut g).unwrap();
         assert_eq!(v.as_int(), Some(15));
         // Both the seed and the program-defined x are present.
@@ -5161,6 +5530,80 @@ mod tests {
             let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
             assert_eq!(bytes, b"hello");
         }
+    }
+
+    #[test]
+    fn str_const_produces_heap_string() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello".into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 1)).unwrap();
+        assert!(v.is_heap(), "str_const should produce a heap value");
+        unsafe {
+            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert_eq!(bytes, b"hello");
+        }
+    }
+
+    #[test]
+    fn e4_str_concat_then_len_runs() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("foo".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("bar".into())], "str"),
+            IIRInstr::new(
+                "str_concat",
+                Some("s".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "str",
+            ),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 5)).unwrap().as_int(), Some(6));
+    }
+
+    #[test]
+    fn e4_str_index_returns_byte() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "str_index",
+                Some("b".into()),
+                vec![Operand::Var("s".into()), Operand::Var("i".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 4)).unwrap().as_int(), Some(66));
+    }
+
+    #[test]
+    fn e4_str_eq_returns_scheme_bool_for_branching() {
+        assert_eq!(
+            run_source(r#"(if (string=? "same" "same") 42 0)"#)
+                .unwrap()
+                .as_int(),
+            Some(42),
+        );
+        assert_eq!(
+            run_source(r#"(if (string=? "same" "different") 42 0)"#)
+                .unwrap()
+                .as_int(),
+            Some(0),
+        );
+    }
+
+    #[test]
+    fn e4_print_str_writes_heap_string() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ok".into())], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 2)).unwrap().as_int(), Some(0));
     }
 
     #[test]

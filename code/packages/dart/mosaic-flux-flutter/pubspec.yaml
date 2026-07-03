@@ -1,0 +1,17 @@
+name: mosaic_flux_flutter
+description: >
+  Strict-Flux runtime for Mosaic UI's Flutter emitter. MosaicAction
+  Command Pattern, MosaicStore with fine-grained subscriptions,
+  middleware, createSelector, devToolsMiddleware. Pure Dart core +
+  optional Flutter MosaicBuilder widget for state-driven rebuilds.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  meta: ^1.10.0
+
+dev_dependencies:
+  test: ^1.24.0

@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.5.0] — 2026-05-29
+
+- Track M2 — port the MACSYMA `load("name")` runtime package directive
+  from Python (committed in `dc78e0931`).  Surface contract:
+  - `load("orthopoly")` flips a per-session gate on `MacsymaBackend`
+    that turns on the closed-form orthogonal polynomial evaluators.
+  - Until then, `legendre_p(3, x)`, `chebyshev_t(4, x)`, `hermite(2, x)`,
+    and friends round-trip unevaluated, matching the Python runtime.
+  - After `load("orthopoly")`:
+    - `legendre_p(n, x)` reduces via the Bonnet recurrence.
+    - `chebyshev_t(n, x)`, `chebyshev_u(n, x)` reduce via the standard
+      two-term recurrence.
+    - `hermite(n, x)` reduces via the physicists' two-term recurrence
+      (Maxima's convention: `H_0 = 1`, `H_1 = 2x`).
+    - `legendre_q`, `bessel_j`, `bessel_y` are passthrough — symbol is
+      "known" but no closed form is applied.
+  - Non-integer / negative `n` keeps the expression unevaluated.
+  - `load("nonexistent")`, `load("../etc/passwd")`, `load("os")`, etc.,
+    raise `MacsymaUserError` with a clear message that advertises the
+    available packages.
+  - Loading is idempotent and per-session (two backends stay
+    independent).
+- Security note: the load handler dispatches via a compile-time-constant
+  `LOAD_ALLOWLIST` and a static `switch` arm.  There is no `eval`,
+  `Function()`, dynamic `import()`, or path lookup; a hostile name
+  string can never be turned into an executable code path.
+- New surface names: `load`, `legendre_p`, `legendre_q`, `chebyshev_t`,
+  `chebyshev_u`, `hermite`, `bessel_j`, `bessel_y` in
+  `MACSYMA_NAME_TABLE`.
+- New exports: `LOAD`, `MacsymaUserError`, plus a `loadedPackages`
+  field on `MacsymaBackend`.
+
+## [0.4.0] — 2026-05-29
+
+- Feed the TypeScript MACSYMA session assumption context into direct
+  `abs`, `sqrt`, and `log` evaluation, matching Python reference behavior
+  for cases such as `assume(x >= 0); sqrt(x^2)`, `log(x^3)`, and `abs(x)`.
+
 ## [0.3.0] — 2026-05-14
 
 - Add TypeScript MACSYMA parity for EllipticE (second kind) integration:

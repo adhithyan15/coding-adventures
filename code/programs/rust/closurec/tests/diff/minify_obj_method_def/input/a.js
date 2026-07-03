@@ -1,0 +1,1 @@
+var o = {add(a,b){return a+b;}};

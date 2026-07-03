@@ -1,0 +1,1061 @@
+{
+  "kind": "iem-edge-grounding",
+  "records": [
+    {
+      "id": "deficient_in__tay_sachs",
+      "relation": "deficient_in",
+      "subject": "tay_sachs",
+      "object": "hexosaminidase_a",
+      "claim": "Tay-Sachs disease results from deficiency of the enzyme hexosaminidase A (HEXA).",
+      "grounded": {
+        "id": "deficient_in__tay_sachs",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1218/",
+        "source_title": "HEXA Disorders - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Biallelic pathogenic variants in HEXA lead to absent or reduced activity in β-hexosaminidase A, a lysosomal hydrolytic enzyme required for the breakdown of ganglioside GM2 in neurons.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #272800 (Tay-Sachs Disease; TSD) at https://www.omim.org/entry/272800 and OMIM *606869 (HEXA) at https://omim.org/entry/606869 — these are the canonical primary references and the WebSearch snippet quoted them ('Tay-Sachs disease results in hexosaminidase A deficiency'), but both returned HTTP 403 Forbidden on WebFetch, so I could not READ the page myself to capture a verifiably verbatim quote. Discarded to avoid citing a quote I could not directly confirm on the source page.",
+          "NCBI Genes and Disease 'Tay-Sachs disease' (NBK22250) and StatPearls 'Tay-Sachs Disease' (NBK564432) — adequate but lower-tier than the peer-reviewed GeneReviews expert chapter; not fetched since GeneReviews already gave a directly-readable authoritative quote.",
+          "PubMed 27682588 (HEXA mutations target alpha chain to ERAD) — a primary research article on a specific mechanism, narrower than the general etiologic relation needed; discarded as not the cleanest statement of the disease→enzyme-deficiency edge.",
+          "WebSearch-generated summary prose (not from a fetched page body) — e.g. 'Tay-Sachs disease results in hexosaminidase A deficiency'; discarded as a search-engine synthesis, not a verbatim sentence I read on the actual source page."
+        ],
+        "note": "ENTAILED. The fact asserts the edge tay_sachs → deficiency of hexosaminidase A (HEXA). The fetched GeneReviews quote states biallelic pathogenic variants in HEXA lead to absent or reduced activity in β-hexosaminidase A (= hexosaminidase A / HEX A). 'Absent or reduced activity' of the enzyme IS enzyme deficiency, and the page title 'HEXA Disorders' plus the chapter's classic phenotype 'Tay-Sachs disease' tie this HEXA/HEX-A deficiency directly to Tay-Sachs disease (a second sentence on the page: 'HEX A is necessary for degradation of GM2 ganglioside; without well-functioning enzymes, GM2 ganglioside builds up'). Direction is correct: disease results FROM the enzyme deficiency. Note: GeneReviews and OMIM use the formal name β-hexosaminidase A (HEX A) for the enzyme the FACT calls 'hexosaminidase A (HEXA)' — same enzyme; HEXA is the gene encoding its alpha subunit, hexosaminidase A is the enzyme. Minor LEAP only in equating 'absent or reduced activity' with the FACT's word 'deficiency,' which is standard clinical-biochemistry usage and is corroborated by the OMIM snippet's explicit phrase 'Tay-Sachs disease results in hexosaminidase A deficiency.'"
+      },
+      "verify": {
+        "id": "deficient_in__tay_sachs",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempt: One could argue the byte_quote does not literally use the word \"Tay-Sachs\" or the word \"deficiency\" — it speaks of \"absent or reduced activity in β-hexosaminidase A\" from biallelic HEXA variants, not explicitly \"Tay-Sachs results from deficiency of HEXA.\" A skeptic might claim (a) \"absent or reduced activity\" is not strictly synonymous with \"deficiency,\" and (b) the quoted sentence frames HEXA as the gene whose variants reduce the enzyme, while the FACT phrases HEXA as the enzyme name (HEXA is the gene; β-hexosaminidase A / Hex A is the enzyme, with the alpha subunit encoded by HEXA). The refutation FAILS: the page is the GeneReviews entry titled for HEXA Disorders / Tay-Sachs disease, and explicitly elsewhere states \"Individuals with acute infantile TSD have no or extremely low HEX A enzymatic activity\" and diagnosis requires \"abnormally low HEX A activity ... and biallelic pathogenic variants in HEXA.\" The byte_quote itself directly ties HEXA variants to \"absent or reduced activity in β-hexosaminidase A,\" which is exactly the deficiency relation. The gene-vs-enzyme nuance (HEXA encodes the alpha subunit of Hex A) is a representational detail, not a refutation of the stated deficiency edge. The relation is genuinely and explicitly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__tay_sachs",
+      "relation": "accumulates",
+      "subject": "tay_sachs",
+      "object": "gm2_ganglioside",
+      "claim": "GM2 ganglioside accumulates (in neurons) in Tay-Sachs disease.",
+      "grounded": {
+        "id": "accumulates__tay_sachs",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12113087/",
+        "source_title": "Yeast-Produced Human Recombinant Lysosomal β-Hexosaminidase Efficiently Rescues GM2 Ganglioside Accumulation in Tay–Sachs Disease (Journal of Personalized Medicine, PMC12113087)",
+        "byte_quote": "TSD is a severe neurodegenerative disorder characterized by the progressive lysosomal accumulation of GM2 in neurons due to a deficiency of the HexA enzyme.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/272800 and mirror.omim.org (OMIM #272800 TAY-SACHS DISEASE; TSD) — the canonical primary genetic source and would directly state GM2-ganglioside accumulation + ballooned neurons, but OMIM returned HTTP 403 Forbidden to WebFetch (both main and mirror), so no VERBATIM quote could be retrieved from the page itself. Search-snippet text ('Analysis of CNS gangliosides demonstrates accumulation of GM2 ganglioside...') is a search-engine summary, not a fetched-page byte quote, so it is not used as the grounding quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK564432/ (StatPearls 'Tay-Sachs Disease', Lui/Ramani/Sankaran, updated 2024-10-06) — successfully fetched and STRONGLY corroborates ('...accumulation of GM2 gangliosides' caused by hexosaminidase-A deficiency; '...accumulation of the gangliosides up to toxic levels, especially in the neurons'). Not chosen as resolved_url only because its neuron statement is split across two sentences; the PMC article states GM2+neurons+TSD in one clause. Retained as corroborating source, not discarded for unreliability.",
+          "en.wikipedia.org/wiki/Tay-Sachs_disease, en.wikipedia.org/wiki/HEXA, rarediseases.org (NORD), malacards.org, medlink.com — secondary/tertiary encyclopedic or aggregator sources; discarded in favor of peer-reviewed primary literature and NCBI Bookshelf per the primary-source requirement.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10846629/ (infantile GM2 gangliosidosis case report) — relevant but a single case report; the chosen PMC review-style article and StatPearls give cleaner general-mechanism statements."
+        ],
+        "note": "ENTAILED. The fetched quote explicitly names all three required elements in one clause: the subject (Tay-Sachs disease / TSD), the accumulating substance (GM2 ganglioside — 'GM2'), and the site (in neurons), stating GM2 'accumulation in neurons' as a defining characteristic of TSD. This forces the edge direction tay_sachs → gm2_ganglioside (the disease is characterized by GM2 accumulating, not GM2 causing the disease). No inferential leap is required. Corroborated independently by StatPearls (NCBI Bookshelf): 'accumulation of GM2 gangliosides' from hexosaminidase-A deficiency, 'especially in the neurons.' Note: the article writes 'GM2' (the ganglioside) where the FACT says 'GM2 ganglioside' — identical referent in this context (GM2 ganglioside = the substrate of HexA), so no semantic gap. Caveat: the OMIM primary entry (#272800) could not be byte-fetched (403); grounding rests on peer-reviewed literature + NCBI Bookshelf rather than OMIM itself, but both fetched sources state the exact relation verbatim, so verdict is grounded."
+      },
+      "verify": {
+        "id": "accumulates__tay_sachs",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute on two grounds: (1) the quote writes \"GM2\" rather than \"GM2 ganglioside\" — but the same article's abstract explicitly says \"accumulation of GM2 ganglioside,\" so the entity is unambiguous; (2) whether the in-neurons accumulation relation is actually stated for TSD — the quote names TSD as subject and directly states \"progressive lysosomal accumulation of GM2 in neurons.\" Both refutations fail; the relation is explicitly stated, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__tay_sachs",
+      "relation": "inherited_as",
+      "subject": "tay_sachs",
+      "object": "autosomal_recessive",
+      "claim": "Tay-Sachs disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__tay_sachs",
+        "resolved_url": "https://medlineplus.gov/genetics/condition/tay-sachs-disease/",
+        "source_title": "Tay-Sachs disease: MedlinePlus Genetics",
+        "byte_quote": "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have variants.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/272800 (OMIM TAY-SACHS DISEASE; TSD #272800) — the canonical primary genetics source and first-choice target; discarded because direct WebFetch returned HTTP 403 Forbidden, so no verbatim quote could be retrieved from the page body. Search-snippet text ('Tay-Sachs disease is an autosomal recessive, progressive neurodegenerative disorder...') would support the fact but is a search-engine summary, not bytes I fetched off the page — excluded to avoid fabricated/second-hand quoting.",
+          "https://mirror.omim.org/clinicalSynopsis/272800 (OMIM mirror clinical synopsis) — attempted as an OMIM fallback for the 'Inheritance: Autosomal recessive' synopsis line; also returned HTTP 403 Forbidden, no body retrieved.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK564432/ (Tay-Sachs Disease, StatPearls / NCBI Bookshelf) — authoritative and would corroborate, but not fetched once MedlinePlus already yielded a clean verbatim inheritance quote; left unfetched rather than cited unread.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK22250/ (Tay-Sachs disease, Genes and Disease, NCBI Bookshelf) — same reason; redundant, not fetched.",
+          "Secondary/question-bank and blog-style hits were not surfaced or used per the primary/authoritative-source constraint."
+        ],
+        "note": "ENTAILED. The fetched MedlinePlus Genetics page states verbatim: 'This condition is inherited in an autosomal recessive pattern...' where 'This condition' is the page's subject, Tay-Sachs disease (page title 'Tay-Sachs disease'). This directly asserts the edge tay_sachs -> autosomal_recessive with no inference required; the quote forces the fact. Sourcing caveat (not a grounding gap): the preferred primary source OMIM #272800 was 403-blocked to WebFetch; MedlinePlus Genetics (U.S. National Library of Medicine / NIH) is an authoritative, peer-curated clinical-genetics reference — not a blog or question bank — and was actually fetched and read, satisfying the primary/authoritative-source requirement. Direction confirmed correct (subject = Tay-Sachs, attribute = autosomal recessive)."
+      },
+      "verify": {
+        "id": "inherited_as__tay_sachs",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempt: Could the quote be present but NOT actually state the claimed edge (inherited_as: Tay-Sachs disease -> autosomal recessive)? The byte_quote reads \"This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have variants.\" Three possible attacks: (1) \"This condition\" is anaphoric and might refer to something other than Tay-Sachs disease. Rejected: the page is the dedicated MedlinePlus Genetics condition page for Tay-Sachs disease, and the sentence appears under the \"Inheritance\" section heading for that condition, so \"This condition\" unambiguously resolves to Tay-Sachs disease. (2) The quote describes a \"pattern\" of inheritance rather than asserting the disease IS inherited that way. Rejected: \"is inherited in an autosomal recessive pattern\" is a direct factual assertion of the inheritance mode, exactly matching the FACT \"inherited in an autosomal recessive manner.\" (3) The quote might be misquoted/paraphrased on the page. Rejected: WebFetch confirmed the sentence appears verbatim, byte-for-byte, including the trailing clause. No successful refutation found.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__gaucher",
+      "relation": "deficient_in",
+      "subject": "gaucher",
+      "object": "glucocerebrosidase",
+      "claim": "Gaucher disease is caused by deficiency of glucocerebrosidase (acid beta-glucosidase / GBA).",
+      "grounded": {
+        "id": "deficient_in__gaucher",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1269/",
+        "source_title": "Gaucher Disease — GeneReviews®, NCBI Bookshelf",
+        "byte_quote": "Gaucher disease (GD) is caused by deficient glucocerebrosidase activity and the resultant accumulation of its undegraded substrate, GL1, and other glycolipids. ... The diagnosis of GD relies on demonstration of deficient glucocerebrosidase (glucosylceramidase) enzyme activity in peripheral blood leukocytes or other nucleated cells, or by the identification of biallelic pathogenic variants in GBA1 on molecular genetic testing.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/230800 — OMIM Gaucher disease type I entry: the authoritative primary genetics database and ideal source, but WebFetch returned HTTP 403 Forbidden, so I could not obtain a verbatim quote from the page itself. Discarded to avoid fabricating a quote.",
+          "https://data.omim.org/entry/606463 — OMIM GBA gene entry: not fetched; OMIM domain blocks WebFetch (403). Not needed once GeneReviews supplied a direct supporting quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK448080/ — StatPearls Gaucher Disease: a secondary review chapter; not fetched since GeneReviews (peer-reviewed expert-authored) is the stronger authoritative source.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6376752/ and other PMC/PubMed research articles (Indian/Turkish/Egyptian cohort studies) — primary research papers on specific mutation cohorts, not authoritative reference statements of the disease→enzyme relation; discarded as off-target.",
+          "https://image-ppubs.uspto.gov/...downloadPdf/9387236 — a US patent on lysosomal-disease compositions; not an authoritative clinical/biochemistry reference; discarded."
+        ],
+        "note": "ENTAILED. The quote \"Gaucher disease (GD) is caused by deficient glucocerebrosidase activity\" directly and explicitly states the exact relation (gaucher → glucocerebrosidase deficiency), with no inference required. The second sentence corroborates by naming the same enzyme (glucocerebrosidase / glucosylceramidase) as the diagnostic deficiency and its gene GBA1, matching the FACT's \"acid beta-glucosidase / GBA\" synonyms. Source is GeneReviews (NCBI Bookshelf), a peer-reviewed expert-authored clinical-genetics reference — an authoritative primary source, not a blog or question bank. Direction is correct (disease is the subject, enzyme deficiency is the cause/object). No LEAP."
+      },
+      "verify": {
+        "id": "deficient_in__gaucher",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the FACT names the enzyme \"acid beta-glucosidase / GBA,\" but the verbatim quote uses \"glucocerebrosidase (glucosylceramidase)\" and references the GBA1 gene — the exact string \"acid beta-glucosidase\" does not appear in the quoted bytes, so one could argue the GBA/acid-beta-glucosidase identity is supplied externally rather than by the source. This refutation FAILS: (1) the page states verbatim \"Gaucher disease (GD) is caused by deficient glucocerebrosidase activity,\" which is precisely the deficiency-causes-disease edge asserted; (2) glucocerebrosidase, glucosylceramidase, and acid beta-glucosidase are established synonyms for the same enzyme (EC 3.2.1.45), and the quote explicitly anchors it to the GBA1 gene via \"biallelic pathogenic variants in GBA1.\" The causal relation is stated outright, not merely implied or inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__gaucher",
+      "relation": "accumulates",
+      "subject": "gaucher",
+      "object": "glucocerebroside",
+      "claim": "Glucocerebroside (glucosylceramide) accumulates in macrophages in Gaucher disease.",
+      "grounded": {
+        "id": "accumulates__gaucher",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451492/",
+        "source_title": "Gaucher Disease and Gaucher Cells (Gözdaşoğlu S.), Turkish Journal of Hematology, 2015 — PMC4451492",
+        "byte_quote": "The storage and deposition of glucocerebroside within these cells, prominently macrophages, results in the appearance of Gaucher cells",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/230800 and https://mirror.omim.org/entry/230800 (OMIM #230800, GAUCHER DISEASE TYPE I) — the intended PRIMARY source, but both returned HTTP 403 Forbidden to WebFetch, so no verbatim quote could be extracted; not cited to avoid fabricating a quote from a page I could not actually read.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4451492/ — pre-redirect URL for the cited article; discarded in favor of the canonical post-301 host pmc.ncbi.nlm.nih.gov which is the URL actually fetched.",
+          "WebSearch result-snippet summaries (e.g. 'intracellular accumulation of glucosylceramide ... within cells of mononuclear phagocyte origin') — discarded as byte_quote because search snippets are AI-paraphrased aggregations, not a verbatim sentence from a single fetched primary page.",
+          "https://pubmed.ncbi.nlm.nih.gov/28218669/ (Review of Gaucher Disease Pathophysiology) and NBK548625 (LiverTox) — credible corroborating peer-reviewed sources, not fetched because the cited PMC article already supplies a verbatim entailing quote; left as backup rather than over-fetching."
+        ],
+        "note": "ENTAILED. The quote states \"storage and deposition of glucocerebroside within these cells, prominently macrophages, results in the appearance of Gaucher cells.\" This directly asserts the subject→object edge (gaucher → glucocerebroside) AND the localization to macrophages, matching the FACT verbatim in substance — glucocerebroside (= glucosylceramide/glucosylcerebroside, used interchangeably in this article) accumulates in macrophages in Gaucher disease. No inferential leap: storage/deposition of glucocerebroside in macrophages IS the claimed accumulation. Direction is correct (Gaucher disease is the context; glucocerebroside is the accumulating substance). One minor note: the source is a peer-reviewed clinical-hematology paper rather than OMIM (OMIM was the preferred primary but was 403-blocked); the Turkish Journal of Hematology article is an authoritative peer-reviewed reference, satisfying the primary/authoritative requirement."
+      },
+      "verify": {
+        "id": "accumulates__gaucher",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute on the grounds that \"within these cells\" is a pronoun reference, so the macrophage identity rests on the appositive \"prominently macrophages\" rather than a standalone subject-verb-object claim, and that \"storage and deposition\" might not equal \"accumulates.\" Both fail: the appositive explicitly identifies the storage cells as macrophages, \"storage and deposition within\" is synonymous with accumulation, and the page independently reinforces the relation (\"glucosylceramide (glucocerebroside) is stored in the reticuloendothelial system due to a deficiency of the lysosomal enzyme β-glucocerebrosidase\"), confirming glucocerebroside=glucosylceramide and the Gaucher disease mechanism.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__gaucher",
+      "relation": "inherited_as",
+      "subject": "gaucher",
+      "object": "autosomal_recessive",
+      "claim": "Gaucher disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__gaucher",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1269/",
+        "source_title": "Gaucher Disease - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Gaucher disease (GD) is inherited in an autosomal recessive manner.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #230800 / #230900 / #231000 (omim.org and mirror.omim.org) — these are the canonical primary genetic catalog entries and would be the ideal source, but every WebFetch returned HTTP 403 Forbidden (OMIM blocks automated/unauthenticated fetching). Could not obtain a verbatim quote, so discarded per the no-fabrication rule despite the search snippet asserting autosomal recessive inheritance.",
+          "StatPearls (NCBI Bookshelf, NBK448080) — authoritative but secondary to GeneReviews for the genetic-counseling/inheritance statement; not fetched since GeneReviews already yielded a clean verbatim quote.",
+          "MedlinePlus Genetics (medlineplus.gov/genetics/condition/gaucher-disease) — NLM consumer-health reference; authoritative but more consumer-facing than GeneReviews; not needed once GeneReviews quote secured.",
+          "Search-result summary text claiming 'Gaucher disease (GD) is inherited in an autosomal recessive manner' — used only as a pointer; the quote was independently confirmed by directly fetching the GeneReviews page itself, not taken from the search snippet."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews page states verbatim, under the 'Mode of Inheritance' heading of the Genetic Counseling section: 'Gaucher disease (GD) is inherited in an autosomal recessive manner.' This names the exact subject (Gaucher disease) and exact relation/object (autosomal recessive inheritance) with no inference required — the quote directly forces the fact. Direction is correct (gaucher → autosomal_recessive). No LEAP. Source is a peer-reviewed authoritative primary reference (GeneReviews, NCBI Bookshelf), satisfying the primary-source requirement; OMIM was the first-choice catalog but was unfetchable (403)."
+      },
+      "verify": {
+        "id": "inherited_as__gaucher",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute by checking whether the relation is hedged, conditional, negated, attributed to a different subject, or merely incidental. The quote \"Gaucher disease (GD) is inherited in an autosomal recessive manner.\" appears verbatim on NBK1269 (the GeneReviews entry for Gaucher Disease) in the \"Mode of Inheritance\" subsection, with no qualifier or negation. It is corroborated by a second verbatim summary statement \"GD is inherited in an autosomal recessive manner.\" Subject (Gaucher disease), predicate (is inherited in), and object (autosomal recessive manner) are all explicit and unhedged. The page is specifically about Gaucher disease, so subject attribution is unambiguous. No contradicting or weakening context was found. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__phenylketonuria",
+      "relation": "deficient_in",
+      "subject": "phenylketonuria",
+      "object": "phenylalanine_hydroxylase",
+      "claim": "Phenylketonuria results from deficiency of phenylalanine hydroxylase (PAH).",
+      "grounded": {
+        "id": "deficient_in__phenylketonuria",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1504/",
+        "source_title": "Phenylalanine Hydroxylase Deficiency - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "PAH deficiency is an inborn error of Phe metabolism caused by biallelic PAH pathogenic variants resulting in reduced activity of the enzyme PAH. ... \"Phenylketonuria (PKU)\" refers specifically to severe PAH deficiency",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/261600 (OMIM PKU entry #261600) — the canonical primary source, but returned HTTP 403 Forbidden to WebFetch; could not retrieve a verbatim quote, so not citable as the grounded source.",
+          "https://mirror.omim.org/entry/261600 (OMIM mirror) — also returned HTTP 403 Forbidden; unfetchable.",
+          "https://omim.org/entry/612349 (OMIM PAH gene entry *612349) — describes the PAH gene/enzyme, not the disease→deficiency relation framing; not fetched for a quote and is the gene entry rather than the PKU disease entry.",
+          "WebSearch result snippet text (Google/OMIM search summary stating 'PKU... resulting from a deficiency of PAH') — discarded as a source: it is an aggregated/search-engine-generated summary, not a verbatim quote read off an authoritative page."
+        ],
+        "note": "ENTAILED. GeneReviews (NCBI Bookshelf), a peer-reviewed authoritative clinical-genetics reference, states PAH deficiency results in 'reduced activity of the enzyme PAH' and that 'Phenylketonuria (PKU)' refers specifically to severe PAH deficiency. Composing the two: phenylketonuria = severe deficiency of phenylalanine hydroxylase (PAH). This forces the fact's exact relation (phenylketonuria → phenylalanine_hydroxylase) with correct direction; the disease is the deficient-state of the named enzyme. No leap. Note: the source frames the etiology as biallelic PAH pathogenic variants causing reduced PAH enzyme activity (i.e., enzyme deficiency is the proximate mechanism), which matches 'deficiency of phenylalanine hydroxylase.' The canonical OMIM #261600 entry corroborates this but was unfetchable (403); the substituted GeneReviews source is itself primary/authoritative."
+      },
+      "verify": {
+        "id": "deficient_in__phenylketonuria",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote describes \"PAH deficiency\" broadly and only equates PKU with SEVERE PAH deficiency (plasma Phe >1,000 µmol/L), so one might argue the page does not state plain \"phenylketonuria results from PAH deficiency\" but rather a severe subset. However, this fails: PKU being \"severe PAH deficiency\" is still a deficiency of the enzyme PAH (phenylalanine hydroxylase), and the page's Molecular Pathogenesis section explicitly states the disorder is \"caused by biallelic PAH pathogenic variants resulting in reduced activity of the enzyme PAH\" where PAH = phenylalanine hydroxylase, \"the rate-limiting step in the conversion of phenylalanine (Phe) to tyrosine.\" The deficient_in(phenylketonuria, phenylalanine hydroxylase) edge is directly stated, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__phenylketonuria",
+      "relation": "accumulates",
+      "subject": "phenylketonuria",
+      "object": "phenylalanine",
+      "claim": "Phenylalanine accumulates in phenylketonuria.",
+      "grounded": {
+        "id": "accumulates__phenylketonuria",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK535378/",
+        "source_title": "Phenylketonuria (PKU) - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Loss of PAH activity due to biallelic pathogenic variants impairs phenylalanine metabolism, leading to the accumulation of phenylalanine and its toxic metabolites.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/261600 — OMIM primary entry for PKU (#261600): the ideal primary source, but the server returned HTTP 403 Forbidden to WebFetch, so I could not READ a page or extract a verbatim quote. Per instructions I do not fabricate a quote from an unfetched page; discarded in favor of a page I actually read.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK1504/ — GeneReviews 'Phenylalanine Hydroxylase Deficiency' (peer-reviewed, equally authoritative): not fetched because StatPearls already yielded an explicit, on-point verbatim quote; held in reserve rather than used.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK22253/ — NCBI 'Genes and Disease' chapter: secondary/educational summary, weaker than StatPearls/GeneReviews; not fetched.",
+          "Search-snippet text (e.g. 'concentration of phenylalanine in the body can build up to toxic levels') — discarded as evidence because it is aggregated search-result text, not bytes I fetched and read from the page itself."
+        ],
+        "note": "ENTAILED. The FACT is phenylketonuria → phenylalanine accumulates. The quote states that loss of PAH activity (the enzymatic defect that defines PKU; the same page titles the disorder 'Phenylketonuria (PKU)' and elsewhere calls it phenylalanine hydroxylase deficiency) leads 'to the accumulation of phenylalanine.' This is the exact subject→object relation with no inference required — the cause (PAH-deficient PKU) and the effect (phenylalanine accumulation) are both explicit in one sentence. Direction is correct: PKU is the condition, phenylalanine is what accumulates. A second corroborating verbatim quote on the same fetched page ('PKU is classified as an aminoacidopathy, or toxic accumulation disorder, in which excess substrate—phenylalanine and its metabolites—produce neurotoxicity if untreated') independently states phenylalanine accumulation in PKU. Minor LEAP element: the equivalence 'loss of PAH activity = phenylketonuria' is medical-definitional rather than spelled out in this single sentence, but the page's own title and classification make it the same disorder, so the grounding holds."
+      },
+      "verify": {
+        "id": "accumulates__phenylketonuria",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: argue the quote attributes accumulation to \"loss of PAH activity,\" not nominally to \"phenylketonuria,\" so the edge could be about an enzyme defect rather than the named disease. This fails: NBK535378 is the StatPearls \"Phenylketonuria\" chapter, and \"loss of PAH activity due to biallelic pathogenic variants\" is the exact molecular definition of PKU (autosomal recessive PAH deficiency). The quote explicitly states \"leading to the accumulation of phenylalanine,\" directly asserting the accumulation relation. Corroborating on-page sentences (\"phenylalanine cannot be adequately metabolized, leading to its accumulation\"; \"Elevated phenylalanine readily crosses the blood-brain barrier\") reinforce it. The relation is stated, not merely implied.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__phenylketonuria",
+      "relation": "inherited_as",
+      "subject": "phenylketonuria",
+      "object": "autosomal_recessive",
+      "claim": "Phenylketonuria is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__phenylketonuria",
+        "resolved_url": "https://medlineplus.gov/genetics/condition/phenylketonuria/",
+        "source_title": "Phenylketonuria — MedlinePlus Genetics (U.S. National Library of Medicine, NIH)",
+        "byte_quote": "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell must have a variant to cause the disorder.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #261600 entry (https://omim.org/entry/261600) and Clinical Synopsis (https://omim.org/clinicalSynopsis/261600) — the canonical primary source and explicitly states 'Autosomal recessive' inheritance, but BOTH the live site and the mirror.omim.org host returned HTTP 403 Forbidden to automated WebFetch, so no verbatim quote could be read directly from the page. Discarded to avoid fabricating a quote.",
+          "Search-result snippet text ('Classical PKU is inherited in a strictly autosomal recessive manner...') — discarded because it is the WebSearch engine's summary, not bytes I fetched and read from the source page itself; using it would risk quoting paraphrase rather than the page's verbatim text.",
+          "PMC article on PAH mutation analysis (https://pmc.ncbi.nlm.nih.gov/articles/PMC6081236/) and the pegvaliase clinical-trial PDF — not fetched; primary-research/trial documents are narrower than needed and the disease-level inheritance statement was already cleanly available from an authoritative reference."
+        ],
+        "note": "ENTAILED. The fetched MedlinePlus Genetics page states verbatim that phenylketonuria 'is inherited in an autosomal recessive pattern,' which directly asserts the relation (phenylketonuria → autosomal_recessive) with the subject as PKU and the object as autosomal recessive — direction is correct and no inferential leap is required. Source is authoritative (NIH/NLM curated genetics reference), though not the single most canonical primary source (OMIM), which was unreachable via automated fetch (403). The MedlinePlus statement independently and unambiguously supports the fact."
+      },
+      "verify": {
+        "id": "inherited_as__phenylketonuria",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute on three axes: (1) quote absent/paraphrased — failed, the sentence appears verbatim; (2) quote belongs to a different condition — failed, it is on the phenylketonuria condition page and reads \"This condition is inherited...\" referring to PKU; (3) quote states autosomal recessive only generically, not as PKU's mode — failed, \"This condition is inherited in an autosomal recessive pattern\" directly asserts the edge, reinforced by the carrier-parent sentence. No refutation holds.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__pompe",
+      "relation": "deficient_in",
+      "subject": "pompe",
+      "object": "acid_alpha_glucosidase",
+      "claim": "Pompe disease (GSD II) is caused by deficiency of acid alpha-glucosidase (acid maltase / GAA).",
+      "grounded": {
+        "id": "deficient_in__pompe",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7467391/",
+        "source_title": "Pompe disease: pathogenesis, molecular genetics and diagnosis — Taverna et al., Aging (Albany NY), 2020 (PMC7467391)",
+        "byte_quote": "Pompe disease (OMIM # 232300) or glycogenosis type II or acid maltase deficiency is a rare, chronic and muscle-weakening, often fatal neuromuscular disease. ... PD is caused by a partial or total deficiency of acid alpha-glucosidase (GAA), which induces glycogen storage.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #232300 (omim.org/entry/232300) — the canonical primary source; the search snippet states 'a deficiency of acid alpha-glucosidase (GAA, acid maltase)', but omim.org and its mirror.omim.org returned HTTP 403 on every WebFetch attempt, so I could not READ the page to extract a first-party verbatim quote. Discarded as unfetchable, not as wrong.",
+          "GeneReviews 'Pompe Disease' (ncbi.nlm.nih.gov/books/NBK1261/) — authoritative peer-reviewed source; fetch confirmed the synonyms 'Acid Alpha-Glucosidase Deficiency, Acid Maltase Deficiency, GAA Deficiency' and that GAA pathogenic variants cause the disease, but the truncated/parsed content did not yield a single verbatim sentence phrasing it as 'caused by deficiency of acid alpha-glucosidase.' Discarded in favor of the PMC article that gave a clean literal causal sentence.",
+          "USPTO patent PDFs (image-ppubs.uspto.gov ...10857212, 12246062, etc.) — patents on recombinant/augmented GAA therapy; not authoritative disease references, discarded as secondary/commercial.",
+          "bioRxiv preprint (biorxiv.org/.../212837) — non-peer-reviewed preprint on GAA structure; discarded in favor of a peer-reviewed source.",
+          "Feline GAA / murine-model and genotype-correlation PMC articles — about animal models or genotype-phenotype detail, not a clean human disease definition; discarded as off-target."
+        ],
+        "note": "ENTAILED. The fetched peer-reviewed article explicitly names the subject as Pompe disease (PD = 'Pompe disease (OMIM # 232300) or glycogenosis type II or acid maltase deficiency') and then states 'PD is caused by a partial or total deficiency of acid alpha-glucosidase (GAA)'. This is the exact relation pompe -> acid_alpha_glucosidase with correct direction (disease caused by deficiency of the enzyme). The synonym 'acid maltase deficiency' / GAA is confirmed in the same sentence, so the GAA = acid maltase = acid alpha-glucosidase identity in the FACT is also directly supported. No inferential leap. Note on provenance: the canonical primary source (OMIM #232300) could not be fetched (403); the grounding source here is a peer-reviewed journal article (Aging, 2020), which the task explicitly permits as an authoritative peer-reviewed reference."
+      },
+      "verify": {
+        "id": "deficient_in__pompe",
+        "byte_stable": true,
+        "refute_attempt": "I tried to refute the edge as only associative rather than causal. The second sentence is explicitly causal: \"PD is caused by a partial or total deficiency of acid alpha-glucosidase (GAA).\" The first sentence establishes the synonymy \"acid maltase deficiency\" = Pompe disease and identifies GAA as acid alpha-glucosidase. There is no hedging, correlation-only language, or ambiguity, so the refutation fails — the deficiency-causes-disease relation is directly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__pompe",
+      "relation": "accumulates",
+      "subject": "pompe",
+      "object": "lysosomal_glycogen",
+      "claim": "Glycogen accumulates in lysosomes in Pompe disease.",
+      "grounded": {
+        "id": "accumulates__pompe",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10092494/",
+        "source_title": "Lysosomal glycogen accumulation in Pompe disease results in disturbed cytoplasmic glycogen metabolism (PMC10092494, peer-reviewed)",
+        "byte_quote": "As a consequence, glycogen cannot be degraded and accumulates in the lysosomes.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #232300 (omim.org/entry/232300) — the canonical primary source for Pompe disease, but WebFetch returned HTTP 403 Forbidden; could not obtain a verbatim quote, so discarded despite being authoritative.",
+          "OMIM mirror *606800 GAA (mirror.omim.org/entry/606800) — also HTTP 403 Forbidden on fetch; no readable quote obtainable.",
+          "StatPearls 'Glycogen Storage Disease Type II' (ncbi.nlm.nih.gov/books/NBK470558/) — fetch DID return supporting verbatim sentences ('This deficiency leads to impaired glycogen breakdown within lysosomes...'; 'Pompe disease is driven by lysosomal glycogen accumulation due to GAA enzyme deficiency'). Strong corroborating source, but the WebFetch returned two competing candidate sentences without surrounding context to disambiguate exact wording, so it was kept as backup rather than the cited quote. It independently confirms the relation.",
+          "USPTO patent PDFs (image-ppubs.uspto.gov) — not peer-reviewed primary biochemistry references; discarded per instruction to avoid non-authoritative/secondary sources.",
+          "WebSearch result-snippet prose summarizing the mechanism — search-engine-generated synthesis, not a fetched page; not used as the byte_quote to avoid fabrication."
+        ],
+        "note": "ENTAILED. The quoted sentence is the consequence clause of the article's mechanism description: GAA (acid alpha-glucosidase) deficiency means glycogen 'cannot be degraded and accumulates in the lysosomes.' The article title itself states 'Lysosomal glycogen accumulation in Pompe disease,' fixing the subject as Pompe disease. Combined, the source directly asserts the exact relation pompe -> lysosomal_glycogen with correct direction (Pompe disease is the condition; lysosomal glycogen accumulation is the result). No leap required; the only minor gap is that the single quoted sentence relies on the immediately preceding context/title to bind 'glycogen accumulates in the lysosomes' to Pompe disease specifically, but that binding is explicit in the article's title and introduction. StatPearls (NBK470558) independently corroborates. Note: the canonical OMIM entry (#232300) was the intended primary target but was unreachable (403); the cited PMC source is peer-reviewed and authoritative."
+      },
+      "verify": {
+        "id": "accumulates__pompe",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to argue the quote's \"As a consequence... accumulates in the lysosomes\" might refer to some other substance or condition, leaving the Pompe/glycogen/lysosome edge implicit rather than stated. Refutation fails: the verbatim quote names glycogen as the explicit subject (\"glycogen cannot be degraded and accumulates in the lysosomes\"), and the surrounding context fetched from the page shows the antecedent is the GAA (acid alpha-glucosidase) gene defect that defines Pompe disease, with the following sentence referencing \"the most severe classic infantile form\" (a Pompe phenotype). The edge glycogen->accumulates->lysosomes in Pompe disease is stated directly, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__pompe",
+      "relation": "inherited_as",
+      "subject": "pompe",
+      "object": "autosomal_recessive",
+      "claim": "Pompe disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__pompe",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1261/",
+        "source_title": "Pompe Disease - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Pompe disease is inherited in an autosomal recessive manner.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #232300 (https://omim.org/entry/232300) — the canonical primary genetic source; WebFetch returned HTTP 403 Forbidden, so no verifiable page body/quote could be retrieved. Search snippet asserted 'Glycogen storage disease type II is inherited as an autosomal recessive trait' but I do not treat an unfetchable snippet as a grounded verbatim quote, so OMIM was discarded in favor of a page I could actually read.",
+          "StatPearls 'Glycogen Storage Disease Type II' (https://www.ncbi.nlm.nih.gov/books/NBK470558/) — authoritative but secondary/review text; not needed once GeneReviews provided a direct statement, so not fetched.",
+          "PMC review/case-report/cohort articles (PMC7467391, PMC8509548, PMC3479421, etc.) — primary research papers on specific cohorts/mutations rather than a clean authoritative statement of inheritance mode; discarded as lower-yield and partly secondary for this specific edge."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews page (NCBI Bookshelf, peer-reviewed authoritative clinical genetics reference) states word-for-word in its Mode of Inheritance / Genetic Counseling section: 'Pompe disease is inherited in an autosomal recessive manner.' This directly asserts the exact relation (pompe → autosomal_recessive) with no inference or leap required. Note OMIM #232300 (the canonical primary source) corroborates this but was unfetchable (403); the verdict rests on the GeneReviews quote which I actually retrieved and verified."
+      },
+      "verify": {
+        "id": "inherited_as__pompe",
+        "byte_stable": true,
+        "refute_attempt": "Tried to break the grounding three ways: (1) quote fabricated/paraphrased — refuted: WebFetch confirms the sentence appears verbatim, character-for-character; (2) quote hedged or conditional — refuted: it is a flat declarative with no \"may/some cases/thought to\"; (3) quote describes something other than mode of inheritance — refuted: it appears specifically under the \"Mode of Inheritance\" subsection of Genetic Counseling AND in the Summary's Genetic counseling section, and syntactically states subject (Pompe disease) → predicate (is inherited in) → object (autosomal recessive manner). No negation or inversion. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__lesch_nyhan",
+      "relation": "deficient_in",
+      "subject": "lesch_nyhan",
+      "object": "hgprt",
+      "claim": "Lesch-Nyhan syndrome results from deficiency of hypoxanthine-guanine phosphoribosyltransferase (HGPRT/HPRT).",
+      "grounded": {
+        "id": "deficient_in__lesch_nyhan",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK556079/",
+        "source_title": "Lesch-Nyhan Syndrome - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Lesch Nyhan syndrome is an inborn disorder caused by a deficiency of hypoxanthine-guanine phosphoribosyltransferase (HPRT) enzyme",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/300322 — the preferred PRIMARY source (OMIM, Lesch-Nyhan disease, MIM 300322), but WebFetch returned HTTP 403 Forbidden; could not retrieve any text/quote, so cannot be cited.",
+          "https://www.omim.org/entry/308000 — alternate OMIM entry attempt; also returned HTTP 403 Forbidden, no retrievable content.",
+          "https://rarediseases.org/rare-diseases/lesch-nyhan-syndrome/ — NORD, a secondary patient-oriented source; not fetched since an authoritative reference (StatPearls) already supplied a direct verbatim quote.",
+          "https://www.malacards.org/card/lesch_nyhan_syndrome — aggregator/secondary database, not a primary source.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2234399/ and other PMC/MDPI/Frontiers articles — peer-reviewed but case/molecular-focused; the StatPearls reference states the etiologic relation more directly and was sufficient."
+        ],
+        "note": "ENTAILED. The quote states the relation directly and in the correct direction: Lesch-Nyhan syndrome (subject) is \"caused by a deficiency of hypoxanthine-guanine phosphoribosyltransferase (HPRT) enzyme\" (object) — exactly lesch_nyhan -> HGPRT/HPRT deficiency. No inferential leap required; \"caused by a deficiency of\" entails \"deficient_in.\" Source is NCBI Bookshelf/StatPearls (peer-reviewed clinical reference), not a blog or question bank. The intended PRIMARY source (OMIM 300322) was unreachable (403), so this authoritative reference was used as the grounding source instead."
+      },
+      "verify": {
+        "id": "deficient_in__lesch_nyhan",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: argue the source does not state the deficiency edge but merely an association, or that the enzyme identity (HGPRT vs HPRT) differs. Both fail. The fetched page states verbatim, in two places: \"Lesch Nyhan syndrome is an inborn disorder caused by a deficiency of hypoxanthine-guanine phosphoribosyltransferase (HPRT) enzyme, an enzyme of the purine salvage pathway.\" This is an explicit causal claim (\"caused by a deficiency of\"), equivalent to the FACT's \"results from deficiency of.\" The enzyme \"hypoxanthine-guanine phosphoribosyltransferase\" with abbreviation HPRT is the same enzyme as HGPRT (a standard alternate abbreviation). No interpretive gap exists; the relation is directly stated, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__lesch_nyhan",
+      "relation": "accumulates",
+      "subject": "lesch_nyhan",
+      "object": "uric_acid",
+      "claim": "Uric acid accumulates (hyperuricemia) in Lesch-Nyhan syndrome.",
+      "grounded": {
+        "id": "accumulates__lesch_nyhan",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1149/",
+        "source_title": "HPRT1 Disorders — GeneReviews® (NCBI Bookshelf, NIH)",
+        "byte_quote": "Pathogenic variants in HPRT1 are almost always associated with clinical evidence for overproduction of uric acid (hyperuricemia, nephrolithiasis, and/or gouty arthritis). ... The loss of HGprt-mediated purine recycling leads to secondary changes in purine synthesis, resulting in overproduction of uric acid as a purine waste product. Uric acid is not very soluble in body fluids, so its accumulation results in precipitation in the urinary system (nephrolithiasis) and joints (gouty arthritis).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #300322 (LESCH-NYHAN SYNDROME; LNS) at omim.org/entry/300322 — the canonical primary OMIM entry and ideal source, but WebFetch returned HTTP 403 Forbidden (OMIM blocks the fetcher). Could not retrieve a verbatim quote, so not cited as the grounding source despite being authoritative.",
+          "PMC2234399 (Torres & Puig, 'HPRT deficiency: Lesch-Nyhan syndrome', Orphanet J Rare Dis) at pmc.ncbi.nlm.nih.gov/articles/PMC2234399/ — peer-reviewed primary reference, fetched successfully and CORROBORATES the fact verbatim ('Uric acid overproduction is present in all HPRT-deficient patients...'; 'The HPRT defect results in the accumulation of its substrates, hypoxanthine and guanine, which are converted into uric acid...'). Used as a second corroborating source but not the primary citation; GeneReviews states the LNS→uric-acid relation more directly and is the cleaner authoritative reference.",
+          "Search-result snippets and secondary/clinical sites (StatPearls NBK556079, Cleveland Clinic, Medscape, MalaCards, MD Searchlight) — discarded as secondary or because the supporting text came from search summaries rather than a page I directly fetched for a verbatim quote.",
+          "OMIM #300323 (HPRT-RELATED HYPERURICEMIA / Kelley-Seegmiller) — discarded as off-target: it describes the milder partial-deficiency allelic disorder, not Lesch-Nyhan syndrome proper."
+        ],
+        "note": "ENTAILED. The fact (lesch_nyhan → uric_acid accumulates/hyperuricemia) is directly stated by the source. GeneReviews 'HPRT1 Disorders' covers the HPRT1-deficiency disease class whose severe/complete-deficiency phenotype IS Lesch-Nyhan syndrome (LND); the page states overproduction of uric acid (explicitly naming hyperuricemia) is 'almost always' present across HPRT1 disorders, and that uric acid 'accumulation' results from the enzyme defect. Direction is correct: the disorder (Lesch-Nyhan/HPRT1 deficiency) is the cause and uric acid accumulation/hyperuricemia is the consequence. Minor LEAP only in that the cited sentence says 'HPRT1' rather than the words 'Lesch-Nyhan' — but the page defines LND as the prototypical HPRT1 disorder and the PMC2234399 corroboration removes any ambiguity by naming Lesch-Nyhan syndrome explicitly ('Uric acid overproduction is present in all HPRT-deficient patients'). The intended primary source (OMIM #300322) was unfetchable (403); GeneReviews + PMC are authoritative NIH/peer-reviewed substitutes."
+      },
+      "verify": {
+        "id": "accumulates__lesch_nyhan",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: (a) the page never uses the literal phrase \"Lesch-Nyhan syndrome\" in the quoted passage — it speaks of \"Pathogenic variants in HPRT1.\" (b) The page's primary verb is \"overproduction of uric acid\" (a production-rate claim), not \"accumulation\" (a buildup-of-level claim), so one could argue the edge \"accumulates\" is an inference rather than a stated relation. Both objections fail: NBK1149 is the GeneReviews entry for HPRT1 disorders, of which Lesch-Nyhan syndrome is the severe HGprt-deficiency phenotype, so the HPRT1-variant mechanism IS the Lesch-Nyhan mechanism. And the page states accumulation literally (\"its accumulation results in precipitation\") and lists \"hyperuricemia\" explicitly as clinical evidence of uric-acid overproduction — accumulation and elevated serum level are both named and tied to uric acid, not merely implied.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__lesch_nyhan",
+      "relation": "inherited_as",
+      "subject": "lesch_nyhan",
+      "object": "x_linked_recessive",
+      "claim": "Lesch-Nyhan syndrome is inherited in an X-linked recessive manner.",
+      "grounded": {
+        "id": "inherited_as__lesch_nyhan",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK556079/",
+        "source_title": "Lesch-Nyhan Syndrome - StatPearls - NCBI Bookshelf (NIH)",
+        "byte_quote": "Lesch Nyhan syndrome is an X-linked recessive disorder resulting from mutation of the HPRT1 gene, located at a q26-27 position on the long arm of the X chromosome.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/clinicalSynopsis/300322 — primary target (OMIM Clinical Synopsis, entry 300322), but returned HTTP 403 Forbidden to automated fetch; could not retrieve a verbatim quote, so discarded despite being the most authoritative source.",
+          "https://www.omim.org/entry/300322 — OMIM main entry, also HTTP 403 Forbidden; not fetchable.",
+          "WebSearch result snippets (sciencedirect, frontiersin, malacards, NORD) — secondary/aggregator or case-report sources; not used as the grounding source since a peer-reviewed NCBI Bookshelf reference (StatPearls) was directly fetchable with an explicit verbatim quote.",
+          "Frontiers/PMC female-patient case reports — describe a de novo/heterozygote female case, which is atypical and could muddy the canonical inheritance statement; discarded in favor of the general inheritance statement in StatPearls."
+        ],
+        "note": "ENTAILED. The fetched StatPearls sentence states verbatim that \"Lesch Nyhan syndrome is an X-linked recessive disorder,\" directly asserting the subject→object edge (lesch_nyhan → x_linked_recessive). No leap or inference required; the quote forces the fact. Direction is correct (the disease is the subject, X-linked recessive is its inheritance mode). Note: the intended PRIMARY source (OMIM 300322) was 403-blocked to WebFetch; StatPearls (NCBI Bookshelf, peer-reviewed, NIH-hosted) is an authoritative clinical reference and serves as the grounding source."
+      },
+      "verify": {
+        "id": "inherited_as__lesch_nyhan",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: argue \"X-linked recessive disorder\" classifies the disorder rather than stating its inheritance mode, or that \"disorder\" differs from \"inherited as.\" This fails — \"X-linked recessive\" is by definition an inheritance-pattern descriptor applied directly to Lesch-Nyhan syndrome in a single clause, and the page reinforces it mechanistically (carrier mothers transmit the defective X chromosome; affected males; female carriers via lyonization). The subject-predicate relation is stated directly, not inferred across sentences. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__von_gierke",
+      "relation": "deficient_in",
+      "subject": "von_gierke",
+      "object": "glucose_6_phosphatase",
+      "claim": "Von Gierke disease (GSD type I) results from deficiency of glucose-6-phosphatase.",
+      "grounded": {
+        "id": "deficient_in__von_gierke",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5859325/",
+        "source_title": "Recent development and gene therapy for glycogen storage disease type Ia (Chou JY, Kim GY, Cho JH; PMC5859325)",
+        "byte_quote": "Glycogen storage disease type I (GSD-I), also known as von Gierke disease, consists of two major subtypes, GSD-Ia (MIM232200), caused by a deficiency in glucose-6-phosphatase-α (G6Pase-α or G6PC)...",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/232200 — the canonical primary source (OMIM GSD Ia entry). DISCARDED as a fetch target because omim.org returned HTTP 403 Forbidden to WebFetch; could not retrieve a verbatim quote, and fabricating one is not allowed. Its content is corroborating but not citable here.",
+          "https://www.orpha.net/en/disease/detail/364 — Orphanet (authoritative rare-disease portal). DISCARDED: WebFetch returned only a bot-protection/connection-verification page ('haphash' challenge), no medical content, so no verbatim quote obtainable.",
+          "https://www.sciencedirect.com/topics/medicine-and-dentistry/glycogen-storage-disease-type-i — ScienceDirect topic page. DISCARDED as redundant/secondary aggregation once a peer-reviewed primary article quote was secured.",
+          "https://medlineplus.gov/.../glycogen-storage-disease-type-i.pdf — MedlinePlus consumer-genetics handout. DISCARDED as a patient-education secondary source, not a primary/peer-reviewed reference.",
+          "Initial WebSearch summary text asserting the Cori 1952 glucose-6-phosphatase demonstration — DISCARDED as a quote source because it is the search engine's synthesized summary, not a verbatim sentence from a fetched page."
+        ],
+        "note": "ENTAILED. The verbatim sentence from a peer-reviewed PMC review article explicitly equates GSD-I with von Gierke disease and states GSD-Ia is 'caused by a deficiency in glucose-6-phosphatase-alpha (G6Pase-alpha or G6PC)'. This directly forces the relation von_gierke -> glucose_6_phosphatase deficiency with the correct subject->object direction; no inferential leap is required. Minor scope nuance (not affecting grounding): 'von Gierke disease / GSD type I' as used in the FACT most precisely maps to GSD-Ia, the predominant ~80% subtype with primary glucose-6-phosphatase (G6PC) deficiency; GSD-Ib reflects a G6P transporter (SLC37A4) defect. The FACT's classic teaching equivalence (Von Gierke = G6Pase deficiency) is exactly what the quoted primary source states. OMIM 232200 was the preferred primary source but is unfetchable via WebFetch (403); the PMC peer-reviewed article is an authoritative substitute and itself cites MIM232200."
+      },
+      "verify": {
+        "id": "deficient_in__von_gierke",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote attributes the deficiency to the subtype \"GSD-Ia\" and names the enzyme as \"glucose-6-phosphatase-α (G6Pase-α or G6PC)\", whereas the FACT states the broader \"GSD type I\" results from deficiency of \"glucose-6-phosphatase\". One could argue (a) the quote scopes the deficiency to a subtype (GSD-Ia), not GSD-I as a whole, since GSD-I also includes GSD-Ib (a glucose-6-phosphate transporter defect), and (b) \"glucose-6-phosphatase-α\" is the catalytic subunit, not the generic \"glucose-6-phosphatase\". This refutation FAILS: the quote explicitly equates \"Glycogen storage disease type I (GSD-I), also known as von Gierke disease\" and states its principal subtype GSD-Ia is \"caused by a deficiency in glucose-6-phosphatase-α\", which is the canonical catalytic enzyme commonly called glucose-6-phosphatase. The eponym von Gierke disease classically denotes the glucose-6-phosphatase-deficient form, and α is the catalytic subunit of that same enzyme. The relation (von Gierke / GSD type I --deficient_in--> glucose-6-phosphatase) is directly and verbatim stated on the page.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__von_gierke",
+      "relation": "accumulates",
+      "subject": "von_gierke",
+      "object": "glycogen",
+      "claim": "Glycogen accumulates in liver and kidney in von Gierke disease.",
+      "grounded": {
+        "id": "accumulates__von_gierke",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK534196/",
+        "source_title": "Glycogen Storage Disease Type I (Von Gierke Disease) — StatPearls, NCBI Bookshelf (NIH)",
+        "byte_quote": "GSD I results from mutations affecting glucose-6-phosphatase (G6Pase) activity, leading to excessive glycogen accumulation in the liver and kidneys",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/232200 — OMIM #232200 (GSD1A) is the ideal primary genetic source and was confirmed by search to contain the relation, but the page returned HTTP 403 Forbidden to WebFetch (Cloudflare/anti-bot). Could not obtain a verbatim quote directly from the page, so not used as the grounding source.",
+          "https://rarediseases.info.nih.gov/diseases/16523/glycogen-storage-disease-i — NIH GARD authoritative page, but WebFetch returned HTTP 404 Not Found (page moved/restructured); no verbatim quote obtainable.",
+          "https://pubmed.ncbi.nlm.nih.gov/21620087/ — case report on preemptive liver-kidney transplantation; about treatment of a single case, not a definitive statement of the von_gierke→glycogen accumulation relation; discarded as non-authoritative for the general fact.",
+          "https://image-ppubs.uspto.gov/... (two US patent PDFs) — patent filings, not peer-reviewed clinical/biochemistry references; discarded per primary-source requirement.",
+          "https://www.ncbi.nlm.nih.gov/gtr/conditions/C2919796/ and /gtr/tests/... — NCBI Genetic Testing Registry entries; registry/testing metadata rather than a pathophysiology statement of the accumulation relation; not fetched for quote."
+        ],
+        "note": "ENTAILED, self-contained. The relation accumulates(von_gierke -> glycogen). The chosen span names the disease as the subject and states the accumulation in one clause: \"GSD I results from mutations affecting glucose-6-phosphatase (G6Pase) activity, leading to excessive glycogen accumulation in the liver and kidneys.\" The same StatPearls chapter establishes the identity verbatim: \"Glycogen storage disease type I (GSD I), also known as Von Gierke disease\" — so GSD I IS von Gierke disease, and glycogen is what accumulates (direction correct). The earlier byte_quote (\"This causes glycogen to accumulate primarily in the liver and kidneys...\") was rejected at verification because its subject was the pronoun \"This\", not the disease, so the span did not self-contain the subject->object relation; naming GSD I explicitly resolves that."
+      },
+      "verify": {
+        "id": "accumulates__von_gierke",
+        "byte_stable": true,
+        "refute_attempt": "Byte-stable: both spans appear verbatim on the fetched NCBI page (the accumulation clause and the \"GSD I ... also known as Von Gierke disease\" identity). Refutation: does the span carry accumulates(von_gierke -> glycogen) by itself? Yes — \"GSD I ... leading to excessive glycogen accumulation in the liver and kidneys\" states the disease and the accumulating substrate in one clause; the GSD I = Von Gierke identity is stated verbatim in the same chapter, so no inferential leap. The prior direction_only verdict was caused only by the old quote using the pronoun \"This\" as subject; that defect is removed. The refutation fails; grounded.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__von_gierke",
+      "relation": "inherited_as",
+      "subject": "von_gierke",
+      "object": "autosomal_recessive",
+      "claim": "Von Gierke disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__von_gierke",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1312/",
+        "source_title": "Glycogen Storage Disease Type I — GeneReviews (NCBI Bookshelf, NBK1312)",
+        "byte_quote": "Glycogen storage disease type I (GSD I) is inherited in an autosomal recessive manner.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "omim.org/clinicalSynopsis/232200 (OMIM Clinical Synopsis for GSD Ia) — the canonical primary source and would state Inheritance: Autosomal recessive, but OMIM returns HTTP 403 to automated fetches, so no verbatim quote could be read directly from the page.",
+          "omim.org/entry/232200 (OMIM full entry for GSD Ia / von Gierke) — also HTTP 403 Forbidden; could not fetch/read.",
+          "WebSearch result snippets (OMIM and GeneReviews) stating 'The inheritance pattern is autosomal recessive' / 'GSD I is inherited in an autosomal recessive manner' — discarded as primary citation because they are search-engine summaries, not bytes verified by fetching the page itself; used only to locate the fetchable source.",
+          "emedicine.medscape.com and StatPearls (NBK534196) — secondary clinical references; not needed since the authoritative GeneReviews source was fetched successfully.",
+          "PMC3118311 'Glucose-6-phosphatase deficiency' — peer-reviewed but a narrower review; GeneReviews gives the explicit, unambiguous mode-of-inheritance sentence."
+        ],
+        "note": "ENTAILED. The fact concerns von Gierke disease = glycogen storage disease type Ia (GSD Ia), which is the principal/classic subtype of GSD type I. The fetched GeneReviews 'Mode of Inheritance' (Genetic Counseling section) states verbatim that GSD I is inherited in an autosomal recessive manner; the same article's molecular section confirms GSD Ia arises from biallelic G6PC1 variants, consistent with autosomal recessive. The subject→object direction (von_gierke → autosomal_recessive) is stated by the source. Minor LEAP element: the quoted sentence names 'GSD I' (the umbrella type) rather than 'von Gierke' or 'Ia' by name, but von Gierke disease is definitionally GSD Ia within GSD I and the article applies this inheritance to the type including Ia, so the entailment is sound. The canonical OMIM Clinical Synopsis (232200) corroborates 'Autosomal recessive' but was unfetchable (403)."
+      },
+      "verify": {
+        "id": "inherited_as__von_gierke",
+        "byte_stable": true,
+        "refute_attempt": "The verbatim quote names \"Glycogen storage disease type I (GSD I)\", not \"Von Gierke disease\", so one could argue the source never states the inheritance pattern of \"Von Gierke disease\" specifically. This refutation fails: Von Gierke disease is the standard eponym for GSD type I — they are the same entity, and the NBK1312 GeneReviews page is the canonical GeneReviews entry for GSD type I. The autosomal-recessive inheritance edge is stated directly and verbatim (\"...is inherited in an autosomal recessive manner\") under the \"Mode of Inheritance\" heading and again in the Summary, with no qualification or alternative pattern.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__fabry",
+      "relation": "deficient_in",
+      "subject": "fabry",
+      "object": "alpha_galactosidase_a",
+      "claim": "Fabry disease results from deficiency of the enzyme alpha-galactosidase A.",
+      "grounded": {
+        "id": "deficient_in__fabry",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1292/",
+        "source_title": "Fabry Disease — GeneReviews®, NCBI Bookshelf (NBK1292)",
+        "byte_quote": "Fabry disease is the most common of the lysosomal storage disorders and results from deficient activity of the enzyme alpha-galactosidase A (α-Gal A), leading to progressive lysosomal deposition of globotriaosylceramide and its derivatives in cells throughout the body.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/301500 — OMIM #301500 is the canonical primary entry and its summary states Fabry results from 'deficient or absent activity of the lysosomal enzyme alpha-galactosidase A', but OMIM returned HTTP 403 Forbidden on direct WebFetch, so I could not retrieve a verbatim byte-quote from the page itself. Discarded as the quote source (cannot fetch) though it corroborates the relation.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3009617/ — PMC review article; fetch returned a cross-host redirect to pmc.ncbi.nlm.nih.gov and was not re-fetched since a cleaner authoritative quote was already obtained. Secondary review rather than the primary reference text, so not needed.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK435996/ (StatPearls) and other NBK chapters (NBK11570, NBK11601, NBK11574) — relevant but not fetched; GeneReviews NBK1292 is the higher-authority peer-reviewed reference and already yielded a direct verbatim quote."
+        ],
+        "note": "ENTAILED. The quote explicitly states Fabry disease 'results from deficient activity of the enzyme alpha-galactosidase A', which is exactly the asserted edge fabry → alpha_galactosidase_a (disease results from deficiency of this specific enzyme). Direction is correct: the disease is the subject, the enzyme deficiency is the cause/object. No inferential leap required — the relation is stated verbatim. Source is GeneReviews (peer-reviewed, NCBI Bookshelf), an authoritative clinical-genetics reference, not a blog or question bank. OMIM #301500 independently corroborates the same relation but was 403-blocked for verbatim retrieval."
+      },
+      "verify": {
+        "id": "deficient_in__fabry",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute on the wording gap: the quote says Fabry \"results from deficient ACTIVITY of the enzyme alpha-galactosidase A,\" whereas the FACT says \"deficiency OF the enzyme.\" One could claim reduced enzymatic activity (a non-functional but present enzyme) is not strictly the same as a deficiency/absence of the enzyme. This refutation fails: in the lysosomal-storage-disorder context \"deficient activity of alpha-galactosidase A\" is the standard expression of the causal relation, and the quote explicitly names the disease, the enzyme alpha-galactosidase A, and the causal connector \"results from.\" The deficient_in edge (Fabry -> alpha-galactosidase A) is directly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__fabry",
+      "relation": "accumulates",
+      "subject": "fabry",
+      "object": "globotriaosylceramide",
+      "claim": "Globotriaosylceramide (Gb3 / ceramide trihexoside) accumulates in Fabry disease.",
+      "grounded": {
+        "id": "accumulates__fabry",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1292/",
+        "source_title": "Fabry Disease - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Fabry disease is the most common of the lysosomal storage disorders and results from deficient activity of the enzyme alpha-galactosidase A (α-Gal A), leading to progressive lysosomal deposition of globotriaosylceramide and its derivatives in cells throughout the body.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #301500 (https://www.omim.org/entry/301500): the canonical primary source and explicitly states the relation, but the server returns HTTP 403 Forbidden to WebFetch, so no verbatim byte_quote could be captured directly from the page. Discarded as unfetchable rather than unsupportive.",
+          "StatPearls Fabry Disease (NBK435996), Biochemical/genetic diagnosis chapter (NBK11601), PMC3009617, PMC9599883: authoritative and corroborating, but redundant once GeneReviews supplied a clean verbatim quote with the exact subject->object relation; not fetched to avoid unnecessary calls.",
+          "USPTO patent PDFs (e.g. downloadPdf/9987263) and biorxiv/PMC mouse-model and migalastat papers: secondary/applied or model-organism specific, not the preferred authoritative clinical-biochemistry reference; discarded."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews sentence names Fabry disease as the subject and states it leads to \"progressive lysosomal deposition of globotriaosylceramide ... in cells throughout the body\" — deposition/storage is synonymous with accumulation. This directly forces the edge (Fabry disease -> globotriaosylceramide accumulates), in the correct direction, with no inference required. A second verbatim sentence on the same page (\"Enzyme deficiency leads to accumulation of Gb3 ...\") independently confirms the term Gb3 and the word accumulation. No leap. Note: the synonyms in the FACT (Gb3 / ceramide trihexoside) are standard equivalents of globotriaosylceramide; the quote uses the full chemical name and Gb3, both established in the corpus."
+      },
+      "verify": {
+        "final_verdict": "grounded",
+        "id": "accumulates__fabry",
+        "byte_stable": true,
+        "refute_attempt": "The quote says \"progressive lysosomal DEPOSITION of globotriaosylceramide ... in cells throughout the body,\" not the literal word \"accumulates,\" and omits the synonym \"ceramide trihexoside.\" This refutation fails: deposition is synonymous with accumulation in lysosomal-storage context, the same page also states \"accumulation of Gb3,\" globotriaosylceramide appears verbatim, and the sentence subject is Fabry disease with deposition as its direct consequence. The edge is directly stated.</refute_attempt>\n</invoke>\n"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__fabry",
+      "relation": "inherited_as",
+      "subject": "fabry",
+      "object": "x_linked_recessive",
+      "claim": "Fabry disease is inherited in an X-linked recessive manner.",
+      "grounded": {
+        "id": "inherited_as__fabry",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1292/",
+        "source_title": "Fabry Disease — GeneReviews®, NCBI Bookshelf",
+        "byte_quote": "Fabry disease is inherited in an X-linked manner: hemizygous males are affected; heterozygous females may be as severely affected as males or asymptomatic throughout a normal life span.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "OMIM #301500 entry (https://www.omim.org/entry/301500) and its clinical synopsis (https://data.omim.org/clinicalSynopsis/301500) — the canonical primary source for Mendelian inheritance, but both returned HTTP 403 Forbidden to WebFetch, so I could not extract a verbatim quote and did not cite a fabricated one.",
+          "MedlinePlus Genetics — Fabry disease (https://medlineplus.gov/genetics/condition/fabry-disease/) — authoritative NIH source, fetched successfully and corroborates the finding ('This condition is inherited in an X-linked pattern'; 'Unlike other X-linked disorders, Fabry disease causes significant medical problems in many females...'). Discarded as the primary citation only because GeneReviews is the more specialized peer-reviewed clinical-genetics reference; it strengthens, not weakens, the verdict.",
+          "StatPearls — Fabry Disease (https://www.ncbi.nlm.nih.gov/books/NBK435996/) — secondary tertiary review, not fetched for a quote since two stronger primary/authoritative sources already converged.",
+          "Search-result AI summaries — not used as evidence; all quotes were taken from a successfully fetched page body."
+        ],
+        "note": "REFUTES the exact relation as stated. The FACT claims inheritance is \"X-linked RECESSIVE,\" but the fetched GeneReviews source deliberately says only \"X-linked manner\" and immediately qualifies that \"heterozygous females may be as severely affected as males\" — i.e. it does NOT behave as classic X-linked recessive (where heterozygous females are unaffected carriers). MedlinePlus independently confirms this, stating \"X-linked pattern\" and explicitly \"Unlike other X-linked disorders, Fabry disease causes significant medical problems in many females who have one altered copy of the GLA gene.\" So the DIRECTION (Fabry → X-linked) is grounded and entailed, but the specific modifier \"recessive\" is a LEAP not supported — and in fact contradicted — by the authoritative sources, which intentionally avoid the term. Hence verdict direction_only: the X-linked locus relation holds; the \"recessive\" qualifier does not. (Note: ICD/older texts sometimes loosely label it X-linked recessive, but primary clinical-genetics references reject that precision.)"
+      },
+      "verify": {
+        "id": "inherited_as__fabry",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the FACT asserts \"X-linked RECESSIVE,\" but the byte_quote says only \"inherited in an X-linked manner\" with no \"recessive\" qualifier. The quote's own clause (\"heterozygous females may be as severely affected as males\") is exactly why GeneReviews omits \"recessive\" — so the quote arguably refutes the strict recessive reading rather than supporting it. However, the core relation under test — that Fabry disease is inherited and is X-linked — IS stated verbatim (\"Fabry disease is inherited in an X-linked manner\"). I confirmed the sentence appears byte-for-byte on the fetched page both via WebFetch and via raw curl of NBK1292. The edge (inherited_as: X-linked) is grounded; only the added \"recessive\" modifier is unsupported by this quote.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "deficient_in__niemann_pick",
+      "relation": "deficient_in",
+      "subject": "niemann_pick",
+      "object": "acid_sphingomyelinase",
+      "claim": "Niemann-Pick disease types A and B result from deficiency of acid sphingomyelinase (ASM / SMPD1).",
+      "grounded": {
+        "id": "deficient_in__niemann_pick",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10009935/",
+        "source_title": "SMPD1 expression profile and mutation landscape help decipher genotype–phenotype association and precision diagnosis for acid sphingomyelinase deficiency (PMC10009935, peer-reviewed)",
+        "byte_quote": "NPD types A and B are due to a deficiency of the enzyme sphingomyelinase ... patients with NPA and NPB can be diagnosed with the measurement of acid sphingomyelinase (ASM) ... mutations in the SMPD1 gene encoding sphingomyelin phosphodiesterase-1",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/257200 (OMIM Niemann-Pick Type A #257200) — preferred primary source, but WebFetch returned HTTP 403 Forbidden; could not retrieve a verbatim quote, so cannot be cited as the grounding source.",
+          "https://omim.org/entry/607616 (OMIM Niemann-Pick Type B #607616) — same OMIM 403 access block; not fetchable for a verbatim quote.",
+          "https://mirror.omim.org/entry/257200 (OMIM mirror) — also returned HTTP 403 Forbidden; no quote obtainable.",
+          "Search-result snippet text describing SMPD1/ASM — discarded as grounding because it is aggregated WebSearch summary output, not a verbatim fetched-page quote."
+        ],
+        "note": "ENTAILED. The fetched peer-reviewed PMC article states verbatim that \"NPD types A and B are due to a deficiency of the enzyme sphingomyelinase,\" and separately identifies the enzyme as acid sphingomyelinase (ASM) encoded by SMPD1. Together these give the exact relation niemann_pick (types A and B) → deficiency of acid sphingomyelinase (ASM/SMPD1) with correct direction (the disease results from the enzyme deficiency). No inferential leap is required; the enzyme named (\"sphingomyelinase\" / \"acid sphingomyelinase (ASM)\" / \"SMPD1 ... sphingomyelin phosphodiesterase-1\") is the same protein the FACT names. The only caveat is sourcing: the canonical primary source (OMIM) was access-blocked (403), so grounding rests on an authoritative peer-reviewed article rather than OMIM itself — still a primary/peer-reviewed source, not a blog or question bank."
+      },
+      "verify": {
+        "id": "deficient_in__niemann_pick",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the FACT claims deficiency of ACID sphingomyelinase (ASM/SMPD1), but the page's lead clause says only the generic 'enzyme sphingomyelinase'. I tested whether the page actually pins the deficiency to acid sphingomyelinase/SMPD1 rather than leaving it generic or attributing it to neutral sphingomyelinase. The page resolves this in favor of the FACT: it diagnoses NPA/NPB via 'measurement of acid sphingomyelinase (ASM)', states the SMPD1 gene 'encodes the human ASM protein', and contains no contradictory attribution (no neutral-sphingomyelinase or alternative-enzyme claim). The deficient-enzyme = ASM/SMPD1 edge is stated. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__niemann_pick",
+      "relation": "accumulates",
+      "subject": "niemann_pick",
+      "object": "sphingomyelin",
+      "claim": "Sphingomyelin accumulates in Niemann-Pick disease (types A/B).",
+      "grounded": {
+        "id": "accumulates__niemann_pick",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1370/",
+        "source_title": "Acid Sphingomyelinase Deficiency - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Acid sphingomyelinase deficiency (ASMD) is an inborn error of metabolism that results in the accumulation of sphingomyelin in cells and tissues.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #257200 (Niemann-Pick disease, type A, https://www.omim.org/entry/257200) and its mirror https://mirror.omim.org/entry/257200 — both returned HTTP 403 Forbidden to WebFetch, so I could not READ the page myself and could not extract a verifiable verbatim quote. The WebSearch snippet asserted OMIM says loss of acid sphingomyelinase causes sphingomyelin to accumulate, but a search-engine summary is not a fetched primary source, so I did not use it as the grounding quote.",
+          "OMIM #607616 (Niemann-Pick disease, type B, https://omim.org/entry/607616) — not fetched; same OMIM 403 access barrier, and GeneReviews already provided a fetchable authoritative quote covering both A and B (ASMD).",
+          "PMC11613795 (impact of sphingomyelin on pathophysiology / olipudase alfa) and PMC10454326 (liver organoids) — research articles, narrower scope; the GeneReviews reference chapter is a more authoritative, definitional primary source for the disease-substrate relation.",
+          "StatPearls NBK556129 (Niemann-Pick Disease) — tertiary review-style chapter; preferred GeneReviews (NBK1370) as the peer-reviewed authoritative reference.",
+          "First WebFetch of NBK1370 returned a candidate quote about SMPD1 variants reducing substrate hydrolysis ('...leads to decreased hydrolysis of the substrate and its subsequent accumulation in cells') — discarded as the primary quote because it does not name 'sphingomyelin' explicitly in that sentence; used the more explicit definitional sentence instead."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews chapter (NBK1370) states verbatim that ASMD \"results in the accumulation of sphingomyelin in cells and tissues.\" The same chapter establishes that ASMD's severe/chronic forms are historically diagnosed as Niemann-Pick disease type A and type B (NPD-A / NPD-B), and that the enzyme deficiency is precisely what fails to hydrolyze sphingomyelin. Therefore the edge niemann_pick (A/B) → sphingomyelin accumulation is forced by the source; direction is correct (the disease causes the substrate to accumulate). The only LEAP is the lexical identity ASMD == Niemann-Pick A/B, which the same primary source itself asserts, so no external inference is required. OMIM (the requested primary source) was unreachable via WebFetch (403); GeneReviews/NCBI Bookshelf is an equally authoritative peer-reviewed primary reference and was successfully READ with a supporting verbatim quote."
+      },
+      "verify": {
+        "id": "accumulates__niemann_pick",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the byte_quote itself names \"Acid sphingomyelinase deficiency (ASMD)\" as the disease in which sphingomyelin accumulates — it does NOT contain the term \"Niemann-Pick disease,\" so the single quoted sentence is one term short of the asserted edge accumulates(sphingomyelin, niemann_pick). The literal subject-object pair (sphingomyelin, Niemann-Pick A/B) is not stated within the quoted bytes alone. The relation only closes by relying on adjacent sentences on the same page that establish ASMD = NPD: \"infantile neurovisceral ASMD, were historically diagnosed with Niemann-Pick disease type A (NPD-A)\" and \"The later-onset, chronic visceral form of ASMD is also referred to as Niemann-Pick disease type B (NPD-B).\" So the edge is grounded by combining bytes (quote + equivalence sentences), not by a single self-contained verbatim statement of subject+object. The refutation fails to overturn the fact: ASMD is, by the same source's definition, exactly NPD types A/B, so sphingomyelin accumulation in ASMD is sphingomyelin accumulation in Niemann-Pick A/B. Verbatim check: confirmed VERBATIM PRESENT=True against the raw NBK1370 page, in context \"...hydrolyzing sphingomyelin to ceramide... Acid sphingomyelinase deficiency (ASMD) is an inborn error of metabolism that results in the accumulation of sphingomyelin in cells and tissues.\"",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__niemann_pick",
+      "relation": "inherited_as",
+      "subject": "niemann_pick",
+      "object": "autosomal_recessive",
+      "claim": "Niemann-Pick disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__niemann_pick",
+        "resolved_url": "https://medlineplus.gov/genetics/condition/niemann-pick-disease/",
+        "source_title": "Niemann-Pick disease — MedlinePlus Genetics (U.S. National Library of Medicine, NIH)",
+        "byte_quote": "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/257200 — OMIM Niemann-Pick disease type A entry: the canonical primary genetics source and the intended target, but it returned HTTP 403 Forbidden to automated WebFetch. Per the no-fabrication rule I did not invent a quote from it; discarded as unfetchable.",
+          "https://omim.org/clinicalSynopsis/257200 — OMIM clinical synopsis for type A (would list 'Autosomal recessive' under Inheritance): also returned HTTP 403 Forbidden, unfetchable.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10886890/ and other PMC review/case articles — peer-reviewed and corroborative (NPD A/B autosomal recessive, SMPD1 11p15.4), but secondary reviews/case reports rather than the cleanest authoritative statement; not fetched once the NIH MedlinePlus primary entry already supplied a verbatim supporting quote."
+        ],
+        "note": "ENTAILED. The fetched MedlinePlus Genetics page is explicitly the entry for 'Niemann-Pick disease' (subject), and the quoted sentence directly states the condition 'is inherited in an autosomal recessive pattern' (object). The subject→object relation (niemann_pick → autosomal_recessive) is stated verbatim on the page about the named disease, so the quote forces the fact with no inferential leap. Caveat for completeness: MedlinePlus presents Niemann-Pick as one entry spanning types A/B/C; all are autosomal recessive (A/B via SMPD1; C via NPC1/NPC2), so the umbrella statement holds for the disease as named. Source is authoritative (NIH/NLM, citing OMIM and GeneReviews) though MedlinePlus is a clinical-genetics reference rather than OMIM itself, which was unfetchable (403)."
+      },
+      "verify": {
+        "id": "inherited_as__niemann_pick",
+        "byte_stable": true,
+        "refute_attempt": "Tried to argue the relation is not actually stated. The quote's subject \"This condition\" could be read as ambiguous, and Niemann-Pick has multiple subtypes (A/B/C) that can carry inheritance nuance. However, the page is titled \"Niemann-Pick disease,\" and its dedicated \"Inheritance\" section states verbatim: \"This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations.\" The subject unambiguously refers to Niemann-Pick disease and the predicate explicitly asserts autosomal recessive inheritance. The refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__krabbe",
+      "relation": "deficient_in",
+      "subject": "krabbe",
+      "object": "galactocerebrosidase",
+      "claim": "Krabbe disease results from deficiency of galactocerebrosidase (galactosylceramidase / GALC).",
+      "grounded": {
+        "id": "deficient_in__krabbe",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10474820/",
+        "source_title": "Galactosylceramidase deficiency and pathological abnormalities in cerebral white matter of Krabbe disease (PMC10474820)",
+        "byte_quote": "Globoid cell leukodystrophy or Krabbe disease (KD) (OMIM 245200) is an inherited demyelinating disorder caused by a deficiency of galactosylceramidase (GALC; EC 3.2.1.46)...",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/245200 — the authoritative OMIM primary entry, but WebFetch returned HTTP 403 Forbidden; could not retrieve a verbatim supporting quote, so not usable as the cited source.",
+          "https://mirror.omim.org/entry/245200 — OMIM mirror, also returned HTTP 403 Forbidden; no quote retrievable.",
+          "WebSearch result snippet ('Krabbe disease is caused by a deficiency of the lysosomal galactosylceramidase (GALC) enzyme...') — discarded because it is a search-engine-synthesized summary, not a verbatim quote from a fetched page; would risk fabrication if cited as a byte_quote.",
+          "https://omim.org/entry/611722 — a DIFFERENT disorder (atypical Krabbe due to saposin A deficiency, KRBSAPA), not the GALC-deficiency entity in the FACT; off-target.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC9255775/, PMC6982065, PMC7584660 — mouse-model papers; relevant but not needed once a clear human-disease causal statement was obtained."
+        ],
+        "note": "ENTAILED. The fetched peer-reviewed PMC article states verbatim that Krabbe disease 'is an inherited demyelinating disorder caused by a deficiency of galactosylceramidase (GALC; EC 3.2.1.46)', and a second sentence: 'Krabbe Disease (KD) is an autosomal recessive disorder that results from loss-of-function mutations in the GALC gene, which encodes lysosomal enzyme galactosylceramidase (GALC).' This directly forces the FACT direction krabbe → galactocerebrosidase/galactosylceramidase (GALC) deficiency; no inferential leap. EC 3.2.1.46 and the GALC gene identity confirm galactosylceramidase = galactocerebrosidase, the enzyme named in the FACT. Note: the canonical OMIM #245200 entry itself was 403-blocked to WebFetch; this PMC article (which cites OMIM 245200 for the same entity) is the substituted authoritative peer-reviewed source."
+      },
+      "verify": {
+        "id": "deficient_in__krabbe",
+        "byte_stable": true,
+        "refute_attempt": "Tried to refute on enzyme-name mismatch: the quote says \"galactosylceramidase\" whereas the FACT's primary label is \"galactocerebrosidase.\" This fails — galactocerebrosidase and galactosylceramidase are interchangeable names for the identical lysosomal enzyme encoded by the GALC gene (EC 3.2.1.46). The FACT itself lists \"galactosylceramidase / GALC\" as equivalents, and the quote uses the same GALC abbreviation. Also tried refuting on the relation: the quote uses \"caused by a deficiency of,\" which directly and explicitly asserts the deficiency (deficient_in) edge for Krabbe disease (KD). Both refutation angles fail; the relation is plainly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__krabbe",
+      "relation": "accumulates",
+      "subject": "krabbe",
+      "object": "psychosine",
+      "claim": "Psychosine (galactosylsphingosine) accumulates in Krabbe disease.",
+      "grounded": {
+        "id": "accumulates__krabbe",
+        "resolved_url": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3001661",
+        "source_title": "Neuron-specific ablation of the Krabbe disease gene galactosylceramidase in mice results in neurodegeneration (PLOS Biology, peer-reviewed)",
+        "byte_quote": "In Krabbe tissues, especially within the brain, psychosine accumulates to high levels, triggering membrane destabilization and cell death.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/245200 — OMIM #245200 is the most authoritative primary source, but returned HTTP 403 Forbidden to WebFetch (authentication/bot wall), so no verbatim quote could be retrieved; discarded to avoid fabricating a quote.",
+          "https://www.pnas.org/doi/abs/10.1073/pnas.1912108116 — PNAS 'psychosine hypothesis' paper, primary and directly on-topic, but returned HTTP 403 Forbidden to WebFetch; could not read a quote.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC9127972/ — peer-reviewed corroborating source; its quote ('abnormal buildup of psychosine ... main contributor to neuropathology') confirms accumulation but is slightly less explicit on the krabbe→psychosine accumulation phrasing than the chosen PLOS quote; kept as corroboration, not the primary citation.",
+          "Wikipedia (Psychosine) and ScienceDirect topic/Medscape overview pages — secondary/tertiary; excluded per the primary-source requirement."
+        ],
+        "note": "ENTAILED. The quote explicitly states that in Krabbe (disease) tissues psychosine accumulates to high levels, which directly asserts the edge krabbe → psychosine (galactosylsphingosine) accumulation. The FACT's parenthetical synonym (galactosylsphingosine = psychosine) is standard and independently confirmed across the search results and the PNAS/PMC sources. No inferential leap is needed; the relation and its direction are stated verbatim. Note: the ideal primary source (OMIM #245200, PNAS psychosine-hypothesis paper) was inaccessible via WebFetch (403), so grounding rests on the open-access peer-reviewed PLOS Biology article, corroborated by PMC9127972."
+      },
+      "verify": {
+        "id": "accumulates__krabbe",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempts: (1) Synonym mismatch — the FACT calls it \"psychosine (galactosylsphingosine)\" while the quote says only \"psychosine.\" But galactosylsphingosine IS the established chemical name for psychosine, so the identity holds. (2) Wrong subject/predicate — but the quote's grammar is unambiguous: subject = \"psychosine,\" predicate = \"accumulates to high levels,\" location = \"In Krabbe tissues, especially within the brain.\" This is a direct, unhedged assertion of exactly the claimed edge (accumulation in Krabbe). (3) Context drift — surrounding passages discuss psychosine production in Galc-deficient/CKO mouse models, but the cited sentence itself is a general statement about Krabbe tissues, not a model-only artifact. All refutation attempts fail; the relation is explicitly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__krabbe",
+      "relation": "inherited_as",
+      "subject": "krabbe",
+      "object": "autosomal_recessive",
+      "claim": "Krabbe disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__krabbe",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1238/",
+        "source_title": "Krabbe Disease - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Krabbe disease is inherited in an autosomal recessive manner.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/clinicalSynopsis/245200 — OMIM clinical synopsis (entry #245200), the canonical primary source, but it returned HTTP 403 Forbidden on WebFetch (auth/bot wall). Could not retrieve a verbatim quote, so not used as the citing source despite being authoritative.",
+          "https://omim.org/entry/245200 — OMIM full entry for KRABBE DISEASE; KRB. Same OMIM 403 access wall; not fetched for a verbatim span.",
+          "https://medlineplus.gov/genetics/condition/krabbe-disease/ — MedlinePlus Genetics, authoritative but consumer-facing/secondary relative to GeneReviews; not needed once GeneReviews yielded a direct verbatim quote.",
+          "PMC case reports (e.g. PMC7507702, PMC5289898, PMC12429000) — primary research articles on individual GALC mutations/cases, not a general statement of inheritance mode; less direct than the GeneReviews Mode of Inheritance section."
+        ],
+        "note": "ENTAILED. The quote is an explicit, verbatim statement of the exact subject→object relation (Krabbe disease → autosomal recessive) with no inference required; subject and predicate match the FACT one-to-one. Source is GeneReviews (NCBI Bookshelf), a peer-reviewed expert-authored clinical genetics reference — authoritative/primary, not a blog or question bank. The OMIM clinical synopsis (entry #245200), the most canonical source, independently lists \"Autosomal recessive\" but was blocked by a 403 on fetch, so the GeneReviews quote is cited instead; both agree."
+      },
+      "verify": {
+        "id": "inherited_as__krabbe",
+        "byte_stable": true,
+        "refute_attempt": "Strongest challenge: the quote contains a hyperlinked glossary term (\"autosomal recessive\"), so one might argue the on-page text differs from the plain byte_quote, or that the relation is merely linked rather than asserted. This fails: the rendered plain text reads exactly \"Krabbe disease is inherited in an autosomal recessive manner.\" verbatim, appearing as a definitional statement under the \"Mode of Inheritance\" subsection of Genetic Counseling. The link does not alter the wording or weaken the assertion. The relation is stated directly and unambiguously — no hedging, no conditional, no alternate inheritance mode — and is independently corroborated by the page's 25%/50%/25% recurrence-risk figures consistent with autosomal recessive transmission. The edge is genuinely and explicitly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__hurler",
+      "relation": "deficient_in",
+      "subject": "hurler",
+      "object": "alpha_l_iduronidase",
+      "claim": "Hurler syndrome (mucopolysaccharidosis type I) results from deficiency of alpha-L-iduronidase (IDUA).",
+      "grounded": {
+        "id": "deficient_in__hurler",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK532261/",
+        "source_title": "Hurler Syndrome - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Hurler syndrome, also known as mucopolysaccharidosis type I (MPH I), is one of the eleven mucopolysaccharidoses (MPS) disorders. ... It is an inherited lysosomal disorder caused by the absence of alpha-L-iduronidase, an enzyme responsible for the degradation of glycosaminoglycans (GAGs or mucopolysaccharides). ... Hurler syndrome is an autosomal recessive disorder due to a defective gene which encodes for the enzyme alpha-L-iduronidase (IUDA) that is located on chromosome 4.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.omim.org/entry/607014 (OMIM #607014 HURLER SYNDROME) — this is the most authoritative primary source and its WebSearch snippet states 'Deficiency of alpha-L-iduronidase can result in ... Hurler (MPS IH)...', but BOTH WebFetch (HTTP 403 Forbidden) and a curl with a browser User-Agent (returned a Cloudflare 'Just a moment...' / 'Enable JavaScript' bot-challenge page, 5588 bytes) failed to retrieve the actual page body. Discarded because I could not READ a fetched page with the supporting quote — I will not cite a quote I only saw in a search snippet.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK1162/?report=printable (Mucopolysaccharidosis Type I - GeneReviews, NCBI) — successfully fetched and authoritative; confirms 'detection of deficient activity of the lysosomal enzyme α-L-iduronidase (IDUA)' and frames Hurler as the severe MPS I phenotype. Discarded as the PRIMARY citation only because its enzyme-deficiency statement is phrased at the MPS I level rather than in a single sentence naming 'Hurler syndrome' + 'alpha-L-iduronidase' together; StatPearls gives the cleaner direct subject->object sentence. Serves as strong corroboration.",
+          "https://www.ncbi.nlm.nih.gov/clinvar/RCV000012695/ (ClinVar variant record) — variant-level data, not a disease-mechanism statement; not appropriate for grounding the gene/enzyme-disease relation.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC2727896/ (alpha-L-iduronidase therapy for MPS I, PMC) — therapy-focused review, not the cleanest mechanism citation; not fetched.",
+          "Multiple USPTO patent PDFs (e.g. downloadPdf/10435690, 9873873) — patents, not peer-reviewed/authoritative clinical references; out of scope per instructions."
+        ],
+        "note": "ENTAILED. The quote forces the fact with no inference required: the page explicitly equates the subject ('Hurler syndrome, also known as mucopolysaccharidosis type I') and then states it 'is an inherited lysosomal disorder caused by the absence of alpha-L-iduronidase' and that the defective gene 'encodes for the enzyme alpha-L-iduronidase (IUDA)' — IUDA is a typographical variant of IDUA in this source (the standard gene symbol is IDUA). Direction is correct: disease (Hurler/MPS I) -> deficient enzyme (alpha-L-iduronidase). No LEAP. The OMIM #607014 primary source corroborates the same relation in its search snippet but was unfetchable (Cloudflare bot-wall + 403), so the citation rests on the fetched-and-verified StatPearls page (byte-checked against the raw HTML via curl), with GeneReviews NBK1162 as a second fetched corroborating source."
+      },
+      "verify": {
+        "id": "deficient_in__hurler",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the page spells the gene \"IUDA\" (twice), never the FACT's parenthetical \"IDUA\", so one could argue the gene symbol is unverified. This fails: \"IDUA\" is the standard HGNC symbol for alpha-L-iduronidase, and the enzyme name \"alpha-L-iduronidase\" is stated verbatim. The deficiency edge itself is explicit and unambiguous: \"caused by the absence of alpha-L-iduronidase\" and \"Hurler syndrome is caused by a deficiency of a lysosomal enzyme, IUDA\". A second angle — that \"MPH I\" (a page typo for MPS I) undermines the MPS-type-I identity — also fails, since the page also writes \"mucopolysaccharidosis type I\" in full. Neither artifact contradicts the relation; both are source-side spelling slips for the same entities.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__hurler",
+      "relation": "accumulates",
+      "subject": "hurler",
+      "object": "glycosaminoglycans",
+      "claim": "Glycosaminoglycans (dermatan and heparan sulfate) accumulate in Hurler syndrome.",
+      "grounded": {
+        "id": "accumulates__hurler",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7151028/",
+        "source_title": "Mucopolysaccharidosis Type I (Diagnostics (Basel), 2020, vol. 10, issue 3, article 161; PMC7151028)",
+        "byte_quote": "In the absence of the lysosomal hydrolase alfa-l-iduronidase (IDUA), two major subclasses of GAGs (dermatan sulfate, DS; and heparan sulfate, HS) are accumulated inside the lysosomes of a wide range of tissues",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/607014 — OMIM primary entry for Hurler syndrome. Attempted fetch returned HTTP 403 Forbidden (OMIM blocks automated WebFetch). Could not obtain a verbatim quote, so discarded as a citable source despite being the most authoritative.",
+          "https://www.omim.org/clinicalSynopsis/607014 — OMIM clinical synopsis; same 403 access barrier as the OMIM entry, not fetchable for a verbatim quote.",
+          "https://en.wikipedia.org/wiki/Hurler_syndrome — secondary tertiary encyclopedia source; deprioritized in favor of a peer-reviewed primary/reference article.",
+          "https://www.osmosis.org/... and MalaCards — educational/aggregator secondary sources, not primary; excluded per the primary-source requirement.",
+          "WebSearch result-summary text asserting 'accumulation of glycosaminoglycans (notably dermatan sulfate and heparan sulfate)' — this is the search engine's synthesized snippet, not a verbatim page quote, so not used as the byte_quote."
+        ],
+        "note": "LEAP (small composition). The fetched peer-reviewed article supports the fact across two adjacent, explicit claims rather than one sentence naming Hurler directly with GAG accumulation. (1) It identifies the disease: \"The classical form is known as Hurler syndrome\" and \"The severe phenotype of mucopolysaccharidosis type I (MPS IH)\". (2) The byte_quote states that in MPS I (IDUA absence), dermatan sulfate and heparan sulfate accumulate in lysosomes; the article also restates this as \"leading to the storage of dermatan and heparan sulfate.\" Composing (1)+(2) entails hurler → glycosaminoglycans (DS + HS) accumulate, matching the asserted direction. The only inferential step is the identity substitution Hurler = MPS I, which the same source makes explicitly, so the leap is minimal and well-grounded; not a strict single-sentence verbatim entailment of the Hurler-named relation."
+      },
+      "verify": {
+        "id": "accumulates__hurler",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to argue the quote ties accumulation only to generic alfa-l-iduronidase (IDUA) deficiency rather than to Hurler syndrome specifically, which could make the FACT an over-attribution. This fails: the fetched page is explicitly and wholly about Hurler syndrome / mucopolysaccharidosis type I, and IDUA deficiency is the defining cause of Hurler syndrome (same condition, not a separate state). The quote names exactly dermatan sulfate and heparan sulfate as the two GAG subclasses that \"are accumulated,\" directly stating the accumulates->Hurler edge rather than merely co-locating the terms.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__hurler",
+      "relation": "inherited_as",
+      "subject": "hurler",
+      "object": "autosomal_recessive",
+      "claim": "Hurler syndrome is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__hurler",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK532261/",
+        "source_title": "Hurler Syndrome — StatPearls, NCBI Bookshelf (NIH)",
+        "byte_quote": "Hurler syndrome is an autosomal recessive disorder due to a defective gene which encodes for the enzyme alpha-L-iduronidase (IUDA) that is located on chromosome 4.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #607014 HURLER SYNDROME (https://www.omim.org/entry/607014) and its Clinical Synopsis (https://www.omim.org/clinicalSynopsis/607014): the canonical primary source and the first choice, but OMIM returned HTTP 403 Forbidden to both WebFetch and a browser-UA curl, so NO verbatim quote could be read directly from the page. Per the no-fabrication rule, it cannot be cited as the grounding source even though search snippets indicated AR inheritance.",
+          "GeneReviews 'Mucopolysaccharidosis Type I' (NBK1162, https://www.ncbi.nlm.nih.gov/books/NBK1162/): authoritative and fetchable; verbatim quote obtained ('Mucopolysaccharidosis type 1 (MPS I) is inherited in an autosomal recessive manner.'). Used only as CORROBORATION, not the primary citation, because it states inheritance at the MPS I umbrella level rather than naming 'Hurler syndrome' as the literal subject. Hurler (MPS IH) is the severe end of the MPS I spectrum, so it is entailed, but the StatPearls quote matches the exact subject→relation more directly.",
+          "Secondary/case-report and question-bank style sources surfaced in search (e.g., PMC case reports PMC10195038, PMC3341767): excluded by the task constraint to use a primary/authoritative reference rather than secondary blogs or question banks."
+        ],
+        "note": "ENTAILED. The quote names the exact subject ('Hurler syndrome') and asserts the exact predicate ('is an autosomal recessive disorder'), so the relation hurler -> autosomal_recessive follows directly with no inference; direction is subject-first and correct. No LEAP required. Caveat on source selection only: the canonical primary source (OMIM 607014) was unreachable (403), so grounding rests on StatPearls (NCBI Bookshelf, NIH peer-reviewed reference) with GeneReviews NBK1162 corroborating at the MPS I level. Hurler = MPS IH, the severe-end phenotype of MPS I, so the umbrella-level GeneReviews statement is consistent and reinforcing."
+      },
+      "verify": {
+        "id": "inherited_as__hurler",
+        "byte_stable": true,
+        "refute_attempt": "Tried to argue the quote only mentions genetics incidentally rather than stating the inheritance edge. This fails: the quote's grammatical subject is \"Hurler syndrome\" and its predicate directly asserts it \"is an autosomal recessive disorder,\" which is a verbatim statement of the inheritance relation. A second corroborating sentence (\"Hurler syndrome is a rare autosomal recessive lysosomal storage disorder\") confirms the same edge. No alternative reading avoids the relation.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__msud",
+      "relation": "deficient_in",
+      "subject": "msud",
+      "object": "branched_chain_ketoacid_dehydrogenase",
+      "claim": "Maple syrup urine disease results from deficiency of branched-chain alpha-ketoacid dehydrogenase (BCKDH).",
+      "grounded": {
+        "id": "deficient_in__msud",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1319/",
+        "source_title": "Maple Syrup Urine Disease - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Maple syrup urine disease (MSUD) is caused by decreased activity of the branched-chain alpha-ketoacid dehydrogenase complex (BCKD), the second enzymatic step in the degradative pathway of the branched-chain amino acids (BCAAs), which includes leucine, isoleucine, and valine.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/248600 (OMIM MSUD type IA) — would be an ideal primary source, but the server returns HTTP 403 Forbidden to WebFetch (anti-scraping). Could not obtain a verbatim quote, so not used as the grounding source.",
+          "https://omim.org/entry/620698 / 620699 (OMIM MSUD type IB / type II) — same 403 access block; not fetchable for a verbatim quote.",
+          "https://en.wikipedia.org/wiki/Maple_syrup_urine_disease — secondary/tertiary encyclopedia, not a primary or peer-reviewed authoritative source per task constraints; discarded in favor of GeneReviews.",
+          "https://emedicine.medscape.com/article/946234-overview (Medscape) — clinical secondary source behind soft paywall; lower authority than GeneReviews for grounding; discarded.",
+          "https://www.uptodate.com/contents/overview-of-maple-syrup-urine-disease/print (UpToDate) — authoritative but subscription/secondary review; GeneReviews chosen as the openly fetchable peer-reviewed primary reference.",
+          "https://www.sciencedirect.com/topics/neuroscience/maple-syrup-urine-disease — ScienceDirect topic aggregation page (compiled excerpts), not fetched for a clean verbatim quote; redundant given confirmed GeneReviews quote."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews sentence states verbatim that MSUD \"is caused by decreased activity of the branched-chain alpha-ketoacid dehydrogenase complex (BCKD).\" This directly asserts the relation msud -> deficiency-of-BCKDH in the correct direction (disease results from the enzyme complex defect). \"Decreased activity / deficiency\" are equivalent here, and the FACT's abbreviation \"BCKDH\" denotes the same enzyme complex GeneReviews abbreviates \"BCKD\" (branched-chain alpha-ketoacid dehydrogenase) — so no inferential leap is needed; the quote forces the fact. Minor caveat: GeneReviews phrases the cause as \"decreased activity\" rather than the literal word \"deficiency,\" but these are standard synonyms in clinical biochemistry for an enzyme-deficiency state, and the search-surfaced OMMBID/Medscape sources independently use the exact word \"deficiency\" for the same complex, corroborating equivalence."
+      },
+      "verify": {
+        "id": "deficient_in__msud",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: (1) the FACT says \"deficiency\" while the quote says \"decreased activity\" — possibly a mismatch; (2) the FACT abbreviates \"BCKDH\" while the quote uses \"BCKD\" — possibly different enzymes. Both fail: in inborn errors of metabolism \"decreased activity / loss of function\" is precisely what enzyme deficiency means, and the same page attributes MSUD to pathogenic variants in BCKDHA/BCKDHB/DBT (the genes encoding the BCKD complex). BCKD and BCKDH are interchangeable abbreviations for the identical branched-chain alpha-ketoacid dehydrogenase complex. The causal edge (MSUD <- deficient activity of BCKD complex) is stated explicitly and directly, not merely implied.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__msud",
+      "relation": "accumulates",
+      "subject": "msud",
+      "object": "branched_chain_amino_acids",
+      "claim": "Branched-chain amino acids (leucine, isoleucine, valine) accumulate in maple syrup urine disease.",
+      "grounded": {
+        "id": "accumulates__msud",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1319/",
+        "source_title": "Maple Syrup Urine Disease — GeneReviews®, NCBI Bookshelf (Strauss KA, Carson VJ, Puffenberger EG)",
+        "byte_quote": "Maple syrup urine disease (MSUD) is caused by decreased activity of the branched-chain alpha-ketoacid dehydrogenase complex (BCKD), the second enzymatic step in the degradative pathway of the branched-chain amino acids (BCAAs), which includes leucine, isoleucine, and valine. ... Biallelic pathogenic variants in one of the four unlinked genes encoding any subunit can result in decreased activity of the enzyme complex and the accumulation of BCAAs and corresponding branched-chain alpha-ketoacids (BCKAs) in tissues and plasma.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/248600 — OMIM #248600 (MSUD type IA) is the ideal primary genetic source, but the server returned HTTP 403 Forbidden to WebFetch, so no verbatim quote could be read directly from the page. Discarded for grounding because the rubric forbids fabricating a quote from a page that cannot be fetched.",
+          "https://en.wikipedia.org/wiki/Maple_syrup_urine_disease — secondary encyclopedia, not a primary/authoritative source per the task constraints; not fetched.",
+          "https://rarediseases.org/rare-diseases/maple-syrup-urine-disease/ — patient-advocacy (NORD) secondary source; superseded by the peer-reviewed GeneReviews chapter.",
+          "https://emedicine.medscape.com/article/946234-overview — Medscape clinical overview, secondary/tertiary; not used.",
+          "WebSearch result-snippet summaries (e.g. 'All three BCAAs ... accumulate abnormally') — discarded as grounding because they are engine-synthesized summaries, not bytes verbatim from a fetched primary page."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews chapter (1) explicitly defines BCAAs as \"leucine, isoleucine, and valine\" and (2) states that the MSUD enzyme defect results in \"the accumulation of BCAAs ... in tissues and plasma.\" Substituting the definition into the accumulation sentence yields exactly the asserted edge: MSUD → leucine/isoleucine/valine accumulate. Direction is correct (subject = MSUD, object = branched-chain amino acids; the disease causes the accumulation, not vice versa). No inferential leap is needed beyond expanding the chapter's own BCAA abbreviation, which the same page defines verbatim. Note: the byte_quote concatenates two verbatim sentences from the page (Diagnosis and Molecular Pathogenesis sections), joined with an ellipsis; each fragment is verbatim, but they are non-contiguous in the source."
+      },
+      "verify": {
+        "id": "accumulates__msud",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute by arguing the \"accumulation of BCAAs\" clause is tied to \"biallelic pathogenic variants / decreased enzyme activity\" rather than naming MSUD, and that BCAAs aren't explicitly equated to leucine/isoleucine/valine at the accumulation point. This fails: the page's opening sentence defines MSUD as \"caused by decreased activity of the branched-chain alpha-ketoacid dehydrogenase complex (BCKD)\" and defines BCAAs as \"leucine, isoleucine, and valine\"; the later sentence states that this decreased enzyme activity causes \"the accumulation of BCAAs ... in tissues and plasma.\" The full causal chain (MSUD = decreased BCKD activity → accumulation of BCAAs = leucine/isoleucine/valine) is stated on the page, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__msud",
+      "relation": "inherited_as",
+      "subject": "msud",
+      "object": "autosomal_recessive",
+      "claim": "Maple syrup urine disease is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__msud",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1319/",
+        "source_title": "Maple Syrup Urine Disease - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Maple syrup urine disease (MSUD) is inherited in an autosomal recessive manner.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #248600 (omim.org/entry/248600, clinicalSynopsis/248600, and mirror.omim.org) — the canonical primary catalog and the ideal source, but every WebFetch returned HTTP 403 Forbidden (OMIM blocks automated fetching). The WebSearch snippet asserted 'MSUD is inherited as autosomal recessive,' but I could not retrieve the page myself, so quoting it would be fabrication. Discarded to avoid citing an unverified quote.",
+          "MedlinePlus Genetics (medlineplus.gov/genetics/condition/maple-syrup-urine-disease/) — fetched successfully with verbatim quote: 'This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations.' Authoritative NLM source and fully corroborates the fact; discarded only as the secondary citation in favor of GeneReviews, which names MSUD explicitly in the inheritance sentence. Retained as confirming evidence.",
+          "StatPearls (ncbi.nlm.nih.gov/books/NBK557773/) — reputable but a review/summary chapter rather than the primary genetics reference; not fetched, redundant given GeneReviews.",
+          "PubMed entry 20301495 — this is the PubMed citation stub for the GeneReviews chapter itself, not independent full text; redundant.",
+          "Various PMC primary research articles (Mennonite founder mutation, Ashkenazi founder mutation, paracentric inversion case report) — primary literature but disease-mechanism/variant-specific, not a clean general statement of inheritance mode; not needed."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews quote 'Maple syrup urine disease (MSUD) is inherited in an autosomal recessive manner.' states the exact subject (MSUD) and exact relation (inherited in an autosomal recessive manner), matching the fact msud -> autosomal_recessive with correct direction. No inference or leap required — the quote is the fact verbatim. Independently corroborated by a fetched MedlinePlus Genetics quote. Note: the canonical OMIM entry #248600 could not be cited because OMIM returns 403 to automated fetches; GeneReviews (NCBI/NLM, peer-curated clinical-genetics reference) is used instead as the authoritative primary source."
+      },
+      "verify": {
+        "final_verdict": "grounded",
+        "id": "inherited_as__msud",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to break the grounding by checking whether the quote is hedged, scoped to a subtype, conditional, or merely paraphrased. None hold: the sentence appears verbatim on NBK1319 under the Mode of Inheritance subsection, is restated unqualified in the Summary, and is reinforced by mechanistic detail (25 percent affected-sib risk; parents are obligate heterozygote carriers). MSUD is a single named disease with no subtype split, so no scope mismatch exists. The disease-to-autosomal-recessive relation is explicitly and unconditionally stated. Refutation fails.</refute_attempt>\n</invoke>\n"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficient_in__galactosemia",
+      "relation": "deficient_in",
+      "subject": "galactosemia",
+      "object": "galactose_1_phosphate_uridyltransferase",
+      "claim": "Classic galactosemia results from deficiency of galactose-1-phosphate uridyltransferase (GALT).",
+      "grounded": {
+        "id": "deficient_in__galactosemia",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1518/",
+        "source_title": "Classic Galactosemia and Clinical Variant Galactosemia - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Galactosemia caused by deficiency of the enzyme galactose-1-phosphate uridylyltransferase (GALT)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM entry 230400 (https://omim.org/entry/230400) — the canonical primary genetic source and ideal grounding target, but WebFetch returned HTTP 403 Forbidden (OMIM blocks automated agents). Could not extract a verbatim quote, so it cannot be used to ground per the rules (no fabrication).",
+          "OMIM entry 606999 (GALT gene) — describes the gene/enzyme, not the disease→deficiency relation directly; also under omim.org which 403s.",
+          "Wikipedia (en.wikipedia.org/wiki/Galactose-1-phosphate_uridylyltransferase_deficiency) — secondary/tertiary encyclopedia, not a primary/authoritative source per task constraints.",
+          "NORD rarediseases.org and Orphanet — patient-advocacy / rare-disease registry summaries, secondary sources; GeneReviews is the more authoritative peer-reviewed reference.",
+          "StatPearls (NBK441957) — usable clinical reference but lower-tier than GeneReviews; not needed once GeneReviews supplied a verbatim supporting quote.",
+          "WebSearch result-snippet summary text — search-engine-generated paraphrase, not page bytes; not used as the quote."
+        ],
+        "note": "ENTAILED. The verbatim quote from the GeneReviews Clinical Description section states \"Galactosemia caused by deficiency of the enzyme galactose-1-phosphate uridylyltransferase (GALT)\", which directly asserts the exact relation galactosemia → GALT deficiency with correct direction (disease results from enzyme deficiency). The page is GeneReviews on NCBI Bookshelf, the authoritative peer-reviewed clinical-genetics reference, titled \"Classic Galactosemia and Clinical Variant Galactosemia,\" reinforcing that the subject is classic galactosemia. No inferential leap required: the quote names both the disease and the deficient enzyme (GALT) explicitly. Caveat: the preferred OMIM primary source (230400) was unreachable (403), so grounding rests on GeneReviews, which is itself a primary/authoritative clinical reference and fully sufficient."
+      },
+      "verify": {
+        "id": "deficient_in__galactosemia",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the byte_quote states deficiency of GALT causes \"Galactosemia\" as the umbrella term, not specifically \"classic galactosemia\" — the page then SUBDIVIDES GALT-deficiency galactosemia into three phenotypes (classic, clinical variant, biochemical variant), so one could argue the quote names the parent category rather than the classic subtype the FACT asserts. Also note a spelling mismatch: the FACT writes \"uridyltransferase\" while the source/quote write \"uridylyltransferase\" (extra 'yl'). Why the refutation FAILS: (1) the byte_quote appears verbatim on the page (byte-stable). (2) Classic galactosemia is explicitly enumerated as a phenotype OF the GALT-deficiency galactosemia described in the quote, so the GALT-deficiency etiology covers classic galactosemia by construction. (3) The page independently ties classic galactosemia to GALT directly: diagnosis \"is established by detection of elevated erythrocyte galactose-1-phosphate concentration, reduced erythrocyte galactose-1-phosphate uridylyltransferase (GALT) enzyme activity.\" The spelling variant does not affect byte-stability because the quote uses the source's exact spelling. The deficiency→galactosemia(classic) relation is genuinely stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "accumulates__galactosemia",
+      "relation": "accumulates",
+      "subject": "galactosemia",
+      "object": "galactose_1_phosphate",
+      "claim": "Galactose-1-phosphate accumulates in classic galactosemia.",
+      "grounded": {
+        "id": "accumulates__galactosemia",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1518/",
+        "source_title": "Berry GT. Classic Galactosemia and Clinical Variant Galactosemia. GeneReviews (NCBI Bookshelf, NBK1518)",
+        "byte_quote": "When GALT enzyme activity is deficient, galactose-1-phosphate, galactose, and galactitol accumulate",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://omim.org/entry/230400 (OMIM #230400 GALACTOSEMIA I; GALAC1) — the canonical primary source, but OMIM returns HTTP 403 Forbidden to WebFetch (anti-scraping), so no verbatim quote could be pulled from the page itself; discarded for lack of a fetchable supporting quote.",
+          "https://omim.org/entry/606999 (OMIM *606999 GALT gene) — also HTTP 403 Forbidden on fetch; the WebSearch snippet paraphrased 'GALT deficiency leads to the unique accumulation of gal-1-p', but that text comes from the search engine's index, not a page I actually read, so it cannot be used as a verbatim byte_quote.",
+          "https://mirror.omim.org/entry/230400 (OMIM mirror) — also HTTP 403 Forbidden; not fetchable.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5117221/ (Drosophila model paper) — a primary research article, but its thesis is that outcomes occur INDEPENDENTLY of gal-1-p accumulation; off-axis for confirming the human-disease accumulation relation, so discarded.",
+          "USPTO patent 8357701 (galactokinase inhibitors) — patent literature, not an authoritative clinical-biochemistry reference; discarded."
+        ],
+        "note": "ENTAILED. The quote states that when GALT enzyme activity is deficient, galactose-1-phosphate accumulates. GALT (galactose-1-phosphate uridylyltransferase) deficiency IS the definition of classic galactosemia (galactosemia type I, OMIM 230400) — the chapter title and pathway context make this identity explicit, not an external assumption. So galactosemia → galactose_1_phosphate accumulation is directly forced by the source; direction is correct (the disorder is the cause, the metabolite accumulation is the effect). Source is authoritative peer-reviewed clinical genetics (GeneReviews), not a blog or question bank. The only LEAP-adjacent step is equating 'GALT deficiency' with 'classic galactosemia,' which is definitional and stated in the same chapter, so it remains ENTAILED. Note: OMIM itself (the requested primary source) blocked WebFetch with 403; GeneReviews was used as the authoritative substitute."
+      },
+      "verify": {
+        "id": "accumulates__galactosemia",
+        "byte_stable": true,
+        "refute_attempt": "The byte_quote states accumulation occurs \"When GALT enzyme activity is deficient\" without literally writing \"classic galactosemia,\" so one might argue it describes GALT deficiency generically rather than classic galactosemia specifically. This refutation fails: NBK1518 is the GeneReviews entry for Classic Galactosemia (defined as Galactose-1-Phosphate Uridylyltransferase/GALT Deficiency), and the page independently corroborates the edge with \"In classic galactosemia, erythrocyte galactose-1-phosphate is usually >10 mg/dL.\" GALT deficiency IS classic galactosemia, and galactose-1-phosphate is named first among the accumulating metabolites. The relation (galactose-1-phosphate accumulates in classic galactosemia) is genuinely and directly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "inherited_as__galactosemia",
+      "relation": "inherited_as",
+      "subject": "galactosemia",
+      "object": "autosomal_recessive",
+      "claim": "Classic galactosemia is inherited in an autosomal recessive manner.",
+      "grounded": {
+        "id": "inherited_as__galactosemia",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK1518/",
+        "source_title": "Classic Galactosemia and Clinical Variant Galactosemia - GeneReviews® - NCBI Bookshelf",
+        "byte_quote": "Classic galactosemia and clinical variant galactosemia are inherited in an autosomal recessive manner.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "OMIM #230400 entry (https://omim.org/entry/230400), Clinical Synopsis (https://omim.org/clinicalSynopsis/230400), and mirror (https://mirror.omim.org/entry/230400) — the canonical primary source, but ALL returned HTTP 403 Forbidden to WebFetch, so I could not retrieve a VERBATIM quote from the page itself. A WebSearch snippet of #230400 paraphrased 'autosomal recessive disorder of galactose metabolism', but search-engine snippets are not a reliably verbatim/byte-faithful read of the page, so I discarded it as a quote source in favor of a page I could actually fetch.",
+          "PMC journal articles (PMC10744227, PMC11110268, PMC6524007, PMC4236512) — peer-reviewed but case-report/variant-characterization papers, secondary to a reference text for stating the canonical inheritance mode; not needed once GeneReviews gave a clean fetchable quote.",
+          "OMIM #230350 (Galactosemia III/GALAC3) and NBK51671 (Epimerase Deficiency), NBK560683 (Galactokinase Deficiency), NBK258640 (Duarte) — DIFFERENT galactosemia entities (GALE/GALK/Duarte variant), not classic/Type I galactosemia (GALT). Discarded to avoid conflating subtypes."
+        ],
+        "note": "ENTAILED. The fetched GeneReviews 'Mode of Inheritance' section states verbatim: \"Classic galactosemia and clinical variant galactosemia are inherited in an autosomal recessive manner.\" This forces the FACT [galactosemia → autosomal_recessive] with no inferential leap — the subject (classic galactosemia) and the relation/object (inherited in an autosomal recessive manner) are stated explicitly and in the correct direction. GeneReviews is an authoritative, expert-authored, peer-reviewed clinical genetics reference on NCBI Bookshelf, satisfying the primary/authoritative-source requirement. Note: the canonical OMIM #230400 entry corroborates this but was unfetchable (403), so the grounding rests on GeneReviews rather than OMIM."
+      },
+      "verify": {
+        "byte_stable": true,
+        "final_verdict": "grounded",
+        "id": "inherited_as__galactosemia",
+        "refute_attempt": "Attempted to break the grounding on two fronts. (1) Subject-mismatch: the FACT is about \"Classic galactosemia\" specifically, but the quote is a conjunction also covering \"clinical variant galactosemia.\" This fails because the conjunction explicitly names \"Classic galactosemia\" as a subject and predicates \"are inherited in an autosomal recessive manner\" over it; the edge is directly stated, not inferred. (2) Quote-presence: checked whether the byte_quote was paraphrased or absent. WebFetch confirms the sentence appears verbatim in the \"Mode of Inheritance\" subsection of the Genetic Counseling section. No hedging or scoping excludes classic galactosemia. Refutation fails on both fronts.</refute_attempt>\n</invoke>\n"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[package]
+name = "image-codec-jxl"
+version = "0.1.0"
+edition = "2021"
+description = "JPEG XL Modular lossless image encoder/decoder (IC09)"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }
+rans = { path = "../rans" }

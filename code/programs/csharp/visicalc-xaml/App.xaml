@@ -1,0 +1,6 @@
+<!-- App.xaml — hand-written WinUI 3 application root. -->
+<Application
+    x:Class="Mosaic.Generated.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+</Application>

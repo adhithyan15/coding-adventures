@@ -3,10 +3,14 @@ import {
   MATRIX,
   MatrixError,
   addMatrices,
+  charPoly,
+  charPolyCoeffs,
   columnspace,
   determinant,
   dimensions,
   dot,
+  eigenvectors,
+  eigenvalues,
   frobeniusNorm,
   getEntry,
   identityMatrix,
@@ -28,7 +32,7 @@ import {
   transpose,
   zeroMatrix,
 } from "../src/index";
-import { ADD, LIST, MUL, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, LIST, MUL, POW, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 import { Matrix, getMatrixBackend, resetMatrixBackend, setMatrixBackend, type MatrixBackend } from "matrix";
 
 function irow(values: readonly number[]): IRNode[] {
@@ -236,6 +240,139 @@ describe("determinant and inverse", () => {
     expect(numRows(inv1)).toBe(1);
     expect(numCols(inv1)).toBe(1);
     expect(() => inverse(matrix([irow([1, 2, 3])]))).toThrow(MatrixError);
+  });
+});
+
+describe("characteristic polynomial", () => {
+  it("returns coefficients for det(lambda I - A)", () => {
+    expect(charPolyCoeffs(matrix([irow([1, 2]), irow([2, 1])]))).toEqual([
+      int(-3),
+      int(-2),
+      int(1),
+    ]);
+    expect(charPolyCoeffs(matrix([[rational(1, 2), int(1)], [int(0), int(2)]]))).toEqual([
+      int(1),
+      rational(-5, 2),
+      int(1),
+    ]);
+  });
+
+  it("builds an IR polynomial in the requested variable", () => {
+    const lambda = sym("lambda");
+    expect(charPoly(matrix([irow([1, 2]), irow([2, 1])]), lambda)).toEqual(app(ADD, [
+      int(-3),
+      app(MUL, [int(-2), lambda]),
+      app(POW, [lambda, int(2)]),
+    ]));
+  });
+
+  it("rejects non-square and symbolic-entry matrices", () => {
+    expect(() => charPolyCoeffs(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+    expect(() => charPoly(matrix([[sym("a")]]), sym("lambda"))).toThrow(MatrixError);
+  });
+});
+
+describe("eigenvalues", () => {
+  it("returns MACSYMA-style eigenvalue/multiplicity pairs for 1x1 and 2x2 matrices", () => {
+    expect(eigenvalues(matrix([irow([7])]))).toEqual(app(LIST, [
+      app(LIST, [int(7), int(1)]),
+    ]));
+    expect(eigenvalues(matrix([irow([1, 2]), irow([2, 1])]))).toEqual(app(LIST, [
+      app(LIST, [int(-1), int(1)]),
+      app(LIST, [int(3), int(1)]),
+    ]));
+  });
+
+  it("preserves repeated and rational eigenvalue multiplicity", () => {
+    expect(eigenvalues(matrix([irow([2, 0]), irow([0, 2])]))).toEqual(app(LIST, [
+      app(LIST, [int(2), int(2)]),
+    ]));
+    expect(eigenvalues(identityMatrix(3))).toEqual(app(LIST, [
+      app(LIST, [int(1), int(3)]),
+    ]));
+    expect(eigenvalues(matrix([[rational(1, 2), int(0)], [int(0), int(3)]]))).toEqual(app(LIST, [
+      app(LIST, [rational(1, 2), int(1)]),
+      app(LIST, [int(3), int(1)]),
+    ]));
+  });
+
+  it("solves cubic and quartic characteristic polynomials for 3x3 and 4x4 matrices", () => {
+    expect(eigenvalues(matrix([irow([1, 0, 0]), irow([0, 2, 0]), irow([0, 0, 3])]))).toEqual(app(LIST, [
+      app(LIST, [int(1), int(1)]),
+      app(LIST, [int(2), int(1)]),
+      app(LIST, [int(3), int(1)]),
+    ]));
+    expect(eigenvalues(matrix([
+      irow([-2, 0, 0, 0]),
+      irow([0, -1, 0, 0]),
+      irow([0, 0, 1, 0]),
+      irow([0, 0, 0, 2]),
+    ]))).toEqual(app(LIST, [
+      app(LIST, [int(-2), int(1)]),
+      app(LIST, [int(-1), int(1)]),
+      app(LIST, [int(1), int(1)]),
+      app(LIST, [int(2), int(1)]),
+    ]));
+  });
+
+  it("rejects unsupported shapes and symbolic entries", () => {
+    expect(() => eigenvalues(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+    expect(() => eigenvalues(identityMatrix(5))).toThrow(MatrixError);
+    expect(() => eigenvalues(matrix([[sym("a")]]))).toThrow(MatrixError);
+  });
+});
+
+describe("eigenvectors", () => {
+  it("returns MACSYMA-style eigenvalue/multiplicity/vector triples", () => {
+    expect(eigenvectors(matrix([irow([7])]))).toEqual(app(LIST, [
+      app(LIST, [int(7), int(1), app(LIST, [matrix([irow([1])])])]),
+    ]));
+
+    expect(eigenvectors(matrix([irow([1, 2]), irow([2, 1])]))).toEqual(app(LIST, [
+      app(LIST, [int(-1), int(1), app(LIST, [matrix([irow([-1]), irow([1])])])]),
+      app(LIST, [int(3), int(1), app(LIST, [matrix([irow([1]), irow([1])])])]),
+    ]));
+  });
+
+  it("preserves rational and repeated eigenvalue vector bases", () => {
+    expect(eigenvectors(matrix([[rational(1, 2), int(0)], [int(0), int(3)]]))).toEqual(app(LIST, [
+      app(LIST, [rational(1, 2), int(1), app(LIST, [matrix([irow([1]), irow([0])])])]),
+      app(LIST, [int(3), int(1), app(LIST, [matrix([irow([0]), irow([1])])])]),
+    ]));
+
+    expect(eigenvectors(matrix([irow([2, 0]), irow([0, 2])]))).toEqual(app(LIST, [
+      app(LIST, [int(2), int(2), app(LIST, [
+        matrix([irow([1]), irow([0])]),
+        matrix([irow([0]), irow([1])]),
+      ])]),
+    ]));
+  });
+
+  it("returns 3x3 exact rational eigenvector bases", () => {
+    expect(eigenvectors(matrix([irow([1, 0, 0]), irow([0, 2, 0]), irow([0, 0, 3])]))).toEqual(app(LIST, [
+      app(LIST, [int(1), int(1), app(LIST, [matrix([irow([1]), irow([0]), irow([0])])])]),
+      app(LIST, [int(2), int(1), app(LIST, [matrix([irow([0]), irow([1]), irow([0])])])]),
+      app(LIST, [int(3), int(1), app(LIST, [matrix([irow([0]), irow([0]), irow([1])])])]),
+    ]));
+  });
+
+  it("returns an empty vector list for non-rational eigenvalues", () => {
+    const triples = eigenvectors(matrix([irow([0, 1]), irow([-1, 0])]));
+    expect(triples.kind).toBe("apply");
+    if (triples.kind !== "apply") return;
+    expect(triples.args.length).toBe(2);
+    triples.args.forEach((triple) => {
+      expect(triple.kind).toBe("apply");
+      if (triple.kind !== "apply") return;
+      expect(triple.args[1]).toEqual(int(1));
+      expect(triple.args[2]).toEqual(app(LIST, []));
+    });
+  });
+
+  it("rejects unsupported shapes and symbolic entries", () => {
+    expect(() => eigenvectors(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+    expect(() => eigenvectors(identityMatrix(5))).toThrow(MatrixError);
+    expect(() => eigenvectors(matrix([[sym("a")]]))).toThrow(MatrixError);
   });
 });
 

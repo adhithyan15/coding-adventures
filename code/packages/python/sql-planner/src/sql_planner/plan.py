@@ -50,6 +50,18 @@ class Scan:
     references using it — the codegen uses the alias (or table name if none)
     to look up column values on the row the scan yields.
 
+    SQLite query hints carried through from the FROM clause:
+
+    - ``index_hint`` — if set, the planner is required to use this index
+      via :class:`IndexScan` substitution.  An error is raised at plan
+      time if the named index doesn't exist on the table.  Mirrors
+      ``INDEXED BY <name>``.
+    - ``not_indexed`` — if True, the planner must NOT substitute an
+      :class:`IndexScan` for this scan.  Mirrors ``NOT INDEXED``.
+
+    Exactly one of ``index_hint`` and ``not_indexed`` may be set (the
+    adapter enforces mutual exclusion at parse time).
+
     Optimizer-added annotations (always None from the planner):
 
     - ``required_columns`` — if set, the column subset the query actually
@@ -63,6 +75,8 @@ class Scan:
     alias: str | None = None
     required_columns: tuple[str, ...] | None = None
     scan_limit: int | None = None
+    index_hint: str | None = None
+    not_indexed: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -182,7 +196,7 @@ class AggregateItem:
     distinct: bool = False
     separator: str | None = None    # GROUP_CONCAT only
     key_arg: FuncArg | None = None  # JSON_GROUP_OBJECT only: the key expression
-    filter_expr: "Expr | None" = None  # FILTER (WHERE expr) — skip rows where False/NULL
+    filter_expr: Expr | None = None  # FILTER (WHERE expr) — skip rows where False/NULL
     output: bool = True  # False → compute but do not emit as a result column
 
 
@@ -230,6 +244,11 @@ class SortKey:
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default
     positional_index: int | None = None  # 0-based; set when ORDER BY N
+    # COLLATE name from the SQL — carried through unchanged from the AST.
+    # ``None`` means BINARY (the default).  The VM applies the named
+    # transform when building the sort key (NOCASE → lowercase ASCII,
+    # RTRIM → strip trailing spaces).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -509,12 +528,18 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class Update:
-    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...].
+
+    ``on_conflict`` carries the optional ``UPDATE OR <action>`` strategy.
+    It mirrors the semantics of :class:`Insert`.  ``None`` → default SQLite
+    ABORT behaviour (raise on constraint violation).
+    """
 
     table: str
     assignments: tuple[Assignment, ...]
     predicate: Expr | None = None  # None = update every row
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)
@@ -531,11 +556,18 @@ class Delete:
 
 @dataclass(frozen=True, slots=True)
 class CreateTable:
-    """CREATE TABLE. Column defs come from sql-backend unchanged."""
+    """CREATE TABLE. Column defs come from sql-backend unchanged.
+
+    ``strict`` carries the SQLite STRICT trailing-option through the plan
+    layer.  The codegen layer mirrors this field on its IR ``CreateTable``
+    instruction; the VM forwards it as a keyword arg to
+    :meth:`sql_backend.Backend.create_table`.
+    """
 
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -548,10 +580,18 @@ class DropTable:
 
 @dataclass(frozen=True, slots=True)
 class AlterTable:
-    """ALTER TABLE t ADD [COLUMN] col_def."""
+    """ALTER TABLE — four flavours, mirroring :class:`AlterTableStmt`.
+
+    Exactly one of ``column`` / ``rename_to`` / ``rename_column`` /
+    ``drop_column`` is non-None per instance; the codegen forwards
+    whichever is set to the IR node, and the VM dispatches on it.
+    """
 
     table: str
-    column: ColumnDef
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -592,6 +632,7 @@ class CreateTrigger:
     event: str    # "INSERT" | "UPDATE" | "DELETE"
     table: str
     body_sql: str
+    if_not_exists: bool = False
 
 
 @dataclass(frozen=True, slots=True)

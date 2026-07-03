@@ -1,0 +1,8 @@
+{
+ "idx": 83,
+ "policy": "A business must allow a consumer to opt out of the sale of their personal information. Transferring personal information to a third party constitutes a 'sale' only if the business receives monetary or other valuable consideration in exchange. If no such consideration is received, the transfer is not a sale and the opt-out does not apply.",
+ "scenario": "DriftMedia operates a free news website and transfers readers' browsing identifiers to an analytics partner, AdLoom. A reader, Sam, asked DriftMedia to honor an opt-out of the sale of his personal information. DriftMedia's privacy team noted that the AdLoom transfer is governed by a signed data-processing agreement and that AdLoom uses the identifiers to build audience segments.",
+ "question": "Was DriftMedia required to honor Sam's opt-out for the AdLoom transfer?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether DriftMedia received consideration"
+}

@@ -1,0 +1,9 @@
+[package]
+name = "testbench-framework"
+version = "0.1.0"
+edition = "2021"
+description = "HDL testbench harness — run tests against a HardwareVm DUT"
+
+[dependencies]
+hardware-vm = { path = "../hardware-vm" }
+hdl-ir       = { path = "../hdl-ir" }

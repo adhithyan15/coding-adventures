@@ -1,0 +1,8 @@
+[package]
+name = "coding-adventures-jsdoc-comment-extractor"
+version = "0.1.0"
+edition = "2021"
+description = "Scans raw JavaScript source for /** ... */ JSDoc block comments, strips the markers and per-line `* ` continuation prefixes, and returns spans + cleaned interior text ready for the JSDoc lexer/parser. Per CLOC05."
+
+[dependencies]
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }

@@ -1,0 +1,8 @@
+{
+ "check_id": 44,
+ "idx": 19,
+ "slot": "capacity_gallons",
+ "claimed_value": 95,
+ "scenario": "Northgate Auto installed a new waste-oil underground tank with a maximum capacity of 95 gallons. The owner asks whether registration and leak-detection rules apply.",
+ "cited_span": "a maximum capacity of 95 gallons"
+}

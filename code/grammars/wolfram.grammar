@@ -1,0 +1,194 @@
+# @version 1
+
+# =============================================================================
+# wolfram.grammar — Parser grammar for the Wolfram Language (subset)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from the wolfram-lexer. Everything in Wolfram is an expression
+# `head[args]`; this grammar parses the surface operators, and the W-4 runtime
+# desugars each rule into the canonical symbolic-ir head (Plus, Times, Power,
+# List, Rule, ReplaceAll, Set, …). See code/specs/MA04-wolfram-language.md.
+#
+# Token names (UPPERCASE) come from the Wolfram lexer (code/grammars/wolfram.tokens):
+#   NUMBER STRING NAME                literals and symbols
+#   SET (=)  SETDELAYED (:=)          assignment
+#   RULE (->)  RULEDELAYED (:>)  REPLACEALL (/.)  REPLACEREPEATED (//.)   (W-21)
+#   CONDITION (/;)  ALTERNATIVES (|)  PATTERNTEST (?)                     (W-21)
+#   AND (&&)  OR (||)  NOT (!)
+#   EQUAL (==)  UNEQUAL (!=)  LESS (<)  GREATER (>)  LE (<=)  GE (>=)
+#   PLUS MINUS TIMES SLASH POWER       arithmetic
+#   MAP (/@)  APPLY (@@)                map / apply sugar  (W-6)
+#   BLANK (_)                          pattern blank
+#   LBRACKET RBRACKET   (f[...] application)
+#   LDBRACKET           ([[...]] Part sugar opener; closes with RBRACKET RBRACKET)  (W-6)
+#   LBRACE RBRACE       ({...} list)
+#   LPAREN RPAREN       (grouping)
+#   COMMA SEMI NEWLINE
+#
+# Precedence cascade (loosest binds first -> tightest binds last)
+# ---------------------------------------------------------------
+#   assignment      =  :=                 (right-associative)
+#   replaceall      /.  //.               (left-associative)          (W-21: //.)
+#   rule            ->  :>                (right-associative)
+#   condition       /;                    (right-associative)         (W-21)
+#   alternatives    |                     (infix, left-assoc, n-ary)  (W-21)
+#   logical_or      ||
+#   logical_and     &&
+#   logical_not     !  (prefix)
+#   amp             expr &                (postfix, pure function)    (W-11)
+#   comparison      == != < > <= >=
+#   additive        + -
+#   multiplicative  * /
+#   unary           - +  (prefix)
+#   power           ^                     (right-associative)
+#   mapapply        /@ @@                 (infix, left-associative)   (W-6)
+#   patterntest     ?                     (infix, left-associative)   (W-21)
+#   application     f[...]  x[[...]]      (postfix)                   (W-6: [[]])
+#   atom            literals, symbols, patterns, slots, {...}, ( ... )  (W-11: # ## #n)
+# =============================================================================
+
+program = { statement_line } ;
+
+# A line is one statement followed by a NEWLINE or `;` (which suppresses its
+# result's display), or a blank/terminator-only line.
+statement_line = statement ( NEWLINE | SEMI )
+               | statement
+               | NEWLINE
+               | SEMI ;
+
+statement = expr ;
+
+expr = assignment ;
+
+# Set / SetDelayed — right-associative, the loosest binding.
+assignment = replaceall [ ( SET | SETDELAYED ) assignment ] ;
+
+# ReplaceAll / ReplaceRepeated — left-associative, and at the SAME precedence
+# level (both are `/`-replace operators): `e /. a /. b` is
+# ReplaceAll[ReplaceAll[e,a],b], `e //. a` is ReplaceRepeated[e, a], and a mixed
+# chain `e /. a //. b` folds left to ReplaceRepeated[ReplaceAll[e,a], b]. W-21
+# adds the `//.` (REPLACEREPEATED) arm beside the existing `/.` (REPLACEALL) one;
+# the runtime lowering inspects the operator token to pick the head.
+replaceall = rule { ( REPLACEALL | REPLACEREPEATED ) rule } ;
+
+# Rule / RuleDelayed — right-associative: `a -> b -> c` is Rule[a, Rule[b, c]].
+# Its operand is now `condition` (W-21), so `/;` binds tighter than `->`.
+rule = condition [ ( RULE | RULEDELAYED ) rule ] ;
+
+# Condition (W-21) — `patt /; test` is Condition[patt, test]. Right-associative
+# (`a /; b /; c` is Condition[a, Condition[b, c]], the rare nested form), and
+# LOOSER than `|` (so `a | b /; t` is Condition[Alternatives[a,b], t]). Modelled
+# on `rule`: a single `alternatives` with no `/;` falls straight through.
+condition = alternatives [ CONDITION condition ] ;
+
+# Alternatives (W-21) — `a | b | c` is the n-ary Alternatives[a, b, c]. Infix,
+# left-associative, folded into ONE n-ary head (like `+`/`&&`), and TIGHTER than
+# `/;` but LOOSER than `||`. A lone operand (no `|`) is a transparent wrapper.
+alternatives = logical_or { ALTERNATIVES logical_or } ;
+
+logical_or  = logical_and { OR logical_and } ;
+logical_and = logical_not { AND logical_not } ;
+logical_not = NOT logical_not | amp ;
+
+# Pure-function `&` postfix (W-11). A trailing run of `&` turns the WHOLE
+# preceding expression into an anonymous `Function`. Wolfram gives `&` a very low
+# precedence — looser than every arithmetic/comparison operator but tighter than
+# `,`/`;`/assignment — so all of these are pure functions of their slots:
+#
+#   #^2 &            →  Function[Power[Slot[1], 2]]     (looser than ^)
+#   # + 1 &          →  Function[Plus[Slot[1], 1]]      (looser than +)
+#   Mod[#, 2] == 0 & →  Function[Equal[Mod[#,2], 0]]    (looser than ==)
+#
+# So `amp` sits high in the cascade — just below `logical_not`, ABOVE the whole
+# comparison/arithmetic stack — and its body is a full `comparison`. The `&` is
+# NOT reachable from inside `^`/`+`/etc, so a trailing `&` always belongs to the
+# outermost expression, never to a sub-operand. A double `& &` wraps twice.
+#
+# After the `&` run the pure function may be *applied immediately*: `(#^2)&[5]`
+# is `(#^2 &)[5]` — the `[5]` (and any chained `[…]` / `[[…]]`) applies to the
+# new Function, not to the body. The apply suffix can appear only when at least
+# one `&` is present (the no-`&` alternative falls straight through to
+# `comparison`, where ordinary application already lives — no double-application
+# ambiguity). The runtime lowers each trailing `&` to a slot-based
+# `Function[body]` and folds each suffix into an application.
+amp = comparison AMP { AMP } { amp_apply }
+    | comparison ;
+
+# The application suffix usable after a pure-function `&` (mirrors `postfix`):
+# `f & [args]` ordinary application, `f & [[i]]` Part sugar.
+amp_apply = LBRACKET [ arglist ] RBRACKET
+          | LDBRACKET arglist RBRACKET RBRACKET ;
+
+# A single (non-chained) comparison for the subset.
+comparison = additive [ ( EQUAL | UNEQUAL | LESS | GREATER | LE | GE ) additive ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = unary { ( TIMES | SLASH ) unary } ;
+
+# Prefix minus/plus. Binds looser than Power, so `-x^2` is -(x^2).
+unary = ( MINUS | PLUS ) unary | power ;
+
+# Power — right-associative: `a^b^c` is Power[a, Power[b, c]]. Unchanged by W-11.
+power = mapapply [ POWER unary ] ;
+
+# Map / Apply sugar (W-6), infix and left-associative, binding just above
+# application: `f /@ x` is Map[f, x], `f @@ x` is Apply[f, x]. The runtime
+# desugars each to the SAME W-5 head the long form uses (`Map`/`Apply`), so
+# `f /@ {1, 2}` and `Map[f, {1, 2}]` produce identical IR. A chain folds left,
+# `g @@ f /@ x` ⇒ `Apply[g, Map[f, x]]` — exact precedence vs arithmetic is not
+# part of the tested subset (write parentheses when mixing). Its operand is now
+# `patterntest` (W-21), so `?` binds tighter than `/@`/`@@`.
+mapapply = patterntest { ( MAP | APPLY ) patterntest } ;
+
+# PatternTest (W-21) — `patt ? fn` is PatternTest[patt, fn]. Infix, left-
+# associative, binding VERY tightly — just above application/`postfix` and below
+# `mapapply` — so in `_?EvenQ` the `?EvenQ` attaches to the blank `_`, and a
+# chain `_?IntegerQ?Positive` folds left to PatternTest[PatternTest[_,IntegerQ],
+# Positive]. A lone `postfix` (no `?`) passes straight through.
+patterntest = postfix { PATTERNTEST postfix } ;
+
+# Postfix application (W-6 adds the `[[ … ]]` Part sugar alongside `f[…]`):
+#   `f[x][y]`     is `(f[x])[y]`             — function application, may be empty
+#   `x[[i]]`      is Part[x, i]              — double-bracket Part sugar
+#   `x[[1]][[2]]` is Part[Part[x, 1], 2]     — both chain left-associatively
+# Both forms are postfix and bind equally tightly, so they interleave freely
+# (`f[x][[1]]`, `x[[1]][y]`). `[[ … ]]` requires at least one index expression
+# (a bare `x[[]]` is not valid Wolfram); the runtime emits one `Part` per index.
+#
+# The opener `[[` is a single LDBRACKET token, but the closer is `RBRACKET
+# RBRACKET` — there is intentionally no `]]` token (see wolfram.tokens for why:
+# a greedy `]]` would mis-lex the tail of nested `f[g[x]]`). So `x[[i]]` closes
+# with two single `]`, exactly as it lexes.
+postfix = atom { LBRACKET [ arglist ] RBRACKET | LDBRACKET arglist RBRACKET RBRACKET } ;
+
+arglist = expr { COMMA expr } ;
+
+# Atoms, including the pattern blank forms and the W-11 slots:
+#   NAME                a symbol
+#   NAME BLANK [NAME]   x_  or  x_h   (Pattern[x, Blank[]] / Pattern[x, Blank[h]])
+#   BLANK [NAME]        _   or  _h    (Blank[] / Blank[h])
+#   slot                #  #n  ##     (Slot / SlotSequence — W-11 pure functions)
+# `slot` is listed first: HASH/SLOTSEQ are disjoint token types from NUMBER/
+# STRING/NAME/BLANK, so order is not required for correctness, but putting the
+# new arm up front keeps the pure-function additions visually grouped.
+atom = slot
+     | NUMBER
+     | STRING
+     | NAME [ BLANK [ NAME ] ]
+     | BLANK [ NAME ]
+     | list
+     | group ;
+
+# A pure-function argument slot (W-11):
+#   #     ≡  #1      the first argument            (HASH, no number)
+#   #n              the n-th argument              (HASH NUMBER)
+#   ##              SlotSequence — all arguments    (SLOTSEQ)
+# `#n` is HASH followed by the ordinary NUMBER token (there is no dedicated
+# slot-number token — the lexer is unchanged), so the parser reads the optional
+# number here; the runtime turns `#`/`#n` into Slot[n] and `##` into
+# SlotSequence[1].
+slot = HASH [ NUMBER ] | SLOTSEQ ;
+
+list  = LBRACE [ arglist ] RBRACE ;
+group = LPAREN expr RPAREN ;

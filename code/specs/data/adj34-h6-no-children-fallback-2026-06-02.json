@@ -1,0 +1,1271 @@
+{
+  "harness_version": "adj25-pr6-v1",
+  "endpoint": "http://127.0.0.1:11434",
+  "binary": "code/packages/rust/target/release/adj_pr6_bench",
+  "models": [
+    "qwen2.5:0.5b",
+    "qwen2.5:1.5b",
+    "qwen2.5:3b"
+  ],
+  "declarations": [
+    "matches",
+    "lighter-disposable"
+  ],
+  "cells": [
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 16.3195156250149,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(2 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (2 gap(s))"
+        },
+        "gaps_detail": [
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(0, 11)] }",
+            "level": "DocumentToSentence",
+            "parent_node_id": "Doc"
+          },
+          {
+            "kind_debug": "FlattenedAtom { node_id: NodeId(\"P1\"), atom: \"bag_count\", reason: UnitSuffix { suffix: \"_count\" } }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "P1"
+          }
+        ],
+        "model": "qwen2.5:0.5b",
+        "partial_ir": {
+          "document_id": "pr6-matches-qwen2.5_0.5b",
+          "edges": [
+            {
+              "from": "S1",
+              "id": "ce2",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "P1",
+              "id": "ce3",
+              "relation": "Contains",
+              "to": "F1"
+            },
+            {
+              "from": "F1",
+              "id": "ce4",
+              "relation": "Contains",
+              "to": "T1"
+            },
+            {
+              "from": "Doc",
+              "id": "ce7",
+              "relation": "Contains",
+              "to": "S1"
+            }
+          ],
+          "nodes": [
+            {
+              "discard_reason": null,
+              "id": "Doc",
+              "kind": "Document",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_0.5b",
+                  "end": 24,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P1",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_0.5b",
+                  "end": 24,
+                  "start": 11
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_0.5b",
+                  "end": 24,
+                  "start": 11
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T1",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_0.5b",
+                  "end": 24,
+                  "start": 11
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "S1",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_0.5b",
+                  "end": 24,
+                  "start": 11
+                }
+              ]
+            }
+          ]
+        },
+        "per_level_gap_distribution": {
+          "document_to_sentence": 1,
+          "fact_to_typed_component": 1,
+          "phrase_to_claim": 0,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 15.813155417
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 75.90019754203968,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "gaps_detail": [
+          {
+            "kind_debug": "ChildSpansEscape { child_id: NodeId(\"T1\"), outside: [(2, 16)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          },
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(16, 24)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          },
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(0, 2)] }",
+            "level": "PhraseToClaim",
+            "parent_node_id": "P1"
+          }
+        ],
+        "model": "qwen2.5:1.5b",
+        "partial_ir": {
+          "document_id": "pr6-matches-qwen2.5_1.5b",
+          "edges": [
+            {
+              "from": "S2",
+              "id": "ce4",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "P1",
+              "id": "ce17",
+              "relation": "Contains",
+              "to": "C3"
+            },
+            {
+              "from": "Doc",
+              "id": "ce18",
+              "relation": "Contains",
+              "to": "S1"
+            },
+            {
+              "from": "P2",
+              "id": "ce19",
+              "relation": "Contains",
+              "to": "F1"
+            },
+            {
+              "from": "S1",
+              "id": "ce22",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "S1",
+              "id": "ce23",
+              "relation": "Contains",
+              "to": "P2"
+            },
+            {
+              "from": "F1",
+              "id": "ce31",
+              "relation": "Contains",
+              "to": "T1"
+            },
+            {
+              "from": "C3",
+              "id": "ce33",
+              "relation": "Contains",
+              "to": "T1"
+            }
+          ],
+          "nodes": [
+            {
+              "discard_reason": null,
+              "id": "Doc",
+              "kind": "Document",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 24,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "C3",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 16,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "S1",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 24,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 24,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P1",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 16,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P2",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 24,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T1",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_1.5b",
+                  "end": 16,
+                  "start": 2
+                }
+              ]
+            }
+          ]
+        },
+        "per_level_gap_distribution": {
+          "document_to_sentence": 0,
+          "fact_to_typed_component": 2,
+          "phrase_to_claim": 1,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 75.896433458
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "matches",
+      "declaration_text": "1 carry-on bag, matches.",
+      "expected_verdict": "NON-COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 53.95723770791665,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(2 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (2 gap(s))"
+        },
+        "gaps_detail": [
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(15, 16)] }",
+            "level": "PhraseToClaim",
+            "parent_node_id": "P1"
+          },
+          {
+            "kind_debug": "FlattenedAtom { node_id: NodeId(\"P1\"), atom: \"bag_count\", reason: UnitSuffix { suffix: \"_count\" } }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "P1"
+          }
+        ],
+        "model": "qwen2.5:3b",
+        "partial_ir": {
+          "document_id": "pr6-matches-qwen2.5_3b",
+          "edges": [
+            {
+              "from": "Doc",
+              "id": "ce1",
+              "relation": "Contains",
+              "to": "S1"
+            },
+            {
+              "from": "S1",
+              "id": "ce2",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "S1",
+              "id": "ce3",
+              "relation": "Contains",
+              "to": "P2"
+            },
+            {
+              "from": "F1",
+              "id": "ce5",
+              "relation": "Contains",
+              "to": "T2"
+            },
+            {
+              "from": "F2",
+              "id": "ce10",
+              "relation": "Contains",
+              "to": "T3"
+            },
+            {
+              "from": "P1",
+              "id": "ce15",
+              "relation": "Contains",
+              "to": "F1"
+            },
+            {
+              "from": "P1",
+              "id": "ce16",
+              "relation": "Contains",
+              "to": "F2"
+            }
+          ],
+          "nodes": [
+            {
+              "discard_reason": null,
+              "id": "Doc",
+              "kind": "Document",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 24,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "S1",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 24,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P1",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 16,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": "NonDomainContent",
+              "id": "P2",
+              "kind": "Discarded",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 24,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T2",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 14,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T3",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 15,
+                  "start": 14
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 14,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F2",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-matches-qwen2.5_3b",
+                  "end": 15,
+                  "start": 14
+                }
+              ]
+            }
+          ]
+        },
+        "per_level_gap_distribution": {
+          "document_to_sentence": 0,
+          "fact_to_typed_component": 1,
+          "phrase_to_claim": 1,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, matches.",
+        "wallclock_secs": 53.953301208
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:0.5b",
+      "wallclock_secs": 45.344632250024006,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(3 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (3 gap(s))"
+        },
+        "gaps_detail": [
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(0, 2), (14, 16)] }",
+            "level": "DocumentToSentence",
+            "parent_node_id": "Doc"
+          },
+          {
+            "kind_debug": "Overlap { ranges: [(2, 14)], participants: [NodeId(\"C1\"), NodeId(\"C2\")] }",
+            "level": "PhraseToClaim",
+            "parent_node_id": "P1"
+          },
+          {
+            "kind_debug": "FlattenedAtom { node_id: NodeId(\"P1\"), atom: \"bag_count\", reason: UnitSuffix { suffix: \"_count\" } }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "P1"
+          }
+        ],
+        "model": "qwen2.5:0.5b",
+        "partial_ir": {
+          "document_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+          "edges": [
+            {
+              "from": "P1",
+              "id": "ce5",
+              "relation": "Contains",
+              "to": "C1"
+            },
+            {
+              "from": "P1",
+              "id": "ce6",
+              "relation": "Contains",
+              "to": "C2"
+            },
+            {
+              "from": "C1",
+              "id": "ce7",
+              "relation": "Contains",
+              "to": "T3"
+            },
+            {
+              "from": "C2",
+              "id": "ce8",
+              "relation": "Contains",
+              "to": "T4"
+            },
+            {
+              "from": "S2",
+              "id": "ce13",
+              "relation": "Contains",
+              "to": "P5"
+            },
+            {
+              "from": "S1",
+              "id": "ce16",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "P5",
+              "id": "ce17",
+              "relation": "Contains",
+              "to": "F1"
+            },
+            {
+              "from": "Doc",
+              "id": "ce18",
+              "relation": "Contains",
+              "to": "S1"
+            },
+            {
+              "from": "Doc",
+              "id": "ce19",
+              "relation": "Contains",
+              "to": "S2"
+            },
+            {
+              "from": "F1",
+              "id": "ce20",
+              "relation": "Contains",
+              "to": "T6"
+            }
+          ],
+          "nodes": [
+            {
+              "discard_reason": null,
+              "id": "Doc",
+              "kind": "Document",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 35,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "C1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 14,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "C2",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 14,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T3",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 14,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T4",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 14,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P5",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P1",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 14,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "S1",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 14,
+                  "start": 2
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "S2",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T6",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_0.5b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            }
+          ]
+        },
+        "per_level_gap_distribution": {
+          "document_to_sentence": 1,
+          "fact_to_typed_component": 1,
+          "phrase_to_claim": 1,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 45.340603791
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:1.5b",
+      "wallclock_secs": 99.59238525002729,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(2 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (2 gap(s))"
+        },
+        "gaps_detail": [
+          {
+            "kind_debug": "ChildSpansEscape { child_id: NodeId(\"T1\"), outside: [(0, 16)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          },
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(16, 27)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          }
+        ],
+        "model": "qwen2.5:1.5b",
+        "partial_ir": {
+          "document_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+          "edges": [
+            {
+              "from": "S2",
+              "id": "ce4",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "Doc",
+              "id": "ce9",
+              "relation": "Contains",
+              "to": "S1"
+            },
+            {
+              "from": "P1",
+              "id": "ce16",
+              "relation": "Contains",
+              "to": "C1"
+            },
+            {
+              "from": "S1",
+              "id": "ce17",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "S1",
+              "id": "ce18",
+              "relation": "Contains",
+              "to": "P2"
+            },
+            {
+              "from": "P2",
+              "id": "ce22",
+              "relation": "Contains",
+              "to": "F1"
+            },
+            {
+              "from": "F1",
+              "id": "ce36",
+              "relation": "Contains",
+              "to": "T1"
+            },
+            {
+              "from": "F1",
+              "id": "ce37",
+              "relation": "Contains",
+              "to": "T2"
+            },
+            {
+              "from": "C1",
+              "id": "ce39",
+              "relation": "Contains",
+              "to": "T1"
+            }
+          ],
+          "nodes": [
+            {
+              "discard_reason": null,
+              "id": "Doc",
+              "kind": "Document",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 35,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "S1",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 35,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "C1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 16,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P1",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 16,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P2",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T2",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 35,
+                  "start": 27
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T1",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_1.5b",
+                  "end": 16,
+                  "start": 0
+                }
+              ]
+            }
+          ]
+        },
+        "per_level_gap_distribution": {
+          "document_to_sentence": 0,
+          "fact_to_typed_component": 2,
+          "phrase_to_claim": 0,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 99.588063333
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    },
+    {
+      "declaration_id": "lighter-disposable",
+      "declaration_text": "1 carry-on bag, disposable lighter.",
+      "expected_verdict": "COMPLIANT",
+      "model": "qwen2.5:3b",
+      "wallclock_secs": 171.74207608390134,
+      "raw_output": {
+        "error": {
+          "kind": "coverage_unresolved(6 gap(s))",
+          "message": "hierarchical-decompose coverage unresolved after retries (6 gap(s))"
+        },
+        "gaps_detail": [
+          {
+            "kind_debug": "ChildSpansEscape { child_id: NodeId(\"F1\"), outside: [(16, 35)] }",
+            "level": "PhraseToClaim",
+            "parent_node_id": "P1"
+          },
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(0, 16)] }",
+            "level": "PhraseToClaim",
+            "parent_node_id": "P1"
+          },
+          {
+            "kind_debug": "ChildSpansEscape { child_id: NodeId(\"T2\"), outside: [(8, 11)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          },
+          {
+            "kind_debug": "ChildSpansEscape { child_id: NodeId(\"T3\"), outside: [(11, 14)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          },
+          {
+            "kind_debug": "UncoveredBytes { ranges: [(16, 35)] }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "F1"
+          },
+          {
+            "kind_debug": "FlattenedAtom { node_id: NodeId(\"P1\"), atom: \"bag_count\", reason: UnitSuffix { suffix: \"_count\" } }",
+            "level": "FactToTypedComponent",
+            "parent_node_id": "P1"
+          }
+        ],
+        "model": "qwen2.5:3b",
+        "partial_ir": {
+          "document_id": "pr6-lighter-disposable-qwen2.5_3b",
+          "edges": [
+            {
+              "from": "Doc",
+              "id": "ce1",
+              "relation": "Contains",
+              "to": "N0"
+            },
+            {
+              "from": "N0",
+              "id": "ce2",
+              "relation": "Contains",
+              "to": "P1"
+            },
+            {
+              "from": "N0",
+              "id": "ce3",
+              "relation": "Contains",
+              "to": "P2"
+            },
+            {
+              "from": "F2",
+              "id": "ce27",
+              "relation": "Contains",
+              "to": "T1"
+            },
+            {
+              "from": "P1",
+              "id": "ce28",
+              "relation": "Contains",
+              "to": "F1"
+            },
+            {
+              "from": "F1",
+              "id": "ce31",
+              "relation": "Contains",
+              "to": "T2"
+            },
+            {
+              "from": "F1",
+              "id": "ce32",
+              "relation": "Contains",
+              "to": "T3"
+            },
+            {
+              "from": "P2",
+              "id": "ce34",
+              "relation": "Contains",
+              "to": "F1"
+            }
+          ],
+          "nodes": [
+            {
+              "discard_reason": null,
+              "id": "Doc",
+              "kind": "Document",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 35,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "N0",
+              "kind": "Sentence",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 35,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P1",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 16,
+                  "start": 0
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "P2",
+              "kind": "Phrase",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T2",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 11,
+                  "start": 8
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "T3",
+              "kind": "Entity",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 14,
+                  "start": 11
+                }
+              ]
+            },
+            {
+              "discard_reason": null,
+              "id": "F1",
+              "kind": "Fact",
+              "modality": "Present",
+              "polarity": "Affirmed",
+              "spans": [
+                {
+                  "doc_id": "pr6-lighter-disposable-qwen2.5_3b",
+                  "end": 35,
+                  "start": 16
+                }
+              ]
+            }
+          ]
+        },
+        "per_level_gap_distribution": {
+          "document_to_sentence": 0,
+          "fact_to_typed_component": 4,
+          "phrase_to_claim": 2,
+          "sentence_to_phrase": 0
+        },
+        "source": "1 carry-on bag, disposable lighter.",
+        "wallclock_secs": 171.734653375
+      },
+      "exit_code": 0,
+      "stderr_excerpt": ""
+    }
+  ],
+  "summary": {
+    "totals": {
+      "cells_run": 6,
+      "ir_produced": 0,
+      "fully_passing": 0,
+      "correlation_complete": 0,
+      "correlation_total": 0
+    },
+    "by_model": {
+      "qwen2.5:0.5b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 61.66414787503891
+      },
+      "qwen2.5:1.5b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 175.49258279206697
+      },
+      "qwen2.5:3b": {
+        "cells": 2,
+        "ir_produced": 0,
+        "overall_pass": 0,
+        "wallclock_sum": 225.69931379181799
+      }
+    },
+    "by_level": {
+      "DocumentToSentence": {
+        "passed": 0,
+        "total": 0
+      },
+      "SentenceToPhrase": {
+        "passed": 0,
+        "total": 0
+      },
+      "PhraseToClaim": {
+        "passed": 0,
+        "total": 0
+      },
+      "FactToTypedComponent": {
+        "passed": 0,
+        "total": 0
+      }
+    }
+  }
+}

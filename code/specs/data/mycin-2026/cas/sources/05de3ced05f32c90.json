@@ -1,0 +1,39 @@
+{
+  "hash": "05de3ced05f32c90",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/6696301/",
+  "title": "Measurement of urinary leukocyte esterase activity: a screening test for urinary tract infections (Chernow et al., Ann Emerg Med. 1984;13(3):150-4)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/6696301/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Leukocyte esterase is an enzyme released only from leukocytes, and testing for it in urine indicates the presence of pyuria.",
+      "byte_quote": "We evaluated the efficacy of testing for the presence of esterase (an enzyme released only from leukocytes) in the urine as an indicator of the presence of pyuria."
+    },
+    {
+      "id": "c2",
+      "text": "A dipstick test for urinary leukocyte esterase activity was hypothesized to be a rapid, simple screening technique for detecting UTIs.",
+      "byte_quote": "We hypothesized that a \"dipstick\" test for urinary leukocyte esterase activity would be a rapid and simple screening technique for detecting urinary tract infections (UTI)."
+    },
+    {
+      "id": "c3",
+      "text": "Study population: 203 patients (148 outpatients, 55 inpatients) with suspected UTI.",
+      "byte_quote": "we collected fresh urine specimens from 203 patients (148 outpatients, 55 inpatients) with a suspected UTI."
+    },
+    {
+      "id": "c4",
+      "text": "Significant bacteriuria was defined as >= 10^5 organisms/mL; 49 of 203 specimens met this threshold.",
+      "byte_quote": "Of the 203 specimens, 49 showed significant bacteriuria (greater than or equal to 10(5) organisms/mL)."
+    },
+    {
+      "id": "c5",
+      "text": "Leukocyte esterase dipstick was 100% sensitive (0% false negatives) and 76% specific (24% false positives) for predicting significant bacteriuria.",
+      "byte_quote": "The leukocyte esterase test was 100% sensitive (0% false negatives) with a 76% specificity (24% false positives) in predicting significant bacteriuria."
+    },
+    {
+      "id": "c6",
+      "text": "Urinary nitrite testing was highly specific (99% specificity, 0.6% false positives) but insensitive (27% sensitivity, 73% false negatives).",
+      "byte_quote": "Although a positive nitrite reaction was more specific (99% specificity, 0.6% false positives), it was insensitive (27% sensitivity, 73% false negatives)."
+    }
+  ],
+  "cites": []
+}

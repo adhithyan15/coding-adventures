@@ -3,6 +3,18 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-04-27
+
+### Fixed
+
+- **`decompress` now rejects inputs larger than 64 MB before calling
+  `unpack('C*', ...)`.**  `unpack` converts every byte into a full Perl scalar
+  (~56 bytes on 64-bit builds), so an oversized compressed input would amplify
+  memory by ~56× before any frame-header check could fire.  The guard fires on
+  the raw byte count alone: `die "input too large" if length($data) > 64 MB`.
+- New `SEC-1` test verifies that a 65 MB input is rejected with a "too large"
+  error before any frame parsing occurs.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added

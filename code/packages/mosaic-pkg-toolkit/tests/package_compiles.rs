@@ -35,8 +35,10 @@ use std::path::PathBuf;
 /// Alphabetical order matches the manifest's `[components].exports`
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
-    "Alert", "Badge", "Button", "Checkbox", "Field", "Input",
-    "ListGroup", "Modal", "Radio", "Spinner", "Toast",
+    "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+    "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
+    "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
+    "Radio", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -81,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.1.0",
-        "[package].version must be 0.1.0 for the v0.1 PR-1 release"
+        version, "0.11.0",
+        "[package].version must be 0.11.0 for the Select release"
     );
 
     let exports = value
@@ -248,28 +250,45 @@ fn input_interface_matches_spec() {
     assert_eq!(emit_names, vec!["onChange", "onCommit"]);
 }
 
-/// Checkbox — toggle button + label, host-owned state.
+/// Checkbox v0.3 — native `HostCheckbox` wrapper with optional
+/// `indeterminate` slot. Breaking changes from v0.2 documented in
+/// CHANGELOG: `onChange` now carries `checked: bool`, and the slot
+/// roster grew an `indeterminate` slot.
 #[test]
 fn checkbox_interface_matches_spec() {
     let mil_src = read_source("Checkbox.mil");
     let out = mosmodel_compiler::compile(&mil_src).unwrap();
     let c = &out.component;
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
-    assert_eq!(slot_names, vec!["label", "checked", "disabled"]);
+    assert_eq!(slot_names, vec!["label", "checked", "disabled", "indeterminate"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onChange"]);
+    // v0.3 — onChange now carries a `checked: bool` parameter.
+    let on_change = c.emits.iter().find(|e| e.name == "onChange").unwrap();
+    let param_names: Vec<&str> = on_change.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(param_names, vec!["checked"]);
 }
 
-/// Radio — single-select toggle, host owns group state.
+/// Radio v0.3 — native `HostRadio` wrapper. Breaking changes from
+/// v0.2: `selected` renamed to `checked` (consistent with HostRadio
+/// and Checkbox); new `value` and `group` slots; `onSelect` carries
+/// `value: text` payload.
 #[test]
 fn radio_interface_matches_spec() {
     let mil_src = read_source("Radio.mil");
     let out = mosmodel_compiler::compile(&mil_src).unwrap();
     let c = &out.component;
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
-    assert_eq!(slot_names, vec!["label", "selected", "disabled"]);
+    assert_eq!(
+        slot_names,
+        vec!["label", "checked", "value", "group", "disabled"]
+    );
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+    // v0.3 — onSelect now carries a `value: text` parameter.
+    let on_select = c.emits.iter().find(|e| e.name == "onSelect").unwrap();
+    let param_names: Vec<&str> = on_select.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(param_names, vec!["value"]);
 }
 
 /// ListGroup — vertical list of selectable text rows. Iterates via For.
@@ -282,6 +301,58 @@ fn listgroup_interface_matches_spec() {
     assert_eq!(slot_names, vec!["items", "selected-index"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// ListGroup should render the selected row through a distinct part,
+/// not merely expose an unused selected-index slot.
+#[test]
+fn listgroup_selected_row_part_compiles_and_is_styled() {
+    let mil_src = read_source("ListGroup.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("ListGroup.mll");
+    assert!(
+        mll_src.contains("i == selectedIndex"),
+        "ListGroup.mll should compare the loop index with selectedIndex"
+    );
+    assert!(
+        mll_src.contains("list-group-item-selected"),
+        "ListGroup.mll should route the selected row through its own part"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("ListGroup.mll should compile against ListGroup.mil");
+    assert!(
+        mll_out.part_map_json.contains("list-group-item-selected"),
+        "ListGroup part map should include the selected row part"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("ListGroup.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let selected = style_out
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "list-group-item-selected")
+            .unwrap_or_else(|| panic!("{style_filename} missing selected row part"));
+        let background = selected
+            .base
+            .iter()
+            .find(|prop| prop.name == "background")
+            .unwrap_or_else(|| panic!("{style_filename} selected row missing background"));
+        let expected_background = if *theme == "light" {
+            "#e7f1ff"
+        } else {
+            "#1d4ed8"
+        };
+        assert_eq!(
+            background.value, expected_background,
+            "{style_filename} selected row background mismatch"
+        );
+    }
 }
 
 /// Modal — wraps HostDialog with title + message slots.
@@ -310,4 +381,245 @@ fn field_interface_matches_spec() {
     );
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Nav — horizontal list of nav links. Same shape as ListGroup
+/// (items + selected-style index + onSelect with index payload),
+/// laid out horizontally via Row.
+#[test]
+fn nav_interface_matches_spec() {
+    let mil_src = read_source("Nav.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Nav should render the active link through a distinct part,
+/// not merely expose an unused active-index slot.
+#[test]
+fn nav_active_link_part_compiles_and_is_styled() {
+    let mil_src = read_source("Nav.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("Nav.mll");
+    assert!(
+        mll_src.contains("i == activeIndex"),
+        "Nav.mll should compare the loop index with activeIndex"
+    );
+    assert!(
+        mll_src.contains("nav-link-active"),
+        "Nav.mll should route the active link through its own part"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("Nav.mll should compile against Nav.mil");
+    assert!(
+        mll_out.part_map_json.contains("nav-link-active"),
+        "Nav part map should include the active link part"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("Nav.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let active = style_out
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "nav-link-active")
+            .unwrap_or_else(|| panic!("{style_filename} missing active link part"));
+        let background = active
+            .base
+            .iter()
+            .find(|prop| prop.name == "background")
+            .unwrap_or_else(|| panic!("{style_filename} active link missing background"));
+        let expected_background = if *theme == "light" {
+            "#e7f1ff"
+        } else {
+            "#1d4ed8"
+        };
+        assert_eq!(
+            background.value, expected_background,
+            "{style_filename} active link background mismatch"
+        );
+    }
+}
+
+/// ButtonGroup — row of related buttons that visually share borders.
+#[test]
+fn button_group_interface_matches_spec() {
+    let mil_src = read_source("ButtonGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["items"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Breadcrumb — hierarchical nav trail. Same For-over-list pattern.
+#[test]
+fn breadcrumb_interface_matches_spec() {
+    let mil_src = read_source("Breadcrumb.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["crumbs"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Pagination — « prev | 1 2 3 | next » row of HostLink chips. Three
+/// emits: onPrev, onNext (no payload), onPageSelect(index).
+#[test]
+fn pagination_interface_matches_spec() {
+    let mil_src = read_source("Pagination.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["pages", "prev-label", "next-label", "active-index"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onPrev", "onNext", "onPageSelect"]);
+}
+
+/// InputGroup — text input flanked by optional prefix/suffix addons.
+/// No emits beyond the inner field's onChange/onCommit.
+#[test]
+fn input_group_interface_matches_spec() {
+    let mil_src = read_source("InputGroup.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["prefix", "suffix", "value", "placeholder", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onChange", "onCommit"]);
+}
+
+/// Accordion — expand/collapse stack. Parallel headers + bodies
+/// lists, host-owned open-index, onToggle(index) emit.
+#[test]
+fn accordion_interface_matches_spec() {
+    let mil_src = read_source("Accordion.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["headers", "bodies", "open-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle"]);
+}
+
+/// Tabs — horizontal tab bar + body panel. Host owns active-index
+/// and supplies the matching active-body each tick.
+#[test]
+fn tabs_interface_matches_spec() {
+    let mil_src = read_source("Tabs.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["headers", "active-body", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Tabs should render the active header through a distinct part,
+/// not merely expose an unused active-index slot.
+#[test]
+fn tabs_active_header_part_compiles_and_is_styled() {
+    let mil_src = read_source("Tabs.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("Tabs.mll");
+    assert!(
+        mll_src.contains("i == activeIndex"),
+        "Tabs.mll should compare the loop index with activeIndex"
+    );
+    assert!(
+        mll_src.contains("tabs-tab-active"),
+        "Tabs.mll should route the active header through its own part"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("Tabs.mll should compile against Tabs.mil");
+    assert!(
+        mll_out.part_map_json.contains("tabs-tab-active"),
+        "Tabs part map should include the active header part"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("Tabs.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let active = style_out
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "tabs-tab-active")
+            .unwrap_or_else(|| panic!("{style_filename} missing active tab part"));
+        let background = active
+            .base
+            .iter()
+            .find(|prop| prop.name == "background")
+            .unwrap_or_else(|| panic!("{style_filename} active tab missing background"));
+        let expected_background = if *theme == "light" {
+            "#e7f1ff"
+        } else {
+            "#1d4ed8"
+        };
+        assert_eq!(
+            background.value, expected_background,
+            "{style_filename} active tab background mismatch"
+        );
+    }
+}
+
+/// DropdownMenu — toggle button + revealed item list. Two emits:
+/// onToggle (no payload) and onSelect(index).
+#[test]
+fn dropdown_menu_interface_matches_spec() {
+    let mil_src = read_source("DropdownMenu.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["label", "items", "open"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle", "onSelect"]);
+}
+
+/// Navbar — brand on the left, HostLink row after.
+#[test]
+fn navbar_interface_matches_spec() {
+    let mil_src = read_source("Navbar.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["brand", "items", "active-index"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+}
+
+/// Select — toggle button + revealed option list. onChange's payload
+/// is the option text (not its index, unlike DropdownMenu).
+#[test]
+fn select_interface_matches_spec() {
+    let mil_src = read_source("Select.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(
+        slot_names,
+        vec!["value", "options", "placeholder", "open", "disabled"]
+    );
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onToggle", "onChange"]);
 }

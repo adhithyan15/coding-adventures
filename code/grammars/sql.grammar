@@ -61,6 +61,10 @@ with_clause       = "WITH" [ "RECURSIVE" ] cte_def { "," cte_def } ;
 cte_def           = NAME [ "(" NAME { "," NAME } ")" ] "AS"
                     [ [ "NOT" ] "MATERIALIZED" ]
                     "(" query_stmt ")" ;
+# Grammar note: [ "ALL" ] is written for all three operators so the parser can
+# produce a useful token-stream and the adapter can emit the correct error.
+# Only UNION ALL is valid in SQLite; the adapter rejects INTERSECT ALL and
+# EXCEPT ALL with OperationalError: near "ALL": syntax error.
 set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ]
                     ( values_stmt | select_stmt ) ;
 
@@ -69,10 +73,10 @@ set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ]
 select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
                     [ "FROM" table_ref { join_clause } ]
                     [ where_clause ] [ group_clause ] [ having_clause ]
-                    [ order_clause ] [ limit_clause ] ;
+                    [ window_clause ] [ order_clause ] [ limit_clause ] ;
 
 select_list       = STAR | select_item { "," select_item } ;
-select_item       = expr [ "AS" NAME ] ;
+select_item       = expr [ [ "AS" ] NAME ] ;
 
 # table_ref: try derived-table form first (starts with "(") then plain name.
 # PEG backtracking ensures "(SELECT ...)" matches the first branch and
@@ -82,8 +86,21 @@ select_item       = expr [ "AS" NAME ] ;
 # ``(SELECT …)`` are accepted.  When no alias is given, the outer query
 # may still reference columns by their unqualified names.
 # NAME never matches SQL keywords, so WHERE, JOIN, ON etc. are never eaten.
-table_ref         = "(" query_stmt ")" [ [ "AS" ] NAME ] | table_name [ "AS" NAME | NAME ] ;
+#
+# An optional ``index_hint`` may follow the table name (not derived
+# tables — SQLite only allows the hint on base tables).  Two forms:
+#
+#   * ``INDEXED BY <index-name>`` — force the planner to use the named
+#     index.  Errors at plan time if the index doesn't exist on the
+#     table.
+#   * ``NOT INDEXED`` — instruct the planner to use a full table scan
+#     and ignore any matching indexes.
+#
+# Both forms are SQLite-only query hints; standard SQL ignores them.
+table_ref         = "(" query_stmt ")" [ [ "AS" ] NAME ]
+                  | table_name [ "AS" NAME | NAME ] [ index_hint ] ;
 table_name        = NAME [ "." NAME ] ;
+index_hint        = "INDEXED" "BY" NAME | "NOT" "INDEXED" ;
 
 # join_clause covers two forms:
 #   1. Explicit JOIN:  [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" (...) ]
@@ -101,19 +118,44 @@ where_clause      = "WHERE" expr ;
 group_clause      = "GROUP" "BY" column_ref { "," column_ref } ;
 having_clause     = "HAVING" expr ;
 order_clause      = "ORDER" "BY" order_item { "," order_item } ;
-# order_item: expr followed by optional direction (ASC|DESC) and optional
-# null-placement clause (NULLS FIRST | NULLS LAST).  The null-placement
-# clause is SQLite 3.30+ syntax; mini-sqlite honours it via the planner's
-# ``SortKey.nulls_first`` field.  Omitting it falls back to SQLite's
-# defaults (NULLs first for ASC, NULLs last for DESC).
+# order_item: expr followed by optional ``COLLATE name`` clause,
+# optional direction (ASC|DESC), and optional null-placement clause
+# (NULLS FIRST | NULLS LAST).
 #
-# ``FIRST`` and ``LAST`` are intentionally NOT in the keyword list — they
-# are extremely common as column names (``first_name``, ``last``).  The
-# grammar accepts a generic NAME after NULLS; the adapter validates it
-# is one of those two literal tokens (case-insensitive).
-order_item        = expr [ "ASC" | "DESC" ]
+# The collation name (``BINARY`` / ``NOCASE`` / ``RTRIM`` in standard
+# SQLite, plus any user-registered ones) is a comparison transform
+# applied to each value before the sort comparator runs.  The
+# adapter stores the name on ``SortKey.collation`` and the VM
+# normalises values accordingly when building the sort key.
+#
+# The null-placement clause is SQLite 3.30+ syntax; mini-sqlite
+# honours it via the planner's ``SortKey.nulls_first`` field.
+# Omitting it falls back to SQLite's defaults (NULLs first for ASC,
+# NULLs last for DESC).
+#
+# ``FIRST`` and ``LAST`` are intentionally NOT in the keyword list —
+# they are extremely common as column names (``first_name``,
+# ``last``).  The grammar accepts a generic NAME after NULLS; the
+# adapter validates it is one of those two literal tokens
+# (case-insensitive).
+order_item        = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ]
                     [ "NULLS" NAME ] ;
-limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
+limit_clause      = "LIMIT" signed_number
+                    [ "OFFSET" signed_number
+                    | "," signed_number ] ;
+# ``signed_number`` is an optional ``-`` prefix followed by a NUMBER
+# token.  SQLite documents a *negative* LIMIT as "no limit"
+# (unbounded), useful for ``LIMIT -1 OFFSET N`` to mean "skip N rows
+# and return the rest".  The lexer emits the sign as a separate
+# MINUS token, so the grammar reads it explicitly here.
+#
+# The trailing ``, signed_number`` alternative is SQLite's
+# MySQL-compatible shorthand: ``LIMIT m, n`` means ``LIMIT n OFFSET
+# m`` — the FIRST number is the offset and the SECOND is the count
+# (note the reversed argument order vs the ``OFFSET`` form).  This
+# syntax exists for compatibility with MySQL queries and is the only
+# place in the language where the count/offset ordering swaps.
+signed_number     = [ "-" ] NUMBER ;
 
 # ── INSERT / UPDATE / DELETE ─────────────────────────────────────────────────
 #
@@ -165,22 +207,51 @@ replace_stmt      = "REPLACE" "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
                     insert_body
                     [ returning_clause ] ;
-insert_body       = "VALUES" row_value { "," row_value } | query_stmt ;
+insert_body       = "VALUES" row_value { "," row_value }
+                  | "DEFAULT" "VALUES"
+                  | query_stmt ;
+# ``DEFAULT VALUES`` (SQLite-only): insert a single row consisting
+# entirely of column defaults.  Equivalent to omitting every column
+# value — useful when the table has an INTEGER PRIMARY KEY plus all
+# other columns have DEFAULT clauses (or are NULLable).
 row_value         = "(" expr { "," expr } ")" ;
+# row_value_list is used by row-value comparisons: (a,b) IN ((x,y),(p,q))
+row_value_list    = row_value { "," row_value } ;
 
-update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
+# UPDATE supports the same five conflict-resolution modes as INSERT.
+# The optional ``conflict_clause`` (``OR REPLACE | IGNORE | …``) must appear
+# immediately after UPDATE and before the table name — exactly as in SQLite.
+#
+#   UPDATE OR IGNORE t SET x = 1 WHERE …   — skip row if constraint violated
+#   UPDATE OR REPLACE t SET x = 1 WHERE …  — delete conflicting rows, then update
+#   UPDATE OR ABORT t SET x = 1 WHERE …    — raise error (default)
+update_stmt       = "UPDATE" [ conflict_clause ] NAME "SET" assignment { "," assignment }
                     [ where_clause ] [ returning_clause ] ;
 assignment        = NAME "=" expr ;
 
 delete_stmt       = "DELETE" "FROM" NAME [ where_clause ] [ returning_clause ] ;
 
-returning_clause  = "RETURNING" expr { "," expr } ;
+returning_clause  = "RETURNING" returning_item { "," returning_item } ;
+# RETURNING accepts ``*`` (shorthand for every column of the target
+# table, in declaration order) as well as ordinary expressions —
+# matches SQLite's RETURNING grammar.
+returning_item    = "*" | expr ;
 
 # ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
 
 create_table_stmt = "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] NAME
-                    "(" col_def { "," col_def } ")"
+                    "(" col_def { "," col_def } { "," table_constraint } ")"
                     [ table_options ] ;
+# Table-level constraints appear after the column definitions.  Each
+# starts with a keyword, which lets the PEG parser distinguish them from
+# col_def (which starts with NAME).  Mini-sqlite enforces PRIMARY KEY and
+# UNIQUE by promoting the flag onto the matching column definition(s);
+# CHECK and FOREIGN KEY are parsed and accepted but not enforced.
+table_constraint  = ( "PRIMARY" "KEY" "(" NAME { "," NAME } ")" )
+                  | ( "UNIQUE"  "(" NAME { "," NAME } ")" )
+                  | ( "CHECK"   "(" expr ")" )
+                  | ( "FOREIGN" "KEY" "(" NAME { "," NAME } ")"
+                      "REFERENCES" NAME [ "(" NAME { "," NAME } ")" ] ) ;
 # Trailing table options (SQLite 3.8.2+ / 3.37+ extensions):
 #   WITHOUT ROWID — store rows in the primary-key B-tree instead of a
 #                   rowid table.  Mini-sqlite accepts and ignores.
@@ -193,21 +264,58 @@ table_option      = "STRICT" | "WITHOUT" NAME ;
 # insensitive).  We don't model ROWID as a keyword because it is widely
 # used as a column name in SQLite (`SELECT rowid FROM t`); making it a
 # keyword would break those queries.
-col_def           = NAME col_type { col_constraint } ;
+col_def           = !("FOREIGN" "KEY") NAME [ col_type ] { col_constraint } ;
+# col_type is optional — SQLite allows typeless columns such as
+#   CREATE TABLE t (id, name, age)
+# When omitted the engine applies BLOB/TEXT affinity (the SQLite default).
+# The negative lookahead !("FOREIGN" "KEY") prevents col_def from greedily
+# consuming "FOREIGN" as a column name when the parser reaches a table-level
+# FOREIGN KEY constraint.  "FOREIGN" is a NAME token in the SQL lexer, so
+# without the lookahead it would be mistaken for a column name, leaving
+# "KEY(...) REFERENCES ..." stranded and causing a parse error.
 # col_type accepts simple names (INTEGER, TEXT) and parameterised types
 # (VARCHAR(8), DECIMAL(10,2)) — the length/precision arguments are parsed
 # but ignored; the engine uses SQLite's type-affinity rules internally.
 col_type          = NAME [ "(" NUMBER { "," NUMBER } ")" ] ;
-col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
-                  | "UNIQUE" | ( "DEFAULT" primary )
+col_constraint    = ( "NOT" "NULL" [ col_conflict_clause ] ) | "NULL"
+                  | ( "PRIMARY" "KEY" [ "AUTOINCREMENT" ] [ col_conflict_clause ] )
+                  | ( "UNIQUE" [ col_conflict_clause ] )
+                  | ( "DEFAULT" primary )
                   | ( "CHECK" "(" expr ")" )
+                  | ( "COLLATE" NAME )
                   | ( "REFERENCES" NAME [ "(" NAME ")" ] ) ;
+# Column-level conflict clause — parsed and accepted but not enforced.
+# SQLite allows each constraint to carry its own conflict-resolution policy:
+#   x INT NOT NULL ON CONFLICT REPLACE
+#   x INT UNIQUE ON CONFLICT IGNORE
+# Mini-sqlite always uses ABORT semantics; these clauses are silently ignored.
+# col_conflict_clause is a nested sub-rule so its keyword tokens do NOT
+# appear as direct children of col_constraint — the adapter's kw_seq logic
+# sees only the constraint-type keywords (NOT NULL, PRIMARY KEY, UNIQUE) and
+# is unaffected.
+col_conflict_clause = "ON" "CONFLICT"
+                      ( "ROLLBACK" | "ABORT" | "FAIL" | "IGNORE" | "REPLACE" ) ;
+# AUTOINCREMENT (SQLite-only): only valid immediately after PRIMARY KEY on
+# an INTEGER column.  The engine recognises the keyword and sets
+# ``ColumnDef.autoincrement = True``; behaviour is "rowids monotonically
+# increase, never reuse a deleted id" — already true in our in-memory
+# backend because _next_rowid is never decremented.
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
 
-# ALTER TABLE — only ADD [COLUMN] is supported.
-# The COLUMN keyword is optional (matches SQLite behaviour).
-alter_table_stmt  = "ALTER" "TABLE" NAME "ADD" [ "COLUMN" ] col_def ;
+# ALTER TABLE — four forms, matching SQLite:
+#   ALTER TABLE t ADD [COLUMN] col_def       (forever)
+#   ALTER TABLE t RENAME TO new_name         (forever)
+#   ALTER TABLE t RENAME [COLUMN] old TO new (SQLite 3.25+)
+#   ALTER TABLE t DROP [COLUMN] col_name     (SQLite 3.35+)
+#
+# The COLUMN keyword is optional everywhere (matches SQLite behaviour).
+alter_table_stmt  = "ALTER" "TABLE" NAME (
+                      "ADD" [ "COLUMN" ] col_def
+                    | "RENAME" "TO" NAME
+                    | "RENAME" [ "COLUMN" ] NAME "TO" NAME
+                    | "DROP" [ "COLUMN" ] NAME
+                    ) ;
 
 # ── CREATE INDEX / DROP INDEX ─────────────────────────────────────────────────
 #
@@ -279,19 +387,48 @@ expr              = or_expr ;
 or_expr           = and_expr { "OR" and_expr } ;
 and_expr          = not_expr { "AND" not_expr } ;
 not_expr          = "NOT" not_expr | comparison ;
-comparison        = bitwise [ cmp_op bitwise
-                  | "BETWEEN" bitwise "AND" bitwise
-                  | "NOT" "BETWEEN" bitwise "AND" bitwise
+# ``collated`` wraps a ``bitwise`` expression with an optional
+# ``COLLATE name`` postfix.  SQLite places COLLATE one level higher
+# than every binary operator except unary prefix (-, ~, +): so
+# ``x * y COLLATE z`` is ``(x * y) COLLATE z`` (multiplicative binds
+# tighter than COLLATE — bitwise is inside multiplicative inside
+# collated), and ``x COLLATE y = z`` is ``(x COLLATE y) = z``
+# (COLLATE binds tighter than the comparison operators).
+#
+# Comparisons (and BETWEEN/IN/LIKE/GLOB/IS …) use ``collated`` as
+# their operand grammar so the postfix is accepted on either side
+# of any comparison.  The COLLATE clause is also accepted in ORDER
+# BY items separately (see ``order_item``).
+collated          = bitwise [ "COLLATE" NAME ] ;
+# Row-value comparisons: (a,b) = (c,d), (a,b) IN ((x,y),...).
+# These three alternatives must precede the scalar ``collated [...]`` form
+# so the PEG parser tries row_value first when it sees "(".  The NOT IN
+# alternative comes before IN so "NOT" is not left unconsumed.
+comparison        = row_value cmp_op row_value
+                  | row_value "NOT" "IN" "(" row_value_list ")"
+                  | row_value "IN" "(" row_value_list ")"
+                  | collated [ cmp_op collated
+                  | "BETWEEN" collated "AND" collated
+                  | "NOT" "BETWEEN" collated "AND" collated
                   | "IN" "(" [ in_expr ] ")"
                   | "NOT" "IN" "(" [ in_expr ] ")"
-                  | "LIKE" bitwise [ "ESCAPE" bitwise ]
-                  | "NOT" "LIKE" bitwise [ "ESCAPE" bitwise ]
-                  | "GLOB" bitwise
-                  | "NOT" "GLOB" bitwise
+                  | "LIKE" collated [ "ESCAPE" collated ]
+                  | "NOT" "LIKE" collated [ "ESCAPE" collated ]
+                  | "GLOB" collated
+                  | "NOT" "GLOB" collated
                   | "IS" "NULL"
                   | "IS" "NOT" "NULL"
-                  | "IS" "DISTINCT" "FROM" bitwise
-                  | "IS" "NOT" "DISTINCT" "FROM" bitwise ] ;
+                  | "IS" "DISTINCT" "FROM" collated
+                  | "IS" "NOT" "DISTINCT" "FROM" collated
+                  | "IS" "NOT" collated
+                  | "IS" collated ] ;
+# The last two alternatives implement SQLite's NULL-safe equality
+# operator.  ``x IS y`` is equivalent to ``x IS NOT DISTINCT FROM y``
+# (NULLs compare equal to each other, never to anything else); ``x IS
+# NOT y`` is the negation.  Order matters in this PEG grammar: the
+# more specific ``IS NULL`` / ``IS NOT NULL`` / ``IS [NOT] DISTINCT
+# FROM`` alternatives must precede the general ``IS [NOT] collated``
+# forms so they get the first shot at matching their keyword tails.
 
 # in_expr: a subquery takes priority (starts with SELECT); otherwise a
 # comma-separated value list is used.
@@ -307,14 +444,19 @@ cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
 #   bitwise:   & | << >>             ← new layer, between additive and cmp
 #   additive:  + - || -> ->>
 #   multiplicative: * / %
-#   unary:     - ~
+#   unary:     - ~ +
 #   primary
 #
 # (Reference: https://sqlite.org/lang_expr.html#operators )
 bitwise           = additive { ( "&" | "|" | "<<" | ">>" ) additive } ;
 additive          = multiplicative { ( "+" | "-" | "||" | JSON_ARROW | JSON_ARROW_TEXT ) multiplicative } ;
 multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
-unary             = ( "-" | "~" ) unary | primary ;
+# Unary prefix operators.  ``+`` is the no-op identity (``+5`` ≡ ``5``)
+# — matches SQLite, which documents it as "a valid no-op".  ``-`` is
+# arithmetic negation; ``~`` is bitwise NOT (coerces to int64).  All
+# three share the same precedence level so ``-+5`` parses as ``-(+5)``
+# and ``++5`` parses as ``+(+5)``.
+unary             = ( "-" | "~" | "+" ) unary | primary ;
 
 # primary: order matters for PEG backtracking.
 #   1. Simple literals
@@ -397,8 +539,10 @@ cast_expr         = "CAST" "(" expr "AS" NAME ")" ;
 # PEG backtracking ensures NAME "(" without a following OVER falls through to
 # function_call.
 
-window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
+window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" ( "(" window_spec ")" | window_name_ref ) ;
+window_name_ref   = NAME ;
 window_spec       = [ partition_clause ] [ order_clause ] [ frame_clause ] ;
+window_clause     = "WINDOW" NAME "AS" "(" window_spec ")" { "," NAME "AS" "(" window_spec ")" } ;
 partition_clause  = "PARTITION" "BY" expr { "," expr } ;
 value_list        = expr { "," expr } ;
 
@@ -440,7 +584,7 @@ frame_bound   = "UNBOUNDED" "PRECEDING"
 # Grammar::
 #
 #   create_trigger_stmt =
-#     "CREATE" "TRIGGER" NAME
+#     "CREATE" "TRIGGER" [ "IF" "NOT" "EXISTS" ] NAME
 #     ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
 #     "FOR" "EACH" "ROW"
 #     "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
@@ -451,9 +595,9 @@ frame_bound   = "UNBOUNDED" "PRECEDING"
 # references inside the body — they are not keywords, just contextual names.
 # The executor injects single-row "NEW" and "OLD" tables at fire time.
 
-create_trigger_stmt = "CREATE" "TRIGGER" NAME
+create_trigger_stmt = "CREATE" "TRIGGER" [ "IF" "NOT" "EXISTS" ] NAME
                       ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
-                      "FOR" "EACH" "ROW"
+                      [ "FOR" "EACH" "ROW" ]
                       "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
 
 trigger_body_stmt   = insert_stmt | replace_stmt | update_stmt | delete_stmt | query_stmt ;

@@ -21,6 +21,11 @@ SUPPRESS = IRSymbol("Suppress")
 # Bookkeeping operations.
 KILL = IRSymbol("Kill")
 EV = IRSymbol("Ev")
+# Track M1 — runtime package loader.  ``load("orthopoly")`` registers a
+# loadable package's evaluator handlers on the calling session.  The list
+# of packages that can be loaded is a hardcoded allowlist enforced by the
+# load handler — see :func:`macsyma_runtime.handlers.make_load_handler`.
+LOAD = IRSymbol("Load")
 BLOCK = IRSymbol("Block")  # Phase G — handled by symbolic-vm's block_ handler.
 ASSUME = IRSymbol("Assume")
 FORGET = IRSymbol("Forget")

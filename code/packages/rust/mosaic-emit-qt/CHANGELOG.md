@@ -4,6 +4,165 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - optional MosaicHost bridge for Qt project shells
+
+Generated Qt project shells now compile with or without an installed
+`MosaicHost.h/.cpp` adapter. When present, `main.cpp` injects the host object
+into QML, hydrates initial props through `applyMosaicProps`, and emitted
+`mosaicEvent` envelopes round-trip through `mosaicHost.handleEvent(event)`.
+`CMakeLists.txt` also picks up an installed host adapter and copies a colocated
+Engram-style native host library next to the executable.
+
+### Added - generic Mosaic event signal for QML hosts
+
+Generated QML components with emits now expose `signal mosaicEvent(var event)`
+and re-emit each specific signal through it as an object preserving the original
+Mosaic emit name and payload keys. Qt hosts can connect once to `mosaicEvent`
+for the same event-envelope bridge used by the other native shells.
+
+### Added — UI32-K-qt — `--emit-project` Qt6 + CMake desktop shell
+
+L6 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309, L4 WebComponent #4315, L5 Flutter #4319). `mosaic-compile --backend qt --emit-project` now produces a Qt6 + CMake desktop scaffold:
+
+- `CMakeLists.txt` — pinned Qt6 `6.7` + CMake `3.21` + C++17 per UI32 §3.6.3. `qt_add_executable` + `qt_add_qml_module` embed the component into a `Mosaic.<Component>` QML module.
+- `main.cpp` — `QGuiApplication` + `QQmlApplicationEngine` loading `qrc:/qt/qml/Mosaic/<Component>/<Component>.qml` (the path `qt_add_qml_module` exposes).
+- `qmldir` — `module Mosaic.<Component>` + `<Component> 1.0 <Component>.qml`.
+- `README.md` — `cmake -B build && cmake --build build && ./build/<Component>` recipe + file map.
+
+New public API (matches L2-L5 pattern):
+
+- `pub struct EmitOptions` — `emit_project`, `pinned_qt_version`, `pinned_cmake_min`, `pinned_cxx_standard`.
+- `pub struct ProjectFiles` — `cmake_lists`, `main_cpp`, `qmldir`, `readme`.
+- `pub struct PipelineEmitResultWithProject`.
+- `pub fn from_pipeline_with_options(...)`. Existing `from_pipeline(...)` unchanged.
+
+UI32 §3.6.2 Qt row: no per-PR constraint beyond upstream — CMake target names exclude `-` (already excluded by `validate_component_name`). qmldir module names follow PascalCase (component name already PascalCase).
+
+9 new tests cover the spec §3 gates plus a qrc-path test that verifies main.cpp loads the component from the embedded QML module via the correct `qrc:/qt/qml/Mosaic/<Component>/<Component>.qml` resource path. Total tests: 90 (was 81, +9).
+
+### Added — UI31-K-qt — `HostTable` RTL contract
+
+The Qt `HostTable` lowering (which produces a structural
+`ColumnLayout` of `RowLayout` rows) now honours the UI31 §3.2 RTL
+contract via QML's `LayoutMirroring` attached property:
+
+- `dir: rtl` → `LayoutMirroring.enabled: true` +
+  `LayoutMirroring.childrenInherit: true` so the flip propagates
+  into the body's `RowLayout` rows and cell order matches the
+  column flip.
+- `dir: ltr` → `LayoutMirroring.enabled: false` — explicit
+  disable, which is the right thing for an author overriding an
+  ambient RTL ancestor.
+- `dir: auto` → no attached property emitted; the spec-mandated
+  "let the host decide" semantic is the QML default of inheriting
+  from an ancestor (typically the `ApplicationWindow` root's
+  `LayoutMirroring`).
+- `dir: slot: layout-direction` →
+  `LayoutMirroring.enabled: layoutDirection`, where the slot must
+  evaluate to a `bool`. The slot name passes through
+  `is_safe_identifier` so it can't smuggle malicious QML through
+  the binding expression.
+- Unknown keywords drop silently — the allow-list is the security
+  gate against attacker-controlled keywords smuggling arbitrary
+  QML through the attribute position. The bare `ColumnLayout` still
+  renders so the rest of the table is intact.
+
+7 new tests cover the a11y gate (ColumnLayout + RowLayout shape
+preserved), the three allow-listed keywords (including the no-
+emit `auto` case), the slot-ref binding, the silent-drop with an
+injection-style payload (`"true; Component.onCompleted: pwn()"`),
+and a regression guard for the no-`dir` case. Total tests: 81 (was
+74).
+
+### Added — U29-4-K-qt — `HostLink` + `HostTooltip` + `HostNumberInput` kernel primitive lowerings
+
+Three new UI29-4 kernel primitives lower to QML widgets:
+
+- **`HostLink` → `Text { textFormat: Text.RichText; text:
+  "<a href='...'>label</a>"; onLinkActivated: ... }`**. QtQuick
+  has no first-class hyperlink widget; rich-text `Text` is the
+  idiomatic shape. `external: false` + `onActivate` dispatches the
+  emit without opening the URL externally (host's router handles
+  it). Default behavior is `Qt.openUrlExternally(link)`; `external:
+  false` + `onActivate` switches to dispatch-only; bare
+  `onActivate` does BOTH (dispatch + external open).
+- **`HostTooltip` → `Item { ToolTip.text: "..."; ToolTip.visible:
+  hoverHandler.hovered; HoverHandler { id: hoverHandler }; child(ren) }`**.
+  Wraps the child(ren) so the tooltip activates on hover via
+  `HoverHandler` (QtQuick 2.12+). `HoverHandler` is used instead of
+  `MouseArea` so clicks still reach the wrapped child unimpeded.
+- **`HostNumberInput` → `TextField { text; DoubleValidator;
+  enabled; onTextEdited }`**. QtQuick.Controls 2.15 TextField keeps
+  direct text entry, preserves fractional `number` values, and
+  dispatches parsed values only for user edits.
+
+Infrastructure:
+
+- `tree_needs_controls_import` now also fires on `HostTooltip` and
+  `HostNumberInput` (both lower to QtQuick.Controls widgets).
+  `HostLink` is intentionally NOT in the list — it lowers to plain
+  `Text`, not a Controls widget.
+- New `find_number_prop` helper alongside the existing
+  `find_string_prop` / `find_slot_ref_prop` / `find_emit_ref_prop`
+  for `HostNumberInput`'s numeric-literal value/min/max props.
+
+6 new tests cover: HostLink rich-text rendering with
+openUrlExternally, the external-false + onActivate dispatch-only
+mode, HostTooltip Item wrapper with HoverHandler, bare
+HostNumberInput TextField emission, fractional value preservation,
+DoubleValidator bounds, and `onTextEdited` parsed-value dispatch wiring.
+
+### Added — U29-2-K-qt — `HostCheckbox` + `HostRadio` kernel primitive lowerings
+
+Both new UI29-2 primitives lower to QtQuick.Controls 2.15 widgets,
+inheriting the native a11y role, focus ring, and keyboard semantics
+that composing from QtQuick basics would lose.
+
+`HostCheckbox` -> `CheckBox { ... }`:
+
+- `checked: slot|bool` -> `checked: c` / `checked: true|false`
+- `disabled: slot|bool` -> `enabled: !d` (polarity flip; same as
+  HostButton)
+- `label: str|slot` -> `text: "..."` / `text: <slot>`
+- `onToggle: emit: onX` -> `onToggled: x(checked)` (Qt's
+  `toggled(bool)` signal forwards the new state to the host)
+- `indeterminate: slot: i` -> `tristate: true` + a `checkState: i ?
+  Qt.PartiallyChecked : (checked ? Qt.Checked : Qt.Unchecked)`
+  ternary. Qt's tri-state checkbox is fully wired here (unlike the
+  React backend, which defers tri-state to a follow-up).
+
+`HostRadio` -> `RadioButton { ... }`:
+
+- `checked`, `disabled`, `label` -> same shape as HostCheckbox
+- `onSelect: emit: onX` -> `onCheckedChanged: if (checked)
+  x(<value>)`. Qt's `checkedChanged()` signal fires on every flip;
+  the `if (checked)` gate enforces the kernel-canonical "onSelect =
+  this radio was chosen" semantics (sibling-radio-caused deselects
+  are silently dropped).
+- `value: str|slot` -> `<value>` is interpolated into the dispatch
+  payload; string literals are escaped, slot refs are camelCased and
+  validated.
+- `group: str|slot` -> preserved as a `// group: ...` line comment
+  ahead of the RadioButton. QtQuick.Controls's `ButtonGroup` would
+  give true radio-group behavior, but wiring it requires a
+  structural pass that synthesises a `ButtonGroup` at the enclosing
+  scope; that pass is reserved for UI29-2.1's `RadioGroup` userland
+  component.
+
+Security: same line-comment-injection vector as the SwiftUI
+backend's `// group: ...` was caught and closed inline. A `group:
+"x\nimport Evil"` author string would terminate the `//` line
+comment and inject arbitrary QML on the next line. The fix replaces
+`\n` and `\r` with spaces inside the comment text. A regression test
+asserts the invariant.
+
+12 new tests cover: bare CheckBox/RadioButton blocks, the
+QtQuick.Controls import trigger, controlled `checked` slot,
+`disabled` polarity flip, string label, `onToggle` -> `onToggled`,
+indeterminate tri-state, `// group:` comment, the newline-injection
+regression, `onSelect`'s positive-gated dispatch, and the slot-typed
+`value:` payload flow.
+
 ### Added — U29-1-K-qt — `HostDialog` kernel primitive lowering
 
 Brings the 16th UI29 kernel primitive (`HostDialog`, UI29-1, spec

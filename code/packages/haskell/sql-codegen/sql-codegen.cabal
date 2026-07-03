@@ -1,0 +1,33 @@
+cabal-version: 3.0
+name:          sql-codegen
+version:       0.1.2.0
+synopsis:      Haskell bytecode code generator for Mini-SQLite Level 1
+description:
+    Transforms an OptimizedPlan (produced by sql-optimizer) into a flat list
+    of stack-machine Instructions (Program) that the sql-vm can execute.
+    Part of the Mini-SQLite Level 1 pipeline:
+      sql-lexer → sql-parser → sql-planner → sql-optimizer → sql-codegen → sql-vm
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  SqlCodegen
+    build-depends:    base >=4.14
+                    , sql-planner
+                    , sql-optimizer
+    hs-source-dirs:   src
+    default-language: GHC2021
+
+test-suite sql-codegen-test
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    SqlCodegenSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , sql-codegen
+                    , sql-planner
+                    , sql-optimizer
+                    , hspec == 2.*
+    default-language: GHC2021

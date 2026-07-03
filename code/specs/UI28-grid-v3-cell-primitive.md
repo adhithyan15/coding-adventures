@@ -410,7 +410,7 @@ children). For v3-style layouts:
   attaches to `sheet/data-row` exactly as before; row-level styling
   is independent of cell decomposition.
 
-### 5.3 demo/visicalc migration
+### 5.3 code/programs/typescript/visicalc migration
 
 The VisiCalc demo (UI26) migrates to v3 as follows:
 
@@ -477,9 +477,9 @@ Each backend emitter must add tests covering:
 | WB4 | `mosaic-emit-swiftui` (new crate): Cell + Column + Grid v3 + tests | SwiftUI backend |
 | WB5 | `mosaic-emit-qt` (new crate): Cell + Column + Grid v3 + tests | Qt backend |
 | WB6 | `mosaic-compile`: wire `--backend swiftui` and `--backend qt` flags | CLI |
-| WB7 | `demo/visicalc`: migrate to Cell-centric shape | demo |
-| WB8 | `demo/visicalc-swiftui`: new SwiftPM demo using the same `.mil`/`.mll`/`.msl` | demo |
-| WB9 | `demo/visicalc-qt`: new Qt demo using the same `.mil`/`.mll`/`.msl` | demo |
+| WB7 | `code/programs/typescript/visicalc`: migrate to Cell-centric shape | demo |
+| WB8 | `code/programs/swift/visicalc-swiftui`: new SwiftPM demo using the same `.mil`/`.mll`/`.msl` | demo |
+| WB9 | `code/programs/cpp/visicalc-qt`: new Qt demo using the same `.mil`/`.mll`/`.msl` | demo |
 
 **WB1 through WB5 run in parallel** — each touches a different
 backend crate; no file overlap. WB6 follows once WB4 and WB5 land.

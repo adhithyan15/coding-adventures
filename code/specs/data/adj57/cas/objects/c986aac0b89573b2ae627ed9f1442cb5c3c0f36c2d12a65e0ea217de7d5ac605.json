@@ -1,0 +1,16 @@
+{
+  "hash": "c986aac0b89573b2ae627ed9f1442cb5c3c0f36c2d12a65e0ea217de7d5ac605",
+  "url": "https://academic.oup.com/mnras/article/412/3/1522/1049969",
+  "title": "Smith et al. 2011, MNRAS 412, 1522 \u2014 Observed fractions of core-collapse supernova types (LOSS volume-limited sample, within 60 Mpc)",
+  "interned_at": "",
+  "content": "Table 1 lists volume-limited core-collapse SN fractions from the LOSS sample within 60 Mpc; the entry for Type IIb is 'IIb: 10.6 +3.6/-3.1' (percent).",
+  "citations": [
+    {
+      "start": 119,
+      "end": 138,
+      "quote": "IIb: 10.6 +3.6/-3.1",
+      "used_for": "prior:type_iib_supernova"
+    }
+  ],
+  "onward_citations": []
+}

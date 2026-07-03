@@ -57,6 +57,119 @@ pub fn free_vars(lam: &Lambda, globals: &HashSet<String>) -> Vec<String> {
     found
 }
 
+/// Determine which of `value_globals` are **captured by a lambda** anywhere in
+/// the program — i.e. referenced inside some `(lambda …)` body rather than only
+/// at the top level of `main`.
+///
+/// This is the safety analysis behind the TW2 "top-level value `define`"
+/// optimisation.  A value `define` whose name is *not* captured is read only
+/// from `main`, so the compiler can keep its value in a typed register (a
+/// `const` / `mov` that the code-gen backends accept) and drop the dynamic
+/// `global_set` / `global_get` pair.  A captured one MUST stay on the host
+/// global table, because the closure it is read from compiles to a *separate*
+/// `IIRFunction` that has no access to `main`'s registers.
+///
+/// The analysis reuses [`free_vars`]: at every lambda encountered, the free
+/// variables (computed against an *empty* global set, so every non-local name
+/// counts) that happen to be value-globals are exactly the ones that lambda
+/// captures.  Over-approximation is safe here — a name wrongly flagged as
+/// captured merely stays on the (correct, if slower) global-table path.
+pub fn lambda_captured_globals(
+    forms: &[twig_parser::Form],
+    value_globals: &HashSet<String>,
+) -> HashSet<String> {
+    let mut captured = HashSet::new();
+    for form in forms {
+        match form {
+            twig_parser::Form::Define(d) => {
+                collect_lambda_captures(&d.expr, value_globals, &mut captured, 0)
+            }
+            twig_parser::Form::Expr(e) => {
+                collect_lambda_captures(e, value_globals, &mut captured, 0)
+            }
+            // RecordDef / UnionDef synthesise constructor / accessor functions,
+            // but those reference only their own parameters — never a user
+            // value-global — so they capture nothing.  TypeAlias is erased.
+            _ => {}
+        }
+    }
+    captured
+}
+
+/// Recurse through `expr` looking for lambdas; union each lambda's captured
+/// value-globals into `captured`.  `free_vars` already descends into nested
+/// lambdas, so once a lambda is found we do not recurse into it again here.
+fn collect_lambda_captures(
+    expr: &Expr,
+    value_globals: &HashSet<String>,
+    captured: &mut HashSet<String>,
+    depth: usize,
+) {
+    // Same belt-and-braces depth guard as `walk`: a hand-built AST (one that
+    // reached the public `compile_program(&Program, …)` entry without the
+    // parser's paren-depth pre-scan) must not overflow the stack here before
+    // the main pass's `MAX_COMPILE_DEPTH` guard would fire.  Bailing early only
+    // stops accumulating more captures; the main pass still produces the hard
+    // depth error, and stopping early can only *under*-collect — which here is
+    // safe because such a deep tree is rejected downstream anyway.
+    if depth > MAX_WALK_DEPTH {
+        return;
+    }
+    let depth = depth + 1;
+    match expr {
+        Expr::Lambda(l) => {
+            for name in free_vars(l, &HashSet::new()) {
+                if value_globals.contains(&name) {
+                    captured.insert(name);
+                }
+            }
+        }
+        Expr::If(If { cond, then_branch, else_branch, .. }) => {
+            collect_lambda_captures(cond, value_globals, captured, depth);
+            collect_lambda_captures(then_branch, value_globals, captured, depth);
+            collect_lambda_captures(else_branch, value_globals, captured, depth);
+        }
+        Expr::Begin(Begin { exprs, .. }) => {
+            for e in exprs {
+                collect_lambda_captures(e, value_globals, captured, depth);
+            }
+        }
+        Expr::Let(Let { bindings, body, .. }) => {
+            for (_, rhs) in bindings {
+                collect_lambda_captures(rhs, value_globals, captured, depth);
+            }
+            for e in body {
+                collect_lambda_captures(e, value_globals, captured, depth);
+            }
+        }
+        Expr::LetStar(LetStar { bindings, body, .. }) => {
+            for (_, rhs) in bindings {
+                collect_lambda_captures(rhs, value_globals, captured, depth);
+            }
+            for e in body {
+                collect_lambda_captures(e, value_globals, captured, depth);
+            }
+        }
+        Expr::Apply(Apply { fn_expr, args, .. }) => {
+            collect_lambda_captures(fn_expr, value_globals, captured, depth);
+            for a in args {
+                collect_lambda_captures(a, value_globals, captured, depth);
+            }
+        }
+        Expr::Match(m) => {
+            collect_lambda_captures(&m.scrutinee, value_globals, captured, depth);
+            for arm in &m.arms {
+                for e in &arm.body {
+                    collect_lambda_captures(e, value_globals, captured, depth);
+                }
+            }
+        }
+        // Atoms — no nested lambdas.
+        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_)
+        | Expr::StrLit(_) | Expr::VarRef(_) => {}
+    }
+}
+
 fn walk(
     expr: &Expr,
     bound: &mut HashSet<String>,

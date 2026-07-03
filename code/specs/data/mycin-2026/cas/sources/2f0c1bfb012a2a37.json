@@ -1,0 +1,74 @@
+{
+  "hash": "2f0c1bfb012a2a37",
+  "source_id": "https://academic.oup.com/cid/article/52/5/e103/388285",
+  "title": "International Clinical Practice Guidelines for the Treatment of Acute Uncomplicated Cystitis and Pyelonephritis in Women: A 2010 Update by the Infectious Diseases Society of America and the European Society for Microbiology and Infectious Diseases",
+  "resolved_url": "https://academic.oup.com/cid/article/52/5/e103/388285",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "UTI (uncomplicated cystitis and pyelonephritis) organism epidemiology: E. coli accounts for 75%-95%, with occasional other Enterobacteriaceae (Proteus mirabilis, Klebsiella pneumoniae) and Staphylococcus saprophyticus.",
+      "byte_quote": "The microbial spectrum of uncomplicated cystitis and pyelonephritis consists mainly of Escherichia coli (75%–95%)"
+    },
+    {
+      "id": "c2",
+      "text": "Host/population scope: the diagnoses are limited to premenopausal, nonpregnant women with no known urological abnormalities or comorbidities (defines the host band; excludes pregnancy and structural/comorbid complications).",
+      "byte_quote": "diagnoses limited in these guidelines to premenopausal, nonpregnant women with no known urological abnormalities or comorbidities"
+    },
+    {
+      "id": "c3",
+      "text": "Risk factor for TMP-SMX resistance: use of trimethoprim-sulfamethoxazole in the preceding 3-6 months independently raises the risk of TMP-SMX-resistant organisms.",
+      "byte_quote": "the use of trimethoprim-sulfamethoxazole in the preceding 3–6 months was an independent risk factor for trimethoprim-sulfamethoxazole resistance"
+    },
+    {
+      "id": "c4",
+      "text": "Resistance threshold: 20% local resistance prevalence is the cutoff above which an agent is no longer recommended for empirical treatment of acute cystitis (expert-opinion based).",
+      "byte_quote": "The threshold of 20% as the resistance prevalence at which the agent is no longer recommended for empirical treatment of acute cystitis is based on expert opinion"
+    },
+    {
+      "id": "c5",
+      "text": "Fluoroquinolone stewardship/contraindication-by-collateral-damage: fluoroquinolones have a propensity for collateral damage and should be reserved for uses other than acute cystitis.",
+      "byte_quote": "fluoroquinolones...have a propensity for collateral damage and should be reserved for important uses other than acute cystitis"
+    },
+    {
+      "id": "c6",
+      "text": "Antibiotic dosing (cystitis): nitrofurantoin monohydrate/macrocrystals 100 mg twice daily for 5 days.",
+      "byte_quote": "Nitrofurantoin monohydrate/macrocrystals (100 mg twice daily for 5 days)"
+    },
+    {
+      "id": "c7",
+      "text": "Antibiotic dosing (cystitis): trimethoprim-sulfamethoxazole 160/800 mg (1 double-strength tablet) twice daily for 3 days.",
+      "byte_quote": "Trimethoprim-sulfamethoxazole (160/800 mg [1 double-strength tablet] twice-daily for 3 days)"
+    },
+    {
+      "id": "c8",
+      "text": "Antibiotic dosing (cystitis): fosfomycin trometamol 3 g as a single dose.",
+      "byte_quote": "Fosfomycin trometamol (3 g in a single dose)"
+    },
+    {
+      "id": "c9",
+      "text": "Antibiotic dosing (cystitis): pivmecillinam 400 mg twice daily for 3-7 days.",
+      "byte_quote": "Pivmecillinam (400 mg bid for 3–7 days)"
+    },
+    {
+      "id": "c10",
+      "text": "Antibiotic dosing (pyelonephritis): oral ciprofloxacin 500 mg twice daily for 7 days.",
+      "byte_quote": "Oral ciprofloxacin (500 mg twice daily) for 7 days"
+    },
+    {
+      "id": "c11",
+      "text": "Antibiotic dosing (pyelonephritis): oral trimethoprim-sulfamethoxazole 160/800 mg (1 double-strength tablet) twice daily for 14 days (longer interval than cystitis indication).",
+      "byte_quote": "Oral trimethoprim-sulfamethoxazole (160/800 mg [1 double-strength tablet] twice-daily for 14 days)"
+    },
+    {
+      "id": "c12",
+      "text": "Antibiotic dosing (pyelonephritis): levofloxacin 750 mg for 5 days.",
+      "byte_quote": "Levofloxacin (750 mg for 5 days)"
+    }
+  ],
+  "cites": [
+    "IDSA/ESCMID UTI guideline ref [8-11] (four large studies on E. coli antimicrobial susceptibility patterns)",
+    "IDSA/ESCMID UTI guideline ref [20-21] (basis for 20% TMP-SMX resistance empirical-treatment threshold)",
+    "IDSA/ESCMID UTI guideline ref [22-23] (collateral damage associated with cephalosporins and fluoroquinolones)",
+    "IDSA/ESCMID UTI guideline ref [28-29] (placebo-arm spontaneous cure rates 25%-42% in cystitis)"
+  ]
+}

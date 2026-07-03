@@ -1,0 +1,8 @@
+{
+ "check_id": 22,
+ "idx": 9,
+ "slot": "under_active_appeal",
+ "claimed_value": true,
+ "scenario": "Devon received a statement dated January 5 for a $400 balance. He filed a formal appeal of the charge through the plan's appeals process on January 20, and the appeal is still pending. It is now March 30, more than 60 days after the statement date, and the balance remains unpaid.",
+ "cited_span": "He filed a formal appeal of the charge through the plan's appeals process on January 20, and the appeal is still pending"
+}

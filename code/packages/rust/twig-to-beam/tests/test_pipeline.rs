@@ -251,27 +251,28 @@ fn unbalanced_parens_produce_compile_error() {
 // cannot handle.
 // ---------------------------------------------------------------------------
 
-// Test 3.1 — empty program emits make_nil which BEAM cannot handle
+// Test 3.1 — empty program now compiles cleanly (Path A increment 6a)
+//
+// Before increment 6a, empty programs emitted `call_builtin make_nil` which
+// the BEAM validator rejected.  After 6a, `twig-ir-compiler` emits a typed
+// `const 0 [ref<LispyPair>]` for the implicit nil return — and the BEAM
+// backend accepts typed const for `ref<*>` types via the Phase 2 heap-
+// lowering convention.  This test flipped from a BeamError expectation
+// to an Ok expectation.
 #[test]
-fn empty_program_is_beam_error() {
-    // An empty Twig program compiles to: `call_builtin make_nil` + `ret`.
-    // `make_nil` survives builtin-lowering (not in the arithmetic table),
-    // so the BEAM validator sees a `call_builtin` instruction and rejects it.
-    let err = compile_err("");
-    assert!(
-        matches!(err, TwigToBeamError::BeamError(_)),
-        "empty program should produce BeamError (call_builtin make_nil); got: {err}"
-    );
+fn empty_program_compiles() {
+    let bytes = compile_ok("");
+    assert!(!bytes.is_empty(), "empty program should produce a non-empty BEAM blob");
 }
 
-// Test 3.2 — nil literal produces call_builtin which BEAM cannot lower
+// Test 3.2 — nil literal now compiles cleanly (Path A increment 6a)
+//
+// Same flip as empty_program_compiles: `nil` now lowers to
+// `const 0 [ref<LispyPair>]`, accepted by every backend.
 #[test]
-fn nil_literal_is_beam_error() {
-    let err = compile_err("nil");
-    assert!(
-        matches!(err, TwigToBeamError::BeamError(_)),
-        "nil literal should produce BeamError; got: {err}"
-    );
+fn nil_literal_compiles() {
+    let bytes = compile_ok("nil");
+    assert!(!bytes.is_empty(), "nil literal should produce a non-empty BEAM blob");
 }
 
 // Test 3.3 — boolean constant compiles to a valid BEAM binary

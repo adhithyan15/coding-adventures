@@ -7,12 +7,13 @@
 
 use std::collections::{BTreeMap, VecDeque};
 use std::net::SocketAddr;
-use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use transport_platform::{
-    BindAddress, CloseKind, ListenerId, ListenerOptions, PlatformError, PlatformEvent, ReadOutcome,
-    StreamId, StreamInterest, StreamOptions, TransportPlatform, WriteOutcome,
+    AdoptableFd, BindAddress, CloseKind, ListenerId, ListenerOptions, PlatformError, PlatformEvent,
+    ReadOutcome, StreamId, StreamInterest, StreamOptions, TransportPlatform, WakeHandle,
+    WriteOutcome,
 };
 
 const DEFAULT_MAX_CONNECTIONS: usize = 1_024;
@@ -74,8 +75,21 @@ impl StreamHandlerResult {
 pub struct StreamReactorOptions {
     pub listener: ListenerOptions,
     pub stream: StreamOptions,
-    /// Shared counter used by sharded reactors to allocate unique connection IDs.
-    pub connection_id_seed: Option<Arc<AtomicU64>>,
+    /// This reactor's shard index within a sharded runtime (0 for a lone reactor).
+    /// It is baked into the low bits of every [`ConnectionId`] this reactor hands
+    /// out, so a mailbox can route a write to the one reactor that owns the
+    /// connection using pure arithmetic — no shared registry.  See [`StreamReactor`].
+    pub shard_index: u64,
+    /// Number of low bits reserved for the shard index: `ceil(log2(worker_count))`.
+    /// `0` for a single reactor, which makes [`ConnectionId`]s identical to the
+    /// original unsharded scheme (a sequence counter starting at 1).
+    pub shard_bits: u32,
+    /// Whether this reactor accepts new connections on its own listener (`true`,
+    /// the default).  A fan-out *worker* sets this `false`: it still binds a
+    /// listener (the constructor requires one) but never enables accept interest,
+    /// so it serves only connections handed to it by adoption — direct connects to
+    /// its throwaway port are never accepted, closing an otherwise-open ingress.
+    pub accept_connections: bool,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -87,7 +101,9 @@ impl Default for StreamReactorOptions {
         Self {
             listener: ListenerOptions::default(),
             stream: StreamOptions::default(),
-            connection_id_seed: None,
+            shard_index: 0,
+            shard_bits: 0,
+            accept_connections: true,
             read_buffer_size: DEFAULT_READ_BUFFER_SIZE,
             max_connections: DEFAULT_MAX_CONNECTIONS,
             max_pending_write_bytes: DEFAULT_MAX_PENDING_WRITE_BYTES,
@@ -100,7 +116,9 @@ impl PartialEq for StreamReactorOptions {
     fn eq(&self, other: &Self) -> bool {
         self.listener == other.listener
             && self.stream == other.stream
-            && self.connection_id_seed.is_some() == other.connection_id_seed.is_some()
+            && self.shard_index == other.shard_index
+            && self.shard_bits == other.shard_bits
+            && self.accept_connections == other.accept_connections
             && self.read_buffer_size == other.read_buffer_size
             && self.max_connections == other.max_connections
             && self.max_pending_write_bytes == other.max_pending_write_bytes
@@ -122,6 +140,11 @@ impl StopHandle {
 #[derive(Clone, Default)]
 pub struct StreamMailbox {
     commands: Arc<Mutex<VecDeque<StreamMailboxCommand>>>,
+    /// Optional cross-thread trigger that interrupts the owning reactor's `poll`
+    /// the instant a command is enqueued, so an off-reactor write flushes without
+    /// waiting for the poll timeout.  `None` on platforms whose wakeup primitive
+    /// can't be shared across threads (the reactor then drains on its next poll).
+    wake: Option<WakeHandle>,
 }
 
 impl StreamMailbox {
@@ -157,11 +180,34 @@ impl StreamMailbox {
         self.push(StreamMailboxCommand::ResumeAllReads);
     }
 
+    /// Hand a freshly-accepted socket to *this* reactor to own and serve.
+    ///
+    /// This is the receiving end of an **accept fan-out**: an acceptor thread
+    /// accepts connections on a single listener (needed where `SO_REUSEPORT`
+    /// doesn't load-balance, e.g. macOS/BSD) and round-robins each accepted socket
+    /// to a worker reactor's mailbox.  Ownership of `fd` transfers to the reactor,
+    /// which adopts it via [`TransportPlatform::adopt_stream`] and then drives it
+    /// like any connection it accepted itself.  The enqueue wakes the reactor (if
+    /// it has a wake handle), so the connection is adopted promptly rather than at
+    /// the next poll timeout.
+    pub fn adopt_connection(&self, fd: AdoptableFd, peer_addr: SocketAddr) {
+        self.push(StreamMailboxCommand::AdoptConnection { fd, peer_addr });
+    }
+
     fn push(&self, command: StreamMailboxCommand) {
+        // Enqueue *first*, then wake: the reactor, once interrupted, must already
+        // see the command in the queue.  (`serve` drains at both the top and
+        // bottom of every poll cycle, so a wake that races mid-cycle is still
+        // caught.)
         self.commands
             .lock()
             .expect("stream mailbox mutex poisoned")
             .push_back(command);
+        if let Some(wake) = &self.wake {
+            // Best-effort: a failed wake just means the reactor flushes on its
+            // next poll timeout instead of immediately — never a lost command.
+            let _ = wake.wake();
+        }
     }
 
     fn drain(&self) -> Vec<StreamMailboxCommand> {
@@ -190,6 +236,13 @@ enum StreamMailboxCommand {
         connection_id: ConnectionId,
     },
     ResumeAllReads,
+    /// Adopt an externally-accepted socket (the fan-out receiving path).  Unlike
+    /// the other commands this carries no `ConnectionId` — the reactor mints one
+    /// when it adopts the socket — so it is handled in `drain_mailbox` directly.
+    AdoptConnection {
+        fd: AdoptableFd,
+        peer_addr: SocketAddr,
+    },
 }
 
 type StateInit<S> = Arc<dyn Fn(StreamConnectionInfo) -> S + Send + Sync + 'static>;
@@ -221,6 +274,10 @@ pub struct StreamReactor<P, S = ()> {
     connections: BTreeMap<StreamId, ConnectionState<S>>,
     connection_index: BTreeMap<ConnectionId, StreamId>,
     next_connection_id: u64,
+    /// Low bits stamped into every `ConnectionId` to identify this reactor as the
+    /// owning shard; `shard_bits` is how many low bits are reserved for it.
+    shard_index: u64,
+    shard_bits: u32,
     stop_flag: Arc<AtomicBool>,
     mailbox: StreamMailbox,
     read_buffer_size: usize,
@@ -228,7 +285,6 @@ pub struct StreamReactor<P, S = ()> {
     max_pending_write_bytes: usize,
     poll_timeout: Duration,
     stream_options: StreamOptions,
-    connection_id_seed: Option<Arc<AtomicU64>>,
     state_init: StateInit<S>,
     handler: StatefulHandler<S>,
     on_close: CloseHandler<S>,
@@ -277,11 +333,33 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         let listener_addr = platform.local_addr(listener).map_err(|error| {
             PlatformError::ProviderFault(format!("read listener address: {error}"))
         })?;
-        platform
-            .set_listener_interest(listener, true)
-            .map_err(|error| {
-                PlatformError::ProviderFault(format!("enable listener interest: {error}"))
-            })?;
+        // A fan-out worker (`accept_connections == false`) binds a listener but
+        // never enables accept interest, so it never accepts on its own port — it
+        // serves only adopted connections.  A direct connect to that throwaway
+        // port is left unaccepted in the kernel backlog rather than served, which
+        // closes it as an ingress.
+        if options.accept_connections {
+            platform
+                .set_listener_interest(listener, true)
+                .map_err(|error| {
+                    PlatformError::ProviderFault(format!("enable listener interest: {error}"))
+                })?;
+        }
+
+        // Register a wakeup and grab a cross-thread handle for the mailbox, so an
+        // off-reactor write can interrupt `poll` and flush at once instead of
+        // waiting out the poll timeout.  Best-effort: if the platform can't create
+        // a wakeup or can't share it across threads (the default `wake_handle`
+        // returns `Unsupported`, e.g. on Windows), the mailbox just has no handle
+        // and the reactor drains on its next poll timeout exactly as before.
+        let wake = match platform.create_wakeup() {
+            Ok(wakeup) => platform.wake_handle(wakeup).ok(),
+            Err(_) => None,
+        };
+        let mailbox = StreamMailbox {
+            commands: Arc::new(Mutex::new(VecDeque::new())),
+            wake,
+        };
 
         Ok(Self {
             platform,
@@ -290,14 +368,15 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             connections: BTreeMap::new(),
             connection_index: BTreeMap::new(),
             next_connection_id: 1,
+            shard_index: options.shard_index,
+            shard_bits: options.shard_bits,
             stop_flag: Arc::new(AtomicBool::new(false)),
-            mailbox: StreamMailbox::default(),
+            mailbox,
             read_buffer_size: options.read_buffer_size.max(1),
             max_connections: options.max_connections.max(1),
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
             poll_timeout: options.poll_timeout,
             stream_options: options.stream,
-            connection_id_seed: options.connection_id_seed,
             state_init: Arc::new(init),
             handler: Arc::new(handler),
             on_close: Arc::new(on_close),
@@ -325,7 +404,13 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
     }
 
     pub fn serve(&mut self) -> Result<(), PlatformError> {
-        self.stop_flag.store(false, Ordering::SeqCst);
+        // NOTE: we deliberately do NOT reset `stop_flag` here.  The flag starts
+        // `false` at construction, so a reset would be redundant on first serve —
+        // but it would also create a race: a `stop()` that arrives after the
+        // serve thread is spawned but before this loop begins would be silently
+        // erased, leaving the loop running forever (observed via JNI, where the
+        // caller can request stop before the background serve thread starts).
+        // A `stop()` must never be lost, so the flag is honoured as-is.
         let mut events = Vec::new();
         while !self.stop_flag.load(Ordering::SeqCst) {
             self.drain_mailbox()?;
@@ -357,6 +442,10 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                         }
                         _ => {}
                     },
+                    // A mailbox wakeup: its only job is to break us out of `poll`.
+                    // The mailbox drain at the bottom of this loop iteration does
+                    // the actual work, so there is nothing to handle here.
+                    PlatformEvent::Wakeup { .. } => {}
                     _ => {}
                 }
             }
@@ -373,41 +462,79 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                         self.close_stream_raw(accepted.stream)?;
                         continue;
                     }
-
-                    self.platform
-                        .configure_stream(accepted.stream, self.stream_options)?;
-                    self.platform
-                        .set_stream_interest(accepted.stream, StreamInterest::readable())?;
-
-                    let connection_id = if let Some(seed) = &self.connection_id_seed {
-                        ConnectionId(seed.fetch_add(1, Ordering::SeqCst))
-                    } else {
-                        let id = ConnectionId(self.next_connection_id);
-                        self.next_connection_id += 1;
-                        id
-                    };
-                    self.connection_index.insert(connection_id, accepted.stream);
-                    self.connections.insert(
-                        accepted.stream,
-                        ConnectionState {
-                            info: StreamConnectionInfo {
-                                id: connection_id,
-                                peer_addr: accepted.peer_addr,
-                            },
-                            app_state: (self.state_init)(StreamConnectionInfo {
-                                id: connection_id,
-                                peer_addr: accepted.peer_addr,
-                            }),
-                            pending_write: Vec::new(),
-                            deferred_reads: VecDeque::new(),
-                            peer_closed: false,
-                            read_paused: false,
-                            close_when_flushed: false,
-                        },
-                    );
+                    self.register_connection(accepted.stream, accepted.peer_addr)?;
                 }
                 None => return Ok(()),
             }
+        }
+    }
+
+    /// Register an already-accepted stream into this reactor: configure it, mark
+    /// it readable, mint a shard-encoded `ConnectionId`, and build its
+    /// per-connection state.  Shared by [`accept_ready`](Self::accept_ready) (a
+    /// stream this reactor accepted) and [`adopt_connection`](Self::adopt_connection)
+    /// (a stream handed in by a fan-out acceptor) so both produce identical state.
+    fn register_connection(
+        &mut self,
+        stream: StreamId,
+        peer_addr: SocketAddr,
+    ) -> Result<(), PlatformError> {
+        self.platform.configure_stream(stream, self.stream_options)?;
+        self.platform
+            .set_stream_interest(stream, StreamInterest::readable())?;
+
+        // Every ConnectionId encodes its owning shard in the low bits:
+        //
+        //     id = (sequence << shard_bits) | shard_index
+        //
+        // so a `TcpMailbox` can route a write to the one reactor that owns the
+        // connection with pure arithmetic — no shared registry and no cross-shard
+        // atomic on the accept hot path.  Uniqueness holds because the low
+        // `shard_bits` distinguish the shard and the high bits carry this
+        // reactor's own monotonic sequence.  For a lone reactor (`shard_bits == 0`,
+        // `shard_index == 0`) the id is just `sequence`, byte-identical to the
+        // original unsharded scheme.
+        let sequence = self.next_connection_id;
+        self.next_connection_id += 1;
+        let connection_id = ConnectionId((sequence << self.shard_bits) | self.shard_index);
+        let info = StreamConnectionInfo {
+            id: connection_id,
+            peer_addr,
+        };
+        self.connection_index.insert(connection_id, stream);
+        self.connections.insert(
+            stream,
+            ConnectionState {
+                info,
+                app_state: (self.state_init)(info),
+                pending_write: Vec::new(),
+                deferred_reads: VecDeque::new(),
+                peer_closed: false,
+                read_paused: false,
+                close_when_flushed: false,
+            },
+        );
+        Ok(())
+    }
+
+    /// Adopt a socket handed in by a fan-out acceptor (the receiving half of the
+    /// accept fan-out).  The platform `adopt_stream` primitive does no admission
+    /// control, so the connection cap is enforced here: if the reactor is full the
+    /// `fd` is dropped (closing the socket) rather than admitted.  A failed adopt
+    /// drops just this one connection — `adopt_stream` already consumed/closed the
+    /// `fd` — instead of tearing down the reactor.
+    fn adopt_connection(
+        &mut self,
+        fd: AdoptableFd,
+        peer_addr: SocketAddr,
+    ) -> Result<(), PlatformError> {
+        if self.connections.len() >= self.max_connections {
+            drop(fd);
+            return Ok(());
+        }
+        match self.platform.adopt_stream(fd) {
+            Ok(stream) => self.register_connection(stream, peer_addr),
+            Err(_) => Ok(()),
         }
     }
 
@@ -415,6 +542,11 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         for command in self.mailbox.drain() {
             match command {
                 StreamMailboxCommand::ResumeAllReads => self.resume_all_reads()?,
+                // Adoption mints a fresh connection, so it bypasses the
+                // ConnectionId-keyed `apply_mailbox_command` path entirely.
+                StreamMailboxCommand::AdoptConnection { fd, peer_addr } => {
+                    self.adopt_connection(fd, peer_addr)?
+                }
                 other => self.apply_mailbox_command(other)?,
             }
         }
@@ -431,6 +563,9 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             StreamMailboxCommand::PauseReads { connection_id } => *connection_id,
             StreamMailboxCommand::ResumeReads { connection_id } => *connection_id,
             StreamMailboxCommand::ResumeAllReads => return self.resume_all_reads(),
+            // Both of these are handled in `drain_mailbox` before reaching here;
+            // the arms keep the match exhaustive.
+            StreamMailboxCommand::AdoptConnection { .. } => return Ok(()),
         };
 
         let Some(stream) = self.connection_index.get(&connection_id).copied() else {
@@ -467,7 +602,10 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                 state.read_paused = false;
                 return self.progress_reads_with_state(stream, state);
             }
-            StreamMailboxCommand::ResumeAllReads => unreachable!("handled before dispatch"),
+            StreamMailboxCommand::ResumeAllReads
+            | StreamMailboxCommand::AdoptConnection { .. } => {
+                unreachable!("handled before dispatch")
+            }
         }
 
         if close_now || self.should_close_after_io(&state) {
@@ -533,8 +671,8 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             if close_now || state.read_paused || state.close_when_flushed || state.peer_closed {
                 break;
             }
-            match self.platform.read(stream, &mut buffer)? {
-                ReadOutcome::Read(n) => {
+            match self.platform.read(stream, &mut buffer) {
+                Ok(ReadOutcome::Read(n)) => {
                     let chunk = &buffer[..n];
                     match self.apply_read_chunk(&mut state, chunk) {
                         ReadChunkOutcome::Applied => {}
@@ -552,9 +690,18 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                         break;
                     }
                 }
-                ReadOutcome::WouldBlock => break,
-                ReadOutcome::Closed => {
+                Ok(ReadOutcome::WouldBlock) => break,
+                Ok(ReadOutcome::Closed) => {
                     state.peer_closed = true;
+                    break;
+                }
+                // A per-connection read error (e.g. ECONNRESET from a client that
+                // vanished) must close ONLY this connection and run its close
+                // callback — never propagate out of `serve` and tear down the
+                // whole event loop. Otherwise a single hostile or crashed client
+                // would take every other connection down with it.
+                Err(_) => {
+                    close_now = true;
                     break;
                 }
             }
@@ -596,12 +743,19 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
         let mut close_now = false;
         while !state.pending_write.is_empty() {
-            match self.platform.write(stream, &state.pending_write)? {
-                WriteOutcome::Wrote(n) => {
+            match self.platform.write(stream, &state.pending_write) {
+                Ok(WriteOutcome::Wrote(n)) => {
                     state.pending_write.drain(..n);
                 }
-                WriteOutcome::WouldBlock => break,
-                WriteOutcome::Closed => {
+                Ok(WriteOutcome::WouldBlock) => break,
+                Ok(WriteOutcome::Closed) => {
+                    close_now = true;
+                    break;
+                }
+                // A per-connection write error (e.g. broken pipe to a client that
+                // vanished) closes ONLY this connection — like the read path, it
+                // must never tear down the event loop for everyone else.
+                Err(_) => {
                     close_now = true;
                     break;
                 }
@@ -841,6 +995,215 @@ mod tests {
         stop.stop();
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn connection_ids_encode_the_shard_index_in_their_low_bits() {
+        // Stand a lone reactor up as if it were shard 1 of a 4-shard runtime
+        // (shard_bits = 2).  Every ConnectionId it allocates must carry `1` in its
+        // low two bits and a non-zero sequence in the high bits, so a routed
+        // mailbox can send a write back to exactly this reactor.
+        let seen = Arc::new(Mutex::new(Vec::<u64>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let options = StreamReactorOptions {
+            shard_index: 1,
+            shard_bits: 2,
+            ..StreamReactorOptions::default()
+        };
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            options,
+            |_| (),
+            move |info, _, bytes| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id.0);
+                StreamHandlerResult::write(bytes.to_vec())
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let addr = reactor.local_addr();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        for _ in 0..3 {
+            let mut stream = TcpStream::connect(addr).expect("connect");
+            stream.write_all(b"x").expect("write");
+            stream.shutdown(Shutdown::Write).expect("shutdown");
+            let mut echoed = Vec::new();
+            stream.read_to_end(&mut echoed).expect("read echo");
+            assert_eq!(echoed, b"x");
+        }
+
+        stop.stop();
+        server.join().expect("server thread").expect("serve");
+
+        let ids = seen.lock().expect("seen mutex poisoned").clone();
+        assert_eq!(ids.len(), 3, "every connection should be observed");
+        for id in ids {
+            assert_eq!(id & 0b11, 1, "shard index must occupy the low 2 bits: {id}");
+            assert!(id >> 2 >= 1, "the sequence (high bits) must start at 1: {id}");
+        }
+    }
+
+    #[test]
+    fn off_reactor_mailbox_write_wakes_the_reactor_immediately() {
+        // Give the reactor a deliberately huge poll timeout (30s).  Without a
+        // cross-thread wakeup, a mailbox write enqueued from another thread would
+        // sit until the next socket event or that timeout — so the client's 3s
+        // read would fail.  The wake handle interrupts `poll` at once, so the
+        // write flushes in milliseconds.  A regression that drops the wake makes
+        // this test fail (the read times out), not merely run slow.
+        let seen = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let options = StreamReactorOptions {
+            poll_timeout: Duration::from_secs(30),
+            ..StreamReactorOptions::default()
+        };
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            options,
+            |_| (),
+            move |info, _, _| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id);
+                StreamHandlerResult::default() // do not reply from the handler
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let addr = reactor.local_addr();
+        let mailbox = reactor.mailbox();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client
+            .set_read_timeout(Some(Duration::from_secs(3)))
+            .expect("read timeout");
+        client.write_all(b"ping").expect("write");
+
+        let mut id = None;
+        for _ in 0..300 {
+            if let Some(first) = seen.lock().expect("seen mutex poisoned").first().copied() {
+                id = Some(first);
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+        let id = id.expect("handler should observe the connection");
+
+        let start = std::time::Instant::now();
+        mailbox.send(id, b"pong".to_vec());
+        let mut buf = [0u8; 4];
+        client
+            .read_exact(&mut buf)
+            .expect("off-reactor write should arrive promptly");
+        assert_eq!(&buf, b"pong");
+        assert!(
+            start.elapsed() < Duration::from_secs(2),
+            "wake should flush in ms, took {:?}",
+            start.elapsed()
+        );
+
+        stop.stop();
+        // The reactor is back in its 30s poll; wake it so it sees the stop flag.
+        mailbox.resume_all_reads();
+        server.join().expect("server thread").expect("serve");
+    }
+
+    #[test]
+    fn concurrent_off_reactor_wakes_do_not_corrupt_the_reactor() {
+        // Hammer the cross-thread wake from many threads while the reactor serves
+        // real clients.  This exercises the duplicated-fd wake handle for data
+        // races / use-after-free and is the test to run under ThreadSanitizer.
+        let mut reactor = StreamReactor::bind_kqueue(("127.0.0.1", 0), |_, bytes| {
+            StreamHandlerResult::write(bytes.to_vec())
+        })
+        .expect("bind");
+        let addr = reactor.local_addr();
+        let mailbox = reactor.mailbox();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        // 8 threads each firing thousands of wakes (resume_all_reads enqueues a
+        // command and wakes; send targets mostly-unknown ids, drained and dropped).
+        let wakers: Vec<_> = (0..8)
+            .map(|_| {
+                let mailbox = mailbox.clone();
+                thread::spawn(move || {
+                    for n in 0..2000u64 {
+                        mailbox.resume_all_reads();
+                        // Target ids far above any real connection's sequence so a
+                        // speculative send is always dropped (id miss) rather than
+                        // injecting bytes into a live client's stream.
+                        mailbox.send(ConnectionId(1_000_000 + n), b"x".to_vec());
+                    }
+                })
+            })
+            .collect();
+
+        // Meanwhile real clients must still echo correctly.
+        for i in 0..12 {
+            let mut stream = TcpStream::connect(addr).expect("connect");
+            let payload = format!("client-{i}").into_bytes();
+            stream.write_all(&payload).expect("write");
+            stream.shutdown(Shutdown::Write).expect("shutdown");
+            let mut echoed = Vec::new();
+            stream.read_to_end(&mut echoed).expect("read echo");
+            assert_eq!(echoed, payload);
+        }
+
+        for waker in wakers {
+            waker.join().expect("waker thread");
+        }
+        stop.stop();
+        mailbox.resume_all_reads(); // break the final poll
+        server.join().expect("server thread").expect("serve");
+    }
+
+    #[test]
+    fn adopts_an_externally_accepted_connection_via_the_mailbox() {
+        // The reactor has its own (unused) listener; we hand it a connection that
+        // a SEPARATE "acceptor" listener accepted, via the `adopt_connection`
+        // mailbox command — the receiving half of the accept fan-out.  The reactor
+        // must then serve the adopted connection (echo) exactly as if it had
+        // accepted the socket itself.
+        use std::os::fd::OwnedFd;
+
+        let mut reactor = StreamReactor::bind_kqueue(("127.0.0.1", 0), |_, bytes| {
+            StreamHandlerResult::write(bytes.to_vec())
+        })
+        .expect("bind reactor");
+        let mailbox = reactor.mailbox();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        // A separate listener stands in for the fan-out acceptor thread.
+        let acceptor = std::net::TcpListener::bind("127.0.0.1:0").expect("bind acceptor");
+        let acc_addr = acceptor.local_addr().expect("acceptor addr");
+        let mut client = TcpStream::connect(acc_addr).expect("connect to acceptor");
+        client
+            .set_read_timeout(Some(Duration::from_secs(5)))
+            .expect("read timeout");
+        let (accepted, peer) = acceptor.accept().expect("acceptor accept");
+
+        // Hand the accepted socket to the reactor (ownership transfers).
+        mailbox.adopt_connection(OwnedFd::from(accepted), peer);
+
+        // The reactor now owns and echoes the adopted connection.
+        client.write_all(b"adopted").expect("client write");
+        let mut buffer = [0u8; 7];
+        client.read_exact(&mut buffer).expect("client read echo");
+        assert_eq!(&buffer, b"adopted");
+
+        stop.stop();
+        mailbox.resume_all_reads(); // wake the reactor so it sees the stop flag
+        server.join().expect("server thread").expect("serve");
     }
 
     #[test]

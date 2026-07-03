@@ -1,0 +1,251 @@
+% ============================================================================
+% ADJ52 case-25 derived rulebook.
+% Clinical area: non-resolving focal lung consolidation in an occupationally
+% exposed heavy smoker (occupational/inhalational pulmonology).
+%
+% The diagnostic puzzle the IR poses (q1-q4): a presumed community-acquired
+% pneumonia (RIGHT UPPER LOBE air-space consolidation) that FAILED a full
+% ~3-week course of IV broad-spectrum antibiotics; a 63yo man, 45 pack-years,
+% who arc-welds IRON AND STEEL in a poorly ventilated bay; BAL returns
+% ALVEOLAR-MACROPHAGE-PREDOMINANT fluid with only scant neutrophils,
+% lymphocytes, and eosinophils; transthoracic biopsy shows NO malignant cells
+% and NO vasculitis; serum ANCA negative. CT shows the segmental consolidation
+% PLUS small ill-defined nodules PLUS background centrilobular emphysema.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (lowercase only, no
+% leading digits, no uppercase). E.g. smoking_burden(heavy), pao2(mildly_low).
+%
+% Anti-overfit note: every clause is added because a CITED source supports the
+% DIRECTION of the likelihood ratio for that finding in that disease, never to
+% steer the case onto a chosen answer. Discriminators that fire NEGATIVE against
+% the tempting wrong answers (lung cancer, organizing pneumonia, eosinophilic
+% pneumonia, TB, ANCA vasculitis) are included with LR<1 wherever a source
+% supports them.
+% ============================================================================
+
+% ===== PRIORS (base rates among non-resolving-consolidation referrals) =====
+
+% rationale: A non-resolving pneumonia is a recognized first presentation of
+% lung malignancy, and a 63yo with 45 pack-years is high-risk; high prior so the
+% engine must EARN the move away from cancer on the negative-biopsy data.
+prior 0.28 for diagnosis(lung_adenocarcinoma)
+  source "Insights Imaging 2022 13:244 (pneumonic-type lung adenocarcinoma mimics pneumonia); PMC4543828 ('Non-resolving' pneumonia, malignancy first manifestation)" trust authoritative
+
+% rationale: Organizing pneumonia is the prototypical cause of focal/migratory
+% air-space consolidation that fails empiric antibiotics for presumed bacterial
+% pneumonia; high prior as the leading non-infectious mimic.
+prior 0.25 for diagnosis(organizing_pneumonia)
+  source "StatPearls NBK507874 (Cryptogenic Organizing Pneumonia); WJGNet 2024 v12 i36 (secondary OP, consolidation unresponsive to antibiotics)" trust authoritative
+
+% rationale: Pulmonary siderosis (welder's lung) is uncommon and classically
+% nodular, BUT it is documented to present as air-space CONSOLIDATION mimicking
+% pneumonia in an iron arc-welder; lower prior, must be EARNED by the exposure
+% and macrophage-predominant BAL.
+prior 0.15 for diagnosis(pulmonary_siderosis)
+  source "Mukae et al. Respir Med Case Rep 2018, PMC6039750 (pulmonary siderosis misdiagnosed as pneumonia: RUL consolidation, iron welding)" trust authoritative
+
+% rationale: TB favors posterior/apical upper-lobe segments and resolves slowly
+% despite antibiotics; a real differential for non-resolving RUL consolidation.
+prior 0.12 for diagnosis(pulmonary_tuberculosis)
+  source "Radiology Assistant TB imaging (apical/posterior upper-lobe ~85%); PMC4543828 (non-resolving pneumonia DDx includes TB)" trust authoritative
+
+% rationale: Chronic eosinophilic pneumonia gives peripheral upper-zone
+% consolidation that fails antibiotics; on the differential of non-resolving
+% peripheral air-space disease.
+prior 0.10 for diagnosis(chronic_eosinophilic_pneumonia)
+  source "Frontiers Med 2024 10.3389/fmed.2024.1355247 (chronic eosinophilic pneumonia, peripheral consolidation)" trust authoritative
+
+% rationale: ANCA-associated vasculitis (GPA) can present with non-resolving
+% nodular/consolidative lung disease; included because vasculitis was actively
+% excluded in the workup.
+prior 0.06 for diagnosis(anca_vasculitis)
+  source "Insights Imaging / StatPearls (GPA pulmonary nodules and consolidation in DDx of non-resolving lung opacity)" trust authoritative
+
+% ===== SHARED 'FAILED-ANTIBIOTICS NON-INFECTIVE CONSOLIDATION' SIGNATURE =====
+% rationale: 'segmental air-space consolidation that did NOT settle after a full
+% broad-spectrum IV course, in an afebrile, well-appearing, normally-saturating
+% patient' is ONE correlated gestalt that points away from ordinary bacterial CAP
+% and toward a non-infective / occupational cause. It is fired ONCE per non-
+% infective conclusion rather than summing the correlated facts (anti-saturation).
+% mechanism non_infective_consolidation_gestalt for diagnosis(pulmonary_siderosis) lr 2.2 : consolidation_response_to_antibiotics(none), general_appearance(well_afebrile), air_space_consolidation(segmental_right_upper_lobe)
+% mechanism non_infective_consolidation_gestalt for diagnosis(organizing_pneumonia) lr 2.4 : consolidation_response_to_antibiotics(none), general_appearance(well_afebrile), air_space_consolidation(segmental_right_upper_lobe)
+% mechanism non_infective_consolidation_gestalt for diagnosis(lung_adenocarcinoma) lr 2.2 : consolidation_response_to_antibiotics(none), general_appearance(well_afebrile), air_space_consolidation(segmental_right_upper_lobe)
+% mechanism non_infective_consolidation_gestalt for diagnosis(chronic_eosinophilic_pneumonia) lr 1.8 : consolidation_response_to_antibiotics(none), general_appearance(well_afebrile), air_space_consolidation(segmental_right_upper_lobe)
+
+% ===== PULMONARY SIDEROSIS (welder's lung) =====
+
+% rationale: KEY DISCRIMINATOR — the central, near-specific clue. Daily arc-
+% welding of IRON AND STEEL in a poorly ventilated bay is the exposure that
+% causes inhaled iron-oxide accumulation in alveolar macrophages (siderosis).
+contributes 7.0 from occupational_exposure(iron_steel_arc_welding) to diagnosis(pulmonary_siderosis)
+  source "Mukae et al. PMC6039750 (iron arc-welding -> pulmonary siderosis); PubMed 8257971 (occupational siderosis and welders' lung review)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — poor ventilation / high-dose biopersistent iron
+% fume is the dose factor that drives iron-laden-macrophage accumulation and even
+% fibrosis; the IR explicitly notes a poorly ventilated bay.
+contributes 2.5 from exposure_condition(poorly_ventilated) to diagnosis(pulmonary_siderosis)
+  source "RadioGraphics 2001 g01nv011371 (high-dose welding fume + inadequate ventilation in welders' pneumoconiosis)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — BAL with a MARKED PREDOMINANCE of alveolar
+% macrophages (and scant other cells) is exactly the siderosis BAL: iron is
+% phagocytosed and accumulates within macrophages (siderophages).
+contributes 4.0 from bal_pattern(alveolar_macrophage_predominant) to diagnosis(pulmonary_siderosis)
+  source "Mukae et al. PMC6039750 (BAL: many alveolar macrophages containing iron particles); EPA Perls' Prussian blue review (only macrophages stain -> siderophages)" trust authoritative
+
+% rationale: small ILL-DEFINED nodules on CT are the classic siderosis substrate
+% (iron-laden macrophages aggregated along peribronchovascular lymphatics);
+% co-occurring with the consolidation, they support iron deposition.
+contributes 2.2 from ct_pattern(small_ill_defined_nodules) to diagnosis(pulmonary_siderosis)
+  source "Clinical Imaging 2023 S0899-7071(23)00034-7 (welders: poorly-defined small centrilobular nodules = radiopaque iron in macrophages)" trust authoritative
+
+% rationale: documented as an air-space CONSOLIDATION presentation of siderosis
+% (the very pattern here), so the RUL segmental consolidation is compatible, not
+% against, once the exposure is present.
+contributes 1.8 from air_space_consolidation(segmental_right_upper_lobe) to diagnosis(pulmonary_siderosis)
+  source "Mukae et al. PMC6039750 (first reported siderosis presenting as RUL air-space consolidation rather than nodules)" trust authoritative
+
+% rationale: a clear chest film three months earlier and a sub-acute (~6 week)
+% course tracking the recent several months of welding fits an acquired
+% inhalational deposition rather than a chronic structural disease.
+contributes 1.5 from prior_film(recent_clear) to diagnosis(pulmonary_siderosis)
+  source "Mukae et al. PMC6039750 (siderosis develops over months of iron-welding exposure; reversible/accumulative)" trust authoritative
+
+% rationale: KEY SYNERGY — iron-steel welding exposure TOGETHER WITH a macrophage-
+% predominant BAL is near-specific for iron-laden-macrophage accumulation; the two
+% together carry more than the product of their separate weak signals.
+interacts 3.0 when occupational_exposure(iron_steel_arc_welding) and bal_pattern(alveolar_macrophage_predominant) for diagnosis(pulmonary_siderosis)
+  source "EPA Perls' Prussian blue review (inhaled biopersistent iron particles phagocytosed by alveolar macrophages -> siderophages on BAL)" trust authoritative
+
+% ===== ORGANIZING PNEUMONIA (leading non-infective mimic — argued down on BAL) =====
+
+% rationale: OP is the classic cause of consolidation that fails empiric
+% antibiotics for presumed bacterial pneumonia.
+contributes 2.5 from consolidation_response_to_antibiotics(none) to diagnosis(organizing_pneumonia)
+  source "WJGNet 2024 v12 i36 6877 (secondary OP: consolidation unresponsive to antibiotics); StatPearls NBK507874" trust authoritative
+
+% rationale: a peribronchial / peripheral segmental air-space consolidation is a
+% typical OP distribution (subpleural / peribronchovascular).
+contributes 2.0 from air_space_consolidation(segmental_right_upper_lobe) to diagnosis(organizing_pneumonia)
+  source "PMC4332061 (COP: airspace consolidation, peribronchovascular/peripheral); ScienceDirect Organizing Pneumonia overview" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — OP BAL is characteristically
+% LYMPHOCYTE-rich (mixed pattern, lymphocytes ~30-40%). A BAL with a MARKED
+% MACROPHAGE predominance and only SCANT lymphocytes argues against OP.
+contributes 0.30 from bal_pattern(alveolar_macrophage_predominant) to diagnosis(organizing_pneumonia)
+  source "PMC4332061 (migratory/COP BAL macrophages ~51%, lymphocytes ~33%); StatPearls NBK507874 (COP BAL lymphocytosis)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE, weak) — OP is a histologic diagnosis
+% (intra-alveolar fibroblastic/Masson bodies). A needle biopsy of the consolidated
+% area that shows NO such organizing features (only non-specific tissue) does not
+% support OP; treated as mildly against given the negative histology offered.
+contributes 0.6 from biopsy(no_specific_diagnostic_feature) to diagnosis(organizing_pneumonia)
+  source "StatPearls NBK507874 (COP diagnosis requires intra-alveolar organizing connective tissue on biopsy)" trust authoritative
+
+% ===== LUNG ADENOCARCINOMA (the high-prior cancer mimic — argued down on biopsy) =====
+
+% rationale: heavy smoking (45 pack-years) is the dominant risk factor for lung
+% carcinoma and is why cancer leads the differential of non-resolving
+% consolidation in this man.
+contributes 2.2 from smoking_burden(heavy_pack_years) to diagnosis(lung_adenocarcinoma)
+  source "Insights Imaging 2022 13:244 (smoking-related risk; pneumonic-type adenocarcinoma DDx)" trust authoritative
+
+% rationale: pneumonic-type (mucinous lepidic) adenocarcinoma is the form that
+% presents as a consolidation indistinguishable from pneumonia and fails to clear.
+contributes 2.0 from air_space_consolidation(segmental_right_upper_lobe) to diagnosis(lung_adenocarcinoma)
+  source "PMC3587910 (bronchioloalveolar carcinoma as non-resolving consolidation); Insights Imaging 2022 13:244" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — a CT-guided transthoracic needle
+% biopsy of the consolidated area showing NO MALIGNANT CELLS substantially lowers
+% (but does not exclude) cancer. This is the clause that demotes the tempting
+% high-prior cancer label.
+contributes 0.20 from biopsy(no_malignant_cells) to diagnosis(lung_adenocarcinoma)
+  source "JCDR 60149 (transthoracic biopsy to diagnose pneumonic adenocarcinoma; negative tissue argues against malignancy)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — direct bronchoscopic inspection
+% showing NO endobronchial lesion, mass, or obstruction argues against a central
+% obstructing tumor causing post-obstructive non-resolution.
+contributes 0.5 from bronchoscopy(no_endobronchial_lesion) to diagnosis(lung_adenocarcinoma)
+  source "PMC4543828 ('Non-resolving' pneumonia: bronchoscopy to exclude endobronchial obstructing lesion/tumour)" trust authoritative
+
+% ===== PULMONARY TUBERCULOSIS (argued down on clean bronchoscopy / no TB features) =====
+
+% rationale: TB favors the POSTERIOR segment of the upper lobe and resolves
+% slowly despite antibacterials — compatible with the RUL posterior-segment site.
+contributes 2.0 from air_space_consolidation(segmental_right_upper_lobe) to diagnosis(pulmonary_tuberculosis)
+  source "Radiology Assistant TB imaging (posterior/apical upper-lobe ~85%); PMC8743064 (active pulmonary TB)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — an afebrile, well-appearing patient
+% with normal saturations and only mild inflammatory markers is atypical for the
+% systemic constitutional picture of active pulmonary TB.
+contributes 0.5 from general_appearance(well_afebrile) to diagnosis(pulmonary_tuberculosis)
+  source "EMCrit IBCC Tuberculosis (constitutional symptoms, fever, weight loss typical of active TB)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires NEGATIVE) — bronchoscopy with NO endobronchial
+% lesion argues against endobronchial TB; the consolidation without cavitation /
+% nodal disease is less classic for TB.
+contributes 0.6 from bronchoscopy(no_endobronchial_lesion) to diagnosis(pulmonary_tuberculosis)
+  source "Radiology Assistant TB (cavitation/tree-in-bud/nodal disease typical); CHEST upper-lobe cavitary DDx" trust authoritative
+
+% ===== CHRONIC EOSINOPHILIC PNEUMONIA (argued down on scant BAL eosinophils) =====
+
+% rationale: CEP gives peripheral upper-zone consolidation that fails antibiotics.
+contributes 1.8 from air_space_consolidation(segmental_right_upper_lobe) to diagnosis(chronic_eosinophilic_pneumonia)
+  source "Frontiers Med 2024 1355247 (CEP: peripheral consolidation, 'photographic negative of pulmonary edema')" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — CEP is DEFINED by BAL
+% eosinophilia (>=40%). A BAL with only SCANT eosinophils and macrophage
+% predominance is strongly against CEP.
+contributes 0.15 from bal_eosinophils(scant) to diagnosis(chronic_eosinophilic_pneumonia)
+  source "Frontiers Med 2024 1355247 (CEP requires BAL eosinophils >=40% or blood eosinophilia >=1000)" trust authoritative
+
+% ===== ANCA-ASSOCIATED VASCULITIS / GPA (argued down on negative ANCA + biopsy) =====
+
+% rationale: GPA can cause non-resolving nodules / consolidation, hence it was
+% actively investigated here.
+contributes 1.5 from ct_pattern(small_ill_defined_nodules) to diagnosis(anca_vasculitis)
+  source "StatPearls / RadioGraphics (GPA: pulmonary nodules and consolidation)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — a NEGATIVE serum ANCA panel
+% lowers the probability of ANCA-associated vasculitis.
+contributes 0.30 from serology(anca_negative) to diagnosis(anca_vasculitis)
+  source "StatPearls (ANCA sensitivity in active GPA; negative ANCA lowers pretest probability)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — a biopsy of the lesion showing
+% NO features of vasculitis argues against pulmonary vasculitis.
+contributes 0.30 from biopsy(no_vasculitis) to diagnosis(anca_vasculitis)
+  source "StatPearls (GPA histology: necrotizing granulomatous vasculitis; absence argues against)" trust authoritative
+
+% ===== NEXT STEP (confirmatory pathway) =====
+
+% rationale: the decisive next step is a PERLS' PRUSSIAN BLUE (iron) STAIN of the
+% BAL fluid and/or the biopsy specimen: iron-laden macrophages (siderophages)
+% staining strongly positive confirm siderosis and, with malignancy/TB/vasculitis
+% excluded, close the case. Highest value-of-information step.
+prior 0.25 for next_step(prussian_blue_iron_stain_of_bal_and_biopsy)
+  source "Mukae et al. PMC6039750 (Prussian blue-positive iron-laden macrophages confirmed siderosis); EPA Perls' review" trust authoritative
+contributes 5.0 from bal_pattern(alveolar_macrophage_predominant) to next_step(prussian_blue_iron_stain_of_bal_and_biopsy)
+  source "EPA Perls' Prussian blue review (macrophage-predominant BAL -> stain for iron to identify siderophages)" trust authoritative
+contributes 4.0 from occupational_exposure(iron_steel_arc_welding) to next_step(prussian_blue_iron_stain_of_bal_and_biopsy)
+  source "Mukae et al. PMC6039750 (iron-welding history -> pursue iron staining of BAL/tissue)" trust authoritative
+contributes 2.0 from biopsy(no_malignant_cells) to next_step(prussian_blue_iron_stain_of_bal_and_biopsy)
+  source "Mukae et al. PMC6039750 (malignancy excluded on tissue -> apply Prussian blue to confirm iron deposition)" trust authoritative
+
+% rationale: an alternative confirmatory arm is a surgical / larger tissue lung
+% biopsy if histology remains non-diagnostic; lower prior than the simple stain.
+prior 0.12 for next_step(surgical_lung_biopsy)
+  source "PMC4543828 ('Non-resolving' pneumonia: surgical lung biopsy when less invasive sampling non-diagnostic)" trust authoritative
+contributes 1.5 from biopsy(no_specific_diagnostic_feature) to next_step(surgical_lung_biopsy)
+  source "PMC4543828 (proceed to surgical lung biopsy after non-diagnostic needle biopsy)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u-iron-stain: the Perls' Prussian blue result on the BAL/biopsy is NOT yet
+% reported; it is the single highest-value discriminator. A strongly positive
+% iron stain is near-dispositive for siderosis; a negative stain argues strongly
+% against and reopens the non-iron differential.
+contributes 12.0 from iron_stain(strongly_positive_siderophages) to diagnosis(pulmonary_siderosis)
+  source "Mukae et al. PMC6039750 (markedly Prussian blue-positive iron-laden macrophages confirm siderosis)" trust authoritative
+contributes 0.12 from iron_stain(negative) to diagnosis(pulmonary_siderosis)
+  source "EPA Perls' review (absence of stainable iron in macrophages argues against siderosis)" trust authoritative
+uncertain { iron_stain(strongly_positive_siderophages), iron_stain(negative) } for diagnosis(pulmonary_siderosis)
+  source "Mukae et al. PMC6039750 (Prussian blue iron stain not yet performed; decisive confirmatory discriminator)"

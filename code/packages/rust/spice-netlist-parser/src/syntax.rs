@@ -1,0 +1,19081 @@
+use crate::{
+    parse_netlist, AnalysisExecutionError, AnalysisExecutionResult, AnalysisKind,
+    NetlistParseError, ParsedNetlist,
+};
+use spice_engine::{
+    run_deck, DeckOutputPlanArtifact, DeckRawfileArtifact, DeckRunArtifact, DeckTableArtifact,
+    DeckWrdataArtifact,
+};
+
+pub const BERKELEY_SPICE_GRAMMAR_NAME: &str = "berkeley-spice-logical-card";
+pub const BERKELEY_SPICE_GRAMMAR_VERSION: u32 = 1;
+pub const BERKELEY_SPICE_TOKEN_GRAMMAR: &str =
+    include_str!("../../../../grammars/spice/berkeley.tokens");
+pub const BERKELEY_SPICE_PARSER_GRAMMAR: &str =
+    include_str!("../../../../grammars/spice/berkeley.grammar");
+pub const BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_TAB_PANELS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARD_ACTIONS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARDS_SCHEMA_VERSION: u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUPS_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUTS_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_BINDINGS_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_REGISTRY_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INDEX_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_RESULTS_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_SELECTION_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPTS_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_SUMMARY_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_MANIFEST_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_LOADER_PLAN_SCHEMA_VERSION:
+    u32 = 1;
+pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
+pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
+
+const BERKELEY_APP_HOST_PANEL_KINDS: &[&str] =
+    &["source", "diagnostics", "analysis", "table", "waveform"];
+const BERKELEY_APP_EDITOR_ACTION_KINDS: &[&str] = &[
+    "select-analysis",
+    "run-analysis",
+    "inspect-table",
+    "inspect-waveform",
+];
+const BERKELEY_APP_COMMAND_TARGETS: &[&str] = &[
+    "analysis-selection",
+    "analysis-runner",
+    "analysis-table",
+    "analysis-waveform",
+];
+const BERKELEY_APP_RUNNABLE_ANALYSIS_DIRECTIVES: &[&str] = &[".op", ".dc", ".ac", ".tran"];
+const BERKELEY_APP_ARTIFACT_ANALYSIS_DIRECTIVES: &[&str] =
+    &[".op", ".dc", ".ac", ".tran", ".tf", ".sens", ".noise"];
+const BERKELEY_APP_ARTIFACT_CAPABILITIES: &[&str] = &[
+    "canonical-source",
+    "analysis-inventory",
+    "source-fingerprint",
+    "session-state",
+    "editor-controls",
+    "editor-command-plan",
+    "persisted-editor-state",
+    "host-surface",
+    "host-surface-wire-json",
+    "app-bootstrap-json",
+    "app-startup-summary-json",
+    "app-launch-plan-json",
+    "app-readiness-report-json",
+    "app-shell-handoff-json",
+    "app-shell-status-json",
+    "app-shell-telemetry-json",
+    "app-shell-events-json",
+    "app-shell-event-summary-json",
+    "app-shell-event-digest-json",
+    "app-shell-event-dashboard-json",
+    "app-shell-dashboard-package-json",
+    "app-shell-dashboard-cards-json",
+    "app-shell-dashboard-view-json",
+    "app-shell-dashboard-layout-json",
+    "app-shell-dashboard-navigation-json",
+    "app-shell-dashboard-routes-json",
+    "app-shell-dashboard-breadcrumbs-json",
+    "app-shell-dashboard-tabs-json",
+    "app-shell-dashboard-tab-panels-json",
+    "app-shell-dashboard-panel-cards-json",
+    "app-shell-dashboard-panel-card-actions-json",
+    "app-shell-dashboard-action-dispatch-json",
+    "app-shell-dashboard-dispatch-events-json",
+    "app-shell-dashboard-dispatch-queue-json",
+    "app-shell-dashboard-dispatch-queue-summary-json",
+    "app-shell-dashboard-dispatch-queue-digest-json",
+    "app-shell-dashboard-dispatch-queue-lanes-json",
+    "app-shell-dashboard-dispatch-queue-lane-tabs-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panels-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-cards-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcuts-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-results-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-selection-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipts-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-json",
+    "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-json",
+    "result-tables",
+    "waveform-series",
+    "run-artifacts",
+    "output-plan-artifacts",
+    "rawfile-artifacts",
+    "wrdata-artifacts",
+];
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct SourceSpan {
+    pub start_line: usize,
+    pub start_column: usize,
+    pub end_line: usize,
+    pub end_column: usize,
+}
+
+impl SourceSpan {
+    fn point(line: usize, column: usize) -> Self {
+        Self {
+            start_line: line,
+            start_column: column,
+            end_line: line,
+            end_column: column,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+struct SourcePosition {
+    line: usize,
+    column: usize,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BerkeleyDiagnosticSeverity {
+    Error,
+    Warning,
+    Note,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleySyntaxDiagnostic {
+    pub code: String,
+    pub severity: BerkeleyDiagnosticSeverity,
+    pub message: String,
+    pub span: Option<SourceSpan>,
+}
+
+impl BerkeleySyntaxDiagnostic {
+    fn new(
+        code: &str,
+        severity: BerkeleyDiagnosticSeverity,
+        message: impl Into<String>,
+        span: Option<SourceSpan>,
+    ) -> Self {
+        Self {
+            code: code.to_string(),
+            severity,
+            message: message.into(),
+            span,
+        }
+    }
+
+    fn error(code: &str, message: impl Into<String>, span: Option<SourceSpan>) -> Self {
+        Self::new(code, BerkeleyDiagnosticSeverity::Error, message, span)
+    }
+
+    pub fn is_error(&self) -> bool {
+        self.severity == BerkeleyDiagnosticSeverity::Error
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BerkeleyCardKind {
+    Element,
+    Model,
+    SubcktStart,
+    SubcktEnd,
+    End,
+    Param,
+    Func,
+    Options,
+    Condition,
+    Analysis,
+    Output,
+    Source,
+    ControlStart,
+    ControlEnd,
+    UnknownDirective,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleySyntaxToken {
+    pub kind: String,
+    pub text: String,
+    pub span: SourceSpan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyLogicalCard {
+    pub kind: BerkeleyCardKind,
+    pub head: String,
+    pub text: String,
+    pub span: SourceSpan,
+    pub physical_lines: Vec<usize>,
+    pub tokens: Vec<BerkeleySyntaxToken>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct BerkeleyGrammarMetadata {
+    pub name: &'static str,
+    pub version: u32,
+    pub token_grammar: &'static str,
+    pub parser_grammar: &'static str,
+}
+
+impl BerkeleyGrammarMetadata {
+    pub fn current() -> Self {
+        Self {
+            name: BERKELEY_SPICE_GRAMMAR_NAME,
+            version: BERKELEY_SPICE_GRAMMAR_VERSION,
+            token_grammar: BERKELEY_SPICE_TOKEN_GRAMMAR,
+            parser_grammar: BERKELEY_SPICE_PARSER_GRAMMAR,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppPackageManifest {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub grammar_name: String,
+    pub grammar_version: u32,
+    pub host_surface_wire_schema_version: u32,
+    pub source_fingerprint_algorithm: String,
+    pub host_panel_kinds: Vec<String>,
+    pub editor_action_kinds: Vec<String>,
+    pub command_targets: Vec<String>,
+    pub runnable_analysis_directives: Vec<String>,
+    pub artifact_analysis_directives: Vec<String>,
+    pub artifact_capabilities: Vec<String>,
+}
+
+impl BerkeleyAppPackageManifest {
+    pub fn to_json(&self) -> String {
+        app_package_manifest_json_value(self).to_string()
+    }
+}
+
+pub fn berkeley_app_package_manifest() -> BerkeleyAppPackageManifest {
+    BerkeleyAppPackageManifest {
+        schema_version: BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION,
+        package_name: BERKELEY_APP_PACKAGE_NAME.to_string(),
+        grammar_name: BERKELEY_SPICE_GRAMMAR_NAME.to_string(),
+        grammar_version: BERKELEY_SPICE_GRAMMAR_VERSION,
+        host_surface_wire_schema_version: BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
+        source_fingerprint_algorithm: BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM.to_string(),
+        host_panel_kinds: manifest_strings(BERKELEY_APP_HOST_PANEL_KINDS),
+        editor_action_kinds: manifest_strings(BERKELEY_APP_EDITOR_ACTION_KINDS),
+        command_targets: manifest_strings(BERKELEY_APP_COMMAND_TARGETS),
+        runnable_analysis_directives: manifest_strings(BERKELEY_APP_RUNNABLE_ANALYSIS_DIRECTIVES),
+        artifact_analysis_directives: manifest_strings(BERKELEY_APP_ARTIFACT_ANALYSIS_DIRECTIVES),
+        artifact_capabilities: manifest_strings(BERKELEY_APP_ARTIFACT_CAPABILITIES),
+    }
+}
+
+pub fn berkeley_app_package_manifest_json() -> String {
+    berkeley_app_package_manifest().to_json()
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppBootstrapSnapshot {
+    pub schema_version: u32,
+    pub package_manifest: BerkeleyAppPackageManifest,
+    pub host_surface: BerkeleyAppHostSurfaceWire,
+}
+
+impl BerkeleyAppBootstrapSnapshot {
+    pub fn to_json(&self) -> String {
+        app_bootstrap_snapshot_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppStartupSummary {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub ready: bool,
+    pub requested_selected_syntax_card_index: Option<usize>,
+    pub requested_active_command_id: Option<String>,
+    pub resolved_selected_syntax_card_index: Option<usize>,
+    pub resolved_active_command_id: Option<String>,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub panel_count: usize,
+    pub active_panel_id: Option<String>,
+    pub diagnostic_count: usize,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppStartupSummary {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        let host_surface = &snapshot.host_surface;
+        Self {
+            schema_version: BERKELEY_APP_STARTUP_SUMMARY_SCHEMA_VERSION,
+            package_name: snapshot.package_manifest.package_name.clone(),
+            source_fingerprint: host_surface.source_fingerprint.clone(),
+            title: host_surface.title.clone(),
+            parsed: host_surface.parsed,
+            execution_available: host_surface.execution_available,
+            ready: host_surface.parsed && host_surface.execution_available,
+            requested_selected_syntax_card_index: host_surface.requested_selected_syntax_card_index,
+            requested_active_command_id: host_surface.requested_active_command_id.clone(),
+            resolved_selected_syntax_card_index: host_surface.resolved_selected_syntax_card_index,
+            resolved_active_command_id: host_surface.resolved_active_command_id.clone(),
+            selection_stale: host_surface.selection_stale,
+            command_stale: host_surface.command_stale,
+            panel_count: host_surface.panel_count,
+            active_panel_id: host_surface.active_panel_id.clone(),
+            diagnostic_count: host_surface.diagnostics.len(),
+            blocking_message: host_surface.blocking_message.clone(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_startup_summary_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppLaunchAction {
+    pub id: String,
+    pub label: String,
+    pub panel_id: String,
+    pub panel_kind: String,
+    pub target: String,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppLaunchPlan {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub entry_panel_id: Option<String>,
+    pub entry_panel_kind: Option<String>,
+    pub entry_target: Option<String>,
+    pub requested_selected_syntax_card_index: Option<usize>,
+    pub requested_active_command_id: Option<String>,
+    pub resolved_selected_syntax_card_index: Option<usize>,
+    pub resolved_active_command_id: Option<String>,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub action_count: usize,
+    pub actions: Vec<BerkeleyAppLaunchAction>,
+    pub diagnostic_count: usize,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppLaunchPlan {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        let host_surface = &snapshot.host_surface;
+        let ready = host_surface.parsed && host_surface.execution_available;
+        let startup_route = if ready { "ready" } else { "blocked" }.to_string();
+        let entry_panel = launch_entry_panel(host_surface, ready);
+        let entry_panel_id = entry_panel.map(|panel| panel.id.clone());
+        let entry_panel_kind = entry_panel.map(|panel| panel.kind.clone());
+        let entry_target = entry_panel.map(|panel| panel.target.clone());
+        let actions = host_surface
+            .panels
+            .iter()
+            .map(|panel| launch_action_from_panel(panel, entry_panel_id.as_deref()))
+            .collect::<Vec<_>>();
+
+        Self {
+            schema_version: BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
+            package_name: snapshot.package_manifest.package_name.clone(),
+            source_fingerprint: host_surface.source_fingerprint.clone(),
+            title: host_surface.title.clone(),
+            startup_route,
+            ready,
+            entry_panel_id,
+            entry_panel_kind,
+            entry_target,
+            requested_selected_syntax_card_index: host_surface.requested_selected_syntax_card_index,
+            requested_active_command_id: host_surface.requested_active_command_id.clone(),
+            resolved_selected_syntax_card_index: host_surface.resolved_selected_syntax_card_index,
+            resolved_active_command_id: host_surface.resolved_active_command_id.clone(),
+            selection_stale: host_surface.selection_stale,
+            command_stale: host_surface.command_stale,
+            action_count: actions.len(),
+            actions,
+            diagnostic_count: host_surface.diagnostics.len(),
+            blocking_message: host_surface.blocking_message.clone(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_launch_plan_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppReadinessReport {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub entry_panel_id: Option<String>,
+    pub entry_target: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub primary_action_enabled: bool,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub disabled_action_count: usize,
+    pub diagnostic_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub note_count: usize,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub repaired_state: bool,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppReadinessReport {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        let host_surface = &snapshot.host_surface;
+        let launch_plan = BerkeleyAppLaunchPlan::from_bootstrap_snapshot(snapshot);
+        let enabled_panel_count = host_surface
+            .panels
+            .iter()
+            .filter(|panel| panel.enabled)
+            .count();
+        let primary_action = launch_plan.actions.iter().find(|action| action.primary);
+        let primary_action_id = primary_action.map(|action| action.id.clone());
+        let primary_action_enabled = primary_action.is_some_and(|action| action.enabled);
+        let enabled_action_count = launch_plan
+            .actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+        let error_count = host_surface
+            .diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.severity == "error")
+            .count();
+        let warning_count = host_surface
+            .diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.severity == "warning")
+            .count();
+        let note_count = host_surface
+            .diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.severity == "note")
+            .count();
+        let repaired_state = launch_plan.selection_stale || launch_plan.command_stale;
+
+        Self {
+            schema_version: BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+            package_name: launch_plan.package_name,
+            source_fingerprint: launch_plan.source_fingerprint,
+            title: launch_plan.title,
+            startup_route: launch_plan.startup_route,
+            ready: launch_plan.ready,
+            parsed: host_surface.parsed,
+            execution_available: host_surface.execution_available,
+            entry_panel_id: launch_plan.entry_panel_id,
+            entry_target: launch_plan.entry_target,
+            primary_action_id,
+            primary_action_enabled,
+            panel_count: host_surface.panel_count,
+            enabled_panel_count,
+            disabled_panel_count: host_surface.panel_count.saturating_sub(enabled_panel_count),
+            action_count: launch_plan.action_count,
+            enabled_action_count,
+            disabled_action_count: launch_plan
+                .action_count
+                .saturating_sub(enabled_action_count),
+            diagnostic_count: host_surface.diagnostics.len(),
+            error_count,
+            warning_count,
+            note_count,
+            selection_stale: launch_plan.selection_stale,
+            command_stale: launch_plan.command_stale,
+            repaired_state,
+            blocking_message: launch_plan.blocking_message,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_readiness_report_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellHandoff {
+    pub schema_version: u32,
+    pub package_manifest: BerkeleyAppPackageManifest,
+    pub startup_summary: BerkeleyAppStartupSummary,
+    pub launch_plan: BerkeleyAppLaunchPlan,
+    pub readiness_report: BerkeleyAppReadinessReport,
+}
+
+impl BerkeleyAppShellHandoff {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self {
+            schema_version: BERKELEY_APP_SHELL_HANDOFF_SCHEMA_VERSION,
+            package_manifest: snapshot.package_manifest.clone(),
+            startup_summary: BerkeleyAppStartupSummary::from_bootstrap_snapshot(snapshot),
+            launch_plan: BerkeleyAppLaunchPlan::from_bootstrap_snapshot(snapshot),
+            readiness_report: BerkeleyAppReadinessReport::from_bootstrap_snapshot(snapshot),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_handoff_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellStatus {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub message: String,
+    pub entry_panel_id: Option<String>,
+    pub entry_target: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub diagnostic_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub note_count: usize,
+    pub blocking_message: Option<String>,
+}
+
+impl BerkeleyAppShellStatus {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        let readiness = &handoff.readiness_report;
+        let severity = shell_status_severity(readiness).to_string();
+        let message = shell_status_message(readiness);
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_STATUS_SCHEMA_VERSION,
+            package_name: readiness.package_name.clone(),
+            source_fingerprint: readiness.source_fingerprint.clone(),
+            title: readiness.title.clone(),
+            startup_route: readiness.startup_route.clone(),
+            ready: readiness.ready,
+            severity,
+            message,
+            entry_panel_id: readiness.entry_panel_id.clone(),
+            entry_target: readiness.entry_target.clone(),
+            primary_action_id: readiness.primary_action_id.clone(),
+            diagnostic_count: readiness.diagnostic_count,
+            error_count: readiness.error_count,
+            warning_count: readiness.warning_count,
+            note_count: readiness.note_count,
+            blocking_message: readiness.blocking_message.clone(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_status_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellTelemetry {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub message: String,
+    pub entry_panel_id: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub disabled_action_count: usize,
+    pub diagnostic_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub note_count: usize,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub repaired_state: bool,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellTelemetry {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        let status = BerkeleyAppShellStatus::from_shell_handoff(handoff);
+        let readiness = &handoff.readiness_report;
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_TELEMETRY_SCHEMA_VERSION,
+            package_name: status.package_name,
+            source_fingerprint: status.source_fingerprint,
+            title: status.title,
+            startup_route: status.startup_route,
+            ready: status.ready,
+            severity: status.severity,
+            message: status.message,
+            entry_panel_id: status.entry_panel_id,
+            primary_action_id: status.primary_action_id,
+            panel_count: readiness.panel_count,
+            enabled_panel_count: readiness.enabled_panel_count,
+            disabled_panel_count: readiness.disabled_panel_count,
+            action_count: readiness.action_count,
+            enabled_action_count: readiness.enabled_action_count,
+            disabled_action_count: readiness.disabled_action_count,
+            diagnostic_count: readiness.diagnostic_count,
+            error_count: readiness.error_count,
+            warning_count: readiness.warning_count,
+            note_count: readiness.note_count,
+            selection_stale: readiness.selection_stale,
+            command_stale: readiness.command_stale,
+            repaired_state: readiness.repaired_state,
+            artifact_capability_count: handoff.package_manifest.artifact_capabilities.len(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_telemetry_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEvent {
+    pub id: String,
+    pub kind: String,
+    pub severity: String,
+    pub message: String,
+    pub panel_id: Option<String>,
+    pub action_id: Option<String>,
+    pub count: Option<usize>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventLog {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub event_count: usize,
+    pub events: Vec<BerkeleyAppShellEvent>,
+}
+
+impl BerkeleyAppShellEventLog {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        let status = BerkeleyAppShellStatus::from_shell_handoff(handoff);
+        let telemetry = BerkeleyAppShellTelemetry::from_shell_handoff(handoff);
+        let readiness = &handoff.readiness_report;
+        let primary_action_enabled = readiness.primary_action_enabled;
+        let repaired_state_count = if readiness.repaired_state { 1 } else { 0 };
+        let diagnostics_severity = if readiness.error_count > 0 {
+            "error"
+        } else if readiness.warning_count > 0 {
+            "warning"
+        } else {
+            "info"
+        };
+        let state_severity = if readiness.repaired_state {
+            "warning"
+        } else {
+            "info"
+        };
+
+        let events = vec![
+            BerkeleyAppShellEvent {
+                id: "shell.status".to_string(),
+                kind: "status".to_string(),
+                severity: status.severity.clone(),
+                message: status.message.clone(),
+                panel_id: status.entry_panel_id.clone(),
+                action_id: status.primary_action_id.clone(),
+                count: None,
+            },
+            BerkeleyAppShellEvent {
+                id: format!("shell.route.{}", status.startup_route),
+                kind: "route".to_string(),
+                severity: status.severity.clone(),
+                message: if status.ready {
+                    "Ready startup route selected".to_string()
+                } else {
+                    "Blocked startup route selected".to_string()
+                },
+                panel_id: status.entry_panel_id.clone(),
+                action_id: status.primary_action_id.clone(),
+                count: None,
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.action.primary".to_string(),
+                kind: "action".to_string(),
+                severity: if primary_action_enabled {
+                    "ready".to_string()
+                } else {
+                    "blocked".to_string()
+                },
+                message: match &status.primary_action_id {
+                    Some(action_id) if primary_action_enabled => {
+                        format!("Primary action {action_id} enabled")
+                    }
+                    Some(action_id) => format!("Primary action {action_id} disabled"),
+                    None => "No primary action available".to_string(),
+                },
+                panel_id: status.entry_panel_id.clone(),
+                action_id: status.primary_action_id.clone(),
+                count: None,
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.diagnostics".to_string(),
+                kind: "diagnostics".to_string(),
+                severity: diagnostics_severity.to_string(),
+                message: format!(
+                    "{} diagnostics: {} errors, {} warnings, {} notes",
+                    readiness.diagnostic_count,
+                    readiness.error_count,
+                    readiness.warning_count,
+                    readiness.note_count
+                ),
+                panel_id: None,
+                action_id: None,
+                count: Some(readiness.diagnostic_count),
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.state".to_string(),
+                kind: "state".to_string(),
+                severity: state_severity.to_string(),
+                message: if readiness.repaired_state {
+                    "Persisted editor state repaired".to_string()
+                } else {
+                    "Persisted editor state current".to_string()
+                },
+                panel_id: readiness.entry_panel_id.clone(),
+                action_id: readiness.primary_action_id.clone(),
+                count: Some(repaired_state_count),
+            },
+            BerkeleyAppShellEvent {
+                id: "shell.capabilities".to_string(),
+                kind: "capability".to_string(),
+                severity: "info".to_string(),
+                message: format!(
+                    "{} artifact capabilities advertised",
+                    telemetry.artifact_capability_count
+                ),
+                panel_id: None,
+                action_id: None,
+                count: Some(telemetry.artifact_capability_count),
+            },
+        ];
+
+        let event_count = events.len();
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_LOG_SCHEMA_VERSION,
+            package_name: status.package_name,
+            source_fingerprint: status.source_fingerprint,
+            title: status.title,
+            startup_route: status.startup_route,
+            ready: status.ready,
+            event_count,
+            events,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_log_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventSummary {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub status_event_id: Option<String>,
+    pub primary_action_id: Option<String>,
+    pub event_count: usize,
+    pub status_event_count: usize,
+    pub route_event_count: usize,
+    pub action_event_count: usize,
+    pub diagnostic_event_count: usize,
+    pub state_event_count: usize,
+    pub capability_event_count: usize,
+    pub ready_event_count: usize,
+    pub blocked_event_count: usize,
+    pub info_event_count: usize,
+    pub warning_event_count: usize,
+    pub error_event_count: usize,
+    pub counted_event_total: usize,
+    pub diagnostic_count: usize,
+    pub repaired_state_count: usize,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellEventSummary {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_shell_handoff(handoff))
+    }
+
+    pub fn from_event_log(event_log: &BerkeleyAppShellEventLog) -> Self {
+        let status_event = event_log.events.iter().find(|event| event.kind == "status");
+        let action_event = event_log.events.iter().find(|event| event.kind == "action");
+        let diagnostic_event = event_log
+            .events
+            .iter()
+            .find(|event| event.id == "shell.diagnostics");
+        let state_event = event_log
+            .events
+            .iter()
+            .find(|event| event.id == "shell.state");
+        let capability_event = event_log
+            .events
+            .iter()
+            .find(|event| event.id == "shell.capabilities");
+
+        let mut status_event_count = 0;
+        let mut route_event_count = 0;
+        let mut action_event_count = 0;
+        let mut diagnostic_event_count = 0;
+        let mut state_event_count = 0;
+        let mut capability_event_count = 0;
+        let mut ready_event_count = 0;
+        let mut blocked_event_count = 0;
+        let mut info_event_count = 0;
+        let mut warning_event_count = 0;
+        let mut error_event_count = 0;
+        let mut counted_event_total = 0;
+
+        for event in &event_log.events {
+            match event.kind.as_str() {
+                "status" => status_event_count += 1,
+                "route" => route_event_count += 1,
+                "action" => action_event_count += 1,
+                "diagnostics" => diagnostic_event_count += 1,
+                "state" => state_event_count += 1,
+                "capability" => capability_event_count += 1,
+                _ => {}
+            }
+
+            match event.severity.as_str() {
+                "ready" => ready_event_count += 1,
+                "blocked" => blocked_event_count += 1,
+                "info" => info_event_count += 1,
+                "warning" => warning_event_count += 1,
+                "error" => error_event_count += 1,
+                _ => {}
+            }
+
+            counted_event_total += event.count.unwrap_or(0);
+        }
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_SUMMARY_SCHEMA_VERSION,
+            package_name: event_log.package_name.clone(),
+            source_fingerprint: event_log.source_fingerprint.clone(),
+            title: event_log.title.clone(),
+            startup_route: event_log.startup_route.clone(),
+            ready: event_log.ready,
+            severity: status_event
+                .map(|event| event.severity.clone())
+                .unwrap_or_else(|| {
+                    if event_log.ready {
+                        "ready".to_string()
+                    } else {
+                        "blocked".to_string()
+                    }
+                }),
+            status_event_id: status_event.map(|event| event.id.clone()),
+            primary_action_id: action_event.and_then(|event| event.action_id.clone()),
+            event_count: event_log.event_count,
+            status_event_count,
+            route_event_count,
+            action_event_count,
+            diagnostic_event_count,
+            state_event_count,
+            capability_event_count,
+            ready_event_count,
+            blocked_event_count,
+            info_event_count,
+            warning_event_count,
+            error_event_count,
+            counted_event_total,
+            diagnostic_count: diagnostic_event.and_then(|event| event.count).unwrap_or(0),
+            repaired_state_count: state_event.and_then(|event| event.count).unwrap_or(0),
+            artifact_capability_count: capability_event.and_then(|event| event.count).unwrap_or(0),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_summary_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventDigest {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub headline_event_id: Option<String>,
+    pub headline_message: String,
+    pub primary_action_id: Option<String>,
+    pub attention_event_count: usize,
+    pub attention_event_ids: Vec<String>,
+    pub metric_event_count: usize,
+    pub metric_event_ids: Vec<String>,
+    pub event_count: usize,
+    pub counted_event_total: usize,
+    pub diagnostic_count: usize,
+    pub repaired_state_count: usize,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellEventDigest {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_shell_handoff(handoff))
+    }
+
+    pub fn from_event_log(event_log: &BerkeleyAppShellEventLog) -> Self {
+        let summary = BerkeleyAppShellEventSummary::from_event_log(event_log);
+        let headline_event = summary
+            .status_event_id
+            .as_ref()
+            .and_then(|status_event_id| {
+                event_log
+                    .events
+                    .iter()
+                    .find(|event| event.id == *status_event_id)
+            });
+        let attention_event_ids = event_log
+            .events
+            .iter()
+            .filter(|event| matches!(event.severity.as_str(), "blocked" | "warning" | "error"))
+            .map(|event| event.id.clone())
+            .collect::<Vec<_>>();
+        let metric_event_ids = event_log
+            .events
+            .iter()
+            .filter(|event| event.count.is_some())
+            .map(|event| event.id.clone())
+            .collect::<Vec<_>>();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_DIGEST_SCHEMA_VERSION,
+            package_name: summary.package_name,
+            source_fingerprint: summary.source_fingerprint,
+            title: summary.title,
+            startup_route: summary.startup_route,
+            ready: summary.ready,
+            severity: summary.severity,
+            headline_event_id: headline_event.map(|event| event.id.clone()),
+            headline_message: headline_event
+                .map(|event| event.message.clone())
+                .unwrap_or_else(|| {
+                    if event_log.ready {
+                        "Berkeley SPICE Mosaic app ready".to_string()
+                    } else {
+                        "Berkeley SPICE Mosaic app blocked".to_string()
+                    }
+                }),
+            primary_action_id: summary.primary_action_id,
+            attention_event_count: attention_event_ids.len(),
+            attention_event_ids,
+            metric_event_count: metric_event_ids.len(),
+            metric_event_ids,
+            event_count: summary.event_count,
+            counted_event_total: summary.counted_event_total,
+            diagnostic_count: summary.diagnostic_count,
+            repaired_state_count: summary.repaired_state_count,
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_digest_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventDashboardSection {
+    pub id: String,
+    pub title: String,
+    pub severity: String,
+    pub event_count: usize,
+    pub event_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellEventDashboard {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub headline_event_id: Option<String>,
+    pub headline_message: String,
+    pub primary_action_id: Option<String>,
+    pub attention_required: bool,
+    pub section_count: usize,
+    pub sections: Vec<BerkeleyAppShellEventDashboardSection>,
+    pub event_count: usize,
+    pub diagnostic_count: usize,
+    pub repaired_state_count: usize,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellEventDashboard {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_event_log(&BerkeleyAppShellEventLog::from_shell_handoff(handoff))
+    }
+
+    pub fn from_event_log(event_log: &BerkeleyAppShellEventLog) -> Self {
+        Self::from_event_digest(&BerkeleyAppShellEventDigest::from_event_log(event_log))
+    }
+
+    pub fn from_event_digest(digest: &BerkeleyAppShellEventDigest) -> Self {
+        let status_event_ids = digest.headline_event_id.iter().cloned().collect::<Vec<_>>();
+        let sections = vec![
+            BerkeleyAppShellEventDashboardSection {
+                id: "status".to_string(),
+                title: "Startup status".to_string(),
+                severity: digest.severity.clone(),
+                event_count: status_event_ids.len(),
+                event_ids: status_event_ids,
+            },
+            BerkeleyAppShellEventDashboardSection {
+                id: "attention".to_string(),
+                title: "Attention".to_string(),
+                severity: if digest.attention_event_count > 0 {
+                    digest.severity.clone()
+                } else {
+                    "ready".to_string()
+                },
+                event_count: digest.attention_event_count,
+                event_ids: digest.attention_event_ids.clone(),
+            },
+            BerkeleyAppShellEventDashboardSection {
+                id: "metrics".to_string(),
+                title: "Metrics".to_string(),
+                severity: "info".to_string(),
+                event_count: digest.metric_event_count,
+                event_ids: digest.metric_event_ids.clone(),
+            },
+        ];
+        let section_count = sections.len();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_EVENT_DASHBOARD_SCHEMA_VERSION,
+            package_name: digest.package_name.clone(),
+            source_fingerprint: digest.source_fingerprint.clone(),
+            title: digest.title.clone(),
+            startup_route: digest.startup_route.clone(),
+            ready: digest.ready,
+            severity: digest.severity.clone(),
+            headline_event_id: digest.headline_event_id.clone(),
+            headline_message: digest.headline_message.clone(),
+            primary_action_id: digest.primary_action_id.clone(),
+            attention_required: digest.attention_event_count > 0,
+            section_count,
+            sections,
+            event_count: digest.event_count,
+            diagnostic_count: digest.diagnostic_count,
+            repaired_state_count: digest.repaired_state_count,
+            artifact_capability_count: digest.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_event_dashboard_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPackage {
+    pub schema_version: u32,
+    pub package_manifest: BerkeleyAppPackageManifest,
+    pub event_dashboard: BerkeleyAppShellEventDashboard,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub section_count: usize,
+    pub artifact_capability_count: usize,
+    pub dashboard_capability_id: String,
+    pub package_capability_id: String,
+}
+
+impl BerkeleyAppShellDashboardPackage {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_package_and_dashboard(
+            snapshot.package_manifest.clone(),
+            BerkeleyAppShellEventDashboard::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_package_and_dashboard(
+            handoff.package_manifest.clone(),
+            BerkeleyAppShellEventDashboard::from_shell_handoff(handoff),
+        )
+    }
+
+    fn from_package_and_dashboard(
+        package_manifest: BerkeleyAppPackageManifest,
+        event_dashboard: BerkeleyAppShellEventDashboard,
+    ) -> Self {
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_PACKAGE_SCHEMA_VERSION,
+            package_name: event_dashboard.package_name.clone(),
+            source_fingerprint: event_dashboard.source_fingerprint.clone(),
+            title: event_dashboard.title.clone(),
+            startup_route: event_dashboard.startup_route.clone(),
+            ready: event_dashboard.ready,
+            severity: event_dashboard.severity.clone(),
+            attention_required: event_dashboard.attention_required,
+            section_count: event_dashboard.section_count,
+            artifact_capability_count: package_manifest.artifact_capabilities.len(),
+            dashboard_capability_id: "app-shell-event-dashboard-json".to_string(),
+            package_capability_id: "app-shell-dashboard-package-json".to_string(),
+            package_manifest,
+            event_dashboard,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_package_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardCard {
+    pub id: String,
+    pub section_id: String,
+    pub title: String,
+    pub severity: String,
+    pub event_count: usize,
+    pub event_ids: Vec<String>,
+    pub primary: bool,
+    pub attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardCards {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub card_count: usize,
+    pub primary_card_id: Option<String>,
+    pub cards: Vec<BerkeleyAppShellDashboardCard>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardCards {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_package(&BerkeleyAppShellDashboardPackage::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_package(&BerkeleyAppShellDashboardPackage::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_package(package: &BerkeleyAppShellDashboardPackage) -> Self {
+        let primary_section_id = if package.attention_required {
+            "attention"
+        } else {
+            "status"
+        };
+        let cards = package
+            .event_dashboard
+            .sections
+            .iter()
+            .map(|section| {
+                let primary = section.id == primary_section_id;
+                let attention = section.id == "attention" && package.attention_required;
+                BerkeleyAppShellDashboardCard {
+                    id: format!("dashboard.{}", section.id),
+                    section_id: section.id.clone(),
+                    title: section.title.clone(),
+                    severity: section.severity.clone(),
+                    event_count: section.event_count,
+                    event_ids: section.event_ids.clone(),
+                    primary,
+                    attention,
+                }
+            })
+            .collect::<Vec<_>>();
+        let primary_card_id = cards
+            .iter()
+            .find(|card| card.primary)
+            .map(|card| card.id.clone());
+        let card_count = cards.len();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
+            package_name: package.package_name.clone(),
+            source_fingerprint: package.source_fingerprint.clone(),
+            title: package.title.clone(),
+            startup_route: package.startup_route.clone(),
+            ready: package.ready,
+            severity: package.severity.clone(),
+            attention_required: package.attention_required,
+            card_count,
+            primary_card_id,
+            cards,
+            package_capability_id: package.package_capability_id.clone(),
+            dashboard_capability_id: package.dashboard_capability_id.clone(),
+            cards_capability_id: "app-shell-dashboard-cards-json".to_string(),
+            artifact_capability_count: package.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_cards_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardView {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_card_title: Option<String>,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub card_ids: Vec<String>,
+    pub visible_card_ids: Vec<String>,
+    pub attention_card_ids: Vec<String>,
+    pub metric_card_ids: Vec<String>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardView {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_cards(&BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_cards(&BerkeleyAppShellDashboardCards::from_shell_handoff(handoff))
+    }
+
+    pub fn from_dashboard_cards(cards: &BerkeleyAppShellDashboardCards) -> Self {
+        let primary_card_title = cards
+            .primary_card_id
+            .as_deref()
+            .and_then(|primary_card_id| {
+                cards
+                    .cards
+                    .iter()
+                    .find(|card| card.id == primary_card_id)
+                    .map(|card| card.title.clone())
+            });
+        let card_ids = cards
+            .cards
+            .iter()
+            .map(|card| card.id.clone())
+            .collect::<Vec<_>>();
+        let visible_card_ids = cards
+            .cards
+            .iter()
+            .filter(|card| card.primary || card.attention || card.event_count > 0)
+            .map(|card| card.id.clone())
+            .collect::<Vec<_>>();
+        let attention_card_ids = cards
+            .cards
+            .iter()
+            .filter(|card| card.attention)
+            .map(|card| card.id.clone())
+            .collect::<Vec<_>>();
+        let metric_card_ids = cards
+            .cards
+            .iter()
+            .filter(|card| card.section_id == "metrics")
+            .map(|card| card.id.clone())
+            .collect::<Vec<_>>();
+        let visible_card_count = visible_card_ids.len();
+        let attention_card_count = attention_card_ids.len();
+        let metric_card_count = metric_card_ids.len();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_VIEW_SCHEMA_VERSION,
+            package_name: cards.package_name.clone(),
+            source_fingerprint: cards.source_fingerprint.clone(),
+            title: cards.title.clone(),
+            startup_route: cards.startup_route.clone(),
+            ready: cards.ready,
+            severity: cards.severity.clone(),
+            attention_required: cards.attention_required,
+            primary_card_id: cards.primary_card_id.clone(),
+            primary_card_title,
+            card_count: cards.card_count,
+            visible_card_count,
+            attention_card_count,
+            metric_card_count,
+            card_ids,
+            visible_card_ids,
+            attention_card_ids,
+            metric_card_ids,
+            package_capability_id: cards.package_capability_id.clone(),
+            dashboard_capability_id: cards.dashboard_capability_id.clone(),
+            cards_capability_id: cards.cards_capability_id.clone(),
+            view_capability_id: "app-shell-dashboard-view-json".to_string(),
+            artifact_capability_count: cards.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_view_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardLayoutRegion {
+    pub id: String,
+    pub role: String,
+    pub title: String,
+    pub card_ids: Vec<String>,
+    pub primary: bool,
+    pub visible: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardLayout {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub regions: Vec<BerkeleyAppShellDashboardLayoutRegion>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardLayout {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_cards(&BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_cards(&BerkeleyAppShellDashboardCards::from_shell_handoff(handoff))
+    }
+
+    pub fn from_dashboard_cards(cards: &BerkeleyAppShellDashboardCards) -> Self {
+        let view = BerkeleyAppShellDashboardView::from_dashboard_cards(cards);
+        let regions = ["status", "attention", "metrics"]
+            .iter()
+            .map(|role| {
+                let card_ids = cards
+                    .cards
+                    .iter()
+                    .filter(|card| card.section_id == *role)
+                    .map(|card| card.id.clone())
+                    .collect::<Vec<_>>();
+                let primary = card_ids
+                    .iter()
+                    .any(|card_id| Some(card_id) == view.primary_card_id.as_ref());
+                let visible = card_ids.iter().any(|card_id| {
+                    view.visible_card_ids
+                        .iter()
+                        .any(|visible_id| visible_id == card_id)
+                });
+                BerkeleyAppShellDashboardLayoutRegion {
+                    id: format!("dashboard.layout.{}", role),
+                    role: (*role).to_string(),
+                    title: match *role {
+                        "status" => "Status".to_string(),
+                        "attention" => "Attention".to_string(),
+                        "metrics" => "Metrics".to_string(),
+                        _ => (*role).to_string(),
+                    },
+                    card_ids,
+                    primary,
+                    visible,
+                }
+            })
+            .collect::<Vec<_>>();
+        let primary_region_id = regions
+            .iter()
+            .find(|region| region.primary)
+            .map(|region| region.id.clone());
+        let region_count = regions.len();
+        let visible_region_count = regions.iter().filter(|region| region.visible).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_LAYOUT_SCHEMA_VERSION,
+            package_name: view.package_name,
+            source_fingerprint: view.source_fingerprint,
+            title: view.title,
+            startup_route: view.startup_route,
+            ready: view.ready,
+            severity: view.severity,
+            attention_required: view.attention_required,
+            primary_card_id: view.primary_card_id,
+            primary_region_id,
+            region_count,
+            visible_region_count,
+            card_count: view.card_count,
+            visible_card_count: view.visible_card_count,
+            attention_card_count: view.attention_card_count,
+            metric_card_count: view.metric_card_count,
+            regions,
+            package_capability_id: view.package_capability_id,
+            dashboard_capability_id: view.dashboard_capability_id,
+            cards_capability_id: view.cards_capability_id,
+            view_capability_id: view.view_capability_id,
+            layout_capability_id: "app-shell-dashboard-layout-json".to_string(),
+            artifact_capability_count: view.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_layout_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardNavigationItem {
+    pub id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub card_ids: Vec<String>,
+    pub active: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardNavigation {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub items: Vec<BerkeleyAppShellDashboardNavigationItem>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardNavigation {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_layout(&BerkeleyAppShellDashboardLayout::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_layout(&BerkeleyAppShellDashboardLayout::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_layout(layout: &BerkeleyAppShellDashboardLayout) -> Self {
+        let items = layout
+            .regions
+            .iter()
+            .map(|region| BerkeleyAppShellDashboardNavigationItem {
+                id: format!("dashboard.nav.{}", region.role),
+                region_id: region.id.clone(),
+                role: region.role.clone(),
+                label: region.title.clone(),
+                card_ids: region.card_ids.clone(),
+                active: region.primary,
+                visible: region.visible,
+                enabled: region.visible,
+                badge_count: region.card_ids.len(),
+            })
+            .collect::<Vec<_>>();
+        let active_item_id = items
+            .iter()
+            .find(|item| item.active)
+            .map(|item| item.id.clone());
+        let item_count = items.len();
+        let visible_item_count = items.iter().filter(|item| item.visible).count();
+        let enabled_item_count = items.iter().filter(|item| item.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_NAVIGATION_SCHEMA_VERSION,
+            package_name: layout.package_name.clone(),
+            source_fingerprint: layout.source_fingerprint.clone(),
+            title: layout.title.clone(),
+            startup_route: layout.startup_route.clone(),
+            ready: layout.ready,
+            severity: layout.severity.clone(),
+            attention_required: layout.attention_required,
+            primary_card_id: layout.primary_card_id.clone(),
+            primary_region_id: layout.primary_region_id.clone(),
+            active_item_id,
+            item_count,
+            visible_item_count,
+            enabled_item_count,
+            region_count: layout.region_count,
+            visible_region_count: layout.visible_region_count,
+            card_count: layout.card_count,
+            visible_card_count: layout.visible_card_count,
+            attention_card_count: layout.attention_card_count,
+            metric_card_count: layout.metric_card_count,
+            items,
+            package_capability_id: layout.package_capability_id.clone(),
+            dashboard_capability_id: layout.dashboard_capability_id.clone(),
+            cards_capability_id: layout.cards_capability_id.clone(),
+            view_capability_id: layout.view_capability_id.clone(),
+            layout_capability_id: layout.layout_capability_id.clone(),
+            navigation_capability_id: "app-shell-dashboard-navigation-json".to_string(),
+            artifact_capability_count: layout.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_navigation_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardRoute {
+    pub id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub path: String,
+    pub card_ids: Vec<String>,
+    pub active: bool,
+    pub default_route: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardRoutes {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub routes: Vec<BerkeleyAppShellDashboardRoute>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardRoutes {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_navigation(
+            &BerkeleyAppShellDashboardNavigation::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_navigation(&BerkeleyAppShellDashboardNavigation::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_navigation(navigation: &BerkeleyAppShellDashboardNavigation) -> Self {
+        let mut routes = navigation
+            .items
+            .iter()
+            .map(|item| BerkeleyAppShellDashboardRoute {
+                id: format!("dashboard.route.{}", item.role),
+                item_id: item.id.clone(),
+                region_id: item.region_id.clone(),
+                role: item.role.clone(),
+                label: item.label.clone(),
+                path: format!("/dashboard/{}", item.role),
+                card_ids: item.card_ids.clone(),
+                active: item.active,
+                default_route: false,
+                visible: item.visible,
+                enabled: item.enabled,
+                badge_count: item.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let active_route_id = routes
+            .iter()
+            .find(|route| route.active)
+            .map(|route| route.id.clone());
+        let default_route_id = active_route_id
+            .clone()
+            .or_else(|| {
+                routes
+                    .iter()
+                    .find(|route| route.enabled)
+                    .map(|route| route.id.clone())
+            })
+            .or_else(|| {
+                routes
+                    .iter()
+                    .find(|route| route.visible)
+                    .map(|route| route.id.clone())
+            })
+            .or_else(|| routes.first().map(|route| route.id.clone()));
+        for route in &mut routes {
+            route.default_route = Some(&route.id) == default_route_id.as_ref();
+        }
+        let active_route_path = active_route_id.as_ref().and_then(|active_id| {
+            routes
+                .iter()
+                .find(|route| &route.id == active_id)
+                .map(|route| route.path.clone())
+        });
+        let default_route_path = default_route_id.as_ref().and_then(|default_id| {
+            routes
+                .iter()
+                .find(|route| &route.id == default_id)
+                .map(|route| route.path.clone())
+        });
+        let route_count = routes.len();
+        let visible_route_count = routes.iter().filter(|route| route.visible).count();
+        let enabled_route_count = routes.iter().filter(|route| route.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_ROUTES_SCHEMA_VERSION,
+            package_name: navigation.package_name.clone(),
+            source_fingerprint: navigation.source_fingerprint.clone(),
+            title: navigation.title.clone(),
+            startup_route: navigation.startup_route.clone(),
+            ready: navigation.ready,
+            severity: navigation.severity.clone(),
+            attention_required: navigation.attention_required,
+            primary_card_id: navigation.primary_card_id.clone(),
+            primary_region_id: navigation.primary_region_id.clone(),
+            active_item_id: navigation.active_item_id.clone(),
+            active_route_id,
+            active_route_path,
+            default_route_id,
+            default_route_path,
+            route_count,
+            visible_route_count,
+            enabled_route_count,
+            item_count: navigation.item_count,
+            visible_item_count: navigation.visible_item_count,
+            enabled_item_count: navigation.enabled_item_count,
+            region_count: navigation.region_count,
+            visible_region_count: navigation.visible_region_count,
+            card_count: navigation.card_count,
+            visible_card_count: navigation.visible_card_count,
+            attention_card_count: navigation.attention_card_count,
+            metric_card_count: navigation.metric_card_count,
+            routes,
+            package_capability_id: navigation.package_capability_id.clone(),
+            dashboard_capability_id: navigation.dashboard_capability_id.clone(),
+            cards_capability_id: navigation.cards_capability_id.clone(),
+            view_capability_id: navigation.view_capability_id.clone(),
+            layout_capability_id: navigation.layout_capability_id.clone(),
+            navigation_capability_id: navigation.navigation_capability_id.clone(),
+            routes_capability_id: "app-shell-dashboard-routes-json".to_string(),
+            artifact_capability_count: navigation.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_routes_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardBreadcrumb {
+    pub id: String,
+    pub route_id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub path: String,
+    pub position: usize,
+    pub active: bool,
+    pub default_route: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardBreadcrumbs {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub breadcrumbs: Vec<BerkeleyAppShellDashboardBreadcrumb>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardBreadcrumbs {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_routes(&BerkeleyAppShellDashboardRoutes::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_routes(&BerkeleyAppShellDashboardRoutes::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_routes(routes: &BerkeleyAppShellDashboardRoutes) -> Self {
+        let breadcrumbs = routes
+            .routes
+            .iter()
+            .enumerate()
+            .map(|(index, route)| BerkeleyAppShellDashboardBreadcrumb {
+                id: format!("dashboard.breadcrumb.{}", route.role),
+                route_id: route.id.clone(),
+                item_id: route.item_id.clone(),
+                region_id: route.region_id.clone(),
+                role: route.role.clone(),
+                label: route.label.clone(),
+                path: route.path.clone(),
+                position: index + 1,
+                active: route.active,
+                default_route: route.default_route,
+                visible: route.visible,
+                enabled: route.enabled,
+                badge_count: route.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let active_breadcrumb_id = breadcrumbs
+            .iter()
+            .find(|breadcrumb| breadcrumb.active)
+            .map(|breadcrumb| breadcrumb.id.clone());
+        let active_breadcrumb_path = active_breadcrumb_id.as_ref().and_then(|active_id| {
+            breadcrumbs
+                .iter()
+                .find(|breadcrumb| &breadcrumb.id == active_id)
+                .map(|breadcrumb| breadcrumb.path.clone())
+        });
+        let default_breadcrumb_id = breadcrumbs
+            .iter()
+            .find(|breadcrumb| breadcrumb.default_route)
+            .map(|breadcrumb| breadcrumb.id.clone());
+        let default_breadcrumb_path = default_breadcrumb_id.as_ref().and_then(|default_id| {
+            breadcrumbs
+                .iter()
+                .find(|breadcrumb| &breadcrumb.id == default_id)
+                .map(|breadcrumb| breadcrumb.path.clone())
+        });
+        let breadcrumb_count = breadcrumbs.len();
+        let visible_breadcrumb_count = breadcrumbs
+            .iter()
+            .filter(|breadcrumb| breadcrumb.visible)
+            .count();
+        let enabled_breadcrumb_count = breadcrumbs
+            .iter()
+            .filter(|breadcrumb| breadcrumb.enabled)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
+            package_name: routes.package_name.clone(),
+            source_fingerprint: routes.source_fingerprint.clone(),
+            title: routes.title.clone(),
+            startup_route: routes.startup_route.clone(),
+            ready: routes.ready,
+            severity: routes.severity.clone(),
+            attention_required: routes.attention_required,
+            primary_card_id: routes.primary_card_id.clone(),
+            primary_region_id: routes.primary_region_id.clone(),
+            active_item_id: routes.active_item_id.clone(),
+            active_route_id: routes.active_route_id.clone(),
+            active_route_path: routes.active_route_path.clone(),
+            default_route_id: routes.default_route_id.clone(),
+            default_route_path: routes.default_route_path.clone(),
+            active_breadcrumb_id,
+            active_breadcrumb_path,
+            default_breadcrumb_id,
+            default_breadcrumb_path,
+            route_count: routes.route_count,
+            visible_route_count: routes.visible_route_count,
+            enabled_route_count: routes.enabled_route_count,
+            breadcrumb_count,
+            visible_breadcrumb_count,
+            enabled_breadcrumb_count,
+            item_count: routes.item_count,
+            visible_item_count: routes.visible_item_count,
+            enabled_item_count: routes.enabled_item_count,
+            region_count: routes.region_count,
+            visible_region_count: routes.visible_region_count,
+            card_count: routes.card_count,
+            visible_card_count: routes.visible_card_count,
+            attention_card_count: routes.attention_card_count,
+            metric_card_count: routes.metric_card_count,
+            breadcrumbs,
+            package_capability_id: routes.package_capability_id.clone(),
+            dashboard_capability_id: routes.dashboard_capability_id.clone(),
+            cards_capability_id: routes.cards_capability_id.clone(),
+            view_capability_id: routes.view_capability_id.clone(),
+            layout_capability_id: routes.layout_capability_id.clone(),
+            navigation_capability_id: routes.navigation_capability_id.clone(),
+            routes_capability_id: routes.routes_capability_id.clone(),
+            breadcrumbs_capability_id: "app-shell-dashboard-breadcrumbs-json".to_string(),
+            artifact_capability_count: routes.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_breadcrumbs_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardTab {
+    pub id: String,
+    pub breadcrumb_id: String,
+    pub route_id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub label: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_tab: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardTabs {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub tabs: Vec<BerkeleyAppShellDashboardTab>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardTabs {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_breadcrumbs(
+            &BerkeleyAppShellDashboardBreadcrumbs::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_breadcrumbs(&BerkeleyAppShellDashboardBreadcrumbs::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dashboard_breadcrumbs(breadcrumbs: &BerkeleyAppShellDashboardBreadcrumbs) -> Self {
+        let tabs = breadcrumbs
+            .breadcrumbs
+            .iter()
+            .map(|breadcrumb| BerkeleyAppShellDashboardTab {
+                id: format!("dashboard.tab.{}", breadcrumb.role),
+                breadcrumb_id: breadcrumb.id.clone(),
+                route_id: breadcrumb.route_id.clone(),
+                item_id: breadcrumb.item_id.clone(),
+                region_id: breadcrumb.region_id.clone(),
+                role: breadcrumb.role.clone(),
+                label: breadcrumb.label.clone(),
+                path: breadcrumb.path.clone(),
+                position: breadcrumb.position,
+                selected: breadcrumb.active,
+                default_tab: breadcrumb.default_route,
+                visible: breadcrumb.visible,
+                enabled: breadcrumb.enabled,
+                badge_count: breadcrumb.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let selected_tab_id = tabs
+            .iter()
+            .find(|tab| tab.selected)
+            .map(|tab| tab.id.clone());
+        let selected_tab_path = selected_tab_id.as_ref().and_then(|selected_id| {
+            tabs.iter()
+                .find(|tab| &tab.id == selected_id)
+                .map(|tab| tab.path.clone())
+        });
+        let default_tab_id = tabs
+            .iter()
+            .find(|tab| tab.default_tab)
+            .map(|tab| tab.id.clone());
+        let default_tab_path = default_tab_id.as_ref().and_then(|default_id| {
+            tabs.iter()
+                .find(|tab| &tab.id == default_id)
+                .map(|tab| tab.path.clone())
+        });
+        let tab_count = tabs.len();
+        let visible_tab_count = tabs.iter().filter(|tab| tab.visible).count();
+        let enabled_tab_count = tabs.iter().filter(|tab| tab.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_TABS_SCHEMA_VERSION,
+            package_name: breadcrumbs.package_name.clone(),
+            source_fingerprint: breadcrumbs.source_fingerprint.clone(),
+            title: breadcrumbs.title.clone(),
+            startup_route: breadcrumbs.startup_route.clone(),
+            ready: breadcrumbs.ready,
+            severity: breadcrumbs.severity.clone(),
+            attention_required: breadcrumbs.attention_required,
+            primary_card_id: breadcrumbs.primary_card_id.clone(),
+            primary_region_id: breadcrumbs.primary_region_id.clone(),
+            active_item_id: breadcrumbs.active_item_id.clone(),
+            active_route_id: breadcrumbs.active_route_id.clone(),
+            active_route_path: breadcrumbs.active_route_path.clone(),
+            default_route_id: breadcrumbs.default_route_id.clone(),
+            default_route_path: breadcrumbs.default_route_path.clone(),
+            active_breadcrumb_id: breadcrumbs.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: breadcrumbs.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: breadcrumbs.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: breadcrumbs.default_breadcrumb_path.clone(),
+            selected_tab_id,
+            selected_tab_path,
+            default_tab_id,
+            default_tab_path,
+            route_count: breadcrumbs.route_count,
+            visible_route_count: breadcrumbs.visible_route_count,
+            enabled_route_count: breadcrumbs.enabled_route_count,
+            breadcrumb_count: breadcrumbs.breadcrumb_count,
+            visible_breadcrumb_count: breadcrumbs.visible_breadcrumb_count,
+            enabled_breadcrumb_count: breadcrumbs.enabled_breadcrumb_count,
+            tab_count,
+            visible_tab_count,
+            enabled_tab_count,
+            item_count: breadcrumbs.item_count,
+            visible_item_count: breadcrumbs.visible_item_count,
+            enabled_item_count: breadcrumbs.enabled_item_count,
+            region_count: breadcrumbs.region_count,
+            visible_region_count: breadcrumbs.visible_region_count,
+            card_count: breadcrumbs.card_count,
+            visible_card_count: breadcrumbs.visible_card_count,
+            attention_card_count: breadcrumbs.attention_card_count,
+            metric_card_count: breadcrumbs.metric_card_count,
+            tabs,
+            package_capability_id: breadcrumbs.package_capability_id.clone(),
+            dashboard_capability_id: breadcrumbs.dashboard_capability_id.clone(),
+            cards_capability_id: breadcrumbs.cards_capability_id.clone(),
+            view_capability_id: breadcrumbs.view_capability_id.clone(),
+            layout_capability_id: breadcrumbs.layout_capability_id.clone(),
+            navigation_capability_id: breadcrumbs.navigation_capability_id.clone(),
+            routes_capability_id: breadcrumbs.routes_capability_id.clone(),
+            breadcrumbs_capability_id: breadcrumbs.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: "app-shell-dashboard-tabs-json".to_string(),
+            artifact_capability_count: breadcrumbs.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_tabs_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardTabPanel {
+    pub id: String,
+    pub tab_id: String,
+    pub breadcrumb_id: String,
+    pub route_id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub role: String,
+    pub title: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_panel: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardTabPanels {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub selected_panel_id: Option<String>,
+    pub selected_panel_path: Option<String>,
+    pub default_panel_id: Option<String>,
+    pub default_panel_path: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub panel_count: usize,
+    pub visible_panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub panels: Vec<BerkeleyAppShellDashboardTabPanel>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub tab_panels_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardTabPanels {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dashboard_tabs(&BerkeleyAppShellDashboardTabs::from_bootstrap_snapshot(
+            snapshot,
+        ))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_tabs(&BerkeleyAppShellDashboardTabs::from_shell_handoff(handoff))
+    }
+
+    pub fn from_dashboard_tabs(tabs: &BerkeleyAppShellDashboardTabs) -> Self {
+        let panels = tabs
+            .tabs
+            .iter()
+            .map(|tab| BerkeleyAppShellDashboardTabPanel {
+                id: format!("dashboard.tab-panel.{}", tab.role),
+                tab_id: tab.id.clone(),
+                breadcrumb_id: tab.breadcrumb_id.clone(),
+                route_id: tab.route_id.clone(),
+                item_id: tab.item_id.clone(),
+                region_id: tab.region_id.clone(),
+                role: tab.role.clone(),
+                title: tab.label.clone(),
+                path: tab.path.clone(),
+                position: tab.position,
+                selected: tab.selected,
+                default_panel: tab.default_tab,
+                visible: tab.visible,
+                enabled: tab.enabled,
+                badge_count: tab.badge_count,
+            })
+            .collect::<Vec<_>>();
+        let selected_panel_id = panels
+            .iter()
+            .find(|panel| panel.selected)
+            .map(|panel| panel.id.clone());
+        let selected_panel_path = selected_panel_id.as_ref().and_then(|selected_id| {
+            panels
+                .iter()
+                .find(|panel| &panel.id == selected_id)
+                .map(|panel| panel.path.clone())
+        });
+        let default_panel_id = panels
+            .iter()
+            .find(|panel| panel.default_panel)
+            .map(|panel| panel.id.clone());
+        let default_panel_path = default_panel_id.as_ref().and_then(|default_id| {
+            panels
+                .iter()
+                .find(|panel| &panel.id == default_id)
+                .map(|panel| panel.path.clone())
+        });
+        let panel_count = panels.len();
+        let visible_panel_count = panels.iter().filter(|panel| panel.visible).count();
+        let enabled_panel_count = panels.iter().filter(|panel| panel.enabled).count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_TAB_PANELS_SCHEMA_VERSION,
+            package_name: tabs.package_name.clone(),
+            source_fingerprint: tabs.source_fingerprint.clone(),
+            title: tabs.title.clone(),
+            startup_route: tabs.startup_route.clone(),
+            ready: tabs.ready,
+            severity: tabs.severity.clone(),
+            attention_required: tabs.attention_required,
+            primary_card_id: tabs.primary_card_id.clone(),
+            primary_region_id: tabs.primary_region_id.clone(),
+            active_item_id: tabs.active_item_id.clone(),
+            active_route_id: tabs.active_route_id.clone(),
+            active_route_path: tabs.active_route_path.clone(),
+            default_route_id: tabs.default_route_id.clone(),
+            default_route_path: tabs.default_route_path.clone(),
+            active_breadcrumb_id: tabs.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: tabs.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: tabs.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: tabs.default_breadcrumb_path.clone(),
+            selected_tab_id: tabs.selected_tab_id.clone(),
+            selected_tab_path: tabs.selected_tab_path.clone(),
+            default_tab_id: tabs.default_tab_id.clone(),
+            default_tab_path: tabs.default_tab_path.clone(),
+            selected_panel_id,
+            selected_panel_path,
+            default_panel_id,
+            default_panel_path,
+            route_count: tabs.route_count,
+            visible_route_count: tabs.visible_route_count,
+            enabled_route_count: tabs.enabled_route_count,
+            breadcrumb_count: tabs.breadcrumb_count,
+            visible_breadcrumb_count: tabs.visible_breadcrumb_count,
+            enabled_breadcrumb_count: tabs.enabled_breadcrumb_count,
+            tab_count: tabs.tab_count,
+            visible_tab_count: tabs.visible_tab_count,
+            enabled_tab_count: tabs.enabled_tab_count,
+            panel_count,
+            visible_panel_count,
+            enabled_panel_count,
+            item_count: tabs.item_count,
+            visible_item_count: tabs.visible_item_count,
+            enabled_item_count: tabs.enabled_item_count,
+            region_count: tabs.region_count,
+            visible_region_count: tabs.visible_region_count,
+            card_count: tabs.card_count,
+            visible_card_count: tabs.visible_card_count,
+            attention_card_count: tabs.attention_card_count,
+            metric_card_count: tabs.metric_card_count,
+            panels,
+            package_capability_id: tabs.package_capability_id.clone(),
+            dashboard_capability_id: tabs.dashboard_capability_id.clone(),
+            cards_capability_id: tabs.cards_capability_id.clone(),
+            view_capability_id: tabs.view_capability_id.clone(),
+            layout_capability_id: tabs.layout_capability_id.clone(),
+            navigation_capability_id: tabs.navigation_capability_id.clone(),
+            routes_capability_id: tabs.routes_capability_id.clone(),
+            breadcrumbs_capability_id: tabs.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: tabs.tabs_capability_id.clone(),
+            tab_panels_capability_id: "app-shell-dashboard-tab-panels-json".to_string(),
+            artifact_capability_count: tabs.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_tab_panels_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPanelCard {
+    pub id: String,
+    pub panel_id: String,
+    pub tab_id: String,
+    pub breadcrumb_id: String,
+    pub route_id: String,
+    pub item_id: String,
+    pub region_id: String,
+    pub card_id: String,
+    pub section_id: String,
+    pub role: String,
+    pub title: String,
+    pub severity: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_panel: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub attention: bool,
+    pub event_count: usize,
+    pub event_ids: Vec<String>,
+    pub badge_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPanelCards {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub selected_panel_id: Option<String>,
+    pub selected_panel_path: Option<String>,
+    pub default_panel_id: Option<String>,
+    pub default_panel_path: Option<String>,
+    pub selected_panel_card_id: Option<String>,
+    pub selected_card_id: Option<String>,
+    pub default_panel_card_id: Option<String>,
+    pub default_card_id: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub panel_count: usize,
+    pub visible_panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub panel_card_count: usize,
+    pub visible_panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub panel_cards: Vec<BerkeleyAppShellDashboardPanelCard>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub tab_panels_capability_id: String,
+    pub panel_cards_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardPanelCards {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_tab_panels_and_cards(
+            &BerkeleyAppShellDashboardTabPanels::from_shell_handoff(handoff),
+            &BerkeleyAppShellDashboardCards::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_dashboard_tab_panels_and_cards(
+        tab_panels: &BerkeleyAppShellDashboardTabPanels,
+        cards: &BerkeleyAppShellDashboardCards,
+    ) -> Self {
+        let panel_cards = tab_panels
+            .panels
+            .iter()
+            .flat_map(|panel| {
+                cards
+                    .cards
+                    .iter()
+                    .filter(move |card| card.section_id == panel.role)
+                    .map(move |card| {
+                        let visible_card = card.primary || card.attention || card.event_count > 0;
+                        BerkeleyAppShellDashboardPanelCard {
+                            id: format!("dashboard.panel-card.{}", panel.role),
+                            panel_id: panel.id.clone(),
+                            tab_id: panel.tab_id.clone(),
+                            breadcrumb_id: panel.breadcrumb_id.clone(),
+                            route_id: panel.route_id.clone(),
+                            item_id: panel.item_id.clone(),
+                            region_id: panel.region_id.clone(),
+                            card_id: card.id.clone(),
+                            section_id: card.section_id.clone(),
+                            role: panel.role.clone(),
+                            title: card.title.clone(),
+                            severity: card.severity.clone(),
+                            path: panel.path.clone(),
+                            position: panel.position,
+                            selected: panel.selected,
+                            default_panel: panel.default_panel,
+                            visible: panel.visible && visible_card,
+                            enabled: panel.enabled,
+                            primary: card.primary,
+                            attention: card.attention,
+                            event_count: card.event_count,
+                            event_ids: card.event_ids.clone(),
+                            badge_count: panel.badge_count,
+                        }
+                    })
+            })
+            .collect::<Vec<_>>();
+        let selected_panel_card = panel_cards.iter().find(|panel_card| panel_card.selected);
+        let selected_panel_card_id = selected_panel_card.map(|panel_card| panel_card.id.clone());
+        let selected_card_id = selected_panel_card.map(|panel_card| panel_card.card_id.clone());
+        let default_panel_card = panel_cards
+            .iter()
+            .find(|panel_card| panel_card.default_panel);
+        let default_panel_card_id = default_panel_card.map(|panel_card| panel_card.id.clone());
+        let default_card_id = default_panel_card.map(|panel_card| panel_card.card_id.clone());
+        let panel_card_count = panel_cards.len();
+        let visible_panel_card_count = panel_cards
+            .iter()
+            .filter(|panel_card| panel_card.visible)
+            .count();
+        let enabled_panel_card_count = panel_cards
+            .iter()
+            .filter(|panel_card| panel_card.enabled)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARDS_SCHEMA_VERSION,
+            package_name: tab_panels.package_name.clone(),
+            source_fingerprint: tab_panels.source_fingerprint.clone(),
+            title: tab_panels.title.clone(),
+            startup_route: tab_panels.startup_route.clone(),
+            ready: tab_panels.ready,
+            severity: tab_panels.severity.clone(),
+            attention_required: tab_panels.attention_required,
+            primary_card_id: tab_panels.primary_card_id.clone(),
+            primary_region_id: tab_panels.primary_region_id.clone(),
+            active_item_id: tab_panels.active_item_id.clone(),
+            active_route_id: tab_panels.active_route_id.clone(),
+            active_route_path: tab_panels.active_route_path.clone(),
+            default_route_id: tab_panels.default_route_id.clone(),
+            default_route_path: tab_panels.default_route_path.clone(),
+            active_breadcrumb_id: tab_panels.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: tab_panels.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: tab_panels.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: tab_panels.default_breadcrumb_path.clone(),
+            selected_tab_id: tab_panels.selected_tab_id.clone(),
+            selected_tab_path: tab_panels.selected_tab_path.clone(),
+            default_tab_id: tab_panels.default_tab_id.clone(),
+            default_tab_path: tab_panels.default_tab_path.clone(),
+            selected_panel_id: tab_panels.selected_panel_id.clone(),
+            selected_panel_path: tab_panels.selected_panel_path.clone(),
+            default_panel_id: tab_panels.default_panel_id.clone(),
+            default_panel_path: tab_panels.default_panel_path.clone(),
+            selected_panel_card_id,
+            selected_card_id,
+            default_panel_card_id,
+            default_card_id,
+            route_count: tab_panels.route_count,
+            visible_route_count: tab_panels.visible_route_count,
+            enabled_route_count: tab_panels.enabled_route_count,
+            breadcrumb_count: tab_panels.breadcrumb_count,
+            visible_breadcrumb_count: tab_panels.visible_breadcrumb_count,
+            enabled_breadcrumb_count: tab_panels.enabled_breadcrumb_count,
+            tab_count: tab_panels.tab_count,
+            visible_tab_count: tab_panels.visible_tab_count,
+            enabled_tab_count: tab_panels.enabled_tab_count,
+            panel_count: tab_panels.panel_count,
+            visible_panel_count: tab_panels.visible_panel_count,
+            enabled_panel_count: tab_panels.enabled_panel_count,
+            panel_card_count,
+            visible_panel_card_count,
+            enabled_panel_card_count,
+            item_count: tab_panels.item_count,
+            visible_item_count: tab_panels.visible_item_count,
+            enabled_item_count: tab_panels.enabled_item_count,
+            region_count: tab_panels.region_count,
+            visible_region_count: tab_panels.visible_region_count,
+            card_count: tab_panels.card_count,
+            visible_card_count: tab_panels.visible_card_count,
+            attention_card_count: tab_panels.attention_card_count,
+            metric_card_count: tab_panels.metric_card_count,
+            panel_cards,
+            package_capability_id: tab_panels.package_capability_id.clone(),
+            dashboard_capability_id: tab_panels.dashboard_capability_id.clone(),
+            cards_capability_id: tab_panels.cards_capability_id.clone(),
+            view_capability_id: tab_panels.view_capability_id.clone(),
+            layout_capability_id: tab_panels.layout_capability_id.clone(),
+            navigation_capability_id: tab_panels.navigation_capability_id.clone(),
+            routes_capability_id: tab_panels.routes_capability_id.clone(),
+            breadcrumbs_capability_id: tab_panels.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: tab_panels.tabs_capability_id.clone(),
+            tab_panels_capability_id: tab_panels.tab_panels_capability_id.clone(),
+            panel_cards_capability_id: "app-shell-dashboard-panel-cards-json".to_string(),
+            artifact_capability_count: tab_panels.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_panel_cards_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPanelCardAction {
+    pub id: String,
+    pub panel_card_id: String,
+    pub panel_id: String,
+    pub card_id: String,
+    pub action_id: String,
+    pub label: String,
+    pub target: String,
+    pub panel_kind: String,
+    pub role: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_panel: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub card_primary: bool,
+    pub attention: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardPanelCardActions {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub selected_panel_id: Option<String>,
+    pub selected_panel_path: Option<String>,
+    pub default_panel_id: Option<String>,
+    pub default_panel_path: Option<String>,
+    pub selected_panel_card_id: Option<String>,
+    pub selected_card_id: Option<String>,
+    pub default_panel_card_id: Option<String>,
+    pub default_card_id: Option<String>,
+    pub selected_panel_card_action_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_panel_card_action_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub panel_count: usize,
+    pub visible_panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub panel_card_count: usize,
+    pub visible_panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub primary_action_count: usize,
+    pub panel_card_action_count: usize,
+    pub visible_panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub panel_card_actions: Vec<BerkeleyAppShellDashboardPanelCardAction>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub tab_panels_capability_id: String,
+    pub panel_cards_capability_id: String,
+    pub panel_card_actions_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardPanelCardActions {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dashboard_panel_cards_and_launch_plan(
+            &BerkeleyAppShellDashboardPanelCards::from_shell_handoff(handoff),
+            &handoff.launch_plan,
+        )
+    }
+
+    pub fn from_dashboard_panel_cards_and_launch_plan(
+        panel_cards: &BerkeleyAppShellDashboardPanelCards,
+        launch_plan: &BerkeleyAppLaunchPlan,
+    ) -> Self {
+        let panel_card_actions = panel_cards
+            .panel_cards
+            .iter()
+            .filter_map(|panel_card| {
+                dashboard_panel_card_launch_action(panel_card, launch_plan).map(|action| {
+                    BerkeleyAppShellDashboardPanelCardAction {
+                        id: format!("dashboard.panel-card-action.{}", panel_card.role),
+                        panel_card_id: panel_card.id.clone(),
+                        panel_id: panel_card.panel_id.clone(),
+                        card_id: panel_card.card_id.clone(),
+                        action_id: action.id.clone(),
+                        label: action.label.clone(),
+                        target: action.target.clone(),
+                        panel_kind: action.panel_kind.clone(),
+                        role: panel_card.role.clone(),
+                        path: panel_card.path.clone(),
+                        position: panel_card.position,
+                        selected: panel_card.selected,
+                        default_panel: panel_card.default_panel,
+                        visible: panel_card.visible,
+                        enabled: panel_card.enabled && action.enabled,
+                        primary: action.primary,
+                        card_primary: panel_card.primary,
+                        attention: panel_card.attention,
+                        disabled_reason: if panel_card.enabled {
+                            action.disabled_reason.clone()
+                        } else {
+                            action
+                                .disabled_reason
+                                .clone()
+                                .or_else(|| Some("panel card is not enabled".to_string()))
+                        },
+                    }
+                })
+            })
+            .collect::<Vec<_>>();
+        let selected_panel_card_action = panel_card_actions.iter().find(|action| action.selected);
+        let selected_panel_card_action_id =
+            selected_panel_card_action.map(|action| action.id.clone());
+        let selected_action_id = selected_panel_card_action.map(|action| action.action_id.clone());
+        let default_panel_card_action = panel_card_actions
+            .iter()
+            .find(|action| action.default_panel);
+        let default_panel_card_action_id =
+            default_panel_card_action.map(|action| action.id.clone());
+        let default_action_id = default_panel_card_action.map(|action| action.action_id.clone());
+        let enabled_action_count = launch_plan
+            .actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+        let primary_action_count = launch_plan
+            .actions
+            .iter()
+            .filter(|action| action.primary)
+            .count();
+        let panel_card_action_count = panel_card_actions.len();
+        let visible_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.visible)
+            .count();
+        let enabled_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_PANEL_CARD_ACTIONS_SCHEMA_VERSION,
+            package_name: panel_cards.package_name.clone(),
+            source_fingerprint: panel_cards.source_fingerprint.clone(),
+            title: panel_cards.title.clone(),
+            startup_route: panel_cards.startup_route.clone(),
+            ready: panel_cards.ready,
+            severity: panel_cards.severity.clone(),
+            attention_required: panel_cards.attention_required,
+            primary_card_id: panel_cards.primary_card_id.clone(),
+            primary_region_id: panel_cards.primary_region_id.clone(),
+            active_item_id: panel_cards.active_item_id.clone(),
+            active_route_id: panel_cards.active_route_id.clone(),
+            active_route_path: panel_cards.active_route_path.clone(),
+            default_route_id: panel_cards.default_route_id.clone(),
+            default_route_path: panel_cards.default_route_path.clone(),
+            active_breadcrumb_id: panel_cards.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: panel_cards.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: panel_cards.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: panel_cards.default_breadcrumb_path.clone(),
+            selected_tab_id: panel_cards.selected_tab_id.clone(),
+            selected_tab_path: panel_cards.selected_tab_path.clone(),
+            default_tab_id: panel_cards.default_tab_id.clone(),
+            default_tab_path: panel_cards.default_tab_path.clone(),
+            selected_panel_id: panel_cards.selected_panel_id.clone(),
+            selected_panel_path: panel_cards.selected_panel_path.clone(),
+            default_panel_id: panel_cards.default_panel_id.clone(),
+            default_panel_path: panel_cards.default_panel_path.clone(),
+            selected_panel_card_id: panel_cards.selected_panel_card_id.clone(),
+            selected_card_id: panel_cards.selected_card_id.clone(),
+            default_panel_card_id: panel_cards.default_panel_card_id.clone(),
+            default_card_id: panel_cards.default_card_id.clone(),
+            selected_panel_card_action_id,
+            selected_action_id,
+            default_panel_card_action_id,
+            default_action_id,
+            route_count: panel_cards.route_count,
+            visible_route_count: panel_cards.visible_route_count,
+            enabled_route_count: panel_cards.enabled_route_count,
+            breadcrumb_count: panel_cards.breadcrumb_count,
+            visible_breadcrumb_count: panel_cards.visible_breadcrumb_count,
+            enabled_breadcrumb_count: panel_cards.enabled_breadcrumb_count,
+            tab_count: panel_cards.tab_count,
+            visible_tab_count: panel_cards.visible_tab_count,
+            enabled_tab_count: panel_cards.enabled_tab_count,
+            panel_count: panel_cards.panel_count,
+            visible_panel_count: panel_cards.visible_panel_count,
+            enabled_panel_count: panel_cards.enabled_panel_count,
+            panel_card_count: panel_cards.panel_card_count,
+            visible_panel_card_count: panel_cards.visible_panel_card_count,
+            enabled_panel_card_count: panel_cards.enabled_panel_card_count,
+            action_count: launch_plan.action_count,
+            enabled_action_count,
+            primary_action_count,
+            panel_card_action_count,
+            visible_panel_card_action_count,
+            enabled_panel_card_action_count,
+            item_count: panel_cards.item_count,
+            visible_item_count: panel_cards.visible_item_count,
+            enabled_item_count: panel_cards.enabled_item_count,
+            region_count: panel_cards.region_count,
+            visible_region_count: panel_cards.visible_region_count,
+            card_count: panel_cards.card_count,
+            visible_card_count: panel_cards.visible_card_count,
+            attention_card_count: panel_cards.attention_card_count,
+            metric_card_count: panel_cards.metric_card_count,
+            panel_card_actions,
+            package_capability_id: panel_cards.package_capability_id.clone(),
+            dashboard_capability_id: panel_cards.dashboard_capability_id.clone(),
+            cards_capability_id: panel_cards.cards_capability_id.clone(),
+            view_capability_id: panel_cards.view_capability_id.clone(),
+            layout_capability_id: panel_cards.layout_capability_id.clone(),
+            navigation_capability_id: panel_cards.navigation_capability_id.clone(),
+            routes_capability_id: panel_cards.routes_capability_id.clone(),
+            breadcrumbs_capability_id: panel_cards.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: panel_cards.tabs_capability_id.clone(),
+            tab_panels_capability_id: panel_cards.tab_panels_capability_id.clone(),
+            panel_cards_capability_id: panel_cards.panel_cards_capability_id.clone(),
+            panel_card_actions_capability_id: "app-shell-dashboard-panel-card-actions-json"
+                .to_string(),
+            artifact_capability_count: panel_cards.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_panel_card_actions_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardActionDispatchItem {
+    pub id: String,
+    pub panel_card_action_id: String,
+    pub panel_card_id: String,
+    pub panel_id: String,
+    pub card_id: String,
+    pub action_id: String,
+    pub label: String,
+    pub target: String,
+    pub panel_kind: String,
+    pub role: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_panel: bool,
+    pub visible: bool,
+    pub enabled: bool,
+    pub dispatchable: bool,
+    pub primary: bool,
+    pub card_primary: bool,
+    pub attention: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardActionDispatch {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub primary_card_id: Option<String>,
+    pub primary_region_id: Option<String>,
+    pub active_item_id: Option<String>,
+    pub active_route_id: Option<String>,
+    pub active_route_path: Option<String>,
+    pub default_route_id: Option<String>,
+    pub default_route_path: Option<String>,
+    pub active_breadcrumb_id: Option<String>,
+    pub active_breadcrumb_path: Option<String>,
+    pub default_breadcrumb_id: Option<String>,
+    pub default_breadcrumb_path: Option<String>,
+    pub selected_tab_id: Option<String>,
+    pub selected_tab_path: Option<String>,
+    pub default_tab_id: Option<String>,
+    pub default_tab_path: Option<String>,
+    pub selected_panel_id: Option<String>,
+    pub selected_panel_path: Option<String>,
+    pub default_panel_id: Option<String>,
+    pub default_panel_path: Option<String>,
+    pub selected_panel_card_id: Option<String>,
+    pub selected_card_id: Option<String>,
+    pub default_panel_card_id: Option<String>,
+    pub default_card_id: Option<String>,
+    pub selected_panel_card_action_id: Option<String>,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_panel_card_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub route_count: usize,
+    pub visible_route_count: usize,
+    pub enabled_route_count: usize,
+    pub breadcrumb_count: usize,
+    pub visible_breadcrumb_count: usize,
+    pub enabled_breadcrumb_count: usize,
+    pub tab_count: usize,
+    pub visible_tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub panel_count: usize,
+    pub visible_panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub panel_card_count: usize,
+    pub visible_panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub action_count: usize,
+    pub enabled_action_count: usize,
+    pub primary_action_count: usize,
+    pub panel_card_action_count: usize,
+    pub visible_panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub action_dispatch_count: usize,
+    pub visible_action_dispatch_count: usize,
+    pub enabled_action_dispatch_count: usize,
+    pub item_count: usize,
+    pub visible_item_count: usize,
+    pub enabled_item_count: usize,
+    pub region_count: usize,
+    pub visible_region_count: usize,
+    pub card_count: usize,
+    pub visible_card_count: usize,
+    pub attention_card_count: usize,
+    pub metric_card_count: usize,
+    pub action_dispatches: Vec<BerkeleyAppShellDashboardActionDispatchItem>,
+    pub package_capability_id: String,
+    pub dashboard_capability_id: String,
+    pub cards_capability_id: String,
+    pub view_capability_id: String,
+    pub layout_capability_id: String,
+    pub navigation_capability_id: String,
+    pub routes_capability_id: String,
+    pub breadcrumbs_capability_id: String,
+    pub tabs_capability_id: String,
+    pub tab_panels_capability_id: String,
+    pub panel_cards_capability_id: String,
+    pub panel_card_actions_capability_id: String,
+    pub action_dispatch_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardActionDispatch {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shell_handoff(&BerkeleyAppShellHandoff::from_bootstrap_snapshot(snapshot))
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_panel_card_actions(
+            &BerkeleyAppShellDashboardPanelCardActions::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_panel_card_actions(
+        panel_card_actions: &BerkeleyAppShellDashboardPanelCardActions,
+    ) -> Self {
+        let action_dispatches = panel_card_actions
+            .panel_card_actions
+            .iter()
+            .map(|action| {
+                let dispatchable = action.visible && action.enabled;
+                let disabled_reason = if dispatchable {
+                    None
+                } else {
+                    action.disabled_reason.clone().or_else(|| {
+                        Some(if !action.visible {
+                            "panel card action is not visible".to_string()
+                        } else {
+                            "panel card action is not enabled".to_string()
+                        })
+                    })
+                };
+
+                BerkeleyAppShellDashboardActionDispatchItem {
+                    id: format!("dashboard.action-dispatch.{}", action.role),
+                    panel_card_action_id: action.id.clone(),
+                    panel_card_id: action.panel_card_id.clone(),
+                    panel_id: action.panel_id.clone(),
+                    card_id: action.card_id.clone(),
+                    action_id: action.action_id.clone(),
+                    label: action.label.clone(),
+                    target: action.target.clone(),
+                    panel_kind: action.panel_kind.clone(),
+                    role: action.role.clone(),
+                    path: action.path.clone(),
+                    position: action.position,
+                    selected: action.selected,
+                    default_panel: action.default_panel,
+                    visible: action.visible,
+                    enabled: action.enabled,
+                    dispatchable,
+                    primary: action.primary,
+                    card_primary: action.card_primary,
+                    attention: action.attention,
+                    disabled_reason,
+                }
+            })
+            .collect::<Vec<_>>();
+        let selected_action_dispatch = action_dispatches.iter().find(|dispatch| dispatch.selected);
+        let selected_action_dispatch_id =
+            selected_action_dispatch.map(|dispatch| dispatch.id.clone());
+        let selected_action_id =
+            selected_action_dispatch.map(|dispatch| dispatch.action_id.clone());
+        let default_action_dispatch = action_dispatches
+            .iter()
+            .find(|dispatch| dispatch.default_panel);
+        let default_action_dispatch_id =
+            default_action_dispatch.map(|dispatch| dispatch.id.clone());
+        let default_action_id = default_action_dispatch.map(|dispatch| dispatch.action_id.clone());
+        let action_dispatch_count = action_dispatches.len();
+        let visible_action_dispatch_count = action_dispatches
+            .iter()
+            .filter(|dispatch| dispatch.visible)
+            .count();
+        let enabled_action_dispatch_count = action_dispatches
+            .iter()
+            .filter(|dispatch| dispatch.dispatchable)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION,
+            package_name: panel_card_actions.package_name.clone(),
+            source_fingerprint: panel_card_actions.source_fingerprint.clone(),
+            title: panel_card_actions.title.clone(),
+            startup_route: panel_card_actions.startup_route.clone(),
+            ready: panel_card_actions.ready,
+            severity: panel_card_actions.severity.clone(),
+            attention_required: panel_card_actions.attention_required,
+            primary_card_id: panel_card_actions.primary_card_id.clone(),
+            primary_region_id: panel_card_actions.primary_region_id.clone(),
+            active_item_id: panel_card_actions.active_item_id.clone(),
+            active_route_id: panel_card_actions.active_route_id.clone(),
+            active_route_path: panel_card_actions.active_route_path.clone(),
+            default_route_id: panel_card_actions.default_route_id.clone(),
+            default_route_path: panel_card_actions.default_route_path.clone(),
+            active_breadcrumb_id: panel_card_actions.active_breadcrumb_id.clone(),
+            active_breadcrumb_path: panel_card_actions.active_breadcrumb_path.clone(),
+            default_breadcrumb_id: panel_card_actions.default_breadcrumb_id.clone(),
+            default_breadcrumb_path: panel_card_actions.default_breadcrumb_path.clone(),
+            selected_tab_id: panel_card_actions.selected_tab_id.clone(),
+            selected_tab_path: panel_card_actions.selected_tab_path.clone(),
+            default_tab_id: panel_card_actions.default_tab_id.clone(),
+            default_tab_path: panel_card_actions.default_tab_path.clone(),
+            selected_panel_id: panel_card_actions.selected_panel_id.clone(),
+            selected_panel_path: panel_card_actions.selected_panel_path.clone(),
+            default_panel_id: panel_card_actions.default_panel_id.clone(),
+            default_panel_path: panel_card_actions.default_panel_path.clone(),
+            selected_panel_card_id: panel_card_actions.selected_panel_card_id.clone(),
+            selected_card_id: panel_card_actions.selected_card_id.clone(),
+            default_panel_card_id: panel_card_actions.default_panel_card_id.clone(),
+            default_card_id: panel_card_actions.default_card_id.clone(),
+            selected_panel_card_action_id: panel_card_actions.selected_panel_card_action_id.clone(),
+            selected_action_dispatch_id,
+            selected_action_id,
+            default_panel_card_action_id: panel_card_actions.default_panel_card_action_id.clone(),
+            default_action_dispatch_id,
+            default_action_id,
+            route_count: panel_card_actions.route_count,
+            visible_route_count: panel_card_actions.visible_route_count,
+            enabled_route_count: panel_card_actions.enabled_route_count,
+            breadcrumb_count: panel_card_actions.breadcrumb_count,
+            visible_breadcrumb_count: panel_card_actions.visible_breadcrumb_count,
+            enabled_breadcrumb_count: panel_card_actions.enabled_breadcrumb_count,
+            tab_count: panel_card_actions.tab_count,
+            visible_tab_count: panel_card_actions.visible_tab_count,
+            enabled_tab_count: panel_card_actions.enabled_tab_count,
+            panel_count: panel_card_actions.panel_count,
+            visible_panel_count: panel_card_actions.visible_panel_count,
+            enabled_panel_count: panel_card_actions.enabled_panel_count,
+            panel_card_count: panel_card_actions.panel_card_count,
+            visible_panel_card_count: panel_card_actions.visible_panel_card_count,
+            enabled_panel_card_count: panel_card_actions.enabled_panel_card_count,
+            action_count: panel_card_actions.action_count,
+            enabled_action_count: panel_card_actions.enabled_action_count,
+            primary_action_count: panel_card_actions.primary_action_count,
+            panel_card_action_count: panel_card_actions.panel_card_action_count,
+            visible_panel_card_action_count: panel_card_actions.visible_panel_card_action_count,
+            enabled_panel_card_action_count: panel_card_actions.enabled_panel_card_action_count,
+            action_dispatch_count,
+            visible_action_dispatch_count,
+            enabled_action_dispatch_count,
+            item_count: panel_card_actions.item_count,
+            visible_item_count: panel_card_actions.visible_item_count,
+            enabled_item_count: panel_card_actions.enabled_item_count,
+            region_count: panel_card_actions.region_count,
+            visible_region_count: panel_card_actions.visible_region_count,
+            card_count: panel_card_actions.card_count,
+            visible_card_count: panel_card_actions.visible_card_count,
+            attention_card_count: panel_card_actions.attention_card_count,
+            metric_card_count: panel_card_actions.metric_card_count,
+            action_dispatches,
+            package_capability_id: panel_card_actions.package_capability_id.clone(),
+            dashboard_capability_id: panel_card_actions.dashboard_capability_id.clone(),
+            cards_capability_id: panel_card_actions.cards_capability_id.clone(),
+            view_capability_id: panel_card_actions.view_capability_id.clone(),
+            layout_capability_id: panel_card_actions.layout_capability_id.clone(),
+            navigation_capability_id: panel_card_actions.navigation_capability_id.clone(),
+            routes_capability_id: panel_card_actions.routes_capability_id.clone(),
+            breadcrumbs_capability_id: panel_card_actions.breadcrumbs_capability_id.clone(),
+            tabs_capability_id: panel_card_actions.tabs_capability_id.clone(),
+            tab_panels_capability_id: panel_card_actions.tab_panels_capability_id.clone(),
+            panel_cards_capability_id: panel_card_actions.panel_cards_capability_id.clone(),
+            panel_card_actions_capability_id: panel_card_actions
+                .panel_card_actions_capability_id
+                .clone(),
+            action_dispatch_capability_id: "app-shell-dashboard-action-dispatch-json".to_string(),
+            artifact_capability_count: panel_card_actions.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_action_dispatch_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchEvent {
+    pub id: String,
+    pub action_dispatch_id: String,
+    pub panel_card_action_id: String,
+    pub action_id: String,
+    pub kind: String,
+    pub severity: String,
+    pub message: String,
+    pub label: String,
+    pub target: String,
+    pub role: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub dispatchable: bool,
+    pub primary: bool,
+    pub attention: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchEvents {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub attention_dispatch_event_count: usize,
+    pub selected_dispatchable: bool,
+    pub default_dispatchable: bool,
+    pub dispatch_events: Vec<BerkeleyAppShellDashboardDispatchEvent>,
+    pub action_dispatch_capability_id: String,
+    pub dispatch_events_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchEvents {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_action_dispatch(
+            &BerkeleyAppShellDashboardActionDispatch::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_action_dispatch(
+            &BerkeleyAppShellDashboardActionDispatch::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_action_dispatch(dispatch: &BerkeleyAppShellDashboardActionDispatch) -> Self {
+        let dispatch_events = dispatch
+            .action_dispatches
+            .iter()
+            .map(|action_dispatch| {
+                let kind = if action_dispatch.dispatchable {
+                    "dispatch-ready"
+                } else {
+                    "dispatch-blocked"
+                };
+                let severity = if action_dispatch.dispatchable {
+                    if action_dispatch.attention {
+                        "warning"
+                    } else {
+                        "ready"
+                    }
+                } else {
+                    "blocked"
+                };
+                let message = if action_dispatch.dispatchable {
+                    format!("{} dispatch ready", action_dispatch.label)
+                } else {
+                    format!(
+                        "{} dispatch blocked: {}",
+                        action_dispatch.label,
+                        action_dispatch
+                            .disabled_reason
+                            .as_deref()
+                            .unwrap_or("action dispatch is not available")
+                    )
+                };
+
+                BerkeleyAppShellDashboardDispatchEvent {
+                    id: format!("dashboard.dispatch-event.{}", action_dispatch.role),
+                    action_dispatch_id: action_dispatch.id.clone(),
+                    panel_card_action_id: action_dispatch.panel_card_action_id.clone(),
+                    action_id: action_dispatch.action_id.clone(),
+                    kind: kind.to_string(),
+                    severity: severity.to_string(),
+                    message,
+                    label: action_dispatch.label.clone(),
+                    target: action_dispatch.target.clone(),
+                    role: action_dispatch.role.clone(),
+                    path: action_dispatch.path.clone(),
+                    position: action_dispatch.position,
+                    selected: action_dispatch.selected,
+                    default_dispatch: action_dispatch.default_panel,
+                    dispatchable: action_dispatch.dispatchable,
+                    primary: action_dispatch.primary,
+                    attention: action_dispatch.attention,
+                    disabled_reason: action_dispatch.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+        let selected_dispatch_event = dispatch_events.iter().find(|event| event.selected);
+        let default_dispatch_event = dispatch_events.iter().find(|event| event.default_dispatch);
+        let dispatch_event_count = dispatch_events.len();
+        let dispatch_ready_event_count = dispatch_events
+            .iter()
+            .filter(|event| event.dispatchable)
+            .count();
+        let dispatch_blocked_event_count = dispatch_events
+            .iter()
+            .filter(|event| !event.dispatchable)
+            .count();
+        let attention_dispatch_event_count = dispatch_events
+            .iter()
+            .filter(|event| event.attention)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_EVENTS_SCHEMA_VERSION,
+            package_name: dispatch.package_name.clone(),
+            source_fingerprint: dispatch.source_fingerprint.clone(),
+            title: dispatch.title.clone(),
+            startup_route: dispatch.startup_route.clone(),
+            ready: dispatch.ready,
+            severity: dispatch.severity.clone(),
+            attention_required: dispatch.attention_required,
+            selected_action_dispatch_id: dispatch.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: selected_dispatch_event.map(|event| event.id.clone()),
+            selected_action_id: dispatch.selected_action_id.clone(),
+            default_action_dispatch_id: dispatch.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: default_dispatch_event.map(|event| event.id.clone()),
+            default_action_id: dispatch.default_action_id.clone(),
+            action_dispatch_count: dispatch.action_dispatch_count,
+            dispatch_event_count,
+            dispatch_ready_event_count,
+            dispatch_blocked_event_count,
+            attention_dispatch_event_count,
+            selected_dispatchable: selected_dispatch_event
+                .map(|event| event.dispatchable)
+                .unwrap_or(false),
+            default_dispatchable: default_dispatch_event
+                .map(|event| event.dispatchable)
+                .unwrap_or(false),
+            dispatch_events,
+            action_dispatch_capability_id: dispatch.action_dispatch_capability_id.clone(),
+            dispatch_events_capability_id: "app-shell-dashboard-dispatch-events-json".to_string(),
+            artifact_capability_count: dispatch.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_events_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueItem {
+    pub id: String,
+    pub dispatch_event_id: String,
+    pub action_dispatch_id: String,
+    pub panel_card_action_id: String,
+    pub action_id: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub message: String,
+    pub label: String,
+    pub target: String,
+    pub role: String,
+    pub path: String,
+    pub position: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub queued: bool,
+    pub blocked: bool,
+    pub dispatchable: bool,
+    pub primary: bool,
+    pub attention: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueue {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub selected_queued: bool,
+    pub default_queued: bool,
+    pub dispatch_queue_items: Vec<BerkeleyAppShellDashboardDispatchQueueItem>,
+    pub action_dispatch_capability_id: String,
+    pub dispatch_events_capability_id: String,
+    pub dispatch_queue_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueue {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_events(
+            &BerkeleyAppShellDashboardDispatchEvents::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_events(
+            &BerkeleyAppShellDashboardDispatchEvents::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_dispatch_events(dispatch_events: &BerkeleyAppShellDashboardDispatchEvents) -> Self {
+        let dispatch_queue_items = dispatch_events
+            .dispatch_events
+            .iter()
+            .map(|event| {
+                let queued = event.dispatchable;
+                let blocked = !event.dispatchable;
+                let queue_state = if queued { "queued" } else { "blocked" };
+                let message = if queued {
+                    format!("{} queued for dispatch", event.label)
+                } else {
+                    format!(
+                        "{} cannot be queued: {}",
+                        event.label,
+                        event
+                            .disabled_reason
+                            .as_deref()
+                            .unwrap_or("dispatch is not available")
+                    )
+                };
+
+                BerkeleyAppShellDashboardDispatchQueueItem {
+                    id: format!("dashboard.dispatch-queue.{}", event.role),
+                    dispatch_event_id: event.id.clone(),
+                    action_dispatch_id: event.action_dispatch_id.clone(),
+                    panel_card_action_id: event.panel_card_action_id.clone(),
+                    action_id: event.action_id.clone(),
+                    queue_state: queue_state.to_string(),
+                    severity: event.severity.clone(),
+                    message,
+                    label: event.label.clone(),
+                    target: event.target.clone(),
+                    role: event.role.clone(),
+                    path: event.path.clone(),
+                    position: event.position,
+                    selected: event.selected,
+                    default_dispatch: event.default_dispatch,
+                    queued,
+                    blocked,
+                    dispatchable: event.dispatchable,
+                    primary: event.primary,
+                    attention: event.attention,
+                    disabled_reason: event.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+        let selected_dispatch_queue_item = dispatch_queue_items.iter().find(|item| item.selected);
+        let default_dispatch_queue_item = dispatch_queue_items
+            .iter()
+            .find(|item| item.default_dispatch);
+        let dispatch_queue_item_count = dispatch_queue_items.len();
+        let queued_dispatch_count = dispatch_queue_items
+            .iter()
+            .filter(|item| item.queued)
+            .count();
+        let blocked_dispatch_count = dispatch_queue_items
+            .iter()
+            .filter(|item| item.blocked)
+            .count();
+        let attention_dispatch_queue_item_count = dispatch_queue_items
+            .iter()
+            .filter(|item| item.attention)
+            .count();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SCHEMA_VERSION,
+            package_name: dispatch_events.package_name.clone(),
+            source_fingerprint: dispatch_events.source_fingerprint.clone(),
+            title: dispatch_events.title.clone(),
+            startup_route: dispatch_events.startup_route.clone(),
+            ready: dispatch_events.ready,
+            severity: dispatch_events.severity.clone(),
+            attention_required: dispatch_events.attention_required,
+            selected_action_dispatch_id: dispatch_events.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: dispatch_events.selected_dispatch_event_id.clone(),
+            selected_dispatch_queue_item_id: selected_dispatch_queue_item
+                .map(|item| item.id.clone()),
+            selected_action_id: dispatch_events.selected_action_id.clone(),
+            default_action_dispatch_id: dispatch_events.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: dispatch_events.default_dispatch_event_id.clone(),
+            default_dispatch_queue_item_id: default_dispatch_queue_item.map(|item| item.id.clone()),
+            default_action_id: dispatch_events.default_action_id.clone(),
+            action_dispatch_count: dispatch_events.action_dispatch_count,
+            dispatch_event_count: dispatch_events.dispatch_event_count,
+            dispatch_ready_event_count: dispatch_events.dispatch_ready_event_count,
+            dispatch_blocked_event_count: dispatch_events.dispatch_blocked_event_count,
+            dispatch_queue_item_count,
+            queued_dispatch_count,
+            blocked_dispatch_count,
+            attention_dispatch_queue_item_count,
+            selected_queued: selected_dispatch_queue_item
+                .map(|item| item.queued)
+                .unwrap_or(false),
+            default_queued: default_dispatch_queue_item
+                .map(|item| item.queued)
+                .unwrap_or(false),
+            dispatch_queue_items,
+            action_dispatch_capability_id: dispatch_events.action_dispatch_capability_id.clone(),
+            dispatch_events_capability_id: dispatch_events.dispatch_events_capability_id.clone(),
+            dispatch_queue_capability_id: "app-shell-dashboard-dispatch-queue-json".to_string(),
+            artifact_capability_count: dispatch_events.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueSummary {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub selected_queued: bool,
+    pub default_queued: bool,
+    pub first_queued_dispatch_queue_item_id: Option<String>,
+    pub first_blocked_dispatch_queue_item_id: Option<String>,
+    pub first_attention_dispatch_queue_item_id: Option<String>,
+    pub queued_dispatch_queue_item_ids: Vec<String>,
+    pub blocked_dispatch_queue_item_ids: Vec<String>,
+    pub attention_dispatch_queue_item_ids: Vec<String>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueSummary {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_queue(
+            &BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_queue(&BerkeleyAppShellDashboardDispatchQueue::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dispatch_queue(queue: &BerkeleyAppShellDashboardDispatchQueue) -> Self {
+        let queued_dispatch_queue_item_ids = queue
+            .dispatch_queue_items
+            .iter()
+            .filter(|item| item.queued)
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+        let blocked_dispatch_queue_item_ids = queue
+            .dispatch_queue_items
+            .iter()
+            .filter(|item| item.blocked)
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+        let attention_dispatch_queue_item_ids = queue
+            .dispatch_queue_items
+            .iter()
+            .filter(|item| item.attention)
+            .map(|item| item.id.clone())
+            .collect::<Vec<_>>();
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_SUMMARY_SCHEMA_VERSION,
+            package_name: queue.package_name.clone(),
+            source_fingerprint: queue.source_fingerprint.clone(),
+            title: queue.title.clone(),
+            startup_route: queue.startup_route.clone(),
+            ready: queue.ready,
+            severity: queue.severity.clone(),
+            attention_required: queue.attention_required,
+            selected_action_dispatch_id: queue.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: queue.selected_dispatch_event_id.clone(),
+            selected_dispatch_queue_item_id: queue.selected_dispatch_queue_item_id.clone(),
+            selected_action_id: queue.selected_action_id.clone(),
+            default_action_dispatch_id: queue.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: queue.default_dispatch_event_id.clone(),
+            default_dispatch_queue_item_id: queue.default_dispatch_queue_item_id.clone(),
+            default_action_id: queue.default_action_id.clone(),
+            action_dispatch_count: queue.action_dispatch_count,
+            dispatch_event_count: queue.dispatch_event_count,
+            dispatch_ready_event_count: queue.dispatch_ready_event_count,
+            dispatch_blocked_event_count: queue.dispatch_blocked_event_count,
+            dispatch_queue_item_count: queue.dispatch_queue_item_count,
+            queued_dispatch_count: queue.queued_dispatch_count,
+            blocked_dispatch_count: queue.blocked_dispatch_count,
+            attention_dispatch_queue_item_count: queue.attention_dispatch_queue_item_count,
+            selected_queued: queue.selected_queued,
+            default_queued: queue.default_queued,
+            first_queued_dispatch_queue_item_id: queued_dispatch_queue_item_ids.first().cloned(),
+            first_blocked_dispatch_queue_item_id: blocked_dispatch_queue_item_ids.first().cloned(),
+            first_attention_dispatch_queue_item_id: attention_dispatch_queue_item_ids
+                .first()
+                .cloned(),
+            queued_dispatch_queue_item_ids,
+            blocked_dispatch_queue_item_ids,
+            attention_dispatch_queue_item_ids,
+            dispatch_queue_capability_id: queue.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: "app-shell-dashboard-dispatch-queue-summary-json"
+                .to_string(),
+            artifact_capability_count: queue.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_summary_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueDigest {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub headline_dispatch_queue_item_id: Option<String>,
+    pub headline_dispatch_event_id: Option<String>,
+    pub headline_action_dispatch_id: Option<String>,
+    pub headline_panel_card_action_id: Option<String>,
+    pub headline_action_id: Option<String>,
+    pub headline_queue_state: Option<String>,
+    pub headline_message: String,
+    pub headline_label: Option<String>,
+    pub headline_target: Option<String>,
+    pub headline_role: Option<String>,
+    pub headline_path: Option<String>,
+    pub headline_position: Option<usize>,
+    pub headline_selected: bool,
+    pub headline_default_dispatch: bool,
+    pub headline_queued: bool,
+    pub headline_blocked: bool,
+    pub headline_dispatchable: bool,
+    pub headline_primary: bool,
+    pub headline_attention: bool,
+    pub headline_disabled_reason: Option<String>,
+    pub selected_action_dispatch_id: Option<String>,
+    pub selected_dispatch_event_id: Option<String>,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub selected_action_id: Option<String>,
+    pub default_action_dispatch_id: Option<String>,
+    pub default_dispatch_event_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub default_action_id: Option<String>,
+    pub action_dispatch_count: usize,
+    pub dispatch_event_count: usize,
+    pub dispatch_ready_event_count: usize,
+    pub dispatch_blocked_event_count: usize,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub selected_queued: bool,
+    pub default_queued: bool,
+    pub first_queued_dispatch_queue_item_id: Option<String>,
+    pub first_blocked_dispatch_queue_item_id: Option<String>,
+    pub first_attention_dispatch_queue_item_id: Option<String>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueDigest {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_queue(
+            &BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_queue(&BerkeleyAppShellDashboardDispatchQueue::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dispatch_queue(queue: &BerkeleyAppShellDashboardDispatchQueue) -> Self {
+        let summary = BerkeleyAppShellDashboardDispatchQueueSummary::from_dispatch_queue(queue);
+        let headline_dispatch_queue_item_id = summary
+            .selected_dispatch_queue_item_id
+            .clone()
+            .or_else(|| summary.default_dispatch_queue_item_id.clone())
+            .or_else(|| summary.first_attention_dispatch_queue_item_id.clone())
+            .or_else(|| summary.first_blocked_dispatch_queue_item_id.clone())
+            .or_else(|| summary.first_queued_dispatch_queue_item_id.clone());
+        let headline_dispatch_queue_item =
+            headline_dispatch_queue_item_id.as_ref().and_then(|id| {
+                queue
+                    .dispatch_queue_items
+                    .iter()
+                    .find(|item| item.id == id.as_str())
+            });
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_DIGEST_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            headline_dispatch_queue_item_id,
+            headline_dispatch_event_id: headline_dispatch_queue_item
+                .map(|item| item.dispatch_event_id.clone()),
+            headline_action_dispatch_id: headline_dispatch_queue_item
+                .map(|item| item.action_dispatch_id.clone()),
+            headline_panel_card_action_id: headline_dispatch_queue_item
+                .map(|item| item.panel_card_action_id.clone()),
+            headline_action_id: headline_dispatch_queue_item.map(|item| item.action_id.clone()),
+            headline_queue_state: headline_dispatch_queue_item.map(|item| item.queue_state.clone()),
+            headline_message: headline_dispatch_queue_item
+                .map(|item| item.message.clone())
+                .unwrap_or_else(|| {
+                    if summary.ready {
+                        "Berkeley SPICE dashboard dispatch queue ready".to_string()
+                    } else {
+                        "Berkeley SPICE dashboard dispatch queue blocked".to_string()
+                    }
+                }),
+            headline_label: headline_dispatch_queue_item.map(|item| item.label.clone()),
+            headline_target: headline_dispatch_queue_item.map(|item| item.target.clone()),
+            headline_role: headline_dispatch_queue_item.map(|item| item.role.clone()),
+            headline_path: headline_dispatch_queue_item.map(|item| item.path.clone()),
+            headline_position: headline_dispatch_queue_item.map(|item| item.position),
+            headline_selected: headline_dispatch_queue_item
+                .map(|item| item.selected)
+                .unwrap_or(false),
+            headline_default_dispatch: headline_dispatch_queue_item
+                .map(|item| item.default_dispatch)
+                .unwrap_or(false),
+            headline_queued: headline_dispatch_queue_item
+                .map(|item| item.queued)
+                .unwrap_or(false),
+            headline_blocked: headline_dispatch_queue_item
+                .map(|item| item.blocked)
+                .unwrap_or(false),
+            headline_dispatchable: headline_dispatch_queue_item
+                .map(|item| item.dispatchable)
+                .unwrap_or(false),
+            headline_primary: headline_dispatch_queue_item
+                .map(|item| item.primary)
+                .unwrap_or(false),
+            headline_attention: headline_dispatch_queue_item
+                .map(|item| item.attention)
+                .unwrap_or(false),
+            headline_disabled_reason: headline_dispatch_queue_item
+                .and_then(|item| item.disabled_reason.clone()),
+            selected_action_dispatch_id: summary.selected_action_dispatch_id.clone(),
+            selected_dispatch_event_id: summary.selected_dispatch_event_id.clone(),
+            selected_dispatch_queue_item_id: summary.selected_dispatch_queue_item_id.clone(),
+            selected_action_id: summary.selected_action_id.clone(),
+            default_action_dispatch_id: summary.default_action_dispatch_id.clone(),
+            default_dispatch_event_id: summary.default_dispatch_event_id.clone(),
+            default_dispatch_queue_item_id: summary.default_dispatch_queue_item_id.clone(),
+            default_action_id: summary.default_action_id.clone(),
+            action_dispatch_count: summary.action_dispatch_count,
+            dispatch_event_count: summary.dispatch_event_count,
+            dispatch_ready_event_count: summary.dispatch_ready_event_count,
+            dispatch_blocked_event_count: summary.dispatch_blocked_event_count,
+            dispatch_queue_item_count: summary.dispatch_queue_item_count,
+            queued_dispatch_count: summary.queued_dispatch_count,
+            blocked_dispatch_count: summary.blocked_dispatch_count,
+            attention_dispatch_queue_item_count: summary.attention_dispatch_queue_item_count,
+            selected_queued: summary.selected_queued,
+            default_queued: summary.default_queued,
+            first_queued_dispatch_queue_item_id: summary
+                .first_queued_dispatch_queue_item_id
+                .clone(),
+            first_blocked_dispatch_queue_item_id: summary
+                .first_blocked_dispatch_queue_item_id
+                .clone(),
+            first_attention_dispatch_queue_item_id: summary
+                .first_attention_dispatch_queue_item_id
+                .clone(),
+            dispatch_queue_capability_id: summary.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: summary
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: "app-shell-dashboard-dispatch-queue-digest-json"
+                .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_digest_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLane {
+    pub id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub dispatch_queue_item_count: usize,
+    pub dispatch_queue_item_ids: Vec<String>,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub primary: bool,
+    pub attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLanes {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub headline_dispatch_queue_item_id: Option<String>,
+    pub headline_queue_state: Option<String>,
+    pub headline_message: String,
+    pub selected_dispatch_queue_item_id: Option<String>,
+    pub default_dispatch_queue_item_id: Option<String>,
+    pub first_queued_dispatch_queue_item_id: Option<String>,
+    pub first_blocked_dispatch_queue_item_id: Option<String>,
+    pub first_attention_dispatch_queue_item_id: Option<String>,
+    pub dispatch_queue_item_count: usize,
+    pub queued_dispatch_count: usize,
+    pub blocked_dispatch_count: usize,
+    pub attention_dispatch_queue_item_count: usize,
+    pub lane_count: usize,
+    pub active_lane_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub lanes: Vec<BerkeleyAppShellDashboardDispatchQueueLane>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLanes {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_dispatch_queue(
+            &BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_dispatch_queue(&BerkeleyAppShellDashboardDispatchQueue::from_shell_handoff(
+            handoff,
+        ))
+    }
+
+    pub fn from_dispatch_queue(queue: &BerkeleyAppShellDashboardDispatchQueue) -> Self {
+        let summary = BerkeleyAppShellDashboardDispatchQueueSummary::from_dispatch_queue(queue);
+        let digest = BerkeleyAppShellDashboardDispatchQueueDigest::from_dispatch_queue(queue);
+        let lanes = vec![
+            Self::lane_from_item_ids(
+                queue,
+                "dashboard.dispatch-queue-lane.queued",
+                "Queued dispatches",
+                "queued",
+                summary.queued_dispatch_queue_item_ids.clone(),
+            ),
+            Self::lane_from_item_ids(
+                queue,
+                "dashboard.dispatch-queue-lane.blocked",
+                "Blocked dispatches",
+                "blocked",
+                summary.blocked_dispatch_queue_item_ids.clone(),
+            ),
+            Self::lane_from_item_ids(
+                queue,
+                "dashboard.dispatch-queue-lane.attention",
+                "Attention dispatches",
+                "attention",
+                summary.attention_dispatch_queue_item_ids.clone(),
+            ),
+        ];
+        let active_lane_id =
+            digest
+                .headline_dispatch_queue_item_id
+                .as_ref()
+                .and_then(|headline_id| {
+                    lanes
+                        .iter()
+                        .filter(|lane| lane.dispatch_queue_item_ids.contains(headline_id))
+                        .find(|lane| lane.queue_state == "attention")
+                        .or_else(|| {
+                            lanes
+                                .iter()
+                                .filter(|lane| lane.dispatch_queue_item_ids.contains(headline_id))
+                                .find(|lane| lane.queue_state == "blocked")
+                        })
+                        .or_else(|| {
+                            lanes
+                                .iter()
+                                .find(|lane| lane.dispatch_queue_item_ids.contains(headline_id))
+                        })
+                        .map(|lane| lane.id.clone())
+                });
+        let attention_lane_id = summary
+            .first_attention_dispatch_queue_item_id
+            .as_ref()
+            .map(|_| "dashboard.dispatch-queue-lane.attention".to_string());
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANES_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            headline_dispatch_queue_item_id: digest.headline_dispatch_queue_item_id.clone(),
+            headline_queue_state: digest.headline_queue_state.clone(),
+            headline_message: digest.headline_message.clone(),
+            selected_dispatch_queue_item_id: summary.selected_dispatch_queue_item_id.clone(),
+            default_dispatch_queue_item_id: summary.default_dispatch_queue_item_id.clone(),
+            first_queued_dispatch_queue_item_id: summary
+                .first_queued_dispatch_queue_item_id
+                .clone(),
+            first_blocked_dispatch_queue_item_id: summary
+                .first_blocked_dispatch_queue_item_id
+                .clone(),
+            first_attention_dispatch_queue_item_id: summary
+                .first_attention_dispatch_queue_item_id
+                .clone(),
+            dispatch_queue_item_count: summary.dispatch_queue_item_count,
+            queued_dispatch_count: summary.queued_dispatch_count,
+            blocked_dispatch_count: summary.blocked_dispatch_count,
+            attention_dispatch_queue_item_count: summary.attention_dispatch_queue_item_count,
+            lane_count: lanes.len(),
+            active_lane_id,
+            attention_lane_id,
+            lanes,
+            dispatch_queue_capability_id: summary.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: summary
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: digest.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: "app-shell-dashboard-dispatch-queue-lanes-json"
+                .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    fn lane_from_item_ids(
+        queue: &BerkeleyAppShellDashboardDispatchQueue,
+        id: &str,
+        title: &str,
+        queue_state: &str,
+        dispatch_queue_item_ids: Vec<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLane {
+        let lane_items = dispatch_queue_item_ids
+            .iter()
+            .filter_map(|item_id| {
+                queue
+                    .dispatch_queue_items
+                    .iter()
+                    .find(|item| item.id == item_id.as_str())
+            })
+            .collect::<Vec<_>>();
+        let severity = if lane_items.iter().any(|item| item.severity == "error") {
+            "error"
+        } else if lane_items.iter().any(|item| item.severity == "warning") {
+            "warning"
+        } else {
+            "ready"
+        };
+
+        BerkeleyAppShellDashboardDispatchQueueLane {
+            id: id.to_string(),
+            title: title.to_string(),
+            queue_state: queue_state.to_string(),
+            severity: severity.to_string(),
+            dispatch_queue_item_count: dispatch_queue_item_ids.len(),
+            dispatch_queue_item_ids,
+            selected: lane_items.iter().any(|item| item.selected),
+            default_dispatch: lane_items.iter().any(|item| item.default_dispatch),
+            primary: lane_items.iter().any(|item| item.primary),
+            attention: queue_state == "attention" && !lane_items.is_empty(),
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lanes_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTab {
+    pub id: String,
+    pub lane_id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub dispatch_queue_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabs {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub tabs: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTab>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabs {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lanes(
+            &BerkeleyAppShellDashboardDispatchQueueLanes::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lanes(&BerkeleyAppShellDashboardDispatchQueueLanes::from_shell_handoff(handoff))
+    }
+
+    pub fn from_lanes(lanes: &BerkeleyAppShellDashboardDispatchQueueLanes) -> Self {
+        let tabs = lanes
+            .lanes
+            .iter()
+            .map(|lane| {
+                let tab_id_suffix = lane
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane.")
+                    .unwrap_or(lane.queue_state.as_str());
+                BerkeleyAppShellDashboardDispatchQueueLaneTab {
+                    id: format!("dashboard.dispatch-queue-lane-tab.{tab_id_suffix}"),
+                    lane_id: lane.id.clone(),
+                    title: lane.title.clone(),
+                    queue_state: lane.queue_state.clone(),
+                    severity: lane.severity.clone(),
+                    dispatch_queue_item_count: lane.dispatch_queue_item_count,
+                    selected: lane.selected,
+                    default_dispatch: lane.default_dispatch,
+                    active: lanes.active_lane_id.as_deref() == Some(lane.id.as_str()),
+                    attention: lane.attention,
+                    disabled: lane.dispatch_queue_item_count == 0,
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_tab_id = tabs.iter().find(|tab| tab.active).map(|tab| tab.id.clone());
+        let attention_tab_id = lanes
+            .attention_lane_id
+            .as_ref()
+            .and_then(|attention_lane_id| {
+                tabs.iter()
+                    .find(|tab| tab.lane_id == attention_lane_id.as_str())
+                    .map(|tab| tab.id.clone())
+            });
+        let enabled_tab_count = tabs.iter().filter(|tab| !tab.disabled).count();
+        let disabled_tab_count = tabs.len().saturating_sub(enabled_tab_count);
+
+        Self {
+            schema_version: BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TABS_SCHEMA_VERSION,
+            package_name: lanes.package_name.clone(),
+            source_fingerprint: lanes.source_fingerprint.clone(),
+            title: lanes.title.clone(),
+            startup_route: lanes.startup_route.clone(),
+            ready: lanes.ready,
+            severity: lanes.severity.clone(),
+            attention_required: lanes.attention_required,
+            active_lane_id: lanes.active_lane_id.clone(),
+            active_tab_id,
+            attention_lane_id: lanes.attention_lane_id.clone(),
+            attention_tab_id,
+            lane_count: lanes.lane_count,
+            tab_count: tabs.len(),
+            enabled_tab_count,
+            disabled_tab_count,
+            tabs,
+            dispatch_queue_capability_id: lanes.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: lanes
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: lanes.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: lanes.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tabs-json".to_string(),
+            artifact_capability_count: lanes.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tabs_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanel {
+    pub id: String,
+    pub tab_id: String,
+    pub lane_id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub dispatch_queue_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub empty_message: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanels {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panels: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanel>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanels {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lane_tabs(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lane_tabs(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_lane_tabs(tabs: &BerkeleyAppShellDashboardDispatchQueueLaneTabs) -> Self {
+        let panels = tabs
+            .tabs
+            .iter()
+            .map(|tab| {
+                let panel_id_suffix = tab
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane-tab.")
+                    .unwrap_or(tab.queue_state.as_str());
+                let empty = tab.dispatch_queue_item_count == 0;
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanel {
+                    id: format!("dashboard.dispatch-queue-lane-tab-panel.{panel_id_suffix}"),
+                    tab_id: tab.id.clone(),
+                    lane_id: tab.lane_id.clone(),
+                    title: tab.title.clone(),
+                    queue_state: tab.queue_state.clone(),
+                    severity: tab.severity.clone(),
+                    dispatch_queue_item_count: tab.dispatch_queue_item_count,
+                    selected: tab.selected,
+                    default_dispatch: tab.default_dispatch,
+                    active: tab.active,
+                    attention: tab.attention,
+                    disabled: tab.disabled,
+                    empty,
+                    empty_message: empty.then(|| format!("No {} dispatches", tab.queue_state)),
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_panel_id = panels
+            .iter()
+            .find(|panel| panel.active)
+            .map(|panel| panel.id.clone());
+        let attention_panel_id = tabs.attention_tab_id.as_ref().and_then(|attention_tab_id| {
+            panels
+                .iter()
+                .find(|panel| panel.tab_id == attention_tab_id.as_str())
+                .map(|panel| panel.id.clone())
+        });
+        let enabled_panel_count = panels.iter().filter(|panel| !panel.disabled).count();
+        let disabled_panel_count = panels.len().saturating_sub(enabled_panel_count);
+        let empty_panel_count = panels.iter().filter(|panel| panel.empty).count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANELS_SCHEMA_VERSION,
+            package_name: tabs.package_name.clone(),
+            source_fingerprint: tabs.source_fingerprint.clone(),
+            title: tabs.title.clone(),
+            startup_route: tabs.startup_route.clone(),
+            ready: tabs.ready,
+            severity: tabs.severity.clone(),
+            attention_required: tabs.attention_required,
+            active_lane_id: tabs.active_lane_id.clone(),
+            active_tab_id: tabs.active_tab_id.clone(),
+            active_panel_id,
+            attention_lane_id: tabs.attention_lane_id.clone(),
+            attention_tab_id: tabs.attention_tab_id.clone(),
+            attention_panel_id,
+            lane_count: tabs.lane_count,
+            tab_count: tabs.tab_count,
+            enabled_tab_count: tabs.enabled_tab_count,
+            disabled_tab_count: tabs.disabled_tab_count,
+            panel_count: panels.len(),
+            enabled_panel_count,
+            disabled_panel_count,
+            empty_panel_count,
+            panels,
+            dispatch_queue_capability_id: tabs.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: tabs.dispatch_queue_summary_capability_id.clone(),
+            dispatch_queue_digest_capability_id: tabs.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: tabs.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id: tabs
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panels-json".to_string(),
+            artifact_capability_count: tabs.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panels_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCard {
+    pub id: String,
+    pub panel_id: String,
+    pub tab_id: String,
+    pub lane_id: String,
+    pub title: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub summary: String,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub empty_message: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_cards: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCard>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lane_tab_panels(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanels::from_bootstrap_snapshot(snapshot),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lane_tab_panels(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanels::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_lane_tab_panels(
+        panels: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanels,
+    ) -> Self {
+        let panel_cards = panels
+            .panels
+            .iter()
+            .map(|panel| {
+                let panel_card_id_suffix = panel
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane-tab-panel.")
+                    .unwrap_or(panel.queue_state.as_str());
+                let dispatch_noun = if panel.dispatch_queue_item_count == 1 {
+                    "dispatch"
+                } else {
+                    "dispatches"
+                };
+                let summary = if panel.empty {
+                    panel
+                        .empty_message
+                        .clone()
+                        .unwrap_or_else(|| format!("No {} dispatches", panel.queue_state))
+                } else {
+                    format!(
+                        "{} {} {}",
+                        panel.dispatch_queue_item_count, panel.queue_state, dispatch_noun
+                    )
+                };
+
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCard {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card.{panel_card_id_suffix}"
+                    ),
+                    panel_id: panel.id.clone(),
+                    tab_id: panel.tab_id.clone(),
+                    lane_id: panel.lane_id.clone(),
+                    title: panel.title.clone(),
+                    queue_state: panel.queue_state.clone(),
+                    severity: panel.severity.clone(),
+                    summary,
+                    dispatch_queue_item_count: panel.dispatch_queue_item_count,
+                    badge_count: panel.dispatch_queue_item_count,
+                    selected: panel.selected,
+                    default_dispatch: panel.default_dispatch,
+                    active: panel.active,
+                    attention: panel.attention,
+                    disabled: panel.disabled,
+                    empty: panel.empty,
+                    empty_message: panel.empty_message.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_panel_card_id = panel_cards
+            .iter()
+            .find(|panel_card| panel_card.active)
+            .map(|panel_card| panel_card.id.clone());
+        let attention_panel_card_id =
+            panels
+                .attention_panel_id
+                .as_ref()
+                .and_then(|attention_panel_id| {
+                    panel_cards
+                        .iter()
+                        .find(|panel_card| panel_card.panel_id == attention_panel_id.as_str())
+                        .map(|panel_card| panel_card.id.clone())
+                });
+        let enabled_panel_card_count = panel_cards
+            .iter()
+            .filter(|panel_card| !panel_card.disabled)
+            .count();
+        let disabled_panel_card_count = panel_cards.len().saturating_sub(enabled_panel_card_count);
+        let empty_panel_card_count = panel_cards
+            .iter()
+            .filter(|panel_card| panel_card.empty)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARDS_SCHEMA_VERSION,
+            package_name: panels.package_name.clone(),
+            source_fingerprint: panels.source_fingerprint.clone(),
+            title: panels.title.clone(),
+            startup_route: panels.startup_route.clone(),
+            ready: panels.ready,
+            severity: panels.severity.clone(),
+            attention_required: panels.attention_required,
+            active_lane_id: panels.active_lane_id.clone(),
+            active_tab_id: panels.active_tab_id.clone(),
+            active_panel_id: panels.active_panel_id.clone(),
+            active_panel_card_id,
+            attention_lane_id: panels.attention_lane_id.clone(),
+            attention_tab_id: panels.attention_tab_id.clone(),
+            attention_panel_id: panels.attention_panel_id.clone(),
+            attention_panel_card_id,
+            lane_count: panels.lane_count,
+            tab_count: panels.tab_count,
+            enabled_tab_count: panels.enabled_tab_count,
+            disabled_tab_count: panels.disabled_tab_count,
+            panel_count: panels.panel_count,
+            enabled_panel_count: panels.enabled_panel_count,
+            disabled_panel_count: panels.disabled_panel_count,
+            empty_panel_count: panels.empty_panel_count,
+            panel_card_count: panel_cards.len(),
+            enabled_panel_card_count,
+            disabled_panel_card_count,
+            empty_panel_card_count,
+            panel_cards,
+            dispatch_queue_capability_id: panels.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: panels
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: panels.dispatch_queue_digest_capability_id.clone(),
+            dispatch_queue_lanes_capability_id: panels.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id: panels
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: panels
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-cards-json".to_string(),
+            artifact_capability_count: panels.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_cards_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardAction {
+    pub id: String,
+    pub panel_card_id: String,
+    pub panel_id: String,
+    pub tab_id: String,
+    pub lane_id: String,
+    pub label: String,
+    pub target: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub summary: String,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub panel_card_actions: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardAction>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lane_tab_panel_cards(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lane_tab_panel_cards(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards::from_shell_handoff(handoff),
+        )
+    }
+
+    pub fn from_lane_tab_panel_cards(
+        panel_cards: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards,
+    ) -> Self {
+        let panel_card_actions = panel_cards
+            .panel_cards
+            .iter()
+            .map(|panel_card| {
+                let action_id_suffix = panel_card
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane-tab-panel-card.")
+                    .unwrap_or(panel_card.queue_state.as_str());
+                let enabled = !panel_card.disabled && !panel_card.empty;
+                let disabled_reason = (!enabled).then(|| {
+                    panel_card.empty_message.clone().unwrap_or_else(|| {
+                        format!("{} dispatches unavailable", panel_card.queue_state)
+                    })
+                });
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardAction {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action.{action_id_suffix}"
+                    ),
+                    panel_card_id: panel_card.id.clone(),
+                    panel_id: panel_card.panel_id.clone(),
+                    tab_id: panel_card.tab_id.clone(),
+                    lane_id: panel_card.lane_id.clone(),
+                    label: if enabled {
+                        format!("Open {}", panel_card.title.to_ascii_lowercase())
+                    } else {
+                        format!("View {}", panel_card.title.to_ascii_lowercase())
+                    },
+                    target: panel_card.id.clone(),
+                    queue_state: panel_card.queue_state.clone(),
+                    severity: panel_card.severity.clone(),
+                    summary: panel_card.summary.clone(),
+                    dispatch_queue_item_count: panel_card.dispatch_queue_item_count,
+                    badge_count: panel_card.badge_count,
+                    selected: panel_card.selected,
+                    default_dispatch: panel_card.default_dispatch,
+                    active: panel_card.active,
+                    attention: panel_card.attention,
+                    disabled: panel_card.disabled,
+                    empty: panel_card.empty,
+                    enabled,
+                    primary: panel_card.active || panel_card.default_dispatch,
+                    disabled_reason,
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_panel_card_action_id =
+            panel_cards
+                .active_panel_card_id
+                .as_ref()
+                .and_then(|active_panel_card_id| {
+                    panel_card_actions
+                        .iter()
+                        .find(|action| action.panel_card_id == active_panel_card_id.as_str())
+                        .map(|action| action.id.clone())
+                });
+        let attention_panel_card_action_id =
+            panel_cards
+                .attention_panel_card_id
+                .as_ref()
+                .and_then(|attention_panel_card_id| {
+                    panel_card_actions
+                        .iter()
+                        .find(|action| action.panel_card_id == attention_panel_card_id.as_str())
+                        .map(|action| action.id.clone())
+                });
+        let enabled_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.enabled)
+            .count();
+        let disabled_panel_card_action_count = panel_card_actions
+            .len()
+            .saturating_sub(enabled_panel_card_action_count);
+        let empty_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.empty)
+            .count();
+        let primary_panel_card_action_count = panel_card_actions
+            .iter()
+            .filter(|action| action.primary)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTIONS_SCHEMA_VERSION,
+            package_name: panel_cards.package_name.clone(),
+            source_fingerprint: panel_cards.source_fingerprint.clone(),
+            title: panel_cards.title.clone(),
+            startup_route: panel_cards.startup_route.clone(),
+            ready: panel_cards.ready,
+            severity: panel_cards.severity.clone(),
+            attention_required: panel_cards.attention_required,
+            active_lane_id: panel_cards.active_lane_id.clone(),
+            active_tab_id: panel_cards.active_tab_id.clone(),
+            active_panel_id: panel_cards.active_panel_id.clone(),
+            active_panel_card_id: panel_cards.active_panel_card_id.clone(),
+            active_panel_card_action_id,
+            attention_lane_id: panel_cards.attention_lane_id.clone(),
+            attention_tab_id: panel_cards.attention_tab_id.clone(),
+            attention_panel_id: panel_cards.attention_panel_id.clone(),
+            attention_panel_card_id: panel_cards.attention_panel_card_id.clone(),
+            attention_panel_card_action_id,
+            lane_count: panel_cards.lane_count,
+            tab_count: panel_cards.tab_count,
+            enabled_tab_count: panel_cards.enabled_tab_count,
+            disabled_tab_count: panel_cards.disabled_tab_count,
+            panel_count: panel_cards.panel_count,
+            enabled_panel_count: panel_cards.enabled_panel_count,
+            disabled_panel_count: panel_cards.disabled_panel_count,
+            empty_panel_count: panel_cards.empty_panel_count,
+            panel_card_count: panel_cards.panel_card_count,
+            enabled_panel_card_count: panel_cards.enabled_panel_card_count,
+            disabled_panel_card_count: panel_cards.disabled_panel_card_count,
+            empty_panel_card_count: panel_cards.empty_panel_card_count,
+            panel_card_action_count: panel_card_actions.len(),
+            enabled_panel_card_action_count,
+            disabled_panel_card_action_count,
+            empty_panel_card_action_count,
+            primary_panel_card_action_count,
+            panel_card_actions,
+            dispatch_queue_capability_id: panel_cards.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: panel_cards
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: panel_cards
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: panel_cards
+                .dispatch_queue_lanes_capability_id
+                .clone(),
+            dispatch_queue_lane_tabs_capability_id: panel_cards
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: panel_cards
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: panel_cards
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-actions-json"
+                    .to_string(),
+            artifact_capability_count: panel_cards.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_json_value(self).to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuItem {
+    pub id: String,
+    pub action_id: String,
+    pub panel_card_id: String,
+    pub panel_id: String,
+    pub tab_id: String,
+    pub lane_id: String,
+    pub label: String,
+    pub target: String,
+    pub queue_state: String,
+    pub severity: String,
+    pub summary: String,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub position: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub active_menu_item_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub attention_menu_item_id: Option<String>,
+    pub default_menu_item_id: Option<String>,
+    pub primary_menu_item_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub menu_item_count: usize,
+    pub enabled_menu_item_count: usize,
+    pub disabled_menu_item_count: usize,
+    pub empty_menu_item_count: usize,
+    pub primary_menu_item_count: usize,
+    pub selected_menu_item_count: usize,
+    pub attention_menu_item_count: usize,
+    pub menu_items: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuItem>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_lane_tab_panel_card_actions(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_lane_tab_panel_card_actions(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_lane_tab_panel_card_actions(
+        actions: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions,
+    ) -> Self {
+        let menu_items = actions
+            .panel_card_actions
+            .iter()
+            .enumerate()
+            .map(|(position, action)| {
+                let action_id_suffix = action
+                    .id
+                    .strip_prefix("dashboard.dispatch-queue-lane-tab-panel-card-action.")
+                    .unwrap_or(action.queue_state.as_str());
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuItem {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-item.{action_id_suffix}"
+                    ),
+                    action_id: action.id.clone(),
+                    panel_card_id: action.panel_card_id.clone(),
+                    panel_id: action.panel_id.clone(),
+                    tab_id: action.tab_id.clone(),
+                    lane_id: action.lane_id.clone(),
+                    label: action.label.clone(),
+                    target: action.target.clone(),
+                    queue_state: action.queue_state.clone(),
+                    severity: action.severity.clone(),
+                    summary: action.summary.clone(),
+                    dispatch_queue_item_count: action.dispatch_queue_item_count,
+                    badge_count: action.badge_count,
+                    position,
+                    selected: action.selected,
+                    default_dispatch: action.default_dispatch,
+                    active: action.active,
+                    attention: action.attention,
+                    disabled: action.disabled,
+                    empty: action.empty,
+                    enabled: action.enabled,
+                    primary: action.primary,
+                    disabled_reason: action.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_menu_item_id =
+            actions
+                .active_panel_card_action_id
+                .as_ref()
+                .and_then(|active_panel_card_action_id| {
+                    menu_items
+                        .iter()
+                        .find(|item| item.action_id == active_panel_card_action_id.as_str())
+                        .map(|item| item.id.clone())
+                });
+        let attention_menu_item_id = actions.attention_panel_card_action_id.as_ref().and_then(
+            |attention_panel_card_action_id| {
+                menu_items
+                    .iter()
+                    .find(|item| item.action_id == attention_panel_card_action_id.as_str())
+                    .map(|item| item.id.clone())
+            },
+        );
+        let default_menu_item_id = menu_items
+            .iter()
+            .find(|item| item.default_dispatch)
+            .map(|item| item.id.clone());
+        let primary_menu_item_id = menu_items
+            .iter()
+            .find(|item| item.primary)
+            .map(|item| item.id.clone());
+        let enabled_menu_item_count = menu_items.iter().filter(|item| item.enabled).count();
+        let disabled_menu_item_count = menu_items.len().saturating_sub(enabled_menu_item_count);
+        let empty_menu_item_count = menu_items.iter().filter(|item| item.empty).count();
+        let primary_menu_item_count = menu_items.iter().filter(|item| item.primary).count();
+        let selected_menu_item_count = menu_items.iter().filter(|item| item.selected).count();
+        let attention_menu_item_count = menu_items.iter().filter(|item| item.attention).count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_SCHEMA_VERSION,
+            package_name: actions.package_name.clone(),
+            source_fingerprint: actions.source_fingerprint.clone(),
+            title: actions.title.clone(),
+            startup_route: actions.startup_route.clone(),
+            ready: actions.ready,
+            severity: actions.severity.clone(),
+            attention_required: actions.attention_required,
+            active_lane_id: actions.active_lane_id.clone(),
+            active_tab_id: actions.active_tab_id.clone(),
+            active_panel_id: actions.active_panel_id.clone(),
+            active_panel_card_id: actions.active_panel_card_id.clone(),
+            active_panel_card_action_id: actions.active_panel_card_action_id.clone(),
+            active_menu_item_id,
+            attention_lane_id: actions.attention_lane_id.clone(),
+            attention_tab_id: actions.attention_tab_id.clone(),
+            attention_panel_id: actions.attention_panel_id.clone(),
+            attention_panel_card_id: actions.attention_panel_card_id.clone(),
+            attention_panel_card_action_id: actions.attention_panel_card_action_id.clone(),
+            attention_menu_item_id,
+            default_menu_item_id,
+            primary_menu_item_id,
+            lane_count: actions.lane_count,
+            tab_count: actions.tab_count,
+            enabled_tab_count: actions.enabled_tab_count,
+            disabled_tab_count: actions.disabled_tab_count,
+            panel_count: actions.panel_count,
+            enabled_panel_count: actions.enabled_panel_count,
+            disabled_panel_count: actions.disabled_panel_count,
+            empty_panel_count: actions.empty_panel_count,
+            panel_card_count: actions.panel_card_count,
+            enabled_panel_card_count: actions.enabled_panel_card_count,
+            disabled_panel_card_count: actions.disabled_panel_card_count,
+            empty_panel_card_count: actions.empty_panel_card_count,
+            panel_card_action_count: actions.panel_card_action_count,
+            enabled_panel_card_action_count: actions.enabled_panel_card_action_count,
+            disabled_panel_card_action_count: actions.disabled_panel_card_action_count,
+            empty_panel_card_action_count: actions.empty_panel_card_action_count,
+            primary_panel_card_action_count: actions.primary_panel_card_action_count,
+            menu_item_count: menu_items.len(),
+            enabled_menu_item_count,
+            disabled_menu_item_count,
+            empty_menu_item_count,
+            primary_menu_item_count,
+            selected_menu_item_count,
+            attention_menu_item_count,
+            menu_items,
+            dispatch_queue_capability_id: actions.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: actions
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: actions
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: actions.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id: actions
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: actions
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: actions
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id: actions
+                .dispatch_queue_lane_tab_panel_card_actions_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-json"
+                    .to_string(),
+            artifact_capability_count: actions.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroup {
+    pub id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub enabled_item_count: usize,
+    pub disabled_item_count: usize,
+    pub empty_item_count: usize,
+    pub primary_item_count: usize,
+    pub selected_item_count: usize,
+    pub attention_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub active_menu_item_id: Option<String>,
+    pub active_menu_group_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub attention_menu_item_id: Option<String>,
+    pub attention_menu_group_id: Option<String>,
+    pub default_menu_item_id: Option<String>,
+    pub default_menu_group_id: Option<String>,
+    pub primary_menu_item_id: Option<String>,
+    pub primary_menu_group_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub menu_item_count: usize,
+    pub enabled_menu_item_count: usize,
+    pub disabled_menu_item_count: usize,
+    pub empty_menu_item_count: usize,
+    pub primary_menu_item_count: usize,
+    pub selected_menu_item_count: usize,
+    pub attention_menu_item_count: usize,
+    pub menu_group_count: usize,
+    pub enabled_menu_group_count: usize,
+    pub disabled_menu_group_count: usize,
+    pub empty_menu_group_count: usize,
+    pub primary_menu_group_count: usize,
+    pub selected_menu_group_count: usize,
+    pub attention_menu_group_count: usize,
+    pub menu_groups: Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroup>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_action_menu(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_action_menu(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_action_menu(
+        menu: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu,
+    ) -> Self {
+        let mut menu_groups: Vec<
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroup,
+        > = Vec::new();
+        for item in &menu.menu_items {
+            let group_index = if let Some(index) = menu_groups
+                .iter()
+                .position(|group| group.queue_state == item.queue_state)
+            {
+                index
+            } else {
+                let queue_state_suffix = item.queue_state.as_str();
+                let label = match item.queue_state.as_str() {
+                    "queued" => "Queued dispatches",
+                    "blocked" => "Blocked dispatches",
+                    "attention" => "Attention dispatches",
+                    _ => item.label.as_str(),
+                };
+                menu_groups.push(
+                    BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroup {
+                        id: format!(
+                            "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.{queue_state_suffix}"
+                        ),
+                        queue_state: item.queue_state.clone(),
+                        label: label.to_string(),
+                        summary: item.summary.clone(),
+                        menu_item_ids: Vec::new(),
+                        action_ids: Vec::new(),
+                        dispatch_queue_item_count: 0,
+                        badge_count: 0,
+                        position: menu_groups.len(),
+                        item_count: 0,
+                        enabled_item_count: 0,
+                        disabled_item_count: 0,
+                        empty_item_count: 0,
+                        primary_item_count: 0,
+                        selected_item_count: 0,
+                        attention_item_count: 0,
+                        selected: false,
+                        default_dispatch: false,
+                        active: false,
+                        attention: false,
+                        disabled: false,
+                        empty: false,
+                        enabled: false,
+                        primary: false,
+                        disabled_reason: None,
+                    },
+                );
+                menu_groups.len() - 1
+            };
+
+            let group = &mut menu_groups[group_index];
+            group.menu_item_ids.push(item.id.clone());
+            group.action_ids.push(item.action_id.clone());
+            group.dispatch_queue_item_count += item.dispatch_queue_item_count;
+            group.badge_count += item.badge_count;
+            group.item_count += 1;
+            if item.enabled {
+                group.enabled_item_count += 1;
+            }
+            if item.disabled {
+                group.disabled_item_count += 1;
+            }
+            if item.empty {
+                group.empty_item_count += 1;
+            }
+            if item.primary {
+                group.primary_item_count += 1;
+            }
+            if item.selected {
+                group.selected_item_count += 1;
+            }
+            if item.attention {
+                group.attention_item_count += 1;
+            }
+            group.selected |= item.selected;
+            group.default_dispatch |= item.default_dispatch;
+            group.active |= item.active;
+            group.attention |= item.attention;
+            group.primary |= item.primary;
+            if group.disabled_reason.is_none() && item.disabled_reason.is_some() {
+                group.disabled_reason = item.disabled_reason.clone();
+            }
+            group.enabled = group.enabled_item_count > 0;
+            group.disabled = group.enabled_item_count == 0;
+            group.empty = group.empty_item_count == group.item_count;
+        }
+
+        let active_menu_group_id =
+            menu.active_menu_item_id
+                .as_ref()
+                .and_then(|active_menu_item_id| {
+                    menu_groups
+                        .iter()
+                        .find(|group| {
+                            group
+                                .menu_item_ids
+                                .iter()
+                                .any(|menu_item_id| menu_item_id == active_menu_item_id)
+                        })
+                        .map(|group| group.id.clone())
+                });
+        let attention_menu_group_id =
+            menu.attention_menu_item_id
+                .as_ref()
+                .and_then(|attention_menu_item_id| {
+                    menu_groups
+                        .iter()
+                        .find(|group| {
+                            group
+                                .menu_item_ids
+                                .iter()
+                                .any(|menu_item_id| menu_item_id == attention_menu_item_id)
+                        })
+                        .map(|group| group.id.clone())
+                });
+        let default_menu_group_id =
+            menu.default_menu_item_id
+                .as_ref()
+                .and_then(|default_menu_item_id| {
+                    menu_groups
+                        .iter()
+                        .find(|group| {
+                            group
+                                .menu_item_ids
+                                .iter()
+                                .any(|menu_item_id| menu_item_id == default_menu_item_id)
+                        })
+                        .map(|group| group.id.clone())
+                });
+        let primary_menu_group_id =
+            menu.primary_menu_item_id
+                .as_ref()
+                .and_then(|primary_menu_item_id| {
+                    menu_groups
+                        .iter()
+                        .find(|group| {
+                            group
+                                .menu_item_ids
+                                .iter()
+                                .any(|menu_item_id| menu_item_id == primary_menu_item_id)
+                        })
+                        .map(|group| group.id.clone())
+                });
+        let enabled_menu_group_count = menu_groups.iter().filter(|group| group.enabled).count();
+        let disabled_menu_group_count = menu_groups.len().saturating_sub(enabled_menu_group_count);
+        let empty_menu_group_count = menu_groups.iter().filter(|group| group.empty).count();
+        let primary_menu_group_count = menu_groups.iter().filter(|group| group.primary).count();
+        let selected_menu_group_count = menu_groups.iter().filter(|group| group.selected).count();
+        let attention_menu_group_count = menu_groups.iter().filter(|group| group.attention).count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUPS_SCHEMA_VERSION,
+            package_name: menu.package_name.clone(),
+            source_fingerprint: menu.source_fingerprint.clone(),
+            title: menu.title.clone(),
+            startup_route: menu.startup_route.clone(),
+            ready: menu.ready,
+            severity: menu.severity.clone(),
+            attention_required: menu.attention_required,
+            active_lane_id: menu.active_lane_id.clone(),
+            active_tab_id: menu.active_tab_id.clone(),
+            active_panel_id: menu.active_panel_id.clone(),
+            active_panel_card_id: menu.active_panel_card_id.clone(),
+            active_panel_card_action_id: menu.active_panel_card_action_id.clone(),
+            active_menu_item_id: menu.active_menu_item_id.clone(),
+            active_menu_group_id,
+            attention_lane_id: menu.attention_lane_id.clone(),
+            attention_tab_id: menu.attention_tab_id.clone(),
+            attention_panel_id: menu.attention_panel_id.clone(),
+            attention_panel_card_id: menu.attention_panel_card_id.clone(),
+            attention_panel_card_action_id: menu.attention_panel_card_action_id.clone(),
+            attention_menu_item_id: menu.attention_menu_item_id.clone(),
+            attention_menu_group_id,
+            default_menu_item_id: menu.default_menu_item_id.clone(),
+            default_menu_group_id,
+            primary_menu_item_id: menu.primary_menu_item_id.clone(),
+            primary_menu_group_id,
+            lane_count: menu.lane_count,
+            tab_count: menu.tab_count,
+            enabled_tab_count: menu.enabled_tab_count,
+            disabled_tab_count: menu.disabled_tab_count,
+            panel_count: menu.panel_count,
+            enabled_panel_count: menu.enabled_panel_count,
+            disabled_panel_count: menu.disabled_panel_count,
+            empty_panel_count: menu.empty_panel_count,
+            panel_card_count: menu.panel_card_count,
+            enabled_panel_card_count: menu.enabled_panel_card_count,
+            disabled_panel_card_count: menu.disabled_panel_card_count,
+            empty_panel_card_count: menu.empty_panel_card_count,
+            panel_card_action_count: menu.panel_card_action_count,
+            enabled_panel_card_action_count: menu.enabled_panel_card_action_count,
+            disabled_panel_card_action_count: menu.disabled_panel_card_action_count,
+            empty_panel_card_action_count: menu.empty_panel_card_action_count,
+            primary_panel_card_action_count: menu.primary_panel_card_action_count,
+            menu_item_count: menu.menu_item_count,
+            enabled_menu_item_count: menu.enabled_menu_item_count,
+            disabled_menu_item_count: menu.disabled_menu_item_count,
+            empty_menu_item_count: menu.empty_menu_item_count,
+            primary_menu_item_count: menu.primary_menu_item_count,
+            selected_menu_item_count: menu.selected_menu_item_count,
+            attention_menu_item_count: menu.attention_menu_item_count,
+            menu_group_count: menu_groups.len(),
+            enabled_menu_group_count,
+            disabled_menu_group_count,
+            empty_menu_group_count,
+            primary_menu_group_count,
+            selected_menu_group_count,
+            attention_menu_group_count,
+            menu_groups,
+            dispatch_queue_capability_id: menu.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: menu
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: menu
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: menu.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id: menu
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: menu
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: menu
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id: menu
+                .dispatch_queue_lane_tab_panel_card_actions_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_capability_id: menu
+                .dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-groups-json"
+                    .to_string(),
+            artifact_capability_count: menu.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcut {
+    pub id: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub target: String,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub enabled_item_count: usize,
+    pub disabled_item_count: usize,
+    pub empty_item_count: usize,
+    pub primary_item_count: usize,
+    pub selected_item_count: usize,
+    pub attention_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub active_menu_item_id: Option<String>,
+    pub active_menu_group_id: Option<String>,
+    pub active_menu_group_shortcut_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub attention_menu_item_id: Option<String>,
+    pub attention_menu_group_id: Option<String>,
+    pub attention_menu_group_shortcut_id: Option<String>,
+    pub default_menu_item_id: Option<String>,
+    pub default_menu_group_id: Option<String>,
+    pub default_menu_group_shortcut_id: Option<String>,
+    pub primary_menu_item_id: Option<String>,
+    pub primary_menu_group_id: Option<String>,
+    pub primary_menu_group_shortcut_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub menu_item_count: usize,
+    pub enabled_menu_item_count: usize,
+    pub disabled_menu_item_count: usize,
+    pub empty_menu_item_count: usize,
+    pub primary_menu_item_count: usize,
+    pub selected_menu_item_count: usize,
+    pub attention_menu_item_count: usize,
+    pub menu_group_count: usize,
+    pub enabled_menu_group_count: usize,
+    pub disabled_menu_group_count: usize,
+    pub empty_menu_group_count: usize,
+    pub primary_menu_group_count: usize,
+    pub selected_menu_group_count: usize,
+    pub attention_menu_group_count: usize,
+    pub menu_group_shortcut_count: usize,
+    pub enabled_menu_group_shortcut_count: usize,
+    pub disabled_menu_group_shortcut_count: usize,
+    pub empty_menu_group_shortcut_count: usize,
+    pub primary_menu_group_shortcut_count: usize,
+    pub selected_menu_group_shortcut_count: usize,
+    pub attention_menu_group_shortcut_count: usize,
+    pub menu_group_shortcuts:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcut>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_menu_groups(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_menu_groups(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_menu_groups(
+        groups: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups,
+    ) -> Self {
+        let menu_group_shortcuts = groups
+            .menu_groups
+            .iter()
+            .map(|group| {
+                let group_id_suffix = group
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.",
+                    )
+                    .unwrap_or(group.queue_state.as_str());
+                let accelerator = match group.queue_state.as_str() {
+                    "queued" => "mod+1",
+                    "blocked" => "mod+2",
+                    "attention" => "mod+3",
+                    _ => "mod+0",
+                };
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcut {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut.{group_id_suffix}"
+                    ),
+                    menu_group_id: group.id.clone(),
+                    queue_state: group.queue_state.clone(),
+                    label: group.label.clone(),
+                    summary: group.summary.clone(),
+                    accelerator: accelerator.to_string(),
+                    target: group.id.clone(),
+                    menu_item_ids: group.menu_item_ids.clone(),
+                    action_ids: group.action_ids.clone(),
+                    dispatch_queue_item_count: group.dispatch_queue_item_count,
+                    badge_count: group.badge_count,
+                    position: group.position,
+                    item_count: group.item_count,
+                    enabled_item_count: group.enabled_item_count,
+                    disabled_item_count: group.disabled_item_count,
+                    empty_item_count: group.empty_item_count,
+                    primary_item_count: group.primary_item_count,
+                    selected_item_count: group.selected_item_count,
+                    attention_item_count: group.attention_item_count,
+                    selected: group.selected,
+                    default_dispatch: group.default_dispatch,
+                    active: group.active,
+                    attention: group.attention,
+                    disabled: group.disabled,
+                    empty: group.empty,
+                    enabled: group.enabled,
+                    primary: group.primary,
+                    disabled_reason: group.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+        let active_menu_group_shortcut_id =
+            groups
+                .active_menu_group_id
+                .as_ref()
+                .and_then(|active_menu_group_id| {
+                    menu_group_shortcuts
+                        .iter()
+                        .find(|shortcut| shortcut.menu_group_id == active_menu_group_id.as_str())
+                        .map(|shortcut| shortcut.id.clone())
+                });
+        let attention_menu_group_shortcut_id =
+            groups
+                .attention_menu_group_id
+                .as_ref()
+                .and_then(|attention_menu_group_id| {
+                    menu_group_shortcuts
+                        .iter()
+                        .find(|shortcut| shortcut.menu_group_id == attention_menu_group_id.as_str())
+                        .map(|shortcut| shortcut.id.clone())
+                });
+        let default_menu_group_shortcut_id =
+            groups
+                .default_menu_group_id
+                .as_ref()
+                .and_then(|default_menu_group_id| {
+                    menu_group_shortcuts
+                        .iter()
+                        .find(|shortcut| shortcut.menu_group_id == default_menu_group_id.as_str())
+                        .map(|shortcut| shortcut.id.clone())
+                });
+        let primary_menu_group_shortcut_id =
+            groups
+                .primary_menu_group_id
+                .as_ref()
+                .and_then(|primary_menu_group_id| {
+                    menu_group_shortcuts
+                        .iter()
+                        .find(|shortcut| shortcut.menu_group_id == primary_menu_group_id.as_str())
+                        .map(|shortcut| shortcut.id.clone())
+                });
+        let enabled_menu_group_shortcut_count = menu_group_shortcuts
+            .iter()
+            .filter(|shortcut| shortcut.enabled)
+            .count();
+        let disabled_menu_group_shortcut_count = menu_group_shortcuts
+            .len()
+            .saturating_sub(enabled_menu_group_shortcut_count);
+        let empty_menu_group_shortcut_count = menu_group_shortcuts
+            .iter()
+            .filter(|shortcut| shortcut.empty)
+            .count();
+        let primary_menu_group_shortcut_count = menu_group_shortcuts
+            .iter()
+            .filter(|shortcut| shortcut.primary)
+            .count();
+        let selected_menu_group_shortcut_count = menu_group_shortcuts
+            .iter()
+            .filter(|shortcut| shortcut.selected)
+            .count();
+        let attention_menu_group_shortcut_count = menu_group_shortcuts
+            .iter()
+            .filter(|shortcut| shortcut.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUTS_SCHEMA_VERSION,
+            package_name: groups.package_name.clone(),
+            source_fingerprint: groups.source_fingerprint.clone(),
+            title: groups.title.clone(),
+            startup_route: groups.startup_route.clone(),
+            ready: groups.ready,
+            severity: groups.severity.clone(),
+            attention_required: groups.attention_required,
+            active_lane_id: groups.active_lane_id.clone(),
+            active_tab_id: groups.active_tab_id.clone(),
+            active_panel_id: groups.active_panel_id.clone(),
+            active_panel_card_id: groups.active_panel_card_id.clone(),
+            active_panel_card_action_id: groups.active_panel_card_action_id.clone(),
+            active_menu_item_id: groups.active_menu_item_id.clone(),
+            active_menu_group_id: groups.active_menu_group_id.clone(),
+            active_menu_group_shortcut_id,
+            attention_lane_id: groups.attention_lane_id.clone(),
+            attention_tab_id: groups.attention_tab_id.clone(),
+            attention_panel_id: groups.attention_panel_id.clone(),
+            attention_panel_card_id: groups.attention_panel_card_id.clone(),
+            attention_panel_card_action_id: groups.attention_panel_card_action_id.clone(),
+            attention_menu_item_id: groups.attention_menu_item_id.clone(),
+            attention_menu_group_id: groups.attention_menu_group_id.clone(),
+            attention_menu_group_shortcut_id,
+            default_menu_item_id: groups.default_menu_item_id.clone(),
+            default_menu_group_id: groups.default_menu_group_id.clone(),
+            default_menu_group_shortcut_id,
+            primary_menu_item_id: groups.primary_menu_item_id.clone(),
+            primary_menu_group_id: groups.primary_menu_group_id.clone(),
+            primary_menu_group_shortcut_id,
+            lane_count: groups.lane_count,
+            tab_count: groups.tab_count,
+            enabled_tab_count: groups.enabled_tab_count,
+            disabled_tab_count: groups.disabled_tab_count,
+            panel_count: groups.panel_count,
+            enabled_panel_count: groups.enabled_panel_count,
+            disabled_panel_count: groups.disabled_panel_count,
+            empty_panel_count: groups.empty_panel_count,
+            panel_card_count: groups.panel_card_count,
+            enabled_panel_card_count: groups.enabled_panel_card_count,
+            disabled_panel_card_count: groups.disabled_panel_card_count,
+            empty_panel_card_count: groups.empty_panel_card_count,
+            panel_card_action_count: groups.panel_card_action_count,
+            enabled_panel_card_action_count: groups.enabled_panel_card_action_count,
+            disabled_panel_card_action_count: groups.disabled_panel_card_action_count,
+            empty_panel_card_action_count: groups.empty_panel_card_action_count,
+            primary_panel_card_action_count: groups.primary_panel_card_action_count,
+            menu_item_count: groups.menu_item_count,
+            enabled_menu_item_count: groups.enabled_menu_item_count,
+            disabled_menu_item_count: groups.disabled_menu_item_count,
+            empty_menu_item_count: groups.empty_menu_item_count,
+            primary_menu_item_count: groups.primary_menu_item_count,
+            selected_menu_item_count: groups.selected_menu_item_count,
+            attention_menu_item_count: groups.attention_menu_item_count,
+            menu_group_count: groups.menu_group_count,
+            enabled_menu_group_count: groups.enabled_menu_group_count,
+            disabled_menu_group_count: groups.disabled_menu_group_count,
+            empty_menu_group_count: groups.empty_menu_group_count,
+            primary_menu_group_count: groups.primary_menu_group_count,
+            selected_menu_group_count: groups.selected_menu_group_count,
+            attention_menu_group_count: groups.attention_menu_group_count,
+            menu_group_shortcut_count: menu_group_shortcuts.len(),
+            enabled_menu_group_shortcut_count,
+            disabled_menu_group_shortcut_count,
+            empty_menu_group_shortcut_count,
+            primary_menu_group_shortcut_count,
+            selected_menu_group_shortcut_count,
+            attention_menu_group_shortcut_count,
+            menu_group_shortcuts,
+            dispatch_queue_capability_id: groups.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: groups
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: groups
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: groups.dispatch_queue_lanes_capability_id.clone(),
+            dispatch_queue_lane_tabs_capability_id: groups
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: groups
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: groups
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id: groups
+                .dispatch_queue_lane_tab_panel_card_actions_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_capability_id: groups
+                .dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: groups
+                .dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcuts-json"
+                    .to_string(),
+            artifact_capability_count: groups.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding {
+    pub id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub enabled_item_count: usize,
+    pub disabled_item_count: usize,
+    pub empty_item_count: usize,
+    pub primary_item_count: usize,
+    pub selected_item_count: usize,
+    pub attention_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub active_menu_item_id: Option<String>,
+    pub active_menu_group_id: Option<String>,
+    pub active_menu_group_shortcut_id: Option<String>,
+    pub active_menu_group_shortcut_binding_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub attention_menu_item_id: Option<String>,
+    pub attention_menu_group_id: Option<String>,
+    pub attention_menu_group_shortcut_id: Option<String>,
+    pub attention_menu_group_shortcut_binding_id: Option<String>,
+    pub default_menu_item_id: Option<String>,
+    pub default_menu_group_id: Option<String>,
+    pub default_menu_group_shortcut_id: Option<String>,
+    pub default_menu_group_shortcut_binding_id: Option<String>,
+    pub primary_menu_item_id: Option<String>,
+    pub primary_menu_group_id: Option<String>,
+    pub primary_menu_group_shortcut_id: Option<String>,
+    pub primary_menu_group_shortcut_binding_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub menu_item_count: usize,
+    pub enabled_menu_item_count: usize,
+    pub disabled_menu_item_count: usize,
+    pub empty_menu_item_count: usize,
+    pub primary_menu_item_count: usize,
+    pub selected_menu_item_count: usize,
+    pub attention_menu_item_count: usize,
+    pub menu_group_count: usize,
+    pub enabled_menu_group_count: usize,
+    pub disabled_menu_group_count: usize,
+    pub empty_menu_group_count: usize,
+    pub primary_menu_group_count: usize,
+    pub selected_menu_group_count: usize,
+    pub attention_menu_group_count: usize,
+    pub menu_group_shortcut_count: usize,
+    pub enabled_menu_group_shortcut_count: usize,
+    pub disabled_menu_group_shortcut_count: usize,
+    pub empty_menu_group_shortcut_count: usize,
+    pub primary_menu_group_shortcut_count: usize,
+    pub selected_menu_group_shortcut_count: usize,
+    pub attention_menu_group_shortcut_count: usize,
+    pub menu_group_shortcut_binding_count: usize,
+    pub enabled_menu_group_shortcut_binding_count: usize,
+    pub disabled_menu_group_shortcut_binding_count: usize,
+    pub empty_menu_group_shortcut_binding_count: usize,
+    pub primary_menu_group_shortcut_binding_count: usize,
+    pub selected_menu_group_shortcut_binding_count: usize,
+    pub attention_menu_group_shortcut_binding_count: usize,
+    pub menu_group_shortcut_bindings:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shortcuts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_shortcuts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_shortcuts(
+        shortcuts: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts,
+    ) -> Self {
+        let menu_group_shortcut_bindings = shortcuts
+            .menu_group_shortcuts
+            .iter()
+            .map(|shortcut| {
+                let shortcut_id_suffix = shortcut
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut.",
+                    )
+                    .unwrap_or(shortcut.queue_state.as_str());
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-binding.{shortcut_id_suffix}"
+                    ),
+                    shortcut_id: shortcut.id.clone(),
+                    command_id: format!(
+                        "berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.{shortcut_id_suffix}"
+                    ),
+                    scope: "dashboard.dispatch-queue".to_string(),
+                    target_kind: "menu-group".to_string(),
+                    target: shortcut.target.clone(),
+                    menu_group_id: shortcut.menu_group_id.clone(),
+                    queue_state: shortcut.queue_state.clone(),
+                    label: shortcut.label.clone(),
+                    summary: shortcut.summary.clone(),
+                    accelerator: shortcut.accelerator.clone(),
+                    menu_item_ids: shortcut.menu_item_ids.clone(),
+                    action_ids: shortcut.action_ids.clone(),
+                    dispatch_queue_item_count: shortcut.dispatch_queue_item_count,
+                    badge_count: shortcut.badge_count,
+                    position: shortcut.position,
+                    item_count: shortcut.item_count,
+                    enabled_item_count: shortcut.enabled_item_count,
+                    disabled_item_count: shortcut.disabled_item_count,
+                    empty_item_count: shortcut.empty_item_count,
+                    primary_item_count: shortcut.primary_item_count,
+                    selected_item_count: shortcut.selected_item_count,
+                    attention_item_count: shortcut.attention_item_count,
+                    selected: shortcut.selected,
+                    default_dispatch: shortcut.default_dispatch,
+                    active: shortcut.active,
+                    attention: shortcut.attention,
+                    disabled: shortcut.disabled,
+                    empty: shortcut.empty,
+                    enabled: shortcut.enabled,
+                    primary: shortcut.primary,
+                    disabled_reason: shortcut.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let binding_id_for_shortcut = |shortcut_id: &Option<String>| {
+            shortcut_id.as_ref().and_then(|shortcut_id| {
+                menu_group_shortcut_bindings
+                    .iter()
+                    .find(|binding| binding.shortcut_id == shortcut_id.as_str())
+                    .map(|binding| binding.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.active_menu_group_shortcut_id);
+        let attention_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.attention_menu_group_shortcut_id);
+        let default_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.default_menu_group_shortcut_id);
+        let primary_menu_group_shortcut_binding_id =
+            binding_id_for_shortcut(&shortcuts.primary_menu_group_shortcut_id);
+
+        let enabled_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.enabled)
+            .count();
+        let disabled_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .len()
+            .saturating_sub(enabled_menu_group_shortcut_binding_count);
+        let empty_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.empty)
+            .count();
+        let primary_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.primary)
+            .count();
+        let selected_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.selected)
+            .count();
+        let attention_menu_group_shortcut_binding_count = menu_group_shortcut_bindings
+            .iter()
+            .filter(|binding| binding.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_BINDINGS_SCHEMA_VERSION,
+            package_name: shortcuts.package_name.clone(),
+            source_fingerprint: shortcuts.source_fingerprint.clone(),
+            title: shortcuts.title.clone(),
+            startup_route: shortcuts.startup_route.clone(),
+            ready: shortcuts.ready,
+            severity: shortcuts.severity.clone(),
+            attention_required: shortcuts.attention_required,
+            active_lane_id: shortcuts.active_lane_id.clone(),
+            active_tab_id: shortcuts.active_tab_id.clone(),
+            active_panel_id: shortcuts.active_panel_id.clone(),
+            active_panel_card_id: shortcuts.active_panel_card_id.clone(),
+            active_panel_card_action_id: shortcuts.active_panel_card_action_id.clone(),
+            active_menu_item_id: shortcuts.active_menu_item_id.clone(),
+            active_menu_group_id: shortcuts.active_menu_group_id.clone(),
+            active_menu_group_shortcut_id: shortcuts.active_menu_group_shortcut_id.clone(),
+            active_menu_group_shortcut_binding_id,
+            attention_lane_id: shortcuts.attention_lane_id.clone(),
+            attention_tab_id: shortcuts.attention_tab_id.clone(),
+            attention_panel_id: shortcuts.attention_panel_id.clone(),
+            attention_panel_card_id: shortcuts.attention_panel_card_id.clone(),
+            attention_panel_card_action_id: shortcuts.attention_panel_card_action_id.clone(),
+            attention_menu_item_id: shortcuts.attention_menu_item_id.clone(),
+            attention_menu_group_id: shortcuts.attention_menu_group_id.clone(),
+            attention_menu_group_shortcut_id: shortcuts.attention_menu_group_shortcut_id.clone(),
+            attention_menu_group_shortcut_binding_id,
+            default_menu_item_id: shortcuts.default_menu_item_id.clone(),
+            default_menu_group_id: shortcuts.default_menu_group_id.clone(),
+            default_menu_group_shortcut_id: shortcuts.default_menu_group_shortcut_id.clone(),
+            default_menu_group_shortcut_binding_id,
+            primary_menu_item_id: shortcuts.primary_menu_item_id.clone(),
+            primary_menu_group_id: shortcuts.primary_menu_group_id.clone(),
+            primary_menu_group_shortcut_id: shortcuts.primary_menu_group_shortcut_id.clone(),
+            primary_menu_group_shortcut_binding_id,
+            lane_count: shortcuts.lane_count,
+            tab_count: shortcuts.tab_count,
+            enabled_tab_count: shortcuts.enabled_tab_count,
+            disabled_tab_count: shortcuts.disabled_tab_count,
+            panel_count: shortcuts.panel_count,
+            enabled_panel_count: shortcuts.enabled_panel_count,
+            disabled_panel_count: shortcuts.disabled_panel_count,
+            empty_panel_count: shortcuts.empty_panel_count,
+            panel_card_count: shortcuts.panel_card_count,
+            enabled_panel_card_count: shortcuts.enabled_panel_card_count,
+            disabled_panel_card_count: shortcuts.disabled_panel_card_count,
+            empty_panel_card_count: shortcuts.empty_panel_card_count,
+            panel_card_action_count: shortcuts.panel_card_action_count,
+            enabled_panel_card_action_count: shortcuts.enabled_panel_card_action_count,
+            disabled_panel_card_action_count: shortcuts.disabled_panel_card_action_count,
+            empty_panel_card_action_count: shortcuts.empty_panel_card_action_count,
+            primary_panel_card_action_count: shortcuts.primary_panel_card_action_count,
+            menu_item_count: shortcuts.menu_item_count,
+            enabled_menu_item_count: shortcuts.enabled_menu_item_count,
+            disabled_menu_item_count: shortcuts.disabled_menu_item_count,
+            empty_menu_item_count: shortcuts.empty_menu_item_count,
+            primary_menu_item_count: shortcuts.primary_menu_item_count,
+            selected_menu_item_count: shortcuts.selected_menu_item_count,
+            attention_menu_item_count: shortcuts.attention_menu_item_count,
+            menu_group_count: shortcuts.menu_group_count,
+            enabled_menu_group_count: shortcuts.enabled_menu_group_count,
+            disabled_menu_group_count: shortcuts.disabled_menu_group_count,
+            empty_menu_group_count: shortcuts.empty_menu_group_count,
+            primary_menu_group_count: shortcuts.primary_menu_group_count,
+            selected_menu_group_count: shortcuts.selected_menu_group_count,
+            attention_menu_group_count: shortcuts.attention_menu_group_count,
+            menu_group_shortcut_count: shortcuts.menu_group_shortcut_count,
+            enabled_menu_group_shortcut_count: shortcuts.enabled_menu_group_shortcut_count,
+            disabled_menu_group_shortcut_count: shortcuts.disabled_menu_group_shortcut_count,
+            empty_menu_group_shortcut_count: shortcuts.empty_menu_group_shortcut_count,
+            primary_menu_group_shortcut_count: shortcuts.primary_menu_group_shortcut_count,
+            selected_menu_group_shortcut_count: shortcuts.selected_menu_group_shortcut_count,
+            attention_menu_group_shortcut_count: shortcuts.attention_menu_group_shortcut_count,
+            menu_group_shortcut_binding_count: menu_group_shortcut_bindings.len(),
+            enabled_menu_group_shortcut_binding_count,
+            disabled_menu_group_shortcut_binding_count,
+            empty_menu_group_shortcut_binding_count,
+            primary_menu_group_shortcut_binding_count,
+            selected_menu_group_shortcut_binding_count,
+            attention_menu_group_shortcut_binding_count,
+            menu_group_shortcut_bindings,
+            dispatch_queue_capability_id: shortcuts.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: shortcuts
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: shortcuts
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: shortcuts
+                .dispatch_queue_lanes_capability_id
+                .clone(),
+            dispatch_queue_lane_tabs_capability_id: shortcuts
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_actions_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: shortcuts
+                .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-bindings-json"
+                    .to_string(),
+            artifact_capability_count: shortcuts.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommand {
+    pub id: String,
+    pub binding_id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub registry_id: String,
+    pub handler_id: String,
+    pub command_group: String,
+    pub invocation_kind: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub enabled_item_count: usize,
+    pub disabled_item_count: usize,
+    pub empty_item_count: usize,
+    pub primary_item_count: usize,
+    pub selected_item_count: usize,
+    pub attention_item_count: usize,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub visible: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub registry_id: String,
+    pub command_group: String,
+    pub active_lane_id: Option<String>,
+    pub active_tab_id: Option<String>,
+    pub active_panel_id: Option<String>,
+    pub active_panel_card_id: Option<String>,
+    pub active_panel_card_action_id: Option<String>,
+    pub active_menu_item_id: Option<String>,
+    pub active_menu_group_id: Option<String>,
+    pub active_menu_group_shortcut_id: Option<String>,
+    pub active_menu_group_shortcut_binding_id: Option<String>,
+    pub active_menu_group_shortcut_command_id: Option<String>,
+    pub attention_lane_id: Option<String>,
+    pub attention_tab_id: Option<String>,
+    pub attention_panel_id: Option<String>,
+    pub attention_panel_card_id: Option<String>,
+    pub attention_panel_card_action_id: Option<String>,
+    pub attention_menu_item_id: Option<String>,
+    pub attention_menu_group_id: Option<String>,
+    pub attention_menu_group_shortcut_id: Option<String>,
+    pub attention_menu_group_shortcut_binding_id: Option<String>,
+    pub attention_menu_group_shortcut_command_id: Option<String>,
+    pub default_menu_item_id: Option<String>,
+    pub default_menu_group_id: Option<String>,
+    pub default_menu_group_shortcut_id: Option<String>,
+    pub default_menu_group_shortcut_binding_id: Option<String>,
+    pub default_menu_group_shortcut_command_id: Option<String>,
+    pub primary_menu_item_id: Option<String>,
+    pub primary_menu_group_id: Option<String>,
+    pub primary_menu_group_shortcut_id: Option<String>,
+    pub primary_menu_group_shortcut_binding_id: Option<String>,
+    pub primary_menu_group_shortcut_command_id: Option<String>,
+    pub lane_count: usize,
+    pub tab_count: usize,
+    pub enabled_tab_count: usize,
+    pub disabled_tab_count: usize,
+    pub panel_count: usize,
+    pub enabled_panel_count: usize,
+    pub disabled_panel_count: usize,
+    pub empty_panel_count: usize,
+    pub panel_card_count: usize,
+    pub enabled_panel_card_count: usize,
+    pub disabled_panel_card_count: usize,
+    pub empty_panel_card_count: usize,
+    pub panel_card_action_count: usize,
+    pub enabled_panel_card_action_count: usize,
+    pub disabled_panel_card_action_count: usize,
+    pub empty_panel_card_action_count: usize,
+    pub primary_panel_card_action_count: usize,
+    pub menu_item_count: usize,
+    pub enabled_menu_item_count: usize,
+    pub disabled_menu_item_count: usize,
+    pub empty_menu_item_count: usize,
+    pub primary_menu_item_count: usize,
+    pub selected_menu_item_count: usize,
+    pub attention_menu_item_count: usize,
+    pub menu_group_count: usize,
+    pub enabled_menu_group_count: usize,
+    pub disabled_menu_group_count: usize,
+    pub empty_menu_group_count: usize,
+    pub primary_menu_group_count: usize,
+    pub selected_menu_group_count: usize,
+    pub attention_menu_group_count: usize,
+    pub menu_group_shortcut_count: usize,
+    pub enabled_menu_group_shortcut_count: usize,
+    pub disabled_menu_group_shortcut_count: usize,
+    pub empty_menu_group_shortcut_count: usize,
+    pub primary_menu_group_shortcut_count: usize,
+    pub selected_menu_group_shortcut_count: usize,
+    pub attention_menu_group_shortcut_count: usize,
+    pub menu_group_shortcut_binding_count: usize,
+    pub enabled_menu_group_shortcut_binding_count: usize,
+    pub disabled_menu_group_shortcut_binding_count: usize,
+    pub empty_menu_group_shortcut_binding_count: usize,
+    pub primary_menu_group_shortcut_binding_count: usize,
+    pub selected_menu_group_shortcut_binding_count: usize,
+    pub attention_menu_group_shortcut_binding_count: usize,
+    pub menu_group_shortcut_command_count: usize,
+    pub enabled_menu_group_shortcut_command_count: usize,
+    pub disabled_menu_group_shortcut_command_count: usize,
+    pub visible_menu_group_shortcut_command_count: usize,
+    pub empty_menu_group_shortcut_command_count: usize,
+    pub primary_menu_group_shortcut_command_count: usize,
+    pub selected_menu_group_shortcut_command_count: usize,
+    pub attention_menu_group_shortcut_command_count: usize,
+    pub menu_group_shortcut_commands:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommand>,
+    pub dispatch_queue_capability_id: String,
+    pub dispatch_queue_summary_capability_id: String,
+    pub dispatch_queue_digest_capability_id: String,
+    pub dispatch_queue_lanes_capability_id: String,
+    pub dispatch_queue_lane_tabs_capability_id: String,
+    pub dispatch_queue_lane_tab_panels_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_cards_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_actions_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_shortcut_bindings(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_shortcut_bindings(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_shortcut_bindings(
+        bindings: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings,
+    ) -> Self {
+        let registry_id = "dashboard.dispatch-queue.shortcut-command-registry".to_string();
+        let command_group = "dispatch-queue".to_string();
+        let menu_group_shortcut_commands = bindings
+            .menu_group_shortcut_bindings
+            .iter()
+            .map(|binding| {
+                let binding_id_suffix = binding
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-binding.",
+                    )
+                    .unwrap_or(binding.queue_state.as_str());
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommand {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.{binding_id_suffix}"
+                    ),
+                    binding_id: binding.id.clone(),
+                    shortcut_id: binding.shortcut_id.clone(),
+                    command_id: binding.command_id.clone(),
+                    registry_id: registry_id.clone(),
+                    handler_id: format!(
+                        "handler.berkeley.app-shell.dashboard.dispatch-queue.menu-group-shortcut.{binding_id_suffix}"
+                    ),
+                    command_group: command_group.clone(),
+                    invocation_kind: "shortcut-binding".to_string(),
+                    scope: binding.scope.clone(),
+                    target_kind: binding.target_kind.clone(),
+                    target: binding.target.clone(),
+                    menu_group_id: binding.menu_group_id.clone(),
+                    queue_state: binding.queue_state.clone(),
+                    label: binding.label.clone(),
+                    summary: binding.summary.clone(),
+                    accelerator: binding.accelerator.clone(),
+                    menu_item_ids: binding.menu_item_ids.clone(),
+                    action_ids: binding.action_ids.clone(),
+                    dispatch_queue_item_count: binding.dispatch_queue_item_count,
+                    badge_count: binding.badge_count,
+                    position: binding.position,
+                    item_count: binding.item_count,
+                    enabled_item_count: binding.enabled_item_count,
+                    disabled_item_count: binding.disabled_item_count,
+                    empty_item_count: binding.empty_item_count,
+                    primary_item_count: binding.primary_item_count,
+                    selected_item_count: binding.selected_item_count,
+                    attention_item_count: binding.attention_item_count,
+                    selected: binding.selected,
+                    default_dispatch: binding.default_dispatch,
+                    active: binding.active,
+                    attention: binding.attention,
+                    disabled: binding.disabled,
+                    empty: binding.empty,
+                    enabled: binding.enabled,
+                    primary: binding.primary,
+                    visible: true,
+                    disabled_reason: binding.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let command_id_for_binding = |binding_id: &Option<String>| {
+            binding_id.as_ref().and_then(|binding_id| {
+                menu_group_shortcut_commands
+                    .iter()
+                    .find(|command| command.binding_id == binding_id.as_str())
+                    .map(|command| command.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_command_id =
+            command_id_for_binding(&bindings.active_menu_group_shortcut_binding_id);
+        let attention_menu_group_shortcut_command_id =
+            command_id_for_binding(&bindings.attention_menu_group_shortcut_binding_id);
+        let default_menu_group_shortcut_command_id =
+            command_id_for_binding(&bindings.default_menu_group_shortcut_binding_id);
+        let primary_menu_group_shortcut_command_id =
+            command_id_for_binding(&bindings.primary_menu_group_shortcut_binding_id);
+
+        let enabled_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .iter()
+            .filter(|command| command.enabled)
+            .count();
+        let disabled_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .len()
+            .saturating_sub(enabled_menu_group_shortcut_command_count);
+        let visible_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .iter()
+            .filter(|command| command.visible)
+            .count();
+        let empty_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .iter()
+            .filter(|command| command.empty)
+            .count();
+        let primary_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .iter()
+            .filter(|command| command.primary)
+            .count();
+        let selected_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .iter()
+            .filter(|command| command.selected)
+            .count();
+        let attention_menu_group_shortcut_command_count = menu_group_shortcut_commands
+            .iter()
+            .filter(|command| command.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_REGISTRY_SCHEMA_VERSION,
+            package_name: bindings.package_name.clone(),
+            source_fingerprint: bindings.source_fingerprint.clone(),
+            title: bindings.title.clone(),
+            startup_route: bindings.startup_route.clone(),
+            ready: bindings.ready,
+            severity: bindings.severity.clone(),
+            attention_required: bindings.attention_required,
+            registry_id,
+            command_group,
+            active_lane_id: bindings.active_lane_id.clone(),
+            active_tab_id: bindings.active_tab_id.clone(),
+            active_panel_id: bindings.active_panel_id.clone(),
+            active_panel_card_id: bindings.active_panel_card_id.clone(),
+            active_panel_card_action_id: bindings.active_panel_card_action_id.clone(),
+            active_menu_item_id: bindings.active_menu_item_id.clone(),
+            active_menu_group_id: bindings.active_menu_group_id.clone(),
+            active_menu_group_shortcut_id: bindings.active_menu_group_shortcut_id.clone(),
+            active_menu_group_shortcut_binding_id: bindings
+                .active_menu_group_shortcut_binding_id
+                .clone(),
+            active_menu_group_shortcut_command_id,
+            attention_lane_id: bindings.attention_lane_id.clone(),
+            attention_tab_id: bindings.attention_tab_id.clone(),
+            attention_panel_id: bindings.attention_panel_id.clone(),
+            attention_panel_card_id: bindings.attention_panel_card_id.clone(),
+            attention_panel_card_action_id: bindings.attention_panel_card_action_id.clone(),
+            attention_menu_item_id: bindings.attention_menu_item_id.clone(),
+            attention_menu_group_id: bindings.attention_menu_group_id.clone(),
+            attention_menu_group_shortcut_id: bindings.attention_menu_group_shortcut_id.clone(),
+            attention_menu_group_shortcut_binding_id: bindings
+                .attention_menu_group_shortcut_binding_id
+                .clone(),
+            attention_menu_group_shortcut_command_id,
+            default_menu_item_id: bindings.default_menu_item_id.clone(),
+            default_menu_group_id: bindings.default_menu_group_id.clone(),
+            default_menu_group_shortcut_id: bindings.default_menu_group_shortcut_id.clone(),
+            default_menu_group_shortcut_binding_id: bindings
+                .default_menu_group_shortcut_binding_id
+                .clone(),
+            default_menu_group_shortcut_command_id,
+            primary_menu_item_id: bindings.primary_menu_item_id.clone(),
+            primary_menu_group_id: bindings.primary_menu_group_id.clone(),
+            primary_menu_group_shortcut_id: bindings.primary_menu_group_shortcut_id.clone(),
+            primary_menu_group_shortcut_binding_id: bindings
+                .primary_menu_group_shortcut_binding_id
+                .clone(),
+            primary_menu_group_shortcut_command_id,
+            lane_count: bindings.lane_count,
+            tab_count: bindings.tab_count,
+            enabled_tab_count: bindings.enabled_tab_count,
+            disabled_tab_count: bindings.disabled_tab_count,
+            panel_count: bindings.panel_count,
+            enabled_panel_count: bindings.enabled_panel_count,
+            disabled_panel_count: bindings.disabled_panel_count,
+            empty_panel_count: bindings.empty_panel_count,
+            panel_card_count: bindings.panel_card_count,
+            enabled_panel_card_count: bindings.enabled_panel_card_count,
+            disabled_panel_card_count: bindings.disabled_panel_card_count,
+            empty_panel_card_count: bindings.empty_panel_card_count,
+            panel_card_action_count: bindings.panel_card_action_count,
+            enabled_panel_card_action_count: bindings.enabled_panel_card_action_count,
+            disabled_panel_card_action_count: bindings.disabled_panel_card_action_count,
+            empty_panel_card_action_count: bindings.empty_panel_card_action_count,
+            primary_panel_card_action_count: bindings.primary_panel_card_action_count,
+            menu_item_count: bindings.menu_item_count,
+            enabled_menu_item_count: bindings.enabled_menu_item_count,
+            disabled_menu_item_count: bindings.disabled_menu_item_count,
+            empty_menu_item_count: bindings.empty_menu_item_count,
+            primary_menu_item_count: bindings.primary_menu_item_count,
+            selected_menu_item_count: bindings.selected_menu_item_count,
+            attention_menu_item_count: bindings.attention_menu_item_count,
+            menu_group_count: bindings.menu_group_count,
+            enabled_menu_group_count: bindings.enabled_menu_group_count,
+            disabled_menu_group_count: bindings.disabled_menu_group_count,
+            empty_menu_group_count: bindings.empty_menu_group_count,
+            primary_menu_group_count: bindings.primary_menu_group_count,
+            selected_menu_group_count: bindings.selected_menu_group_count,
+            attention_menu_group_count: bindings.attention_menu_group_count,
+            menu_group_shortcut_count: bindings.menu_group_shortcut_count,
+            enabled_menu_group_shortcut_count: bindings.enabled_menu_group_shortcut_count,
+            disabled_menu_group_shortcut_count: bindings.disabled_menu_group_shortcut_count,
+            empty_menu_group_shortcut_count: bindings.empty_menu_group_shortcut_count,
+            primary_menu_group_shortcut_count: bindings.primary_menu_group_shortcut_count,
+            selected_menu_group_shortcut_count: bindings.selected_menu_group_shortcut_count,
+            attention_menu_group_shortcut_count: bindings.attention_menu_group_shortcut_count,
+            menu_group_shortcut_binding_count: bindings.menu_group_shortcut_binding_count,
+            enabled_menu_group_shortcut_binding_count: bindings
+                .enabled_menu_group_shortcut_binding_count,
+            disabled_menu_group_shortcut_binding_count: bindings
+                .disabled_menu_group_shortcut_binding_count,
+            empty_menu_group_shortcut_binding_count: bindings
+                .empty_menu_group_shortcut_binding_count,
+            primary_menu_group_shortcut_binding_count: bindings
+                .primary_menu_group_shortcut_binding_count,
+            selected_menu_group_shortcut_binding_count: bindings
+                .selected_menu_group_shortcut_binding_count,
+            attention_menu_group_shortcut_binding_count: bindings
+                .attention_menu_group_shortcut_binding_count,
+            menu_group_shortcut_command_count: menu_group_shortcut_commands.len(),
+            enabled_menu_group_shortcut_command_count,
+            disabled_menu_group_shortcut_command_count,
+            visible_menu_group_shortcut_command_count,
+            empty_menu_group_shortcut_command_count,
+            primary_menu_group_shortcut_command_count,
+            selected_menu_group_shortcut_command_count,
+            attention_menu_group_shortcut_command_count,
+            menu_group_shortcut_commands,
+            dispatch_queue_capability_id: bindings.dispatch_queue_capability_id.clone(),
+            dispatch_queue_summary_capability_id: bindings
+                .dispatch_queue_summary_capability_id
+                .clone(),
+            dispatch_queue_digest_capability_id: bindings
+                .dispatch_queue_digest_capability_id
+                .clone(),
+            dispatch_queue_lanes_capability_id: bindings
+                .dispatch_queue_lanes_capability_id
+                .clone(),
+            dispatch_queue_lane_tabs_capability_id: bindings
+                .dispatch_queue_lane_tabs_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panels_capability_id: bindings
+                .dispatch_queue_lane_tab_panels_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_cards_capability_id: bindings
+                .dispatch_queue_lane_tab_panel_cards_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_actions_capability_id: bindings
+                .dispatch_queue_lane_tab_panel_card_actions_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_capability_id: bindings
+                .dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id: bindings
+                .dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id: bindings
+                .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id: bindings
+                .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id
+                .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-registry-json"
+                    .to_string(),
+            artifact_capability_count: bindings.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteItem
+{
+    pub id: String,
+    pub palette_id: String,
+    pub command_entry_id: String,
+    pub binding_id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub registry_id: String,
+    pub handler_id: String,
+    pub command_group: String,
+    pub invocation_kind: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub search_text: String,
+    pub keywords: Vec<String>,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub rank: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub enabled_item_count: usize,
+    pub disabled_item_count: usize,
+    pub empty_item_count: usize,
+    pub primary_item_count: usize,
+    pub selected_item_count: usize,
+    pub attention_item_count: usize,
+    pub selectable: bool,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub visible: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub active_menu_group_shortcut_command_id: Option<String>,
+    pub active_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub attention_menu_group_shortcut_command_id: Option<String>,
+    pub attention_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub default_menu_group_shortcut_command_id: Option<String>,
+    pub default_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub primary_menu_group_shortcut_command_id: Option<String>,
+    pub primary_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub menu_group_shortcut_command_count: usize,
+    pub enabled_menu_group_shortcut_command_count: usize,
+    pub disabled_menu_group_shortcut_command_count: usize,
+    pub visible_menu_group_shortcut_command_count: usize,
+    pub empty_menu_group_shortcut_command_count: usize,
+    pub primary_menu_group_shortcut_command_count: usize,
+    pub selected_menu_group_shortcut_command_count: usize,
+    pub attention_menu_group_shortcut_command_count: usize,
+    pub command_palette_item_count: usize,
+    pub selectable_command_palette_item_count: usize,
+    pub disabled_command_palette_item_count: usize,
+    pub visible_command_palette_item_count: usize,
+    pub empty_command_palette_item_count: usize,
+    pub primary_command_palette_item_count: usize,
+    pub selected_command_palette_item_count: usize,
+    pub attention_command_palette_item_count: usize,
+    pub command_palette_items:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteItem>,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_command_registry(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_command_registry(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_command_registry(
+        registry: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry,
+    ) -> Self {
+        let palette_id = "dashboard.dispatch-queue.shortcut-command-palette".to_string();
+        let command_palette_items = registry
+            .menu_group_shortcut_commands
+            .iter()
+            .map(|command| {
+                let command_id_suffix = command
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command.",
+                    )
+                    .unwrap_or(command.queue_state.as_str());
+                let selectable = command.visible && command.enabled && !command.empty;
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteItem {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-item.{command_id_suffix}"
+                    ),
+                    palette_id: palette_id.clone(),
+                    command_entry_id: command.id.clone(),
+                    binding_id: command.binding_id.clone(),
+                    shortcut_id: command.shortcut_id.clone(),
+                    command_id: command.command_id.clone(),
+                    registry_id: command.registry_id.clone(),
+                    handler_id: command.handler_id.clone(),
+                    command_group: command.command_group.clone(),
+                    invocation_kind: command.invocation_kind.clone(),
+                    scope: command.scope.clone(),
+                    target_kind: command.target_kind.clone(),
+                    target: command.target.clone(),
+                    menu_group_id: command.menu_group_id.clone(),
+                    queue_state: command.queue_state.clone(),
+                    label: command.label.clone(),
+                    summary: command.summary.clone(),
+                    accelerator: command.accelerator.clone(),
+                    search_text: format!(
+                        "{} {} {} {} {}",
+                        command.label,
+                        command.summary,
+                        command.accelerator,
+                        command.queue_state,
+                        command.target
+                    ),
+                    keywords: vec![
+                        command.queue_state.clone(),
+                        command.command_group.clone(),
+                        command.target_kind.clone(),
+                        command.target.clone(),
+                        command.accelerator.clone(),
+                    ],
+                    menu_item_ids: command.menu_item_ids.clone(),
+                    action_ids: command.action_ids.clone(),
+                    dispatch_queue_item_count: command.dispatch_queue_item_count,
+                    badge_count: command.badge_count,
+                    rank: command.position,
+                    position: command.position,
+                    item_count: command.item_count,
+                    enabled_item_count: command.enabled_item_count,
+                    disabled_item_count: command.disabled_item_count,
+                    empty_item_count: command.empty_item_count,
+                    primary_item_count: command.primary_item_count,
+                    selected_item_count: command.selected_item_count,
+                    attention_item_count: command.attention_item_count,
+                    selectable,
+                    selected: command.selected,
+                    default_dispatch: command.default_dispatch,
+                    active: command.active,
+                    attention: command.attention,
+                    disabled: command.disabled,
+                    empty: command.empty,
+                    enabled: command.enabled,
+                    primary: command.primary,
+                    visible: command.visible,
+                    disabled_reason: command.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let palette_item_id_for_command = |command_id: &Option<String>| {
+            command_id.as_ref().and_then(|command_id| {
+                command_palette_items
+                    .iter()
+                    .find(|item| item.command_entry_id == command_id.as_str())
+                    .map(|item| item.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_command_palette_item_id =
+            palette_item_id_for_command(&registry.active_menu_group_shortcut_command_id);
+        let attention_menu_group_shortcut_command_palette_item_id =
+            palette_item_id_for_command(&registry.attention_menu_group_shortcut_command_id);
+        let default_menu_group_shortcut_command_palette_item_id =
+            palette_item_id_for_command(&registry.default_menu_group_shortcut_command_id);
+        let primary_menu_group_shortcut_command_palette_item_id =
+            palette_item_id_for_command(&registry.primary_menu_group_shortcut_command_id);
+
+        let selectable_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.selectable)
+            .count();
+        let disabled_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.disabled)
+            .count();
+        let visible_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.visible)
+            .count();
+        let empty_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.empty)
+            .count();
+        let primary_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.primary)
+            .count();
+        let selected_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.selected)
+            .count();
+        let attention_command_palette_item_count = command_palette_items
+            .iter()
+            .filter(|item| item.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SCHEMA_VERSION,
+            package_name: registry.package_name.clone(),
+            source_fingerprint: registry.source_fingerprint.clone(),
+            title: registry.title.clone(),
+            startup_route: registry.startup_route.clone(),
+            ready: registry.ready,
+            severity: registry.severity.clone(),
+            attention_required: registry.attention_required,
+            palette_id,
+            registry_id: registry.registry_id.clone(),
+            command_group: registry.command_group.clone(),
+            active_menu_group_shortcut_command_id: registry
+                .active_menu_group_shortcut_command_id
+                .clone(),
+            active_menu_group_shortcut_command_palette_item_id,
+            attention_menu_group_shortcut_command_id: registry
+                .attention_menu_group_shortcut_command_id
+                .clone(),
+            attention_menu_group_shortcut_command_palette_item_id,
+            default_menu_group_shortcut_command_id: registry
+                .default_menu_group_shortcut_command_id
+                .clone(),
+            default_menu_group_shortcut_command_palette_item_id,
+            primary_menu_group_shortcut_command_id: registry
+                .primary_menu_group_shortcut_command_id
+                .clone(),
+            primary_menu_group_shortcut_command_palette_item_id,
+            menu_group_shortcut_command_count: registry.menu_group_shortcut_command_count,
+            enabled_menu_group_shortcut_command_count: registry
+                .enabled_menu_group_shortcut_command_count,
+            disabled_menu_group_shortcut_command_count: registry
+                .disabled_menu_group_shortcut_command_count,
+            visible_menu_group_shortcut_command_count: registry
+                .visible_menu_group_shortcut_command_count,
+            empty_menu_group_shortcut_command_count: registry.empty_menu_group_shortcut_command_count,
+            primary_menu_group_shortcut_command_count: registry
+                .primary_menu_group_shortcut_command_count,
+            selected_menu_group_shortcut_command_count: registry
+                .selected_menu_group_shortcut_command_count,
+            attention_menu_group_shortcut_command_count: registry
+                .attention_menu_group_shortcut_command_count,
+            command_palette_item_count: command_palette_items.len(),
+            selectable_command_palette_item_count,
+            disabled_command_palette_item_count,
+            visible_command_palette_item_count,
+            empty_command_palette_item_count,
+            primary_command_palette_item_count,
+            selected_command_palette_item_count,
+            attention_command_palette_item_count,
+            command_palette_items,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id:
+                registry
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-json"
+                    .to_string(),
+            artifact_capability_count: registry.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry
+{
+    pub id: String,
+    pub search_index_id: String,
+    pub palette_item_id: String,
+    pub command_entry_id: String,
+    pub binding_id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub registry_id: String,
+    pub handler_id: String,
+    pub command_group: String,
+    pub invocation_kind: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub search_text: String,
+    pub normalized_search_text: String,
+    pub search_tokens: Vec<String>,
+    pub keywords: Vec<String>,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub rank: usize,
+    pub position: usize,
+    pub item_count: usize,
+    pub selectable: bool,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub visible: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex {
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub active_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub active_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub attention_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub attention_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub default_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub default_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub primary_menu_group_shortcut_command_palette_item_id: Option<String>,
+    pub primary_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub command_palette_item_count: usize,
+    pub selectable_command_palette_item_count: usize,
+    pub disabled_command_palette_item_count: usize,
+    pub visible_command_palette_item_count: usize,
+    pub empty_command_palette_item_count: usize,
+    pub primary_command_palette_item_count: usize,
+    pub selected_command_palette_item_count: usize,
+    pub attention_command_palette_item_count: usize,
+    pub search_index_entry_count: usize,
+    pub search_token_count: usize,
+    pub selectable_search_index_entry_count: usize,
+    pub disabled_search_index_entry_count: usize,
+    pub visible_search_index_entry_count: usize,
+    pub empty_search_index_entry_count: usize,
+    pub primary_search_index_entry_count: usize,
+    pub selected_search_index_entry_count: usize,
+    pub attention_search_index_entry_count: usize,
+    pub search_index_entries:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry>,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex {
+    pub fn from_bootstrap_snapshot(snapshot: &BerkeleyAppBootstrapSnapshot) -> Self {
+        Self::from_command_palette(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette::from_bootstrap_snapshot(
+                snapshot,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(handoff: &BerkeleyAppShellHandoff) -> Self {
+        Self::from_command_palette(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette::from_shell_handoff(
+                handoff,
+            ),
+        )
+    }
+
+    pub fn from_command_palette(
+        palette: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette,
+    ) -> Self {
+        let search_index_id =
+            "dashboard.dispatch-queue.shortcut-command-palette-search-index".to_string();
+        let search_index_entries = palette
+            .command_palette_items
+            .iter()
+            .map(|item| {
+                let palette_item_id_suffix = item
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-item.",
+                    )
+                    .unwrap_or(item.queue_state.as_str());
+                let search_tokens = command_palette_search_tokens(&item.search_text, &item.keywords);
+                let normalized_search_text = search_tokens.join(" ");
+                BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-entry.{palette_item_id_suffix}"
+                    ),
+                    search_index_id: search_index_id.clone(),
+                    palette_item_id: item.id.clone(),
+                    command_entry_id: item.command_entry_id.clone(),
+                    binding_id: item.binding_id.clone(),
+                    shortcut_id: item.shortcut_id.clone(),
+                    command_id: item.command_id.clone(),
+                    registry_id: item.registry_id.clone(),
+                    handler_id: item.handler_id.clone(),
+                    command_group: item.command_group.clone(),
+                    invocation_kind: item.invocation_kind.clone(),
+                    scope: item.scope.clone(),
+                    target_kind: item.target_kind.clone(),
+                    target: item.target.clone(),
+                    menu_group_id: item.menu_group_id.clone(),
+                    queue_state: item.queue_state.clone(),
+                    label: item.label.clone(),
+                    summary: item.summary.clone(),
+                    accelerator: item.accelerator.clone(),
+                    search_text: item.search_text.clone(),
+                    normalized_search_text,
+                    search_tokens,
+                    keywords: item.keywords.clone(),
+                    menu_item_ids: item.menu_item_ids.clone(),
+                    action_ids: item.action_ids.clone(),
+                    dispatch_queue_item_count: item.dispatch_queue_item_count,
+                    badge_count: item.badge_count,
+                    rank: item.rank,
+                    position: item.position,
+                    item_count: item.item_count,
+                    selectable: item.selectable,
+                    selected: item.selected,
+                    default_dispatch: item.default_dispatch,
+                    active: item.active,
+                    attention: item.attention,
+                    disabled: item.disabled,
+                    empty: item.empty,
+                    enabled: item.enabled,
+                    primary: item.primary,
+                    visible: item.visible,
+                    disabled_reason: item.disabled_reason.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let search_index_entry_id_for_palette_item = |palette_item_id: &Option<String>| {
+            palette_item_id.as_ref().and_then(|palette_item_id| {
+                search_index_entries
+                    .iter()
+                    .find(|entry| entry.palette_item_id == palette_item_id.as_str())
+                    .map(|entry| entry.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.active_menu_group_shortcut_command_palette_item_id,
+            );
+        let attention_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.attention_menu_group_shortcut_command_palette_item_id,
+            );
+        let default_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.default_menu_group_shortcut_command_palette_item_id,
+            );
+        let primary_menu_group_shortcut_command_search_index_entry_id =
+            search_index_entry_id_for_palette_item(
+                &palette.primary_menu_group_shortcut_command_palette_item_id,
+            );
+
+        let search_token_count = search_index_entries
+            .iter()
+            .map(|entry| entry.search_tokens.len())
+            .sum();
+        let selectable_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.selectable)
+            .count();
+        let disabled_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.disabled)
+            .count();
+        let visible_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.visible)
+            .count();
+        let empty_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.empty)
+            .count();
+        let primary_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.primary)
+            .count();
+        let selected_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.selected)
+            .count();
+        let attention_search_index_entry_count = search_index_entries
+            .iter()
+            .filter(|entry| entry.attention)
+            .count();
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INDEX_SCHEMA_VERSION,
+            package_name: palette.package_name.clone(),
+            source_fingerprint: palette.source_fingerprint.clone(),
+            title: palette.title.clone(),
+            startup_route: palette.startup_route.clone(),
+            ready: palette.ready,
+            severity: palette.severity.clone(),
+            attention_required: palette.attention_required,
+            search_index_id,
+            palette_id: palette.palette_id.clone(),
+            registry_id: palette.registry_id.clone(),
+            command_group: palette.command_group.clone(),
+            active_menu_group_shortcut_command_palette_item_id: palette
+                .active_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            active_menu_group_shortcut_command_search_index_entry_id,
+            attention_menu_group_shortcut_command_palette_item_id: palette
+                .attention_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            attention_menu_group_shortcut_command_search_index_entry_id,
+            default_menu_group_shortcut_command_palette_item_id: palette
+                .default_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            default_menu_group_shortcut_command_search_index_entry_id,
+            primary_menu_group_shortcut_command_palette_item_id: palette
+                .primary_menu_group_shortcut_command_palette_item_id
+                .clone(),
+            primary_menu_group_shortcut_command_search_index_entry_id,
+            command_palette_item_count: palette.command_palette_item_count,
+            selectable_command_palette_item_count: palette.selectable_command_palette_item_count,
+            disabled_command_palette_item_count: palette.disabled_command_palette_item_count,
+            visible_command_palette_item_count: palette.visible_command_palette_item_count,
+            empty_command_palette_item_count: palette.empty_command_palette_item_count,
+            primary_command_palette_item_count: palette.primary_command_palette_item_count,
+            selected_command_palette_item_count: palette.selected_command_palette_item_count,
+            attention_command_palette_item_count: palette.attention_command_palette_item_count,
+            search_index_entry_count: search_index_entries.len(),
+            search_token_count,
+            selectable_search_index_entry_count,
+            disabled_search_index_entry_count,
+            visible_search_index_entry_count,
+            empty_search_index_entry_count,
+            primary_search_index_entry_count,
+            selected_search_index_entry_count,
+            attention_search_index_entry_count,
+            search_index_entries,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id:
+                palette
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-json"
+                    .to_string(),
+            artifact_capability_count: palette.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResult
+{
+    pub id: String,
+    pub search_results_id: String,
+    pub search_index_entry_id: String,
+    pub search_index_id: String,
+    pub palette_item_id: String,
+    pub command_entry_id: String,
+    pub binding_id: String,
+    pub shortcut_id: String,
+    pub command_id: String,
+    pub registry_id: String,
+    pub handler_id: String,
+    pub command_group: String,
+    pub invocation_kind: String,
+    pub scope: String,
+    pub target_kind: String,
+    pub target: String,
+    pub menu_group_id: String,
+    pub queue_state: String,
+    pub label: String,
+    pub summary: String,
+    pub accelerator: String,
+    pub search_text: String,
+    pub normalized_search_text: String,
+    pub search_tokens: Vec<String>,
+    pub keywords: Vec<String>,
+    pub matched_query_tokens: Vec<String>,
+    pub matched_query_token_count: usize,
+    pub menu_item_ids: Vec<String>,
+    pub action_ids: Vec<String>,
+    pub dispatch_queue_item_count: usize,
+    pub badge_count: usize,
+    pub rank: usize,
+    pub position: usize,
+    pub result_position: usize,
+    pub item_count: usize,
+    pub selectable: bool,
+    pub selected: bool,
+    pub default_dispatch: bool,
+    pub active: bool,
+    pub attention: bool,
+    pub disabled: bool,
+    pub empty: bool,
+    pub enabled: bool,
+    pub primary: bool,
+    pub visible: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub active_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub active_menu_group_shortcut_command_search_result_id: Option<String>,
+    pub attention_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub attention_menu_group_shortcut_command_search_result_id: Option<String>,
+    pub default_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub default_menu_group_shortcut_command_search_result_id: Option<String>,
+    pub primary_menu_group_shortcut_command_search_index_entry_id: Option<String>,
+    pub primary_menu_group_shortcut_command_search_result_id: Option<String>,
+    pub search_index_entry_count: usize,
+    pub visible_search_index_entry_count: usize,
+    pub search_result_count: usize,
+    pub selectable_search_result_count: usize,
+    pub disabled_search_result_count: usize,
+    pub visible_search_result_count: usize,
+    pub empty_search_result_count: usize,
+    pub primary_search_result_count: usize,
+    pub selected_search_result_count: usize,
+    pub attention_search_result_count: usize,
+    pub matched_query_token_count: usize,
+    pub no_results: bool,
+    pub empty_state_title: Option<String>,
+    pub empty_state_message: Option<String>,
+    pub search_results:
+        Vec<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResult>,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+    ) -> Self {
+        Self::from_search_index(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex::from_bootstrap_snapshot(
+                snapshot,
+            ),
+            search_query,
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+    ) -> Self {
+        Self::from_search_index(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex::from_shell_handoff(
+                handoff,
+            ),
+            search_query,
+        )
+    }
+
+    pub fn from_search_index(
+        search_index: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex,
+        search_query: impl Into<String>,
+    ) -> Self {
+        let query = search_query.into();
+        let query_tokens = command_palette_search_tokens(&query, &[]);
+        let normalized_query = query_tokens.join(" ");
+        let search_results_id =
+            "dashboard.dispatch-queue.shortcut-command-palette-search-results".to_string();
+        let mut search_results = search_index
+            .search_index_entries
+            .iter()
+            .filter_map(|entry| {
+                let matched_query_tokens =
+                    command_palette_search_entry_matched_tokens(entry, &query_tokens);
+                if !entry.visible
+                    || (!query_tokens.is_empty()
+                        && matched_query_tokens.len() != query_tokens.len())
+                {
+                    return None;
+                }
+
+                let result_suffix = entry
+                    .id
+                    .strip_prefix(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-index-entry.",
+                    )
+                    .unwrap_or(entry.queue_state.as_str());
+                Some(BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResult {
+                    id: format!(
+                        "dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.{result_suffix}"
+                    ),
+                    search_results_id: search_results_id.clone(),
+                    search_index_entry_id: entry.id.clone(),
+                    search_index_id: entry.search_index_id.clone(),
+                    palette_item_id: entry.palette_item_id.clone(),
+                    command_entry_id: entry.command_entry_id.clone(),
+                    binding_id: entry.binding_id.clone(),
+                    shortcut_id: entry.shortcut_id.clone(),
+                    command_id: entry.command_id.clone(),
+                    registry_id: entry.registry_id.clone(),
+                    handler_id: entry.handler_id.clone(),
+                    command_group: entry.command_group.clone(),
+                    invocation_kind: entry.invocation_kind.clone(),
+                    scope: entry.scope.clone(),
+                    target_kind: entry.target_kind.clone(),
+                    target: entry.target.clone(),
+                    menu_group_id: entry.menu_group_id.clone(),
+                    queue_state: entry.queue_state.clone(),
+                    label: entry.label.clone(),
+                    summary: entry.summary.clone(),
+                    accelerator: entry.accelerator.clone(),
+                    search_text: entry.search_text.clone(),
+                    normalized_search_text: entry.normalized_search_text.clone(),
+                    search_tokens: entry.search_tokens.clone(),
+                    keywords: entry.keywords.clone(),
+                    matched_query_token_count: matched_query_tokens.len(),
+                    matched_query_tokens,
+                    menu_item_ids: entry.menu_item_ids.clone(),
+                    action_ids: entry.action_ids.clone(),
+                    dispatch_queue_item_count: entry.dispatch_queue_item_count,
+                    badge_count: entry.badge_count,
+                    rank: entry.rank,
+                    position: entry.position,
+                    result_position: 0,
+                    item_count: entry.item_count,
+                    selectable: entry.selectable,
+                    selected: entry.selected,
+                    default_dispatch: entry.default_dispatch,
+                    active: entry.active,
+                    attention: entry.attention,
+                    disabled: entry.disabled,
+                    empty: entry.empty,
+                    enabled: entry.enabled,
+                    primary: entry.primary,
+                    visible: entry.visible,
+                    disabled_reason: entry.disabled_reason.clone(),
+                })
+            })
+            .collect::<Vec<_>>();
+
+        search_results.sort_by(|left, right| {
+            left.rank
+                .cmp(&right.rank)
+                .then_with(|| left.position.cmp(&right.position))
+                .then_with(|| left.id.cmp(&right.id))
+        });
+        for (result_position, result) in search_results.iter_mut().enumerate() {
+            result.result_position = result_position;
+        }
+
+        let search_result_id_for_index_entry = |search_index_entry_id: &Option<String>| {
+            search_index_entry_id.as_ref().and_then(|search_index_entry_id| {
+                search_results
+                    .iter()
+                    .find(|result| result.search_index_entry_id == search_index_entry_id.as_str())
+                    .map(|result| result.id.clone())
+            })
+        };
+        let active_menu_group_shortcut_command_search_result_id =
+            search_result_id_for_index_entry(
+                &search_index.active_menu_group_shortcut_command_search_index_entry_id,
+            );
+        let attention_menu_group_shortcut_command_search_result_id =
+            search_result_id_for_index_entry(
+                &search_index.attention_menu_group_shortcut_command_search_index_entry_id,
+            );
+        let default_menu_group_shortcut_command_search_result_id =
+            search_result_id_for_index_entry(
+                &search_index.default_menu_group_shortcut_command_search_index_entry_id,
+            );
+        let primary_menu_group_shortcut_command_search_result_id =
+            search_result_id_for_index_entry(
+                &search_index.primary_menu_group_shortcut_command_search_index_entry_id,
+            );
+
+        let selectable_search_result_count = search_results
+            .iter()
+            .filter(|result| result.selectable)
+            .count();
+        let disabled_search_result_count = search_results
+            .iter()
+            .filter(|result| result.disabled)
+            .count();
+        let visible_search_result_count = search_results
+            .iter()
+            .filter(|result| result.visible)
+            .count();
+        let empty_search_result_count = search_results
+            .iter()
+            .filter(|result| result.empty)
+            .count();
+        let primary_search_result_count = search_results
+            .iter()
+            .filter(|result| result.primary)
+            .count();
+        let selected_search_result_count = search_results
+            .iter()
+            .filter(|result| result.selected)
+            .count();
+        let attention_search_result_count = search_results
+            .iter()
+            .filter(|result| result.attention)
+            .count();
+        let matched_query_token_count = search_results
+            .iter()
+            .map(|result| result.matched_query_token_count)
+            .sum();
+        let no_results = search_results.is_empty();
+        let empty_state_title = no_results.then(|| "No command matches".to_string());
+        let empty_state_message = no_results.then(|| {
+            if normalized_query.is_empty() {
+                "No visible command palette entries are available.".to_string()
+            } else {
+                format!("No command palette entries match \"{query}\".")
+            }
+        });
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_RESULTS_SCHEMA_VERSION,
+            package_name: search_index.package_name.clone(),
+            source_fingerprint: search_index.source_fingerprint.clone(),
+            title: search_index.title.clone(),
+            startup_route: search_index.startup_route.clone(),
+            ready: search_index.ready,
+            severity: search_index.severity.clone(),
+            attention_required: search_index.attention_required,
+            search_results_id,
+            search_index_id: search_index.search_index_id.clone(),
+            palette_id: search_index.palette_id.clone(),
+            registry_id: search_index.registry_id.clone(),
+            command_group: search_index.command_group.clone(),
+            query,
+            normalized_query,
+            query_token_count: query_tokens.len(),
+            query_tokens,
+            active_menu_group_shortcut_command_search_index_entry_id: search_index
+                .active_menu_group_shortcut_command_search_index_entry_id
+                .clone(),
+            active_menu_group_shortcut_command_search_result_id,
+            attention_menu_group_shortcut_command_search_index_entry_id: search_index
+                .attention_menu_group_shortcut_command_search_index_entry_id
+                .clone(),
+            attention_menu_group_shortcut_command_search_result_id,
+            default_menu_group_shortcut_command_search_index_entry_id: search_index
+                .default_menu_group_shortcut_command_search_index_entry_id
+                .clone(),
+            default_menu_group_shortcut_command_search_result_id,
+            primary_menu_group_shortcut_command_search_index_entry_id: search_index
+                .primary_menu_group_shortcut_command_search_index_entry_id
+                .clone(),
+            primary_menu_group_shortcut_command_search_result_id,
+            search_index_entry_count: search_index.search_index_entry_count,
+            visible_search_index_entry_count: search_index.visible_search_index_entry_count,
+            search_result_count: search_results.len(),
+            selectable_search_result_count,
+            disabled_search_result_count,
+            visible_search_result_count,
+            empty_search_result_count,
+            primary_search_result_count,
+            selected_search_result_count,
+            attention_search_result_count,
+            matched_query_token_count,
+            no_results,
+            empty_state_title,
+            empty_state_message,
+            search_results,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id:
+                search_index
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-results-json"
+                    .to_string(),
+            artifact_capability_count: search_index.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub requested_search_result_id: Option<String>,
+    pub selection_source: String,
+    pub selection_state: String,
+    pub has_selection: bool,
+    pub can_invoke: bool,
+    pub blocked_reason: Option<String>,
+    pub selected_search_result_id: Option<String>,
+    pub selected_search_index_entry_id: Option<String>,
+    pub selected_palette_item_id: Option<String>,
+    pub selected_command_entry_id: Option<String>,
+    pub selected_binding_id: Option<String>,
+    pub selected_shortcut_id: Option<String>,
+    pub selected_command_id: Option<String>,
+    pub selected_registry_id: Option<String>,
+    pub selected_handler_id: Option<String>,
+    pub selected_invocation_kind: Option<String>,
+    pub selected_scope: Option<String>,
+    pub selected_target_kind: Option<String>,
+    pub selected_target: Option<String>,
+    pub selected_menu_group_id: Option<String>,
+    pub selected_queue_state: Option<String>,
+    pub selected_label: Option<String>,
+    pub selected_summary: Option<String>,
+    pub selected_accelerator: Option<String>,
+    pub selected_search_text: Option<String>,
+    pub selected_normalized_search_text: Option<String>,
+    pub selected_rank: Option<usize>,
+    pub selected_position: Option<usize>,
+    pub selected_result_position: Option<usize>,
+    pub selected_item_count: Option<usize>,
+    pub selected_dispatch_queue_item_count: Option<usize>,
+    pub selected_badge_count: Option<usize>,
+    pub selected_menu_item_ids: Vec<String>,
+    pub selected_action_ids: Vec<String>,
+    pub selected_search_tokens: Vec<String>,
+    pub selected_keywords: Vec<String>,
+    pub selected_matched_query_tokens: Vec<String>,
+    pub selected_matched_query_token_count: usize,
+    pub selection_selectable: bool,
+    pub selection_selected: bool,
+    pub selection_default: bool,
+    pub selection_active: bool,
+    pub selection_attention: bool,
+    pub selection_disabled: bool,
+    pub selection_empty: bool,
+    pub selection_enabled: bool,
+    pub selection_primary: bool,
+    pub selection_visible: bool,
+    pub active_search_result_id: Option<String>,
+    pub attention_search_result_id: Option<String>,
+    pub default_search_result_id: Option<String>,
+    pub primary_search_result_id: Option<String>,
+    pub search_result_count: usize,
+    pub selectable_search_result_count: usize,
+    pub disabled_search_result_count: usize,
+    pub visible_search_result_count: usize,
+    pub empty_search_result_count: usize,
+    pub primary_search_result_count: usize,
+    pub selected_search_result_count: usize,
+    pub attention_search_result_count: usize,
+    pub no_results: bool,
+    pub empty_state_title: Option<String>,
+    pub empty_state_message: Option<String>,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_results(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+            ),
+            selected_search_result_id,
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_results(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults::from_shell_handoff(
+                handoff,
+                search_query,
+            ),
+            selected_search_result_id,
+        )
+    }
+
+    pub fn from_search_results(
+        results: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        let search_selection_id =
+            "dashboard.dispatch-queue.shortcut-command-palette-search-selection".to_string();
+        let result_for_id = |result_id: &Option<String>| {
+            result_id.as_ref().and_then(|result_id| {
+                results
+                    .search_results
+                    .iter()
+                    .find(|result| result.id == result_id.as_str())
+            })
+        };
+        let selected_result_with_source = selected_search_result_id
+            .as_ref()
+            .and_then(|result_id| {
+                results
+                    .search_results
+                    .iter()
+                    .find(|result| result.id == result_id.as_str())
+                    .map(|result| ("requested", result))
+            })
+            .or_else(|| {
+                result_for_id(&results.active_menu_group_shortcut_command_search_result_id)
+                    .map(|result| ("active", result))
+            })
+            .or_else(|| {
+                result_for_id(&results.attention_menu_group_shortcut_command_search_result_id)
+                    .map(|result| ("attention", result))
+            })
+            .or_else(|| {
+                result_for_id(&results.default_menu_group_shortcut_command_search_result_id)
+                    .map(|result| ("default", result))
+            })
+            .or_else(|| {
+                result_for_id(&results.primary_menu_group_shortcut_command_search_result_id)
+                    .map(|result| ("primary", result))
+            })
+            .or_else(|| {
+                results
+                    .search_results
+                    .iter()
+                    .find(|result| result.visible && result.selectable)
+                    .map(|result| ("first-selectable", result))
+            })
+            .or_else(|| {
+                results
+                    .search_results
+                    .iter()
+                    .find(|result| result.visible)
+                    .map(|result| ("first-visible", result))
+            });
+        let selection_source = selected_result_with_source
+            .as_ref()
+            .map(|(source, _)| (*source).to_string())
+            .unwrap_or_else(|| "none".to_string());
+        let selected_result = selected_result_with_source.map(|(_, result)| result);
+        let has_selection = selected_result.is_some();
+        let selection_selectable = selected_result
+            .map(|result| result.selectable)
+            .unwrap_or(false);
+        let selection_selected = selected_result
+            .map(|result| result.selected)
+            .unwrap_or(false);
+        let selection_default = selected_result
+            .map(|result| result.default_dispatch)
+            .unwrap_or(false);
+        let selection_active = selected_result.map(|result| result.active).unwrap_or(false);
+        let selection_attention = selected_result
+            .map(|result| result.attention)
+            .unwrap_or(false);
+        let selection_disabled = selected_result
+            .map(|result| result.disabled)
+            .unwrap_or(false);
+        let selection_empty = selected_result.map(|result| result.empty).unwrap_or(false);
+        let selection_enabled = selected_result
+            .map(|result| result.enabled)
+            .unwrap_or(false);
+        let selection_primary = selected_result
+            .map(|result| result.primary)
+            .unwrap_or(false);
+        let selection_visible = selected_result
+            .map(|result| result.visible)
+            .unwrap_or(false);
+        let can_invoke = selection_visible
+            && selection_selectable
+            && selection_enabled
+            && !selection_disabled
+            && !selection_empty;
+        let selection_state = if !has_selection {
+            "empty"
+        } else if can_invoke {
+            "ready"
+        } else {
+            "disabled"
+        }
+        .to_string();
+        let blocked_reason = if let Some(result) = selected_result {
+            if can_invoke {
+                None
+            } else {
+                result
+                    .disabled_reason
+                    .clone()
+                    .or_else(|| Some("Selected command cannot be invoked.".to_string()))
+            }
+        } else if let Some(requested_search_result_id) = &selected_search_result_id {
+            Some(format!(
+                "Requested search result \"{requested_search_result_id}\" is not available."
+            ))
+        } else {
+            results.empty_state_message.clone()
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_SELECTION_SCHEMA_VERSION,
+            package_name: results.package_name.clone(),
+            source_fingerprint: results.source_fingerprint.clone(),
+            title: results.title.clone(),
+            startup_route: results.startup_route.clone(),
+            ready: results.ready,
+            severity: results.severity.clone(),
+            attention_required: results.attention_required,
+            search_selection_id,
+            search_results_id: results.search_results_id.clone(),
+            search_index_id: results.search_index_id.clone(),
+            palette_id: results.palette_id.clone(),
+            registry_id: results.registry_id.clone(),
+            command_group: results.command_group.clone(),
+            query: results.query.clone(),
+            normalized_query: results.normalized_query.clone(),
+            query_tokens: results.query_tokens.clone(),
+            query_token_count: results.query_token_count,
+            requested_search_result_id: selected_search_result_id,
+            selection_source,
+            selection_state,
+            has_selection,
+            can_invoke,
+            blocked_reason,
+            selected_search_result_id: selected_result.map(|result| result.id.clone()),
+            selected_search_index_entry_id: selected_result
+                .map(|result| result.search_index_entry_id.clone()),
+            selected_palette_item_id: selected_result.map(|result| result.palette_item_id.clone()),
+            selected_command_entry_id: selected_result
+                .map(|result| result.command_entry_id.clone()),
+            selected_binding_id: selected_result.map(|result| result.binding_id.clone()),
+            selected_shortcut_id: selected_result.map(|result| result.shortcut_id.clone()),
+            selected_command_id: selected_result.map(|result| result.command_id.clone()),
+            selected_registry_id: selected_result.map(|result| result.registry_id.clone()),
+            selected_handler_id: selected_result.map(|result| result.handler_id.clone()),
+            selected_invocation_kind: selected_result
+                .map(|result| result.invocation_kind.clone()),
+            selected_scope: selected_result.map(|result| result.scope.clone()),
+            selected_target_kind: selected_result.map(|result| result.target_kind.clone()),
+            selected_target: selected_result.map(|result| result.target.clone()),
+            selected_menu_group_id: selected_result.map(|result| result.menu_group_id.clone()),
+            selected_queue_state: selected_result.map(|result| result.queue_state.clone()),
+            selected_label: selected_result.map(|result| result.label.clone()),
+            selected_summary: selected_result.map(|result| result.summary.clone()),
+            selected_accelerator: selected_result.map(|result| result.accelerator.clone()),
+            selected_search_text: selected_result.map(|result| result.search_text.clone()),
+            selected_normalized_search_text: selected_result
+                .map(|result| result.normalized_search_text.clone()),
+            selected_rank: selected_result.map(|result| result.rank),
+            selected_position: selected_result.map(|result| result.position),
+            selected_result_position: selected_result.map(|result| result.result_position),
+            selected_item_count: selected_result.map(|result| result.item_count),
+            selected_dispatch_queue_item_count: selected_result
+                .map(|result| result.dispatch_queue_item_count),
+            selected_badge_count: selected_result.map(|result| result.badge_count),
+            selected_menu_item_ids: selected_result
+                .map(|result| result.menu_item_ids.clone())
+                .unwrap_or_default(),
+            selected_action_ids: selected_result
+                .map(|result| result.action_ids.clone())
+                .unwrap_or_default(),
+            selected_search_tokens: selected_result
+                .map(|result| result.search_tokens.clone())
+                .unwrap_or_default(),
+            selected_keywords: selected_result
+                .map(|result| result.keywords.clone())
+                .unwrap_or_default(),
+            selected_matched_query_tokens: selected_result
+                .map(|result| result.matched_query_tokens.clone())
+                .unwrap_or_default(),
+            selected_matched_query_token_count: selected_result
+                .map(|result| result.matched_query_token_count)
+                .unwrap_or(0),
+            selection_selectable,
+            selection_selected,
+            selection_default,
+            selection_active,
+            selection_attention,
+            selection_disabled,
+            selection_empty,
+            selection_enabled,
+            selection_primary,
+            selection_visible,
+            active_search_result_id: results
+                .active_menu_group_shortcut_command_search_result_id
+                .clone(),
+            attention_search_result_id: results
+                .attention_menu_group_shortcut_command_search_result_id
+                .clone(),
+            default_search_result_id: results
+                .default_menu_group_shortcut_command_search_result_id
+                .clone(),
+            primary_search_result_id: results
+                .primary_menu_group_shortcut_command_search_result_id
+                .clone(),
+            search_result_count: results.search_result_count,
+            selectable_search_result_count: results.selectable_search_result_count,
+            disabled_search_result_count: results.disabled_search_result_count,
+            visible_search_result_count: results.visible_search_result_count,
+            empty_search_result_count: results.empty_search_result_count,
+            primary_search_result_count: results.primary_search_result_count,
+            selected_search_result_count: results.selected_search_result_count,
+            attention_search_result_count: results.attention_search_result_count,
+            no_results: results.no_results,
+            empty_state_title: results.empty_state_title.clone(),
+            empty_state_message: results.empty_state_message.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id:
+                results
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-selection-json"
+                    .to_string(),
+            artifact_capability_count: results.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub requested_search_result_id: Option<String>,
+    pub selected_search_result_id: Option<String>,
+    pub selected_search_index_entry_id: Option<String>,
+    pub selected_palette_item_id: Option<String>,
+    pub selected_command_entry_id: Option<String>,
+    pub selected_binding_id: Option<String>,
+    pub selected_shortcut_id: Option<String>,
+    pub selected_command_id: Option<String>,
+    pub selected_registry_id: Option<String>,
+    pub selected_handler_id: Option<String>,
+    pub selected_invocation_kind: Option<String>,
+    pub selected_scope: Option<String>,
+    pub selected_target_kind: Option<String>,
+    pub selected_target: Option<String>,
+    pub selected_menu_group_id: Option<String>,
+    pub selected_queue_state: Option<String>,
+    pub selected_label: Option<String>,
+    pub selected_summary: Option<String>,
+    pub selected_accelerator: Option<String>,
+    pub selected_menu_item_ids: Vec<String>,
+    pub selected_action_ids: Vec<String>,
+    pub selected_matched_query_tokens: Vec<String>,
+    pub selected_matched_query_token_count: usize,
+    pub selection_source: String,
+    pub selection_state: String,
+    pub has_selection: bool,
+    pub selection_selectable: bool,
+    pub selection_enabled: bool,
+    pub selection_disabled: bool,
+    pub selection_empty: bool,
+    pub selection_visible: bool,
+    pub selection_active: bool,
+    pub selection_attention: bool,
+    pub selection_default: bool,
+    pub selection_primary: bool,
+    pub can_invoke: bool,
+    pub can_dispatch: bool,
+    pub invocation_state: String,
+    pub invocation_action: Option<String>,
+    pub invocation_message: String,
+    pub blocked_reason: Option<String>,
+    pub active_search_result_id: Option<String>,
+    pub attention_search_result_id: Option<String>,
+    pub default_search_result_id: Option<String>,
+    pub primary_search_result_id: Option<String>,
+    pub search_result_count: usize,
+    pub selectable_search_result_count: usize,
+    pub disabled_search_result_count: usize,
+    pub visible_search_result_count: usize,
+    pub no_results: bool,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_selection(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_selection(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_search_selection(
+        selection: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection,
+    ) -> Self {
+        let search_invocation_id =
+            "dashboard.dispatch-queue.shortcut-command-palette-search-invocation".to_string();
+        let can_dispatch = selection.can_invoke
+            && selection.selected_command_id.is_some()
+            && selection.selected_handler_id.is_some()
+            && selection.selected_target.is_some();
+        let invocation_state = if !selection.has_selection {
+            "empty"
+        } else if can_dispatch {
+            "ready"
+        } else {
+            "blocked"
+        }
+        .to_string();
+        let invocation_action = can_dispatch.then(|| "invoke-command".to_string());
+        let blocked_reason = if can_dispatch {
+            None
+        } else {
+            selection.blocked_reason.clone().or_else(|| {
+                if selection.has_selection {
+                    Some("Selected command cannot be dispatched.".to_string())
+                } else {
+                    Some("No command palette search result is selected.".to_string())
+                }
+            })
+        };
+        let invocation_message = if can_dispatch {
+            format!(
+                "Invoke command \"{}\".",
+                selection
+                    .selected_label
+                    .as_deref()
+                    .unwrap_or("selected command")
+            )
+        } else {
+            blocked_reason
+                .clone()
+                .unwrap_or_else(|| "Selected command cannot be dispatched.".to_string())
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_SCHEMA_VERSION,
+            package_name: selection.package_name.clone(),
+            source_fingerprint: selection.source_fingerprint.clone(),
+            title: selection.title.clone(),
+            startup_route: selection.startup_route.clone(),
+            ready: selection.ready,
+            severity: selection.severity.clone(),
+            attention_required: selection.attention_required,
+            search_invocation_id,
+            search_selection_id: selection.search_selection_id.clone(),
+            search_results_id: selection.search_results_id.clone(),
+            search_index_id: selection.search_index_id.clone(),
+            palette_id: selection.palette_id.clone(),
+            registry_id: selection.registry_id.clone(),
+            command_group: selection.command_group.clone(),
+            query: selection.query.clone(),
+            normalized_query: selection.normalized_query.clone(),
+            query_tokens: selection.query_tokens.clone(),
+            query_token_count: selection.query_token_count,
+            requested_search_result_id: selection.requested_search_result_id.clone(),
+            selected_search_result_id: selection.selected_search_result_id.clone(),
+            selected_search_index_entry_id: selection.selected_search_index_entry_id.clone(),
+            selected_palette_item_id: selection.selected_palette_item_id.clone(),
+            selected_command_entry_id: selection.selected_command_entry_id.clone(),
+            selected_binding_id: selection.selected_binding_id.clone(),
+            selected_shortcut_id: selection.selected_shortcut_id.clone(),
+            selected_command_id: selection.selected_command_id.clone(),
+            selected_registry_id: selection.selected_registry_id.clone(),
+            selected_handler_id: selection.selected_handler_id.clone(),
+            selected_invocation_kind: selection.selected_invocation_kind.clone(),
+            selected_scope: selection.selected_scope.clone(),
+            selected_target_kind: selection.selected_target_kind.clone(),
+            selected_target: selection.selected_target.clone(),
+            selected_menu_group_id: selection.selected_menu_group_id.clone(),
+            selected_queue_state: selection.selected_queue_state.clone(),
+            selected_label: selection.selected_label.clone(),
+            selected_summary: selection.selected_summary.clone(),
+            selected_accelerator: selection.selected_accelerator.clone(),
+            selected_menu_item_ids: selection.selected_menu_item_ids.clone(),
+            selected_action_ids: selection.selected_action_ids.clone(),
+            selected_matched_query_tokens: selection.selected_matched_query_tokens.clone(),
+            selected_matched_query_token_count: selection.selected_matched_query_token_count,
+            selection_source: selection.selection_source.clone(),
+            selection_state: selection.selection_state.clone(),
+            has_selection: selection.has_selection,
+            selection_selectable: selection.selection_selectable,
+            selection_enabled: selection.selection_enabled,
+            selection_disabled: selection.selection_disabled,
+            selection_empty: selection.selection_empty,
+            selection_visible: selection.selection_visible,
+            selection_active: selection.selection_active,
+            selection_attention: selection.selection_attention,
+            selection_default: selection.selection_default,
+            selection_primary: selection.selection_primary,
+            can_invoke: selection.can_invoke,
+            can_dispatch,
+            invocation_state,
+            invocation_action,
+            invocation_message,
+            blocked_reason,
+            active_search_result_id: selection.active_search_result_id.clone(),
+            attention_search_result_id: selection.attention_search_result_id.clone(),
+            default_search_result_id: selection.default_search_result_id.clone(),
+            primary_search_result_id: selection.primary_search_result_id.clone(),
+            search_result_count: selection.search_result_count,
+            selectable_search_result_count: selection.selectable_search_result_count,
+            disabled_search_result_count: selection.disabled_search_result_count,
+            visible_search_result_count: selection.visible_search_result_count,
+            no_results: selection.no_results,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id:
+                selection
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-json"
+                    .to_string(),
+            artifact_capability_count: selection.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipt
+{
+    pub id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub selected_search_result_id: Option<String>,
+    pub selected_command_id: Option<String>,
+    pub selected_handler_id: Option<String>,
+    pub selected_target: Option<String>,
+    pub selected_label: Option<String>,
+    pub selected_queue_state: Option<String>,
+    pub receipt_state: String,
+    pub dispatch_action: Option<String>,
+    pub dispatch_accepted: bool,
+    pub dispatch_blocked: bool,
+    pub blocked_reason: Option<String>,
+    pub message: String,
+    pub position: usize,
+    pub attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub can_dispatch: bool,
+    pub latest_receipt_id: Option<String>,
+    pub accepted_receipt_id: Option<String>,
+    pub blocked_receipt_id: Option<String>,
+    pub empty_receipt_id: Option<String>,
+    pub receipt_count: usize,
+    pub accepted_receipt_count: usize,
+    pub blocked_receipt_count: usize,
+    pub empty_receipt_count: usize,
+    pub receipts: Vec<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipt,
+    >,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_invocation(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_invocation(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_search_invocation(
+        invocation: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation,
+    ) -> Self {
+        let receipt_state = if invocation.can_dispatch {
+            "accepted"
+        } else if invocation.has_selection {
+            "blocked"
+        } else {
+            "empty"
+        }
+        .to_string();
+        let receipt_id = format!(
+            "{}.receipt.{}",
+            invocation.search_invocation_id, receipt_state
+        );
+        let dispatch_accepted = invocation.can_dispatch;
+        let dispatch_blocked = !invocation.can_dispatch;
+        let message = if dispatch_accepted {
+            format!(
+                "Accepted command \"{}\" for dispatch.",
+                invocation
+                    .selected_label
+                    .as_deref()
+                    .unwrap_or("selected command")
+            )
+        } else {
+            invocation
+                .blocked_reason
+                .clone()
+                .unwrap_or_else(|| invocation.invocation_message.clone())
+        };
+        let receipt =
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipt {
+                id: receipt_id.clone(),
+                search_invocation_id: invocation.search_invocation_id.clone(),
+                search_selection_id: invocation.search_selection_id.clone(),
+                selected_search_result_id: invocation.selected_search_result_id.clone(),
+                selected_command_id: invocation.selected_command_id.clone(),
+                selected_handler_id: invocation.selected_handler_id.clone(),
+                selected_target: invocation.selected_target.clone(),
+                selected_label: invocation.selected_label.clone(),
+                selected_queue_state: invocation.selected_queue_state.clone(),
+                receipt_state: receipt_state.clone(),
+                dispatch_action: invocation.invocation_action.clone(),
+                dispatch_accepted,
+                dispatch_blocked,
+                blocked_reason: invocation.blocked_reason.clone(),
+                message,
+                position: 0,
+                attention: invocation.attention_required || invocation.selection_attention,
+            };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPTS_SCHEMA_VERSION,
+            package_name: invocation.package_name.clone(),
+            source_fingerprint: invocation.source_fingerprint.clone(),
+            title: invocation.title.clone(),
+            startup_route: invocation.startup_route.clone(),
+            ready: invocation.ready,
+            severity: invocation.severity.clone(),
+            attention_required: invocation.attention_required,
+            receipt_stream_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipts"
+                    .to_string(),
+            search_invocation_id: invocation.search_invocation_id.clone(),
+            search_selection_id: invocation.search_selection_id.clone(),
+            search_results_id: invocation.search_results_id.clone(),
+            search_index_id: invocation.search_index_id.clone(),
+            palette_id: invocation.palette_id.clone(),
+            registry_id: invocation.registry_id.clone(),
+            command_group: invocation.command_group.clone(),
+            query: invocation.query.clone(),
+            normalized_query: invocation.normalized_query.clone(),
+            query_tokens: invocation.query_tokens.clone(),
+            query_token_count: invocation.query_token_count,
+            invocation_state: invocation.invocation_state.clone(),
+            can_dispatch: invocation.can_dispatch,
+            latest_receipt_id: Some(receipt_id.clone()),
+            accepted_receipt_id: dispatch_accepted.then(|| receipt_id.clone()),
+            blocked_receipt_id: (receipt_state == "blocked").then(|| receipt_id.clone()),
+            empty_receipt_id: (receipt_state == "empty").then(|| receipt_id.clone()),
+            receipt_count: 1,
+            accepted_receipt_count: if dispatch_accepted { 1 } else { 0 },
+            blocked_receipt_count: if receipt_state == "blocked" { 1 } else { 0 },
+            empty_receipt_count: if receipt_state == "empty" { 1 } else { 0 },
+            receipts: vec![receipt],
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id:
+                invocation
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipts-json"
+                    .to_string(),
+            artifact_capability_count: invocation.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub receipt_state: Option<String>,
+    pub status_kind: String,
+    pub status_title: String,
+    pub status_message: String,
+    pub can_dispatch: bool,
+    pub dispatch_accepted: bool,
+    pub dispatch_blocked: bool,
+    pub dispatch_action: Option<String>,
+    pub latest_receipt_id: Option<String>,
+    pub selected_search_result_id: Option<String>,
+    pub selected_command_id: Option<String>,
+    pub selected_handler_id: Option<String>,
+    pub selected_target: Option<String>,
+    pub selected_label: Option<String>,
+    pub selected_queue_state: Option<String>,
+    pub blocked_reason: Option<String>,
+    pub receipt_count: usize,
+    pub accepted_receipt_count: usize,
+    pub blocked_receipt_count: usize,
+    pub empty_receipt_count: usize,
+    pub has_receipts: bool,
+    pub attention: bool,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_invocation_receipts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_search_invocation_receipts(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_search_invocation_receipts(
+        receipts: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts,
+    ) -> Self {
+        let latest_receipt = receipts.receipts.last();
+        let receipt_state = latest_receipt.map(|receipt| receipt.receipt_state.clone());
+        let (status_kind, status_title) = match receipt_state.as_deref() {
+            Some("accepted") => ("success", "Command accepted"),
+            Some("blocked") => ("blocked", "Command blocked"),
+            Some("empty") => ("empty", "No command selected"),
+            Some(_) => ("unknown", "Command receipt"),
+            None => ("empty", "No invocation receipt"),
+        };
+        let status_message = latest_receipt
+            .map(|receipt| receipt.message.clone())
+            .unwrap_or_else(|| "No command palette invocation receipt is available.".to_string());
+        let dispatch_accepted = latest_receipt
+            .map(|receipt| receipt.dispatch_accepted)
+            .unwrap_or(false);
+        let dispatch_blocked = latest_receipt
+            .map(|receipt| receipt.dispatch_blocked)
+            .unwrap_or(false);
+        let attention = receipts.attention_required
+            || latest_receipt.map(|receipt| receipt.attention).unwrap_or(false)
+            || receipts.blocked_receipt_count > 0;
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_SUMMARY_SCHEMA_VERSION,
+            package_name: receipts.package_name.clone(),
+            source_fingerprint: receipts.source_fingerprint.clone(),
+            title: receipts.title.clone(),
+            startup_route: receipts.startup_route.clone(),
+            ready: receipts.ready,
+            severity: receipts.severity.clone(),
+            attention_required: receipts.attention_required,
+            receipt_summary_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-summary"
+                    .to_string(),
+            receipt_stream_id: receipts.receipt_stream_id.clone(),
+            search_invocation_id: receipts.search_invocation_id.clone(),
+            search_selection_id: receipts.search_selection_id.clone(),
+            search_results_id: receipts.search_results_id.clone(),
+            search_index_id: receipts.search_index_id.clone(),
+            palette_id: receipts.palette_id.clone(),
+            registry_id: receipts.registry_id.clone(),
+            command_group: receipts.command_group.clone(),
+            query: receipts.query.clone(),
+            normalized_query: receipts.normalized_query.clone(),
+            query_tokens: receipts.query_tokens.clone(),
+            query_token_count: receipts.query_token_count,
+            invocation_state: receipts.invocation_state.clone(),
+            receipt_state,
+            status_kind: status_kind.to_string(),
+            status_title: status_title.to_string(),
+            status_message,
+            can_dispatch: receipts.can_dispatch,
+            dispatch_accepted,
+            dispatch_blocked,
+            dispatch_action: latest_receipt.and_then(|receipt| receipt.dispatch_action.clone()),
+            latest_receipt_id: receipts.latest_receipt_id.clone(),
+            selected_search_result_id: latest_receipt
+                .and_then(|receipt| receipt.selected_search_result_id.clone()),
+            selected_command_id: latest_receipt.and_then(|receipt| receipt.selected_command_id.clone()),
+            selected_handler_id: latest_receipt.and_then(|receipt| receipt.selected_handler_id.clone()),
+            selected_target: latest_receipt.and_then(|receipt| receipt.selected_target.clone()),
+            selected_label: latest_receipt.and_then(|receipt| receipt.selected_label.clone()),
+            selected_queue_state: latest_receipt.and_then(|receipt| receipt.selected_queue_state.clone()),
+            blocked_reason: latest_receipt.and_then(|receipt| receipt.blocked_reason.clone()),
+            receipt_count: receipts.receipt_count,
+            accepted_receipt_count: receipts.accepted_receipt_count,
+            blocked_receipt_count: receipts.blocked_receipt_count,
+            empty_receipt_count: receipts.empty_receipt_count,
+            has_receipts: !receipts.receipts.is_empty(),
+            attention,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id:
+                receipts
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json"
+                    .to_string(),
+            artifact_capability_count: receipts.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub receipt_state: Option<String>,
+    pub notification_kind: String,
+    pub notification_level: String,
+    pub notification_title: String,
+    pub notification_body: String,
+    pub notification_action_label: Option<String>,
+    pub notification_action_target: Option<String>,
+    pub notification_dismissible: bool,
+    pub should_announce: bool,
+    pub announcement: Option<String>,
+    pub can_dispatch: bool,
+    pub dispatch_accepted: bool,
+    pub dispatch_blocked: bool,
+    pub dispatch_action: Option<String>,
+    pub latest_receipt_id: Option<String>,
+    pub selected_search_result_id: Option<String>,
+    pub selected_command_id: Option<String>,
+    pub selected_handler_id: Option<String>,
+    pub selected_target: Option<String>,
+    pub selected_label: Option<String>,
+    pub selected_queue_state: Option<String>,
+    pub blocked_reason: Option<String>,
+    pub receipt_count: usize,
+    pub accepted_receipt_count: usize,
+    pub blocked_receipt_count: usize,
+    pub empty_receipt_count: usize,
+    pub has_receipts: bool,
+    pub attention: bool,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_receipt_summary(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_receipt_summary(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_receipt_summary(
+        summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary,
+    ) -> Self {
+        let (notification_kind, notification_level, notification_action_label) =
+            match summary.status_kind.as_str() {
+                "success" => (
+                    "dispatch-accepted",
+                    "success",
+                    Some("Open command".to_string()),
+                ),
+                "blocked" => (
+                    "dispatch-blocked",
+                    "error",
+                    Some("Review command".to_string()),
+                ),
+                "empty" => ("dispatch-empty", "info", None),
+                _ => ("dispatch-receipt", "info", None),
+            };
+        let should_announce =
+            notification_kind != "dispatch-empty" && (summary.dispatch_accepted || summary.dispatch_blocked);
+        let announcement = if should_announce {
+            Some(format!(
+                "{}: {}",
+                summary.status_title, summary.status_message
+            ))
+        } else {
+            None
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            receipt_notification_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification"
+                    .to_string(),
+            receipt_summary_id: summary.receipt_summary_id.clone(),
+            receipt_stream_id: summary.receipt_stream_id.clone(),
+            search_invocation_id: summary.search_invocation_id.clone(),
+            search_selection_id: summary.search_selection_id.clone(),
+            search_results_id: summary.search_results_id.clone(),
+            search_index_id: summary.search_index_id.clone(),
+            palette_id: summary.palette_id.clone(),
+            registry_id: summary.registry_id.clone(),
+            command_group: summary.command_group.clone(),
+            query: summary.query.clone(),
+            normalized_query: summary.normalized_query.clone(),
+            query_tokens: summary.query_tokens.clone(),
+            query_token_count: summary.query_token_count,
+            invocation_state: summary.invocation_state.clone(),
+            receipt_state: summary.receipt_state.clone(),
+            notification_kind: notification_kind.to_string(),
+            notification_level: notification_level.to_string(),
+            notification_title: summary.status_title.clone(),
+            notification_body: summary.status_message.clone(),
+            notification_action_label,
+            notification_action_target: summary.selected_target.clone(),
+            notification_dismissible: true,
+            should_announce,
+            announcement,
+            can_dispatch: summary.can_dispatch,
+            dispatch_accepted: summary.dispatch_accepted,
+            dispatch_blocked: summary.dispatch_blocked,
+            dispatch_action: summary.dispatch_action.clone(),
+            latest_receipt_id: summary.latest_receipt_id.clone(),
+            selected_search_result_id: summary.selected_search_result_id.clone(),
+            selected_command_id: summary.selected_command_id.clone(),
+            selected_handler_id: summary.selected_handler_id.clone(),
+            selected_target: summary.selected_target.clone(),
+            selected_label: summary.selected_label.clone(),
+            selected_queue_state: summary.selected_queue_state.clone(),
+            blocked_reason: summary.blocked_reason.clone(),
+            receipt_count: summary.receipt_count,
+            accepted_receipt_count: summary.accepted_receipt_count,
+            blocked_receipt_count: summary.blocked_receipt_count,
+            empty_receipt_count: summary.empty_receipt_count,
+            has_receipts: summary.has_receipts,
+            attention: summary.attention,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id:
+                summary
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json"
+                    .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_notification_stack_id: String,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub receipt_state: Option<String>,
+    pub latest_notification_id: Option<String>,
+    pub active_notification_id: Option<String>,
+    pub attention_notification_id: Option<String>,
+    pub latest_notification_kind: Option<String>,
+    pub latest_notification_level: Option<String>,
+    pub latest_notification_title: Option<String>,
+    pub latest_notification_body: Option<String>,
+    pub latest_should_announce: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub has_visible_notifications: bool,
+    pub has_announcement: bool,
+    pub notifications: Vec<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification,
+    >,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_receipt_notification(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_receipt_notification(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_receipt_notification(
+        notification: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification,
+    ) -> Self {
+        let visible = notification.notification_kind != "dispatch-empty";
+        let success_notification_count = if notification.notification_level == "success" {
+            1
+        } else {
+            0
+        };
+        let error_notification_count = if notification.notification_level == "error" {
+            1
+        } else {
+            0
+        };
+        let info_notification_count = if notification.notification_level == "info" {
+            1
+        } else {
+            0
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SCHEMA_VERSION,
+            package_name: notification.package_name.clone(),
+            source_fingerprint: notification.source_fingerprint.clone(),
+            title: notification.title.clone(),
+            startup_route: notification.startup_route.clone(),
+            ready: notification.ready,
+            severity: notification.severity.clone(),
+            attention_required: notification.attention_required,
+            receipt_notification_stack_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack"
+                    .to_string(),
+            receipt_notification_id: notification.receipt_notification_id.clone(),
+            receipt_summary_id: notification.receipt_summary_id.clone(),
+            receipt_stream_id: notification.receipt_stream_id.clone(),
+            search_invocation_id: notification.search_invocation_id.clone(),
+            search_selection_id: notification.search_selection_id.clone(),
+            search_results_id: notification.search_results_id.clone(),
+            search_index_id: notification.search_index_id.clone(),
+            palette_id: notification.palette_id.clone(),
+            registry_id: notification.registry_id.clone(),
+            command_group: notification.command_group.clone(),
+            query: notification.query.clone(),
+            normalized_query: notification.normalized_query.clone(),
+            query_tokens: notification.query_tokens.clone(),
+            query_token_count: notification.query_token_count,
+            invocation_state: notification.invocation_state.clone(),
+            receipt_state: notification.receipt_state.clone(),
+            latest_notification_id: Some(notification.receipt_notification_id.clone()),
+            active_notification_id: visible.then(|| notification.receipt_notification_id.clone()),
+            attention_notification_id: notification
+                .attention
+                .then(|| notification.receipt_notification_id.clone()),
+            latest_notification_kind: Some(notification.notification_kind.clone()),
+            latest_notification_level: Some(notification.notification_level.clone()),
+            latest_notification_title: Some(notification.notification_title.clone()),
+            latest_notification_body: Some(notification.notification_body.clone()),
+            latest_should_announce: notification.should_announce,
+            notification_count: 1,
+            visible_notification_count: if visible { 1 } else { 0 },
+            announce_notification_count: if notification.should_announce { 1 } else { 0 },
+            attention_notification_count: if notification.attention { 1 } else { 0 },
+            success_notification_count,
+            error_notification_count,
+            info_notification_count,
+            has_visible_notifications: visible,
+            has_announcement: notification.announcement.is_some(),
+            notifications: vec![notification.clone()],
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id:
+                notification
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-json"
+                    .to_string(),
+            artifact_capability_count: notification.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_notification_stack_summary_id: String,
+    pub receipt_notification_stack_id: String,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub invocation_state: String,
+    pub receipt_state: Option<String>,
+    pub headline_notification_id: Option<String>,
+    pub headline_notification_kind: Option<String>,
+    pub headline_notification_level: Option<String>,
+    pub headline_notification_title: Option<String>,
+    pub headline_notification_body: Option<String>,
+    pub summary_kind: String,
+    pub summary_level: String,
+    pub summary_title: Option<String>,
+    pub summary_body: Option<String>,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub has_visible_notifications: bool,
+    pub has_announcement: bool,
+    pub has_attention_notifications: bool,
+    pub has_success_notifications: bool,
+    pub has_error_notifications: bool,
+    pub has_info_notifications: bool,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_notification_stack(
+        stack: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack,
+    ) -> Self {
+        let has_visible_attention_notifications =
+            stack.has_visible_notifications && stack.attention_notification_count > 0;
+        let summary_kind = if has_visible_attention_notifications {
+            "attention"
+        } else if stack.visible_notification_count > 0 {
+            "visible"
+        } else {
+            "empty"
+        };
+        let summary_level = if !stack.has_visible_notifications {
+            "info"
+        } else if stack.error_notification_count > 0 {
+            "error"
+        } else if stack.success_notification_count > 0 {
+            "success"
+        } else {
+            "info"
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_SCHEMA_VERSION,
+            package_name: stack.package_name.clone(),
+            source_fingerprint: stack.source_fingerprint.clone(),
+            title: stack.title.clone(),
+            startup_route: stack.startup_route.clone(),
+            ready: stack.ready,
+            severity: stack.severity.clone(),
+            attention_required: stack.attention_required,
+            receipt_notification_stack_summary_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary"
+                    .to_string(),
+            receipt_notification_stack_id: stack.receipt_notification_stack_id.clone(),
+            receipt_notification_id: stack.receipt_notification_id.clone(),
+            receipt_summary_id: stack.receipt_summary_id.clone(),
+            receipt_stream_id: stack.receipt_stream_id.clone(),
+            search_invocation_id: stack.search_invocation_id.clone(),
+            search_selection_id: stack.search_selection_id.clone(),
+            search_results_id: stack.search_results_id.clone(),
+            search_index_id: stack.search_index_id.clone(),
+            palette_id: stack.palette_id.clone(),
+            registry_id: stack.registry_id.clone(),
+            command_group: stack.command_group.clone(),
+            query: stack.query.clone(),
+            normalized_query: stack.normalized_query.clone(),
+            query_tokens: stack.query_tokens.clone(),
+            query_token_count: stack.query_token_count,
+            invocation_state: stack.invocation_state.clone(),
+            receipt_state: stack.receipt_state.clone(),
+            headline_notification_id: stack
+                .active_notification_id
+                .clone()
+                .or_else(|| stack.latest_notification_id.clone()),
+            headline_notification_kind: stack.latest_notification_kind.clone(),
+            headline_notification_level: stack.latest_notification_level.clone(),
+            headline_notification_title: stack.latest_notification_title.clone(),
+            headline_notification_body: stack.latest_notification_body.clone(),
+            summary_kind: summary_kind.to_string(),
+            summary_level: summary_level.to_string(),
+            summary_title: stack.latest_notification_title.clone(),
+            summary_body: stack.latest_notification_body.clone(),
+            should_render_stack: stack.has_visible_notifications,
+            should_announce_latest: stack.latest_should_announce,
+            notification_count: stack.notification_count,
+            visible_notification_count: stack.visible_notification_count,
+            announce_notification_count: stack.announce_notification_count,
+            attention_notification_count: stack.attention_notification_count,
+            success_notification_count: stack.success_notification_count,
+            error_notification_count: stack.error_notification_count,
+            info_notification_count: stack.info_notification_count,
+            has_visible_notifications: stack.has_visible_notifications,
+            has_announcement: stack.has_announcement,
+            has_attention_notifications: has_visible_attention_notifications,
+            has_success_notifications: stack.success_notification_count > 0,
+            has_error_notifications: stack.error_notification_count > 0,
+            has_info_notifications: stack.info_notification_count > 0,
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id:
+                stack
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-json"
+                    .to_string(),
+            artifact_capability_count: stack.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub receipt_notification_stack_summary_product_handoff_id: String,
+    pub receipt_notification_stack_summary_id: String,
+    pub receipt_notification_stack_id: String,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub command_group: String,
+    pub query: String,
+    pub normalized_query: String,
+    pub query_tokens: Vec<String>,
+    pub query_token_count: usize,
+    pub product_surface: String,
+    pub render_region: String,
+    pub handoff_route: String,
+    pub handoff_status: String,
+    pub product_shell_action: String,
+    pub notification_badge_label: String,
+    pub notification_badge_count: usize,
+    pub live_region_id: Option<String>,
+    pub latest_announcement: Option<String>,
+    pub headline_notification_id: Option<String>,
+    pub headline_notification_kind: Option<String>,
+    pub headline_notification_level: Option<String>,
+    pub headline_notification_title: Option<String>,
+    pub headline_notification_body: Option<String>,
+    pub summary_kind: String,
+    pub summary_level: String,
+    pub summary_title: Option<String>,
+    pub summary_body: Option<String>,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub stack_summary:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack_summary(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_notification_stack_summary(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_notification_stack_summary(
+        summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+    ) -> Self {
+        let handoff_route = if summary.should_render_stack {
+            "notification-stack"
+        } else {
+            "dispatch-status"
+        };
+        let product_shell_action = if summary.has_error_notifications {
+            "open-dispatch-errors"
+        } else if summary.should_render_stack {
+            "render-notification-stack"
+        } else {
+            "render-empty-dispatch-status"
+        };
+        let notification_badge_label = if summary.visible_notification_count == 1 {
+            "1 visible notification".to_string()
+        } else {
+            format!("{} visible notifications", summary.visible_notification_count)
+        };
+        let live_region_id = summary
+            .should_announce_latest
+            .then(|| "app-shell-command-palette-receipt-live-region".to_string());
+        let latest_announcement = if summary.should_announce_latest {
+            match (&summary.summary_title, &summary.summary_body) {
+                (Some(title), Some(body)) => Some(format!("{title}: {body}")),
+                (Some(title), None) => Some(title.clone()),
+                (None, Some(body)) => Some(body.clone()),
+                (None, None) => None,
+            }
+        } else {
+            None
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_SCHEMA_VERSION,
+            package_name: summary.package_name.clone(),
+            source_fingerprint: summary.source_fingerprint.clone(),
+            title: summary.title.clone(),
+            startup_route: summary.startup_route.clone(),
+            ready: summary.ready,
+            severity: summary.severity.clone(),
+            attention_required: summary.attention_required,
+            receipt_notification_stack_summary_product_handoff_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff"
+                    .to_string(),
+            receipt_notification_stack_summary_id: summary
+                .receipt_notification_stack_summary_id
+                .clone(),
+            receipt_notification_stack_id: summary.receipt_notification_stack_id.clone(),
+            receipt_notification_id: summary.receipt_notification_id.clone(),
+            receipt_summary_id: summary.receipt_summary_id.clone(),
+            receipt_stream_id: summary.receipt_stream_id.clone(),
+            search_invocation_id: summary.search_invocation_id.clone(),
+            search_selection_id: summary.search_selection_id.clone(),
+            search_results_id: summary.search_results_id.clone(),
+            search_index_id: summary.search_index_id.clone(),
+            palette_id: summary.palette_id.clone(),
+            registry_id: summary.registry_id.clone(),
+            command_group: summary.command_group.clone(),
+            query: summary.query.clone(),
+            normalized_query: summary.normalized_query.clone(),
+            query_tokens: summary.query_tokens.clone(),
+            query_token_count: summary.query_token_count,
+            product_surface: "command-palette-dispatch-feedback".to_string(),
+            render_region: "app-shell-command-palette-receipt".to_string(),
+            handoff_route: handoff_route.to_string(),
+            handoff_status: summary.summary_level.clone(),
+            product_shell_action: product_shell_action.to_string(),
+            notification_badge_label,
+            notification_badge_count: summary.visible_notification_count,
+            live_region_id,
+            latest_announcement,
+            headline_notification_id: summary.headline_notification_id.clone(),
+            headline_notification_kind: summary.headline_notification_kind.clone(),
+            headline_notification_level: summary.headline_notification_level.clone(),
+            headline_notification_title: summary.headline_notification_title.clone(),
+            headline_notification_body: summary.headline_notification_body.clone(),
+            summary_kind: summary.summary_kind.clone(),
+            summary_level: summary.summary_level.clone(),
+            summary_title: summary.summary_title.clone(),
+            summary_body: summary.summary_body.clone(),
+            should_render_stack: summary.should_render_stack,
+            should_announce_latest: summary.should_announce_latest,
+            requires_attention: summary.has_attention_notifications
+                || summary.has_error_notifications
+                || summary.attention_required,
+            notification_count: summary.notification_count,
+            visible_notification_count: summary.visible_notification_count,
+            announce_notification_count: summary.announce_notification_count,
+            attention_notification_count: summary.attention_notification_count,
+            success_notification_count: summary.success_notification_count,
+            error_notification_count: summary.error_notification_count,
+            info_notification_count: summary.info_notification_count,
+            stack_summary: summary.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id:
+                summary
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-json"
+                    .to_string(),
+            artifact_capability_count: summary.artifact_capability_count,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub delivery_package_id: String,
+    pub delivery_package_kind: String,
+    pub delivery_route: String,
+    pub wasm_export_symbol: String,
+    pub hydration_target_id: String,
+    pub handoff_route: String,
+    pub handoff_status: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub receipt_notification_stack_summary_product_handoff_id: String,
+    pub receipt_notification_stack_summary_id: String,
+    pub receipt_notification_stack_id: String,
+    pub receipt_notification_id: String,
+    pub receipt_summary_id: String,
+    pub receipt_stream_id: String,
+    pub search_invocation_id: String,
+    pub search_selection_id: String,
+    pub search_results_id: String,
+    pub search_index_id: String,
+    pub palette_id: String,
+    pub registry_id: String,
+    pub notification_badge_label: String,
+    pub notification_badge_count: usize,
+    pub live_region_id: Option<String>,
+    pub latest_announcement: Option<String>,
+    pub should_hydrate: bool,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub product_handoff:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_product_handoff(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_product_handoff(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_product_handoff(
+        handoff: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff,
+    ) -> Self {
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_SCHEMA_VERSION,
+            package_name: handoff.package_name.clone(),
+            source_fingerprint: handoff.source_fingerprint.clone(),
+            title: handoff.title.clone(),
+            startup_route: handoff.startup_route.clone(),
+            ready: handoff.ready,
+            severity: handoff.severity.clone(),
+            attention_required: handoff.attention_required,
+            delivery_package_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package"
+                    .to_string(),
+            delivery_package_kind: "berkeley-product-handoff-delivery-package".to_string(),
+            delivery_route: format!("{}/{}", handoff.startup_route, handoff.handoff_route),
+            wasm_export_symbol: "berkeleyAppProductHandoffDeliveryPackage".to_string(),
+            hydration_target_id: "berkeley-product-handoff-hydration-root".to_string(),
+            handoff_route: handoff.handoff_route.clone(),
+            handoff_status: handoff.handoff_status.clone(),
+            product_surface: handoff.product_surface.clone(),
+            render_region: handoff.render_region.clone(),
+            product_shell_action: handoff.product_shell_action.clone(),
+            receipt_notification_stack_summary_product_handoff_id: handoff
+                .receipt_notification_stack_summary_product_handoff_id
+                .clone(),
+            receipt_notification_stack_summary_id: handoff
+                .receipt_notification_stack_summary_id
+                .clone(),
+            receipt_notification_stack_id: handoff.receipt_notification_stack_id.clone(),
+            receipt_notification_id: handoff.receipt_notification_id.clone(),
+            receipt_summary_id: handoff.receipt_summary_id.clone(),
+            receipt_stream_id: handoff.receipt_stream_id.clone(),
+            search_invocation_id: handoff.search_invocation_id.clone(),
+            search_selection_id: handoff.search_selection_id.clone(),
+            search_results_id: handoff.search_results_id.clone(),
+            search_index_id: handoff.search_index_id.clone(),
+            palette_id: handoff.palette_id.clone(),
+            registry_id: handoff.registry_id.clone(),
+            notification_badge_label: handoff.notification_badge_label.clone(),
+            notification_badge_count: handoff.notification_badge_count,
+            live_region_id: handoff.live_region_id.clone(),
+            latest_announcement: handoff.latest_announcement.clone(),
+            should_hydrate: handoff.ready,
+            should_render_stack: handoff.should_render_stack,
+            should_announce_latest: handoff.should_announce_latest,
+            requires_attention: handoff.requires_attention,
+            notification_count: handoff.notification_count,
+            visible_notification_count: handoff.visible_notification_count,
+            announce_notification_count: handoff.announce_notification_count,
+            attention_notification_count: handoff.attention_notification_count,
+            success_notification_count: handoff.success_notification_count,
+            error_notification_count: handoff.error_notification_count,
+            info_notification_count: handoff.info_notification_count,
+            product_handoff: handoff.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id:
+                handoff
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-json"
+                    .to_string(),
+            artifact_capability_count: handoff.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub embed_manifest_id: String,
+    pub embed_manifest_kind: String,
+    pub embed_mode: String,
+    pub embed_root_id: String,
+    pub embed_script_id: String,
+    pub wasm_module_name: String,
+    pub wasm_module_format: String,
+    pub wasm_content_type: String,
+    pub wasm_import_namespace: String,
+    pub wasm_export_symbol: String,
+    pub wasm_initializer_symbol: String,
+    pub hydration_target_id: String,
+    pub hydration_mode: String,
+    pub delivery_package_id: String,
+    pub delivery_package_kind: String,
+    pub delivery_route: String,
+    pub handoff_route: String,
+    pub handoff_status: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub should_preload: bool,
+    pub should_instantiate: bool,
+    pub should_mount: bool,
+    pub should_hydrate: bool,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub delivery_package:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_delivery_package(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_delivery_package(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_delivery_package(
+        package: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage,
+    ) -> Self {
+        let hydration_mode = if package.should_hydrate {
+            "hydrate"
+        } else {
+            "defer"
+        };
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_MANIFEST_SCHEMA_VERSION,
+            package_name: package.package_name.clone(),
+            source_fingerprint: package.source_fingerprint.clone(),
+            title: package.title.clone(),
+            startup_route: package.startup_route.clone(),
+            ready: package.ready,
+            severity: package.severity.clone(),
+            attention_required: package.attention_required,
+            embed_manifest_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-manifest"
+                    .to_string(),
+            embed_manifest_kind:
+                "berkeley-product-handoff-webassembly-embed-manifest".to_string(),
+            embed_mode: "webassembly-module".to_string(),
+            embed_root_id: "berkeley-product-handoff-embed-root".to_string(),
+            embed_script_id: "berkeley-product-handoff-wasm-module".to_string(),
+            wasm_module_name: "berkeley_spice_mosaic_app".to_string(),
+            wasm_module_format: "wasm32-unknown-unknown".to_string(),
+            wasm_content_type: "application/wasm".to_string(),
+            wasm_import_namespace: "berkeley_spice_mosaic".to_string(),
+            wasm_export_symbol: package.wasm_export_symbol.clone(),
+            wasm_initializer_symbol: "berkeleyAppProductHandoffEmbedManifest".to_string(),
+            hydration_target_id: package.hydration_target_id.clone(),
+            hydration_mode: hydration_mode.to_string(),
+            delivery_package_id: package.delivery_package_id.clone(),
+            delivery_package_kind: package.delivery_package_kind.clone(),
+            delivery_route: package.delivery_route.clone(),
+            handoff_route: package.handoff_route.clone(),
+            handoff_status: package.handoff_status.clone(),
+            product_surface: package.product_surface.clone(),
+            render_region: package.render_region.clone(),
+            product_shell_action: package.product_shell_action.clone(),
+            should_preload: true,
+            should_instantiate: package.ready,
+            should_mount: package.should_hydrate,
+            should_hydrate: package.should_hydrate,
+            should_render_stack: package.should_render_stack,
+            should_announce_latest: package.should_announce_latest,
+            requires_attention: package.requires_attention,
+            notification_count: package.notification_count,
+            visible_notification_count: package.visible_notification_count,
+            announce_notification_count: package.announce_notification_count,
+            attention_notification_count: package.attention_notification_count,
+            success_notification_count: package.success_notification_count,
+            error_notification_count: package.error_notification_count,
+            info_notification_count: package.info_notification_count,
+            delivery_package: package.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+                package
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-manifest-json"
+                    .to_string(),
+            artifact_capability_count: package.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_json_value(self)
+            .to_string()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub loader_plan_id: String,
+    pub loader_plan_kind: String,
+    pub loader_phase: String,
+    pub loader_strategy: String,
+    pub module_request_id: String,
+    pub module_request_kind: String,
+    pub module_cache_key: String,
+    pub module_integrity_mode: String,
+    pub module_fetch_priority: String,
+    pub instantiation_target_id: String,
+    pub embed_manifest_id: String,
+    pub embed_manifest_kind: String,
+    pub embed_mode: String,
+    pub embed_root_id: String,
+    pub embed_script_id: String,
+    pub wasm_module_name: String,
+    pub wasm_module_format: String,
+    pub wasm_content_type: String,
+    pub wasm_import_namespace: String,
+    pub wasm_export_symbol: String,
+    pub wasm_initializer_symbol: String,
+    pub hydration_target_id: String,
+    pub hydration_mode: String,
+    pub delivery_package_id: String,
+    pub delivery_package_kind: String,
+    pub delivery_route: String,
+    pub handoff_route: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub load_order: Vec<String>,
+    pub should_preload: bool,
+    pub should_instantiate: bool,
+    pub should_mount: bool,
+    pub should_hydrate: bool,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub embed_manifest:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_manifest(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_manifest(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_embed_manifest(
+        manifest: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest,
+    ) -> Self {
+        let loader_phase = if manifest.ready { "ready" } else { "blocked" };
+        let loader_strategy = if manifest.should_instantiate && manifest.should_mount {
+            "preload-instantiate-mount-hydrate"
+        } else {
+            "preload-defer"
+        };
+        let module_fetch_priority = if manifest.requires_attention {
+            "high"
+        } else {
+            "auto"
+        };
+        let mut load_order = vec!["preload-module".to_string()];
+        if manifest.should_instantiate {
+            load_order.push("instantiate-module".to_string());
+        }
+        if manifest.should_mount {
+            load_order.push("mount-embed-root".to_string());
+        }
+        if manifest.should_hydrate {
+            load_order.push("hydrate-product-handoff".to_string());
+        } else {
+            load_order.push("defer-product-handoff-hydration".to_string());
+        }
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_LOADER_PLAN_SCHEMA_VERSION,
+            package_name: manifest.package_name.clone(),
+            source_fingerprint: manifest.source_fingerprint.clone(),
+            title: manifest.title.clone(),
+            startup_route: manifest.startup_route.clone(),
+            ready: manifest.ready,
+            severity: manifest.severity.clone(),
+            attention_required: manifest.attention_required,
+            loader_plan_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-loader-plan"
+                    .to_string(),
+            loader_plan_kind:
+                "berkeley-product-handoff-webassembly-embed-loader-plan".to_string(),
+            loader_phase: loader_phase.to_string(),
+            loader_strategy: loader_strategy.to_string(),
+            module_request_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-module-request"
+                    .to_string(),
+            module_request_kind:
+                "berkeley-product-handoff-webassembly-module-request".to_string(),
+            module_cache_key: format!(
+                "{}:{}:{}",
+                manifest.wasm_module_name, manifest.source_fingerprint, manifest.hydration_mode
+            ),
+            module_integrity_mode: "source-fingerprint".to_string(),
+            module_fetch_priority: module_fetch_priority.to_string(),
+            instantiation_target_id: format!("{}::{}", manifest.embed_root_id, manifest.wasm_export_symbol),
+            embed_manifest_id: manifest.embed_manifest_id.clone(),
+            embed_manifest_kind: manifest.embed_manifest_kind.clone(),
+            embed_mode: manifest.embed_mode.clone(),
+            embed_root_id: manifest.embed_root_id.clone(),
+            embed_script_id: manifest.embed_script_id.clone(),
+            wasm_module_name: manifest.wasm_module_name.clone(),
+            wasm_module_format: manifest.wasm_module_format.clone(),
+            wasm_content_type: manifest.wasm_content_type.clone(),
+            wasm_import_namespace: manifest.wasm_import_namespace.clone(),
+            wasm_export_symbol: manifest.wasm_export_symbol.clone(),
+            wasm_initializer_symbol: manifest.wasm_initializer_symbol.clone(),
+            hydration_target_id: manifest.hydration_target_id.clone(),
+            hydration_mode: manifest.hydration_mode.clone(),
+            delivery_package_id: manifest.delivery_package_id.clone(),
+            delivery_package_kind: manifest.delivery_package_kind.clone(),
+            delivery_route: manifest.delivery_route.clone(),
+            handoff_route: manifest.handoff_route.clone(),
+            product_surface: manifest.product_surface.clone(),
+            render_region: manifest.render_region.clone(),
+            product_shell_action: manifest.product_shell_action.clone(),
+            load_order,
+            should_preload: manifest.should_preload,
+            should_instantiate: manifest.should_instantiate,
+            should_mount: manifest.should_mount,
+            should_hydrate: manifest.should_hydrate,
+            should_render_stack: manifest.should_render_stack,
+            should_announce_latest: manifest.should_announce_latest,
+            requires_attention: manifest.requires_attention,
+            notification_count: manifest.notification_count,
+            visible_notification_count: manifest.visible_notification_count,
+            announce_notification_count: manifest.announce_notification_count,
+            attention_notification_count: manifest.attention_notification_count,
+            success_notification_count: manifest.success_notification_count,
+            error_notification_count: manifest.error_notification_count,
+            info_notification_count: manifest.info_notification_count,
+            embed_manifest: manifest.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+                manifest
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id:
+                manifest
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-loader-plan-json"
+                    .to_string(),
+            artifact_capability_count: manifest.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json_value(self)
+            .to_string()
+    }
+}
+
+fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
+    let mut tokens = Vec::new();
+    for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
+        for token in source.split(|character: char| !character.is_ascii_alphanumeric()) {
+            let normalized = token.to_ascii_lowercase();
+            if !normalized.is_empty() && !tokens.iter().any(|entry| entry == &normalized) {
+                tokens.push(normalized);
+            }
+        }
+    }
+    tokens
+}
+
+fn command_palette_search_entry_matched_tokens(
+    entry: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry,
+    query_tokens: &[String],
+) -> Vec<String> {
+    if query_tokens.is_empty() {
+        return Vec::new();
+    }
+
+    query_tokens
+        .iter()
+        .filter(|query_token| {
+            entry.search_tokens.iter().any(|search_token| {
+                search_token == *query_token
+                    || search_token.starts_with(query_token.as_str())
+                    || search_token.contains(query_token.as_str())
+            }) || entry.normalized_search_text.contains(query_token.as_str())
+        })
+        .cloned()
+        .collect()
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAnalysisInventoryEntry {
+    pub index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleySyntaxDeck {
+    pub grammar: BerkeleyGrammarMetadata,
+    pub title: Option<String>,
+    pub cards: Vec<BerkeleyLogicalCard>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+impl BerkeleySyntaxDeck {
+    pub fn has_errors(&self) -> bool {
+        self.diagnostics
+            .iter()
+            .any(BerkeleySyntaxDiagnostic::is_error)
+    }
+
+    pub fn analysis_inventory(&self) -> Vec<BerkeleyAnalysisInventoryEntry> {
+        self.cards
+            .iter()
+            .enumerate()
+            .filter_map(|(index, card)| {
+                if card.kind != BerkeleyCardKind::Analysis {
+                    return None;
+                }
+                let analysis = card.head.trim_start_matches('.').to_ascii_lowercase();
+                Some(BerkeleyAnalysisInventoryEntry {
+                    index,
+                    directive: card.head.clone(),
+                    analysis,
+                    span: card.span,
+                })
+            })
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppDeck {
+    pub syntax: BerkeleySyntaxDeck,
+    pub canonical_source: String,
+    pub parsed: Option<ParsedNetlist>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppAnalysisArtifact {
+    pub syntax_card_index: Option<usize>,
+    pub directive: String,
+    pub analysis: String,
+    pub span: Option<SourceSpan>,
+    pub table: String,
+    pub table_columns: Vec<String>,
+    pub table_row_count: usize,
+    pub waveform_series_count: usize,
+    pub waveform_series: Vec<BerkeleyAppWaveformSeries>,
+    pub table_artifacts: Vec<DeckTableArtifact>,
+    pub output_plan_artifacts: Vec<DeckOutputPlanArtifact>,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub rawfile_artifacts: Vec<DeckRawfileArtifact>,
+    pub wrdata_artifacts: Vec<DeckWrdataArtifact>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppWaveformPoint {
+    pub row_index: usize,
+    pub x: f64,
+    pub y: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppWaveformSeries {
+    pub syntax_card_index: Option<usize>,
+    pub directive: String,
+    pub analysis: String,
+    pub table_name: String,
+    pub name: String,
+    pub x_column: String,
+    pub y_column: String,
+    pub group_column: Option<String>,
+    pub group_value: Option<String>,
+    pub point_count: usize,
+    pub points: Vec<BerkeleyAppWaveformPoint>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct BerkeleyAppExecution {
+    pub canonical_source: String,
+    pub analyses: Vec<BerkeleyAppAnalysisArtifact>,
+    pub waveform_series_count: usize,
+    pub waveform_series: Vec<BerkeleyAppWaveformSeries>,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub run_artifact_table: String,
+    pub run_artifact_csv: String,
+    pub run_artifact_json: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppSessionAnalysis {
+    pub syntax_card_index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+    pub runnable: bool,
+    pub artifact_supported: bool,
+    pub selected: bool,
+    pub execution_available: bool,
+    pub table_row_count: Option<usize>,
+    pub table_columns: Vec<String>,
+    pub waveform_series_count: Option<usize>,
+    pub output_probes: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppSessionState {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub card_count: usize,
+    pub analysis_count: usize,
+    pub diagnostic_count: usize,
+    pub has_errors: bool,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub selected_syntax_card_index: Option<usize>,
+    pub selected_analysis: Option<BerkeleyAppSessionAnalysis>,
+    pub selected_table_columns: Vec<String>,
+    pub selected_output_probes: Vec<String>,
+    pub selected_waveform_series_count: Option<usize>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+    pub analyses: Vec<BerkeleyAppSessionAnalysis>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BerkeleyAppEditorActionKind {
+    SelectAnalysis,
+    RunAnalysis,
+    InspectTable,
+    InspectWaveform,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorAction {
+    pub kind: BerkeleyAppEditorActionKind,
+    pub label: String,
+    pub enabled: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppAnalysisControl {
+    pub syntax_card_index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+    pub selected: bool,
+    pub runnable: bool,
+    pub artifact_supported: bool,
+    pub execution_available: bool,
+    pub table_available: bool,
+    pub waveform_available: bool,
+    pub action_count: usize,
+    pub actions: Vec<BerkeleyAppEditorAction>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorControls {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub selected_syntax_card_index: Option<usize>,
+    pub selected_control: Option<BerkeleyAppAnalysisControl>,
+    pub control_count: usize,
+    pub controls: Vec<BerkeleyAppAnalysisControl>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorCommand {
+    pub id: String,
+    pub kind: BerkeleyAppEditorActionKind,
+    pub syntax_card_index: usize,
+    pub directive: String,
+    pub analysis: String,
+    pub span: SourceSpan,
+    pub target: String,
+    pub label: String,
+    pub enabled: bool,
+    pub selected: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorCommandPlan {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub selected_syntax_card_index: Option<usize>,
+    pub command_count: usize,
+    pub commands: Vec<BerkeleyAppEditorCommand>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct BerkeleyAppPersistedEditorState {
+    pub selected_syntax_card_index: Option<usize>,
+    pub active_command_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppEditorStateSnapshot {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub requested_state: BerkeleyAppPersistedEditorState,
+    pub resolved_state: BerkeleyAppPersistedEditorState,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub selected_control: Option<BerkeleyAppAnalysisControl>,
+    pub active_command: Option<BerkeleyAppEditorCommand>,
+    pub command_plan: BerkeleyAppEditorCommandPlan,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BerkeleyAppHostPanelKind {
+    Source,
+    Diagnostics,
+    Analysis,
+    Table,
+    Waveform,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostPanel {
+    pub id: String,
+    pub kind: BerkeleyAppHostPanelKind,
+    pub title: String,
+    pub target: String,
+    pub enabled: bool,
+    pub active: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostSurface {
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub editor_state: BerkeleyAppEditorStateSnapshot,
+    pub panel_count: usize,
+    pub active_panel: Option<BerkeleyAppHostPanel>,
+    pub panels: Vec<BerkeleyAppHostPanel>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleySyntaxDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostSpanWire {
+    pub start_line: usize,
+    pub start_column: usize,
+    pub end_line: usize,
+    pub end_column: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostDiagnosticWire {
+    pub code: String,
+    pub severity: String,
+    pub message: String,
+    pub span: Option<BerkeleyAppHostSpanWire>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostPanelWire {
+    pub id: String,
+    pub kind: String,
+    pub title: String,
+    pub target: String,
+    pub enabled: bool,
+    pub active: bool,
+    pub disabled_reason: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppHostSurfaceWire {
+    pub schema_version: u32,
+    pub canonical_source: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub parsed: bool,
+    pub execution_available: bool,
+    pub requested_selected_syntax_card_index: Option<usize>,
+    pub requested_active_command_id: Option<String>,
+    pub resolved_selected_syntax_card_index: Option<usize>,
+    pub resolved_active_command_id: Option<String>,
+    pub selection_stale: bool,
+    pub command_stale: bool,
+    pub panel_count: usize,
+    pub active_panel_id: Option<String>,
+    pub panels: Vec<BerkeleyAppHostPanelWire>,
+    pub blocking_message: Option<String>,
+    pub diagnostics: Vec<BerkeleyAppHostDiagnosticWire>,
+}
+
+impl BerkeleyAppHostSurfaceWire {
+    pub fn to_json(&self) -> String {
+        host_surface_wire_json_value(self).to_string()
+    }
+}
+
+impl BerkeleyAppDeck {
+    pub fn has_errors(&self) -> bool {
+        self.diagnostics
+            .iter()
+            .any(BerkeleySyntaxDiagnostic::is_error)
+    }
+
+    pub fn analysis_inventory(&self) -> Vec<BerkeleyAnalysisInventoryEntry> {
+        self.syntax.analysis_inventory()
+    }
+
+    pub fn session_state(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> BerkeleyAppSessionState {
+        let has_errors = self.has_errors();
+        let parsed = self.parsed.is_some();
+        let mut analyses = self
+            .analysis_inventory()
+            .into_iter()
+            .map(|entry| BerkeleyAppSessionAnalysis {
+                syntax_card_index: entry.index,
+                directive: entry.directive.clone(),
+                analysis: entry.analysis,
+                span: entry.span,
+                runnable: runnable_analysis_kind(&entry.directive).is_some(),
+                artifact_supported: deck_artifact_analysis_directive(&entry.directive),
+                selected: selected_syntax_card_index == Some(entry.index),
+                execution_available: false,
+                table_row_count: None,
+                table_columns: Vec::new(),
+                waveform_series_count: None,
+                output_probes: Vec::new(),
+            })
+            .collect::<Vec<_>>();
+        let selected_analysis = analyses.iter().find(|analysis| analysis.selected).cloned();
+
+        BerkeleyAppSessionState {
+            canonical_source: self.canonical_source.clone(),
+            source_fingerprint: stable_source_fingerprint(&self.canonical_source),
+            title: self.syntax.title.clone(),
+            card_count: self.syntax.cards.len(),
+            analysis_count: analyses.len(),
+            diagnostic_count: self.diagnostics.len(),
+            has_errors,
+            parsed,
+            execution_available: false,
+            selected_syntax_card_index,
+            selected_analysis,
+            selected_table_columns: Vec::new(),
+            selected_output_probes: Vec::new(),
+            selected_waveform_series_count: None,
+            blocking_message: if parsed {
+                None
+            } else {
+                Some(self.blocking_message())
+            },
+            diagnostics: self.diagnostics.clone(),
+            analyses: std::mem::take(&mut analyses),
+        }
+    }
+
+    pub fn run_session_state(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> Result<BerkeleyAppSessionState, AnalysisExecutionError> {
+        let mut state = self.session_state(selected_syntax_card_index);
+        if self.parsed.is_none() {
+            return Ok(state);
+        }
+
+        let execution = self.run_artifacts()?;
+        state.execution_available = true;
+        for artifact in &execution.analyses {
+            let Some(syntax_card_index) = artifact.syntax_card_index else {
+                continue;
+            };
+            let Some(analysis) = state
+                .analyses
+                .iter_mut()
+                .find(|analysis| analysis.syntax_card_index == syntax_card_index)
+            else {
+                continue;
+            };
+            analysis.execution_available = true;
+            analysis.table_row_count = Some(artifact.table_row_count);
+            analysis.table_columns = artifact.table_columns.clone();
+            analysis.waveform_series_count = Some(artifact.waveform_series_count);
+            analysis.output_probes = output_plan_probes(&artifact.output_plan_artifacts);
+        }
+        refresh_selected_session_analysis(&mut state);
+        Ok(state)
+    }
+
+    pub fn editor_controls(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> BerkeleyAppEditorControls {
+        editor_controls_from_session_state(&self.session_state(selected_syntax_card_index))
+    }
+
+    pub fn run_editor_controls(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> Result<BerkeleyAppEditorControls, AnalysisExecutionError> {
+        Ok(editor_controls_from_session_state(
+            &self.run_session_state(selected_syntax_card_index)?,
+        ))
+    }
+
+    pub fn editor_command_plan(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> BerkeleyAppEditorCommandPlan {
+        editor_command_plan_from_controls(&self.editor_controls(selected_syntax_card_index))
+    }
+
+    pub fn run_editor_command_plan(
+        &self,
+        selected_syntax_card_index: Option<usize>,
+    ) -> Result<BerkeleyAppEditorCommandPlan, AnalysisExecutionError> {
+        Ok(editor_command_plan_from_controls(
+            &self.run_editor_controls(selected_syntax_card_index)?,
+        ))
+    }
+
+    pub fn editor_state_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppEditorStateSnapshot {
+        editor_state_snapshot_from_session_state(self.session_state(None), persisted_state)
+    }
+
+    pub fn run_editor_state_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppEditorStateSnapshot, AnalysisExecutionError> {
+        Ok(editor_state_snapshot_from_session_state(
+            self.run_session_state(None)?,
+            persisted_state,
+        ))
+    }
+
+    pub fn host_surface(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppHostSurface {
+        host_surface_from_editor_state(self.editor_state_snapshot(persisted_state))
+    }
+
+    pub fn run_host_surface(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppHostSurface, AnalysisExecutionError> {
+        Ok(host_surface_from_editor_state(
+            self.run_editor_state_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn host_surface_wire(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppHostSurfaceWire {
+        BerkeleyAppHostSurfaceWire::from(self.host_surface(persisted_state))
+    }
+
+    pub fn run_host_surface_wire(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppHostSurfaceWire, AnalysisExecutionError> {
+        Ok(BerkeleyAppHostSurfaceWire::from(
+            self.run_host_surface(persisted_state)?,
+        ))
+    }
+
+    pub fn host_surface_wire_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.host_surface_wire(persisted_state).to_json()
+    }
+
+    pub fn run_host_surface_wire_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_host_surface_wire(persisted_state)?.to_json())
+    }
+
+    pub fn app_bootstrap_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppBootstrapSnapshot {
+        BerkeleyAppBootstrapSnapshot {
+            schema_version: BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
+            package_manifest: berkeley_app_package_manifest(),
+            host_surface: self.host_surface_wire(persisted_state),
+        }
+    }
+
+    pub fn run_app_bootstrap_snapshot(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppBootstrapSnapshot, AnalysisExecutionError> {
+        Ok(BerkeleyAppBootstrapSnapshot {
+            schema_version: BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
+            package_manifest: berkeley_app_package_manifest(),
+            host_surface: self.run_host_surface_wire(persisted_state)?,
+        })
+    }
+
+    pub fn app_bootstrap_json(&self, persisted_state: BerkeleyAppPersistedEditorState) -> String {
+        self.app_bootstrap_snapshot(persisted_state).to_json()
+    }
+
+    pub fn run_app_bootstrap_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_bootstrap_snapshot(persisted_state)?.to_json())
+    }
+
+    pub fn app_startup_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppStartupSummary {
+        BerkeleyAppStartupSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_startup_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppStartupSummary, AnalysisExecutionError> {
+        Ok(BerkeleyAppStartupSummary::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_startup_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_startup_summary(persisted_state).to_json()
+    }
+
+    pub fn run_app_startup_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_startup_summary(persisted_state)?.to_json())
+    }
+
+    pub fn app_launch_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppLaunchPlan {
+        BerkeleyAppLaunchPlan::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_launch_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppLaunchPlan, AnalysisExecutionError> {
+        Ok(BerkeleyAppLaunchPlan::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_launch_plan_json(&self, persisted_state: BerkeleyAppPersistedEditorState) -> String {
+        self.app_launch_plan(persisted_state).to_json()
+    }
+
+    pub fn run_app_launch_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_launch_plan(persisted_state)?.to_json())
+    }
+
+    pub fn app_readiness_report(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppReadinessReport {
+        BerkeleyAppReadinessReport::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_readiness_report(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppReadinessReport, AnalysisExecutionError> {
+        Ok(BerkeleyAppReadinessReport::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_readiness_report_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_readiness_report(persisted_state).to_json()
+    }
+
+    pub fn run_app_readiness_report_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_readiness_report(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellHandoff {
+        BerkeleyAppShellHandoff::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellHandoff, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellHandoff::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_handoff(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_handoff(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_status(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellStatus {
+        BerkeleyAppShellStatus::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_status(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellStatus, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellStatus::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_status_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_status(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_status_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_status(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_telemetry(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellTelemetry {
+        BerkeleyAppShellTelemetry::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_telemetry(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellTelemetry, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellTelemetry::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_telemetry_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_telemetry(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_telemetry_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_telemetry(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_log(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventLog {
+        BerkeleyAppShellEventLog::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_log(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventLog, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventLog::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_log_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_log(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_log_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_event_log(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventSummary {
+        BerkeleyAppShellEventSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventSummary, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventSummary::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_summary(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_event_summary(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventDigest {
+        BerkeleyAppShellEventDigest::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventDigest, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventDigest::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_digest(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self.run_app_shell_event_digest(persisted_state)?.to_json())
+    }
+
+    pub fn app_shell_event_dashboard(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellEventDashboard {
+        BerkeleyAppShellEventDashboard::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_event_dashboard(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellEventDashboard, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellEventDashboard::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_event_dashboard_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_event_dashboard(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_event_dashboard_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_event_dashboard(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_package(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardPackage {
+        BerkeleyAppShellDashboardPackage::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_package(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardPackage, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardPackage::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_package_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_package(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_package_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_package(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardCards {
+        BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardCards, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardCards::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_cards(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_cards(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_view(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardView {
+        BerkeleyAppShellDashboardView::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_view(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardView, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardView::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_view_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_view(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_view_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_view(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_layout(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardLayout {
+        BerkeleyAppShellDashboardLayout::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_layout(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardLayout, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardLayout::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_layout_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_layout(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_layout_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_layout(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_navigation(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardNavigation {
+        BerkeleyAppShellDashboardNavigation::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_navigation(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardNavigation, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardNavigation::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_navigation_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_navigation(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_navigation_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_navigation(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_routes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardRoutes {
+        BerkeleyAppShellDashboardRoutes::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_routes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardRoutes, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardRoutes::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_routes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_routes(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_routes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_routes(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_breadcrumbs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardBreadcrumbs {
+        BerkeleyAppShellDashboardBreadcrumbs::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_breadcrumbs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardBreadcrumbs, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardBreadcrumbs::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_breadcrumbs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_breadcrumbs(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_breadcrumbs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_breadcrumbs(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardTabs {
+        BerkeleyAppShellDashboardTabs::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardTabs, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardTabs::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_tabs(persisted_state).to_json()
+    }
+
+    pub fn run_app_shell_dashboard_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_tabs(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_tab_panels(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardTabPanels {
+        BerkeleyAppShellDashboardTabPanels::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_tab_panels(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardTabPanels, AnalysisExecutionError> {
+        Ok(BerkeleyAppShellDashboardTabPanels::from_bootstrap_snapshot(
+            &self.run_app_bootstrap_snapshot(persisted_state)?,
+        ))
+    }
+
+    pub fn app_shell_dashboard_tab_panels_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_tab_panels(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_tab_panels_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_tab_panels(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_panel_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardPanelCards {
+        BerkeleyAppShellDashboardPanelCards::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_panel_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardPanelCards, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardPanelCards::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_panel_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_panel_cards(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_panel_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_panel_cards(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_panel_card_actions(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardPanelCardActions {
+        BerkeleyAppShellDashboardPanelCardActions::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_panel_card_actions(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardPanelCardActions, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardPanelCardActions::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_panel_card_actions_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_panel_card_actions(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_panel_card_actions_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_panel_card_actions(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_action_dispatch(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardActionDispatch {
+        BerkeleyAppShellDashboardActionDispatch::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_action_dispatch(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardActionDispatch, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardActionDispatch::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_action_dispatch_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_action_dispatch(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_action_dispatch_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_action_dispatch(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_events(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchEvents {
+        BerkeleyAppShellDashboardDispatchEvents::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_events(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchEvents, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchEvents::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_events_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_events(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_events_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_events(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueue {
+        BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueue, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueue::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueSummary {
+        BerkeleyAppShellDashboardDispatchQueueSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueSummary, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueSummary::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_summary(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_summary(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueDigest {
+        BerkeleyAppShellDashboardDispatchQueueDigest::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_digest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueDigest, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueDigest::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_digest(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_digest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_digest(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lanes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLanes {
+        BerkeleyAppShellDashboardDispatchQueueLanes::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lanes(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLanes, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLanes::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lanes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lanes(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lanes_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lanes(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabs {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tabs(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLaneTabs, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabs::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tabs(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tabs_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tabs(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panels(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanels {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanels::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panels(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLaneTabPanels, AnalysisExecutionError> {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanels::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panels_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panels(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panels_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panels(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_cards(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards, AnalysisExecutionError>
+    {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_cards(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_cards_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_cards(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions, AnalysisExecutionError>
+    {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions(persisted_state)?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu,
+        AnalysisExecutionError,
+    > {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu(persisted_state)
+            .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups,
+        AnalysisExecutionError,
+    > {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts,
+        AnalysisExecutionError,
+    > {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings,
+        AnalysisExecutionError,
+    > {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette,
+        AnalysisExecutionError,
+    > {
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+            persisted_state,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index(
+                persisted_state,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results(
+            persisted_state,
+            search_query,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results(
+                persisted_state,
+                search_query,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn run_source_order(&self) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+        let parsed = self.parsed.as_ref().ok_or_else(|| {
+            AnalysisExecutionError::Netlist(NetlistParseError::new(self.blocking_message()))
+        })?;
+        parsed.run_analysis_plan()
+    }
+
+    pub fn run_selected_analysis(
+        &self,
+        syntax_card_index: usize,
+    ) -> Result<Option<AnalysisExecutionResult>, AnalysisExecutionError> {
+        let Some(entry) = self
+            .analysis_inventory()
+            .into_iter()
+            .find(|entry| entry.index == syntax_card_index)
+        else {
+            return Ok(None);
+        };
+        if runnable_analysis_kind(&entry.directive).is_none() {
+            return Ok(None);
+        }
+        let result_ordinal = self
+            .syntax
+            .cards
+            .iter()
+            .take(entry.index + 1)
+            .filter(|card| runnable_analysis_kind(&card.head).is_some())
+            .count()
+            - 1;
+        Ok(self.run_source_order()?.into_iter().nth(result_ordinal))
+    }
+
+    pub fn run_artifacts(&self) -> Result<BerkeleyAppExecution, AnalysisExecutionError> {
+        let parsed = self.parsed.as_ref().ok_or_else(|| {
+            AnalysisExecutionError::Netlist(NetlistParseError::new(self.blocking_message()))
+        })?;
+        let deck_execution = run_deck(&parsed.circuit, &self.canonical_source)?;
+        let analysis_entries = self
+            .analysis_inventory()
+            .into_iter()
+            .filter(|entry| deck_artifact_analysis_directive(&entry.directive))
+            .collect::<Vec<_>>();
+        let mut analysis_entries = analysis_entries.into_iter();
+        let mut execution_waveform_series = Vec::new();
+        let analyses = deck_execution
+            .executions
+            .into_iter()
+            .map(|execution| {
+                let entry = if execution.plan.line_number == 0 {
+                    None
+                } else {
+                    analysis_entries.next()
+                };
+                let syntax_card_index = entry.as_ref().map(|entry| entry.index);
+                let directive = entry
+                    .as_ref()
+                    .map(|entry| entry.directive.clone())
+                    .unwrap_or_else(|| execution.plan.directive.clone());
+                let analysis = execution.plan.analysis.clone();
+                let waveform_series = deck_waveform_series(
+                    syntax_card_index,
+                    &directive,
+                    &analysis,
+                    &execution.table,
+                );
+                execution_waveform_series.extend(waveform_series.iter().cloned());
+                BerkeleyAppAnalysisArtifact {
+                    syntax_card_index,
+                    directive,
+                    analysis,
+                    span: entry.as_ref().map(|entry| entry.span),
+                    table_columns: deck_table_columns(&execution.table),
+                    table_row_count: deck_table_row_count(&execution.table),
+                    waveform_series_count: waveform_series.len(),
+                    waveform_series,
+                    table: execution.table,
+                    table_artifacts: execution.table_artifacts,
+                    output_plan_artifacts: execution.output_plan_artifacts,
+                    run_artifacts: execution.run_artifacts,
+                    rawfile_artifacts: execution.rawfile_artifacts,
+                    wrdata_artifacts: execution.wrdata_artifacts,
+                }
+            })
+            .collect();
+
+        Ok(BerkeleyAppExecution {
+            canonical_source: self.canonical_source.clone(),
+            analyses,
+            waveform_series_count: execution_waveform_series.len(),
+            waveform_series: execution_waveform_series,
+            run_artifacts: deck_execution.run_artifacts,
+            run_artifact_table: deck_execution.run_artifact_table,
+            run_artifact_csv: deck_execution.run_artifact_csv,
+            run_artifact_json: deck_execution.run_artifact_json,
+        })
+    }
+
+    pub fn run_selected_artifact(
+        &self,
+        syntax_card_index: usize,
+    ) -> Result<Option<BerkeleyAppAnalysisArtifact>, AnalysisExecutionError> {
+        Ok(self
+            .run_artifacts()?
+            .analyses
+            .into_iter()
+            .find(|artifact| artifact.syntax_card_index == Some(syntax_card_index)))
+    }
+
+    pub fn run_selected_waveform_series(
+        &self,
+        syntax_card_index: usize,
+    ) -> Result<Option<Vec<BerkeleyAppWaveformSeries>>, AnalysisExecutionError> {
+        Ok(self
+            .run_selected_artifact(syntax_card_index)?
+            .map(|artifact| artifact.waveform_series))
+    }
+
+    fn blocking_message(&self) -> String {
+        self.diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.is_error())
+            .map(|diagnostic| format!("Berkeley SPICE app deck: {}", diagnostic.message))
+            .unwrap_or_else(|| {
+                "Berkeley SPICE app deck did not produce a parsed netlist".to_string()
+            })
+    }
+}
+
+fn editor_controls_from_session_state(
+    state: &BerkeleyAppSessionState,
+) -> BerkeleyAppEditorControls {
+    let controls = state
+        .analyses
+        .iter()
+        .map(|analysis| analysis_control_from_session_state(state, analysis))
+        .collect::<Vec<_>>();
+    let selected_control = controls.iter().find(|control| control.selected).cloned();
+
+    BerkeleyAppEditorControls {
+        canonical_source: state.canonical_source.clone(),
+        source_fingerprint: state.source_fingerprint.clone(),
+        title: state.title.clone(),
+        parsed: state.parsed,
+        execution_available: state.execution_available,
+        selected_syntax_card_index: state.selected_syntax_card_index,
+        selected_control,
+        control_count: controls.len(),
+        controls,
+        blocking_message: state.blocking_message.clone(),
+        diagnostics: state.diagnostics.clone(),
+    }
+}
+
+fn editor_command_plan_from_controls(
+    controls: &BerkeleyAppEditorControls,
+) -> BerkeleyAppEditorCommandPlan {
+    let commands = controls
+        .controls
+        .iter()
+        .flat_map(|control| {
+            control
+                .actions
+                .iter()
+                .map(|action| editor_command_from_control(control, action))
+        })
+        .collect::<Vec<_>>();
+
+    BerkeleyAppEditorCommandPlan {
+        canonical_source: controls.canonical_source.clone(),
+        source_fingerprint: controls.source_fingerprint.clone(),
+        title: controls.title.clone(),
+        parsed: controls.parsed,
+        execution_available: controls.execution_available,
+        selected_syntax_card_index: controls.selected_syntax_card_index,
+        command_count: commands.len(),
+        commands,
+        blocking_message: controls.blocking_message.clone(),
+        diagnostics: controls.diagnostics.clone(),
+    }
+}
+
+fn editor_state_snapshot_from_session_state(
+    mut state: BerkeleyAppSessionState,
+    requested_state: BerkeleyAppPersistedEditorState,
+) -> BerkeleyAppEditorStateSnapshot {
+    let resolved_selection =
+        resolve_editor_selection(&state, requested_state.selected_syntax_card_index);
+    apply_session_selection(&mut state, resolved_selection);
+
+    let controls = editor_controls_from_session_state(&state);
+    let command_plan = editor_command_plan_from_controls(&controls);
+    let active_command = resolve_active_editor_command(
+        &command_plan,
+        resolved_selection,
+        requested_state.active_command_id.as_deref(),
+    )
+    .cloned();
+    let resolved_state = BerkeleyAppPersistedEditorState {
+        selected_syntax_card_index: resolved_selection,
+        active_command_id: active_command.as_ref().map(|command| command.id.clone()),
+    };
+    let selection_stale = requested_state.selected_syntax_card_index.is_some()
+        && requested_state.selected_syntax_card_index != resolved_state.selected_syntax_card_index;
+    let command_stale = requested_state.active_command_id.is_some()
+        && requested_state.active_command_id != resolved_state.active_command_id;
+
+    BerkeleyAppEditorStateSnapshot {
+        canonical_source: command_plan.canonical_source.clone(),
+        source_fingerprint: command_plan.source_fingerprint.clone(),
+        title: command_plan.title.clone(),
+        parsed: command_plan.parsed,
+        execution_available: command_plan.execution_available,
+        requested_state,
+        resolved_state,
+        selection_stale,
+        command_stale,
+        selected_control: controls.selected_control,
+        active_command,
+        blocking_message: command_plan.blocking_message.clone(),
+        diagnostics: command_plan.diagnostics.clone(),
+        command_plan,
+    }
+}
+
+fn resolve_editor_selection(
+    state: &BerkeleyAppSessionState,
+    requested_selection: Option<usize>,
+) -> Option<usize> {
+    if let Some(selection) = requested_selection {
+        if state
+            .analyses
+            .iter()
+            .any(|analysis| analysis.syntax_card_index == selection)
+        {
+            return Some(selection);
+        }
+    }
+    state
+        .analyses
+        .first()
+        .map(|analysis| analysis.syntax_card_index)
+}
+
+fn apply_session_selection(
+    state: &mut BerkeleyAppSessionState,
+    selected_syntax_card_index: Option<usize>,
+) {
+    state.selected_syntax_card_index = selected_syntax_card_index;
+    for analysis in &mut state.analyses {
+        analysis.selected = Some(analysis.syntax_card_index) == selected_syntax_card_index;
+    }
+    refresh_selected_session_analysis(state);
+}
+
+fn resolve_active_editor_command<'a>(
+    command_plan: &'a BerkeleyAppEditorCommandPlan,
+    selected_syntax_card_index: Option<usize>,
+    requested_command_id: Option<&str>,
+) -> Option<&'a BerkeleyAppEditorCommand> {
+    if let Some(command_id) = requested_command_id {
+        if let Some(command) = command_plan.commands.iter().find(|command| {
+            command.id == command_id
+                && Some(command.syntax_card_index) == selected_syntax_card_index
+        }) {
+            return Some(command);
+        }
+    }
+
+    let selected_syntax_card_index = selected_syntax_card_index?;
+    command_plan.commands.iter().find(|command| {
+        command.syntax_card_index == selected_syntax_card_index
+            && command.kind == BerkeleyAppEditorActionKind::SelectAnalysis
+    })
+}
+
+fn host_surface_from_editor_state(
+    editor_state: BerkeleyAppEditorStateSnapshot,
+) -> BerkeleyAppHostSurface {
+    let active_kind = active_host_panel_kind(&editor_state);
+    let selected_control = editor_state.selected_control.as_ref();
+    let table_enabled = selected_control.is_some_and(|control| control.table_available);
+    let waveform_enabled = selected_control.is_some_and(|control| control.waveform_available);
+    let diagnostics_enabled =
+        !editor_state.diagnostics.is_empty() || editor_state.blocking_message.is_some();
+    let analysis_enabled = editor_state.command_plan.command_count > 0;
+
+    let panels = vec![
+        host_panel(
+            BerkeleyAppHostPanelKind::Source,
+            "source",
+            "Source",
+            "source-editor",
+            true,
+            active_kind == BerkeleyAppHostPanelKind::Source,
+            None,
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Diagnostics,
+            "diagnostics",
+            "Diagnostics",
+            "diagnostics",
+            diagnostics_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Diagnostics,
+            if diagnostics_enabled {
+                None
+            } else {
+                Some("deck has no diagnostics".to_string())
+            },
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Analysis,
+            "analysis",
+            "Analysis",
+            "analysis-controls",
+            analysis_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Analysis,
+            if analysis_enabled {
+                None
+            } else {
+                Some("deck has no analysis controls".to_string())
+            },
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Table,
+            "table",
+            "Table",
+            "analysis-table",
+            table_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Table,
+            if table_enabled {
+                None
+            } else {
+                host_panel_disabled_reason(&editor_state, BerkeleyAppEditorActionKind::InspectTable)
+            },
+        ),
+        host_panel(
+            BerkeleyAppHostPanelKind::Waveform,
+            "waveform",
+            "Waveform",
+            "analysis-waveform",
+            waveform_enabled,
+            active_kind == BerkeleyAppHostPanelKind::Waveform,
+            if waveform_enabled {
+                None
+            } else {
+                host_panel_disabled_reason(
+                    &editor_state,
+                    BerkeleyAppEditorActionKind::InspectWaveform,
+                )
+            },
+        ),
+    ];
+    let active_panel = panels.iter().find(|panel| panel.active).cloned();
+
+    BerkeleyAppHostSurface {
+        canonical_source: editor_state.canonical_source.clone(),
+        source_fingerprint: editor_state.source_fingerprint.clone(),
+        title: editor_state.title.clone(),
+        parsed: editor_state.parsed,
+        execution_available: editor_state.execution_available,
+        panel_count: panels.len(),
+        active_panel,
+        blocking_message: editor_state.blocking_message.clone(),
+        diagnostics: editor_state.diagnostics.clone(),
+        editor_state,
+        panels,
+    }
+}
+
+fn active_host_panel_kind(
+    editor_state: &BerkeleyAppEditorStateSnapshot,
+) -> BerkeleyAppHostPanelKind {
+    if editor_state.blocking_message.is_some() {
+        return BerkeleyAppHostPanelKind::Diagnostics;
+    }
+
+    match editor_state
+        .active_command
+        .as_ref()
+        .map(|command| command.target.as_str())
+    {
+        Some("analysis-table") => BerkeleyAppHostPanelKind::Table,
+        Some("analysis-waveform") => BerkeleyAppHostPanelKind::Waveform,
+        Some("analysis-selection") | Some("analysis-runner") => BerkeleyAppHostPanelKind::Analysis,
+        _ => BerkeleyAppHostPanelKind::Source,
+    }
+}
+
+fn host_panel(
+    kind: BerkeleyAppHostPanelKind,
+    id: &str,
+    title: &str,
+    target: &str,
+    enabled: bool,
+    active: bool,
+    disabled_reason: Option<String>,
+) -> BerkeleyAppHostPanel {
+    BerkeleyAppHostPanel {
+        id: id.to_string(),
+        kind,
+        title: title.to_string(),
+        target: target.to_string(),
+        enabled,
+        active,
+        disabled_reason: if enabled { None } else { disabled_reason },
+    }
+}
+
+fn host_panel_disabled_reason(
+    editor_state: &BerkeleyAppEditorStateSnapshot,
+    kind: BerkeleyAppEditorActionKind,
+) -> Option<String> {
+    let selected_syntax_card_index = editor_state.resolved_state.selected_syntax_card_index?;
+    editor_state
+        .command_plan
+        .commands
+        .iter()
+        .find(|command| {
+            command.syntax_card_index == selected_syntax_card_index && command.kind == kind
+        })
+        .and_then(|command| command.disabled_reason.clone())
+        .or_else(|| Some("selected analysis does not expose this panel".to_string()))
+}
+
+impl From<BerkeleyAppHostSurface> for BerkeleyAppHostSurfaceWire {
+    fn from(surface: BerkeleyAppHostSurface) -> Self {
+        let active_panel_id = surface.active_panel.as_ref().map(|panel| panel.id.clone());
+        let requested_state = surface.editor_state.requested_state.clone();
+        let resolved_state = surface.editor_state.resolved_state.clone();
+
+        Self {
+            schema_version: BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION,
+            canonical_source: surface.canonical_source,
+            source_fingerprint: surface.source_fingerprint,
+            title: surface.title,
+            parsed: surface.parsed,
+            execution_available: surface.execution_available,
+            requested_selected_syntax_card_index: requested_state.selected_syntax_card_index,
+            requested_active_command_id: requested_state.active_command_id,
+            resolved_selected_syntax_card_index: resolved_state.selected_syntax_card_index,
+            resolved_active_command_id: resolved_state.active_command_id,
+            selection_stale: surface.editor_state.selection_stale,
+            command_stale: surface.editor_state.command_stale,
+            panel_count: surface.panel_count,
+            active_panel_id,
+            panels: surface
+                .panels
+                .into_iter()
+                .map(BerkeleyAppHostPanelWire::from)
+                .collect(),
+            blocking_message: surface.blocking_message,
+            diagnostics: surface
+                .diagnostics
+                .into_iter()
+                .map(BerkeleyAppHostDiagnosticWire::from)
+                .collect(),
+        }
+    }
+}
+
+impl From<BerkeleyAppHostPanel> for BerkeleyAppHostPanelWire {
+    fn from(panel: BerkeleyAppHostPanel) -> Self {
+        Self {
+            id: panel.id,
+            kind: host_panel_kind_wire(panel.kind).to_string(),
+            title: panel.title,
+            target: panel.target,
+            enabled: panel.enabled,
+            active: panel.active,
+            disabled_reason: panel.disabled_reason,
+        }
+    }
+}
+
+impl From<BerkeleySyntaxDiagnostic> for BerkeleyAppHostDiagnosticWire {
+    fn from(diagnostic: BerkeleySyntaxDiagnostic) -> Self {
+        Self {
+            code: diagnostic.code,
+            severity: diagnostic_severity_wire(diagnostic.severity).to_string(),
+            message: diagnostic.message,
+            span: diagnostic.span.map(BerkeleyAppHostSpanWire::from),
+        }
+    }
+}
+
+impl From<SourceSpan> for BerkeleyAppHostSpanWire {
+    fn from(span: SourceSpan) -> Self {
+        Self {
+            start_line: span.start_line,
+            start_column: span.start_column,
+            end_line: span.end_line,
+            end_column: span.end_column,
+        }
+    }
+}
+
+fn host_panel_kind_wire(kind: BerkeleyAppHostPanelKind) -> &'static str {
+    match kind {
+        BerkeleyAppHostPanelKind::Source => "source",
+        BerkeleyAppHostPanelKind::Diagnostics => "diagnostics",
+        BerkeleyAppHostPanelKind::Analysis => "analysis",
+        BerkeleyAppHostPanelKind::Table => "table",
+        BerkeleyAppHostPanelKind::Waveform => "waveform",
+    }
+}
+
+fn diagnostic_severity_wire(severity: BerkeleyDiagnosticSeverity) -> &'static str {
+    match severity {
+        BerkeleyDiagnosticSeverity::Error => "error",
+        BerkeleyDiagnosticSeverity::Warning => "warning",
+        BerkeleyDiagnosticSeverity::Note => "note",
+    }
+}
+
+fn host_surface_wire_json_value(wire: &BerkeleyAppHostSurfaceWire) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": wire.schema_version,
+        "canonicalSource": &wire.canonical_source,
+        "sourceFingerprint": &wire.source_fingerprint,
+        "title": &wire.title,
+        "parsed": wire.parsed,
+        "executionAvailable": wire.execution_available,
+        "requestedSelectedSyntaxCardIndex": wire.requested_selected_syntax_card_index,
+        "requestedActiveCommandId": &wire.requested_active_command_id,
+        "resolvedSelectedSyntaxCardIndex": wire.resolved_selected_syntax_card_index,
+        "resolvedActiveCommandId": &wire.resolved_active_command_id,
+        "selectionStale": wire.selection_stale,
+        "commandStale": wire.command_stale,
+        "panelCount": wire.panel_count,
+        "activePanelId": &wire.active_panel_id,
+        "panels": wire
+            .panels
+            .iter()
+            .map(host_panel_wire_json_value)
+            .collect::<Vec<_>>(),
+        "blockingMessage": &wire.blocking_message,
+        "diagnostics": wire
+            .diagnostics
+            .iter()
+            .map(host_diagnostic_wire_json_value)
+            .collect::<Vec<_>>(),
+    })
+}
+
+fn host_panel_wire_json_value(panel: &BerkeleyAppHostPanelWire) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel.id,
+        "kind": &panel.kind,
+        "title": &panel.title,
+        "target": &panel.target,
+        "enabled": panel.enabled,
+        "active": panel.active,
+        "disabledReason": &panel.disabled_reason,
+    })
+}
+
+fn host_diagnostic_wire_json_value(
+    diagnostic: &BerkeleyAppHostDiagnosticWire,
+) -> serde_json::Value {
+    serde_json::json!({
+        "code": &diagnostic.code,
+        "severity": &diagnostic.severity,
+        "message": &diagnostic.message,
+        "span": diagnostic
+            .span
+            .as_ref()
+            .map(host_span_wire_json_value),
+    })
+}
+
+fn host_span_wire_json_value(span: &BerkeleyAppHostSpanWire) -> serde_json::Value {
+    serde_json::json!({
+        "startLine": span.start_line,
+        "startColumn": span.start_column,
+        "endLine": span.end_line,
+        "endColumn": span.end_column,
+    })
+}
+
+fn launch_entry_panel(
+    host_surface: &BerkeleyAppHostSurfaceWire,
+    ready: bool,
+) -> Option<&BerkeleyAppHostPanelWire> {
+    host_surface
+        .active_panel_id
+        .as_deref()
+        .and_then(|active_panel_id| {
+            host_surface
+                .panels
+                .iter()
+                .find(|panel| panel.id == active_panel_id)
+        })
+        .or_else(|| {
+            let preferred_panel_id = if ready { "analysis" } else { "diagnostics" };
+            host_surface
+                .panels
+                .iter()
+                .find(|panel| panel.id == preferred_panel_id && panel.enabled)
+        })
+        .or_else(|| host_surface.panels.iter().find(|panel| panel.enabled))
+}
+
+fn launch_action_from_panel(
+    panel: &BerkeleyAppHostPanelWire,
+    entry_panel_id: Option<&str>,
+) -> BerkeleyAppLaunchAction {
+    BerkeleyAppLaunchAction {
+        id: format!("launch.{}", panel.id),
+        label: panel.title.clone(),
+        panel_id: panel.id.clone(),
+        panel_kind: panel.kind.clone(),
+        target: panel.target.clone(),
+        enabled: panel.enabled,
+        primary: entry_panel_id == Some(panel.id.as_str()),
+        disabled_reason: panel.disabled_reason.clone(),
+    }
+}
+
+fn dashboard_panel_card_launch_action<'a>(
+    panel_card: &BerkeleyAppShellDashboardPanelCard,
+    launch_plan: &'a BerkeleyAppLaunchPlan,
+) -> Option<&'a BerkeleyAppLaunchAction> {
+    let preferred_panel_id =
+        dashboard_panel_card_preferred_action_panel_id(&panel_card.role, launch_plan);
+    let preferred_action = launch_plan
+        .actions
+        .iter()
+        .find(|action| action.panel_id == preferred_panel_id);
+
+    if let Some(action) = preferred_action {
+        if action.enabled
+            || panel_card.selected
+            || panel_card.default_panel
+            || panel_card.role == "attention"
+        {
+            return Some(action);
+        }
+    }
+
+    launch_plan
+        .actions
+        .iter()
+        .find(|action| action.primary && action.enabled)
+        .or_else(|| launch_plan.actions.iter().find(|action| action.enabled))
+        .or(preferred_action)
+        .or_else(|| launch_plan.actions.first())
+}
+
+fn dashboard_panel_card_preferred_action_panel_id<'a>(
+    role: &str,
+    launch_plan: &'a BerkeleyAppLaunchPlan,
+) -> &'a str {
+    match role {
+        "status" if launch_plan.ready => "analysis",
+        "status" => "source",
+        "attention" => "diagnostics",
+        "metrics" => "waveform",
+        _ => launch_plan.entry_panel_id.as_deref().unwrap_or("source"),
+    }
+}
+
+fn app_package_manifest_json_value(manifest: &BerkeleyAppPackageManifest) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": manifest.schema_version,
+        "packageName": &manifest.package_name,
+        "grammarName": &manifest.grammar_name,
+        "grammarVersion": manifest.grammar_version,
+        "hostSurfaceWireSchemaVersion": manifest.host_surface_wire_schema_version,
+        "sourceFingerprintAlgorithm": &manifest.source_fingerprint_algorithm,
+        "hostPanelKinds": &manifest.host_panel_kinds,
+        "editorActionKinds": &manifest.editor_action_kinds,
+        "commandTargets": &manifest.command_targets,
+        "runnableAnalysisDirectives": &manifest.runnable_analysis_directives,
+        "artifactAnalysisDirectives": &manifest.artifact_analysis_directives,
+        "artifactCapabilities": &manifest.artifact_capabilities,
+    })
+}
+
+fn app_bootstrap_snapshot_json_value(snapshot: &BerkeleyAppBootstrapSnapshot) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": snapshot.schema_version,
+        "packageManifest": app_package_manifest_json_value(&snapshot.package_manifest),
+        "hostSurface": host_surface_wire_json_value(&snapshot.host_surface),
+    })
+}
+
+fn app_startup_summary_json_value(summary: &BerkeleyAppStartupSummary) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": summary.schema_version,
+        "packageName": &summary.package_name,
+        "sourceFingerprint": &summary.source_fingerprint,
+        "title": &summary.title,
+        "parsed": summary.parsed,
+        "executionAvailable": summary.execution_available,
+        "ready": summary.ready,
+        "requestedSelectedSyntaxCardIndex": summary.requested_selected_syntax_card_index,
+        "requestedActiveCommandId": &summary.requested_active_command_id,
+        "resolvedSelectedSyntaxCardIndex": summary.resolved_selected_syntax_card_index,
+        "resolvedActiveCommandId": &summary.resolved_active_command_id,
+        "selectionStale": summary.selection_stale,
+        "commandStale": summary.command_stale,
+        "panelCount": summary.panel_count,
+        "activePanelId": &summary.active_panel_id,
+        "diagnosticCount": summary.diagnostic_count,
+        "blockingMessage": &summary.blocking_message,
+    })
+}
+
+fn app_launch_plan_json_value(plan: &BerkeleyAppLaunchPlan) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": plan.schema_version,
+        "packageName": &plan.package_name,
+        "sourceFingerprint": &plan.source_fingerprint,
+        "title": &plan.title,
+        "startupRoute": &plan.startup_route,
+        "ready": plan.ready,
+        "entryPanelId": &plan.entry_panel_id,
+        "entryPanelKind": &plan.entry_panel_kind,
+        "entryTarget": &plan.entry_target,
+        "requestedSelectedSyntaxCardIndex": plan.requested_selected_syntax_card_index,
+        "requestedActiveCommandId": &plan.requested_active_command_id,
+        "resolvedSelectedSyntaxCardIndex": plan.resolved_selected_syntax_card_index,
+        "resolvedActiveCommandId": &plan.resolved_active_command_id,
+        "selectionStale": plan.selection_stale,
+        "commandStale": plan.command_stale,
+        "actionCount": plan.action_count,
+        "actions": plan
+            .actions
+            .iter()
+            .map(app_launch_action_json_value)
+            .collect::<Vec<_>>(),
+        "diagnosticCount": plan.diagnostic_count,
+        "blockingMessage": &plan.blocking_message,
+    })
+}
+
+fn app_launch_action_json_value(action: &BerkeleyAppLaunchAction) -> serde_json::Value {
+    serde_json::json!({
+        "id": &action.id,
+        "label": &action.label,
+        "panelId": &action.panel_id,
+        "panelKind": &action.panel_kind,
+        "target": &action.target,
+        "enabled": action.enabled,
+        "primary": action.primary,
+        "disabledReason": &action.disabled_reason,
+    })
+}
+
+fn app_readiness_report_json_value(report: &BerkeleyAppReadinessReport) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": report.schema_version,
+        "packageName": &report.package_name,
+        "sourceFingerprint": &report.source_fingerprint,
+        "title": &report.title,
+        "startupRoute": &report.startup_route,
+        "ready": report.ready,
+        "parsed": report.parsed,
+        "executionAvailable": report.execution_available,
+        "entryPanelId": &report.entry_panel_id,
+        "entryTarget": &report.entry_target,
+        "primaryActionId": &report.primary_action_id,
+        "primaryActionEnabled": report.primary_action_enabled,
+        "panelCount": report.panel_count,
+        "enabledPanelCount": report.enabled_panel_count,
+        "disabledPanelCount": report.disabled_panel_count,
+        "actionCount": report.action_count,
+        "enabledActionCount": report.enabled_action_count,
+        "disabledActionCount": report.disabled_action_count,
+        "diagnosticCount": report.diagnostic_count,
+        "errorCount": report.error_count,
+        "warningCount": report.warning_count,
+        "noteCount": report.note_count,
+        "selectionStale": report.selection_stale,
+        "commandStale": report.command_stale,
+        "repairedState": report.repaired_state,
+        "blockingMessage": &report.blocking_message,
+    })
+}
+
+fn app_shell_handoff_json_value(handoff: &BerkeleyAppShellHandoff) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": handoff.schema_version,
+        "packageManifest": app_package_manifest_json_value(&handoff.package_manifest),
+        "startupSummary": app_startup_summary_json_value(&handoff.startup_summary),
+        "launchPlan": app_launch_plan_json_value(&handoff.launch_plan),
+        "readinessReport": app_readiness_report_json_value(&handoff.readiness_report),
+    })
+}
+
+fn app_shell_status_json_value(status: &BerkeleyAppShellStatus) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": status.schema_version,
+        "packageName": &status.package_name,
+        "sourceFingerprint": &status.source_fingerprint,
+        "title": &status.title,
+        "startupRoute": &status.startup_route,
+        "ready": status.ready,
+        "severity": &status.severity,
+        "message": &status.message,
+        "entryPanelId": &status.entry_panel_id,
+        "entryTarget": &status.entry_target,
+        "primaryActionId": &status.primary_action_id,
+        "diagnosticCount": status.diagnostic_count,
+        "errorCount": status.error_count,
+        "warningCount": status.warning_count,
+        "noteCount": status.note_count,
+        "blockingMessage": &status.blocking_message,
+    })
+}
+
+fn app_shell_telemetry_json_value(telemetry: &BerkeleyAppShellTelemetry) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": telemetry.schema_version,
+        "packageName": &telemetry.package_name,
+        "sourceFingerprint": &telemetry.source_fingerprint,
+        "title": &telemetry.title,
+        "startupRoute": &telemetry.startup_route,
+        "ready": telemetry.ready,
+        "severity": &telemetry.severity,
+        "message": &telemetry.message,
+        "entryPanelId": &telemetry.entry_panel_id,
+        "primaryActionId": &telemetry.primary_action_id,
+        "panelCount": telemetry.panel_count,
+        "enabledPanelCount": telemetry.enabled_panel_count,
+        "disabledPanelCount": telemetry.disabled_panel_count,
+        "actionCount": telemetry.action_count,
+        "enabledActionCount": telemetry.enabled_action_count,
+        "disabledActionCount": telemetry.disabled_action_count,
+        "diagnosticCount": telemetry.diagnostic_count,
+        "errorCount": telemetry.error_count,
+        "warningCount": telemetry.warning_count,
+        "noteCount": telemetry.note_count,
+        "selectionStale": telemetry.selection_stale,
+        "commandStale": telemetry.command_stale,
+        "repairedState": telemetry.repaired_state,
+        "artifactCapabilityCount": telemetry.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_log_json_value(event_log: &BerkeleyAppShellEventLog) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": event_log.schema_version,
+        "packageName": &event_log.package_name,
+        "sourceFingerprint": &event_log.source_fingerprint,
+        "title": &event_log.title,
+        "startupRoute": &event_log.startup_route,
+        "ready": event_log.ready,
+        "eventCount": event_log.event_count,
+        "events": event_log
+            .events
+            .iter()
+            .map(app_shell_event_json_value)
+            .collect::<Vec<_>>(),
+    })
+}
+
+fn app_shell_event_summary_json_value(summary: &BerkeleyAppShellEventSummary) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": summary.schema_version,
+        "packageName": &summary.package_name,
+        "sourceFingerprint": &summary.source_fingerprint,
+        "title": &summary.title,
+        "startupRoute": &summary.startup_route,
+        "ready": summary.ready,
+        "severity": &summary.severity,
+        "statusEventId": &summary.status_event_id,
+        "primaryActionId": &summary.primary_action_id,
+        "eventCount": summary.event_count,
+        "statusEventCount": summary.status_event_count,
+        "routeEventCount": summary.route_event_count,
+        "actionEventCount": summary.action_event_count,
+        "diagnosticEventCount": summary.diagnostic_event_count,
+        "stateEventCount": summary.state_event_count,
+        "capabilityEventCount": summary.capability_event_count,
+        "readyEventCount": summary.ready_event_count,
+        "blockedEventCount": summary.blocked_event_count,
+        "infoEventCount": summary.info_event_count,
+        "warningEventCount": summary.warning_event_count,
+        "errorEventCount": summary.error_event_count,
+        "countedEventTotal": summary.counted_event_total,
+        "diagnosticCount": summary.diagnostic_count,
+        "repairedStateCount": summary.repaired_state_count,
+        "artifactCapabilityCount": summary.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_digest_json_value(digest: &BerkeleyAppShellEventDigest) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": digest.schema_version,
+        "packageName": &digest.package_name,
+        "sourceFingerprint": &digest.source_fingerprint,
+        "title": &digest.title,
+        "startupRoute": &digest.startup_route,
+        "ready": digest.ready,
+        "severity": &digest.severity,
+        "headlineEventId": &digest.headline_event_id,
+        "headlineMessage": &digest.headline_message,
+        "primaryActionId": &digest.primary_action_id,
+        "attentionEventCount": digest.attention_event_count,
+        "attentionEventIds": &digest.attention_event_ids,
+        "metricEventCount": digest.metric_event_count,
+        "metricEventIds": &digest.metric_event_ids,
+        "eventCount": digest.event_count,
+        "countedEventTotal": digest.counted_event_total,
+        "diagnosticCount": digest.diagnostic_count,
+        "repairedStateCount": digest.repaired_state_count,
+        "artifactCapabilityCount": digest.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_dashboard_json_value(
+    dashboard: &BerkeleyAppShellEventDashboard,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": dashboard.schema_version,
+        "packageName": &dashboard.package_name,
+        "sourceFingerprint": &dashboard.source_fingerprint,
+        "title": &dashboard.title,
+        "startupRoute": &dashboard.startup_route,
+        "ready": dashboard.ready,
+        "severity": &dashboard.severity,
+        "headlineEventId": &dashboard.headline_event_id,
+        "headlineMessage": &dashboard.headline_message,
+        "primaryActionId": &dashboard.primary_action_id,
+        "attentionRequired": dashboard.attention_required,
+        "sectionCount": dashboard.section_count,
+        "sections": dashboard
+            .sections
+            .iter()
+            .map(app_shell_event_dashboard_section_json_value)
+            .collect::<Vec<_>>(),
+        "eventCount": dashboard.event_count,
+        "diagnosticCount": dashboard.diagnostic_count,
+        "repairedStateCount": dashboard.repaired_state_count,
+        "artifactCapabilityCount": dashboard.artifact_capability_count,
+    })
+}
+
+fn app_shell_event_dashboard_section_json_value(
+    section: &BerkeleyAppShellEventDashboardSection,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &section.id,
+        "title": &section.title,
+        "severity": &section.severity,
+        "eventCount": section.event_count,
+        "eventIds": &section.event_ids,
+    })
+}
+
+fn app_shell_dashboard_package_json_value(
+    package: &BerkeleyAppShellDashboardPackage,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": package.schema_version,
+        "packageName": &package.package_name,
+        "sourceFingerprint": &package.source_fingerprint,
+        "title": &package.title,
+        "startupRoute": &package.startup_route,
+        "ready": package.ready,
+        "severity": &package.severity,
+        "attentionRequired": package.attention_required,
+        "sectionCount": package.section_count,
+        "artifactCapabilityCount": package.artifact_capability_count,
+        "dashboardCapabilityId": &package.dashboard_capability_id,
+        "packageCapabilityId": &package.package_capability_id,
+        "packageManifest": app_package_manifest_json_value(&package.package_manifest),
+        "eventDashboard": app_shell_event_dashboard_json_value(&package.event_dashboard),
+    })
+}
+
+fn app_shell_dashboard_cards_json_value(
+    cards: &BerkeleyAppShellDashboardCards,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": cards.schema_version,
+        "packageName": &cards.package_name,
+        "sourceFingerprint": &cards.source_fingerprint,
+        "title": &cards.title,
+        "startupRoute": &cards.startup_route,
+        "ready": cards.ready,
+        "severity": &cards.severity,
+        "attentionRequired": cards.attention_required,
+        "cardCount": cards.card_count,
+        "primaryCardId": &cards.primary_card_id,
+        "cards": cards
+            .cards
+            .iter()
+            .map(app_shell_dashboard_card_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &cards.package_capability_id,
+        "dashboardCapabilityId": &cards.dashboard_capability_id,
+        "cardsCapabilityId": &cards.cards_capability_id,
+        "artifactCapabilityCount": cards.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_view_json_value(view: &BerkeleyAppShellDashboardView) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": view.schema_version,
+        "packageName": &view.package_name,
+        "sourceFingerprint": &view.source_fingerprint,
+        "title": &view.title,
+        "startupRoute": &view.startup_route,
+        "ready": view.ready,
+        "severity": &view.severity,
+        "attentionRequired": view.attention_required,
+        "primaryCardId": &view.primary_card_id,
+        "primaryCardTitle": &view.primary_card_title,
+        "cardCount": view.card_count,
+        "visibleCardCount": view.visible_card_count,
+        "attentionCardCount": view.attention_card_count,
+        "metricCardCount": view.metric_card_count,
+        "cardIds": &view.card_ids,
+        "visibleCardIds": &view.visible_card_ids,
+        "attentionCardIds": &view.attention_card_ids,
+        "metricCardIds": &view.metric_card_ids,
+        "packageCapabilityId": &view.package_capability_id,
+        "dashboardCapabilityId": &view.dashboard_capability_id,
+        "cardsCapabilityId": &view.cards_capability_id,
+        "viewCapabilityId": &view.view_capability_id,
+        "artifactCapabilityCount": view.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_layout_json_value(
+    layout: &BerkeleyAppShellDashboardLayout,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": layout.schema_version,
+        "packageName": &layout.package_name,
+        "sourceFingerprint": &layout.source_fingerprint,
+        "title": &layout.title,
+        "startupRoute": &layout.startup_route,
+        "ready": layout.ready,
+        "severity": &layout.severity,
+        "attentionRequired": layout.attention_required,
+        "primaryCardId": &layout.primary_card_id,
+        "primaryRegionId": &layout.primary_region_id,
+        "regionCount": layout.region_count,
+        "visibleRegionCount": layout.visible_region_count,
+        "cardCount": layout.card_count,
+        "visibleCardCount": layout.visible_card_count,
+        "attentionCardCount": layout.attention_card_count,
+        "metricCardCount": layout.metric_card_count,
+        "regions": layout
+            .regions
+            .iter()
+            .map(app_shell_dashboard_layout_region_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &layout.package_capability_id,
+        "dashboardCapabilityId": &layout.dashboard_capability_id,
+        "cardsCapabilityId": &layout.cards_capability_id,
+        "viewCapabilityId": &layout.view_capability_id,
+        "layoutCapabilityId": &layout.layout_capability_id,
+        "artifactCapabilityCount": layout.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_layout_region_json_value(
+    region: &BerkeleyAppShellDashboardLayoutRegion,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &region.id,
+        "role": &region.role,
+        "title": &region.title,
+        "cardIds": &region.card_ids,
+        "primary": region.primary,
+        "visible": region.visible,
+    })
+}
+
+fn app_shell_dashboard_navigation_json_value(
+    navigation: &BerkeleyAppShellDashboardNavigation,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": navigation.schema_version,
+        "packageName": &navigation.package_name,
+        "sourceFingerprint": &navigation.source_fingerprint,
+        "title": &navigation.title,
+        "startupRoute": &navigation.startup_route,
+        "ready": navigation.ready,
+        "severity": &navigation.severity,
+        "attentionRequired": navigation.attention_required,
+        "primaryCardId": &navigation.primary_card_id,
+        "primaryRegionId": &navigation.primary_region_id,
+        "activeItemId": &navigation.active_item_id,
+        "itemCount": navigation.item_count,
+        "visibleItemCount": navigation.visible_item_count,
+        "enabledItemCount": navigation.enabled_item_count,
+        "regionCount": navigation.region_count,
+        "visibleRegionCount": navigation.visible_region_count,
+        "cardCount": navigation.card_count,
+        "visibleCardCount": navigation.visible_card_count,
+        "attentionCardCount": navigation.attention_card_count,
+        "metricCardCount": navigation.metric_card_count,
+        "items": navigation
+            .items
+            .iter()
+            .map(app_shell_dashboard_navigation_item_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &navigation.package_capability_id,
+        "dashboardCapabilityId": &navigation.dashboard_capability_id,
+        "cardsCapabilityId": &navigation.cards_capability_id,
+        "viewCapabilityId": &navigation.view_capability_id,
+        "layoutCapabilityId": &navigation.layout_capability_id,
+        "navigationCapabilityId": &navigation.navigation_capability_id,
+        "artifactCapabilityCount": navigation.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_navigation_item_json_value(
+    item: &BerkeleyAppShellDashboardNavigationItem,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &item.id,
+        "regionId": &item.region_id,
+        "role": &item.role,
+        "label": &item.label,
+        "cardIds": &item.card_ids,
+        "active": item.active,
+        "visible": item.visible,
+        "enabled": item.enabled,
+        "badgeCount": item.badge_count,
+    })
+}
+
+fn app_shell_dashboard_routes_json_value(
+    routes: &BerkeleyAppShellDashboardRoutes,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": routes.schema_version,
+        "packageName": &routes.package_name,
+        "sourceFingerprint": &routes.source_fingerprint,
+        "title": &routes.title,
+        "startupRoute": &routes.startup_route,
+        "ready": routes.ready,
+        "severity": &routes.severity,
+        "attentionRequired": routes.attention_required,
+        "primaryCardId": &routes.primary_card_id,
+        "primaryRegionId": &routes.primary_region_id,
+        "activeItemId": &routes.active_item_id,
+        "activeRouteId": &routes.active_route_id,
+        "activeRoutePath": &routes.active_route_path,
+        "defaultRouteId": &routes.default_route_id,
+        "defaultRoutePath": &routes.default_route_path,
+        "routeCount": routes.route_count,
+        "visibleRouteCount": routes.visible_route_count,
+        "enabledRouteCount": routes.enabled_route_count,
+        "itemCount": routes.item_count,
+        "visibleItemCount": routes.visible_item_count,
+        "enabledItemCount": routes.enabled_item_count,
+        "regionCount": routes.region_count,
+        "visibleRegionCount": routes.visible_region_count,
+        "cardCount": routes.card_count,
+        "visibleCardCount": routes.visible_card_count,
+        "attentionCardCount": routes.attention_card_count,
+        "metricCardCount": routes.metric_card_count,
+        "routes": routes
+            .routes
+            .iter()
+            .map(app_shell_dashboard_route_json_value)
+            .collect::<Vec<_>>(),
+        "packageCapabilityId": &routes.package_capability_id,
+        "dashboardCapabilityId": &routes.dashboard_capability_id,
+        "cardsCapabilityId": &routes.cards_capability_id,
+        "viewCapabilityId": &routes.view_capability_id,
+        "layoutCapabilityId": &routes.layout_capability_id,
+        "navigationCapabilityId": &routes.navigation_capability_id,
+        "routesCapabilityId": &routes.routes_capability_id,
+        "artifactCapabilityCount": routes.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_route_json_value(
+    route: &BerkeleyAppShellDashboardRoute,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &route.id,
+        "itemId": &route.item_id,
+        "regionId": &route.region_id,
+        "role": &route.role,
+        "label": &route.label,
+        "path": &route.path,
+        "cardIds": &route.card_ids,
+        "active": route.active,
+        "default": route.default_route,
+        "visible": route.visible,
+        "enabled": route.enabled,
+        "badgeCount": route.badge_count,
+    })
+}
+
+fn app_shell_dashboard_breadcrumbs_json_value(
+    breadcrumbs: &BerkeleyAppShellDashboardBreadcrumbs,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", breadcrumbs.schema_version);
+    insert_json!("packageName", &breadcrumbs.package_name);
+    insert_json!("sourceFingerprint", &breadcrumbs.source_fingerprint);
+    insert_json!("title", &breadcrumbs.title);
+    insert_json!("startupRoute", &breadcrumbs.startup_route);
+    insert_json!("ready", breadcrumbs.ready);
+    insert_json!("severity", &breadcrumbs.severity);
+    insert_json!("attentionRequired", breadcrumbs.attention_required);
+    insert_json!("primaryCardId", &breadcrumbs.primary_card_id);
+    insert_json!("primaryRegionId", &breadcrumbs.primary_region_id);
+    insert_json!("activeItemId", &breadcrumbs.active_item_id);
+    insert_json!("activeRouteId", &breadcrumbs.active_route_id);
+    insert_json!("activeRoutePath", &breadcrumbs.active_route_path);
+    insert_json!("defaultRouteId", &breadcrumbs.default_route_id);
+    insert_json!("defaultRoutePath", &breadcrumbs.default_route_path);
+    insert_json!("activeBreadcrumbId", &breadcrumbs.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &breadcrumbs.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &breadcrumbs.default_breadcrumb_id);
+    insert_json!(
+        "defaultBreadcrumbPath",
+        &breadcrumbs.default_breadcrumb_path
+    );
+    insert_json!("routeCount", breadcrumbs.route_count);
+    insert_json!("visibleRouteCount", breadcrumbs.visible_route_count);
+    insert_json!("enabledRouteCount", breadcrumbs.enabled_route_count);
+    insert_json!("breadcrumbCount", breadcrumbs.breadcrumb_count);
+    insert_json!(
+        "visibleBreadcrumbCount",
+        breadcrumbs.visible_breadcrumb_count
+    );
+    insert_json!(
+        "enabledBreadcrumbCount",
+        breadcrumbs.enabled_breadcrumb_count
+    );
+    insert_json!("itemCount", breadcrumbs.item_count);
+    insert_json!("visibleItemCount", breadcrumbs.visible_item_count);
+    insert_json!("enabledItemCount", breadcrumbs.enabled_item_count);
+    insert_json!("regionCount", breadcrumbs.region_count);
+    insert_json!("visibleRegionCount", breadcrumbs.visible_region_count);
+    insert_json!("cardCount", breadcrumbs.card_count);
+    insert_json!("visibleCardCount", breadcrumbs.visible_card_count);
+    insert_json!("attentionCardCount", breadcrumbs.attention_card_count);
+    insert_json!("metricCardCount", breadcrumbs.metric_card_count);
+    value.insert(
+        "breadcrumbs".to_string(),
+        serde_json::Value::Array(
+            breadcrumbs
+                .breadcrumbs
+                .iter()
+                .map(app_shell_dashboard_breadcrumb_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &breadcrumbs.package_capability_id);
+    insert_json!(
+        "dashboardCapabilityId",
+        &breadcrumbs.dashboard_capability_id
+    );
+    insert_json!("cardsCapabilityId", &breadcrumbs.cards_capability_id);
+    insert_json!("viewCapabilityId", &breadcrumbs.view_capability_id);
+    insert_json!("layoutCapabilityId", &breadcrumbs.layout_capability_id);
+    insert_json!(
+        "navigationCapabilityId",
+        &breadcrumbs.navigation_capability_id
+    );
+    insert_json!("routesCapabilityId", &breadcrumbs.routes_capability_id);
+    insert_json!(
+        "breadcrumbsCapabilityId",
+        &breadcrumbs.breadcrumbs_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        breadcrumbs.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_breadcrumb_json_value(
+    breadcrumb: &BerkeleyAppShellDashboardBreadcrumb,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &breadcrumb.id,
+        "routeId": &breadcrumb.route_id,
+        "itemId": &breadcrumb.item_id,
+        "regionId": &breadcrumb.region_id,
+        "role": &breadcrumb.role,
+        "label": &breadcrumb.label,
+        "path": &breadcrumb.path,
+        "position": breadcrumb.position,
+        "active": breadcrumb.active,
+        "default": breadcrumb.default_route,
+        "visible": breadcrumb.visible,
+        "enabled": breadcrumb.enabled,
+        "badgeCount": breadcrumb.badge_count,
+    })
+}
+
+fn app_shell_dashboard_tabs_json_value(tabs: &BerkeleyAppShellDashboardTabs) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", tabs.schema_version);
+    insert_json!("packageName", &tabs.package_name);
+    insert_json!("sourceFingerprint", &tabs.source_fingerprint);
+    insert_json!("title", &tabs.title);
+    insert_json!("startupRoute", &tabs.startup_route);
+    insert_json!("ready", tabs.ready);
+    insert_json!("severity", &tabs.severity);
+    insert_json!("attentionRequired", tabs.attention_required);
+    insert_json!("primaryCardId", &tabs.primary_card_id);
+    insert_json!("primaryRegionId", &tabs.primary_region_id);
+    insert_json!("activeItemId", &tabs.active_item_id);
+    insert_json!("activeRouteId", &tabs.active_route_id);
+    insert_json!("activeRoutePath", &tabs.active_route_path);
+    insert_json!("defaultRouteId", &tabs.default_route_id);
+    insert_json!("defaultRoutePath", &tabs.default_route_path);
+    insert_json!("activeBreadcrumbId", &tabs.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &tabs.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &tabs.default_breadcrumb_id);
+    insert_json!("defaultBreadcrumbPath", &tabs.default_breadcrumb_path);
+    insert_json!("selectedTabId", &tabs.selected_tab_id);
+    insert_json!("selectedTabPath", &tabs.selected_tab_path);
+    insert_json!("defaultTabId", &tabs.default_tab_id);
+    insert_json!("defaultTabPath", &tabs.default_tab_path);
+    insert_json!("routeCount", tabs.route_count);
+    insert_json!("visibleRouteCount", tabs.visible_route_count);
+    insert_json!("enabledRouteCount", tabs.enabled_route_count);
+    insert_json!("breadcrumbCount", tabs.breadcrumb_count);
+    insert_json!("visibleBreadcrumbCount", tabs.visible_breadcrumb_count);
+    insert_json!("enabledBreadcrumbCount", tabs.enabled_breadcrumb_count);
+    insert_json!("tabCount", tabs.tab_count);
+    insert_json!("visibleTabCount", tabs.visible_tab_count);
+    insert_json!("enabledTabCount", tabs.enabled_tab_count);
+    insert_json!("itemCount", tabs.item_count);
+    insert_json!("visibleItemCount", tabs.visible_item_count);
+    insert_json!("enabledItemCount", tabs.enabled_item_count);
+    insert_json!("regionCount", tabs.region_count);
+    insert_json!("visibleRegionCount", tabs.visible_region_count);
+    insert_json!("cardCount", tabs.card_count);
+    insert_json!("visibleCardCount", tabs.visible_card_count);
+    insert_json!("attentionCardCount", tabs.attention_card_count);
+    insert_json!("metricCardCount", tabs.metric_card_count);
+    value.insert(
+        "tabs".to_string(),
+        serde_json::Value::Array(
+            tabs.tabs
+                .iter()
+                .map(app_shell_dashboard_tab_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &tabs.package_capability_id);
+    insert_json!("dashboardCapabilityId", &tabs.dashboard_capability_id);
+    insert_json!("cardsCapabilityId", &tabs.cards_capability_id);
+    insert_json!("viewCapabilityId", &tabs.view_capability_id);
+    insert_json!("layoutCapabilityId", &tabs.layout_capability_id);
+    insert_json!("navigationCapabilityId", &tabs.navigation_capability_id);
+    insert_json!("routesCapabilityId", &tabs.routes_capability_id);
+    insert_json!("breadcrumbsCapabilityId", &tabs.breadcrumbs_capability_id);
+    insert_json!("tabsCapabilityId", &tabs.tabs_capability_id);
+    insert_json!("artifactCapabilityCount", tabs.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_tab_json_value(tab: &BerkeleyAppShellDashboardTab) -> serde_json::Value {
+    serde_json::json!({
+        "id": &tab.id,
+        "breadcrumbId": &tab.breadcrumb_id,
+        "routeId": &tab.route_id,
+        "itemId": &tab.item_id,
+        "regionId": &tab.region_id,
+        "role": &tab.role,
+        "label": &tab.label,
+        "path": &tab.path,
+        "position": tab.position,
+        "selected": tab.selected,
+        "default": tab.default_tab,
+        "visible": tab.visible,
+        "enabled": tab.enabled,
+        "badgeCount": tab.badge_count,
+    })
+}
+
+fn app_shell_dashboard_tab_panels_json_value(
+    panels: &BerkeleyAppShellDashboardTabPanels,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", panels.schema_version);
+    insert_json!("packageName", &panels.package_name);
+    insert_json!("sourceFingerprint", &panels.source_fingerprint);
+    insert_json!("title", &panels.title);
+    insert_json!("startupRoute", &panels.startup_route);
+    insert_json!("ready", panels.ready);
+    insert_json!("severity", &panels.severity);
+    insert_json!("attentionRequired", panels.attention_required);
+    insert_json!("primaryCardId", &panels.primary_card_id);
+    insert_json!("primaryRegionId", &panels.primary_region_id);
+    insert_json!("activeItemId", &panels.active_item_id);
+    insert_json!("activeRouteId", &panels.active_route_id);
+    insert_json!("activeRoutePath", &panels.active_route_path);
+    insert_json!("defaultRouteId", &panels.default_route_id);
+    insert_json!("defaultRoutePath", &panels.default_route_path);
+    insert_json!("activeBreadcrumbId", &panels.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &panels.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &panels.default_breadcrumb_id);
+    insert_json!("defaultBreadcrumbPath", &panels.default_breadcrumb_path);
+    insert_json!("selectedTabId", &panels.selected_tab_id);
+    insert_json!("selectedTabPath", &panels.selected_tab_path);
+    insert_json!("defaultTabId", &panels.default_tab_id);
+    insert_json!("defaultTabPath", &panels.default_tab_path);
+    insert_json!("selectedPanelId", &panels.selected_panel_id);
+    insert_json!("selectedPanelPath", &panels.selected_panel_path);
+    insert_json!("defaultPanelId", &panels.default_panel_id);
+    insert_json!("defaultPanelPath", &panels.default_panel_path);
+    insert_json!("routeCount", panels.route_count);
+    insert_json!("visibleRouteCount", panels.visible_route_count);
+    insert_json!("enabledRouteCount", panels.enabled_route_count);
+    insert_json!("breadcrumbCount", panels.breadcrumb_count);
+    insert_json!("visibleBreadcrumbCount", panels.visible_breadcrumb_count);
+    insert_json!("enabledBreadcrumbCount", panels.enabled_breadcrumb_count);
+    insert_json!("tabCount", panels.tab_count);
+    insert_json!("visibleTabCount", panels.visible_tab_count);
+    insert_json!("enabledTabCount", panels.enabled_tab_count);
+    insert_json!("panelCount", panels.panel_count);
+    insert_json!("visiblePanelCount", panels.visible_panel_count);
+    insert_json!("enabledPanelCount", panels.enabled_panel_count);
+    insert_json!("itemCount", panels.item_count);
+    insert_json!("visibleItemCount", panels.visible_item_count);
+    insert_json!("enabledItemCount", panels.enabled_item_count);
+    insert_json!("regionCount", panels.region_count);
+    insert_json!("visibleRegionCount", panels.visible_region_count);
+    insert_json!("cardCount", panels.card_count);
+    insert_json!("visibleCardCount", panels.visible_card_count);
+    insert_json!("attentionCardCount", panels.attention_card_count);
+    insert_json!("metricCardCount", panels.metric_card_count);
+    value.insert(
+        "panels".to_string(),
+        serde_json::Value::Array(
+            panels
+                .panels
+                .iter()
+                .map(app_shell_dashboard_tab_panel_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &panels.package_capability_id);
+    insert_json!("dashboardCapabilityId", &panels.dashboard_capability_id);
+    insert_json!("cardsCapabilityId", &panels.cards_capability_id);
+    insert_json!("viewCapabilityId", &panels.view_capability_id);
+    insert_json!("layoutCapabilityId", &panels.layout_capability_id);
+    insert_json!("navigationCapabilityId", &panels.navigation_capability_id);
+    insert_json!("routesCapabilityId", &panels.routes_capability_id);
+    insert_json!("breadcrumbsCapabilityId", &panels.breadcrumbs_capability_id);
+    insert_json!("tabsCapabilityId", &panels.tabs_capability_id);
+    insert_json!("tabPanelsCapabilityId", &panels.tab_panels_capability_id);
+    insert_json!("artifactCapabilityCount", panels.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_tab_panel_json_value(
+    panel: &BerkeleyAppShellDashboardTabPanel,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel.id,
+        "tabId": &panel.tab_id,
+        "breadcrumbId": &panel.breadcrumb_id,
+        "routeId": &panel.route_id,
+        "itemId": &panel.item_id,
+        "regionId": &panel.region_id,
+        "role": &panel.role,
+        "title": &panel.title,
+        "path": &panel.path,
+        "position": panel.position,
+        "selected": panel.selected,
+        "default": panel.default_panel,
+        "visible": panel.visible,
+        "enabled": panel.enabled,
+        "badgeCount": panel.badge_count,
+    })
+}
+
+fn app_shell_dashboard_panel_cards_json_value(
+    panel_cards: &BerkeleyAppShellDashboardPanelCards,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", panel_cards.schema_version);
+    insert_json!("packageName", &panel_cards.package_name);
+    insert_json!("sourceFingerprint", &panel_cards.source_fingerprint);
+    insert_json!("title", &panel_cards.title);
+    insert_json!("startupRoute", &panel_cards.startup_route);
+    insert_json!("ready", panel_cards.ready);
+    insert_json!("severity", &panel_cards.severity);
+    insert_json!("attentionRequired", panel_cards.attention_required);
+    insert_json!("primaryCardId", &panel_cards.primary_card_id);
+    insert_json!("primaryRegionId", &panel_cards.primary_region_id);
+    insert_json!("activeItemId", &panel_cards.active_item_id);
+    insert_json!("activeRouteId", &panel_cards.active_route_id);
+    insert_json!("activeRoutePath", &panel_cards.active_route_path);
+    insert_json!("defaultRouteId", &panel_cards.default_route_id);
+    insert_json!("defaultRoutePath", &panel_cards.default_route_path);
+    insert_json!("activeBreadcrumbId", &panel_cards.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &panel_cards.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &panel_cards.default_breadcrumb_id);
+    insert_json!(
+        "defaultBreadcrumbPath",
+        &panel_cards.default_breadcrumb_path
+    );
+    insert_json!("selectedTabId", &panel_cards.selected_tab_id);
+    insert_json!("selectedTabPath", &panel_cards.selected_tab_path);
+    insert_json!("defaultTabId", &panel_cards.default_tab_id);
+    insert_json!("defaultTabPath", &panel_cards.default_tab_path);
+    insert_json!("selectedPanelId", &panel_cards.selected_panel_id);
+    insert_json!("selectedPanelPath", &panel_cards.selected_panel_path);
+    insert_json!("defaultPanelId", &panel_cards.default_panel_id);
+    insert_json!("defaultPanelPath", &panel_cards.default_panel_path);
+    insert_json!("selectedPanelCardId", &panel_cards.selected_panel_card_id);
+    insert_json!("selectedCardId", &panel_cards.selected_card_id);
+    insert_json!("defaultPanelCardId", &panel_cards.default_panel_card_id);
+    insert_json!("defaultCardId", &panel_cards.default_card_id);
+    insert_json!("routeCount", panel_cards.route_count);
+    insert_json!("visibleRouteCount", panel_cards.visible_route_count);
+    insert_json!("enabledRouteCount", panel_cards.enabled_route_count);
+    insert_json!("breadcrumbCount", panel_cards.breadcrumb_count);
+    insert_json!(
+        "visibleBreadcrumbCount",
+        panel_cards.visible_breadcrumb_count
+    );
+    insert_json!(
+        "enabledBreadcrumbCount",
+        panel_cards.enabled_breadcrumb_count
+    );
+    insert_json!("tabCount", panel_cards.tab_count);
+    insert_json!("visibleTabCount", panel_cards.visible_tab_count);
+    insert_json!("enabledTabCount", panel_cards.enabled_tab_count);
+    insert_json!("panelCount", panel_cards.panel_count);
+    insert_json!("visiblePanelCount", panel_cards.visible_panel_count);
+    insert_json!("enabledPanelCount", panel_cards.enabled_panel_count);
+    insert_json!("panelCardCount", panel_cards.panel_card_count);
+    insert_json!(
+        "visiblePanelCardCount",
+        panel_cards.visible_panel_card_count
+    );
+    insert_json!(
+        "enabledPanelCardCount",
+        panel_cards.enabled_panel_card_count
+    );
+    insert_json!("itemCount", panel_cards.item_count);
+    insert_json!("visibleItemCount", panel_cards.visible_item_count);
+    insert_json!("enabledItemCount", panel_cards.enabled_item_count);
+    insert_json!("regionCount", panel_cards.region_count);
+    insert_json!("visibleRegionCount", panel_cards.visible_region_count);
+    insert_json!("cardCount", panel_cards.card_count);
+    insert_json!("visibleCardCount", panel_cards.visible_card_count);
+    insert_json!("attentionCardCount", panel_cards.attention_card_count);
+    insert_json!("metricCardCount", panel_cards.metric_card_count);
+    value.insert(
+        "panelCards".to_string(),
+        serde_json::Value::Array(
+            panel_cards
+                .panel_cards
+                .iter()
+                .map(app_shell_dashboard_panel_card_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &panel_cards.package_capability_id);
+    insert_json!(
+        "dashboardCapabilityId",
+        &panel_cards.dashboard_capability_id
+    );
+    insert_json!("cardsCapabilityId", &panel_cards.cards_capability_id);
+    insert_json!("viewCapabilityId", &panel_cards.view_capability_id);
+    insert_json!("layoutCapabilityId", &panel_cards.layout_capability_id);
+    insert_json!(
+        "navigationCapabilityId",
+        &panel_cards.navigation_capability_id
+    );
+    insert_json!("routesCapabilityId", &panel_cards.routes_capability_id);
+    insert_json!(
+        "breadcrumbsCapabilityId",
+        &panel_cards.breadcrumbs_capability_id
+    );
+    insert_json!("tabsCapabilityId", &panel_cards.tabs_capability_id);
+    insert_json!(
+        "tabPanelsCapabilityId",
+        &panel_cards.tab_panels_capability_id
+    );
+    insert_json!(
+        "panelCardsCapabilityId",
+        &panel_cards.panel_cards_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        panel_cards.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_panel_card_json_value(
+    panel_card: &BerkeleyAppShellDashboardPanelCard,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel_card.id,
+        "panelId": &panel_card.panel_id,
+        "tabId": &panel_card.tab_id,
+        "breadcrumbId": &panel_card.breadcrumb_id,
+        "routeId": &panel_card.route_id,
+        "itemId": &panel_card.item_id,
+        "regionId": &panel_card.region_id,
+        "cardId": &panel_card.card_id,
+        "sectionId": &panel_card.section_id,
+        "role": &panel_card.role,
+        "title": &panel_card.title,
+        "severity": &panel_card.severity,
+        "path": &panel_card.path,
+        "position": panel_card.position,
+        "selected": panel_card.selected,
+        "default": panel_card.default_panel,
+        "visible": panel_card.visible,
+        "enabled": panel_card.enabled,
+        "primary": panel_card.primary,
+        "attention": panel_card.attention,
+        "eventCount": panel_card.event_count,
+        "eventIds": &panel_card.event_ids,
+        "badgeCount": panel_card.badge_count,
+    })
+}
+
+fn app_shell_dashboard_panel_card_actions_json_value(
+    panel_card_actions: &BerkeleyAppShellDashboardPanelCardActions,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", panel_card_actions.schema_version);
+    insert_json!("packageName", &panel_card_actions.package_name);
+    insert_json!("sourceFingerprint", &panel_card_actions.source_fingerprint);
+    insert_json!("title", &panel_card_actions.title);
+    insert_json!("startupRoute", &panel_card_actions.startup_route);
+    insert_json!("ready", panel_card_actions.ready);
+    insert_json!("severity", &panel_card_actions.severity);
+    insert_json!("attentionRequired", panel_card_actions.attention_required);
+    insert_json!("primaryCardId", &panel_card_actions.primary_card_id);
+    insert_json!("primaryRegionId", &panel_card_actions.primary_region_id);
+    insert_json!("activeItemId", &panel_card_actions.active_item_id);
+    insert_json!("activeRouteId", &panel_card_actions.active_route_id);
+    insert_json!("activeRoutePath", &panel_card_actions.active_route_path);
+    insert_json!("defaultRouteId", &panel_card_actions.default_route_id);
+    insert_json!("defaultRoutePath", &panel_card_actions.default_route_path);
+    insert_json!(
+        "activeBreadcrumbId",
+        &panel_card_actions.active_breadcrumb_id
+    );
+    insert_json!(
+        "activeBreadcrumbPath",
+        &panel_card_actions.active_breadcrumb_path
+    );
+    insert_json!(
+        "defaultBreadcrumbId",
+        &panel_card_actions.default_breadcrumb_id
+    );
+    insert_json!(
+        "defaultBreadcrumbPath",
+        &panel_card_actions.default_breadcrumb_path
+    );
+    insert_json!("selectedTabId", &panel_card_actions.selected_tab_id);
+    insert_json!("selectedTabPath", &panel_card_actions.selected_tab_path);
+    insert_json!("defaultTabId", &panel_card_actions.default_tab_id);
+    insert_json!("defaultTabPath", &panel_card_actions.default_tab_path);
+    insert_json!("selectedPanelId", &panel_card_actions.selected_panel_id);
+    insert_json!("selectedPanelPath", &panel_card_actions.selected_panel_path);
+    insert_json!("defaultPanelId", &panel_card_actions.default_panel_id);
+    insert_json!("defaultPanelPath", &panel_card_actions.default_panel_path);
+    insert_json!(
+        "selectedPanelCardId",
+        &panel_card_actions.selected_panel_card_id
+    );
+    insert_json!("selectedCardId", &panel_card_actions.selected_card_id);
+    insert_json!(
+        "defaultPanelCardId",
+        &panel_card_actions.default_panel_card_id
+    );
+    insert_json!("defaultCardId", &panel_card_actions.default_card_id);
+    insert_json!(
+        "selectedPanelCardActionId",
+        &panel_card_actions.selected_panel_card_action_id
+    );
+    insert_json!("selectedActionId", &panel_card_actions.selected_action_id);
+    insert_json!(
+        "defaultPanelCardActionId",
+        &panel_card_actions.default_panel_card_action_id
+    );
+    insert_json!("defaultActionId", &panel_card_actions.default_action_id);
+    insert_json!("routeCount", panel_card_actions.route_count);
+    insert_json!("visibleRouteCount", panel_card_actions.visible_route_count);
+    insert_json!("enabledRouteCount", panel_card_actions.enabled_route_count);
+    insert_json!("breadcrumbCount", panel_card_actions.breadcrumb_count);
+    insert_json!(
+        "visibleBreadcrumbCount",
+        panel_card_actions.visible_breadcrumb_count
+    );
+    insert_json!(
+        "enabledBreadcrumbCount",
+        panel_card_actions.enabled_breadcrumb_count
+    );
+    insert_json!("tabCount", panel_card_actions.tab_count);
+    insert_json!("visibleTabCount", panel_card_actions.visible_tab_count);
+    insert_json!("enabledTabCount", panel_card_actions.enabled_tab_count);
+    insert_json!("panelCount", panel_card_actions.panel_count);
+    insert_json!("visiblePanelCount", panel_card_actions.visible_panel_count);
+    insert_json!("enabledPanelCount", panel_card_actions.enabled_panel_count);
+    insert_json!("panelCardCount", panel_card_actions.panel_card_count);
+    insert_json!(
+        "visiblePanelCardCount",
+        panel_card_actions.visible_panel_card_count
+    );
+    insert_json!(
+        "enabledPanelCardCount",
+        panel_card_actions.enabled_panel_card_count
+    );
+    insert_json!("actionCount", panel_card_actions.action_count);
+    insert_json!(
+        "enabledActionCount",
+        panel_card_actions.enabled_action_count
+    );
+    insert_json!(
+        "primaryActionCount",
+        panel_card_actions.primary_action_count
+    );
+    insert_json!(
+        "panelCardActionCount",
+        panel_card_actions.panel_card_action_count
+    );
+    insert_json!(
+        "visiblePanelCardActionCount",
+        panel_card_actions.visible_panel_card_action_count
+    );
+    insert_json!(
+        "enabledPanelCardActionCount",
+        panel_card_actions.enabled_panel_card_action_count
+    );
+    insert_json!("itemCount", panel_card_actions.item_count);
+    insert_json!("visibleItemCount", panel_card_actions.visible_item_count);
+    insert_json!("enabledItemCount", panel_card_actions.enabled_item_count);
+    insert_json!("regionCount", panel_card_actions.region_count);
+    insert_json!(
+        "visibleRegionCount",
+        panel_card_actions.visible_region_count
+    );
+    insert_json!("cardCount", panel_card_actions.card_count);
+    insert_json!("visibleCardCount", panel_card_actions.visible_card_count);
+    insert_json!(
+        "attentionCardCount",
+        panel_card_actions.attention_card_count
+    );
+    insert_json!("metricCardCount", panel_card_actions.metric_card_count);
+    value.insert(
+        "panelCardActions".to_string(),
+        serde_json::Value::Array(
+            panel_card_actions
+                .panel_card_actions
+                .iter()
+                .map(app_shell_dashboard_panel_card_action_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "packageCapabilityId",
+        &panel_card_actions.package_capability_id
+    );
+    insert_json!(
+        "dashboardCapabilityId",
+        &panel_card_actions.dashboard_capability_id
+    );
+    insert_json!("cardsCapabilityId", &panel_card_actions.cards_capability_id);
+    insert_json!("viewCapabilityId", &panel_card_actions.view_capability_id);
+    insert_json!(
+        "layoutCapabilityId",
+        &panel_card_actions.layout_capability_id
+    );
+    insert_json!(
+        "navigationCapabilityId",
+        &panel_card_actions.navigation_capability_id
+    );
+    insert_json!(
+        "routesCapabilityId",
+        &panel_card_actions.routes_capability_id
+    );
+    insert_json!(
+        "breadcrumbsCapabilityId",
+        &panel_card_actions.breadcrumbs_capability_id
+    );
+    insert_json!("tabsCapabilityId", &panel_card_actions.tabs_capability_id);
+    insert_json!(
+        "tabPanelsCapabilityId",
+        &panel_card_actions.tab_panels_capability_id
+    );
+    insert_json!(
+        "panelCardsCapabilityId",
+        &panel_card_actions.panel_cards_capability_id
+    );
+    insert_json!(
+        "panelCardActionsCapabilityId",
+        &panel_card_actions.panel_card_actions_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        panel_card_actions.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_panel_card_action_json_value(
+    panel_card_action: &BerkeleyAppShellDashboardPanelCardAction,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel_card_action.id,
+        "panelCardId": &panel_card_action.panel_card_id,
+        "panelId": &panel_card_action.panel_id,
+        "cardId": &panel_card_action.card_id,
+        "actionId": &panel_card_action.action_id,
+        "label": &panel_card_action.label,
+        "target": &panel_card_action.target,
+        "panelKind": &panel_card_action.panel_kind,
+        "role": &panel_card_action.role,
+        "path": &panel_card_action.path,
+        "position": panel_card_action.position,
+        "selected": panel_card_action.selected,
+        "default": panel_card_action.default_panel,
+        "visible": panel_card_action.visible,
+        "enabled": panel_card_action.enabled,
+        "primary": panel_card_action.primary,
+        "cardPrimary": panel_card_action.card_primary,
+        "attention": panel_card_action.attention,
+        "disabledReason": &panel_card_action.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_action_dispatch_json_value(
+    dispatch: &BerkeleyAppShellDashboardActionDispatch,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", dispatch.schema_version);
+    insert_json!("packageName", &dispatch.package_name);
+    insert_json!("sourceFingerprint", &dispatch.source_fingerprint);
+    insert_json!("title", &dispatch.title);
+    insert_json!("startupRoute", &dispatch.startup_route);
+    insert_json!("ready", dispatch.ready);
+    insert_json!("severity", &dispatch.severity);
+    insert_json!("attentionRequired", dispatch.attention_required);
+    insert_json!("primaryCardId", &dispatch.primary_card_id);
+    insert_json!("primaryRegionId", &dispatch.primary_region_id);
+    insert_json!("activeItemId", &dispatch.active_item_id);
+    insert_json!("activeRouteId", &dispatch.active_route_id);
+    insert_json!("activeRoutePath", &dispatch.active_route_path);
+    insert_json!("defaultRouteId", &dispatch.default_route_id);
+    insert_json!("defaultRoutePath", &dispatch.default_route_path);
+    insert_json!("activeBreadcrumbId", &dispatch.active_breadcrumb_id);
+    insert_json!("activeBreadcrumbPath", &dispatch.active_breadcrumb_path);
+    insert_json!("defaultBreadcrumbId", &dispatch.default_breadcrumb_id);
+    insert_json!("defaultBreadcrumbPath", &dispatch.default_breadcrumb_path);
+    insert_json!("selectedTabId", &dispatch.selected_tab_id);
+    insert_json!("selectedTabPath", &dispatch.selected_tab_path);
+    insert_json!("defaultTabId", &dispatch.default_tab_id);
+    insert_json!("defaultTabPath", &dispatch.default_tab_path);
+    insert_json!("selectedPanelId", &dispatch.selected_panel_id);
+    insert_json!("selectedPanelPath", &dispatch.selected_panel_path);
+    insert_json!("defaultPanelId", &dispatch.default_panel_id);
+    insert_json!("defaultPanelPath", &dispatch.default_panel_path);
+    insert_json!("selectedPanelCardId", &dispatch.selected_panel_card_id);
+    insert_json!("selectedCardId", &dispatch.selected_card_id);
+    insert_json!("defaultPanelCardId", &dispatch.default_panel_card_id);
+    insert_json!("defaultCardId", &dispatch.default_card_id);
+    insert_json!(
+        "selectedPanelCardActionId",
+        &dispatch.selected_panel_card_action_id
+    );
+    insert_json!(
+        "selectedActionDispatchId",
+        &dispatch.selected_action_dispatch_id
+    );
+    insert_json!("selectedActionId", &dispatch.selected_action_id);
+    insert_json!(
+        "defaultPanelCardActionId",
+        &dispatch.default_panel_card_action_id
+    );
+    insert_json!(
+        "defaultActionDispatchId",
+        &dispatch.default_action_dispatch_id
+    );
+    insert_json!("defaultActionId", &dispatch.default_action_id);
+    insert_json!("routeCount", dispatch.route_count);
+    insert_json!("visibleRouteCount", dispatch.visible_route_count);
+    insert_json!("enabledRouteCount", dispatch.enabled_route_count);
+    insert_json!("breadcrumbCount", dispatch.breadcrumb_count);
+    insert_json!("visibleBreadcrumbCount", dispatch.visible_breadcrumb_count);
+    insert_json!("enabledBreadcrumbCount", dispatch.enabled_breadcrumb_count);
+    insert_json!("tabCount", dispatch.tab_count);
+    insert_json!("visibleTabCount", dispatch.visible_tab_count);
+    insert_json!("enabledTabCount", dispatch.enabled_tab_count);
+    insert_json!("panelCount", dispatch.panel_count);
+    insert_json!("visiblePanelCount", dispatch.visible_panel_count);
+    insert_json!("enabledPanelCount", dispatch.enabled_panel_count);
+    insert_json!("panelCardCount", dispatch.panel_card_count);
+    insert_json!("visiblePanelCardCount", dispatch.visible_panel_card_count);
+    insert_json!("enabledPanelCardCount", dispatch.enabled_panel_card_count);
+    insert_json!("actionCount", dispatch.action_count);
+    insert_json!("enabledActionCount", dispatch.enabled_action_count);
+    insert_json!("primaryActionCount", dispatch.primary_action_count);
+    insert_json!("panelCardActionCount", dispatch.panel_card_action_count);
+    insert_json!(
+        "visiblePanelCardActionCount",
+        dispatch.visible_panel_card_action_count
+    );
+    insert_json!(
+        "enabledPanelCardActionCount",
+        dispatch.enabled_panel_card_action_count
+    );
+    insert_json!("actionDispatchCount", dispatch.action_dispatch_count);
+    insert_json!(
+        "visibleActionDispatchCount",
+        dispatch.visible_action_dispatch_count
+    );
+    insert_json!(
+        "enabledActionDispatchCount",
+        dispatch.enabled_action_dispatch_count
+    );
+    insert_json!("itemCount", dispatch.item_count);
+    insert_json!("visibleItemCount", dispatch.visible_item_count);
+    insert_json!("enabledItemCount", dispatch.enabled_item_count);
+    insert_json!("regionCount", dispatch.region_count);
+    insert_json!("visibleRegionCount", dispatch.visible_region_count);
+    insert_json!("cardCount", dispatch.card_count);
+    insert_json!("visibleCardCount", dispatch.visible_card_count);
+    insert_json!("attentionCardCount", dispatch.attention_card_count);
+    insert_json!("metricCardCount", dispatch.metric_card_count);
+    value.insert(
+        "actionDispatches".to_string(),
+        serde_json::Value::Array(
+            dispatch
+                .action_dispatches
+                .iter()
+                .map(app_shell_dashboard_action_dispatch_item_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!("packageCapabilityId", &dispatch.package_capability_id);
+    insert_json!("dashboardCapabilityId", &dispatch.dashboard_capability_id);
+    insert_json!("cardsCapabilityId", &dispatch.cards_capability_id);
+    insert_json!("viewCapabilityId", &dispatch.view_capability_id);
+    insert_json!("layoutCapabilityId", &dispatch.layout_capability_id);
+    insert_json!("navigationCapabilityId", &dispatch.navigation_capability_id);
+    insert_json!("routesCapabilityId", &dispatch.routes_capability_id);
+    insert_json!(
+        "breadcrumbsCapabilityId",
+        &dispatch.breadcrumbs_capability_id
+    );
+    insert_json!("tabsCapabilityId", &dispatch.tabs_capability_id);
+    insert_json!("tabPanelsCapabilityId", &dispatch.tab_panels_capability_id);
+    insert_json!(
+        "panelCardsCapabilityId",
+        &dispatch.panel_cards_capability_id
+    );
+    insert_json!(
+        "panelCardActionsCapabilityId",
+        &dispatch.panel_card_actions_capability_id
+    );
+    insert_json!(
+        "actionDispatchCapabilityId",
+        &dispatch.action_dispatch_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        dispatch.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_action_dispatch_item_json_value(
+    dispatch: &BerkeleyAppShellDashboardActionDispatchItem,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &dispatch.id,
+        "panelCardActionId": &dispatch.panel_card_action_id,
+        "panelCardId": &dispatch.panel_card_id,
+        "panelId": &dispatch.panel_id,
+        "cardId": &dispatch.card_id,
+        "actionId": &dispatch.action_id,
+        "label": &dispatch.label,
+        "target": &dispatch.target,
+        "panelKind": &dispatch.panel_kind,
+        "role": &dispatch.role,
+        "path": &dispatch.path,
+        "position": dispatch.position,
+        "selected": dispatch.selected,
+        "default": dispatch.default_panel,
+        "visible": dispatch.visible,
+        "enabled": dispatch.enabled,
+        "dispatchable": dispatch.dispatchable,
+        "primary": dispatch.primary,
+        "cardPrimary": dispatch.card_primary,
+        "attention": dispatch.attention,
+        "disabledReason": &dispatch.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_events_json_value(
+    dispatch_events: &BerkeleyAppShellDashboardDispatchEvents,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": dispatch_events.schema_version,
+        "packageName": &dispatch_events.package_name,
+        "sourceFingerprint": &dispatch_events.source_fingerprint,
+        "title": &dispatch_events.title,
+        "startupRoute": &dispatch_events.startup_route,
+        "ready": dispatch_events.ready,
+        "severity": &dispatch_events.severity,
+        "attentionRequired": dispatch_events.attention_required,
+        "selectedActionDispatchId": &dispatch_events.selected_action_dispatch_id,
+        "selectedDispatchEventId": &dispatch_events.selected_dispatch_event_id,
+        "selectedActionId": &dispatch_events.selected_action_id,
+        "defaultActionDispatchId": &dispatch_events.default_action_dispatch_id,
+        "defaultDispatchEventId": &dispatch_events.default_dispatch_event_id,
+        "defaultActionId": &dispatch_events.default_action_id,
+        "actionDispatchCount": dispatch_events.action_dispatch_count,
+        "dispatchEventCount": dispatch_events.dispatch_event_count,
+        "dispatchReadyEventCount": dispatch_events.dispatch_ready_event_count,
+        "dispatchBlockedEventCount": dispatch_events.dispatch_blocked_event_count,
+        "attentionDispatchEventCount": dispatch_events.attention_dispatch_event_count,
+        "selectedDispatchable": dispatch_events.selected_dispatchable,
+        "defaultDispatchable": dispatch_events.default_dispatchable,
+        "dispatchEvents": dispatch_events
+            .dispatch_events
+            .iter()
+            .map(app_shell_dashboard_dispatch_event_json_value)
+            .collect::<Vec<_>>(),
+        "actionDispatchCapabilityId": &dispatch_events.action_dispatch_capability_id,
+        "dispatchEventsCapabilityId": &dispatch_events.dispatch_events_capability_id,
+        "artifactCapabilityCount": dispatch_events.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_event_json_value(
+    event: &BerkeleyAppShellDashboardDispatchEvent,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &event.id,
+        "actionDispatchId": &event.action_dispatch_id,
+        "panelCardActionId": &event.panel_card_action_id,
+        "actionId": &event.action_id,
+        "kind": &event.kind,
+        "severity": &event.severity,
+        "message": &event.message,
+        "label": &event.label,
+        "target": &event.target,
+        "role": &event.role,
+        "path": &event.path,
+        "position": event.position,
+        "selected": event.selected,
+        "default": event.default_dispatch,
+        "dispatchable": event.dispatchable,
+        "primary": event.primary,
+        "attention": event.attention,
+        "disabledReason": &event.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_json_value(
+    dispatch_queue: &BerkeleyAppShellDashboardDispatchQueue,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": dispatch_queue.schema_version,
+        "packageName": &dispatch_queue.package_name,
+        "sourceFingerprint": &dispatch_queue.source_fingerprint,
+        "title": &dispatch_queue.title,
+        "startupRoute": &dispatch_queue.startup_route,
+        "ready": dispatch_queue.ready,
+        "severity": &dispatch_queue.severity,
+        "attentionRequired": dispatch_queue.attention_required,
+        "selectedActionDispatchId": &dispatch_queue.selected_action_dispatch_id,
+        "selectedDispatchEventId": &dispatch_queue.selected_dispatch_event_id,
+        "selectedDispatchQueueItemId": &dispatch_queue.selected_dispatch_queue_item_id,
+        "selectedActionId": &dispatch_queue.selected_action_id,
+        "defaultActionDispatchId": &dispatch_queue.default_action_dispatch_id,
+        "defaultDispatchEventId": &dispatch_queue.default_dispatch_event_id,
+        "defaultDispatchQueueItemId": &dispatch_queue.default_dispatch_queue_item_id,
+        "defaultActionId": &dispatch_queue.default_action_id,
+        "actionDispatchCount": dispatch_queue.action_dispatch_count,
+        "dispatchEventCount": dispatch_queue.dispatch_event_count,
+        "dispatchReadyEventCount": dispatch_queue.dispatch_ready_event_count,
+        "dispatchBlockedEventCount": dispatch_queue.dispatch_blocked_event_count,
+        "dispatchQueueItemCount": dispatch_queue.dispatch_queue_item_count,
+        "queuedDispatchCount": dispatch_queue.queued_dispatch_count,
+        "blockedDispatchCount": dispatch_queue.blocked_dispatch_count,
+        "attentionDispatchQueueItemCount": dispatch_queue.attention_dispatch_queue_item_count,
+        "selectedQueued": dispatch_queue.selected_queued,
+        "defaultQueued": dispatch_queue.default_queued,
+        "dispatchQueueItems": dispatch_queue
+            .dispatch_queue_items
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_item_json_value)
+            .collect::<Vec<_>>(),
+        "actionDispatchCapabilityId": &dispatch_queue.action_dispatch_capability_id,
+        "dispatchEventsCapabilityId": &dispatch_queue.dispatch_events_capability_id,
+        "dispatchQueueCapabilityId": &dispatch_queue.dispatch_queue_capability_id,
+        "artifactCapabilityCount": dispatch_queue.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_item_json_value(
+    item: &BerkeleyAppShellDashboardDispatchQueueItem,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &item.id,
+        "dispatchEventId": &item.dispatch_event_id,
+        "actionDispatchId": &item.action_dispatch_id,
+        "panelCardActionId": &item.panel_card_action_id,
+        "actionId": &item.action_id,
+        "queueState": &item.queue_state,
+        "severity": &item.severity,
+        "message": &item.message,
+        "label": &item.label,
+        "target": &item.target,
+        "role": &item.role,
+        "path": &item.path,
+        "position": item.position,
+        "selected": item.selected,
+        "default": item.default_dispatch,
+        "queued": item.queued,
+        "blocked": item.blocked,
+        "dispatchable": item.dispatchable,
+        "primary": item.primary,
+        "attention": item.attention,
+        "disabledReason": &item.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_summary_json_value(
+    summary: &BerkeleyAppShellDashboardDispatchQueueSummary,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": summary.schema_version,
+        "packageName": &summary.package_name,
+        "sourceFingerprint": &summary.source_fingerprint,
+        "title": &summary.title,
+        "startupRoute": &summary.startup_route,
+        "ready": summary.ready,
+        "severity": &summary.severity,
+        "attentionRequired": summary.attention_required,
+        "selectedActionDispatchId": &summary.selected_action_dispatch_id,
+        "selectedDispatchEventId": &summary.selected_dispatch_event_id,
+        "selectedDispatchQueueItemId": &summary.selected_dispatch_queue_item_id,
+        "selectedActionId": &summary.selected_action_id,
+        "defaultActionDispatchId": &summary.default_action_dispatch_id,
+        "defaultDispatchEventId": &summary.default_dispatch_event_id,
+        "defaultDispatchQueueItemId": &summary.default_dispatch_queue_item_id,
+        "defaultActionId": &summary.default_action_id,
+        "actionDispatchCount": summary.action_dispatch_count,
+        "dispatchEventCount": summary.dispatch_event_count,
+        "dispatchReadyEventCount": summary.dispatch_ready_event_count,
+        "dispatchBlockedEventCount": summary.dispatch_blocked_event_count,
+        "dispatchQueueItemCount": summary.dispatch_queue_item_count,
+        "queuedDispatchCount": summary.queued_dispatch_count,
+        "blockedDispatchCount": summary.blocked_dispatch_count,
+        "attentionDispatchQueueItemCount": summary.attention_dispatch_queue_item_count,
+        "selectedQueued": summary.selected_queued,
+        "defaultQueued": summary.default_queued,
+        "firstQueuedDispatchQueueItemId": &summary.first_queued_dispatch_queue_item_id,
+        "firstBlockedDispatchQueueItemId": &summary.first_blocked_dispatch_queue_item_id,
+        "firstAttentionDispatchQueueItemId": &summary.first_attention_dispatch_queue_item_id,
+        "queuedDispatchQueueItemIds": &summary.queued_dispatch_queue_item_ids,
+        "blockedDispatchQueueItemIds": &summary.blocked_dispatch_queue_item_ids,
+        "attentionDispatchQueueItemIds": &summary.attention_dispatch_queue_item_ids,
+        "dispatchQueueCapabilityId": &summary.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &summary.dispatch_queue_summary_capability_id,
+        "artifactCapabilityCount": summary.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_digest_json_value(
+    digest: &BerkeleyAppShellDashboardDispatchQueueDigest,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $field:expr) => {
+            value.insert($key.to_string(), serde_json::json!($field));
+        };
+    }
+
+    insert_json!("schemaVersion", digest.schema_version);
+    insert_json!("packageName", &digest.package_name);
+    insert_json!("sourceFingerprint", &digest.source_fingerprint);
+    insert_json!("title", &digest.title);
+    insert_json!("startupRoute", &digest.startup_route);
+    insert_json!("ready", digest.ready);
+    insert_json!("severity", &digest.severity);
+    insert_json!("attentionRequired", digest.attention_required);
+    insert_json!(
+        "headlineDispatchQueueItemId",
+        &digest.headline_dispatch_queue_item_id
+    );
+    insert_json!(
+        "headlineDispatchEventId",
+        &digest.headline_dispatch_event_id
+    );
+    insert_json!(
+        "headlineActionDispatchId",
+        &digest.headline_action_dispatch_id
+    );
+    insert_json!(
+        "headlinePanelCardActionId",
+        &digest.headline_panel_card_action_id
+    );
+    insert_json!("headlineActionId", &digest.headline_action_id);
+    insert_json!("headlineQueueState", &digest.headline_queue_state);
+    insert_json!("headlineMessage", &digest.headline_message);
+    insert_json!("headlineLabel", &digest.headline_label);
+    insert_json!("headlineTarget", &digest.headline_target);
+    insert_json!("headlineRole", &digest.headline_role);
+    insert_json!("headlinePath", &digest.headline_path);
+    insert_json!("headlinePosition", digest.headline_position);
+    insert_json!("headlineSelected", digest.headline_selected);
+    insert_json!("headlineDefaultDispatch", digest.headline_default_dispatch);
+    insert_json!("headlineQueued", digest.headline_queued);
+    insert_json!("headlineBlocked", digest.headline_blocked);
+    insert_json!("headlineDispatchable", digest.headline_dispatchable);
+    insert_json!("headlinePrimary", digest.headline_primary);
+    insert_json!("headlineAttention", digest.headline_attention);
+    insert_json!("headlineDisabledReason", &digest.headline_disabled_reason);
+    insert_json!(
+        "selectedActionDispatchId",
+        &digest.selected_action_dispatch_id
+    );
+    insert_json!(
+        "selectedDispatchEventId",
+        &digest.selected_dispatch_event_id
+    );
+    insert_json!(
+        "selectedDispatchQueueItemId",
+        &digest.selected_dispatch_queue_item_id
+    );
+    insert_json!("selectedActionId", &digest.selected_action_id);
+    insert_json!(
+        "defaultActionDispatchId",
+        &digest.default_action_dispatch_id
+    );
+    insert_json!("defaultDispatchEventId", &digest.default_dispatch_event_id);
+    insert_json!(
+        "defaultDispatchQueueItemId",
+        &digest.default_dispatch_queue_item_id
+    );
+    insert_json!("defaultActionId", &digest.default_action_id);
+    insert_json!("actionDispatchCount", digest.action_dispatch_count);
+    insert_json!("dispatchEventCount", digest.dispatch_event_count);
+    insert_json!("dispatchReadyEventCount", digest.dispatch_ready_event_count);
+    insert_json!(
+        "dispatchBlockedEventCount",
+        digest.dispatch_blocked_event_count
+    );
+    insert_json!("dispatchQueueItemCount", digest.dispatch_queue_item_count);
+    insert_json!("queuedDispatchCount", digest.queued_dispatch_count);
+    insert_json!("blockedDispatchCount", digest.blocked_dispatch_count);
+    insert_json!(
+        "attentionDispatchQueueItemCount",
+        digest.attention_dispatch_queue_item_count
+    );
+    insert_json!("selectedQueued", digest.selected_queued);
+    insert_json!("defaultQueued", digest.default_queued);
+    insert_json!(
+        "firstQueuedDispatchQueueItemId",
+        &digest.first_queued_dispatch_queue_item_id
+    );
+    insert_json!(
+        "firstBlockedDispatchQueueItemId",
+        &digest.first_blocked_dispatch_queue_item_id
+    );
+    insert_json!(
+        "firstAttentionDispatchQueueItemId",
+        &digest.first_attention_dispatch_queue_item_id
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &digest.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &digest.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &digest.dispatch_queue_digest_capability_id
+    );
+    insert_json!("artifactCapabilityCount", digest.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lanes_json_value(
+    lanes: &BerkeleyAppShellDashboardDispatchQueueLanes,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": lanes.schema_version,
+        "packageName": &lanes.package_name,
+        "sourceFingerprint": &lanes.source_fingerprint,
+        "title": &lanes.title,
+        "startupRoute": &lanes.startup_route,
+        "ready": lanes.ready,
+        "severity": &lanes.severity,
+        "attentionRequired": lanes.attention_required,
+        "headlineDispatchQueueItemId": &lanes.headline_dispatch_queue_item_id,
+        "headlineQueueState": &lanes.headline_queue_state,
+        "headlineMessage": &lanes.headline_message,
+        "selectedDispatchQueueItemId": &lanes.selected_dispatch_queue_item_id,
+        "defaultDispatchQueueItemId": &lanes.default_dispatch_queue_item_id,
+        "firstQueuedDispatchQueueItemId": &lanes.first_queued_dispatch_queue_item_id,
+        "firstBlockedDispatchQueueItemId": &lanes.first_blocked_dispatch_queue_item_id,
+        "firstAttentionDispatchQueueItemId": &lanes.first_attention_dispatch_queue_item_id,
+        "dispatchQueueItemCount": lanes.dispatch_queue_item_count,
+        "queuedDispatchCount": lanes.queued_dispatch_count,
+        "blockedDispatchCount": lanes.blocked_dispatch_count,
+        "attentionDispatchQueueItemCount": lanes.attention_dispatch_queue_item_count,
+        "laneCount": lanes.lane_count,
+        "activeLaneId": &lanes.active_lane_id,
+        "attentionLaneId": &lanes.attention_lane_id,
+        "lanes": lanes
+            .lanes
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &lanes.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &lanes.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &lanes.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &lanes.dispatch_queue_lanes_capability_id,
+        "artifactCapabilityCount": lanes.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_json_value(
+    lane: &BerkeleyAppShellDashboardDispatchQueueLane,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &lane.id,
+        "title": &lane.title,
+        "queueState": &lane.queue_state,
+        "severity": &lane.severity,
+        "dispatchQueueItemCount": lane.dispatch_queue_item_count,
+        "dispatchQueueItemIds": &lane.dispatch_queue_item_ids,
+        "selected": lane.selected,
+        "defaultDispatch": lane.default_dispatch,
+        "primary": lane.primary,
+        "attention": lane.attention,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tabs_json_value(
+    tabs: &BerkeleyAppShellDashboardDispatchQueueLaneTabs,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": tabs.schema_version,
+        "packageName": &tabs.package_name,
+        "sourceFingerprint": &tabs.source_fingerprint,
+        "title": &tabs.title,
+        "startupRoute": &tabs.startup_route,
+        "ready": tabs.ready,
+        "severity": &tabs.severity,
+        "attentionRequired": tabs.attention_required,
+        "activeLaneId": &tabs.active_lane_id,
+        "activeTabId": &tabs.active_tab_id,
+        "attentionLaneId": &tabs.attention_lane_id,
+        "attentionTabId": &tabs.attention_tab_id,
+        "laneCount": tabs.lane_count,
+        "tabCount": tabs.tab_count,
+        "enabledTabCount": tabs.enabled_tab_count,
+        "disabledTabCount": tabs.disabled_tab_count,
+        "tabs": tabs
+            .tabs
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_tab_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &tabs.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &tabs.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &tabs.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &tabs.dispatch_queue_lanes_capability_id,
+        "dispatchQueueLaneTabsCapabilityId": &tabs.dispatch_queue_lane_tabs_capability_id,
+        "artifactCapabilityCount": tabs.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_json_value(
+    tab: &BerkeleyAppShellDashboardDispatchQueueLaneTab,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &tab.id,
+        "laneId": &tab.lane_id,
+        "title": &tab.title,
+        "queueState": &tab.queue_state,
+        "severity": &tab.severity,
+        "dispatchQueueItemCount": tab.dispatch_queue_item_count,
+        "selected": tab.selected,
+        "defaultDispatch": tab.default_dispatch,
+        "active": tab.active,
+        "attention": tab.attention,
+        "disabled": tab.disabled,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panels_json_value(
+    panels: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanels,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": panels.schema_version,
+        "packageName": &panels.package_name,
+        "sourceFingerprint": &panels.source_fingerprint,
+        "title": &panels.title,
+        "startupRoute": &panels.startup_route,
+        "ready": panels.ready,
+        "severity": &panels.severity,
+        "attentionRequired": panels.attention_required,
+        "activeLaneId": &panels.active_lane_id,
+        "activeTabId": &panels.active_tab_id,
+        "activePanelId": &panels.active_panel_id,
+        "attentionLaneId": &panels.attention_lane_id,
+        "attentionTabId": &panels.attention_tab_id,
+        "attentionPanelId": &panels.attention_panel_id,
+        "laneCount": panels.lane_count,
+        "tabCount": panels.tab_count,
+        "enabledTabCount": panels.enabled_tab_count,
+        "disabledTabCount": panels.disabled_tab_count,
+        "panelCount": panels.panel_count,
+        "enabledPanelCount": panels.enabled_panel_count,
+        "disabledPanelCount": panels.disabled_panel_count,
+        "emptyPanelCount": panels.empty_panel_count,
+        "panels": panels
+            .panels
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_tab_panel_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &panels.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &panels.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &panels.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &panels.dispatch_queue_lanes_capability_id,
+        "dispatchQueueLaneTabsCapabilityId": &panels.dispatch_queue_lane_tabs_capability_id,
+        "dispatchQueueLaneTabPanelsCapabilityId": &panels.dispatch_queue_lane_tab_panels_capability_id,
+        "artifactCapabilityCount": panels.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_json_value(
+    panel: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanel,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel.id,
+        "tabId": &panel.tab_id,
+        "laneId": &panel.lane_id,
+        "title": &panel.title,
+        "queueState": &panel.queue_state,
+        "severity": &panel.severity,
+        "dispatchQueueItemCount": panel.dispatch_queue_item_count,
+        "selected": panel.selected,
+        "defaultDispatch": panel.default_dispatch,
+        "active": panel.active,
+        "attention": panel.attention,
+        "disabled": panel.disabled,
+        "empty": panel.empty,
+        "emptyMessage": &panel.empty_message,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_cards_json_value(
+    panel_cards: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCards,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": panel_cards.schema_version,
+        "packageName": &panel_cards.package_name,
+        "sourceFingerprint": &panel_cards.source_fingerprint,
+        "title": &panel_cards.title,
+        "startupRoute": &panel_cards.startup_route,
+        "ready": panel_cards.ready,
+        "severity": &panel_cards.severity,
+        "attentionRequired": panel_cards.attention_required,
+        "activeLaneId": &panel_cards.active_lane_id,
+        "activeTabId": &panel_cards.active_tab_id,
+        "activePanelId": &panel_cards.active_panel_id,
+        "activePanelCardId": &panel_cards.active_panel_card_id,
+        "attentionLaneId": &panel_cards.attention_lane_id,
+        "attentionTabId": &panel_cards.attention_tab_id,
+        "attentionPanelId": &panel_cards.attention_panel_id,
+        "attentionPanelCardId": &panel_cards.attention_panel_card_id,
+        "laneCount": panel_cards.lane_count,
+        "tabCount": panel_cards.tab_count,
+        "enabledTabCount": panel_cards.enabled_tab_count,
+        "disabledTabCount": panel_cards.disabled_tab_count,
+        "panelCount": panel_cards.panel_count,
+        "enabledPanelCount": panel_cards.enabled_panel_count,
+        "disabledPanelCount": panel_cards.disabled_panel_count,
+        "emptyPanelCount": panel_cards.empty_panel_count,
+        "panelCardCount": panel_cards.panel_card_count,
+        "enabledPanelCardCount": panel_cards.enabled_panel_card_count,
+        "disabledPanelCardCount": panel_cards.disabled_panel_card_count,
+        "emptyPanelCardCount": panel_cards.empty_panel_card_count,
+        "panelCards": panel_cards
+            .panel_cards
+            .iter()
+            .map(app_shell_dashboard_dispatch_queue_lane_tab_panel_card_json_value)
+            .collect::<Vec<_>>(),
+        "dispatchQueueCapabilityId": &panel_cards.dispatch_queue_capability_id,
+        "dispatchQueueSummaryCapabilityId": &panel_cards.dispatch_queue_summary_capability_id,
+        "dispatchQueueDigestCapabilityId": &panel_cards.dispatch_queue_digest_capability_id,
+        "dispatchQueueLanesCapabilityId": &panel_cards.dispatch_queue_lanes_capability_id,
+        "dispatchQueueLaneTabsCapabilityId": &panel_cards.dispatch_queue_lane_tabs_capability_id,
+        "dispatchQueueLaneTabPanelsCapabilityId": &panel_cards.dispatch_queue_lane_tab_panels_capability_id,
+        "dispatchQueueLaneTabPanelCardsCapabilityId": &panel_cards.dispatch_queue_lane_tab_panel_cards_capability_id,
+        "artifactCapabilityCount": panel_cards.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_json_value(
+    panel_card: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCard,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &panel_card.id,
+        "panelId": &panel_card.panel_id,
+        "tabId": &panel_card.tab_id,
+        "laneId": &panel_card.lane_id,
+        "title": &panel_card.title,
+        "queueState": &panel_card.queue_state,
+        "severity": &panel_card.severity,
+        "summary": &panel_card.summary,
+        "dispatchQueueItemCount": panel_card.dispatch_queue_item_count,
+        "badgeCount": panel_card.badge_count,
+        "selected": panel_card.selected,
+        "defaultDispatch": panel_card.default_dispatch,
+        "active": panel_card.active,
+        "attention": panel_card.attention,
+        "disabled": panel_card.disabled,
+        "empty": panel_card.empty,
+        "emptyMessage": &panel_card.empty_message,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_actions_json_value(
+    actions: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActions,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", actions.schema_version);
+    insert_json!("packageName", &actions.package_name);
+    insert_json!("sourceFingerprint", &actions.source_fingerprint);
+    insert_json!("title", &actions.title);
+    insert_json!("startupRoute", &actions.startup_route);
+    insert_json!("ready", actions.ready);
+    insert_json!("severity", &actions.severity);
+    insert_json!("attentionRequired", actions.attention_required);
+    insert_json!("activeLaneId", &actions.active_lane_id);
+    insert_json!("activeTabId", &actions.active_tab_id);
+    insert_json!("activePanelId", &actions.active_panel_id);
+    insert_json!("activePanelCardId", &actions.active_panel_card_id);
+    insert_json!(
+        "activePanelCardActionId",
+        &actions.active_panel_card_action_id
+    );
+    insert_json!("attentionLaneId", &actions.attention_lane_id);
+    insert_json!("attentionTabId", &actions.attention_tab_id);
+    insert_json!("attentionPanelId", &actions.attention_panel_id);
+    insert_json!("attentionPanelCardId", &actions.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &actions.attention_panel_card_action_id
+    );
+    insert_json!("laneCount", actions.lane_count);
+    insert_json!("tabCount", actions.tab_count);
+    insert_json!("enabledTabCount", actions.enabled_tab_count);
+    insert_json!("disabledTabCount", actions.disabled_tab_count);
+    insert_json!("panelCount", actions.panel_count);
+    insert_json!("enabledPanelCount", actions.enabled_panel_count);
+    insert_json!("disabledPanelCount", actions.disabled_panel_count);
+    insert_json!("emptyPanelCount", actions.empty_panel_count);
+    insert_json!("panelCardCount", actions.panel_card_count);
+    insert_json!("enabledPanelCardCount", actions.enabled_panel_card_count);
+    insert_json!("disabledPanelCardCount", actions.disabled_panel_card_count);
+    insert_json!("emptyPanelCardCount", actions.empty_panel_card_count);
+    insert_json!("panelCardActionCount", actions.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        actions.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        actions.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        actions.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        actions.primary_panel_card_action_count
+    );
+    value.insert(
+        "panelCardActions".to_string(),
+        serde_json::Value::Array(
+            actions
+                .panel_card_actions
+                .iter()
+                .map(app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_json_value)
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &actions.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &actions.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &actions.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &actions.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &actions.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &actions.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &actions.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &actions.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!("artifactCapabilityCount", actions.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_json_value(
+    action: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardAction,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &action.id,
+        "panelCardId": &action.panel_card_id,
+        "panelId": &action.panel_id,
+        "tabId": &action.tab_id,
+        "laneId": &action.lane_id,
+        "label": &action.label,
+        "target": &action.target,
+        "queueState": &action.queue_state,
+        "severity": &action.severity,
+        "summary": &action.summary,
+        "dispatchQueueItemCount": action.dispatch_queue_item_count,
+        "badgeCount": action.badge_count,
+        "selected": action.selected,
+        "defaultDispatch": action.default_dispatch,
+        "active": action.active,
+        "attention": action.attention,
+        "disabled": action.disabled,
+        "empty": action.empty,
+        "enabled": action.enabled,
+        "primary": action.primary,
+        "disabledReason": &action.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_json_value(
+    menu: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenu,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", menu.schema_version);
+    insert_json!("packageName", &menu.package_name);
+    insert_json!("sourceFingerprint", &menu.source_fingerprint);
+    insert_json!("title", &menu.title);
+    insert_json!("startupRoute", &menu.startup_route);
+    insert_json!("ready", menu.ready);
+    insert_json!("severity", &menu.severity);
+    insert_json!("attentionRequired", menu.attention_required);
+    insert_json!("activeLaneId", &menu.active_lane_id);
+    insert_json!("activeTabId", &menu.active_tab_id);
+    insert_json!("activePanelId", &menu.active_panel_id);
+    insert_json!("activePanelCardId", &menu.active_panel_card_id);
+    insert_json!("activePanelCardActionId", &menu.active_panel_card_action_id);
+    insert_json!("activeMenuItemId", &menu.active_menu_item_id);
+    insert_json!("attentionLaneId", &menu.attention_lane_id);
+    insert_json!("attentionTabId", &menu.attention_tab_id);
+    insert_json!("attentionPanelId", &menu.attention_panel_id);
+    insert_json!("attentionPanelCardId", &menu.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &menu.attention_panel_card_action_id
+    );
+    insert_json!("attentionMenuItemId", &menu.attention_menu_item_id);
+    insert_json!("defaultMenuItemId", &menu.default_menu_item_id);
+    insert_json!("primaryMenuItemId", &menu.primary_menu_item_id);
+    insert_json!("laneCount", menu.lane_count);
+    insert_json!("tabCount", menu.tab_count);
+    insert_json!("enabledTabCount", menu.enabled_tab_count);
+    insert_json!("disabledTabCount", menu.disabled_tab_count);
+    insert_json!("panelCount", menu.panel_count);
+    insert_json!("enabledPanelCount", menu.enabled_panel_count);
+    insert_json!("disabledPanelCount", menu.disabled_panel_count);
+    insert_json!("emptyPanelCount", menu.empty_panel_count);
+    insert_json!("panelCardCount", menu.panel_card_count);
+    insert_json!("enabledPanelCardCount", menu.enabled_panel_card_count);
+    insert_json!("disabledPanelCardCount", menu.disabled_panel_card_count);
+    insert_json!("emptyPanelCardCount", menu.empty_panel_card_count);
+    insert_json!("panelCardActionCount", menu.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        menu.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        menu.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        menu.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        menu.primary_panel_card_action_count
+    );
+    insert_json!("menuItemCount", menu.menu_item_count);
+    insert_json!("enabledMenuItemCount", menu.enabled_menu_item_count);
+    insert_json!("disabledMenuItemCount", menu.disabled_menu_item_count);
+    insert_json!("emptyMenuItemCount", menu.empty_menu_item_count);
+    insert_json!("primaryMenuItemCount", menu.primary_menu_item_count);
+    insert_json!("selectedMenuItemCount", menu.selected_menu_item_count);
+    insert_json!("attentionMenuItemCount", menu.attention_menu_item_count);
+    value.insert(
+        "menuItems".to_string(),
+        serde_json::Value::Array(
+            menu.menu_items
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_item_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &menu.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &menu.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &menu.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &menu.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &menu.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &menu.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &menu.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &menu.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuCapabilityId",
+        &menu.dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+    );
+    insert_json!("artifactCapabilityCount", menu.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_item_json_value(
+    item: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuItem,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &item.id,
+        "actionId": &item.action_id,
+        "panelCardId": &item.panel_card_id,
+        "panelId": &item.panel_id,
+        "tabId": &item.tab_id,
+        "laneId": &item.lane_id,
+        "label": &item.label,
+        "target": &item.target,
+        "queueState": &item.queue_state,
+        "severity": &item.severity,
+        "summary": &item.summary,
+        "dispatchQueueItemCount": item.dispatch_queue_item_count,
+        "badgeCount": item.badge_count,
+        "position": item.position,
+        "selected": item.selected,
+        "defaultDispatch": item.default_dispatch,
+        "active": item.active,
+        "attention": item.attention,
+        "disabled": item.disabled,
+        "empty": item.empty,
+        "enabled": item.enabled,
+        "primary": item.primary,
+        "disabledReason": &item.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_groups_json_value(
+    groups: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroups,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", groups.schema_version);
+    insert_json!("packageName", &groups.package_name);
+    insert_json!("sourceFingerprint", &groups.source_fingerprint);
+    insert_json!("title", &groups.title);
+    insert_json!("startupRoute", &groups.startup_route);
+    insert_json!("ready", groups.ready);
+    insert_json!("severity", &groups.severity);
+    insert_json!("attentionRequired", groups.attention_required);
+    insert_json!("activeLaneId", &groups.active_lane_id);
+    insert_json!("activeTabId", &groups.active_tab_id);
+    insert_json!("activePanelId", &groups.active_panel_id);
+    insert_json!("activePanelCardId", &groups.active_panel_card_id);
+    insert_json!(
+        "activePanelCardActionId",
+        &groups.active_panel_card_action_id
+    );
+    insert_json!("activeMenuItemId", &groups.active_menu_item_id);
+    insert_json!("activeMenuGroupId", &groups.active_menu_group_id);
+    insert_json!("attentionLaneId", &groups.attention_lane_id);
+    insert_json!("attentionTabId", &groups.attention_tab_id);
+    insert_json!("attentionPanelId", &groups.attention_panel_id);
+    insert_json!("attentionPanelCardId", &groups.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &groups.attention_panel_card_action_id
+    );
+    insert_json!("attentionMenuItemId", &groups.attention_menu_item_id);
+    insert_json!("attentionMenuGroupId", &groups.attention_menu_group_id);
+    insert_json!("defaultMenuItemId", &groups.default_menu_item_id);
+    insert_json!("defaultMenuGroupId", &groups.default_menu_group_id);
+    insert_json!("primaryMenuItemId", &groups.primary_menu_item_id);
+    insert_json!("primaryMenuGroupId", &groups.primary_menu_group_id);
+    insert_json!("laneCount", groups.lane_count);
+    insert_json!("tabCount", groups.tab_count);
+    insert_json!("enabledTabCount", groups.enabled_tab_count);
+    insert_json!("disabledTabCount", groups.disabled_tab_count);
+    insert_json!("panelCount", groups.panel_count);
+    insert_json!("enabledPanelCount", groups.enabled_panel_count);
+    insert_json!("disabledPanelCount", groups.disabled_panel_count);
+    insert_json!("emptyPanelCount", groups.empty_panel_count);
+    insert_json!("panelCardCount", groups.panel_card_count);
+    insert_json!("enabledPanelCardCount", groups.enabled_panel_card_count);
+    insert_json!("disabledPanelCardCount", groups.disabled_panel_card_count);
+    insert_json!("emptyPanelCardCount", groups.empty_panel_card_count);
+    insert_json!("panelCardActionCount", groups.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        groups.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        groups.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        groups.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        groups.primary_panel_card_action_count
+    );
+    insert_json!("menuItemCount", groups.menu_item_count);
+    insert_json!("enabledMenuItemCount", groups.enabled_menu_item_count);
+    insert_json!("disabledMenuItemCount", groups.disabled_menu_item_count);
+    insert_json!("emptyMenuItemCount", groups.empty_menu_item_count);
+    insert_json!("primaryMenuItemCount", groups.primary_menu_item_count);
+    insert_json!("selectedMenuItemCount", groups.selected_menu_item_count);
+    insert_json!("attentionMenuItemCount", groups.attention_menu_item_count);
+    insert_json!("menuGroupCount", groups.menu_group_count);
+    insert_json!("enabledMenuGroupCount", groups.enabled_menu_group_count);
+    insert_json!("disabledMenuGroupCount", groups.disabled_menu_group_count);
+    insert_json!("emptyMenuGroupCount", groups.empty_menu_group_count);
+    insert_json!("primaryMenuGroupCount", groups.primary_menu_group_count);
+    insert_json!("selectedMenuGroupCount", groups.selected_menu_group_count);
+    insert_json!("attentionMenuGroupCount", groups.attention_menu_group_count);
+    value.insert(
+        "menuGroups".to_string(),
+        serde_json::Value::Array(
+            groups
+                .menu_groups
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &groups.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &groups.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &groups.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &groups.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &groups.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &groups.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &groups.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &groups.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuCapabilityId",
+        &groups.dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId",
+        &groups.dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+    );
+    insert_json!("artifactCapabilityCount", groups.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_json_value(
+    group: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroup,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &group.id,
+        "queueState": &group.queue_state,
+        "label": &group.label,
+        "summary": &group.summary,
+        "menuItemIds": &group.menu_item_ids,
+        "actionIds": &group.action_ids,
+        "dispatchQueueItemCount": group.dispatch_queue_item_count,
+        "badgeCount": group.badge_count,
+        "position": group.position,
+        "itemCount": group.item_count,
+        "enabledItemCount": group.enabled_item_count,
+        "disabledItemCount": group.disabled_item_count,
+        "emptyItemCount": group.empty_item_count,
+        "primaryItemCount": group.primary_item_count,
+        "selectedItemCount": group.selected_item_count,
+        "attentionItemCount": group.attention_item_count,
+        "selected": group.selected,
+        "defaultDispatch": group.default_dispatch,
+        "active": group.active,
+        "attention": group.attention,
+        "disabled": group.disabled,
+        "empty": group.empty,
+        "enabled": group.enabled,
+        "primary": group.primary,
+        "disabledReason": &group.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_json_value(
+    shortcuts: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcuts,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", shortcuts.schema_version);
+    insert_json!("packageName", &shortcuts.package_name);
+    insert_json!("sourceFingerprint", &shortcuts.source_fingerprint);
+    insert_json!("title", &shortcuts.title);
+    insert_json!("startupRoute", &shortcuts.startup_route);
+    insert_json!("ready", shortcuts.ready);
+    insert_json!("severity", &shortcuts.severity);
+    insert_json!("attentionRequired", shortcuts.attention_required);
+    insert_json!("activeLaneId", &shortcuts.active_lane_id);
+    insert_json!("activeTabId", &shortcuts.active_tab_id);
+    insert_json!("activePanelId", &shortcuts.active_panel_id);
+    insert_json!("activePanelCardId", &shortcuts.active_panel_card_id);
+    insert_json!(
+        "activePanelCardActionId",
+        &shortcuts.active_panel_card_action_id
+    );
+    insert_json!("activeMenuItemId", &shortcuts.active_menu_item_id);
+    insert_json!("activeMenuGroupId", &shortcuts.active_menu_group_id);
+    insert_json!(
+        "activeMenuGroupShortcutId",
+        &shortcuts.active_menu_group_shortcut_id
+    );
+    insert_json!("attentionLaneId", &shortcuts.attention_lane_id);
+    insert_json!("attentionTabId", &shortcuts.attention_tab_id);
+    insert_json!("attentionPanelId", &shortcuts.attention_panel_id);
+    insert_json!("attentionPanelCardId", &shortcuts.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &shortcuts.attention_panel_card_action_id
+    );
+    insert_json!("attentionMenuItemId", &shortcuts.attention_menu_item_id);
+    insert_json!("attentionMenuGroupId", &shortcuts.attention_menu_group_id);
+    insert_json!(
+        "attentionMenuGroupShortcutId",
+        &shortcuts.attention_menu_group_shortcut_id
+    );
+    insert_json!("defaultMenuItemId", &shortcuts.default_menu_item_id);
+    insert_json!("defaultMenuGroupId", &shortcuts.default_menu_group_id);
+    insert_json!(
+        "defaultMenuGroupShortcutId",
+        &shortcuts.default_menu_group_shortcut_id
+    );
+    insert_json!("primaryMenuItemId", &shortcuts.primary_menu_item_id);
+    insert_json!("primaryMenuGroupId", &shortcuts.primary_menu_group_id);
+    insert_json!(
+        "primaryMenuGroupShortcutId",
+        &shortcuts.primary_menu_group_shortcut_id
+    );
+    insert_json!("laneCount", shortcuts.lane_count);
+    insert_json!("tabCount", shortcuts.tab_count);
+    insert_json!("enabledTabCount", shortcuts.enabled_tab_count);
+    insert_json!("disabledTabCount", shortcuts.disabled_tab_count);
+    insert_json!("panelCount", shortcuts.panel_count);
+    insert_json!("enabledPanelCount", shortcuts.enabled_panel_count);
+    insert_json!("disabledPanelCount", shortcuts.disabled_panel_count);
+    insert_json!("emptyPanelCount", shortcuts.empty_panel_count);
+    insert_json!("panelCardCount", shortcuts.panel_card_count);
+    insert_json!("enabledPanelCardCount", shortcuts.enabled_panel_card_count);
+    insert_json!(
+        "disabledPanelCardCount",
+        shortcuts.disabled_panel_card_count
+    );
+    insert_json!("emptyPanelCardCount", shortcuts.empty_panel_card_count);
+    insert_json!("panelCardActionCount", shortcuts.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        shortcuts.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        shortcuts.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        shortcuts.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        shortcuts.primary_panel_card_action_count
+    );
+    insert_json!("menuItemCount", shortcuts.menu_item_count);
+    insert_json!("enabledMenuItemCount", shortcuts.enabled_menu_item_count);
+    insert_json!("disabledMenuItemCount", shortcuts.disabled_menu_item_count);
+    insert_json!("emptyMenuItemCount", shortcuts.empty_menu_item_count);
+    insert_json!("primaryMenuItemCount", shortcuts.primary_menu_item_count);
+    insert_json!("selectedMenuItemCount", shortcuts.selected_menu_item_count);
+    insert_json!(
+        "attentionMenuItemCount",
+        shortcuts.attention_menu_item_count
+    );
+    insert_json!("menuGroupCount", shortcuts.menu_group_count);
+    insert_json!("enabledMenuGroupCount", shortcuts.enabled_menu_group_count);
+    insert_json!(
+        "disabledMenuGroupCount",
+        shortcuts.disabled_menu_group_count
+    );
+    insert_json!("emptyMenuGroupCount", shortcuts.empty_menu_group_count);
+    insert_json!("primaryMenuGroupCount", shortcuts.primary_menu_group_count);
+    insert_json!(
+        "selectedMenuGroupCount",
+        shortcuts.selected_menu_group_count
+    );
+    insert_json!(
+        "attentionMenuGroupCount",
+        shortcuts.attention_menu_group_count
+    );
+    insert_json!(
+        "menuGroupShortcutCount",
+        shortcuts.menu_group_shortcut_count
+    );
+    insert_json!(
+        "enabledMenuGroupShortcutCount",
+        shortcuts.enabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutCount",
+        shortcuts.disabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutCount",
+        shortcuts.empty_menu_group_shortcut_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCount",
+        shortcuts.primary_menu_group_shortcut_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutCount",
+        shortcuts.selected_menu_group_shortcut_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCount",
+        shortcuts.attention_menu_group_shortcut_count
+    );
+    value.insert(
+        "menuGroupShortcuts".to_string(),
+        serde_json::Value::Array(
+            shortcuts
+                .menu_group_shortcuts
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &shortcuts.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &shortcuts.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &shortcuts.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &shortcuts.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &shortcuts.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &shortcuts.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &shortcuts.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &shortcuts.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuCapabilityId",
+        &shortcuts.dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId",
+        &shortcuts.dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutsCapabilityId",
+        &shortcuts.dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        shortcuts.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_json_value(
+    shortcut: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcut,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &shortcut.id,
+        "menuGroupId": &shortcut.menu_group_id,
+        "queueState": &shortcut.queue_state,
+        "label": &shortcut.label,
+        "summary": &shortcut.summary,
+        "accelerator": &shortcut.accelerator,
+        "target": &shortcut.target,
+        "menuItemIds": &shortcut.menu_item_ids,
+        "actionIds": &shortcut.action_ids,
+        "dispatchQueueItemCount": shortcut.dispatch_queue_item_count,
+        "badgeCount": shortcut.badge_count,
+        "position": shortcut.position,
+        "itemCount": shortcut.item_count,
+        "enabledItemCount": shortcut.enabled_item_count,
+        "disabledItemCount": shortcut.disabled_item_count,
+        "emptyItemCount": shortcut.empty_item_count,
+        "primaryItemCount": shortcut.primary_item_count,
+        "selectedItemCount": shortcut.selected_item_count,
+        "attentionItemCount": shortcut.attention_item_count,
+        "selected": shortcut.selected,
+        "defaultDispatch": shortcut.default_dispatch,
+        "active": shortcut.active,
+        "attention": shortcut.attention,
+        "disabled": shortcut.disabled,
+        "empty": shortcut.empty,
+        "enabled": shortcut.enabled,
+        "primary": shortcut.primary,
+        "disabledReason": &shortcut.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_json_value(
+    bindings: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindings,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", bindings.schema_version);
+    insert_json!("packageName", &bindings.package_name);
+    insert_json!("sourceFingerprint", &bindings.source_fingerprint);
+    insert_json!("title", &bindings.title);
+    insert_json!("startupRoute", &bindings.startup_route);
+    insert_json!("ready", bindings.ready);
+    insert_json!("severity", &bindings.severity);
+    insert_json!("attentionRequired", bindings.attention_required);
+    insert_json!("activeLaneId", &bindings.active_lane_id);
+    insert_json!("activeTabId", &bindings.active_tab_id);
+    insert_json!("activePanelId", &bindings.active_panel_id);
+    insert_json!("activePanelCardId", &bindings.active_panel_card_id);
+    insert_json!(
+        "activePanelCardActionId",
+        &bindings.active_panel_card_action_id
+    );
+    insert_json!("activeMenuItemId", &bindings.active_menu_item_id);
+    insert_json!("activeMenuGroupId", &bindings.active_menu_group_id);
+    insert_json!(
+        "activeMenuGroupShortcutId",
+        &bindings.active_menu_group_shortcut_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutBindingId",
+        &bindings.active_menu_group_shortcut_binding_id
+    );
+    insert_json!("attentionLaneId", &bindings.attention_lane_id);
+    insert_json!("attentionTabId", &bindings.attention_tab_id);
+    insert_json!("attentionPanelId", &bindings.attention_panel_id);
+    insert_json!("attentionPanelCardId", &bindings.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &bindings.attention_panel_card_action_id
+    );
+    insert_json!("attentionMenuItemId", &bindings.attention_menu_item_id);
+    insert_json!("attentionMenuGroupId", &bindings.attention_menu_group_id);
+    insert_json!(
+        "attentionMenuGroupShortcutId",
+        &bindings.attention_menu_group_shortcut_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutBindingId",
+        &bindings.attention_menu_group_shortcut_binding_id
+    );
+    insert_json!("defaultMenuItemId", &bindings.default_menu_item_id);
+    insert_json!("defaultMenuGroupId", &bindings.default_menu_group_id);
+    insert_json!(
+        "defaultMenuGroupShortcutId",
+        &bindings.default_menu_group_shortcut_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutBindingId",
+        &bindings.default_menu_group_shortcut_binding_id
+    );
+    insert_json!("primaryMenuItemId", &bindings.primary_menu_item_id);
+    insert_json!("primaryMenuGroupId", &bindings.primary_menu_group_id);
+    insert_json!(
+        "primaryMenuGroupShortcutId",
+        &bindings.primary_menu_group_shortcut_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutBindingId",
+        &bindings.primary_menu_group_shortcut_binding_id
+    );
+    insert_json!("laneCount", bindings.lane_count);
+    insert_json!("tabCount", bindings.tab_count);
+    insert_json!("enabledTabCount", bindings.enabled_tab_count);
+    insert_json!("disabledTabCount", bindings.disabled_tab_count);
+    insert_json!("panelCount", bindings.panel_count);
+    insert_json!("enabledPanelCount", bindings.enabled_panel_count);
+    insert_json!("disabledPanelCount", bindings.disabled_panel_count);
+    insert_json!("emptyPanelCount", bindings.empty_panel_count);
+    insert_json!("panelCardCount", bindings.panel_card_count);
+    insert_json!("enabledPanelCardCount", bindings.enabled_panel_card_count);
+    insert_json!("disabledPanelCardCount", bindings.disabled_panel_card_count);
+    insert_json!("emptyPanelCardCount", bindings.empty_panel_card_count);
+    insert_json!("panelCardActionCount", bindings.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        bindings.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        bindings.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        bindings.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        bindings.primary_panel_card_action_count
+    );
+    insert_json!("menuItemCount", bindings.menu_item_count);
+    insert_json!("enabledMenuItemCount", bindings.enabled_menu_item_count);
+    insert_json!("disabledMenuItemCount", bindings.disabled_menu_item_count);
+    insert_json!("emptyMenuItemCount", bindings.empty_menu_item_count);
+    insert_json!("primaryMenuItemCount", bindings.primary_menu_item_count);
+    insert_json!("selectedMenuItemCount", bindings.selected_menu_item_count);
+    insert_json!("attentionMenuItemCount", bindings.attention_menu_item_count);
+    insert_json!("menuGroupCount", bindings.menu_group_count);
+    insert_json!("enabledMenuGroupCount", bindings.enabled_menu_group_count);
+    insert_json!("disabledMenuGroupCount", bindings.disabled_menu_group_count);
+    insert_json!("emptyMenuGroupCount", bindings.empty_menu_group_count);
+    insert_json!("primaryMenuGroupCount", bindings.primary_menu_group_count);
+    insert_json!("selectedMenuGroupCount", bindings.selected_menu_group_count);
+    insert_json!(
+        "attentionMenuGroupCount",
+        bindings.attention_menu_group_count
+    );
+    insert_json!("menuGroupShortcutCount", bindings.menu_group_shortcut_count);
+    insert_json!(
+        "enabledMenuGroupShortcutCount",
+        bindings.enabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutCount",
+        bindings.disabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutCount",
+        bindings.empty_menu_group_shortcut_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCount",
+        bindings.primary_menu_group_shortcut_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutCount",
+        bindings.selected_menu_group_shortcut_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCount",
+        bindings.attention_menu_group_shortcut_count
+    );
+    insert_json!(
+        "menuGroupShortcutBindingCount",
+        bindings.menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "enabledMenuGroupShortcutBindingCount",
+        bindings.enabled_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutBindingCount",
+        bindings.disabled_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutBindingCount",
+        bindings.empty_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutBindingCount",
+        bindings.primary_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutBindingCount",
+        bindings.selected_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutBindingCount",
+        bindings.attention_menu_group_shortcut_binding_count
+    );
+    value.insert(
+        "menuGroupShortcutBindings".to_string(),
+        serde_json::Value::Array(
+            bindings
+                .menu_group_shortcut_bindings
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_binding_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &bindings.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &bindings.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &bindings.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &bindings.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &bindings.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutsCapabilityId",
+        &bindings.dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindingsCapabilityId",
+        &bindings
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        bindings.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_binding_json_value(
+    binding: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutBinding,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &binding.id,
+        "shortcutId": &binding.shortcut_id,
+        "commandId": &binding.command_id,
+        "scope": &binding.scope,
+        "targetKind": &binding.target_kind,
+        "target": &binding.target,
+        "menuGroupId": &binding.menu_group_id,
+        "queueState": &binding.queue_state,
+        "label": &binding.label,
+        "summary": &binding.summary,
+        "accelerator": &binding.accelerator,
+        "menuItemIds": &binding.menu_item_ids,
+        "actionIds": &binding.action_ids,
+        "dispatchQueueItemCount": binding.dispatch_queue_item_count,
+        "badgeCount": binding.badge_count,
+        "position": binding.position,
+        "itemCount": binding.item_count,
+        "enabledItemCount": binding.enabled_item_count,
+        "disabledItemCount": binding.disabled_item_count,
+        "emptyItemCount": binding.empty_item_count,
+        "primaryItemCount": binding.primary_item_count,
+        "selectedItemCount": binding.selected_item_count,
+        "attentionItemCount": binding.attention_item_count,
+        "selected": binding.selected,
+        "defaultDispatch": binding.default_dispatch,
+        "active": binding.active,
+        "attention": binding.attention,
+        "disabled": binding.disabled,
+        "empty": binding.empty,
+        "enabled": binding.enabled,
+        "primary": binding.primary,
+        "disabledReason": &binding.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_json_value(
+    registry: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistry,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", registry.schema_version);
+    insert_json!("packageName", &registry.package_name);
+    insert_json!("sourceFingerprint", &registry.source_fingerprint);
+    insert_json!("title", &registry.title);
+    insert_json!("startupRoute", &registry.startup_route);
+    insert_json!("ready", registry.ready);
+    insert_json!("severity", &registry.severity);
+    insert_json!("attentionRequired", registry.attention_required);
+    insert_json!("registryId", &registry.registry_id);
+    insert_json!("commandGroup", &registry.command_group);
+    insert_json!("activeLaneId", &registry.active_lane_id);
+    insert_json!("activeTabId", &registry.active_tab_id);
+    insert_json!("activePanelId", &registry.active_panel_id);
+    insert_json!("activePanelCardId", &registry.active_panel_card_id);
+    insert_json!(
+        "activePanelCardActionId",
+        &registry.active_panel_card_action_id
+    );
+    insert_json!("activeMenuItemId", &registry.active_menu_item_id);
+    insert_json!("activeMenuGroupId", &registry.active_menu_group_id);
+    insert_json!(
+        "activeMenuGroupShortcutId",
+        &registry.active_menu_group_shortcut_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutBindingId",
+        &registry.active_menu_group_shortcut_binding_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutCommandId",
+        &registry.active_menu_group_shortcut_command_id
+    );
+    insert_json!("attentionLaneId", &registry.attention_lane_id);
+    insert_json!("attentionTabId", &registry.attention_tab_id);
+    insert_json!("attentionPanelId", &registry.attention_panel_id);
+    insert_json!("attentionPanelCardId", &registry.attention_panel_card_id);
+    insert_json!(
+        "attentionPanelCardActionId",
+        &registry.attention_panel_card_action_id
+    );
+    insert_json!("attentionMenuItemId", &registry.attention_menu_item_id);
+    insert_json!("attentionMenuGroupId", &registry.attention_menu_group_id);
+    insert_json!(
+        "attentionMenuGroupShortcutId",
+        &registry.attention_menu_group_shortcut_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutBindingId",
+        &registry.attention_menu_group_shortcut_binding_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandId",
+        &registry.attention_menu_group_shortcut_command_id
+    );
+    insert_json!("defaultMenuItemId", &registry.default_menu_item_id);
+    insert_json!("defaultMenuGroupId", &registry.default_menu_group_id);
+    insert_json!(
+        "defaultMenuGroupShortcutId",
+        &registry.default_menu_group_shortcut_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutBindingId",
+        &registry.default_menu_group_shortcut_binding_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandId",
+        &registry.default_menu_group_shortcut_command_id
+    );
+    insert_json!("primaryMenuItemId", &registry.primary_menu_item_id);
+    insert_json!("primaryMenuGroupId", &registry.primary_menu_group_id);
+    insert_json!(
+        "primaryMenuGroupShortcutId",
+        &registry.primary_menu_group_shortcut_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutBindingId",
+        &registry.primary_menu_group_shortcut_binding_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandId",
+        &registry.primary_menu_group_shortcut_command_id
+    );
+    insert_json!("laneCount", registry.lane_count);
+    insert_json!("tabCount", registry.tab_count);
+    insert_json!("enabledTabCount", registry.enabled_tab_count);
+    insert_json!("disabledTabCount", registry.disabled_tab_count);
+    insert_json!("panelCount", registry.panel_count);
+    insert_json!("enabledPanelCount", registry.enabled_panel_count);
+    insert_json!("disabledPanelCount", registry.disabled_panel_count);
+    insert_json!("emptyPanelCount", registry.empty_panel_count);
+    insert_json!("panelCardCount", registry.panel_card_count);
+    insert_json!("enabledPanelCardCount", registry.enabled_panel_card_count);
+    insert_json!("disabledPanelCardCount", registry.disabled_panel_card_count);
+    insert_json!("emptyPanelCardCount", registry.empty_panel_card_count);
+    insert_json!("panelCardActionCount", registry.panel_card_action_count);
+    insert_json!(
+        "enabledPanelCardActionCount",
+        registry.enabled_panel_card_action_count
+    );
+    insert_json!(
+        "disabledPanelCardActionCount",
+        registry.disabled_panel_card_action_count
+    );
+    insert_json!(
+        "emptyPanelCardActionCount",
+        registry.empty_panel_card_action_count
+    );
+    insert_json!(
+        "primaryPanelCardActionCount",
+        registry.primary_panel_card_action_count
+    );
+    insert_json!("menuItemCount", registry.menu_item_count);
+    insert_json!("enabledMenuItemCount", registry.enabled_menu_item_count);
+    insert_json!("disabledMenuItemCount", registry.disabled_menu_item_count);
+    insert_json!("emptyMenuItemCount", registry.empty_menu_item_count);
+    insert_json!("primaryMenuItemCount", registry.primary_menu_item_count);
+    insert_json!("selectedMenuItemCount", registry.selected_menu_item_count);
+    insert_json!("attentionMenuItemCount", registry.attention_menu_item_count);
+    insert_json!("menuGroupCount", registry.menu_group_count);
+    insert_json!("enabledMenuGroupCount", registry.enabled_menu_group_count);
+    insert_json!("disabledMenuGroupCount", registry.disabled_menu_group_count);
+    insert_json!("emptyMenuGroupCount", registry.empty_menu_group_count);
+    insert_json!("primaryMenuGroupCount", registry.primary_menu_group_count);
+    insert_json!("selectedMenuGroupCount", registry.selected_menu_group_count);
+    insert_json!(
+        "attentionMenuGroupCount",
+        registry.attention_menu_group_count
+    );
+    insert_json!("menuGroupShortcutCount", registry.menu_group_shortcut_count);
+    insert_json!(
+        "enabledMenuGroupShortcutCount",
+        registry.enabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutCount",
+        registry.disabled_menu_group_shortcut_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutCount",
+        registry.empty_menu_group_shortcut_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCount",
+        registry.primary_menu_group_shortcut_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutCount",
+        registry.selected_menu_group_shortcut_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCount",
+        registry.attention_menu_group_shortcut_count
+    );
+    insert_json!(
+        "menuGroupShortcutBindingCount",
+        registry.menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "enabledMenuGroupShortcutBindingCount",
+        registry.enabled_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutBindingCount",
+        registry.disabled_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutBindingCount",
+        registry.empty_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutBindingCount",
+        registry.primary_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutBindingCount",
+        registry.selected_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutBindingCount",
+        registry.attention_menu_group_shortcut_binding_count
+    );
+    insert_json!(
+        "menuGroupShortcutCommandCount",
+        registry.menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "enabledMenuGroupShortcutCommandCount",
+        registry.enabled_menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "disabledMenuGroupShortcutCommandCount",
+        registry.disabled_menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "visibleMenuGroupShortcutCommandCount",
+        registry.visible_menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "emptyMenuGroupShortcutCommandCount",
+        registry.empty_menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandCount",
+        registry.primary_menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "selectedMenuGroupShortcutCommandCount",
+        registry.selected_menu_group_shortcut_command_count
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandCount",
+        registry.attention_menu_group_shortcut_command_count
+    );
+    value.insert(
+        "menuGroupShortcutCommands".to_string(),
+        serde_json::Value::Array(
+            registry
+                .menu_group_shortcut_commands
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueCapabilityId",
+        &registry.dispatch_queue_capability_id
+    );
+    insert_json!(
+        "dispatchQueueSummaryCapabilityId",
+        &registry.dispatch_queue_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueDigestCapabilityId",
+        &registry.dispatch_queue_digest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLanesCapabilityId",
+        &registry.dispatch_queue_lanes_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabsCapabilityId",
+        &registry.dispatch_queue_lane_tabs_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelsCapabilityId",
+        &registry.dispatch_queue_lane_tab_panels_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardsCapabilityId",
+        &registry.dispatch_queue_lane_tab_panel_cards_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionsCapabilityId",
+        &registry.dispatch_queue_lane_tab_panel_card_actions_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuCapabilityId",
+        &registry.dispatch_queue_lane_tab_panel_card_action_menu_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupsCapabilityId",
+        &registry.dispatch_queue_lane_tab_panel_card_action_menu_groups_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutsCapabilityId",
+        &registry.dispatch_queue_lane_tab_panel_card_action_menu_group_shortcuts_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutBindingsCapabilityId",
+        &registry
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_bindings_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistryCapabilityId",
+        &registry
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        registry.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_json_value(
+    command: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommand,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &command.id,
+        "bindingId": &command.binding_id,
+        "shortcutId": &command.shortcut_id,
+        "commandId": &command.command_id,
+        "registryId": &command.registry_id,
+        "handlerId": &command.handler_id,
+        "commandGroup": &command.command_group,
+        "invocationKind": &command.invocation_kind,
+        "scope": &command.scope,
+        "targetKind": &command.target_kind,
+        "target": &command.target,
+        "menuGroupId": &command.menu_group_id,
+        "queueState": &command.queue_state,
+        "label": &command.label,
+        "summary": &command.summary,
+        "accelerator": &command.accelerator,
+        "menuItemIds": &command.menu_item_ids,
+        "actionIds": &command.action_ids,
+        "dispatchQueueItemCount": command.dispatch_queue_item_count,
+        "badgeCount": command.badge_count,
+        "position": command.position,
+        "itemCount": command.item_count,
+        "enabledItemCount": command.enabled_item_count,
+        "disabledItemCount": command.disabled_item_count,
+        "emptyItemCount": command.empty_item_count,
+        "primaryItemCount": command.primary_item_count,
+        "selectedItemCount": command.selected_item_count,
+        "attentionItemCount": command.attention_item_count,
+        "selected": command.selected,
+        "defaultDispatch": command.default_dispatch,
+        "active": command.active,
+        "attention": command.attention,
+        "disabled": command.disabled,
+        "empty": command.empty,
+        "enabled": command.enabled,
+        "primary": command.primary,
+        "visible": command.visible,
+        "disabledReason": &command.disabled_reason,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_json_value(
+    palette: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPalette,
+) -> serde_json::Value {
+    serde_json::json!({
+        "schemaVersion": palette.schema_version,
+        "packageName": &palette.package_name,
+        "sourceFingerprint": &palette.source_fingerprint,
+        "title": &palette.title,
+        "startupRoute": &palette.startup_route,
+        "ready": palette.ready,
+        "severity": &palette.severity,
+        "attentionRequired": palette.attention_required,
+        "paletteId": &palette.palette_id,
+        "registryId": &palette.registry_id,
+        "commandGroup": &palette.command_group,
+        "activeMenuGroupShortcutCommandId": &palette.active_menu_group_shortcut_command_id,
+        "activeMenuGroupShortcutCommandPaletteItemId":
+            &palette.active_menu_group_shortcut_command_palette_item_id,
+        "attentionMenuGroupShortcutCommandId": &palette.attention_menu_group_shortcut_command_id,
+        "attentionMenuGroupShortcutCommandPaletteItemId":
+            &palette.attention_menu_group_shortcut_command_palette_item_id,
+        "defaultMenuGroupShortcutCommandId": &palette.default_menu_group_shortcut_command_id,
+        "defaultMenuGroupShortcutCommandPaletteItemId":
+            &palette.default_menu_group_shortcut_command_palette_item_id,
+        "primaryMenuGroupShortcutCommandId": &palette.primary_menu_group_shortcut_command_id,
+        "primaryMenuGroupShortcutCommandPaletteItemId":
+            &palette.primary_menu_group_shortcut_command_palette_item_id,
+        "menuGroupShortcutCommandCount": palette.menu_group_shortcut_command_count,
+        "enabledMenuGroupShortcutCommandCount":
+            palette.enabled_menu_group_shortcut_command_count,
+        "disabledMenuGroupShortcutCommandCount":
+            palette.disabled_menu_group_shortcut_command_count,
+        "visibleMenuGroupShortcutCommandCount":
+            palette.visible_menu_group_shortcut_command_count,
+        "emptyMenuGroupShortcutCommandCount": palette.empty_menu_group_shortcut_command_count,
+        "primaryMenuGroupShortcutCommandCount":
+            palette.primary_menu_group_shortcut_command_count,
+        "selectedMenuGroupShortcutCommandCount":
+            palette.selected_menu_group_shortcut_command_count,
+        "attentionMenuGroupShortcutCommandCount":
+            palette.attention_menu_group_shortcut_command_count,
+        "commandPaletteItemCount": palette.command_palette_item_count,
+        "selectableCommandPaletteItemCount": palette.selectable_command_palette_item_count,
+        "disabledCommandPaletteItemCount": palette.disabled_command_palette_item_count,
+        "visibleCommandPaletteItemCount": palette.visible_command_palette_item_count,
+        "emptyCommandPaletteItemCount": palette.empty_command_palette_item_count,
+        "primaryCommandPaletteItemCount": palette.primary_command_palette_item_count,
+        "selectedCommandPaletteItemCount": palette.selected_command_palette_item_count,
+        "attentionCommandPaletteItemCount": palette.attention_command_palette_item_count,
+        "commandPaletteItems": palette
+            .command_palette_items
+            .iter()
+            .map(
+                app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_item_json_value,
+            )
+            .collect::<Vec<_>>(),
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandRegistryCapabilityId":
+            &palette
+                .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_registry_capability_id,
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteCapabilityId":
+            &palette
+                .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id,
+        "artifactCapabilityCount": palette.artifact_capability_count,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_item_json_value(
+    item: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteItem,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("id", &item.id);
+    insert_json!("paletteId", &item.palette_id);
+    insert_json!("commandEntryId", &item.command_entry_id);
+    insert_json!("bindingId", &item.binding_id);
+    insert_json!("shortcutId", &item.shortcut_id);
+    insert_json!("commandId", &item.command_id);
+    insert_json!("registryId", &item.registry_id);
+    insert_json!("handlerId", &item.handler_id);
+    insert_json!("commandGroup", &item.command_group);
+    insert_json!("invocationKind", &item.invocation_kind);
+    insert_json!("scope", &item.scope);
+    insert_json!("targetKind", &item.target_kind);
+    insert_json!("target", &item.target);
+    insert_json!("menuGroupId", &item.menu_group_id);
+    insert_json!("queueState", &item.queue_state);
+    insert_json!("label", &item.label);
+    insert_json!("summary", &item.summary);
+    insert_json!("accelerator", &item.accelerator);
+    insert_json!("searchText", &item.search_text);
+    insert_json!("keywords", &item.keywords);
+    insert_json!("menuItemIds", &item.menu_item_ids);
+    insert_json!("actionIds", &item.action_ids);
+    insert_json!("dispatchQueueItemCount", item.dispatch_queue_item_count);
+    insert_json!("badgeCount", item.badge_count);
+    insert_json!("rank", item.rank);
+    insert_json!("position", item.position);
+    insert_json!("itemCount", item.item_count);
+    insert_json!("enabledItemCount", item.enabled_item_count);
+    insert_json!("disabledItemCount", item.disabled_item_count);
+    insert_json!("emptyItemCount", item.empty_item_count);
+    insert_json!("primaryItemCount", item.primary_item_count);
+    insert_json!("selectedItemCount", item.selected_item_count);
+    insert_json!("attentionItemCount", item.attention_item_count);
+    insert_json!("selectable", item.selectable);
+    insert_json!("selected", item.selected);
+    insert_json!("defaultDispatch", item.default_dispatch);
+    insert_json!("active", item.active);
+    insert_json!("attention", item.attention);
+    insert_json!("disabled", item.disabled);
+    insert_json!("empty", item.empty);
+    insert_json!("enabled", item.enabled);
+    insert_json!("primary", item.primary);
+    insert_json!("visible", item.visible);
+    insert_json!("disabledReason", &item.disabled_reason);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_json_value(
+    search_index: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndex,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", search_index.schema_version);
+    insert_json!("packageName", &search_index.package_name);
+    insert_json!("sourceFingerprint", &search_index.source_fingerprint);
+    insert_json!("title", &search_index.title);
+    insert_json!("startupRoute", &search_index.startup_route);
+    insert_json!("ready", search_index.ready);
+    insert_json!("severity", &search_index.severity);
+    insert_json!("attentionRequired", search_index.attention_required);
+    insert_json!("searchIndexId", &search_index.search_index_id);
+    insert_json!("paletteId", &search_index.palette_id);
+    insert_json!("registryId", &search_index.registry_id);
+    insert_json!("commandGroup", &search_index.command_group);
+    insert_json!(
+        "activeMenuGroupShortcutCommandPaletteItemId",
+        &search_index.active_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.active_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandPaletteItemId",
+        &search_index.attention_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.attention_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandPaletteItemId",
+        &search_index.default_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.default_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandPaletteItemId",
+        &search_index.primary_menu_group_shortcut_command_palette_item_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandSearchIndexEntryId",
+        &search_index.primary_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "commandPaletteItemCount",
+        search_index.command_palette_item_count
+    );
+    insert_json!(
+        "selectableCommandPaletteItemCount",
+        search_index.selectable_command_palette_item_count
+    );
+    insert_json!(
+        "disabledCommandPaletteItemCount",
+        search_index.disabled_command_palette_item_count
+    );
+    insert_json!(
+        "visibleCommandPaletteItemCount",
+        search_index.visible_command_palette_item_count
+    );
+    insert_json!(
+        "emptyCommandPaletteItemCount",
+        search_index.empty_command_palette_item_count
+    );
+    insert_json!(
+        "primaryCommandPaletteItemCount",
+        search_index.primary_command_palette_item_count
+    );
+    insert_json!(
+        "selectedCommandPaletteItemCount",
+        search_index.selected_command_palette_item_count
+    );
+    insert_json!(
+        "attentionCommandPaletteItemCount",
+        search_index.attention_command_palette_item_count
+    );
+    insert_json!(
+        "searchIndexEntryCount",
+        search_index.search_index_entry_count
+    );
+    insert_json!("searchTokenCount", search_index.search_token_count);
+    insert_json!(
+        "selectableSearchIndexEntryCount",
+        search_index.selectable_search_index_entry_count
+    );
+    insert_json!(
+        "disabledSearchIndexEntryCount",
+        search_index.disabled_search_index_entry_count
+    );
+    insert_json!(
+        "visibleSearchIndexEntryCount",
+        search_index.visible_search_index_entry_count
+    );
+    insert_json!(
+        "emptySearchIndexEntryCount",
+        search_index.empty_search_index_entry_count
+    );
+    insert_json!(
+        "primarySearchIndexEntryCount",
+        search_index.primary_search_index_entry_count
+    );
+    insert_json!(
+        "selectedSearchIndexEntryCount",
+        search_index.selected_search_index_entry_count
+    );
+    insert_json!(
+        "attentionSearchIndexEntryCount",
+        search_index.attention_search_index_entry_count
+    );
+    value.insert(
+        "searchIndexEntries".to_string(),
+        serde_json::Value::Array(
+            search_index
+                .search_index_entries
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_entry_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteCapabilityId",
+        &search_index
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexCapabilityId",
+        &search_index
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        search_index.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_entry_json_value(
+    entry: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexEntry,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("id", &entry.id);
+    insert_json!("searchIndexId", &entry.search_index_id);
+    insert_json!("paletteItemId", &entry.palette_item_id);
+    insert_json!("commandEntryId", &entry.command_entry_id);
+    insert_json!("bindingId", &entry.binding_id);
+    insert_json!("shortcutId", &entry.shortcut_id);
+    insert_json!("commandId", &entry.command_id);
+    insert_json!("registryId", &entry.registry_id);
+    insert_json!("handlerId", &entry.handler_id);
+    insert_json!("commandGroup", &entry.command_group);
+    insert_json!("invocationKind", &entry.invocation_kind);
+    insert_json!("scope", &entry.scope);
+    insert_json!("targetKind", &entry.target_kind);
+    insert_json!("target", &entry.target);
+    insert_json!("menuGroupId", &entry.menu_group_id);
+    insert_json!("queueState", &entry.queue_state);
+    insert_json!("label", &entry.label);
+    insert_json!("summary", &entry.summary);
+    insert_json!("accelerator", &entry.accelerator);
+    insert_json!("searchText", &entry.search_text);
+    insert_json!("normalizedSearchText", &entry.normalized_search_text);
+    insert_json!("searchTokens", &entry.search_tokens);
+    insert_json!("keywords", &entry.keywords);
+    insert_json!("menuItemIds", &entry.menu_item_ids);
+    insert_json!("actionIds", &entry.action_ids);
+    insert_json!("dispatchQueueItemCount", entry.dispatch_queue_item_count);
+    insert_json!("badgeCount", entry.badge_count);
+    insert_json!("rank", entry.rank);
+    insert_json!("position", entry.position);
+    insert_json!("itemCount", entry.item_count);
+    insert_json!("selectable", entry.selectable);
+    insert_json!("selected", entry.selected);
+    insert_json!("defaultDispatch", entry.default_dispatch);
+    insert_json!("active", entry.active);
+    insert_json!("attention", entry.attention);
+    insert_json!("disabled", entry.disabled);
+    insert_json!("empty", entry.empty);
+    insert_json!("enabled", entry.enabled);
+    insert_json!("primary", entry.primary);
+    insert_json!("visible", entry.visible);
+    insert_json!("disabledReason", &entry.disabled_reason);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_json_value(
+    results: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResults,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", results.schema_version);
+    insert_json!("packageName", &results.package_name);
+    insert_json!("sourceFingerprint", &results.source_fingerprint);
+    insert_json!("title", &results.title);
+    insert_json!("startupRoute", &results.startup_route);
+    insert_json!("ready", results.ready);
+    insert_json!("severity", &results.severity);
+    insert_json!("attentionRequired", results.attention_required);
+    insert_json!("searchResultsId", &results.search_results_id);
+    insert_json!("searchIndexId", &results.search_index_id);
+    insert_json!("paletteId", &results.palette_id);
+    insert_json!("registryId", &results.registry_id);
+    insert_json!("commandGroup", &results.command_group);
+    insert_json!("query", &results.query);
+    insert_json!("normalizedQuery", &results.normalized_query);
+    insert_json!("queryTokens", &results.query_tokens);
+    insert_json!("queryTokenCount", results.query_token_count);
+    insert_json!(
+        "activeMenuGroupShortcutCommandSearchIndexEntryId",
+        &results.active_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "activeMenuGroupShortcutCommandSearchResultId",
+        &results.active_menu_group_shortcut_command_search_result_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandSearchIndexEntryId",
+        &results.attention_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "attentionMenuGroupShortcutCommandSearchResultId",
+        &results.attention_menu_group_shortcut_command_search_result_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandSearchIndexEntryId",
+        &results.default_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "defaultMenuGroupShortcutCommandSearchResultId",
+        &results.default_menu_group_shortcut_command_search_result_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandSearchIndexEntryId",
+        &results.primary_menu_group_shortcut_command_search_index_entry_id
+    );
+    insert_json!(
+        "primaryMenuGroupShortcutCommandSearchResultId",
+        &results.primary_menu_group_shortcut_command_search_result_id
+    );
+    insert_json!("searchIndexEntryCount", results.search_index_entry_count);
+    insert_json!(
+        "visibleSearchIndexEntryCount",
+        results.visible_search_index_entry_count
+    );
+    insert_json!("searchResultCount", results.search_result_count);
+    insert_json!(
+        "selectableSearchResultCount",
+        results.selectable_search_result_count
+    );
+    insert_json!(
+        "disabledSearchResultCount",
+        results.disabled_search_result_count
+    );
+    insert_json!(
+        "visibleSearchResultCount",
+        results.visible_search_result_count
+    );
+    insert_json!("emptySearchResultCount", results.empty_search_result_count);
+    insert_json!(
+        "primarySearchResultCount",
+        results.primary_search_result_count
+    );
+    insert_json!(
+        "selectedSearchResultCount",
+        results.selected_search_result_count
+    );
+    insert_json!(
+        "attentionSearchResultCount",
+        results.attention_search_result_count
+    );
+    insert_json!("matchedQueryTokenCount", results.matched_query_token_count);
+    insert_json!("noResults", results.no_results);
+    insert_json!("emptyStateTitle", &results.empty_state_title);
+    insert_json!("emptyStateMessage", &results.empty_state_message);
+    value.insert(
+        "searchResults".to_string(),
+        serde_json::Value::Array(
+            results
+                .search_results
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_result_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchIndexCapabilityId",
+        &results
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_index_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResultsCapabilityId",
+        &results
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id
+    );
+    insert_json!("artifactCapabilityCount", results.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_result_json_value(
+    result: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResult,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("id", &result.id);
+    insert_json!("searchResultsId", &result.search_results_id);
+    insert_json!("searchIndexEntryId", &result.search_index_entry_id);
+    insert_json!("searchIndexId", &result.search_index_id);
+    insert_json!("paletteItemId", &result.palette_item_id);
+    insert_json!("commandEntryId", &result.command_entry_id);
+    insert_json!("bindingId", &result.binding_id);
+    insert_json!("shortcutId", &result.shortcut_id);
+    insert_json!("commandId", &result.command_id);
+    insert_json!("registryId", &result.registry_id);
+    insert_json!("handlerId", &result.handler_id);
+    insert_json!("commandGroup", &result.command_group);
+    insert_json!("invocationKind", &result.invocation_kind);
+    insert_json!("scope", &result.scope);
+    insert_json!("targetKind", &result.target_kind);
+    insert_json!("target", &result.target);
+    insert_json!("menuGroupId", &result.menu_group_id);
+    insert_json!("queueState", &result.queue_state);
+    insert_json!("label", &result.label);
+    insert_json!("summary", &result.summary);
+    insert_json!("accelerator", &result.accelerator);
+    insert_json!("searchText", &result.search_text);
+    insert_json!("normalizedSearchText", &result.normalized_search_text);
+    insert_json!("searchTokens", &result.search_tokens);
+    insert_json!("keywords", &result.keywords);
+    insert_json!("matchedQueryTokens", &result.matched_query_tokens);
+    insert_json!("matchedQueryTokenCount", result.matched_query_token_count);
+    insert_json!("menuItemIds", &result.menu_item_ids);
+    insert_json!("actionIds", &result.action_ids);
+    insert_json!("dispatchQueueItemCount", result.dispatch_queue_item_count);
+    insert_json!("badgeCount", result.badge_count);
+    insert_json!("rank", result.rank);
+    insert_json!("position", result.position);
+    insert_json!("resultPosition", result.result_position);
+    insert_json!("itemCount", result.item_count);
+    insert_json!("selectable", result.selectable);
+    insert_json!("selected", result.selected);
+    insert_json!("defaultDispatch", result.default_dispatch);
+    insert_json!("active", result.active);
+    insert_json!("attention", result.attention);
+    insert_json!("disabled", result.disabled);
+    insert_json!("empty", result.empty);
+    insert_json!("enabled", result.enabled);
+    insert_json!("primary", result.primary);
+    insert_json!("visible", result.visible);
+    insert_json!("disabledReason", &result.disabled_reason);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_json_value(
+    selection: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelection,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", selection.schema_version);
+    insert_json!("packageName", &selection.package_name);
+    insert_json!("sourceFingerprint", &selection.source_fingerprint);
+    insert_json!("title", &selection.title);
+    insert_json!("startupRoute", &selection.startup_route);
+    insert_json!("ready", selection.ready);
+    insert_json!("severity", &selection.severity);
+    insert_json!("attentionRequired", selection.attention_required);
+    insert_json!("searchSelectionId", &selection.search_selection_id);
+    insert_json!("searchResultsId", &selection.search_results_id);
+    insert_json!("searchIndexId", &selection.search_index_id);
+    insert_json!("paletteId", &selection.palette_id);
+    insert_json!("registryId", &selection.registry_id);
+    insert_json!("commandGroup", &selection.command_group);
+    insert_json!("query", &selection.query);
+    insert_json!("normalizedQuery", &selection.normalized_query);
+    insert_json!("queryTokens", &selection.query_tokens);
+    insert_json!("queryTokenCount", selection.query_token_count);
+    insert_json!(
+        "requestedSearchResultId",
+        &selection.requested_search_result_id
+    );
+    insert_json!("selectionSource", &selection.selection_source);
+    insert_json!("selectionState", &selection.selection_state);
+    insert_json!("hasSelection", selection.has_selection);
+    insert_json!("canInvoke", selection.can_invoke);
+    insert_json!("blockedReason", &selection.blocked_reason);
+    insert_json!(
+        "selectedSearchResultId",
+        &selection.selected_search_result_id
+    );
+    insert_json!(
+        "selectedSearchIndexEntryId",
+        &selection.selected_search_index_entry_id
+    );
+    insert_json!("selectedPaletteItemId", &selection.selected_palette_item_id);
+    insert_json!(
+        "selectedCommandEntryId",
+        &selection.selected_command_entry_id
+    );
+    insert_json!("selectedBindingId", &selection.selected_binding_id);
+    insert_json!("selectedShortcutId", &selection.selected_shortcut_id);
+    insert_json!("selectedCommandId", &selection.selected_command_id);
+    insert_json!("selectedRegistryId", &selection.selected_registry_id);
+    insert_json!("selectedHandlerId", &selection.selected_handler_id);
+    insert_json!(
+        "selectedInvocationKind",
+        &selection.selected_invocation_kind
+    );
+    insert_json!("selectedScope", &selection.selected_scope);
+    insert_json!("selectedTargetKind", &selection.selected_target_kind);
+    insert_json!("selectedTarget", &selection.selected_target);
+    insert_json!("selectedMenuGroupId", &selection.selected_menu_group_id);
+    insert_json!("selectedQueueState", &selection.selected_queue_state);
+    insert_json!("selectedLabel", &selection.selected_label);
+    insert_json!("selectedSummary", &selection.selected_summary);
+    insert_json!("selectedAccelerator", &selection.selected_accelerator);
+    insert_json!("selectedSearchText", &selection.selected_search_text);
+    insert_json!(
+        "selectedNormalizedSearchText",
+        &selection.selected_normalized_search_text
+    );
+    insert_json!("selectedRank", selection.selected_rank);
+    insert_json!("selectedPosition", selection.selected_position);
+    insert_json!("selectedResultPosition", selection.selected_result_position);
+    insert_json!("selectedItemCount", selection.selected_item_count);
+    insert_json!(
+        "selectedDispatchQueueItemCount",
+        selection.selected_dispatch_queue_item_count
+    );
+    insert_json!("selectedBadgeCount", selection.selected_badge_count);
+    insert_json!("selectedMenuItemIds", &selection.selected_menu_item_ids);
+    insert_json!("selectedActionIds", &selection.selected_action_ids);
+    insert_json!("selectedSearchTokens", &selection.selected_search_tokens);
+    insert_json!("selectedKeywords", &selection.selected_keywords);
+    insert_json!(
+        "selectedMatchedQueryTokens",
+        &selection.selected_matched_query_tokens
+    );
+    insert_json!(
+        "selectedMatchedQueryTokenCount",
+        selection.selected_matched_query_token_count
+    );
+    insert_json!("selectionSelectable", selection.selection_selectable);
+    insert_json!("selectionSelected", selection.selection_selected);
+    insert_json!("selectionDefault", selection.selection_default);
+    insert_json!("selectionActive", selection.selection_active);
+    insert_json!("selectionAttention", selection.selection_attention);
+    insert_json!("selectionDisabled", selection.selection_disabled);
+    insert_json!("selectionEmpty", selection.selection_empty);
+    insert_json!("selectionEnabled", selection.selection_enabled);
+    insert_json!("selectionPrimary", selection.selection_primary);
+    insert_json!("selectionVisible", selection.selection_visible);
+    insert_json!("activeSearchResultId", &selection.active_search_result_id);
+    insert_json!(
+        "attentionSearchResultId",
+        &selection.attention_search_result_id
+    );
+    insert_json!("defaultSearchResultId", &selection.default_search_result_id);
+    insert_json!("primarySearchResultId", &selection.primary_search_result_id);
+    insert_json!("searchResultCount", selection.search_result_count);
+    insert_json!(
+        "selectableSearchResultCount",
+        selection.selectable_search_result_count
+    );
+    insert_json!(
+        "disabledSearchResultCount",
+        selection.disabled_search_result_count
+    );
+    insert_json!(
+        "visibleSearchResultCount",
+        selection.visible_search_result_count
+    );
+    insert_json!(
+        "emptySearchResultCount",
+        selection.empty_search_result_count
+    );
+    insert_json!(
+        "primarySearchResultCount",
+        selection.primary_search_result_count
+    );
+    insert_json!(
+        "selectedSearchResultCount",
+        selection.selected_search_result_count
+    );
+    insert_json!(
+        "attentionSearchResultCount",
+        selection.attention_search_result_count
+    );
+    insert_json!("noResults", selection.no_results);
+    insert_json!("emptyStateTitle", &selection.empty_state_title);
+    insert_json!("emptyStateMessage", &selection.empty_state_message);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchResultsCapabilityId",
+        &selection
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_results_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelectionCapabilityId",
+        &selection
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        selection.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_json_value(
+    invocation: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocation,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", invocation.schema_version);
+    insert_json!("packageName", &invocation.package_name);
+    insert_json!("sourceFingerprint", &invocation.source_fingerprint);
+    insert_json!("title", &invocation.title);
+    insert_json!("startupRoute", &invocation.startup_route);
+    insert_json!("ready", invocation.ready);
+    insert_json!("severity", &invocation.severity);
+    insert_json!("attentionRequired", invocation.attention_required);
+    insert_json!("searchInvocationId", &invocation.search_invocation_id);
+    insert_json!("searchSelectionId", &invocation.search_selection_id);
+    insert_json!("searchResultsId", &invocation.search_results_id);
+    insert_json!("searchIndexId", &invocation.search_index_id);
+    insert_json!("paletteId", &invocation.palette_id);
+    insert_json!("registryId", &invocation.registry_id);
+    insert_json!("commandGroup", &invocation.command_group);
+    insert_json!("query", &invocation.query);
+    insert_json!("normalizedQuery", &invocation.normalized_query);
+    insert_json!("queryTokens", &invocation.query_tokens);
+    insert_json!("queryTokenCount", invocation.query_token_count);
+    insert_json!(
+        "requestedSearchResultId",
+        &invocation.requested_search_result_id
+    );
+    insert_json!(
+        "selectedSearchResultId",
+        &invocation.selected_search_result_id
+    );
+    insert_json!(
+        "selectedSearchIndexEntryId",
+        &invocation.selected_search_index_entry_id
+    );
+    insert_json!(
+        "selectedPaletteItemId",
+        &invocation.selected_palette_item_id
+    );
+    insert_json!(
+        "selectedCommandEntryId",
+        &invocation.selected_command_entry_id
+    );
+    insert_json!("selectedBindingId", &invocation.selected_binding_id);
+    insert_json!("selectedShortcutId", &invocation.selected_shortcut_id);
+    insert_json!("selectedCommandId", &invocation.selected_command_id);
+    insert_json!("selectedRegistryId", &invocation.selected_registry_id);
+    insert_json!("selectedHandlerId", &invocation.selected_handler_id);
+    insert_json!(
+        "selectedInvocationKind",
+        &invocation.selected_invocation_kind
+    );
+    insert_json!("selectedScope", &invocation.selected_scope);
+    insert_json!("selectedTargetKind", &invocation.selected_target_kind);
+    insert_json!("selectedTarget", &invocation.selected_target);
+    insert_json!("selectedMenuGroupId", &invocation.selected_menu_group_id);
+    insert_json!("selectedQueueState", &invocation.selected_queue_state);
+    insert_json!("selectedLabel", &invocation.selected_label);
+    insert_json!("selectedSummary", &invocation.selected_summary);
+    insert_json!("selectedAccelerator", &invocation.selected_accelerator);
+    insert_json!("selectedMenuItemIds", &invocation.selected_menu_item_ids);
+    insert_json!("selectedActionIds", &invocation.selected_action_ids);
+    insert_json!(
+        "selectedMatchedQueryTokens",
+        &invocation.selected_matched_query_tokens
+    );
+    insert_json!(
+        "selectedMatchedQueryTokenCount",
+        invocation.selected_matched_query_token_count
+    );
+    insert_json!("selectionSource", &invocation.selection_source);
+    insert_json!("selectionState", &invocation.selection_state);
+    insert_json!("hasSelection", invocation.has_selection);
+    insert_json!("selectionSelectable", invocation.selection_selectable);
+    insert_json!("selectionEnabled", invocation.selection_enabled);
+    insert_json!("selectionDisabled", invocation.selection_disabled);
+    insert_json!("selectionEmpty", invocation.selection_empty);
+    insert_json!("selectionVisible", invocation.selection_visible);
+    insert_json!("selectionActive", invocation.selection_active);
+    insert_json!("selectionAttention", invocation.selection_attention);
+    insert_json!("selectionDefault", invocation.selection_default);
+    insert_json!("selectionPrimary", invocation.selection_primary);
+    insert_json!("canInvoke", invocation.can_invoke);
+    insert_json!("canDispatch", invocation.can_dispatch);
+    insert_json!("invocationState", &invocation.invocation_state);
+    insert_json!("invocationAction", &invocation.invocation_action);
+    insert_json!("invocationMessage", &invocation.invocation_message);
+    insert_json!("blockedReason", &invocation.blocked_reason);
+    insert_json!("activeSearchResultId", &invocation.active_search_result_id);
+    insert_json!(
+        "attentionSearchResultId",
+        &invocation.attention_search_result_id
+    );
+    insert_json!(
+        "defaultSearchResultId",
+        &invocation.default_search_result_id
+    );
+    insert_json!(
+        "primarySearchResultId",
+        &invocation.primary_search_result_id
+    );
+    insert_json!("searchResultCount", invocation.search_result_count);
+    insert_json!(
+        "selectableSearchResultCount",
+        invocation.selectable_search_result_count
+    );
+    insert_json!(
+        "disabledSearchResultCount",
+        invocation.disabled_search_result_count
+    );
+    insert_json!(
+        "visibleSearchResultCount",
+        invocation.visible_search_result_count
+    );
+    insert_json!("noResults", invocation.no_results);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchSelectionCapabilityId",
+        &invocation
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_selection_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationCapabilityId",
+        &invocation
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        invocation.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_json_value(
+    receipt: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipt,
+) -> serde_json::Value {
+    serde_json::json!({
+        "id": &receipt.id,
+        "searchInvocationId": &receipt.search_invocation_id,
+        "searchSelectionId": &receipt.search_selection_id,
+        "selectedSearchResultId": &receipt.selected_search_result_id,
+        "selectedCommandId": &receipt.selected_command_id,
+        "selectedHandlerId": &receipt.selected_handler_id,
+        "selectedTarget": &receipt.selected_target,
+        "selectedLabel": &receipt.selected_label,
+        "selectedQueueState": &receipt.selected_queue_state,
+        "receiptState": &receipt.receipt_state,
+        "dispatchAction": &receipt.dispatch_action,
+        "dispatchAccepted": receipt.dispatch_accepted,
+        "dispatchBlocked": receipt.dispatch_blocked,
+        "blockedReason": &receipt.blocked_reason,
+        "message": &receipt.message,
+        "position": receipt.position,
+        "attention": receipt.attention,
+    })
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_json_value(
+    receipts: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceipts,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+    let receipt_values: Vec<serde_json::Value> = receipts
+        .receipts
+        .iter()
+        .map(app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_json_value)
+        .collect();
+
+    insert_json!("schemaVersion", receipts.schema_version);
+    insert_json!("packageName", &receipts.package_name);
+    insert_json!("sourceFingerprint", &receipts.source_fingerprint);
+    insert_json!("title", &receipts.title);
+    insert_json!("startupRoute", &receipts.startup_route);
+    insert_json!("ready", receipts.ready);
+    insert_json!("severity", &receipts.severity);
+    insert_json!("attentionRequired", receipts.attention_required);
+    insert_json!("receiptStreamId", &receipts.receipt_stream_id);
+    insert_json!("searchInvocationId", &receipts.search_invocation_id);
+    insert_json!("searchSelectionId", &receipts.search_selection_id);
+    insert_json!("searchResultsId", &receipts.search_results_id);
+    insert_json!("searchIndexId", &receipts.search_index_id);
+    insert_json!("paletteId", &receipts.palette_id);
+    insert_json!("registryId", &receipts.registry_id);
+    insert_json!("commandGroup", &receipts.command_group);
+    insert_json!("query", &receipts.query);
+    insert_json!("normalizedQuery", &receipts.normalized_query);
+    insert_json!("queryTokens", &receipts.query_tokens);
+    insert_json!("queryTokenCount", receipts.query_token_count);
+    insert_json!("invocationState", &receipts.invocation_state);
+    insert_json!("canDispatch", receipts.can_dispatch);
+    insert_json!("latestReceiptId", &receipts.latest_receipt_id);
+    insert_json!("acceptedReceiptId", &receipts.accepted_receipt_id);
+    insert_json!("blockedReceiptId", &receipts.blocked_receipt_id);
+    insert_json!("emptyReceiptId", &receipts.empty_receipt_id);
+    insert_json!("receiptCount", receipts.receipt_count);
+    insert_json!("acceptedReceiptCount", receipts.accepted_receipt_count);
+    insert_json!("blockedReceiptCount", receipts.blocked_receipt_count);
+    insert_json!("emptyReceiptCount", receipts.empty_receipt_count);
+    insert_json!("receipts", receipt_values);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationCapabilityId",
+        &receipts
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptsCapabilityId",
+        &receipts
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        receipts.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_json_value(
+    summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummary,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", summary.schema_version);
+    insert_json!("packageName", &summary.package_name);
+    insert_json!("sourceFingerprint", &summary.source_fingerprint);
+    insert_json!("title", &summary.title);
+    insert_json!("startupRoute", &summary.startup_route);
+    insert_json!("ready", summary.ready);
+    insert_json!("severity", &summary.severity);
+    insert_json!("attentionRequired", summary.attention_required);
+    insert_json!("receiptSummaryId", &summary.receipt_summary_id);
+    insert_json!("receiptStreamId", &summary.receipt_stream_id);
+    insert_json!("searchInvocationId", &summary.search_invocation_id);
+    insert_json!("searchSelectionId", &summary.search_selection_id);
+    insert_json!("searchResultsId", &summary.search_results_id);
+    insert_json!("searchIndexId", &summary.search_index_id);
+    insert_json!("paletteId", &summary.palette_id);
+    insert_json!("registryId", &summary.registry_id);
+    insert_json!("commandGroup", &summary.command_group);
+    insert_json!("query", &summary.query);
+    insert_json!("normalizedQuery", &summary.normalized_query);
+    insert_json!("queryTokens", &summary.query_tokens);
+    insert_json!("queryTokenCount", summary.query_token_count);
+    insert_json!("invocationState", &summary.invocation_state);
+    insert_json!("receiptState", &summary.receipt_state);
+    insert_json!("statusKind", &summary.status_kind);
+    insert_json!("statusTitle", &summary.status_title);
+    insert_json!("statusMessage", &summary.status_message);
+    insert_json!("canDispatch", summary.can_dispatch);
+    insert_json!("dispatchAccepted", summary.dispatch_accepted);
+    insert_json!("dispatchBlocked", summary.dispatch_blocked);
+    insert_json!("dispatchAction", &summary.dispatch_action);
+    insert_json!("latestReceiptId", &summary.latest_receipt_id);
+    insert_json!("selectedSearchResultId", &summary.selected_search_result_id);
+    insert_json!("selectedCommandId", &summary.selected_command_id);
+    insert_json!("selectedHandlerId", &summary.selected_handler_id);
+    insert_json!("selectedTarget", &summary.selected_target);
+    insert_json!("selectedLabel", &summary.selected_label);
+    insert_json!("selectedQueueState", &summary.selected_queue_state);
+    insert_json!("blockedReason", &summary.blocked_reason);
+    insert_json!("receiptCount", summary.receipt_count);
+    insert_json!("acceptedReceiptCount", summary.accepted_receipt_count);
+    insert_json!("blockedReceiptCount", summary.blocked_receipt_count);
+    insert_json!("emptyReceiptCount", summary.empty_receipt_count);
+    insert_json!("hasReceipts", summary.has_receipts);
+    insert_json!("attention", summary.attention);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptsCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipts_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummaryCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id
+    );
+    insert_json!("artifactCapabilityCount", summary.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json_value(
+    notification: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotification,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", notification.schema_version);
+    insert_json!("packageName", &notification.package_name);
+    insert_json!("sourceFingerprint", &notification.source_fingerprint);
+    insert_json!("title", &notification.title);
+    insert_json!("startupRoute", &notification.startup_route);
+    insert_json!("ready", notification.ready);
+    insert_json!("severity", &notification.severity);
+    insert_json!("attentionRequired", notification.attention_required);
+    insert_json!(
+        "receiptNotificationId",
+        &notification.receipt_notification_id
+    );
+    insert_json!("receiptSummaryId", &notification.receipt_summary_id);
+    insert_json!("receiptStreamId", &notification.receipt_stream_id);
+    insert_json!("searchInvocationId", &notification.search_invocation_id);
+    insert_json!("searchSelectionId", &notification.search_selection_id);
+    insert_json!("searchResultsId", &notification.search_results_id);
+    insert_json!("searchIndexId", &notification.search_index_id);
+    insert_json!("paletteId", &notification.palette_id);
+    insert_json!("registryId", &notification.registry_id);
+    insert_json!("commandGroup", &notification.command_group);
+    insert_json!("query", &notification.query);
+    insert_json!("normalizedQuery", &notification.normalized_query);
+    insert_json!("queryTokens", &notification.query_tokens);
+    insert_json!("queryTokenCount", notification.query_token_count);
+    insert_json!("invocationState", &notification.invocation_state);
+    insert_json!("receiptState", &notification.receipt_state);
+    insert_json!("notificationKind", &notification.notification_kind);
+    insert_json!("notificationLevel", &notification.notification_level);
+    insert_json!("notificationTitle", &notification.notification_title);
+    insert_json!("notificationBody", &notification.notification_body);
+    insert_json!(
+        "notificationActionLabel",
+        &notification.notification_action_label
+    );
+    insert_json!(
+        "notificationActionTarget",
+        &notification.notification_action_target
+    );
+    insert_json!(
+        "notificationDismissible",
+        notification.notification_dismissible
+    );
+    insert_json!("shouldAnnounce", notification.should_announce);
+    insert_json!("announcement", &notification.announcement);
+    insert_json!("canDispatch", notification.can_dispatch);
+    insert_json!("dispatchAccepted", notification.dispatch_accepted);
+    insert_json!("dispatchBlocked", notification.dispatch_blocked);
+    insert_json!("dispatchAction", &notification.dispatch_action);
+    insert_json!("latestReceiptId", &notification.latest_receipt_id);
+    insert_json!(
+        "selectedSearchResultId",
+        &notification.selected_search_result_id
+    );
+    insert_json!("selectedCommandId", &notification.selected_command_id);
+    insert_json!("selectedHandlerId", &notification.selected_handler_id);
+    insert_json!("selectedTarget", &notification.selected_target);
+    insert_json!("selectedLabel", &notification.selected_label);
+    insert_json!("selectedQueueState", &notification.selected_queue_state);
+    insert_json!("blockedReason", &notification.blocked_reason);
+    insert_json!("receiptCount", notification.receipt_count);
+    insert_json!("acceptedReceiptCount", notification.accepted_receipt_count);
+    insert_json!("blockedReceiptCount", notification.blocked_receipt_count);
+    insert_json!("emptyReceiptCount", notification.empty_receipt_count);
+    insert_json!("hasReceipts", notification.has_receipts);
+    insert_json!("attention", notification.attention);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummaryCapabilityId",
+        &notification
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationCapabilityId",
+        &notification
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        notification.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_json_value(
+    stack: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStack,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", stack.schema_version);
+    insert_json!("packageName", &stack.package_name);
+    insert_json!("sourceFingerprint", &stack.source_fingerprint);
+    insert_json!("title", &stack.title);
+    insert_json!("startupRoute", &stack.startup_route);
+    insert_json!("ready", stack.ready);
+    insert_json!("severity", &stack.severity);
+    insert_json!("attentionRequired", stack.attention_required);
+    insert_json!(
+        "receiptNotificationStackId",
+        &stack.receipt_notification_stack_id
+    );
+    insert_json!("receiptNotificationId", &stack.receipt_notification_id);
+    insert_json!("receiptSummaryId", &stack.receipt_summary_id);
+    insert_json!("receiptStreamId", &stack.receipt_stream_id);
+    insert_json!("searchInvocationId", &stack.search_invocation_id);
+    insert_json!("searchSelectionId", &stack.search_selection_id);
+    insert_json!("searchResultsId", &stack.search_results_id);
+    insert_json!("searchIndexId", &stack.search_index_id);
+    insert_json!("paletteId", &stack.palette_id);
+    insert_json!("registryId", &stack.registry_id);
+    insert_json!("commandGroup", &stack.command_group);
+    insert_json!("query", &stack.query);
+    insert_json!("normalizedQuery", &stack.normalized_query);
+    insert_json!("queryTokens", &stack.query_tokens);
+    insert_json!("queryTokenCount", stack.query_token_count);
+    insert_json!("invocationState", &stack.invocation_state);
+    insert_json!("receiptState", &stack.receipt_state);
+    insert_json!("latestNotificationId", &stack.latest_notification_id);
+    insert_json!("activeNotificationId", &stack.active_notification_id);
+    insert_json!("attentionNotificationId", &stack.attention_notification_id);
+    insert_json!("latestNotificationKind", &stack.latest_notification_kind);
+    insert_json!("latestNotificationLevel", &stack.latest_notification_level);
+    insert_json!("latestNotificationTitle", &stack.latest_notification_title);
+    insert_json!("latestNotificationBody", &stack.latest_notification_body);
+    insert_json!("latestShouldAnnounce", stack.latest_should_announce);
+    insert_json!("notificationCount", stack.notification_count);
+    insert_json!("visibleNotificationCount", stack.visible_notification_count);
+    insert_json!(
+        "announceNotificationCount",
+        stack.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        stack.attention_notification_count
+    );
+    insert_json!("successNotificationCount", stack.success_notification_count);
+    insert_json!("errorNotificationCount", stack.error_notification_count);
+    insert_json!("infoNotificationCount", stack.info_notification_count);
+    insert_json!("hasVisibleNotifications", stack.has_visible_notifications);
+    insert_json!("hasAnnouncement", stack.has_announcement);
+    value.insert(
+        "notifications".to_string(),
+        serde_json::Value::Array(
+            stack
+                .notifications
+                .iter()
+                .map(
+                    app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json_value,
+                )
+                .collect(),
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationCapabilityId",
+        &stack
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackCapabilityId",
+        &stack
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id
+    );
+    insert_json!("artifactCapabilityCount", stack.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json_value(
+    summary: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummary,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", summary.schema_version);
+    insert_json!("packageName", &summary.package_name);
+    insert_json!("sourceFingerprint", &summary.source_fingerprint);
+    insert_json!("title", &summary.title);
+    insert_json!("startupRoute", &summary.startup_route);
+    insert_json!("ready", summary.ready);
+    insert_json!("severity", &summary.severity);
+    insert_json!("attentionRequired", summary.attention_required);
+    insert_json!(
+        "receiptNotificationStackSummaryId",
+        &summary.receipt_notification_stack_summary_id
+    );
+    insert_json!(
+        "receiptNotificationStackId",
+        &summary.receipt_notification_stack_id
+    );
+    insert_json!("receiptNotificationId", &summary.receipt_notification_id);
+    insert_json!("receiptSummaryId", &summary.receipt_summary_id);
+    insert_json!("receiptStreamId", &summary.receipt_stream_id);
+    insert_json!("searchInvocationId", &summary.search_invocation_id);
+    insert_json!("searchSelectionId", &summary.search_selection_id);
+    insert_json!("searchResultsId", &summary.search_results_id);
+    insert_json!("searchIndexId", &summary.search_index_id);
+    insert_json!("paletteId", &summary.palette_id);
+    insert_json!("registryId", &summary.registry_id);
+    insert_json!("commandGroup", &summary.command_group);
+    insert_json!("query", &summary.query);
+    insert_json!("normalizedQuery", &summary.normalized_query);
+    insert_json!("queryTokens", &summary.query_tokens);
+    insert_json!("queryTokenCount", summary.query_token_count);
+    insert_json!("invocationState", &summary.invocation_state);
+    insert_json!("receiptState", &summary.receipt_state);
+    insert_json!("headlineNotificationId", &summary.headline_notification_id);
+    insert_json!(
+        "headlineNotificationKind",
+        &summary.headline_notification_kind
+    );
+    insert_json!(
+        "headlineNotificationLevel",
+        &summary.headline_notification_level
+    );
+    insert_json!(
+        "headlineNotificationTitle",
+        &summary.headline_notification_title
+    );
+    insert_json!(
+        "headlineNotificationBody",
+        &summary.headline_notification_body
+    );
+    insert_json!("summaryKind", &summary.summary_kind);
+    insert_json!("summaryLevel", &summary.summary_level);
+    insert_json!("summaryTitle", &summary.summary_title);
+    insert_json!("summaryBody", &summary.summary_body);
+    insert_json!("shouldRenderStack", summary.should_render_stack);
+    insert_json!("shouldAnnounceLatest", summary.should_announce_latest);
+    insert_json!("notificationCount", summary.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        summary.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        summary.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        summary.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        summary.success_notification_count
+    );
+    insert_json!("errorNotificationCount", summary.error_notification_count);
+    insert_json!("infoNotificationCount", summary.info_notification_count);
+    insert_json!("hasVisibleNotifications", summary.has_visible_notifications);
+    insert_json!("hasAnnouncement", summary.has_announcement);
+    insert_json!(
+        "hasAttentionNotifications",
+        summary.has_attention_notifications
+    );
+    insert_json!("hasSuccessNotifications", summary.has_success_notifications);
+    insert_json!("hasErrorNotifications", summary.has_error_notifications);
+    insert_json!("hasInfoNotifications", summary.has_info_notifications);
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryCapabilityId",
+        &summary
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
+    );
+    insert_json!("artifactCapabilityCount", summary.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json_value(
+    handoff: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoff,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", handoff.schema_version);
+    insert_json!("packageName", &handoff.package_name);
+    insert_json!("sourceFingerprint", &handoff.source_fingerprint);
+    insert_json!("title", &handoff.title);
+    insert_json!("startupRoute", &handoff.startup_route);
+    insert_json!("ready", handoff.ready);
+    insert_json!("severity", &handoff.severity);
+    insert_json!("attentionRequired", handoff.attention_required);
+    insert_json!(
+        "receiptNotificationStackSummaryProductHandoffId",
+        &handoff.receipt_notification_stack_summary_product_handoff_id
+    );
+    insert_json!(
+        "receiptNotificationStackSummaryId",
+        &handoff.receipt_notification_stack_summary_id
+    );
+    insert_json!(
+        "receiptNotificationStackId",
+        &handoff.receipt_notification_stack_id
+    );
+    insert_json!("receiptNotificationId", &handoff.receipt_notification_id);
+    insert_json!("receiptSummaryId", &handoff.receipt_summary_id);
+    insert_json!("receiptStreamId", &handoff.receipt_stream_id);
+    insert_json!("searchInvocationId", &handoff.search_invocation_id);
+    insert_json!("searchSelectionId", &handoff.search_selection_id);
+    insert_json!("searchResultsId", &handoff.search_results_id);
+    insert_json!("searchIndexId", &handoff.search_index_id);
+    insert_json!("paletteId", &handoff.palette_id);
+    insert_json!("registryId", &handoff.registry_id);
+    insert_json!("commandGroup", &handoff.command_group);
+    insert_json!("query", &handoff.query);
+    insert_json!("normalizedQuery", &handoff.normalized_query);
+    insert_json!("queryTokens", &handoff.query_tokens);
+    insert_json!("queryTokenCount", handoff.query_token_count);
+    insert_json!("productSurface", &handoff.product_surface);
+    insert_json!("renderRegion", &handoff.render_region);
+    insert_json!("handoffRoute", &handoff.handoff_route);
+    insert_json!("handoffStatus", &handoff.handoff_status);
+    insert_json!("productShellAction", &handoff.product_shell_action);
+    insert_json!("notificationBadgeLabel", &handoff.notification_badge_label);
+    insert_json!("notificationBadgeCount", handoff.notification_badge_count);
+    insert_json!("liveRegionId", &handoff.live_region_id);
+    insert_json!("latestAnnouncement", &handoff.latest_announcement);
+    insert_json!("headlineNotificationId", &handoff.headline_notification_id);
+    insert_json!(
+        "headlineNotificationKind",
+        &handoff.headline_notification_kind
+    );
+    insert_json!(
+        "headlineNotificationLevel",
+        &handoff.headline_notification_level
+    );
+    insert_json!(
+        "headlineNotificationTitle",
+        &handoff.headline_notification_title
+    );
+    insert_json!(
+        "headlineNotificationBody",
+        &handoff.headline_notification_body
+    );
+    insert_json!("summaryKind", &handoff.summary_kind);
+    insert_json!("summaryLevel", &handoff.summary_level);
+    insert_json!("summaryTitle", &handoff.summary_title);
+    insert_json!("summaryBody", &handoff.summary_body);
+    insert_json!("shouldRenderStack", handoff.should_render_stack);
+    insert_json!("shouldAnnounceLatest", handoff.should_announce_latest);
+    insert_json!("requiresAttention", handoff.requires_attention);
+    insert_json!("notificationCount", handoff.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        handoff.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        handoff.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        handoff.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        handoff.success_notification_count
+    );
+    insert_json!("errorNotificationCount", handoff.error_notification_count);
+    insert_json!("infoNotificationCount", handoff.info_notification_count);
+    value.insert(
+        "stackSummary".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_json_value(
+            &handoff.stack_summary,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryCapabilityId",
+        &handoff
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffCapabilityId",
+        &handoff
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id
+    );
+    insert_json!("artifactCapabilityCount", handoff.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json_value(
+    package: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackage,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", package.schema_version);
+    insert_json!("packageName", &package.package_name);
+    insert_json!("sourceFingerprint", &package.source_fingerprint);
+    insert_json!("title", &package.title);
+    insert_json!("startupRoute", &package.startup_route);
+    insert_json!("ready", package.ready);
+    insert_json!("severity", &package.severity);
+    insert_json!("attentionRequired", package.attention_required);
+    insert_json!("deliveryPackageId", &package.delivery_package_id);
+    insert_json!("deliveryPackageKind", &package.delivery_package_kind);
+    insert_json!("deliveryRoute", &package.delivery_route);
+    insert_json!("wasmExportSymbol", &package.wasm_export_symbol);
+    insert_json!("hydrationTargetId", &package.hydration_target_id);
+    insert_json!("handoffRoute", &package.handoff_route);
+    insert_json!("handoffStatus", &package.handoff_status);
+    insert_json!("productSurface", &package.product_surface);
+    insert_json!("renderRegion", &package.render_region);
+    insert_json!("productShellAction", &package.product_shell_action);
+    insert_json!(
+        "receiptNotificationStackSummaryProductHandoffId",
+        &package.receipt_notification_stack_summary_product_handoff_id
+    );
+    insert_json!(
+        "receiptNotificationStackSummaryId",
+        &package.receipt_notification_stack_summary_id
+    );
+    insert_json!(
+        "receiptNotificationStackId",
+        &package.receipt_notification_stack_id
+    );
+    insert_json!("receiptNotificationId", &package.receipt_notification_id);
+    insert_json!("receiptSummaryId", &package.receipt_summary_id);
+    insert_json!("receiptStreamId", &package.receipt_stream_id);
+    insert_json!("searchInvocationId", &package.search_invocation_id);
+    insert_json!("searchSelectionId", &package.search_selection_id);
+    insert_json!("searchResultsId", &package.search_results_id);
+    insert_json!("searchIndexId", &package.search_index_id);
+    insert_json!("paletteId", &package.palette_id);
+    insert_json!("registryId", &package.registry_id);
+    insert_json!("notificationBadgeLabel", &package.notification_badge_label);
+    insert_json!("notificationBadgeCount", package.notification_badge_count);
+    insert_json!("liveRegionId", &package.live_region_id);
+    insert_json!("latestAnnouncement", &package.latest_announcement);
+    insert_json!("shouldHydrate", package.should_hydrate);
+    insert_json!("shouldRenderStack", package.should_render_stack);
+    insert_json!("shouldAnnounceLatest", package.should_announce_latest);
+    insert_json!("requiresAttention", package.requires_attention);
+    insert_json!("notificationCount", package.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        package.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        package.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        package.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        package.success_notification_count
+    );
+    insert_json!("errorNotificationCount", package.error_notification_count);
+    insert_json!("infoNotificationCount", package.info_notification_count);
+    value.insert(
+        "productHandoff".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_json_value(
+            &package.product_handoff,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffCapabilityId",
+        &package
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageCapabilityId",
+        &package
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+    );
+    insert_json!("artifactCapabilityCount", package.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_json_value(
+    manifest: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", manifest.schema_version);
+    insert_json!("packageName", &manifest.package_name);
+    insert_json!("sourceFingerprint", &manifest.source_fingerprint);
+    insert_json!("title", &manifest.title);
+    insert_json!("startupRoute", &manifest.startup_route);
+    insert_json!("ready", manifest.ready);
+    insert_json!("severity", &manifest.severity);
+    insert_json!("attentionRequired", manifest.attention_required);
+    insert_json!("embedManifestId", &manifest.embed_manifest_id);
+    insert_json!("embedManifestKind", &manifest.embed_manifest_kind);
+    insert_json!("embedMode", &manifest.embed_mode);
+    insert_json!("embedRootId", &manifest.embed_root_id);
+    insert_json!("embedScriptId", &manifest.embed_script_id);
+    insert_json!("wasmModuleName", &manifest.wasm_module_name);
+    insert_json!("wasmModuleFormat", &manifest.wasm_module_format);
+    insert_json!("wasmContentType", &manifest.wasm_content_type);
+    insert_json!("wasmImportNamespace", &manifest.wasm_import_namespace);
+    insert_json!("wasmExportSymbol", &manifest.wasm_export_symbol);
+    insert_json!("wasmInitializerSymbol", &manifest.wasm_initializer_symbol);
+    insert_json!("hydrationTargetId", &manifest.hydration_target_id);
+    insert_json!("hydrationMode", &manifest.hydration_mode);
+    insert_json!("deliveryPackageId", &manifest.delivery_package_id);
+    insert_json!("deliveryPackageKind", &manifest.delivery_package_kind);
+    insert_json!("deliveryRoute", &manifest.delivery_route);
+    insert_json!("handoffRoute", &manifest.handoff_route);
+    insert_json!("handoffStatus", &manifest.handoff_status);
+    insert_json!("productSurface", &manifest.product_surface);
+    insert_json!("renderRegion", &manifest.render_region);
+    insert_json!("productShellAction", &manifest.product_shell_action);
+    insert_json!("shouldPreload", manifest.should_preload);
+    insert_json!("shouldInstantiate", manifest.should_instantiate);
+    insert_json!("shouldMount", manifest.should_mount);
+    insert_json!("shouldHydrate", manifest.should_hydrate);
+    insert_json!("shouldRenderStack", manifest.should_render_stack);
+    insert_json!("shouldAnnounceLatest", manifest.should_announce_latest);
+    insert_json!("requiresAttention", manifest.requires_attention);
+    insert_json!("notificationCount", manifest.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        manifest.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        manifest.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        manifest.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        manifest.success_notification_count
+    );
+    insert_json!("errorNotificationCount", manifest.error_notification_count);
+    insert_json!("infoNotificationCount", manifest.info_notification_count);
+    value.insert(
+        "deliveryPackage".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_json_value(
+            &manifest.delivery_package,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageCapabilityId",
+        &manifest
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifestCapabilityId",
+        &manifest
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id
+    );
+    insert_json!(
+        "artifactCapabilityCount",
+        manifest.artifact_capability_count
+    );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json_value(
+    plan: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", plan.schema_version);
+    insert_json!("packageName", &plan.package_name);
+    insert_json!("sourceFingerprint", &plan.source_fingerprint);
+    insert_json!("title", &plan.title);
+    insert_json!("startupRoute", &plan.startup_route);
+    insert_json!("ready", plan.ready);
+    insert_json!("severity", &plan.severity);
+    insert_json!("attentionRequired", plan.attention_required);
+    insert_json!("loaderPlanId", &plan.loader_plan_id);
+    insert_json!("loaderPlanKind", &plan.loader_plan_kind);
+    insert_json!("loaderPhase", &plan.loader_phase);
+    insert_json!("loaderStrategy", &plan.loader_strategy);
+    insert_json!("moduleRequestId", &plan.module_request_id);
+    insert_json!("moduleRequestKind", &plan.module_request_kind);
+    insert_json!("moduleCacheKey", &plan.module_cache_key);
+    insert_json!("moduleIntegrityMode", &plan.module_integrity_mode);
+    insert_json!("moduleFetchPriority", &plan.module_fetch_priority);
+    insert_json!("instantiationTargetId", &plan.instantiation_target_id);
+    insert_json!("embedManifestId", &plan.embed_manifest_id);
+    insert_json!("embedManifestKind", &plan.embed_manifest_kind);
+    insert_json!("embedMode", &plan.embed_mode);
+    insert_json!("embedRootId", &plan.embed_root_id);
+    insert_json!("embedScriptId", &plan.embed_script_id);
+    insert_json!("wasmModuleName", &plan.wasm_module_name);
+    insert_json!("wasmModuleFormat", &plan.wasm_module_format);
+    insert_json!("wasmContentType", &plan.wasm_content_type);
+    insert_json!("wasmImportNamespace", &plan.wasm_import_namespace);
+    insert_json!("wasmExportSymbol", &plan.wasm_export_symbol);
+    insert_json!("wasmInitializerSymbol", &plan.wasm_initializer_symbol);
+    insert_json!("hydrationTargetId", &plan.hydration_target_id);
+    insert_json!("hydrationMode", &plan.hydration_mode);
+    insert_json!("deliveryPackageId", &plan.delivery_package_id);
+    insert_json!("deliveryPackageKind", &plan.delivery_package_kind);
+    insert_json!("deliveryRoute", &plan.delivery_route);
+    insert_json!("handoffRoute", &plan.handoff_route);
+    insert_json!("productSurface", &plan.product_surface);
+    insert_json!("renderRegion", &plan.render_region);
+    insert_json!("productShellAction", &plan.product_shell_action);
+    insert_json!("loadOrder", &plan.load_order);
+    insert_json!("shouldPreload", plan.should_preload);
+    insert_json!("shouldInstantiate", plan.should_instantiate);
+    insert_json!("shouldMount", plan.should_mount);
+    insert_json!("shouldHydrate", plan.should_hydrate);
+    insert_json!("shouldRenderStack", plan.should_render_stack);
+    insert_json!("shouldAnnounceLatest", plan.should_announce_latest);
+    insert_json!("requiresAttention", plan.requires_attention);
+    insert_json!("notificationCount", plan.notification_count);
+    insert_json!("visibleNotificationCount", plan.visible_notification_count);
+    insert_json!(
+        "announceNotificationCount",
+        plan.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        plan.attention_notification_count
+    );
+    insert_json!("successNotificationCount", plan.success_notification_count);
+    insert_json!("errorNotificationCount", plan.error_notification_count);
+    insert_json!("infoNotificationCount", plan.info_notification_count);
+    value.insert(
+        "embedManifest".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_json_value(
+            &plan.embed_manifest,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifestCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlanCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id
+    );
+    insert_json!("artifactCapabilityCount", plan.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_card_json_value(card: &BerkeleyAppShellDashboardCard) -> serde_json::Value {
+    serde_json::json!({
+        "id": &card.id,
+        "sectionId": &card.section_id,
+        "title": &card.title,
+        "severity": &card.severity,
+        "eventCount": card.event_count,
+        "eventIds": &card.event_ids,
+        "primary": card.primary,
+        "attention": card.attention,
+    })
+}
+
+fn app_shell_event_json_value(event: &BerkeleyAppShellEvent) -> serde_json::Value {
+    serde_json::json!({
+        "id": &event.id,
+        "kind": &event.kind,
+        "severity": &event.severity,
+        "message": &event.message,
+        "panelId": &event.panel_id,
+        "actionId": &event.action_id,
+        "count": event.count,
+    })
+}
+
+fn shell_status_severity(readiness: &BerkeleyAppReadinessReport) -> &'static str {
+    if readiness.error_count > 0 {
+        "error"
+    } else if readiness.warning_count > 0 {
+        "warning"
+    } else if !readiness.ready {
+        "blocked"
+    } else {
+        "ready"
+    }
+}
+
+fn shell_status_message(readiness: &BerkeleyAppReadinessReport) -> String {
+    if readiness.ready {
+        return readiness
+            .entry_panel_id
+            .as_deref()
+            .map(|panel_id| format!("Ready to launch {panel_id} panel"))
+            .unwrap_or_else(|| "Ready to launch Berkeley SPICE Mosaic app".to_string());
+    }
+
+    readiness
+        .blocking_message
+        .clone()
+        .unwrap_or_else(|| "Deck is blocked before launch".to_string())
+}
+
+fn manifest_strings(values: &[&str]) -> Vec<String> {
+    values.iter().map(|value| value.to_string()).collect()
+}
+
+fn editor_command_from_control(
+    control: &BerkeleyAppAnalysisControl,
+    action: &BerkeleyAppEditorAction,
+) -> BerkeleyAppEditorCommand {
+    BerkeleyAppEditorCommand {
+        id: editor_command_id(control.syntax_card_index, action.kind),
+        kind: action.kind,
+        syntax_card_index: control.syntax_card_index,
+        directive: control.directive.clone(),
+        analysis: control.analysis.clone(),
+        span: control.span,
+        target: editor_command_target(action.kind).to_string(),
+        label: action.label.clone(),
+        enabled: action.enabled,
+        selected: control.selected,
+        disabled_reason: action.disabled_reason.clone(),
+    }
+}
+
+fn editor_command_id(syntax_card_index: usize, kind: BerkeleyAppEditorActionKind) -> String {
+    format!(
+        "analysis.{}.{}",
+        syntax_card_index,
+        editor_command_slug(kind)
+    )
+}
+
+fn editor_command_slug(kind: BerkeleyAppEditorActionKind) -> &'static str {
+    match kind {
+        BerkeleyAppEditorActionKind::SelectAnalysis => "select",
+        BerkeleyAppEditorActionKind::RunAnalysis => "run",
+        BerkeleyAppEditorActionKind::InspectTable => "inspect-table",
+        BerkeleyAppEditorActionKind::InspectWaveform => "inspect-waveform",
+    }
+}
+
+fn editor_command_target(kind: BerkeleyAppEditorActionKind) -> &'static str {
+    match kind {
+        BerkeleyAppEditorActionKind::SelectAnalysis => "analysis-selection",
+        BerkeleyAppEditorActionKind::RunAnalysis => "analysis-runner",
+        BerkeleyAppEditorActionKind::InspectTable => "analysis-table",
+        BerkeleyAppEditorActionKind::InspectWaveform => "analysis-waveform",
+    }
+}
+
+fn analysis_control_from_session_state(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> BerkeleyAppAnalysisControl {
+    let table_available = analysis.execution_available && analysis.table_row_count.is_some();
+    let waveform_available =
+        analysis.execution_available && analysis.waveform_series_count.unwrap_or(0) > 0;
+    let actions = vec![
+        BerkeleyAppEditorAction {
+            kind: BerkeleyAppEditorActionKind::SelectAnalysis,
+            label: format!("Select {}", analysis.directive),
+            enabled: true,
+            disabled_reason: None,
+        },
+        editor_action(
+            BerkeleyAppEditorActionKind::RunAnalysis,
+            format!("Run {}", analysis.directive),
+            state.parsed && analysis.runnable,
+            run_action_disabled_reason(state, analysis),
+        ),
+        editor_action(
+            BerkeleyAppEditorActionKind::InspectTable,
+            format!("Inspect {} table", analysis.directive),
+            table_available,
+            table_action_disabled_reason(state, analysis),
+        ),
+        editor_action(
+            BerkeleyAppEditorActionKind::InspectWaveform,
+            format!("Inspect {} waveform", analysis.directive),
+            waveform_available,
+            waveform_action_disabled_reason(state, analysis),
+        ),
+    ];
+
+    BerkeleyAppAnalysisControl {
+        syntax_card_index: analysis.syntax_card_index,
+        directive: analysis.directive.clone(),
+        analysis: analysis.analysis.clone(),
+        span: analysis.span,
+        selected: analysis.selected,
+        runnable: analysis.runnable,
+        artifact_supported: analysis.artifact_supported,
+        execution_available: analysis.execution_available,
+        table_available,
+        waveform_available,
+        action_count: actions.len(),
+        actions,
+    }
+}
+
+fn editor_action(
+    kind: BerkeleyAppEditorActionKind,
+    label: String,
+    enabled: bool,
+    disabled_reason: Option<String>,
+) -> BerkeleyAppEditorAction {
+    BerkeleyAppEditorAction {
+        kind,
+        label,
+        enabled,
+        disabled_reason: if enabled { None } else { disabled_reason },
+    }
+}
+
+fn run_action_disabled_reason(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> Option<String> {
+    if !state.parsed {
+        state.blocking_message.clone()
+    } else if !analysis.runnable {
+        Some("analysis is not runnable from the app facade".to_string())
+    } else {
+        None
+    }
+}
+
+fn table_action_disabled_reason(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> Option<String> {
+    if !state.parsed {
+        state.blocking_message.clone()
+    } else if !analysis.artifact_supported {
+        Some("analysis artifacts are not supported".to_string())
+    } else if !analysis.execution_available {
+        Some("run deck artifacts to populate analysis table".to_string())
+    } else {
+        Some("analysis did not produce a result table".to_string())
+    }
+}
+
+fn waveform_action_disabled_reason(
+    state: &BerkeleyAppSessionState,
+    analysis: &BerkeleyAppSessionAnalysis,
+) -> Option<String> {
+    if !state.parsed {
+        state.blocking_message.clone()
+    } else if !analysis.artifact_supported {
+        Some("analysis artifacts are not supported".to_string())
+    } else if !analysis.execution_available {
+        Some("run deck artifacts to populate waveform series".to_string())
+    } else {
+        Some("analysis has no waveform series".to_string())
+    }
+}
+
+fn refresh_selected_session_analysis(state: &mut BerkeleyAppSessionState) {
+    state.selected_analysis = state
+        .analyses
+        .iter()
+        .find(|analysis| Some(analysis.syntax_card_index) == state.selected_syntax_card_index)
+        .cloned();
+    if let Some(selected) = &state.selected_analysis {
+        state.selected_table_columns = selected.table_columns.clone();
+        state.selected_output_probes = selected.output_probes.clone();
+        state.selected_waveform_series_count = selected.waveform_series_count;
+    } else {
+        state.selected_table_columns.clear();
+        state.selected_output_probes.clear();
+        state.selected_waveform_series_count = None;
+    }
+}
+
+fn output_plan_probes(artifacts: &[DeckOutputPlanArtifact]) -> Vec<String> {
+    let mut probes = Vec::new();
+    for artifact in artifacts {
+        for probe in &artifact.output_probes {
+            if !probes.iter().any(|existing| existing == probe) {
+                probes.push(probe.clone());
+            }
+        }
+    }
+    probes
+}
+
+fn stable_source_fingerprint(source: &str) -> String {
+    let mut hash = 0xcbf2_9ce4_8422_2325_u64;
+    for byte in source.as_bytes() {
+        hash ^= u64::from(*byte);
+        hash = hash.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    format!("{hash:016x}")
+}
+
+fn deck_artifact_analysis_directive(directive: &str) -> bool {
+    matches!(
+        directive.to_ascii_lowercase().as_str(),
+        ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise"
+    )
+}
+
+fn runnable_analysis_kind(directive: &str) -> Option<AnalysisKind> {
+    match directive.to_ascii_lowercase().as_str() {
+        ".op" => Some(AnalysisKind::Op),
+        ".dc" => Some(AnalysisKind::Dc),
+        ".ac" => Some(AnalysisKind::Ac),
+        ".tran" => Some(AnalysisKind::Tran),
+        _ => None,
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct LogicalCardBuilder {
+    text: String,
+    positions: Vec<SourcePosition>,
+    physical_lines: Vec<usize>,
+}
+
+impl LogicalCardBuilder {
+    fn new(line_number: usize, text: &str, start_column: usize) -> Self {
+        let positions = text
+            .chars()
+            .enumerate()
+            .map(|(offset, _)| SourcePosition {
+                line: line_number,
+                column: start_column + offset,
+            })
+            .collect();
+        Self {
+            text: text.to_string(),
+            positions,
+            physical_lines: vec![line_number],
+        }
+    }
+
+    fn append_continuation(&mut self, line_number: usize, text: &str, start_column: usize) {
+        if text.is_empty() {
+            return;
+        }
+        let join_position = self.positions.last().copied().unwrap_or(SourcePosition {
+            line: line_number,
+            column: start_column,
+        });
+        self.text.push(' ');
+        self.positions.push(join_position);
+        for (offset, ch) in text.chars().enumerate() {
+            self.text.push(ch);
+            self.positions.push(SourcePosition {
+                line: line_number,
+                column: start_column + offset,
+            });
+        }
+        self.physical_lines.push(line_number);
+    }
+
+    fn span(&self) -> SourceSpan {
+        let Some(start) = self.positions.first() else {
+            return SourceSpan::point(1, 1);
+        };
+        let Some(end) = self.positions.last() else {
+            return SourceSpan::point(start.line, start.column);
+        };
+        SourceSpan {
+            start_line: start.line,
+            start_column: start.column,
+            end_line: end.line,
+            end_column: end.column + 1,
+        }
+    }
+}
+
+pub fn parse_berkeley_syntax(text: &str) -> BerkeleySyntaxDeck {
+    let mut builders = Vec::new();
+    let mut diagnostics = Vec::new();
+    let mut pending: Option<LogicalCardBuilder> = None;
+    let mut title = None;
+    let mut saw_content = false;
+
+    for (index, raw_line) in text.lines().enumerate() {
+        let line_number = index + 1;
+        let without_comment = strip_inline_comment(raw_line);
+        let Some((trimmed, start_column)) = trimmed_with_column(without_comment) else {
+            continue;
+        };
+        if trimmed.is_empty() {
+            continue;
+        }
+        if trimmed.starts_with('*') {
+            if !saw_content && title.is_none() {
+                let candidate = trimmed[1..].trim();
+                if !candidate.is_empty() {
+                    title = Some(candidate.to_string());
+                }
+            }
+            continue;
+        }
+        if let Some(after_plus) = trimmed.strip_prefix('+') {
+            let continuation = after_plus.trim();
+            let continuation_start_column = start_column
+                + 1
+                + after_plus
+                    .len()
+                    .saturating_sub(after_plus.trim_start().len());
+            if let Some(card) = pending.as_mut() {
+                card.append_continuation(line_number, continuation, continuation_start_column);
+            } else {
+                diagnostics.push(BerkeleySyntaxDiagnostic::error(
+                    "SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD",
+                    "continuation line appears before any logical SPICE card",
+                    Some(SourceSpan::point(line_number, start_column)),
+                ));
+            }
+            continue;
+        }
+        saw_content = true;
+        if let Some(card) = pending.take() {
+            builders.push(card);
+        }
+        pending = Some(LogicalCardBuilder::new(line_number, trimmed, start_column));
+    }
+
+    if let Some(card) = pending {
+        builders.push(card);
+    }
+
+    let cards = builders
+        .into_iter()
+        .map(|builder| logical_card(builder, &mut diagnostics))
+        .collect();
+
+    BerkeleySyntaxDeck {
+        grammar: BerkeleyGrammarMetadata::current(),
+        title,
+        cards,
+        diagnostics,
+    }
+}
+
+pub fn parse_berkeley_app_deck(text: &str) -> BerkeleyAppDeck {
+    let syntax = parse_berkeley_syntax(text);
+    let canonical_source = canonical_source(&syntax);
+    let mut diagnostics = syntax.diagnostics.clone();
+    let parsed = if syntax.has_errors() {
+        None
+    } else {
+        match parse_netlist(text) {
+            Ok(parsed) => Some(parsed),
+            Err(error) => {
+                let message = error.to_string();
+                diagnostics.push(BerkeleySyntaxDiagnostic::error(
+                    "SPICE_BERKELEY_LOWERING_ERROR",
+                    message.clone(),
+                    parse_line_error_span(&message),
+                ));
+                None
+            }
+        }
+    };
+
+    BerkeleyAppDeck {
+        syntax,
+        canonical_source,
+        parsed,
+        diagnostics,
+    }
+}
+
+fn canonical_source(syntax: &BerkeleySyntaxDeck) -> String {
+    let mut lines = Vec::new();
+    if let Some(title) = &syntax.title {
+        lines.push(format!("* {title}"));
+    }
+    lines.extend(syntax.cards.iter().map(|card| card.text.clone()));
+    if lines.is_empty() {
+        String::new()
+    } else {
+        format!("{}\n", lines.join("\n"))
+    }
+}
+
+fn deck_table_columns(table: &str) -> Vec<String> {
+    table
+        .lines()
+        .next()
+        .map(|header| header.split('\t').map(str::to_string).collect())
+        .unwrap_or_default()
+}
+
+fn deck_table_row_count(table: &str) -> usize {
+    let mut lines = table.lines();
+    if lines.next().is_none() {
+        0
+    } else {
+        lines.count()
+    }
+}
+
+fn deck_waveform_series(
+    syntax_card_index: Option<usize>,
+    directive: &str,
+    analysis: &str,
+    table: &str,
+) -> Vec<BerkeleyAppWaveformSeries> {
+    let mut lines = table.lines();
+    let Some(header) = lines.next() else {
+        return Vec::new();
+    };
+    let columns = header.split('\t').map(str::to_string).collect::<Vec<_>>();
+    let Some(x_index) = deck_waveform_x_column(&columns) else {
+        return Vec::new();
+    };
+    let rows = lines
+        .map(|row| row.split('\t').map(str::to_string).collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+    let group_index = deck_waveform_group_column(&columns, x_index);
+    let group_values = deck_waveform_group_values(&rows, group_index);
+    let mut series = Vec::new();
+
+    for (y_index, y_column) in columns.iter().enumerate() {
+        if y_index == x_index || Some(y_index) == group_index || !deck_waveform_y_column(y_column) {
+            continue;
+        }
+
+        if group_index.is_some() {
+            for group_value in &group_values {
+                let points =
+                    deck_waveform_points(&rows, x_index, y_index, group_index, Some(group_value));
+                if points.is_empty() {
+                    continue;
+                }
+                series.push(BerkeleyAppWaveformSeries {
+                    syntax_card_index,
+                    directive: directive.to_string(),
+                    analysis: analysis.to_string(),
+                    table_name: "result".to_string(),
+                    name: format!("{group_value}:{y_column}"),
+                    x_column: columns[x_index].clone(),
+                    y_column: y_column.clone(),
+                    group_column: group_index.map(|index| columns[index].clone()),
+                    group_value: Some(group_value.clone()),
+                    point_count: points.len(),
+                    points,
+                });
+            }
+        } else {
+            let points = deck_waveform_points(&rows, x_index, y_index, None, None);
+            if points.is_empty() {
+                continue;
+            }
+            series.push(BerkeleyAppWaveformSeries {
+                syntax_card_index,
+                directive: directive.to_string(),
+                analysis: analysis.to_string(),
+                table_name: "result".to_string(),
+                name: y_column.clone(),
+                x_column: columns[x_index].clone(),
+                y_column: y_column.clone(),
+                group_column: None,
+                group_value: None,
+                point_count: points.len(),
+                points,
+            });
+        }
+    }
+
+    series
+}
+
+fn deck_waveform_x_column(columns: &[String]) -> Option<usize> {
+    ["Time", "Frequency", "Value", "TemperatureKelvin"]
+        .into_iter()
+        .find_map(|preferred| {
+            columns
+                .iter()
+                .position(|column| column.eq_ignore_ascii_case(preferred))
+        })
+        .or_else(|| {
+            columns
+                .iter()
+                .position(|column| column.eq_ignore_ascii_case("Index"))
+        })
+}
+
+fn deck_waveform_group_column(columns: &[String], x_index: usize) -> Option<usize> {
+    ["Probe", "Source", "Corner", "Method"]
+        .into_iter()
+        .find_map(|preferred| {
+            columns.iter().enumerate().find_map(|(index, column)| {
+                if index != x_index && column.eq_ignore_ascii_case(preferred) {
+                    Some(index)
+                } else {
+                    None
+                }
+            })
+        })
+}
+
+fn deck_waveform_y_column(column: &str) -> bool {
+    !matches!(
+        column.to_ascii_lowercase().as_str(),
+        "index" | "source" | "probe" | "corner" | "method" | "converged" | "stepsrejected"
+    )
+}
+
+fn deck_waveform_group_values(rows: &[Vec<String>], group_index: Option<usize>) -> Vec<String> {
+    let Some(group_index) = group_index else {
+        return Vec::new();
+    };
+    let mut values = Vec::new();
+    for row in rows {
+        let value = row.get(group_index).cloned().unwrap_or_default();
+        if !values.iter().any(|existing| existing == &value) {
+            values.push(value);
+        }
+    }
+    values
+}
+
+fn deck_waveform_points(
+    rows: &[Vec<String>],
+    x_index: usize,
+    y_index: usize,
+    group_index: Option<usize>,
+    group_value: Option<&String>,
+) -> Vec<BerkeleyAppWaveformPoint> {
+    rows.iter()
+        .enumerate()
+        .filter_map(|(row_index, row)| {
+            if let (Some(group_index), Some(group_value)) = (group_index, group_value) {
+                if row.get(group_index) != Some(group_value) {
+                    return None;
+                }
+            }
+            let x = parse_finite_cell(row, x_index)?;
+            let y = parse_finite_cell(row, y_index)?;
+            Some(BerkeleyAppWaveformPoint { row_index, x, y })
+        })
+        .collect()
+}
+
+fn parse_finite_cell(row: &[String], index: usize) -> Option<f64> {
+    row.get(index)
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite())
+}
+
+fn logical_card(
+    builder: LogicalCardBuilder,
+    diagnostics: &mut Vec<BerkeleySyntaxDiagnostic>,
+) -> BerkeleyLogicalCard {
+    let tokens = tokenize_card(&builder, diagnostics);
+    let head = card_head(&tokens);
+    let kind = classify_card(&head);
+    let span = builder.span();
+    BerkeleyLogicalCard {
+        kind,
+        head,
+        text: builder.text,
+        span,
+        physical_lines: builder.physical_lines,
+        tokens,
+    }
+}
+
+fn tokenize_card(
+    builder: &LogicalCardBuilder,
+    diagnostics: &mut Vec<BerkeleySyntaxDiagnostic>,
+) -> Vec<BerkeleySyntaxToken> {
+    let chars = builder.text.chars().collect::<Vec<_>>();
+    let mut tokens = Vec::new();
+    let mut index = 0;
+    let mut paren_depth = 0_i32;
+
+    while index < chars.len() {
+        let ch = chars[index];
+        if ch.is_whitespace() {
+            index += 1;
+            continue;
+        }
+
+        if ch == '"' {
+            let start = index;
+            index += 1;
+            let mut escaped = false;
+            let mut closed = false;
+            while index < chars.len() {
+                let current = chars[index];
+                if escaped {
+                    escaped = false;
+                } else if current == '\\' {
+                    escaped = true;
+                } else if current == '"' {
+                    index += 1;
+                    closed = true;
+                    break;
+                }
+                index += 1;
+            }
+            if !closed {
+                diagnostics.push(BerkeleySyntaxDiagnostic::error(
+                    "SPICE_SYNTAX_UNCLOSED_QUOTE",
+                    "quoted string is missing its closing quote",
+                    Some(span_for_range(&builder.positions, start, index)),
+                ));
+            }
+            tokens.push(token(
+                "QUOTED_STRING",
+                &chars,
+                &builder.positions,
+                start,
+                index,
+            ));
+            continue;
+        }
+
+        if ch == '{' {
+            let start = index;
+            index += 1;
+            let mut closed = false;
+            while index < chars.len() {
+                if chars[index] == '}' {
+                    index += 1;
+                    closed = true;
+                    break;
+                }
+                index += 1;
+            }
+            if !closed {
+                diagnostics.push(BerkeleySyntaxDiagnostic::error(
+                    "SPICE_SYNTAX_UNCLOSED_BRACED_EXPR",
+                    "braced expression is missing its closing brace",
+                    Some(span_for_range(&builder.positions, start, index)),
+                ));
+            }
+            tokens.push(token(
+                "BRACED_EXPR",
+                &chars,
+                &builder.positions,
+                start,
+                index,
+            ));
+            continue;
+        }
+
+        match ch {
+            '(' => {
+                paren_depth += 1;
+                tokens.push(token(
+                    "LPAREN",
+                    &chars,
+                    &builder.positions,
+                    index,
+                    index + 1,
+                ));
+                index += 1;
+                continue;
+            }
+            ')' => {
+                if paren_depth == 0 {
+                    diagnostics.push(BerkeleySyntaxDiagnostic::error(
+                        "SPICE_SYNTAX_UNMATCHED_RPAREN",
+                        "closing parenthesis has no matching opening parenthesis",
+                        Some(span_for_range(&builder.positions, index, index + 1)),
+                    ));
+                } else {
+                    paren_depth -= 1;
+                }
+                tokens.push(token(
+                    "RPAREN",
+                    &chars,
+                    &builder.positions,
+                    index,
+                    index + 1,
+                ));
+                index += 1;
+                continue;
+            }
+            ',' => {
+                tokens.push(token("COMMA", &chars, &builder.positions, index, index + 1));
+                index += 1;
+                continue;
+            }
+            '=' => {
+                tokens.push(token(
+                    "EQUALS",
+                    &chars,
+                    &builder.positions,
+                    index,
+                    index + 1,
+                ));
+                index += 1;
+                continue;
+            }
+            _ => {}
+        }
+
+        if ch == '.' {
+            let atom_end = read_atom_end(&chars, index);
+            let raw = chars[index..atom_end].iter().collect::<String>();
+            if let Some(kind) = known_dot_token(&raw) {
+                tokens.push(token(kind, &chars, &builder.positions, index, atom_end));
+                index = atom_end;
+            } else {
+                tokens.push(token("DOT", &chars, &builder.positions, index, index + 1));
+                index += 1;
+            }
+            continue;
+        }
+
+        let start = index;
+        index = read_atom_end(&chars, index);
+        let raw = chars[start..index].iter().collect::<String>();
+        let kind = if is_number_token(&raw) {
+            "NUMBER"
+        } else {
+            "ATOM"
+        };
+        tokens.push(token(kind, &chars, &builder.positions, start, index));
+    }
+
+    if paren_depth > 0 {
+        diagnostics.push(BerkeleySyntaxDiagnostic::error(
+            "SPICE_SYNTAX_UNCLOSED_PAREN",
+            "unclosed parenthesis: opening parenthesis is missing its closing parenthesis",
+            Some(builder.span()),
+        ));
+    }
+
+    tokens
+}
+
+fn token(
+    kind: &str,
+    chars: &[char],
+    positions: &[SourcePosition],
+    start: usize,
+    end: usize,
+) -> BerkeleySyntaxToken {
+    BerkeleySyntaxToken {
+        kind: kind.to_string(),
+        text: chars[start..end].iter().collect(),
+        span: span_for_range(positions, start, end),
+    }
+}
+
+fn span_for_range(positions: &[SourcePosition], start: usize, end: usize) -> SourceSpan {
+    let first = positions
+        .get(start)
+        .copied()
+        .or_else(|| positions.first().copied())
+        .unwrap_or(SourcePosition { line: 1, column: 1 });
+    let last = positions
+        .get(end.saturating_sub(1))
+        .copied()
+        .unwrap_or(first);
+    SourceSpan {
+        start_line: first.line,
+        start_column: first.column,
+        end_line: last.line,
+        end_column: last.column + 1,
+    }
+}
+
+fn card_head(tokens: &[BerkeleySyntaxToken]) -> String {
+    let Some(first) = tokens.first() else {
+        return String::new();
+    };
+    if first.kind == "DOT" {
+        if let Some(second) = tokens.get(1) {
+            if second.kind == "ATOM" {
+                return format!(".{}", second.text);
+            }
+        }
+    }
+    first.text.clone()
+}
+
+fn classify_card(head: &str) -> BerkeleyCardKind {
+    match head.to_ascii_lowercase().as_str() {
+        ".model" => BerkeleyCardKind::Model,
+        ".subckt" => BerkeleyCardKind::SubcktStart,
+        ".ends" => BerkeleyCardKind::SubcktEnd,
+        ".end" => BerkeleyCardKind::End,
+        ".param" => BerkeleyCardKind::Param,
+        ".func" => BerkeleyCardKind::Func,
+        ".options" => BerkeleyCardKind::Options,
+        ".temp" | ".ic" | ".nodeset" => BerkeleyCardKind::Condition,
+        ".op" | ".dc" | ".ac" | ".tran" | ".tf" | ".sens" | ".noise" | ".disto" | ".pz" => {
+            BerkeleyCardKind::Analysis
+        }
+        ".print" | ".plot" | ".save" | ".probe" | ".measure" | ".meas" | ".four" => {
+            BerkeleyCardKind::Output
+        }
+        ".include" | ".lib" => BerkeleyCardKind::Source,
+        ".control" => BerkeleyCardKind::ControlStart,
+        ".endc" => BerkeleyCardKind::ControlEnd,
+        value if value.starts_with('.') => BerkeleyCardKind::UnknownDirective,
+        _ => BerkeleyCardKind::Element,
+    }
+}
+
+fn read_atom_end(chars: &[char], mut index: usize) -> usize {
+    while index < chars.len() {
+        let ch = chars[index];
+        if ch.is_whitespace() || matches!(ch, '(' | ')' | ',' | '=' | '"' | '{' | '}') {
+            break;
+        }
+        index += 1;
+    }
+    index
+}
+
+fn known_dot_token(raw: &str) -> Option<&'static str> {
+    match raw.to_ascii_lowercase().as_str() {
+        ".end" => Some("DOT_END"),
+        ".ends" => Some("DOT_ENDS"),
+        ".subckt" => Some("DOT_SUBCKT"),
+        ".model" => Some("DOT_MODEL"),
+        ".param" => Some("DOT_PARAM"),
+        ".func" => Some("DOT_FUNC"),
+        ".options" => Some("DOT_OPTIONS"),
+        ".temp" => Some("DOT_TEMP"),
+        ".ic" => Some("DOT_IC"),
+        ".nodeset" => Some("DOT_NODESET"),
+        ".op" => Some("DOT_OP"),
+        ".dc" => Some("DOT_DC"),
+        ".ac" => Some("DOT_AC"),
+        ".tran" => Some("DOT_TRAN"),
+        ".tf" => Some("DOT_TF"),
+        ".sens" => Some("DOT_SENS"),
+        ".noise" => Some("DOT_NOISE"),
+        ".disto" => Some("DOT_DISTO"),
+        ".pz" => Some("DOT_PZ"),
+        ".print" => Some("DOT_PRINT"),
+        ".plot" => Some("DOT_PLOT"),
+        ".save" => Some("DOT_SAVE"),
+        ".probe" => Some("DOT_PROBE"),
+        ".measure" => Some("DOT_MEASURE"),
+        ".meas" => Some("DOT_MEAS"),
+        ".four" => Some("DOT_FOUR"),
+        ".include" => Some("DOT_INCLUDE"),
+        ".lib" => Some("DOT_LIB"),
+        ".control" => Some("DOT_CONTROL"),
+        ".endc" => Some("DOT_ENDC"),
+        _ => None,
+    }
+}
+
+fn is_number_token(raw: &str) -> bool {
+    let mut chars = raw.chars().peekable();
+    if matches!(chars.peek(), Some('+') | Some('-')) {
+        chars.next();
+    }
+
+    let mut digits_before_dot = 0;
+    while matches!(chars.peek(), Some(ch) if ch.is_ascii_digit()) {
+        digits_before_dot += 1;
+        chars.next();
+    }
+
+    let mut digits_after_dot = 0;
+    if matches!(chars.peek(), Some('.')) {
+        chars.next();
+        while matches!(chars.peek(), Some(ch) if ch.is_ascii_digit()) {
+            digits_after_dot += 1;
+            chars.next();
+        }
+    }
+
+    if digits_before_dot == 0 && digits_after_dot == 0 {
+        return false;
+    }
+
+    if matches!(chars.peek(), Some('e') | Some('E')) {
+        let mut probe = chars.clone();
+        probe.next();
+        if matches!(probe.peek(), Some('+') | Some('-')) {
+            probe.next();
+        }
+        let mut exponent_digits = 0;
+        while matches!(probe.peek(), Some(ch) if ch.is_ascii_digit()) {
+            exponent_digits += 1;
+            probe.next();
+        }
+        if exponent_digits > 0 {
+            chars = probe;
+        }
+    }
+
+    chars.all(|ch| ch.is_ascii_alphabetic())
+}
+
+fn strip_inline_comment(line: &str) -> &str {
+    line.split_once(';').map_or(line, |(before, _)| before)
+}
+
+fn trimmed_with_column(line: &str) -> Option<(&str, usize)> {
+    let trimmed_end = line.trim_end();
+    if trimmed_end.is_empty() {
+        return None;
+    }
+    let trimmed = trimmed_end.trim_start();
+    let leading_columns = trimmed_end.len() - trimmed.len();
+    Some((trimmed, leading_columns + 1))
+}
+
+fn parse_line_error_span(message: &str) -> Option<SourceSpan> {
+    let after_line = message.strip_prefix("line ")?;
+    let line_text = after_line.split_once(':')?.0;
+    let line = line_text.parse::<usize>().ok()?;
+    Some(SourceSpan::point(line, 1))
+}

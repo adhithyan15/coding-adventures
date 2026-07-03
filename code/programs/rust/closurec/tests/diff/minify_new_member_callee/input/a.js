@@ -1,0 +1,1 @@
+var x=new a.b.C().d;

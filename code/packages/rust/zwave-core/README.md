@@ -10,7 +10,10 @@ Current scope:
 - network summary counts for classic/Long Range nodes and command-class coverage
 - common command-class ids
 - command-class payload frame parse/encode for short and extended class ids
-- command-class and Serial API frame batch summaries for supervisor views
+- command-class frame summaries plus Serial API per-frame and batch summaries
+  for supervisor views
+- controller readiness summaries that combine node, command-class, Serial API,
+  security, and Long Range region signals
 - Serial API SOF/ACK/NAK/CAN constants
 - Serial API request/response frame parse and encode
 - checksum validation

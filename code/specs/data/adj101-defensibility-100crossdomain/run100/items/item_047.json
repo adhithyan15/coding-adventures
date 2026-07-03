@@ -1,0 +1,7 @@
+{
+ "idx": 47,
+ "id": "INS-8",
+ "scenario": "A member went to the emergency room with sudden crushing chest pain and shortness of breath and was treated for a suspected heart attack. No prior authorization had been obtained before the visit.",
+ "policy": "A health plan denies coverage for any treatment that has not received prior authorization. Override: emergency services required to treat an acute condition that a prudent layperson would consider life-threatening are covered without prior authorization.",
+ "question": "Is the emergency treatment covered?"
+}

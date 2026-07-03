@@ -1,0 +1,84 @@
+{
+  "hash": "debf68ecb2c088e8",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10031580/",
+  "title": "Bacterial species and antimicrobial resistance differ between catheter and non–catheter-associated urinary tract infections: Data from a national surveillance network",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10031580/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "E. coli is the most frequent uropathogen in both catheter-associated (CAUTI) and non-catheter-associated UTI.",
+      "byte_quote": "Escherichia coli was the most frequent pathogen identified in both CAUTI and non-CAUTI samples"
+    },
+    {
+      "id": "c2",
+      "text": "Four organisms (E. coli, K. pneumoniae, P. aeruginosa, P. mirabilis) make up 70% of CAUTI and 85% of non-CAUTI pathogens.",
+      "byte_quote": "Escherichia coli, Klebsiella pneumoniae, Pseudomonas aeruginosa, and Proteus mirabilis together represented 70% and 85% of pathogens identified in CAUTI and non-CAUTI samples, respectively"
+    },
+    {
+      "id": "c3",
+      "text": "P. aeruginosa is enriched in catheter-associated UTI (10% of CAUTI vs 3.3% of non-CAUTI).",
+      "byte_quote": "Pseudomonas aeruginosa represented 10% of CAUTI pathogens versus only 3.3% of non-CAUTIs"
+    },
+    {
+      "id": "c4",
+      "text": "E. coli proportion: 31.9% in CAUTI vs 54.8% in non-CAUTI.",
+      "byte_quote": "Escherichia coli (31.9% CAUTI; 54.8% non-CAUTI)"
+    },
+    {
+      "id": "c5",
+      "text": "P. aeruginosa proportion: 10.1% in CAUTI vs 3.3% in non-CAUTI.",
+      "byte_quote": "Pseudomonas aeruginosa (10.1% CAUTI; 3.3% non-CAUTI)"
+    },
+    {
+      "id": "c6",
+      "text": "K. pneumoniae proportion: 11.1% in CAUTI vs 9.9% in non-CAUTI.",
+      "byte_quote": "Klebsiella pneumoniae (11.1% CAUTI; 9.9% non-CAUTI)"
+    },
+    {
+      "id": "c7",
+      "text": "Host/risk factor: CAUTI patients are older (median 75 y) than non-CAUTI patients (median 65 y); catheterization (device) is the differentiating exposure.",
+      "byte_quote": "Age, median y (IQR): CAUTI 75 (60–80); Non-CAUTI 65 (40–75); P<.001"
+    },
+    {
+      "id": "c8",
+      "text": "Host/risk factor: CAUTI cases are predominantly male (57.4%), whereas non-CAUTI cases are predominantly female (68.6%).",
+      "byte_quote": "Male: 2,587 (57.4%) CAUTI; 6,234 (31.3%) non-CAUTI"
+    },
+    {
+      "id": "c9",
+      "text": "Catheter association predicts higher resistance to recommended empirical antibiotics.",
+      "byte_quote": "CAUTI pathogens were more often resistant to recommended empirical antibiotics than non-CAUTI pathogens."
+    },
+    {
+      "id": "c10",
+      "text": "E. coli ciprofloxacin (CIP) resistance is higher in CAUTI (26%) than non-CAUTI (16.9%).",
+      "byte_quote": "26% of CAUTI samples were resistant vs 16.9% of non-CAUTI samples"
+    },
+    {
+      "id": "c11",
+      "text": "E. coli third/fourth-generation cephalosporin (C3/4G) resistance: 11.6% CAUTI vs 8.2% non-CAUTI.",
+      "byte_quote": "11.6% of CAUTI samples were resistant vs 8.2% of non-CAUTI samples"
+    },
+    {
+      "id": "c12",
+      "text": "E. coli norfloxacin (NOR) resistance: 28.1% CAUTI vs 19.1% non-CAUTI.",
+      "byte_quote": "28.1% of CAUTI samples were resistant vs 19.1% of non-CAUTI samples"
+    },
+    {
+      "id": "c13",
+      "text": "K. pneumoniae ciprofloxacin resistance: 17.8% CAUTI vs 11.4% non-CAUTI.",
+      "byte_quote": "17.8% vs 11.4% resistant, respectively"
+    },
+    {
+      "id": "c14",
+      "text": "P. aeruginosa cephalosporin (CEF) resistance: 13.7% CAUTI vs 8.1% non-CAUTI.",
+      "byte_quote": "13.7% vs 8.1% resistant, respectively"
+    },
+    {
+      "id": "c15",
+      "text": "P. aeruginosa piperacillin (PIP) resistance: 14.5% CAUTI vs 9.8% non-CAUTI.",
+      "byte_quote": "14.5% vs 9.8% resistant, respectively"
+    }
+  ],
+  "cites": []
+}

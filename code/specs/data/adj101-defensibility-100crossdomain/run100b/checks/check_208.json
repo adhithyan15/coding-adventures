@@ -1,0 +1,8 @@
+{
+ "check_id": 208,
+ "idx": 80,
+ "slot": "breach_involves_unencrypted_financial_account_numbers",
+ "claimed_value": true,
+ "scenario": "On Monday at 09:00, Northvale Bank's security team confirmed that an attacker had exfiltrated a database containing customers' unencrypted checking account numbers and routing numbers. The team notified the supervisory authority on Thursday at 16:00 the same week.",
+ "cited_span": "a database containing customers' unencrypted checking account numbers and routing numbers"
+}

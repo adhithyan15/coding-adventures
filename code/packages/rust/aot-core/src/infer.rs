@@ -89,6 +89,10 @@ use interpreter_ir::instr::{IIRInstr, Operand};
 /// Defence-in-depth: any future consumer of the `env` map does not need to
 /// re-validate.
 const ALLOWED_TYPES: &[&str] = &[
+    // `u4` (Nib's 4-bit nibble) rides the same slot as `u8`; the aarch64/x86_64
+    // backends mask it to 0xF (LANG-FULL E2). Listed so a `u4` type_hint is
+    // recognised by the native CIR pipeline rather than refused.
+    "u4",
     "u8",  "u16", "u32", "u64",
     "i8",  "i16", "i32", "i64",
     "f32", "f64",
@@ -108,19 +112,21 @@ const ALLOWED_TYPES: &[&str] = &[
 /// | Type | Rank |
 /// |------|------|
 /// | `bool` | 0 (narrowest) |
-/// | `u8`   | 1 |
-/// | `u16`  | 2 |
-/// | `u32`  | 3 |
-/// | `u64`  | 4 |
-/// | `f64`  | 5 (widest) |
+/// | `u4`   | 1 |
+/// | `u8`   | 2 |
+/// | `u16`  | 3 |
+/// | `u32`  | 4 |
+/// | `u64`  | 5 |
+/// | `f64`  | 6 (widest) |
 fn numeric_rank(ty: &str) -> Option<u8> {
     match ty {
         "bool" => Some(0),
-        "u8"   => Some(1),
-        "u16"  => Some(2),
-        "u32"  => Some(3),
-        "u64"  => Some(4),
-        "f64"  => Some(5),
+        "u4"   => Some(1),
+        "u8"   => Some(2),
+        "u16"  => Some(3),
+        "u32"  => Some(4),
+        "u64"  => Some(5),
+        "f64"  => Some(6),
         _      => None,
     }
 }

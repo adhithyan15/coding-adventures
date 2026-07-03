@@ -1,0 +1,1116 @@
+{
+ "summary": {
+  "verdict_match": {
+   "baseline_88_blunt_74": "(reference)",
+   "sensitivity_gated": "82/100"
+  },
+  "underdetermined -> INDETERMINATE": {
+   "baseline": "24/30",
+   "gated": "26/30"
+  },
+  "clean-determinate -> DETERMINATE": {
+   "baseline": "26/30",
+   "gated": "23/30"
+  }
+ },
+ "rows": [
+  {
+   "id": "MED-1",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-2",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "hours_since_last_dose"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-3",
+   "domain": "medicine",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-4",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "iodinated_contrast_procedure"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-5",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-6",
+   "domain": "medicine",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-7",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "yi_meets_stemi"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-8",
+   "domain": "medicine",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "threat_imminent"
+   ],
+   "nulled_pivotal": [
+    "threat_imminent"
+   ]
+  },
+  {
+   "id": "MED-9",
+   "domain": "medicine",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "MED-10",
+   "domain": "medicine",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-1",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-2",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-3",
+   "domain": "statutory-liability",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-4",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-5",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap": [
+    "is_manufacturer",
+    "used_for_intended_purpose"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-6",
+   "domain": "statutory-liability",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "tort_committed_by_employee",
+    "within_scope_of_employment"
+   ],
+   "nulled_pivotal": [
+    "within_scope_of_employment"
+   ]
+  },
+  {
+   "id": "STA-7",
+   "domain": "statutory-liability",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-8",
+   "domain": "statutory-liability",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-9",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "checked_baggage_loss"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "STA-10",
+   "domain": "statutory-liability",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-1",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-2",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-3",
+   "domain": "tax-duty",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-4",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "paid_or_incurred_current_year"
+   ],
+   "nulled_pivotal": [
+    "paid_or_incurred_current_year"
+   ]
+  },
+  {
+   "id": "TAX-5",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-6",
+   "domain": "tax-duty",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "full_time_student"
+   ],
+   "nulled_pivotal": [
+    "full_time_student"
+   ]
+  },
+  {
+   "id": "TAX-7",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-8",
+   "domain": "tax-duty",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "late_filing"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-9",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "TAX-10",
+   "domain": "tax-duty",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "is_imported_alcohol"
+   ],
+   "nulled_pivotal": [
+    "is_imported_alcohol"
+   ]
+  },
+  {
+   "id": "BEN-1",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-2",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap": [
+    "eligible_children_count"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-3",
+   "domain": "benefits-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-4",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "disability_duration_months"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-5",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-6",
+   "domain": "benefits-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "active_service_days"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-7",
+   "domain": "benefits-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-8",
+   "domain": "benefits-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-9",
+   "domain": "benefits-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BEN-10",
+   "domain": "benefits-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-1",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap": [
+    "payout_before_cap"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-2",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "government_travel_advisory"
+   ],
+   "nulled_pivotal": [
+    "government_travel_advisory"
+   ]
+  },
+  {
+   "id": "INS-3",
+   "domain": "insurance-claims",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap": [
+    "dwelling_insured_value",
+    "deductible_rate_pct"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-4",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "death_is_covered"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-5",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gated": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "leap": [
+    "is_personal_property"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-6",
+   "domain": "insurance-claims",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-7",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "INS-8",
+   "domain": "insurance-claims",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "is_emergency_service"
+   ],
+   "nulled_pivotal": [
+    "is_emergency_service"
+   ]
+  },
+  {
+   "id": "INS-9",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "injury_intentionally_caused_by_insured"
+   ],
+   "nulled_pivotal": [
+    "injury_intentionally_caused_by_insured"
+   ]
+  },
+  {
+   "id": "INS-10",
+   "domain": "insurance-claims",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-1",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-2",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-3",
+   "domain": "building-code",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-4",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "is_detached_accessory_structure"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-5",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "alarm_outside_sleeping_area_vicinity",
+    "more_than_one_alarm_required"
+   ],
+   "nulled_pivotal": [
+    "alarm_outside_sleeping_area_vicinity"
+   ]
+  },
+  {
+   "id": "BUI-6",
+   "domain": "building-code",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-7",
+   "domain": "building-code",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "CONFLICT",
+   "gated": "CONFLICT",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-8",
+   "domain": "building-code",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-9",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "BUI-10",
+   "domain": "building-code",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "is_interior_bathroom_of_dwelling_unit"
+   ],
+   "nulled_pivotal": [
+    "is_interior_bathroom_of_dwelling_unit"
+   ]
+  },
+  {
+   "id": "EMP-1",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "CONFLICT",
+   "gated": "CONFLICT",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-2",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-3",
+   "domain": "employment-rules",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-4",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-5",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-6",
+   "domain": "employment-rules",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-7",
+   "domain": "employment-rules",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-8",
+   "domain": "employment-rules",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "CONFLICT",
+   "gated": "CONFLICT",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-9",
+   "domain": "employment-rules",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "EMP-10",
+   "domain": "employment-rules",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-1",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-2",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "days_in_country"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-3",
+   "domain": "immigration-eligibility",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-4",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "is_aggravated_felony"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-5",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-6",
+   "domain": "immigration-eligibility",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-7",
+   "domain": "immigration-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-8",
+   "domain": "immigration-eligibility",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-9",
+   "domain": "immigration-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "IMM-10",
+   "domain": "immigration-eligibility",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-1",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-2",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "acknowledgment_minutes"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-3",
+   "domain": "contract-sla",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "within_business_hours"
+   ],
+   "nulled_pivotal": [
+    "within_business_hours"
+   ]
+  },
+  {
+   "id": "CON-4",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-5",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "force_majeure_event"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-6",
+   "domain": "contract-sla",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "invoice_days_past_due"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-7",
+   "domain": "contract-sla",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-8",
+   "domain": "contract-sla",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-9",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "hours_unresolved"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "CON-10",
+   "domain": "contract-sla",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "days_after_window_start"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-1",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-2",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-3",
+   "domain": "academic-grant",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [
+    "submitted_after_deadline"
+   ],
+   "nulled_pivotal": [
+    "submitted_after_deadline"
+   ]
+  },
+  {
+   "id": "ACA-4",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-5",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-6",
+   "domain": "academic-grant",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "base": "INDETERMINATE",
+   "gated": "INDETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-7",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "personnel_listed_in_approved_budget"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-8",
+   "domain": "academic-grant",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-9",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [
+    "financial_interest_in_relevant_entity"
+   ],
+   "nulled_pivotal": []
+  },
+  {
+   "id": "ACA-10",
+   "domain": "academic-grant",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "base": "DETERMINATE",
+   "gated": "DETERMINATE",
+   "leap": [],
+   "nulled_pivotal": []
+  }
+ ]
+}

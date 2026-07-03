@@ -1,0 +1,61 @@
+% ADJ52 case-14 — patient observations + queries.
+% 52yo man, lifelong nonsmoker, no alcohol, no notable PMH. ~8 months of
+% chronic, slowly worsening productive cough with FROTHY WHITE sputum
+% (bronchorrhea) and intermittent small-volume hemoptysis. Imaging: a solid RML
+% nodule plus numerous scattered thin-walled cysts and small nodules in both
+% lungs, progressively multiplying/enlarging across serial CTs. Transbronchial
+% biopsy: only chronic inflammation + focal alveolar epithelial hyperplasia.
+% Lavage metagenomics: reads for S. pneumoniae, P. jirovecii, A. flavus.
+% Multiple empiric antimicrobials (levofloxacin, TMP-SMX for presumed PCP,
+% fluoroquinolone, cephalosporin+macrolide) -> NONE helped, lesions unchanged/
+% progressing; PET read as "inflammatory". STRIKING labs: markedly elevated
+% CA 19-9 (512), CEA, CYFRA 21-1, NSE, pro-GRP, with ENTIRELY NORMAL WBC, CRP,
+% procalcitonin, ESR. Autoimmune screen: ANA/dsDNA/ANCA/anticardiolipin
+% negative; RF mildly elevated; anti-Ro-52 positive. MDT raised LIP in Sjogren.
+% Numeric magnitudes normalized to qualitative atoms for the adj-lang grammar.
+
+% --- demographics / host ---
+observe age(over_50)
+observe patient_sex(male)
+observe lifelong_nonsmoker
+observe no_immunocompromise
+
+% --- respiratory symptoms ---
+observe sputum(frothy_white_bronchorrhea)
+observe symptom(intermittent_hemoptysis)
+
+% --- imaging gestalt + course ---
+observe finding(diffuse_thin_walled_cysts_and_nodules)
+observe imaging_course(progression_despite_antimicrobials)
+
+% --- pathology / microbiology ---
+observe biopsy(chronic_inflammation_with_alveolar_epithelial_hyperplasia)
+observe lavage(metagenomic_reads_multiple_organisms)
+
+% --- serum tumour-marker panel (correlated -> one mechanism) ---
+observe lab(ca_19_9_markedly_elevated)
+observe lab(carcinoembryonic_antigen_elevated)
+observe lab(cyfra_21_1_elevated)
+observe lab(neuron_specific_enolase_elevated)
+observe lab(pro_gastrin_releasing_peptide_elevated)
+
+% --- infection / inflammation markers ---
+observe labs(infection_inflammation_markers_normal)
+
+% --- autoimmune signals ---
+observe serology(anti_ro_52_positive_rf_mildly_elevated)
+
+% --- treatment course ---
+observe treatment_response(no_response_to_targeted_antimicrobials)
+
+% ===== queries =====
+% q1/q3 — unifying diagnosis and is the LIP/Sjogren proposal correct
+? diagnosis(invasive_mucinous_adenocarcinoma)
+? diagnosis(lymphoid_interstitial_pneumonia_sjogren)
+? diagnosis(lymphangioleiomyomatosis)
+? diagnosis(pulmonary_amyloidosis)
+? diagnosis(chronic_pulmonary_infection)
+
+% q (next step) — confirmatory investigation
+? next_step(surgical_or_cryobiopsy_lung_biopsy)
+? next_step(sjogren_serology_and_minor_salivary_gland_biopsy)

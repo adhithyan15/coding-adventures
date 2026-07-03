@@ -1,0 +1,10 @@
+.gradle/
+.gradle-out/
+build/
+.idea/
+*.iml
+local.properties
+captures/
+.cxx/
+# Cross-compiled engine .so (built by scripts/build.sh, like other demos' native/)
+app/src/main/jniLibs/

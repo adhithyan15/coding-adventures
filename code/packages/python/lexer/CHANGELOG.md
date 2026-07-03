@@ -5,6 +5,31 @@ All notable changes to the lexer package will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — F10 declarative lexer mode transitions
+
+### Added
+- `GrammarLexer` now interprets the declarative mode-transition table on a
+  `TokenGrammar` (F10), the Python port of the Rust `grammar_lexer.rs`
+  interpreter. After each token is emitted it consults the table and may
+  `set-mode` (flat toggle of the active group), `push`/`pop` (F04 nested
+  regions), or toggle skip — enabling context-sensitive lexing
+  (JavaScript regex-vs-division, template substitutions) without a
+  hand-written `on-token` callback. New `_apply_transitions` +
+  `_transition_key`; start mode read from `grammar.start_mode`.
+- **Flat-mode inheritance**: a group reached via `set-mode` inherits the
+  default group's patterns (its own patterns take priority), so a JS `div`
+  mode can override `SLASH`/`SLASH_EQUALS` ahead of `REGEX` without
+  duplicating the grammar. `push` targets stay exclusive (F04 region
+  semantics). Derived automatically from the transition table
+  (`_inheriting_modes`).
+
+### Notes
+- Fully backward compatible: a grammar with no `transitions:` table yields
+  an identical token stream (every F10 helper early-returns / stays inert).
+  Verified by the existing suite + 7 new F10 tests. Mirrors the Rust port
+  (PR #5663); the grammar-tools data model (`ModeTransition` /
+  `TransitionAction`) landed in PR #5668.
+
 ## [0.3.1] - 2026-03-31
 
 ### Fixed

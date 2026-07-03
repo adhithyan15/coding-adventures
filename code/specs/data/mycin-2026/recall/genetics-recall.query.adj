@@ -1,0 +1,80 @@
+% ============================================================================
+% genetics-recall.query.adj — a worked recall query over the genetics library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a genetics recall question:
+% it states no genetic fact — it only `import`s the grounded library and asks binding
+% queries. The native adj-lang engine resolves each `?` against the imported `relate`
+% edges and returns the binding + the citing clause's source/locator/trust. All
+% knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli genetics-recall.query.adj
+% ============================================================================
+
+import "genetics-edges.adj"
+
+? inheritance(huntington_disease, $Pattern)            % expect autosomal_dominant
+? gene_defect(huntington_disease, $Gene)               % expect htt
+? trinucleotide_repeat(huntington_disease, $Repeat)    % expect cag
+? inheritance(marfan_syndrome, $Pattern)               % expect autosomal_dominant
+? trinucleotide_repeat(fragile_x_syndrome, $Repeat)    % expect cgg
+? gene_defect(fragile_x_syndrome, $Gene)               % expect fmr1
+? imprinting(prader_willi_syndrome, $Parent)           % expect paternal
+? inheritance(cystic_fibrosis, $Pattern)               % expect autosomal_recessive (expand)
+? gene_defect(cystic_fibrosis, $Gene)                  % expect cftr (expand)
+? gene_defect(duchenne_muscular_dystrophy, $Gene)      % expect dystrophin (expand)
+? trinucleotide_repeat(myotonic_dystrophy, $Repeat)    % expect ctg (expand)
+? gene_defect(myotonic_dystrophy, $Gene)               % expect dmpk (expand)
+? gene_defect(friedreich_ataxia, $Gene)                % expect fxn (expand)
+? gene_defect(marfan_syndrome, $Gene)                  % expect fbn1 (expand)
+? imprinting(angelman_syndrome, $Parent)               % expect maternal (expand)
+? gene_defect(angelman_syndrome, $Gene)                % expect ube3a (expand)
+? inheritance(friedreich_ataxia, $Pattern)             % expect autosomal_recessive (expand)
+? trinucleotide_repeat(friedreich_ataxia, $Repeat)     % expect gaa (expand)
+? inheritance(wilson_disease, $Pattern)                % expect autosomal_recessive (expand)
+? gene_defect(wilson_disease, $Gene)                   % expect atp7b (expand)
+? inheritance(hereditary_hemochromatosis, $Pattern)    % expect autosomal_recessive (expand)
+? gene_defect(hereditary_hemochromatosis, $Gene)       % expect hfe (expand)
+? inheritance(tay_sachs_disease, $Pattern)             % expect autosomal_recessive (expand)
+? gene_defect(tay_sachs_disease, $Gene)                % expect hexa (expand)
+? gene_defect(phenylketonuria, $Gene)                  % expect pah (expand)
+? gene_defect(achondroplasia, $Gene)                   % expect fgfr3 (expand)
+? inheritance(achondroplasia, $Pattern)                % expect autosomal_dominant (expand)
+? gene_defect(gaucher_disease, $Gene)                  % expect gba1 (expand)
+? inheritance(gaucher_disease, $Pattern)               % expect autosomal_recessive (expand)
+? inheritance(fabry_disease, $Pattern)                 % expect x_linked (expand)
+? gene_defect(fabry_disease, $Gene)                    % expect gla (expand)
+? inheritance(pompe_disease, $Pattern)                 % expect autosomal_recessive (expand)
+? gene_defect(sickle_cell_disease, $Gene)              % expect hbb (expand)
+? gene_defect(retinoblastoma, $Gene)                   % expect rb1 (expand)
+? inheritance(retinoblastoma, $Pattern)                % expect autosomal_dominant (expand)
+? gene_defect(von_hippel_lindau, $Gene)                % expect vhl (expand)
+? inheritance(von_hippel_lindau, $Pattern)             % expect autosomal_dominant (expand)
+? gene_defect(hemophilia_a, $Gene)                     % expect factor_viii (expand)
+? inheritance(hemophilia_a, $Pattern)                  % expect x_linked (expand)
+? inheritance(alpha_1_antitrypsin_deficiency, $Pattern) % expect autosomal_codominant (expand)
+? gene_defect(tuberous_sclerosis, $Gene)               % expect tsc1_tsc2 (expand)
+? inheritance(tuberous_sclerosis, $Pattern)            % expect autosomal_dominant (expand)
+? gene_defect(niemann_pick_disease, $Gene)             % expect smpd1 (recovered)
+? inheritance(niemann_pick_disease, $Pattern)          % expect autosomal_recessive (recovered)
+? gene_defect(pompe_disease, $Gene)                    % expect gaa (recovered)
+? inheritance(sickle_cell_disease, $Pattern)           % expect autosomal_recessive (recovered)
+% --- BATCH 2: high-yield single-gene disorders (gene + inheritance) ---
+? gene_defect(neurofibromatosis_type_1, $Gene)         % expect nf1 (expand)
+? inheritance(neurofibromatosis_type_1, $Pattern)      % expect autosomal_dominant (expand)
+? gene_defect(neurofibromatosis_type_2, $Gene)         % expect nf2 (expand)
+? inheritance(neurofibromatosis_type_2, $Pattern)      % expect autosomal_dominant (expand)
+? gene_defect(osteogenesis_imperfecta, $Gene)          % expect col1a1 (expand)
+? gene_defect(familial_adenomatous_polyposis, $Gene)   % expect apc (expand)
+? inheritance(familial_adenomatous_polyposis, $Pattern)  % expect autosomal_dominant (expand)
+? gene_defect(multiple_endocrine_neoplasia_type_2, $Gene)  % expect ret (expand)
+? inheritance(multiple_endocrine_neoplasia_type_2, $Pattern)  % expect autosomal_dominant (expand)
+? inheritance(li_fraumeni_syndrome, $Pattern)          % expect autosomal_dominant (expand)
+? gene_defect(familial_hypercholesterolemia, $Gene)    % expect ldlr (expand)
+? inheritance(familial_hypercholesterolemia, $Pattern)   % expect autosomal_dominant (expand)
+? gene_defect(spinal_muscular_atrophy, $Gene)          % expect smn1 (expand)
+? inheritance(spinal_muscular_atrophy, $Pattern)       % expect autosomal_recessive (expand)
+? gene_defect(rett_syndrome, $Gene)                    % expect mecp2 (expand)
+? inheritance(rett_syndrome, $Pattern)                 % expect x_linked (expand)
+? gene_defect(g6pd_deficiency, $Gene)                  % expect g6pd (expand)
+? inheritance(g6pd_deficiency, $Pattern)               % expect x_linked (expand)

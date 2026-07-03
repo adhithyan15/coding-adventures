@@ -1,0 +1,22 @@
+% ============================================================================
+% exocrine-gland-recall.query.adj — a worked recall query over the
+% exocrine-gland library.
+% ============================================================================
+% The shape an LLM (or a student) produces to ANSWER a "what characterizes
+% exocrine gland X?" question: it states no anatomy/physiology fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli exocrine-gland-recall.query.adj
+% ============================================================================
+
+import "exocrine-gland-edges.adj"
+
+? characterized_by(parotid_gland, $Characteristic)        % expect serous
+? characterized_by(sublingual_gland, $Characteristic)     % expect mucous
+? characterized_by(submandibular_gland, $Characteristic)  % expect mixed_predominantly_serous
+? characterized_by(eccrine_gland, $Characteristic)        % expect thermoregulatory_sweat
+? characterized_by(apocrine_gland, $Characteristic)       % expect axillary_anogenital

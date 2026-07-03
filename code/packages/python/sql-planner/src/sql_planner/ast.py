@@ -74,10 +74,24 @@ class JoinKind:
 
 @dataclass(frozen=True, slots=True)
 class TableRef:
-    """A reference to a base table in FROM, optionally aliased."""
+    """A reference to a base table in FROM, optionally aliased.
+
+    SQLite supports two query hints on a base-table reference:
+
+    * ``INDEXED BY <name>`` forces the named index for the scan.  The
+      planner errors at plan time if the index doesn't exist on the
+      table.  Field: ``index_hint``.
+    * ``NOT INDEXED`` instructs the planner to use a full table scan,
+      ignoring any matching indexes.  Field: ``not_indexed``.
+
+    Exactly one of ``index_hint`` and ``not_indexed`` may be set; the
+    adapter is responsible for the mutual exclusion at parse time.
+    """
 
     table: str
     alias: str | None = None
+    index_hint: str | None = None
+    not_indexed: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -171,11 +185,21 @@ class JoinClause:
 
 @dataclass(frozen=True, slots=True)
 class SortKey:
-    """One key in ORDER BY."""
+    """One key in ORDER BY.
+
+    ``collation`` carries the optional ``COLLATE name`` clause from
+    SQL: ``ORDER BY name COLLATE NOCASE``.  Mini-sqlite recognises
+    SQLite's three built-in collations (``BINARY`` — the default,
+    which is also what ``None`` means; ``NOCASE`` — case-insensitive
+    ASCII comparison; ``RTRIM`` — strips trailing spaces before
+    comparing).  Unknown collation names are accepted at the planner
+    level and validated by the VM.
+    """
 
     expr: Expr
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default (nulls last for ASC)
+    collation: str | None = None     # None = BINARY (default)
 
 
 @dataclass(frozen=True, slots=True)
@@ -323,12 +347,17 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class UpdateStmt:
-    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...].
+
+    ``on_conflict`` carries the optional ``UPDATE OR <action>`` strategy.
+    ``None`` → default SQLite ABORT behaviour.
+    """
 
     table: str
     assignments: tuple[Assignment, ...]
     where: Expr | None = None
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)
@@ -444,11 +473,16 @@ class CreateTableStmt:
     This reuse is why the planner depends on sql-backend: the schema shape
     is defined once, in the leaf package. Backend-level constraint
     enforcement and planner-level statement planning agree by construction.
+
+    ``strict`` mirrors the SQLite ``STRICT`` trailing table-option.  When
+    True the engine enforces strict per-column typing — see
+    :meth:`sql_backend.Backend.create_table` for the full rules.
     """
 
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -461,14 +495,23 @@ class DropTableStmt:
 
 @dataclass(frozen=True, slots=True)
 class AlterTableStmt:
-    """ALTER TABLE t ADD [COLUMN] col_def.
+    """ALTER TABLE — supports four operations:
 
-    Only ADD [COLUMN] is supported; the column definition uses the same
-    :class:`~sql_backend.schema.ColumnDef` as CREATE TABLE.
+    * ``ADD [COLUMN] col_def``     → ``column`` set, others None
+    * ``RENAME TO new_name``       → ``rename_to`` set, others None
+    * ``RENAME [COLUMN] old TO new`` → ``rename_column`` set to (old, new)
+    * ``DROP [COLUMN] name``       → ``drop_column`` set to the name
+
+    Exactly one of ``column`` / ``rename_to`` / ``rename_column`` /
+    ``drop_column`` is non-None per instance; the others are None.
+    The VM dispatches on whichever one is set.
     """
 
     table: str
-    column: ColumnDef
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -571,6 +614,7 @@ class CreateTriggerStmt:
     event: str   # "INSERT" | "UPDATE" | "DELETE"
     table: str
     body_sql: str
+    if_not_exists: bool = False
 
 
 @dataclass(frozen=True, slots=True)

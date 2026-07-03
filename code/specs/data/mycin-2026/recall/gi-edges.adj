@@ -1,0 +1,134 @@
+% ============================================================================
+% gi-edges — the GI biopsy/histology knowledge-graph (MYCIN-2026 GI).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", #8 gastrointestinal):
+% the characteristic biopsy/histology finding and the GI diagnosis it points to. "A small-
+% bowel biopsy shows villous atrophy — what is the diagnosis?" becomes the binding query
+%     ? biopsy_finding_in(villous_atrophy, $Disease).
+%
+% Direction note: the relation is finding -> disease (`biopsy_finding_in`), the board
+% direction — you SEE the histology and must name the disease. The cited spans read either
+% way ("villous atrophy ... confirm the diagnosis of celiac disease"; "Crohn disease ...
+% characterized by transmural inflammation") — what matters for grounding is that one
+% self-contained span names BOTH the finding AND the disease. Each finding here maps to one
+% canonical diagnosis, so a query binds a single answer with its citation.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the tenth ADJ-only recall domain; sixth Tier-2 organ-system domain
+% after RHEUM, ONCO, HISTO, CARDIO, NEURO). Each fact is a `relate` clause whose byte-
+% provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it appears
+%                character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see gi-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only findings whose page states the association in a clean self-contained
+% span (both finding AND disease named) are included. Under the primary-source-first
+% policy, ulcerative colitis → crypt abscesses is now GROUNDED: the Inflammatory Bowel
+% Disease page (NBK470312) carries a Histopathology span naming "ulcerative colitis" and
+% its "cryptic abscesses" together. Still deferred (re-checked): Whipple disease → PAS-
+% positive macrophages — its dedicated page (NBK441937) splits the diagnosis ("The diagnosis
+% of Whipple disease is made by a biopsy of the intestine...") from the criterion
+% ("...positive results for PAS-positive foamy macrophages in the small bowel biopsy"), and
+% the Tropheryma review (PMC88990) likewise names the PAS-positive macrophages in a sentence
+% that does not contain "Whipple". No primary page checked carries a single both-endpoints
+% declarative, so the edge stays out — honest absence beats an over-reaching citation.
+% ============================================================================
+
+dictionary gi_vocab {
+    define finding : entity   surface "biopsy finding", "histology finding"
+    define disease : entity   surface "GI diagnosis", "disease"
+
+    define biopsy_finding_in : relation from finding to disease  % the disease a biopsy finding points to
+}
+
+rulebook gi_facts {
+    use gi_vocab
+
+    % --- villous atrophy -> celiac disease -------------------------------------
+    relate biopsy_finding_in(villous_atrophy, celiac_disease)
+        source "Characteristic histologic findings, such as villous atrophy, crypt hyperplasia, and intraepithelial lymphocytosis, confirm the diagnosis of celiac disease, particularly in seronegative or borderline cases."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441900/"
+        trust authoritative
+
+    % --- transmural inflammation -> Crohn disease ------------------------------
+    relate biopsy_finding_in(transmural_inflammation, crohn_disease)
+        source "Crohn disease is an immunologically mediated gastrointestinal disorder characterized by transmural inflammation that can involve any segment of the gastrointestinal tract."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK436021/"
+        trust authoritative
+
+    % --- goblet cells (intestinal metaplasia) -> Barrett esophagus -------------
+    relate biopsy_finding_in(goblet_cells, barrett_esophagus)
+        source "Barrett esophagus is a premalignant condition characterized by salmon-colored mucosa extending at least 1 cm proximal to the gastroesophageal junction, with biopsies showing columnar epithelium and goblet cells indicative of intestinal metaplasia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK430979/"
+        trust authoritative
+
+    % --- absence of ganglion cells -> Hirschsprung disease ---------------------
+    relate biopsy_finding_in(absence_of_ganglion_cells, hirschsprung_disease)
+        source "Hirschsprung disease (HD) is a congenital disorder defined by the absence of ganglion cells (GC) at the Meissner's plexus of the submucosa and Auerbach's plexus of the muscularis in the terminal rectum"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562142/"
+        trust authoritative
+
+    % --- >=15 eosinophils per HPF -> eosinophilic esophagitis ------------------
+    relate biopsy_finding_in(eosinophils_15_per_hpf, eosinophilic_esophagitis)
+        source "The pathological diagnosis of EoE is made when eosinophils are present greater than or equal to 15 per high power field (HPF)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459297/"
+        trust authoritative
+
+    % --- BACKFILL (primary-source-first): crypt abscesses -> ulcerative colitis ----------
+    % The IBD page's Histopathology span names "ulcerative colitis" and its "cryptic
+    % abscesses" (the board buzzword "crypt abscesses") together in one declarative.
+    relate biopsy_finding_in(crypt_abscesses, ulcerative_colitis)
+        source "The histopathology of ulcerative colitis will show involvement only of the mucosa and submucosa, with the formation of cryptic abscesses and mucosal ulcers."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470312/"
+        trust authoritative
+
+    % --- onion-skin periductal fibrosis -> primary sclerosing cholangitis ------
+    % The Histopathology span names the disease (via its page-defined abbreviation "PSC",
+    % expanded at the top of NBK537181 as primary sclerosing cholangitis) AND the board
+    % buzzword "onion-skin" fibrosis together in one clean "X is characterized by Y"
+    % declarative. The abbreviation is noted here for honesty: a reader re-fetching the page
+    % finds "PSC" defined and this exact byte-stable sentence.
+    relate biopsy_finding_in(onion_skin_fibrosis, primary_sclerosing_cholangitis)
+        source "PSC is histologically characterized by concentric, lamellar periductal fibrosis—often referred to as \"onion-skin\" fibrosis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537181/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield GI/hepatobiliary biopsy findings, each grounded to a
+    % self-contained verbatim NCBI Bookshelf span naming both the finding and
+    % the disease. (Declined — no single NBK self-contained span: noncaseating
+    % granulomas->Crohn [NBK says "Nonnecrotic" when naming Crohn], PAS-positive
+    % macrophages->Whipple [split sentences], ground-glass hepatocytes->HBV
+    % [no NBK uses "ground glass"]. Backlog, not stretched.)
+    % ------------------------------------------------------------------------
+
+    % Signet ring cells — diffuse-type gastric cancer.
+    relate biopsy_finding_in(signet_ring_cells, gastric_cancer)
+        source "Diffuse-type tumors exhibit markedly aberrant cells with little or no gland formation and occasionally contain signet ring cells (see Image. Diffuse Carcinoma of the Stomach) characterized by cytoplasmic mucin with an eccentrically placed nucleus (see Images. Diffuse Gastric Cancer and Signet Ring Carcinoma)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459142/"
+        trust authoritative
+
+    % Florid duct lesion — primary biliary cholangitis (page uses the former
+    % name "primary biliary cirrhosis").
+    relate biopsy_finding_in(florid_duct_lesion, primary_biliary_cholangitis)
+        source "Histopathological evidence of primary biliary cirrhosis (nonsuppurative destructive cholangitis or \"florid duct lesion\" and destruction of interlobular bile ducts with a predominance of lymphocytic infiltration)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459209/"
+        trust authoritative
+
+    % Cowdry type A intranuclear inclusions — HSV esophagitis (pathognomonic).
+    relate biopsy_finding_in(cowdry_a_inclusions, herpes_esophagitis)
+        source "Multinucleated giant cells with ballooning and degeneration of squamous cells with Cowdry type A inclusion is pathognomonic diagnosis finding for HSV esophagitis and Large cells with both intracytoplasmic inclusions and amphophilic intranuclear inclusions are seen in CMV esophagitis."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK442012/"
+        trust authoritative
+
+    % Pseudomembranes — pseudomembranous (C difficile) colitis.
+    relate biopsy_finding_in(pseudomembranes, pseudomembranous_colitis)
+        source "Colonoscopies of patients with pseudomembranous colitis demonstrate inflamed colonic mucosa characterized by raised yellowish, occasionally hemorrhagic nodules or plaques that congregate into widespread, pseudomembranes on the surface of the colonic mucosa."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470319/"
+        trust authoritative
+}

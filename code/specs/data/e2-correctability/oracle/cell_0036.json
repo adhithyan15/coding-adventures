@@ -1,0 +1,7 @@
+{
+ "idx": 36,
+ "question": "What is the bushu / radical in the Japanese character 謄? Answer with the Hepburn transcription of the name of the radical. For instance, in the character 媛 the answer would be \"Onnahen\".",
+ "gold": "Gen",
+ "answer": "kotoba",
+ "reasoning_raw": "RETRIEVED FACTS (CAS):\n[1] The character 謄 (U+8B04) contains Kangxi radical 149, which is the character 言 (meaning 'speech' or 'word') (src: Wiktionary entry for 謄)\n[2] Kangxi radical 149 (言) appears in the character 謄, which is composed of this radical plus 10 additional strokes, totaling 17 strokes (src: Wiktionary entry for 謄)\n[3] The Hepburn romanization of the bushu (radical) name for Kangxi radical 149 (言) is 'kotoba' (src: Wikipedia List of Kangxi radicals)\n[4] The character 謄 means 'mimeograph, copy' with the on'yomi reading トウ (tō) (src: Jisho.org entry for 謄)\n\nREASONING CHAIN:\n(1) The character 謄 (U+8B04) contains Kangxi radical 149, which is the character 言  [cites: [1]]\n(2) Kangxi radical 149 is the character 言 (meaning 'speech' or 'word')  [cites: [1]]\n(3) The Hepburn romanization of the bushu (radical) name for Kangxi radical 149 (言) is 'kotoba'  [cites: [3]]\n(4) Therefore, the bushu/radical in the Japanese character 謄 is kotoba, which is the Hepburn romanization of the name of Kangxi radical 149 (言)  [cites: [1], [3]]\n\nFINAL ANSWER: kotoba"
+}

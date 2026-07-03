@@ -1,0 +1,15 @@
+[package]
+name = "riscv-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust RV32I instruction encoder.  Re-exports the canonical encode_* helpers from riscv-simulator::encoding (which is the in-tree source of truth for RV32I encoding) and adds the canonical word constants the LANG VM riscv-backend uses to lower CIR to little-endian 32-bit RV32I instruction words.  No IR knowledge.  Phase 7 of the historical-arch backend migration — the FINAL lane."
+
+[lib]
+name = "riscv_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for RV32I bit-level encoding.  We re-export rather
+# than duplicate so any future opcodes/funct3 fixes in the simulator
+# propagate to encoder consumers automatically.
+riscv-simulator = { path = "../riscv-simulator" }

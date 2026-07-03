@@ -1,0 +1,7 @@
+{
+ "idx": 27,
+ "id": "TAX-8",
+ "scenario": "Sergeant Ortiz filed her return six weeks after the deadline. She was on active military deployment in a designated combat zone throughout the period that included the filing deadline.",
+ "policy": "Late filing of a tax return incurs a penalty of $200. However, if the taxpayer was on active military deployment in a combat zone during the filing deadline, this penalty provision is overridden and no late-filing penalty applies, regardless of the standard rule.",
+ "question": "Does Sergeant Ortiz owe the $200 late-filing penalty?"
+}

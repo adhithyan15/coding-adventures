@@ -1,0 +1,16 @@
+[package]
+name = "irc-server-capi"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable C ABI for the all-Rust irc-net-reactor IRC engine — consumed by Swift (and any C-FFI language)"
+publish = false
+
+[lib]
+# staticlib (.a) — compile-time linking for Swift Package Manager / C / C++
+# cdylib     (.so/.dylib/.dll) — dynamic linking for cgo / P/Invoke / Dart FFI
+# lib        — so `cargo test --lib` can exercise the ABI from Rust.
+crate-type = ["staticlib", "cdylib", "lib"]
+name = "irc_server_capi"
+
+[dependencies]
+irc-net-reactor = { path = "../irc-net-reactor" }

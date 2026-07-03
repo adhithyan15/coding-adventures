@@ -1,0 +1,8 @@
+{
+ "check_id": 117,
+ "idx": 47,
+ "slot": "cook_temperature_f",
+ "claimed_value": 160,
+ "scenario": "A cook assembles raw beef patties by hand, shaping the ground beef with bare hands. The patties are then grilled to an internal temperature of 160 degrees F before serving to customers.",
+ "cited_span": "grilled to an internal temperature of 160 degrees F"
+}

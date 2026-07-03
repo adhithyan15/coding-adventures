@@ -49,7 +49,10 @@ defmodule CodingAdventures.NibTypeChecker do
   @void :void
   @literal :literal
 
-  @expression_rules ~w(expr or_expr and_expr eq_expr cmp_expr add_expr bitwise_expr unary_expr primary call_expr)
+  # mul_expr sits between add_expr and bitwise_expr in the precedence cascade
+  # (LANG-FULL N1). It must appear in this list so expression_children/1 does
+  # not filter it out when add_expr walks its operands.
+  @expression_rules ~w(expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr)
 
   @spec check(ASTNode.t()) :: TypeCheckerProtocol.TypeCheckResult.t()
   def check(%ASTNode{} = ast) do
@@ -237,6 +240,42 @@ defmodule CodingAdventures.NibTypeChecker do
   defp check_stmt(_stmt, scope, state, _return_type), do: {state, scope}
 
   defp check_expr(%ASTNode{rule_name: "add_expr"} = node, scope, state) do
+    case expression_children(node) do
+      [left_node, right_node | _] ->
+        {left_type, state} = check_expr(left_node, scope, state)
+        {right_type, state} = check_expr(right_node, scope, state)
+
+        inferred =
+          cond do
+            left_type == @literal and numeric?(right_type) -> right_type
+            right_type == @literal and numeric?(left_type) -> left_type
+            left_type == @literal and right_type == @literal -> @literal
+            left_type == right_type and numeric?(left_type) -> left_type
+            true -> nil
+          end
+
+        state =
+          if is_nil(inferred) do
+            error(state, "binary expression type mismatch: #{inspect(left_type)} vs #{inspect(right_type)}", node)
+          else
+            annotate(state, node, inferred)
+          end
+
+        {inferred, state}
+
+      [single | _] ->
+        check_expr(single, scope, state)
+
+      _ ->
+        {nil, state}
+    end
+  end
+
+  # mul_expr shares the same numeric type-inference logic as add_expr.
+  # Multiplicative expressions (*, /) require both operands to be numeric and
+  # the same type; the result type equals the operand type (or :literal if
+  # both sides are unresolved integer literals).
+  defp check_expr(%ASTNode{rule_name: "mul_expr"} = node, scope, state) do
     case expression_children(node) do
       [left_node, right_node | _] ->
         {left_type, state} = check_expr(left_node, scope, state)

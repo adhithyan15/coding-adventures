@@ -1,0 +1,8 @@
+{
+ "check_id": 180,
+ "idx": 70,
+ "slot": "international_freight",
+ "claimed_value": 3000,
+ "scenario": "Delgado Trading imports a shipment of ceramic tiles. The price paid to the foreign seller was $40,000. International ocean freight to the port of entry cost $3,000, and marine insurance for the voyage cost $1,000.",
+ "cited_span": "International ocean freight to the port of entry cost $3,000"
+}

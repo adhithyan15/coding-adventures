@@ -1,0 +1,43 @@
+{
+  "id": "15-fetchone-fetchmany",
+  "description": "fetchone(), fetchmany(n), fetchall() cursor fetch methods",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE nums (n)"
+    },
+    {
+      "op": "executemany",
+      "sql": "INSERT INTO nums VALUES (?)",
+      "param_seq": [[1], [2], [3], [4], [5]]
+    },
+    {
+      "op": "fetchone_test",
+      "sql": "SELECT n FROM nums ORDER BY n",
+      "expected_first": [1],
+      "expected_second": [2],
+      "note": "Two consecutive fetchone() calls must return rows in order"
+    },
+    {
+      "op": "fetchmany_test",
+      "sql": "SELECT n FROM nums ORDER BY n",
+      "size": 3,
+      "expected_first_batch": [[1], [2], [3]],
+      "expected_second_batch": [[4], [5]],
+      "note": "fetchmany(3) then fetchmany(3) — second call returns remaining 2 rows"
+    },
+    {
+      "op": "fetchall_test",
+      "sql": "SELECT n FROM nums ORDER BY n",
+      "expected_rows": [[1], [2], [3], [4], [5]],
+      "note": "fetchall() must return every row in one call"
+    },
+    {
+      "op": "fetchall_empty_test",
+      "sql": "SELECT n FROM nums WHERE n > 99",
+      "expected_rows": [],
+      "note": "fetchall() on empty result must return empty list/array"
+    }
+  ]
+}

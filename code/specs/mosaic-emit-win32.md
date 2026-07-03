@@ -425,7 +425,7 @@ Mirrors the React and XAML emitters; one type swap, same call shape.
 ## 10. VisiCalc plumbing — proof that this all hangs together
 
 ```
-demo/visicalc/
+code/programs/typescript/visicalc/
   windows/win32/
     Cargo.toml                  — generated (when --emit-host)
     src/
@@ -444,7 +444,7 @@ demo/visicalc/
 ```
 
 The end-to-end story: `cargo build --release` in
-`demo/visicalc/windows/win32/` produces a single ~3-5 MB `.exe` with no
+`code/programs/typescript/visicalc/windows/win32/` produces a single ~3-5 MB `.exe` with no
 runtime dependencies (it statically links `paint-vm-direct2d`,
 `win32-event-loop`, and the generated component crates). Double-clicking
 it opens a window that renders the same VisiCalc grid as the React demo,
@@ -481,7 +481,7 @@ adds a new `"win32"` arm that constructs a
    - UI24 dispatch cases (empty, one, three emits).
    - Component-name mismatch / unsupported primitive errors.
 2. **Compile-the-output tests** (cross-platform via `cargo check`):
-   for each `demo/visicalc/mosaic/*` triple, run the emitter, drop the
+   for each `code/programs/mosaic/visicalc/*` triple, run the emitter, drop the
    output into a temp crate, and assert `cargo check` succeeds. This
    catches emitter bugs that produce un-compilable Rust.
 3. **Windows-only smoke tests** (`#[cfg(target_os = "windows")]`):

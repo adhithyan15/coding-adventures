@@ -1,0 +1,46 @@
+{
+ "claim": "cost-to-correct is small: one localized edit, propagated, 0 model calls",
+ "1_localize": {
+  "case": "MEN-2 (pre-culture)",
+  "naive_P_bacterial": 0.7709,
+  "error_locus": "four correlated CSF-chemistry contributions stacked as independent",
+  "stacked_csf_contributions_in_proof": [
+   "csf_neutrophilic_pleocytosis(high)"
+  ]
+ },
+ "2_edit": {
+  "edits": 1,
+  "clauses_touched": 0,
+  "removed": [],
+  "kept_representative": "csf_neutrophilic_pleocytosis(high)",
+  "new_cas_version": "cas/objects/c3551b18e5f3b86e.json",
+  "answer_time_model_calls": 0
+ },
+ "3_propagate": {
+  "MEN-2_calibrated": "0.7709 -> 0.7709 (over-saturation -> high suspicion, await culture)",
+  "all_cases_after_fix": {
+   "MEN-1": {
+    "leader": "bacterial_meningitis",
+    "P_bacterial": 0.9999,
+    "P_viral": 0.963
+   },
+   "MEN-2": {
+    "leader": "viral_meningitis",
+    "P_bacterial": 0.7709,
+    "P_viral": 0.963
+   },
+   "MEN-3": {
+    "leader": "viral_meningitis",
+    "P_bacterial": 0.037,
+    "P_viral": 1.0
+   },
+   "MEN-4": {
+    "leader": "viral_meningitis",
+    "P_bacterial": 0.037,
+    "P_viral": 0.963
+   }
+  },
+  "answer_time_model_calls": 0,
+  "note": "the single edit propagated to every case citing those clauses (MEN-1 recalibrated too)"
+ }
+}

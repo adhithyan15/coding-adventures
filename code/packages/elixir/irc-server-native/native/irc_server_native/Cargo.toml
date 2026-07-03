@@ -1,0 +1,19 @@
+# Erlang NIF cdylib exposing the all-Rust irc-net-reactor IRC engine to Elixir.
+# Loaded via :erlang.load_nif/2. [workspace]-isolated: BUILD does its own
+# `cargo build` from this directory.
+[workspace]
+
+[package]
+name = "irc-server-native-nif"
+version = "0.1.0"
+edition = "2021"
+description = "Erlang NIF exposing the irc-net-reactor IRC engine to Elixir"
+build = "build.rs"
+
+[lib]
+name = "irc_server_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+erl-nif-bridge  = { path = "../../../../rust/erl-nif-bridge" }
+irc-net-reactor = { path = "../../../../rust/irc-net-reactor" }

@@ -143,13 +143,56 @@ pub fn tokenize_javascript_with_cv(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use lexer::token::TokenType;
+    use lexer::token::{TokenType, TOKEN_PRECEDED_BY_NEWLINE};
+
+    fn preceded_by_newline(t: &lexer::token::Token) -> bool {
+        t.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
+    }
 
     #[test]
     fn tokenizes_es5_javascript() {
         let tokens = tokenize_javascript("var x = 1;", "es5").unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "var");
+    }
+
+    #[test]
+    fn token_after_newline_has_preceded_by_newline_flag() {
+        // `a = 1` then `b = 2` on the next line. `b` (index 3) is preceded by a
+        // line terminator; the tokens up to and including the `1` are not.
+        let tokens = tokenize_javascript("a = 1\nb = 2", "es2025").unwrap();
+        // [a, =, 1, b, =, 2, EOF]
+        assert_eq!(tokens[3].value, "b");
+        assert!(
+            preceded_by_newline(&tokens[3]),
+            "`b` after a newline must carry TOKEN_PRECEDED_BY_NEWLINE"
+        );
+        // The `=` and `1` on the first line must NOT carry the flag.
+        assert!(!preceded_by_newline(&tokens[1]));
+        assert!(!preceded_by_newline(&tokens[2]));
+    }
+
+    #[test]
+    fn same_line_tokens_have_no_newline_flag() {
+        let tokens = tokenize_javascript("a = 1 b = 2", "es2025").unwrap();
+        // Everything is on one line; no token is newline-preceded.
+        assert!(tokens.iter().all(|t| !preceded_by_newline(t)));
+    }
+
+    #[test]
+    fn newline_inside_a_template_does_not_set_the_flag() {
+        // The `\n` lives INSIDE the multi-line template (consumed by token
+        // matching, not trivia), and `x` follows on the same source line as the
+        // template's closing backtick — so `x` is NOT preceded by a newline.
+        let tokens = tokenize_javascript("var t = `a\nb`; x", "es2025").unwrap();
+        let x = tokens
+            .iter()
+            .find(|t| t.value == "x")
+            .expect("found x token");
+        assert!(
+            !preceded_by_newline(x),
+            "a newline inside a template must not flag the following token"
+        );
     }
 
     #[test]
@@ -202,6 +245,45 @@ mod tests {
         let _lexer = create_javascript_lexer_typed("var x = 1;", EsVersion::Es5);
     }
 
+    // gap-096 (CLOC12.99) regression: the ES2024/ES2025 REGEX token's
+    // flag character class once read `[dgimsvy]`, accidentally dropping
+    // the ES2015 `u` (unicode) flag when `v` (unicodeSets) was added.
+    // A regex carrying every modern flag must lex as ONE token, not a
+    // truncated regex followed by a stray identifier of the leftover
+    // flags. We assert the whole `/x/dgimsuy` literal survives intact.
+    #[test]
+    fn es2025_regex_accepts_all_modern_flags_as_one_token() {
+        let tokens =
+            tokenize_javascript_typed("var r=/x/dgimsuy;", EsVersion::Es2025).unwrap();
+        let regex = tokens
+            .iter()
+            .find(|t| t.value.starts_with("/x/"))
+            .expect("expected a single regex token beginning with /x/");
+        assert_eq!(
+            regex.value, "/x/dgimsuy",
+            "all of d,g,i,m,s,u,y must be consumed as part of the regex; \
+             a split here means a flag is missing from the grammar's class"
+        );
+        // And crucially there is NO stray identifier `uy` left behind.
+        assert!(
+            tokens.iter().all(|t| t.value != "uy" && t.value != "u"),
+            "regex flags must not split off into a separate identifier"
+        );
+    }
+
+    // The same flag set under ES2024 (the other grammar that carried the
+    // typo) must likewise lex as one token.
+    #[test]
+    fn es2024_regex_accepts_u_flag() {
+        let tokens =
+            tokenize_javascript_typed("var r=/x/gimsuy;", EsVersion::Es2024).unwrap();
+        let regex = tokens
+            .iter()
+            .find(|t| t.value.starts_with("/x/"))
+            .expect("expected a single regex token beginning with /x/");
+        assert_eq!(regex.value, "/x/gimsuy");
+    }
+
     // ----- CV-plumbed tokenization (CLOC03 Stage 1) -----
 
     #[test]
@@ -251,6 +333,102 @@ mod tests {
                 origin.location
             );
         }
+    }
+
+    // ----- gap-044b: template literals with non-identifier expressions -----
+    //
+    // Before the fix, any substitution expression that triggered an F10
+    // flat-mode transition (e.g. `on NAME -> set-mode div`) caused the lexer
+    // to lose the template context.  A subsequent `}` was then consumed as
+    // RBRACE instead of TEMPLATE_TAIL, producing a LexerError.
+    //
+    // We verify six representative shapes; each must tokenize successfully
+    // and the closing `}...`` token must be classified as TEMPLATE_TAIL.
+
+    fn find_template_tail(tokens: &[lexer::token::Token]) -> Option<&lexer::token::Token> {
+        tokens.iter().find(|t| t.type_name.as_deref() == Some("TEMPLATE_TAIL"))
+    }
+
+    #[test]
+    fn gap044b_template_member_expr_no_lexer_error() {
+        // `${obj.name}` — DOT triggers set-mode default, then NAME sets div
+        let tokens = tokenize_javascript_typed(
+            "var s = `prefix ${obj.name} suffix`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize `${obj.name}` without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after `${{obj.name}}`");
+    }
+
+    #[test]
+    fn gap044b_template_binary_expr_no_lexer_error() {
+        // `${a + b}` — PLUS triggers set-mode default, then b sets div
+        let tokens = tokenize_javascript_typed(
+            "var s = `sum ${a + b} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize `${{a + b}}` without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after `${{a + b}}`");
+    }
+
+    #[test]
+    fn gap044b_template_call_expr_no_lexer_error() {
+        // `${f()}` — LPAREN triggers set-mode default, RPAREN triggers set-mode div
+        let tokens = tokenize_javascript_typed(
+            "var s = `call ${f()} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize `${{f()}}` without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after `${{f()}}`");
+    }
+
+    #[test]
+    fn gap044b_template_object_expr_no_lexer_error() {
+        // `${{a:1}}` — nested braces inside the substitution
+        let tokens = tokenize_javascript_typed(
+            "var s = `obj ${{a:1}} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize template with nested object literal without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after nested object literal in template");
+    }
+
+    #[test]
+    fn gap044b_template_ternary_expr_no_lexer_error() {
+        // `${x ? y : z}` — COLON triggers set-mode default, z NAME sets div
+        let tokens = tokenize_javascript_typed(
+            "var s = `tern ${x ? y : z} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize ternary template without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token after ternary expression in template");
+    }
+
+    #[test]
+    fn gap044b_template_multiple_substitutions_no_lexer_error() {
+        // Two substitutions: each `}${` is TEMPLATE_MIDDLE, closing `}` is TEMPLATE_TAIL
+        let tokens = tokenize_javascript_typed(
+            "var s = `${a.x} mid ${b.y} end`;",
+            EsVersion::Es2025,
+        ).expect("should tokenize multiple substitutions without LexerError");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected a TEMPLATE_TAIL token in multi-substitution template");
+        let middles: Vec<_> = tokens.iter()
+            .filter(|t| t.type_name.as_deref() == Some("TEMPLATE_MIDDLE"))
+            .collect();
+        assert_eq!(middles.len(), 1,
+            "expected exactly one TEMPLATE_MIDDLE between two substitutions");
+    }
+
+    #[test]
+    fn gap044b_simple_template_still_works() {
+        // Sanity check: simple `${x}` (only NAME, no operators) must still work.
+        let tokens = tokenize_javascript_typed(
+            "var s = `hello ${x}!`;",
+            EsVersion::Es2025,
+        ).expect("simple template must tokenize");
+        assert!(find_template_tail(&tokens).is_some(),
+            "expected TEMPLATE_TAIL for simple template substitution");
     }
 
     #[test]

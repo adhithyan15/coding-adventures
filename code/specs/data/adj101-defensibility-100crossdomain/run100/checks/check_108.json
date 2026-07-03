@@ -1,0 +1,8 @@
+{
+ "check_id": 108,
+ "idx": 45,
+ "slot": "covered_peril",
+ "claimed_value": "fire",
+ "scenario": "A warehouse fire destroyed insured inventory worth $80,000. The policy was active, premiums were current, and fire is a listed covered peril. An inspection after the fire confirmed a sprinkler system was installed throughout the building.",
+ "cited_span": "fire is a listed covered peril"
+}

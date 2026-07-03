@@ -4,6 +4,884 @@
 
 ### Added
 
+- **Berkeley SPICE syntax facade** —
+  `parse_berkeley_syntax()` now mirrors the Rust Berkeley logical-card parser
+  contract with embedded grammar metadata, normalized continuation cards,
+  source spans, token streams, stable diagnostics, and analysis inventory for
+  frontend and parser-tooling consumers.
+
+- **Device model reference-deck audit analysis summaries** —
+  `device_model_reference_deck_audit_analysis_summary()`,
+  `format_device_model_reference_deck_audit_analysis_summary_table()`,
+  `device_model_reference_deck_audit_analysis_summary_records()`,
+  `format_device_model_reference_deck_audit_analysis_summary_csv()`, and
+  `format_device_model_reference_deck_audit_analysis_summary_json()` now expose
+  stable per-analysis coverage summaries for the reference-deck audit matrix,
+  matching Rust and TypeScript.
+
+- **Device model reference-deck audit summaries** —
+  `device_model_reference_deck_audit_summary()`,
+  `format_device_model_reference_deck_audit_summary_table()`,
+  `device_model_reference_deck_audit_summary_records()`,
+  `format_device_model_reference_deck_audit_summary_csv()`, and
+  `format_device_model_reference_deck_audit_summary_json()` now expose stable
+  per-kind coverage summaries for the reference-deck audit matrix, matching
+  Rust and TypeScript.
+
+- **Device model reference-deck audit record exports** —
+  `device_model_reference_deck_audit_records()`,
+  `format_device_model_reference_deck_audit_csv()`, and
+  `format_device_model_reference_deck_audit_json()` now expose the audit
+  matrix as stable header-keyed records plus CSV/JSON outputs, matching Rust
+  and TypeScript.
+
+- **Device model reference-deck audit release gate** —
+  `device_model_reference_deck_audit_gate()` and
+  `format_device_model_reference_deck_audit_gate_report()` now validate the
+  required kind-by-analysis coverage matrix and emit a stable pass/fail gate
+  report, matching Rust and TypeScript.
+
+- **Device model reference-deck audit table** —
+  `format_device_model_reference_deck_audit_table()` now emits a stable
+  tab-separated summary for the device-model reference-deck audit matrix,
+  matching Rust and TypeScript.
+
+- **Device model reference-deck audit fixtures** —
+  `device_model_reference_deck_audit_fixtures()` now exposes a stable
+  reference coverage matrix across DC, temperature, AC, noise, and transient
+  model-depth fixtures for diode, BJT, JFET, and Level-1 MOS families,
+  matching Rust and TypeScript.
+
+- **MOS Level-1 bulk-junction depletion charge shaping** —
+  Level-1 MOS `PB`/`MJ` model-card parameters now shape reverse-biased
+  `CBS`/`CBD` bulk-junction capacitance for AC operating-point capacitance
+  reports and transient source-body / drain-body charge companions, matching
+  Rust and TypeScript, with regression coverage for reverse-biased drain-step
+  delay.
+
+- **MOS Level-1 transient bulk-junction charge stamping** —
+  Level-1 MOS zero-bias bulk-junction `CBS`/`CBD` model-card storage now
+  stamps transient source-body and drain-body companions, matching Rust and
+  TypeScript, with regression coverage for drain-step delay.
+
+- **MOS Level-1 transient overlap charge stamping** —
+  Level-1 MOS `CGSO`/`CGDO`/`CGBO` model-card storage now stamps transient
+  gate-source, gate-drain, and gate-body companions, matching Rust and
+  TypeScript, with regression coverage for gate-step delay.
+
+- **JFET transient charge stamping** —
+  JFET `Cgs`/`Cgd` model-card storage now stamps transient gate-source and
+  gate-drain companions and contributes AC susceptance, matching Rust and
+  TypeScript, with regression coverage for gate-step delay and high-frequency
+  gate-drive shunting.
+
+- **BJT transient charge stamping** —
+  BJT `Cje`/`Cjc`/`Tf`/`Tr` model-card storage now stamps transient
+  base-emitter and base-collector companions, matching Rust and TypeScript,
+  with regression coverage for base current-step delay and forward transit-time
+  turnoff charge.
+
+- **Diode transient charge stamping** —
+  Diode `Cjo`/`Tt` model-card storage now stamps transient anode-cathode
+  companions, matching Rust and TypeScript, with regression coverage for
+  junction-capacitance current-step delay and transit-time turnoff charge.
+
+- **Device model charge audit fixtures** —
+  `device_model_charge_audit_fixtures()` now exposes runnable one-device
+  `.tran` fixtures with reference deck lines, explicit terminal storage
+  capacitance metadata, stable first/final probe-voltage windows, and
+  charge-behavior notes for diode, BJT, JFET, and Level-1 MOS audits,
+  matching Rust and TypeScript.
+
+- **Device model noise audit fixtures** —
+  `device_model_noise_audit_fixtures()` now exposes runnable one-device
+  `.noise` fixtures with reference deck lines and stable source/output PSD
+  windows for diode and BJT shot noise plus JFET and Level-1 MOS channel
+  thermal noise audits, matching Rust and TypeScript.
+
+- **Device model capacitance audit fixtures** —
+  `device_model_capacitance_audit_fixtures()` now exposes runnable
+  one-device AC fixtures with `.ac` reference deck lines and stable
+  high-frequency probe-magnitude windows for diode, BJT, JFET, and Level-1 MOS
+  model-depth audits, matching Rust and TypeScript.
+
+- **Device model temperature audit fixtures** —
+  `device_model_temperature_audit_fixtures()` now exposes runnable one-device
+  DC temperature-sweep fixtures with `.temp` reference deck lines and stable
+  probe-voltage windows for diode, BJT, JFET, and Level-1 MOS model-depth
+  audits, matching Rust and TypeScript.
+
+- **Device model behavior audit fixtures** —
+  `device_model_behavior_audit_fixtures()` now exposes runnable one-device DC
+  bias fixtures with reference deck lines and stable probe-voltage windows for
+  diode, BJT, JFET, and Level-1 MOS model-depth audits, matching Rust and
+  TypeScript.
+
+- **Nonlinear Newton damping diagnostics** —
+  `dc_op()` now applies a configurable `newton_step_limit` to nonlinear
+  Newton updates and reports `newton_step_limit`, `limited_newton_steps`, and
+  `minimum_damping_factor` in `DcResult.diagnostics`, matching Rust and
+  TypeScript.
+
+- **Production solver profiles** —
+  `DcResult.diagnostics` now carries a nested `solver_profile` with matrix
+  size, solver kind, backend, structural nonzero count, density, peak fill-in,
+  and fallback metadata. Large real DC solves prefer an optional SciPy
+  sparse-LU backend and fall back to the native sparse-row solver with a stable
+  fallback reason, matching Rust and TypeScript profile surfaces.
+
+- **Deck whole-run analysis execution** —
+  `run_deck()` now executes every parsed `.op`, `.dc`, `.ac`, `.tran`,
+  `.tf`, `.sens`, and `.noise` card in source order, preserves duplicate
+  analysis directives, defaults analysis-less decks to an implicit `.op`, and
+  returns aggregate run-artifact table, CSV, compact JSON, and header-keyed
+  record exports, matching Rust and TypeScript.
+
+- **Deck output-plan analysis sweep artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose selected
+  sweep, frequency, transient timing, and `UIC` metadata in table, CSV, compact
+  JSON, and header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck output-plan analysis output-node artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose the selected
+  analysis output node beside line/source metadata in table, CSV, compact JSON,
+  and header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck output-plan analysis source artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose the selected
+  analysis line number and source name beside directive metadata in table, CSV,
+  compact JSON, and header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck output-plan result row artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose selected
+  result row counts beside result-column inventories in table, CSV, compact
+  JSON, and header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck output-plan probe source line artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose selected
+  output probe source line counts/lists aligned with the selected output-probe
+  inventories in table, CSV, compact JSON, and header-keyed record exports,
+  matching Rust and TypeScript.
+
+- **Deck output-plan directive line artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose selected
+  output directive source line counts/lists beside directive scope inventories
+  in table, CSV, compact JSON, and header-keyed record exports, matching Rust
+  and TypeScript.
+
+- **Deck output-plan directive analysis-kind artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose normalized
+  output directive analysis scope counts/lists beside directive kind
+  inventories, distinguishing global `.save` / `.probe` selections from
+  scoped `.probe`, `.print`, and `.plot` selections in table, CSV, compact
+  JSON, and header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck output-plan directive-kind artifacts** —
+  selected `run_deck_analysis()` output-plan artifacts now expose normalized
+  output directive kind counts/lists beside the selected directive tokens in
+  table, CSV, compact JSON, and header-keyed record exports, matching Rust and
+  TypeScript.
+
+- **Deck output-plan table export artifacts** —
+  selected `run_deck_analysis()` executions now include `output-plan` in
+  `tables`, selected-run `TableList` metadata, and ordered `table_artifacts`
+  with stable table, CSV, compact JSON, and header-keyed record payloads,
+  matching Rust and TypeScript.
+
+- **Deck output-plan inventory artifacts** —
+  selected `run_deck_analysis()` executions now expose
+  `output_plan_artifacts` with stable result-column, output-probe,
+  output-directive, and table inventories plus table, CSV, compact JSON, and
+  header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck control policy table export artifacts** —
+  selected `run_deck_analysis()` executions now include `control-policy` and
+  `control-policy-summary` entries in `tables`, selected-run `TableList`
+  metadata, and ordered `table_artifacts` with stable table, CSV, compact JSON,
+  and header-keyed record payloads, matching Rust and TypeScript.
+
+- **Deck control policy run-artifact inventories** —
+  selected `run_deck_analysis()` run artifacts now carry
+  `ControlPolicyArtifacts`, `ControlPolicyCategoryList`,
+  `ControlPolicyCodeList`, and `ControlPolicySeverityList` summary fields so
+  policy-blocked `.control` commands are visible in the stable run-artifact
+  table, CSV, compact JSON, and header-keyed record exports, matching Rust and
+  TypeScript.
+
+- **Deck control policy summary artifacts** —
+  selected `run_deck_analysis()` executions now group policy-blocked `.control`
+  command artifacts by category as `control_policy_summary_artifacts` with
+  stable counts, line lists, command lists, code lists, severity lists, and
+  table, CSV, compact JSON, and header-keyed record exports, matching Rust and
+  TypeScript.
+
+- **Deck control policy diagnostic artifacts** —
+  selected `run_deck_analysis()` executions now expose policy-blocked
+  `.control` commands as `control_policy_artifacts` with stable line,
+  category, command, code, severity, and message metadata plus table, CSV,
+  compact JSON, and header-keyed record exports, matching Rust and TypeScript.
+
+- **Deck rawfile probe inventory artifacts** —
+  selected `run_deck_analysis()` rawfile artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns, and `write <rawfile> <probes...>` artifacts now
+  keep only requested matching vector columns in deterministic in-memory
+  rawfile output, matching Rust and TypeScript.
+
+- **Deck WRDATA unmatched probe artifacts** —
+  selected `run_deck_analysis()` WRDATA artifact summaries now carry
+  `MatchedProbes` / `MatchedProbeList` and `UnmatchedProbes` /
+  `UnmatchedProbeList` columns so ignored `wrdata` probe names remain
+  auditable in stable table, CSV, JSON, and record exports, matching Rust and
+  TypeScript.
+
+- **Deck WRDATA probe column artifacts** —
+  `format_deck_wrdata_ascii()` now treats explicit `wrdata <file> <probes...>`
+  probe lists as data-file column selectors, preserving the scale column plus
+  requested matching probe columns in deterministic WRDATA output, matching
+  Rust and TypeScript.
+
+- **Deck WRDATA rawfile option rendering artifacts** —
+  selected `run_deck_analysis()` WRDATA artifacts now carry accepted
+  `.control` rawfile/data-write option inventories through stable
+  `Options` / `RawfileOptionList` summary columns and render
+  `wr_vecnames` / `wr_singlescale` intent as deterministic `VectorNames` /
+  `Scale` metadata in the in-memory data file, matching Rust and TypeScript.
+
+- **Deck WRDATA ASCII artifacts** —
+  selected `run_deck_analysis()` executions now expose deterministic in-memory
+  ASCII data-file artifacts for accepted `.control` `wrdata <file> ...`
+  markers as `wrdata_artifact_count`, `wrdata_artifacts`,
+  `wrdata_artifact_table`, `wrdata_artifact_csv`, `wrdata_artifact_json`, and
+  `wrdata_artifact_records`, matching Rust and TypeScript.
+
+- **Deck rawfile ASCII artifacts** —
+  selected `run_deck_analysis()` executions now expose deterministic in-memory
+  ASCII rawfile artifacts for accepted `.control` `write <rawfile> ...`
+  markers as `rawfile_artifact_count`, `rawfile_artifacts`,
+  `rawfile_artifact_table`, `rawfile_artifact_csv`, `rawfile_artifact_json`,
+  and `rawfile_artifact_records`, matching Rust and TypeScript.
+
+- **Deck rawfile option artifacts** —
+  `analyze_deck_controls()` and selected `run_deck_analysis()` executions now
+  expose normalized accepted `.control` rawfile option inventories as
+  `rawfile_option_count` / `rawfile_options`, and selected-run artifacts carry
+  stable `RawfileOptions` / `RawfileOptionList` columns through tables,
+  CSV/JSON, and ordered `table_artifacts`, matching Rust and TypeScript.
+
+- **Deck rawfile write marker artifacts** —
+  `analyze_deck_controls()` and selected `run_deck_analysis()` executions now
+  expose normalized accepted `.control` `write` / `wrdata` marker inventories
+  as `write_marker_count` / `write_markers`, and selected-run artifacts carry
+  stable `WriteMarkers` / `WriteMarkerList` columns through tables, CSV/JSON,
+  and ordered `table_artifacts`, matching Rust and TypeScript.
+
+- **Deck execution diagnostic artifacts** —
+  `run_deck_analysis()` selected executions now expose selected diagnostic
+  inventories directly as `diagnostic_count` / `diagnostic_codes` alongside
+  control command, table, output, measurement, Fourier, and analysis-directive
+  metadata, matching Rust and TypeScript.
+
+- **Deck execution control command inventory artifacts** —
+  `run_deck_analysis()` selected executions now expose normalized `.control`
+  command inventories directly as `control_line_count` / `control_lines`
+  alongside table, output, measurement, Fourier, and analysis-directive
+  metadata, matching Rust and TypeScript.
+
+- **Deck run control command inventory artifacts** —
+  `analyze_deck_controls()` now exposes normalized `.control` command lines
+  separately from full active deck input, and `run_deck_analysis()`
+  selected-run artifacts carry those commands in `ControlLines` /
+  `ControlLineList` across stable tables, CSV/JSON helpers, and ordered
+  `table_artifacts`, matching Rust and TypeScript.
+
+- **Deck run control diagnostic artifacts** —
+  `run_deck_analysis()` selected-run artifacts now include existing `.control`
+  body policy diagnostic codes in `Diagnostics` / `DiagnosticCodeList`, and
+  those codes flow through stable run-artifact tables, CSV/JSON helpers, and
+  ordered `table_artifacts`, matching Rust and TypeScript.
+
+- **Deck execution table export artifacts** —
+  `run_deck_analysis()` selected executions now expose ordered
+  `table_artifacts` with each stable table's text, CSV, compact JSON, and
+  header-keyed records beside the existing table inventory, matching Rust and
+  TypeScript.
+
+- **Deck execution table inventory** —
+  `run_deck_analysis()` selected executions now expose stable table count/name
+  lists beside analysis directives, output probes, output directives, and
+  selected-run artifacts, matching Rust and TypeScript.
+
+- **Deck run table artifacts** —
+  `run_deck_analysis()` selected-run artifacts now include stable table
+  count/name lists and `format_deck_run_artifact_table()` renders `TableList`,
+  matching Rust and TypeScript.
+
+- **Deck execution analysis directives** —
+  `run_deck_analysis()` now returns the selected analysis directive beside
+  selected output probes and output directives, and selected-run artifacts
+  include stable `AnalysisDirectiveList` metadata, matching Rust and
+  TypeScript.
+
+- **Deck execution output directives** —
+  `run_deck_analysis()` now returns selected output directives beside selected
+  output probes so callers can inspect the deck output plan without reparsing
+  run-artifact tables, matching Rust and TypeScript.
+
+- **Deck table records** —
+  `deck_table_records()` now parses stable tab-separated deck output tables into
+  header-keyed records for browser and host integrations, matching Rust and
+  TypeScript.
+
+- **Deck table JSON format** —
+  `format_deck_table_json()` now converts stable tab-separated deck output
+  tables into compact JSON records keyed by the header row, matching Rust and
+  TypeScript.
+
+- **Deck table CSV format** —
+  `format_deck_table_csv()` now converts stable tab-separated deck output
+  tables into deterministic CSV using the same escaping rules as selected-run
+  artifacts, matching Rust and TypeScript.
+
+- **Deck run artifact JSON format** —
+  `format_deck_run_artifact_json()` now renders selected-run artifacts as
+  compact JSON records with the same stable keys and normalized cell values as
+  `format_deck_run_artifact_table()`, matching Rust and TypeScript.
+
+- **Deck run artifact CSV format** —
+  `format_deck_run_artifact_csv()` now renders selected-run artifacts with the
+  same stable columns as `format_deck_run_artifact_table()`, using deterministic
+  CSV escaping for browser and spreadsheet consumers, matching Rust and
+  TypeScript.
+
+- **Deck run Fourier artifact probes** —
+  `run_deck_analysis()` selected-run artifacts now include selected Fourier
+  probe names alongside the Fourier result count, and
+  `format_deck_run_artifact_table()` renders a stable `FourierList` column,
+  matching Rust and TypeScript.
+
+- **Deck run measurement artifact names** —
+  `run_deck_analysis()` selected-run artifacts now include selected
+  measurement names alongside the measurement count, and
+  `format_deck_run_artifact_table()` renders a stable `MeasurementList`
+  column, matching Rust and TypeScript.
+
+- **Deck run output-probe artifact names** —
+  `run_deck_analysis()` selected-run artifacts now include the normalized
+  output-probe names alongside the output-probe count, and
+  `format_deck_run_artifact_table()` renders a stable `OutputProbeList`
+  column, matching Rust and TypeScript.
+
+- **Deck control variable policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block variable/state mutation
+  commands, including `let`, `alter`, `alterparam`, `set`, and `unset`,
+  instead of generic unsupported-command diagnostics, matching Rust and
+  TypeScript. Accepted no-op `set` options still route as no-op markers.
+
+- **Deck control-flow policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block control-flow commands,
+  including `if`, `while`, `foreach`, and `repeat`, instead of generic
+  unsupported-command diagnostics, matching Rust and TypeScript. Control-flow
+  execution remains disabled by the deck execution policy.
+
+- **Deck control working-directory policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block `cd` working-directory
+  mutation commands instead of generic unsupported-command diagnostics,
+  matching Rust and TypeScript. Working-directory mutation remains disabled by
+  the deck execution policy.
+
+- **Deck control script policy diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now emit explicit
+  policy diagnostics for selected `.control` block `source` and `shell`
+  external script/shell commands instead of generic unsupported-command
+  diagnostics, matching Rust and TypeScript. External script execution and
+  shelling out remain disabled by the deck execution policy.
+
+- **Deck control console marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `echo`, `rusage`, and `where` console/debug
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/debug output
+  remains out of scope for these markers.
+
+- **Deck control introspection marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `status`, `version`, and `help` UI introspection
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/help output remains
+  out of scope for these markers.
+
+- **Deck control show marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `show` and `showmod` device/model inspection
+  commands as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript. Actual console/model inspection
+  output remains out of scope for these markers.
+
+- **Deck control inspection marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block read-only `display` and `listing` inspection commands as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Actual console/listing output remains out of
+  scope for these markers.
+
+- **Deck control WRDATA marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `wrdata <file> <probes...>` ASCII data-write markers as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Actual data-file serialization remains out of
+  scope for this marker.
+
+- **Deck control rawfile write marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `write <rawfile> [probes...]` rawfile-write markers as
+  no-op control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript. Rawfile serialization remains out of scope for
+  this marker.
+
+- **Deck control appendwrite option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set appendwrite` rawfile append-write options as no-op
+  control commands instead of reporting unsupported-command diagnostics,
+  matching Rust and TypeScript.
+
+- **Deck control rawfile output option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set wr_vecnames` and `set wr_singlescale` rawfile output
+  toggles as no-op control commands instead of reporting unsupported-command
+  diagnostics, matching Rust and TypeScript.
+
+- **Deck control ASCII filetype option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set filetype=ascii` output-format options as no-op control
+  commands instead of reporting unsupported-command diagnostics, matching Rust
+  and TypeScript.
+
+- **Deck control reset marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `reset` session-reset markers as no-op control commands
+  instead of reporting unsupported-command diagnostics, matching Rust and
+  TypeScript.
+
+- **Deck control noaskquit option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set noaskquit` UI options as no-op control commands instead
+  of reporting unsupported-command diagnostics, matching Rust and TypeScript.
+
+- **Deck control quit marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `quit` interpreter-exit markers as no-op control commands
+  instead of reporting unsupported-command diagnostics, matching Rust and
+  TypeScript.
+
+- **Deck control run marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `run` execution markers as no-op control commands instead
+  of reporting unsupported-command diagnostics, matching Rust and TypeScript.
+
+- **Deck control Fourier routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `four` and `fourier` harmonic output commands into
+  `.four` deck cards, matching Rust and TypeScript.
+
+- **Deck control measurement routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `measure` and `meas` measurement commands into
+  `.measure` and `.meas` deck cards, matching Rust and TypeScript.
+
+- **Deck control save/probe routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `save` and `probe` output commands into `.save` and
+  `.probe` deck cards, matching Rust and TypeScript.
+
+- **Deck control-command routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block analysis/output commands (`op`, `dc`, `ac`,
+  `tran`, `save`, `probe`, `print`, and `plot`) into dotted deck cards,
+  matching Rust and TypeScript.
+
+- **Deck control-block exclusion diagnostics** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now exclude
+  unsupported `.control` / `.endc` block markers and unrecognized body
+  commands from active deck lines while reporting stable command diagnostics,
+  matching Rust and TypeScript.
+
+- **Parsed plot output routing** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and
+  `format_deck_*_table()` now route scoped `.plot <analysis> ...` output
+  cards alongside `.save`, `.probe`, and `.print`, matching Rust and
+  TypeScript.
+
+- **Parsed print output routing** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and
+  `format_deck_*_table()` now route scoped `.print <analysis> ...` output
+  cards alongside `.save` and `.probe`, matching Rust and TypeScript.
+
+- **Deck run artifact metadata** —
+  `run_deck_analysis()` now returns selected-run artifact summaries and a
+  stable run-artifact table with result-row, output-probe, measurement, and
+  Fourier counts, matching Rust and TypeScript.
+
+- **Deck Fourier artifact routing** —
+  `run_deck_analysis()` now returns selected transient `.four` harmonic
+  results and a stable Fourier table alongside the selected plan, solver
+  result, output probes, and measurement artifacts, matching Rust and
+  TypeScript.
+
+- **Deck measurement artifact routing** —
+  `run_deck_analysis()` now returns selected `.measure` / `.meas` results and
+  a stable measurement table for selected `.dc`, `.ac`, and `.tran` executions,
+  matching Rust and TypeScript.
+
+- **Deck selected-output artifact metadata** —
+  `run_deck_analysis()` now returns the normalized deck-selected output probes
+  alongside each selected plan, solver result, and stable table, matching Rust
+  and TypeScript.
+
+- **Deck transient print-step output routing** —
+  `run_deck_analysis()` now keeps `.tran TSTEP` as the stable deck output
+  print grid while `MAXSTEP` caps internal solver stepping, matching Rust and
+  TypeScript.
+
+- **Deck transient START/MAXSTEP/UIC routing** —
+  `run_deck_analysis()` now routes selected `.tran` `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Rust and TypeScript.
+
+- **Deck AC LIN/OCT execution routing** —
+  `run_deck_analysis()` now executes selected `.ac LIN`, `.ac DEC`, and
+  `.ac OCT` plans with SPICE-style linear, points-per-decade, and
+  points-per-octave frequency grids, matching Rust and TypeScript.
+
+- **Deck analysis execution routing** —
+  `run_deck_analysis()` now selects one deck `.op`, `.dc`, `.ac DEC`, or
+  `.tran` plan, dispatches it into the matching solver, and returns the
+  selected plan, solver result, and deck-selected output table, matching Rust
+  and TypeScript.
+
+- **Deck analysis-plan selector** —
+  `select_deck_analysis_plan()` now resolves one explicit or implicit deck
+  analysis plan with stable ambiguity and invalid-card errors, matching Rust
+  and TypeScript.
+
+- **Deck analysis-plan resolver** —
+  `resolve_deck_analyses()` now extracts `.op`, `.dc`, `.ac`, and `.tran`
+  analysis cards before `.end` into stable metadata with shared diagnostics,
+  matching Rust and TypeScript.
+
+- **Parsed save/probe output parity** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and the
+  `format_deck_*_table()` helpers now route parsed `.save` / `.probe` cards
+  into stable operating-point, DC sweep, AC sweep, and transient tables,
+  matching Rust and TypeScript.
+
+- **Transient Fourier deck-card routing** —
+  `resolve_deck_fourier()`, `fourier_transient_cards()`, and
+  `fourier_transient_deck()` now route parsed `.four` / `.FOUR` deck cards
+  into SPICE-style Fourier harmonic results with optional `HARMONICS=` and
+  `FROM=` controls, matching Rust and TypeScript.
+
+- **Transient TRIG/TARG delay measurement routing** —
+  `measure_transient_delay_between_probes()` and parsed transient
+  `.measure ... TRIG ... TARG ...` cards now report trigger-to-target delays
+  with counted crossing controls, matching Rust and TypeScript.
+
+- **Transient WHEN crossing counters** —
+  `measure_transient_when_probe_counted()` and parsed transient
+  `.measure ... WHEN probe=target RISE|FALL|CROSS=n` cards now report counted
+  threshold occurrences over optional `FROM=` / `TO=` windows, matching Rust
+  and TypeScript.
+
+- **Transient WHEN measurement routing** —
+  `measure_transient_when_probe()` and parsed transient
+  `.measure ... WHEN probe=target` cards now report the first crossing time
+  over optional `FROM=` / `TO=` windows, matching Rust and TypeScript.
+
+- **Transient FIND/AT measurement routing** —
+  `measure_transient_find_at_probe()` and parsed transient
+  `.measure ... FIND ... AT=` cards now sample or linearly interpolate a probe
+  value at one scalar time, matching Rust and TypeScript.
+
+- **AC sweep measurement card routing** —
+  `measure_ac_sweep_probe()`, `measure_ac_sweep_cards()`, and
+  `measure_ac_sweep_deck()` now route direct or parsed `.measure ac` /
+  `.meas ac` cards into the shared scalar measurement table surface using
+  complex probe magnitudes, matching Rust and TypeScript.
+
+- **DC sweep measurement card routing** —
+  `measure_dc_sweep_probe()`, `measure_dc_sweep_cards()`, and
+  `measure_dc_sweep_deck()` now route direct or parsed `.measure dc` /
+  `.meas dc` cards into the shared scalar measurement table surface, matching
+  Rust and TypeScript.
+
+- **Parsed transient measurement card routing** —
+  `resolve_deck_measurements()`, `measure_transient_cards()`, and
+  `measure_transient_deck()` now extract transient `.measure` / `.meas` cards
+  before `.end` and route MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+  probe measurements into stable measurement rows, matching Rust and
+  TypeScript.
+
+- **Transient measurement output expansion** — `measure_transient_probe()` and
+  `format_measurement_table()` provide a shared `.MEASURE`-style scalar
+  transient output surface with MAX, MIN, AVG, RMS, peak-to-peak, and
+  final-value probe measurements, matching Rust and TypeScript.
+
+- **Initial-condition execution aids** — `dc_initial_vector_from_conditions()`
+  maps parsed `.ic` / `.nodeset` node-voltage hints into the DC solver's MNA
+  warm-start vector, and `dc_op_with_initial_conditions()` applies those hints
+  to operating-point solves with `.ic` values taking precedence over
+  `.nodeset`, matching Rust and TypeScript.
+
+- **Deck function-call expression resolution** — `resolve_deck_parameters()`
+  now collects scalar `.func` definitions before `.end` and evaluates scalar
+  function calls in `.param` assignments plus braced or quoted active-line
+  expressions, with stable diagnostics for unknown functions, bad arity, and
+  recursive calls, matching Rust and TypeScript.
+
+- **Deck function definition resolution** — `resolve_deck_functions()` now
+  extracts scalar `.func name(args) expression` definitions before `.end`,
+  strips braced or quoted expression delimiters, and reports stable diagnostics
+  for malformed signatures, arguments, duplicate arguments, and empty
+  expressions, matching Rust and TypeScript.
+
+- **Deck initial-condition resolution** — `resolve_deck_initial_conditions()`
+  now extracts scalar `.ic` and `.nodeset` `V(node)=value` hints before `.end`,
+  evaluates numeric SPICE suffix/arithmetic expressions, and reports stable
+  diagnostics for malformed targets and unresolved values, matching Rust and
+  TypeScript.
+
+- **Deck parameter resolution** — `resolve_deck_parameters()` now evaluates
+  scalar whitespace-tokenized `.param` assignments, rewrites braced and quoted
+  active-line expressions, and reports stable diagnostics for unresolved
+  expressions, matching Rust and TypeScript.
+
+- **Deck source resolution** — `resolve_deck_sources()` now expands
+  map-provided `.include` files and selected `.lib path section` library
+  sections with stable diagnostics for missing sources, bad sections, cycles,
+  and still-unsupported `.control` blocks, matching Rust and TypeScript.
+
+- **Deck boundary diagnostics** — `analyze_deck_controls()` now reports the
+  active pre-`.end` deck lines and stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control` directives, matching Rust and TypeScript.
+
+- **Remaining stable table parity** — `format_dc_sweep_table()`,
+  `format_corner_dc_sweep_table()`, `format_corner_ac_table()`, and
+  `format_corner_tf_table()` now close the remaining Rust-first `.DC`, `.AC`,
+  and `.TF` named-corner table helper gaps in the Python package.
+
+- **DC corner and temperature parity** — `format_corner_dc_table()`,
+  `dc_temperature_sweep()`, `dc_temperature_sweep_corners()`,
+  `format_temperature_dc_table()`, and `format_corner_temperature_dc_table()`
+  now expose Rust-matching named-corner and `.temp`-style DC operating-point
+  snapshots with stable table columns.
+
+- **Compatibility corpus release gates** — `compatibility_corpus()`,
+  `release_readiness_gates()`, `format_compatibility_corpus_table()`, and
+  `format_release_readiness_report()` expose the first oracle-backed deck
+  corpus with golden tolerances and known incompatibility notes shared with
+  Rust and TypeScript.
+
+- **Custom-model foothold** — `CustomModel`, `CustomModelEvaluation`,
+  `custom_linear_conductance_model()`, and
+  `analyze_custom_model_source()` add the first portable two-terminal
+  residual/Jacobian hook and Verilog-A subset diagnostics shared with Rust and
+  TypeScript.
+
+- **Mixed-signal bridge helpers** — `DigitalEvent`, `DigitalEventStream`,
+  `DigitalLogicLevels`, `DigitalThresholds`, digital-stream PWL voltage source
+  conversion, fixed/adaptive digital transient bridge runners, named-corner
+  bridge wrappers, stable event/schedule tables, and deterministic VCD output
+  now match the Rust and TypeScript SPICE bridge surface.
+
+- **Model-card alias normalization** — `normalize_model_card()`,
+  `diode_from_model_card()`, `bjt_from_model_card()`,
+  `jfet_from_model_card()`, `mosfet_from_model_card()`, and
+  `device_model_audit_fixtures()` provide cross-language diode, BJT, JFET, and
+  Level-1 MOS `.model` alias fixtures for future deck parsing.
+
+- **Solver diagnostics and sparse complex solves** — `DcResult.diagnostics`
+  now reports stable matrix size, solver kind, tolerance, convergence aid, and
+  final Newton delta metadata; large AC complex systems now route through the
+  sparse-row complex solver path.
+
+- **Distortion and pole-zero named-corner wrappers** —
+  `distortion_from_transient_corners()`, `pole_zero_corners()`,
+  `format_corner_distortion_table()`, and `format_corner_pole_zero_table()` now
+  expose Rust-matching named-corner analysis output for these SPICE helpers.
+
+- **Fourier named-corner wrappers** — `fourier_corners()` and
+  `format_corner_fourier_table()` now run `.FOUR`-style harmonic analysis across
+  named corner specs, matching Rust output columns for cross-language parity.
+
+- **PSS text output and named-corner wrappers** — `format_pss_table()`,
+  `pss_corners()`, and `format_corner_pss_table()` now expose stable
+  periodic-steady-state output and named-corner PSS parity with the Rust engine.
+
+- **Transient named-corner wrappers** — `transient_corners()` and
+  `transient_adaptive_corners()` now run fixed-step and LTE-adaptive transient
+  analyses across named corner specs, with matching stable
+  `format_corner_transient_table()` and
+  `format_corner_adaptive_transient_table()` output helpers.
+
+- **Multi-corner advanced analysis wrappers** — `mc_dc_corners()`,
+  `sens_dc_corners()`, `noise_ac_corners()`, and `s_parameters_corners()` now
+  run the corresponding analyses across named corner specs, matching the Rust
+  engine surface for these SPICE outputs.
+
+- **Advanced analysis text output tables** — `format_mc_table()`,
+  `format_sens_table()`, `format_noise_table()`, and
+  `format_s_parameter_table()` now emit stable tab-separated results, with
+  matching `format_corner_*` variants for named-corner output.
+
+## [0.14.0] — 2026-06-05
+
+### Added
+
+- **Diode temperature scaling helpers** — `diode_at_temperature()` and
+  `circuit_at_temperature()` adjust diode thermal voltage and saturation
+  current for an operating temperature using a SPICE-style silicon energy-gap
+  foothold.
+
+- **BJT temperature scaling helpers** — `bjt_at_temperature()` and
+  `circuit_at_temperature()` adjust BJT thermal voltage and saturation current
+  for an operating temperature using the same silicon energy-gap foothold.
+
+- **MOSFET temperature scaling helpers** — `mosfet_at_temperature()` and
+  `circuit_at_temperature()` adjust Level-1 MOSFET threshold voltage,
+  transconductance parameter, and nominal temperature for an operating
+  temperature.
+
+- **Classic text output tables** — `format_dc_table()` and
+  `format_transient_table()` now emit stable tab-separated node-voltage and
+  branch-current tables for `.OP` / `.TRAN` style snapshots.
+
+- **Pole-zero text output table** — `format_pole_zero_table()` now emits a
+  stable tab-separated row set for `.PZ` poles and zeros.
+
+- **Distortion text output table** — `format_distortion_table()` now emits a
+  stable tab-separated row set for `.DISTO` harmonic magnitude, phase, and THD
+  snapshots.
+
+- **Fourier text output table** — `format_fourier_table()` now emits a stable
+  tab-separated row set for `.FOUR` harmonic coefficients, magnitude, phase,
+  DC, and THD snapshots.
+
+- **AC text output table** — `format_ac_table()` now emits stable
+  tab-separated real, imaginary, magnitude, and phase rows for `.AC` phasor
+  snapshots.
+
+- **Transfer-function text output table** — `format_tf_table()` now emits a
+  stable tab-separated row for `.TF` gain and impedance snapshots.
+
+- **JFET transient coverage** — source-follower transient fixtures now cover
+  JFET participation in nonlinear companion-model solves.
+
+- **Fourier transient analysis** — `fourier()` now computes SPICE-style DC,
+  harmonic sine/cosine coefficients, magnitudes, phases, and THD from
+  transient samples for `V(node)` and `I(source)` probes.
+
+- **RC high-pass pole-zero helper** — `pole_zero_rc_highpass()` now returns the
+  origin zero and RC pole for a constrained first-order high-pass fixture.
+
+- **RLC low-pass pole-zero helper** — `pole_zero_rlc_lowpass()` now returns the
+  second-order pole pair for a constrained series R-L / shunt-C low-pass
+  fixture.
+
+- **RLC high-pass pole-zero helper** — `pole_zero_rlc_highpass()` now returns
+  the double origin zero plus second-order pole pair for a constrained series
+  R-C / shunt-L high-pass fixture.
+
+- **RLC band-pass pole-zero helper** — `pole_zero_rlc_bandpass()` now returns
+  the origin zero plus second-order pole pair for a constrained series L-C /
+  shunt-R band-pass fixture.
+
+- **RLC notch pole-zero helper** — `pole_zero_rlc_notch()` now returns the
+  imaginary-axis zero pair plus second-order pole pair for a constrained
+  series-R / shunt-series-L-C notch fixture.
+
+- **Transient distortion helper** — `distortion_from_transient()` now runs the
+  Fourier extraction path and returns the Phase-8 distortion result shape
+  directly from transient samples.
+
+- **MOS Level-1 capacitance models** — `CGSO`, `CGDO`, `CGBO`, `CBS`, and
+  `CBD` now contribute MOSFET small-signal AC susceptance.
+
+- **MOSFET channel thermal noise** — `.NOISE` now includes long-channel
+  `4kTγgm` channel noise for biased MOSFETs in the per-element breakdown.
+
+- **Diode emission coefficient models** — `Diode.N` now scales the effective
+  thermal voltage in DC and small-signal diode conductance calculations.
+
+- **Diode breakdown models** — `Diode.BV` / `Diode.IBV` now add a bounded
+  reverse-breakdown current and conductance foothold.
+
+- **Diode junction capacitance models** — `Diode.Cjo` now contributes a
+  small-signal AC susceptance in parallel with the linearized diode
+  conductance.
+
+- **Diode transit-time models** — `Diode.Tt` now contributes forward-bias
+  diffusion capacitance to small-signal AC admittance.
+
+- **BJT capacitance models** — `BJT.Cje` / `BJT.Cjc` now contribute
+  base-emitter and base-collector small-signal AC susceptance.
+
+- **BJT transit-time models** — `BJT.Tf` now contributes forward-bias
+  diffusion capacitance to small-signal AC admittance.
+
+- **BJT reverse transit-time models** — `BJT.Tr` now contributes
+  base-collector diffusion capacitance to small-signal AC admittance.
+
+- **Pseudo-transient DC continuation** — `dc_op` now has a final bounded
+  artificial backward-Euler continuation aid after Newton, Gmin stepping, and
+  source stepping; successful fallback results report
+  `convergence_aid="pseudo_transient"`.
+
+- **DC convergence-aid metadata** — `DcResult` now reports whether the
+  operating point came from plain Newton, Gmin stepping, source stepping, or no
+  successful convergence aid.
+
+- **Gear-2 damping fixture** — transient tests now cover a coarse LC oscillator
+  where Gear-2 damps numerical ringing more aggressively than trapezoidal
+  integration.
+
+- **Gear-2 transient companions** — transient analysis now accepts
+  `method="gear2"` and uses BDF2 capacitor/inductor companion histories after
+  bootstrapping with one backward-Euler step.
+
+- **Transmission-line transient stamping** — `TransmissionLine` now participates
+  in transient analysis with a lossless Bergeron delay-line companion model,
+  including matched-load delayed step behavior.
+
+- **Transmission-line AC stamping** — `TransmissionLine` now contributes the
+  lossless two-port admittance matrix in AC analysis, including matched-load
+  phase-delay behavior.
+
+- **Transmission-line element foothold** — `TransmissionLine` now exposes the
+  public `T`-card four-terminal delay-line shape for parser and future
+  AC/transient stamping work.
+
+- **Mutual-inductor transient stamping** — `MutualInductor` now couples
+  referenced inductor pairs during transient analysis with a two-winding
+  companion conductance matrix.
+
+- **Mutual-inductor AC stamping** — `MutualInductor` now couples referenced
+  inductor pairs in AC analysis using the inverted two-winding inductance
+  matrix.
+
+- **Mutual-inductor element foothold** — `MutualInductor` now exposes the
+  public `K`-card coupling shape for future coupled-inductor AC/transient
+  stamping.
+
+- **JFET DC/AC analysis foothold** — `JFET` now participates in nonlinear DC
+  operating-point solves and AC small-signal analysis using the DC bias point.
+
+- **JFET element foothold** — `JFET` now exposes the public three-terminal
+  device shape needed by SPICE `J` cards; nonlinear analysis stamping follows
+  in a later compatibility slice.
+
 - **PSS analysis foothold** — `pss` now runs the bounded shooting-Newton solve
   and returns one steady-state transient period from the solved circuit.
 
@@ -984,7 +1862,7 @@ Total: 107 tests, 80.16% coverage, ruff clean.
 
 ---
 
-## [0.1.0] — Unreleased
+## [0.1.0]
 
 ### Added
 - Element classes: Resistor, Capacitor, Inductor, VoltageSource, CurrentSource, Diode (Shockley), Mosfet (mosfet-models-backed).

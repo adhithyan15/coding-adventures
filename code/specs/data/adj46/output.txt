@@ -1,0 +1,44 @@
+================================================================
+  ADJ46 — ACS posterior estimate, audit document
+================================================================
+Case:  62yo M, ED for chest discomfort x 2h; pressure-like, mild diaphoresis; no clear precipitator; PMH: HTN, smoker; vitals normal; ECG: no acute ST changes.
+
+Prior:  P(acs) = 0.1000  (logodds = -2.1972)
+       Source: Pope JH et al., NEJM 1995;342(16):1163-70.
+
+Fired contributions (7 of 10 possible rules):
+
+  id                             LR    log(LR)   citation
+  --------------------------------------------------------------------------------------------------------------
+  c_assoc_diaphoresis         2.000    +0.6931   Panju AA et al., JAMA 1998. Pooled LR for diaphoresis present (range 1.7-2.7).
+  c_ecg_no_st                 0.400    -0.9163   Pope JH et al., NEJM 1995;342(16):1163-70. ECG w/o acute ST changes lowers but does not exclude ACS.
+  c_joint_press_diaph         1.300    +0.2624   [empirical] Synergy: pressure-like pain WITH diaphoresis is more diagnostic than the product of individual LRs.  (interaction)
+  c_pmh_htn                   1.500    +0.4055   HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6. [empirical]
+  c_pmh_smoker                1.800    +0.5878   HEART Score; Six AJ et al., Neth Heart J 2008;16(6):191-6. [empirical]
+  c_sympq_pressure            2.500    +0.9163   Panju AA et al., JAMA 1998;280(14):1256-63. Pooled LR for 'pressure' descriptor (range 1.5-3.0).
+  c_vitals_wnl                0.500    -0.6931   Panju AA et al., JAMA 1998. Normal vitals roughly halve ACS likelihood.
+
+Sum of log(LR) over atomic contributions   = +0.9933
+Sum of log(LR) over interaction terms      = +0.2624
+Total log-odds shift                       = +1.2556
+
+Posterior:  logodds = -0.9416  →  P(acs) = 0.2806
+
+================================================================
+  Awkwardness flags raised during this query
+================================================================
+  A1  Likelihood ratios stored in a side-table (engine has no LR type)
+  A2  Provenance stored in a side-table (clauses have no provenance field)
+  A3  Prior stored as a bare constant (engine probability ≠ Bayesian prior)
+  A4  Joint contribution encoded as a multi-body rule but not flagged as interaction
+  A5  'no clear precipitator' has no encoding — omitted (lossy)
+  A6  WMC posterior discarded — aggregated LRs by hand
+  A7  No kickback variant: harness has to invent its own threshold
+  A8  Counterfactuals not run — would require KB clone + rerun
+  A9  Source disagreement not modeled — picked one number per rule
+  A10 Surface syntax is hand-written Rust, not a rulebook DSL
+
+See AWKWARDNESS.md in this directory for the full design log.
+ADJ36 reference posterior:  P(acs) = 0.2810
+This binary's posterior:    P(acs) = 0.2806
+Absolute delta:             0.0004 (OK — encoding reproduces ADJ36)

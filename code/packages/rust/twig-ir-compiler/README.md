@@ -18,9 +18,44 @@ For each Twig source program, this crate emits an [`IIRModule`](../interpreter-i
 | One per `(lambda ...)`         | gensym'd `__lambda_0`, `__lambda_1`, … |
 | `main` (always present)         | top-level value defines + bare exprs  |
 
-Anonymous lambdas have their captured free variables prepended to the parameter list (in stable insertion order); the `make_closure` call site passes them in matching order. Top-level value defines lower to `call_builtin "global_set" name value`; bare top-level expressions accumulate into `main`, with the *last* expression's value becoming `main`'s return.
+Anonymous lambdas have their captured free variables prepended to the parameter list (in stable insertion order); the `make_closure` call site passes them in matching order. Bare top-level expressions accumulate into `main`, with the *last* expression's value becoming `main`'s return.
 
-All emitted instructions carry `type_hint = "any"` because Twig is dynamically typed. Functions therefore have `type_status = Untyped`. The vm-core profiler observes runtime types; the JIT specialises later.
+Top-level value defines lower one of two ways (TW2/E4). A value define that is **not captured by any lambda** is read only from `main`, so its statically-typed (`i64`/`bool` and immutable top-level `str`) value is kept in a `main` register and reads return it directly — fully typed, accepted by every code-gen backend. A value define **captured by a closure** (read inside a lambda body, which compiles to a separate function) stays on the host global table via `call_builtin "global_set" name value` / `global_get`, as does a top-level forward reference.
+
+Literal `(string-length "...")`, `(string-ref "..." i)`, `(string=? "..." "...")`,
+`(string<? "..." "...")`, `(string>? "..." "...")`, `(substring "..." i j)`,
+and `(string-length (string-append "..." "..."))`
+lower to typed E4 string
+metadata ops: `str_const` for each direct literal, then `str_len`, `str_index`,
+`str_eq`, `str_cmp`, `str_slice`, or `str_concat` for the result path. The same E4
+lowering also handles immutable top-level string values, so `(define s "ABC")
+(string-ref s 2)` and named-string `string-append`/`string=?` proofs avoid the
+dynamic builtin path.
+Lexical `let`/`let*` string literal bindings use the same typed registers, so
+local strings can feed `string-ref`, `string-length`, `string=?`, `string<?`,
+`string>?`, and
+`string-append` without dynamic builtins; a `string-append` result can also feed
+`string-ref` directly through `str_concat` -> `str_index`, and `string-length`
+can compute a typed arithmetic index that feeds `str_index`. `substring` over a
+known string and known index expressions lowers to `str_slice`, so its result
+can feed `string-ref` through `str_index`. Direct top-level functions whose
+final expression already infers a concrete type also preserve that return type
+at later direct call sites, so `(define (strlen) (string-length "HELLO"))
+(strlen)` returns through a typed `call [i64]`. Bare `str`/`string` parameter
+annotations on top-level functions also seed concrete `str` IIR params, so
+`(define (strlen (s : str)) (string-length s)) (strlen "HELLO")` lowers without
+dynamic string builtins. Conservative `main`-level direct-call evidence can also
+seed an otherwise-unannotated top-level string parameter, so `(define (strlen s)
+(string-length s)) (strlen "HELLO")` follows the same typed path without
+synthesizing refinement annotations. Reassignable strings, captured strings,
+unobserved/conflicting or closure-derived string parameters, and broader dynamic
+string values remain follow-up work.
+
+Twig remains dynamically typed, so functions keep `type_status = Untyped` and
+dynamic paths still carry `type_hint = "any"`. The LANG-FULL fast paths above
+stamp concrete hints only where source-local evidence makes the type
+unambiguous. The vm-core profiler observes runtime types; the JIT specialises
+later.
 
 ## Apply-site dispatch
 
@@ -28,11 +63,22 @@ The compiler decides at compile time:
 
 | Function position           | Emitted IIR                                 |
 |-----------------------------|---------------------------------------------|
-| Top-level user fn           | `call <name>, ...args`                      |
-| Builtin (`+`, `cons`, …)    | `call_builtin <name>, ...args`              |
+| Top-level user fn           | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
+| Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
+| Direct literal, immutable top-level, lexical-local, annotated top-level-parameter, or direct-call-inferred top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
+| Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 
 Top-level recursion stays on the fast `call` path; only locals holding closures pay the indirect cost.
+
+### Typed arithmetic fold
+
+Scheme arithmetic is variadic. When every argument is statically `i64`, an
+arithmetic call folds to a **left-associated chain of typed binary CIR ops** —
+`(+ 10 20 12)` becomes `r1 = add 10, 20; r2 = add r1, 12` — which the
+IIR-to-{llvm,wasm,jvm,clr} backends accept directly. A call with any
+dynamically-typed argument, or a chained comparison like `(< a b c)` (a
+predicate, not a fold), stays on the dynamic `call_builtin` path.
 
 ## Builtins
 

@@ -5,6 +5,29 @@
 // the is-editing slot.  Composed by Grid; usable standalone if a host
 // wants a one-off editable cell outside a Grid.
 //
+// v0.2.0 changes
+// --------------
+//
+//   Added `is-selected: bool` so the cell can style itself differently
+//   when the host (via Grid) has flagged it as the currently-selected
+//   cell.  The Cell.mll layout doesn't branch on it — the sub-part
+//   styling (`cell:selected`) does — but the slot has to be declared
+//   for Grid to thread the value in through the component-ref boundary.
+//
+// Encapsulation contract (UI28-1 §2 constraint 4)
+// -----------------------------------------------
+//
+//   The host does NOT compute per-cell `is-editing` / `is-selected`
+//   booleans.  The host pushes plain coordinate numbers (`edit-row`,
+//   `edit-col`, `selected-row`, `selected-col`) to the *Grid*, and the
+//   Grid composes the predicate at the Cell call site using
+//   expression-in-slot-binding:
+//
+//     Cell ( is-editing: ( r == editRow && c == editCol ) , ... )
+//
+//   Cell receives the bool result.  Cell never learns anything about
+//   Grid's internal cell-coordinate mechanics.
+//
 // Slot vocabulary
 // ---------------
 //   value         the text currently displayed (and the seed for the
@@ -13,10 +36,14 @@
 //                 (advisory; the Grid host enforces the policy by setting
 //                 is-editing or not)
 //   is-editing    when true, the cell renders HostInput; otherwise Text
+//   is-selected   when true, the cell is the host's currently-selected
+//                 cell.  Used by the sub-part styling system
+//                 (`cell:selected`) to render a highlight; the Cell.mll
+//                 layout itself does not branch on it.
 //   alignment     visual alignment hint ("left" | "right" | "center")
 //   cell-type     advisory type hint ("text" | "number"); v1 treats both
 //                 the same — number-specific formatting/validation is a
-//                 v0.2.0 concern
+//                 v0.3.0 concern
 //
 // Emit vocabulary
 // ---------------
@@ -26,13 +53,29 @@
 //   onCancel      fired when an in-progress edit is abandoned
 
 component Cell {
-  slot value      : text ;
-  slot editable   : bool ;
-  slot is-editing : bool ;
-  slot alignment  : text ;
-  slot cell-type  : text ;
+  slot value        : text ;
+  // edit-content — the host's live edit buffer (UI28-1 v0.3.0).  When
+  // the cell is promoted to editing, the HostInput's `value=` is
+  // wired to this slot rather than the underlying `value` so the
+  // input actually accepts keystrokes.  A controlled
+  // `<input value={X}>` without an `onChange` companion freezes
+  // (React rejects keystrokes); pairing edit-content with onChange
+  // restores the writable round-trip.  Hosts typically maintain a
+  // single edit-content string in their state and thread the SAME
+  // buffer through every Cell — at most one Cell edits at a time.
+  slot edit-content : text ;
+  slot editable     : bool ;
+  slot is-editing   : bool ;
+  slot is-selected  : bool ;
+  slot alignment    : text ;
+  slot cell-type    : text ;
 
   emit onClick ;
+  // onChange fires every keystroke while editing.  Carries the new
+  // input value so the host's reducer can update `edit-content`.
+  // Paired with the `edit-content` slot to complete the
+  // controlled-input round-trip.
+  emit onChange ( value : text ) ;
   emit onCommit ( value : text ) ;
   emit onCancel ;
 }

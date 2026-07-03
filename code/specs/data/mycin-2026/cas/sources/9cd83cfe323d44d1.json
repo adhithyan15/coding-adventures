@@ -1,0 +1,59 @@
+{
+  "hash": "9cd83cfe323d44d1",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+  "title": "Nosocomial bloodstream infections in US hospitals: analysis of 24,179 cases from a prospective nationwide surveillance study (Wisplinghoff et al., Clin Infect Dis 2004;39:309-17)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Among nosocomial bloodstream infections, gram-positive organisms caused 65%, gram-negative organisms 25%, and fungi 9.5%.",
+      "byte_quote": "Gram-positive organisms caused 65% of these BSIs, gram-negative organisms caused 25%, and fungi caused 9.5%."
+    },
+    {
+      "id": "c2",
+      "text": "The most common organisms causing bloodstream infections were coagulase-negative staphylococci (31%), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+      "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%)."
+    },
+    {
+      "id": "c3",
+      "text": "Eighty-seven percent of nosocomial bloodstream infections were monomicrobial.",
+      "byte_quote": "Eighty-seven percent of BSIs were monomicrobial."
+    },
+    {
+      "id": "c4",
+      "text": "The crude mortality rate of nosocomial bloodstream infection was 27%.",
+      "byte_quote": "The crude mortality rate was 27%."
+    },
+    {
+      "id": "c5",
+      "text": "ICU admission (host setting) raised the likelihood of bloodstream infection with CoNS, Pseudomonas, Enterobacter, Serratia, and Acinetobacter species.",
+      "byte_quote": "CoNS, Pseudomonas species, Enterobacter species, Serratia species, and Acinetobacter species were more likely to cause infections in patients in intensive care units (P<.001)."
+    },
+    {
+      "id": "c6",
+      "text": "Neutropenia raised the likelihood of bloodstream infection with Candida species, enterococci, and viridans group streptococci.",
+      "byte_quote": "In neutropenic patients, infections with Candida species, enterococci, and viridans group streptococci were significantly more common."
+    },
+    {
+      "id": "c7",
+      "text": "Mean interval from admission to infection varied by organism: 13 days for E. coli, 16 for S. aureus, 22 for Candida and Klebsiella, 23 for enterococci, and 26 for Acinetobacter.",
+      "byte_quote": "The mean interval between admission and infection was 13 days for infection with Escherichia coli, 16 days for S. aureus, 22 days for Candida species and Klebsiella species, 23 days for enterococci, and 26 days for Acinetobacter species."
+    },
+    {
+      "id": "c8",
+      "text": "Methicillin resistance among S. aureus bloodstream isolates rose from 22% in 1995 to 57% in 2001.",
+      "byte_quote": "The proportion of S. aureus isolates with methicillin resistance increased from 22% in 1995 to 57% in 2001 (P<.001, trend analysis)."
+    },
+    {
+      "id": "c9",
+      "text": "Vancomycin resistance was 2% in Enterococcus faecalis and 60% in Enterococcus faecium bloodstream isolates.",
+      "byte_quote": "Vancomycin resistance was seen in 2% of Enterococcus faecalis isolates and in 60% of Enterococcus faecium isolates."
+    },
+    {
+      "id": "c10",
+      "text": "The study detected 24,179 nosocomial bloodstream infections in 49 US hospitals over 7 years (60 cases per 10,000 hospital admissions).",
+      "byte_quote": "Our study detected 24,179 cases of nosocomial BSI in 49 US hospitals over a 7-year period from March 1995 through September 2002 (60 cases per 10,000 hospital admissions)."
+    }
+  ],
+  "cites": []
+}

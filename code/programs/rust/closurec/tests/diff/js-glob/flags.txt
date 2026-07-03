@@ -1,0 +1,6 @@
+--js
+tests/diff/js-glob/input/**/*.js
+--js
+!tests/diff/js-glob/input/excluded/**
+--compilation_level
+WHITESPACE_ONLY

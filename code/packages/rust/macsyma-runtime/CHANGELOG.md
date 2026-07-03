@@ -1,5 +1,44 @@
 # Changelog
 
+## [0.5.0] — 2026-05-29
+
+- Track M2 — port the MACSYMA `load("name")` runtime package directive
+  from Python (committed in `dc78e0931`).  Surface contract:
+  - `load("orthopoly")` flips a per-session gate on the backend that
+    turns on the closed-form orthogonal polynomial evaluators.
+  - Until then, `legendre_p(3, x)`, `chebyshev_t(4, x)`, `hermite(2, x)`,
+    and friends round-trip unevaluated, matching the Python runtime.
+  - After `load("orthopoly")`:
+    - `legendre_p(n, x)` reduces via the Bonnet recurrence.
+    - `chebyshev_t(n, x)`, `chebyshev_u(n, x)` reduce via the standard
+      two-term recurrence.
+    - `hermite(n, x)` reduces via the physicists' two-term recurrence
+      (Maxima's convention: `H_0 = 1`, `H_1 = 2x`).
+    - `legendre_q`, `bessel_j`, `bessel_y` are passthrough — symbol is
+      "known" but no closed form is applied.
+  - Non-integer / negative `n` keeps the expression unevaluated.
+  - `load("nonexistent")`, `load("../etc/passwd")`, `load("os")`, etc.,
+    panic with a `MacsymaUserError` that advertises the available
+    packages.
+  - Loading is idempotent and per-session (two backends stay
+    independent).
+- Security note: the load handler dispatches via a compile-time-constant
+  `LOAD_ALLOWLIST: &[&str]` and a static `match` arm.  There is no
+  `libloading`, dynamic FFI, `Path` resolution, or `eval`-equivalent
+  code path; a hostile name string can never become an executable
+  code path.
+- New surface names in `macsyma_name_table()`: `load`, `legendre_p`,
+  `legendre_q`, `chebyshev_t`, `chebyshev_u`, `hermite`, `bessel_j`,
+  `bessel_y`.
+- New public items: `LOAD`, `MacsymaUserError`, and
+  `MacsymaSession::loaded_packages()`.
+
+## [0.4.0] — 2026-05-29
+
+- Feed the Rust MACSYMA session assumption context into direct `abs`, `sqrt`,
+  and `log` evaluation, matching Python reference behavior for cases such as
+  `assume(x >= 0); sqrt(x^2)`, `log(x^3)`, and `abs(x)`.
+
 ## [0.3.0] — 2026-05-16
 
 **EllipticE (2nd kind) and EllipticPi (3rd kind) integration pipeline tests.**

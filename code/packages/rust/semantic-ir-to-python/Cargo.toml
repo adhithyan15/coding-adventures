@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir-to-python"
-version = "0.1.0"
+version = "0.8.0"
 edition = "2021"
 description = "Semantic IR → self-contained Python 3 source code (SIR14). Third backend for the SIR10 narrow-waist IR."
 
@@ -9,3 +9,4 @@ semantic-ir = { path = "../semantic-ir" }
 
 [dev-dependencies]
 twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }
+ruby-to-semantic-ir = { path = "../ruby-to-semantic-ir" }

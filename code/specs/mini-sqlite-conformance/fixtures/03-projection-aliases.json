@@ -1,0 +1,37 @@
+{
+  "id": "03-projection-aliases",
+  "description": "Column projection and AS aliases in SELECT",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE employees (id, first_name, last_name, salary)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO employees VALUES (1, 'Alice', 'Smith', 75000)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO employees VALUES (2, 'Bob', 'Jones', 82000)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT first_name AS name, salary AS pay FROM employees ORDER BY id",
+      "expected_columns": ["name", "pay"],
+      "expected_rows": [
+        ["Alice", 75000],
+        ["Bob", 82000]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT first_name FROM employees ORDER BY id",
+      "expected_columns": ["first_name"],
+      "expected_rows": [
+        ["Alice"],
+        ["Bob"]
+      ]
+    }
+  ]
+}

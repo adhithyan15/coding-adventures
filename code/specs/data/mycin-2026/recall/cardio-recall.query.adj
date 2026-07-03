@@ -1,0 +1,22 @@
+% ============================================================================
+% cardio-recall.query.adj — a worked recall query over the auscultation library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "which valvular lesion makes
+% this murmur?" question: it states no cardiology fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli cardio-recall.query.adj
+% ============================================================================
+
+import "cardio-edges.adj"
+
+? murmur_indicates(holosystolic_apical, $Lesion)               % expect mitral_regurgitation
+? murmur_indicates(crescendo_decrescendo_systolic, $Lesion)    % expect aortic_stenosis
+? murmur_indicates(late_systolic_click, $Lesion)               % expect mitral_valve_prolapse
+? murmur_indicates(holosystolic_left_lower_sternal, $Lesion)   % expect tricuspid_regurgitation
+? murmur_indicates(decrescendo_diastolic, $Lesion)             % expect aortic_regurgitation
+? murmur_indicates(diastolic_apical, $Lesion)                  % expect mitral_stenosis
+? murmur_indicates(continuous_machinery, $Lesion)              % expect patent_ductus_arteriosus (expand)

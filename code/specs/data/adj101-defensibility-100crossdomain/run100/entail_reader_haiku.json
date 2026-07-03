@@ -1,0 +1,197 @@
+[
+ {
+  "check_id": 2,
+  "verdict": "LEAP",
+  "why": "The span establishes only a lower bound (at least 12 hours); the actual elapsed time could be 13, 24, or any larger value. Exactly 12 is not forced."
+ },
+ {
+  "check_id": 6,
+  "verdict": "ENTAILED",
+  "why": "In clinical medicine, \"contrast-enhanced CT\" unambiguously means iodinated contrast. No other contrast agent is used for CT; the cited span forces this value with no reasonable alternative reading."
+ },
+ {
+  "check_id": 10,
+  "verdict": "LEAP",
+  "why": "The scenario describes Yi as a level-1 trauma but never states his ECG was checked or that he lacks ST-elevation. \"Trauma\" does not logically preclude STEMI; the false value is an unstated assumption."
+ },
+ {
+  "check_id": 12,
+  "verdict": "ENTAILED",
+  "why": "A credible, specific intent to cause serious harm to a named person \"within the week\" forces imminence \u2014 the scenario's own words (\"clear and credible\") plus the sub-7-day bounded horizon leave no reasonable alternative reading."
+ },
+ {
+  "check_id": 33,
+  "verdict": "LEAP",
+  "why": "The scenario names no defendant and never identifies any party as a manufacturer. The cited span is a legal rule, not a scenario fact. The liable party could be a retailer or distributor."
+ },
+ {
+  "check_id": 34,
+  "verdict": "LEAP",
+  "why": "The cited span establishes physical presence on the ladder, not that all intended-use conditions were met. Misuse (e.g., overloading, standing on prohibited rungs) remains consistent with \"standing on the ladder\" \u2014 the scenario never explicitly confirms proper use."
+ },
+ {
+  "check_id": 37,
+  "verdict": "LEAP",
+  "why": "The scenario calls him a \"driver\" during a \"shift\" but never establishes an employment relationship; he could be an independent contractor \u2014 a legally distinct classification common in delivery contexts \u2014 leaving the value genuinely open."
+ },
+ {
+  "check_id": 38,
+  "verdict": "LEAP",
+  "why": "Being in the company van during a shift is consistent with a personal deviation (frolic). The scenario never states he was actively performing a delivery or authorized task; \"within scope of employment\" is a legal conclusion the bytes don't compel."
+ },
+ {
+  "check_id": 47,
+  "verdict": "LEAP",
+  "why": "The scenario describes lawful government confiscation, not carrier loss. Classifying a deliberate sovereign seizure as \"checked_baggage_loss\" requires an assumption the scenario never compels; a consistent reading treats it as confiscation, not loss."
+ },
+ {
+  "check_id": 57,
+  "verdict": "LEAP",
+  "why": "Invoice issuance does not establish payment or accrual in the current year. The scenario never states the invoice was paid, and an invoice issued in November could easily be paid in the next tax year. \"Paid or incurred\" requires more than invoice date."
+ },
+ {
+  "check_id": 60,
+  "verdict": "LEAP",
+  "why": "The scenario says only \"enrolled at a university\" \u2014 full-time status is never stated. A part-time enrollee is a consistent reading, so full_time_student=true requires an assumption not forced by the text."
+ },
+ {
+  "check_id": 66,
+  "verdict": "LEAP",
+  "why": "Combat zone deployment typically suspends filing deadlines by law. The scenario never establishes she missed her actual operative deadline \u2014 she may have filed within her extended window, leaving late_filing genuinely open."
+ },
+ {
+  "check_id": 70,
+  "verdict": "ENTAILED",
+  "why": "A returning traveler \"declaring\" goods \"brought in\" is unambiguously a border-crossing/importation context. No consistent reading of the scenario places the wine outside an import transaction."
+ },
+ {
+  "check_id": 75,
+  "verdict": "LEAP",
+  "why": "The scenario lists four children (ages 2, 5, 9, 15) but never states an eligibility age cutoff. Concluding exactly 3 are eligible requires importing an external rule (e.g., age < 13 or < 14) that the text does not state."
+ },
+ {
+  "check_id": 79,
+  "verdict": "LEAP",
+  "why": "\"Several years\" is vague and does not map to exactly 24 months. No scenario text states a numeric duration or references a policy threshold that would fix the value at 24."
+ },
+ {
+  "check_id": 81,
+  "verdict": "LEAP",
+  "why": "The scenario states \"14 months\" only. Converting to exactly 425 days requires knowing which specific calendar months were served \u2014 unspecified. Multiple day counts (420\u2013434) are equally consistent with the text."
+ },
+ {
+  "check_id": 92,
+  "verdict": "LEAP",
+  "why": "The scenario never states a deductible amount. The $500 deductible appears only in the cited_span formula, not the scenario text, making the $3,700 result an unsupported assumption."
+ },
+ {
+  "check_id": 95,
+  "verdict": "LEAP",
+  "why": "The scenario states the cancellation reason was finding a cheaper flight, but never explicitly states no government travel advisory existed. Absence of mention does not entail absence of the advisory; both could coexist."
+ },
+ {
+  "check_id": 97,
+  "verdict": "LEAP",
+  "why": "The scenario never states a dwelling insured value; $300,000 appears only in the cited_span, which does not exist in the scenario text. The only figure present is the $15,000 roof loss."
+ },
+ {
+  "check_id": 100,
+  "verdict": "ENTAILED",
+  "why": "The cited span \"a 2% windstorm deductible\" directly and unambiguously states the deductible rate as 2%. No inference or assumption is required; the numeric value is explicit in the text."
+ },
+ {
+  "check_id": 103,
+  "verdict": "LEAP",
+  "why": "Policy being active and premiums paid does not establish death-is-covered. Suicide exclusion clauses are standard in life insurance; the scenario never states the policy covers suicide or that any exclusion period elapsed."
+ },
+ {
+  "check_id": 105,
+  "verdict": "LEAP",
+  "why": "The scenario calls it a \"covered item\" but never states it is personal property. \"Covered\" does not force that classification \u2014 borrowed goods, business items with endorsements, or other categories can be covered without being personal property."
+ },
+ {
+  "check_id": 112,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly places the visit in an emergency room with classic heart-attack symptoms (crushing chest pain, shortness of breath) treated as a suspected heart attack \u2014 no reasonable reading leaves the emergency-service classification open or false."
+ },
+ {
+  "check_id": 115,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the insured \"deliberately shoved\" the guest down the stairs, causing injury. \"Deliberately\" unambiguously establishes intent; the injurious act (shove down stairs) was intentional, forcing the slot value true."
+ },
+ {
+  "check_id": 129,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly uses the word \"detached\" to describe the shed. The cited span \"A homeowner builds a detached backyard shed\" directly and literally establishes the structure is detached, leaving no room for alternative reading."
+ },
+ {
+  "check_id": 132,
+  "verdict": "ENTAILED",
+  "why": "The cited span explicitly places an alarm in the second-floor hallway \"outside the bedrooms,\" which are the sleeping areas. The hallway is immediately adjacent (bedrooms cluster around it), so an alarm outside but in the vicinity of sleeping areas is directly stated."
+ },
+ {
+  "check_id": 133,
+  "verdict": "LEAP",
+  "why": "The scenario describes an existing installation of 5 alarms but never states any requirement. The number installed does not force the conclusion that more than one alarm is *required* \u2014 the owner may simply have over-installed beyond any mandatory minimum."
+ },
+ {
+  "check_id": 152,
+  "verdict": "LEAP",
+  "why": "The scenario places a bathroom inside a dwelling unit but never states it lacks exterior walls or windows. \"Interior bathroom\" in building-code usage means no exterior exposure \u2014 that fact is never established, making the claimed_value an assumption."
+ },
+ {
+  "check_id": 176,
+  "verdict": "LEAP",
+  "why": "The scenario gives Jan 1 to July 15 (non-leap year) but never specifies whether both endpoints count. Counting both gives 196; excluding the departure day gives 195. The endpoint-inclusion convention is an unstated assumption."
+ },
+ {
+  "check_id": 181,
+  "verdict": "LEAP",
+  "why": "The scenario says \"drug offense involving marijuana\" but never specifies possession vs. trafficking. A marijuana distribution/trafficking conviction can be an aggravated felony; the text does not compel the offense was non-trafficking, so false is not established."
+ },
+ {
+  "check_id": 200,
+  "verdict": "ENTAILED",
+  "why": "Ticket opened 09:02, acknowledgment sent 09:25; 09:25 minus 09:02 = 23 minutes exactly. The arithmetic is forced with no alternative reading."
+ },
+ {
+  "check_id": 202,
+  "verdict": "LEAP",
+  "why": "The scenario never defines business hours. 11:00 Eastern on Wednesday is conventionally mid-morning on a weekday, but whether it falls within this provider's business hours is assumed, not stated. A different business-hours window (e.g., noon\u20138 PM) would make the value false."
+ },
+ {
+  "check_id": 205,
+  "verdict": "LEAP",
+  "why": "The scenario only states the provider claims force majeure; the backup generator failure is an independent non-force-majeure cause explicitly noted, and no determination that the claim is valid is ever stated."
+ },
+ {
+  "check_id": 207,
+  "verdict": "ENTAILED",
+  "why": "July 1 due date to July 20 unpaid reference is unambiguously 19 calendar days past due; both common counting conventions (20\u22121=19 or day-after-due as day 1) yield the same value."
+ },
+ {
+  "check_id": 216,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"remained unresolved after 3 hours\" \u2014 the cited span directly forces hours_unresolved=3 with no alternative reading possible."
+ },
+ {
+  "check_id": 219,
+  "verdict": "LEAP",
+  "why": "The slot asks for days after window_start, but the cited span measures from end of August. End of August to Oct 15 is ~45 days, not 76; 76 days before Oct 15 is ~July 31, not end of August. The scenario never establishes a window start that forces 76."
+ },
+ {
+  "check_id": 224,
+  "verdict": "LEAP",
+  "why": "The scenario states only two dates (submission Oct 15, period-end Dec 31) and never mentions a deadline. The cited_span imports an unstated \"90 days before end\" rule; without that external assumption, whether Oct 15 is after any deadline is simply unknown."
+ },
+ {
+  "check_id": 229,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"The replacement's name does not appear in the originally approved budget\" \u2014 this directly and unambiguously establishes the claimed false value with no alternative reading possible."
+ },
+ {
+  "check_id": 235,
+  "verdict": "LEAP",
+  "why": "Receiving honoraria from a state university is payment for services, not a financial interest in an entity. Under standard COI rules (e.g., NIH), income from state/government institutions is explicitly excluded. The scenario never establishes an ownership or equity stake."
+ }
+]

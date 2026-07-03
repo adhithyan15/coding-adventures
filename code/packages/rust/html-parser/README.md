@@ -58,6 +58,81 @@ The current parser surface includes:
 - parser diagnostics for unmatched end tags
 - body-fragment parsing that returns DOM nodes without the implied
   `html/head/body` shell while preserving lexer/parser diagnostics
+- browser-facing document extraction for title, base URL/target, head metadata,
+  resource inventory, anchor targets, body text, headings, richer links, image
+  attributes, form controls, and table summaries
+- browser-facing content tree extraction that filters parser-only shell and
+  invisible nodes into a CSS-independent body structure for early rendering
+- browser-facing render tree input extraction that maps renderable content
+  nodes into stable default display categories for early layout
+- browser-facing form control metadata for input values, disabled/checked/
+  selected state, select options, and textarea values across document,
+  content-tree, and render-tree projections
+- browser-facing form accessibility metadata for explicit and implicit labels,
+  derived accessible names, form-owner references, placeholder/autocomplete
+  hints, and required/readonly/multiple control state across document,
+  content-tree, and render-tree projections
+- browser-facing URL resolution metadata for links, loadable resources, images,
+  and form actions using the document `base` href when available, while keeping
+  raw authored URLs available to browser policy code
+- browser-facing link/resource scheduling metadata for preconnect, preload,
+  modulepreload, prefetch, manifest, canonical, and icon links, including
+  `as`, integrity, CORS/referrer policy, fetch priority, blocking, and
+  responsive image preload hints
+- browser-facing responsive image metadata for `img` and `picture/source`
+  combinations, including raw/resolved `srcset`, `sizes`, source media/type
+  hints, lazy loading, decoding, fetch priority, CORS/referrer policy, usemap,
+  and server-side image-map state
+- browser-facing identity and language metadata for document/body fields plus
+  renderable content nodes, including `id`, tokenized `class`, `title`, `lang`,
+  and `dir` values for selector matching, UI policy, and early layout
+- browser-facing embedded resource metadata for replaced content such as
+  `iframe`, `object`, `embed`, `audio`, and `video`, including resolved source
+  URLs, resource kind, type hints, media attributes, and authored dimensions
+- browser-facing media playback metadata for `audio` and `video`, including
+  playback flags and preload/poster fields
+- browser-facing script and stylesheet loading metadata, including
+  module/classic script kind, async/defer/nomodule flags, inline script/style
+  text, integrity/crossorigin/referrer-policy hints, fetch priority, blocking,
+  alternate stylesheet, and disabled stylesheet state
+- browser-facing table layout and accessibility metadata, including effective
+  column counts, column hints, row-group identity, column spans, cell spans,
+  header associations, scopes, and abbreviated header labels
+- browser-facing text-flow metadata for paragraphs, preformatted text, ordered
+  and unordered lists, list item values, block/inline quote citations, and
+  line/word/thematic break elements
+- browser-facing document outline metadata for heading levels, sectioning
+  elements, and landmark-like regions such as `main`, `nav`, `aside`,
+  `header`, and `footer`
+
+## Browser-Readiness Completion Boundary
+
+The browser-readiness pass is complete when `BrowserDocument` exposes stable,
+flat planning inventories for the major browser subsystems that need parser
+facts before CSS, layout, script execution, accessibility tree construction,
+network scheduling, and activation planning. The completion boundary is not
+"add every possible browser API"; it is a bounded parser-owned contract:
+
+- document/head policy, URL, resource, script, stylesheet, fetch, and loading
+  inventories
+- form ownership, control, validation, submission, reset, autofill, and form
+  policy inventories
+- navigation targets, navigation groups, headings, landmarks, text semantics,
+  text flow, structured data, table structure, and global state inventories
+- ARIA name, description, relation, collection, range, and live-region
+  inventories
+- media, embedded content, responsive image, image-map, canvas, template, slot,
+  custom element, component-hydration, and data-attribute inventories
+- activation, popover, disclosure, focus, keyboard, input, drag/drop,
+  clipboard, selection, composition, pointer, scroll, lifecycle, animation,
+  fullscreen, context-menu, and event-handler inventories
+
+Each public browser-readiness inventory must have either checked fixture
+evidence in `tests/fixtures/html-browser-readiness.json` or an explicitly named
+focused regression test in `tests/browser_readiness_test.rs`. The
+`browser_readiness_completion_manifest_matches_public_surface` test is the
+executable source of truth for that boundary and should fail if a future field
+is added without coverage evidence.
 
 The checked-in html5lib tree-construction smoke corpus now covers every case in
 the currently audited upstream `html5lib-tests/tree-construction/*.dat` sources
@@ -319,12 +394,35 @@ audit report and pinned-count checks into the same local guard.
 ```rust
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_parser::{
-    parse_html, parse_html_fragment, parse_html_with_options, HtmlInitialTokenizerContext,
-    HtmlParseOptions,
+    parse_browser_content_tree, parse_browser_document, parse_browser_render_tree, parse_html,
+    parse_html_fragment, parse_html_with_options, HtmlInitialTokenizerContext, HtmlParseOptions,
 };
 use dom_core::Node;
 
 let document = parse_html("<p>Hello <strong>Venture</strong></p>").unwrap();
+let browser_document = parse_browser_document(
+    "<title>Example</title><h1>Example</h1><p><a href=next.html>Next</a></p>"
+).unwrap();
+
+assert_eq!(browser_document.title.as_deref(), Some("Example"));
+assert_eq!(browser_document.links[0].href.as_deref(), Some("next.html"));
+assert!(browser_document.resources.is_empty());
+
+let content_tree = parse_browser_content_tree("<h1>Example</h1><p>Hello <b>there</b>").unwrap();
+assert_eq!(content_tree.children[0].role, "heading");
+assert_eq!(content_tree.children[1].role, "block");
+
+let render_tree = parse_browser_render_tree("<p>Hello <img src=logo.gif alt=Logo>").unwrap();
+assert_eq!(render_tree.children[0].display, "block");
+assert_eq!(render_tree.children[0].children[1].display, "inline-replaced");
+
+let form_tree = parse_browser_render_tree(
+    "<form><select><option value=one>One<option selected>Two</select></form>"
+).unwrap();
+let select = &form_tree.children[0].children[0];
+assert_eq!(select.control_type.as_deref(), Some("select"));
+assert_eq!(select.value.as_deref(), Some("Two"));
+assert_eq!(select.options, vec!["One".to_string(), "Two".to_string()]);
 
 match &document.children[0] {
     Node::Element(element) => assert_eq!(element.name, "html"),

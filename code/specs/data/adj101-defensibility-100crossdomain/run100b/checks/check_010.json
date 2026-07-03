@@ -1,0 +1,8 @@
+{
+ "check_id": 10,
+ "idx": 5,
+ "slot": "generic_available",
+ "claimed_value": true,
+ "scenario": "Nadia filled a prescription at an in-network pharmacy for a medication that has both a brand and a generic version available. Her plan has a $10 generic copay and a $50 brand copay. The pharmacy processed the claim.",
+ "cited_span": "a medication that has both a brand and a generic version available"
+}

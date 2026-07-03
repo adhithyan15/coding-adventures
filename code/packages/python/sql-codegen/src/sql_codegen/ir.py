@@ -477,6 +477,13 @@ class SortKey:
     direction: Direction = Direction.ASC
     nulls: NullsOrder = NullsOrder.LAST
     column_idx: int | None = None  # 0-based; set for positional ORDER BY N
+    # ``COLLATE name`` from the SQL: a comparison transform applied to
+    # the column value before the sort comparator runs.  ``None`` means
+    # SQLite's default ``BINARY`` (byte-for-byte comparison).
+    # Mini-sqlite recognises ``"NOCASE"`` (ASCII case-insensitive) and
+    # ``"RTRIM"`` (strip trailing spaces).  Unknown collations are
+    # ignored at runtime (matching SQLite, which validates lazily).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -713,10 +720,17 @@ class InsertFromResult:
 
 @dataclass(frozen=True, slots=True)
 class UpdateRows:
-    """For the row under the current cursor, update the named assignments."""
+    """For the row under the current cursor, update the named assignments.
+
+    ``on_conflict`` carries the optional ``UPDATE OR <action>`` strategy.
+    ``None`` → default SQLite ABORT behaviour (raise on constraint violation).
+    ``"IGNORE"`` → skip the update for this row silently.
+    ``"REPLACE"`` → pre-delete conflicting rows, then apply the update.
+    """
     table: str
     assignments: tuple[str, ...]
     cursor_id: int
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)
@@ -837,19 +851,42 @@ class ColumnDef:
     type: str
     nullable: bool = True
     primary_key: bool = False
+    # ``autoincrement`` mirrors SQLite's ``AUTOINCREMENT`` clause that
+    # may follow ``PRIMARY KEY`` on an INTEGER column.  When True, the
+    # backend treats deleted rowids as permanently retired (monotonic
+    # rowid sequence).  The in-memory backend always behaves this way
+    # because ``_next_rowid`` is never decremented, so the flag is
+    # mostly informational and round-tripped into ``sqlite_master.sql``.
+    autoincrement: bool = False
     unique: bool = False
     default: object = NO_COLUMN_DEFAULT
     check_instrs: tuple[Instruction, ...] = ()
+    # Source text of the CHECK expression — passed through to the VM so
+    # constraint-violation error messages can quote the original
+    # predicate (matching SQLite: ``CHECK constraint failed: a > 0``).
+    # Empty string means "fall back to the older ``<table>.<col>`` form".
+    check_expr_text: str = ""
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
+    # ``COLLATE name`` from the CREATE TABLE source.  Passed through to the
+    # backend's ColumnDef so the planner can consult it when an ORDER BY
+    # references this column without an explicit COLLATE override.
+    # ``None`` means BINARY (the SQLite default).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class CreateTable:
-    """Ask the backend to create a table."""
+    """Ask the backend to create a table.
+
+    ``strict`` mirrors the SQLite ``STRICT`` trailing table-option.  The VM
+    forwards it to ``Backend.create_table(strict=...)`` so the backend can
+    enforce strict per-column typing on subsequent INSERT/UPDATE.
+    """
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -861,9 +898,18 @@ class DropTable:
 
 @dataclass(frozen=True, slots=True)
 class AlterTable:
-    """Ask the backend to add a column to an existing table."""
+    """Ask the backend to mutate an existing table's schema.
+
+    Mirrors :class:`sql_planner.ast.AlterTableStmt`: exactly one of
+    ``column`` / ``rename_to`` / ``rename_column`` / ``drop_column``
+    is non-None per instance; the VM dispatches on whichever one is
+    set.
+    """
     table: str
-    column: ColumnDef
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -909,6 +955,7 @@ class CreateTriggerDef:
     event: str     # "INSERT" | "UPDATE" | "DELETE"
     table: str
     body_sql: str
+    if_not_exists: bool = False
 
 
 @dataclass(frozen=True, slots=True)

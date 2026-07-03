@@ -1,0 +1,47 @@
+% ADJ52 case-10 — patient observations + queries (deriver output).
+% Same vocabulary as rulebook.adj. Numeric/unit term-args normalized to
+% qualitative atoms per the adj-lang IDENT grammar:
+%   patient_age(years(61)) -> (clinical context; not a clause trigger)
+%   symptom_onset_age(years(7)) -> symptom_onset_age(early_childhood)
+%   lab(il_6, value(11.4,...) ref <5.9) -> lab(il_6, markedly_elevated)
+%   lab(hs_crp, value(31.8,...) ref <3.00) -> lab(hs_crp, markedly_elevated)
+%   lab(esr, value(52,...) ref <15) -> lab(esr, elevated)
+%   trigger(cold_weather)/trigger(air_conditioned_room) -> trigger(cold_exposure)
+%   inheritance affected each generation both sexes -> inheritance_pattern(autosomal_dominant)
+%   biopsy perivascular infiltrate, no fibrinoid necrosis / vessel destruction
+%     -> biopsy_pattern(perivascular_infiltrate_no_vasculitis)
+%   antihistamines + corticosteroids never controlled -> treatment_failure(antihistamines_and_steroids)
+%   connective-tissue serology unrevealing -> connective_tissue_serology(no_paraprotein)
+
+observe symptom_onset_age(early_childhood)
+observe trigger(cold_exposure)
+observe relieving_factor(warmth)
+observe familial_phenotype(non_itchy_urticaria_like_rash)
+observe rash_non_pruritic(true)
+observe associated_symptom(low_grade_fever)
+observe associated_symptom(aching_joints)
+observe exam_audiometry(bilateral_sensorineural_hearing_loss)
+observe familial_phenotype(eye_problems)
+observe inheritance_pattern(autosomal_dominant)
+observe inflammatory_markers_persistently_raised
+observe lab(il_6, markedly_elevated)
+observe lab(hs_crp, markedly_elevated)
+observe lab(esr, elevated)
+observe lab(ana, weakly_positive)
+observe lab(anti_jo_1, borderline)
+observe connective_tissue_serology(no_paraprotein)
+observe biopsy_pattern(perivascular_infiltrate_no_vasculitis)
+observe treatment_failure(antihistamines_and_steroids)
+observe cardiac_event(coronary_disease)
+
+% q1 — unifying diagnosis
+? diagnosis(cryopyrin_associated_periodic_syndrome)
+? diagnosis(schnitzler_syndrome)
+? diagnosis(urticarial_vasculitis)
+? diagnosis(acquired_cold_urticaria)
+? diagnosis(idiopathic_inflammatory_myopathy)
+
+% q5 — confirmatory investigation / targeted therapy (recommended next step)
+? next_step(nlrp3_genetic_testing)
+? next_step(il1_inhibitor_trial)
+? next_step(serum_immunofixation_for_paraprotein)

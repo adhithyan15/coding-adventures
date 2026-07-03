@@ -1,0 +1,232 @@
+% ============================================================================
+% ADJ52 case-11 derived rulebook.
+% Clinical area: adult pancytopenia workup with a bone-marrow atypical
+% LYMPHOID infiltrate + monocytopenia + reticulin fibrosis (flow / molecular /
+% cytogenetic studies pending). Differential is built from the IR alone — no
+% answer is given. Every clause carries a % rationale + source + trust.
+%
+% NOTE: numeric/unit lab values from the IR were normalized to qualitative
+% atoms so they satisfy the adj-lang IDENT grammar (no uppercase, no leading
+% digit). Mapping used throughout:
+%   patient_age(years(64))                 -> patient_age(over_50)
+%   hemoglobin 12.4 (ref 13-17)            -> anemia(mild)
+%   mcv 102 (ref 80-100)                   -> mean_corpuscular_volume(macrocytic)
+%   platelet 108 (ref 150-450)             -> thrombocytopenia(present)
+%   anc 0.8 (ref 1.5-8.0)                  -> neutropenia(present)
+%   wcc 2.6 (ref 4.0-11.0)                 -> leukopenia(present)
+%   strikingly low absolute monocyte count -> absolute_monocyte_count(strikingly_low)
+%   esr 24 (ref 0-12)                       -> erythrocyte_sedimentation_rate(modestly_raised)
+%   counts depressed ~3 months              -> cytopenia_chronicity(persistent_months)
+% ============================================================================
+
+% ===== PRIORS (base rates for a 64yo with persistent pancytopenia + marrow
+% atypical lymphoid infiltrate) =====
+
+% rationale: HCL is a rare chronic B-cell malignancy that classically presents
+% with pancytopenia, monocytopenia, marrow reticulin fibrosis and an atypical
+% lymphoid marrow infiltrate — the exact constellation here.
+prior 0.18 for diagnosis(hairy_cell_leukemia)
+  source "Blood 2017;129(5):553 consensus guidelines; NCBI Bookshelf NBK586203" trust authoritative
+
+% rationale: HCL variant is the nearest mimic — a separate WHO entity with
+% leukocytosis and (importantly) preserved monocytes; kept on the differential.
+prior 0.08 for diagnosis(hairy_cell_leukemia_variant)
+  source "Orphanet 300878; PMC4382572 (HCL-V differential diagnosis)" trust authoritative
+
+% rationale: SMZL is the canonical B-cell lymphoproliferative differential for a
+% splenic/marrow-based small-B-cell infiltrate; can give cytopenias.
+prior 0.08 for diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC4382572 (HCL vs HCL-V vs SMZL differential); StatPearls NBK499845" trust authoritative
+
+% rationale: T-LGL leukemia is an indolent lymphoid leukemia that infiltrates
+% marrow interstitially and characteristically causes cytopenias (esp.
+% neutropenia) — a plausible T/NK-lineage explanation for the atypical lymphocytes.
+prior 0.08 for diagnosis(t_large_granular_lymphocytic_leukemia)
+  source "PMC4188790; ScienceDirect LGL overview" trust authoritative
+
+% rationale: MDS is the leading non-lymphoid cause of persistent pancytopenia
+% with macrocytosis in an older adult; must be excluded.
+prior 0.10 for diagnosis(myelodysplastic_syndrome)
+  source "StatPearls NBK534126; MSD Manual MDS" trust authoritative
+
+% rationale: primary myelofibrosis explains marrow reticulin fibrosis + cytopenias
+% but is a myeloid (not lymphoid) clonal process.
+prior 0.06 for diagnosis(primary_myelofibrosis)
+  source "MSD Manual Primary Myelofibrosis (PMF)" trust authoritative
+
+% ===== HAIRY CELL LEUKEMIA =====
+
+% rationale: multilineage pancytopenia is one of the most common presentations of HCL.
+contributes 2.0 from pancytopenia(present) to diagnosis(hairy_cell_leukemia)
+  source "NCBI Bookshelf NBK586203 (HCL — multilineage cytopenias)" trust authoritative
+
+% rationale: an atypical lymphoid marrow infiltrate is the substrate of HCL
+% (small-medium B-cells with pale cytoplasm infiltrating marrow).
+contributes 2.5 from marrow_infiltrate(atypical_lymphocytes) to diagnosis(hairy_cell_leukemia)
+  source "Pathology Outlines lymphomahcl; NBK586203" trust authoritative
+
+% --- CORRELATED MECHANISM: monocytopenia + marrow reticulin fibrosis are NOT
+% independent. Both are signature downstream effects of the hairy-cell clone:
+% monocytopenia is near-universal (~98%) in HCL, and the reticulin fibrosis is
+% produced by hairy cells assembling a fibronectin matrix (the "dry tap").
+% Grouped as one mechanism so the combined LR fires ONCE rather than
+% double-counting one underlying disease process. ---
+% mechanism hairy_cell_clone for diagnosis(hairy_cell_leukemia) lr 9.0 : absolute_monocyte_count(strikingly_low), marrow_finding(increased_reticulin_fibrosis)
+
+% rationale: absence of splenomegaly is atypical for HCL (splenomegaly is the most
+% common sign) but HCL without splenomegaly is well documented -> mild AGAINST only.
+contributes 0.7 from exam_finding(no_splenomegaly) to diagnosis(hairy_cell_leukemia)
+  source "Blood Research case report PMC5503894 (HCL without splenomegaly)" trust authoritative
+
+% rationale: a non-contributory smear with no circulating abnormal cells fits
+% HCL, where hairy cells are often sparse/absent in blood (marrow-based disease).
+contributes 1.3 from smear_finding(no_atypical_or_abnormal_circulating_cells) to diagnosis(hairy_cell_leukemia)
+  source "PMC12370212 (HCL diagnosed despite absence of hairy cells in blood)" trust authoritative
+
+% ===== HAIRY CELL LEUKEMIA VARIANT =====
+
+% rationale: HCL-V shares the atypical B-lymphoid marrow infiltrate.
+contributes 2.0 from marrow_infiltrate(atypical_lymphocytes) to diagnosis(hairy_cell_leukemia_variant)
+  source "PMC4382572 (HCL-V differential)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — HCL-V characteristically PRESERVES monocytes
+% (lacks the monocytopenia of classic HCL); a strikingly low monocyte count
+% argues strongly AGAINST the variant.
+contributes 0.2 from absolute_monocyte_count(strikingly_low) to diagnosis(hairy_cell_leukemia_variant)
+  source "PMC4382572 (HCL-V lacks monocytopenia, unlike classic HCL)" trust authoritative
+
+% rationale: HCL-V usually presents with leukocytosis, not leukopenia/pancytopenia
+% -> the pancytopenic picture here argues mildly against the variant.
+contributes 0.6 from pancytopenia(present) to diagnosis(hairy_cell_leukemia_variant)
+  source "PMC4382572 (HCL-V: leukocytosis common; pancytopenia favors classic HCL)" trust authoritative
+
+% ===== SPLENIC MARGINAL ZONE LYMPHOMA =====
+
+% rationale: SMZL is a small-B-cell lymphoproliferative disorder that can infiltrate marrow.
+contributes 1.8 from marrow_infiltrate(atypical_lymphocytes) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "StatPearls NBK499845; PMC4382572" trust authoritative
+
+% rationale: DISCRIMINATOR — SMZL is defined by splenomegaly; a normal-sized
+% spleen on CT and exam argues against it.
+contributes 0.4 from exam_finding(no_splenomegaly) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC4382572 (SMZL is a splenic disease — splenomegaly expected)" trust authoritative
+
+% rationale: SMZL does not characteristically cause monocytopenia; the striking
+% monocytopenia is not explained by SMZL -> mild AGAINST.
+contributes 0.6 from absolute_monocyte_count(strikingly_low) to diagnosis(splenic_marginal_zone_lymphoma)
+  source "PMC4382572 (monocytopenia is the HCL-specific feature, not SMZL)" trust inferred
+
+% ===== T-LARGE GRANULAR LYMPHOCYTIC LEUKEMIA =====
+
+% rationale: T-LGL infiltrates marrow interstitially with a lymphoid population.
+contributes 1.8 from marrow_infiltrate(atypical_lymphocytes) to diagnosis(t_large_granular_lymphocytic_leukemia)
+  source "PMC4188790 (T-LGL marrow interstitial infiltrate)" trust authoritative
+
+% rationale: T-LGL characteristically causes neutropenia/cytopenias — fits the ANC.
+contributes 2.2 from neutropenia(present) to diagnosis(t_large_granular_lymphocytic_leukemia)
+  source "PMC7529498; PMC9732502 (T-LGL severe neutropenia)" trust authoritative
+
+% rationale: T-LGL does not produce the dry-tap reticulin fibrosis of HCL; marked
+% reticulin fibrosis is not a T-LGL feature -> mild AGAINST.
+contributes 0.6 from marrow_finding(increased_reticulin_fibrosis) to diagnosis(t_large_granular_lymphocytic_leukemia)
+  source "PMC4188790 (T-LGL infiltrate; fibrosis is not a defining feature)" trust inferred
+
+% rationale: T-LGL does not cause the near-universal monocytopenia of HCL -> the
+% striking monocytopenia is not explained by T-LGL.
+contributes 0.7 from absolute_monocyte_count(strikingly_low) to diagnosis(t_large_granular_lymphocytic_leukemia)
+  source "ScienceDirect LGL overview (monocytopenia is HCL-specific)" trust inferred
+
+% ===== MYELODYSPLASTIC SYNDROME =====
+
+% rationale: MDS is a leading cause of persistent pancytopenia in older adults.
+contributes 2.0 from pancytopenia(present) to diagnosis(myelodysplastic_syndrome)
+  source "StatPearls NBK534126 (MDS — refractory cytopenias)" trust authoritative
+
+% rationale: macrocytosis (MCV 102) is a classic MDS clue (dysplastic erythropoiesis).
+contributes 2.5 from mean_corpuscular_volume(macrocytic) to diagnosis(myelodysplastic_syndrome)
+  source "Medscape MDS workup; MSD Manual MDS (macrocytic anemia)" trust authoritative
+
+% rationale: stable cytopenias >= months is part of the MDS prerequisite criteria.
+contributes 1.6 from cytopenia_chronicity(persistent_months) to diagnosis(myelodysplastic_syndrome)
+  source "Medscape MDS workup (IWG: cytopenia >=6 months prerequisite)" trust authoritative
+
+% rationale: DISCRIMINATOR — MDS is a MYELOID disorder; an atypical LYMPHOID
+% marrow infiltrate is not MDS and points away from a myelodysplastic process.
+contributes 0.4 from marrow_infiltrate(atypical_lymphocytes) to diagnosis(myelodysplastic_syndrome)
+  source "StatPearls NBK534126 (MDS = myeloid dysplasia, not a lymphoid infiltrate)" trust authoritative
+
+% ===== PRIMARY MYELOFIBROSIS =====
+
+% rationale: reticulin fibrosis on marrow is the defining lesion of PMF.
+contributes 2.5 from marrow_finding(increased_reticulin_fibrosis) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (diagnosis by reticulin/trichrome stain)" trust authoritative
+
+% rationale: PMF gives cytopenias as marrow is replaced by fibrosis.
+contributes 1.4 from pancytopenia(present) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (anemia/cytopenias from marrow replacement)" trust authoritative
+
+% rationale: DISCRIMINATOR — PMF produces a leukoerythroblastic smear with
+% teardrop cells and splenomegaly; this smear is non-contributory with no
+% abnormal cells -> argues against PMF.
+contributes 0.4 from smear_finding(no_atypical_or_abnormal_circulating_cells) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (leukoerythroblastosis + teardrop cells expected)" trust authoritative
+
+% rationale: DISCRIMINATOR — PMF classically has splenomegaly (extramedullary
+% hematopoiesis); a normal spleen argues against it.
+contributes 0.5 from exam_finding(no_splenomegaly) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (massive splenomegaly characteristic)" trust authoritative
+
+% rationale: DISCRIMINATOR — PMF is a myeloid clonal process; an atypical
+% LYMPHOID infiltrate is not PMF.
+contributes 0.4 from marrow_infiltrate(atypical_lymphocytes) to diagnosis(primary_myelofibrosis)
+  source "MSD Manual PMF (myeloproliferative, not lymphoid)" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: flow cytometry of the marrow lymphoid population is the first
+% confirmatory step — HCL shows CD11c/CD25/CD103/CD123 with pan-B markers, and
+% flow distinguishes HCL from HCL-V and SMZL.
+prior 0.25 for next_step(flow_cytometry_immunophenotyping)
+  source "Blood 2017;129(5):553 consensus; ScienceDirect (4-antigen flow panel)" trust authoritative
+contributes 4.0 from marrow_infiltrate(atypical_lymphocytes) to next_step(flow_cytometry_immunophenotyping)
+  source "PMC4382572 (flow distinguishes HCL/HCL-V/SMZL)" trust authoritative
+contributes 2.5 from absolute_monocyte_count(strikingly_low) to next_step(flow_cytometry_immunophenotyping)
+  source "Blood 2017;129(5):553 (monocytopenia -> suspect HCL -> immunophenotype)" trust authoritative
+
+% rationale: BRAF V600E is the disease-defining molecular marker for HCL,
+% present in nearly all classic HCL and virtually absent in its mimics; the
+% molecular study already sent is best directed at BRAF V600E.
+prior 0.15 for next_step(braf_v600e_mutation_testing)
+  source "NEJM 2011 NEJMoa1014209; PMC4129051 (BRAF V600E disease-defining for HCL)" trust authoritative
+contributes 3.5 from absolute_monocyte_count(strikingly_low) to next_step(braf_v600e_mutation_testing)
+  source "PMC4129051 (monocytopenia + lymphoid infiltrate -> test BRAF V600E)" trust authoritative
+
+% rationale: cytogenetics/karyotype is the directed next step if MDS is the
+% explanation (defining cytogenetic abnormalities establish MDS).
+prior 0.10 for next_step(marrow_cytogenetics_karyotype)
+  source "StatPearls NBK534126 (cytogenetics establishes MDS)" trust authoritative
+contributes 2.0 from mean_corpuscular_volume(macrocytic) to next_step(marrow_cytogenetics_karyotype)
+  source "Medscape MDS workup (karyotype for dysplastic macrocytic cytopenias)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved — pending flow/molecular) =====
+
+% u3: lineage of the atypical marrow lymphocytes is unresolved pending flow.
+% Resolving it (B vs T vs NK) moves the lymphoid differential.
+uncertain { lineage(b_lymphocyte), lineage(t_lymphocyte), lineage(nk_cell) } for diagnosis(hairy_cell_leukemia)
+  source "Flow cytometry on marrow lymphocyte population (pending)"
+% rationale: a B-cell phenotype with bright CD25/CD103/CD123 confirms classic HCL.
+contributes 6.0 from lineage(b_lymphocyte) to diagnosis(hairy_cell_leukemia)
+  source "Blood 2017;129(5):553 (classic HCL B-cell immunophenotype)" trust authoritative
+% rationale: a T-cell phenotype redirects toward T-LGL and away from HCL.
+contributes 0.2 from lineage(t_lymphocyte) to diagnosis(hairy_cell_leukemia)
+  source "PMC4188790 (T-lineage -> T-LGL, not HCL)" trust inferred
+
+% u: the molecular result (BRAF) is the disease-defining confirmation, unresolved.
+uncertain { molecular(braf_v600e_present), molecular(braf_wild_type) } for diagnosis(hairy_cell_leukemia)
+  source "NEJM 2011 NEJMoa1014209 (BRAF V600E pending)"
+% rationale: BRAF V600E present is near-diagnostic for classic HCL.
+contributes 8.0 from molecular(braf_v600e_present) to diagnosis(hairy_cell_leukemia)
+  source "PMC4129051; NEJM 2011 (BRAF V600E nearly all classic HCL)" trust authoritative
+% rationale: BRAF wild-type argues against classic HCL (favors HCL-V / mimic).
+contributes 0.3 from molecular(braf_wild_type) to diagnosis(hairy_cell_leukemia)
+  source "PMC3342983 (BRAF wild-type in HCL-V and related disorders)" trust authoritative

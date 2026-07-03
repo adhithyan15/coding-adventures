@@ -1,0 +1,22 @@
+% ============================================================================
+% psych-recall.query.adj — a worked recall query over the psychopharmacology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "what is this drug's
+% signature adverse effect?" question: it states no psychiatry fact — it only
+% `import`s the grounded library and asks binding queries. The native adj-lang
+% engine resolves each `?` against the imported `relate` edges and returns the
+% binding + the citing clause's source/locator/trust. All knowledge is in the
+% library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli psych-recall.query.adj
+% ============================================================================
+
+import "psych-edges.adj"
+
+? drug_adverse_effect(lithium, $Effect)                        % expect nephrogenic_diabetes_insipidus
+? drug_adverse_effect(clozapine, $Effect)                      % expect agranulocytosis
+? drug_adverse_effect(valproate, $Effect)                      % expect hepatotoxicity
+? drug_adverse_effect(maoi, $Effect)                           % expect hypertensive_crisis
+? drug_adverse_effect(tricyclic_antidepressants, $Effect)      % expect qrs_prolongation
+? drug_adverse_effect(dopamine_receptor_antagonists, $Effect)  % expect neuroleptic_malignant_syndrome

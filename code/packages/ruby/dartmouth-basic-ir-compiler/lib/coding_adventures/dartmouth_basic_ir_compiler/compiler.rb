@@ -47,10 +47,12 @@ module CodingAdventures
         stripped = line.strip
         return nil if stripped.empty?
 
-        match = stripped.match(/\A(\d+)\s*(.*)\z/)
-        raise CompileError, "expected line number: #{line.inspect}" unless match
+        # Anchored digit-run match (no `\s*(.*)` tail) — keeps codeql's
+        # rb/polynomial-redos quiet on whitespace-padded input.
+        digits = stripped[/\A\d+/]
+        raise CompileError, "expected line number: #{line.inspect}" unless digits
 
-        [match[1].to_i, match[2].strip]
+        [digits.to_i, stripped[digits.length..].to_s.strip]
       end
 
       def compile_line(line_no, stmt)

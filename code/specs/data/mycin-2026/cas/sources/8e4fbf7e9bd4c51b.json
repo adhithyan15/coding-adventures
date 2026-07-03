@@ -1,0 +1,24 @@
+{
+  "hash": "8e4fbf7e9bd4c51b",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/15509818/",
+  "title": "Clinical features and prognostic factors in adults with bacterial meningitis (van de Beek et al., N Engl J Med 2004)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15509818/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Streptococcus pneumoniae was the most common pathogen, accounting for 51% of episodes of community-acquired bacterial meningitis in adults.",
+      "byte_quote": "The most common pathogens were Streptococcus pneumoniae (51 percent of episodes) and Neisseria meningitidis (37 percent)."
+    },
+    {
+      "id": "c2",
+      "text": "Neisseria meningitidis was the second most common pathogen, accounting for 37% of episodes.",
+      "byte_quote": "The most common pathogens were Streptococcus pneumoniae (51 percent of episodes) and Neisseria meningitidis (37 percent)."
+    },
+    {
+      "id": "c3",
+      "text": "Mortality was higher with pneumococcal meningitis than meningococcal meningitis (30% vs 7%).",
+      "byte_quote": "The mortality rate was higher among patients with pneumococcal meningitis than among those with meningococcal meningitis (30 percent vs. 7 percent, P<0.001)."
+    }
+  ],
+  "cites": []
+}

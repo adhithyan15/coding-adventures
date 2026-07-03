@@ -1,0 +1,7 @@
+{
+  "name": "PE-stress-ruleout (https://pmc.ncbi.nlm.nih.gov/articles/PMC11998620/) [pretest]",
+  "ground_truth": "true-negative; PE excluded by CTPA; final dx epicardial fat necrosis",
+  "pe_confirmed": "pe_excluded",
+  "observations": [],
+  "observations_pretest": []
+}

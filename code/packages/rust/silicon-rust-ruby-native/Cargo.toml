@@ -1,0 +1,23 @@
+[package]
+name = "silicon-rust-ruby-native"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Ruby native extension for the silicon simulation stack: device-physics, mosfet-models, fab-process-simulation"
+
+[lib]
+# cdylib → the .{so,bundle,dll} Ruby loads via dlopen().
+# Follows the same pattern as matrix-rust-ruby-native:
+#   * Linux: ELF resolves undefined Ruby symbols at dlopen() time
+#   * macOS: build.rs emits -undefined dynamic_lookup
+#   * Windows: build.rs links against libruby
+name = "silicon_rust_ruby_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+device-physics         = { path = "../device-physics" }
+mosfet-models          = { path = "../mosfet-models" }
+fab-process-simulation = { path = "../fab-process-simulation" }
+ruby-bridge            = { path = "../ruby-bridge" }
+
+[build-dependencies]

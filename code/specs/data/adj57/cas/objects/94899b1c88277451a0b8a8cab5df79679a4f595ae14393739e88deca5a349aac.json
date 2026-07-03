@@ -1,0 +1,25 @@
+{
+  "hash": "94899b1c88277451a0b8a8cab5df79679a4f595ae14393739e88deca5a349aac",
+  "url": "https://arxiv.org/pdf/1405.4863",
+  "title": "Fox et al. 2014, ApJ \u2014 Uncovering the B-star companion of SN 1993J (states the defining IIb property and that 1993J is the prototype)",
+  "interned_at": "",
+  "content": "The Type IIb supernova (SN IIb; see Filippenko 1997 for a review) subclass exhibits spectroscopic evidence for hydrogen emission at early times (the defining property of Type II supernovae, SNe II), He I absorption at later times (as in SNe Ib), and renewed broad H-alpha emission in the nebular phase. The Type IIb supernova (SN) 1993J is one of only a few stripped-envelope supernovae with a progenitor star identified in pre-explosion images.",
+  "citations": [
+    {
+      "start": 303,
+      "end": 445,
+      "quote": "The Type IIb supernova (SN) 1993J is one of only a few stripped-envelope supernovae with a progenitor star identified in pre-explosion images.",
+      "used_for": "template_match(sn1993j_iib_prototype, plus4_days): top SNID template = SN 1993J (the IIb prototype) at +4d. SN 1993J is the canonical Type IIb prototype, included as a IIb template in the SNID/CfA template library. A top template match to SN 1993J at the correct epoch is strong evidence for IIb. ROOT classification of SN1993J as IIb is grounded (Filippenko et al. 1993; reaffirmed Fox et al. 2014), and its inclusion as a SNID IIb template is grounded (Liu & Modjaz / Modjaz et al. 2014 SNID template set). However NO published numeric LR for 'top template = 1993J -> IIb' exists. Direction strongly favors IIb. Honest verdict: direction_only.->type_iib_supernova"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "Filippenko, Matheson & Ho 1993, ApJ 415, L103 (original IIb classification of SN1993J)",
+      "interned_hash": ""
+    },
+    {
+      "citation": "Filippenko, Matheson & Ho 1993, ApJ 415, L103",
+      "interned_hash": ""
+    }
+  ]
+}

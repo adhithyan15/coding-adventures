@@ -1,0 +1,8 @@
+{
+ "check_id": 16,
+ "idx": 8,
+ "slot": "lacked_capacity_at_refusal",
+ "claimed_value": true,
+ "scenario": "Mr. Ferreira, admitted for sepsis, refuses IV antibiotics. At the moment he voiced the refusal he was febrile, disoriented to time and place, and unable to explain the consequences of declining treatment; a capacity assessment documented that he lacked decision-making capacity at that time.",
+ "cited_span": "a capacity assessment documented that he lacked decision-making capacity at that time"
+}

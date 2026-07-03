@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-spice-engine"
-version = "0.13.0"
-description = "SPICE-compatible analog circuit simulator with MNA + Newton-Raphson DC + Gmin/source-stepping convergence aids + transient + AC small-signal sweep + DC transfer function (.TF) + DC parameter sweep (.DC) + DC sensitivity analysis (.SENS) + Monte Carlo (.MC) + noise analysis (.NOISE) + controlled sources (VCVS, VCCS, CCCS, CCVS) + time-varying source waveforms (PWL, SIN, PULSE, EXP)."
+version = "0.14.0"
+description = "SPICE-compatible analog circuit simulator with MNA, nonlinear DC convergence aids, transient/AC/TF/DC/SENS/MC/NOISE/PSS analyses, Fourier/distortion/pole-zero/S-parameter helpers, controlled sources, waveforms, subcircuits, temperature scaling, and text output tables."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -29,6 +29,7 @@ Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+sparse = ["scipy>=1.12"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/spice_engine"]

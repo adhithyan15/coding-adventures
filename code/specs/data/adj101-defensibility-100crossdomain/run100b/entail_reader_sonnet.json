@@ -1,0 +1,197 @@
+[
+ {
+  "check_id": 12,
+  "verdict": "LEAP",
+  "why": "The cited span says the procedure \"normally\" requires prior authorization \u2014 the qualifier \"normally\" explicitly leaves room for emergency exceptions, and the scenario's emergency framing makes that exception a consistent alternative reading. The text never asserts authorization is required in this specific case."
+ },
+ {
+  "check_id": 20,
+  "verdict": "ENTAILED",
+  "why": "January 5 to March 30 is exactly 84 days by direct arithmetic. Both dates are explicitly stated in the scenario; no assumption is needed."
+ },
+ {
+  "check_id": 31,
+  "verdict": "LEAP",
+  "why": "The scenario gives parcel size (0.7 acres), not acres disturbed. Grading \"a parcel\" does not force that every square foot is disturbed; partial grading for a duplex footprint is a consistent alternative reading."
+ },
+ {
+  "check_id": 32,
+  "verdict": "LEAP",
+  "why": "The scenario explicitly notes a large portion went to reclamation/recycling, not disposal. Equating total spent-solvent generated (1,240 kg) with hazardous_waste_kg requires assuming all generated solvent counts as waste, which the scenario itself contradicts."
+ },
+ {
+  "check_id": 35,
+  "verdict": "LEAP",
+  "why": "Scenario presents both an 8 mg/L NPDES permit and a 4 mg/L TMDL allocation. Claiming compliance is \"true\" requires assuming only the nominal permit face value applies; the TMDL allocation (which 7 mg/L exceeds) is a competing operative limit the scenario never resolves."
+ },
+ {
+  "check_id": 38,
+  "verdict": "LEAP",
+  "why": "\"Mechanically trivial\" describes physical ease, not regulatory status. The scenario's \"but it will increase HAP emissions\" clause signals the change may not qualify as a minor modification under permitting law \u2014 the slot value is an unsupported assumption."
+ },
+ {
+  "check_id": 40,
+  "verdict": "LEAP",
+  "why": "The scenario describes a 15-year established routine farming operation, the precise profile for CWA \u00a7404(f)(1)(A)'s normal-farming exemption. That exemption could make this a non-regulated discharge, so \"discharges_fill_into_us_waters = true\" is not compelled \u2014 a legally consistent reading yields false or unknown."
+ },
+ {
+  "check_id": 43,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly calls the installation \"a new waste-oil underground tank.\" The word \"underground\" in the cited span directly forces is_ust = true; no consistent reading of those words leaves the underground classification open."
+ },
+ {
+  "check_id": 46,
+  "verdict": "LEAP",
+  "why": "March 1 to August 15 is 5 months and 14 days. Whether this rounds to 5 or 6 depends on a truncation/rounding convention the scenario never states; \"5\" is not forced."
+ },
+ {
+  "check_id": 66,
+  "verdict": "LEAP",
+  "why": "The scenario describes battery degradation and a replacement request but never classifies the battery as a \"consumable part.\" That label is an assumption the reader imports; the text does not compel it."
+ },
+ {
+  "check_id": 81,
+  "verdict": "LEAP",
+  "why": "The scenario establishes facts consistent with Rule 701 eligibility but never states Nimbus is actually relying on Rule 701. Other exemptions (e.g., Section 4(a)(2), Reg D) remain plausible; reliance is an unstated assumption."
+ },
+ {
+  "check_id": 94,
+  "verdict": "LEAP",
+  "why": "The scenario describes an oral earnings call; the cited span only states the call's purpose. Item 2.02 classification is a legal inference requiring SEC rule application \u2014 the scenario never states this is an Item 2.02 event, and the oral call (vs. the pre-furnished press release) may not independently trigger that item."
+ },
+ {
+  "check_id": 95,
+  "verdict": "LEAP",
+  "why": "The scenario states Quanta already furnished an earnings press release before the call, meaning results-of-operations information was released through at least two channels. \"The only disclosure at issue\" is a legal scoping phrase, not a factual claim of sole release."
+ },
+ {
+  "check_id": 105,
+  "verdict": "LEAP",
+  "why": "The scenario never labels tuna salad as \"cold_tcs.\" That classification applies external food-safety regulatory knowledge. The cited span alone does not compel the specific category label."
+ },
+ {
+  "check_id": 106,
+  "verdict": "LEAP",
+  "why": "The cited span establishes a 3-hour endpoint reading of 74\u00b0F, not the maximum. The temperature could have peaked higher and cooled to 74\u00b0F; the scenario never asserts monotonic rise or that this reading is the peak."
+ },
+ {
+  "check_id": 108,
+  "verdict": "ENTAILED",
+  "why": "The scenario states \"exactly 1 hour 45 minutes,\" which arithmetically equals 105 minutes with no ambiguity. The word \"exactly\" forecloses any alternative reading."
+ },
+ {
+  "check_id": 111,
+  "verdict": "LEAP",
+  "why": "The tag is retrieved from a file, not affixed to the container. The scenario never states the container currently bears a tag; \"container_tagged\" being true requires an assumption the scenario does not compel."
+ },
+ {
+  "check_id": 112,
+  "verdict": "LEAP",
+  "why": "The scenario has two refrigeration periods (Days 0\u20133 and Days 23\u201324). Reaching exactly 4 requires a specific counting convention (e.g., only the first period, boundary-inclusive one way) that the scenario never states; alternative readings yield 3, 5, or 6 refrigerated days."
+ },
+ {
+  "check_id": 114,
+  "verdict": "LEAP",
+  "why": "The scenario says \"A kitchen prepares\" but never states that kitchen is the inspected facility. The inspector could be checking it at a different site; prepared_on_site=true is an unstated assumption."
+ },
+ {
+  "check_id": 121,
+  "verdict": "LEAP",
+  "why": "The scenario describes a ribeye steak cooked to 145\u00b0F but never states it is a TCS food. Concluding is_tcs_food=true requires importing external FDA Food Code regulatory definitions absent from the scenario text."
+ },
+ {
+  "check_id": 132,
+  "verdict": "LEAP",
+  "why": "The scenario states dates (June 20 notice, June 30 move-out) but never says \"10 days.\" The count depends on inclusive vs. exclusive counting \u2014 inclusive yields 11 days, exclusive yields 10. The scenario's bytes do not compel one over the other."
+ },
+ {
+  "check_id": 138,
+  "verdict": "LEAP",
+  "why": "Listing on one website is one documented action; whether that constitutes \"reasonable efforts\" is a normative judgment the scenario never establishes. The unit remaining empty for four months is consistent with inadequate mitigation, leaving the value open."
+ },
+ {
+  "check_id": 142,
+  "verdict": "LEAP",
+  "why": "January 12 is winter only in the Northern Hemisphere. The scenario states no location; Omar's apartment could be in the Southern Hemisphere where January 12 is summer. Season is not established without an unstated geographic assumption."
+ },
+ {
+  "check_id": 153,
+  "verdict": "LEAP",
+  "why": "The scenario explicitly qualifies the withholding as lawful, making the legal status of \"unpaid rent\" contested. Factual non-payment does not entail a debt is owed; the \"lawful procedure\" framing directly undercuts treating it as unpaid rent."
+ },
+ {
+  "check_id": 155,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"those exact two months\" of withheld rent coincide with the city's uninhabitable declaration, leaving no alternative reading in which the accrual falls outside the uninhabitable period."
+ },
+ {
+  "check_id": 159,
+  "verdict": "LEAP",
+  "why": "The scenario states the dog is a verified assistance animal with documentation provided, which legally exempts it from a no-pets clause. \"Keeps a dog\" does not entail \"in violation\" \u2014 the scenario's facts suggest no violation exists."
+ },
+ {
+  "check_id": 163,
+  "verdict": "LEAP",
+  "why": "Scenario lists 3 disciplines but never designates one as primary. Concluding 2 are \"additional\" requires an unstated assumption about which discipline is primary."
+ },
+ {
+  "check_id": 166,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the attorney \"applies for admission by reciprocity,\" directly forcing applies_reciprocity=true with no alternative reading possible."
+ },
+ {
+  "check_id": 168,
+  "verdict": "LEAP",
+  "why": "The conviction was formally expunged in 2020. Expungement often means the conviction no longer legally exists, so claiming has_felony_conviction=true ignores that legal effect and requires an unstated assumption about jurisdiction-specific treatment of expunged records."
+ },
+ {
+  "check_id": 174,
+  "verdict": "LEAP",
+  "why": "The scenario states the contractor is licensed only as a handyman, but does not say the work performed is limited to handyman scope. A contractor could be licensed only in one classification yet perform work outside it; the scenario never rules that out."
+ },
+ {
+  "check_id": 189,
+  "verdict": "LEAP",
+  "why": "The scenario describes item types (\"souvenirs and gifts\") but never states their purpose or customs classification. Inferring goods_personal_use=true requires assuming these are not for resale \u2014 an unstated categorization the bytes don't compel."
+ },
+ {
+  "check_id": 193,
+  "verdict": "LEAP",
+  "why": "\"Identical pumps\" identifies the same physical items, not their condition. The scenario never states the pumps were unused or undamaged; same-condition is an unstated assumption."
+ },
+ {
+  "check_id": 197,
+  "verdict": "LEAP",
+  "why": "The scenario never states the shipment is for commercial/resale purposes. A company can import pharmaceuticals for research or internal use. The informal-entry attempt and sub-$2500 value are consistent with a non-commercial import; the bytes don't compel \"commercial.\""
+ },
+ {
+  "check_id": 236,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"Two-thirds of his average weekly wage is $1,600\" \u2014 no inference needed. The cited span directly asserts the value, and the arithmetic (2/3 \u00d7 $2,400) confirms it."
+ },
+ {
+  "check_id": 240,
+  "verdict": "LEAP",
+  "why": "The cited span shows she historically received benefits as a surviving spouse, but the scenario explicitly frames a current eligibility review against new cohabitation facts. Whether she presently IS a surviving spouse is the open question, not a settled fact."
+ },
+ {
+  "check_id": 244,
+  "verdict": "LEAP",
+  "why": "The mandatory-attendance email makes \"recreational\" contestable: a reasonable reading classifies this as a compulsory work activity, not a voluntary recreational one. The scenario never labels it recreational."
+ },
+ {
+  "check_id": 246,
+  "verdict": "LEAP",
+  "why": "The robber targeted the register cash; Nadia was incidental. Whether the assault was \"directed due to employment duties\" versus directed at the money with Nadia as an obstacle is an interpretive categorization the scenario's words don't compel."
+ },
+ {
+  "check_id": 249,
+  "verdict": "LEAP",
+  "why": "The scenario confirms Raj carries no WC insurance, but whether it was legally REQUIRED for a solo sole proprietor with no employees is never established \u2014 many jurisdictions exempt such persons. The auditor's proposal is contested, not a legal finding."
+ },
+ {
+  "check_id": 250,
+  "verdict": "LEAP",
+  "why": "The scenario shows a workplace injury and emergency surgery, but \"compensable\" is a legal determination never stated. The insurer's challenge to authorization leaves compensability in dispute, not forced by the text."
+ }
+]

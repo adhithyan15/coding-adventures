@@ -1,0 +1,8 @@
+{
+ "check_id": 151,
+ "idx": 59,
+ "slot": "door_type",
+ "claimed_value": "pocket_sliding",
+ "scenario": "A dwelling unit has a bathroom fitted with a sliding pocket door. The bathroom opens off a central hallway; the hallway, not the bathroom, provides access to the unit's required exit, and the bathroom is a dead-end room.",
+ "cited_span": "a bathroom fitted with a sliding pocket door"
+}

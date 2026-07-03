@@ -1,0 +1,64 @@
+{
+ "case_id": "MEN-3",
+ "findings": [
+  {
+   "term": "csf_lymphocytic_pleocytosis(high)",
+   "span": "CSF shows 180 white cells/uL with 88% lymphocytes",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_glucose(normal)",
+   "span": "CSF:serum glucose ratio is 0.62 (normal)",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_lactate(normal)",
+   "span": "CSF lactate is 1.9 mmol/L (normal)",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_protein(elevated)",
+   "span": "protein is mildly elevated",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "enteroviral_pcr(positive)",
+   "span": "CSF enterovirus RT-PCR returns positive",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "seizure(absent)",
+   "span": "He never had a seizure",
+   "type": "stated",
+   "polarity": "affirmed"
+  }
+ ],
+ "discard": [
+  {
+   "span": "A 24-year-old previously well graduate student",
+   "reason": "Demographics and baseline health; no dictionary functor."
+  },
+  {
+   "span": "presents in late summer",
+   "reason": "Seasonal/epidemiologic context, not a dictionary finding."
+  },
+  {
+   "span": "2 days of headache, low-grade fever, and mild neck discomfort",
+   "reason": "Nonspecific meningitic symptoms; no functor in the closed dictionary."
+  },
+  {
+   "span": "after a recent gastrointestinal illness",
+   "reason": "Prodrome/exposure history; not a dispositive dictionary finding."
+  },
+  {
+   "span": "is fully alert",
+   "reason": "Mental status observation; no functor (no confusion/alertness term in dictionary)."
+  }
+ ],
+ "inference_justifications": []
+}

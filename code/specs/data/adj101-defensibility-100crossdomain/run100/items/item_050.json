@@ -1,0 +1,7 @@
+{
+ "idx": 50,
+ "id": "BUI-1",
+ "scenario": "A finished attic bedroom has a required floor area of 120 square feet. 70 square feet of that area sits under a flat ceiling measuring 96 inches high. The remaining 50 square feet is under a sloped ceiling that ranges from 48 inches to 72 inches high; of that, 30 square feet is below 60 inches.",
+ "policy": "Habitable rooms must have a ceiling height of at least 7 feet 6 inches (90 inches) over at least 50% of the required floor area. Any portion of the room with a sloped ceiling measuring less than 5 feet (60 inches) in height is not counted toward the required floor area.",
+ "question": "Does the room satisfy the ceiling-height requirement for a habitable room?"
+}

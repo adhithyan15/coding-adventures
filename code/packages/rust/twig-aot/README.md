@@ -24,6 +24,66 @@ echo $?    # → main()'s return value modulo 256
 The final `ld` invocation is what makes the binary actually launch on
 modern macOS — see CHANGELOG for the trust-model background.
 
+## The runtime archive
+
+AOT-compiled programs call into a small static runtime that `build.rs`
+compiles (via the `cc` crate) and embeds in the `twig-aot` binary, then
+writes to a temp file and hands to the system linker at compile time. It has
+two translation units:
+
+- `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
+  `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …).
+- `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
+  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
+  plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
+  `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
+  McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
+  native binary — it is a language-agnostic primitive, not tied to one
+  frontend.
+
+The C lisp runtime and the Rust `lispy-runtime` crate (used by the VM/JIT)
+are two implementations of one documented ABI. The `lispy_runtime_golden`
+unit test pins the C side to the Rust `pub const`s/constructors so they can
+never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
+
+- `runtime/twig_gc.c` — **TWIG-GC**: a conservative mark-and-sweep garbage
+  collector (TWIG-GC, Layer 1 of `code/specs/native-aot-substrate.md`). Every
+  managed allocation (`__twig_gc_alloc`) is preceded by a 32-byte header and
+  tracked in a linked list. Collections trigger automatically when total live
+  bytes exceed an adaptive threshold (starts 1 MB, doubles/halves based on
+  survival rate). The stack scan is conservative: every word (and `word & ~0x7`
+  for NaN-boxed Lispy pointers) is tested as a potential managed pointer.
+  `__twig_lispy_cons` now uses `__twig_gc_alloc` instead of leaking `calloc`.
+
+LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
+preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
+`call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through
+the same object/link/runtime pipeline as byte-tape programs. Direct-literal
+`str_len`, `str_index`, `str_eq`, `str_cmp`, literal `str_concat`, and literal `str_slice`
+metadata over direct literals fold before machine-code lowering, so Twig
+`(string-length "HELLO")`, `(string-ref "ABC" 1)`,
+`(string=? "HELLO" "HELLO")`, `(string<? "ALPHA" "BETA")`,
+`(string-length (string-append "AB" "CDE"))`,
+and `(string-ref (substring "ABCDE" 1 4) 1)` run natively through the same
+preparation pass. Folded `str_len` metadata can also flow through typed integer
+arithmetic, so `(let ((s "ABCDE")) (string-ref s (- (string-length s) 1)))`
+folds to byte `69` before native lowering.
+
+As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
+`cdr` to **calls into this runtime** (via
+`iir_builtin_lowering::lower_heap_builtins_runtime`), so a McCarthy program
+like `(CAR (CONS 7 9))` compiles to a native binary that calls
+`__twig_lispy_cons`/`__twig_lispy_car` and exits 7 — with the cons cell as a
+tagged `LispyValue`.
+
+As of 0.11.0 it also runs `lower_lisp_repr`, a type-directed pass that boxes
+the integer atoms feeding those calls (`n << 3`, so their tag is `000`
+instead of the heap tag a raw int's low bits collide with) and unboxes the
+program result for the exit code. So `(CAR (CONS 7 9))` now round-trips
+through fully **tagged** values — the representation the `pair?`/`ATOM`/`EQ`
+predicates build on. It keys on use-sites, so non-lisp programs are
+untouched.
+
 ## Requirements
 
 - Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)

@@ -51,9 +51,19 @@ function walk(node: unknown, buf: string[], depth: number): void {
   if (depth > MAX_DEPTH) return;
   if (node === null || node === undefined) return;
   if (typeof node !== "object") return;
-  const n = node as { type?: unknown; text?: unknown; children?: unknown };
+  const n = node as { type?: unknown; text?: unknown; value?: unknown; children?: unknown };
+  // The DocumentNode IR uses TWO different field names depending
+  // on node type:
+  //   - `TextNode`, `CodeBlockNode`, `RawInlineNode`, etc. use
+  //     `value: string` for their textual payload.
+  //   - Older / sibling ASTs sometimes use `text: string`.
+  // Accept both so we work across the spectrum of nodes that
+  // pass through this demo's content pipeline.
   if (typeof n.text === "string") {
     buf.push(n.text);
+  }
+  if (typeof n.value === "string") {
+    buf.push(n.value);
   }
   // Recurse into children if the node has any.  Most DocumentNode
   // variants use `children: Node[]`; some inline nodes (TextNode,

@@ -1,0 +1,28 @@
+{
+  "leave": {
+    "n_sentences": 4,
+    "coverage_before_gapfill": 1.0,
+    "byte_accounted_after_gapfill": 1.0,
+    "counts": {
+      "FACT": 3,
+      "UNCERTAINTY": 1,
+      "QUESTION": 1,
+      "DISCARDED": 0
+    },
+    "stated_facts": 3,
+    "inferred_facts": 0
+  },
+  "clinic": {
+    "n_sentences": 5,
+    "coverage_before_gapfill": 0.4,
+    "byte_accounted_after_gapfill": 1.0,
+    "counts": {
+      "FACT": 2,
+      "UNCERTAINTY": 3,
+      "QUESTION": 7,
+      "DISCARDED": 0
+    },
+    "stated_facts": 2,
+    "inferred_facts": 0
+  }
+}

@@ -1,0 +1,91 @@
+{
+ "case_id": "MEN-2",
+ "findings": [
+  {
+   "term": "csf_neutrophilic_pleocytosis(high)",
+   "span": "white-cell count 1500/uL, neutrophil-predominant",
+   "type": "inferred",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_glucose(low)",
+   "span": "CSF:serum glucose ratio 0.25",
+   "type": "inferred",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_protein(elevated)",
+   "span": "protein 2.0 g/L",
+   "type": "inferred",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_lactate(elevated)",
+   "span": "lactate 5.8 mmol/L",
+   "type": "inferred",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "seizure(present)",
+   "span": "She had a witnessed convulsion on arrival",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_gram_stain(negative)",
+   "span": "The Gram stain was reported as showing no organisms",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_culture(pending)",
+   "span": "cultures are still pending",
+   "type": "stated",
+   "polarity": "affirmed"
+  }
+ ],
+ "discard": [
+  {
+   "span": "A 41-year-old woman",
+   "reason": "Demographics (age/sex); not a dictionary finding."
+  },
+  {
+   "span": "otherwise healthy",
+   "reason": "General health context, no mappable finding term."
+  },
+  {
+   "span": "develops fever and confusion over 8 hours",
+   "reason": "Fever and confusion/timeline are not in the closed finding dictionary."
+  },
+  {
+   "span": "Her only medication is an oral contraceptive",
+   "reason": "Medication history; unrelated to the meningitis differential findings."
+  },
+  {
+   "span": "Procalcitonin was not sent",
+   "reason": "serum_procalcitonin term is legal but not observed — 'not yet observed', not a finding value."
+  }
+ ],
+ "inference_justifications": [
+  {
+   "term": "csf_neutrophilic_pleocytosis(high)",
+   "basis_span": "white-cell count 1500/uL, neutrophil-predominant",
+   "verdict": "ENTAILED"
+  },
+  {
+   "term": "csf_glucose(low)",
+   "basis_span": "CSF:serum glucose ratio 0.25",
+   "verdict": "ENTAILED"
+  },
+  {
+   "term": "csf_protein(elevated)",
+   "basis_span": "protein 2.0 g/L",
+   "verdict": "ENTAILED"
+  },
+  {
+   "term": "csf_lactate(elevated)",
+   "basis_span": "lactate 5.8 mmol/L",
+   "verdict": "ENTAILED"
+  }
+ ]
+}

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Tests — real-socket server E2E (parity with the other ports)
+
+- Add `tests/test_server_e2e.py`: a real-socket end-to-end suite. It builds a
+  self-contained app, starts the **real** `NativeServer` on an ephemeral port in
+  a daemon thread, and drives every feature (routing, path params, JSON body,
+  before-filter, `halt`, `redirect`, custom `not_found`/`error_handler`) over
+  real HTTP via `urllib`. Previously the library only had a *mocked* dispatch
+  test (`test_server_dispatch.py`, a fake native module, no socket) — useful as a
+  dispatch-wiring unit test but it never proved the Rust engine actually serves.
+  Every other port tests its server over a real socket at the library level; this
+  closes that gap. Library coverage rises to ~95%. (The mocked dispatch test is
+  kept — it covers the Python dispatch layer in isolation.)
+
 ### Phase 1 — Python Flask-like Conduit (WEB03)
 
 First Python port of the Conduit framework, mirroring the Ruby implementation

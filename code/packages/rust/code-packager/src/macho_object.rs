@@ -730,6 +730,16 @@ pub fn pack_object_with_globals_and_externals(
     let mut ext_strx: Vec<u32> = Vec::with_capacity(n_ext_syms);
     for sym in &unique_ext_syms {
         ext_strx.push(strtab.len() as u32);
+        // Mach-O C decoration: a C symbol `foo` is `_foo` in the object/archive
+        // (the same legacy underscore `_main`/`_twig_globals` carry above). The
+        // backend hands us the raw C name (e.g. `__twig_lispy_car`, `__twig_print_i64`),
+        // platform-agnostic; the Mach-O packager owns the leading underscore so the
+        // undefined reference matches the symbol the `cc`-built runtime archive
+        // exports (`___twig_lispy_car`). On ELF there is no decoration, so
+        // `elf_object.rs` deliberately leaves the name unchanged. Without this the
+        // system linker reports "Undefined symbols" for every `__twig_*` runtime
+        // call on macOS — the McCarthy-lisp / `io_out` runtime-link gap.
+        strtab.push(b'_');
         strtab.extend_from_slice(sym.as_bytes());
         strtab.push(0u8);
     }
@@ -1212,15 +1222,16 @@ mod tests {
         // total = 312 (header) + N (text) + 0 (no data) + 1×8 (reloc) +
         //         3×16 (syms: _main + _twig_globals + extern) + strtab_len
         //
-        // strtab = "\0_main\0_twig_globals\0__twig_print_i64\0"
+        // strtab = "\0_main\0_twig_globals\0___twig_print_i64\0"
         //   "\0"           = 1 byte  (leading NUL sentinel)
         //   "_main\0"      = 6 bytes
         //   "_twig_globals\0" = 14 bytes
-        //   "__twig_print_i64\0" = 17 bytes  (16 chars + NUL)
+        //   "___twig_print_i64\0" = 18 bytes  (17 chars + NUL — the Mach-O `_`
+        //                          decoration prefixes the raw C name `__twig_print_i64`)
         //                         ─────────
-        //                   total = 38 bytes
+        //                   total = 39 bytes
         let n = 8usize;
-        let strtab_len = 1 + 6 + 14 + 17; // 38
+        let strtab_len = 1 + 6 + 14 + 18; // 39
         let expected = 312 + n + 0 + 1 * 8 + 3 * 16 + strtab_len;
         let ext = vec![ExternBranchReloc {
             byte_offset: 0,
@@ -1228,6 +1239,33 @@ mod tests {
         }];
         let bytes = arm64_full(vec![0x00u8; n], 0, &[], &ext);
         assert_eq!(bytes.len(), expected, "size formula for no-globals + 1 extern");
+    }
+
+    /// W14a: an external symbol is written into the Mach-O string table with the
+    /// leading `_` C decoration, so the undefined reference matches the symbol the
+    /// `cc`-built runtime archive exports. The raw C name `__twig_lispy_car` must
+    /// appear as `___twig_lispy_car` (three underscores) in the strtab bytes.
+    #[test]
+    fn full_extern_symbol_is_mach_o_decorated() {
+        let ext = vec![ExternBranchReloc {
+            byte_offset: 0,
+            symbol: "__twig_lispy_car".to_string(),
+        }];
+        let bytes = arm64_full(vec![0x00u8; 8], 0, &[], &ext);
+        // The decorated name (with NUL terminator) is present...
+        assert!(
+            bytes
+                .windows(b"___twig_lispy_car\0".len())
+                .any(|w| w == b"___twig_lispy_car\0"),
+            "strtab must contain the `_`-decorated `___twig_lispy_car`",
+        );
+        // ...and the raw, *undecorated* name is NOT (it would never resolve).
+        assert!(
+            !bytes
+                .windows(b"\0__twig_lispy_car\0".len())
+                .any(|w| w == b"\0__twig_lispy_car\0"),
+            "the undecorated `__twig_lispy_car` must not appear as a standalone strtab entry",
+        );
     }
 
     #[test]

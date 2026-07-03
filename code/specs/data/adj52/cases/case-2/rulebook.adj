@@ -1,0 +1,206 @@
+% ============================================================================
+% ADJ52 case-2 derived rulebook.
+% A 29-year-old man, referred for "adult ADHD", with a 4-year multi-domain
+% cognitive decline, pyramidal signs / spastic gait, bilateral Achilles tendon
+% swellings, bilateral (juvenile) cataracts, chronic intermittent diarrhea,
+% premature osteoporosis, and symmetric T2/FLAIR hyperintensities centered on
+% the dentate nuclei + cerebellar white matter. A bile-acid-precursor assay
+% (cholestanol) was unavailable locally.
+%
+% Differential is built from the IR alone (no answer given). Numeric IR args are
+% normalized to qualitative atoms to satisfy the adj-lang IDENT grammar
+% (lowercase, no leading digit): patient_age(29)->age(under_30);
+% full_scale_iq(62)->iq(low_range); cognitive_screen 27->21/30 over 3 months ->
+% cognitive_screen(declining_over_months).
+%
+% CORRELATED EVIDENCE: the classic CTX features (cataracts + tendon xanthomas +
+% chronic diarrhea + pyramidal signs + the dentate-nucleus MRI signature) are
+% described in the literature as ONE syndromic constellation arising from a
+% single sterol-27-hydroxylase / cholestanol-deposition mechanism. They are
+% therefore grouped under mechanism directives that fire a combined LR ONCE,
+% rather than as independent contributes that would double-count and saturate.
+% Genuinely independent items (acquired cognitive decline, the negative
+% discriminators against the tempting autoimmune-thyroid answer) stay separate.
+% ============================================================================
+
+% ===== PRIORS (base rates for a young adult with progressive cognitive decline + UMN signs) =====
+
+% rationale: CTX is a rare autosomal-recessive sterol-storage disease; low base rate but the unifying candidate here.
+prior 0.08 for diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (CTX); StatPearls NBK564330" trust authoritative
+
+% rationale: the referral hypothesis; adult ADHD is common but is a phenotypic mimic with no UMN signs/MRI lesions.
+prior 0.20 for diagnosis(adult_adhd)
+  source "DSM-5-TR Attention-Deficit/Hyperactivity Disorder; AAFP adult ADHD review" trust authoritative
+
+% rationale: autoimmune (Hashimoto/steroid-responsive) encephalopathy is the tempting distractor given known autoimmune thyroid disease + antithyroid antibodies.
+prior 0.12 for diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PubMed 1992366 (steroid-responsive encephalopathy, high antithyroid-antibody titers)" trust authoritative
+
+% rationale: X-linked adrenoleukodystrophy/AMN is a sibling young-adult spastic + white-matter disorder kept on the differential.
+prior 0.05 for diagnosis(adrenoleukodystrophy)
+  source "GeneReviews NBK1315 (X-linked adrenoleukodystrophy)" trust authoritative
+
+% rationale: a primary mitochondrial leukoencephalopathy is a generic alternative for symmetric deep T2/FLAIR signal.
+prior 0.04 for diagnosis(mitochondrial_leukoencephalopathy)
+  source "GeneReviews NBK1233 (mitochondrial disorders overview)" trust authoritative
+
+% ===== CEREBROTENDINOUS XANTHOMATOSIS (CTX) =====
+
+% rationale: young age of overt neurological onset (second-third decade) fits CTX adult-onset neurologic phase.
+contributes 1.6 from age(under_30) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "Endotext NBK395578 (CTX neurologic onset second decade)" trust authoritative
+
+% MECHANISM (correlated CTX features): juvenile cataracts + Achilles tendon xanthomas + chronic diarrhea
+% are the systemic triad of cholestanol deposition; in a CTX case series they co-occur (cataract ~70%,
+% xanthoma ~77%, chronic diarrhea ~53%) as one syndrome. Count the combined LR ONCE.
+% mechanism cholestanol_deposition_systemic_triad for diagnosis(cerebrotendinous_xanthomatosis) lr 18.0 : exam(bilateral_cataracts), exam(bilateral_achilles_tendon_swellings_firm_painless), symptom(chronic_intermittent_loose_stools)
+%   source "PMC4264335 (CTX cataract 70%, xanthoma 77%, diarrhea 53% as one constellation); GeneReviews NBK1409" trust authoritative
+
+% MECHANISM (correlated CTX neuro-imaging signature): pyramidal signs (hyperreflexia, extensor plantars,
+% spastic gait) + the symmetric dentate-nucleus / cerebellar-white-matter T2/FLAIR pattern are correlated
+% manifestations of cerebellar+pyramidal cholestanol myelinopathy; fire the combined LR ONCE.
+% mechanism dentate_cerebellar_pyramidal_myelinopathy for diagnosis(cerebrotendinous_xanthomatosis) lr 9.0 : exam(hyperreflexia_four_limbs), exam(bilateral_extensor_plantar_responses), exam(progression_to_spastic_gait), imaging(mri_symmetric_t2_flair_hyperintensities), mri_site(dentate_nuclei), mri_site(cerebellar_white_matter)
+%   source "PMC6857253 / PMID 28324197 (CTX MRI: symmetric dentate + cerebellar white-matter T2/FLAIR); Endotext NBK395578 (pyramidal signs: spasticity, hyperreflexia, extensor plantars)" trust authoritative
+
+% rationale: premature osteoporosis is an independently described CTX manifestation (mean age ~31y), not part of the neuro or sterol-triad mechanism above.
+contributes 3.0 from test(osteoporosis_premature_for_age) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PubMed 8446051 (osteoporosis + increased fractures in CTX, mean age 31)" trust authoritative
+
+% rationale: progressive multi-domain (amnestic + executive + language) cognitive decline is the adult CTX dementia, distinct from the imaging mechanism.
+contributes 3.0 from characterization(multidomain_amnestic_cognitive_impairment) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC9816572 (CTX cognitive decline / dementia ~74%)" trust authoritative
+
+% rationale: low-range IQ with measured further decline fits CTX's intellectual disability (~60%) plus superimposed adult decline.
+contributes 1.8 from iq(low_range) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC5585103 (CTX intellectual disability ~60%; developmental delay + measured decline)" trust authoritative
+
+% rationale: unremarkable CSF and non-epileptiform EEG are compatible with CTX (a structural sterol-storage process, not an inflammatory encephalopathy).
+contributes 1.3 from test(csf_unremarkable) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "Frontiers fneur.2022.1049850 (CTX is a structural storage disease; diagnosis rests on cholestanol + MRI, not CSF inflammation)" trust authoritative
+
+% ===== ADULT ADHD (the referral mimic) =====
+
+% rationale: a positive adult-ADHD self-report screen and lifelong scattered/disorganized trait nominally support ADHD.
+contributes 2.0 from screen(adult_adhd_questionnaire_positive) to diagnosis(adult_adhd)
+  source "DSM-5-TR ADHD; ASRS adult self-report screen" trust authoritative
+contributes 1.5 from premorbid_trait(lifelong_disorganized_scattered) to diagnosis(adult_adhd)
+  source "DSM-5-TR ADHD (childhood-onset, pervasive inattention/disorganization)" trust authoritative
+
+% rationale: DISCRIMINATOR — ADHD is non-progressive; a measured cognitive screen DROP over months argues strongly AGAINST primary ADHD.
+contributes 0.15 from cognitive_screen(declining_over_months) to diagnosis(adult_adhd)
+  source "DSM-5-TR ADHD (stable trait, not a progressive amnestic decline)" trust authoritative
+
+% rationale: DISCRIMINATOR — ADHD has NO upper-motor-neuron signs; pyramidal signs argue strongly AGAINST a primary attentional disorder.
+contributes 0.10 from exam(bilateral_extensor_plantar_responses) to diagnosis(adult_adhd)
+  source "DSM-5-TR ADHD (no focal/pyramidal neurological signs); standard neurology" trust authoritative
+
+% rationale: DISCRIMINATOR — a multi-domain amnestic dementia is not ADHD (which is attentional, non-amnestic).
+contributes 0.2 from characterization(multidomain_amnestic_cognitive_impairment) to diagnosis(adult_adhd)
+  source "DSM-5-TR ADHD vs neurocognitive disorder differential" trust authoritative
+
+% ===== AUTOIMMUNE THYROID ENCEPHALOPATHY (the tempting distractor) =====
+
+% rationale: known autoimmune thyroid disease with elevated antithyroid/antithyroglobulin antibodies is the entry criterion clinicians anchor on.
+contributes 2.2 from lab(elevated_antithyroid_antibodies) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PubMed 1992366 (diagnosis predicated on elevated antithyroid antibodies)" trust authoritative
+contributes 1.5 from past_history(graves_disease_hyperthyroidism) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "Wikipedia Hashimoto's encephalopathy; PMC9972331 (association with autoimmune thyroid disease)" trust authoritative
+
+% rationale: DISCRIMINATOR — steroid-responsive/Hashimoto encephalopathy classically shows RAISED CSF protein; an UNREMARKABLE CSF argues against it.
+contributes 0.35 from test(csf_unremarkable) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PMC7478448 (raised CSF protein in ~75% of Hashimoto encephalopathy)" trust authoritative
+
+% rationale: DISCRIMINATOR — Hashimoto encephalopathy EEG is diffusely abnormal in >90%; a non-epileptiform/unremarkable EEG argues against.
+contributes 0.5 from test(eeg_no_epileptiform_activity) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "psychiatryonline jnp.23.4 (non-specific EEG abnormality >90% in Hashimoto encephalopathy)" trust authoritative
+
+% rationale: DISCRIMINATOR — autoimmune encephalopathy MRI is usually normal; a SPECIFIC symmetric dentate-nucleus structural lesion is not its signature and argues against.
+contributes 0.3 from mri_site(dentate_nuclei) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PMC9375585 / Wikipedia Hashimoto encephalopathy (MRI usually normal)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — tendon xanthomas are a lipid-storage finding with NO place in autoimmune encephalopathy; they point away from the thyroid story toward a sterol disease.
+contributes 0.2 from exam(bilateral_achilles_tendon_swellings_firm_painless) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PubMed 1992366 (Hashimoto encephalopathy has no tendon-xanthoma feature); GeneReviews NBK1409 (xanthoma is a sterol-storage sign)" trust inferred
+
+% rationale: KEY DISCRIMINATOR — juvenile cataracts are not part of autoimmune thyroid encephalopathy; they belong to the sterol-storage constellation.
+contributes 0.3 from exam(bilateral_cataracts) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PMC4264335 (cataract is a CTX sterol-storage feature, not autoimmune encephalopathy)" trust inferred
+
+% ===== X-LINKED ADRENOLEUKODYSTROPHY (sibling spastic/white-matter disorder) =====
+
+% rationale: young-adult spastic gait + symmetric white-matter signal is shared with adrenomyeloneuropathy/ALD.
+contributes 2.0 from exam(progression_to_spastic_gait) to diagnosis(adrenoleukodystrophy)
+  source "GeneReviews NBK1315 (AMN: progressive spastic paraparesis)" trust authoritative
+contributes 1.5 from imaging(mri_symmetric_t2_flair_hyperintensities) to diagnosis(adrenoleukodystrophy)
+  source "GeneReviews NBK1315 (symmetric white-matter demyelination in cerebral ALD)" trust authoritative
+
+% rationale: DISCRIMINATOR — ALD has no tendon xanthomas; their presence argues against ALD and toward a sterol-deposition disease.
+contributes 0.3 from exam(bilateral_achilles_tendon_swellings_firm_painless) to diagnosis(adrenoleukodystrophy)
+  source "GeneReviews NBK1315 (no tendon-xanthoma phenotype in ALD)" trust inferred
+
+% rationale: DISCRIMINATOR — ALD has no juvenile-cataract association; their presence argues against ALD.
+contributes 0.4 from exam(bilateral_cataracts) to diagnosis(adrenoleukodystrophy)
+  source "GeneReviews NBK1315 (cataract not an ALD feature)" trust inferred
+
+% ===== MITOCHONDRIAL LEUKOENCEPHALOPATHY (generic alternative) =====
+
+% rationale: symmetric deep T2/FLAIR signal and multisystem (GI, neuro) involvement can occur in mitochondrial disease.
+contributes 1.8 from imaging(mri_symmetric_t2_flair_hyperintensities) to diagnosis(mitochondrial_leukoencephalopathy)
+  source "GeneReviews NBK1233 (symmetric deep white-matter / nuclear T2 signal in mitochondrial disease)" trust authoritative
+contributes 1.4 from symptom(chronic_intermittent_loose_stools) to diagnosis(mitochondrial_leukoencephalopathy)
+  source "GeneReviews NBK1233 (GI dysmotility in mitochondrial disease)" trust authoritative
+
+% rationale: DISCRIMINATOR — tendon xanthomas are not a mitochondrial feature; they argue against and toward a sterol disease.
+contributes 0.3 from exam(bilateral_achilles_tendon_swellings_firm_painless) to diagnosis(mitochondrial_leukoencephalopathy)
+  source "GeneReviews NBK1233 (no tendon-xanthoma phenotype)" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: serum/plasma cholestanol (the unavailable "bile-acid precursor" assay) is the first-line biochemical confirmatory test for CTX.
+prior 0.20 for next_step(serum_cholestanol_assay)
+  source "GeneReviews NBK1409 (elevated plasma cholestanol is the biochemical hallmark / first-line test)" trust authoritative
+contributes 6.0 from exam(bilateral_achilles_tendon_swellings_firm_painless) to next_step(serum_cholestanol_assay)
+  source "PMC4264335 (tendon xanthoma + neuro picture prompts cholestanol testing)" trust authoritative
+contributes 5.0 from exam(bilateral_cataracts) to next_step(serum_cholestanol_assay)
+  source "GeneReviews NBK1409 (juvenile cataract is a cardinal trigger for CTX biochemical workup)" trust authoritative
+contributes 4.0 from mri_site(dentate_nuclei) to next_step(serum_cholestanol_assay)
+  source "PMID 28324197 (dentate-nucleus MRI signature prompts cholestanol assay)" trust authoritative
+
+% rationale: CYP27A1 molecular genetic testing confirms CTX, especially when biochemistry is equivocal or unavailable locally.
+prior 0.15 for next_step(cyp27a1_genetic_testing)
+  source "GeneReviews NBK1409 (biallelic CYP27A1 variants are confirmatory)" trust authoritative
+contributes 4.0 from exam(bilateral_achilles_tendon_swellings_firm_painless) to next_step(cyp27a1_genetic_testing)
+  source "GeneReviews NBK1409 (xanthoma + neuro phenotype prompts CYP27A1 testing)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u2: the unavailable bile-acid-precursor assay; resolving cholestanol settles CTX vs the distractors.
+uncertain { test(serum_cholestanol_elevated), test(serum_cholestanol_normal) } for diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (elevated cholestanol confirms; normal argues strongly against CTX)"
+
+% u1: histologic nature of the Achilles swellings; tendon xanthoma confirms a sterol-storage disease.
+uncertain { test(achilles_biopsy_tendon_xanthoma_cholestanol), test(achilles_biopsy_nonspecific) } for diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC4264335 (tendon xanthoma = cholestanol/cholesterol deposition, pathognomonic context)"
+
+% u4: antithyroid-antibody specificity; resolving it tests the autoimmune-encephalopathy distractor.
+uncertain { test(csf_oligoclonal_bands_present), test(csf_oligoclonal_bands_absent) } for diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PMC7478448 (CSF/antibody adjudication for steroid-responsive encephalopathy)"
+
+% contributes FROM each candidate test-result term so resolving an uncertainty moves the posterior:
+% rationale: elevated cholestanol is the confirmatory biomarker for CTX.
+contributes 12.0 from test(serum_cholestanol_elevated) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (elevated plasma cholestanol = biochemical hallmark)" trust authoritative
+% rationale: a normal cholestanol argues strongly against CTX.
+contributes 0.1 from test(serum_cholestanol_normal) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "GeneReviews NBK1409 (normal cholestanol makes CTX very unlikely)" trust authoritative
+% rationale: biopsy-proven tendon xanthoma with cholestanol confirms the sterol-storage disease.
+contributes 6.0 from test(achilles_biopsy_tendon_xanthoma_cholestanol) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC4264335 (cholestanol-laden tendon xanthoma)" trust authoritative
+contributes 0.4 from test(achilles_biopsy_nonspecific) to diagnosis(cerebrotendinous_xanthomatosis)
+  source "PMC4264335 (nonspecific swelling lowers CTX probability)" trust inferred
+% rationale: CSF oligoclonal bands would support an autoimmune/inflammatory encephalopathy.
+contributes 3.0 from test(csf_oligoclonal_bands_present) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PMC7478448 (intrathecal/inflammatory markers support autoimmune encephalopathy)" trust authoritative
+contributes 0.7 from test(csf_oligoclonal_bands_absent) to diagnosis(autoimmune_thyroid_encephalopathy)
+  source "PMC7478448 (absent bands lower autoimmune-encephalopathy probability)" trust inferred

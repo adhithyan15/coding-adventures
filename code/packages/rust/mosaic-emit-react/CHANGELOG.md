@@ -4,6 +4,299 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed - `--emit-project` Vite shell uses a host adapter
+
+`src/main.tsx` now mounts the generated component through
+`window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with
+deterministic sample values as fallback props. Previously the Vite shell only
+passed sample props and logged events locally, which made generated app shells
+hard to wire to shared business logic.
+
+The generated shell also listens for a `mosaic-host-ready` browser event and
+refreshes props when it fires, allowing async WASM or Electron host installers
+to attach `window.mosaicHost` after the React bundle has loaded.
+
+The React project shell now also emits `tsconfig.json`, matching its
+`npm run build` script (`tsc && vite build`) so generated shells are directly
+type-checkable.
+
+### Added — UI28-1 §6.3 — Automatic React keys for `For` iterations
+
+Every `For` body is now wrapped in a `<React.Fragment key={...}>` so
+React's reconciler always has a stable per-iteration identity. This
+is the UI28-1 §5 performance property the spec promises — eliminates
+React's "Each child in a list should have a unique 'key' prop"
+runtime warning by default.
+
+Two emission shapes:
+
+- **Author bound `index: <name>`** — that name doubles as the
+  React.Fragment key source. Callback signature is `(<as>, <index>)`,
+  wrapper is `<React.Fragment key={<index>}>`.
+- **Author omitted `index:`** — emitter injects an implicit `_idx`
+  parameter into the .map callback and uses it as the key. Callback
+  signature is `(<as>, _idx)`, wrapper is `<React.Fragment key={_idx}>`.
+  The underscored name signals "framework-internal"; author body code
+  is unaffected.
+
+The wrapper is always the long-form `<React.Fragment>`, never the
+shorthand `<>`, because JSX shorthand fragments cannot carry
+attributes. Multi-child bodies that previously wrapped in `<>...</>`
+now wrap in `<React.Fragment key={...}>...</React.Fragment>` —
+single-child bodies, which previously emitted bare, also gain the
+keyed wrapper for uniformity.
+
+A new layout-scan helper `layout_contains_for` extends the file-
+header import detection: any component whose layout has a For now
+triggers `import React from "react";` (otherwise the file would
+reference the `React` namespace without importing it). Components
+without For or React.*-typed slots still skip the import — the
+existing `noUnusedLocals` discipline holds.
+
+5 new tests + 4 snapshot tests updated to assert the new shapes.
+Total tests: 198 (was 193, +5). Notable:
+`ui28_1_react_for_with_explicit_index_uses_that_name_as_key`,
+`ui28_1_react_for_without_index_injects_implicit_idx_for_key`,
+`ui28_1_react_for_kebab_case_index_camel_cases_in_both_callback_and_key`,
+`ui28_1_react_for_triggers_react_namespace_import_even_for_primitive_only_interface`,
+`ui28_1_react_for_multi_child_body_still_uses_react_fragment_wrapper`.
+
+### Added — UI32-K-react — `--emit-project` Vite shell
+
+Mirrors the XAML pattern (UI32 spec §2.1, PR #3917, spec PR #4286)
+for the React backend: when `EmitOptions::emit_project` is on, the
+emitter returns a `ProjectFiles` value alongside the component TSX
+so `mosaic-compile --backend react --emit-project` produces a
+runnable Vite project. Author types `npm install && npm run dev`
+and sees the component at `http://localhost:5173` — no host code
+required.
+
+New public API:
+
+- `pub struct EmitOptions` — `emit_project: bool`, pinned versions
+  (`pinned_react`, `pinned_vite`, `pinned_vite_react_plugin`,
+  `pinned_typescript`, `pinned_types_react[_dom]`,
+  `pinned_node_engines`), optional `package_name` override.
+- `pub struct ProjectFiles` — `package_json`, `vite_config`,
+  `index_html`, `main_tsx`, `readme` (UI32 spec §2.2 React row).
+- `pub enum ProjectShellError` — `InvalidNpmPackageName(String)`
+  surfaced through `PipelineEmitError::UnsafeSlotName`.
+- `pub struct PipelineEmitResultWithProject` — `output`,
+  `component_name`, `project: Option<ProjectFiles>`.
+- `pub fn from_pipeline_with_options(...)` — new entry point.
+  Existing `from_pipeline(...)` is unchanged (3-arg signature).
+
+Emitted shell:
+
+- `package.json` — pinned react@18.3.1, react-dom@18.3.1,
+  vite@5.4.10, @vitejs/plugin-react-swc@3.7.1, typescript@5.7.2,
+  @types/react@18.3.18, @types/react-dom@18.3.5. `engines.node`
+  floors at `>=18.0.0`. All deps exact-pinned (no `^`/`~`/`*`/
+  `latest`/`>=`) per UI32 spec §3.6.3.
+- `vite.config.ts` — Vite 5 + React-SWC plugin.
+- `index.html` — Vite root with `<div id="root">` +
+  `<script type="module" src="/src/main.tsx">`.
+- `src/main.tsx` — `createRoot(...).render(<StrictMode>
+  <Component dispatch={(ev)=>console.log("event:",ev)} />
+  </StrictMode>)`. Imports sibling-relative (`../{Component}`)
+  so the `.tsx` stays at project root.
+- `README.md` — prereqs (Node ≥18), run commands, file map.
+
+Banner on every file (spec §3.5): `// AUTO-GENERATED by
+mosaic-compile --emit-project. Edits will be overwritten on next
+emit. // Fork the file (remove this banner) to customise.`
+package.json uses a `"//"` key for the banner (JSON has no
+comments).
+
+Validation per spec §3.6.2: derived npm name flows through
+`is_valid_npm_name` which enforces lowercase + ≤214 chars +
+no leading dot/underscore + URL-safe chars. Auto-derivation
+(`mosaic-{kebab(Component)}`) produces a valid name for any
+PascalCase component. An explicit `package_name` override that
+fails the check returns `ProjectShellError::InvalidNpmPackageName`
+fail-loud — no silent substitution.
+
+10 new tests pin: back-compat (default = no shell, identical
+TSX), emit-true returns shell, banner on every file, byte-
+determinism, invalid name rejected, name derivation, exact pinning
++ no forbidden version forms (engines.node correctly exempted),
+file enumeration tripwire, no env reads, is_valid_npm_name truth
+table. Total React emitter tests: 193 (was 183, +10).
+
+**Scope note: lockfile vendoring deferred to L2.1 follow-up.**
+UI32 spec §3.6.3 mandates a vendored lockfile (`package-lock.json`)
+alongside the pinned `package.json`. Generating one without
+shelling to `npm install` at emit time (which would violate spec
+§3.8) requires a separate offline-lockfile script that's out of
+scope for the L2 cycle. Workaround for now: pin exact versions
+in `package.json` (no `^`/`~`); `npm install` will fetch the
+exact top-level versions but transitive deps remain unpinned.
+Tracked as L2.1.
+
+### Added — UI31-L10 — For-in-HostTable section + Keyword content seam
+
+Three coordinated extensions that let `HostTable` compositions drive
+dynamic row data through For loops while keeping semantic
+`<table>`/`<thead>`/`<tbody>`/`<tr>`/`<th>`/`<td>` markup:
+
+- **For-of-Row in a section** — `HostTableBody { For (each:…, as: row)
+  { Row { … } } }` now lowers to
+  `<tbody>{rows.map((row) => <tr>…</tr>)}</tbody>`. Without this
+  seam the generic walker would have produced
+  `<tbody>{rows.map((row) => <div>…</div>)}</tbody>` — `<div>`
+  inside `<tbody>` is HTML-parser-invalid and breaks every
+  backend's table semantics.
+
+- **For-of-cell in a Row** — `Row { For (each:…, as: header) { Text
+  (content: header) } }` now lowers to
+  `<tr>{cols.map((header) => <th><span>{header}</span></th>)}</tr>`.
+  The seam produces one `<th>`/`<td>` per item rather than wrapping
+  the entire `.map(...)` in a single cell.
+
+- **Keyword content in Text** — `Text (content: <For-binding>)` now
+  interpolates as `<span>{binding}</span>`. Previously the Text
+  emitter only handled SlotRef content; Keyword content fell
+  through to the generic emit (empty `<span></span>`), so cells
+  iterated by a For rendered blank. Slot names pass through
+  `is_safe_js_identifier` so an unsafe keyword like `"x; alert(1)"`
+  drops silently rather than landing in the JSX interpolation.
+
+Together these enable the L10 VisiCalc Grid migration: the demo's
+`Grid.desktop.mll` + `Grid.touch.mll` now compose from HostTable*
+kernel primitives instead of the legacy built-in `Grid` primitive,
+producing semantic table markup on every backend that has the UI31
+HostTable lowering (React + HTML get this PR's For seams; the
+WebComponent + Flutter + Qt + SwiftUI + XAML backends still produce
+broken For-in-section output and are tracked as follow-ups).
+
+4 new tests, total 183 (was 179):
+- `host_table_for_of_row_in_body_emits_map_of_tr`
+- `host_table_for_of_cell_in_head_row_emits_map_of_th`
+- `text_with_keyword_content_lowers_to_span_with_binding_expr`
+- `text_with_unsafe_keyword_content_drops_silently`
+
+### Added — UI29-4 `HostLink` + `HostTooltip` + `HostNumberInput` (U29-4-K-react)
+
+Three new kernel primitives lower to React widgets:
+
+- **`HostLink` → `<a href onClick>`**
+  - `href: str|slot` → `href="..."` / `href={slot}`
+  - `label: str|slot` → JSX text body
+  - `target: new-tab` → `target="_blank" rel="noopener noreferrer"`
+    (security default — prevents reverse-tabnabbing per the
+    HTML5 living-standard recommendation and the eslint-plugin-
+    react `react/jsx-no-target-blank` rule)
+  - `target: parent | top | same` → standard HTML `target=` values
+  - `external: false` keyword → onClick handler with
+    `e.preventDefault()` so the host's router takes over
+  - `onActivate: emit: onX` → dispatched as `{type:"x", href: ...}`
+    (combined with preventDefault when both are present)
+- **`HostTooltip` → `<span title={text}>{children}</span>`**
+  - `text: str|slot` → `title="..."` / `title={slot}`
+  - Single child (or all children) wraps inside the span
+  - Plain-text only in v1 per UI29-4 §3.2; rich-content tooltips
+    are reserved for UI29-5
+- **`HostNumberInput` → `<input type="number" inputMode="numeric">`**
+  - `value: slot` → controlled-input `value={slot}`
+  - `min` / `max` / `step` numeric literals → matching JSX
+    expression attributes
+  - `placeholder: str` → `placeholder="..."`
+  - `disabled: slot|bool`
+  - `onChange: emit: onX` → `dispatch({type:"x", value:
+    e.target.valueAsNumber})` — the DOM's standard numeric parser,
+    matching the kernel-canonical `value: number` payload
+  - `inputMode="numeric"` is always set — triggers the mobile
+    numeric keyboard, one of the "what composition loses" items
+    flagged in the UI29-4 survey
+
+8 new tests pin: HostLink href+label rendering, the
+target="_blank" security pin (rel="noopener noreferrer" pair),
+external: false + onActivate combined preventDefault+dispatch,
+HostTooltip string + slot text variants wrapping children,
+HostNumberInput bare shape (with inputMode), min/max/step
+literals, and the onChange valueAsNumber dispatch.
+
+Security review caught no findings. The `escape_for_jsx_double_
+quoted` + `validate_slot_or_field_name` / `validate_emit_name`
+helpers (added in earlier PRs) already cover the new
+interpolation sites; the `target="_blank"` + `rel="noopener
+noreferrer"` pairing is emitted as a single literal block so the
+two attrs can't be decoupled by future refactors.
+
+### Added — `HostCheckbox.indeterminate` slot (UI29-2 follow-up)
+
+Closes the deferred work flagged in the previous `Added` block.
+React's `<input type="checkbox">` cannot reach the tri-state visual
+through HTML attributes — `indeterminate` is a JS DOM property on
+`HTMLInputElement`, not an HTML attribute. The fix mirrors
+`HostDialog`'s `dialog_nodes` infrastructure: a separate
+`indeterminate_checkbox_nodes` collection threads through the JSX
+walkers, and `emit_function` now emits one `useRef
+<HTMLInputElement>` + `useEffect` pair per indeterminate-tracking
+checkbox at the top of the function body. The emitted effect:
+
+```tsx
+const checkboxRef_0 = useRef<HTMLInputElement>(null);
+useEffect(() => {
+  if (checkboxRef_0.current) {
+    checkboxRef_0.current.indeterminate = !!isMixed;
+  }
+}, [isMixed]);
+```
+
+and the `<input>` lowering gains `ref={checkboxRef_0}` so React
+hands the DOM node to the effect. Multiple indeterminate
+checkboxes in the same component get distinct ref names
+(`checkboxRef_0`, `checkboxRef_1`, …) assigned in DFS source
+order — same pattern as `dialogRef_<n>`.
+
+`HostCheckbox` instances WITHOUT an `indeterminate:` slot stay at
+the pre-FU minimal shape (no ref, no effect, no hook import).
+Keyword-form `indeterminate: true/false` literals don't emit hooks
+either — only the runtime-driven SlotRef case does.
+
+3 new tests pin: the useRef/useEffect emission with correct slot
+binding, the negative-case "no hooks when slot absent" guard, and
+distinct-ref-names-when-multiple regression.
+
+The React backend now matches the indeterminate coverage already
+provided by the Qt / XAML / HTML / WebComponent backends. The
+spec-promised follow-up is closed.
+
+### Added — `HostCheckbox` + `HostRadio` kernel primitives (UI29-2, U29-2-K-react)
+
+- New `HostCheckbox` lowering emits a native `<input type="checkbox" />`.
+  - `checked: slot: c` → `checked={c}` (controlled-input pattern).
+  - `disabled: slot: d` / `disabled: true|false` → `disabled={d|true|false}`.
+  - `label: "..."` / `label: slot: l` → wraps the input in a
+    `<label><input … /> {label}</label>` element (idiomatic React
+    single-row pattern, no id-juggling needed).
+  - `onToggle: emit: onX` → `onChange={e => dispatch({ type: "x",
+    checked: e.target.checked })}`, matching the kernel-canonical
+    `checked: bool` payload (UI29-2 §2.2).
+  - The `indeterminate` slot is **deferred to a follow-up PR**: it
+    requires a `useRef` + `useEffect` pair (DOM's `indeterminate` is
+    JS-API-only, not an HTML attribute), and that plumbing is left out
+    of this first cut to keep the diff reviewable. Authors who declare
+    `indeterminate:` today get a working two-state checkbox; the third
+    state is silently dropped until the follow-up.
+- New `HostRadio` lowering emits a native `<input type="radio" />`.
+  - `checked: slot: c` → `checked={c}` (controlled-input).
+  - `group: "name"` / `group: slot: g` → `name="name"` / `name={g}`,
+    which couples radios into a browser-enforced mutex set (DOM radios
+    with the same `name` deselect each other automatically).
+  - `value: "v"` / `value: slot: v` → `value="v"` / `value={v}`, the
+    form-submit value the host receives in `onSelect`'s payload.
+  - `disabled` and `label` mirror HostCheckbox exactly.
+  - `onSelect: emit: onX` → `onChange={e => dispatch({ type: "x",
+    value: e.target.value })}` per UI29-2's `value: text` payload.
+- v1 keeps each `HostRadio` standalone with its own `checked` slot —
+  the host is responsible for the React-state mutex. The proper
+  `RadioGroup` userland component is reserved for UI29-2.1.
+- 12 new unit tests cover the bare-input shape, controlled-input
+  wiring, `disabled`, `label` wrapping, group/value/checked, and the
+  onToggle/onSelect dispatch payloads.
+
 ### Added — `HostDialog` kernel primitive (UI29-1, U29-1-K-react)
 
 - New `HostDialog` lowering emits React's native `<dialog>` element with
@@ -151,10 +444,10 @@ All notable changes to this package will be documented in this file.
 - When the prop is absent (existing demos), no `<colgroup>` is emitted,
   preserving the previous flex-default behaviour.
 - Two new tests cover both branches.
-- The VisiCalc demo (`demo/visicalc/mosaic/Grid.mil` and
+- The VisiCalc demo (`code/programs/mosaic/visicalc/Grid.mil` and
   `Grid.desktop.mll`) was updated to declare and bind the slot, and
   `App.tsx` now passes `state.columnWidths` through. Resolves known
-  limitation #5 in `demo/visicalc/README.md`.
+  limitation #5 in `code/programs/typescript/visicalc/README.md`.
 
 ### Changed — event-union types are now exported
 
@@ -162,7 +455,7 @@ All notable changes to this package will be documented in this file.
   (and `export type {Component}Event = never` in the empty-emit case)
   so host applications can `import type { GridEvent } from "./Grid"`
   directly instead of redeclaring the event-union shape inline. The
-  VisiCalc demo (`demo/visicalc/src/app/state.ts`) previously carried a
+  VisiCalc demo (`code/programs/typescript/visicalc/src/app/state.ts`) previously carried a
   hand-maintained copy of `GridEvent` and `FormulaBarEvent` for exactly
   this reason; it now imports them from the generated component files.
 - Two new tests assert the `export` keyword is emitted in both the

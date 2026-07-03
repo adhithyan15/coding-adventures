@@ -1,0 +1,7 @@
+{
+ "idx": 29,
+ "id": "TAX-10",
+ "scenario": "A returning traveler declares a single 0.75-liter bottle of wine brought in solely for their own personal use.",
+ "policy": "Imported alcohol is subject to an excise duty of $3 per liter, except that alcohol imported solely for personal use in a quantity not exceeding 1 liter per traveler is exempt from the excise duty.",
+ "question": "Is excise duty owed on the traveler's bottle of wine?"
+}

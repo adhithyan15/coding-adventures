@@ -1,0 +1,59 @@
+% =====================================================================
+% worked-appeal-example.adj — precedence DERIVED by a meta-rule (ADJ73 PR-B-4).
+%
+% THE CASE.  A statutory term "scope" was read BROADLY by a Ninth Circuit panel
+% in 2019. In 2023 the Supreme Court reversed that panel and read it NARROWLY.
+% Both readings are in the record, so they CONFLICT. Which governs?
+%
+% There is NO hand-asserted `outranks_context(scotus_2023, ninth_circuit_2019)`
+% edge. Instead the case supplies one primitive grounded fact —
+% `reverses(scotus_2023, ninth_circuit_2019)` — and the APPEAL-STATUS meta-rule
+% (context-precedence-meta.adj, canon 1) DERIVES the precedence edge from it.
+% The derived edge drives lex superior:
+%
+%   means(scope, narrow)  status governing   context scotus_2023
+%   means(scope, broad)   status defeated     context ninth_circuit_2019
+%                         defeated_by means(scope, narrow)
+%
+% The trap is set as in PR-B-3: the (now-reversed) Ninth Circuit reading is
+% asserted at the HIGHEST `mandatory` tier, the Supreme Court reading at the
+% default tier — and context precedence (derived from `reverses`) still flips it.
+% 0 answer-time model calls. The precedence is auditable AND recursive: the edge
+% comes from the meta-rule (which cites the overruling doctrine) applied to the
+% `reverses` fact (which cites the appellate record).
+% =====================================================================
+
+% The recursive canons (appeal status, lex posterior), each citing its doctrine.
+import "context-precedence-meta.adj"
+
+% A statutory term has at most one governing reading.
+functional means(term, reading)
+
+% The PRIMITIVE grounded fact for this case: the 2023 Supreme Court decision
+% reversed the 2019 Ninth Circuit panel. (In a real pipeline this is decomposed
+% from the appellate record; here it carries that record as its source.)
+relate reverses(scotus_2023, ninth_circuit_2019)
+  source "Supreme Court (2023) reversed the Ninth Circuit panel (2019) on the meaning of the statutory term."
+  locator "appellate record — judgment reversed"
+  trust authoritative
+
+% The reversed Ninth Circuit reading (broad), at the HIGHEST tier — yet reversed.
+rule {
+  head: means(scope, broad)
+  when: ninth_circuit_held
+  priority: mandatory
+  context: ninth_circuit_2019
+}
+
+% The Supreme Court reading (narrow), at the default tier — governs on derived context.
+rule {
+  head: means(scope, narrow)
+  when: scotus_held
+  context: scotus_2023
+}
+
+observe ninth_circuit_held
+observe scotus_held
+
+% Which reading governs?  (the meta-rule-derived edge resolves it)
+? means(scope, $reading)

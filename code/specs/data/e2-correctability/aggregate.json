@@ -1,0 +1,1111 @@
+{
+ "report": {
+  "primary_haiku": {
+   "per_arm": {
+    "framework": {
+     "n_wrong": 32,
+     "localize_rate": 0.7969,
+     "hit": 25,
+     "partial": 1,
+     "miss": 6,
+     "auditor_fooled": 4,
+     "auditor_fooled_rate": 0.125
+    },
+    "plain": {
+     "n_wrong": 31,
+     "localize_rate": 0.8226,
+     "hit": 23,
+     "partial": 5,
+     "miss": 3,
+     "auditor_fooled": 3,
+     "auditor_fooled_rate": 0.0968
+    }
+   },
+   "paired_localize_delta": {
+    "point_delta_fw_minus_plain": -0.0323,
+    "ci95": [
+     -0.2097,
+     0.129
+    ],
+    "n_items": 31,
+    "excludes_zero": false
+   }
+  },
+  "robustness_opus": {
+   "per_arm": {
+    "framework": {
+     "n_wrong": 16,
+     "localize_rate": 0.5625,
+     "hit": 8,
+     "partial": 2,
+     "miss": 6,
+     "auditor_fooled": 5,
+     "auditor_fooled_rate": 0.3125
+    },
+    "plain": {
+     "n_wrong": 14,
+     "localize_rate": 0.6429,
+     "hit": 8,
+     "partial": 2,
+     "miss": 4,
+     "auditor_fooled": 5,
+     "auditor_fooled_rate": 0.3571
+    }
+   },
+   "paired_localize_delta": {
+    "point_delta_fw_minus_plain": 0.0,
+    "ci95": [
+     -0.3214,
+     0.3214
+    ],
+    "n_items": 14,
+    "excludes_zero": false
+   }
+  },
+  "pooled": {
+   "per_arm": {
+    "framework": {
+     "n_wrong": 48,
+     "localize_rate": 0.7188,
+     "hit": 33,
+     "partial": 3,
+     "miss": 12,
+     "auditor_fooled": 9,
+     "auditor_fooled_rate": 0.1875
+    },
+    "plain": {
+     "n_wrong": 45,
+     "localize_rate": 0.7667,
+     "hit": 31,
+     "partial": 7,
+     "miss": 7,
+     "auditor_fooled": 8,
+     "auditor_fooled_rate": 0.1778
+    }
+   },
+   "paired_localize_delta": {
+    "point_delta_fw_minus_plain": -0.0968,
+    "ci95": [
+     -0.3065,
+     0.0968
+    ],
+    "n_items": 31,
+    "excludes_zero": false
+   }
+  },
+  "fix_propagate": {
+   "RQ2_fix_locality": {
+    "framework": "single local edit at the located locus (override one CAS fact / edit one clause)",
+    "prose": "no localized handle \u2014 the fix requires rewriting the derivation; not a fix of an artifact",
+    "worked_example": {
+     "fix": "one human override of the correlated CSF-chemistry facts (a single CAS edit)",
+     "edits_applied_as_one_override": 3,
+     "target_case_pre_culture": {
+      "base_P": 0.9999,
+      "edited_P": 0.7709,
+      "effect": "false-certainty de-saturated"
+     },
+     "regression_sibling_culture_positive": {
+      "base_P": 1.0,
+      "edited_P": 1.0,
+      "effect": "unchanged (no regression)"
+     },
+     "answer_time_model_calls": 0,
+     "base_corpus": "immutable; edit lives in versioned, attributed, cited overrides/"
+    }
+   },
+   "RQ3_persist_propagate": {
+    "framework": "re-derive from corrected CAS; one override propagates to every sibling citing the fact",
+    "prose": "nothing to propagate (no re-derivable artifact)",
+    "meningitis_regression_safe": {
+     "base_P": 1.0,
+     "edited_P": 1.0,
+     "effect": "unchanged (no regression)"
+    },
+    "tax_derive_once": {
+     "compiled_once": "TAX-1 rulebook (byte-verified) -> content-addressed library, no model",
+     "held_out_cases_decided_on_cpu": 3,
+     "verdicts": [
+      "REQUIRED_TO_FILE",
+      "NOT_REQUIRED_TO_FILE",
+      "REQUIRED_TO_FILE"
+     ],
+     "answer_time_model_calls": 0,
+     "every_verdict_carries_proof": "rule -> fact -> cited policy bytes"
+    },
+    "headline_number": "1 edit / 1 compiled library -> N sibling cases corrected, answer-time model calls = 0"
+   }
+  },
+  "leak_check": {
+   "n_cells": 96,
+   "haiku_items_both_wrong_selected": 32,
+   "opus_items_both_wrong_selected": 16,
+   "chrome_tell_present_on_normalized": 1,
+   "regex_acc_chrome": 0.5104,
+   "regex_acc_structure": 0.9792,
+   "note": "chrome accuracy ~0.5 confirms the citation-format confound is removed; any structure accuracy above chance is the stepwise-decomposition TREATMENT, not chrome \u2014 reported openly, not hidden."
+  }
+ },
+ "rows": [
+  {
+   "cid": 0,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66e8f69b14",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 1,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66e8f69b14",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 2,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66eb36fbb3",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 3,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66eb36fbb3",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 4,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66ecfd03e7",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 5,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66ecfd03e7",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 6,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66fd60ea6b",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 7,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66fd60ea6b",
+   "category": "Biology/Medicine",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 8,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66fc5e8f98",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 9,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66fc5e8f98",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 10,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66feaaa369",
+   "category": "Chemistry",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 11,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66feaaa369",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 12,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66ff359260",
+   "category": "Chemistry",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 13,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66ff359260",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 14,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "67008a05ad",
+   "category": "Chemistry",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 15,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "67008a05ad",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 16,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66b91693d8",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 17,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66b91693d8",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 18,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "670cfd3778",
+   "category": "Computer Science/AI",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 19,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "670cfd3778",
+   "category": "Computer Science/AI",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 20,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "671f941e91",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 21,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "671f941e91",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 22,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "672285d7e6",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 23,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "672285d7e6",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 24,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66f2cda3b5",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 25,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66f2cda3b5",
+   "category": "Engineering",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": true
+  },
+  {
+   "cid": 26,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66f85b3388",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 27,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66f85b3388",
+   "category": "Engineering",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 28,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "670489fced",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 29,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "670489fced",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 30,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "67173a11ff",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 31,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "67173a11ff",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 32,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66ea36e7aa",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 33,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66ea36e7aa",
+   "category": "Humanities/Social Science",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 34,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "6705b23880",
+   "category": "Humanities/Social Science",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 35,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "6705b23880",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 36,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "670a6b32b3",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 37,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "670a6b32b3",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 38,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "6717fbb348",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 39,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "6717fbb348",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 40,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66e8e473f5",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 41,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66e8e473f5",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 42,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66eea9e29a",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 43,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66eea9e29a",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 44,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "670dab3f29",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 45,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "670dab3f29",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 46,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "6717eeddd6",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 47,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "6717eeddd6",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 48,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66ea40e5b4",
+   "category": "Other",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": false
+  },
+  {
+   "cid": 49,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66ea40e5b4",
+   "category": "Other",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": false
+  },
+  {
+   "cid": 50,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66eb533fcd",
+   "category": "Other",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 51,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66eb533fcd",
+   "category": "Other",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 52,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66ef5b2ee2",
+   "category": "Other",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": false
+  },
+  {
+   "cid": 53,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66ef5b2ee2",
+   "category": "Other",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 54,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "6701d2675f",
+   "category": "Other",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 55,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "6701d2675f",
+   "category": "Other",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 56,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66ed86e620",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 57,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66ed86e620",
+   "category": "Physics",
+   "localization": "n/a",
+   "loc_score": null,
+   "fooled": false
+  },
+  {
+   "cid": 58,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "66fc450342",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 59,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "66fc450342",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 60,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "671ec6d8a6",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 61,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "671ec6d8a6",
+   "category": "Physics",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 62,
+   "arm": "framework",
+   "scale": "haiku",
+   "item_id": "671f8a0781",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 63,
+   "arm": "plain",
+   "scale": "haiku",
+   "item_id": "671f8a0781",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 64,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66ecfd03e7",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 65,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66ecfd03e7",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 66,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66fd60ea6b",
+   "category": "Biology/Medicine",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": false
+  },
+  {
+   "cid": 67,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66fd60ea6b",
+   "category": "Biology/Medicine",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 68,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66fc5e8f98",
+   "category": "Chemistry",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 69,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66fc5e8f98",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 70,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66feaaa369",
+   "category": "Chemistry",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 71,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66feaaa369",
+   "category": "Chemistry",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": false
+  },
+  {
+   "cid": 72,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "670cfd3778",
+   "category": "Computer Science/AI",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 73,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "670cfd3778",
+   "category": "Computer Science/AI",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 74,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "671f941e91",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 75,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "671f941e91",
+   "category": "Computer Science/AI",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 76,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66f2cda3b5",
+   "category": "Engineering",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 77,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66f2cda3b5",
+   "category": "Engineering",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 78,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66f85b3388",
+   "category": "Engineering",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 79,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66f85b3388",
+   "category": "Engineering",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": true
+  },
+  {
+   "cid": 80,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66ea36e7aa",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 81,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66ea36e7aa",
+   "category": "Humanities/Social Science",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 82,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "6705b23880",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 83,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "6705b23880",
+   "category": "Humanities/Social Science",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 84,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66e8e473f5",
+   "category": "Math",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 85,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66e8e473f5",
+   "category": "Math",
+   "localization": "n/a",
+   "loc_score": null,
+   "fooled": false
+  },
+  {
+   "cid": 86,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66eea9e29a",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 87,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66eea9e29a",
+   "category": "Math",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 88,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66ea40e5b4",
+   "category": "Other",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 89,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66ea40e5b4",
+   "category": "Other",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 90,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66eb533fcd",
+   "category": "Other",
+   "localization": "partial",
+   "loc_score": 0.5,
+   "fooled": false
+  },
+  {
+   "cid": 91,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66eb533fcd",
+   "category": "Other",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": false
+  },
+  {
+   "cid": 92,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66ed86e620",
+   "category": "Physics",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 93,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66ed86e620",
+   "category": "Physics",
+   "localization": "n/a",
+   "loc_score": null,
+   "fooled": false
+  },
+  {
+   "cid": 94,
+   "arm": "framework",
+   "scale": "opus",
+   "item_id": "66fc450342",
+   "category": "Physics",
+   "localization": "miss",
+   "loc_score": 0.0,
+   "fooled": true
+  },
+  {
+   "cid": 95,
+   "arm": "plain",
+   "scale": "opus",
+   "item_id": "66fc450342",
+   "category": "Physics",
+   "localization": "hit",
+   "loc_score": 1.0,
+   "fooled": true
+  }
+ ]
+}

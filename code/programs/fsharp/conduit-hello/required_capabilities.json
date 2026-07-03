@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "fsharp/conduit-hello",
+  "capabilities": ["ffi:call", "network:listen"],
+  "justification": "ffi:call — links against the CodingAdventures.Conduit.FSharp library which uses P/Invoke into libconduit_capi. network:listen — smoke tests bind a real TCP socket on 127.0.0.1:0."
+}

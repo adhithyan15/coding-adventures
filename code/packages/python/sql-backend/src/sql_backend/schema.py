@@ -100,9 +100,23 @@ class ColumnDef:
     autoincrement: bool = False
     default: ColumnDefault = field(default=NO_DEFAULT)
     check_expr: object = field(default=None, compare=False, hash=False)
+    # Source text of the CHECK expression — used in error messages.
+    # SQLite renders ``CHECK constraint failed: <expr_text>``; we
+    # round-trip the parsed expression back to text so our error
+    # matches.  Empty string means "no check or no text available";
+    # in that case the VM falls back to the older ``<table>.<col>``
+    # form.  Stored alongside ``check_expr`` rather than on a
+    # parallel struct so the two travel together through the
+    # planner → IR → VM pipeline.
+    check_expr_text: str = ""
     # (ref_table, ref_col_or_None) — None ref_col means "reference the PK".
     # Typed as object to avoid circular import with planner types.
     foreign_key: object = field(default=None, compare=False, hash=False)
+    # ``COLLATE name`` from CREATE TABLE — the column's declared default
+    # comparison-collation.  Used as the default when an ORDER BY clause
+    # references this column without an explicit COLLATE override.
+    # ``None`` means BINARY (the SQLite default).  Stored upper-cased.
+    collation: str | None = None
 
     def effective_not_null(self) -> bool:
         """PRIMARY KEY implies NOT NULL. Convenience for the constraint enforcer."""

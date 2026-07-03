@@ -1,0 +1,57 @@
+[
+  {
+    "override": "reduced rate of 12 days",
+    "COPY": {
+      "override_attn_share": 0.154,
+      "response": "Part-time staff hired after January 2020 accrue at a reduced"
+    },
+    "ANSWER": {
+      "override_attn_share": 0.071,
+      "response": "Based on the information provided in the passage:\n\n1. The st"
+    }
+  },
+  {
+    "override": "lower limit of 55 mph",
+    "COPY": {
+      "override_attn_share": 0.151,
+      "response": "The posted speed limit on this highway is 65 mph for general"
+    },
+    "ANSWER": {
+      "override_attn_share": 0.075,
+      "response": "Based on the information provided in the passage, the vehicl"
+    }
+  },
+  {
+    "override": "younger than eighteen are exempt from all overdue fines",
+    "COPY": {
+      "override_attn_share": 0.303,
+      "response": "Borrowers under eighteen are exempt from all overdue fines."
+    },
+    "ANSWER": {
+      "override_attn_share": 0.147,
+      "response": "Based on the passage provided, if a twelve-year-old borrower"
+    }
+  },
+  {
+    "override": "refurbished instead carry a reduced warranty term of 90 days",
+    "COPY": {
+      "override_attn_share": 0.377,
+      "response": "Products carry a one-year warranty covering defects. Refurbi"
+    },
+    "ANSWER": {
+      "override_attn_share": 0.319,
+      "response": "Based on the information provided in the passage, the warran"
+    }
+  },
+  {
+    "override": "clearance are excluded from all discounts",
+    "COPY": {
+      "override_attn_share": 0.173,
+      "response": "Loyalty members receive a 10% discount on most purchases. It"
+    },
+    "ANSWER": {
+      "override_attn_share": 0.174,
+      "response": "Based on the passage provided, if an item is marked as \"clea"
+    }
+  }
+]

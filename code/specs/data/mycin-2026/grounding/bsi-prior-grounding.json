@@ -1,0 +1,254 @@
+{
+  "records": [
+    {
+      "id": "bsi_prior_saureus",
+      "kind": "prior",
+      "target": "s_aureus",
+      "claim": "Proportion of bloodstream isolates / bacteremia episodes caused by Staphylococcus aureus.",
+      "authored_hint": 0.22,
+      "grounded": {
+        "id": "bsi_prior_saureus",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+        "source_title": "Wisplinghoff et al., \"Nosocomial bloodstream infections in US hospitals: analysis of 24,179 cases from a prospective nationwide surveillance study\" (SCOPE), Clinical Infectious Diseases",
+        "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+        "value_found": "~0.20 (Staphylococcus aureus = 20% of nosocomial bloodstream infection isolates; n=24,179 cases, SCOPE surveillance, 49 US hospitals, 1995-2002)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "CDC Invasive Staphylococcus aureus Surveillance (cdc.gov/healthcare-associated-infections/php/haic-eip/invasive-staphylococcus.html) — reports S. aureus BSI incidence rates, not S. aureus as a fraction of all BSI isolates, so it does not directly yield the requested proportion.",
+          "Laupland et al. multinational population-based S. aureus BSI surveillance (sciencedirect/pubmed 22616816) — reports S. aureus BSI incidence per 100,000 population (26.1/100k), not the proportion of all bloodstream isolates that are S. aureus; wrong denominator for this claim.",
+          "Southern Sweden population-based BSI study (PMC9999458) — gives S. aureus as 13% of BSI (E. coli 27%); a valid alternative primary datapoint but lower than the claim; discarded as the primary citation in favor of the larger, canonical SCOPE nationwide study, though noted as showing geographic/case-mix variability.",
+          "StatPearls 'Staphylococcus aureus Infection' (NCBI Bookshelf) and Medscape overview — secondary/tertiary review sources, not primary surveillance data.",
+          "Genomic epidemiology of S. aureus BSI South America (medRxiv preprint) — concerns molecular typing of already-collected S. aureus isolates, does not report S. aureus share of all BSI."
+        ],
+        "note": "ENTAILED. The quote directly states Staphylococcus aureus = 20% of isolates causing nosocomial bloodstream infections in the SCOPE cohort (24,179 cases). No leap is needed: the claim asks for the proportion of bloodstream isolates/episodes caused by S. aureus, and the source supplies it as a direct percentage. Value 0.20 is consistent with the ~0.22 hint (same direction and magnitude). Scope caveat (not a leap, just context): SCOPE is NOSOCOMIAL (hospital-acquired) BSI; community-onset/all-comer BSI series often run lower for S. aureus (e.g., the Swedish population-based study reports 13%, with E. coli dominant at 27%). So ~0.20 is a reasonable central prior but skews to the hospital-acquired end of the range."
+      },
+      "verify": {
+        "id": "bsi_prior_saureus",
+        "byte_stable": true,
+        "reextracted_value": "~0.20 (Staphylococcus aureus = 20% of nosocomial bloodstream-infection isolates; SCOPE surveillance, n=24,179 cases, 49 US hospitals, Mar 1995–Sep 2002)",
+        "refute_attempt": "Tried to refute on scope: the 20% is specifically NOSOCOMIAL (hospital-acquired) BSI, not community-acquired or all-comers bacteremia, whose organism distributions differ; it is a per-ISOLATE proportion (polymicrobial episodes can shift the per-episode value slightly); and it derives from 1995–2002 data, predating later MRSA/CoNS epidemiology shifts, so it may be dated as a current prior. However, the claim's own value parenthetical explicitly scopes itself to \"nosocomial bloodstream infection isolates,\" and the byte_quote appears verbatim on the page and directly states \"Staphylococcus aureus (20%)\" with matching n=24,179, SCOPE, 49 hospitals, and study years. The refutation narrows applicability/recency but does not overturn the grounding as stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "bsi_prior_enteric_gnb",
+      "kind": "prior",
+      "target": "enteric_gnb",
+      "claim": "Proportion of bloodstream infections caused by Enterobacterales (enteric gram-negative bacilli, esp. Escherichia coli).",
+      "authored_hint": 0.25,
+      "grounded": {
+        "id": "bsi_prior_enteric_gnb",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8785473/",
+        "source_title": "Blood bacterial resistant investigation collaborative system (BRICS) report: a national surveillance in China from 2014 to 2019 (Antimicrobial Resistance & Infection Control, 2022)",
+        "byte_quote": "Gram-positive organisms accounted for 29.5% (8244) of the species identified and Gram-negative organisms accounted for 70.5% (19,655). [...] Notably, E. coli increased 29.1% to 38.5% during the study period.",
+        "value_found": "E. coli alone = ~29.1%–38.5% of all bloodstream isolates (single most common organism); total gram-negatives = 70.5% of all isolates. Enterobacterales (E. coli + K. pneumoniae + other enteric GNB) comprise roughly half of all BSI in this national surveillance — i.e. ~0.30+ for E. coli alone, ~0.45–0.55 for Enterobacterales overall.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "SCOPE/Wisplinghoff nosocomial BSI study (PMID 15306996, pmubmed.ncbi.nlm.nih.gov/15306996): a strong primary US national surveillance source and gram-negative=25% overall, but the accessible abstract does NOT break out E. coli or individual Enterobacterales percentages, so no verbatim quote could ground the specific enteric-GNB proportion. Discarded for lack of a supporting numeric quote.",
+          "German six-university-hospital GN-BSI study (PMC11971176): cleanest derivable proportions (E. coli 59.6%, Klebsiella 23.7%, Enterobacter 7.7% => Enterobacterales ~91% of gram-negative BSI), but the denominator is GRAM-NEGATIVE BSI only, not ALL BSI. Using it for the all-BSI claim would conflate denominators, so discarded as the headline source (it corroborates that Enterobacterales dominate the GN compartment).",
+          "SENTRY 1997 GNB survey (PMID 10530454): E. coli 41% of gram-negative bacilli — again a within-gram-negative denominator, not all-BSI; older and narrower. Discarded.",
+          "Springer full-text (link.springer.com/article/10.1186/s13756-022-01055-5) and an initial PubMed ID guess (15067218->wrong article): Springer hit an auth/IdP redirect (could not fetch); the guessed PubMed ID resolved to an unrelated medical-education article. Discarded as unreachable/incorrect; used the open-access PMC mirror of the same BRICS study instead.",
+          "WHO GHO/GLASS SDG 3.d.2 indicator pages: report proportion of E. coli that is RESISTANT (3rd-gen cephalosporin/carbapenem), not E. coli's share of all BSI. Wrong quantity for this claim; discarded."
+        ],
+        "note": "ENTAILED for direction + a stronger-than-hint magnitude; partial LEAP on the exact Enterobacterales aggregate. The BRICS quote explicitly grounds (a) gram-negatives = 70.5% of all identified isolates and (b) E. coli rising 29.1%->38.5% of all isolates as the single most common organism (denominator confirmed to be all isolates, since the GP/GN split is 'of the species identified'). This directly entails that E. coli alone already exceeds the ~0.25 prior hint, and that enteric GNB are the dominant BSI cause. The precise all-BSI Enterobacterales fraction (~0.45-0.55) is a LEAP: the article reports E. coli and K. pneumoniae as the two leading organisms and a 70.5% GN total, but does not print a single summed Enterobacterales percentage, so the aggregate is inferred from the components rather than quoted verbatim. direction_correct=true because the claim (Enterobacterales/E. coli are a large share of BSI) holds and is if anything understated by the 0.25 hint in this national surveillance source."
+      },
+      "verify": {
+        "id": "bsi_prior_enteric_gnb",
+        "byte_stable": true,
+        "reextracted_value": "In this Chinese national BSI surveillance (BRICS, 2014–2019; n=27,899 isolates), gram-negative organisms = 70.5% (19,655) and gram-positive = 29.5% (8,244). E. coli is the single most common organism, rising from 29.1% to 38.5% of isolates over the study period; K. pneumoniae is second most common. Enterobacterales (E. coli + K. pneumoniae + other enteric GNB) therefore comprise roughly half of all BSI isolates — E. coli alone ~0.29–0.39, combined Enterobacterales ~0.45–0.55. The ~0.45–0.55 combined figure is an inference (the page gives no explicit combined percentage), but the per-organism anchors (E. coli 29.1–38.5%, GNB 70.5%) are stated verbatim.",
+        "refute_attempt": "Strongest refutation: (1) Generalizability — this is China-specific BRICS surveillance, not a universal BSI prior. The GNB:GP ratio (70.5% vs 29.5%) is heavily gram-negative-skewed relative to many Western/US surveillance datasets, where gram-positives often reach or exceed 50%; the E. coli and Enterobacterales proportions are not transferable as a global prior. (2) The 70.5% gram-negative total INCLUDES non-Enterobacterales (A. baumannii, P. aeruginosa, S. maltophilia, Burkholderia), so it cannot be equated with Enterobacterales — though the claim does correctly distinguish these. (3) The combined Enterobacterales figure (~0.45–0.55) is NOT stated verbatim; the page only gives E. coli's range and identifies K. pneumoniae as second-most-common without a combined percentage, so the ~half claim is a reconstruction. (4) WebFetch noted \"increased 29.1% to 38.5%\" describes proportion-among-isolates over time, not a static prevalence — using it as a single point estimate elides the temporal trend. None of these refute that the byte_quote appears verbatim or that it supports the per-organism anchors; they bound generalizability and flag the combined figure as inferred rather than quoted.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "bsi_prior_cons",
+      "kind": "prior",
+      "target": "coag_neg_staph",
+      "claim": "Proportion of positive blood cultures caused by coagulase-negative staphylococci (often line-related or contaminant).",
+      "authored_hint": 0.1,
+      "grounded": {
+        "id": "bsi_prior_cons",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+        "source_title": "Nosocomial bloodstream infections in US hospitals: analysis of 24,179 cases from a prospective nationwide surveillance study (Wisplinghoff et al., Clinical Infectious Diseases / SCOPE)",
+        "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+        "value_found": "~0.31 (31% of isolates from nosocomial bloodstream infections, the single most common organism)",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "pubmed.ncbi.nlm.nih.gov/22784359 (Garcia-Vazquez prospective study, 654 CoNS bacteraemia episodes): supports the 'often contaminant' qualifier — 65% of CoNS-positive cultures judged contamination, 35% true BSI — but its denominator is CoNS-positive cultures only, not the proportion of ALL positive blood cultures that are CoNS, so it does not yield the requested value.",
+          "pmc.ncbi.nlm.nih.gov/articles/PMC4187637 (Becker et al. CoNS review): secondary/narrative review, not a primary surveillance dataset; discarded in favor of the SCOPE primary series.",
+          "nature.com/articles/s41598-021-96997-y (contamination-rate indicator study): about using CoNS detection as a contamination-rate proxy (r=0.85 correlation), not the proportion of positive cultures caused by CoNS.",
+          "cambridge.org/.../emergence-of-coagulase-negative-staphylococci (Pfaller/Herwaldt 1988): older single-era data superseded by the larger 7-year SCOPE series; not fetched for a quote."
+        ],
+        "note": "LEAP. The quote ENTAILS that CoNS = 31% of isolates among 24,179 nosocomial BSI cases — the single most common organism, consistent with the claim's 'often line-related' framing (CoNS dominance in hospital-acquired/line-associated BSI). However, two gaps make the exact value a leap rather than full entailment: (1) the denominator is clinically-adjudicated nosocomial BSI isolates, not 'all positive blood cultures' (which would also include community-onset cultures and adjudicated contaminants, shifting the fraction); (2) the claim's rough prior of ~0.1 is REFUTED in magnitude by this source — the real surveillance value is ~3x higher (~0.31). So direction (CoNS is a/the leading cause, line-related/contaminant-prone) is correct and well-grounded, but the ~0.1 point estimate is not; hence direction_only."
+      },
+      "verify": {
+        "id": "bsi_prior_cons",
+        "byte_stable": true,
+        "reextracted_value": "~0.31 (CoNS = 31% of isolates, the single most common organism in nosocomial BSIs; from the SCOPE study, Wisplinghoff et al., 24,179 cases, 49 US hospitals, 1995-2002)",
+        "refute_attempt": "Strongest refutation: (1) The quote is from a NOSOCOMIAL (hospital-acquired) BSI surveillance study, so 31% is the proportion among hospital-onset positive cultures, not all blood cultures generally — a community/all-comer setting could differ. (2) The claim's parenthetical gloss \"often line-related or contaminant\" is NOT asserted by this byte_quote; the quote only gives organism frequency, not that CoNS were line-related or contaminants, so that clinical interpretation is unsupported by THIS source text. However, neither point refutes the load-bearing quantitative claim: the quote verbatim states CoNS = 31% of isolates and lists it first/most-common, which directly supports value ~0.31. The numeric proportion and organism identity are byte-grounded; only the interpretive caveat is extra-textual.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "bsi_prior_enterococcus",
+      "kind": "prior",
+      "target": "enterococcus",
+      "claim": "Proportion of bloodstream infections caused by Enterococcus species.",
+      "authored_hint": 0.08,
+      "grounded": {
+        "id": "bsi_prior_enterococcus",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+        "source_title": "Nosocomial bloodstream infections in US hospitals: analysis of 24,179 cases from a prospective nationwide surveillance study (Wisplinghoff et al., Clin Infect Dis 2004) — SCOPE Program",
+        "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+        "value_found": "~0.09 (enterococci = 9% of nosocomial bloodstream infection isolates; SCOPE, 24,179 cases, 49 US hospitals, 1995–2002)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "SENTRY 20-year study (pubmed.ncbi.nlm.nih.gov/31010862) — gives Enterococcus faecalis = 5.2% (5th most common pathogen) but does NOT report a combined all-Enterococcus-species proportion, so it understates the claim (faecalis only) and cannot directly ground the species-level value; discarded as not directly entailing the claim though directionally consistent.",
+          "Search-summary statement 'enterococcal BSI represented 7%-12% of nosocomial BSI (NNIS data)' — discarded: this is a secondary range aggregated across decades in the search snippet, not a verbatim primary-source figure I fetched and read.",
+          "Single-center retrospective Enterococcus-BSI series (Qatar PMC9422275, Beijing PMC5496248, tertiary-hospital 2007-2019) — these study enterococcal BSI cohorts and report intra-genus species splits (E. faecalis ~60-70%, E. faecium ~20-25%), NOT the genus's share of ALL BSI; wrong denominator for this claim, discarded.",
+          "ISID infection-control chapter 44 (PDF) — secondary guide/textbook chapter, not a primary surveillance dataset; discarded in favor of the SCOPE primary cohort."
+        ],
+        "note": "ENTAILED. The SCOPE quote states enterococci = 9% of bloodstream-infection isolates in a 24,179-case prospective nationwide US surveillance cohort, directly giving the genus-level proportion the claim asks for. No leap is required: 'enterococci (9%)' is the proportion of BSI caused by Enterococcus species. The hint (~0.08) is slightly low; the primary-source value is ~0.09, same direction/magnitude. A second primary source (SENTRY) corroborates the lower bound via E. faecalis alone at 5.2%, consistent with a genus total near 8-9% once E. faecium is added."
+      },
+      "verify": {
+        "id": "bsi_prior_enterococcus",
+        "byte_stable": true,
+        "reextracted_value": "~0.09 (enterococci = 9% of isolates among 24,179 nosocomial bloodstream infection cases, SCOPE, 49 US hospitals, March 1995–September 2002)",
+        "refute_attempt": "Strongest refutation: the 9% figure is \"of isolates\" within the SCOPE nosocomial (hospital-acquired) BSI surveillance program, so the broad claim label \"Proportion of bloodstream infections caused by Enterococcus species\" is wider in scope than the source (which covers nosocomial BSIs only, not community-acquired). Additionally, \"9% of isolates\" is a proportion of organism isolates, which can differ slightly from proportion of infection episodes if some cases are polymicrobial. However, this refutation does not overturn the grounding: the byte_quote states \"enterococci (9%)\" verbatim, the claimed value parenthetical explicitly qualifies it as \"nosocomial bloodstream infection isolates,\" and the study scope (24,179 cases, 49 US hospitals, 1995–2002) matches exactly. The quote directly and verbatim supports value ~0.09.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "bsi_prior_spneumoniae",
+      "kind": "prior",
+      "target": "s_pneumoniae",
+      "claim": "Proportion of community bloodstream infections caused by Streptococcus pneumoniae.",
+      "authored_hint": 0.07,
+      "grounded": {
+        "id": "bsi_prior_spneumoniae",
+        "resolved_url": "https://www.cambridge.org/core/journals/epidemiology-and-infection/article/burden-of-communityonset-bloodstream-infection-a-populationbased-assessment/4C3033D11C42B1D2B68B3580C283DB9A",
+        "source_title": "Burden of community-onset bloodstream infection: a population-based assessment (Laupland et al., Epidemiology & Infection, 2007)",
+        "byte_quote": "_Escherichia coli_ (30%), _S. aureus_ (16%), and _Str. pneumoniae_ (12%) were the most important agents",
+        "value_found": "~0.124 (12.4%): S. pneumoniae annual rate 10.1/100,000 divided by the overall community-onset BSI rate of 81.6/100,000 = 0.124. S. pneumoniae is the 3rd leading organism behind E. coli (25.8/100,000) and S. aureus (13.5/100,000).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC4187633/ (Laupland & Church CMR 2014 review) — secondary narrative review; explicitly declines to give a single proportion ('difficult to precisely define an overall rate'), so not usable as the primary number, though it cites the same Calgary data.",
+          "Community-acquired PNEUMONIA studies (PMC3902680, PMC6669839, academic.oup.com/ofid ofy010, academic.oup.com/cid 7714577) — report S. pneumoniae as 19-60% of CAP, but the denominator is pneumonia cases, not all community BSI episodes. Wrong denominator; would massively overstate the BSI prior.",
+          "PMC3892635 (S. pneumoniae bacteremia, Southern Spain) and Franklin County / 8-French-counties studies (PubMed 8604171, 12667237) — pneumococcus-only case series with no all-BSI denominator, so they cannot yield the fraction-of-all-community-BSI value.",
+          "Cambridge PDF (S0950268806007631a.pdf) — binary/compressed, unreadable verbatim; discarded in favor of the rendered Cambridge Core HTML of the same article.",
+          "PubMed 17156503 — wrong record (Pope et al., dissociative amnesia), not the Laupland paper; discarded."
+        ],
+        "note": "LEAP (small, arithmetic). The quote ENTAILS the component rates (S. pneumoniae 10.1/100,000; overall 81.6/100,000) directly from the primary population-based study. The claimed quantity — S. pneumoniae as a PROPORTION of all community-onset BSI — is not stated verbatim as a percentage; I derived it as 10.1/81.6 = 0.124. This is a one-step ratio of two figures in the same sentence cluster, so the leap is minimal and well-grounded. Note the hint (~0.07) is directionally right (pneumococcus is a minority, 3rd-ranked pathogen) but understates the value from this Calgary 2000-2004 surveillance; the data-derived prior is ~0.12. Caveat: 'community-onset' includes healthcare-associated community-onset cases, and proportions shift modestly across regions/eras (post-PCV vaccination tends to lower the pneumococcal share), so 0.07-0.12 is a reasonable real-world band."
+      },
+      "verify": {
+        "id": "bsi_prior_spneumoniae",
+        "byte_stable": true,
+        "reextracted_value": "~0.124 (12.4%). S. pneumoniae annual rate 10.1/100,000 divided by overall community-onset BSI incidence 81.6/100,000 = 0.1238 ≈ 0.124. Page confirms verbatim: \"a total of 4467 episodes of community-onset BSI were identified for an overall annual incidence of 81·6/100 000\" and the three species \"Escherichia coli, Staphylococcus aureus, and Streptococcus pneumoniae ... occurred at annual rates of 25·8, 13·5, and 10·1/100 000, respectively.\" S. pneumoniae is the 3rd-leading organism behind E. coli (25.8) and S. aureus (13.5).",
+        "refute_attempt": "Strongest refutation: (1) The 12.4% figure is a derived ratio, NOT a proportion the authors state. The 81.6/100,000 overall incidence includes ALL organisms (polymicrobial, fungal, anaerobes, and many other bacteria), so 10.1/81.6 implicitly treats the three named organisms' rates as if they sum cleanly within the denominator. The denominator is total BSI incidence, and the three named rates (25.8+13.5+10.1=49.4) are only ~61% of it, so dividing one organism's rate by the grand total is a legitimate \"fraction of all community-onset BSI\" but is an inferred computation the source never labels as a percentage. (2) CONTEXT/SCOPE: this is a single-region (Calgary Health Region, 2000-2004) population-based incidence study; it is NOT a study of \"bloodstream infection causative-organism proportions\" in the general/clinical sense and may not generalize as a prior for any other population. Pneumococcal vaccination era effects (PCV7 introduced ~2000-2002) make 2000-2004 S. pneumoniae rates time-sensitive and likely non-representative of current proportions. (3) WORDING: the byte_quote drops the source's leading \"The three species,\" before the organism list and bridges two separate sentences with \"[...]\"; the organism-list sentence is not verbatim-contiguous as presented. (4) \"Community\" vs \"community-onset\": the source measures community-ONSET BSI (onset location), which can include healthcare-associated cases presenting from the community — not strictly community-ACQUIRED — so labeling it \"community bloodstream infections\" slightly overstates scope. Despite these caveats, the underlying byte quote and the arithmetic (10.1/81.6=0.124) are both confirmed on the page.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "bsi_prior_pseudomonas",
+      "kind": "prior",
+      "target": "pseudomonas",
+      "claim": "Proportion of bloodstream infections caused by Pseudomonas aeruginosa (healthcare-associated / neutropenic).",
+      "authored_hint": 0.05,
+      "grounded": {
+        "id": "bsi_prior_pseudomonas",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10699684/",
+        "source_title": "Pseudomonas aeruginosa: Infections and novel approaches to treatment \"Knowing the enemy\" the threat of Pseudomonas aeruginosa and exploring novel approaches to treatment — Infect Med (Beijing), 2023;2(3):178–194",
+        "byte_quote": "reported P. aeruginosa as the third most common Gram-negative bacteria causing nosocomial BSI and accounted for 4.3% of all cases.",
+        "value_found": "~0.043 (4.3%) of all nosocomial/healthcare-associated bloodstream infections caused by P. aeruginosa; 4.7% in ICUs, 3.8% in non-ICU wards — derived from a USA nationwide nosocomial BSI surveillance study (Wisplinghoff et al.).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://journals.asm.org/doi/10.1128/jcm.00376-11 — Brazilian SCOPE primary surveillance study (Nosocomial BSI in Brazilian Hospitals, 2,563 cases); would have been the ideal primary registry but returned HTTP 403 Forbidden on fetch, so no verbatim quote could be extracted.",
+          "https://journals.asm.org/doi/full/10.1128/aac.02494-19 and https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11051800/ — large neutropenic-cancer P. aeruginosa BSI cohorts (1,217 / 1,213 episodes); discarded because they report MDR resistance proportions and septic-shock rates, NOT the proportion of all BSIs attributable to P. aeruginosa, so they cannot ground the claim's denominator.",
+          "Search-engine AI summaries (SCOPE Brazilian Gram-negative 58.5%, pediatric mortality 29%) — discarded as non-fetched secondary aggregations; only the directly fetched page text was used as the byte_quote."
+        ],
+        "note": "ENTAILED for the healthcare-associated reading: the quoted sentence directly states P. aeruginosa = 4.3% of all nosocomial BSI cases (4.7% ICU), which matches the claim's HA prior and is close to the ~0.05 hint (hint not trusted; value derived from the source). LEAP caveat for the neutropenic-specific reading: this source provides only resistance percentages for the neutropenic subgroup, not a clean attributable-proportion figure, so the grounded value is the broader nosocomial/HA estimate rather than a neutropenic-specific one. The percentages are secondary attribution within a review (citing Wisplinghoff et al.'s USA nationwide surveillance study), one step removed from the raw registry; the genuinely primary Brazilian SCOPE article (jcm.00376-11) was 403-blocked."
+      },
+      "verify": {
+        "id": "bsi_prior_pseudomonas",
+        "byte_stable": true,
+        "reextracted_value": "~0.043 (4.3%) of all nosocomial/healthcare-associated BSI caused by P. aeruginosa; 4.7% in ICUs, 3.8% in non-ICU wards — third most common Gram-negative cause of nosocomial BSI per Wisplinghoff et al. USA nationwide nosocomial BSI surveillance study, as cited in this review.",
+        "refute_attempt": "Strongest refutation targets the claim's parenthetical label \"(healthcare-associated / neutropenic).\" The byte_quote and its surrounding context describe GENERAL nosocomial/ICU/non-ICU BSI patients from the Wisplinghoff nationwide surveillance study — NOT neutropenic patients. The article addresses neutropenic cancer patients in a SEPARATE section citing a different study (Gudiol et al. 2018) with distinct resistance figures, never tying the 4.3%/4.7%/3.8% values to neutropenia. Therefore the \"neutropenic\" qualifier is unsupported by this quote and conflates two distinct populations. Secondary weaknesses: (1) this is a REVIEW article (\"Pseudomonas aeruginosa: Infections and novel approaches to treatment\"), citing Wisplinghoff secondhand — not the primary surveillance source [89]; the original numbers are not independently verified here. (2) Wisplinghoff's data is now dated relative to a 2023/2024 review. However, these do not refute the central value: the \"healthcare-associated\"/nosocomial proportion (~0.043, with 4.7% ICU / 3.8% non-ICU) is supported verbatim. Only the \"neutropenic\" sub-label overreaches.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "bsi_prior_pyogenes",
+      "kind": "prior",
+      "target": "strep_pyogenes",
+      "claim": "Proportion of bloodstream infections caused by group A Streptococcus (Streptococcus pyogenes).",
+      "authored_hint": 0.04,
+      "grounded": {
+        "id": "bsi_prior_pyogenes",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3284952/",
+        "source_title": "Streptococcus pyogenes bacteraemia: an old enemy subdued, but not defeated (J Infect)",
+        "byte_quote": "Altogether, 40 cases were encountered, representing 2% of all cases of bacteraemia.",
+        "value_found": "~0.02 (2% of all bacteraemia cases caused by Streptococcus pyogenes / group A streptococcus); 40 cases over a 7-year period at University Hospital, Nottingham",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "SCOPE / Wisplinghoff 'Nosocomial Bloodstream Infections in US Hospitals: Analysis of 24,179 Cases' (academic.oup.com/cid/article/39/3/309) — fetched but paywalled body; top-pathogen list (CoNS 31%, S. aureus 20%, enterococci 9%, Candida 9%) does NOT break out S. pyogenes, so no supporting quote obtainable. Discarded for lack of a verbatim S. pyogenes figure.",
+          "SENTRY 20-year program 'The Microbiology of Bloodstream Infection: 20-Year Trends' (PMC6591610), 264,901 BSI episodes — fetched; rank table lists only S. pneumoniae (2.8%) and other top-10 organisms. S. pyogenes is NOT separately reported. Discarded: no S. pyogenes percentage.",
+          "Swedish population-based BSI aetiology study, southern Sweden 2006-2019 (PMC9999458), 54,498 episodes — fetched; reports aggregate 'Streptococcus species [except pneumoniae]' 12.3% but does NOT isolate S. pyogenes. Discarded: denominator-of-all-BSI present but pyogenes not separable.",
+          "Laupland et al., 'Bloodstream infection due to beta-hemolytic streptococci: a population-based comparative analysis' (Infection / Springer, link.springer.com/article/10.1007/s15010-019-01356-9) — gives GAS BSI incidence 4.2/100,000 (vs 14.4/100,000 for all beta-hemolytic strep combined). Used only as an indirect cross-check (implies ~3-4% of all BSI against typical all-cause BSI incidence). Discarded as the primary citation: full text behind Springer auth redirect; reports incidence per 100,000, not a direct proportion-of-all-BSI."
+        ],
+        "note": "ENTAILED. The quote 'Altogether, 40 cases were encountered, representing 2% of all cases of bacteraemia' directly states the proportion of bloodstream infections (bacteraemia) attributable to S. pyogenes (group A streptococcus) at this hospital, which is exactly the claim quantity. Value found = 0.02. Direction is correct: a low single-digit fraction, same regime as the ~0.04 hint. Note the hint (0.04) and this grounded value (0.02) differ by 2x; both are within the plausible low-single-digit-percent range for GAS as a fraction of all BSI, and the indirect Laupland incidence cross-check (4.2/100k GAS vs ~100-150/100k all-cause BSI => ~3-4%) sits between them, suggesting ~0.02-0.04 is the defensible prior. This is a single-center 7-year series (UK), not a multi-national registry, so it is one valid primary data point rather than a pooled estimate."
+      },
+      "verify": {
+        "id": "bsi_prior_pyogenes",
+        "byte_stable": true,
+        "reextracted_value": "~0.02 (40 Streptococcus pyogenes / group A streptococcus bacteraemia cases representing 2% of all bacteraemia cases; University Hospital, Nottingham, over a 7-year period)",
+        "refute_attempt": "Strongest refutation: the 2% derives from a single UK center (University Hospital, Nottingham) over one ~7-year window in the 1980s (PMID 3284952, pub. 1988), so treating it as a general prior for the proportion of all bloodstream infections caused by group A Streptococcus overgeneralizes from one site/era — invasive GAS incidence varies by region and has shifted over decades. This is a generalizability/interpretation concern, NOT a grounding failure: the byte_quote appears verbatim on the fetched page and explicitly states the 40-case count and the \"2% of all cases of bacteraemia\" proportion for S. pyogenes, which matches the claimed value (~0.02) and meaning exactly. The framework gates on representation, not on whether the source is the ideal prior, so the grounding stands.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "bsi_prior_candida",
+      "kind": "prior",
+      "target": "candida",
+      "claim": "Proportion of bloodstream isolates caused by Candida species (candidemia).",
+      "authored_hint": 0.03,
+      "grounded": {
+        "id": "bsi_prior_candida",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+        "source_title": "Nosocomial bloodstream infections in US hospitals: analysis of 24,179 cases from a prospective nationwide surveillance study (Wisplinghoff/Edmond et al., SCOPE Program; Clin Infect Dis 2004)",
+        "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+        "value_found": "~0.09 (9% of nosocomial bloodstream isolates were Candida species), tied as 4th most common organism out of 24,179 cases",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "SCOPE 1995-96 Candida papers (S073288939700240X, S0732889397001922): species-breakdown sub-studies citing 8.0% Candida among BSI, but they focus on C. albicans vs non-albicans antifungal susceptibility rather than the overall isolate-proportion headline; the 24,179-case Wisplinghoff paper is the larger, more authoritative primary surveillance source for the overall proportion.",
+          "SENTRY candidemia papers (PMC88327, PubMed 9650930/11526159) and ASM 2008-2009 (aac.01079-10): these report ONLY species distribution WITHIN candidemia (e.g. C. albicans ~48-55%), not Candida as a fraction of all BSI isolates — wrong denominator for this claim.",
+          "Population-based active surveillance (PubMed 15070998, Baltimore/Connecticut): gives candidemia incidence (10/100,000 population) and Candida species mix, not Candida's share of all bloodstream isolates.",
+          "Kor-GLASS South Korea report (PMC9604804): antifungal-resistance surveillance of Candida BSI isolates, no overall Candida-fraction-of-BSI figure cited."
+        ],
+        "note": "ENTAILED: the quote directly states \"Candida species (9%)\" of bloodstream-infection isolates, no inference required for value_found. CAVEAT on direction: the ~0.03 hint is plausibly an all-comer/community-inclusive BSI prior, whereas this primary source is NOSOCOMIAL (hospital-acquired) BSI, where Candida is enriched (9%). Both agree Candida is a small-but-non-negligible minority of bloodstream isolates, so direction_correct=true, but the exact magnitude depends on case-mix (nosocomial 9% vs broader all-BSI ~3-5%). A LEAP would be applying this 9% nosocomial figure as a universal prior for all bloodstream isolates; the verbatim figure itself is grounded."
+      },
+      "verify": {
+        "id": "bsi_prior_candida",
+        "byte_stable": true,
+        "reextracted_value": "Candida species = 9% (~0.09) of nosocomial bloodstream isolates, tied with enterococci, out of 24,179 nosocomial BSI cases (SCOPE surveillance, 49 US hospitals, 1995–2002).",
+        "refute_attempt": "Strongest refutation: (1) The figure is specifically NOSOCOMIAL (hospital-acquired) BSI from the SCOPE database, not all bloodstream isolates broadly — so using it as a generic \"bloodstream isolates\" prior over-generalizes the population. (2) Candida is TIED with enterococci at 9%, so labeling it cleanly \"4th most common\" is imprecise; it is co-3rd/4th. (3) 9% is the proportion of isolates, not necessarily of patients/episodes. However, none of these undermine the numeric claim itself: the verbatim quote states Candida species = 9% of isolates out of 24,179 cases, which directly supports value ~0.09. The refutation only narrows the scope (nosocomial), it does not contradict the value.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 79,
+ "id": "CUS-10",
+ "scenario": "Sterling Goods owed $12,000 in customs duty due on June 2. The customs electronic payment system suffered a documented nationwide outage all day on June 2, preventing any payments. Sterling paid the full $12,000 on June 3, the next business day.",
+ "policy": "A late-payment surcharge of 10% is added to any customs duty not paid by its due date, except where the delay was caused by a documented customs-system outage on the due date, in which case no surcharge is applied and payment made on the next business day is treated as timely.",
+ "question": "Does Sterling owe the 10% late-payment surcharge?"
+}

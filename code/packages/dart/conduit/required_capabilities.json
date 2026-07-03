@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "dart/conduit",
+  "capabilities": ["ffi:call", "network:listen"],
+  "justification": "ffi:call — uses dart:ffi DynamicLibrary.open to call into the Rust conduit-capi shared library (libconduit_capi.so/.dylib). network:listen — test suite binds a real TCP socket on 127.0.0.1:0 via conduit_server_bind to run E2E HTTP tests."
+}

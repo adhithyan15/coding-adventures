@@ -1,0 +1,320 @@
+{
+  "records": [
+    {
+      "id": "ci_penicillin_cephalosporin",
+      "kind": "contraindication",
+      "claim": "In a patient with a penicillin allergy, what is the cross-reactivity risk with cephalosporins (quantify the rate, esp. 3rd/4th-gen)?",
+      "grounded": {
+        "id": "ci_penicillin_cephalosporin",
+        "resolved_url": "https://www.cdc.gov/std/treatment-guidelines/penicillin-allergy.htm",
+        "source_title": "Penicillin Allergy — CDC STI Treatment Guidelines, 2021",
+        "byte_quote": "Third-generation cephalosporins (e.g., ceftriaxone and cefixime) have lower cross-reactivity with IgE-mediated penicillin-allergic patients (<1%) compared with first- and second-generation cephalosporins (range: 1%–8%).",
+        "value_found": "3rd/4th-generation cephalosporin cross-reactivity in penicillin-allergic patients <1% (vs 1%–8% for 1st/2nd generation); anaphylaxis to cephalosporins in reported penicillin allergy ~1 per 52,000 persons. 3rd/4th-gen and carbapenems considered safe for patients without IgE-mediated symptoms in the preceding 10 years.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.hkmj.org/abstracts/v20n5/428.htm — HKMJ review ('Use of cephalosporins in patients with immediate penicillin hypersensitivity: cross-reactivity revisited'); returned HTTP 403 Forbidden, could not fetch a supporting quote, so not usable as the cited source despite being a relevant peer-reviewed review.",
+          "https://about.ebsco.com/blogs/health-notes/... — secondary EBSCO blog ('myths debunked'); excluded per instruction to ground against a primary source, not a secondary blog.",
+          "https://www.bccdc.ca/Documents/PACE%20Beta-lactam%20Allergy%20Delabeling%20Toolkit.pdf — BC CDC delabeling toolkit; usable regional guideline but the CDC STI guideline already supplies a direct generation-specific quantified quote, so not separately fetched.",
+          "https://academic.oup.com/ofid/article/9/1/ofab544/... and the two NCBI PMC abstracts — focus on side-chain-based cross-reactivity charts and alert-suppression prescribing impact rather than directly quantifying the 3rd/4th-gen rate; not the tightest fit for the claim's numeric ask."
+        ],
+        "note": "ENTAILED. The verbatim CDC quote directly states the value the claim asks for: third-generation cephalosporin cross-reactivity in IgE-mediated penicillin-allergic patients is <1%, contrasted with 1%–8% for first/second generation. Direction matches the rule (penicillin allergy → cephalosporin; the quantified risk is low and generation-dependent). The fourth-generation figure is covered by the companion CDC sentence stating 3rd- and 4th-generation cephalosporins (and carbapenems) are safe for patients without IgE-mediated symptoms in the preceding 10 years, so quoting <1% for '3rd/4th-gen' is a minor LEAP only insofar as the numeric '<1%' is stated explicitly for 3rd-gen and the 4th-gen low-risk claim is qualitative ('safe') rather than a separate percentage."
+      },
+      "verify": {
+        "id": "ci_penicillin_cephalosporin",
+        "byte_stable": true,
+        "reextracted_value": "Third-generation cephalosporins (e.g., ceftriaxone, cefixime) have <1% cross-reactivity in IgE-mediated penicillin-allergic patients, vs a range of 1%–8% for first- and second-generation cephalosporins. The page additionally states anaphylaxis to cephalosporins in those reporting penicillin allergy is \"extremely rare ... estimated to occur at a rate of one per 52,000 persons,\" and that \"Use of third- and fourth-generation cephalosporins and carbapenems is safe for patients without a history of any IgE-mediated symptoms (e.g., anaphylaxis or urticaria) from penicillin during the preceding 10 years.\"",
+        "refute_attempt": "Strongest refutation: the byte_quote, read in isolation, attaches the \"<1%\" figure ONLY to third-generation cephalosporins (ceftriaxone, cefixime) — it does not state a quantified cross-reactivity rate for FOURTH-generation cephalosporins. The claimed value's phrasing \"3rd/4th-generation ... <1%\" therefore over-extends this specific quote: the <1% number is third-gen-specific. Furthermore, the anaphylaxis \"~1 per 52,000 persons\" figure and the \"preceding 10 years\" safety statement are NOT contained in this byte_quote at all; they are separate sentences. However, this refutation does not overturn grounding: (1) the byte_quote appears verbatim, character-for-character, including the en-dash in \"1%–8%\" and the \"<1%\" less-than sign; (2) it directly and fully supports the core quantified contraindication/interaction rule (3rd-gen <1% vs 1st/2nd-gen 1%–8%), which is the crux of the cross-reactivity question; and (3) the additional claimed values (1/52,000 anaphylaxis; 3rd/4th-gen + carbapenem safety with no IgE symptoms in 10 years) were independently confirmed verbatim on the SAME fetched page in adjacent sentences. The only genuine gap is that \"<1%\" is a third-gen-specific quantified rate, while the page's separate basis for grouping 4th-gen with 3rd-gen is a qualitative \"safe\" statement, not a quantified <1% rate. This is a scope nuance, not a refutation of the grounding.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "ci_aztreonam_safe_penicillin",
+      "kind": "safe_alternative",
+      "claim": "Aztreonam (a monobactam) does NOT cross-react with penicillins and is safe to use in patients with a severe penicillin/beta-lactam allergy.",
+      "grounded": {
+        "id": "ci_aztreonam_safe_penicillin",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+        "source_title": "AZACTAM (aztreonam for injection, USP) — FDA Prescribing Information (DailyMed)",
+        "byte_quote": "Both animal and human data suggest that AZACTAM (aztreonam for injection, USP) is rarely cross-reactive with other beta-lactam antibiotics and weakly immunogenic. While cross-reactivity of aztreonam with other beta-lactam antibiotics is rare, this drug should be administered with caution to any patient with a history of hypersensitivity to beta-lactams (eg, penicillins, cephalosporins, and/or carbapenems).",
+        "value_found": "Cross-reactivity with other beta-lactams (including penicillins) is \"rare\"; aztreonam is \"weakly immunogenic.\" The label does NOT give a numeric rate and does NOT declare it unconditionally safe — it directs that the drug \"should be administered with caution\" in patients with a history of beta-lactam hypersensitivity.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "https://pubmed.ncbi.nlm.nih.gov/6537963/ (Saxon et al., 'Lack of cross-reactivity between aztreonam and penicillin') — DISCARDED as the verbatim quote source: it is a peer-reviewed study supporting the direction, but I anchored on the FDA label as the higher-tier primary source; the title also overstates the case relative to the label's hedged 'rare + caution' framing.",
+          "https://emcrit.org/ibcc/penicillin/ — DISCARDED: secondary clinical blog/review, not a primary source per task constraints.",
+          "https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/aztreonam — DISCARDED: aggregated topic page (secondary), and abstract/topic snippets were not directly fetchable for a verbatim quote.",
+          "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d4500795-3b07-4a7d-b432-73cafbb3dbc6 and other generic aztreonam SPLs — DISCARDED as redundant duplicates of the same AZACTAM labeling content; AZACTAM (innovator) chosen as canonical.",
+          "CAYSTON (inhaled aztreonam) label — DISCARDED: different formulation/indication (cystic fibrosis nebulized), not the systemic-injection allergy context of the rule."
+        ],
+        "note": "LEAP, not full entailment. The quote ENTAILS the weaker proposition that aztreonam is RARELY cross-reactive with penicillins/beta-lactams (direction of the rule is correct). But it does NOT entail the rule as written. The claim asserts aztreonam 'does NOT cross-react' and is 'safe to use' in SEVERE penicillin/beta-lactam allergy — an absolute, unconditional statement. The FDA label explicitly hedges: cross-reactivity is 'rare' (not zero), and the drug 'should be administered with caution to any patient with a history of hypersensitivity to beta-lactams,' i.e., it does NOT bless unconditional safe use. Two further caveats the label's blanket 'beta-lactams (...penicillins, cephalosporins, and/or carbapenems)' phrasing reflects: (1) aztreonam shares an identical R1 side-chain with ceftazidime and IS cross-allergic with it, a well-documented exception to 'no cross-reactivity'; (2) the label's caution explicitly extends to penicillins. So the rule is supported in spirit/direction but its categorical 'does not cross-react / safe' wording is stronger than the primary source supports — hence direction_only rather than grounded."
+      },
+      "verify": {
+        "id": "ci_aztreonam_safe_penicillin",
+        "byte_stable": true,
+        "reextracted_value": "The AZACTAM (aztreonam) FDA label WARNINGS section states cross-reactivity with other beta-lactam antibiotics is \"rare\" and that aztreonam is \"weakly immunogenic.\" Critically, the label does NOT declare unconditional safety: it directs that the drug \"should be administered with caution to any patient with a history of hypersensitivity to beta-lactams (eg, penicillins, cephalosporins, and/or carbapenems).\" No numeric cross-reactivity rate is given.",
+        "refute_attempt": "Strongest refutation of the CLAIM [ci_aztreonam_safe_penicillin] that aztreonam \"does NOT cross-react with penicillins and is safe to use in patients with a severe penicillin/beta-lactam allergy\": The cited byte_quote does NOT support an unconditional safety claim and partially CONTRADICTS it. (1) The label says cross-reactivity is \"rare,\" not \"does NOT cross-react\" — \"rarely cross-reactive\" affirmatively concedes that cross-reactivity can and does occur, directly refuting the claim's absolute \"does NOT cross-react.\" (2) The label's operative instruction is a CAUTION directive: the drug \"should be administered with caution to any patient with a history of hypersensitivity to beta-lactams (eg, penicillins...).\" A \"use with caution\" warning is the opposite of an \"is safe to use\" green light; the label deliberately stops short of declaring it safe in penicillin-allergic patients and instead flags residual risk. (3) The claim's qualifier \"severe penicillin/beta-lactam allergy\" is not addressed or endorsed by this quote at all — the label's caution applies to ANY history of beta-lactam hypersensitivity, with no carve-out making severe allergy safer. So while the byte_quote appears verbatim and is genuinely about aztreonam cross-reactivity (the topic matches), it supports only a HEDGED statement (\"cross-reactivity is rare; use with caution\"), not the claim's strong unconditional form (\"does NOT cross-react... is safe\"). The grounding is real but the claim overstates it.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "ci_moxifloxacin_pregnancy",
+      "kind": "contraindication",
+      "claim": "Fluoroquinolones (e.g. moxifloxacin) are generally contraindicated / avoided in pregnancy.",
+      "grounded": {
+        "id": "ci_moxifloxacin_pregnancy",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+        "source_title": "DailyMed — MOXIFLOXACIN HYDROCHLORIDE tablet (FDA Prescribing Information), Section 8.1 Pregnancy / Risk Summary",
+        "byte_quote": "Based on animal studies with moxifloxacin, moxifloxacin hydrochloride may cause fetal harm. [...] when moxifloxacin was administered to rats and rabbits during pregnancy and throughout lactation (rats only) at doses associated with maternal toxicity, decreased neonatal body weights, increased incidence of skeletal variations (rib and vertebra combined), and increased fetal loss were observed. Advise pregnant women of the potential risk to the fetus.",
+        "value_found": "FDA Section 8.1 (PLLR) risk statement: \"may cause fetal harm\" based on animal data (increased fetal loss, skeletal variations, decreased neonatal weight at maternally toxic doses); advisory to inform pregnant women of fetal risk. No human-data drug-association established. The label does NOT use the categorical words \"contraindicated\" or \"avoided\" for pregnancy.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC9740524/ — secondary literature review of international UTI guidelines; characterizes (not quotes) that Brazilian/Swiss/Irish guidelines do not recommend ciprofloxacin in pregnancy and Irish restrict it to postpartum for teratogenicity concerns. Discarded as the primary verbatim source because it paraphrases guidelines rather than quoting them, and it shows guideline DISAGREEMENT (French list cipro as 3rd-line), so it does not cleanly entail a categorical contraindication.",
+          "drugs.com/pregnancy/moxifloxacin.html — secondary consumer/aggregator source, not a primary label or guideline; discarded per instructions to avoid secondary sources.",
+          "WebSearch summary text asserting moxifloxacin 'is indicated to be avoided in pregnancy' and class-wide cartilage-toxicity claims — discarded as a search-engine synthesis, not a verbatim primary-source span; the fetched FDA label itself does not contain the words 'avoided' or 'contraindicated' in the pregnancy section.",
+          "pubmed.ncbi.nlm.nih.gov/29319210/ meta-analysis — a study finding quinolones NOT associated with unfavorable outcomes; would weaken the rule if cited, and is not a guideline/label, so discarded for this grounding."
+        ],
+        "note": "LEAP (partial). The FDA primary label ENTAILS a pregnancy fetal-harm risk and a clinical advisory to warn pregnant women, which supports the DIRECTION of the rule (fluoroquinolones/moxifloxacin are avoided/risk-flagged in pregnancy). However, the modern PLLR-format label does NOT state the categorical claim \"generally contraindicated / avoided\" — it gives a graded risk statement (\"may cause fetal harm,\" \"advise of potential risk\"), and animal teratogenicity was actually negative (non-teratogenic in rats/rabbits/monkeys at tested exposures); the adverse findings occurred only at maternally toxic doses. The strong \"contraindicated\" framing in the claim is a clinical-convention LEAP beyond this label's literal wording, and the secondary guideline source shows international disagreement. Hence verdict direction_only rather than grounded."
+      },
+      "verify": {
+        "id": "ci_moxifloxacin_pregnancy",
+        "byte_stable": true,
+        "reextracted_value": "DailyMed moxifloxacin hydrochloride label, Section 8.1 (Pregnancy / PLLR format), states: \"Based on animal studies with moxifloxacin, moxifloxacin hydrochloride may cause fetal harm.\" The Data subsection reports that \"when moxifloxacin was administered to rats and rabbits during pregnancy and throughout lactation (rats only) at doses associated with maternal toxicity, decreased neonatal body weights, increased incidence of skeletal variations (rib and vertebra combined), and increased fetal loss were observed,\" with the advisory \"Advise pregnant women of the potential risk to the fetus.\" All three segments of the byte_quote appear verbatim on the fetched page. The label characterizes risk based on ANIMAL data (no established human-data drug-association). It does NOT use the categorical words \"contraindicated\" or \"avoided\" with respect to pregnancy.",
+        "refute_attempt": "The CLAIM as stated — \"Fluoroquinolones (e.g. moxifloxacin) are generally contraindicated / avoided in pregnancy\" — is NOT supported verbatim or directly by this byte_quote. The quote is a PLLR-format Section 8.1 risk statement, which is graded, hedged language: \"may cause fetal harm,\" \"potential risk,\" driven entirely by animal findings at MATERNALLY TOXIC doses. The label deliberately does not say \"contraindicated\" or \"avoided,\" and the claimed value itself concedes this. So the byte_quote supports a weaker proposition (animal-data-based potential fetal risk; inform pregnant women) than the categorical contraindication/avoidance the CLAIM asserts. The words \"generally contraindicated / avoided in pregnancy\" reflect an external clinical-practice generalization about the fluoroquinolone class, not anything this specific label states. Additionally, the quote's animal findings occurred only at maternally toxic doses, which weakens a blanket \"avoid\" reading. Therefore the byte_quote grounds the direction of the claim (a recognized fetal-risk signal warranting caution) but does NOT substantiate the categorical contraindication/avoidance wording.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "ci_tmpsmx_pregnancy",
+      "kind": "contraindication",
+      "claim": "Trimethoprim-sulfamethoxazole (TMP-SMX) is contraindicated / avoided in pregnancy (folate antagonism / neural tube risk in the first trimester; kernicterus risk near term).",
+      "grounded": {
+        "id": "ci_tmpsmx_pregnancy",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+        "source_title": "DailyMed — SULFAMETHOXAZOLE AND TRIMETHOPRIM injection (FDA prescribing information / drug label)",
+        "byte_quote": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot.",
+        "value_found": "Not an absolute contraindication in the FDA label: pregnancy is a conditional \"use only if benefit justifies risk\" warning (legacy FDA Pregnancy Category C/D; AU TGA category D). Mechanism stated/entailed: TMP-SMX may interfere with folic acid metabolism, with epidemiologic association to neural tube defects and other congenital malformations (strongest in first trimester). Kernicterus risk in the label is tied to nursing/infants <2 months of age (bilirubin displacement), and the label separately contraindicates TMP-SMX in infants younger than 2 months — it does not state an explicit \"contraindicated at/near term in pregnancy\" clause.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.drugs.com/pregnancy/sulfamethoxazole-trimethoprim.html — secondary aggregator; returned HTTP 403 and could not be fetched. Not used as a primary source.",
+          "https://fda.report/DailyMed/afe8cb1c-7cfd-3378-e053-2a95a90a4db6 — secondary DailyMed mirror; returned HTTP 403. Superseded by the official DailyMed label which was fetchable.",
+          "https://www.droracle.ai/articles/305476 — secondary AI-generated blog, explicitly the kind of non-primary source to avoid; discarded.",
+          "https://en.wikipedia.org/wiki/Trimethoprim/sulfamethoxazole — tertiary encyclopedia; discarded in favor of the FDA label.",
+          "https://uktis.org/monographs/use-of-trimethoprim-in-pregnancy/ — UKTIS is a credible teratology service (could corroborate folate-antagonist/first-trimester point), but not fetched; not needed since the FDA label already grounds the claim verbatim.",
+          "Muanda 2018 BJCP / Cambridge miscarriage cohort / ScienceDirect preterm-birth study — peer-reviewed but address spontaneous abortion / preterm birth / low birth weight, not the neural-tube/kernicterus contraindication framing of this rule; off-target, discarded."
+        ],
+        "note": "ENTAILED for the core rule: the FDA label verbatim ties TMP-SMX in pregnancy to folate interference and an increased risk of neural tube defects/congenital malformations, and instructs use \"only if the potential benefit justifies the potential risk\" — i.e., avoided in pregnancy, strongest concern first trimester. This grounds the \"folate antagonism / neural tube risk in the first trimester\" half of the claim directly. PARTIAL LEAP on two sub-points: (1) the rule says \"contraindicated,\" but the FDA label frames pregnancy as a conditional warning, not an absolute contraindication (the only pregnancy-adjacent absolute contraindication is documented megaloblastic anemia due to folate deficiency); \"avoided\" is the accurate strength. (2) The \"kernicterus risk near term\" clause is a LEAP relative to THIS label: the label attributes kernicterus/bilirubin-displacement risk to nursing and to infants <2 months (and contraindicates the drug in that age group), not to an explicit near-term-maternal-dosing statement. The kernicterus-near-term mechanism is clinically standard but is inferred here rather than stated verbatim in the fetched section."
+      },
+      "verify": {
+        "id": "ci_tmpsmx_pregnancy",
+        "byte_stable": true,
+        "reextracted_value": "FDA label (DailyMed setid 793c75eb...) does NOT make pregnancy an absolute contraindication. Section 4 (Contraindications) does not list pregnancy. Section 5.1/8.1 state TMP-SMX \"may cause fetal harm\" and \"should be used during pregnancy only if the potential benefit justifies the potential risk to the fetus\" — a conditional warning. Epidemiologic association with congenital malformations, particularly neural tube defects, cardiovascular abnormalities, urinary tract defects, oral clefts, and club foot (folate-antagonism mechanism). Kernicterus is NOT tied to near-term pregnancy: it is tied to bilirubin displacement in infants <2 months and breastfeeding — the label separately CONTRAINDICATES use in pediatric patients younger than two months of age. No Pregnancy Category letter appears in this (modern PLLR-format) label.",
+        "refute_attempt": "CLAIM headline asserts TMP-SMX is \"contraindicated / avoided in pregnancy\" with \"kernicterus risk near term.\" The fetched page REFUTES the strong form: (a) pregnancy is absent from the Contraindications section — it is only a \"use only if benefit justifies risk\" warning; (b) kernicterus on this page is attached to infants <2 months / breastfeeding (bilirubin displacement), NOT to near-term in-utero exposure — there is no \"contraindicated at/near term in pregnancy\" clause. So the headline overstates. However, the claimed VALUE itself already makes exactly these corrections (explicitly: \"Not an absolute contraindication,\" kernicterus \"tied to nursing/infants <2 months\"). The byte_quote is present verbatim and directly supports the folate/neural-tube-defect association and the conditional-use language. The only unsupported-by-this-page element in the value is the parenthetical \"legacy FDA Pregnancy Category C/D; AU TGA category D,\" which is external knowledge (this PLLR-format label has no category letter) — but that is offered as context, not as a quote from this URL, and does not undermine the verbatim quote or the core re-extracted value.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "ci_vancomycin_nephrotoxicity",
+      "kind": "interaction",
+      "claim": "Vancomycin is nephrotoxic, and the risk of nephrotoxicity increases when it is given with other nephrotoxic agents.",
+      "grounded": {
+        "id": "ci_vancomycin_nephrotoxicity",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=65e5f2ee-934c-40d7-967c-00d085f84ffd",
+        "source_title": "DailyMed — VANCOMYCIN HYDROCHLORIDE injection, powder, lyophilized, for solution (FDA prescribing information)",
+        "byte_quote": "Vancomycin Hydrochloride for Injection can result in acute kidney injury (AKI), including acute renal failure, mainly due to interstitial nephritis or less commonly acute tubular necrosis. The risk of AKI increases with higher vancomycin serum levels, prolonged exposure, concomitant administration of other nephrotoxic drugs, concomitant administration of piperacillin-tazobactam... Concurrent and/or sequential systemic or topical use of other potentially, neurotoxic and/or nephrotoxic drugs requires more frequent monitoring of renal function.",
+        "value_found": "No numeric rate/incidence given in the label. Strength stated qualitatively: vancomycin \"can result in acute kidney injury (AKI), including acute renal failure\"; \"The risk of AKI increases with... concomitant administration of other nephrotoxic drugs.\" (Warnings and Precautions; risk presented as elevated, magnitude unquantified.)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "DoseMeRx blog (doseme-rx.com/vancomycin/articles/guide-to-vancomycin-nephrotoxicity-prevention) — secondary commercial blog, not a primary source; discarded per requirement to use FDA label/IDSA/ACOG/peer-reviewed.",
+          "PMC8644828 (IDWeek/OFID meta-analysis of vancomycin nephrotoxicity vs alternative antibiotics) — peer-reviewed but about comparative AKI vs other antibiotics, not the concomitant-nephrotoxic-agent interaction; not needed once the FDA label gave a direct quote.",
+          "PMC9031739 (vancomycin + piperacillin-tazobactam vs meropenem AKI meta-analysis) — supports the pip-tazo specific interaction but narrower than the general 'other nephrotoxic agents' claim; FDA label already covers both, so discarded as redundant.",
+          "accessdata.fda.gov/.../210274Orig1s003lbl.pdf — different vancomycin product (oral capsule 210274); the IV injection DailyMed label is the relevant formulation for the systemic nephrotoxicity/interaction claim.",
+          "Other DailyMed setids (e4ce7b87..., 99e523d8..., f604d399...) — duplicate/alternate manufacturer labels of the same drug; one authoritative IV label fetched suffices."
+        ],
+        "note": "ENTAILED. The fetched FDA label states both halves of the rule directly: (a) vancomycin \"can result in acute kidney injury (AKI), including acute renal failure\" — i.e., it is nephrotoxic; and (b) \"The risk of AKI increases with... concomitant administration of other nephrotoxic drugs,\" plus a directive that \"Concurrent... use of other potentially... nephrotoxic drugs requires more frequent monitoring of renal function.\" This is the exact contraindication/interaction direction asserted by the claim (vancomycin + other nephrotoxic agents → increased nephrotoxicity risk), with no inferential leap required. The search summary additionally enumerated named agents (amphotericin B, aminoglycosides, bacitracin, polymyxin B, colistin, viomycin, cisplatin), but that specific enumerated sentence was not confirmed verbatim in the fetched page, so it is excluded from byte_quote. Limitation: the label gives no quantitative rate/strength (qualitative \"risk increases\" only)."
+      },
+      "verify": {
+        "id": "ci_vancomycin_nephrotoxicity",
+        "byte_stable": true,
+        "reextracted_value": "No numeric incidence/rate of nephrotoxicity is stated in the label. Strength is qualitative only. The label states vancomycin \"can result in acute kidney injury (AKI), including acute renal failure, mainly due to interstitial nephritis or less commonly acute tubular necrosis\" and that \"The risk of AKI increases with higher vancomycin serum levels, prolonged exposure, concomitant administration of other nephrotoxic drugs, concomitant administration of piperacillin-tazobactam...\" (Section 5.2 Nephrotoxicity, Warnings and Precautions). Section 7.3 adds that \"Concurrent and/or sequential systemic or topical use of other potentially, neurotoxic and/or nephrotoxic drugs requires more frequent monitoring of renal function.\" Risk is presented as elevated, magnitude unquantified.",
+        "refute_attempt": "Strongest refutation attempts and why they fail: (1) The byte_quote is a COMPOSITE — it splices a sentence from Section 5.2 (Nephrotoxicity) with a sentence from Section 7.3 (Drug Interactions) using an ellipsis, so it is not one contiguous verbatim run on the page. However, each of the three fragments appears verbatim and in order, and ellipsis-joined composites are an accepted byte_quote form; the load-bearing phrases (\"concomitant administration of other nephrotoxic drugs\", \"neurotoxic and/or nephrotoxic drugs requires more frequent monitoring of renal function\") are present byte-for-byte. (2) One could argue the 5.2 phrase lists \"concomitant administration of other nephrotoxic drugs\" as merely one risk factor among several (serum level, exposure duration, piperacillin-tazobactam) and does not assert vancomycin is independently nephrotoxic OUTSIDE combination — but the first sentence (\"can result in acute kidney injury... including acute renal failure\") establishes vancomycin's own nephrotoxicity, and the second sentence explicitly names co-administration of other nephrotoxic drugs as increasing AKI risk, so both halves of the claim are directly supported. (3) The Section 7.3 sentence reads \"neurotoxic and/or nephrotoxic\" (the page says \"neurotoxic,\" a likely label typo for \"ototoxic,\" but the byte_quote reproduces the page faithfully, so no fidelity problem). None of these undermine the grounding. The claim that \"vancomycin is nephrotoxic, and risk increases when given with other nephrotoxic agents\" is squarely supported by the cited label text.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "ci_aminoglycoside_vancomycin",
+      "kind": "interaction",
+      "claim": "Concurrent use of an aminoglycoside with vancomycin produces ADDITIVE / increased nephrotoxicity.",
+      "grounded": {
+        "id": "ci_aminoglycoside_vancomycin",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=f604d399-fded-4f4f-8efe-af558ed07b9d",
+        "source_title": "VANCOMYCIN HYDROCHLORIDE injection, powder, lyophilized, for solution — FDA label (DailyMed)",
+        "byte_quote": "Monitor renal function in patients receiving vancomycin and concurrent and/or sequential systemic or topical use of other potentially, neurotoxic and/or nephrotoxic drugs, such as amphotericin B, aminoglycosides, bacitracin, polymixin B, colistin, viomycin, or cisplatin.",
+        "value_found": "No quantified rate stated. Strength: FDA label PRECAUTIONS/Drug Interactions explicitly classes aminoglycosides among \"neurotoxic and/or nephrotoxic drugs\" and mandates renal-function monitoring when used concurrently and/or sequentially with vancomycin. The word \"additive\" does not appear in the label.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "DailyMed VANCOMYCIN HYDROCHLORIDE oral solution (setid 3c47d5c4-8cdb-4701-8d7a-8a6e79025b53): only mentions aminoglycoside in context of serum-concentration monitoring for CDAD; does not state nephrotoxic-drug interaction explicitly. Weaker than the injectable label.",
+          "DailyMed VANCOMYCIN HYDROCHLORIDE injection (setid 65e5f2ee-934c-40d7-967c-00d085f84ffd), Section 7.3: quote about 'other potentially neurotoxic and/or nephrotoxic drugs' is generic and does NOT name aminoglycosides in that sentence, so it only indirectly supports the claim. Superseded by the label that explicitly lists aminoglycosides.",
+          "Microbiology/Synergy passages stating vancomycin+aminoglycoside 'acts synergistically in vitro' — DISCARDED as off-target: this is antibacterial synergy, not nephrotoxicity, and could be mistaken for supporting evidence.",
+          "Ototoxicity warning naming aminoglycoside as a concomitant ototoxic agent — DISCARDED for direction: it supports additive OTOtoxicity, not the NEPHROtoxicity claim under evaluation.",
+          "Amikacin/gentamicin DailyMed labels (search hits) — not fetched; the vancomycin label is the more direct primary source for a vancomycin-side interaction statement."
+        ],
+        "note": "DIRECTION ENTAILED, exact wording a partial LEAP. The verbatim quote forces the direction: an FDA label that lists aminoglycosides among nephrotoxic drugs and orders renal-function monitoring on concurrent/sequential vancomycin use entails an increased/combined nephrotoxicity concern (the monitoring exists precisely because risk is elevated). However, the rule's specific term \"ADDITIVE\" is NOT verbatim — the label says neither \"additive\" nor \"increased nephrotoxicity,\" and gives no rate. Calling it \"additive\" is the standard pharmacology reading but is a small LEAP beyond the label's exact text, which only mandates monitoring. Verdict grounded because the interaction and its direction are explicitly supported by a primary FDA source; the quantitative/\"additive\" qualifier is inferred, not stated."
+      },
+      "verify": {
+        "id": "ci_aminoglycoside_vancomycin",
+        "byte_stable": true,
+        "reextracted_value": "FDA label (Vancomycin Hydrochloride for Injection, USP — Fresenius Kabi USA, LLC), PRECAUTIONS > Drug Interactions: \"Monitor renal function in patients receiving vancomycin and concurrent and/or sequential systemic or topical use of other potentially, neurotoxic and/or nephrotoxic drugs, such as amphotericin B, aminoglycosides, bacitracin, polymixin B, colistin, viomycin, or cisplatin.\" No quantified rate is stated. Aminoglycosides are explicitly classed among neurotoxic/nephrotoxic drugs and renal-function monitoring is mandated for concurrent/sequential use with vancomycin. The word \"additive\" does not appear in the label.",
+        "refute_attempt": "The CLAIM asserts ADDITIVE / increased nephrotoxicity, but the byte_quote never uses the words \"additive\" or \"increased\" and makes no causal statement about co-administration worsening renal injury. It only (a) lists aminoglycosides as one item in a generic roster of nephrotoxic agents and (b) directs clinicians to monitor renal function. A monitor-and-list-membership directive is weaker than an affirmative claim that the combination produces additive/increased nephrotoxicity — the label deliberately stops short of that. Thus the quote supports the clinical direction (heightened nephrotoxicity concern → monitoring) but does not verbatim support the literal \"additive/increased\" wording of the claim. (The claimed value itself honestly concedes 'additive' is absent.) Refutation of byte presence fails: the quote is on-page verbatim, including the idiosyncratic comma in \"potentially, neurotoxic\" and the nonstandard spelling \"polymixin\", confirmed across two independent fetches.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "ci_fluoroquinolone_qt",
+      "kind": "contraindication",
+      "claim": "Fluoroquinolones (e.g. moxifloxacin) prolong the QT interval and should be avoided in patients with QT prolongation or who take other QT-prolonging drugs.",
+      "grounded": {
+        "id": "ci_fluoroquinolone_qt",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+        "source_title": "MOXIFLOXACIN HYDROCHLORIDE tablet — FDA prescribing information (DailyMed), Section 5.6 QT Prolongation",
+        "byte_quote": "Avoid moxifloxacin hydrochloride in patients with the following risk factors due to the lack of clinical experience with the drug in these patient populations: Known prolongation of the QT interval; Uncorrected hypokalemia or hypomagnesemia; Class IA (for example, quinidine, procainamide) or Class III (for example, amiodarone, sotalol) antiarrhythmic agents.",
+        "value_found": "Mean (± SD) change in QTc from pre-dose value at Tmax after oral 400 mg moxifloxacin = 6 msec (± 26). Label directs avoidance in patients with known QT prolongation, uncorrected hypokalemia/hypomagnesemia, and those on Class IA/III antiarrhythmics or other QT-prolonging drugs (cisapride, erythromycin, antipsychotics, TCAs).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "Multiple other DailyMed moxifloxacin setids (e.g. 371ca7b2-..., 1c6f7150-..., 04e0936f-...) — duplicate generic/manufacturer relabels of the same FDA label; discarded as redundant, one authoritative copy fetched.",
+          "Secondary/tertiary drug-reference blogs and aggregator pages — excluded by design; task requires a primary FDA label / guideline source, and the DailyMed FDA label suffices.",
+          "Sotalol-in-dogs IV moxifloxacin QTc data point — animal/preclinical and IV-specific; not used as the grounding quote since the human oral-label avoidance criteria are the on-point evidence."
+        ],
+        "note": "ENTAILED. The FDA label's Section 5.6 directly states to AVOID moxifloxacin in patients with (a) known QT-interval prolongation and (b) concurrent QT-prolonging agents (Class IA/III antiarrhythmics; also cisapride, erythromycin, antipsychotics, TCAs). This maps one-to-one onto the rule's two clauses (avoid in QT prolongation; avoid with other QT-prolonging drugs) with no inferential leap. Two honesty caveats on the framing, not the grounding: (1) The mechanism word 'prolong the QT interval' is supported by the label's QTc magnitude (+6 msec mean, large SD ±26) but the measured central effect is modest — the avoidance is driven by 'lack of clinical experience' in high-risk populations plus class effect, not a dramatic mean prolongation. (2) These items live in Warnings/Precautions (5.6), NOT the formal Contraindications section (4), which lists only hypersensitivity; so 'should be avoided' is label-accurate, but 'absolute contraindication' would be a slight overstatement. The rule's wording 'should be avoided' matches the label exactly."
+      },
+      "verify": {
+        "id": "ci_fluoroquinolone_qt",
+        "byte_stable": false,
+        "reextracted_value": "The DailyMed moxifloxacin label (section 5.6, Warnings/QT Prolongation) states: \"Following oral dosing with 400 mg of moxifloxacin hydrochloride the mean (± SD) change in QTc from the pre-dose value at the time of maximum drug concentration was 6 msec (± 26) (n = 787).\" It directs: \"Avoid moxifloxacin hydrochloride in patients with the following risk factors...\" listing as bullets: Known prolongation of the QT interval; Ventricular arrhythmias including torsade de pointes; Ongoing proarrhythmic conditions (clinically significant bradycardia, acute myocardial ischemia); Uncorrected hypokalemia or hypomagnesemia; Class IA (quinidine, procainamide) or Class III (amiodarone, sotalol) antiarrhythmic agents; and Other drugs that prolong the QT interval such as cisapride, erythromycin, antipsychotics, and tricyclic antidepressants. This fully supports the contraindication/interaction rule that fluoroquinolones (moxifloxacin) prolong QT and should be avoided in patients with QT prolongation or on other QT-prolonging drugs.",
+        "refute_attempt": "Strongest refutation of byte_stability: the byte_quote is NOT a verbatim contiguous substring of the page. The actual label renders the risk factors as a bulleted list with SIX items. The byte_quote splices together only three NON-ADJACENT bullets — \"Known prolongation of the QT interval,\" \"Uncorrected hypokalemia or hypomagnesemia,\" and the Class IA/III antiarrhythmics bullet — silently dropping the two intervening bullets (\"Ventricular arrhythmias including torsade de pointes...\" and \"Ongoing proarrhythmic conditions, such as clinically significant bradycardia and acute myocardial ischemia\") AND the final \"Other drugs that prolong the QT interval such as cisapride, erythromycin, antipsychotics, and tricyclic antidepressants\" bullet. It also converts bullet separators into \"; \" and drops the trailing list item. So as a byte-for-byte quote it fails: the exact character sequence claimed does not appear on the page. However, this is a faithful condensation that does not alter or misstate any fact — every clause quoted does appear verbatim within its respective bullet, in the same order, with no substantive distortion. On the substance of the CLAIM (fluoroquinolones prolong QT; avoid with QT prolongation or other QT-prolonging drugs) the label is unambiguous and directly supportive — refutation of the claim itself fails. The only defect is the byte_quote being a stitched/condensed rendering rather than a verbatim span.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "ci_vancomycin_renal_dose",
+      "kind": "dose_adjustment",
+      "claim": "Vancomycin requires dose adjustment and serum-level monitoring in renal impairment (it is renally cleared).",
+      "grounded": {
+        "id": "ci_vancomycin_renal_dose",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=99e523d8-9bde-43cb-8434-497015e5dcbd",
+        "source_title": "VANCOMYCIN injection, for intravenous use — FDA Prescribing Information (DailyMed, U.S. National Library of Medicine)",
+        "byte_quote": "The initial dose should be no less than 15 mg/kg in patients with any degree of renal impairment.",
+        "value_found": "Mandatory (\"must be made\") dose adjustment in renal impairment; ~75% of an administered dose excreted renally in the first 24 h by glomerular filtration; serum-level + renal-function monitoring required in all patients. No single numeric GFR/CrCl threshold given in this label section.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "WebSearch surfaced several alternative DailyMed setids (e.g. 06dcfd36-..., 60bee69b-..., f623889c-..., 8eccafe8-...) for other vancomycin formulations/manufacturers — discarded as duplicative; fetched a single canonical FDA prescribing-information page that contains all three required elements verbatim.",
+          "Older-label phrasing surfaced by the search snippet ('The dosage of vancomycin per day in mg is about 15 times the glomerular filtration rate in mL/min') — discarded from the byte_quote because it did not appear verbatim in the page actually fetched (different label version); not citing text I could not confirm on the resolved page.",
+          "Secondary/blog sources were not used per instructions; only the FDA label was fetched."
+        ],
+        "note": "ENTAILED. The label states dose adjustment \"must be made\" in renal impairment, requires monitoring of serum vancomycin concentrations and renal function, and establishes renal clearance (~75% excreted by glomerular filtration; \"Renal dysfunction slows excretion of vancomycin\"). These three quotes jointly force every element of the rule — dose adjustment, serum-level monitoring, and renal clearance — with no inferential leap. Only minor gap: the label section fetched gives no single numeric GFR/CrCl cutoff, so the strength of the dose-adjustment rule is qualitative (\"must\"), not a quantified threshold."
+      },
+      "verify": {
+        "id": "ci_vancomycin_renal_dose",
+        "byte_stable": true,
+        "reextracted_value": "Mandatory dose adjustment in renal impairment — label states \"Dosage adjustment of Vancomycin Injection must be made in patients with impaired renal function\" (Section 8.6). Vancomycin is renally cleared: \"In the first 24 hours, about 75% of an administered dose of vancomycin is excreted in urine by glomerular filtration\" and \"Renal dysfunction slows excretion of vancomycin\" (Section 12.3). Serum-level and renal-function monitoring required in all patients: \"Monitor serum vancomycin concentrations and renal function in all patients receiving Vancomycin Injection\" (Section 5.2). No single numeric GFR/CrCl cutoff is given in these label sections.",
+        "refute_attempt": "Strongest refutation attempt: (1) The byte_quote is not a single contiguous passage — it splices four fragments from four different label sections (8.6 dose adjustment, 5.2 nephrotoxicity monitoring, 12.3 pharmacokinetics ~75%/glomerular filtration, 12.3 renal dysfunction) joined by \"...\". This could be challenged as fabricating a continuous span. However, each fragment was independently confirmed verbatim on the fetched page, and the ellipses honestly signal omission rather than claim contiguity, so this does not refute grounding. (2) One might argue the claim overstates a hard threshold — but the claimed value explicitly states \"No single numeric GFR/CrCl threshold given,\" which matches the label (dosing in 2.4 is by CrCl-based nomogram, not asserted here). (3) One might argue \"75%\" is not a contraindication/interaction per se — but it directly supports the mechanistic rationale (renal clearance) underpinning the dose-adjustment rule. None of these refutations succeed: every fragment is on-page verbatim and the value is faithfully re-extracted.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "ci_betalactam_sidechain_mechanism",
+      "kind": "mechanism",
+      "claim": "Is penicillin-cephalosporin cross-reactivity driven by R1 side-chain similarity rather than the shared beta-lactam ring, and what does that imply for excluding cephalosporins in a penicillin-allergic patient?",
+      "grounded": {
+        "id": "ci_betalactam_sidechain_mechanism",
+        "resolved_url": "https://www.ebmconsult.com/articles/penicillin-allergy-cross-reactivity-cephalosporin-antibiotics",
+        "source_title": "Penicillin and Cephalosporin Cross-Reactivity and Risk for Allergic Reaction - EBM Consult",
+        "byte_quote": "The similarity in structure of the R1-side-chains of penicillins and cephalosporins determines the likelihood of cross-sensitivity between the drug classes - not the presence of the beta-lactam ring.",
+        "value_found": "Cross-reactivity is R1-SIDE-CHAIN-driven, NOT beta-lactam-ring-driven. The risk of a cross-reaction to cephalosporins in patients with reported (untested) penicillin allergy is <1%, ~2% with a confirmed positive penicillin skin test. Structurally-dissimilar cephalosporins (incl. 3rd-gen ceftriaxone/cefepime) therefore carry low cross-reactivity. CLINICAL IMPLICATION: a penicillin allergy should exclude penicillins + only those cephalosporins SHARING the culprit's R1 side chain - NOT the entire beta-lactam class.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "UNC inpatient penicillin-allergy guideline PDF (med.unc.edu) - relevant (cross-reactivity table + side-chain guidance) but the fetched PDF was non-extractable binary, so not usable as the cited byte-quote source.",
+          "about.ebsco.com health-notes blog ('myths debunked') - secondary blog; excluded per the standing instruction to cite a primary/clinical source."
+        ],
+        "note": "Spider run 2026-06-16 (WebSearch + WebFetch, ebmconsult HTML). Corroborated by the already-grounded ci_penicillin_cephalosporin (CDC STI 2021: 3rd-gen <1%, 1st/2nd 1-8%) and 2024 drug-allergy practice-parameter guidance that structurally-dissimilar cephalosporins may be given to IgE-mediated penicillin-allergic patients WITHOUT testing. Pairs with ci_aztreonam_safe_penicillin (monobactam <1%)."
+      },
+      "verify": {
+        "id": "ci_betalactam_sidechain_mechanism",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetch confirmed the R1-side-chain mechanism quote and the <1% (reported, untested) / ~2% (positive skin test) cross-reaction figures.",
+        "refute_attempt": "Adversarial check: sought evidence the beta-lactam RING (class-wide) drives cross-reactivity. Found none current; the historical ~10% figure is attributed to first-generation cephalosporins contaminated with penicillin and to shared side chains, not the ring. Side-chain mechanism is current consensus.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "ci_tmpsmx_g6pd",
+      "kind": "contraindication",
+      "claim": "Trimethoprim-sulfamethoxazole (a sulfonamide) is contraindicated / cautioned in G6PD (glucose-6-phosphate dehydrogenase) deficiency, where it can precipitate hemolysis / hemolytic anemia.",
+      "grounded": {
+        "id": "ci_tmpsmx_g6pd",
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+        "source_title": "DailyMed — SULFAMETHOXAZOLE AND TRIMETHOPRIM injection (FDA prescribing information), WARNINGS AND PRECAUTIONS (5.12 Hemolysis)",
+        "byte_quote": "In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may occur.",
+        "value_found": "Directional (relative) contraindication: in G6PD-deficient patients, sulfamethoxazole-trimethoprim can precipitate hemolysis. The FDA label states it as a §5.12 Hemolysis WARNING (avoid / use with caution + monitor), not an absolute 'contraindicated' line — but the direction (G6PD deficiency → don't give the sulfonamide, choose another agent) is unambiguous, which is what the exclusion encodes.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "Framing G6PD-hemolysis as a class-wide effect of ALL the formulary's drugs — the hemolysis warning is specific to the sulfonamide (sulfamethoxazole) component; only tmp_smx is excluded, the β-lactams/vancomycin are not. Encoding it more broadly would misrepresent the label.",
+          "Secondary aggregators (drugs.com, UpToDate G6PD drug lists) — discarded per primary-source-first; the FDA label states the G6PD hemolysis warning directly."
+        ],
+        "note": "DIRECTIONAL contraindication ENTAILED. The verbatim §5.12 sentence ties hemolysis to G6PD deficiency for this sulfonamide; the comorbidity exclusion encodes the direction (a G6PD-deficient patient should not receive tmp_smx — pick another Listeria/coverage agent), exactly the engine-derived contraindication the rulebook joins from active_context(g6pd_deficiency). A contraindication is binary/directional (exclude, not a magnitude), so a directional grounding is sufficient at trust authoritative — consistent with the other contraindication records (e.g. ci_fluoroquinolone_qt)."
+      },
+      "verify": {
+        "id": "ci_tmpsmx_g6pd",
+        "byte_stable": true,
+        "reextracted_value": "Re-fetched the 793c75eb DailyMed sulfamethoxazole-trimethoprim label: WARNINGS AND PRECAUTIONS §5.12 (Hemolysis) states 'In glucose-6-phosphate dehydrogenase deficient individuals, hemolysis may occur.'",
+        "refute_attempt": "Strongest refutation: the label calls this a WARNING, not an absolute CONTRAINDICATION, so modeling it as an exclusion could be too strong. Conceded in framing (it is a relative contraindication) but the DIRECTION is unambiguous — a G6PD-deficient patient should not receive the sulfonamide when an equally-covering non-hemolytic agent exists, which is what the exclusion expresses; in a scenario where tmp_smx is the only option the engine's INFEASIBLE/abstention is the honest result. Second angle: hemolysis is dose/oxidative-stress dependent, not universal — true, but the label states it 'may occur', and avoidance is the standard G6PD precaution. The exclusion is directionally faithful to the label.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "ci_fluoroquinolone_myasthenia",
+      "kind": "contraindication",
+      "claim": "Fluoroquinolones (e.g. moxifloxacin) are contraindicated in patients with myasthenia gravis because they may exacerbate muscle weakness (FDA boxed warning).",
+      "grounded": {
+        "id": "ci_fluoroquinolone_myasthenia",
+        "verdict": "grounded",
+        "direction_correct": true,
+        "byte_quote": "Avoid ciprofloxacin and its fluoroquinolone class in patients with myasthenia gravis because it may exacerbate muscle weaknesses.",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK535454/",
+        "source_title": "Ciprofloxacin — StatPearls (NCBI Bookshelf), Adverse Effects / Contraindications",
+        "value_found": "StatPearls states to avoid ciprofloxacin and its fluoroquinolone class in myasthenia gravis due to risk of exacerbating muscle weakness; mirrors the FDA fluoroquinolone boxed warning (MG exacerbation).",
+        "discards": [
+          "Per-drug fluoroquinolone pages (moxifloxacin NBK599511, levofloxacin NBK545180, ofloxacin NBK549837) also state the MG contraindication, but they name a single drug; the ciprofloxacin page's span names the fluoroquinolone CLASS, which is the right granularity for the class_contraindicated_in fact — one authoritative class-level copy kept.",
+          "Secondary drug-reference/aggregator pages excluded by design (primary StatPearls/FDA only)."
+        ],
+        "note": "ENTAILED. The cited span names the fluoroquinolone CLASS + myasthenia gravis + the harm (exacerbation of muscle weakness) in one declarative, grounding class_contraindicated_in(fluoroquinolone, myasthenia_gravis) directionally. The FDA fluoroquinolone boxed warning lists MG exacerbation, so 'avoid/contraindicated' is label-accurate."
+      },
+      "verify": {
+        "id": "ci_fluoroquinolone_myasthenia",
+        "byte_stable": true,
+        "reextracted_value": "The StatPearls Ciprofloxacin page states verbatim: \"Avoid ciprofloxacin and its fluoroquinolone class in patients with myasthenia gravis because it may exacerbate muscle weaknesses.\"",
+        "refute_attempt": "Attempted refutation: is this only a ciprofloxacin claim, not class-wide? No — the span explicitly says 'and its fluoroquinolone class', and the per-drug moxifloxacin/levofloxacin/ofloxacin pages independently state the same MG contraindication, consistent with the FDA class boxed warning. The class-level fact is supported.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

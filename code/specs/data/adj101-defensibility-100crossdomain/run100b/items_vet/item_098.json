@@ -1,0 +1,8 @@
+{
+ "idx": 98,
+ "policy": "An employer that fails to carry required workers' compensation insurance must pay a penalty equal to double the benefits owed, except where the employer is a sole proprietor with no employees other than the owner, in which case no coverage is required and no penalty applies.",
+ "scenario": "Raj operates a one-person landscaping business as a sole proprietor. He has no employees and works alone. He carries no workers' compensation insurance. After Raj himself was injured, a state auditor questioned his lack of coverage and proposed the double-benefits penalty.",
+ "question": "Does the double-benefits penalty apply to Raj?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "no penalty applies"
+}

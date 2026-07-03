@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 16 \u2014 cardiac hemodynamic parameters from a single bedside assessment (a NEW organ system: cardiology). From three stated quantities (stroke volume SV, heart rate HR, body-surface area BSA) compute the cardiac output (CO = SV*HR), cardiac index (CI = SV*HR/BSA), or stroke-volume index (SVI = SV/BSA). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a product AND an indexing division \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every parameter is built only from the three observed quantities via * and / \u2014 no constant leaks. The five options are a family over the same quantities, so the distractors are exactly the slips students make: multiplying by BSA instead of indexing (dividing) by it, or indexing the heart rate instead of the stroke volume.",
+  "items": [
+    {
+      "id": "r16co-01",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 70 mL, a heart rate of 72 bpm, and a body-surface area of 1.7 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(70)\nobserve hr(72)\nobserve bsa(1.7)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5040,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2964.7058823529414,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 41.1764705882353,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 119.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.35294117647059,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r16co-02",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 70 mL, a heart rate of 72 bpm, and a body-surface area of 1.7 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(70)\nobserve hr(72)\nobserve bsa(1.7)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5040,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2964.7058823529414,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 41.1764705882353,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 119.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.35294117647059,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r16co-03",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 70 mL, a heart rate of 72 bpm, and a body-surface area of 1.7 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(70)\nobserve hr(72)\nobserve bsa(1.7)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5040,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2964.7058823529414,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 41.1764705882353,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 119.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.35294117647059,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r16co-04",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 60 mL, a heart rate of 80 bpm, and a body-surface area of 2.0 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(60)\nobserve hr(80)\nobserve bsa(2.0)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2400.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r16co-05",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 60 mL, a heart rate of 80 bpm, and a body-surface area of 2.0 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(60)\nobserve hr(80)\nobserve bsa(2.0)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4800,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2400.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r16co-06",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 60 mL, a heart rate of 80 bpm, and a body-surface area of 2.0 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(60)\nobserve hr(80)\nobserve bsa(2.0)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4800,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2400.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r16co-07",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 80 mL, a heart rate of 60 bpm, and a body-surface area of 1.9 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(80)\nobserve hr(60)\nobserve bsa(1.9)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2526.315789473684,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4800,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 42.10526315789474,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 152.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.578947368421055,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r16co-08",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 80 mL, a heart rate of 60 bpm, and a body-surface area of 1.9 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(80)\nobserve hr(60)\nobserve bsa(1.9)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4800,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42.10526315789474,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2526.315789473684,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 152.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.578947368421055,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r16co-09",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 80 mL, a heart rate of 60 bpm, and a body-surface area of 1.9 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(80)\nobserve hr(60)\nobserve bsa(1.9)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4800,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2526.315789473684,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 152.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 42.10526315789474,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 31.578947368421055,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r16co-10",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 55 mL, a heart rate of 90 bpm, and a body-surface area of 1.6 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(55)\nobserve hr(90)\nobserve bsa(1.6)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3093.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34.375,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 88.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 56.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4950,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r16co-11",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 55 mL, a heart rate of 90 bpm, and a body-surface area of 1.6 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(55)\nobserve hr(90)\nobserve bsa(1.6)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3093.75,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4950,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 34.375,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 88.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 56.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r16co-12",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 55 mL, a heart rate of 90 bpm, and a body-surface area of 1.6 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(55)\nobserve hr(90)\nobserve bsa(1.6)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4950,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 34.375,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3093.75,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 88.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 56.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r16co-13",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 90 mL, a heart rate of 100 bpm, and a body-surface area of 2.1 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(90)\nobserve hr(100)\nobserve bsa(2.1)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4285.714285714285,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42.857142857142854,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 189.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 47.61904761904762,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r16co-14",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 90 mL, a heart rate of 100 bpm, and a body-surface area of 2.1 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(90)\nobserve hr(100)\nobserve bsa(2.1)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 42.857142857142854,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 189.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4285.714285714285,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 47.61904761904762,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r16co-15",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 90 mL, a heart rate of 100 bpm, and a body-surface area of 2.1 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(90)\nobserve hr(100)\nobserve bsa(2.1)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4285.714285714285,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 189.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 47.61904761904762,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 42.857142857142854,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r16co-16",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 50 mL, a heart rate of 66 bpm, and a body-surface area of 1.5 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(50)\nobserve hr(66)\nobserve bsa(1.5)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3300,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2200.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 75.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 44.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r16co-17",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 50 mL, a heart rate of 66 bpm, and a body-surface area of 1.5 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(50)\nobserve hr(66)\nobserve bsa(1.5)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3300,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2200.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 75.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 44.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r16co-18",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 50 mL, a heart rate of 66 bpm, and a body-surface area of 1.5 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(50)\nobserve hr(66)\nobserve bsa(1.5)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3300,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2200.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33.333333333333336,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 75.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 44.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r16co-19",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 75 mL, a heart rate of 88 bpm, and a body-surface area of 1.8 m^2. What is the patient's cardiac output (CO)?",
+      "program": "observe sv(75)\nobserve hr(88)\nobserve bsa(1.8)\nlet answer = sv * hr\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3666.6666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 41.666666666666664,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 135.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6600,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.888888888888886,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r16co-20",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 75 mL, a heart rate of 88 bpm, and a body-surface area of 1.8 m^2. What is the patient's cardiac index (CI)?",
+      "program": "observe sv(75)\nobserve hr(88)\nobserve bsa(1.8)\nlet answer = sv * hr / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 41.666666666666664,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 135.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 48.888888888888886,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3666.6666666666665,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r16co-21",
+      "qtype": "cardiac_hemodynamic_parameter",
+      "stem": "A hemodynamic assessment shows a stroke volume of 75 mL, a heart rate of 88 bpm, and a body-surface area of 1.8 m^2. What is the patient's stroke-volume index (SVI)?",
+      "program": "observe sv(75)\nobserve hr(88)\nobserve bsa(1.8)\nlet answer = sv / bsa\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 41.666666666666664,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3666.6666666666665,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 135.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 48.888888888888886,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

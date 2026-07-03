@@ -1,0 +1,8 @@
+{
+ "check_id": 21,
+ "idx": 9,
+ "slot": "authorized_surrogate_available",
+ "claimed_value": false,
+ "scenario": "Ms. Nakagawa arrives unconscious after a car crash with a rapidly expanding intracranial hematoma that will be fatal within minutes without immediate surgery. She cannot consent, and despite attempts no family member or authorized surrogate can be reached in time. No signed consent form exists.",
+ "cited_span": "despite attempts no family member or authorized surrogate can be reached in time"
+}

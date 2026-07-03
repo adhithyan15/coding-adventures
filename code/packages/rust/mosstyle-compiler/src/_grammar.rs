@@ -10,9 +10,9 @@
 // The -f flag is needed for compile-tokens because 'escapes: standard' is a
 // semantic directive consumed by the lexer runtime, not a grammar-tools concept.
 
+use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
 #[allow(unused_imports)]
 use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
-use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
 #[allow(unused_imports)]
 use std::collections::HashMap;
 
@@ -26,7 +26,8 @@ pub fn token_grammar() -> TokenGrammar {
             TokenDefinition {
                 name: r#"STRING"#.to_string(),
                 pattern: r#""([^"\
-]|\.)*""#.to_string(),
+]|\.)*""#
+                    .to_string(),
                 is_regex: true,
                 line_number: 29,
                 alias: None,
@@ -127,13 +128,18 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: None,
             },
         ],
-        keywords: vec![r#"style"#.to_string(), r#"part"#.to_string(), r#"state"#.to_string()],
+        keywords: vec![
+            r#"style"#.to_string(),
+            r#"part"#.to_string(),
+            r#"state"#.to_string(),
+        ],
         mode: None,
         skip_definitions: vec![
             TokenDefinition {
                 name: r#"LINE_COMMENT"#.to_string(),
                 pattern: r#"\/\/[^
-]*"#.to_string(),
+]*"#
+                .to_string(),
                 is_regex: true,
                 line_number: 19,
                 alias: None,
@@ -148,7 +154,8 @@ pub fn token_grammar() -> TokenGrammar {
             TokenDefinition {
                 name: r#"WHITESPACE"#.to_string(),
                 pattern: r#"[ 	
-]+"#.to_string(),
+]+"#
+                .to_string(),
                 is_regex: true,
                 line_number: 21,
                 alias: None,
@@ -164,6 +171,8 @@ pub fn token_grammar() -> TokenGrammar {
         context_keywords: vec![],
         soft_keywords: vec![],
         layout_keywords: vec![],
+        start_mode: None,
+        transitions: vec![],
     }
 }
 
@@ -174,98 +183,188 @@ pub fn token_grammar() -> TokenGrammar {
 pub fn parser_grammar() -> ParserGrammar {
     ParserGrammar {
         rules: vec![
-        GrammarRule {
-            name: r#"file"#.to_string(),
-            body: GrammarElement::RuleReference { name: r#"style_def"#.to_string() },
-            line_number: 36,
-        },
-        GrammarRule {
-            name: r#"style_def"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"part_def"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-            ] },
-            line_number: 49,
-        },
-        // part_def = KEYWORD part_path LBRACE { part_item } RBRACE ;
-        // part_path replaces a bare NAME so the grammar can address
-        // sub-parts like `part sheet/cell` (UI27 §3.1).
-        GrammarRule {
-            name: r#"part_def"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
-                GrammarElement::RuleReference { name: r#"part_path"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"part_item"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-            ] },
-            line_number: 56,
-        },
-        // part_path = NAME { SLASH NAME } ;
-        GrammarRule {
-            name: r#"part_path"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                    GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                ] }) },
-            ] },
-            line_number: 57,
-        },
-        GrammarRule {
-            name: r#"part_item"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::RuleReference { name: r#"state_block"#.to_string() },
-                GrammarElement::RuleReference { name: r#"property_decl"#.to_string() },
-            ] },
-            line_number: 66,
-        },
-        GrammarRule {
-            name: r#"state_block"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"property_decl"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-            ] },
-            line_number: 76,
-        },
-        // property_decl = NAME COLON style_value { style_value } SEMICOLON ;
-        //
-        // Multi-value shorthand: a property can carry one or more
-        // space-separated style_values, matching CSS shorthand syntax
-        // (`border: 1px solid #3f3f46 ;`, `margin: 4px 8px ;`). The
-        // analyzer joins them with single spaces to produce the final
-        // value string.
-        GrammarRule {
-            name: r#"property_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
-                GrammarElement::RuleReference { name: r#"style_value"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"style_value"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
-            ] },
-            line_number: 83,
-        },
-        GrammarRule {
-            name: r#"style_value"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::TokenReference { name: r#"TOKEN_REF"#.to_string() },
-                GrammarElement::TokenReference { name: r#"HASH_COLOR"#.to_string() },
-                GrammarElement::TokenReference { name: r#"DIMENSION"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-            ] },
-            line_number: 96,
-        },
-    ],
+            GrammarRule {
+                name: r#"file"#.to_string(),
+                body: GrammarElement::RuleReference {
+                    name: r#"style_def"#.to_string(),
+                },
+                line_number: 36,
+            },
+            GrammarRule {
+                name: r#"style_def"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"KEYWORD"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NAME"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"part_def"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 49,
+            },
+            // part_def = KEYWORD part_path LBRACE { part_item } RBRACE ;
+            // part_path replaces a bare NAME so the grammar can address
+            // sub-parts like `part sheet/cell` (UI27 §3.1).
+            GrammarRule {
+                name: r#"part_def"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"KEYWORD"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"part_path"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"part_item"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 56,
+            },
+            // part_path = NAME { SLASH NAME } ;
+            GrammarRule {
+                name: r#"part_path"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"NAME"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"SLASH"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                    ],
+                },
+                line_number: 57,
+            },
+            GrammarRule {
+                name: r#"part_item"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"state_block"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"property_decl"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 66,
+            },
+            GrammarRule {
+                name: r#"state_block"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"KEYWORD"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NAME"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"property_decl"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 76,
+            },
+            // property_decl = NAME COLON style_value { style_value } SEMICOLON ;
+            //
+            // Multi-value shorthand: a property can carry one or more
+            // space-separated style_values, matching CSS shorthand syntax
+            // (`border: 1px solid #3f3f46 ;`, `margin: 4px 8px ;`). The
+            // analyzer joins them with single spaces to produce the final
+            // value string.
+            GrammarRule {
+                name: r#"property_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"NAME"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"COLON"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"style_value"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"style_value"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"SEMICOLON"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 83,
+            },
+            GrammarRule {
+                name: r#"style_value"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"TOKEN_REF"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"HASH_COLOR"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"DIMENSION"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NUMBER"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"STRING"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NAME"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 96,
+            },
+        ],
         version: 1,
     }
 }

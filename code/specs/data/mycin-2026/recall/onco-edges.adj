@@ -1,0 +1,137 @@
+% ============================================================================
+% onco-edges — the oncology tumor-marker knowledge-graph (MYCIN-2026 ONCO).
+% ============================================================================
+% A Tier-2 organ-system pathology domain (USMLE-DOMAIN-MAP §"Tier 2", neoplasia): the
+% serum tumor-marker → neoplasm associations behind the oncology board questions.
+% "Which tumor marker is associated with ovarian cancer?" becomes the binding query
+%   ? tumor_marker(ovarian_cancer, $Marker).
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator, no
+% JSON, no manifest (the sixth ADJ-only recall domain). Each fact is a `relate` clause
+% whose byte-provenance lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf, NIH).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s this
+% library and asks a binding query — see onco-recall.query.adj. Nothing here is asserted
+% "from memory": every edge is defended by a span a reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% Honest scope: only edges whose cited span states the marker↔neoplasm association AND
+% names both endpoints are included. Spans were taken from the per-marker / per-cancer
+% pages (the aggregate "tumor biomarkers" page discusses markers mostly in sensitivity /
+% false-positive / procedure-context, not a clean both-endpoints-named declarative).
+% Under the primary-source-first policy, PSA→prostate is now GROUNDED from the Prostate
+% Cancer page (NBK470550: "Elevated PSA levels have long been associated with prostate
+% cancer.") — the disease-specific page supplies the clean both-endpoints span the PSA
+% marker page (which frames PSA by its limited specificity) lacked. CEA→colorectal was
+% grounded earlier (NBK578172). hCG→choriocarcinoma is also now GROUNDED (NBK532950: hCG
+% testing aids the diagnosis of choriocarcinoma) — the marker atom is `hcg` to match the
+% span (the board buzzword "beta-hCG" is the assayed subunit of the named hCG). Still
+% deferred (re-checked): CA 19-9→pancreatic — the Pancreatic Cancer page (NBK518996) names
+% the marker only as a "pancreatic tumor marker (CA 19-9 and CEA)", not alongside
+% "pancreatic cancer" in one sentence. Honest absence beats an over-reaching citation.
+% ============================================================================
+
+dictionary onco_vocab {
+    define neoplasm : entity   surface "cancer", "neoplasm", "tumor"
+    define marker   : entity   surface "tumor marker", "serum biomarker"
+
+    define tumor_marker : relation from neoplasm to marker  % the serum marker of a neoplasm
+}
+
+rulebook onco_facts {
+    use onco_vocab
+
+    % --- Ovarian cancer (CA-125) -----------------------------------------
+    relate tumor_marker(ovarian_cancer, ca_125)
+        source "Cancer antigen 125 (CA125) is an antigenic tumor marker expressed by epithelial ovarian neoplasms and cells lining various organs such as the endometrium, fallopian tubes, pleura, peritoneum, and pericardium."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK562245/"
+        trust authoritative
+
+    % --- Medullary thyroid carcinoma (calcitonin and CEA; one span names both) ---
+    relate tumor_marker(medullary_thyroid_carcinoma, calcitonin)
+        source "Baseline serum calcitonin and carcinoembryonic antigen (CEA) measurements are essential tumor markers in MTC."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459354/"
+        trust authoritative
+    relate tumor_marker(medullary_thyroid_carcinoma, cea)
+        source "Baseline serum calcitonin and carcinoembryonic antigen (CEA) measurements are essential tumor markers in MTC."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459354/"
+        trust authoritative
+
+    % --- Hepatocellular carcinoma (alpha-fetoprotein) --------------------
+    relate tumor_marker(hepatocellular_carcinoma, alpha_fetoprotein)
+        source "HCC is diagnosed by elevation of serum biomarkers, including alpha-fetoprotein, imaging including ultrasound, contrast CT/MRI, and biopsy."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK559177/"
+        trust authoritative
+
+    % --- EXPAND: colorectal cancer (carcinoembryonic antigen, CEA) -------
+    relate tumor_marker(colorectal_cancer, cea)
+        source "Carcinoembryonic antigen (CEA) is a nonspecific serum biomarker that is elevated in many malignancies, including colorectal cancer, medullary thyroid cancer, breast cancer, and mucinous ovarian cancer"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK578172/"
+        trust authoritative
+
+    % --- EXPAND (primary-source-first): prostate cancer (PSA) -----------
+    % The Prostate Cancer page supplies the clean both-endpoints span the PSA
+    % marker page lacked (that page frames PSA by its limited specificity).
+    relate tumor_marker(prostate_cancer, psa)
+        source "Elevated PSA levels have long been associated with prostate cancer."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK470550/"
+        trust authoritative
+
+    % --- EXPAND (primary-source-first): choriocarcinoma (hCG) -----------
+    % Marker atom is `hcg` to match the span verbatim (the board buzzword
+    % "beta-hCG" is the clinically-assayed subunit of the hCG named here).
+    relate tumor_marker(choriocarcinoma, hcg)
+        source "In addition, hCG testing can aid in the diagnosis of certain cancers, such as choriocarcinoma and some extra-uterine malignancies."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532950/"
+        trust authoritative
+
+    % ------------------------------------------------------------------------
+    % BATCH: high-yield tumor markers, each grounded to a self-contained verbatim
+    % NCBI Bookshelf span naming both the neoplasm and the marker. (breast_cancer
+    % -> CA 15-3 and multiple_myeloma -> beta-2-microglobulin declined: no single
+    % NBK span names the spelled-out disease with the marker — backlog, not stretched.)
+    % ------------------------------------------------------------------------
+
+    % Pancreatic cancer — CA 19-9 and CEA (one span names both markers).
+    relate tumor_marker(pancreatic_cancer, ca_19_9)
+        source "Tumor markers associated with pancreatic cancer include CEA and CA 19-9."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK518996/"
+        trust authoritative
+    relate tumor_marker(pancreatic_cancer, cea)
+        source "Tumor markers associated with pancreatic cancer include CEA and CA 19-9."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK518996/"
+        trust authoritative
+
+    % Small cell lung cancer — neuron-specific enolase (NSE).
+    relate tumor_marker(small_cell_lung_cancer, neuron_specific_enolase)
+        source "This study aims to evaluate the association of serum neuron-specific enolase (NSE) levels with the prognosis of small cell lung cancer (SCLC)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK153280/"
+        trust authoritative
+
+    % Neuroendocrine tumors — chromogranin A.
+    relate tumor_marker(neuroendocrine_tumor, chromogranin_a)
+        source "Chromogranin A is a widely used neuroendocrine tumor marker."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537344/"
+        trust authoritative
+
+    % Melanoma — S100 (immunohistochemical marker of melanocytic differentiation).
+    relate tumor_marker(melanoma, s100)
+        source "Immunohistochemical stains, such as S100, Melan-A, and human melanoma black-45 (HMB-45), aid in confirming melanocytic differentiation and distinguishing melanoma from other tumors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK459367/"
+        trust authoritative
+
+    % Yolk sac tumor (endodermal sinus tumor) — alpha-fetoprotein.
+    relate tumor_marker(yolk_sac_tumor, alpha_fetoprotein)
+        source "Immunohistochemical staining can support the diagnosis of yolk sac tumors, as almost all cases stain positively for alpha-fetoprotein (AFP)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK563163/"
+        trust authoritative
+
+    % Gastrointestinal stromal tumor (GIST) — CD117 (KIT).
+    relate tumor_marker(gastrointestinal_stromal_tumor, cd117)
+        source "Immunohistochemically, GISTs typically express KIT (CD117), which is a highly sensitive and specific diagnostic marker."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK554541/"
+        trust authoritative
+}

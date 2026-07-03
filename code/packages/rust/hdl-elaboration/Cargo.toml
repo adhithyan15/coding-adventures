@@ -1,0 +1,11 @@
+[package]
+name = "hdl-elaboration"
+version = "0.1.0"
+edition = "2021"
+description = "Three-pass Verilog HDL elaborator — AST → HIR (structural subset: modules, ports, continuous assignments)"
+
+[dependencies]
+hdl-ir = { path = "../hdl-ir" }
+coding-adventures-verilog-parser = { path = "../verilog-parser" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

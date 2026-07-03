@@ -1,0 +1,65 @@
+{
+  "cas": {
+    "index": "cas/index.json",
+    "object_count": 27
+  },
+  "claim": "The reusable rule corpus was derived once from source bytes into a CAS-backed program library. The held-out case was compiled into a case program that imported the library and executed without answer-time model calls.",
+  "experiment": "ADJ71 CAS program-cache experiment",
+  "held_out": {
+    "case_coverage_summary": {
+      "discarded_bytes": 0,
+      "input_bytes": 912,
+      "represented_bytes": 912
+    },
+    "case_id": "case_011_heldout_borderline_pass",
+    "case_program_hash": "6963d3227dfa02e96566d47291347d7d8c7fbde2ae9faaae92a1792fb0c37689",
+    "eligible": true,
+    "expected_eligible": true,
+    "failed_requirements": [],
+    "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+    "input_ir_hash": "bdb3fc58e18f7180f02faa2869bd5f790813348c3af1a8cdd129462f2c092267",
+    "matched_expected": true,
+    "result_hash": "f697475c6c26d28d9f59a01e0da4a136fe68cdbdce95e823ed95bfcb2f72b0fa"
+  },
+  "library": {
+    "answer_time_model_calls": 0,
+    "hash": "0849b243e02158ada47f7905582627b2fc96e025385ea9974962c32299f98989",
+    "path": "generated/immigration_316a_rules.py",
+    "source_span_count": 8
+  },
+  "source": {
+    "archive_sha256": "a66b51e9deae5606ba6d7cad0c8fa920fa96f16a3a4e15e9548767284bfd63c1",
+    "hash": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+    "release_point": "Public Law 119-95 (05/29/2026)",
+    "represented_rule_spans": 8,
+    "section_end_in_title_xml": 5929979,
+    "section_start_in_title_xml": 5903622,
+    "source_bytes": 26357,
+    "source_coverage_summary": {
+      "discarded_bytes": 25418,
+      "represented_bytes": 939,
+      "source_bytes": 26357
+    },
+    "source_ir_hash": "6042ab931915ed9bf310b8836c1a4863ca8f194114eec80c21ffb065a0594627",
+    "title_xml_sha256": "40df2a8b138086b6d84e50be8292813dde70798499cb469f42cf104803594898",
+    "url": "https://uscode.house.gov/download/releasepoints/us/pl/119/95/xml_usc08@119-95.zip"
+  },
+  "started_at": "2026-06-08T01:18:36.036603+00:00",
+  "training_corpus": {
+    "case_count": 10,
+    "case_ids": [
+      "case_001_clean_pass",
+      "case_002_short_residence",
+      "case_003_not_lpr",
+      "case_004_short_physical_presence",
+      "case_005_short_state_residence",
+      "case_006_not_continuous_after_filing",
+      "case_007_no_good_moral_character",
+      "case_008_not_attached",
+      "case_009_not_well_disposed",
+      "case_010_exception_claimed"
+    ],
+    "passed_expected": 10
+  },
+  "wallclock_seconds": 3.08725
+}

@@ -1,0 +1,1 @@
+cargo test --lib -p silicon-rust-napi -- --nocapture

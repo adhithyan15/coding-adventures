@@ -1,0 +1,32 @@
+% Worked example — grant allocation (maximize impact, an LP).
+%
+% A grant office splits a $10k budget across two programs and wants the
+% allocation that maximizes total impact. Let `outreach` and `training` be the
+% dollars (in $1k units) put into each program:
+%
+%     impact      = 3·outreach + 2·training   (impact units per $1k)
+%     budget:       outreach + training ≤ 10  ($10k total)
+%     capacity:     outreach ≤ 6              (outreach saturates at $6k)
+%     non-negative: outreach ≥ 0, training ≥ 0
+%
+% The model wrote the objective and the constraints; the engine SOLVES the
+% linear program on the CPU (Fourier–Motzkin projection over exact rationals),
+% returns the optimum, an achieving allocation, and the constraints binding at
+% that point — all without the model doing any arithmetic.
+%
+% Optimum at the vertex (outreach = 6, training = 4):
+%     impact = 3·6 + 2·4 = 26
+% binding the budget (6 + 4 = 10) and the outreach cap (6) — constraints 0 and 1.
+%
+% Expected: optimize → optimal, value 26, { outreach = 6, training = 4 },
+%           binding [0, 1].
+
+symbol outreach : scalar
+symbol training : scalar
+
+constrain outreach + training <= 10
+constrain outreach <= 6
+constrain outreach >= 0
+constrain training >= 0
+
+maximize 3 * outreach + 2 * training

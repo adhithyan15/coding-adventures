@@ -1,0 +1,71 @@
+# frozen_string_literal: true
+
+# Rakefile — dev-mode build + test tasks for the matrix_rust_ruby gem.
+#
+# Two tasks worth knowing about:
+#
+#   rake compile  — runs `cargo build -p matrix-rust-ruby-native --release`
+#                   (against the WORKSPACE Cargo.toml) and copies the resulting
+#                   shared library into lib/coding_adventures/matrix_rust_ruby/
+#                   under the basename Ruby will `require`.
+#
+#   rake test     — depends on :compile, then runs the minitest suite.
+#
+# Note: We don't use Rake::ExtensionTask here because that helper assumes the
+# Rust source lives inside the gem (ext/<name>/).  Ours lives in the
+# workspace, so we drive cargo by hand.
+
+require "rake/testtask"
+require "rbconfig"
+require_relative "ext/matrix_rust_ruby_native/build_config"
+
+DLEXT   = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/matrix_rust_ruby_native", __dir__)
+LIB_DIR = File.expand_path("lib/coding_adventures/matrix_rust_ruby", __dir__)
+
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+            when /darwin/
+              "libmatrix_rust_ruby_native.dylib"
+            when /mingw|mswin|cygwin/
+              "matrix_rust_ruby_native.dll"
+            else
+              "libmatrix_rust_ruby_native.so"
+            end
+
+TARGET = "matrix_rust_ruby_native.#{DLEXT}"
+
+desc "Compile the Rust native extension via cargo"
+task :compile do
+  # Build from the workspace rust dir; cargo finds the workspace Cargo.toml
+  # by walking up.  `-p matrix-rust-ruby-native` scopes the build.
+  workspace_rust = File.expand_path("../../rust", __dir__)
+  cd workspace_rust do
+    sh(*MatrixRustRubyNativeBuildConfig.cargo_build_command)
+  end
+
+  src = File.join(MatrixRustRubyNativeBuildConfig.target_release_dir(EXT_DIR), CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/coding_adventures/matrix_rust_ruby/"
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+# Always compile before running tests — the test suite dlopens the native ext.
+task test: :compile
+
+desc "Remove build artifacts (calls `cargo clean -p matrix-rust-ruby-native`)"
+task :clean do
+  workspace_rust = File.expand_path("../../rust", __dir__)
+  cd workspace_rust do
+    sh(*MatrixRustRubyNativeBuildConfig.cargo_clean_command)
+  end
+  rm_f Dir[File.join(LIB_DIR, "matrix_rust_ruby_native.*")]
+end
+
+task default: :test

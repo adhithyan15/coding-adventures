@@ -1,0 +1,218 @@
+% ============================================================================
+% ADJ52 case-26 derived rulebook.
+% Clinical area: adrenal_cortical_insufficiency (the AREA — primary adrenal
+% failure and its etiologic differential — NOT a specific diagnosis).
+%
+% The diagnostic puzzle the IR poses (q1-q5): a 34-year-old woman with ~14
+% months of treatment-resistant psychiatric illness (low mood, broken sleep,
+% nightmares, agitation, withdrawal) on an antipsychotic + TCA + benzodiazepine
+% that "had not settled", who then evolves PHYSICAL disease — vague abdominal
+% pain, anorexia, ~9 kg weight loss, amenorrhea, wasting, mild dehydration,
+% HYPOTENSION (88/44) with tachycardia (116), hyponatremia (Na 128), low-normal
+% potassium (3.4), normocytic anemia (Hb 9.8), EOSINOPHILIA (7%), mildly raised
+% urea, and — pivotally — skin darkening over extensor surfaces + BUCCAL mucosal
+% pigmentation. Dedicated endocrine testing: serum cortisol VERY LOW with a
+% MARKEDLY ELEVATED plasma ACTH (~6x upper limit). Abdominal cross-sectional
+% imaging was arranged.
+%
+% The unifying lesion is PRIMARY adrenal insufficiency (Addison's): low cortisol
+% with HIGH ACTH localizes the failure to the adrenal cortex itself; the ACTH /
+% POMC excess drives the hyperpigmentation. The residual question (q1, q4) is the
+% ETIOLOGY of the adrenal destruction, which the arranged imaging is meant to
+% adjudicate (atrophic glands = autoimmune; enlarged +/- calcified = TB / other).
+%
+% Magnitudes encoded QUALITATIVELY per adj-lang grammar (lowercase identifiers,
+% no leading digit, no uppercase): cortisol(very_low), acth(markedly_elevated),
+% sodium(low), eosinophils(elevated), etc.
+%
+% Anti-overfit note: each clause is added because a cited source supports the
+% DIRECTION of the likelihood ratio for that finding in that condition, NOT to
+% steer this case onto a chosen answer. The discriminator that argues AGAINST the
+% tempting wrong answer (central / SECONDARY adrenal insufficiency) is included
+% with LR<1 because the sources support it (high ACTH + hyperpigmentation + salt-
+% wasting hyponatremia are precisely what secondary AI does NOT produce).
+%
+% CORRELATED EVIDENCE: the Addisonian biochemical/clinical gestalt (low cortisol,
+% high ACTH, hyperpigmentation, salt-wasting hyponatremia, hypotension,
+% eosinophilia, weight loss) is ONE syndrome with ONE upstream cause (cortical
+% glucocorticoid+mineralocorticoid failure with loss of ACTH feedback). It is
+% shared by ALL primary-adrenal-failure etiologies, so it is grouped under a
+% single mechanism directive that fires ONCE per primary-AI conclusion rather
+% than summing a separate edge for each manifestation (anti-saturation). What
+% remains as independent `contributes` are the ETIOLOGY discriminators (childhood
+% autoimmunity, the imaging pattern, demographics) that actually separate the
+% candidates.
+% ============================================================================
+
+% ===== PRIORS (base rates among new primary adrenal insufficiency diagnoses) =====
+
+% rationale: Autoimmune adrenalitis (autoimmune Addison's, 21-hydroxylase-Ab
+% mediated) is the single commonest cause of primary adrenal insufficiency in the
+% developed world (75-96% of cases), so it carries the largest prior.
+prior 0.45 for etiology(autoimmune_adrenalitis)
+  source "Frontiers Endocrinol 2023;14:1285901 (autoimmunity 75-96% of primary AI in industrialised countries)" trust authoritative
+
+% rationale: Tuberculous adrenalitis is the leading infectious / granulomatous
+% cause worldwide and the historical commonest cause; remains a major competitor,
+% especially where TB is endemic.
+prior 0.25 for etiology(tuberculous_adrenalitis)
+  source "PubMed 26516430 (tuberculous adrenalitis as cause of primary AI; CT/MRI evaluation)" trust authoritative
+
+% rationale: Adrenal metastasis / infiltration / lymphoma is a recognised cause of
+% bilateral adrenal destruction producing primary AI; lower prior in a young woman.
+prior 0.10 for etiology(adrenal_metastatic_infiltration)
+  source "StatPearls NBK441994 Addison Disease (neoplastic/metastatic infiltration among causes of primary AI)" trust authoritative
+
+% rationale: Bilateral adrenal hemorrhage (e.g. antiphospholipid, sepsis, anticoag)
+% is a cause of acute primary AI; on the differential, modest prior.
+prior 0.07 for etiology(bilateral_adrenal_hemorrhage)
+  source "StatPearls NBK441994 Addison Disease (adrenal hemorrhage among etiologies of primary AI)" trust authoritative
+
+% rationale: SECONDARY (central / pituitary-hypothalamic) adrenal insufficiency is
+% the tempting alternative when a chronic psychiatric patient becomes hypocortisol-
+% aemic; high enough prior that the engine must EARN moving away from it on the
+% ACTH + pigmentation + electrolyte data.
+prior 0.13 for etiology(secondary_adrenal_insufficiency)
+  source "MSD Manual Professional, Secondary Adrenal Insufficiency (ACTH deficiency)" trust authoritative
+
+% ===== SHARED PRIMARY-ADRENAL-FAILURE SIGNATURE (count once per etiology) =====
+% rationale: low cortisol + HIGH ACTH + mucocutaneous hyperpigmentation + salt-
+% wasting hyponatremia + hypotension + eosinophilia + weight loss are correlated
+% manifestations of ONE mechanism: destruction of the adrenal cortex with loss of
+% cortisol/aldosterone and disinhibited POMC/ACTH drive. Fire ONCE for each
+% primary-AI etiology rather than summing seven edges (anti-double-count). The
+% magnitude differs only because some etiologies are more strongly "primary-AI-
+% defining" by base association, not by re-counting the findings.
+% mechanism primary_adrenal_failure for etiology(autoimmune_adrenalitis) lr 9.0 : cortisol(very_low), acth(markedly_elevated), hyperpigmentation(mucocutaneous), sodium(low), hypotension(present), eosinophils(elevated), weight_loss(significant)
+% mechanism primary_adrenal_failure for etiology(tuberculous_adrenalitis) lr 9.0 : cortisol(very_low), acth(markedly_elevated), hyperpigmentation(mucocutaneous), sodium(low), hypotension(present), eosinophils(elevated), weight_loss(significant)
+% mechanism primary_adrenal_failure for etiology(adrenal_metastatic_infiltration) lr 7.0 : cortisol(very_low), acth(markedly_elevated), hyperpigmentation(mucocutaneous), sodium(low), hypotension(present), eosinophils(elevated), weight_loss(significant)
+% mechanism primary_adrenal_failure for etiology(bilateral_adrenal_hemorrhage) lr 6.0 : cortisol(very_low), acth(markedly_elevated), hyperpigmentation(mucocutaneous), sodium(low), hypotension(present), eosinophils(elevated), weight_loss(significant)
+
+% ===== SECONDARY (CENTRAL) ADRENAL INSUFFICIENCY — the discriminator =====
+% rationale: NOT grouped into the primary signature, because secondary AI is
+% DEFINED by the OPPOSITE pattern. Two near-pathognomonic negative discriminators:
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — a MARKEDLY ELEVATED ACTH
+% excludes secondary AI, whose mechanism is ACTH DEFICIENCY (low/inappropriately
+% normal ACTH with low cortisol). High ACTH is the strongest single argument
+% against the tempting "psychiatric patient with central hypocortisolism" answer.
+contributes 0.05 from acth(markedly_elevated) to etiology(secondary_adrenal_insufficiency)
+  source "MSD Manual Professional, Secondary Adrenal Insufficiency (low/normal ACTH with low cortisol)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires NEGATIVE) — mucocutaneous hyperpigmentation
+% requires POMC/ACTH excess and is ABSENT in secondary AI; its presence argues
+% strongly against a central cause.
+contributes 0.1 from hyperpigmentation(mucocutaneous) to etiology(secondary_adrenal_insufficiency)
+  source "Wikipedia Adrenal insufficiency; PMC4330026 (absent hyperpigmentation distinguishes secondary AI)" trust authoritative
+
+% rationale: salt-wasting hyponatremia with hypotension reflects mineralocorticoid
+% (aldosterone) loss, which is preserved in secondary AI (renin-angiotensin intact);
+% overt salt-wasting / hyperkalemia tendency argues against a central cause.
+contributes 0.4 from sodium(low) to etiology(secondary_adrenal_insufficiency)
+  source "PMC4330026 (secondary AI hyponatremia is dilutional; primary AI has true salt-wasting + hyperkalemia)" trust authoritative
+
+% rationale: secondary AI can still produce nonspecific psychiatric symptoms, low
+% cortisol and eosinophilia, so those are NON-discriminating and are deliberately
+% not given edges here (they neither raise nor lower central vs cortical).
+
+% ===== AUTOIMMUNE ADRENALITIS — etiology discriminators =====
+
+% rationale: KEY DISCRIMINATOR — a personal history of another autoimmune disorder
+% (childhood immune thrombocytopenia) marks autoimmune diathesis / polyglandular
+% tendency and strongly supports an autoimmune cause of the adrenal failure.
+contributes 3.5 from history(childhood_immune_thrombocytopenia) to etiology(autoimmune_adrenalitis)
+  source "Frontiers Endocrinol 2023;14:1285901 (autoimmune Addison clusters with other organ-specific autoimmunity / APS)" trust authoritative
+
+% rationale: female sex and young-to-middle adulthood is the typical autoimmune
+% Addison demographic (female predominance, peak 30-50), mildly supportive.
+contributes 1.6 from demographic(female_adult) to etiology(autoimmune_adrenalitis)
+  source "AAFP 2014;89(7):563 Addison Disease (autoimmune AI more common in women, 30-50y)" trust authoritative
+
+% rationale: a co-existing atopic / asthma-type history fits the broader autoimmune
+% / atopic clustering sometimes seen with organ-specific autoimmunity; weakly
+% supportive, low LR to avoid over-reading a nonspecific wheeze.
+contributes 1.2 from history(intermittent_wheeze) to etiology(autoimmune_adrenalitis)
+  source "StatPearls NBK441994 (autoimmune AI associates with other immune-mediated conditions)" trust inferred
+
+% rationale: KEY DISCRIMINATOR — autoimmune adrenalitis produces ATROPHIC,
+% non-enlarged, non-calcified adrenal glands on cross-sectional imaging; finding
+% small/atrophic glands strongly supports the autoimmune etiology.
+contributes 4.0 from adrenal_imaging(atrophic_noncalcified) to etiology(autoimmune_adrenalitis)
+  source "Frontiers Endocrinol 2023;14:1285901; RadiologyKey adrenal imaging (chronic autoimmune AI -> atrophic glands)" trust authoritative
+
+% rationale: positive 21-hydroxylase autoantibodies are the defining marker of
+% autoimmune Addison's — near-confirmatory when present.
+contributes 6.0 from antibody(twenty_one_hydroxylase_positive) to etiology(autoimmune_adrenalitis)
+  source "Mayo 21OH Overview; Frontiers Endocrinol 2023;14:1285901 (21-OH Ab defines autoimmune AI)" trust authoritative
+
+% rationale: enlarged or calcified adrenals on imaging would argue AGAINST a purely
+% atrophic autoimmune process and toward an infiltrative/granulomatous cause.
+contributes 0.3 from adrenal_imaging(enlarged_or_calcified) to etiology(autoimmune_adrenalitis)
+  source "RadiologyKey adrenal imaging (autoimmune AI glands are atrophic, not enlarged/calcified)" trust authoritative
+
+% ===== TUBERCULOUS ADRENALITIS — etiology discriminators =====
+
+% rationale: KEY DISCRIMINATOR — untreated adrenal TB shows BILATERAL ENLARGED
+% adrenals (91% of cases) early, with CALCIFICATION in ~50% over time; enlarged
+% +/- calcified glands strongly support tuberculous (granulomatous) destruction.
+contributes 5.0 from adrenal_imaging(enlarged_or_calcified) to etiology(tuberculous_adrenalitis)
+  source "PubMed 26516430; ScienceDirect S0720048X06005134 (TB adrenalitis: bilateral enlargement 91%, calcification ~50%)" trust authoritative
+
+% rationale: atrophic non-calcified glands argue AGAINST active tuberculous
+% adrenalitis (which enlarges the glands before late fibrosis); LR<1.
+contributes 0.4 from adrenal_imaging(atrophic_noncalcified) to etiology(tuberculous_adrenalitis)
+  source "PubMed 26516430 (TB adrenals enlarged early; atrophy is a late/healed pattern)" trust authoritative
+
+% rationale: constitutional wasting and weight loss are consistent with chronic TB,
+% but are also part of the shared Addisonian signature, so kept as a weak edge to
+% avoid double-counting the syndrome already grouped above.
+contributes 1.2 from history(chronic_constitutional_illness) to etiology(tuberculous_adrenalitis)
+  source "ScienceDirect Adrenal Tuberculosis overview (chronic wasting / constitutional features)" trust empirical
+
+% rationale: childhood autoimmune disease (ITP) does not specifically point to TB
+% and slightly favours the autoimmune alternative instead; mild LR<1.
+contributes 0.7 from history(childhood_immune_thrombocytopenia) to etiology(tuberculous_adrenalitis)
+  source "Frontiers Endocrinol 2023;14:1285901 (organ-specific autoimmunity favours autoimmune over infectious cause)" trust inferred
+
+% ===== ADRENAL METASTATIC / INFILTRATIVE DISEASE =====
+
+% rationale: bilateral adrenal enlargement (often without calcification) can reflect
+% metastatic or infiltrative replacement; enlarged glands are weakly supportive.
+contributes 1.8 from adrenal_imaging(enlarged_or_calcified) to etiology(adrenal_metastatic_infiltration)
+  source "RadiologyKey imaging of adrenal disorders (bilateral enlargement in infiltrative/metastatic AI)" trust authoritative
+
+% rationale: a young woman with a chronic but non-cachectic course and no known
+% primary malignancy makes metastatic adrenal failure less likely; mild LR<1.
+contributes 0.6 from demographic(female_adult) to etiology(adrenal_metastatic_infiltration)
+  source "StatPearls NBK441994 (metastatic adrenal AI typically older patients with known primary tumour)" trust inferred
+
+% ===== BILATERAL ADRENAL HEMORRHAGE =====
+
+% rationale: the ~14-month chronic, insidiously progressive course argues against
+% an acute hemorrhagic catastrophe; LR<1 for a chronic presentation.
+contributes 0.4 from history(chronic_constitutional_illness) to etiology(bilateral_adrenal_hemorrhage)
+  source "StatPearls NBK441994 (adrenal hemorrhage causes ACUTE primary AI, not a 14-month indolent course)" trust authoritative
+
+% rationale: a childhood low-platelet (thrombocytopenic) disorder does not predispose
+% to adrenal hemorrhage in the way a prothrombotic/antiphospholipid state would;
+% weak LR<1.
+contributes 0.7 from history(childhood_immune_thrombocytopenia) to etiology(bilateral_adrenal_hemorrhage)
+  source "StatPearls NBK441994 (adrenal hemorrhage linked to antiphospholipid/anticoagulation/sepsis, not ITP)" trust inferred
+
+% ===== SYNERGY =====
+
+% rationale: KEY SYNERGY — coexisting organ-specific autoimmunity TOGETHER with
+% imaging-confirmed atrophic glands is near-specific for autoimmune adrenalitis
+% (the two independent autoimmune lines of evidence reinforce each other).
+interacts 2.5 when history(childhood_immune_thrombocytopenia) and adrenal_imaging(atrophic_noncalcified) for etiology(autoimmune_adrenalitis)
+  source "Frontiers Endocrinol 2023;14:1285901 (autoimmune AI: organ-specific autoimmunity + atrophic adrenals)" trust authoritative
+
+% ===== DECISION-RELEVANT UNCERTAINTIES =====
+% The two unresolved tests that move the etiologic posterior are (a) the arranged
+% abdominal cross-sectional imaging pattern and (b) 21-hydroxylase antibodies.
+% Each candidate imaging/antibody value has a contributes edge above, so resolving
+% the uncertainty shifts the posterior.
+
+uncertain { adrenal_imaging(atrophic_noncalcified), adrenal_imaging(enlarged_or_calcified) } for etiology(autoimmune_adrenalitis)
+uncertain { adrenal_imaging(enlarged_or_calcified), adrenal_imaging(atrophic_noncalcified) } for etiology(tuberculous_adrenalitis)
+uncertain { antibody(twenty_one_hydroxylase_positive), antibody(twenty_one_hydroxylase_negative) } for etiology(autoimmune_adrenalitis)

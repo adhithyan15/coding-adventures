@@ -1,0 +1,8 @@
+{
+ "check_id": 126,
+ "idx": 52,
+ "slot": "handrail_height_inches",
+ "claimed_value": 36,
+ "scenario": "An interior stairway has six risers. A continuous handrail runs the full length of the stair on one side. The handrail is mounted at a uniform height of 36 inches measured vertically from the sloped plane adjoining the tread nosings.",
+ "cited_span": "The handrail is mounted at a uniform height of 36 inches measured vertically from the sloped plane adjoining the tread nosings."
+}

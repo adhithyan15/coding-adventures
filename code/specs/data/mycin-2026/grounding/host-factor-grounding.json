@@ -1,0 +1,442 @@
+{
+  "records": [
+    {
+      "id": "host_neonate_gbs",
+      "kind": "host",
+      "target": "group_b_strep",
+      "evidence": "age_band(neonate)",
+      "claim": "In neonates (first ~1–3 months of life), group B Streptococcus (Streptococcus agalactiae) is a leading cause of bacterial meningitis.",
+      "grounded": {
+        "id": "host_neonate_gbs",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/",
+        "source_title": "Disease burden of neonatal invasive Group B Streptococcus infection in the Netherlands (PLOS One, PMC6508726)",
+        "byte_quote": "Streptococcus agalactiae or group B Streptococcus (GBS) is the leading cause of neonatal sepsis and meningitis.",
+        "value_found": "No odds ratio / relative risk given for the association; source states GBS is \"the leading cause\" of neonatal meningitis (qualitative leading-cause claim). Corroborating CDC: GBS remains a leading cause of meningitis and bloodstream infections in newborns younger than 3 months.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://journals.asm.org/doi/full/10.1128/cmr.00079-21 — Clinical Microbiology Reviews 'Group B Streptococcal Neonatal Meningitis' would be an ideal authoritative reference, but WebFetch returned HTTP 403 Forbidden so no verbatim quote could be captured; discarded to avoid fabrication.",
+          "https://www.cdc.gov/group-b-strep/about/index.html — CDC primary source; fetched page only yielded 'GBS bacteria most commonly cause bacteremia, sepsis, pneumonia, and meningitis in newborns' which does not verbatim assert 'leading/most common cause of meningitis,' so not used as the primary quote (the stronger leading-cause phrasing appeared only in search-snippet summary, not confirmed on-page).",
+          "https://www.meningitis.org/... — meningitis.org is an advocacy/charity site (secondary), excluded in favor of peer-reviewed/primary sources.",
+          "https://medlineplus.gov/ency/article/001366.htm — consumer health encyclopedia (secondary), not used."
+        ],
+        "note": "ENTAILED. The peer-reviewed PLOS One article states verbatim that 'Streptococcus agalactiae or group B Streptococcus (GBS) is the leading cause of neonatal sepsis and meningitis.' This directly forces the claim that the host factor 'neonate' RAISES the likelihood of GBS as the organism in bacterial meningitis — 'leading cause' is an explicit statement of elevated relative likelihood in that population, no inferential leap required. The claim's age window (~1-3 months) is consistent with the corroborating CDC framing ('newborns younger than 3 months old'). The only gap is a quantitative effect size: the source gives no OR/RR/proportion for GBS's share of neonatal meningitis, so value_found is qualitative. Direction and association are entailed; the magnitude is not quantified."
+      },
+      "verify": {
+        "id": "host_neonate_gbs",
+        "byte_stable": true,
+        "reextracted_value": "No odds ratio or relative risk is reported; the source makes a qualitative \"leading cause\" claim. Verbatim: \"Streptococcus agalactiae or group B Streptococcus (GBS) is the leading cause of neonatal sepsis and meningitis.\" The page also defines neonates as \"age 0-90 days\" and describes late-onset GBS disease occurring up to three months of life, corroborating the \"first ~1-3 months\" window. It cites neonatal meningitis-specific incidence (\"15 cases of meningitis ... per 100.000 births\", Netherlands 2017). This matches the claimed value.",
+        "refute_attempt": "Strongest refutation: the verbatim sentence conjoins outcomes (\"sepsis and meningitis\"), so it does not isolate meningitis alone, and one might argue the \"leading cause\" claim is carried mostly by sepsis. This refutation fails: the conjunction explicitly names meningitis, the source independently reports meningitis-specific incidence and describes GBS causing neonatal meningitis (pneumonia, meningitis and/or sepsis after perinatal acquisition), and the host-factor (neonate, 0-90 days) -> organism (GBS) direction is directly and strongly supported. If anything the source is stronger (\"the leading cause\") than the claim's \"a leading cause.\" Direction is sound.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_neonate_gnb",
+      "kind": "host",
+      "target": "gram_negative_bacilli",
+      "evidence": "age_band(neonate)",
+      "claim": "In neonates, aerobic gram-negative bacilli (especially Escherichia coli) are a leading cause of bacterial meningitis.",
+      "grounded": {
+        "id": "host_neonate_gnb",
+        "resolved_url": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis",
+        "source_title": "Neonatal Bacterial Meningitis — Merck Manual Professional Edition (Pediatrics, Infections in Neonates)",
+        "byte_quote": "The **predominant pathogens** are the following: [Group B streptococcus](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections) (GBS) [_Escherichia coli_](/professional/infectious-diseases/gram-negative-bacilli/escherichia-coli-infections) (particularly those strains contain",
+        "value_found": "Merck Manual lists E. coli (a gram-negative bacillus, particularly K1-capsule strains) among the three predominant pathogens of neonatal meningitis (no percentage given there). A corroborating peer-reviewed primary study (PMC8254664, Eastern China 2001–2020) gives a concrete proportion: E. coli = 69/182 culture-confirmed neonatal meningitis cases = 37.9%; StatPearls (NBK532264) states E. coli \"accounts for approximately 30% of all early-onset neonatal meningitis.\"",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "MedLink 'Gram-negative bacillary meningitis' article — not fetched as primary citation; broad GNB topic page rather than neonate-specific quantification.",
+          "biorxiv.org high-throughput sequencing preprint — discarded: non-peer-reviewed preprint and about immunotherapeutic targets, not epidemiologic cause/proportion.",
+          "PMC10298365 (microglia activation, NMEC) — discarded as primary citation: mechanistic immunology study, not an epidemiologic statement of leading cause.",
+          "Meningitis Research Foundation patient page and Wikipedia 'Neonatal meningitis' — discarded as secondary/lay sources, not primary/authoritative clinical references.",
+          "Frontiers Pediatrics 2019 multicenter cohort and StatPearls China-39% figure — retained as corroboration only, not the cited primary quote, to avoid over-citing region-specific proportions as the headline value."
+        ],
+        "note": "ENTAILED. The claim is a host-factor (neonate) → organism (aerobic gram-negative bacilli, esp. E. coli) association asserting this host factor raises likelihood. The Merck Manual quote directly names E. coli — an aerobic gram-negative bacillus — among the three predominant/most-common causes specifically of NEONATAL bacterial meningitis (the page elsewhere adds \"particularly those strains containing the K1 polysaccharide\"). Because the population is restricted to neonates, listing E. coli as a leading cause IS the statement that the neonatal host factor elevates this organism's probability; no inferential leap is needed for direction. The \"leading cause\" wording in the claim is fully supported. Quantification is the only soft spot in the Merck quote itself (no %), but the direction and \"leading\" status are entailed, and concrete proportions (~30–39%) are entailed by the corroborating StatPearls and PMC8254664 primary study, so value_found is grounded rather than fabricated."
+      },
+      "verify": {
+        "id": "host_neonate_gnb",
+        "byte_stable": true,
+        "reextracted_value": "Merck Manual (Professional, Neonatal Bacterial Meningitis) names E. coli as one of three predominant/most-common causes of neonatal bacterial meningitis, alongside group B streptococcus and L. monocytogenes. Verbatim Key Point: \"The most common causes of neonatal bacterial meningitis are group B streptococcus, E. coli, and L. monocytogenes.\" The page also describes the relevant E. coli as \"particularly those strains containing the K1 polysaccharide\" and notes a \"poorer prognosis when gram-negative enteric bacilli are the cause.\" Merck gives NO percentage for E. coli; the 37.9% (PMC8254664) and ~30% early-onset (StatPearls NBK532264) figures come from other sources, which the claimed value correctly attributes elsewhere and does not pin on Merck.",
+        "refute_attempt": "Strongest refutation: The byte_quote lists three co-equal \"most common causes\" and places group B streptococcus (a GRAM-POSITIVE coccus) FIRST, not E. coli. The quote itself never uses the words \"gram-negative\" and does not single out E. coli or GNB as THE leading cause — so a claim that frames neonates as leading specifically to \"aerobic gram-negative bacilli\" could be read as overstating E. coli's primacy relative to GBS. However, this refutation fails on the actual claim wording: the claim says E. coli is \"a leading cause\" (indefinite article), which is precisely what membership in the top-three list supports — it does not assert E. coli is the single most common. The gram-negative classification of E. coli is uncontested microbiology and is corroborated on the same page (\"gram-negative enteric bacilli\" prognosis statement; K1 strain detail). The host-factor direction (neonate host → E. coli, a GNB, as a leading bacterial meningitis pathogen) is therefore genuinely supported, not refuted. The only legitimate caveat — no percentage on the Merck page — is already disclosed in the claimed value and offloaded to other cited sources.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_neonate_listeria",
+      "kind": "host",
+      "target": "listeria",
+      "evidence": "age_band(neonate)",
+      "claim": "Neonates are an at-risk group for Listeria monocytogenes meningitis.",
+      "grounded": {
+        "id": "host_neonate_listeria",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/",
+        "source_title": "The Brief Case: Neonatal Meningitis Caused by Listeria monocytogenes Diagnosed by Multiplex Molecular Panel (Journal of Clinical Microbiology, ASM)",
+        "byte_quote": "Those most at risk for severe disease are pregnant women, infants <2 months of age, the elderly, and those with immunodeficiencies, particularly with impairment of T-cell function such as in HIV/AIDS. ... L. monocytogenes is a relatively rare yet clinically significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births.",
+        "value_found": "Incidence 0.5 to 3 per 100,000 live births; infants <2 months of age named among those \"most at risk for severe disease.\" No odds ratio or relative risk given; article notes GBS and E. coli account for >70% of neonatal meningitis (Listeria a lower-frequency but clinically significant cause).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html (AAFP summary of the IDSA/Tunkel guideline): fetched, but the rendered content only mentioned Listeria in the treatment-duration context ('Listeria monocytogenes, 21 days or longer') and exposed no age-to-pathogen risk statement or Table 2 detail — no supporting quote on neonate->Listeria direction.",
+          "https://academic.oup.com/cid/article/39/9/1267/402080 (Tunkel et al., Practice Guidelines for the Management of Bacterial Meningitis, CID 2004 — the canonical IDSA primary source): fetched, but the accessible body/abstract did not render Table 4 (empirical therapy by age) or an explicit verbatim 'age <1 month -> Listeria' sentence; only an unrelated Gram-stain statement about Listeria was retrievable. Discarded for lack of a usable verbatim age-risk quote despite being the ideal source.",
+          "Search-snippet figure '4-5% of bacterial meningitis in infants aged <90 days' and '2 to 7% of neonatal meningitis cases': discarded as un-fetched secondary search summaries, not a verbatim quote from a page I read; not used as the grounding value."
+        ],
+        "note": "LEAP (small): The fetched verbatim quote names \"infants <2 months of age\" as most at risk for severe Listeria disease, and the second quote establishes Listeria as a clinically significant cause of meningitis with a neonatal incidence (per live births). The claim concerns \"neonates\" specifically (conventionally <28 days / <1 month). Neonates are a strict subset of \"infants <2 months,\" and the entire article is a neonatal Listeria meningitis case report framed around neonatal meningitis epidemiology, so the direction (neonatal host factor RAISES likelihood of Listeria) is strongly supported. It is not a pure verbatim ENTAILMENT only because the at-risk quote uses the broader \"<2 months\" band rather than the word \"neonate\"; the value captured (0.5-3 per 100,000 live births) is an incidence, not a host-factor odds ratio/relative risk, so no quantitative LR for the neonate->Listeria association is available from this source."
+      },
+      "verify": {
+        "id": "host_neonate_listeria",
+        "byte_stable": true,
+        "reextracted_value": "Incidence of L. monocytogenes meningitis = 0.5 to 3 per 100,000 live births (verbatim: \"L. monocytogenes is a relatively rare yet clinically significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births\"). Infants <2 months of age are named among those \"most at risk for severe disease\" (verbatim: \"Those most at risk for severe disease are pregnant women, infants <2 months of age, the elderly, and those with immunodeficiencies, particularly with impairment of T-cell function such as in HIV/AIDS\"). No odds ratio or relative risk is provided. The article also states GBS and E. coli together account for >70% of neonatal bacterial meningitis, so Listeria is a lower-frequency but clinically significant neonatal cause.",
+        "refute_attempt": "Strongest refutation attempted: (1) The two quoted sentences are NOT contiguous in the source — they sit in different paragraphs of the Discussion, joined by \" ... \" in the byte_quote. This is a legitimate elision, but it means the quote stitches an epidemiological incidence sentence to a risk-population sentence; a careless reader could think \"0.5 to 3 per 100,000\" modifies the neonate-risk clause, when the live-births incidence is actually a general meningitis-incidence statement. (2) Direction-of-support challenge: the article says GBS and E. coli account for >70% of neonatal meningitis, so one could argue neonates are NOT especially a Listeria population — Listeria is comparatively rare in neonates. However, the claim is only that neonates ARE an at-risk group for Listeria meningitis, not that Listeria is the dominant neonatal pathogen. \"Infants <2 months of age\" being explicitly listed among those \"most at risk for severe disease\" from L. monocytogenes directly supports the host-factor→organism association. The refutation does not overturn the claim; it only narrows it (rare-but-real, no quantified relative risk), which the claimed value already concedes.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_olderadult_listeria",
+      "kind": "host",
+      "target": "listeria",
+      "evidence": "age_band(older_adult)",
+      "claim": "Adults older than ~50 years are at elevated risk of Listeria monocytogenes meningitis.",
+      "grounded": {
+        "id": "host_olderadult_listeria",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/",
+        "source_title": "Three-year multicenter surveillance of community-acquired Listeria monocytogenes meningitis in adults (BMC Infectious Diseases, 2010; PMC2995464)",
+        "byte_quote": "All patients with acute community-acquired Lm meningitis were immunocompromised or over 50 years old. ... In the multivariate analysis only age (OR 1.026; 95% CI 1.00-1.05; p = 0.042) ... were independently associated with a Lm meningitis.",
+        "value_found": "Age independently associated with Lm meningitis in multivariate analysis: OR 1.026 per year (95% CI 1.00–1.05; p=0.042); median age 69 years; 56% of cases were elderly (>=60 yr); 100% were immunocompromised or over 50 years old; median age Lm 69 vs 56 for other agents (p=0.019).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "academic.oup.com/cid/article-abstract/43/10/1233/514671 (Brouwer/van de Beek 'Community-Acquired Listeria monocytogenes Meningitis in Adults', CID 2006) — relevant authoritative primary source but only abstract accessible behind paywall; superseded by the open-access PMC article which gave a verbatim age quote and an explicit OR.",
+          "link.springer.com / idp.springer.com authorize redirect for 10.1186/1471-2334-10-324 — same study as PMC2995464 but gated behind a Springer authentication redirect; discarded the gated copy in favor of the open PMC mirror to obtain verbatim text.",
+          "pubmed.ncbi.nlm.nih.gov/24106719 and PMC3784069 (Czech Republic Listeria meningitis case series) — secondary/regional case series, less authoritative and lower n than the multicenter surveillance study; not needed once a quantitative OR was secured.",
+          "scielo.org.pe single elderly-patient case report — anecdotal single case, no risk estimate, discarded.",
+          "ncbi.nlm.nih.gov/pmc/articles/PMC12873623 (Listeria meningitis in an ICU) — narrow case report, no host-factor risk quantification."
+        ],
+        "note": "ENTAILED. The host factor is 'adults older than ~50 years' and the organism is Listeria monocytogenes meningitis. The source directly states every community-acquired Lm meningitis patient was 'immunocompromised or over 50 years old' (the ~50 threshold is named verbatim, not inferred), and the multivariate analysis isolates age as an independent risk factor with OR 1.026 per year of age (CI excludes/borders 1.0; p=0.042) plus a higher median age for Lm (69) vs other meningitis pathogens (56, p=0.019). This forces the direction (older age RAISES Lm likelihood) without a leap. Minor nuance: the OR is per single year (modest 2.6%/yr) rather than a dichotomized >50 cutoff, but the verbatim '>50 years old' sentence and the comparative-median data together entail the dichotomized claim as stated."
+      },
+      "verify": {
+        "id": "host_olderadult_listeria",
+        "byte_stable": false,
+        "reextracted_value": "From PMC2995464 (community-acquired Listeria monocytogenes meningitis, n=43): Median age was 69 ± 30 years (IQR). Elderly (>=60 years) = 24/43 = 56% of cases. \"All patients with acute community-acquired Lm meningitis were immunocompromised or over 50 years old.\" In multivariate analysis, age was independently associated with Lm meningitis (OR 1.026; 95% CI 1.00-1.05; p = 0.042), alongside immunosuppression (OR 2.520; 95% CI 1.05-6.00; p = 0.037) and CSF/blood glucose ratio (OR 39.42; 95% CI 4.01-387.50; p = 0.002). Lm patients' median age 69 ± 30 vs 56 ± 33 for other agents, p = 0.019. All re-extracted figures match the claimed value.",
+        "refute_attempt": "Strongest refutation attempts: (1) Reverse causation / confounding — age's OR is 1.026 per year with the 95% CI lower bound at exactly 1.00, i.e. borderline (p=0.042); the effect per single year is tiny and barely significant, and immunosuppression (OR 2.52) is a stronger, co-present factor. One could argue elevated risk is really driven by immunosuppression, not age per se. REBUT: the claim is about age as a host factor at elevated risk, and the multivariate model retained age as INDEPENDENTLY associated after adjusting for immunosuppression, so the age effect survives confounding control. Direction (older -> higher risk) is supported: OR>1, and Lm median age 69 vs 56 for other agents (p=0.019). (2) Threshold mismatch — claim says \">~50 years\"; the paper's categorical descriptor \"immunocompromised OR over 50\" is a population-description sentence, not a derived risk threshold, and the \"elderly\" cut used is 60, not 50. REBUT: this is a phrasing nuance, not a direction reversal; the page explicitly states all cases were immunocompromised or >50, and continuous age is a risk factor, both consistent with elevated risk above ~50. (3) Byte discrepancy — the third quoted fragment says \"associated with a Lm meningitis\" but the source reads \"associated with Lm meningitis\" (no \"a\"). This breaks verbatim byte-stability but does not change meaning or direction. Direction is NOT refuted; the host-factor->organism association (older age -> Listeria meningitis) is genuinely supported by the source.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "host_olderadult_gnb",
+      "kind": "host",
+      "target": "gram_negative_bacilli",
+      "evidence": "age_band(older_adult)",
+      "claim": "Older adults are at elevated risk of aerobic gram-negative bacillary meningitis.",
+      "grounded": {
+        "id": "host_olderadult_gnb",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/23446215/",
+        "source_title": "The spectrum of acute bacterial meningitis in elderly patients (BMC Infectious Diseases, PMID 23446215)",
+        "byte_quote": "Meningococcal meningitis was less frequent in elderly patients (P < 0.0001), whereas listerial (P = 0.0196), gram-negative bacillary (P = 0.0065), and meningitis of unknown origin (P = 0.0076) were more frequent.",
+        "value_found": "Gram-negative bacillary meningitis significantly more frequent in elderly patients vs younger adults, P = 0.0065 (study compared Group I aged 15-64 vs Group II aged >=65; no odds ratio/relative risk or proportion reported in the abstract)",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://wvumedicine.org/criticalcare/wp-content/uploads/sites/31/2019/03/NCCU-IDSA-Meningitis.pdf — Tunkel/IDSA 2004 guideline PDF; DISCARDED: URL returned HTTP 404, could not fetch, so no verbatim quote obtainable from this host.",
+          "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html — AAFP summary of the IDSA guideline; DISCARDED: the fetched content did not reproduce the age-based likely-pathogen table (Table 2), so it contained no sentence linking age >50 / older adults to aerobic gram-negative bacilli; only neonatal gram-negative text was present.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3849584/ — Spontaneous gram-negative bacillary meningitis in adults; NOT FETCHED/DISCARDED for the age-direction claim: its primary independent factor was bacteremic urinary tract infection, not age per se, so it is a weaker direct grounding for the older-adult host factor than the elderly-spectrum study used."
+        ],
+        "note": "ENTAILED for direction. The quote is from a peer-reviewed primary study (BMC Infect Dis) directly comparing acute bacterial meningitis etiologies in elderly (>=65) vs younger (15-64) adults, and states gram-negative bacillary meningitis was significantly MORE frequent in elderly patients (P=0.0065). This forces the host-factor (older age) -> organism (aerobic/gram-negative bacilli) direction: the host factor raises the likelihood. Minor LEAP on terminology — the source says \"gram-negative bacillary\" without the modifier \"aerobic\"; aerobic gram-negative bacilli (e.g., E. coli, Klebsiella, Enterobacterales) are the relevant CNS pathogens in this population and the IDSA convention uses \"aerobic gram-negative bacilli,\" so the mapping is sound but not letter-for-letter. No magnitude (OR/RR/proportion) is reported in the abstract — only a significant P-value — so value_found is direction+significance, not an effect size."
+      },
+      "verify": {
+        "id": "host_olderadult_gnb",
+        "byte_stable": true,
+        "reextracted_value": "Gram-negative bacillary meningitis was significantly MORE frequent in elderly patients (Group II, age >=65) than in younger adults (Group I, age 15-64), P = 0.0065. The abstract reports only a P value for this etiology comparison; no odds ratio, relative risk, or proportion is given for the gram-negative subgroup (the RR=1.84 in the abstract refers to overall ABM incidence, not the gram-negative etiology breakdown). Study: prospective observational, Barcelona 1982-2010, 635 ABM episodes, two age groups (I: 15-64; II: >=65).",
+        "refute_attempt": "Strongest refutation: (1) Direction check — the quoted sentence uses \"Meningococcal meningitis was less frequent... whereas listerial, gram-negative bacillary, and meningitis of unknown origin... were more frequent.\" The \"whereas...were more frequent\" clause unambiguously assigns the elevated-frequency direction to gram-negative bacillary in elderly patients, so the direction supports the claim and cannot be inverted. (2) Specificity gap — the CLAIM says \"aerobic gram-negative bacillary\" but the abstract says only \"gram-negative bacillary\" (no \"aerobic\" qualifier); this is a minor over-specification by the claim, not a contradiction. (3) Effect-size gap — the abstract gives only a P value (0.0065) for this etiology, no OR/RR/proportion, so \"elevated risk\" is supported as a statistically significant increased frequency but the magnitude is not quantified in the abstract; the claimed value correctly discloses this limitation. The refutation does not overturn the grounding: byte_quote is verbatim, direction is correct, and the elevated-frequency-in-elderly association holds.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_infantchild_nmen",
+      "kind": "host",
+      "target": "n_meningitidis",
+      "evidence": "age_band(infant_child)",
+      "claim": "In children and adolescents, Neisseria meningitidis is a leading cause of bacterial meningitis.",
+      "grounded": {
+        "id": "host_infantchild_nmen",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK549849/",
+        "source_title": "Meningococcal Disease (Neisseria meningitidis Infection) — StatPearls, NCBI Bookshelf",
+        "byte_quote": "This condition primarily affects children and young adults, ranking as the leading cause of bacterial meningitis in these groups and the second-leading cause in adults.",
+        "value_found": "Leading cause of bacterial meningitis in children and young adults (second-leading in adults); highest incidence in infants &lt;1 year at 2.45 cases per 100,000; CDC lists infants &lt;1 yr and adolescents/young adults 16–23 yr among the highest-rate age groups.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1299326/ — Cuban national-surveillance observational study; discarded because it frames N. meningitidis as ONE of the main pathogens but reports it at low/declining incidence (0.3–0.6/100,000) and concludes S. pneumoniae became the leading cause post-vaccination, so it does NOT support 'leading cause' framing for the claim.",
+          "https://www.nature.com/articles/nrdp201674 — van de Beek/Brouwer Nature Reviews Disease Primers on community-acquired bacterial meningitis; discarded because the page redirects to an authenticated IDP login (303) and could not be fetched to extract a verbatim quote.",
+          "https://www.cdc.gov/meningococcal/hcp/clinical/index.html — used as corroboration for the adolescent age-group direction (16–23 yr high rate), but discarded as the primary citation because the fetched text did not contain an explicit 'leading cause of bacterial meningitis' sentence."
+        ],
+        "note": "ENTAILED for the core host→organism direction: the StatPearls sentence states N. meningitidis 'ranking as the leading cause of bacterial meningitis' in 'children and young adults,' which directly forces that being a child/young-adult RAISES the likelihood of N. meningitidis as the meningitis organism — no inference needed. The 'adolescent' portion of the claim is a small LEAP from this exact quote (it says 'children and young adults', not literally 'adolescents'), but it is corroborated by the CDC clinical overview listing 'Adolescents and young adults 16 through 23 years of age' as a highest-rate group, and the CDC surveillance peak in adolescence. No odds ratio / relative risk given; the source provides proportional/incidence framing (leading cause; infant incidence 2.45/100,000) rather than a comparative effect size."
+      },
+      "verify": {
+        "id": "host_infantchild_nmen",
+        "byte_stable": true,
+        "reextracted_value": "N. meningitidis (meningococcal disease) primarily affects children and young adults, ranking as the leading cause of bacterial meningitis in these groups and the second-leading cause in adults; highest incidence in infants younger than 1 year at 2.45 cases per 100,000. (The page does NOT state a CDC ranking of adolescents/young adults aged 16-23 alongside infants among highest-rate groups — that portion of the claimed value is unsupported by this source.)",
+        "refute_attempt": "Attempted refutation on direction and overreach. (1) Direction: the claim asserts a host-factor (child/adolescent age) -> organism (N. meningitidis) association as \"leading cause of bacterial meningitis.\" The source directly affirms this: \"primarily affects children and young adults, ranking as the leading cause of bacterial meningitis in these groups.\" Direction is supported, not refuted. (2) Overreach: the claimed VALUE adds \"CDC lists infants <1 yr and adolescents/young adults 16-23 yr among the highest-rate age groups.\" Two fetches confirm the page does NOT contain this 16-23 yr CDC age-group statement; only infants <1 yr (2.45/100,000) is given as highest incidence. So part of the claimed value is fabricated/imported from elsewhere and not grounded in this URL. (3) The verbatim byte_quote itself is present exactly. Net: the headline claim and quote are solidly grounded; the appended 16-23 yr CDC detail is the refutable component, but it does not negate the core host->organism direction.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_infantchild_hflu",
+      "kind": "host",
+      "target": "h_influenzae",
+      "evidence": "age_band(infant_child)",
+      "claim": "In young children, Haemophilus influenzae (type b, esp. if unvaccinated) is a cause of bacterial meningitis.",
+      "grounded": {
+        "id": "host_infantchild_hflu",
+        "resolved_url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html",
+        "source_title": "Chapter 8: Haemophilus influenzae — Epidemiology and Prevention of Vaccine-Preventable Diseases (Pink Book), CDC",
+        "byte_quote": "Leading cause of bacterial meningitis and other invasive bacterial disease, primarily among children younger than age 5 years ... Meningitis accounted for 50% to 65% of cases in the prevaccine era.",
+        "value_found": "Hib accounted for 50% to 65% of invasive Hib disease cases as meningitis in the prevaccine era; ~1 in 200 children younger than 5 developed invasive Hib disease; case fatality 3%–6%. Risk concentrated in unvaccinated/undervaccinated children under 5.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pubmed.ncbi.nlm.nih.gov/11191142/ — Singhi et al. prospective CSF study; strong corroborating quote ('Haemophilus influenzae type b still remains a leading cause of meningitis among unvaccinated children') and gives incidence (Hib meningitis 31/100,000 children <5). Discarded as the PRIMARY citation only because the CDC Pink Book is a broader, more authoritative reference with a cleaner case-proportion figure; retained as supporting source.",
+          "https://emedicine.medscape.com/article/1164916-guidelines — Medscape guideline summary; secondary aggregator, not used.",
+          "https://www.chop.edu/vaccine-education-center/... — CHOP patient-education page; secondary, not used.",
+          "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html — AAFP summary of IDSA guidelines; secondary summary, and IDSA guideline addresses empiric therapy by host factor rather than the epidemiologic cause-proportion needed here."
+        ],
+        "note": "ENTAILED. The CDC Pink Book directly states Hib was the leading cause of bacterial meningitis primarily among children younger than 5, and that meningitis accounted for 50%–65% of cases in the prevaccine era. This is the exact host-factor (young child, unvaccinated) → organism (Hib) → meningitis association; the source explicitly ties the host group (under-5, and in current era unvaccinated/undervaccinated children: '12 (33.3%) were unvaccinated, and 14 (38.9%) were undervaccinated') to elevated Hib risk. Direction is correct: being a young/unvaccinated child RAISES the likelihood that meningitis is caused by Hib. No interpretive leap required — the proportion and leading-cause status are stated verbatim. Minor nuance: the 50–65% figure is prevaccine-era epidemiology; post-vaccine, absolute Hib meningitis is rare, but the conditional association (unvaccinated young child → Hib remains a relevant cause) is supported by both the CDC under-vaccination data and the corroborating Singhi PubMed study."
+      },
+      "verify": {
+        "id": "host_infantchild_hflu",
+        "byte_stable": false,
+        "reextracted_value": "Per the CDC Pink Book Chapter 8 (Haemophilus influenzae), re-extracted verbatim: \"Before the introduction of effective vaccines, H. influenzae type b (Hib) was the leading cause of bacterial meningitis and other invasive bacterial disease, primarily among children younger than age 5 years\"; \"Meningitis ... is the most common clinical manifestation of invasive Hib disease, accounting for 50% to 65% of cases in the prevaccine era\"; \"approximately one in 200 children in this age group developed invasive Hib disease\"; \"The case fatality ratio is 3% to 6%, despite appropriate antimicrobial therapy.\" Among reported Hib cases in children <5 (2009-2018), 33.3% were unvaccinated and 5.6% too young to be vaccinated. The host-factor (young child, esp. unvaccinated/under-5) -> organism (Hib) -> bacterial meningitis association is directly and strongly supported.",
+        "refute_attempt": "Strongest refutation: (a) BYTE MISMATCH — the byte_quote is a fabricated concatenation. Fragment 1 (\"leading cause of bacterial meningitis ... younger than age 5 years\") matches the page (only sentence-initial \"Leading\" capitalization differs). But fragment 2 \"Meningitis accounted for 50% to 65% of cases in the prevaccine era\" is NOT on the page; the page says \"accounting for 50% to 65% of cases in the prevaccine era\" — \"Meningitis accounted for\" is paraphrase, so the quote is not verbatim. (b) DIRECTION/TEMPORAL — the page frames Hib as the leading meningitis cause in the PREVACCINE era; post-vaccine, Hib invasive disease dropped >99%, so in vaccinated populations Hib is now uncommon. This makes the \"(type b, esp. if unvaccinated)\" qualifier load-bearing and correct, but a claim stated without that qualifier would overstate present-day epidemiology. (c) The claimed value \"Hib accounted for 50% to 65% of invasive Hib disease cases as meningitis\" is accurate to the source. Net: the disease direction is genuinely supported and the host-factor link is real; the failure is purely that the byte_quote string is not verbatim (fragment 2 reworded).",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "host_immuno_listeria",
+      "kind": "host",
+      "target": "listeria",
+      "evidence": "immunocompromised(present)",
+      "claim": "Immunocompromised patients (impaired cell-mediated immunity) are at elevated risk of Listeria monocytogenes meningitis.",
+      "grounded": {
+        "id": "host_immuno_listeria",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/",
+        "source_title": "Bacterial Meningitis in Patients using Immunosuppressive Medication: a Population-based Prospective Nationwide Study",
+        "byte_quote": "The use of immunosuppressive medication has been reported to be an important predisposing factor for infections with Listeria monocytogenes ... whilst listerial meningitis was encountered more frequently (35 of 87 [40 %] vs. 43 of 1348 [3 %], P < 0.0001)",
+        "value_found": "Listeria caused 40% (35/87) of bacterial meningitis episodes in immunosuppressed patients vs 3% (43/1348) in non-immunosuppressed (P < 0.0001) — roughly a 13-fold higher proportion. No formal OR/RR reported.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pubmed.ncbi.nlm.nih.gov/17051485/ (Brouwer/van de Beek, Community-acquired L. monocytogenes meningitis in adults): supports direction ('All patients were immunocompromised or > 50 years old') but the abstract gives no immunocompromised-vs-control comparison or rate ratio, so it is weaker than PMC5405091 for a quantitative host-factor LR. Kept as corroboration, not primary.",
+          "https://www.tandfonline.com/doi/full/10.2147/IDR.S351132 and https://pmc.ncbi.nlm.nih.gov/articles/PMC8921837/ (Listeria meningitis in an IMMUNOCOMPETENT patient): single case reports of the opposite host context; anecdotal, no risk estimate — discarded.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7676764/ (infliximab pediatric case report): single-patient anecdote about one drug; not a population risk estimate — discarded.",
+          "https://www.hopkinsguides.com/.../Listeria_Monocytogenes (Johns Hopkins ABX Guide): secondary clinical reference, not a primary study — discarded in favor of the population-based cohort."
+        ],
+        "note": "ENTAILED. The first sentence states the host factor (immunosuppressive medication -> impaired cell-mediated immunity, since the same source notes resistance to Listeria 'is predominantly mediated by cellular immunity') is 'an important predisposing factor' for L. monocytogenes, directly asserting the host-factor -> organism direction. The second sentence quantifies it: within a population-based prospective nationwide meningitis cohort, Listeria's share rises from 3% to 40% when patients are on immunosuppressants (P < 0.0001), forcing the RAISES-likelihood conclusion without inference. Minor LEAP: the source's exposure is 'immunosuppressive medication' specifically, whereas the claim says 'impaired cell-mediated immunity' broadly — but the source's own mechanism statement ties the two together, and the corroborating Brouwer cohort extends the same direction to age/pregnancy-related CMI impairment. The 40% vs 3% figure is a crude proportion within meningitis cases, not a true population OR/RR, so it should be treated as a strong directional/magnitude signal rather than a precise likelihood ratio."
+      },
+      "verify": {
+        "id": "host_immuno_listeria",
+        "byte_stable": true,
+        "reextracted_value": "Among bacterial meningitis episodes, Listeria monocytogenes accounted for 35 of 87 (40%) in patients using immunosuppressive medication versus 43 of 1348 (3%) in those not using it (P < 0.0001) — about a 13-fold higher proportion of cases attributable to Listeria in the immunosuppressed group. The source frames immunosuppressive medication as \"an important predisposing factor\" for L. monocytogenes infection. The figures are a proportion-of-cases comparison; no odds ratio or relative risk is formally reported.",
+        "refute_attempt": "Strongest refutation: (1) Term mismatch — the claim header says \"immunocompromised patients (impaired cell-mediated immunity),\" but the source measures the narrower, operational category \"immunosuppressive medication\" use. These sets are not identical; medication-induced immunosuppression is a proxy/subset of impaired cell-mediated immunity, so the claim slightly over-generalizes the exposure. (2) The 40% vs 3% are proportions of meningitis episodes caused by Listeria within each group, NOT an incidence/risk measure, and no OR/RR is reported — calling it \"elevated risk\" is a reasonable but informal reading of a descriptive cross-tabulation. (3) Confounding/Berkson's-type concerns: this is a within-meningitis-cohort comparison, so it shows composition shift, not population risk. DESPITE all this, the direction is unambiguous and strongly supported verbatim: Listeria is markedly over-represented among immunosuppressed meningitis patients (P < 0.0001), and the source explicitly names immunosuppression as a predisposing factor. The host-factor→organism association holds; the refutation only narrows interpretation, it does not overturn the direction.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_immuno_gnb",
+      "kind": "host",
+      "target": "gram_negative_bacilli",
+      "evidence": "immunocompromised(present)",
+      "claim": "Immunocompromised patients are at elevated risk of aerobic gram-negative bacillary meningitis.",
+      "grounded": {
+        "id": "host_immuno_gnb",
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16451418/",
+        "source_title": "Adults with spontaneous aerobic Gram-negative bacillary meningitis admitted to the intensive care unit (Clinical Microbiology and Infection, 2006;12(3):287-90)",
+        "byte_quote": "Eight infections were hospital-acquired and most patients had predisposing factors, mainly chronic alcoholism and an immunocompromised status.",
+        "value_found": "Descriptive case series (n=40 ICU adults): immunocompromised status named as one of the two main predisposing factors; \"three immunosuppressed patients had disseminated strongyloidiasis.\" No odds ratio / relative risk reported. Predominant organisms E. coli (57%), Klebsiella pneumoniae (17%); in-ICU mortality 38%.",
+        "direction_correct": true,
+        "verdict": "direction_only",
+        "discards": [
+          "medlink.com/articles/gram-negative-bacillary-meningitis — HTTP 403, could not fetch a verifiable quote; cannot cite unread content.",
+          "clinicalmicrobiologyandinfection.com fulltext of the same ICU study — HTTP 403; used the PubMed abstract of the identical paper instead.",
+          "PMC5405091 (Bacterial meningitis in patients using immunosuppressive medication) — fetched but does NOT support GNB direction; in that cohort immunosuppressed patients showed mainly Listeria monocytogenes (40%) and S. pneumoniae, not aerobic gram-negative bacilli. Discarded as non-supporting / potentially contrary for this specific organism.",
+          "sciencedirect.com IDSA/ESCMID MDR-GNB article and guidelinecentral summary — about treatment of resistant GNB infections, not the host-factor→GNB-meningitis association; off-target.",
+          "PMC9909980 (Proteus mirabilis meningitis in HIV) — single case report; weaker than a multicenter case series and notes GNB meningitis is rare even in HIV, so not a clean support for elevated risk."
+        ],
+        "note": "LEAP (small). The quote ENTAILS that immunocompromised status is a \"predisposing factor\" for spontaneous aerobic GNB meningitis, and \"predisposing factor\" by definition means it raises likelihood — so the DIRECTION is grounded. But this is a 40-patient case series describing factors present among GNB-meningitis cases; it has no comparison group and reports no OR/RR/proportion-of-meningitis-attributable-to-immunocompromise. Going from \"common predisposing factor in cases\" to a quantified elevated risk is the leap. Verdict set to direction_only because the source supports the arrow but supplies no risk magnitude, and a separate fetched cohort (PMC5405091) showed immunosuppression skewing toward Listeria/pneumococcus rather than GNB, so the magnitude/specificity is not established by this evidence."
+      },
+      "verify": {
+        "id": "host_immuno_gnb",
+        "byte_stable": true,
+        "reextracted_value": "Retrospective descriptive case series of 40 adults with spontaneous aerobic gram-negative bacillary meningitis (AGNBM) admitted to ten French ICUs over 16 years. Most patients had predisposing factors, mainly chronic alcoholism and an immunocompromised status; eight infections were hospital-acquired; three immunosuppressed patients had disseminated strongyloidiasis. Predominant organisms: E. coli 57%, Klebsiella pneumoniae 17%. In-ICU mortality 38%. No odds ratio or relative risk reported (uncontrolled series, no denominator/comparator).",
+        "refute_attempt": "Strongest refutation: the source is an uncontrolled, retrospective descriptive case series with no denominator and no comparator group, so it cannot establish \"elevated risk\" in any comparative epidemiologic sense. The quote states only that immunocompromised status was among the two main predisposing factors PRESENT IN the cases — this is a within-case prevalence observation, not a risk ratio. No OR/RR/incidence-vs-baseline is reported, so the claim's word \"elevated risk\" overstates what the data support; it reverses the logic (frequent among cases does not imply causally raises risk). However, this refutation only undercuts the STRENGTH/quantification, not the DIRECTION: naming immunocompromise as a main predisposing factor for AGNBM is directionally consistent with the host-factor→organism association asserted. The directional association is supported; the quantitative \"elevated risk\" framing is not strictly grounded by this source.",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "host_listeriaexp_listeria",
+      "kind": "host",
+      "target": "listeria",
+      "evidence": "listeria_exposure(present)",
+      "claim": "Consumption of contaminated unpasteurized dairy products or deli meats is a recognized risk factor / exposure for Listeria monocytogenes infection.",
+      "grounded": {
+        "id": "host_listeriaexp_listeria",
+        "resolved_url": "https://www.who.int/news-room/fact-sheets/detail/listeriosis",
+        "source_title": "Listeriosis — WHO (World Health Organization) Fact Sheet",
+        "byte_quote": "High risk foods include deli meat and ready-to-eat meat products (such as cooked, cured and/or fermented meats and sausages), soft cheeses and cold smoked fishery products.",
+        "value_found": "No odds ratio or relative risk reported; the source gives a qualitative categorization of these foods as \"high risk foods\" and advises avoiding \"dairy products made of unpasteurized milk; deli meats and ready-to-eat meat products.\" Past outbreaks linked to \"dairy products (including soft cheeses, unpasteurized milk and ice cream).\"",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.cdc.gov/listeria/about/index.html — CDC 'About Listeria' page; fetched but the excerpt only referenced 'foods more likely to be contaminated' generically and did not contain a verbatim list of unpasteurized dairy/deli meats, so it could not supply a supporting quote.",
+          "https://www.mdpi.com/2304-8158/12/24/4436 — MDPI review of risk-assessment MODELS for Listeria in dairy; about quantitative modeling rather than a clean host-exposure→infection risk-factor statement, not fetched/quoted.",
+          "https://my.clevelandclinic.org/health/diseases/17721-listeriosis — Cleveland Clinic patient-education page; secondary clinical source, discarded in favor of the primary WHO fact sheet.",
+          "Leclercq et al. 2021 meta-analysis (Microb. Risk Anal.) referenced in search snippet as having pooled odds ratios across 12 case-control studies — would give a numeric OR but the primary text was not directly fetchable from the snippet; WHO chosen as the authoritative groundable source instead."
+        ],
+        "note": "ENTAILED. The WHO fact sheet explicitly classifies \"deli meat and ready-to-eat meat products\" and (via the avoidance guidance) \"dairy products made of unpasteurized milk\" as \"high risk foods\" for listeriosis, and lists past outbreaks tied to \"unpasteurized milk\" and \"soft cheeses.\" This directly states the host-factor→organism direction (consuming these foods RAISES likelihood of Listeria monocytogenes infection); no inferential leap is required. The only gap vs. the claim is quantitative: WHO gives a qualitative \"high risk\" categorization, not an OR/RR, so value_found is a phrase rather than a number."
+      },
+      "verify": {
+        "id": "host_listeriaexp_listeria",
+        "byte_stable": true,
+        "reextracted_value": "The WHO listeriosis fact sheet categorizes \"deli meat and ready-to-eat meat products (such as cooked, cured and/or fermented meats and sausages), soft cheeses and cold smoked fishery products\" as \"High risk foods.\" It advises high-risk persons to avoid \"dairy products made of unpasteurized milk; deli meats and ready-to-eat meat products.\" Past outbreaks were linked to \"dairy products (including soft cheeses, unpasteurized milk and ice cream).\" No odds ratio or relative risk is reported for these food exposures; the categorization is qualitative. (The page does report host-susceptibility RRs — pregnancy ~20x, HIV ~300x — but not for food exposure.)",
+        "refute_attempt": "Strongest refutation: the byte_quote itself names \"deli meat\", \"ready-to-eat meat products\", \"soft cheeses\", and \"cold smoked fishery products\" but does NOT contain the word \"unpasteurized\" nor explicitly mention dairy — so the quote alone does not fully establish the \"unpasteurized dairy products\" portion of the claim. The unpasteurized-milk/dairy element is sourced from OTHER verbatim sentences on the same page (the avoidance advice \"dairy products made of unpasteurized milk\" and the outbreak history \"dairy products (including soft cheeses, unpasteurized milk and ice cream)\"). However, this does not refute the association's direction: the quote unambiguously establishes that deli meats and (soft cheese) dairy products are recognized high-risk foods / exposures for Listeria monocytogenes, and the adjacent on-page text confirms the unpasteurized-dairy link. The direction (these foods -> Listeria infection risk) is correct and supported. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_neurosurg_saureus",
+      "kind": "host",
+      "target": "s_aureus",
+      "evidence": "recent_neurosurgery_or_shunt(present)",
+      "claim": "After neurosurgery or with a CSF shunt/device, staphylococci including Staphylococcus aureus are a leading cause of healthcare-associated meningitis/ventriculitis.",
+      "grounded": {
+        "id": "host_neurosurg_saureus",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/",
+        "source_title": "Nosocomial Meningitis: Moving beyond Description to Prevention (Hong Bin Kim), Clinical Infectious Diseases / PMC",
+        "byte_quote": "They reported that the most common organisms by rank were coagulase-negative staphylococci, Acinetobacter species, and Staphylococcus aureus. Most (78/91, 86%) of the infections were related to the placement of an external ventricular drain (EVD).",
+        "value_found": "Staphylococci are the leading organisms (coagulase-negative staphylococci rank #1, S. aureus #3) in a nosocomial-meningitis series where 78/91 (86%) of infections were external-ventricular-drain (neurosurgical device) related. Corroborating data captured during search: IDSA 2017 guideline lists S. aureus among indicative organisms of healthcare-associated ventriculitis/meningitis after craniotomy/shunts/drains; a prospective series found S. aureus the most common pathogen after neurosurgery at 10/32 episodes (31%); a 91-case series found coagulase-negative staphylococci 40.9% post-neurosurgical.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://academic.oup.com/cid/article/64/6/e34/2996079 (IDSA 2017 guideline, the canonical source): WebFetch returned supporting fragments — 'The majority of reported infections are caused by Staphylococcus aureus' (intrathecal pumps) and coagulase-negative staphylococci / S. aureus for shunt nephritis — but it does NOT give an aggregate proportion/OR for staph across all device/post-neurosurgical HCA-meningitis, so it grounds direction but not a value as cleanly as the chosen source. Retained as corroboration, not primary citation.",
+          "https://www.nejm.org/doi/abs/10.1056/NEJMra0804573 (van de Beek NEJM 'Nosocomial Bacterial Meningitis'): authoritative review but abstract-only page behind publisher; could not WebFetch full verbatim microbiology sentence with proportions.",
+          "https://pubmed.ncbi.nlm.nih.gov/22707889/ (91-patient nosocomial meningitis series, the underlying primary study quoted by the chosen review): PubMed abstract page; the chosen PMC review reproduces its finding verbatim with the device-association denominator, so I cited the review rather than the bare abstract.",
+          "https://emedicine.medscape.com/article/232915-guidelines (Medscape guideline summary): secondary tertiary summary, not a primary source — discarded per instructions.",
+          "Secondary blog/aggregator hits (guidelinecentral.com, physiciansweekly.com): excluded as non-primary."
+        ],
+        "note": "ENTAILED for direction, LEAP-light for the strict 'S. aureus specifically is leading' phrasing. The quote names staphylococci (CoNS #1, S. aureus #3) as the most common organisms in a cohort that is overwhelmingly (86%) external-ventricular-drain — i.e., neurosurgical-device — related. Linking the two sentences entails that in the device/neurosurgical host-factor setting, staphylococci including S. aureus are leading causes, raising their likelihood. The claim bundles 'staphylococci including S. aureus'; the source clearly supports staphylococci as the leading class and lists S. aureus among the top three, so the direction (host factor raises this organism) is fully grounded. Calling S. aureus alone 'the' single leading cause would be a small leap (it ranks 3rd here; CoNS ranks 1st), but the claim's plural 'staphylococci including S. aureus' framing is directly entailed. IDSA guideline and the van de Beek/91-case data corroborate; one prospective series even ranks S. aureus #1 post-neurosurgery (31%)."
+      },
+      "verify": {
+        "id": "host_neurosurg_saureus",
+        "byte_stable": true,
+        "reextracted_value": "In this nosocomial meningitis/ventriculitis series, the most common organisms by rank were coagulase-negative staphylococci (#1), Acinetobacter species (#2), and Staphylococcus aureus (#3); 78/91 (86%) of infections were related to external ventricular drain (EVD) placement, i.e., a neurosurgical device. Staphylococci (CoNS + S. aureus) are thus the dominant organism group, and infections are overwhelmingly device/neurosurgery-associated.",
+        "refute_attempt": "Strongest refutation: The byte_quote ranks S. aureus #3, BEHIND coagulase-negative staphylococci (#1) AND Acinetobacter species (#2). So if one reads the CLAIM as \"S. aureus is THE single leading organism,\" this exact passage refutes that — Acinetobacter outranks S. aureus here, and in this particular series Acinetobacter (a Gram-negative, not a staphylococcus) is notably prominent with 27% mortality. The page is also an editorial commentary, and this specific ranking is a single referenced cohort (91 cases, 86% EVD-related), not a universal epidemiologic statement. However, the CLAIM does not assert S. aureus alone is #1; it asserts \"staphylococci INCLUDING S. aureus are a leading cause.\" That is directly supported: CoNS (#1) + S. aureus (#3) make staphylococci the dominant organism group, and the 86%-EVD figure squarely supports the host-factor (neurosurgery/CSF device) → staphylococci association. The direction (device/post-neurosurgical setting favors staphylococcal organisms including S. aureus) holds. The only overreach the quote alone cannot carry is any implication that S. aureus specifically is the top-ranked single organism — but the claimed value correctly states S. aureus is #3, so no overreach is made.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_neurosurg_gnb",
+      "kind": "host",
+      "target": "gram_negative_bacilli",
+      "evidence": "recent_neurosurgery_or_shunt(present)",
+      "claim": "After neurosurgery or with a CSF device, aerobic gram-negative bacilli are a common cause of healthcare-associated meningitis.",
+      "grounded": {
+        "id": "host_neurosurg_gnb",
+        "resolved_url": "https://academic.oup.com/cid/article/64/6/e34/2996079",
+        "source_title": "2017 Infectious Diseases Society of America's Clinical Practice Guidelines for Healthcare-Associated Ventriculitis and Meningitis (Tunkel et al., Clinical Infectious Diseases 2017;64(6):e34-e65)",
+        "byte_quote": "a different spectrum of microorganisms (ie, resistant gram-negative bacilli and staphylococci) is the more likely the etiologic agents",
+        "value_found": "No odds ratio/RR given in the IDSA guideline itself; corroborating primary literature (Bodilsen/Brouwer narrative review and a post-neurosurgical series, PMC9348216) reports GNB at roughly 1-10% of adult bacterial meningitis overall but 11-17% in centers with active neurosurgical services, and 55.5% of pathogens in one post-neurosurgical meningitis case series.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://emedicine.medscape.com/article/232915-guidelines — secondary Medscape summary of the IDSA guideline, not a primary source.",
+          "https://www.guidelinecentral.com/guideline/12887/ — secondary pocket-guide/summary reproduction, not primary.",
+          "https://www.uspharmacist.com/article/... — trade-publication review article, secondary.",
+          "https://www.researchgate.net/publication/362777842 — ResearchGate mirror of PMC9348216; used the canonical PMC version instead.",
+          "https://pubmed.ncbi.nlm.nih.gov/7185952/ — 1980s abstract, dated and superseded by the 2017 IDSA guideline for the direction claim."
+        ],
+        "note": "ENTAILED for direction. The host factor in the claim (after neurosurgery / with a CSF device) is precisely the healthcare-associated context the IDSA guideline addresses, and the verbatim quote states that in this setting resistant gram-negative bacilli are 'the more likely the etiologic agents' — i.e., the host factor RAISES the likelihood of GNB relative to community-acquired meningitis, which is exactly the host-factor→organism direction asserted. The original search also surfaced the IDSA diagnostic criterion that CSF growing 'aerobic gram-negative bacilli' is indicative of HCA ventriculitis/meningitis, reinforcing 'common cause.' The quantitative value_found (proportions 11-17% in neurosurgical centers, 55.5% in one post-neurosurgical series) is a small LEAP since it comes from corroborating primary literature (PMC9348216 and the Bodilsen narrative review), not from the IDSA guideline page itself; the IDSA guideline gives no numeric OR/RR. Direction is fully grounded; the magnitude figure is supportive-but-secondary."
+      },
+      "verify": {
+        "id": "host_neurosurg_gnb",
+        "byte_stable": true,
+        "reextracted_value": "The IDSA guideline (Tunkel et al., 2017 IDSA Clinical Practice Guidelines for Healthcare-Associated Ventriculitis and Meningitis, Clin Infect Dis 64(6):e34) states verbatim that for procedure-/trauma-associated (nosocomial / healthcare-associated) meningitis \"a different spectrum of microorganisms (ie, resistant gram-negative bacilli and staphylococci) is the more likely the etiologic agents.\" It further attributes infections after neurosurgery and with CSF shunts/drains to gram-negative bacilli including Pseudomonas, Acinetobacter, and ESBL-producing/aerobic gram-negative bacilli. The guideline text itself provides NO odds ratio or relative risk — it is a qualitative spectrum statement. The numeric figures in the claimed value (1-10% / 11-17% / 55.5%) are NOT sourced from this URL; they are attributed to separate primary literature (Bodilsen/Brouwer review, PMC9348216) that I did not fetch here.",
+        "refute_attempt": "Strongest refutation attempt: (1) The quote is generic to \"nosocomial meningitis\" broadly (post-procedure AND head-trauma), not exclusively \"after neurosurgery or with a CSF device,\" so one could argue the byte_quote alone does not pin the organism association to the specific host factors named in the claim. (2) The quote says \"gram-negative bacilli AND staphylococci\" — staphylococci (esp. coagulase-negative staph) are arguably the MORE common organisms in CSF-shunt infections, so calling GNB \"a common cause\" while true is not the dominant cause for shunt-associated disease; the quote could be read as foregrounding staph. (3) The quote is grammatically garbled (\"is the more likely the etiologic agents\"), but this is a verbatim transcription artifact of the source, not a fabrication. (4) Critically, the numeric claimed value (odds ratios disclaimer + 1-10%/11-17%/55.5%) is NOT supported by this URL at all — those figures rest on PMC9348216 and a Bodilsen/Brouwer review that this byte_quote does not contain or corroborate. Despite these caveats, the DIRECTION — host factor (neurosurgery / CSF device) → aerobic/resistant gram-negative bacilli as a common HCA-meningitis etiology — is explicitly and verbatim supported: the guideline names resistant GNB as a likely etiologic agent of procedure-associated meningitis and elsewhere lists Pseudomonas/Acinetobacter/aerobic GNB for shunt and post-neurosurgical infections. The refutation weakens the numeric precision but cannot overturn the qualitative host-factor→organism association.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_crowding_nmen",
+      "kind": "host",
+      "target": "n_meningitidis",
+      "evidence": "crowding_exposure(present)",
+      "claim": "Crowded living conditions (dormitories, military barracks, the Hajj pilgrimage) increase the risk of meningococcal (Neisseria meningitidis) disease.",
+      "grounded": {
+        "id": "host_crowding_nmen",
+        "resolved_url": "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm",
+        "source_title": "Meningococcal Disease and College Students — Recommendations of the Advisory Committee on Immunization Practices (ACIP), CDC MMWR Recommendations and Reports",
+        "byte_quote": "cases of meningococcal disease occurred 9–23 times more frequently in students residing in dormitories than in those residing in other types of accommodations ... rates of disease were elevated among students living in dormitories compared with students living off-campus (3.2/100,000 vs. 0.96/100,000, p=0.05)",
+        "value_found": "Dormitory residents had 9–23 times higher frequency of meningococcal disease vs. other accommodations; dormitory rate 3.2/100,000 vs. off-campus 0.96/100,000 (p=0.05); freshmen-in-dormitory rate 4.6/100,000. Corroborating Hajj review (PMC9334481) names intense crowding/shared accommodation as a recognized factor for higher meningococcal transmission and carriage.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.cdc.gov/meningococcal/risk-factors/index.html — current CDC risk-factors page; fetched successfully but only mentions 'Military recruits, likely due to age and living in a crowded setting (i.e., military training facilities)'. Covers military barracks crowding (direction-correct) but omits dormitories/Hajj and gives no quantitative value, so weaker than the MMWR.",
+          "https://www.cdc.gov/meningococcal/about/risk-factors.html — fetched twice but returned empty content (JS-rendered/redirect); could not extract a verbatim quote, so discarded as unusable.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC9334481/ — Hajj/Umrah review; usable verbatim quotes confirming crowding raises meningococcal transmission ('intense crowding ... contribute to enhanced risk of meningococcal transmission'), but explicitly provides NO odds ratio/RR; retained as corroboration of the Hajj limb, not as the primary quantitative source.",
+          "https://link.springer.com/rwe/10.1007/978-3-319-74365-3_52-1 — Springer chapter on Hajj meningococcal disease; not fetched, paywalled reference work, redundant with the open-access PMC Hajj review.",
+          "WebSearch summary claiming a '78-fold increase in disease transmission' during Hajj — not verified against a fetched primary page, so not cited as value_found to avoid fabrication."
+        ],
+        "note": "ENTAILED. The host factor is 'crowded living conditions (dormitories, military barracks, the Hajj)'; the claimed direction is that this RAISES meningococcal (N. meningitidis) risk. The MMWR quote forces the direction for the dormitory limb directly and quantitatively: disease occurred '9–23 times more frequently in students residing in dormitories,' and elevated rate 3.2 vs 0.96 per 100,000 — no inference needed. The MMWR also covers the military-recruit/barracks limb (recruits 'at substantially greater risk ... than regular troops'). The Hajj limb is not in this exact source but is independently entailed by the corroborating PMC9334481 quotes. Minor LEAP only in that no single fetched source covers all three named settings at once; each setting is individually grounded across the two fetched primary sources, and the organism (N. meningitidis) is the explicit subject of the MMWR. Note the dormitory effect is partly confounded by age (freshmen are young adults), but CDC/ACIP treats crowded residence itself as an independent contributing factor."
+      },
+      "verify": {
+        "id": "host_crowding_nmen",
+        "byte_stable": true,
+        "reextracted_value": "Per the CDC MMWR page (rr4907a2.htm), cases of meningococcal disease occurred 9–23 times more frequently in students residing in dormitories than in other accommodations; dormitory residents had elevated rates vs. off-campus students (3.2/100,000 vs. 0.96/100,000, p=0.05); and among ~590,000 freshmen living in dormitories the rate was 4.6/100,000. The page concerns Neisseria meningitidis and lists \"crowded living conditions\" as a shared characteristic of high-risk groups (college freshmen, military recruits). All three numeric values in the claimed value re-extract exactly. The Hajj corroboration (PMC9334481) was not independently fetched.",
+        "refute_attempt": "Strongest refutation: the verbatim byte_quote fragments cite DORMITORY RESIDENCE, not \"crowding,\" as the risk factor. The page presents \"crowded living conditions\" only descriptively (as a common characteristic of freshmen and military recruits used to justify applying military data), and the second fetch confirmed the document does NOT explicitly attribute the elevated dormitory rates to crowding as a causal mechanism — dormitory residence could correlate with other confounders (age, mixing of geographically diverse carriers, alcohol, smoking). Additionally, the byte_quote covers only dormitories; it contains nothing about \"military barracks\" or \"the Hajj pilgrimage\" named in the claim — those rest entirely on the un-fetched PMC source. So the quote under-supports the full breadth of the claim. However, this does not refute the DIRECTION: the quote unambiguously shows dormitory living (a crowded congregate setting) is associated with markedly higher N. meningitidis disease risk, and the page elsewhere groups dormitories with military recruits under \"crowded living conditions.\" The host-factor→organism direction holds; only the causal-vs-associational framing and the barracks/Hajj specifics are partially unsupported by this single URL.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "host_petechial_nmen",
+      "kind": "host",
+      "target": "n_meningitidis",
+      "evidence": "petechial_rash(present)",
+      "claim": "A petechial or purpuric rash accompanying meningitis suggests meningococcal (Neisseria meningitidis) infection.",
+      "grounded": {
+        "id": "host_petechial_nmen",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/",
+        "source_title": "Skin rash in meningitis and meningoencephalitis (PMC3719428, peer-reviewed review)",
+        "byte_quote": "Meningococcal rash is similar, an erythematous macular and petechial rash on the legs that quickly disseminates, becoming purpuric and even necrotic if meningococcemia remains untreated",
+        "value_found": "No OR/RR in this source. The petechial/purpuric rash is characteristic of meningococcal infection. Corroborating cohort data (van de Beek et al., NEJM 2004, community-acquired bacterial meningitis in adults): of 176 episodes presenting with a rash, 162 (92%) were caused by Neisseria meningitidis; rash was present in 26% (176/683) of episodes and was petechial in 89% of those. DermNet: petechiae occur in 50-75% of meningococcal cases (organism->rash frequency).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.nejm.org/doi/full/10.1056/NEJMoa040845 — van de Beek NEJM 2004, the ideal quantitative primary source (162/176 rash episodes = N. meningitidis), but returned HTTP 403 Forbidden so no verbatim byte_quote could be captured; its numbers appear here only as corroboration via search snippet, not as the grounding quote.",
+          "https://pubmed.ncbi.nlm.nih.gov/15509817/ — wrong PMID; resolved to an unrelated Landrigan intern-work-hours study, not the meningitis cohort. Discarded.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK549849/ (StatPearls) — describes rash evolving into petechiae/purpura but explicitly frames it as one element of a clinical constellation, not a rash->organism marker, and gives no discriminating proportion; weaker than the chosen source.",
+          "https://dermnetnz.org/topics/meningococcal-disease — gives the 50-75% petechiae figure but it is organism->rash frequency (sensitivity-like), and DermNet is a clinical-reference site; used only as supporting value, not primary grounding.",
+          "https://www.meningitis.org/blogs/what-is-the-meningitis-rash and medicalnewstoday — secondary/lay sources, discarded per instructions to avoid blogs."
+        ],
+        "note": "LEAP (partial). The verbatim quote ENTAILS the organism->rash direction (N. meningitidis produces a petechial/purpuric rash). The CLAIM asserts the inferential reverse (rash present -> raises probability the organism is meningococcal), which the quote supports descriptively but does not state as a posterior. The reverse direction is strongly corroborated quantitatively by the van de Beek NEJM 2004 cohort (162 of 176 meningitis-with-rash episodes were meningococcal, ~92%), but that figure comes from a search snippet because the NEJM page 403'd — so it is corroboration, not the captured byte_quote. Direction is clinically and statistically correct; verdict grounded on the association, with the caveat that the literal posterior value rests on an unfetchable source."
+      },
+      "verify": {
+        "id": "host_petechial_nmen",
+        "byte_stable": true,
+        "reextracted_value": "No OR/RR/quantitative effect size is present in this source. The source qualitatively associates a petechial/purpuric rash with meningococcal (Neisseria meningitidis) infection: \"Meningococcal rash is similar, an erythematous macular and petechial rash on the legs that quickly disseminates, becoming purpuric and even necrotic if meningococcemia remains untreated,\" and frames peripheral petechial rash with meningitis as one of \"3 meningitides that should not be missed.\" The source itself contains NO cohort frequencies — the van de Beek NEJM 2004 figures (162/176 rash episodes = 92% N. meningitidis; rash in 26% of episodes, petechial in 89%) and DermNet's 50-75% petechiae figure are external corroborating sources, not content of PMC3719428.",
+        "refute_attempt": "The source sentence is phrased organism->rash (\"Meningococcal rash is... a petechial rash\"), describing the rash as a FEATURE of meningococcemia rather than asserting the inference rash->organism that the claim makes. Critically, the immediately preceding text establishes that Rocky Mountain spotted fever produces a clinically SIMILAR petechial extremity rash (\"Meningococcal rash is similar...\"), so the source explicitly treats petechial rash as NON-SPECIFIC with a real differential — it does not say petechial rash uniquely or even preferentially points to meningococcus. The claim's hedge word \"suggests\" is therefore only weakly supported by this descriptive sentence; the quantitative directional support (92% of rash-presenting meningitis = meningococcal) comes entirely from OTHER sources not present on this page.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

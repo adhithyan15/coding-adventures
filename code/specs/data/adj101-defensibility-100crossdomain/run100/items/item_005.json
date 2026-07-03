@@ -1,0 +1,7 @@
+{
+ "idx": 5,
+ "id": "MED-6",
+ "scenario": "Ms. Brevik, who is 16 weeks pregnant, presents to the clinic for a vaccination during flu season. The intake nurse confirms she has no egg allergy and no prior adverse vaccine reaction, and the order simply reads 'administer influenza vaccine today.'",
+ "policy": "Live attenuated vaccines (such as MMR) are contraindicated in pregnant patients. Inactivated vaccines (such as the inactivated influenza vaccine) may be given during pregnancy.",
+ "question": "Is the ordered influenza vaccine permitted for Ms. Brevik?"
+}

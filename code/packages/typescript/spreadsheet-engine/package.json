@@ -1,0 +1,40 @@
+{
+  "name": "@coding-adventures/spreadsheet-engine",
+  "version": "0.1.0",
+  "description": "Headless, adapter-pluggable spreadsheet computation core: cells, a dependency graph, and incremental topological recalc. Ships a default Excel/CAS formula adapter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "spreadsheet",
+    "recalc",
+    "dependency-graph",
+    "topological-sort",
+    "formula",
+    "excel",
+    "cas",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cas-simplify": "file:../cas-simplify",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/excel-parser": "file:../excel-parser",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
+    "@coding-adventures/symbolic-vm": "file:../symbolic-vm"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

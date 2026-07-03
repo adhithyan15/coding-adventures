@@ -1,0 +1,8 @@
+{
+ "check_id": 249,
+ "idx": 98,
+ "slot": "fails_to_carry_required_wc_insurance",
+ "claimed_value": true,
+ "scenario": "Raj operates a one-person landscaping business as a sole proprietor. He has no employees and works alone. He carries no workers' compensation insurance. After Raj himself was injured, a state auditor questioned his lack of coverage and proposed the double-benefits penalty.",
+ "cited_span": "He carries no workers' compensation insurance."
+}

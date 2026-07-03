@@ -1,0 +1,8 @@
+{
+ "check_id": 143,
+ "idx": 55,
+ "slot": "repair_hours_after_notice",
+ "claimed_value": 40,
+ "scenario": "On January 12, the heat in Omar's apartment stopped working. A repair technician arrived and fixed it 40 hours after the landlord first learned of the problem. Omar is now seeking a rent abatement.",
+ "cited_span": "fixed it 40 hours after the landlord first learned of the problem"
+}

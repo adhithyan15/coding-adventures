@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_const_let_mix/input/a.js
+--compilation_level
+WHITESPACE_ONLY

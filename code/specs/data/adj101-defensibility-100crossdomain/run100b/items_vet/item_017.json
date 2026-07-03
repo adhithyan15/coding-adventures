@@ -1,0 +1,8 @@
+{
+ "idx": 17,
+ "policy": "General rule: Minor modifications to a permitted facility may proceed under an administrative amendment without public notice. Override: If the modification would increase emissions of a hazardous air pollutant (HAP) by any amount, the administrative amendment is unavailable and a full permit modification with public notice is required regardless of how minor the change otherwise appears.",
+ "scenario": "Lakeside Coatings wants to swap one pump for a slightly larger model. The change is mechanically trivial, but it will increase emissions of the HAP methylene chloride by 0.3 tpy.",
+ "question": "May Lakeside Coatings proceed under an administrative amendment?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "full permit modification with public notice is required"
+}

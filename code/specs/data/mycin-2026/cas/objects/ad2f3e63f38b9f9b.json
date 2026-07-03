@@ -1,0 +1,15 @@
+{
+  "hash": "ad2f3e63f38b9f9b",
+  "kind": "rulebook",
+  "source_name": "meningitis.adj",
+  "imports": [
+    "08b1777d124b9dce",
+    "e7ccec85df7a92d9"
+  ],
+  "clauses": [],
+  "gate": {
+    "n_clauses": 0,
+    "accepted": 0,
+    "flagged_downgraded_to_inferred": []
+  }
+}

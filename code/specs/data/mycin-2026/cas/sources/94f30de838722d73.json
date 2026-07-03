@@ -1,0 +1,45 @@
+{
+  "hash": "94f30de838722d73",
+  "source_id": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis",
+  "title": "Neonatal Bacterial Meningitis - Merck Manual Professional Edition",
+  "resolved_url": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "The predominant pathogens of neonatal bacterial meningitis are Group B streptococcus (GBS), Escherichia coli (especially K1-polysaccharide strains), and Listeria monocytogenes.",
+      "byte_quote": "The **predominant pathogens** are the following: [Group B streptococcus](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections) (GBS) [_Escherichia coli_](/professional/infectious-diseases/gram-negative-bacilli/escherichia-coli-infections) (particularly those strains containing the K1 polysaccharide) [_Listeria monocytogenes_](/professional/infectious-diseases/gram-positive-bacilli/listeriosis)"
+    },
+    {
+      "id": "c2",
+      "text": "Other reported pathogens include enterococci, nonenterococcal group D streptococci, alpha-hemolytic streptococci, Staphylococcus aureus, coagulase-negative staphylococci, gram-negative enteric organisms (Klebsiella, Enterobacter, Citrobacter diversus), Haemophilus influenzae, Neisseria meningitidis, and Streptococcus pneumoniae.",
+      "byte_quote": "**Other reported pathogens** include [enterococci](/professional/infectious-diseases/gram-positive-cocci/enterococcal-infections), nonenterococcal group D streptococci, [alpha-hemolytic streptococci](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections), [_Staphylococcus aureus_](/professional/infectious-diseases/gram-positive-cocci/staphylococcal-infections), [coagulase-negative staphylococci](/professional/infectious-diseases/gram-positive-cocci/staphylococcal-infections), gram-negative enteric organisms (eg, [_Klebsiella_](/professional/infectious-diseases/gram-negative-bacilli/klebsiella-enterobacter-and-serratia-infections) species, [_Enterobacter_](/professional/infectious-diseases/gram-negative-bacilli/klebsiella-enterobacter-and-serratia-infections) species, _Citrobacter diversus_), [_Haemophilus influenzae_](/professional/infectious-diseases/gram-negative-bacilli/haemophilus-infections), [_Neisseria meningitidis_](/professional/infectious-diseases/gram-negative-cocci-and-coccobacilli/meningococcal-diseases), and [_Streptococcus pneumoniae_](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections)."
+    },
+    {
+      "id": "c3",
+      "text": "Incidence is 3/10,000 in full-term neonates and 1/1,000 in low-birth-weight neonates, so low birth weight is a host risk factor.",
+      "byte_quote": "Neonatal bacterial meningitis occurs in 3/10,000 full-term and in 1/1,000 low-birth-weight (LBW) neonates"
+    },
+    {
+      "id": "c4",
+      "text": "Neonatal bacterial meningitis most often results from the bacteremia of neonatal sepsis, with higher blood-culture colony counts conferring higher meningitis risk.",
+      "byte_quote": "Neonatal bacterial meningitis most frequently results from the bacteremia that occurs with neonatal sepsis; the higher the colony count in the blood culture, the higher the risk of meningitis."
+    },
+    {
+      "id": "c5",
+      "text": "Scalp lesions are a route of infection, particularly developmental defects creating communication between the skin surface and the subarachnoid space.",
+      "byte_quote": "Neonatal bacterial meningitis may also result from scalp lesions, particularly when developmental defects lead to communication between the skin surface and the subarachnoid space"
+    },
+    {
+      "id": "c6",
+      "text": "Definitive diagnosis is made by CSF examination via lumbar puncture in any neonate suspected of sepsis or meningitis; no Gram-stain organism morphology is described on this page.",
+      "byte_quote": "Definitive diagnosis of neonatal bacterial meningitis is made by CSF examination. Lumbar puncture (LP), which should be performed in any neonate suspected of having sepsis or meningitis."
+    }
+  ],
+  "cites": [
+    "Okike IO, Johnson AP, Henderson KL, et al. Clin Infect Dis. 2014",
+    "Schrag SJ, Farley MM, Petit S, et al. Pediatrics. 2016",
+    "Srinivasan L, Shah SS, Padula MA, et al. J Pediatr. 2012",
+    "Zimmermann P, Curtis N. Neonatology. 2021",
+    "Curtis S, Stobart K, Vandermeer B, Simel DL, Klassen T. Pediatrics. 2010"
+  ]
+}

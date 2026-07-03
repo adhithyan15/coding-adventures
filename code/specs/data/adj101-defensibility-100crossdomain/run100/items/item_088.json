@@ -1,0 +1,7 @@
+{
+ "idx": 88,
+ "id": "CON-9",
+ "scenario": "A Severity-1 incident remained unresolved after 3 hours. Within the first hour, the provider confirmed and documented that the root cause was an outage at an upstream third-party network provider outside its control. The provider did not escalate to a senior engineer.",
+ "policy": "The provider must escalate any unresolved Severity-1 incident to a senior engineer after 2 hours, except where the incident's root cause has been positively identified as a third-party network provider outside the provider's control, in which case no escalation obligation applies.",
+ "question": "Did the provider breach its escalation obligation?"
+}

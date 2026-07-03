@@ -2,6 +2,217 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.45.0] - 2026-06-16
+
+### Added
+
+- **Named WINDOW clause grammar** — ``sql.grammar`` changes:
+
+  - ``WINDOW`` added to ``sql.tokens`` keyword list so the lexer
+    classifies it as a keyword token rather than a plain name.
+  - ``window_func_call`` modified to accept either an inline spec or a
+    name reference after ``OVER``::
+
+        window_func_call = NAME "(" ( STAR | [ value_list ] ) ")" "OVER"
+                           ( "(" window_spec ")" | window_name_ref ) ;
+        window_name_ref  = NAME ;
+
+  - New ``window_clause`` rule::
+
+        window_clause = "WINDOW" NAME "AS" "(" window_spec ")"
+                        { "," NAME "AS" "(" window_spec ")" } ;
+
+  - ``select_stmt`` extended with ``[ window_clause ]`` between
+    ``having_clause`` and ``order_clause``.
+
+  ``_grammar.py`` regenerated from the updated grammar source via
+  ``grammar-tools compile-grammar``.
+
+## [0.44.0] - 2026-06-15
+
+### Added
+
+- **Row-value comparison grammar** — the ``comparison`` rule in
+  ``code/grammars/sql.grammar`` gained three new PEG alternatives that
+  fire before the scalar ``collated`` form:
+
+      comparison = row_value cmp_op row_value
+                 | row_value "NOT" "IN" "(" row_value_list ")"
+                 | row_value "IN" "(" row_value_list ")"
+                 | collated [ ... ] ;
+
+  A new ``row_value_list`` rule is also defined to support the IN variant::
+
+      row_value_list = row_value { "," row_value } ;
+
+  ``_grammar.py`` was regenerated from the updated grammar source via
+  ``grammar-tools compile-grammar``.  The ordering ensures the PEG parser
+  tries the row-value form first when it sees ``(`` so that scalar
+  regressions are unaffected.
+
+## [0.43.0] - 2026-05-23
+
+### Changed
+
+- ``limit_clause`` now accepts SQLite's signed counts and
+  MySQL-compatible comma syntax::
+
+      limit_clause  = "LIMIT" signed_number
+                      [ "OFFSET" signed_number | "," signed_number ] ;
+      signed_number = [ "-" ] NUMBER ;
+
+  ``LIMIT -1`` (no limit), ``LIMIT 5 OFFSET -2`` (negative offset
+  treated as zero), and ``LIMIT m, n`` (≡ ``LIMIT n OFFSET m``)
+  now parse cleanly.  Regenerated ``_grammar.py`` cache via
+  ``grammar-tools``.
+
+## [0.42.0] - 2026-05-23
+
+### Changed
+
+- ``comparison`` rule now accepts SQLite's general NULL-safe equality
+  forms ``"IS" collated`` and ``"IS" "NOT" collated`` (in addition
+  to the existing ``"IS" "NULL"`` / ``"IS" "NOT" "NULL"`` /
+  ``"IS" [NOT] "DISTINCT" "FROM" collated`` alternatives).  The new
+  forms are listed *after* the specific NULL / DISTINCT shapes so
+  the PEG parser still matches those first.  Regenerated
+  ``_grammar.py`` cache via ``grammar-tools``.
+
+- Unary ``+`` prefix accepted as a no-op identity in the ``unary``
+  rule (see mini-sqlite CHANGELOG 2.6.0 for the end-to-end change).
+  This was inadvertently omitted from the previous bump; pinning the
+  version here so the parser ships with the matching grammar.
+
+## [0.41.0] - 2026-05-23
+
+### Changed
+
+- ``unary`` rule now accepts ``+`` alongside ``-`` and ``~``::
+
+      unary = ( "-" | "~" | "+" ) unary | primary ;
+
+  SQLite documents ``+`` as a valid no-op unary prefix.  Regenerated
+  ``_grammar.py`` cache via ``grammar-tools``.
+
+## [0.41.0] - 2026-05-23
+
+### Changed
+
+- ``insert_body`` now accepts the ``DEFAULT VALUES`` shorthand::
+
+      insert_body = "VALUES" row_value { "," row_value }
+                  | "DEFAULT" "VALUES"
+                  | query_stmt ;
+
+  Required for SQLite's ``INSERT INTO t DEFAULT VALUES`` form, which
+  inserts a single row of column defaults.  Regenerated
+  ``_grammar.py`` cache via ``grammar-tools``.
+
+## [0.40.0] - 2026-05-23
+
+### Changed
+
+- ``returning_clause`` now accepts ``*`` via a new ``returning_item``
+  alternative::
+
+      returning_clause = "RETURNING" returning_item { "," returning_item } ;
+      returning_item   = "*" | expr ;
+
+  Required for SQLite's ``RETURNING *`` shorthand.  Regenerated
+  ``_grammar.py``.
+
+## [0.39.0] - 2026-05-23
+
+### Added
+
+- ``col_constraint`` extended to accept optional ``AUTOINCREMENT``
+  after ``PRIMARY KEY``::
+
+      col_constraint = ("PRIMARY" "KEY" ["AUTOINCREMENT"]) | ... ;
+
+  Required for SQLite-style ``id INTEGER PRIMARY KEY AUTOINCREMENT``
+  column declarations.  Regenerated ``_grammar.py`` and ``_tokens.py``.
+
+## [0.38.0] - 2026-05-23
+
+### Added
+
+- ``table_ref`` extended with an optional trailing ``index_hint``:
+  ```
+  index_hint = "INDEXED" "BY" NAME | "NOT" "INDEXED" ;
+  ```
+  Two SQLite-only query hints — ``INDEXED BY <name>`` (force the
+  named index) and ``NOT INDEXED`` (disable index substitution).
+- Regenerated ``_grammar.py`` and ``_tokens.py`` to include the new
+  rule and the ``INDEXED`` keyword.
+
+## [0.37.0] - 2026-05-23
+
+### Added
+
+- ``alter_table_stmt`` extended to support all four SQLite forms,
+  not just ``ADD COLUMN``:
+
+      alter_table_stmt = "ALTER" "TABLE" NAME (
+            "ADD" [ "COLUMN" ] col_def
+          | "RENAME" "TO" NAME
+          | "RENAME" [ "COLUMN" ] NAME "TO" NAME
+          | "DROP" [ "COLUMN" ] NAME
+      ) ;
+
+  The ``COLUMN`` keyword is optional everywhere (matches SQLite).
+- Regenerated grammar tables.
+
+## [0.36.0] - 2026-05-23
+
+### Added
+
+- ``col_constraint`` now accepts ``COLLATE name`` as one of its
+  alternatives, matching SQLite's column-constraint grammar:
+
+      col_constraint = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
+                     | "UNIQUE" | ( "DEFAULT" primary )
+                     | ( "CHECK" "(" expr ")" )
+                     | ( "COLLATE" NAME )                            ← new
+                     | ( "REFERENCES" NAME [ "(" NAME ")" ] ) ;
+
+  This lets users declare a column's default comparison-collation at
+  CREATE TABLE time: ``CREATE TABLE users(email TEXT COLLATE NOCASE)``.
+- Regenerated ``_grammar.py`` to embed the new alternative.
+
+## [0.35.0] - 2026-05-23
+
+### Added
+
+- New ``collated`` rule between ``bitwise`` and ``comparison`` so the
+  comparison-level operators (``=``, ``<``, ``BETWEEN``, ``LIKE``,
+  ``IS DISTINCT FROM``, …) accept an optional ``COLLATE name``
+  postfix on either side:
+
+      collated   = bitwise [ "COLLATE" NAME ] ;
+      comparison = collated [ cmp_op collated | "BETWEEN" collated
+                              "AND" collated | … ] ;
+
+  This matches SQLite's operator precedence: ``x * y COLLATE z`` is
+  ``(x * y) COLLATE z`` (multiplicative binds tighter than COLLATE),
+  and ``x COLLATE y = z`` is ``(x COLLATE y) = z`` (COLLATE binds
+  tighter than comparison).
+- Regenerated ``_grammar.py`` to embed the new rule.
+
+## [0.34.0] - 2026-05-22
+
+### Added
+
+- ``ORDER BY`` items accept an optional ``COLLATE name`` clause between
+  the expression and ``ASC`` / ``DESC``:
+
+      order_item = expr [ "COLLATE" NAME ] [ "ASC" | "DESC" ]
+                   [ "NULLS" NAME ] ;
+
+  The collation name is verbatim (any NAME token); validation happens
+  in downstream layers.  Regenerated ``_grammar.py`` to embed the new
+  production.
+
 ## [0.33.0] - 2026-05-22
 
 ### Added

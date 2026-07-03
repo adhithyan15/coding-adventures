@@ -169,14 +169,89 @@ fn main() {
                 HierarchicalDecomposeError::UnparseableResponse { level, .. } => {
                     format!("unparseable_at_{:?}", level)
                 }
-                HierarchicalDecomposeError::CoverageUnresolved { gaps } => {
+                HierarchicalDecomposeError::CoverageUnresolved { gaps, .. } => {
                     format!("coverage_unresolved({} gap(s))", gaps.len())
                 }
             };
+            // ADJ31 instrumentation: per-level gap distribution.
+            // ADJ33 instrumentation: also surface partial IR + per-gap
+            // detail. ADJ30 + ADJ32 both falsified intervention
+            // hypotheses without data on the raw output — this fixes
+            // that.
+            let (per_level_gap_distribution, gaps_detail, partial_ir_json) =
+                if let HierarchicalDecomposeError::CoverageUnresolved { gaps, partial_ir } = &e {
+                    let mut doc_sent = 0usize;
+                    let mut sent_phrase = 0usize;
+                    let mut phrase_claim = 0usize;
+                    let mut fact_typed = 0usize;
+                    let mut details = Vec::new();
+                    for g in gaps {
+                        match g.level {
+                            DecompLevel::DocumentToSentence => doc_sent += 1,
+                            DecompLevel::SentenceToPhrase => sent_phrase += 1,
+                            DecompLevel::PhraseToClaim => phrase_claim += 1,
+                            DecompLevel::FactToTypedComponent => fact_typed += 1,
+                        }
+                        details.push(json!({
+                            "level": format!("{:?}", g.level),
+                            "parent_node_id": &g.parent_node_id.0,
+                            "kind_debug": format!("{:?}", g.kind),
+                        }));
+                    }
+                    // Hand-render IRNode fields; adjudication-ir
+                    // doesn't derive Serialize.
+                    let mut nodes_arr: Vec<serde_json::Value> = Vec::new();
+                    for n in &partial_ir.nodes {
+                        let spans: Vec<serde_json::Value> = n.source_spans.iter().map(|s| {
+                            json!({
+                                "doc_id": &s.document_id.0,
+                                "start": s.start,
+                                "end": s.end,
+                            })
+                        }).collect();
+                        nodes_arr.push(json!({
+                            "id": &n.id.0,
+                            "kind": format!("{:?}", n.kind),
+                            "spans": spans,
+                            "polarity": format!("{:?}", n.polarity),
+                            "modality": format!("{:?}", n.modality),
+                            "discard_reason": n.discard_reason.as_ref().map(|r| format!("{:?}", r)),
+                        }));
+                    }
+                    let mut edges_arr: Vec<serde_json::Value> = Vec::new();
+                    for ed in &partial_ir.edges {
+                        edges_arr.push(json!({
+                            "id": &ed.id.0,
+                            "from": &ed.source.0,
+                            "to": &ed.target.0,
+                            "relation": format!("{:?}", ed.relation),
+                        }));
+                    }
+                    let ir_json = json!({
+                        "document_id": &partial_ir.document_id.0,
+                        "nodes": nodes_arr,
+                        "edges": edges_arr,
+                    });
+                    (
+                        Some(json!({
+                            "document_to_sentence": doc_sent,
+                            "sentence_to_phrase": sent_phrase,
+                            "phrase_to_claim": phrase_claim,
+                            "fact_to_typed_component": fact_typed,
+                        })),
+                        Some(serde_json::Value::Array(details)),
+                        Some(ir_json),
+                    )
+                } else {
+                    (None, None, None)
+                };
             let record = json!({
                 "model": model,
                 "source": source,
                 "wallclock_secs": elapsed,
+                "per_level_gap_distribution": per_level_gap_distribution,
+                "gaps_detail": gaps_detail,
+                "partial_ir": partial_ir_json,
                 "error": {
                     "kind": kind,
                     "message": e.to_string(),

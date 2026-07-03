@@ -31,6 +31,7 @@ from symbolic_ir import (
     COS,
     DIV,
     INTEGRATE,
+    LOG,
     MUL,
     NEG,
     SIN,
@@ -199,6 +200,22 @@ def test_cos_five_plus_three_cos(vm: VM) -> None:
         got = _numerical_derivative(vm, phi, x_val)
         expected = 1.0 / (5.0 + 3.0 * math.cos(x_val))
         assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
+
+
+def test_cos_negative_a_arctan_branch_closes(vm: VM) -> None:
+    """``∫ 1/(-2 + cos(x)) dx`` closes with the sign-correct atan form."""
+    integrand = IRApply(DIV, (IRInteger(1), IRApply(ADD, (IRInteger(-2), IRApply(COS, (X,))))))
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 34 should close ∫ 1/(-2+cos x) dx; got {phi!r}"
+    )
+    assert _contains_head(phi, ATAN)
+    for x_val in (-1.5, -0.4, 0.0, 0.4, 1.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (-2.0 + math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4), (
+            f"At x={x_val}: derivative={got!r}, expected={expected!r}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -721,20 +738,41 @@ def test_regression_pure_sin_still_works(vm: VM) -> None:
     assert result in (neg_cos, mul_neg), f"Got {result!r}"
 
 
-def test_regression_one_over_cos_unchanged(vm: VM) -> None:
-    """``∫ 1/cos(x) dx`` (i.e. ∫ sec(x) dx) is NOT a Weierstrass case.
-
-    The denominator is bare ``cos(x)`` without an additive constant, so
-    ``_parse_a_plus_b_sincos`` returns None and Phase 34 does not engage.
-    The result therefore stays as ``Integrate(...)`` (∫sec x dx has no
-    elementary closed form in our pipeline yet).
-    """
+def test_regression_one_over_cos_now_closes(vm: VM) -> None:
+    """``∫ 1/cos(x) dx`` closes as the ``a = 0`` cosine log branch."""
     integrand = IRApply(DIV, (IRInteger(1), IRApply(COS, (X,))))
     result = vm.eval(_integrate(integrand))
-    # Either unevaluated, or some elementary fold the VM applies — but
-    # specifically MUST NOT be a Phase 34 arctan-of-tan(x/2) artefact.
-    if isinstance(result, IRApply) and result.head == ATAN:
-        pytest.fail(f"Phase 34 incorrectly fired on ∫ 1/cos(x) dx: got {result!r}")
+    assert not (isinstance(result, IRApply) and result.head == INTEGRATE)
+    assert _contains_head(result, LOG)
+    for x_val in (-1.0, -0.4, 0.0, 0.4, 1.0):
+        got = _numerical_derivative(vm, result, x_val)
+        expected = 1.0 / math.cos(x_val)
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase36_one_over_sin_now_closes(vm: VM) -> None:
+    """``∫ 1/sin(x) dx`` closes as ``log|tan(x/2)|``."""
+    integrand = IRApply(DIV, (IRInteger(1), IRApply(SIN, (X,))))
+    result = vm.eval(_integrate(integrand))
+    assert not (isinstance(result, IRApply) and result.head == INTEGRATE)
+    assert _contains_head(result, LOG)
+    for x_val in (0.4, 0.8, 1.2, 1.6, 2.0):
+        got = _numerical_derivative(vm, result, x_val)
+        expected = 1.0 / math.sin(x_val)
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
+
+
+def test_phase38_scaled_csc_branch_closes(vm: VM) -> None:
+    """``∫ 3/(2·sin(2x+1)) dx`` preserves numerator, b, and alpha scaling."""
+    arg = IRApply(ADD, (IRApply(MUL, (IRInteger(2), X)), IRInteger(1)))
+    denominator = IRApply(MUL, (IRInteger(2), IRApply(SIN, (arg,))))
+    result = vm.eval(_integrate(IRApply(DIV, (IRInteger(3), denominator))))
+    assert not (isinstance(result, IRApply) and result.head == INTEGRATE)
+    assert _contains_head(result, LOG)
+    for x_val in (0.0, 0.2, 0.5, 0.8):
+        got = _numerical_derivative(vm, result, x_val)
+        expected = 3.0 / (2.0 * math.sin(2.0 * x_val + 1.0))
+        assert math.isclose(got, expected, abs_tol=1e-3, rel_tol=1e-3)
 
 
 # ---------------------------------------------------------------------------

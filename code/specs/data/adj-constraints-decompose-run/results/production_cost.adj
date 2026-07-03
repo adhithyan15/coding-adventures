@@ -1,0 +1,6 @@
+symbol a : scalar
+symbol b : scalar
+constrain 100 <= a
+constrain 60 <= b
+constrain 5 * a + 8 * b >= 0
+minimize 5 * a + 8 * b

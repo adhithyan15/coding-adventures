@@ -1,0 +1,215 @@
+{
+  "_meta": {
+    "benchmark": "ADJ101 cross-domain defensibility",
+    "stage": "pilot (N=20: 10 domains x 2, 4 strata x 5)",
+    "format": "each item is an adjudication problem (policy + scenario + question); gold_* held aside, never shown to the solver arms",
+    "strata": {
+      "clean-determinate": "policy+scenario fully determine the answer; engine -> DETERMINATE",
+      "underdetermined-baited": "the dispositive fact is WITHHELD; engine -> INDETERMINATE; bare is tempted to assume it",
+      "override-precedence": "a general rule and an exception/override both fire; the override must dominate",
+      "exception-encoding": "an 'except ...' clause suppresses the outcome that would otherwise apply"
+    }
+  },
+  "items": [
+    {
+      "id": "MED1",
+      "domain": "medicine",
+      "stratum": "clean-determinate",
+      "policy": "The HealthFirst plan reimburses in-network specialist visits at 70% after the annual deductible is met, and out-of-network specialist visits at 40%.",
+      "scenario": "A member whose annual deductible is fully met saw an in-network endocrinologist (a specialist) for a consultation.",
+      "question": "At what rate is this visit reimbursed?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "70%"
+    },
+    {
+      "id": "MED2",
+      "domain": "medicine",
+      "stratum": "underdetermined-baited",
+      "policy": "The HealthFirst plan reimburses in-network specialist visits at 70% after the annual deductible is met, and at 0% before the deductible is met.",
+      "scenario": "A member saw an in-network rheumatologist (a specialist) for a consultation this week.",
+      "question": "At what rate is this visit reimbursed?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_answer_substring": "deductible status not stated"
+    },
+    {
+      "id": "LAW1",
+      "domain": "statutory-liability",
+      "stratum": "override-precedence",
+      "policy": "A vehicle owner is liable for parking fines incurred by the vehicle. Exception: if the vehicle was reported stolen before the time of the violation, the owner is not liable.",
+      "scenario": "A car received a parking fine at 3:00pm. Its owner had filed a police stolen-vehicle report for that car at 9:00am the same day.",
+      "question": "Is the owner liable for the fine?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "not liable"
+    },
+    {
+      "id": "LAW2",
+      "domain": "statutory-liability",
+      "stratum": "exception-encoding",
+      "policy": "A landlord must return a tenant's security deposit within 21 days of move-out, except where the lease was terminated by the tenant for cause, in which case no deadline applies.",
+      "scenario": "A tenant moved out 30 days ago after the landlord ended the lease for non-payment. The deposit has not been returned.",
+      "question": "Has the landlord violated the 21-day return deadline?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "no violation"
+    },
+    {
+      "id": "TAX1",
+      "domain": "tax-duty",
+      "stratum": "clean-determinate",
+      "policy": "Imported goods with a declared customs value of $800 or less are exempt from import duty. Goods valued above $800 are dutiable at 5% of the declared value.",
+      "scenario": "A traveler imported a watch with a declared customs value of $1,200.",
+      "question": "What duty is owed?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "$60"
+    },
+    {
+      "id": "TAX2",
+      "domain": "tax-duty",
+      "stratum": "underdetermined-baited",
+      "policy": "A resident is taxed on worldwide income; a non-resident is taxed only on domestic-source income. Residency is determined by presence of 183 days or more in the tax year.",
+      "scenario": "An individual earned $50,000 of foreign-source income this tax year.",
+      "question": "Is the foreign-source income taxable?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_answer_substring": "days of presence not stated"
+    },
+    {
+      "id": "BEN1",
+      "domain": "benefits-eligibility",
+      "stratum": "override-precedence",
+      "policy": "A household qualifies for the energy subsidy if monthly income is at or below $2,000. Override: households with a member on continuous home oxygen qualify regardless of income.",
+      "scenario": "A household has monthly income of $2,600 and one member who uses continuous home oxygen.",
+      "question": "Does the household qualify for the subsidy?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "qualifies"
+    },
+    {
+      "id": "BEN2",
+      "domain": "benefits-eligibility",
+      "stratum": "exception-encoding",
+      "policy": "Applicants are eligible for tuition assistance if enrolled at least half-time, except applicants in default on a prior education loan, who are ineligible regardless of enrollment.",
+      "scenario": "An applicant is enrolled full-time and is currently in default on a federal student loan from a prior program.",
+      "question": "Is the applicant eligible for tuition assistance?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "ineligible"
+    },
+    {
+      "id": "INS1",
+      "domain": "insurance-claims",
+      "stratum": "clean-determinate",
+      "policy": "The auto policy covers windshield repair in full with no deductible. All other glass damage is subject to a $250 deductible.",
+      "scenario": "A policyholder filed a claim for a chipped windshield repaired at a cost of $90.",
+      "question": "How much does the insurer pay?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "$90"
+    },
+    {
+      "id": "INS2",
+      "domain": "insurance-claims",
+      "stratum": "underdetermined-baited",
+      "policy": "Water damage is covered if sudden and accidental (e.g., a burst pipe), and excluded if due to gradual seepage or long-term maintenance neglect.",
+      "scenario": "A policyholder filed a claim for water damage to a kitchen floor discovered last week.",
+      "question": "Is the damage covered?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_answer_substring": "cause of water damage not stated"
+    },
+    {
+      "id": "BLD1",
+      "domain": "building-code",
+      "stratum": "override-precedence",
+      "policy": "Guardrails are required on any walking surface more than 30 inches above the floor below. Override: guardrails are not required on the loading-dock side of a dock used exclusively for vehicle loading.",
+      "scenario": "A walking surface is 42 inches above the floor below; it is the loading-dock side of a dock used exclusively for vehicle loading.",
+      "question": "Is a guardrail required here?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "not required"
+    },
+    {
+      "id": "BLD2",
+      "domain": "building-code",
+      "stratum": "exception-encoding",
+      "policy": "A means of egress door must swing in the direction of travel, except for doors serving a room with an occupant load of 49 or fewer, which may swing either way.",
+      "scenario": "An egress door serves a conference room with a posted occupant load of 35 and swings against the direction of travel.",
+      "question": "Does the door comply?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "complies"
+    },
+    {
+      "id": "EMP1",
+      "domain": "employment-rules",
+      "stratum": "clean-determinate",
+      "policy": "Non-exempt employees must be paid overtime at 1.5x the regular rate for hours worked beyond 40 in a workweek.",
+      "scenario": "A non-exempt employee with a regular rate of $20/hour worked 46 hours in one workweek.",
+      "question": "What is the overtime pay owed for that week?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "$180"
+    },
+    {
+      "id": "EMP2",
+      "domain": "employment-rules",
+      "stratum": "underdetermined-baited",
+      "policy": "An employee is entitled to protected family leave only if employed by the company for at least 12 months.",
+      "scenario": "An employee requested protected family leave to care for a newborn.",
+      "question": "Is the employee entitled to protected family leave?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_answer_substring": "length of employment not stated"
+    },
+    {
+      "id": "IMM1",
+      "domain": "immigration-eligibility",
+      "stratum": "override-precedence",
+      "policy": "An applicant must have 5 years of continuous residence to naturalize. Override: an applicant married to and living with a citizen spouse for the required period qualifies with 3 years of continuous residence.",
+      "scenario": "An applicant has 3 years and 2 months of continuous residence and has been married to and living with a U.S.-citizen spouse for that entire period.",
+      "question": "Does the applicant meet the continuous-residence requirement?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "meets"
+    },
+    {
+      "id": "IMM2",
+      "domain": "immigration-eligibility",
+      "stratum": "exception-encoding",
+      "policy": "An applicant satisfies the physical-presence requirement with 30 months of presence in the U.S. during the statutory period, except that any single absence of 12 months or more breaks continuity and disqualifies the period regardless of total months.",
+      "scenario": "An applicant accumulated 33 months of physical presence but took one continuous trip abroad lasting 13 months during the period.",
+      "question": "Does the applicant satisfy the physical-presence requirement?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "does not satisfy"
+    },
+    {
+      "id": "CON1",
+      "domain": "contract-sla",
+      "stratum": "clean-determinate",
+      "policy": "The SLA credits the customer 10% of the monthly fee for each full hour of unplanned downtime, capped at 50% of the monthly fee.",
+      "scenario": "A service had 3 full hours of unplanned downtime in a month with a $1,000 monthly fee.",
+      "question": "What service credit is owed?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "$300"
+    },
+    {
+      "id": "CON2",
+      "domain": "contract-sla",
+      "stratum": "underdetermined-baited",
+      "policy": "Unplanned downtime is creditable under the SLA; planned-maintenance downtime announced at least 48 hours in advance is not creditable.",
+      "scenario": "A service was down for 2 hours during a maintenance window last month.",
+      "question": "Is the customer owed a service credit for this downtime?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_answer_substring": "advance notice not stated"
+    },
+    {
+      "id": "ACA1",
+      "domain": "academic-grant",
+      "stratum": "override-precedence",
+      "policy": "A grant requires the applicant to hold a doctoral degree. Override: applicants with 10 or more years of documented professional research experience may apply without a doctoral degree.",
+      "scenario": "An applicant has a master's degree and 12 years of documented professional research experience.",
+      "question": "Is the applicant eligible to apply?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "eligible"
+    },
+    {
+      "id": "ACA2",
+      "domain": "academic-grant",
+      "stratum": "exception-encoding",
+      "policy": "An applicant may hold at most one active grant from the foundation at a time, except for travel grants, which do not count toward the limit.",
+      "scenario": "An applicant currently holds one active travel grant from the foundation and is applying for a research grant.",
+      "question": "Is the applicant barred by the one-active-grant limit?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "not barred"
+    }
+  ]
+}

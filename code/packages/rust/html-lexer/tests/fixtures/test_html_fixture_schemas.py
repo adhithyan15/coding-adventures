@@ -31,6 +31,118 @@ class HtmlFixtureSchemasTest(unittest.TestCase):
 
         self.assertEqual(errors, [])
 
+    def test_browser_readiness_cases_require_browser_expected_shape(self) -> None:
+        errors = schema_check.check_browser_readiness_case(
+            "html-parser/tests/fixtures/html-browser-readiness.json",
+            0,
+            {
+                "id": "example",
+                "input": "<title>x</title><p>body",
+                "expected": {
+                    "title": "x",
+                    "base_href": None,
+                    "base_target": None,
+                    "body_text": "body",
+                    "metas": [],
+                    "resources": [],
+                    "anchors": [],
+                    "headings": [],
+                    "links": [],
+                    "images": [],
+                    "forms": [],
+                    "tables": [],
+                },
+            },
+        )
+
+        self.assertEqual(errors, [])
+
+    def test_browser_content_tree_cases_require_recursive_node_shape(self) -> None:
+        errors = schema_check.check_browser_content_tree_case(
+            "html-parser/tests/fixtures/html-browser-content-tree.json",
+            0,
+            {
+                "id": "example",
+                "input": "<p>body",
+                "expected": {
+                    "children": [
+                        {
+                            "role": "block",
+                            "name": "p",
+                            "text": None,
+                            "href": None,
+                            "src": None,
+                            "alt": None,
+                            "control_type": None,
+                            "children": [
+                                {
+                                    "role": "text",
+                                    "name": None,
+                                    "text": "body",
+                                    "href": None,
+                                    "src": None,
+                                    "alt": None,
+                                    "control_type": None,
+                                    "value": None,
+                                    "disabled": False,
+                                    "checked": False,
+                                    "selected": False,
+                                    "options": [],
+                                    "children": [],
+                                }
+                            ],
+                        }
+                    ]
+                },
+            },
+        )
+
+        self.assertEqual(errors, [])
+
+    def test_browser_render_tree_cases_require_recursive_node_shape(self) -> None:
+        errors = schema_check.check_browser_render_tree_case(
+            "html-parser/tests/fixtures/html-browser-render-tree.json",
+            0,
+            {
+                "id": "example",
+                "input": "<p>body",
+                "expected": {
+                    "children": [
+                        {
+                            "display": "block",
+                            "role": "block",
+                            "name": "p",
+                            "text": None,
+                            "href": None,
+                            "src": None,
+                            "alt": None,
+                            "control_type": None,
+                            "children": [
+                                {
+                                    "display": "inline-text",
+                                    "role": "text",
+                                    "name": None,
+                                    "text": "body",
+                                    "href": None,
+                                    "src": None,
+                                    "alt": None,
+                                    "control_type": None,
+                                    "value": None,
+                                    "disabled": False,
+                                    "checked": False,
+                                    "selected": False,
+                                    "options": [],
+                                    "children": [],
+                                }
+                            ],
+                        }
+                    ]
+                },
+            },
+        )
+
+        self.assertEqual(errors, [])
+
     def test_chunk_split_points_must_stay_inside_input(self) -> None:
         errors = schema_check.check_lexer_case(
             "html-lexer/tests/fixtures/whatwg-chunk-boundaries.json",

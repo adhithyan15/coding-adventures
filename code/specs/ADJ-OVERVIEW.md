@@ -273,5 +273,19 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   deterministically (instead of asking the LLM to do arithmetic
   inside its forward pass — the failure mode the ADJ18 v0.13
   bench surfaced empirically).
+- [ADJ70](ADJ70-byte-provenance-experiment-results.md) — manual
+  cross-domain shakedown of byte provenance across a coding task,
+  an FCRA legal case, and a memory-source experiment. Records the
+  methodological correction that code is input, shows the framework
+  producing auditable law reasoning, and introduces the
+  `claimed_from_model_memory` authenticity class for model-emitted
+  source bytes.
+- [ADJ71](ADJ71-cas-program-cache-experiment.md) — automated
+  CAS program-cache experiment: fetches an official 8 U.S.C. 1427
+  release XML section, byte-provenances a narrow
+  ordinary-naturalization rule subset, compiles it once into a
+  generated executable library, validates ten synthetic cases, then
+  compiles an eleventh held-out case into a program that imports the
+  cached library and executes with zero answer-time model calls.
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.

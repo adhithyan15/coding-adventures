@@ -1,0 +1,100 @@
+[
+ {
+  "idx": 0,
+  "key": "bacterial_meningitis::prior",
+  "lr": 0.037,
+  "byte_quote": "Among 3295 patients with CSF pleocytosis, 121 (3.7%; 95% confidence interval [CI], 3.1%-4.4%) had bacterial meningitis and 3174 (96.3%; 95% CI, 95.5%-96.9%) had aseptic meningitis.",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 1,
+  "key": "bacterial_meningitis::csf_gram_stain(positive)",
+  "lr": 85,
+  "byte_quote": "CSF Gram stain likely has moderate to high sensitivity (85%, 95% confidence interval [CI] 55-96%; 6 studies; high-certainty evidence) and very high specificity (99%; 1 study; moderate-certainty evidence) for the diagnosis of acute bacterial meningitis.",
+  "declared_tier": "consensus"
+ },
+ {
+  "idx": 2,
+  "key": "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)",
+  "lr": 15,
+  "byte_quote": "CSF white blood cell count of 500/muL or higher (LR, 15; 95% CI, 10-22)",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 3,
+  "key": "bacterial_meningitis::csf_glucose(low)",
+  "lr": 18,
+  "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) accurately diagnosed bacterial meningitis.",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 4,
+  "key": "bacterial_meningitis::csf_protein(elevated)",
+  "lr": 9.33,
+  "byte_quote": "Viallon et al. ... Using '>=1.88 g/L', they found 84.0 sensitivity and 91.0 specificity for distinguishing bacterial from viral meningitis.",
+  "declared_tier": "empirical"
+ },
+ {
+  "idx": 5,
+  "key": "bacterial_meningitis::csf_lactate(elevated)",
+  "lr": 22.9,
+  "byte_quote": "likelihood ratio positive 22.9 (95% CI: 12.6-41.9), likelihood ratio negative 0.07 (95% CI: 0.05-0.12), and diagnostic odds ratio 313 (95% CI: 141-698).",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 6,
+  "key": "bacterial_meningitis::serum_procalcitonin(elevated)",
+  "lr": 27.3,
+  "byte_quote": "The pooled sensitivity, specificity, positive likelihood ratio, negative likelihood ratio, and diagnostic odds ratio (DOR) for PCT were 0.90 (95% confidence interval (CI) 0.84-0.94), 0.98 (95% CI 0.97-0.99), 27.3 (95% CI 8.2-91.1)",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 7,
+  "key": "bacterial_meningitis::seizure(present)",
+  "lr": 5.84,
+  "byte_quote": "Seizure at or before presentation, n (%): Bacterial Meningitis N=86 = 19 (22%); Aseptic Meningitis N=370 = 14 (4%)",
+  "declared_tier": "empirical"
+ },
+ {
+  "idx": 8,
+  "key": "bacterial_meningitis::csf_culture(positive)",
+  "lr": 271,
+  "byte_quote": "culture, 81.3% and 99.7%; Gram stain, 98.2% and 98.7%; and real-time PCR, 95.7% and 94.3%, respectively.",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 9,
+  "key": "viral_meningitis::prior",
+  "lr": 0.963,
+  "byte_quote": "Among 3295 patients with CSF pleocytosis, 121 (3.7%) ... had bacterial meningitis and 3174 (96.3%; 95% CI, 95.5%-96.9%) had aseptic meningitis.",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 10,
+  "key": "viral_meningitis::csf_glucose(normal)",
+  "lr": 4.9,
+  "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) ... CSF:serum glucose ratio <0.4 = 80% sensitive, 98% specific.",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 11,
+  "key": "viral_meningitis::csf_lactate(normal)",
+  "lr": 13.7,
+  "byte_quote": "sensitivity 0.93 (95% CI: 0.89-0.96), specificity 0.96 (95% CI: 0.93-0.98), likelihood ratio positive 22.9",
+  "declared_tier": "authoritative"
+ },
+ {
+  "idx": 12,
+  "key": "viral_meningitis::csf_lymphocytic_pleocytosis(high)",
+  "lr": 5.0,
+  "byte_quote": null,
+  "declared_tier": "inferred"
+ },
+ {
+  "idx": 13,
+  "key": "viral_meningitis::enteroviral_pcr(positive)",
+  "lr": 50,
+  "byte_quote": null,
+  "declared_tier": "inferred"
+ }
+]

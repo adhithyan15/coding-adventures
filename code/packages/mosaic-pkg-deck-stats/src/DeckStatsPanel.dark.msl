@@ -1,0 +1,140 @@
+// DeckStatsPanel.dark.msl - dark deck-stat panel theme.
+
+style DeckStatsPanel {
+  part deck-stats-panel {
+    background    : "#172033" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    border-radius : 8 ;
+    padding       : 14 ;
+  }
+
+  part deck-stats-label {
+    color       : "#93c5fd" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-stats-name {
+    color          : "#f8fafc" ;
+    font-size      : 20 ;
+    font-weight    : 800 ;
+    padding-bottom : 10 ;
+  }
+
+  part deck-list-label {
+    color       : "#67e8f9" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-list-row {
+    padding-top    : 4 ;
+    padding-bottom : 8 ;
+  }
+
+  part deck-option-button {
+    background    : "#0f766e" ;
+    border-width  : 1 ;
+    border-color  : "#134e4a" ;
+    border-radius : 6 ;
+    color         : "#ecfeff" ;
+    font-weight   : 700 ;
+    padding       : 7 ;
+  }
+
+  part deck-stats-grid {
+    padding : 2 ;
+    padding-top : 10 ;
+  }
+
+  part deck-stat-total {
+    background    : "#2563eb" ;
+    border-radius : 6 ;
+    padding       : 9 ;
+  }
+
+  part deck-stat-new {
+    background    : "#059669" ;
+    border-radius : 6 ;
+    padding       : 9 ;
+  }
+
+  part deck-stat-due {
+    background    : "#dc2626" ;
+    border-radius : 6 ;
+    padding       : 9 ;
+  }
+
+  part deck-stat-learning {
+    background    : "#9333ea" ;
+    border-radius : 6 ;
+    padding       : 9 ;
+  }
+
+  part deck-stat-hidden {
+    background    : "#64748b" ;
+    border-radius : 6 ;
+    padding       : 9 ;
+  }
+
+  part deck-total-value {
+    color       : "#ffffff" ;
+    font-size   : 18 ;
+    font-weight : 800 ;
+  }
+
+  part deck-new-value {
+    color       : "#ffffff" ;
+    font-size   : 18 ;
+    font-weight : 800 ;
+  }
+
+  part deck-due-value {
+    color       : "#ffffff" ;
+    font-size   : 18 ;
+    font-weight : 800 ;
+  }
+
+  part deck-learning-value {
+    color       : "#ffffff" ;
+    font-size   : 18 ;
+    font-weight : 800 ;
+  }
+
+  part deck-hidden-value {
+    color       : "#ffffff" ;
+    font-size   : 18 ;
+    font-weight : 800 ;
+  }
+
+  part deck-total-label {
+    color       : "#dbeafe" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-new-label {
+    color       : "#d1fae5" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-due-label {
+    color       : "#fee2e2" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-learning-label {
+    color       : "#f3e8ff" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-hidden-label {
+    color       : "#f1f5f9" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+}

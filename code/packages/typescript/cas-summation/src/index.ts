@@ -19,6 +19,13 @@ import {
 
 export const GAMMA_FUNC = sym("GammaFunc");
 
+// Re-exported from ``gosper.ts``.  Track H2 — see PR #5366 (H1, Python).
+export { tryGosperSum, MAX_POLY_DEGREE } from "./gosper";
+import { tryGosperSum } from "./gosper";
+// Re-exported from ``seriesClosedForms.ts``.  Track I2 — see PR #5382 (I1, Python).
+export { tryClosedFormSeries, bernoulliRational } from "./seriesClosedForms";
+import { tryClosedFormSeries } from "./seriesClosedForms";
+
 export interface RationalValue {
   readonly numer: bigint;
   readonly denom: bigint;
@@ -109,6 +116,42 @@ export function trySpecialInfinite(f: IRNode, k: IRNode, lo: IRNode): IRNode | u
 }
 
 export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn: EvalFn): IRNode {
+  return evaluateSumInner(f, k, lo, hi, evalFn, false);
+}
+
+/**
+ * Track B2 (TypeScript port of Phase 40 + Phase 46 from Python ``symbolic-vm``
+ * ``sum_handler``).  The ``apartRetried`` flag prevents infinite recursion
+ * when the retry path falls back to the outer entry point — Apart is
+ * attempted at most once per top-level call.
+ *
+ * Apart-retry telescope chain
+ * ---------------------------
+ * When the structural telescope detector and every other narrow recogniser
+ * fall through to the unevaluated ``Sum(...)`` shape AND the summand is a
+ * proper rational ``Div(P(k), Q(k))``, we expand once via
+ * ``Apart(f, k)`` (dispatched through the user-provided ``evalFn`` —
+ * typically a ``symbolic-vm`` VM with the Apart handler installed) and
+ * retry ``evaluateSum`` on the partial-fraction decomposed shape.
+ *
+ * The classic case is ``∑ 1/(k·(k+1))``: Apart emits
+ * ``Add(Div(1, k), Div(-1, k+1))`` which the Phase 40+46 Add-with-negation
+ * normaliser rewrites to ``Sub(1/k, 1/(k+1))`` so the telescope detector
+ * fires and emits ``1 − 1/(hi+1)`` (finite) or ``1`` (infinite, since
+ * ``1/(k+1) → 0``).  When ``evalFn`` does not dispatch Apart (e.g. a bare
+ * arithmetic evaluator), ``apart_attempt`` retains the same head
+ * (``Apply(Apart, ...)``), structurally differs from ``f``, but
+ * ``evaluateSumInner`` will not close on it so the original unevaluated
+ * Sum is returned — exactly the Python fall-through behaviour.
+ */
+function evaluateSumInner(
+  f: IRNode,
+  k: IRNode,
+  lo: IRNode,
+  hi: IRNode,
+  evalFn: EvalFn,
+  apartRetried: boolean,
+): IRNode {
   const infUpper = isInf(hi);
   if (isConstantIn(f, k)) {
     return evalFn(app(MUL, [f, app(ADD, [app(SUB, [hi, lo]), int(1)])]));
@@ -168,6 +211,19 @@ export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn
     if (raw !== undefined) return evalFn(raw);
   }
 
+  // Track I2 — closed-form transcendental infinite sums.  Recognises the
+  // canonical zeta(2m), eta(2m), eta(1) = log(2), e_series, exp/cos/sin/
+  // cosh/sinh Taylor series.  Mirrors the Python dispatch insertion
+  // point (step 5a): placed after ``trySpecialInfinite`` so its
+  // pre-existing patterns (Basel zeta(2)/zeta(4), Leibniz π/4) keep
+  // their IR shapes and tests; ``tryClosedFormSeries`` only fires on
+  // patterns the legacy handler refuses (e.g. ``Σ 1/k⁶``, the eta
+  // family, sin/cos/sinh/cosh).
+  if (infUpper) {
+    const raw = tryClosedFormSeries(f, k, lo, hi);
+    if (raw !== undefined) return evalFn(raw);
+  }
+
   if (lo.kind === "integer" && hi.kind === "integer" && hi.value - lo.value >= 0n && hi.value - lo.value <= 999n) {
     let total = makeRational(0n, 1n);
     let ok = true;
@@ -181,6 +237,55 @@ export function evaluateSum(f: IRNode, k: IRNode, lo: IRNode, hi: IRNode, evalFn
       total = addR(total, r);
     }
     if (ok) return rationalToIr(total);
+  }
+
+  // Track H2 — Gosper hypergeometric closed-form attempt.  Runs after
+  // all narrow recognisers (constant, geometric, Faulhaber, telescoping,
+  // small-range numeric, special infinite series) but before the
+  // Apart-retry telescope chain and the unevaluated fallthrough.
+  //
+  // Mirrors the Python dispatch insertion point in
+  // ``cas_summation.summation`` (step 5b): Gosper only runs for *finite*
+  // upper bounds because the algorithm returns ``T(hi+1) − T(lo)`` which
+  // is only meaningful when ``hi+1`` is a real value.  Infinite upper
+  // bounds belong to the dedicated limit-aware paths above (telescope at
+  // ∞, classic series).  This guard also preserves the Phase 41 fall-
+  // through contract for non-vanishing telescopes.
+  if (!infUpper) {
+    const gosper = tryGosperSum(f, k, lo, hi);
+    if (gosper !== undefined) return evalFn(gosper);
+  }
+
+  // Track B2 — Apart-retry telescope chain.  Mirrors the Python
+  // ``sum_handler`` Phase 40 / Phase 46 retry path: when every direct rule
+  // above fails on a rational summand, expand once via ``Apart(f, k)``
+  // (dispatched through the user-provided ``evalFn``, i.e. a real VM with
+  // the Apart handler installed) and try the whole pipeline again.  The
+  // ``apartRetried`` guard pins the retry to at most one round, matching
+  // Python's structural one-shot behaviour and guaranteeing termination.
+  //
+  // Only attempted when ``f`` is structurally ``Div(num, den)`` — Apart
+  // leaves other heads unchanged, so this saves a wasted round-trip
+  // through the VM dispatch.  When ``apart_attempt`` is structurally
+  // equal to ``f`` (e.g. denominator irreducible over ℚ, or Apart isn't
+  // wired into ``evalFn``), no retry is performed.
+  if (!apartRetried && f.kind === "apply" && equals(f.head, DIV)) {
+    const apartAttempt = evalFn(app(sym("Apart"), [f, k]));
+    if (!equals(apartAttempt, f)) {
+      // Apart emits two-term partial fractions as ``Add(a, Div(-c, d))``
+      // or ``Add(Neg(a), b)``.  The structural telescope detector keys
+      // off ``Sub`` heads, so normalise via the existing helper before
+      // retrying.  ``normaliseAddNegToSub`` is a no-op when the head is
+      // not an Add — safe to apply unconditionally.
+      const normalised = normaliseAddNegToSub(apartAttempt);
+      const retry = evaluateSumInner(normalised, k, lo, hi, evalFn, true);
+      // Only return when the retry actually closed the sum (i.e. it is
+      // no longer the unevaluated ``Sum(...)`` head).  Otherwise fall
+      // through and return the original unevaluated form below.
+      if (!(retry.kind === "apply" && equals(retry.head, SUM))) {
+        return retry;
+      }
+    }
   }
 
   return app(SUM, [f, k, lo, hi]);
@@ -295,22 +400,65 @@ function extractNegation(node: IRNode): IRNode | undefined {
  */
 function normaliseAddNegToSub(node: IRNode): IRNode {
   if (node.kind !== "apply" || !irEquals(node.head, ADD) || node.args.length !== 2) {
-    return node;
+    return canonicaliseAddOperandOrder(node);
   }
   const [left, right] = node.args;
   const leftPos = extractNegation(left);
   const rightPos = extractNegation(right);
   if (leftPos !== undefined && rightPos !== undefined) {
     // Both sides genuinely negative — no telescope to expose.
-    return node;
+    return canonicaliseAddOperandOrder(node);
   }
   if (rightPos !== undefined) {
-    return app(SUB, [left, rightPos]);
+    return canonicaliseAddOperandOrder(app(SUB, [left, rightPos]));
   }
   if (leftPos !== undefined) {
-    return app(SUB, [right, leftPos]);
+    return canonicaliseAddOperandOrder(app(SUB, [right, leftPos]));
   }
-  return node;
+  return canonicaliseAddOperandOrder(node);
+}
+
+/**
+ * Track B2 (TypeScript port of Python ``_canonicalise_add_operand_order``):
+ * deep-rewrite every ``Add`` so that numeric literals appear *last* among
+ * its arguments.
+ *
+ * The symbolic VM doesn't currently impose a canonical operand order on
+ * ``Add``, so two structurally distinct trees can represent the same
+ * mathematical expression — e.g. ``Add(k, 1)`` vs ``Add(1, k)``.  The
+ * Phase 39 telescope detector relies on ``==`` after ``evalFn``, so
+ * these must look identical for the Apart-rewritten summand to match the
+ * substituted half (``Apart`` emits ``Add(1, k)`` while substitution
+ * produces ``Add(k, 1)``).
+ *
+ * Walks the tree and sorts each ``Add``'s arguments so that integer /
+ * rational / float literals come *last*, preserving the relative order of
+ * non-literal children.  Other heads recurse into their arguments unchanged.
+ */
+function canonicaliseAddOperandOrder(node: IRNode): IRNode {
+  if (node.kind !== "apply") return node;
+  const newArgs = node.args.map(canonicaliseAddOperandOrder);
+  if (irEquals(node.head, ADD) && newArgs.length >= 2) {
+    const literals: IRNode[] = [];
+    const nonLiterals: IRNode[] = [];
+    for (const arg of newArgs) {
+      if (arg.kind === "integer" || arg.kind === "rational" || arg.kind === "float") {
+        literals.push(arg);
+      } else {
+        nonLiterals.push(arg);
+      }
+    }
+    if (literals.length > 0 && nonLiterals.length > 0) {
+      const reordered = [...nonLiterals, ...literals];
+      // Only rebuild when the order actually changed.
+      const changed = reordered.some((arg, idx) => arg !== newArgs[idx]);
+      if (changed) {
+        return app(node.head, reordered);
+      }
+    }
+  }
+  const argsChanged = newArgs.some((arg, idx) => arg !== node.args[idx]);
+  return argsChanged ? app(node.head, newArgs) : node;
 }
 
 /**
@@ -690,7 +838,482 @@ function isLogOfDivergingInK(node: IRNode, k: IRNode): boolean {
   return hDivergesAtInfinity(node, k);
 }
 
+const _SQRT_HEAD = sym("Sqrt");
+
+/**
+ * Phase 51 (TypeScript port): Return the effective polynomial half-
+ * degree of ``Sqrt(P(k))`` when ``P`` is a positive-degree polynomial
+ * with positive leading coefficient.  Returns ``undefined`` otherwise.
+ *
+ * The half-degree is ``deg(P) / 2`` (so ``sqrt(k³)`` is degree ``1.5``).
+ * Used in :func:`gVanishesAtInfinity` to recognise that
+ * ``sqrt(P)/Q`` vanishes when ``deg(Q) > deg(P)/2``.
+ *
+ * Conservative — refuses ``Sqrt(negative-polynomial)`` (not real) and
+ * non-Sqrt heads.
+ */
+function sqrtEffectiveHalfDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply") return undefined;
+  if (!equals(node.head, _SQRT_HEAD) || node.args.length !== 1) return undefined;
+  const inner = node.args[0];
+  const innerDeg = polynomialDegreeInK(inner, k);
+  if (innerDeg === undefined || innerDeg < 1) return undefined;
+  if (polynomialLeadingCoeffSignInK(inner, k) !== 1) return undefined;
+  return innerDeg / 2;
+}
+
+/**
+ * Phase 52 (TypeScript port): Return the effective polynomial degree of the
+ * polynomial part when ``node = Mul(bounded_factors, polynomial_factors)`` in
+ * ``k``; ``undefined`` otherwise.
+ *
+ * Used by :func:`gVanishesAtInfinity` to recognise that ``sin(k)·k/k³``
+ * vanishes (bounded × deg 1 over deg 3).  The bounded part must contain at
+ * least one non-constant-in-k factor — otherwise Phase 49 would catch the
+ * whole numerator as a single bounded expression.
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. Partition each factor into bounded vs polynomial buckets.
+ *      Factors that are neither bounded nor polynomial → return undefined.
+ *   3. Require ≥ 1 non-constant-in-k bounded factor.
+ *   4. Sum the polynomial factors' degrees.
+ *   5. Return ``{ bounded: aggregate, polyDeg: summed }``.
+ */
+function splitBoundedPolynomialFactor(
+  node: IRNode,
+  k: IRNode
+): { bounded: IRNode; polyDeg: number } | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  const boundedFactors: IRNode[] = [];
+  let polyDeg = 0;
+  let hasNonConstantBounded = false;
+  for (const arg of node.args) {
+    if (isBoundedInK(arg, k)) {
+      boundedFactors.push(arg);
+      if (!isConstantIn(arg, k)) hasNonConstantBounded = true;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg === undefined) return undefined;  // Unrecognised factor.
+    polyDeg += deg;
+  }
+  // Pure polynomial — Phase 42 will handle it; no non-constant bounded factor.
+  if (!hasNonConstantBounded) return undefined;
+  if (boundedFactors.length === 0) return undefined;
+  const bounded =
+    boundedFactors.length === 1
+      ? boundedFactors[0]
+      : app(MUL, boundedFactors);
+  return { bounded, polyDeg };
+}
+
+/**
+ * Phase 53 (TypeScript port): Return the effective growth degree of a
+ * ``Mul(Sqrt(P), polynomial_factors)`` numerator, or ``undefined`` when
+ * the shape isn't recognised.
+ *
+ * The numerator ``Sqrt(P(k)) · Q(k)`` grows at rate
+ * ``deg(P)/2 + deg(Q)``.  Returns that combined value (a possibly
+ * fractional number).  The caller compares against ``den_deg`` directly.
+ *
+ * Requirements:
+ *   - ``node = Mul(...)`` — the plain-``Sqrt`` case is handled by Phase 51.
+ *   - Exactly one factor is a ``Sqrt(P)`` with positive-leading-coeff poly inner.
+ *   - All remaining factors are polynomials in ``k``.
+ */
+function sqrtPolyNumeratorEffectiveDegree(
+  node: IRNode,
+  k: IRNode
+): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  let polyDegSum = 0;
+  for (const arg of node.args) {
+    const sqrtDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (sqrtDeg !== undefined) {
+      // Only one Sqrt factor is allowed; bail on a second.
+      if (sqrtHalfDeg !== undefined) return undefined;
+      sqrtHalfDeg = sqrtDeg;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg === undefined) return undefined; // Neither Sqrt nor polynomial.
+    polyDegSum += deg;
+  }
+  // Must have found exactly one Sqrt factor.
+  if (sqrtHalfDeg === undefined) return undefined;
+  return sqrtHalfDeg + polyDegSum;
+}
+
+/**
+ * Phase 54 (TypeScript port): Return the effective polynomial degree of a
+ * ``Mul(Log(diverging), polynomial_factors)`` numerator, or ``undefined``
+ * when the shape isn't recognised.
+ *
+ * ``log(h(k))`` grows sub-polynomially — ``log(h) = o(k^ε)`` for any
+ * ``ε > 0`` — so the effective growth degree of ``log(h) · P(k)``
+ * equals ``deg(P)`` alone.  The quotient vanishes when
+ * ``den_deg > poly_deg`` (strictly).
+ *
+ * Requirements:
+ *   - ``node = Mul(...)`` — a bare ``Log(h)`` numerator goes via Phase 50.
+ *   - Exactly one factor passes ``isLogOfDivergingInK``.
+ *   - All remaining factors are polynomials in ``k``.
+ */
+function splitLogPolynomialFactor(
+  node: IRNode,
+  k: IRNode
+): { logFactor: IRNode; polyDeg: number } | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logFactor: IRNode | undefined;
+  let polyDegSum = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      // Only one Log(diverging) factor allowed; bail on a second.
+      if (logFactor !== undefined) return undefined;
+      logFactor = arg;
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg === undefined) return undefined; // Neither Log(diverging) nor polynomial.
+    polyDegSum += deg;
+  }
+  if (logFactor === undefined) return undefined; // No Log factor found.
+  return { logFactor, polyDeg: polyDegSum };
+}
+
+/**
+ * Phase 55 (TypeScript port): Return true when ``node`` is a ``Mul`` with
+ * exactly one ``Log(diverging)`` factor and all remaining factors bounded
+ * in ``k``.
+ *
+ * The bounded part is uniformly bounded by some constant ``C`` and
+ * ``log(h(k))`` grows sub-polynomially, so their product is dominated by
+ * any polynomial or faster-growing denominator.  This is the
+ * bounded-times-log complement of Phase 52 (bounded × polynomial) and
+ * Phase 54 (log × polynomial).
+ *
+ * Requirements:
+ *   - ``node = Mul(...)`` — a bare ``Log(h)`` numerator goes via Phase 50.
+ *   - Exactly one factor passes ``isLogOfDivergingInK``.
+ *   - All remaining factors pass ``isBoundedInK``.
+ *   - Any factor that is neither → return false.
+ */
+function isBoundedTimesLogInK(node: IRNode, k: IRNode): boolean {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return false;
+  let logCount = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Factor is neither Log(diverging) nor bounded — unrecognised.
+    return false;
+  }
+  return logCount === 1;
+}
+
+/**
+ * Phase 56 (TypeScript port): Return the ``Sqrt`` inner half-degree
+ * when ``node`` is a ``Mul`` with exactly one
+ * ``Sqrt(positive-leading polynomial)`` factor and all remaining
+ * factors bounded in ``k``; ``undefined`` otherwise.
+ *
+ * Mirror of :func:`isBoundedTimesLogInK` but for sqrt instead of log.
+ * Returns the half-degree directly (Phase 51's
+ * ``sqrtEffectiveHalfDegree`` already returns the half value in TS),
+ * so the caller compares ``denDeg > sqrtHalfDeg`` directly.
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Sqrt(positive-leading polynomial)`` → record its half-deg;
+ *        refuse if a second sqrt appears.
+ *      - ``bounded`` → accept.
+ *      - otherwise → return undefined.
+ *   3. Require exactly one sqrt factor.
+ */
+function boundedTimesSqrtHalfDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDeg: number | undefined;
+  for (const arg of node.args) {
+    const deg = sqrtEffectiveHalfDegree(arg, k);
+    if (deg !== undefined) {
+      if (sqrtHalfDeg !== undefined) {
+        // Two Sqrt factors — refuse (conservative, would need
+        // combined growth-rate logic).
+        return undefined;
+      }
+      sqrtHalfDeg = deg;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Neither Sqrt(positive-poly) nor bounded → unrecognised.
+    return undefined;
+  }
+  return sqrtHalfDeg;
+}
+
+/**
+ * Phase 57 (TypeScript port): Return the ``Sqrt`` inner half-degree when
+ * ``node`` is a ``Mul`` with **exactly one** ``Log(diverging)`` factor AND
+ * **exactly one** ``Sqrt(positive-leading polynomial)`` factor, plus any
+ * number of bounded factors; ``undefined`` otherwise.
+ *
+ * Combines sub-polynomial ``Log`` growth with half-polynomial ``Sqrt``
+ * growth.  Effective growth ``log(k)·k^{deg(P)/2}`` is strictly dominated
+ * by ``k^{deg(P)/2+ε}`` for any ``ε > 0`` since ``log(k) = o(k^ε)``.
+ * Caller compares ``denDeg > sqrtHalfDeg`` directly (same convention as
+ * Phase 56's ``boundedTimesSqrtHalfDegree``).
+ *
+ * Requires **both** Log and Sqrt — one-only patterns fall through to
+ * Phase 55 (bounded × Log) or Phase 56 (bounded × Sqrt).  Two-of-either
+ * is refused (conservative; combined growth-rate logic would be needed).
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Log(diverging)`` → count; refuse if count > 1.
+ *      - ``Sqrt(positive-poly)`` → record half-degree; refuse if second one.
+ *      - ``bounded`` → accept.
+ *      - otherwise → return undefined.
+ *   3. Require exactly one Log AND exactly one Sqrt.
+ */
+function boundedLogSqrtHalfDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let sqrtHalfDeg: number | undefined;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 1) {
+        // Two or more Log factors — refuse (would need combined rate logic).
+        return undefined;
+      }
+      continue;
+    }
+    const deg = sqrtEffectiveHalfDegree(arg, k);
+    if (deg !== undefined) {
+      if (sqrtHalfDeg !== undefined) {
+        // Two Sqrt factors — refuse (conservative).
+        return undefined;
+      }
+      sqrtHalfDeg = deg;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      continue;
+    }
+    // Neither Log(diverging) nor Sqrt(positive-poly) nor bounded — refuse.
+    return undefined;
+  }
+  if (logCount !== 1 || sqrtHalfDeg === undefined) {
+    return undefined;
+  }
+  return sqrtHalfDeg;
+}
+
+/**
+ * Phase 58 (TypeScript port): Return the total polynomial degree when
+ * ``node`` is a ``Mul`` with exactly one ``Log(diverging)`` factor, any
+ * polynomial factors, and any number of bounded (non-polynomial) factors;
+ * ``undefined`` otherwise.
+ *
+ * Fills the gap between:
+ * - **Phase 54** — ``Mul(Log, polynomial_only)``; refuses bounded factors.
+ * - **Phase 55** — ``Mul(bounded, Log)``; refuses polynomial factors.
+ * - **Phase 57** — ``Mul(bounded, Log, Sqrt)``; the Sqrt specialisation.
+ *
+ * Effective growth ``log(k)·k^m = o(k^{m+ε})``.  Caller compares
+ * ``denDeg > polyDeg`` (strict).  Sqrt factors are refused here and
+ * handled by Phase 57.
+ *
+ * Algorithm:
+ *   1. Require ``node = Mul(...)``.
+ *   2. For each factor:
+ *      - ``Log(diverging)`` → count; refuse if count > 1.
+ *      - polynomial → add its degree to ``polyDeg``.
+ *      - ``bounded`` (non-polynomial, non-Sqrt) → accept silently.
+ *      - Sqrt or unrecognised → return undefined.
+ *   3. Require exactly one Log.
+ *   4. Return ``polyDeg``.
+ */
+function boundedLogPolyDegree(node: IRNode, k: IRNode): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let logCount = 0;
+  let polyDeg = 0;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      logCount++;
+      if (logCount > 1) {
+        // Two or more Log factors — refuse.
+        return undefined;
+      }
+      continue;
+    }
+    const deg = polynomialDegreeInK(arg, k);
+    if (deg !== undefined) {
+      polyDeg += deg;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      // Bounded but non-polynomial (e.g. Sin, Cos) — accept.
+      continue;
+    }
+    // Sqrt or unrecognised factor — bail (Sqrt is handled by Phase 57).
+    return undefined;
+  }
+  if (logCount !== 1) {
+    return undefined;
+  }
+  return polyDeg;
+}
+
+/**
+ * Return ``Σ sqrtHalfDeg + Σ polyDeg`` when ``node`` is a ``Mul`` whose
+ * factors split into any combination of:
+ *
+ *   - ``Log(diverging)`` factors (any count, including zero),
+ *   - ``Sqrt(positive-leading polynomial)`` factors (any count),
+ *   - polynomial factors in ``k`` (any count),
+ *   - bounded-in-``k`` factors (any count, e.g. ``Sin``, ``Cos``, constants),
+ *
+ * and at least one of the Log/Sqrt/polynomial factors is present.  Returns
+ * ``undefined`` when any factor is unrecognised (e.g. ``Exp(k)``) or when
+ * the numerator is purely bounded.
+ *
+ * **Phase 86 — cleanup.**  Supersedes the hand-written grid of
+ * ``N-Sqrt × M-Log × polynomial`` helpers (Phases 59-85).  The convergence
+ * math is identical for every non-negative ``(N, M)`` pair:
+ *
+ *   - The product of ``N`` ``Log(diverging)`` factors is sub-polynomial —
+ *     ``log^N(k) = o(k^ε)`` for any ``ε > 0`` — so ``N`` contributes ``0``
+ *     to the effective growth degree.
+ *   - Each ``Sqrt(P_i)`` contributes ``deg(P_i)/2`` (here as a fractional
+ *     half-degree, matching the existing TS-port convention).
+ *   - Each polynomial factor ``Q_j`` contributes its own ``deg(Q_j)``.
+ *   - Bounded factors contribute ``0``.
+ *
+ * Effective growth:
+ *
+ *   effective = Σ_i sqrtHalfDeg(Sqrt(P_i)) + Σ_j deg(Q_j)
+ *
+ * Caller compares ``denDeg > effective`` (polynomial denominator) or
+ * short-circuits on non-polynomial diverging denominator.
+ *
+ * Conservative refusals:
+ *
+ *   - Empty ``Mul`` (no recognised growth factor) → undefined.
+ *   - ``Sqrt`` of a polynomial whose leading coefficient is negative → undefined.
+ *   - Any unrecognised factor (Exp, free symbol, …) → undefined.
+ */
+function logSqrtPolyEffectiveDegGeneric(
+  node: IRNode,
+  k: IRNode,
+): number | undefined {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) return undefined;
+  let sqrtHalfDegSum = 0;
+  let polyDegSum = 0;
+  let foundLog = false;
+  let foundSqrt = false;
+  let foundPoly = false;
+  for (const arg of node.args) {
+    if (isLogOfDivergingInK(arg, k)) {
+      foundLog = true;
+      continue;
+    }
+    const sqrtHalfDeg = sqrtEffectiveHalfDegree(arg, k);
+    if (sqrtHalfDeg !== undefined) {
+      sqrtHalfDegSum += sqrtHalfDeg;
+      foundSqrt = true;
+      continue;
+    }
+    if (isBoundedInK(arg, k)) {
+      // Constants and Sin/Cos/closures — contribute nothing.
+      continue;
+    }
+    const polyDeg = polynomialDegreeInK(arg, k);
+    if (polyDeg !== undefined && polyDeg >= 1) {
+      polyDegSum += polyDeg;
+      foundPoly = true;
+      continue;
+    }
+    // Unrecognised factor (Exp, free symbol, …) — bail.
+    return undefined;
+  }
+  if (!foundLog && !foundSqrt && !foundPoly) {
+    // Pure-bounded numerator — let Phase 49 handle it.
+    return undefined;
+  }
+  return sqrtHalfDegSum + polyDegSum;
+}
+
+function vanishesAtInfinity(node: IRNode, k: IRNode): boolean {
+  if (isConstantIn(node, k)) {
+    const value = rationalValue(node);
+    return value !== undefined && value.numer === 0n;
+  }
+  if (node.kind !== "apply") return false;
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    return vanishesAtInfinity(node.args[0], k);
+  }
+  if (equals(node.head, ADD)) {
+    return node.args.every((arg) => vanishesAtInfinity(arg, k));
+  }
+  if (equals(node.head, EXP) && node.args.length === 1) {
+    const inner = node.args[0];
+    const degree = polynomialDegreeInK(inner, k);
+    return (
+      degree !== undefined &&
+      degree > 0 &&
+      polynomialLeadingCoeffSignInK(inner, k) === -1
+    );
+  }
+  if (equals(node.head, POW) && node.args.length === 2) {
+    const [base, exp] = node.args;
+    if (isConstantIn(base, k)) {
+      const baseVal = rationalValue(base);
+      if (baseVal !== undefined) {
+        const absNumer = baseVal.numer < 0n ? -baseVal.numer : baseVal.numer;
+        if (absNumer > baseVal.denom) {
+          const degree = polynomialDegreeInK(exp, k);
+          return (
+            degree !== undefined &&
+            degree > 0 &&
+            polynomialLeadingCoeffSignInK(exp, k) === -1
+          );
+        }
+      }
+    }
+  }
+  if (equals(node.head, MUL)) {
+    let hasVanishing = false;
+    for (const arg of node.args) {
+      if (isConstantIn(arg, k)) {
+        const value = rationalValue(arg);
+        if (value !== undefined && value.numer === 0n) return true;
+        continue;
+      }
+      if (isBoundedInK(arg, k)) continue;
+      if (vanishesAtInfinity(arg, k)) {
+        hasVanishing = true;
+        continue;
+      }
+      return false;
+    }
+    return hasVanishing;
+  }
+  return false;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
+  if (vanishesAtInfinity(g, k)) return true;
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
   }
@@ -709,6 +1332,135 @@ function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
   // log/poly → 0 always (log grows slower than any positive power).
   if (isLogOfDivergingInK(num, k) && hDivergesAtInfinity(den, k)) {
     return true;
+  }
+  // Phase 51: Sqrt(positive-poly) numerator + polynomial denominator
+  // with deg(den) > deg(P)/2.
+  const sqrtHalfDeg = sqrtEffectiveHalfDegree(num, k);
+  if (sqrtHalfDeg !== undefined) {
+    const denDegSqrt = polynomialDegreeInK(den, k);
+    if (denDegSqrt !== undefined && denDegSqrt > sqrtHalfDeg) {
+      return true;
+    }
+  }
+  // Phase 52: Mul(bounded, polynomial) numerator pattern.  When the
+  // numerator factors as bounded × polynomial with positive poly degree,
+  // the quotient vanishes iff den_deg > poly_deg.  Catches shapes like
+  // sin(k)·k/k³ that Phase 49 misses (Mul isn't wholly bounded) and
+  // Phase 42 refuses (sin is not polynomial).
+  const bpResult = splitBoundedPolynomialFactor(num, k);
+  if (bpResult !== undefined) {
+    const denDegBp = polynomialDegreeInK(den, k);
+    if (denDegBp !== undefined && denDegBp > bpResult.polyDeg) {
+      return true;
+    }
+  }
+  // Phase 53: Mul(Sqrt(P), polynomial_factors) numerator pattern.
+  // The effective growth rate is deg(P)/2 + deg(Q).  Vanishes when
+  // deg(den) > deg(P)/2 + deg(Q).  Handled by sqrtPolyNumeratorEffectiveDegree
+  // which requires exactly one Sqrt factor and all others polynomial.
+  const sqrtPolyEff = sqrtPolyNumeratorEffectiveDegree(num, k);
+  if (sqrtPolyEff !== undefined) {
+    const denDegSp = polynomialDegreeInK(den, k);
+    if (denDegSp !== undefined && denDegSp > sqrtPolyEff) {
+      return true;
+    }
+  }
+  // Phase 54: Mul(Log(diverging), polynomial_factors) numerator pattern.
+  // log(h(k)) grows sub-polynomially so the effective growth degree is just
+  // deg(poly_part).  Vanishes when den_deg > poly_deg (strictly).
+  // Equal degrees are refused: log(k)*constant diverges to ±∞.
+  const logPolyResult = splitLogPolynomialFactor(num, k);
+  if (logPolyResult !== undefined) {
+    const denDegLp = polynomialDegreeInK(den, k);
+    if (denDegLp !== undefined && denDegLp > logPolyResult.polyDeg) {
+      return true;
+    }
+  }
+  // Phase 55: Mul(bounded, Log(diverging)) numerator + diverging denominator.
+  // bounded × log(h(k)) grows sub-polynomially (log dominates bounded part,
+  // but log itself is dominated by any polynomial or faster-growing denominator).
+  if (isBoundedTimesLogInK(num, k) && hDivergesAtInfinity(den, k)) {
+    return true;
+  }
+  // Phase 56: Mul(bounded, Sqrt(positive-poly)) numerator pattern.
+  // Effective growth degree is deg(P)/2.  Vanishes when:
+  //   - denominator is polynomial with deg(den) > deg(P)/2, OR
+  //   - denominator is non-polynomial diverging (Exp / Pow / Log×poly)
+  //     which dominates any sub-polynomial sqrt growth automatically.
+  const sqrtBoundedHalfDeg = boundedTimesSqrtHalfDegree(num, k);
+  if (sqrtBoundedHalfDeg !== undefined) {
+    const denDegBs = polynomialDegreeInK(den, k);
+    if (denDegBs !== undefined) {
+      if (denDegBs > sqrtBoundedHalfDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 57: Mul(bounded, Log(diverging), Sqrt(positive-poly)) numerator.
+  // Effective growth ``log(k)·k^{deg(P)/2}`` is dominated by any
+  // ``k^{deg(P)/2+ε}``, so the quotient vanishes when:
+  //   - polynomial denominator with ``denDeg > deg(P)/2``, OR
+  //   - non-polynomial diverging denominator (Exp / Pow / Log×poly).
+  // Requires both Log and Sqrt; one-only falls through to Phase 55 / 56.
+  const blsHalfDeg = boundedLogSqrtHalfDegree(num, k);
+  if (blsHalfDeg !== undefined) {
+    const denDegBls = polynomialDegreeInK(den, k);
+    if (denDegBls !== undefined) {
+      if (denDegBls > blsHalfDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // Phase 58: Mul(bounded, Log(diverging), polynomial) numerator.
+  // Effective growth ``log(k)·k^m = o(k^{m+ε})``.  Vanishes when:
+  //   - polynomial denominator with ``denDeg > polyDeg`` (strict), OR
+  //   - non-polynomial diverging denominator (Exp / Pow / Log×poly).
+  // Fills the gap between Phase 54 (Log × poly, refuses bounded) and
+  // Phase 55 (bounded × Log, refuses poly).  Sqrt is refused here →
+  // Phase 57 handles that case.
+  const blpDeg = boundedLogPolyDegree(num, k);
+  if (blpDeg !== undefined) {
+    const denDegBlp = polynomialDegreeInK(den, k);
+    if (denDegBlp !== undefined) {
+      if (denDegBlp > blpDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
+  }
+  // ---- Generic recogniser (Phase 86 cleanup) ----
+  //
+  // Mul(bounded..., Log_1, ..., Log_N, Sqrt_1, ..., Sqrt_M, Poly_1, ..., Poly_K)
+  // over diverging denominator: the product of any number of
+  // ``Log(diverging)`` factors is still sub-polynomial
+  // (``log^N(k) = o(k^ε)``), so ``N`` drops out of the comparison.  The
+  // Sqrt factors contribute ``Σ deg(P_i)/2`` and the polynomial factors
+  // contribute ``Σ deg(Q_j)``.  Effective:
+  //
+  //   effective = Σ sqrtHalfDeg + Σ polyDeg
+  //
+  // Vanishes when ``denDeg > effective``; non-polynomial diverging
+  // denominators dominate automatically.
+  //
+  // Supersedes the hand-written grid of ``N-Sqrt × M-Log × polynomial``
+  // helpers (Phases 59-85): the math is identical for every (N, M) ≥ (0, 0).
+  // The hardcoded helpers remain in place for now but are preempted by this
+  // branch; a follow-up cleanup PR will delete them.
+  const genDeg = logSqrtPolyEffectiveDegGeneric(num, k);
+  if (genDeg !== undefined) {
+    const denDegGen = polynomialDegreeInK(den, k);
+    if (denDegGen !== undefined) {
+      if (denDegGen > genDeg) {
+        return true;
+      }
+    } else if (hDivergesAtInfinity(den, k)) {
+      return true;
+    }
   }
   // Phase 42 widening: deg(num) < deg(den) on pure polynomials.
   const numDeg = polynomialDegreeInK(num, k);

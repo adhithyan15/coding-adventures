@@ -50,6 +50,10 @@ fn run_probabilities(src: &str) -> Vec<f64> {
                 }
             }
             SearchResult::EnumerateAllResult { probability, .. } => probability,
+            // LP19e LR aggregation reports the Bayesian posterior;
+            // route it through this test helper with the same
+            // "probability of the query" semantics as WMC.
+            SearchResult::LRAggregateResult { posterior, .. } => posterior,
         });
     }
     probs

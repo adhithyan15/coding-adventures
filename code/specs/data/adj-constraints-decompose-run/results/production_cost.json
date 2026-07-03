@@ -1,0 +1,29 @@
+{
+  "queries": [],
+  "ranked": [],
+  "decision": {
+    "type": "empty"
+  },
+  "solve": {
+    "outcome": "unsupported",
+    "reason": "inequality constraints \u2014 feasibility/LP is track C1/C2"
+  },
+  "optimize": {
+    "outcome": "optimal",
+    "value": 980,
+    "assignments": [
+      {
+        "name": "a",
+        "value": 100
+      },
+      {
+        "name": "b",
+        "value": 60
+      }
+    ],
+    "binding": [
+      0,
+      1
+    ]
+  }
+}

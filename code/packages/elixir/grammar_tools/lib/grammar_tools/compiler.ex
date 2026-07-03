@@ -80,6 +80,7 @@ defmodule CodingAdventures.GrammarTools.Compiler do
     skip_src = token_def_list_src(grammar.skip_definitions, "      ")
     err_src = token_def_list_src(grammar.error_definitions, "      ")
     groups_src = groups_src(grammar.groups, "      ")
+    transitions_src = transitions_list_src(grammar.transitions, "      ")
 
     """
     # AUTO-GENERATED FILE \u2014 DO NOT EDIT
@@ -104,6 +105,8 @@ defmodule CodingAdventures.GrammarTools.Compiler do
         case_sensitive: #{grammar.case_sensitive},
         version: #{grammar.version},
         case_insensitive: #{grammar.case_insensitive},
+        start_mode: #{inspect(grammar.start_mode)},
+        transitions: #{transitions_src},
       }
     end
     """
@@ -197,6 +200,40 @@ defmodule CodingAdventures.GrammarTools.Compiler do
       |> Enum.join(",\n")
 
     "%{\n#{entries},\n#{indent}}"
+  end
+
+  # Render a single transition_action value as an Elixir expression (F10).
+  defp transition_action_src(action) do
+    case action do
+      {:set_mode, target} -> "{:set_mode, #{inspect(target)}}"
+      {:push, group} -> "{:push, #{inspect(group)}}"
+      :pop -> ":pop"
+      :enable_skip -> ":enable_skip"
+      :disable_skip -> ":disable_skip"
+    end
+  end
+
+  # Render one mode_transition map as an Elixir map literal (F10).
+  defp mode_transition_src(rule, indent) do
+    i = indent <> "  "
+    actions_src = "[#{Enum.map_join(rule.actions, ", ", &transition_action_src/1)}]"
+
+    "#{indent}%{\n" <>
+      "#{i}on_tokens: #{inspect(rule.on_tokens)},\n" <>
+      "#{i}on_value: #{inspect(rule.on_value)},\n" <>
+      "#{i}in_mode: #{inspect(rule.in_mode)},\n" <>
+      "#{i}actions: #{actions_src},\n" <>
+      "#{i}line_number: #{rule.line_number},\n" <>
+      "#{indent}}"
+  end
+
+  # Render a list of mode_transition maps as an Elixir list literal (F10).
+  defp transitions_list_src([], _indent), do: "[]"
+
+  defp transitions_list_src(rules, indent) do
+    inner = indent <> "  "
+    items = rules |> Enum.map(&mode_transition_src(&1, inner)) |> Enum.join(",\n")
+    "[\n#{items},\n#{indent}]"
   end
 
   # ===========================================================================

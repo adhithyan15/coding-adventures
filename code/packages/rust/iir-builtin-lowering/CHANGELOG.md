@@ -4,6 +4,294 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.16.0] — 2026-06-10 — lambda value-model: arg boxing + polymorphic result coercion (LANG77 / McCarthy W13b)
+
+Closes the two tagged-word value-model gaps a `LAMBDA` exposes in `lower_lisp_repr`
+(F7), reusing the managed pass's lisp-function partition (`lisp_functions`, now
+`pub(crate)`):
+
+- **Argument boxing** — `lisp_arg_regs` now includes the arguments of a `call` to a
+  **lisp function** (not just lisp builtins), so an integer atom passed to a lambda
+  is boxed (`n << 3`). Without it a raw `5` reads as tag `0b101` (`#t`) and `7` as
+  `0b111` (a heap pair) inside the body.
+- **Polymorphic result coercion** — a lambda result is a `call` typed `any` of
+  unknown runtime tag, so the entry-exit coercion wraps it with the new
+  `lispy_to_exit_code` (a RUNTIME tag switch) instead of the static
+  `unbox_int`/`truthy`/verbatim that the int/bool/symbol cases use.
+- **Language gate** — both behaviours fire only for a lisp module (`language ==
+  "mccarthy-lisp"`). Twig shares this pass and also types untyped params `any`, so
+  the gate keeps the pass a faithful no-op for Twig (regression-tested:
+  `non_lisp_call_is_left_untouched`).
+
+New unit tests `lambda_call_boxes_int_arg_and_coerces_result` +
+`non_lisp_call_is_left_untouched`.
+
+## [0.15.0] — 2026-06-10 — symbol program-result handling (LANG77 / McCarthy W13a)
+
+Extends the type-directed program-exit coercion in `lower_lisp_repr` (the bool case
+landed in 0.14.0) to **symbols**: a SYMBOL result is already a finished tagged
+immediate from `intern_symbols` (`(id << shift) | TAG_SYMBOL`), so it must NOT be
+`lispy_unbox_int`'d (`>> 3` would corrupt the id+tag). Such a `ret` is returned
+verbatim (its tagged word). Reusable for every tagged-word backend; verified
+end-to-end on the LLVM/clang path (`(EQ (QUOTE A) (QUOTE A))`→1). New unit test
+`symbol_result_returned_verbatim`.
+
+## [0.14.0] — 2026-06-10 — boolean program-result coercion (LANG77 / McCarthy W12b-2)
+
+Closes the long-deferred "booleans land in L3b-2c-2" gap in `lower_lisp_repr`'s
+program-exit handling. A value produced by a predicate (`pair?`/`equal?`/`not`) is
+a tagged **boolean** (`LISPY_TRUE = 5` / `LISPY_FALSE = 3`), not a tagged integer —
+so `insert_unbox_before_lisp_rets` is now **type-directed**:
+
+- an INTEGER result is unboxed (`lispy_unbox_int`, `>> 3`) as before;
+- a BOOLEAN result (its producing instruction carries the `bool` type hint) is run
+  through `lispy_truthy` (→ raw `0`/`1`). Unboxing a true (`5 >> 3 = 0`) would have
+  reported *false* — the bug this fixes.
+
+Reusable for every tagged-word backend (LLVM/AOT/JIT) that links `lispy_runtime.c`.
+Verified end-to-end in `lang-aot` on the LLVM/clang path: `(ATOM 7)`→1,
+`(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(EQ 7 8)`→0. Updated the
+`tagged_cond_is_wrapped_with_truthy` unit test (the bool-typed `ret` now also
+truthy-coerces) and added `integer_result_unboxed_boolean_result_truthied`.
+
+## [0.13.0] — 2026-06-09 — reference funnels + lisp-call result type (LANG77 / McCarthy W5b)
+
+### Fixed
+
+- `lower_lisp_repr_structural` now produces IIR a **strict** backend (JVM/CLR/
+  BEAM) can type, where the loose wasm model previously got away with ambiguity:
+  - **Lisp `call` results are retyped `ref<any>`.** The frontend hints a call
+    `i64`; a lisp function returns the uniform-anyref value, so the call result is
+    a reference. (The JVM stored an `Object` result into a `long` slot otherwise —
+    a recursive `LABEL` returned garbage.)
+  - **Reference funnels.** A `COND` `mov`s each clause's value into one result
+    register. If any clause yields a reference (a cons, `nil`, or a lisp call
+    result — e.g. a recursive `LABEL`), the funnel must be a reference in *every*
+    clause. `ref`-ness is now propagated through `mov` chains to a fixpoint, and
+    the rebuild **boxes each atom clause into the funnel** (`mov %fun, %atom` →
+    `box %fun, %atom`) and retypes the reference clauses — instead of boxing the
+    whole funnel once at `ret`, which mis-boxed a clause that already held a
+    reference.
+
+These make McCarthy `LAMBDA`/`LABEL`/recursion and mixed atom/cons `COND` run on
+the JVM. wasm is unaffected (regression-tested). 1 new test.
+
+## [0.12.0] — 2026-06-09 — uniform-anyref function boundary (LANG77 / McCarthy W2)
+
+### Changed
+
+- `lower_lisp_repr_structural` now makes the **function-call boundary**
+  uniform-anyref, so a `LAMBDA`/`LABEL` can be applied and can recurse:
+  - a new `lisp_functions` module analysis (functions using the heap/predicates
+    or taking lisp params, closed under *calling*) replaces the per-function
+    `function_uses_heap` gate — every lisp function is processed, even a trivial
+    `(LAMBDA (X) X)`;
+  - each **lisp parameter** (`any`/`symbol`) is retyped to `ref<any>` and treated
+    as a reference;
+  - each argument of a `call` to a lisp function is **boxed** (`i31ref`) before
+    crossing the boundary, and the **call result** is a reference;
+  - a **non-entry** function (a lambda) returns `ref<any>` — boxing a scalar /
+    predicate-boolean / atom result — so every value crossing a boundary is an
+    `anyref`; the entry function still unboxes its result to `i32`.
+  - Recursion needs no special handling: a self-`call` is just a lisp call.
+- `lang-aot::concretize_scalar_any_for_wasm` correspondingly skips functions with
+  lisp params, keeping the two passes' partition exact.
+
+1 new test (the `((LAMBDA (X) X) 5)` boundary: param→ref<any>, arg boxed, return
+ref<any>, caller unboxes).
+
+## [0.11.0] — 2026-06-09 — managed-backend symbol interning (LANG77 / McCarthy W1)
+
+### Added
+
+- **`intern_symbols_structural`** — the managed/uniform-reference twin of
+  `intern_symbols`. Interns each symbol literal (`const Var(name) : symbol`) to a
+  distinct integer in a reserved high range (`SYMBOL_ID_BASE = 2²⁹` + module-wide
+  id) and retypes it to `i32`, so a symbol flows like any integer atom: the
+  structural pass boxes it as an `i31ref` and `EQ` compares the payloads with
+  `i32.eq`. Distinct symbols get distinct values (`(EQ 'A 'B)` → nil), same
+  symbols share one (`(EQ 'A 'A)` → T), and the reserved range keeps symbols
+  disjoint from integer atoms (`(EQ 'A 5)` → nil). No new value type, no
+  polymorphic `EQ`. Reusable across WASM/JVM/CLR/BEAM (each adapts the encoding;
+  the WASM path uses the integer ids directly). 4 new tests.
+
+## [0.10.0] — 2026-06-09 — `COND` lisp-truthiness (LANG77 / McCarthy L3b-3a-4d)
+
+### Changed
+
+- `lower_lisp_repr_structural` now wraps **lisp-value `COND` guards** with a
+  truthiness test, so `COND` branches with McCarthy semantics on wasm. A
+  `jmp_if_false` whose condition is a predicate result (hint `"bool"`) is tested
+  directly, but a condition that is a **lisp value** (an integer atom, `nil`, a
+  cons, a variable) is rewritten:
+
+  ```
+  %n = is_null(%cond_boxed)   ;; 1 iff cond is nil
+  %t = not(%n)                ;; 1 iff cond is truthy (non-nil)
+  jmp_if_false %t, L          ;; branch iff cond is nil/false
+  ```
+
+  so a lisp integer atom — **even `0`** — is true, and only `nil` is false
+  (integer atoms are boxed as `i31ref` first so `is_null` is well-typed). The
+  result funnel is unchanged (it already returns the clause's value, or `nil` as
+  `0`, through the loose value model — uniform funnel boxing is deferred because
+  it would make a `nil` return unbox-trap).
+
+1 new test (a lisp-value guard is wrapped with `is_null`/`not`; a machine-boolean
+guard is tested directly).
+
+## [0.9.0] — 2026-06-08 — predicate atoms box (LANG77 / McCarthy L3b-3a-4b)
+
+### Changed
+
+- `lower_lisp_repr_structural` now also handles functions that use the lisp
+  **predicate** builtins (`pair?`/`not`/`equal?`), not just the cons heap ops —
+  so a program like `(ATOM 5)` (which `cons`es nothing) is owned by this pass
+  rather than slipping through untyped:
+  - `function_uses_heap` additionally returns true for a `call_builtin` to a
+    lisp builtin, matching `concretize_scalar_any_for_wasm`'s `LISP_BUILTINS`
+    list so the two passes still partition the module cleanly.
+  - the atom-boxing rule generalised from "the value stored into a cons field"
+    to "any non-reference value flowing into a **lisp-value position**" — which
+    now also covers the arguments of `pair?`/`equal?` (a lisp integer atom is
+    boxed as an `i31ref` before the predicate). `not`'s argument is a machine
+    boolean, so it is left alone.
+  - a non-reference **scalar** result is concretised to its real width: a
+    predicate result (hint `"bool"`) returns as `i32` (not widened to `i64`), so
+    the wasm function's result type matches the value on the stack.
+
+1 new test (predicate atom boxes, bool result stays i32, not unboxed).
+
+## [0.8.0] — 2026-06-08 — structural lisp-value representation (LANG77 / McCarthy L3b-3a-3c)
+
+### Added
+
+- **`lower_lisp_repr_structural`** — the *managed-backend* (wasm/jvm/clr/beam)
+  twin of `lower_lisp_repr`. Where the native pass tags integers with the
+  NaN-box `n << 3` over the runtime-call form, this pass implements the
+  **uniform-anyref** model over the *structural* heap form
+  (`alloc`/`field_store`/`field_load`):
+  - an integer atom stored into a cons field is **boxed** as an `i31ref` — a
+    `box` op is inserted and the atom's `const` is narrowed to `i32` (the
+    `ref.i31` payload width);
+  - a value that is already a reference (an `alloc`/`field_load`/`box` result or
+    a `ref<…>` const) is left alone;
+  - in the **entry** function a `ret` of a reference is **unboxed** to `i32`
+    (`unbox`), and the return type becomes `i32` (the machine exit code);
+    non-entry functions return their lisp value as `ref<any>`.
+  - Use-site directed and gate-free (no per-language switch): a function with no
+    heap op is left entirely to `concretize_scalar_any_for_wasm`, so the two
+    passes partition the module and every value ends up concretely typed.
+  - Atoms outside the `i31` range (`±2³⁰`) are left unboxed (and rejected
+    downstream) rather than silently truncated.
+
+This is what lets a McCarthy **cons** program compile to a runnable WasmGC
+module: `(CAR (CONS 7 9))` → `7`. 4 new unit tests.
+
+## [0.7.0] — 2026-06-04
+
+### Added (LANG77 — compile-time symbol interning, McCarthy L3b-2c-3)
+
+- **`src/symbol_intern.rs`** + `intern_symbols` (re-exported at the crate
+  root): rewrites each `const Var(name) : symbol` to the finished **tagged
+  immediate** `(id << 32) | TAG_SYMBOL`, assigning ids in first-seen order
+  **module-wide** (so the same name → the same id across functions). This is
+  what makes `EQ`/`equal?` on symbols word equality on native — without any
+  runtime interning or string-constant machinery (the native backend has
+  none). General and language-agnostic: any lisp frontend's symbol literals
+  intern the same way; the ids are module-local and need not match the VM's.
+- **`lisp_repr`** now recognises a symbol immediate (`type_hint == "symbol"`)
+  as a tagged `LispyValue` — it joins `boxed_regs` (so it propagates through
+  `mov`, drives `COND` truthiness, etc.) but is **never boxed** (a `<< 3`
+  would corrupt the id/tag).
+- 5 new tests: same-name→same-id, the `(id<<32)|tag` encoding, module-wide
+  ids, non-symbol consts untouched, and the `lisp_repr` "tagged-but-not-boxed"
+  guard.
+
+> Runtime `make_symbol` + string-literal emission (needed only to *print* a
+> symbol's name or create symbols dynamically) remains deferred — static
+> programs observe a symbol *value* via `EQ`, which compile-time interning
+> fully supports.
+
+---
+
+## [0.6.0] — 2026-06-04
+
+### Added (LANG77 — ATOM/EQ predicates + COND truthiness, McCarthy L3b-2c-2)
+
+- **`heap::lower_heap_builtins_runtime`** now also renames the *unambiguous*
+  predicates `pair?` → `lispy_pair_p` and `equal?` → `lispy_equal`
+  (`EQ` = `equal?`). `not` is **not** renamed here — it is also a *numeric*
+  builtin (Twig's machine boolean-not), so renaming it unconditionally would
+  hijack Twig. Instead `lisp_repr` renames `not` → `lispy_not` **type-directed**
+  (`rename_lisp_not`): only when its argument is a `lispy_*` result — exactly
+  the `ATOM` = `not(pair?)` shape — leaving Twig's `not` for the numeric pass.
+- **`lisp_repr::lower_lisp_repr`** extended:
+  - The predicate builtins join the lisp-arg set, so an integer atom flowing
+    into `(ATOM 5)` / `(EQ 5 5)` boxes.
+  - The tagged-register classification is now a **bidirectional `mov`
+    fixpoint** — a `COND` funnels every clause's value into one register, so a
+    raw integer-literal clause result `mov`-tied to the (tagged) nil
+    fallthrough is itself boxed, keeping the funnel register uniformly tagged
+    (and the exit-unbox correct).
+  - New `wrap_tagged_conditions`: a `jmp_if_false` whose condition holds a
+    tagged `LispyValue` (a `COND` predicate's `#t`/`#f`) is rewritten to test
+    `lispy_truthy(cond)` (raw `0`/`1`), so the branch follows lisp truthiness.
+    A raw machine condition (Twig's `cmp` result) is left untouched.
+- 6 new unit tests: predicate-arg boxing, truthy-wrap of a tagged condition,
+  raw condition left unwrapped, `mov` propagation for unbox, and the
+  COND-mixing (literal + nil) bidirectional-box case.
+
+---
+
+## [0.5.0] — 2026-06-04
+
+### Added (LANG77 — type-directed lisp-value representation, McCarthy L3b-2c-1)
+
+- **`src/lisp_repr.rs`** + `lower_lisp_repr` (re-exported at the crate root):
+  a **gate-free, type-directed** pass that gives native lisp values their
+  NaN-box tag. A raw integer's low 3 bits (`111` for `7`) collide with the
+  heap tag, so `pair?`/`ATOM` would misread it as a pointer — integers
+  destined for lisp positions must be boxed (`n << 3`, tag `000`).
+- The rule is **use-site directed, not per-language**: a `const Int(n) : i64`
+  is boxed iff its register feeds a `lispy_*` call (`lispy_cons`/`car`/`cdr`);
+  the nil sentinel (`Int(0) : ref<LispyPair>`) becomes `TAG_NIL` (`0b001`); a
+  register holding a lisp-builtin result is tagged. At the machine boundary —
+  the **entry function's** `ret` of a boxed value — an unbox is inserted
+  (`lispy_unbox_int`), so the process exit code is the raw integer. McCarthy
+  (no arithmetic) boxes every atom; a Twig/Nib program whose integers feed
+  `add`/`print_i64` (never a `lispy_*` call) is left byte-for-byte unchanged.
+  Out-of-range ints (beyond ±2⁶⁰) are left raw rather than truncated.
+- 7 unit tests: boxed cons/car round-trip + unbox, scalar-int untouched,
+  machine arithmetic untouched, nil-tag, non-entry not unboxed, out-of-range,
+  and end-to-end composition with `lower_heap_builtins_runtime`.
+
+---
+
+## [0.4.0] — 2026-06-04
+
+### Added (LANG77 — native runtime-call heap lowering, McCarthy L3b-2b)
+
+- **`heap::lower_heap_builtins_runtime`** (+ `lower_heap_function_runtime`),
+  re-exported at the crate root. The **target-aware** counterpart of
+  `lower_heap_builtins`: instead of expanding `cons` to `alloc` + two
+  `field_store`s (the structural form the managed wasm/jvm/clr/beam backends
+  consume), it **renames** `cons`/`car`/`cdr` → `call_builtin
+  "lispy_cons"/"lispy_car"/"lispy_cdr"`, which the native aarch64/x86_64
+  backends dispatch to `__twig_lispy_*` in the linked C lisp runtime
+  (`twig-aot/runtime/lispy_runtime.c`, LANG77). This keeps the value
+  NaN-box **tagged** (a heap-tagged pointer), the prerequisite for
+  `pair?`/`ATOM`/`EQ`/symbols (L3b-2c).
+- The transform is a pure in-place rename (arg order already matches the C
+  ABI), allocation-free, and a no-op for any module without those builtins —
+  so every non-lisp program is unchanged. Nothing here is language-specific:
+  any lisp-family frontend (McCarthy Lisp, Twig, future lisps) reaches both
+  the managed (structural) and native (runtime-call) worlds from the same
+  `call_builtin "cons"` IIR. `null?`/`make_nil`/`pair?`/`not`/`equal?`/
+  `make_symbol` are intentionally left for L3b-2c.
+- 5 new unit tests covering the rename, dest/arg preservation, the
+  left-unchanged builtins, and the non-lisp no-op.
+
 ## [0.3.0] — 2026-05-12
 
 ### Added (LANG34 — Phase 4 Closure Builtin Lowering)

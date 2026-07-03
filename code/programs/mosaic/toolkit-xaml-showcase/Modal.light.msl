@@ -1,0 +1,32 @@
+// Modal.light.msl — default light-theme styling.
+//
+// The dialog chrome (titlebar, backdrop, modal blocking) is the
+// backend's native widget; this .msl only styles the parts inside
+// the dialog body.
+
+style Modal {
+  part modal-shell {
+  }
+  part modal-stack {
+    padding : 0 ;
+  }
+  part modal-body {
+    padding : 16 ;
+  }
+  part modal-body-text {
+    color     : "#212529" ;
+    font-size : 14 ;
+  }
+  part modal-actions {
+    padding : 8 ;
+  }
+  part modal-close-btn {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#6c757d" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#6c757d" ;
+    font-weight   : 500 ;
+  }
+}

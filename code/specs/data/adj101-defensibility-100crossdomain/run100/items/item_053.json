@@ -1,0 +1,7 @@
+{
+ "idx": 53,
+ "id": "BUI-4",
+ "scenario": "A homeowner builds a detached backyard shed with a roofed floor area of 160 square feet on a concrete slab. The shed has a single door and two windows, sits 8 feet from the property line, and is used only for garden tool storage.",
+ "policy": "A building permit is required for any structure with a roofed floor area exceeding 200 square feet. A detached accessory structure is exempt from the permit requirement only if its roofed floor area is 200 square feet or less AND it is not served by any electrical, plumbing, or mechanical system.",
+ "question": "Is the shed exempt from the building permit requirement?"
+}

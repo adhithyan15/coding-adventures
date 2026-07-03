@@ -1,0 +1,7 @@
+{
+ "idx": 6,
+ "id": "MED-7",
+ "scenario": "In the emergency department, three patients are waiting. Mr. Yi has the highest standard triage acuity (a level 1 trauma). Ms. Faraday has a lower triage acuity but her ECG shows confirmed ST-elevation meeting STEMI criteria. A third patient is stable.",
+ "policy": "Patients are normally seen in order of triage acuity, with higher-acuity patients seen before lower-acuity ones. However, a patient meeting STEMI (ST-elevation myocardial infarction) criteria must be taken to the catheterization lab immediately, ahead of all other patients regardless of their assigned acuity level.",
+ "question": "Which patient should be taken for definitive intervention first?"
+}

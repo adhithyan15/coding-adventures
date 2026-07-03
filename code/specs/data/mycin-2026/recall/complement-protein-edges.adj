@@ -1,0 +1,70 @@
+% ============================================================================
+% complement-protein-edges — the complement protein → function knowledge-graph
+% (MYCIN-2026 COMPLEMENT).
+% ============================================================================
+% A high-yield immunology board table: complement system components and the
+% effector function each performs. "What does C3b do?" becomes the binding query
+%     ? has_function(c3b, $Function).
+%
+% Direction note: the relation is complement component -> the effector function
+% the cited sentence states for it (`has_function`). Each component here maps to
+% ONE canonical function span, so a query binds a single answer.
+%
+% Faithfulness note: each `relate` subject/object is bound to what the cited
+% sentence ACTUALLY names. The function object names the role the sentence states
+% (C3b "opsonizing activity"; C5a "neutrophil chemotactic agent"; the membrane
+% attack complex "leads to cell death"; C3a "anaphylatoxin"). Each cited sentence
+% names the component by the term it uses ("C3b", "C5a", "membrane attack
+% complex", "C3a"). Each span was independently re-fetched and confirmed on two
+% separate fetches of the same page for byte-stability.
+%
+% This file is the SHIPPED ARTIFACT and the SOLE source of truth — no generator,
+% no JSON, no manifest (a pure ADJ-only recall domain, like WBC/IG-ISOTYPE/
+% HYPERSENSITIVITY/GIWALL). Each fact is a `relate` clause whose byte-provenance
+% lives INLINE:
+%     source   — the VERBATIM span copied from the cited page (byte-stable: it
+%                appears character-for-character in the page's normalized text;
+%                every span here was independently re-fetched and confirmed).
+%     locator  — the URL the span was read from (NCBI StatPearls / Bookshelf).
+%     trust    — authoritative (a primary, citable reference).
+% An LLM (or a human) recalls a fact by writing a tiny query .adj that `import`s
+% this library and asks a binding query — see complement-protein-recall.query.adj.
+% Nothing here is asserted "from memory": every edge is defended by a span a
+% reader can re-fetch and check.
+% (See feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+dictionary complement_protein_vocab {
+    define complement_protein : entity   surface "complement protein", "complement component"
+    define function           : entity   surface "function", "effector function"
+
+    define has_function : relation from complement_protein to function  % the effector function of this complement component
+}
+
+rulebook complement_protein_facts {
+    use complement_protein_vocab
+
+    % --- C3b -> opsonization ------------------------------------------------
+    relate has_function(c3b, opsonization)
+        source "C3b is best known for its opsonizing activity because when it coats the microbe, phagocytosis activity is increased."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK534215/"
+        trust authoritative
+
+    % --- C5a -> neutrophil chemotactic agent --------------------------------
+    relate has_function(c5a, neutrophil_chemotactic_agent)
+        source "C5a is also an anaphylatoxin, in addition to a neutrophil chemotactic agent."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544229/"
+        trust authoritative
+
+    % --- membrane attack complex -> cell lysis ------------------------------
+    relate has_function(membrane_attack_complex, causes_cell_lysis)
+        source "One goal of the complement system is the formation of a membrane attack complex (MAC), which compromises the pathogen's cell wall, causing swelling that ultimately leads to cell death."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544229/"
+        trust authoritative
+
+    % --- C3a -> anaphylatoxin -----------------------------------------------
+    relate has_function(c3a, anaphylatoxin)
+        source "The C3a fragment is an anaphylatoxin that mediates inflammation in two ways: it triggers histamine release from mast cells and increases vascular permeability."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK544229/"
+        trust authoritative
+}

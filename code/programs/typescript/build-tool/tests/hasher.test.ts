@@ -392,3 +392,12 @@ describe("SPECIAL_FILENAMES", () => {
     expect(SPECIAL_FILENAMES.ruby.has("Gemfile")).toBe(true);
   });
 });
+
+describe("walkFiles error-handling branch", () => {
+  it("returns an empty list when the package directory does not exist", () => {
+    // walkFiles wraps `readdirSync` in try/catch — exercises the catch branch.
+    const ghost = path.join(os.tmpdir(), "build-tool-hasher-ghost-" + Date.now());
+    const pkg = makePkg(ghost, "python");
+    expect(collectSourceFilesGlob(pkg, ["**/*"])).toEqual([]);
+  });
+});

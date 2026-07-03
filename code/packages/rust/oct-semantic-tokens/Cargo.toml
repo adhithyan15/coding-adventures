@@ -1,0 +1,9 @@
+[package]
+name = "oct-semantic-tokens"
+version = "0.1.0"
+edition = "2021"
+description = "OCT-ST01 — semantic-token extraction for Oct.  Walks the oct-lexer's token stream and emits a typed token stream (keywords / booleans / numbers / names / types / operators / comments) suitable for LSP semantic-tokens, syntax highlighters, and editor extensions."
+
+[dependencies]
+coding-adventures-oct-lexer = { path = "../oct-lexer" }
+lexer                       = { path = "../lexer" }

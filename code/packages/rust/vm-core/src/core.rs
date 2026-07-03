@@ -128,6 +128,27 @@ pub struct VMCore {
     /// Flat address-space memory (used by `load_mem` / `store_mem` / I/O).
     memory: HashMap<i64, Value>,
 
+    /// Module-level global variables (LANG-FULL E6), keyed by name.
+    /// `global_store("g", v)` writes here; `global_load("g")` reads it (a
+    /// never-written global reads as `Value::Int(0)`, matching the zero-init the
+    /// code-gen backends give their `_twig_globals` slots). This is distinct
+    /// from `memory` (addressed by `i64`) and from the dynamic
+    /// `call_builtin "global_set"/"global_get"` table the Twig front-end uses —
+    /// these are the *lowered, typed* `global_load`/`global_store` IIR ops a
+    /// statically-typed frontend (ALGOL procedures over an enclosing variable)
+    /// emits directly.
+    globals: HashMap<String, Value>,
+
+    /// Heap of bounds-checked arrays (LANG-FULL E5). `alloc_array` pushes a new
+    /// `Vec<Value>` and binds its 0-based index as the array *handle* (an
+    /// `i64`); `array_get`/`array_set` index the `Vec` with a range check, and
+    /// `array_len` reads its length. This is the interpreter's representation of
+    /// the representation-agnostic IIR array — the managed backends use a native
+    /// array, the static backends a length-prefixed flat block, but the VM keeps
+    /// it simplest with a per-allocation `Vec` so distinct arrays never alias
+    /// (unlike the single Brainfuck byte-tape, which is one flat space).
+    arrays: Vec<Vec<Value>>,
+
     /// JIT handler registry.  When a `call` instruction names a function
     /// listed here, the handler is called instead of the interpreter.
     jit_handlers: HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
@@ -181,6 +202,8 @@ impl VMCore {
             max_instructions: None, // unlimited — trusted code path
             frames: Vec::new(),
             memory: HashMap::new(),
+            globals: HashMap::new(),
+            arrays: Vec::new(),
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
             builtins: BuiltinRegistry::new(),
@@ -302,6 +325,8 @@ impl VMCore {
             module_fns: &mut module.functions,
             builtins: &self.builtins,
             memory: &mut self.memory,
+            globals: &mut self.globals,
+            arrays: &mut self.arrays,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -374,6 +399,8 @@ impl VMCore {
             module_fns: &mut module.functions,
             builtins: &self.builtins,
             memory: &mut self.memory,
+            globals: &mut self.globals,
+            arrays: &mut self.arrays,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -881,5 +908,444 @@ mod tests {
         let vm = VMCore::new();
         assert!(vm.branch_profile("main", 0).is_none());
         assert!(vm.branch_profile("nonexistent", 42).is_none());
+    }
+
+    /// The byte-tape ops (LANG-MATRIX Phase V — Brainfuck on the VM). `alloc_bytes`
+    /// binds a tape base, `store_byte` writes a cell's low byte (so a value > 255
+    /// wraps — Brainfuck's 8-bit cell), and `load_byte` reads it back *unsigned*
+    /// (so a high byte like 200 reads as 200, never a sign-extended negative).
+    #[test]
+    fn byte_tape_round_trips_unsigned_and_wraps() {
+        // 200 stored, read back unsigned as 200.
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+                IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+                IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(200)], "i64"),
+                IIRInstr::new("store_byte", None, vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("v".into()),
+                ], "i64"),
+                IIRInstr::new("load_byte", Some("got".into()), vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(fn_);
+        let mut vm = VMCore::new();
+        assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(200)));
+
+        // 257 stored wraps to 1 (257 & 0xFF) — the 8-bit cell.
+        let wrap = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+                IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+                IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(3)], "i64"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(257)], "i64"),
+                IIRInstr::new("store_byte", None, vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("v".into()),
+                ], "i64"),
+                IIRInstr::new("load_byte", Some("got".into()), vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+            ],
+        );
+        let mut wm = IIRModule::new("test", "test");
+        wm.add_or_replace(wrap);
+        let mut vm2 = VMCore::new();
+        assert_eq!(vm2.execute(&mut wm, "main", &[]).unwrap(), Some(Value::Int(1)));
+    }
+
+    /// An untouched tape cell reads `0` (Brainfuck's zero-cell convention): the
+    /// sparse `memory` map has no entry, so `load_byte` returns the default.
+    #[test]
+    fn untouched_byte_tape_cell_reads_zero() {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+                IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+                IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(5)], "i64"),
+                IIRInstr::new("load_byte", Some("got".into()), vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(fn_);
+        let mut vm = VMCore::new();
+        assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(0)));
+    }
+
+    // ---- E2: register-arithmetic width & wrap (mod-2ⁿ) ----
+
+    /// Run `op a b` with the given result `type_hint` and return the i64 value.
+    fn run_binop(op: &str, a: i64, b: i64, ty: &str) -> i64 {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(b)], "i64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_i64().unwrap()
+    }
+
+    /// Run `op a` (unary) with the given result `type_hint`.
+    fn run_unop(op: &str, a: i64, ty: &str) -> i64 {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new(op, Some("r".into()), vec![Operand::Var("a".into())], ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_i64().unwrap()
+    }
+
+    #[test]
+    fn u8_arithmetic_wraps_mod_256() {
+        assert_eq!(run_binop("add", 200, 100, "u8"), 44);   // 300 & 0xFF
+        assert_eq!(run_binop("mul", 16, 16, "u8"), 0);      // 256 & 0xFF
+        assert_eq!(run_binop("sub", 0, 1, "u8"), 255);      // -1 & 0xFF
+        assert_eq!(run_binop("add", 255, 1, "u8"), 0);      // classic cell wrap
+    }
+
+    #[test]
+    fn u8_bitwise_not_flips_eight_bits() {
+        assert_eq!(run_unop("not", 0, "u8"), 255);          // ~0 over a byte
+        assert_eq!(run_unop("not", 0xF0, "u8"), 0x0F);
+    }
+
+    #[test]
+    fn u8_left_shift_masks_off_high_bits() {
+        assert_eq!(run_binop("shl", 1, 7, "u8"), 128);
+        assert_eq!(run_binop("shl", 1, 8, "u8"), 0);        // shifted past the byte
+        assert_eq!(run_binop("shl", 3, 6, "u8"), 192);      // 0b11000000
+    }
+
+    #[test]
+    fn u4_arithmetic_wraps_mod_16() {
+        assert_eq!(run_binop("add", 10, 10, "u4"), 4);      // 20 & 0xF
+        assert_eq!(run_unop("not", 0, "u4"), 15);
+    }
+
+    #[test]
+    fn u16_and_u32_widths_wrap() {
+        assert_eq!(run_binop("add", 60000, 10000, "u16"), 70000 & 0xFFFF); // 4464
+        assert_eq!(run_binop("mul", 0x1_0000, 0x1_0000, "u32"), 0);        // 2^32 & 0xFFFF_FFFF
+    }
+
+    #[test]
+    fn i64_hint_does_not_mask() {
+        // The width mask only fires for narrow hints; plain i64 keeps full width.
+        assert_eq!(run_binop("add", 200, 100, "i64"), 300);
+        assert_eq!(run_binop("mul", 16, 16, "i64"), 256);
+        assert_eq!(run_unop("not", 0, "i64"), -1);
+    }
+
+    // ---- E3: floating-point (f64) execution ----
+
+    /// Run `op fa fb` with an `f64` result hint and return the float value.
+    /// Operands are `Operand::Float` constants — exactly what the ALGOL real
+    /// frontend emits for a `real` expression.
+    fn run_fbinop(op: &str, fa: f64, fb: f64) -> f64 {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "f64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Float(fa)], "f64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Float(fb)], "f64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_f64().unwrap()
+    }
+
+    /// Run a float comparison `cmp_* fa fb` and return the resulting bool.
+    fn run_fcmp(op: &str, fa: f64, fb: f64) -> bool {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "bool",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Float(fa)], "f64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Float(fb)], "f64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "bool"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_bool().unwrap()
+    }
+
+    #[test]
+    fn f64_arithmetic_computes_in_double() {
+        assert_eq!(run_fbinop("add", 2.5, 0.25), 2.75);
+        assert_eq!(run_fbinop("sub", 2.5, 0.25), 2.25);
+        assert_eq!(run_fbinop("mul", 2.5, 4.0), 10.0);
+        assert_eq!(run_fbinop("div", 7.0, 2.0), 3.5);   // true division, not 3
+    }
+
+    #[test]
+    fn f64_division_by_zero_is_inf_not_a_trap() {
+        // IEEE-754: matches LLVM/WASM/JVM `fdiv` (the other backends), so a
+        // real-division program agrees cross-backend instead of trapping.
+        assert!(run_fbinop("div", 1.0, 0.0).is_infinite());
+    }
+
+    #[test]
+    fn f64_ordered_comparisons() {
+        assert!(run_fcmp("cmp_lt", 1.5, 2.5));
+        assert!(!run_fcmp("cmp_lt", 2.5, 1.5));
+        assert!(run_fcmp("cmp_gt", 2.5, 1.5));
+        assert!(run_fcmp("cmp_le", 2.5, 2.5));
+        assert!(run_fcmp("cmp_ge", 2.5, 2.5));
+    }
+
+    #[test]
+    fn f64_equality_via_value_eq() {
+        // cmp_eq / cmp_ne route through Value's PartialEq, which compares floats.
+        assert!(run_fcmp("cmp_eq", 5.0, 5.0));
+        assert!(!run_fcmp("cmp_eq", 5.0, 5.1));
+        assert!(run_fcmp("cmp_ne", 5.0, 5.1));
+    }
+
+    #[test]
+    fn f64_neg_stays_float() {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "f64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Float(2.5)], "f64"),
+                IIRInstr::new("neg", Some("r".into()), vec![Operand::Var("a".into())], "f64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        let r = VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap();
+        assert_eq!(r, Value::Float(-2.5));
+    }
+
+    // ---- E8: numeric conversions (integer ↔ real) ----
+
+    /// Run a single unary conversion `op` on a constant operand and return the
+    /// raw `Value` (or the error). `lit` is the input constant, `in_ty`/`ret_ty`
+    /// its IIR types.
+    fn run_convert(
+        op: &str,
+        lit: Operand,
+        in_ty: &str,
+        ret_ty: &str,
+    ) -> Result<Value, crate::errors::VMError> {
+        let fn_ = IIRFunction::new(
+            "main", vec![], ret_ty,
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![lit], in_ty),
+                IIRInstr::new(op, Some("r".into()), vec![Operand::Var("a".into())], ret_ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], ret_ty),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    #[test]
+    fn int_to_real_widens_exactly() {
+        assert_eq!(run_convert("int_to_real", Operand::Int(3), "i64", "f64").unwrap(), Value::Float(3.0));
+        assert_eq!(run_convert("int_to_real", Operand::Int(-7), "i64", "f64").unwrap(), Value::Float(-7.0));
+        assert_eq!(run_convert("int_to_real", Operand::Int(0), "i64", "f64").unwrap(), Value::Float(0.0));
+    }
+
+    #[test]
+    fn real_to_int_trunc_rounds_toward_zero() {
+        // Truncation: positive and negative both round toward zero.
+        assert_eq!(run_convert("real_to_int_trunc", Operand::Float(2.7), "f64", "i64").unwrap(), Value::Int(2));
+        assert_eq!(run_convert("real_to_int_trunc", Operand::Float(-2.7), "f64", "i64").unwrap(), Value::Int(-2));
+        assert_eq!(run_convert("real_to_int_trunc", Operand::Float(5.0), "f64", "i64").unwrap(), Value::Int(5));
+    }
+
+    #[test]
+    fn real_to_int_floor_rounds_toward_neg_inf() {
+        // Floor (ALGOL entier): a negative non-integer rounds DOWN, the key
+        // difference from truncation — entier(-2.7) = -3, not -2.
+        assert_eq!(run_convert("real_to_int_floor", Operand::Float(2.7), "f64", "i64").unwrap(), Value::Int(2));
+        assert_eq!(run_convert("real_to_int_floor", Operand::Float(-2.7), "f64", "i64").unwrap(), Value::Int(-3));
+        assert_eq!(run_convert("real_to_int_floor", Operand::Float(-3.0), "f64", "i64").unwrap(), Value::Int(-3));
+    }
+
+    #[test]
+    fn real_to_int_traps_on_nan_and_infinity() {
+        // Fail-closed (like array bounds / divide-by-zero), never a garbage int.
+        assert!(run_convert("real_to_int_trunc", Operand::Float(f64::NAN), "f64", "i64").is_err());
+        assert!(run_convert("real_to_int_floor", Operand::Float(f64::INFINITY), "f64", "i64").is_err());
+        assert!(run_convert("real_to_int_trunc", Operand::Float(f64::NEG_INFINITY), "f64", "i64").is_err());
+    }
+
+    #[test]
+    fn real_to_int_traps_on_out_of_range() {
+        // 2^63 and beyond does not fit i64 — trap rather than saturate/wrap.
+        let two_pow_63 = 9_223_372_036_854_775_808.0_f64; // = 2^63 = -(i64::MIN as f64)
+        assert!(run_convert("real_to_int_trunc", Operand::Float(two_pow_63), "f64", "i64").is_err());
+        assert!(run_convert("real_to_int_floor", Operand::Float(-1e30), "f64", "i64").is_err());
+    }
+
+    // ---- E5: bounds-checked arrays ----
+
+    /// Helper: build `main` from instrs returning `ret_ty`, run, return result.
+    fn run_arr(instrs: Vec<IIRInstr>, ret_ty: &str) -> Result<Option<Value>, crate::errors::VMError> {
+        let fn_ = IIRFunction::new("main", vec![], ret_ty, instrs);
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[])
+    }
+
+    /// `integer array A[3]; A[0]:=10; A[2]:=12; ret A[0]+A[2]` → 22.
+    #[test]
+    fn array_alloc_set_get_roundtrip() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("i2".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("const", Some("v10".into()), vec![Operand::Int(10)], "i64"),
+            IIRInstr::new("const", Some("v12".into()), vec![Operand::Int(12)], "i64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v10".into())], "array<i64>"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i2".into()), Operand::Var("v12".into())], "array<i64>"),
+            IIRInstr::new("array_get", Some("x".into()), vec![Operand::Var("a".into()), Operand::Var("i0".into())], "i64"),
+            IIRInstr::new("array_get", Some("y".into()), vec![Operand::Var("a".into()), Operand::Var("i2".into())], "i64"),
+            IIRInstr::new("add", Some("r".into()), vec![Operand::Var("x".into()), Operand::Var("y".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(22)));
+    }
+
+    /// A fresh array is zero-initialised: reading an unset element gives 0.
+    #[test]
+    fn array_default_initialised_to_zero() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(0)));
+    }
+
+    /// `array_len` returns the element count.
+    #[test]
+    fn array_len_returns_count() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("array_len", Some("r".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(7)));
+    }
+
+    /// An `f64` array zero-inits to `0.0` and round-trips a real value.
+    #[test]
+    fn f64_array_roundtrips() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(2.5)], "f64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("v".into())], "array<f64>"),
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ], "f64");
+        assert_eq!(r.unwrap(), Some(Value::Float(2.5)));
+    }
+
+    /// An out-of-bounds `array_get` traps (the index check is by-definition).
+    #[test]
+    fn array_get_out_of_bounds_traps() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(5)], "i64"),
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert!(r.is_err(), "out-of-bounds array_get must trap, got {r:?}");
+    }
+
+    /// A negative index also traps (the lower-bound half of the check).
+    #[test]
+    fn array_set_negative_index_traps() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(-1)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(9)], "i64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("v".into())], "array<i64>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+        ], "i64");
+        assert!(r.is_err(), "negative array_set index must trap, got {r:?}");
+    }
+
+    /// Distinct arrays do not alias (the per-allocation Vec model).
+    #[test]
+    fn distinct_arrays_do_not_alias() {
+        let r = run_arr(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("alloc_array", Some("b".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("va".into()), vec![Operand::Int(11)], "i64"),
+            IIRInstr::new("const", Some("vb".into()), vec![Operand::Int(22)], "i64"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("va".into())], "array<i64>"),
+            IIRInstr::new("array_set", None, vec![Operand::Var("b".into()), Operand::Var("i".into()), Operand::Var("vb".into())], "array<i64>"),
+            // a[0] must still be 11 (not clobbered by b[0]=22).
+            IIRInstr::new("array_get", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ], "i64");
+        assert_eq!(r.unwrap(), Some(Value::Int(11)));
+    }
+
+    /// `max_memory_entries` is an **aggregate** ceiling: many small arrays whose
+    /// element counts sum past the cap must trap, not just one oversized array.
+    /// (Defeats an `alloc_array`-in-a-loop OOM, the E5 security-review finding.)
+    #[test]
+    fn aggregate_array_allocation_is_capped() {
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(6)], "i64"),
+                // First 6-element array: fits under a cap of 10.
+                IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+                // Second 6-element array: 6 + 6 = 12 > 10 → must trap.
+                IIRInstr::new("alloc_array", Some("b".into()), vec![Operand::Var("n".into())], "array<i64>"),
+                IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+            ],
+        ));
+        let mut vm = VMCore::new();
+        vm.max_memory_entries = 10;
+        let r = vm.execute(&mut m, "main", &[]);
+        assert!(r.is_err(), "aggregate over-allocation must trap, got {r:?}");
     }
 }

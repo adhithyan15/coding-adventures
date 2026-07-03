@@ -11,7 +11,7 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_cil_bytecode::{
     IIRClrConfig, IIRClrError,
     lower_iir_to_cil, validate_iir_for_clr, IIRClrCodeGenerator,
-    CILProgramArtifact,
+    CILProgramArtifact, emit_il,
 };
 use codegen_core::codegen::CodeGenerator;
 
@@ -110,12 +110,15 @@ fn validate_polymorphic_type_hint_is_rejected() {
     assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
 }
 
+/// An `f64` float const is now ACCEPTED (LANG-FULL E3 — the textual `.il`
+/// emitter lowers it to `ldc.r8`). (Was `validate_float_const_is_rejected`.)
 #[test]
-fn validate_float_const_is_rejected() {
+fn validate_f64_float_const_is_accepted() {
     let errs = validate_iir_for_clr(&single_fn(vec![
         IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
     ]));
-    assert!(errs.iter().any(|e| e.contains("Float")));
+    assert!(!errs.iter().any(|e| e.contains("Float")),
+        "f64 float const should be accepted; got: {errs:?}");
 }
 
 #[test]
@@ -1517,3 +1520,282 @@ fn lang37_dispatch_method_contains_ldelem_i4() {
 // sequences that require dup to prime the array reference).
 #[allow(dead_code)]
 const _DUP_USED: u8 = DUP;
+
+// ===========================================================================
+// G4 — call_builtin "print_i64" → call env.BasicRuntime::PrintI64(int64)
+// ===========================================================================
+//
+// CLR counterpart to iir-to-wasm v0.8.0 (env.__print_i64 import) and
+// iir-to-jvm-class-file v0.7.0 (invokestatic env/BasicRuntime.println(J)V).
+// All three let BASIC's PRINT lower to real backend bytecode without the
+// backend itself owning a stdout.
+//
+// Convention picked: a new sentinel metadata token
+//   BASIC_PRINT_I64_TOKEN = 0x0A00_0005
+// reserved at MemberRef row 5, which a CLR runtime / launcher resolves to
+//   env.BasicRuntime::PrintI64(int64)
+// at link time.
+//
+// Reference: code/specs/MULTILANG-BACKEND-PLAN.md (item G4).
+
+/// Build a function that calls `print_i64` once with an i64 local.
+///
+/// IIR:
+///   fn print_42() -> void {
+///     v = const 42 : i64
+///     call_builtin print_i64(v)
+///     ret_void
+///   }
+fn g4_print_i64_module() -> IIRModule {
+    single_fn(vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![
+                Operand::Var("print_i64".into()),
+                Operand::Var("v".into()),
+            ],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ])
+}
+
+/// Validator must accept `call_builtin "print_i64"` after G4.
+#[test]
+fn g4_validator_accepts_print_i64() {
+    let module = g4_print_i64_module();
+    let errors = validate_iir_for_clr(&module);
+    assert!(
+        errors.is_empty(),
+        "validator should accept call_builtin \"print_i64\" after G4; got: {:?}",
+        errors
+    );
+}
+
+/// Validator still rejects unknown builtin names — guards against the
+/// whitelist accidentally widening.
+#[test]
+fn g4_validator_still_rejects_unknown_builtin() {
+    let module = single_fn(vec![
+        IIRInstr::new(
+            "call_builtin",
+            None,
+            vec![Operand::Var("definitely_not_a_real_builtin".into())],
+            "void",
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let errors = validate_iir_for_clr(&module);
+    assert!(
+        errors.iter().any(|e| e.contains("UnsupportedOp")),
+        "unknown call_builtin name must still produce UnsupportedOp; got: {:?}",
+        errors
+    );
+}
+
+/// Lowering `print_i64` emits a CALL (0x28) byte AND the little-endian
+/// 4-byte encoding of `BASIC_PRINT_I64_TOKEN` (0x0A00_0005) immediately
+/// after it.
+///
+/// CIL `call` is `0x28 <tok:le u32>`, so scanning for the byte sequence
+/// `[0x28, 0x05, 0x00, 0x00, 0x0A]` confirms both:
+///   1. We routed through the host-class `call` path (not silently dropped).
+///   2. The token is the new BASIC sentinel — *not* an accidental reuse of
+///      `CONSOLE_WRITELINE_I64_TOKEN` (0x0A00_0002, used by `io_out`),
+///      `BF_PUTCHAR_TOKEN` (0x0A00_0003), or `BF_GETCHAR_TOKEN`
+///      (0x0A00_0004).
+#[test]
+fn g4_lowers_print_i64_to_call_with_basic_token() {
+    let module = g4_print_i64_module();
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let body = &artifact.methods[0].body;
+
+    // Expected byte sequence: call (0x28) + LE u32 0x0A00_0005.
+    let expected: [u8; 5] = [0x28, 0x05, 0x00, 0x00, 0x0A];
+    let found = body.windows(5).any(|w| w == expected);
+    assert!(
+        found,
+        "expected `call BASIC_PRINT_I64_TOKEN` byte sequence {:02X?} \
+         in print_42 body; got: {:02X?}",
+        expected, body
+    );
+}
+
+// ===========================================================================
+// LANG-FULL E6 (layer 1) — typed module globals (static fields)
+// ===========================================================================
+
+/// E6 proof module (i32 program, int64 global): `compute` seeds the global, a
+/// *separate* `bump` reads/increments/writes it ⇒ 42. The program is i32-typed
+/// so the emit_il launcher's `Console.WriteLine(int32)` prints it directly.
+fn e6_globals_module() -> IIRModule {
+    let mut m = IIRModule::new("Main", "Main");
+    m.entry_point = Some("compute".into());
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i32", vec![
+        IIRInstr::new("const", Some("seed".into()), vec![Operand::Int(41)], "i32"),
+        IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("seed".into())], "void"),
+        IIRInstr::new("call", Some("res".into()), vec![Operand::Var("bump".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "i32"),
+    ]));
+    m.add_or_replace(IIRFunction::new("bump", vec![], "i32", vec![
+        IIRInstr::new("global_load", Some("cur".into()), vec![Operand::Str("g".into())], "i32"),
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("add", Some("nxt".into()), vec![Operand::Var("cur".into()), Operand::Var("one".into())], "i32"),
+        IIRInstr::new("global_store", None, vec![Operand::Str("g".into()), Operand::Var("nxt".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("nxt".into())], "i32"),
+    ]));
+    m
+}
+
+#[test]
+fn e6_global_emits_static_field_and_ldsfld_stsfld() {
+    let il = emit_il(&e6_globals_module(), &default_cfg()).expect("emit_il");
+    assert!(il.contains(".field public static int64 G_0"), "missing field def:\n{il}");
+    assert!(il.contains("ldsfld int64 ") && il.contains("Program::G_0"), "missing ldsfld:\n{il}");
+    assert!(il.contains("stsfld int64 ") && il.contains("Program::G_0"), "missing stsfld:\n{il}");
+}
+
+fn find_ilasm() -> Option<std::path::PathBuf> {
+    let home = std::env::var("HOME").ok()?;
+    let base = std::path::Path::new(&home).join(".nuget/packages");
+    for pkg in ["runtime.osx-arm64.microsoft.netcore.ilasm", "runtime.linux-x64.microsoft.netcore.ilasm"] {
+        let dir = base.join(pkg);
+        if let Ok(versions) = std::fs::read_dir(&dir) {
+            for v in versions.flatten() {
+                for cand in ["runtimes/osx-arm64/native/ilasm", "runtimes/linux-x64/native/ilasm"] {
+                    let p = v.path().join(cand);
+                    if p.exists() { return Some(p); }
+                }
+            }
+        }
+    }
+    None
+}
+
+/// End-to-end on real `ilasm` + `dotnet`: the cross-function global program
+/// prints 42. Skipped if the CLR toolchain is unavailable.
+#[test]
+fn e6_global_runs_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let il = emit_il(&e6_globals_module(), &default_cfg()).expect("emit_il");
+    let dir = std::env::temp_dir().join(format!("e6_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
+}
+
+// ===========================================================================
+// LANG-FULL E8 — numeric conversions (int ⇄ real)
+//
+//   int_to_real        → conv.r8 / conv.r4   (widen int→float, exact, any width)
+//   real_to_int_trunc  → conv.ovf.i4 / conv.ovf.i8   (truncate toward zero + trap)
+//   real_to_int_floor  → call Math::Floor(float64) ; conv.ovf.i4/i8   (round to −∞ + trap)
+//
+// The CLR's overflow-checked `conv.ovf.*` truncates toward zero AND throws
+// OverflowException on NaN/±∞/out-of-range — giving the VM's fail-closed trap
+// contract for free (one opcode), unlike the JVM backend whose d2i/d2l saturate.
+// ===========================================================================
+
+/// `int_to_real` over an integer source emits `conv.r8` (widen to float64);
+/// `real_to_int_trunc` emits the overflow-checked `conv.ovf.i4` (truncate
+/// toward zero + trap on NaN/±∞/out-of-range). This backend's scalar integer
+/// model is uniformly 32-bit (`i64` and `i32` both collapse to `int32`), so the
+/// narrowing target is always `conv.ovf.i4` regardless of the IR's int width.
+#[test]
+fn e8_int_to_real_emits_conv_r8_and_trunc_emits_conv_ovf() {
+    for ty in ["i64", "i32"] {
+        let mut m = IIRModule::new("Main", "Main");
+        m.entry_point = Some("compute".into());
+        m.add_or_replace(IIRFunction::new("compute", vec![], ty, vec![
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], ty),
+            IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+            IIRInstr::new("real_to_int_trunc", Some("o".into()), vec![Operand::Var("r".into())], ty),
+            IIRInstr::new("ret", None, vec![Operand::Var("o".into())], ty),
+        ]));
+        let il = emit_il(&m, &default_cfg()).unwrap_or_else(|e| panic!("emit_il {ty}: {e:?}"));
+        assert!(il.contains("conv.r8"), "int_to_real ({ty}) must widen with conv.r8:\n{il}");
+        assert!(il.contains("conv.ovf.i4"),
+            "real_to_int_trunc ({ty}) must use the trapping conv.ovf.i4:\n{il}");
+    }
+}
+
+/// `real_to_int_floor` calls `System.Math::Floor(float64)` (round toward −∞)
+/// then narrows with the overflow-checked conversion.
+#[test]
+fn e8_real_to_int_floor_calls_math_floor_then_conv_ovf() {
+    let mut m = IIRModule::new("Main", "Main");
+    m.entry_point = Some("compute".into());
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i32", vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Float(-2.7)], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("x".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i32"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    assert!(il.contains("[System.Runtime]System.Math::Floor(float64)"),
+        "real_to_int_floor must call Math::Floor:\n{il}");
+    assert!(il.contains("conv.ovf.i4"),
+        "after Math::Floor the result is narrowed with conv.ovf.i4:\n{il}");
+}
+
+/// End-to-end on real `ilasm` + `dotnet`: `floor(int_to_real(45) − 2.7)` ⇒
+/// `floor(42.3)` ⇒ 42 — exercises all three conversion ops plus an f64
+/// subtraction, matching the LLVM/WASM/VM/JVM matrix-cell value. Skipped if the
+/// CLR toolchain is unavailable.
+#[test]
+fn e8_conversions_round_trip_runs_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let mut m = IIRModule::new("Main", "Main");
+    m.entry_point = Some("compute".into());
+    m.add_or_replace(IIRFunction::new("compute", vec![], "i32", vec![
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(45)], "i32"),
+        IIRInstr::new("int_to_real", Some("r".into()), vec![Operand::Var("i".into())], "f64"),
+        IIRInstr::new("const", Some("c".into()), vec![Operand::Float(2.7)], "f64"),
+        IIRInstr::new("sub", Some("d".into()),
+            vec![Operand::Var("r".into()), Operand::Var("c".into())], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("o".into()), vec![Operand::Var("d".into())], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("o".into())], "i32"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    let dir = std::env::temp_dir().join(format!("e8_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
+}

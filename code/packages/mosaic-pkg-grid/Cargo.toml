@@ -16,7 +16,7 @@
 
 [package]
 name        = "mosaic-pkg-grid"
-version     = "0.1.0"
+version     = "0.2.0"
 edition     = "2021"
 description = "Smoke-test harness for the mosaic-pkg-grid component package"
 publish     = false

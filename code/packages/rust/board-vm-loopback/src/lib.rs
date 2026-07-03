@@ -223,6 +223,7 @@ impl<const MAX_PROGRAM_BYTES: usize, const MAX_STACK: usize, const MAX_HANDLES: 
             MessageType::PROGRAM_END => self.handle_program_end(request, payload_out, frame_out),
             MessageType::RUN => self.handle_run(request, payload_out, frame_out),
             MessageType::STOP => self.handle_stop(request, payload_out, frame_out),
+            MessageType::PING => self.handle_ping(request, frame_out),
             _ => Err(BoardError::UnsupportedMessage),
         }
     }
@@ -432,6 +433,17 @@ impl<const MAX_PROGRAM_BYTES: usize, const MAX_STACK: usize, const MAX_HANDLES: 
             &payload_out[..payload_len],
             frame_out,
         )
+    }
+
+    fn handle_ping(
+        &mut self,
+        request: Frame<'_>,
+        frame_out: &mut [u8],
+    ) -> Result<usize, BoardError> {
+        if !request.payload.is_empty() {
+            return Err(BoardError::InvalidFrame);
+        }
+        write_response(MessageType::PONG, request.request_id, &[], frame_out)
     }
 
     fn write_error_response(
@@ -828,6 +840,18 @@ mod tests {
                 FakeEvent::SleepMs(250),
             ]
         );
+
+        let ping = session.ping_frame(&mut request).unwrap();
+        let response_len = handle(
+            &mut board,
+            &request[..ping.len],
+            &mut board_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        assert_eq!(frame.message_type, MessageType::PONG);
+        assert_eq!(frame.request_id, ping.request_id);
+        assert!(frame.payload.is_empty());
 
         let stop = session.stop_frame(&mut request).unwrap();
         let response_len = handle(

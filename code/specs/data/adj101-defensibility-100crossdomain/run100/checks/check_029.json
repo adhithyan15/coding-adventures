@@ -1,0 +1,8 @@
+{
+ "check_id": 29,
+ "idx": 12,
+ "slot": "remedied",
+ "claimed_value": false,
+ "scenario": "A customer slipped on a spilled drink. A waiter saw the spill and reported it to the manager 25 minutes before the fall, but no one cleaned it up before the customer slipped.",
+ "cited_span": "no one cleaned it up before the customer slipped"
+}

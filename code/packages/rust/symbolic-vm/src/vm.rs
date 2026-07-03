@@ -24,6 +24,7 @@
 //! The "self-loop guard" in symbol evaluation prevents `x := x` from
 //! recursing forever.
 
+use cas_simplify::AssumptionContext;
 use symbolic_ir::{IRApply, IRNode, DEFINE, LIST};
 
 use crate::backend::Backend;
@@ -35,12 +36,21 @@ use crate::backend::Backend;
 pub struct VM {
     /// The evaluation policy — language-specific behaviour lives here.
     pub backend: Box<dyn Backend>,
+    /// Track G2 — per-VM assumption store consulted by the
+    /// symbolic-coefficient Weierstrass integrator (and any future
+    /// sign-aware helper).  Mutated via the `Assume(...)` /
+    /// `Forget(...)` / `ForgetAll()` handlers; tests and embedders may
+    /// also read or write it directly.
+    pub assumptions: AssumptionContext,
 }
 
 impl VM {
     /// Create a new VM backed by `backend`.
     pub fn new(backend: Box<dyn Backend>) -> Self {
-        Self { backend }
+        Self {
+            backend,
+            assumptions: AssumptionContext::new(),
+        }
     }
 
     // ------------------------------------------------------------------

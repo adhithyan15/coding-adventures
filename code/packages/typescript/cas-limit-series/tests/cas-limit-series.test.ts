@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ADD, DIV, MUL, NEG, POW, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, COS, DIV, MUL, NEG, POW, SIN, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 import { LIMIT, PolynomialError, limitAdvanced, limitDirect, taylorPolynomial } from "../src/index";
 
 function expectEqual(actual: IRNode, expected: IRNode): void {
@@ -137,13 +137,17 @@ describe("limitAdvanced", () => {
     expectEqual(limitAdvanced(expr, x, int(2), { evaluate: evaluateFixture }), int(5));
   });
 
-  it("returns unevaluated Limit for indeterminate quotients without callbacks", () => {
+  it("closes indeterminate quotients via the Taylor-series fallback without callbacks", () => {
+    // Track J2: the Taylor fallback now closes 0/0 polynomial forms even
+    // when no `differentiate` callback is supplied. (x^2 - 1)/(x - 1) at
+    // x = 1 expands to 2 + (x - 1) in shifted form, so leading order is 0,
+    // ratio is 2/1 = 2. Pre-J2 this returned an unevaluated `Limit(...)`.
     const x = sym("x");
     const expr = app(DIV, [
       app(SUB, [app(POW, [x, int(2)]), int(1)]),
       app(SUB, [x, int(1)]),
     ]);
-    expectEqual(limitAdvanced(expr, x, int(1)), app(sym(LIMIT), [expr, x, int(1)]));
+    expectEqual(limitAdvanced(expr, x, int(1)), int(2));
   });
 
   it("uses injected differentiation for a simple L'Hopital rational form", () => {
@@ -171,6 +175,23 @@ describe("limitAdvanced", () => {
     const x = sym("x");
     const expr = app(POW, [x, x]);
     expectEqual(limitAdvanced(expr, x, int(0), { direction: "plus" }), app(sym(LIMIT), [expr, x, int(0), sym("plus")]));
+  });
+
+  it("resolves bounded oscillatory numerator over diverging denominator at infinity", () => {
+    const x = sym("x");
+    expectEqual(limitAdvanced(app(DIV, [app(SIN, [x]), x]), x, sym("inf"), {
+      differentiate: differentiateFixture,
+      evaluate: evaluateFixture,
+    }), int(0));
+  });
+
+  it("resolves bounded oscillatory numerator over quadratic denominator at negative infinity", () => {
+    const x = sym("x");
+    const denom = app(ADD, [app(POW, [x, int(2)]), int(1)]);
+    expectEqual(limitAdvanced(app(DIV, [app(COS, [x]), denom]), x, sym("minf"), {
+      differentiate: differentiateFixture,
+      evaluate: evaluateFixture,
+    }), int(0));
   });
 });
 

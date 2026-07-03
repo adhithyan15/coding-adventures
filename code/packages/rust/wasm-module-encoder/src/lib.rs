@@ -528,6 +528,26 @@ pub enum GcInstruction {
     /// Stack effect: `[i31ref] → [i32]`
     I31GetS,
 
+    /// `ref.test (ref $t)` — test whether a reference is an instance of the
+    /// (non-null) concrete type `$t`, pushing an `i32` boolean.
+    ///
+    /// Encoding: `0xFB 0x14 <typeidx: LEB>`
+    ///
+    /// Stack effect: `[anyref] → [i32]`
+    ///
+    /// This is what McCarthy `pair?` lowers to: `ref.test (ref $LispyPair)` —
+    /// "is this lisp value a cons cell?". A boxed integer (`i31ref`) or the null
+    /// reference yields `0`; a `$LispyPair` struct reference yields `1`.
+    RefTest(u32),
+
+    /// `ref.test (ref null $t)` — the **nullable** variant: like [`Self::RefTest`]
+    /// but the null reference also matches.
+    ///
+    /// Encoding: `0xFB 0x15 <typeidx: LEB>`
+    ///
+    /// Stack effect: `[anyref] → [i32]`
+    RefTestNull(u32),
+
     /// `any.convert_extern` — convert an `externref` to `anyref`.
     ///
     /// Encoding: `0xFB 0x1A`
@@ -637,6 +657,28 @@ pub fn encode_gc_instruction(code: &mut Vec<u8>, instr: &GcInstruction) {
         GcInstruction::I31GetS => {
             code.push(0xFB);
             code.push(0x1D);
+        }
+
+        // ── ref.test (ref $t) ────────────────────────────────────────────────
+        //
+        // 0xFB 0x14 <typeidx: LEB>
+        //
+        // Test whether a reference is a (non-null) instance of concrete type $t.
+        GcInstruction::RefTest(type_idx) => {
+            code.push(0xFB);
+            code.push(0x14);
+            code.extend(encode_unsigned(*type_idx as u64));
+        }
+
+        // ── ref.test (ref null $t) ───────────────────────────────────────────
+        //
+        // 0xFB 0x15 <typeidx: LEB>
+        //
+        // As above, but the null reference also matches.
+        GcInstruction::RefTestNull(type_idx) => {
+            code.push(0xFB);
+            code.push(0x15);
+            code.extend(encode_unsigned(*type_idx as u64));
         }
 
         // ── any.convert_extern ───────────────────────────────────────────────
@@ -826,6 +868,19 @@ mod tests {
         encode_gc_instruction(&mut code, &GcInstruction::StructNew(0));
         // 0xFB 0x00 + LEB128(0) = [0xFB, 0x00, 0x00]
         assert_eq!(code, vec![0xFB, 0x00, 0x00]);
+    }
+
+    // GC Test 1b: ref.test / ref.test null (LANG77 L3b-3a-4)
+    #[test]
+    fn encode_gc_ref_test() {
+        let mut code = Vec::new();
+        encode_gc_instruction(&mut code, &GcInstruction::RefTest(1));
+        // 0xFB 0x14 + LEB128(1)
+        assert_eq!(code, vec![0xFB, 0x14, 0x01]);
+
+        let mut code = Vec::new();
+        encode_gc_instruction(&mut code, &GcInstruction::RefTestNull(1));
+        assert_eq!(code, vec![0xFB, 0x15, 0x01]);
     }
 
     // GC Test 2: struct.get type=0, field=0

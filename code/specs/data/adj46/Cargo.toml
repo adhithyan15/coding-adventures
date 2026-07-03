@@ -1,0 +1,14 @@
+[package]
+name = "adj46-acs-demo"
+version = "0.1.0"
+edition = "2021"
+description = "ADJ46 — ACS rulebook + Jane Doe case run through existing logic-engine. Catalogues every awkwardness to drive ADJ47 language design."
+publish = false
+
+[dependencies]
+logic-core = { path = "../../../packages/rust/logic-core" }
+logic-engine = { path = "../../../packages/rust/logic-engine" }
+
+[[bin]]
+name = "adj46"
+path = "src/main.rs"

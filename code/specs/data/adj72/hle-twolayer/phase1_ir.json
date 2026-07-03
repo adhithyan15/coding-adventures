@@ -1,0 +1,12 @@
+{
+  "query": "translate(inscription)",
+  "tokens": [
+    {"id": "t1", "surface": "RGYNᵓ", "role": "lexical_unit"},
+    {"id": "t2", "surface": "BT", "role": "lexical_unit"},
+    {"id": "t3", "surface": "ḤRY", "role": "lexical_unit"},
+    {"id": "t4", "surface": "BR", "role": "lexical_unit"},
+    {"id": "t5", "surface": "ᶜTᵓ", "role": "lexical_unit"},
+    {"id": "t6", "surface": "ḤBL", "role": "lexical_unit"}
+  ],
+  "byte_coverage": "Every whitespace-separated unit of the inscription on line 3 (RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL) is represented as exactly one token; lines 1-2 stating that this is a Palmyrene Aramaic funerary inscription in transliteration and requesting an English translation are framing/instruction, not content to interpret, and are deliberately left untokenized."
+}

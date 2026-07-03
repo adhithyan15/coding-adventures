@@ -1,0 +1,30 @@
+% ============================================================================
+% histo-recall.query.adj — a worked recall query over the histology-finding library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a "what does this smear/histology
+% finding suggest?" question: it states no pathology fact — it only `import`s the grounded
+% library and asks binding queries. The native adj-lang engine resolves each `?` against
+% the imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here. (A finding that
+% points to several conditions binds multiple answers — each with its own citation.)
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli histo-recall.query.adj
+% ============================================================================
+
+import "histo-edges.adj"
+
+? seen_in(reed_sternberg_cells, $Condition)   % expect hodgkin_lymphoma
+? seen_in(howell_jolly_bodies, $Condition)    % expect asplenia / megaloblastic_anemia
+? seen_in(heinz_bodies, $Condition)           % expect g6pd_deficiency / methemoglobinemia
+? seen_in(auer_rods, $Condition)              % expect acute_promyelocytic_leukemia (backfill)
+? seen_in(psammoma_bodies, $Condition)        % expect meningioma (backfill)
+? seen_in(negri_bodies, $Condition)           % expect rabies (expand)
+% --- BATCH: high-yield histology buzzwords ---
+? seen_in(lewy_bodies, $Condition)            % expect parkinson_disease (expand)
+? seen_in(neurofibrillary_tangles, $Condition)  % expect alzheimer_disease (expand)
+? seen_in(mallory_bodies, $Condition)         % expect alcoholic_hepatitis (expand)
+? seen_in(aschoff_bodies, $Condition)         % expect rheumatic_fever (expand)
+? seen_in(owl_eye_inclusions, $Condition)     % expect cytomegalovirus (expand)
+? seen_in(ferruginous_bodies, $Condition)     % expect asbestosis (expand)
+? seen_in(zellballen, $Condition)             % expect pheochromocytoma (expand)

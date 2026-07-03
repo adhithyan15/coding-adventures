@@ -1,0 +1,49 @@
+% ============================================================================
+% pharm-recall.query.adj — a worked recall query over the pharmacology library.
+% ============================================================================
+% The shape an LLM (or a clinician) produces to ANSWER a pharmacology recall
+% question: it states no drug fact — it only `import`s the grounded library and
+% asks binding queries. The native adj-lang engine resolves each `?` against the
+% imported `relate` edges and returns the binding + the citing clause's
+% source/locator/trust. All knowledge is in the library; none is here.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli pharm-recall.query.adj
+% ============================================================================
+
+import "pharm-edges.adj"
+
+? drug_class(metformin, $Class)                  % expect biguanide
+? drug_class(lisinopril, $Class)                 % expect ace_inhibitor
+? drug_class(naloxone, $Class)                   % expect opioid_antagonist
+? mechanism(warfarin, $MOA)                      % expect inhibits_vitamin_k_dependent_clotting_factor_synthesis
+? adverse_effect(acetaminophen, $Effect)         % expect hepatic_necrosis
+? antidote_for(acetaminophen_poisoning, $Antidote)  % expect acetylcysteine
+? antidote_for(opioid_toxicity, $Antidote)       % expect naloxone
+? antidote_for(heparin_overdose, $Antidote)      % expect protamine (expand)
+? antidote_for(digoxin_toxicity, $Antidote)      % expect digoxin_immune_fab (expand)
+? antidote_for(warfarin_toxicity, $Antidote)     % expect vitamin_k (expand)
+? antidote_for(organophosphate_poisoning, $Antidote)  % expect atropine (expand)
+? antidote_for(toxic_alcohol_poisoning, $Antidote)    % expect fomepizole (expand)
+? antidote_for(cyanide_poisoning, $Antidote)          % expect hydroxocobalamin (expand)
+? antidote_for(methotrexate_toxicity, $Antidote)      % expect leucovorin (expand)
+? antidote_for(iron_toxicity, $Antidote)              % expect deferoxamine (expand)
+? antidote_for(beta_blocker_overdose, $Antidote)      % expect glucagon (expand)
+? antidote_for(methemoglobinemia, $Antidote)          % expect methylene_blue (expand)
+? antidote_for(lead_poisoning, $Antidote)             % expect succimer (expand)
+? antidote_for(copper_toxicity, $Antidote)           % expect penicillamine (expand)
+? antidote_for(dabigatran_toxicity, $Antidote)       % expect idarucizumab (expand)
+? antidote_for(arsenic_poisoning, $Antidote)         % expect dimercaprol (expand)
+? antidote_for(isoniazid_toxicity, $Antidote)        % expect pyridoxine (expand)
+? antidote_for(rocuronium_toxicity, $Antidote)       % expect sugammadex (expand)
+? drug_class(omeprazole, $Class)                     % expect proton_pump_inhibitor (expand)
+? drug_class(losartan, $Class)                       % expect angiotensin_receptor_blocker (expand)
+? drug_class(furosemide, $Class)                     % expect loop_diuretic (expand)
+? drug_class(hydrochlorothiazide, $Class)            % expect thiazide_type_diuretic (expand)
+? drug_class(ciprofloxacin, $Class)                  % expect fluoroquinolone (expand)
+? drug_class(azithromycin, $Class)                   % expect macrolide (expand)
+? drug_class(vancomycin, $Class)                     % expect glycopeptide (expand)
+? drug_class(albuterol, $Class)                      % expect short_acting_beta_2_agonist (expand)
+? mechanism(atorvastatin, $MOA)                      % expect inhibits_hmg_coa_reductase (expand)
+? mechanism(aspirin, $MOA)                           % expect cyclooxygenase_inhibition (expand)
+? antidote_for(malignant_hyperthermia, $Antidote)    % expect dantrolene (expand)

@@ -1,0 +1,8 @@
+{
+ "check_id": 20,
+ "idx": 9,
+ "slot": "patient_unable_to_consent",
+ "claimed_value": true,
+ "scenario": "Ms. Nakagawa arrives unconscious after a car crash with a rapidly expanding intracranial hematoma that will be fatal within minutes without immediate surgery. She cannot consent, and despite attempts no family member or authorized surrogate can be reached in time. No signed consent form exists.",
+ "cited_span": "arrives unconscious after a car crash"
+}

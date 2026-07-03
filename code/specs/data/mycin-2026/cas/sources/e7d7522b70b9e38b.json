@@ -1,0 +1,77 @@
+{
+  "hash": "e7d7522b70b9e38b",
+  "source_id": "https://www.cambridge.org/core/journals/epidemiology-and-infection/article/burden-of-communityonset-bloodstream-infection-a-populationbased-assessment/4C3033D11C42B1D2B68B3580C283DB9A",
+  "title": "The burden of community-onset bloodstream infection: a population-based assessment (Epidemiology and Infection)",
+  "resolved_url": "https://www.cambridge.org/core/journals/epidemiology-and-infection/article/burden-of-communityonset-bloodstream-infection-a-populationbased-assessment/4C3033D11C42B1D2B68B3580C283DB9A",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "The three species E. coli, S. aureus, and Str. pneumoniae cause the majority of community-onset bloodstream infections.",
+      "byte_quote": "the three species _Escherichia coli_, _Staphyloccocus_ (_S_.) _aureus_, and _Streptococcus_ (_Str_.) _pneumoniae_ were responsible for the majority of cases"
+    },
+    {
+      "id": "c2",
+      "text": "Overall, E. coli accounted for 30%, S. aureus 16%, and Str. pneumoniae 12% of community-onset BSI cases.",
+      "byte_quote": "_Escherichia coli_ (30%), _S. aureus_ (16%), and _Str. pneumoniae_ (12%) were the most important agents"
+    },
+    {
+      "id": "c3",
+      "text": "Organism proportions vary by age band: in <1yr E. coli/S. aureus/Str. pneumoniae were 35%/9%/19%; in 1-19yr 11%/17%/33%; in 20-64yr 29%/17%/13%; in >=65yr 34%/15%/7%.",
+      "byte_quote": "_E. coli_, _S. aureus_, and _Str. pneumoniae_ were responsible for 35%, 9%, and 19% of infections in those aged <1 year, 11%, 17%, and 33% in those aged 1–19 years, 29%, 17%, and 13% in thoase aged 20–64, and 34%, 15%, and 7% in those aged ⩾65 years"
+    },
+    {
+      "id": "c4",
+      "text": "Isolate counts: E. coli 1414, S. aureus 737, Str. pneumoniae 552 isolates.",
+      "byte_quote": "_Escherichia coli_ (1414 isolates), _Staphylococcus aureus_ (737 isolates), and _Streptococcus pneumoniae_ (552 isolates) were responsible for the majority of cases"
+    },
+    {
+      "id": "c5",
+      "text": "Age and gender strongly affect incidence: the very young and the elderly are at highest risk.",
+      "byte_quote": "there was a dramatic relationship observed between age and gender and the incidence of community-onset BSI with the very young and the elderly at highest risk"
+    },
+    {
+      "id": "c6",
+      "text": "In those aged >=60 years, men had significantly higher BSI risk than women (396.1 vs 292.5 per 100000; RR 1.35).",
+      "byte_quote": "in those aged ⩾60 years, men were at significantly higher risk compared to women (396.1 _vs_. 292.5/100 000; RR 1·35)"
+    },
+    {
+      "id": "c7",
+      "text": "Poly-microbial infections were significantly associated with older median patient age (69.9 vs 62.3 years, P<0.001).",
+      "byte_quote": "poly-microbial infections were...significantly associated with older median patient age (69·9 _vs_. 62·3 years, _P_<0·001)"
+    },
+    {
+      "id": "c8",
+      "text": "The overall annual incidence of community-onset BSI was 81.6 per 100000 population, from 4467 episodes among 4192 residents.",
+      "byte_quote": "a total of 4467 episodes of community-onset BSI were identified among 4192 CHR residents for an overall annual incidence of 81·6/100 000 population"
+    },
+    {
+      "id": "c9",
+      "text": "Case-fatality rate was 13%: among 3445 admitted episodes, 460 resulted in in-hospital death.",
+      "byte_quote": "Among the 3445 episodes of community-onset BSI that required hospital admission, 460 were associated with in-hospital death for a case-fatality rate of 13%"
+    },
+    {
+      "id": "c10",
+      "text": "Study setting: Calgary Health Region, a publicly funded health system serving over one million residents (population denominator for the population-based assessment).",
+      "byte_quote": "Calgary Health Region (CHR) is a health system that provides all medically necessary, publicly funded health care to the more than one million residents"
+    },
+    {
+      "id": "c11",
+      "text": "77% of episodes resulted in hospital admission, representing 0.7% of all admissions.",
+      "byte_quote": "77% episodes resulted in hospital admission representing 0·7% of all admissions"
+    },
+    {
+      "id": "c12",
+      "text": "Citing Pedersen et al., E. coli was the most important aetiology (605 episodes, 33%).",
+      "byte_quote": "Pedersen _et al_. also found that _E. coli_ (605 episodes, 33%) was the most important aetiology"
+    },
+    {
+      "id": "c13",
+      "text": "Citing Madsen et al., population-based surveillance found an E. coli bacteraemia incidence of ~32 per 100000.",
+      "byte_quote": "Madsen _et al_. conducted population-based surveillance...and found an incidence of _E. coli_ bacteraemia of ∼32/100 000"
+    }
+  ],
+  "cites": [
+    "Pedersen et al.",
+    "Madsen et al."
+  ]
+}

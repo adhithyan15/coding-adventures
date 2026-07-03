@@ -1,0 +1,245 @@
+# VisiCalc — Flutter demo (live, on the Rust engine)
+
+The Flutter VisiCalc demo, now **computing on the shared Rust `spreadsheet-core`
+engine** through its C ABI (`spreadsheet-capi`), reached via `dart:ffi` — the
+same engine the SwiftUI and Qt demos link natively and the web demos run as
+WebAssembly. This is the third native backend wired to the engine.
+
+## What it shows
+
+A `MaterialApp` shell containing the auto-generated `FormulaBar` and `Grid`
+widgets (`lib/generated/`, produced by `mosaic-compile --backend flutter` from
+the shared `code/programs/mosaic/visicalc/*` sources).
+
+- The grid renders **engine-computed** values: the classic cross-footing budget
+  where column E totals each row, row 5 totals each column, and E5 is the grand
+  total (169) — all formulas evaluated by the Rust engine, not hard-coded.
+- Editing the formula bar writes through to the engine via
+  `SpreadsheetModel.setCell`, which recomputes every dependent cell.
+
+## How it's wired to the engine
+
+```
+Flutter widgets (generated)  ──  SpreadsheetModel / SpreadsheetSession (lib/engine.dart)
+   Grid(viewportRows: model…)     │  sc_set_cell / sc_get_value … (dart:ffi, String↔char*)
+                                  ▼
+   native/libspreadsheet_capi.dylib  ←  spreadsheet-capi (Rust C ABI)  ←  spreadsheet-core
+```
+
+`lib/engine.dart` loads the engine dynamic library with `DynamicLibrary.open`
+and marshals strings by hand (UTF-8 via `dart:convert`, libc `malloc`/`free`
+bound through `DynamicLibrary.process()`) — **no extra pub dependency**, not even
+`package:ffi`. It maps the engine's JSON value shape (the same contract the
+TS/WASM/Swift/Qt engines emit) into display text.
+
+## Build, test, run
+
+```bash
+bash scripts/build.sh   # regenerate widgets + build & vendor the engine (cdylib)
+flutter test            # HEADLESS: proves the grid is engine-computed + recomputes
+flutter pub get && flutter run -d macos   # launch the desktop app
+```
+
+`test/engine_test.dart` loads the vendored engine through `dart:ffi` and asserts
+the grid is engine-computed (E1 = 38, A5 = 39, E5 = 169), that editing A1
+15 → 115 recomputes the totals (E5 → 269), and that a formula entry computes with
+binary-op error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it → `#DIV/0!`).
+
+> Known gap (tracked separately): the generated Flutter `FormulaBar` places its
+> `TextField` directly in a `Row` without a `Flexible` wrapper, so it throws an
+> unbounded-width layout assertion when the full app is pumped. That's a
+> `mosaic-emit-flutter` emitter bug, independent of the engine wiring (the grid
+> renders fine). The headless `engine_test.dart` is the canonical proof here,
+> matching how the SwiftUI and Qt demos verify.
+
+## How to run the app
+
+```bash
+flutter pub get
+flutter run            # picks default target
+flutter run -d chrome  # web target
+flutter run -d macos   # desktop target
+flutter run -d ios     # iOS sim
+flutter run -d android # Android emulator
+```
+
+(Requires Flutter SDK 3.0+. Install via https://flutter.dev/docs/get-started/install.)
+
+## How to build deployable artefacts (CI-friendly)
+
+```bash
+flutter build apk --debug            # Android — debug-signed APK
+flutter build apk --release          # Android — release APK (needs signing config)
+flutter build ios --no-codesign      # iOS — .app bundle (sideload-ready)
+flutter build web --release          # Web — static dist/
+flutter build macos --release        # Desktop — .app
+```
+
+Verified locally on macOS arm64:
+
+| Target | Command | Output | Result |
+| --- | --- | --- | --- |
+| Android | `flutter build apk --debug` | `build/app/outputs/flutter-apk/app-debug.apk` | ✅ |
+| iOS | `flutter build ios --no-codesign` | `build/ios/iphoneos/Runner.app` (15.2 MB) | ✅ |
+| Web | `flutter build web --release` | `build/web/` | ✅ |
+
+The `android/` and `ios/` platform-runner scaffolds are generated
+by `flutter create --platforms=ios,android .` and checked in.
+Volatile per-platform caches (`android/.gradle/`, `ios/Pods/`,
+`xcuserdata/`, etc.) are gitignored — `flutter build` regenerates
+them on first run.
+
+## The touch FormulaBar layout (`FormulaBarTouch`)
+
+The **Touch bar** button (shown in classic-grid mode) swaps the formula bar
+between two widgets generated from the *same* `FormulaBar.mil` interface:
+
+- **Desktop** (`FormulaBar.desktop.mll` → `FormulaBar`): a `Row` — the
+  cell-address label sits to the **left** of the input.
+- **Touch** (`FormulaBar.touch.mll` → `FormulaBarTouch`): a `Column` — the
+  address label stacks **above** a full-width input, the phone arrangement.
+
+`scripts/build.sh` emits both into `lib/generated/`. The Flutter emitter names
+the widget after the `.mil` component (`FormulaBar`) and also emits the shared
+`sealed class FormulaBarEvent` + subclasses, so to let both widgets coexist the
+touch output has its **duplicate** event classes stripped — it `import`s them
+from `formula_bar.dart` instead — and its widget + constructor renamed to
+`FormulaBarTouch`. `main.dart` holds a `_touch` flag and renders one or the
+other, passing the identical `_onFormulaBarEvent` — editing behaves the same in
+both; only the shape changes. This is the UI30 "one component, many layouts,
+identical host contract" invariant made a runtime toggle — the Flutter sibling
+of the Qt and Compose demos' toggles and the web demo's switcher.
+
+## Infinite virtualized sheet
+
+`SpreadsheetSession` (`lib/engine.dart`) also binds the engine's **viewport
+primitive** over dart:ffi — `window(r0,c0,r1,c1)` (a dense `List<List<String>>`
+rectangle), `usedRange()`, `columnLetters()`, `currentRevision()`, and
+`changedSince()` — so a windowed Flutter grid can render only the visible
+rectangle of an unbounded sheet (the Flutter sibling of the web/SwiftUI/Qt
+infinite views).
+
+### The scrollable infinite GUI (`lib/infinite_grid.dart`)
+
+The **Infinite sheet** button in the running app toggles from the classic 5×5
+grid to `InfiniteGrid` — a virtualized, effectively-infinite (u32 × u32, sparse)
+sheet rendered on the same engine. The body is a `ListView.builder`, which
+natively virtualizes: it calls its `itemBuilder` only for rows near the viewport
+and recycles them as they scroll off, so a 1000-row sheet costs the handful of
+rows you can see. Each built row makes **one** engine `get_display_window` over
+its `1×totalCols` strip (`InfiniteSheetModel.rowCells`) — display strings, each
+already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the Flutter host paints them directly. Per-frame engine work is proportional
+to *visible* rows, never the sheet's height.
+
+Two-axis scroll with frozen chrome, kept in sync by one-way controller links
+(the chrome is non-interactive and slaved to the body): the column-letter header
+follows the body's horizontal pan and the row-number gutter (its own virtualized
+`ListView`) follows the body's vertical scroll. Tap a cell → `selectInf(row,col)`
+(clamps, loads the source into the formula bar); press Enter → `commitInf(text)`
+(writes through, recomputes dependents, regrows the extent). The **"Fill ↓ 10"**
+button calls `InfiniteSheetModel.fillDown(10)` (over the C ABI's `sc_fill`) to
+replicate the selected cell into the 10 rows below it — the engine shifts each
+copy's relative references (`=A1`→`=A2`, …), pins absolute (`$`) refs, and
+carries the format. The **Copy / Cut / Paste** buttons drive the engine's
+clipboard (`InfiniteSheetModel.copyCell`/`cutCell`/`pasteCell` over the C ABI's
+`sc_copy`/`sc_cut`/`sc_paste`): copy the selected cell, then paste it elsewhere
+with its relative references shifted by the destination's offset (absolute `$`
+refs pinned, format carried); a cut clears the source on paste, and `pasteCell`
+returns `false` (a no-op) for an empty clipboard. The **Save / Load** buttons
+serialize the whole workbook (`InfiniteSheetModel.saveBook` over the C ABI's
+`sc_serialize`) to a JSON document held in memory and restore it
+(`loadBook` / `sc_deserialize`): the document captures only the source (formula
+text + typed literals) and per-cell formats — not the computed values, which the
+engine recomputes on load, so a loaded formula stays live. The **Undo / Redo**
+buttons walk the engine's snapshot history (`InfiniteSheetModel.undoEdit`/
+`redoEdit` over the C ABI's `sc_undo`/`sc_redo`); they disable at the history
+ends via `canUndo`/`canRedo`. Every edit is reversible and a restored formula
+recomputes live. The **+ Row / − Row / + Col / − Col** buttons are **structural
+edits** (`InfiniteSheetModel.insertRow`/`deleteRow`/`insertCol`/`deleteCol` over
+the C ABI's `sc_insert_rows`/`sc_delete_rows`/`sc_insert_cols`/`sc_delete_cols`):
+insert or delete the selected cell's row/column, and the engine shifts every
+formula reference at or after the band so dependents keep pointing at their
+precedents (`=A1+A2` with a row inserted above becomes `=A1+A3`); a reference
+whose whole band is deleted becomes `#REF!`.
+The **.00 / % / $ / Gen** buttons apply a number **format** to the selected cell
+(`InfiniteSheetModel.applyFormat` over the C ABI's `sc_set_format`, with the code
+`#,##0.00`, `0.0%`, `$#,##0.00`, or `""` to clear). The format is display-only —
+the engine renders the stored value through the code, so the underlying number is
+unchanged. `InfiniteSheetModel`
+(in `lib/engine.dart`) seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) so
+there's something to scroll to, and derives the extent from `usedRange()` + a
+margin.
+
+The bottom **sheet tab bar** drives a multi-sheet **workbook**: the workbook
+holds several sheets and bare-`A1` ops address the *active* one, while a formula
+reaches **across** with a qualifier (`=Summary!B3`). Each tab is a chip (the
+active one tints to the accent); **tap** to switch, **double-tap** to rename,
+**right-click / long-press** to delete, and **+ Sheet** adds one
+(`InfiniteSheetModel.selectSheet`/`renameSheet`/`deleteSheet`/`addSheet` over the
+C ABI's `sc_set_active_sheet`/`sc_rename_sheet`/`sc_delete_sheet`/`sc_add_sheet`,
+with `sc_sheet_names`/`sc_active_sheet` reading the tab list). The seed adds a
+second sheet, **Summary**, whose `B3` sums its own `A1`+`A2` (=300), and back on
+the first sheet `G1` = `=Summary!B3` pulls that value **across the sheets**;
+editing a Summary input recomputes the cross-sheet dependent live. Renaming
+`Summary` rewrites every referencing qualifier (the dependents stay live);
+deleting a referenced sheet turns the dangling reference into `#REF!`. The engine
+keeps at least one sheet, so deleting the last is a no-op. The single-sheet path
+is byte-identical — an unqualified `A1` still means the active sheet.
+
+#### Visual design
+
+`lib/infinite_grid.dart` mirrors the **reference visual language** defined by the
+web demo (`code/programs/typescript/visicalc-html/infinite.html`) so every VisiCalc backend reads as
+one considered dark, modern-spreadsheet surface — the same token set the Qt port
+uses. The palette lives in a small set of `Color` design constants at the top of
+the file (`_cBg`/`_cPanel`/`_cSurface`/`_cLine`/`_cInk`/`_cMuted`/`_cAccent`…),
+echoing the web demo's CSS custom properties rather than scattering ARGB values.
+From those it builds: a panel-wrapped **toolbar** with an address **pill**, an
+italic `fx` marker, then a grown formula field with an accent **focus ring**
+(driven by a `FocusNode`); the actions are **segmented button groups** (drag-fill
+· clipboard · file · structure · history) — a reusable `_ToolButton` chip with
+hover/pressed/disabled states — separated by thin rules; the bar scrolls
+horizontally so the controls never overflow a narrow window. The grid gets subtle **zebra** row
+banding, a 2-px **accent selection ring**, and the selected cell's **row + column
+headers tint to the accent**; a hairline-separated **status footer** echoes the
+live virtual-grid size and revision.
+
+### Headless proof
+
+`test/window_test.dart` seeds far-flung sparse cells and asserts the window is
+engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000 rows down
+(`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
+AA/BA, and editing `A1` dirties the far dependent `Z1000` via `changedSince`. It
+also covers `InfiniteSheetModel` directly (`rowCells` one-read rows, `selectInf`
+clamping + source load, `commitInf` recompute, drag-fill, clipboard copy/cut/
+paste, a save/load round trip — serialize → mutate → restore, with the loaded
+formula staying live and malformed input rejected — and an undo/redo walk on a
+fresh session (two edits → undo both → redo both with the formula recomputing
+live → a fresh edit forks history)). A **multi-sheet** group proves the workbook
+over the C ABI: a cross-sheet `=Summary!B3` computes and stays live as its
+precedent changes, a rename rewrites the referencing qualifier, deleting a
+referenced sheet yields `#REF!` (and the last sheet can't be deleted), and the
+`InfiniteSheetModel` seed exposes `Sheet1`/`Summary` with a live cross-ref.
+
+`test/infinite_grid_test.dart` is a **widget test** that pumps the real
+`InfiniteGrid` tree on the live engine, taps the A1 cell, edits `15`→`115` in the
+formula bar, and asserts every dependent recomputes *on screen* (E1 → 138, A5 →
+139, E5 → 269) — the Flutter analog of running the GUI by hand.
+
+```bash
+flutter test          # the whole suite (engine + window + infinite_grid)
+```
+
+## Where this fits in the cross-backend demo plan
+
+| Backend | Engine | Status |
+|---|---|---|
+| HTML (web) | WASM | ✅ live |
+| WebComponent (web) | WASM | ✅ live |
+| SwiftUI (macOS / iOS) | C ABI | ✅ live (+ infinite sheet) |
+| Qt / C++ | C ABI | ✅ live (+ infinite sheet) |
+| Flutter (this one) | C ABI (dart:ffi) | ✅ live (+ infinite sheet) |
+| Compose / Android (Kotlin) | C ABI (FFM / JNI) | infinite sheet next |
+| XAML (.NET, Windows) | C ABI (P/Invoke) | infinite sheet next |

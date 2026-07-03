@@ -1,0 +1,8 @@
+[package]
+name = "image-raw-pipeline"
+version = "0.1.0"
+edition = "2021"
+description = "IMG07: Shared RAW colour development pipeline — sRGB gamma, 3×3 matrix ops, and apply_color_pipeline used by all RAW codec crates (TIFF/DNG/CR2/NEF/ARW/RAF/ORF/RW2)"
+license = "MIT"
+
+[dependencies]

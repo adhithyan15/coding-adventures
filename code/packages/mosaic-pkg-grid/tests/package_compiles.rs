@@ -92,7 +92,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|p| p.get("version"))
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
-    assert_eq!(version, "0.1.0", "[package].version must be 0.1.0 for U29-P1");
+    assert_eq!(version, "0.2.0", "[package].version must be 0.2.0 for the UI28-1 cell-and-column composition release");
 
     // [components].exports
     let exports = value
@@ -221,6 +221,193 @@ fn each_msl_compiles_against_its_part_map() {
 // ---------------------------------------------------------------------------
 // 5. Source-shape sanity
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// 6. UI28-1 v0.2.0 shape — additive guards
+//
+// These tests pin the v0.2.0-specific surface: the new slots on Cell and
+// Grid, the nested-For body shape in Grid.mll, and the expression-driven
+// per-cell predicates. A future refactor that drops any of these is the
+// kind of regression the v0.2.0 release commits to avoiding.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn ui28_1_cell_declares_is_selected_slot() {
+    // v0.1.0 had no `is-selected` slot. v0.2.0 adds it so Grid can
+    // thread per-cell selection state down without sharing its
+    // internal coordinate-comparison logic with the host.
+    let src = read_source("Cell.mil");
+    assert!(
+        src.contains("slot is-selected"),
+        "Cell.mil must declare an `is-selected` slot (added in v0.2.0)"
+    );
+    let mil = mosmodel_compiler::compile(&src).expect("Cell.mil compiles");
+    let names: Vec<&str> = mil.component.slots.iter().map(|s| s.name.as_str()).collect();
+    assert!(
+        names.contains(&"is-selected"),
+        "Cell mosmodel descriptor must expose `is-selected`, got: {:?}",
+        names
+    );
+}
+
+#[test]
+fn ui28_1_grid_declares_column_headers_and_widths_slots() {
+    // v0.1.0 had no column-metadata slots (header row was empty).
+    // v0.2.0 adds parallel-array slots so the header renders + the
+    // <colgroup> carries widths.
+    let src = read_source("Grid.mil");
+    assert!(
+        src.contains("slot column-headers"),
+        "Grid.mil must declare `column-headers: list<text>` (v0.2.0)"
+    );
+    assert!(
+        src.contains("slot column-widths"),
+        "Grid.mil must declare `column-widths: list<number>` (v0.2.0)"
+    );
+    let mil = mosmodel_compiler::compile(&src).expect("Grid.mil compiles");
+    let names: Vec<&str> = mil.component.slots.iter().map(|s| s.name.as_str()).collect();
+    assert!(
+        names.contains(&"column-headers") && names.contains(&"column-widths"),
+        "Grid mosmodel descriptor must expose column-headers + column-widths, got: {:?}",
+        names
+    );
+}
+
+#[test]
+fn ui28_1_grid_mll_uses_nested_for_via_u29_3_4_scope() {
+    // The body must contain TWO `For` blocks (outer over rows, inner
+    // over each row's cells). Without UI29 §3.4 (PR #4398) the inner
+    // `each: row` would be rejected; the moslayout-compiler accepting
+    // this layout end-to-end is the regression guard for that PR.
+    let src = read_source("Grid.mll");
+    let for_count = src.matches("For (").count();
+    assert!(
+        for_count >= 3,
+        "Grid.mll must contain at least 3 For blocks (colgroup, head, body-outer, body-inner — found {}), got source:\n{}",
+        for_count,
+        src
+    );
+    // The inner For specifically uses the outer's `as: row` as its
+    // `each:` value. That's the UI29 §3.4 shape we depend on.
+    assert!(
+        src.contains("For ( each: row"),
+        "Grid.mll body must nest `For ( each: row, ... )` to iterate each row's cells (UI29 §3.4)"
+    );
+
+    // Round-trip the file through the validator. This is the
+    // language-frontend assertion that PR #4398's scope-walker is in
+    // place AND that v0.2.0's nested-For is well-formed.
+    let mil_src = read_source("Grid.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).expect("Grid.mil compiles");
+    moslayout_compiler::compile(&src, Some(&mil_out.descriptor_json))
+        .expect("Grid.mll must validate against Grid.mil; if this fails the §3.4 scope walker may have regressed");
+}
+
+#[test]
+fn ui28_1_grid_mll_predicate_uses_expression_in_slot_binding() {
+    // Per UI28-1 §2 constraint 4 (encapsulation), Grid computes
+    // is-editing / is-selected at the Cell call site via Expr — the
+    // host pushes plain coordinate numbers, not pre-computed masks.
+    let src = read_source("Grid.mll");
+    // The Expr shape is `( r == editRow && c == editCol )`. We pin the
+    // operator structure rather than exact spacing; the moslayout
+    // parser collapses to a reconstructed-source Expr either way.
+    assert!(
+        src.contains("is-editing:") && src.contains("editRow") && src.contains("editCol"),
+        "Grid.mll must compose is-editing per-cell via expression-in-slot-binding"
+    );
+    assert!(
+        src.contains("is-selected:") && src.contains("selectedRow") && src.contains("selectedCol"),
+        "Grid.mll must compose is-selected per-cell via expression-in-slot-binding"
+    );
+}
+
+#[test]
+fn ui28_1_grid_mll_has_colgroup_section_for_column_widths() {
+    let src = read_source("Grid.mll");
+    assert!(
+        src.contains("HostTableColGroup"),
+        "Grid.mll must use HostTableColGroup to thread per-column widths (UI28-1 §3.3)"
+    );
+    assert!(
+        src.contains("each: slot: column-widths"),
+        "Grid.mll's HostTableColGroup must iterate the `column-widths` slot"
+    );
+}
+
+#[test]
+fn ui28_1_grid_mll_header_for_renders_column_headers() {
+    let src = read_source("Grid.mll");
+    assert!(
+        src.contains("each: slot: column-headers"),
+        "Grid.mll's HostTableHead must iterate the `column-headers` slot — v0.1.0 left the header empty, v0.2.0 fills it"
+    );
+}
+
+#[test]
+fn ui28_1_no_new_kernel_primitive_was_added() {
+    // Sanity guard: ensure nothing in Grid.mll / Cell.mll references a
+    // tag that isn't already in the UI29 kernel + this package's
+    // userland Cell / Column. The currently-allowed tag set is:
+    //
+    //   - 21 UI29 kernel primitives + UI31 HostTable family
+    //   - Userland: Grid, Cell, Column
+    //
+    // If a future change introduces e.g. `HostCell` or `HostTableRow`
+    // as a new tag, this test fires loud — Cell-as-component is the
+    // architectural contract per UI28-1 §2 constraint 1.
+    let allowed_tags: std::collections::HashSet<&str> = [
+        // Containers + leaves + control flow (UI29 kernel)
+        "Box", "Row", "Column", "Stack", "Text", "Image", "Spacer",
+        "Divider", "Icon", "If", "Else", "For",
+        // Host primitives (UI29 + UI29-1/2/4)
+        "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+        "HostCheckbox", "HostRadio", "HostLink", "HostTooltip", "HostNumberInput",
+        // HostTable structural sub-tags + Col (UI31)
+        "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
+        "Col",
+        // Legacy (still in PRIMITIVES, scheduled removal in U29-X1)
+        "Grid", "Scroll",
+        // Userland (this package)
+        "Cell", "Column",
+    ]
+    .iter()
+    .copied()
+    .collect();
+
+    for component in ["Grid", "Cell", "Column"] {
+        let src = read_source(&format!("{}.mll", component));
+        // Naive tag-extraction: any PascalCase identifier at the start of
+        // a line (possibly preceded by whitespace) is a tag candidate.
+        // Misses the rare inline tag, but the common shape catches all
+        // surface-level new primitives.
+        for raw_line in src.lines() {
+            let line = raw_line.trim_start();
+            // Strip leading `}` from "} Else {" etc.
+            let line = line.trim_start_matches('}').trim_start();
+            // Get the first identifier-looking token.
+            let token: String = line
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                .collect();
+            if token.is_empty() {
+                continue;
+            }
+            let first = token.chars().next().unwrap();
+            if !first.is_ascii_uppercase() {
+                continue;
+            }
+            assert!(
+                allowed_tags.contains(token.as_str()),
+                "{}.mll references unknown tag `{}` — if this is a new \
+                 primitive, add it to the kernel list (and review whether \
+                 UI28-1 §2 constraint 1 is being violated)",
+                component,
+                token
+            );
+        }
+    }
+}
 
 /// Belt-and-suspenders check: every file the package promises is on disk.
 #[test]

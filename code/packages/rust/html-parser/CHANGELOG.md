@@ -3,6 +3,121 @@
 All notable changes to the `coding-adventures-html-parser` crate will be
 documented in this file.
 
+## Unreleased
+
+### Added
+- The WHATWG formatting audit now includes a focused post-parse repair evidence
+  guard for the html5lib cases that still justify legacy finish-time recovery
+  shims.
+- `<hr>` inside open `select` elements is now placed during tree construction,
+  removing a post-parse repair while preserving the html5lib select-list DOM
+  audit behavior.
+- Browser-readiness completion is now documented as a bounded planning surface
+  and enforced by a manifest-style regression test that ties every public
+  readiness inventory to fixture or focused-test evidence.
+- Browser-readiness form-association descriptors now expose form owners, labels,
+  fieldset membership, datalist links, and output calculation relationships as a
+  flat browser-planning inventory.
+- Browser-readiness form-reset descriptors now expose resettable controls,
+  resetter controls, default reset values, selection/checked reset state, and
+  form-level `onreset` hooks as a flat browser-planning inventory.
+- Browser-readiness form-submission descriptors now expose successful controls,
+  submission values, form action/method/target defaults, and submitter routing
+  overrides as a flat browser-planning inventory.
+- Browser-readiness form-validation descriptors now expose validation
+  candidates, constraint attributes, barred controls, form-level `novalidate`,
+  and submitter-level validation bypass hints as a flat browser-planning
+  inventory.
+- Browser-readiness context-menu interaction descriptors now expose
+  `oncontextmenu` hooks, ARIA menu-popup invokers, menu/menuitem roles, popover
+  menu surfaces, and hidden/inert/disabled blockers as a flat browser-planning
+  inventory.
+- Browser-readiness fullscreen-interaction descriptors now expose embedded
+  fullscreen permission hints, `allowfullscreen` state, fullscreen event hooks,
+  and document/body fullscreen callbacks as a flat browser-planning inventory.
+- Browser-readiness animation-interaction descriptors now expose CSS animation
+  and transition event hooks, timeline phase grouping, document/body scope, and
+  cancellation paths as a flat browser-planning inventory.
+- Browser-readiness lifecycle-event descriptors now expose document/body load
+  and unload hooks, visibility/history/network lifecycle handlers, and
+  element-level error recovery as a flat browser-planning inventory.
+- Browser-readiness composition-interaction descriptors now expose IME
+  composition events, beforeinput/input hooks, text controls, editing hosts, and
+  blocked composition paths as a flat browser-planning inventory.
+- Browser-readiness scroll-interaction descriptors now expose `onscroll`,
+  `onscrollend`, wheel/touch routing, ARIA scrollbar value state, and blocked
+  scroll paths as a flat browser-planning inventory.
+- Browser-readiness pointer-interaction descriptors now expose click, mouse,
+  touch, pointer, wheel, and drag/drop handler routing plus command/editing
+  context and blocked pointer paths as a flat browser-planning inventory.
+- Browser-readiness selection-interaction descriptors now expose `onselect` and
+  selection-change handlers, input hooks, editing hosts, text controls, and
+  blocked selection paths as a flat browser-planning inventory.
+- Browser-readiness clipboard-interaction descriptors now expose copy/cut/paste
+  handlers, input hooks, editing hosts, text controls, and blocked clipboard
+  paths as a flat browser-planning inventory.
+- Browser-readiness drag/drop descriptors now expose draggable state, drag/drop
+  handlers, pointer handler inventory, and blocked drag paths as a flat
+  browser-planning inventory.
+- Browser-readiness input-planning descriptors now expose text-entry hints,
+  datalist suggestions, validation blockers, form ownership, and contenteditable
+  editing hosts as a flat browser-planning inventory.
+- Browser-readiness keyboard-interaction descriptors now expose access keys,
+  ARIA shortcuts, keyboard handlers, focus order, editing hosts, and blocked
+  keyboard paths as a flat browser-planning inventory.
+- Browser-readiness focus-navigation descriptors now expose sequential focus,
+  programmatic focus, editing hosts, access keys, and hidden/inert/disabled/ARIA
+  focus blockers as a flat browser-planning inventory.
+- Browser-readiness activation descriptors now expose command, popover,
+  disclosure, ARIA, focus, and inline handler routing metadata as a flat
+  activation-planning inventory.
+- Browser-readiness disclosure-state descriptors now expose details/dialog open
+  state, grouped details names, summary text, modal/closedby behavior, and
+  accessible naming metadata as a flat browser-planning inventory.
+- Browser-readiness resource-endpoint descriptors now expose refresh redirects
+  plus resolved document resources as a flat endpoint inventory for
+  fetch/navigation planning.
+- Browser-readiness event-handler descriptors now expose document, body, and
+  element inline handler metadata as a categorized flat inventory for browser
+  readiness planning without evaluating script text.
+- Browser-readiness navigation-target descriptors now expose policy-rich anchor
+  and image-map area targets with resolved URLs, target selection, rel policy,
+  ping/attribution endpoints, language/type hints, referrer policy, download,
+  and area geometry metadata as a flat browser-planning inventory.
+- Browser-readiness document-policy descriptors now expose charset, viewport,
+  referrer/robots/color-scheme policy, CSP/Permissions/Origin-Trial/Accept-CH
+  hints, theme colors, refresh, canonical, and manifest metadata as a flat
+  browser-planning inventory.
+- Browser-readiness form-policy descriptors now expose form submission targets,
+  accept/autocomplete/rel policy tokens, validation bypass state, and submitter
+  overrides as a flat browser-planning inventory.
+- Browser-readiness form-autofill descriptors now expose autocomplete tokens,
+  section/address/contact field hints, webauthn markers, and disabled/readonly/
+  hidden/off blockers as a flat browser-planning inventory.
+- Browser-readiness fetch-policy descriptors now expose subresource integrity,
+  CORS, nonce, referrer policy, iframe CSP/sandbox/permissions, fullscreen, and
+  credentialless metadata as a flat browser-planning inventory.
+- Browser-readiness loading-hint descriptors now expose lazy/eager loading,
+  decoding, fetch priority, blocking, and media preload scheduling metadata.
+- Browser-readiness ARIA relation descriptors now expose details, error-message,
+  and flow target metadata with resolved target text.
+- Browser-readiness global-state descriptors now include shell-level `html` and
+  `body` states such as hidden, inert, accesskey, editing, spellcheck, and
+  translate metadata.
+- Browser-readiness text semantic summaries now include phrase-level semantics
+  for abbreviation, definition, citation, code, keyboard input, sample output,
+  variables, subscript/superscript, emphasis, importance, small print,
+  strikethrough, and unarticulated annotation elements.
+- Browser-readiness document summaries now include global-state descriptors for
+  non-form elements with inert/hidden, editing, drag, spellcheck, translate,
+  accesskey, autofocus, and related focus metadata.
+
+### Fixed
+- Test fixture generators: `COMMENT_MARKUP` regex accepts both `-->` and
+  `--!>` comment end forms, and tag-axis classifier scans pass `re.I` even
+  though their inputs are already lowercased.  Both changes silence codeql
+  `py/bad-tag-filter`; runtime behaviour is unchanged.
+
 ## [0.1.0] - 2026-05-02
 
 ### Added
@@ -138,6 +253,9 @@ documented in this file.
 - Parser-approved initial tokenizer contexts now include seeded text/RCDATA
   character-reference continuation substates, carrying temporary buffers and
   return states through named, numeric, decimal, and hexadecimal recovery paths.
+- Browser-facing content and render projections now expose document outline
+  metadata for heading levels, sectioning elements, and landmark-like regions
+  such as `main`, `nav`, `aside`, `header`, and `footer`.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
@@ -178,6 +296,60 @@ documented in this file.
 - Self-closing flags on non-void HTML start tags are now ignored with a parser
   diagnostic, keeping elements such as `div`, `script`, `textarea`, and table
   cells open for their real content.
+- Browser-facing document extraction now includes base targets, head metadata,
+  loadable resources, anchor targets, richer link attributes, form encodings,
+  form targets, and basic control disabled/checked state for browser pipeline
+  consumers.
+- Browser-facing content tree extraction now projects parsed body content into
+  CSS-independent structural nodes for early browser rendering pipelines.
+- Browser-facing render tree input extraction now maps parsed body structure
+  into stable default display categories for early layout pipelines.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  richer form control metadata including values, checked/selected state,
+  disabled state, select options, and textarea values.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  form accessibility metadata including explicit and implicit labels, derived
+  accessible names, form-owner references, placeholder/autocomplete hints, and
+  required/readonly/multiple control state.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  resolved URL metadata for links, resources, images, and form actions using
+  the document `base` href when available, while preserving raw authored
+  attributes for downstream policy decisions.
+- Browser-facing resource summaries now carry link/resource scheduling
+  metadata for preconnect, preload, modulepreload, prefetch, manifest,
+  canonical, and icon links, including `as`, integrity, CORS/referrer policy,
+  fetch priority, blocking, and responsive image preload hints.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  identity and language metadata, including document/body `lang` and `dir`,
+  body `id`/classes, and node-level `id`, tokenized `class`, `title`, `lang`,
+  and `dir` values for selector matching and browser UI policy.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  embedded resource metadata for frames, objects, embeds, media, and images,
+  including resolved source URLs, resource kind, type hints, media attributes,
+  authored dimensions, and flattened embedded policy descriptors for fetch,
+  sandboxing, permissions, and fallback planning.
+- Browser-facing document, content-tree, and render-tree projections now carry
+  media playback metadata for `audio` and `video`, including playback flags,
+  preload/poster fields, and flattened playback descriptors with source/track
+  counts.
+- Browser-facing document summaries now carry script and stylesheet loading
+  metadata, including script kind, async/defer/nomodule flags, inline
+  script/style text, integrity/crossorigin/referrer-policy hints, fetch
+  priority, blocking, flattened script execution and stylesheet planning
+  descriptors, alternate stylesheets, and disabled stylesheet state.
+- Browser-facing image summaries now carry responsive image selection metadata,
+  including `srcset`/`sizes`, resolved candidate URLs, flattened image
+  candidate descriptors with source/candidate counts, `picture/source`
+  media/type hints, lazy loading, decoding, fetch priority, CORS/referrer
+  policy, usemap, and server-side image-map state.
+- Browser-facing table summaries and tree projections now carry table layout and
+  accessibility metadata, including effective column counts, column hints,
+  row-group identity, column and cell spans, header associations, scopes, and
+  abbreviated header labels.
+- Browser-facing content-tree and render-tree projections now carry text-flow
+  metadata for paragraphs, preformatted text, ordered and unordered lists, list
+  item values, block and inline quote citations, and line/word/thematic break
+  elements.
 - Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
   parser diagnostic, while self-closing syntax on void start tags remains
   acknowledged.

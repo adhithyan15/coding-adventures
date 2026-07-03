@@ -581,3 +581,107 @@ def test_delete_returning_multiple_rows() -> None:
     assert result.columns == ("id",)
     assert len(result.rows) == 3
     assert _scan_rows(be, "employees") == []
+
+
+# ---------------------------------------------------------------------------
+# ALTER TABLE — RENAME TO / RENAME COLUMN / DROP COLUMN
+# ---------------------------------------------------------------------------
+
+
+def test_alter_table_rename_to() -> None:
+    """ALTER TABLE old RENAME TO new — table appears under new key."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    be.create_table("t", [BackendColumnDef(name="x", type_name="INTEGER")], False)
+    be.insert("t", {"x": 42})
+
+    plan = PlanAlterTable(table="t", rename_to="u")
+    result = execute(compile(plan), be)
+    assert result.rows_affected == 0
+    assert "u" in be.tables()
+    assert "t" not in be.tables()
+    # Rows survive the rename.
+    assert _scan_rows(be, "u") == [{"x": 42}]
+
+
+def test_alter_table_rename_column() -> None:
+    """ALTER TABLE t RENAME COLUMN old TO new — column visible under new name."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    be.create_table(
+        "t",
+        [
+            BackendColumnDef(name="a", type_name="INTEGER"),
+            BackendColumnDef(name="b", type_name="TEXT"),
+        ],
+        False,
+    )
+    be.insert("t", {"a": 1, "b": "hello"})
+
+    plan = PlanAlterTable(table="t", rename_column=("a", "renamed"))
+    result = execute(compile(plan), be)
+    assert result.rows_affected == 0
+
+    # Schema shows the new name.
+    assert [c.name for c in be.columns("t")] == ["renamed", "b"]
+    # Existing rows retain the value under the new key.
+    rows = _scan_rows(be, "t")
+    assert rows == [{"renamed": 1, "b": "hello"}]
+
+
+def test_alter_table_drop_column() -> None:
+    """ALTER TABLE t DROP COLUMN c — column gone, other columns survive."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    be.create_table(
+        "t",
+        [
+            BackendColumnDef(name="a", type_name="INTEGER"),
+            BackendColumnDef(name="b", type_name="TEXT"),
+        ],
+        False,
+    )
+    be.insert("t", {"a": 1, "b": "keep"})
+    be.insert("t", {"a": 2, "b": "also"})
+
+    plan = PlanAlterTable(table="t", drop_column="b")
+    result = execute(compile(plan), be)
+    assert result.rows_affected == 0
+
+    assert [c.name for c in be.columns("t")] == ["a"]
+    rows = _scan_rows(be, "t")
+    assert rows == [{"a": 1}, {"a": 2}]
+
+
+def test_alter_table_drop_column_unknown_raises() -> None:
+    """DROP COLUMN on a non-existent column raises ColumnNotFound (translated)."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    from sql_vm.errors import ColumnNotFound
+
+    be = InMemoryBackend()
+    be.create_table(
+        "t",
+        [
+            BackendColumnDef(name="a", type_name="INTEGER"),
+            BackendColumnDef(name="b", type_name="TEXT"),
+        ],
+        False,
+    )
+
+    plan = PlanAlterTable(table="t", drop_column="ghost")
+    with pytest.raises(ColumnNotFound):
+        execute(compile(plan), be)
+
+
+def test_alter_table_rename_table_missing_raises() -> None:
+    """RENAME TO on a non-existent table raises TableNotFound."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    plan = PlanAlterTable(table="ghost", rename_to="new_name")
+    with pytest.raises(TableNotFound):
+        execute(compile(plan), be)

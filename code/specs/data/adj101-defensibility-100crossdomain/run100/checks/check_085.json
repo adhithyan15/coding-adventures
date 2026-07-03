@@ -1,0 +1,8 @@
+{
+ "check_id": 85,
+ "idx": 37,
+ "slot": "days_since_disaster_declaration",
+ "claimed_value": 10,
+ "scenario": "Theresa has $18,000 in savings. Her county was placed under a declared natural disaster 10 days ago after severe flooding destroyed her home. She files for Emergency Cash Aid today.",
+ "cited_span": "Her county was placed under a declared natural disaster 10 days ago"
+}

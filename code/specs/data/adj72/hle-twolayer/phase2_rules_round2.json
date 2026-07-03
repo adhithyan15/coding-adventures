@@ -1,0 +1,58 @@
+[
+  {
+    "applies_to": ["t1"],
+    "gloss": "Regina (a personal name, here the name of the deceased woman)",
+    "justification": "RGYNᵓ is the Palmyrene Aramaic transliteration of the Latin feminine name Regina ('queen'). The final ᵓ (aleph) represents the Aramaic determined/emphatic-state vowel ending used to render the Latin nominative -a, a standard adaptation of Greco-Latin names into Palmyrene (cf. the famous bilingual Palmyrene–Latin tombstone of Regina at South Shields, RIB 1065). The cluster RGYN spells Reg-in with Y as a mater lectionis for the /i/ vowel.",
+    "exists": true,
+    "confidence": 0.82
+  },
+  {
+    "applies_to": ["t2", "t3"],
+    "gloss": "daughter of Ḥari / Ḥaira (i.e., 'daughter of ḤRY')",
+    "justification": "BT is the Aramaic noun bt = bart/bath 'daughter', the feminine counterpart of BR 'son', used in filiation formulae. In construct it is followed immediately by the parent's name. ḤRY is the following personal name (a West-Semitic name, attested at Palmyra; the root Ḥ-R could relate to 'free/noble' ḥōr or be a hypocoristic). BT + ḤRY together form the genitive filiation unit 'daughter of ḤRY'.",
+    "exists": true,
+    "confidence": 0.78
+  },
+  {
+    "applies_to": ["t2"],
+    "gloss": "daughter (of)",
+    "justification": "BT = Aramaic bart > bt 'daughter', construct form heading a filiation ('X daughter of Y'). Standard kinship term in Palmyrene funerary onomastic formulae; the feminine analogue to BR 'son'. Distinguished from homographic bt 'house' by the genealogical context (personal name preceding and following).",
+    "exists": true,
+    "confidence": 0.9
+  },
+  {
+    "applies_to": ["t3"],
+    "gloss": "Ḥari / Ḥairan (personal name of the father)",
+    "justification": "ḤRY is a West-Semitic personal name attested in Palmyrene onomastics, often analyzed as a hypocoristic of names with the root Ḥ-Y-R / Ḥ-R (e.g., Ḥairan, ḤYRN). The Y is a mater lectionis. Functions here as the name governed by BT.",
+    "exists": true,
+    "confidence": 0.6
+  },
+  {
+    "applies_to": ["t4", "t5"],
+    "gloss": "son of ʿAttā / ʿAtē (i.e., 'son of ᶜTᵓ')",
+    "justification": "BR is the Aramaic noun br 'son' (construct), the masculine filiation term. ᶜTᵓ (with ᶜ = ʿayin) is a personal name; the determined/emphatic ending -ᵓ marks it. The name ʿTʾ (ʿAttā / ʿAteh) is well attested at Palmyra, frequently a hypocoristic connected with the goddess ʿAttar/ʿAtē or as a short divine-name form. BR + ᶜTᵓ together = 'son of ʿAttā', extending the genealogy (here likely the grandfather's filiation, naming the father ḤRY's lineage, or a second-generation ancestor).",
+    "exists": true,
+    "confidence": 0.72
+  },
+  {
+    "applies_to": ["t4"],
+    "gloss": "son (of)",
+    "justification": "BR = Aramaic bar/br 'son', construct form, the standard term in Semitic patronymic/genealogical formulae ('X bar Y' = 'X son of Y'). Ubiquitous in Palmyrene and Nabataean funerary inscriptions.",
+    "exists": true,
+    "confidence": 0.95
+  },
+  {
+    "applies_to": ["t5"],
+    "gloss": "ʿAttā / ʿAtē (personal name)",
+    "justification": "ᶜTᵓ = ʿṬʾ/ʿTʾ, the ᶜ representing ʿayin and final ᵓ the aleph emphatic ending. A common Palmyrene short/hypocoristic personal name (ʿAttā, ʿAteh), often theophoric in origin (linked to the divine element ʿAtē/ʿAttar). Functions as the name governed by BR.",
+    "exists": true,
+    "confidence": 0.65
+  },
+  {
+    "applies_to": ["t6"],
+    "gloss": "Alas! / Woe! — a funerary lament closing the epitaph (conventionally 'alas', 'woe is me')",
+    "justification": "ḤBL is the well-known Palmyrene (and broader Aramaic) funerary exclamation ḥabal / ḥbl, from the root Ḥ-B-L 'to harm, suffer loss; loss, grief'. It is placed at the end of tombstones as an interjection of mourning, conventionally rendered 'Alas!' or 'Woe!' (cf. ḥăbal in Imperial Aramaic and the standard tomb-formula usage at Palmyra and Hatra). It is not part of the name string but the lament terminating the epitaph.",
+    "exists": true,
+    "confidence": 0.85
+  }
+]

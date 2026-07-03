@@ -1,0 +1,8 @@
+{
+ "check_id": 53,
+ "idx": 20,
+ "slot": "gross_income",
+ "claimed_value": 9200,
+ "scenario": "Dana earned $9,200 in wages during the tax year and had no other income. The filing threshold for the year is $14,600.",
+ "cited_span": "Dana earned $9,200 in wages during the tax year and had no other income."
+}

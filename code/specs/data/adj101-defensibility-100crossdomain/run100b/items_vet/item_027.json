@@ -1,0 +1,8 @@
+{
+ "idx": 27,
+ "policy": "General rule: the warranty period is 1 year from purchase. Override: where the product is sold in the state of Greenfield, state consumer law extends the mandatory minimum warranty period to 3 years from purchase, and this statutory period prevails over the manufacturer's shorter term.",
+ "scenario": "Carlos bought a laptop in a store located in the state of Greenfield 20 months ago. The motherboard failed due to a confirmed manufacturing defect, and he filed a claim. The manufacturer pointed to its 1-year warranty term.",
+ "question": "Is Carlos's claim within the applicable warranty period?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "within"
+}

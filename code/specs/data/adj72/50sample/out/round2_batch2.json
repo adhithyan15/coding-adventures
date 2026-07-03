@@ -1,0 +1,93 @@
+[
+  {
+    "id": "Q14",
+    "verbatim_source_passage": "Shall I compare thee to a summer's day?",
+    "source_citation": "William Shakespeare, Sonnet 18, line 1 (first published in Shake-speares Sonnets, 1609)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q15",
+    "verbatim_source_passage": "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.",
+    "source_citation": "United States Declaration of Independence (1776), second sentence of the preamble",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q16",
+    "verbatim_source_passage": "\"Where's Papa going with that ax?\" said Fern to her mother as they were setting the table for breakfast.",
+    "source_citation": "E.B. White, Charlotte's Web (1952), Chapter 1, opening sentence",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q17",
+    "verbatim_source_passage": "Our Father which art in heaven, Hallowed be thy name.",
+    "source_citation": "King James Version, Matthew 6:9",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q18",
+    "verbatim_source_passage": "light is always propagated in empty space with a definite velocity c which is independent of the state of motion of the emitting body.",
+    "source_citation": "Albert Einstein, \"Zur Elektrodynamik bewegter Körper\" (\"On the Electrodynamics of Moving Bodies\"), Annalen der Physik, 1905; English translation (Perrett & Jeffery, in The Principle of Relativity, 1923), Introduction / statement of the light postulate",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.8
+  },
+  {
+    "id": "Q19",
+    "verbatim_source_passage": "Μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος",
+    "source_citation": "Homer, Iliad, Book 1, line 1 (Greek). A common English rendering (Richmond Lattimore) is: \"Sing, goddess, the anger of Peleus' son Achilleus\".",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q20",
+    "verbatim_source_passage": "All happy families are alike; each unhappy family is unhappy in its own way.",
+    "source_citation": "Leo Tolstoy, Anna Karenina (1877), opening sentence (Constance Garnett translation). Original Russian: \"Все счастливые семьи похожи друг на друга, каждая несчастливая семья несчастлива по-своему.\"",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.88
+  },
+  {
+    "id": "Q21",
+    "verbatim_source_passage": "Mother died today.",
+    "source_citation": "Albert Camus, The Stranger (L'Étranger, 1942), opening sentence (Stuart Gilbert translation). French original: \"Aujourd'hui, maman est morte.\" Matthew Ward's 1988 translation renders it \"Maman died today.\"",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q22",
+    "verbatim_source_passage": "Many years later, as he faced the firing squad, Colonel Aureliano Buendía was to remember that distant afternoon when his father took him to discover ice.",
+    "source_citation": "Gabriel García Márquez, One Hundred Years of Solitude (Cien años de soledad, 1967), opening sentence (Gregory Rabassa translation, 1970)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q23",
+    "verbatim_source_passage": "je pense, donc je suis",
+    "source_citation": "René Descartes, Discourse on the Method (Discours de la méthode, 1637), Part IV. The Latin \"Cogito, ergo sum\" appears in Principles of Philosophy (Principia Philosophiae, 1644).",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q24",
+    "verbatim_source_passage": "Corpus omne perseverare in statu suo quiescendi vel movendi uniformiter in directum, nisi quatenus a viribus impressis cogitur statum illum mutare.",
+    "source_citation": "Isaac Newton, Philosophiæ Naturalis Principia Mathematica (1687), Axiomata sive Leges Motus, Lex I (Law I). Common English translation (Motte/Cohen-Whitman): \"Every body perseveres in its state of rest, or of uniform motion in a right line, unless it is compelled to change that state by forces impressed thereon.\"",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.8
+  },
+  {
+    "id": "Q25",
+    "verbatim_source_passage": "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.",
+    "source_citation": "Franz Kafka, The Metamorphosis (Die Verwandlung, 1915), opening sentence (Willa and Edwin Muir translation). German original: \"Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheuren Ungeziefer verwandelt.\"",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q26",
+    "verbatim_source_passage": "First they came for the Socialists, and I did not speak out—Because I was not a Socialist.\n\nThen they came for the Trade Unionists, and I did not speak out—Because I was not a Trade Unionist.\n\nThen they came for the Jews, and I did not speak out—Because I was not a Jew.\n\nThen they came for me—and there was no one left to speak for me.",
+    "source_citation": "Martin Niemöller, \"First they came ...\" — attributed; widely circulated English version (e.g., as displayed at the United States Holocaust Memorial Museum). No single canonical authorized text exists; Niemöller gave varying versions in speeches, and the groups/order differ across renderings.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.6
+  }
+]

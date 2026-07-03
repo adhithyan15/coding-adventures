@@ -1,0 +1,37 @@
+{
+  "note": "Raw verbatim_source_passage + confidence from 12 blind closed-book subagents (4 claims x 3 independent resamples). Captured exactly as returned.",
+  "claims": {
+    "C1": {
+      "question": "Exact opening sentence of Pride and Prejudice",
+      "resamples": [
+        {"passage": "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", "confidence": 0.99},
+        {"passage": "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", "confidence": 0.99},
+        {"passage": "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.", "confidence": 0.99}
+      ]
+    },
+    "C2": {
+      "question": "Exact wording of Article 1 of the UDHR",
+      "resamples": [
+        {"passage": "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.", "confidence": 0.99},
+        {"passage": "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.", "confidence": 0.99},
+        {"passage": "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.", "confidence": 0.99}
+      ]
+    },
+    "C3": {
+      "question": "Exact English sentence in Einstein 1905 introducing constancy of light speed",
+      "resamples": [
+        {"passage": "light is always propagated in empty space with a definite velocity c which is independent of the state of motion of the emitting body.", "confidence": 0.82},
+        {"passage": "any ray of light moves in the \"stationary\" system of co-ordinates with the determined velocity c, whether the ray be emitted by a stationary or by a moving body.", "confidence": 0.6},
+        {"passage": "any ray of light moves in the \"stationary\" system of co-ordinates with the determined velocity c, whether the ray be emitted by a stationary or by a moving body.", "confidence": 0.6}
+      ]
+    },
+    "C4": {
+      "question": "Exact quote from Darwin's Origin of Species using 'survival of the fittest'",
+      "resamples": [
+        {"passage": "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection, or the Survival of the Fittest.", "confidence": 0.55},
+        {"passage": "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection, or the Survival of the Fittest.", "confidence": 0.6},
+        {"passage": "This preservation of favourable individual differences and variations, and the destruction of those which are injurious, I have called Natural Selection, or the Survival of the Fittest.", "confidence": 0.6}
+      ]
+    }
+  }
+}

@@ -196,6 +196,52 @@ prove -l -I../draw-instructions/lib -v t/
     expect(error).toContain("Test2::V0 without --notest");
   });
 
+  it("validateCIFullBuildToolchains returns null when no ci.yml exists", () => {
+    // Branch coverage for `if (!fs.existsSync(ciPath)) return null` (line 24).
+    expect(validateCIFullBuildToolchains(tmpDir, [{ language: "python" }])).toBeNull();
+  });
+
+  it("validateCIFullBuildToolchains returns null when the marker comment is absent", () => {
+    // Branch coverage for `if (!workflow.includes("Full build on main merge"))` (line 29).
+    writeFile(
+      path.join(tmpDir, ".github", "workflows", "ci.yml"),
+      "jobs:\n  detect:\n    runs-on: ubuntu-latest\n",
+    );
+    expect(validateCIFullBuildToolchains(tmpDir, [{ language: "python" }])).toBeNull();
+  });
+
+  it("validateBuildContracts surfaces CI errors alongside Lua/Perl errors", () => {
+    // Branch coverage for `if (ciError !== null) errors.push(ciError)` (line 77)
+    // by crafting both a CI gap and a Perl issue in one call.
+    writeFile(
+      path.join(tmpDir, ".github", "workflows", "ci.yml"),
+      `
+jobs:
+  detect:
+    outputs: {}
+  build:
+    steps:
+      - name: Full build on main merge
+        run: ./build-tool -root . -force
+`,
+    );
+    const perlPath = path.join(tmpDir, "code", "packages", "perl", "x");
+    writeFile(path.join(perlPath, "BUILD"), "cpanm --quiet Test2::V0\nprove -l -v t/\n");
+    const errors = validateBuildContracts(tmpDir, [
+      { language: "python", path: path.join(tmpDir, "py") },
+      { language: "perl", path: perlPath },
+    ]);
+    expect(errors).toContain("ci.yml");
+    expect(errors).toContain("Test2::V0");
+  });
+
+  it("Lua validator tolerates empty BUILD files", () => {
+    // Branch coverage for `if (lines.length === 0) continue` (line 120).
+    const luaPath = path.join(tmpDir, "code", "packages", "lua", "empty_pkg");
+    writeFile(path.join(luaPath, "BUILD"), "");
+    expect(validateBuildContracts(tmpDir, [{ language: "lua", path: luaPath }])).toBeNull();
+  });
+
   it("allows safe Lua isolated-build patterns", () => {
     const safePath = path.join(tmpDir, "code", "packages", "lua", "safe_pkg");
 

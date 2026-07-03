@@ -28,6 +28,13 @@ class Level1Params:
     IS: float = 1e-15  # saturation current (A)
     N_SUB: float = 1.4  # subthreshold slope factor
     T_NOM: float = 300.15  # nominal temperature (K)
+    CGSO: float = 0.0  # gate-source overlap capacitance per width (F/m)
+    CGDO: float = 0.0  # gate-drain overlap capacitance per width (F/m)
+    CGBO: float = 0.0  # gate-bulk overlap capacitance per width (F/m)
+    CBS: float = 0.0  # source-bulk zero-bias junction capacitance (F)
+    CBD: float = 0.0  # drain-bulk zero-bias junction capacitance (F)
+    PB: float = 0.8  # bulk junction potential (V)
+    MJ: float = 0.5  # bulk junction grading coefficient
     subthreshold_enable: bool = True
 
 
@@ -45,6 +52,26 @@ class MosResult:
     Cbs: float
     Cbd: float
     region: str  # 'cutoff', 'subthreshold', 'triode', 'saturation'
+
+
+def bulk_junction_capacitance(
+    zero_bias_capacitance: float,
+    junction_voltage: float,
+    junction_potential: float,
+    grading_coefficient: float,
+) -> float:
+    """Return the Level-1 bulk-junction depletion capacitance.
+
+    ``junction_voltage`` follows the diode convention: positive is forward
+    body-to-terminal bias, negative is reverse bias.
+    """
+
+    if zero_bias_capacitance <= 0.0:
+        return zero_bias_capacitance
+    if junction_potential <= 0.0 or grading_coefficient == 0.0:
+        return zero_bias_capacitance
+    reverse_scale = max(0.0, -junction_voltage) / junction_potential
+    return zero_bias_capacitance / ((1.0 + reverse_scale) ** grading_coefficient)
 
 
 def evaluate_level1(
@@ -73,11 +100,14 @@ def evaluate_level1(
     V_OV = V_GS - V_t
     V_T = thermal_voltage(T)
 
-    Cgs_off = (2.0 / 3.0) * p.W * p.L * p.KP / 1.0  # placeholder; Meyer model
-    Cgd_off = 0.0
-    Cgb_off = 0.0
-    Cbs_off = 0.0
-    Cbd_off = 0.0
+    Cgs_overlap = p.CGSO * p.W
+    Cgd_overlap = p.CGDO * p.W
+    Cgb_overlap = p.CGBO * p.L
+    Cgs_intrinsic = (2.0 / 3.0) * p.W * p.L * p.KP / 1.0  # placeholder; Meyer model
+    Cgd_intrinsic = 0.0
+    Cgb_intrinsic = 0.0
+    Cbs_bulk = bulk_junction_capacitance(p.CBS, V_BS, p.PB, p.MJ)
+    Cbd_bulk = bulk_junction_capacitance(p.CBD, V_BS - V_DS, p.PB, p.MJ)
 
     if V_OV <= 0:
         # Cutoff — optionally subthreshold.
@@ -92,12 +122,20 @@ def evaluate_level1(
             gds_sub = (beta * n * V_T) * exp(V_OV / (n * V_T)) * exp(-V_DS / V_T)
             return MosResult(
                 Id=Id_sub, gm=gm_sub, gds=gds_sub, gmb=0.0,
-                Cgs=Cgs_off, Cgd=Cgd_off, Cgb=Cgb_off, Cbs=Cbs_off, Cbd=Cbd_off,
+                Cgs=Cgs_overlap + Cgs_intrinsic,
+                Cgd=Cgd_overlap + Cgd_intrinsic,
+                Cgb=Cgb_overlap + Cgb_intrinsic,
+                Cbs=Cbs_bulk,
+                Cbd=Cbd_bulk,
                 region="subthreshold",
             )
         return MosResult(
             Id=0.0, gm=0.0, gds=0.0, gmb=0.0,
-            Cgs=Cgs_off, Cgd=Cgd_off, Cgb=Cgb_off, Cbs=Cbs_off, Cbd=Cbd_off,
+            Cgs=Cgs_overlap + Cgs_intrinsic,
+            Cgd=Cgd_overlap + Cgd_intrinsic,
+            Cgb=Cgb_overlap + Cgb_intrinsic,
+            Cbs=Cbs_bulk,
+            Cbd=Cbd_bulk,
             region="cutoff",
         )
 
@@ -117,8 +155,11 @@ def evaluate_level1(
             gmb = 0.0
         return MosResult(
             Id=Id, gm=gm, gds=gds, gmb=gmb,
-            Cgs=Cgs_off / 2.0, Cgd=Cgd_off / 2.0, Cgb=Cgb_off,
-            Cbs=Cbs_off, Cbd=Cbd_off,
+            Cgs=Cgs_overlap + Cgs_intrinsic / 2.0,
+            Cgd=Cgd_overlap + Cgd_intrinsic / 2.0,
+            Cgb=Cgb_overlap + Cgb_intrinsic,
+            Cbs=Cbs_bulk,
+            Cbd=Cbd_bulk,
             region="triode",
         )
 
@@ -133,6 +174,10 @@ def evaluate_level1(
         gmb = 0.0
     return MosResult(
         Id=Id, gm=gm, gds=gds, gmb=gmb,
-        Cgs=(2.0 / 3.0) * Cgs_off, Cgd=0.0, Cgb=0.0, Cbs=0.0, Cbd=0.0,
+        Cgs=Cgs_overlap + (2.0 / 3.0) * Cgs_intrinsic,
+        Cgd=Cgd_overlap,
+        Cgb=Cgb_overlap,
+        Cbs=Cbs_bulk,
+        Cbd=Cbd_bulk,
         region="saturation",
     )

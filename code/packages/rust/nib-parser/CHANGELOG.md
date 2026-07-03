@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — 2026-06-13 (LANG-FULL N1)
+
+- Grammar gains the multiplicative level `mul_expr = bitwise_expr
+  { ( STAR | SLASH ) bitwise_expr }`, with `add_expr` now delegating to
+  `mul_expr`, so `*` and `/` parse (tighter than `+`/`-`, left-associative).
+  `src/_grammar.rs` regenerated via `grammar-tools generate-rust-compiled-grammars nib`.
+
 ## 0.2.0 — 2026-05-20 (NIB04 step 3)
 
 - Grammar rule `while_stmt = "while" expr block;` added to the `stmt`

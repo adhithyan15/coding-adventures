@@ -329,16 +329,17 @@ impl Profiler {
         };
 
         let key = (graph_subhash, op_index, slot, is_input);
-        let entry = inner.tensor_observations.entry(key).or_insert_with(|| {
-            TensorObservation {
+        let entry = inner
+            .tensor_observations
+            .entry(key)
+            .or_insert_with(|| TensorObservation {
                 slot,
                 is_input,
                 observed_min: f64::INFINITY,
                 observed_max: f64::NEG_INFINITY,
                 observed_zeros: 0,
                 samples: 0,
-            }
-        });
+            });
 
         match dtype {
             DType::F32 => {
@@ -349,6 +350,27 @@ impl Profiler {
                         // NaN propagates poorly through min/max; skip.
                         // Counted as a sample so sparsity ratio stays
                         // honest; not counted as a zero.
+                        entry.samples = entry.samples.saturating_add(1);
+                        continue;
+                    }
+                    if v < entry.observed_min {
+                        entry.observed_min = v;
+                    }
+                    if v > entry.observed_max {
+                        entry.observed_max = v;
+                    }
+                    if v == 0.0 {
+                        entry.observed_zeros = entry.observed_zeros.saturating_add(1);
+                    }
+                    entry.samples = entry.samples.saturating_add(1);
+                }
+            }
+            DType::F64 => {
+                let mut chunks = bytes.chunks_exact(8);
+                for chunk in &mut chunks {
+                    let arr: [u8; 8] = chunk.try_into().unwrap();
+                    let v = f64::from_le_bytes(arr);
+                    if v.is_nan() {
                         entry.samples = entry.samples.saturating_add(1);
                         continue;
                     }
@@ -504,7 +526,7 @@ mod tests {
     use super::*;
     use compute_ir::{
         BufferId, ComputeGraph, OpTiming, PlacedConstant, PlacedOp, PlacedTensor, Residency,
-        WIRE_FORMAT_VERSION, CPU_EXECUTOR,
+        CPU_EXECUTOR, WIRE_FORMAT_VERSION,
     };
     use matrix_ir::{DType, Op, Shape, TensorId};
 
@@ -609,7 +631,11 @@ mod tests {
 
         p.record_dispatch(&g);
         let obs = p.observations();
-        assert_eq!(obs.len(), 1, "only the Compute op should produce an observation");
+        assert_eq!(
+            obs.len(),
+            1,
+            "only the Compute op should produce an observation"
+        );
         assert_eq!(obs[0].invocation_count, 1);
     }
 
@@ -824,7 +850,10 @@ mod tests {
                 hits += 1;
             }
         }
-        assert_eq!(hits, 1, "expected exactly one hit per 100 calls at rate 100");
+        assert_eq!(
+            hits, 1,
+            "expected exactly one hit per 100 calls at rate 100"
+        );
     }
 
     #[test]
@@ -862,7 +891,10 @@ mod tests {
         // true so we can't tell, but at default rate we'd see the
         // first call return true.  Re-set rate and check.
         p.set_sample_rate(100);
-        assert!(p.should_sample(), "first call after reset should be a sample at rate 100");
+        assert!(
+            p.should_sample(),
+            "first call after reset should be a sample at rate 100"
+        );
     }
 
     #[test]

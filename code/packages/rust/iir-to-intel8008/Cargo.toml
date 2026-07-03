@@ -1,0 +1,20 @@
+[package]
+name = "iir-to-intel8008"
+version = "0.4.0"
+edition = "2021"
+description = "IIR → Intel 8008 machine code backend (Oct's native target) — lowers IIRModule to a Vec<u8> of 8-bit Intel 8008 opcodes.  v0.3.9 (A2++.5.5 eighth slice, FINAL): adds real RET (0x07, 1-byte unconditional return — NOT 0x03 which is RFC conditional) and CAL (CRITICAL: 0x7E, NOT 0x46 which is CFZ — 3-byte unconditional call with 14-bit address).  New IIR op `call dest, fn_name` lowers to CAL + return-value-from-A capture; ret/ret_void emit RET for non-entry functions, HLT for the entry point (RET on entry would underflow the empty return-address stack).  Module-level pending_calls + function_addrs handle cross-function CAL backpatching.  v0.4.0 (A2+++) brings lang-aot --target=intel8008 wiring."
+
+[lib]
+name = "iir_to_intel8008"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+# Pulled in for the simulator's symbolic mnemonic comments / opcode
+# constants — we mirror its naming so downstream consumers can decode
+# our output by feeding it back into the simulator.
+coding-adventures-intel8008-simulator = { path = "../intel8008-simulator" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"

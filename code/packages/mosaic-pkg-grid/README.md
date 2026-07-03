@@ -64,47 +64,97 @@ React's ecosystem treats data-grid libraries as userland.
 * The smoke test at `tests/package_compiles.rs` round-trips every source
   file through its respective compiler crate.
 
-## v0.2.0 caveats (deliberate scope cuts)
+## v0.2.0 — what's done (the v0.1.0 caveats are CLOSED)
 
-* **Header row is empty.**  `Grid.mll`'s `HostTableHead` contains a Row
-  with no cells.  Rendering one `<th>` per declared Column requires
-  Grid's interface to accept a `columns` list slot so a
-  `For (each: slot: columns, as: col)` can drive the header.
-* **Body emits ONE Cell per row.**  Each row shows `row` (the For-bound
-  iteration variable resolved as a Keyword-valued prop), not `row[0]`,
-  `row[1]`, ... — full per-column iteration needs the same `columns`
-  slot, plus the expression-grammar `row[c]` field-access syntax that
-  UI29 §3.3 defines but UI29-G3 has not yet landed.
-* **No theming cascade.**  The package ships `dark.msl` only; light-mode
-  styles and host overrides arrive once the multi-theme cascade lands
-  in mosstyle.
+v0.1.0 shipped a working scaffold with two declared follow-ups. As of
+v0.2.0 (per [UI28-1](../../specs/UI28-1-grid-v3-userland-revised.md)),
+both are CLOSED:
 
-These are not bugs.  The architecture (manifest-driven, kernel-
-primitive-only composition, backend-agnostic) is what v0.1.0 proves;
-v0.2.0 fills in the Grid behaviour once the underlying grammar and
-resolver PRs land.
+* **Header row renders.** `Grid.mll`'s `HostTableHead` now contains
+  `For (each: slot: column-headers, as: h)` producing one `<th>` per
+  column. Grid.mil gained a `column-headers: list<text>` slot.
+* **Body iterates per-column.** The body is nested-For now:
+  `For (each: slot: viewport-rows, as: row) { Row { For (each: row,
+  as: v) { Cell ( value: ( v ), ... ) } } }`. The inner
+  `For ( each: row, ... )` is the UI29 §3.4 "For-binding-as-iterable"
+  shape ([PR #4398](https://github.com/adhithyan15/coding-adventures/pull/4398)).
+* **`<colgroup>` carries per-column widths.** `HostTableColGroup`
+  with `For (each: slot: column-widths, as: w)` emits one `<col>`
+  per column with its declared width.
 
-## Usage (conceptual; resolver lands in U29-R2)
+Per-cell `is-editing` / `is-selected` predicates are computed at the
+Cell call site using expression-in-slot-binding:
+
+```
+is-editing:  ( r == editRow && c == editCol )
+is-selected: ( r == selectedRow && c == selectedCol )
+```
+
+The host pushes only the plain coordinate slots (`edit-row`,
+`selected-col`, …). Grid is the encapsulation boundary that converts
+coordinates → per-cell booleans. Cell receives booleans, never
+coordinates.
+
+## What's still out of scope (deferred to UI28-2 / v0.3.0)
+
+* **Sticky header.** Authors compose `HostScroll { Grid { ... } }`
+  themselves (UI28-1 §2 constraint 5).
+* **Custom cell renderers** (image, button, checkbox, sparkline).
+  v0.3.0 extends Cell's `cell-type` to switch.
+* **Column groups, sortable headers, pinned columns.** UI28-2.
+* **List virtualization INSIDE Grid.** Today the host slices to
+  viewport before pushing — `viewport-rows` IS the visible window.
+* **Mosmodel record type.** When it lands, the parallel
+  `column-headers` + `column-widths` slots collapse to
+  `columns: list<column-meta>`.
+* **Multi-theme cascade.** Ships `dark.msl` only; light-mode and
+  host overrides arrive once the mosstyle cascade lands.
+
+## Usage (v0.2.0, working end-to-end)
+
+The host declares the data + viewport coordinates as slots and wires
+emits to its reducer. The Grid does the rest:
 
 ```moslayout
 // In a host component's .mll:
 layout SpreadsheetApp {
   Column [ root ] {
     Grid (
-      viewport-rows: slot: data-rows ,
-      edit-row:      slot: app-edit-row ,
-      edit-col:      slot: app-edit-col ,
-      onEditCommit:  emit: handleCommit
-    ) {
-      // Future v0.2.0: Column children declare the columns.
-      Column ( key: "name",  header: "Name",  width: 120 , editable: true ,
-               cell-type: "text" , default-alignment: "left" )
-      Column ( key: "price", header: "Price", width:  80 , editable: true ,
-               cell-type: "number" , default-alignment: "right" )
-    }
+      viewport-rows:  slot: viewport-rows ,
+      column-headers: slot: column-headers ,
+      column-widths:  slot: column-widths ,
+      selected-row:   slot: app-selected-row ,
+      selected-col:   slot: app-selected-col ,
+      edit-row:       slot: app-edit-row ,
+      edit-col:       slot: app-edit-col ,
+      edit-content:   slot: app-edit-content ,
+      onNavigate:     emit: handleNavigate ,
+      onEditCommit:   emit: handleCommit ,
+      onEditCancel:   emit: handleCancel
+    )
   }
 }
 ```
+
+Grid produces semantic table markup on every backend that has the
+UI31 HostTable lowering — React `<table>`, HTML `<table>`,
+WebComponent shadow-DOM `<table>`, Flutter `DataTable`, Qt `TableView`
+/ `Repeater`, SwiftUI `Grid` / `Table`, XAML `ItemsRepeater` with row
+view-models.
+
+### What the host pushes
+
+* `viewport-rows: list<list<text>>` — sliced to the visible window;
+  one inner list per displayed row, one cell per column. Grid
+  iterates BOTH axes per-render.
+* `column-headers: list<text>` — header labels, one per column,
+  parallel-shaped to each `viewport-rows[r]`.
+* `column-widths: list<number>` — pixel widths, parallel-shaped to
+  column-headers. Drives the `<colgroup>`.
+* `selected-row` / `selected-col` / `edit-row` / `edit-col` —
+  plain numbers, `-1` means "none". Grid composes per-cell
+  `is-editing` / `is-selected` from these internally.
+* `edit-content: text` — the in-progress edit buffer the host owns.
 
 ## Smoke test
 
@@ -130,14 +180,18 @@ userland component references.
 
 ## Position in UI29's roadmap
 
-* **U29-P1 (this package)**: ship the source tree, declare the manifest,
-  prove the smoke test.
-* **U29-D1**: migrate `demo/visicalc` to import this package's `Grid`
-  instead of carrying its own bespoke copy.
-* **U29-X1**: remove dead `emit_grid_jsx_*` / `emit_input_jsx` /
-  `emit_cell_jsx_*` / `emit_column_jsx_*` from every backend now that
-  Grid is userland and only kernel-primitive lowering is on the
-  critical path.
+* **U29-P1**: ship the source tree, declare the manifest, prove the
+  smoke test. **Done in v0.1.0.**
+* **UI28-1 v0.2.0 (this release)**: complete the Cell-and-Column
+  composition — full header row, nested-For body, per-cell
+  predicates, stable iteration keys. **Done.**
+* **U29-D1**: migrate `code/programs/mosaic/visicalc/Grid.{desktop,touch}.mll`
+  to reference this package's `Grid` (replacing the local degraded
+  HostTable composition the L10 migration shipped). Next.
+* **U29-X1**: remove the legacy `Grid` built-in primitive from
+  `moslayout-compiler::PRIMITIVES` + its special-case lowering in
+  `mosaic-emit-react`, now that Grid is fully userland and only
+  kernel-primitive lowering is on the critical path.
 
 ## License
 

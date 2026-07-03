@@ -1,0 +1,1 @@
+label:while(x)break label;

@@ -1,0 +1,20 @@
+% ============================================================================
+% wom_crosslib.query.adj — WRITE-ONCE / USE-MANY, consumer #4: cross-library join.
+% ============================================================================
+% TWO libraries written once and independently — genetics-edges.adj and
+% immuno-edges.adj — both define the SAME relation `gene_defect` over DISJOINT
+% subjects. Import both and the engine resolves one query across the union, no
+% merge step, no shared schema rewrite. Each binding keeps the citation from
+% whichever library owns that fact. This is composition for free: a new library
+% dropped beside the others is immediately query-reachable.
+%
+% Run (from the recall/ directory):
+%     ../../../../packages/rust/target/debug/adj-lang-cli wom_crosslib.query.adj
+% ============================================================================
+
+import "genetics-edges.adj"
+import "immuno-edges.adj"
+
+? gene_defect(huntington_disease, $Gene)              % expect htt   (owned by genetics-edges)
+? gene_defect(x_linked_agammaglobulinemia, $Gene)     % expect btk   (owned by immuno-edges)
+? gene_defect($Disease, chromosome_22q11_2_deletion)  % expect digeorge_syndrome (reverse, immuno-edges)

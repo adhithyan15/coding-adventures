@@ -1,0 +1,51 @@
+{
+  "hash": "e8b0ff528d21cbcf",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12258469/",
+  "title": "P50 Five-year review of epidemiology of invasive group A streptococcal infections with bacteraemia in a tertiary care centre in the UK",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12258469/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Study reviewed blood cultures positive for Streptococcus pyogenes (GAS) at a UK tertiary care centre from 1 Jan 2019 to 31 Dec 2023.",
+      "byte_quote": "Blood culture specimens positive for Streptococcus pyogenes (GAS) at our centre from 1 January 2019 to 31 December 2023 and the respective clinical records for patients were retrospectively reviewed."
+    },
+    {
+      "id": "c2",
+      "text": "186 GAS bacteraemia cases were identified, split roughly evenly by sex (male 49.5%, female 50.5%).",
+      "byte_quote": "One hundred and eighty-six cases of GAS bacteraemias were identified and were equally distributed among male (49.5%) and female gender (50.5%)."
+    },
+    {
+      "id": "c3",
+      "text": "GAS bacteraemia rate was highest in the 61-90 year age band, then 31-50 years, then 1-10 years.",
+      "byte_quote": "The age distribution analysis indicated that the highest rate of GAS bacteraemia occurred in the age range of 61–90 years followed by 31–50 years and 1–10 years, respectively."
+    },
+    {
+      "id": "c4",
+      "text": "Among GAS isolates, 39 distinct emm types were found; emm 1.0 was most prevalent (28.5%), then emm 89.0 (6.98%) and emm 12.0 (6.45%).",
+      "byte_quote": "Thirty-nine distinct emm types were identified among study isolates and emm 1.0 was the most prevalent (28.5%), followed by emm 89.0 (6.98%) and emm 12.0 (6.45%)."
+    },
+    {
+      "id": "c5",
+      "text": "Extremes of age (infants <1 yr and elderly >90 yr) raised 30-day mortality risk, with mortality of 50% and 40% respectively.",
+      "byte_quote": "However, extremes of age was a significant risk factor for 30 day mortality: infants (<1 year) and the elderly (>90 years) had the highest mortality rates at 50% and 40%, respectively."
+    },
+    {
+      "id": "c6",
+      "text": "The commonest portal/focus of GAS bacteraemia infection was skin and soft tissue (56.45%), then respiratory tract (18.8%).",
+      "byte_quote": "The commonest focus of infection was skin and soft tissue (56.45%), followed by respiratory tract (18.8%)."
+    },
+    {
+      "id": "c7",
+      "text": "Overall 30-day mortality was ~18%, rising to 21% at 90 days, with no sex-based difference.",
+      "byte_quote": "Thirty day mortality was approximately 18%, rising to 21% at 90 days, with no sex-based difference (male 53% versus female 47%)."
+    },
+    {
+      "id": "c8",
+      "text": "The West Midlands (the centre's region) is among the UK areas with highest GAS notification rates.",
+      "byte_quote": "West Midlands—the region we serve—is highlighted as one of the areas with highest notification rates in the UK."
+    }
+  ],
+  "cites": [
+    "UK Health Security Agency. Group A Streptococcal Infections: First Update on Seasonal Activity in England, 2024 to 2025. gov.uk"
+  ]
+}

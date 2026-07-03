@@ -1,0 +1,234 @@
+% ============================================================================
+% ADJ52 case-22 derived rulebook.
+% Clinical area: small mature B-cell lymphoid neoplasm (haematopathology),
+% presenting extranodally in the nasopharynx with a leukemic blood component.
+%
+% The IR poses (q1-q5): characterise the lymphoid neoplasm of a 61-year-old man
+% with a smooth nasopharyngeal mass, bilateral middle-ear effusions / conductive
+% hearing loss, a small (~8%) circulating CLONAL B-cell population, and a biopsy
+% whose architecture is effaced by a MONOTONOUS population of small mature
+% lymphocytes with coarse clumped chromatin and scattered pale PROLIFERATION
+% CENTRES. IHC: CD20+ (diffuse), CD5+, CD23 variably+, BCL2+, CD3- , CD10- ,
+% cyclin D1 NEGATIVE. Targeted molecular work is pending (u1).
+%
+% That panel — a CD5-positive small B-cell neoplasm with CD23 positivity,
+% proliferation centres, and cyclin D1 NEGATIVITY — defines the differential of
+% small mature B-cell lymphomas. The single most dangerous look-alike is mantle
+% cell lymphoma (also CD5+); cyclin D1 negativity and CD23 positivity are the
+% discriminators that argue it DOWN. CD10 negativity argues against follicular
+% lymphoma; CD5 positivity + proliferation centres argue against marginal-zone
+% lymphoma; clonality + architecture effacement argue against a reactive process.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (lowercase, no
+% leading digits, no uppercase). E.g. ihc(cyclin_d1_negative),
+% clonal_b_cell_fraction(small_circulating).
+%
+% Anti-overfit note: every clause is added because a cited source supports the
+% DIRECTION of the likelihood ratio for that finding in that entity, not to land
+% on a chosen answer. Discriminators that fire AGAINST the tempting wrong answer
+% (mantle cell lymphoma) are included with LR<1 wherever a source supports them.
+% ============================================================================
+
+% ===== PRIORS (base rates among small mature B-cell neoplasm work-ups) =====
+
+% rationale: CLL/SLL is the commonest small mature B-cell leukemia/lymphoma and
+% the prototype CD5+/CD23+/cyclinD1-negative entity with proliferation centres;
+% a small circulating clonal B-cell fraction fits its leukemic compartment.
+prior 0.34 for diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "StatPearls NBK470433 Chronic Lymphocytic Leukemia; PathologyOutlines CLL/SLL" trust authoritative
+
+% rationale: mantle cell lymphoma is the principal CD5-positive small B-cell
+% look-alike and the key wrong answer the panel is designed to exclude; high
+% prior so the engine must EARN the move away from it on cyclin D1 / CD23 data.
+prior 0.24 for diagnosis(mantle_cell_lymphoma)
+  source "StatPearls NBK536985 Mantle Cell Lymphoma" trust authoritative
+
+% rationale: marginal-zone lymphoma is a common CD5-/CD10- small B-cell lymphoma
+% that frequently presents at extranodal mucosal sites (head and neck).
+prior 0.14 for diagnosis(marginal_zone_lymphoma)
+  source "PubMed 37605344 Marginal zone lymphoma: 2023 update on diagnosis and management" trust authoritative
+
+% rationale: follicular lymphoma is a common indolent small B-cell lymphoma, the
+% CD10+/BCL6+ germinal-centre entity in this differential.
+prior 0.12 for diagnosis(follicular_lymphoma)
+  source "PMC4993814 Selective Immunophenotyping for Diagnosis of B-cell Neoplasms" trust authoritative
+
+% rationale: a reactive / benign lymphoid hyperplasia of the nasopharynx is the
+% non-neoplastic alternative the biopsy must exclude; low prior given clonality.
+prior 0.05 for diagnosis(reactive_lymphoid_hyperplasia)
+  source "PMC4993814 (clonality distinguishes neoplastic from reactive B-cell proliferations)" trust authoritative
+
+% ===== SHARED CD5+ SMALL-B-CELL SIGNATURE (correlated, fires once) =====
+% rationale: CD20+ B-lineage + CD5 co-expression + a clonal B-cell population is
+% ONE correlated immunophenotypic gestalt (a clonal CD5+ B-cell neoplasm), shared
+% by both CLL/SLL and MCL. It is counted ONCE per such conclusion rather than as
+% three independent edges (anti-saturation). CD3 negativity confirms B (not T)
+% lineage and is part of the same gestalt.
+% mechanism clonal_cd5_b_cell_gestalt for diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma) lr 4.5 : ihc(cd20_positive_diffuse), ihc(cd5_positive), finding(clonal_b_cell_population_small_circulating), ihc(cd3_negative)
+% mechanism clonal_cd5_b_cell_gestalt for diagnosis(mantle_cell_lymphoma) lr 4.0 : ihc(cd20_positive_diffuse), ihc(cd5_positive), finding(clonal_b_cell_population_small_circulating), ihc(cd3_negative)
+
+% ===== EXTRANODAL / CLINICAL PRESENTATION (shared, mechanism for ENT picture) =====
+% rationale: the nasopharyngeal mass, bilateral middle-ear effusion and bilateral
+% CONDUCTIVE hearing loss are ONE causal chain — a nasopharyngeal mass obstructs
+% the Eustachian tube orifice, giving otitis media with effusion and conductive
+% loss. This is a mechanism (mass-effect), not three independent disease edges; it
+% weakly favours any nasopharyngeal lymphoid neoplasm and fires once.
+% mechanism nasopharyngeal_mass_eustachian_obstruction for diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma) lr 1.4 : exam_finding(nasopharyngeal_mass), exam_finding(bilateral_middle_ear_effusion), audiometry_result(bilateral_conductive_hearing_loss)
+% mechanism nasopharyngeal_mass_eustachian_obstruction for diagnosis(mantle_cell_lymphoma) lr 1.4 : exam_finding(nasopharyngeal_mass), exam_finding(bilateral_middle_ear_effusion), audiometry_result(bilateral_conductive_hearing_loss)
+% mechanism nasopharyngeal_mass_eustachian_obstruction for diagnosis(marginal_zone_lymphoma) lr 1.6 : exam_finding(nasopharyngeal_mass), exam_finding(bilateral_middle_ear_effusion), audiometry_result(bilateral_conductive_hearing_loss)
+% mechanism nasopharyngeal_mass_eustachian_obstruction for diagnosis(follicular_lymphoma) lr 1.3 : exam_finding(nasopharyngeal_mass), exam_finding(bilateral_middle_ear_effusion), audiometry_result(bilateral_conductive_hearing_loss)
+
+% ===== CHRONIC LYMPHOCYTIC LEUKEMIA / SMALL LYMPHOCYTIC LYMPHOMA =====
+
+% rationale: KEY POSITIVE DISCRIMINATOR — CD23 positivity, together with the CD5+
+% B-cell phenotype, strongly favours CLL/SLL over the other CD5+ entity (MCL),
+% which is characteristically CD23 negative.
+contributes 4.0 from ihc(cd23_positive_variable) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "PMC8378319 / PathologyOutlines CLL (CD23 positivity favours CLL over MCL)" trust authoritative
+
+% rationale: PATHOGNOMONIC HISTOLOGY — pale proliferation centres / pseudofollicles
+% (paraimmunoblasts and prolymphocytes) are the histopathologic hallmark of CLL/SLL,
+% present in ~90% and regarded as near-pathognomonic.
+contributes 6.0 from histology(proliferation_centres_present) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "Oncohemakey Histopathology of CLL; PathologyOutlines CLL (pseudofollicles ~90%, hallmark)" trust authoritative
+
+% rationale: a monotonous population of small mature lymphocytes with coarse,
+% clumped (block) chromatin is the classic CLL/SLL cytomorphology.
+contributes 2.0 from histology(monotonous_small_lymphocytes_clumped_chromatin) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "StatPearls NBK470433; PathologyOutlines CLL (small mature cells, clumped chromatin)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — cyclin D1 NEGATIVITY is expected in CLL/SLL and is
+% what separates it from mantle cell lymphoma; supports CLL/SLL when MCL is the rival.
+contributes 2.5 from ihc(cyclin_d1_negative) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "PMC4841457 NCCN CLL/SLL v1.2015 (CLL is cyclin D1 negative); PathologyOutlines CLL" trust authoritative
+
+% rationale: CD10 negativity is expected in CLL/SLL (a non-germinal-centre neoplasm)
+% and argues against a follicular (CD10+) process.
+contributes 1.3 from ihc(cd10_negative) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "PMC4993814 Selective Immunophenotyping (CLL/SLL CD10 negative)" trust authoritative
+
+% rationale: a SMALL circulating clonal B-cell fraction (~8%) is consistent with the
+% leukemic blood compartment of SLL / low-burden CLL (a clonal B-lymphocytosis).
+contributes 1.8 from finding(clonal_b_cell_population_small_circulating) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "Blood 2015;126(4):454 Monoclonal B-cell lymphocytosis and early-stage CLL" trust authoritative
+
+% rationale: KEY SYNERGY — CD23 positivity TOGETHER WITH cyclin D1 negativity in a
+% CD5+ B-cell neoplasm is near-specific for CLL/SLL versus MCL.
+interacts 3.0 when ihc(cd23_positive_variable) and ihc(cyclin_d1_negative) for diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "PathologyOutlines CLL; AnnLymphoma MCL update (CD23+/cyclinD1- defines CLL not MCL)" trust authoritative
+
+% ===== MANTLE CELL LYMPHOMA (the tempting CD5+ wrong answer — argued DOWN) =====
+
+% rationale: DISCRIMINATOR (fires negative) — MCL is DEFINED by cyclin D1 over-
+% expression from t(11;14); a cyclin D1 NEGATIVE result strongly argues against
+% classic MCL (cyclin-D1-negative MCL exists but is rare and SOX11-driven).
+contributes 0.12 from ihc(cyclin_d1_negative) to diagnosis(mantle_cell_lymphoma)
+  source "StatPearls NBK536985; PMC4778333 SOX11 biomarker for cyclin D1-negative MCL (rare)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — MCL is characteristically CD23
+% NEGATIVE; CD23 positivity argues against MCL and toward CLL.
+contributes 0.30 from ihc(cd23_positive_variable) to diagnosis(mantle_cell_lymphoma)
+  source "AnnLymphoma MCL 2016 WHO update; PMC8378319 (MCL CD23 usually negative)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — proliferation centres / pseudofollicles
+% are a feature of CLL/SLL, NOT of MCL; their presence argues against MCL.
+contributes 0.40 from histology(proliferation_centres_present) to diagnosis(mantle_cell_lymphoma)
+  source "Oncohemakey Histopathology of CLL (pseudofollicles specific to CLL, absent in MCL)" trust authoritative
+
+% rationale: a monotonous small-lymphocyte morphology is shared with classic MCL,
+% so it is weakly consistent (not discriminating).
+contributes 1.3 from histology(monotonous_small_lymphocytes_clumped_chromatin) to diagnosis(mantle_cell_lymphoma)
+  source "StatPearls NBK536985 (MCL: monomorphic small-to-medium lymphocytes)" trust authoritative
+
+% rationale: CD10 negativity is also expected in MCL (non-germinal-centre), so it is
+% mildly consistent and does not separate MCL from CLL.
+contributes 1.1 from ihc(cd10_negative) to diagnosis(mantle_cell_lymphoma)
+  source "PMC4993814 (MCL typically CD10 negative)" trust authoritative
+
+% ===== MARGINAL ZONE LYMPHOMA (CD5-/CD10- extranodal small B-cell) =====
+
+% rationale: DISCRIMINATOR (fires negative) — MZL is characteristically CD5
+% NEGATIVE; a CD5-POSITIVE phenotype argues against typical MZL.
+contributes 0.30 from ihc(cd5_positive) to diagnosis(marginal_zone_lymphoma)
+  source "PubMed 37605344 MZL 2023 update; Wiley Cytometry B 2008 (MZL CD5-, CD10-)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — proliferation centres are not a
+% feature of MZL; their presence argues against it.
+contributes 0.50 from histology(proliferation_centres_present) to diagnosis(marginal_zone_lymphoma)
+  source "PubMed 37605344 MZL update (no proliferation centres in MZL)" trust authoritative
+
+% rationale: CD10 negativity is consistent with MZL (which is CD10 negative).
+contributes 1.4 from ihc(cd10_negative) to diagnosis(marginal_zone_lymphoma)
+  source "Wiley Cytometry B 2008 MZL immunophenotypic analysis (CD10 negative)" trust authoritative
+
+% rationale: extranodal mucosal head-and-neck presentation is typical for MZL and
+% mildly supports it.
+contributes 1.5 from mass_location(nasopharynx_roof) to diagnosis(marginal_zone_lymphoma)
+  source "AnnLymphoma Wotherspoon, extranodal MZL at different anatomic sites" trust authoritative
+
+% ===== FOLLICULAR LYMPHOMA (CD10+/BCL6+ germinal-centre — argued DOWN) =====
+
+% rationale: DISCRIMINATOR (fires negative) — follicular lymphoma is CD10 POSITIVE;
+% CD10 NEGATIVITY argues strongly against it.
+contributes 0.20 from ihc(cd10_negative) to diagnosis(follicular_lymphoma)
+  source "PMC4993814 (CD10 stains ~86% follicular lymphoma vs 0% MZL); CD10 relatively specific for FL" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — follicular lymphoma is CD5 NEGATIVE;
+% a CD5-positive phenotype argues against it.
+contributes 0.40 from ihc(cd5_positive) to diagnosis(follicular_lymphoma)
+  source "PMC4993814 Selective Immunophenotyping (follicular lymphoma CD5 negative)" trust authoritative
+
+% rationale: BCL2 positivity is consistent with follicular lymphoma but is non-
+% specific (also positive in CLL and many B-cell lymphomas), so weakly supportive.
+contributes 1.2 from ihc(bcl2_positive) to diagnosis(follicular_lymphoma)
+  source "PMC4993814 (BCL2 positive in follicular lymphoma but non-specific)" trust authoritative
+
+% ===== REACTIVE LYMPHOID HYPERPLASIA (the benign alternative — argued DOWN) =====
+
+% rationale: DISCRIMINATOR (fires negative) — a demonstrable CLONAL B-cell population
+% argues against a reactive (polyclonal) process.
+contributes 0.10 from finding(clonal_b_cell_population_small_circulating) to diagnosis(reactive_lymphoid_hyperplasia)
+  source "PMC4993814 (clonality establishes neoplasia; reactive proliferations are polyclonal)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — complete effacement of normal architecture
+% by a monotonous population argues against benign reactive hyperplasia (which preserves
+% architecture and is polymorphous).
+contributes 0.20 from histology(architecture_effacement_monotonous) to diagnosis(reactive_lymphoid_hyperplasia)
+  source "PathologyOutlines CLL/SLL (architectural effacement by monotonous cells = neoplastic)" trust authoritative
+
+% ===== NEXT STEP (confirmatory / prognostic molecular pathway) =====
+
+% rationale: the decisive next step matches the molecular work already under way:
+% FISH/karyotype + IGHV mutation status + TP53/del17p sequencing. In a CD5+ small
+% B-cell neoplasm this BOTH confirms CLL prognostic stratification AND, via
+% cyclin D1 / t(11;14) testing, formally excludes the MCL look-alike.
+prior 0.30 for next_step(cll_fish_ighv_tp53_and_t1114_exclusion_panel)
+  source "Blood 2016;127(14):1752 (IGHV + FISH at diagnosis); Frontiers Oncol 2024 CLL prognostic markers" trust authoritative
+contributes 4.0 from finding(distinctive_surface_marker_profile) to next_step(cll_fish_ighv_tp53_and_t1114_exclusion_panel)
+  source "Blood 2016;127(14):1752 (immunophenotype triggers FISH/IGHV/TP53 work-up in CLL)" trust authoritative
+contributes 3.0 from ihc(cyclin_d1_negative) to next_step(cll_fish_ighv_tp53_and_t1114_exclusion_panel)
+  source "PMC4841457 NCCN CLL/SLL (include cyclin D1 / t(11;14) FISH to exclude MCL)" trust authoritative
+contributes 2.5 from histology(proliferation_centres_present) to next_step(cll_fish_ighv_tp53_and_t1114_exclusion_panel)
+  source "Frontiers Oncol 2024 CLL prognostic markers (del17p/TP53, IGHV, del11q, del13q, trisomy 12)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved: u1 molecular targets) =====
+
+% u-cyclind1-fish: t(11;14)/cyclin D1 FISH has not been resolved; a NEGATIVE result
+% (no t(11;14)) is near-confirmatory of CLL over MCL, a POSITIVE result reclassifies
+% to MCL. Each result moves the CLL posterior.
+contributes 4.0 from molecular_t1114(absent) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "PMC4841457 NCCN CLL/SLL; AnnLymphoma MCL update (no t(11;14) supports CLL over MCL)" trust authoritative
+contributes 0.10 from molecular_t1114(present) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "StatPearls NBK536985 (t(11;14)/cyclin D1 defines MCL, reclassifies away from CLL)" trust authoritative
+uncertain { molecular_t1114(absent), molecular_t1114(present) } for diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "PMC4841457 NCCN CLL/SLL (t(11;14)/cyclin D1 FISH formally excludes MCL; pending)"
+
+% u-ighv: IGHV mutation status is a key CLL prognostic discriminator that is pending;
+% it does not change the CLL DIAGNOSIS but is part of the molecular characterisation
+% asked for. Encoded as bearing weakly on CLL confirmation (consistent either way).
+contributes 1.5 from ighv_status(mutated) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "Blood 2016;127(14):1752 (IGHV mutational analysis is a routine CLL diagnostic/prognostic test)" trust authoritative
+contributes 1.5 from ighv_status(unmutated) to diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "Frontiers Oncol 2024 CLL prognostic markers (unmutated IGHV = adverse but still CLL)" trust authoritative
+uncertain { ighv_status(mutated), ighv_status(unmutated) } for diagnosis(chronic_lymphocytic_leukemia_small_lymphocytic_lymphoma)
+  source "Blood 2016;127(14):1752 (IGHV status pending; prognostic, part of molecular characterisation)"

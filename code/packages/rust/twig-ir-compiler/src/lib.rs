@@ -39,10 +39,12 @@
 //!   expression becomes `main`'s return; programs with no expression
 //!   return `nil`.
 //!
-//! All instructions carry `type_hint = "any"` (Twig is dynamically
-//! typed); functions therefore have `type_status = Untyped`.  The
-//! vm-core profiler fills in observed types at runtime, which the
-//! JIT can specialise on later.
+//! Twig remains dynamically typed, so functions keep `type_status = Untyped`
+//! and dynamic paths carry `type_hint = "any"`.  LANG-FULL fast paths stamp
+//! concrete hints where source forms make the type unambiguous (literals, typed
+//! arithmetic, E4 string ops, selected annotations, and conservative top-level
+//! direct-call evidence).  The vm-core profiler fills in observed types at
+//! runtime, which the JIT can specialise on later.
 //!
 //! ## Apply-site dispatch (compile-time)
 //!
@@ -544,19 +546,24 @@ mod tests {
     // ---- Module-level invariants -----------------------------------------
 
     #[test]
-    fn empty_program_returns_nil() {
+    fn empty_program_returns_typed_nil_const() {
+        // Path A increment 6a: the empty-program implicit nil return
+        // is emitted as a typed `const 0 [ref<LispyPair>]` instead of
+        // `call_builtin "make_nil" [any]`.  This matches the convention
+        // used by the IIR-to-{wasm,jvm,clr,beam} backends and the
+        // Phase 2 heap-lowering pass — nil is the null `LispyPair`
+        // reference, represented as 0.
         let m = module("");
         assert_eq!(m.entry_point.as_deref(), Some("main"));
         assert_eq!(m.language, "twig");
         assert_eq!(m.functions.len(), 1);
         let main = &m.functions[0];
         assert_eq!(main.name, "main");
-        // make_nil + ret is the empty-program shape.
-        assert_eq!(op_names(&main.instructions), vec!["call_builtin", "ret"]);
-        match &main.instructions[0].srcs[0] {
-            Operand::Var(s) => assert_eq!(s, "make_nil"),
-            other => panic!("expected Var(\"make_nil\"), got {other:?}"),
-        }
+        // const 0 [ref<LispyPair>] + ret is the empty-program shape.
+        assert_eq!(op_names(&main.instructions), vec!["const", "ret"]);
+        assert_eq!(main.instructions[0].srcs[0], Operand::Int(0));
+        assert_eq!(main.instructions[0].type_hint, "ref<LispyPair>");
+        assert_eq!(main.instructions[1].type_hint, "ref<LispyPair>");
     }
 
     #[test]
@@ -633,10 +640,14 @@ mod tests {
     }
 
     #[test]
-    fn nil_literal_emits_make_nil_builtin() {
+    fn nil_literal_emits_typed_const_ref_lispy_pair() {
+        // Path A increment 6a: `nil` now emits `const 0 [ref<LispyPair>]`
+        // (matching iir-builtin-lowering's Phase 2 convention) instead
+        // of `call_builtin "make_nil" [any]`.
         let i = main_instrs("nil");
-        assert_eq!(i[0].op, "call_builtin");
-        assert_eq!(i[0].srcs[0], Operand::Var("make_nil".into()));
+        assert_eq!(i[0].op, "const");
+        assert_eq!(i[0].srcs[0], Operand::Int(0));
+        assert_eq!(i[0].type_hint, "ref<LispyPair>");
     }
 
     #[test]
@@ -687,6 +698,105 @@ mod tests {
             && x.srcs.first() == Some(&Operand::Var("+".into())));
         assert!(plus_call.is_some(),
             "`+` over a dynamic source must fall back to call_builtin");
+    }
+
+    // ---- TW1: typed variadic arithmetic fold ----
+
+    #[test]
+    fn variadic_add_folds_to_typed_chain() {
+        // `(+ 1 2 3 4)` (four i64 literals) folds to three typed `add`s and no
+        // `call_builtin "+"` — the n-ary call clears the backend validators.
+        let i = main_instrs("(+ 1 2 3 4)");
+        let adds = i.iter().filter(|x| x.op == "add").count();
+        assert_eq!(adds, 3, "(+ a b c d) folds to 3 typed adds");
+        assert!(i.iter().all(|x| x.op != "call_builtin"
+            || x.srcs.first() != Some(&Operand::Var("+".into()))),
+            "variadic typed `+` must not emit call_builtin");
+        assert!(i.iter().filter(|x| x.op == "add").all(|x| x.type_hint == "i64"));
+    }
+
+    #[test]
+    fn variadic_mul_and_sub_fold() {
+        assert_eq!(main_instrs("(* 2 3 7)").iter().filter(|x| x.op == "mul").count(), 2);
+        // `(- 100 30 28)` left-associates to `(100 - 30) - 28` → two typed subs.
+        assert_eq!(main_instrs("(- 100 30 28)").iter().filter(|x| x.op == "sub").count(), 2);
+    }
+
+    #[test]
+    fn variadic_comparison_stays_dynamic() {
+        // A chained comparison `(< 1 2 3)` is a predicate (`1<2 ∧ 2<3`), not a
+        // fold, so it must NOT be lowered to a typed `cmp_*` chain — it stays on
+        // the dynamic `call_builtin "<"` path.
+        let i = main_instrs("(< 1 2 3)");
+        assert!(i.iter().any(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var("<".into()))),
+            "variadic comparison must stay on the dynamic path");
+        assert!(!i.iter().any(|x| x.op.starts_with("cmp_")),
+            "variadic comparison must not fold to typed cmp");
+    }
+
+    #[test]
+    fn variadic_arith_with_dynamic_arg_falls_back() {
+        // If any argument is dynamically typed, the whole variadic call falls
+        // back to `call_builtin "+"` (no typed fold).
+        let i = main_instrs("(+ (car (cons 1 2)) 3 4)");
+        assert!(i.iter().any(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var("+".into()))),
+            "a dynamic arg forces the dynamic `+` path");
+    }
+
+    // ---- TW2: top-level value `define` → typed main local ----
+
+    fn has_global_call(i: &[IIRInstr], which: &str) -> bool {
+        i.iter().any(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var(which.into())))
+    }
+
+    #[test]
+    fn toplevel_value_define_lowers_to_typed_local() {
+        // `(define x 40) (define y 2) (+ x y)` — neither x nor y is captured by a
+        // lambda, so both stay in typed `main` registers: no `global_set` /
+        // `global_get`, and `(+ x y)` is a typed `add`.
+        let i = main_instrs("(define x 40) (define y 2) (+ x y)");
+        assert!(!has_global_call(&i, "global_set"), "no global_set for main-only defines");
+        assert!(!has_global_call(&i, "global_get"), "no global_get for main-only reads");
+        let add = i.iter().find(|x| x.op == "add").expect("(+ x y) is a typed add");
+        assert_eq!(add.type_hint, "i64");
+    }
+
+    #[test]
+    fn toplevel_value_define_chains() {
+        // A later define may read an earlier one at the top level; both remain
+        // typed locals (`b`'s RHS reads `a`'s register).
+        let i = main_instrs("(define a 40) (define b (+ a 2)) b");
+        assert!(!has_global_call(&i, "global_set"));
+        assert!(!has_global_call(&i, "global_get"));
+    }
+
+    #[test]
+    fn value_define_captured_by_lambda_stays_global() {
+        // `k` is referenced inside `addk`'s body, so it escapes into a separate
+        // function and must stay on the host global table.
+        let i = main_instrs("(define k 5) (define (addk n) (+ n k)) (addk 37)");
+        assert!(has_global_call(&i, "global_set"),
+            "a lambda-captured value-global keeps its global_set");
+    }
+
+    #[test]
+    fn value_define_bool_lowers_to_typed_local() {
+        // Boolean-typed value defines are eligible too.
+        let i = main_instrs("(define b #t) (if b 42 0)");
+        assert!(!has_global_call(&i, "global_set"));
+        assert!(!has_global_call(&i, "global_get"));
+    }
+
+    #[test]
+    fn forward_referenced_value_define_stays_global() {
+        // `z` reads `w` before `w`'s define — the forward reference forces `w`
+        // onto the global table so behaviour matches the pre-TW2 dynamic path.
+        let i = main_instrs("(define z (+ w 1)) (define w 41) z");
+        assert!(has_global_call(&i, "global_get"), "forward read emits global_get");
+        assert!(has_global_call(&i, "global_set"), "forward-referenced define keeps global_set");
     }
 
     #[test]
@@ -775,17 +885,23 @@ mod tests {
     // ---- Top-level value defines ---------------------------------------
 
     #[test]
-    fn top_level_value_define_uses_global_set() {
-        let i = main_instrs("(define x 42)");
+    fn captured_value_define_uses_global_set() {
+        // TW2: a value-global captured by a lambda (here `f`) stays on the host
+        // global table, so its `define` still emits `global_set`.  (A value
+        // read only from `main` now lowers to a typed local — see
+        // `toplevel_value_define_lowers_to_typed_local`.)
+        let i = main_instrs("(define x 42) (define (f) x) (f)");
         let gs = i.iter().find(|x| matches!(&x.srcs.first(), Some(Operand::Var(s)) if s == "global_set"));
-        assert!(gs.is_some(), "expected a global_set call_builtin");
+        assert!(gs.is_some(), "expected a global_set call_builtin for a captured global");
     }
 
     #[test]
-    fn value_global_reference_uses_global_get() {
-        let i = main_instrs("(define x 42) x");
+    fn captured_value_global_reference_uses_global_get() {
+        // A `main`-level read of a *captured* (escaping) value-global still goes
+        // through `global_get` — it is not eligible for the typed-local form.
+        let i = main_instrs("(define x 42) (define (f) x) x");
         let gg = i.iter().find(|x| matches!(&x.srcs.first(), Some(Operand::Var(s)) if s == "global_get"));
-        assert!(gg.is_some(), "expected a global_get call_builtin");
+        assert!(gg.is_some(), "expected a global_get call_builtin for a captured global");
     }
 
     // ---- if + let + begin ---------------------------------------------
@@ -1201,10 +1317,125 @@ mod tests {
         assert!(f.return_refinement.is_none());
     }
 
-    /// Parsing an annotated function does not change its `params` tuple —
-    /// the `type_hint` field of each param entry is still `"any"` (dynamic typing
-    /// is unchanged; refinements are carried in the parallel `param_refinements`
-    /// field, not in the existing `type_hint` strings).
+    #[test]
+    fn unannotated_param_string_inference_requires_consistent_evidence() {
+        let src = "(define (id s) s) (id \"HI\") (id 1)";
+        let m = compile_source(src, "test_e4_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("s".to_string(), "any".to_string())],
+            "mixed string/non-string direct calls must leave unannotated params dynamic"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn captured_top_level_string_actual_does_not_infer_unannotated_param() {
+        let src = "(define s \"HI\") (define (capture) s) (define (id x) x) (id s)";
+        let m = compile_source(src, "test_e4_captured_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "any".to_string())],
+            "captured top-level string values must stay on the dynamic global path"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn forward_referenced_top_level_string_actual_does_not_infer_unannotated_param() {
+        let src = "s (define s \"HI\") (define (id x) x) (id s)";
+        let m = compile_source(src, "test_e4_forward_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "any".to_string())],
+            "forward-referenced top-level string values must stay on the dynamic global path"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn shadowed_lexical_string_actual_does_not_infer_unannotated_param() {
+        let src = "(define s \"HI\") (define (id x) x) (let ((s 1)) (id s))";
+        let m = compile_source(src, "test_e4_shadowed_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "id").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "any".to_string())],
+            "dynamic lexical shadowing must block top-level string evidence"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn let_star_derived_string_actual_infers_unannotated_param() {
+        let src = "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))";
+        let m = compile_source(src, "test_e4_letstar_derived_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "str".to_string())],
+            "derived sequential let* string actuals should seed typed string params"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn static_string_expression_actual_infers_unannotated_param() {
+        let src = "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))";
+        let m = compile_source(src, "test_e4_static_expr_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(
+            f.params,
+            vec![("x".to_string(), "str".to_string())],
+            "static string expression actuals should seed typed string params"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    #[test]
+    fn direct_call_evidence_infers_multiple_string_params() {
+        let src = "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))";
+        let m = compile_source(src, "test_e4_multi_param_infer").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "same").unwrap();
+        assert_eq!(
+            f.params,
+            vec![
+                ("a".to_string(), "str".to_string()),
+                ("b".to_string(), "str".to_string()),
+            ],
+            "direct-call string evidence should type every consistently-static param slot"
+        );
+        assert!(
+            f.param_refinements.iter().all(|r| r.is_none()),
+            "call-site inference must not synthesize refinement annotations"
+        );
+    }
+
+    /// Parsing non-static refinement annotations does not change the existing
+    /// param type-hint strings; those refinements live in the parallel
+    /// `param_refinements` field.  E4's `str` annotations are the deliberate
+    /// exception because they seed concrete backend-safe string params.
     #[test]
     fn annotation_does_not_change_existing_type_hints() {
         let src = "(define (f (x : (Int 0 10)) (y : int)) (+ x y))";
@@ -1342,6 +1573,276 @@ mod tests {
         // If compile_source succeeds, typed should too.
         let baseline = compile_source(src, "test");
         assert_eq!(result.is_ok(), baseline.is_ok());
+    }
+
+    #[test]
+    fn string_length_literal_uses_e4_str_len() {
+        let m = compile_source("(string-length \"HELLO\")", "string_len")
+            .expect("literal string-length should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-length should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_ref_literal_uses_e4_str_index() {
+        let m = compile_source("(string-ref \"ABC\" 1)", "string_ref")
+            .expect("literal string-ref should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "const", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-ref should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_eq_literals_use_e4_str_eq() {
+        let m = compile_source("(string=? \"HELLO\" \"HELLO\")", "string_eq")
+            .expect("literal string=? should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_eq", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string=? should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "str");
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_order_literals_use_e4_str_cmp() {
+        let m = compile_source(
+            "(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)",
+            "string_order_branch",
+        )
+        .expect("literal string ordering should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops.iter().filter(|op| **op == "str_cmp").count(), 2, "{ops:?}");
+        assert!(ops.contains(&"cmp_lt"), "expected cmp_lt in {ops:?}");
+        assert!(ops.contains(&"cmp_gt"), "expected cmp_gt in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string ordering should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn string_append_literal_length_uses_e4_str_concat() {
+        let m = compile_source("(string-length (string-append \"AB\" \"CDE\"))", "string_concat_len")
+            .expect("literal string-append length should compile");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_concat", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "literal string-append length should avoid the dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "str");
+        assert_eq!(main.instructions[2].type_hint, "str");
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_define_feeds_e4_string_length() {
+        let m = compile_source("(define s \"HELLO\") (string-length s)", "string_define_len")
+            .expect("top-level string define should feed E4 string-length");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string define should avoid dynamic globals/builtins: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].type_hint, "str");
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_defines_feed_e4_concat_length() {
+        let m = compile_source(
+            "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
+            "string_define_concat_len",
+        )
+        .expect("top-level string defines should feed E4 string-append");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_concat", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string concat should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[2].type_hint, "str");
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_define_can_drive_e4_string_eq_branch() {
+        let m = compile_source(
+            "(define s \"HELLO\") (if (string=? s \"HELLO\") 42 0)",
+            "string_define_eq_branch",
+        )
+        .expect("top-level string define should feed E4 string equality");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"str_eq"), "expected str_eq in {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "expected branch in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string equality branch should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn top_level_string_define_feeds_e4_string_ref() {
+        let m = compile_source("(define s \"ABC\") (string-ref s 2)", "string_define_ref")
+            .expect("top-level string define should feed E4 string-ref");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "const", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "top-level string-ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[2].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_binding_feeds_e4_string_ref() {
+        let m = compile_source("(let ((s \"ABC\") (i 2)) (string-ref s i))", "string_let_ref")
+            .expect("let string binding should feed E4 string-ref");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["const", "str_const", "mov", "str_index", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string-ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[1].dest.as_deref(), Some("s"));
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_star_string_binding_feeds_e4_string_length() {
+        let m = compile_source("(let* ((s \"HELLO\")) (string-length s))", "string_let_star_len")
+            .expect("let* string binding should feed E4 string-length");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let* string-length should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].dest.as_deref(), Some("s"));
+        assert_eq!(main.instructions[1].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_bindings_can_drive_e4_string_eq_branch() {
+        let m = compile_source(
+            "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
+            "string_let_eq_branch",
+        )
+        .expect("let string bindings should feed E4 string equality");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"str_eq"), "expected str_eq in {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "expected branch in {ops:?}");
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string equality branch should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_bindings_feed_e4_concat_length() {
+        let m = compile_source(
+            "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
+            "string_let_concat_len",
+        )
+        .expect("let string bindings should feed E4 string-append");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, vec!["str_const", "str_const", "str_concat", "str_len", "ret"]);
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let string concat should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[0].dest.as_deref(), Some("a"));
+        assert_eq!(main.instructions[1].dest.as_deref(), Some("b"));
+        assert_eq!(main.instructions[2].type_hint, "str");
+        assert_eq!(main.instructions[3].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
+    }
+
+    #[test]
+    fn let_string_binding_feeds_e4_substring_ref() {
+        let m = compile_source(
+            "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
+            "string_let_substring_ref",
+        )
+        .expect("let string binding should feed E4 substring");
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let ops: Vec<&str> = main.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(
+            ops,
+            vec![
+                "str_const",
+                "const",
+                "const",
+                "str_slice",
+                "const",
+                "str_index",
+                "ret"
+            ]
+        );
+        assert!(
+            main.instructions.iter().all(|i| i.op != "call_builtin"),
+            "let substring/ref should avoid dynamic builtin path: {:?}",
+            main.instructions
+        );
+        assert_eq!(main.instructions[3].type_hint, "str");
+        assert_eq!(main.instructions[5].type_hint, "i64");
+        assert_eq!(main.return_type, "i64");
     }
 
     // =========================================================================

@@ -1,0 +1,42 @@
+% ADJ52 case-11 — patient observations + queries.
+% 64yo man, persistent pancytopenia ~3 months, strikingly low monocytes,
+% macrocytosis, marrow atypical lymphoid infiltrate + reticulin fibrosis,
+% no organomegaly/lymphadenopathy, non-contributory smear. Flow/molecular/
+% cytogenetics pending. Numeric labs normalized to qualitative atoms per the
+% rulebook mapping header (same vocabulary as the rulebook).
+
+observe patient_age(over_50)
+observe patient_sex(male)
+observe pancytopenia(present)
+observe leukopenia(present)
+observe neutropenia(present)
+observe anemia(mild)
+observe mean_corpuscular_volume(macrocytic)
+observe thrombocytopenia(present)
+observe absolute_monocyte_count(strikingly_low)
+observe erythrocyte_sedimentation_rate(modestly_raised)
+observe cytopenia_chronicity(persistent_months)
+observe exam_finding(no_palpable_lymphadenopathy)
+observe exam_finding(no_hepatomegaly)
+observe exam_finding(no_splenomegaly)
+observe imaging_finding(no_organomegaly)
+observe imaging_finding(no_lymphadenopathy)
+observe smear_result(non_contributory)
+observe smear_finding(no_schistocytes)
+observe smear_finding(no_atypical_or_abnormal_circulating_cells)
+observe marrow_finding(mildly_hypercellular)
+observe marrow_infiltrate(atypical_lymphocytes)
+observe marrow_finding(increased_reticulin_fibrosis)
+
+% q1/q2/q3 — explain the persistent pancytopenia / classify the marrow lymphoid population
+? diagnosis(hairy_cell_leukemia)
+? diagnosis(hairy_cell_leukemia_variant)
+? diagnosis(splenic_marginal_zone_lymphoma)
+? diagnosis(t_large_granular_lymphocytic_leukemia)
+? diagnosis(myelodysplastic_syndrome)
+? diagnosis(primary_myelofibrosis)
+
+% q4 — recommended next step (interpret flow / molecular / cytogenetic studies)
+? next_step(flow_cytometry_immunophenotyping)
+? next_step(braf_v600e_mutation_testing)
+? next_step(marrow_cytogenetics_karyotype)

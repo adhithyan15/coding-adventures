@@ -1,0 +1,8 @@
+{
+ "idx": 15,
+ "policy": "A new major stationary source in a nonattainment area must obtain a Nonattainment New Source Review (NNSR) permit and offset its emissions. A source is 'major' for NNSR if its potential to emit the nonattainment pollutant equals or exceeds the applicable major-source threshold for that area's classification.",
+ "scenario": "Riverside Energy proposes a plant with a potential to emit 85 tpy of ozone-precursor VOCs in a region designated nonattainment for ozone. The classification thresholds range from 100 tpy (Marginal) down to 10 tpy (Extreme) depending on severity.",
+ "question": "Is Riverside Energy a 'major' source requiring an NNSR permit?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "the area's ozone nonattainment classification (and thus the applicable major-source threshold) is not stated"
+}

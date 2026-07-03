@@ -6,8 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Serial API per-frame summaries for request/response, function id, and payload
+  shape diagnostics.
 - Command-class and Serial API frame batch summaries for supervisor coverage
   views.
+- Z-Wave controller readiness summaries that combine node, command-class,
+  Serial API, security, and Long Range region signals.
 
 ## [0.1.0] - 2026-05-06
 

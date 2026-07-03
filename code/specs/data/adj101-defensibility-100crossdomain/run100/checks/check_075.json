@@ -1,0 +1,8 @@
+{
+ "check_id": 75,
+ "idx": 31,
+ "slot": "eligible_children_count",
+ "claimed_value": 3,
+ "scenario": "Maria applies for Childcare Assistance for her four children, aged 2, 5, 9, and 15. All are in her care.",
+ "cited_span": "her four children, aged 2, 5, 9, and 15"
+}

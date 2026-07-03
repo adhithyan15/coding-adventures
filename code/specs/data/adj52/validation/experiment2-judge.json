@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "what": "Blind judge verdict comparing the framework arm vs plain-Claude on ADJ51 experiment-2 (PMC12914605), against the known PMBCL ground truth. The judge received the two outputs as OUTPUT A / OUTPUT B with identities hidden.",
+    "keymap_held_by_orchestrator": { "A": "plain_claude", "B": "framework" },
+    "run_date": "2026-06-03"
+  },
+  "output_a": {
+    "correctness": "partially correct",
+    "hallucination": "Anchors on CML/AML/myeloid sarcoma as leading diagnosis, which is incorrect — ground truth is PMBCL (B-cell lymphoma); the myeloid picture was a paraneoplastic leukemoid reaction, not a primary myeloid malignancy. Correctly identifies hematologic/thoracic malignancy over infection, lists lymphoma in differential, flags Actinomyces as colonizer, nails the biopsy disposition. No fabricated facts.",
+    "calibration": "Reasonable — explicitly marks diagnosis confidence moderate and hedges the exact entity; next-action confidence high and correct.",
+    "defensibility": "Good — reasoning traceable and clinically coherent."
+  },
+  "output_b": {
+    "correctness": "largely correct",
+    "hallucination": "Correctly lands on thoracic/mediastinal malignancy as essentially certain, rejects actinomycosis and TB, prescribes biopsy. Does not name PMBCL. Claims each probability shift 'traces to a specific finding and citation' and presents precise posteriors (~100%, ~99.9%) without showing any actual LRs or citations — cited-source framing unsupported, numeric precision is false rigor.",
+    "calibration": "Poorly calibrated — ~100%/~99.9% posteriors on a genuinely hard case is overconfident; spurious decimal precision overstates certainty even though direction is right.",
+    "defensibility": "Mixed — directional reasoning sound and checkable, but claimed citations and exact posteriors cannot be traced or verified as presented."
+  },
+  "winner": "B",
+  "rationale": "Both correctly reject infection, treat Actinomyces as colonizer, recommend biopsy. The diagnosis axis separates them: A commits to CML/AML/myeloid sarcoma (the specific trap the ground truth warns against — the myeloid left-shift was paraneoplastic), whereas B keeps the answer at 'thoracic/hematologic malignancy' and avoids that wrong commitment. Neither names PMBCL. B's weakness is calibration/defensibility (false-rigor citations and overconfident posteriors as presented). On balance B's diagnostic direction is closer to ground truth and avoids A's incorrect lead diagnosis, outweighing B's overconfidence — narrow margin.",
+  "_orchestrator_note": "B's defensibility ding is an artifact of lossy rendering: the framework arm was summarised in prose rather than presented with its real fired-clauses-and-citations audit trail. The orchestrator must feed the judge the actual audit trail. See experiment2-blind-ab.md finding 1."
+}

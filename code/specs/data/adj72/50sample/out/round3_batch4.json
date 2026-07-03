@@ -1,0 +1,79 @@
+[
+  {
+    "id": "Q40",
+    "verbatim_source_passage": null,
+    "source_citation": "No verbatim source exists. This is a popular paraphrase commonly attributed to Gandhi but not found in his collected works. The closest authentic statement is from Gandhi's writings (Collected Works of Mahatma Gandhi, vol. 13): 'We but mirror the world. All the tendencies present in the outer world are to be found in the world of our body. If we could change ourselves, the tendencies in the world would also change. As a man changes his own nature, so does the attitude of the world change towards him. This is the divine mystery supreme.' The exact phrase 'Be the change you wish to see in the world' is apocryphal.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q41",
+    "verbatim_source_passage": "It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material.",
+    "source_citation": "J. D. Watson and F. H. C. Crick, \"Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid,\" Nature 171, no. 4356 (April 25, 1953): 737-738.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q42",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/misattributed. The sentence was coined by Evelyn Beatrice Hall (writing as S. G. Tallentyre) in 'The Friends of Voltaire' (1906) as a summary of Voltaire's attitude, not a quotation of Voltaire. Hall's wording: 'I disapprove of what you say, but I will defend to the death your right to say it.' Voltaire himself never wrote this.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.93
+  },
+  {
+    "id": "Q43",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal. 'Keep your friends close and your enemies closer' does not appear in Sun Tzu's The Art of War. The modern phrasing is most famously from the film The Godfather Part II (1974), spoken by Michael Corleone. The premise of the question is false.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q44",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal. There is no contemporary record of Galileo uttering 'Eppur si muove' at his 1633 trial. The anecdote first appears over a century later, notably in Giuseppe Baretti's 'The Italian Library' (1757). No verbatim trial source exists.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.88
+  },
+  {
+    "id": "Q45",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/misattributed. There is no reliable evidence P. T. Barnum ever said 'There's a sucker born every minute.' The attribution is unsupported; the phrase has been variously credited to others (e.g., con man Joseph Bessimer or banker David Hannum). No verbatim Barnum source exists.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q46",
+    "verbatim_source_passage": null,
+    "source_citation": "Misattributed/apocryphal. This exact sentence does not appear in Edmund Burke's writings or speeches. Researchers (including the editors of the Oxford Dictionary of Quotations) have been unable to locate it in Burke. A related but distinct passage is Burke's 'Thoughts on the Cause of the Present Discontents' (1770): 'When bad men combine, the good must associate; else they will fall one by one, an unpitied sacrifice in a contemptible struggle.' The popular 'triumph of evil' wording is apocryphal.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q47",
+    "verbatim_source_passage": "The report of my death was an exaggeration.",
+    "source_citation": "Mark Twain, note to a reporter (Frank Marshall White) of the New York Journal, 1897 (often dated June 2, 1897). The popular form 'The reports of my death have been greatly exaggerated' is a paraphrase; Twain's actual written words were 'The report of my death was an exaggeration.'",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.8
+  },
+  {
+    "id": "Q48",
+    "verbatim_source_passage": null,
+    "source_citation": "Misquotation. In Star Wars: Episode V – The Empire Strikes Back (1980), Darth Vader's actual line is: 'No. I am your father.' The line 'Luke, I am your father' does not occur in any Star Wars film, and the question's premise (that it appears in the 1977 A New Hope) is false on two counts.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q49",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/unverified. 'If you're going through hell, keep going' is widely attributed to Winston Churchill but has no documented source in his speeches or writings; the International Churchill Society lists it among quotes Churchill never said ('Red Herrings'). No verbatim source exists.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q50",
+    "verbatim_source_passage": null,
+    "source_citation": "Mary Shelley, Frankenstein; or, The Modern Prometheus (1818 text). I cannot reproduce the exact opening sentence of Chapter 2 verbatim with sufficient confidence, so a verbatim passage is not asserted here. The opening sentence of the work as a whole (Letter 1) is 'You will rejoice to hear that no disaster has accompanied the commencement of an enterprise which you have regarded with such evil forebodings.' Chapter 2 begins by describing the narrator's (Victor's) early life and his relationship with Elizabeth, but I cannot reliably recall its first sentence word-for-word.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.3
+  }
+]

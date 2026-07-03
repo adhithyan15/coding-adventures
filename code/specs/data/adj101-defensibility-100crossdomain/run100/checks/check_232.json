@@ -1,0 +1,8 @@
+{
+ "check_id": 232,
+ "idx": 96,
+ "slot": "role_unchanged",
+ "claimed_value": true,
+ "scenario": "A budgeted research-technician position became vacant when the original technician resigned. The PI hired a replacement into the same role at the same budgeted salary line and charged the new hire's salary to the grant. The replacement's name does not appear in the originally approved budget.",
+ "cited_span": "hired a replacement into the same role"
+}

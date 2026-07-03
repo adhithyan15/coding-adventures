@@ -15,6 +15,7 @@ import {
   DIV,
   INTEGRATE,
   IRNode,
+  LOG,
   MUL,
   NEG,
   SIN,
@@ -166,6 +167,19 @@ describe("Phase 34: ∫ 1/(a + b·cos x) dx (Weierstrass arctan form)", () => {
       expect(Math.abs(got - expected)).toBeLessThan(1e-4);
     }
   });
+
+  it("negative a in the cosine arctan branch closes with the correct sign", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(ADD, [int(-2), app(COS, [X])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    expect(containsHead(phi, ATAN)).toBe(true);
+    for (const xVal of [-1.5, -0.4, 0.0, 0.4, 1.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (-2 + Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -238,14 +252,16 @@ describe("Phase 34: regression — must not interfere with existing rules", () =
     expect(equals(result, negCos) || equals(result, mulNeg)).toBe(true);
   });
 
-  it("∫ 1/cos(x) dx is NOT misinterpreted as Weierstrass (no additive constant)", () => {
+  it("∫ 1/cos(x) dx closes as the a = 0 cosine log branch", () => {
     const vm = makeVM();
     const integrand = app(DIV, [int(1), app(COS, [X])]);
     const result = vm.eval(integrate(integrand));
-    // Either unevaluated, or some elementary fold — but specifically MUST NOT be
-    // a top-level Atan (which would only come from Phase 34).
-    if (result.kind === "apply" && equals(result.head, ATAN)) {
-      throw new Error(`Phase 34 incorrectly fired on ∫ 1/cos(x) dx: got ${JSON.stringify(result)}`);
+    expect(isUnevaluatedIntegrate(result)).toBe(false);
+    expect(containsHead(result, LOG)).toBe(true);
+    for (const xVal of [-1.0, -0.4, 0.0, 0.4, 1.0]) {
+      const got = numericalDerivative(vm, result, xVal);
+      const expected = 1 / Math.cos(xVal);
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
     }
   });
 });
@@ -324,6 +340,19 @@ describe("Phase 35: degenerate a² = b² cases", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 36: log form for a² < b²", () => {
+  it("∫ 1/sin(x) dx closes as log|tan(x/2)|", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(SIN, [X])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    expect(containsHead(phi, LOG)).toBe(true);
+    for (const xVal of [0.4, 0.8, 1.2, 1.6, 2.0]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / Math.sin(xVal);
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
+    }
+  });
+
   it("∫ 1/(1 + 2·cos x) dx — cos branch with b > |a|", () => {
     const vm = makeVM();
     const integrand = app(DIV, [int(1), app(ADD, [int(1), app(MUL, [int(2), app(COS, [X])])])]);
@@ -439,6 +468,20 @@ describe("Phase 38: linear-argument substitution lifts Weierstrass", () => {
       const got = numericalDerivative(vm, phi, xVal);
       const expected = 1.0 / (2.0 + Math.sin(2.0 * xVal));
       expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
+
+  it("scaled csc branch closes for ∫ 3/(2·sin(2x+1)) dx", () => {
+    const vm = makeVM();
+    const arg = app(ADD, [app(MUL, [int(2), X]), int(1)]);
+    const denominator = app(MUL, [int(2), app(SIN, [arg])]);
+    const phi = vm.eval(integrate(app(DIV, [int(3), denominator])));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    expect(containsHead(phi, LOG)).toBe(true);
+    for (const xVal of [0.0, 0.2, 0.5, 0.8]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 3 / (2 * Math.sin(2 * xVal + 1));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-3);
     }
   });
 

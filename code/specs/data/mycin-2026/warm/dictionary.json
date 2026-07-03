@@ -1,0 +1,287 @@
+{
+  "_doc": "Closed controlled vocabulary, extracted from lib/meningitis-vocab.adj (the single source of truth). The decomposer is constrained to these functors + value domains; ir_to_adj.py rejects any term outside them.",
+  "domain": "bacterial_vs_viral_meningitis",
+  "hypotheses": [
+    {
+      "name": "bacterial_meningitis",
+      "surfaces": [
+        "bacterial meningitis",
+        "pyogenic meningitis",
+        "acute bacterial meningitis"
+      ]
+    },
+    {
+      "name": "viral_meningitis",
+      "surfaces": [
+        "viral meningitis",
+        "aseptic meningitis",
+        "enteroviral meningitis"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "functor": "csf_gram_stain",
+      "value_domain": [
+        "positive",
+        "negative"
+      ],
+      "surfaces": [
+        "Gram stain positive",
+        "organisms seen on Gram stain",
+        "gram-positive diplococci on CSF",
+        "no organisms on Gram stain"
+      ]
+    },
+    {
+      "functor": "csf_culture",
+      "value_domain": [
+        "positive",
+        "negative"
+      ],
+      "surfaces": [
+        "CSF culture positive",
+        "positive cerebrospinal fluid culture",
+        "organism grown from CSF",
+        "sterile CSF culture",
+        "no growth"
+      ]
+    },
+    {
+      "functor": "enteroviral_pcr",
+      "value_domain": [
+        "positive",
+        "negative"
+      ],
+      "surfaces": [
+        "enterovirus PCR positive",
+        "CSF enteroviral PCR detected",
+        "positive enterovirus RT-PCR",
+        "negative enterovirus PCR"
+      ]
+    },
+    {
+      "functor": "csf_neutrophilic_pleocytosis",
+      "value_domain": [
+        "high",
+        "normal"
+      ],
+      "surfaces": [
+        "neutrophil-predominant pleocytosis",
+        "PMN predominance",
+        "CSF WBC elevated with neutrophils",
+        "neutrophilic pleocytosis"
+      ]
+    },
+    {
+      "functor": "csf_lymphocytic_pleocytosis",
+      "value_domain": [
+        "high",
+        "normal"
+      ],
+      "surfaces": [
+        "lymphocyte-predominant pleocytosis",
+        "lymphocytic pleocytosis",
+        "mononuclear predominance",
+        "CSF WBC elevated with lymphocytes"
+      ]
+    },
+    {
+      "functor": "csf_glucose",
+      "value_domain": [
+        "low",
+        "normal"
+      ],
+      "surfaces": [
+        "low CSF glucose",
+        "hypoglycorrhachia",
+        "CSF glucose reduced",
+        "normal CSF glucose"
+      ]
+    },
+    {
+      "functor": "csf_protein",
+      "value_domain": [
+        "high",
+        "normal"
+      ],
+      "surfaces": [
+        "elevated CSF protein",
+        "high CSF protein",
+        "normal CSF protein"
+      ]
+    },
+    {
+      "functor": "csf_lactate",
+      "value_domain": [
+        "high",
+        "normal"
+      ],
+      "surfaces": [
+        "elevated CSF lactate",
+        "high CSF lactate",
+        "normal CSF lactate"
+      ]
+    },
+    {
+      "functor": "serum_procalcitonin",
+      "value_domain": [
+        "high",
+        "normal"
+      ],
+      "surfaces": [
+        "elevated procalcitonin",
+        "high serum procalcitonin",
+        "raised PCT",
+        "normal procalcitonin"
+      ]
+    },
+    {
+      "functor": "seizure",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "seizure",
+        "convulsion",
+        "seized",
+        "no seizure"
+      ]
+    },
+    {
+      "functor": "fever",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "fever",
+        "febrile",
+        "afebrile",
+        "no fever"
+      ]
+    },
+    {
+      "functor": "meningismus",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "neck stiffness",
+        "nuchal rigidity",
+        "meningismus",
+        "no neck stiffness"
+      ]
+    },
+    {
+      "functor": "csf_gram_morphology",
+      "value_domain": [
+        "gram_positive_diplococci",
+        "gram_negative_diplococci",
+        "gram_positive_bacilli",
+        "gram_negative_coccobacilli",
+        "gram_negative_bacilli",
+        "gram_positive_cocci_clusters",
+        "none_seen"
+      ],
+      "surfaces": [
+        "lancet-shaped gram-positive diplococci",
+        "gram-positive diplococci",
+        "gram-negative diplococci",
+        "gram-positive bacilli/rods",
+        "pleomorphic gram-negative coccobacilli",
+        "gram-negative rods",
+        "gram-positive cocci in clusters",
+        "no organisms on Gram stain"
+      ]
+    },
+    {
+      "functor": "age_band",
+      "value_domain": [
+        "neonate",
+        "infant_child",
+        "adult",
+        "older_adult"
+      ],
+      "surfaces": [
+        "neonate / newborn",
+        "infant",
+        "young child",
+        "adult",
+        "older adult",
+        "elderly / over 50"
+      ]
+    },
+    {
+      "functor": "immunocompromised",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "immunocompromised",
+        "immunosuppressed",
+        "on chemotherapy",
+        "transplant recipient",
+        "HIV",
+        "immunocompetent"
+      ]
+    },
+    {
+      "functor": "listeria_exposure",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "unpasteurized dairy",
+        "soft cheese",
+        "deli meats",
+        "pregnant",
+        "no listeria exposure"
+      ]
+    },
+    {
+      "functor": "recent_neurosurgery_or_shunt",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "recent neurosurgery",
+        "CSF shunt",
+        "ventriculostomy",
+        "penetrating head trauma",
+        "no recent neurosurgery"
+      ]
+    },
+    {
+      "functor": "crowding_exposure",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "college dormitory",
+        "military barracks",
+        "crowded living",
+        "no crowding exposure"
+      ]
+    },
+    {
+      "functor": "petechial_rash",
+      "value_domain": [
+        "present",
+        "absent"
+      ],
+      "surfaces": [
+        "petechial rash",
+        "purpuric rash",
+        "petechiae",
+        "no rash"
+      ]
+    }
+  ]
+}

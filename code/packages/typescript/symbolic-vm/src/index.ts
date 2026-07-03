@@ -55,7 +55,9 @@ import {
   rational,
   sym,
 } from "@coding-adventures/symbolic-ir";
-import { factorIntegerPolynomial } from "@coding-adventures/cas-factor";
+import { BiRational, factorIntegerPolynomial, tryBivariateHensel, tryNVariateHensel } from "@coding-adventures/cas-factor";
+import type { BiPoly, NPoly } from "@coding-adventures/cas-factor";
+import { AssumptionContext } from "@coding-adventures/cas-simplify";
 
 export type Handler = (vm: VM, expr: IRApply) => IRNode;
 export type RulePredicate = (expr: IRApply) => boolean;
@@ -86,6 +88,12 @@ class BaseBackend {
     ASSIGN.name,
     DEFINE.name,
     IF.name,
+    // Track G2: `Assume(rel)` and `Forget(rel)` must NOT pre-evaluate
+    // their relational argument — `Greater(a^2, b^2)` would otherwise be
+    // reduced (or echoed by the symbolic backend) before reaching the
+    // handler, which would then have no symbolic relation to record.
+    "Assume",
+    "Forget",
   ]);
 
   lookup(name: string): IRNode | undefined {
@@ -146,6 +154,15 @@ export class SymbolicBackend extends BaseBackend implements Backend {
 }
 
 export class VM {
+  /**
+   * Track G2 (TypeScript port): per-VM assumption store consulted by
+   * the symbolic-coefficient Weierstrass integrator (and any future
+   * sign-aware helper).  Mutated only via the `Assume(...)` /
+   * `Forget(...)` / `ForgetAll()` handlers — direct field access is
+   * supported for tests and embedders.
+   */
+  readonly assumptions: AssumptionContext = new AssumptionContext();
+
   constructor(public readonly backend: Backend) {}
 
   eval(node: IRNode): IRNode {
@@ -941,9 +958,36 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   });
   table.set(LIST.name, (_vm, expr) => expr);
   table.set(FACTOR.name, factorHandler);
+  // Track B1 (Phase 1 partial-fraction decomposition).  Registered by string
+  // name because ``Apart`` has no exported constant in symbolic-ir.
+  if (simplify) {
+    table.set("Apart", apartHandler);
+  }
   if (simplify) {
     table.set(D.name, differentiate());
     table.set(INTEGRATE.name, integrate());
+    // Track G2 (TS port): `Assume(rel)` records a sign / equality fact
+    // on the VM's `assumptions` store; `Forget(rel)` removes one;
+    // `ForgetAll()` clears the whole table.  Returning the relation
+    // verbatim mirrors the Python handler's behaviour and lets MACSYMA
+    // chains like `Assume(x > 0); Sqrt(x^2)` thread the assertion
+    // through without producing an extraneous result expression.
+    table.set("Assume", (vm, expr) => {
+      if (expr.args.length === 1) {
+        vm.assumptions.assumeRelation(expr.args[0]);
+      }
+      return expr;
+    });
+    table.set("Forget", (vm, expr) => {
+      if (expr.args.length === 1) {
+        vm.assumptions.forgetRelation(expr.args[0]);
+      }
+      return expr;
+    });
+    table.set("ForgetAll", (vm, expr) => {
+      vm.assumptions.forgetAll();
+      return expr;
+    });
   }
 
   return table;
@@ -968,7 +1012,20 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
     const grouping = extractMultivariateGrouping(inner);
     if (grouping !== undefined) return grouping;
     const commonFactored = extractCommonSymbolicFactor(inner);
-    return commonFactored === undefined ? expr : vm.eval(commonFactored);
+    if (commonFactored !== undefined) return vm.eval(commonFactored);
+    // Generic bivariate Hensel lifting fallback — for multivariate inputs
+    // the pattern handlers above can't recognise.  Mirrors the Python
+    // ``_try_bivariate_hensel_ir`` glue in ``symbolic-vm/cas_handlers.py``.
+    const hensel = tryBivariateHenselIr(inner);
+    if (hensel !== undefined) return vm.eval(hensel);
+    // n-variate (n ≥ 3) Hensel — Track K2.  Generalised algorithmic
+    // fallback for tri- and higher-variate polynomials (e.g.,
+    // x³ + y³ + z³ − 3xyz = (x+y+z)(…)).  Returns undefined for
+    // transcendentals, foreign symbols, or when the iterated lift can't
+    // pin down a factorisation.
+    const nHensel = tryNVariateHenselIr(inner);
+    if (nHensel !== undefined) return vm.eval(nHensel);
+    return expr;
   }
 
   const [content, factors] = factorIntegerPolynomial(coeffs);
@@ -1030,6 +1087,429 @@ function irToIntegerPoly(node: IRNode, variable: IRSymbol): bigint[] | undefined
     return base === undefined ? undefined : polyPow(base, node.args[1].value);
   }
   return undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Bivariate Hensel-lifting IR glue.  Mirrors the Python ``_try_bivariate_*``
+// helpers in ``symbolic-vm/cas_handlers.py``.
+// ---------------------------------------------------------------------------
+
+function findTwoVariables(node: IRNode): [IRSymbol, IRSymbol] | undefined {
+  const seen: IRSymbol[] = [];
+  function walk(n: IRNode): boolean {
+    if (n.kind === "symbol") {
+      if (n.name.startsWith("%")) return true;
+      if (!seen.some((s) => s.name === n.name)) {
+        seen.push(n);
+        if (seen.length > 2) return false;
+      }
+      return true;
+    }
+    if (n.kind === "apply") {
+      for (const arg of n.args) {
+        if (!walk(arg)) return false;
+      }
+    }
+    return true;
+  }
+  if (!walk(node)) return undefined;
+  if (seen.length !== 2) return undefined;
+  return [seen[0], seen[1]];
+}
+
+function biKey(i: number, j: number): string {
+  return `${i},${j}`;
+}
+
+function biParseKey(k: string): [number, number] {
+  const idx = k.indexOf(",");
+  return [Number(k.slice(0, idx)), Number(k.slice(idx + 1))];
+}
+
+function biAddInPlace(acc: BiPoly, other: BiPoly): BiPoly {
+  for (const [k, v] of other) {
+    const cur = acc.get(k);
+    acc.set(k, cur === undefined ? v : cur.add(v));
+  }
+  for (const [k, v] of [...acc]) {
+    if (v.isZero()) acc.delete(k);
+  }
+  return acc;
+}
+
+function biMulMaps(a: BiPoly, b: BiPoly): BiPoly {
+  const out: BiPoly = new Map();
+  for (const [k1, c1] of a) {
+    const [i1, j1] = biParseKey(k1);
+    for (const [k2, c2] of b) {
+      const [i2, j2] = biParseKey(k2);
+      const k = biKey(i1 + i2, j1 + j2);
+      const cur = out.get(k);
+      out.set(k, cur === undefined ? c1.mul(c2) : cur.add(c1.mul(c2)));
+    }
+  }
+  for (const [k, v] of [...out]) {
+    if (v.isZero()) out.delete(k);
+  }
+  return out;
+}
+
+function irToBipoly(node: IRNode, x: IRSymbol, y: IRSymbol): BiPoly | undefined {
+  // Numeric literals.
+  if (node.kind === "integer") {
+    if (node.value === 0n) return new Map();
+    return new Map([[biKey(0, 0), BiRational.fromInt(node.value)]]);
+  }
+  if (node.kind === "rational") {
+    return new Map([[biKey(0, 0), new BiRational(node.numer, node.denom)]]);
+  }
+  if (node.kind === "float") return undefined;
+  if (node.kind === "string") return undefined;
+  if (node.kind === "symbol") {
+    if (node.name.startsWith("%")) return undefined;
+    if (node.name === x.name) return new Map([[biKey(1, 0), BiRational.ONE]]);
+    if (node.name === y.name) return new Map([[biKey(0, 1), BiRational.ONE]]);
+    return undefined;
+  }
+  // Apply nodes.
+  const apply = node;
+  if (apply.head.kind !== "symbol") return undefined;
+  const head = apply.head.name;
+  if (head === ADD.name) {
+    const acc: BiPoly = new Map();
+    for (const arg of apply.args) {
+      const sub = irToBipoly(arg, x, y);
+      if (sub === undefined) return undefined;
+      biAddInPlace(acc, sub);
+    }
+    return acc;
+  }
+  if (head === SUB.name && apply.args.length === 2) {
+    const a = irToBipoly(apply.args[0], x, y);
+    const b = irToBipoly(apply.args[1], x, y);
+    if (a === undefined || b === undefined) return undefined;
+    const negB: BiPoly = new Map();
+    for (const [k, v] of b) negB.set(k, v.neg());
+    biAddInPlace(a, negB);
+    return a;
+  }
+  if (head === NEG.name && apply.args.length === 1) {
+    const sub = irToBipoly(apply.args[0], x, y);
+    if (sub === undefined) return undefined;
+    const out: BiPoly = new Map();
+    for (const [k, v] of sub) {
+      if (!v.isZero()) out.set(k, v.neg());
+    }
+    return out;
+  }
+  if (head === MUL.name) {
+    let acc: BiPoly = new Map([[biKey(0, 0), BiRational.ONE]]);
+    for (const arg of apply.args) {
+      const sub = irToBipoly(arg, x, y);
+      if (sub === undefined) return undefined;
+      acc = biMulMaps(acc, sub);
+    }
+    return acc;
+  }
+  if (head === POW.name && apply.args.length === 2) {
+    const expNode = apply.args[1];
+    if (expNode.kind !== "integer") return undefined;
+    const eBig = expNode.value;
+    if (eBig < 0n) return undefined;
+    const base = irToBipoly(apply.args[0], x, y);
+    if (base === undefined) return undefined;
+    if (eBig === 0n) return new Map([[biKey(0, 0), BiRational.ONE]]);
+    let result = base;
+    const e = Number(eBig);
+    for (let i = 1; i < e; i += 1) result = biMulMaps(result, base);
+    return result;
+  }
+  return undefined;
+}
+
+function bipolyToIr(p: BiPoly, x: IRSymbol, y: IRSymbol): IRNode {
+  if (p.size === 0) return int(0);
+
+  function monomialNode(i: number, j: number, c: BiRational): IRNode {
+    const parts: IRNode[] = [];
+    const isConstantTerm = i === 0 && j === 0;
+    if (!c.equals(BiRational.ONE) || isConstantTerm) {
+      if (c.denom === 1n) {
+        parts.push(int(c.numer));
+      } else {
+        parts.push(rational(c.numer, c.denom));
+      }
+    }
+    if (i > 0) {
+      parts.push(i === 1 ? x : app(POW, [x, int(i)]));
+    }
+    if (j > 0) {
+      parts.push(j === 1 ? y : app(POW, [y, int(j)]));
+    }
+    if (parts.length === 1) return parts[0];
+    return app(MUL, parts);
+  }
+
+  // Sort by descending total degree, then by descending i, then j.
+  const keys = [...p.keys()].sort((a, b) => {
+    const [ai, aj] = biParseKey(a);
+    const [bi, bj] = biParseKey(b);
+    const aTot = ai + aj;
+    const bTot = bi + bj;
+    if (aTot !== bTot) return bTot - aTot;
+    if (ai !== bi) return bi - ai;
+    return bj - aj;
+  });
+  const terms = keys.map((k) => {
+    const [i, j] = biParseKey(k);
+    return monomialNode(i, j, p.get(k)!);
+  });
+  if (terms.length === 1) return terms[0];
+  return app(ADD, terms);
+}
+
+function tryBivariateHenselIr(inner: IRNode): IRNode | undefined {
+  const vars = findTwoVariables(inner);
+  if (vars === undefined) return undefined;
+  const [x, y] = vars;
+  const bipoly = irToBipoly(inner, x, y);
+  if (bipoly === undefined) return undefined;
+  const factors = tryBivariateHensel(bipoly);
+  if (factors === null || factors.length < 2) return undefined;
+  const factorNodes = factors.map((f) => bipolyToIr(f, x, y));
+  if (factorNodes.length === 1) return factorNodes[0];
+  return app(MUL, factorNodes);
+}
+
+// ---------------------------------------------------------------------------
+// n-variate (n ≥ 3) Hensel-lifting IR glue — Track K2.  Mirrors the
+// Python ``_find_n_variables``, ``_ir_to_npoly``, ``_npoly_to_ir``, and
+// ``_try_n_variate_hensel_ir`` helpers in ``cas_handlers.py``.
+//
+// Output convention: LEFT-NESTED BINARY Add/Mul.  The symbolic-vm
+// primitive Add/Mul handlers are strictly binary, so an
+// ``IRApply(ADD, (a, b, c))`` with three or more children would crash
+// when re-evaluated.  We mirror the cubic-identity handler's nesting
+// convention: ``Add(Add(a, b), c)`` for three terms, etc.
+// ---------------------------------------------------------------------------
+
+const MAX_N_VARS = 8;
+
+function findNVariables(node: IRNode): IRSymbol[] | undefined {
+  const seen: IRSymbol[] = [];
+  function walk(n: IRNode): boolean {
+    if (n.kind === "symbol") {
+      if (n.name.startsWith("%")) return true;
+      if (!seen.some((s) => s.name === n.name)) {
+        seen.push(n);
+        if (seen.length > MAX_N_VARS) return false;
+      }
+      return true;
+    }
+    if (n.kind === "apply") {
+      for (const arg of n.args) {
+        if (!walk(arg)) return false;
+      }
+    }
+    return true;
+  }
+  if (!walk(node)) return undefined;
+  if (seen.length === 0) return undefined;
+  return seen;
+}
+
+function nKeyJoin(tup: number[]): string {
+  return tup.join(",");
+}
+
+function nParseKeyJoin(k: string, numVars: number): number[] {
+  const out: number[] = [];
+  let start = 0;
+  for (let i = 0; i < numVars - 1; i += 1) {
+    const idx = k.indexOf(",", start);
+    out.push(Number(k.slice(start, idx)));
+    start = idx + 1;
+  }
+  out.push(Number(k.slice(start)));
+  return out;
+}
+
+function nAddInto(acc: NPoly, other: NPoly): void {
+  for (const [k, v] of other) {
+    const cur = acc.get(k);
+    acc.set(k, cur === undefined ? v : cur.add(v));
+  }
+  for (const [k, v] of [...acc]) {
+    if (v.isZero()) acc.delete(k);
+  }
+}
+
+function nMulMaps(a: NPoly, b: NPoly, numVars: number): NPoly {
+  const out: NPoly = new Map();
+  for (const [k1, c1] of a) {
+    if (c1.isZero()) continue;
+    const t1 = nParseKeyJoin(k1, numVars);
+    for (const [k2, c2] of b) {
+      if (c2.isZero()) continue;
+      const t2 = nParseKeyJoin(k2, numVars);
+      const t: number[] = new Array<number>(numVars);
+      for (let i = 0; i < numVars; i += 1) t[i] = t1[i] + t2[i];
+      const k = nKeyJoin(t);
+      const cur = out.get(k);
+      out.set(k, cur === undefined ? c1.mul(c2) : cur.add(c1.mul(c2)));
+    }
+  }
+  for (const [k, v] of [...out]) {
+    if (v.isZero()) out.delete(k);
+  }
+  return out;
+}
+
+function irToNpoly(node: IRNode, vars: IRSymbol[]): NPoly | undefined {
+  const numVars = vars.length;
+  const zeroKey = nKeyJoin(new Array<number>(numVars).fill(0));
+  const varIndex = new Map<string, number>();
+  vars.forEach((v, i) => varIndex.set(v.name, i));
+
+  function unitFor(v: IRSymbol): string {
+    const i = varIndex.get(v.name);
+    if (i === undefined) throw new Error("unitFor on non-tracked var");
+    const tup = new Array<number>(numVars).fill(0);
+    tup[i] = 1;
+    return nKeyJoin(tup);
+  }
+
+  function walk(n: IRNode): NPoly | undefined {
+    if (n.kind === "integer") {
+      if (n.value === 0n) return new Map();
+      return new Map([[zeroKey, BiRational.fromInt(n.value)]]);
+    }
+    if (n.kind === "rational") {
+      return new Map([[zeroKey, new BiRational(n.numer, n.denom)]]);
+    }
+    if (n.kind === "float" || n.kind === "string") return undefined;
+    if (n.kind === "symbol") {
+      if (n.name.startsWith("%")) return undefined;
+      if (varIndex.has(n.name)) return new Map([[unitFor(n), BiRational.ONE]]);
+      return undefined;
+    }
+    const apply = n;
+    if (apply.head.kind !== "symbol") return undefined;
+    const head = apply.head.name;
+    if (head === ADD.name) {
+      const acc: NPoly = new Map();
+      for (const arg of apply.args) {
+        const sub = walk(arg);
+        if (sub === undefined) return undefined;
+        nAddInto(acc, sub);
+      }
+      return acc;
+    }
+    if (head === SUB.name && apply.args.length === 2) {
+      const a = walk(apply.args[0]);
+      const b = walk(apply.args[1]);
+      if (a === undefined || b === undefined) return undefined;
+      const negB: NPoly = new Map();
+      for (const [k, v] of b) negB.set(k, v.neg());
+      nAddInto(a, negB);
+      return a;
+    }
+    if (head === NEG.name && apply.args.length === 1) {
+      const sub = walk(apply.args[0]);
+      if (sub === undefined) return undefined;
+      const out: NPoly = new Map();
+      for (const [k, v] of sub) {
+        if (!v.isZero()) out.set(k, v.neg());
+      }
+      return out;
+    }
+    if (head === MUL.name) {
+      let acc: NPoly = new Map([[zeroKey, BiRational.ONE]]);
+      for (const arg of apply.args) {
+        const sub = walk(arg);
+        if (sub === undefined) return undefined;
+        acc = nMulMaps(acc, sub, numVars);
+      }
+      return acc;
+    }
+    if (head === POW.name && apply.args.length === 2) {
+      const expNode = apply.args[1];
+      if (expNode.kind !== "integer") return undefined;
+      const eBig = expNode.value;
+      if (eBig < 0n) return undefined;
+      const base = walk(apply.args[0]);
+      if (base === undefined) return undefined;
+      if (eBig === 0n) return new Map([[zeroKey, BiRational.ONE]]);
+      let result = base;
+      const e = Number(eBig);
+      for (let i = 1; i < e; i += 1) result = nMulMaps(result, base, numVars);
+      return result;
+    }
+    return undefined;
+  }
+
+  return walk(node);
+}
+
+/** Left-fold a list of children into nested binary IRApply nodes. */
+function foldBinary(head: IRSymbol, parts: IRNode[]): IRNode {
+  if (parts.length === 0) throw new Error("foldBinary requires at least one node");
+  let result = parts[0];
+  for (let i = 1; i < parts.length; i += 1) {
+    result = app(head, [result, parts[i]]);
+  }
+  return result;
+}
+
+function npolyToIr(p: NPoly, vars: IRSymbol[]): IRNode {
+  if (p.size === 0) return int(0);
+  const numVars = vars.length;
+
+  function monomialNode(tup: number[], c: BiRational): IRNode {
+    const parts: IRNode[] = [];
+    const allZero = tup.every((e) => e === 0);
+    if (!c.equals(BiRational.ONE) || allZero) {
+      if (c.denom === 1n) parts.push(int(c.numer));
+      else parts.push(rational(c.numer, c.denom));
+    }
+    for (let i = 0; i < numVars; i += 1) {
+      const e = tup[i];
+      if (e <= 0) continue;
+      const v = vars[i];
+      parts.push(e === 1 ? v : app(POW, [v, int(e)]));
+    }
+    if (parts.length === 0) return int(1);
+    return foldBinary(MUL, parts);
+  }
+
+  // Sort: descending total degree, then lex on negated exponents (matches
+  // Python ``_npoly_to_ir`` key order).
+  const keys = [...p.keys()].sort((a, b) => {
+    const ta = nParseKeyJoin(a, numVars);
+    const tb = nParseKeyJoin(b, numVars);
+    const sa = ta.reduce((x, y) => x + y, 0);
+    const sb = tb.reduce((x, y) => x + y, 0);
+    if (sa !== sb) return sb - sa;
+    for (let i = 0; i < numVars; i += 1) {
+      if (ta[i] !== tb[i]) return tb[i] - ta[i];
+    }
+    return 0;
+  });
+  const terms = keys.map((k) => monomialNode(nParseKeyJoin(k, numVars), p.get(k)!));
+  return foldBinary(ADD, terms);
+}
+
+function tryNVariateHenselIr(inner: IRNode): IRNode | undefined {
+  const vars = findNVariables(inner);
+  if (vars === undefined || vars.length < 2) return undefined;
+  const npoly = irToNpoly(inner, vars);
+  if (npoly === undefined) return undefined;
+  const factors = tryNVariateHensel(npoly, vars.length);
+  if (factors === null || factors.length < 2) return undefined;
+  const factorNodes = factors.map((f) => npolyToIr(f, vars));
+  if (factorNodes.length === 1) return factorNodes[0];
+  // Left-nested binary Mul output for binary-handler compatibility.
+  return foldBinary(MUL, factorNodes);
 }
 
 function factorResultToIr(content: bigint, factors: Array<[bigint[], number]>, variable: IRSymbol): IRNode {
@@ -1620,6 +2100,721 @@ function nodeKey(node: IRNode): string {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Apart (Track B1) — partial-fraction decomposition over Q(x).
+//
+// Supports simple rational roots, repeated rational roots, and proper
+// irreducible denominators that are already apart, and mixed rational-root
+// plus irreducible residual factors.
+//
+// Polynomials here use a coefficient-tuple representation indexed by power
+// (lowest degree first) — same convention as ``polynomial-bridge.py``:
+//
+//     [c0, c1, c2]  ↔  c0 + c1·x + c2·x²
+//
+// Coefficients are ``RatQ`` values (bigint numerator + bigint denominator,
+// always lowest terms with denom > 0).  We deliberately roll our own thin
+// fraction type rather than reusing ``Numeric`` because Numeric also admits
+// floats — Apart must stay exact.
+// ---------------------------------------------------------------------------
+
+/** Exact rational coefficient: numerator + positive denominator in lowest terms. */
+type RatQ = readonly [bigint, bigint];
+
+const RQ_ZERO: RatQ = [0n, 1n];
+const RQ_ONE: RatQ = [1n, 1n];
+
+function rqAbs(n: bigint): bigint {
+  return n < 0n ? -n : n;
+}
+
+/** Greatest common divisor of two non-negative bigints. */
+function rqGcd(a: bigint, b: bigint): bigint {
+  let x = a < 0n ? -a : a;
+  let y = b < 0n ? -b : b;
+  while (y !== 0n) {
+    [x, y] = [y, x % y];
+  }
+  return x;
+}
+
+/** Build a RatQ from raw numer/denom, reducing to lowest terms with denom > 0. */
+function rqMake(n: bigint, d: bigint): RatQ {
+  if (d === 0n) throw new RangeError("zero denominator in RatQ");
+  if (d < 0n) {
+    n = -n;
+    d = -d;
+  }
+  if (n === 0n) return RQ_ZERO;
+  const g = rqGcd(rqAbs(n), d);
+  return [n / g, d / g];
+}
+
+function rqIsZero(r: RatQ): boolean {
+  return r[0] === 0n;
+}
+
+function rqEquals(a: RatQ, b: RatQ): boolean {
+  return a[0] === b[0] && a[1] === b[1];
+}
+
+function rqAdd(a: RatQ, b: RatQ): RatQ {
+  return rqMake(a[0] * b[1] + b[0] * a[1], a[1] * b[1]);
+}
+
+function rqSub(a: RatQ, b: RatQ): RatQ {
+  return rqMake(a[0] * b[1] - b[0] * a[1], a[1] * b[1]);
+}
+
+function rqMul(a: RatQ, b: RatQ): RatQ {
+  return rqMake(a[0] * b[0], a[1] * b[1]);
+}
+
+function rqDiv(a: RatQ, b: RatQ): RatQ {
+  if (b[0] === 0n) throw new RangeError("division by zero in RatQ");
+  return rqMake(a[0] * b[1], a[1] * b[0]);
+}
+
+function rqNeg(r: RatQ): RatQ {
+  return [-r[0], r[1]];
+}
+
+/** Convert a RatQ to IR (Integer when denom == 1, otherwise Rational). */
+function rqToIr(r: RatQ): IRNode {
+  if (r[0] === 0n) return int(0);
+  if (r[1] === 1n) return int(r[0]);
+  return rational(r[0], r[1]);
+}
+
+/** Coefficient tuple (lowest-degree first); empty array == zero polynomial. */
+type PolyQ = readonly RatQ[];
+
+/** Strip trailing zeros — analog of ``polynomial.normalize``. */
+function polyQNormalize(p: PolyQ): RatQ[] {
+  const result = [...p];
+  while (result.length > 0 && rqIsZero(result[result.length - 1])) result.pop();
+  return result;
+}
+
+/** Degree (-1 for the zero polynomial). */
+function polyQDegree(p: PolyQ): number {
+  const n = polyQNormalize(p);
+  return n.length - 1;
+}
+
+/** Horner evaluation at a rational point. */
+function polyQEvaluate(p: PolyQ, x: RatQ): RatQ {
+  const n = polyQNormalize(p);
+  if (n.length === 0) return RQ_ZERO;
+  let acc: RatQ = RQ_ZERO;
+  for (let i = n.length - 1; i >= 0; i -= 1) {
+    acc = rqAdd(rqMul(acc, x), n[i]);
+  }
+  return acc;
+}
+
+/** Formal derivative; constant / zero polynomial → []. */
+function polyQDeriv(p: PolyQ): RatQ[] {
+  const n = polyQNormalize(p);
+  if (n.length <= 1) return [];
+  const result: RatQ[] = [];
+  for (let i = 1; i < n.length; i += 1) {
+    result.push(rqMul(n[i], [BigInt(i), 1n]));
+  }
+  return polyQNormalize(result);
+}
+
+/** Polynomial long division: returns { q, r } such that ``a = b·q + r``. */
+function polyQDivmod(a: PolyQ, b: PolyQ): { q: RatQ[]; r: RatQ[] } {
+  const nb = polyQNormalize(b);
+  if (nb.length === 0) throw new RangeError("polynomial division by zero");
+  const na = polyQNormalize(a);
+  const degA = na.length - 1;
+  const degB = nb.length - 1;
+  if (degA < degB) return { q: [], r: na };
+  const rem: RatQ[] = [...na];
+  const quot: RatQ[] = Array.from({ length: degA - degB + 1 }, () => RQ_ZERO);
+  const leadB = nb[degB];
+  let degRem = degA;
+  while (degRem >= degB) {
+    const coeff = rqDiv(rem[degRem], leadB);
+    const power = degRem - degB;
+    quot[power] = coeff;
+    for (let j = 0; j < nb.length; j += 1) {
+      rem[power + j] = rqSub(rem[power + j], rqMul(coeff, nb[j]));
+    }
+    degRem -= 1;
+    while (degRem >= 0 && rqIsZero(rem[degRem])) degRem -= 1;
+  }
+  return { q: polyQNormalize(quot), r: polyQNormalize(rem) };
+}
+
+/** Distinct rational roots via the Rational-Roots Theorem.  Returns roots
+ *  as ``RatQ`` values in arbitrary order. */
+function polyQRationalRoots(p: PolyQ): RatQ[] {
+  const n = polyQNormalize(p);
+  if (n.length <= 1) return [];
+
+  // Clear denominators so candidates come from integer divisors of p.
+  let lcmDen = 1n;
+  for (const [, d] of n) {
+    lcmDen = (lcmDen * d) / rqGcd(lcmDen, d);
+  }
+  let intCoeffs = n.map(([num, den]) => (num * lcmDen) / den);
+  if (intCoeffs[intCoeffs.length - 1] < 0n) {
+    intCoeffs = intCoeffs.map((c) => -c);
+  }
+
+  const a0 = intCoeffs[0];
+  const an = intCoeffs[intCoeffs.length - 1];
+
+  if (a0 === 0n) {
+    // x = 0 is a root; strip it and recurse on the tail.
+    const tailInt = intCoeffs.slice(1);
+    const tailPoly: RatQ[] = tailInt.map((c) => rqMake(c, 1n));
+    const tailRoots = polyQRationalRoots(tailPoly);
+    const found = new Map<string, RatQ>();
+    found.set("0/1", RQ_ZERO);
+    for (const r of tailRoots) found.set(`${r[0]}/${r[1]}`, r);
+    // Sort ascending — matches Python's ``sorted(roots)`` (Phase 48 needs
+    // a stable ascending order across multi-root denominators that include
+    // ``x = 0``; B1's simple-root tests never exercised this branch).
+    const all = [...found.values()];
+    all.sort((a, b) => {
+      const lhs = a[0] * b[1];
+      const rhs = b[0] * a[1];
+      if (lhs < rhs) return -1;
+      if (lhs > rhs) return 1;
+      return 0;
+    });
+    return all;
+  }
+
+  const divisors = (m: bigint): bigint[] => {
+    const abs = m < 0n ? -m : m;
+    const out: bigint[] = [];
+    for (let d = 1n; d <= abs; d += 1n) {
+      if (abs % d === 0n) out.push(d);
+    }
+    return out;
+  };
+
+  const pDivs = divisors(a0);
+  const qDivs = divisors(an);
+
+  const candidates = new Map<string, RatQ>();
+  for (const u of pDivs) {
+    for (const v of qDivs) {
+      const pos = rqMake(u, v);
+      const neg = rqMake(-u, v);
+      candidates.set(`${pos[0]}/${pos[1]}`, pos);
+      candidates.set(`${neg[0]}/${neg[1]}`, neg);
+    }
+  }
+
+  const intPoly: RatQ[] = intCoeffs.map((c) => rqMake(c, 1n));
+  const roots: RatQ[] = [];
+  for (const cand of candidates.values()) {
+    if (rqIsZero(polyQEvaluate(intPoly, cand))) roots.push(cand);
+  }
+  // Sort ascending by rational value to match Python's ``sorted(roots)``
+  // — keeps the IR output shape stable across regression tests.
+  roots.sort((a, b) => {
+    const lhs = a[0] * b[1];
+    const rhs = b[0] * a[1];
+    if (lhs < rhs) return -1;
+    if (lhs > rhs) return 1;
+    return 0;
+  });
+  return roots;
+}
+
+/** For each rational root r, count how many times (x − r) divides ``den``.
+ *  Also returns the remaining factor, which is constant iff ``den`` fully
+ *  splits over Q. */
+function polyQRootMultiplicitiesAndResidual(
+  den: PolyQ,
+  roots: readonly RatQ[],
+): { mults: Map<string, { root: RatQ; mult: number }>; residual: RatQ[] } | undefined {
+  const out = new Map<string, { root: RatQ; mult: number }>();
+  let remaining: RatQ[] = polyQNormalize(den);
+  for (const r of roots) {
+    let m = 0;
+    const linear: RatQ[] = [rqNeg(r), RQ_ONE]; // (x − r)
+    // Repeatedly divide while exact.
+    /* eslint-disable no-constant-condition */
+    while (true) {
+      const { q, r: rem } = polyQDivmod(remaining, linear);
+      if (polyQNormalize(rem).length === 0) {
+        remaining = q;
+        m += 1;
+      } else {
+        break;
+      }
+    }
+    /* eslint-enable no-constant-condition */
+    if (m === 0) return undefined;
+    out.set(`${r[0]}/${r[1]}`, { root: r, mult: m });
+  }
+  return { mults: out, residual: polyQNormalize(remaining) };
+}
+
+// --- IR ↔ polynomial bridge -------------------------------------------------
+
+type RationalForm = { num: RatQ[]; den: RatQ[] };
+
+/** Mirror of Python ``polynomial_bridge.to_rational``: walks an IR tree and
+ *  returns ``{ num, den }`` if it lives in Q(x); otherwise ``undefined``. */
+function toRational(node: IRNode, x: IRSymbol): RationalForm | undefined {
+  return toRationalWalk(node, x);
+}
+
+function toRationalWalk(node: IRNode, x: IRSymbol): RationalForm | undefined {
+  if (node.kind === "integer") {
+    return { num: [rqMake(node.value, 1n)], den: [RQ_ONE] };
+  }
+  if (node.kind === "rational") {
+    return { num: [rqMake(node.numer, node.denom)], den: [RQ_ONE] };
+  }
+  if (node.kind === "float") return undefined; // exact only
+  if (node.kind === "symbol") {
+    if (node.name === x.name) {
+      return { num: [RQ_ZERO, RQ_ONE], den: [RQ_ONE] };
+    }
+    return undefined;
+  }
+  if (node.kind !== "apply") return undefined;
+  const head = node.head;
+
+  if (equals(head, ADD)) {
+    return reduceRational(node.args, x, addRational);
+  }
+  if (equals(head, SUB)) {
+    if (node.args.length !== 2) return undefined;
+    const a = toRationalWalk(node.args[0], x);
+    const b = toRationalWalk(node.args[1], x);
+    if (!a || !b) return undefined;
+    return subRational(a, b);
+  }
+  if (equals(head, NEG)) {
+    if (node.args.length !== 1) return undefined;
+    const a = toRationalWalk(node.args[0], x);
+    if (!a) return undefined;
+    return { num: a.num.map(rqNeg), den: a.den };
+  }
+  if (equals(head, MUL)) {
+    return reduceRational(node.args, x, mulRational);
+  }
+  if (equals(head, DIV)) {
+    if (node.args.length !== 2) return undefined;
+    const a = toRationalWalk(node.args[0], x);
+    const b = toRationalWalk(node.args[1], x);
+    if (!a || !b) return undefined;
+    return divRational(a, b);
+  }
+  if (equals(head, POW)) {
+    if (node.args.length !== 2) return undefined;
+    return powRational(node.args[0], node.args[1], x);
+  }
+  return undefined;
+}
+
+function polyQAdd(a: PolyQ, b: PolyQ): RatQ[] {
+  const n = Math.max(a.length, b.length);
+  const out: RatQ[] = [];
+  for (let i = 0; i < n; i += 1) {
+    const av = i < a.length ? a[i] : RQ_ZERO;
+    const bv = i < b.length ? b[i] : RQ_ZERO;
+    out.push(rqAdd(av, bv));
+  }
+  return polyQNormalize(out);
+}
+
+function polyQSub(a: PolyQ, b: PolyQ): RatQ[] {
+  const n = Math.max(a.length, b.length);
+  const out: RatQ[] = [];
+  for (let i = 0; i < n; i += 1) {
+    const av = i < a.length ? a[i] : RQ_ZERO;
+    const bv = i < b.length ? b[i] : RQ_ZERO;
+    out.push(rqSub(av, bv));
+  }
+  return polyQNormalize(out);
+}
+
+function polyQMul(a: PolyQ, b: PolyQ): RatQ[] {
+  if (a.length === 0 || b.length === 0) return [];
+  const out: RatQ[] = Array.from({ length: a.length + b.length - 1 }, () => RQ_ZERO);
+  for (let i = 0; i < a.length; i += 1) {
+    if (rqIsZero(a[i])) continue;
+    for (let j = 0; j < b.length; j += 1) {
+      if (rqIsZero(b[j])) continue;
+      out[i + j] = rqAdd(out[i + j], rqMul(a[i], b[j]));
+    }
+  }
+  return polyQNormalize(out);
+}
+
+function polyQPow(p: PolyQ, n: number): RatQ[] {
+  let result: RatQ[] = [RQ_ONE];
+  for (let i = 0; i < n; i += 1) {
+    result = polyQMul(result, p);
+  }
+  return result;
+}
+
+function addRational(a: RationalForm, b: RationalForm): RationalForm {
+  return {
+    num: polyQAdd(polyQMul(a.num, b.den), polyQMul(b.num, a.den)),
+    den: polyQMul(a.den, b.den),
+  };
+}
+
+function subRational(a: RationalForm, b: RationalForm): RationalForm {
+  return {
+    num: polyQSub(polyQMul(a.num, b.den), polyQMul(b.num, a.den)),
+    den: polyQMul(a.den, b.den),
+  };
+}
+
+function mulRational(a: RationalForm, b: RationalForm): RationalForm {
+  return { num: polyQMul(a.num, b.num), den: polyQMul(a.den, b.den) };
+}
+
+function divRational(a: RationalForm, b: RationalForm): RationalForm | undefined {
+  const newDen = polyQMul(a.den, b.num);
+  if (polyQNormalize(newDen).length === 0) return undefined;
+  return { num: polyQMul(a.num, b.den), den: newDen };
+}
+
+function powRational(
+  baseNode: IRNode,
+  expNode: IRNode,
+  x: IRSymbol,
+): RationalForm | undefined {
+  if (expNode.kind !== "integer") return undefined;
+  const baseR = toRationalWalk(baseNode, x);
+  if (!baseR) return undefined;
+  const n = Number(expNode.value);
+  if (!Number.isFinite(n)) return undefined;
+  if (n === 0) return { num: [RQ_ONE], den: [RQ_ONE] };
+  if (n < 0) {
+    if (polyQNormalize(baseR.num).length === 0) return undefined;
+    return { num: polyQPow(baseR.den, -n), den: polyQPow(baseR.num, -n) };
+  }
+  return { num: polyQPow(baseR.num, n), den: polyQPow(baseR.den, n) };
+}
+
+function reduceRational(
+  args: readonly IRNode[],
+  x: IRSymbol,
+  op: (a: RationalForm, b: RationalForm) => RationalForm | undefined,
+): RationalForm | undefined {
+  if (args.length === 0) return undefined;
+  let acc = toRationalWalk(args[0], x);
+  if (!acc) return undefined;
+  for (let i = 1; i < args.length; i += 1) {
+    const other = toRationalWalk(args[i], x);
+    if (!other) return undefined;
+    const next = op(acc, other);
+    if (!next) return undefined;
+    acc = next;
+  }
+  return acc;
+}
+
+/** Build the canonical IR tree for a polynomial.  Mirrors
+ *  ``polynomial_bridge.from_polynomial``: emits ``Add(term_0, term_1, …)``
+ *  left-associated, drops zero terms, special-cases ±1 coefficients. */
+function fromPolynomial(p: PolyQ, x: IRSymbol): IRNode {
+  const n = polyQNormalize(p);
+  if (n.length === 0) return int(0);
+  if (n.length === 1) return rqToIr(n[0]);
+  const terms: IRNode[] = [];
+  for (let i = 0; i < n.length; i += 1) {
+    const c = n[i];
+    if (rqIsZero(c)) continue;
+    terms.push(polyTerm(c, i, x));
+  }
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  let acc: IRNode = terms[0];
+  for (let i = 1; i < terms.length; i += 1) {
+    acc = app(ADD, [acc, terms[i]]);
+  }
+  return acc;
+}
+
+function polyTerm(c: RatQ, i: number, x: IRSymbol): IRNode {
+  if (i === 0) return rqToIr(c);
+  const power: IRNode = i === 1 ? x : app(POW, [x, int(i)]);
+  if (rqEquals(c, RQ_ONE)) return power;
+  if (rqEquals(c, [-1n, 1n])) return app(NEG, [power]);
+  return app(MUL, [rqToIr(c), power]);
+}
+
+// --- Apart simple-roots (Phase 1) + repeated linear factors (Phase 48) -----
+
+/** Phase 1 simple-root path; mirrors ``_apart_simple_roots`` in Python.
+ *  Returns ``undefined`` when any residue blows up (repeated root that
+ *  slipped through — defensive, the caller already gates on this). */
+function apartSimpleRoots(
+  num: PolyQ,
+  den: PolyQ,
+  roots: readonly RatQ[],
+  x: IRSymbol,
+): IRNode | undefined {
+  const denDeriv = polyQDeriv(den);
+  const terms: IRNode[] = [];
+  for (const r of roots) {
+    const numVal = polyQEvaluate(num, r);
+    const denDVal = polyQEvaluate(denDeriv, r);
+    if (rqIsZero(denDVal)) return undefined;
+    const A = rqDiv(numVal, denDVal);
+    const negR = rqNeg(r);
+    const factorIr = fromPolynomial([negR, RQ_ONE], x);
+    if (rqEquals(A, RQ_ONE)) {
+      terms.push(app(DIV, [int(1), factorIr]));
+    } else if (rqEquals(A, [-1n, 1n])) {
+      terms.push(app(NEG, [app(DIV, [int(1), factorIr])]));
+    } else {
+      terms.push(app(DIV, [rqToIr(A), factorIr]));
+    }
+  }
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  let acc: IRNode = terms[0];
+  for (let i = 1; i < terms.length; i += 1) {
+    acc = app(ADD, [acc, terms[i]]);
+  }
+  return acc;
+}
+
+/** Binomial coefficient ``C(n, k)``.  Returns ``0n`` when k is out of
+ *  range so callers can sum unconditionally.  Mirrors Python ``_binomial``. */
+function binomialBig(n: number, k: number): bigint {
+  if (k < 0 || k > n) return 0n;
+  if (k === 0 || k === n) return 1n;
+  const kk = Math.min(k, n - k);
+  let result = 1n;
+  for (let i = 0; i < kk; i += 1) {
+    result = (result * BigInt(n - i)) / BigInt(i + 1);
+  }
+  return result;
+}
+
+/** Return the first ``length`` Taylor coefficients of ``poly(r + t)`` as
+ *  a polynomial in ``t``.  Mirrors Python ``_taylor_expand_around_r``:
+ *  for ``poly(x) = ∑ c_i x^i``,
+ *      poly(r + t) = ∑_j t^j · [∑_{i ≥ j} c_i · C(i, j) · r^(i − j)].
+ *  When ``length`` exceeds ``deg poly`` trailing entries are filled with 0. */
+function polyTaylorExpandAroundR(poly: PolyQ, r: RatQ, length: number): RatQ[] {
+  const deg = poly.length - 1;
+  const result: RatQ[] = [];
+  for (let j = 0; j < length; j += 1) {
+    let cj: RatQ = RQ_ZERO;
+    let rPow: RatQ = RQ_ONE; // r^(i - j) starts at r^0 when i == j
+    for (let i = j; i <= deg; i += 1) {
+      const coef = poly[i];
+      const binom = binomialBig(i, j);
+      if (binom !== 0n) {
+        const term = rqMul(rqMul(coef, [binom, 1n]), rPow);
+        cj = rqAdd(cj, term);
+      }
+      rPow = rqMul(rPow, r);
+    }
+    result.push(cj);
+  }
+  return result;
+}
+
+/** Formal power-series division ``N(t) / D(t)`` up to ``t^(length − 1)``.
+ *  Requires ``D(0) ≠ 0`` — returns ``undefined`` otherwise (signal of a
+ *  repeated-root miscount upstream).  Mirrors Python ``_series_div``. */
+function polySeriesDiv(
+  nCoeffs: readonly RatQ[],
+  dCoeffs: readonly RatQ[],
+  length: number,
+): RatQ[] | undefined {
+  if (dCoeffs.length === 0 || rqIsZero(dCoeffs[0])) return undefined;
+  const d0 = dCoeffs[0];
+  const q: RatQ[] = [];
+  for (let j = 0; j < length; j += 1) {
+    const nj = j < nCoeffs.length ? nCoeffs[j] : RQ_ZERO;
+    let s: RatQ = RQ_ZERO;
+    for (let k = 1; k <= j; k += 1) {
+      const dk = k < dCoeffs.length ? dCoeffs[k] : RQ_ZERO;
+      s = rqAdd(s, rqMul(dk, q[j - k]));
+    }
+    q.push(rqDiv(rqSub(nj, s), d0));
+  }
+  return q;
+}
+
+/** Build the IR for ``A / (x − r)^power``.  Drops ±1 numerator coefficients
+ *  to match the formatting convention in ``apartSimpleRoots``.  Mirrors
+ *  Python ``_build_apart_term``. */
+function buildApartTerm(A: RatQ, r: RatQ, power: number, x: IRSymbol): IRNode {
+  const negR = rqNeg(r);
+  const factorIr = fromPolynomial([negR, RQ_ONE], x);
+  const denomIr: IRNode = power === 1 ? factorIr : app(POW, [factorIr, int(power)]);
+  if (rqEquals(A, RQ_ONE)) {
+    return app(DIV, [int(1), denomIr]);
+  }
+  if (rqEquals(A, [-1n, 1n])) {
+    return app(NEG, [app(DIV, [int(1), denomIr])]);
+  }
+  return app(DIV, [rqToIr(A), denomIr]);
+}
+
+/** Decompose a *proper* rational function (deg num < deg den).
+ *
+ *  Phase 1 (simple roots) — uses the residue formula ``A_i = P(r_i)/Q'(r_i)``
+ *  for each distinct rational root ``r_i``.
+ *
+ *  Phase 48 (repeated linear factors) — for each root ``r`` of multiplicity
+ *  ``m`` compute ``Q(x) = den(x)/(x − r)^m`` and expand
+ *  ``φ(t) = P(r + t)/Q(r + t)`` as a Taylor series in ``t`` up to ``t^(m−1)``.
+ *  Then ``A_{r, m − j} = φ_j``.  Emits terms ``A / (x − r)^power`` for
+ *  ``power = 1..m``.
+ *
+ *  Mixed rational-root plus irreducible residual factors are decomposed into
+ *  rational-pole terms plus a proper residual rational term. */
+function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
+  const roots = polyQRationalRoots(den);
+  if (roots.length === 0) return properRationalToIr(num, den, x);
+  const split = polyQRootMultiplicitiesAndResidual(den, roots);
+  if (split === undefined) return undefined;
+  const { mults, residual: residualDen } = split;
+  const hasResidual = polyQDegree(residualDen) >= 1;
+
+  // Phase 1 fast path — preserves the existing output shape for the
+  // regression tests written against B1.
+  let allSimple = true;
+  for (const { mult } of mults.values()) {
+    if (mult > 1) {
+      allSimple = false;
+      break;
+    }
+  }
+  if (!hasResidual && allSimple) return apartSimpleRoots(num, den, roots, x);
+
+  // Phase 48 generic path: Taylor + series-division per root.
+  const terms: IRNode[] = [];
+  let linearPart: RatQ[] = [RQ_ONE];
+  let residualNum: RatQ[] = polyQNormalize(num);
+  for (const r of roots) {
+    const key = `${r[0]}/${r[1]}`;
+    const entry = mults.get(key);
+    if (entry === undefined) return undefined; // defensive — shouldn't happen
+    const m = entry.mult;
+    // Q(x) = den(x) / (x − r)^m.  Successive divisions are exact because
+    // we just verified the multiplicity above.
+    let qPoly: RatQ[] = polyQNormalize(den);
+    const linear: RatQ[] = [rqNeg(r), RQ_ONE];
+    for (let i = 0; i < m; i += 1) {
+      linearPart = polyQMul(linearPart, linear);
+    }
+    for (let i = 0; i < m; i += 1) {
+      const { q } = polyQDivmod(qPoly, linear);
+      qPoly = q;
+    }
+    // Taylor-expand both P(r + t) and Q(r + t) up to t^(m − 1).
+    const nTaylor = polyTaylorExpandAroundR(num, r, m);
+    const dTaylor = polyTaylorExpandAroundR(qPoly, r, m);
+    const phi = polySeriesDiv(nTaylor, dTaylor, m);
+    if (phi === undefined) return undefined;
+    // A_{r, m − j} = phi[j].  Emit ascending power order:
+    // 1/(x − r), 1/(x − r)^2, …, 1/(x − r)^m.
+    for (let power = 1; power <= m; power += 1) {
+      const j = m - power;
+      const A = phi[j];
+      if (rqIsZero(A)) continue;
+      terms.push(buildApartTerm(A, r, power, x));
+      let poleDenom: RatQ[] = [RQ_ONE];
+      for (let i = 0; i < power; i += 1) {
+        poleDenom = polyQMul(poleDenom, linear);
+      }
+      const { q, r: rem } = polyQDivmod(den, poleDenom);
+      if (polyQNormalize(rem).length !== 0) return undefined;
+      residualNum = polyQSub(
+        residualNum,
+        q.map((c) => rqMul(c, A)),
+      );
+    }
+  }
+  if (hasResidual) {
+    const { q: residualQuotient, r: residualRem } = polyQDivmod(residualNum, linearPart);
+    if (polyQNormalize(residualRem).length !== 0) return undefined;
+    const residualIr = properRationalToIr(residualQuotient, residualDen, x);
+    if (!(residualIr.kind === "integer" && residualIr.value === 0n)) {
+      terms.push(residualIr);
+    }
+  }
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  let acc: IRNode = terms[0];
+  for (let i = 1; i < terms.length; i += 1) {
+    acc = app(ADD, [acc, terms[i]]);
+  }
+  return acc;
+}
+
+function properRationalToIr(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode {
+  if (polyQNormalize(num).length === 0) return int(0);
+  return app(DIV, [fromPolynomial(num, x), fromPolynomial(den, x)]);
+}
+
+function apartHandler(_vm: VM, expr: IRApply): IRNode {
+  if (expr.args.length !== 2) return expr;
+  const inner = expr.args[0];
+  const varNode = expr.args[1];
+  if (varNode.kind !== "symbol") return expr;
+  const rational = toRational(inner, varNode);
+  if (!rational) return expr;
+  const num = polyQNormalize(rational.num);
+  const den = polyQNormalize(rational.den);
+  if (den.length === 1 && rqEquals(den[0], RQ_ONE)) {
+    // Already a polynomial.
+    return fromPolynomial(num, varNode);
+  }
+  const numDeg = polyQDegree(num);
+  const denDeg = polyQDegree(den);
+  if (numDeg >= denDeg) {
+    // Improper fraction — polynomial division first, then Apart on the
+    // proper remainder.
+    const { q, r } = polyQDivmod(num, den);
+    if (polyQNormalize(r).length === 0) {
+      return fromPolynomial(q, varNode);
+    }
+    const properResult = apartProper(r, den, varNode);
+    if (properResult === undefined) return expr;
+    const polyPart = fromPolynomial(q, varNode);
+    return app(ADD, [polyPart, properResult]);
+  }
+  const result = apartProper(num, den, varNode);
+  if (result === undefined) return expr;
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Track G2 — current-VM assumption store, mirror of the Python
+// ``_CURRENT_VM`` ContextVar.
+//
+// Most integrator helpers operate on pure IR and don't need the VM.
+// The symbolic-coefficient Weierstrass helper (added in Track G2)
+// needs to query ``vm.assumptions`` for the discriminant sign.
+// Threading ``vm`` through every helper signature would touch ~30
+// call sites; we instead publish the live store via a module-level
+// reference that the top-level ``Integrate`` handler sets for the
+// duration of one evaluation.  JavaScript is single-threaded so a
+// plain ``let`` is the natural mirror of Python's ``ContextVar``.
+// ---------------------------------------------------------------------------
+let CURRENT_ASSUMPTIONS: AssumptionContext | undefined;
+
+function currentAssumptions(): AssumptionContext | undefined {
+  return CURRENT_ASSUMPTIONS;
+}
+
 function integrate(): Handler {
   return (vm, expr) => {
     if (expr.args.length !== 2 && expr.args.length !== 4) {
@@ -1629,35 +2824,59 @@ function integrate(): Handler {
     if (x.kind !== "symbol") {
       return expr;
     }
-    if (expr.args.length === 4) {
-      const resultK = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
-      if (resultK !== undefined) return vm.eval(resultK);
-      const resultE = completeEllipticSecondKind(f, x, expr.args[2], expr.args[3]);
-      if (resultE !== undefined) return vm.eval(resultE);
-      const resultPi = completeEllipticThirdKind(f, x, expr.args[2], expr.args[3]);
-      if (resultPi !== undefined) return vm.eval(resultPi);
-      return expr;
+    // Track G2: publish the live assumption store for helpers that
+    // consult it (currently: symbolic-coefficient Weierstrass).  The
+    // previous value is restored in `finally` so nested calls and
+    // exceptions can't strand the module-level mirror in an
+    // inconsistent state.
+    const previousAssumptions = CURRENT_ASSUMPTIONS;
+    CURRENT_ASSUMPTIONS = vm.assumptions;
+    try {
+      if (expr.args.length === 4) {
+        const resultK = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
+        if (resultK !== undefined) return vm.eval(resultK);
+        const resultE = completeEllipticSecondKind(f, x, expr.args[2], expr.args[3]);
+        if (resultE !== undefined) return vm.eval(resultE);
+        const resultPi = completeEllipticThirdKind(f, x, expr.args[2], expr.args[3]);
+        if (resultPi !== undefined) return vm.eval(resultPi);
+        return expr;
+      }
+      const result = integrateIndefinite(f, x);
+      if (result === undefined) {
+        // Track E2: generic tabular IBP fallback.  Fires after every
+        // shape-specific handler in integrateIndefinite returned undefined.
+        // Mirrors the Python ``try_ibp_tabular`` hook in ``integrate.py``.
+        const ibpResult = tryIbpTabular(
+          f,
+          x,
+          (g) => integrateIndefinite(g, x),
+          (g) => diff(g, x),
+          (n) => vm.eval(n),
+        );
+        if (ibpResult !== undefined) {
+          return vm.eval(ibpResult);
+        }
+        return expr;
+      }
+      return isDeferredIntegral(result, f, x) ? result : vm.eval(result);
+    } finally {
+      CURRENT_ASSUMPTIONS = previousAssumptions;
     }
-    const result = integrateIndefinite(f, x);
-    if (result === undefined) {
-      return expr;
-    }
-    return isDeferredIntegral(result, f, x) ? result : vm.eval(result);
   };
 }
 
 // ---------------------------------------------------------------------------
 // Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
-// ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b² (and a > 0
-// for the cos branch).  Mirrors the Python port at symbolic-vm 0.59.0.
+// ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b².
+// Mirrors the Python port at symbolic-vm 0.59.0.
 //
 // Closed forms:
 //   ∫ 1/(a + b·sin x) dx = (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
 //   ∫ 1/(a + b·cos x) dx = (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
 //
 // Numerator constants c scale the result.  Discriminant cases a² ≤ b² and
-// the a ≤ 0 cos branch are deliberately deferred — they need sign analysis
-// that the assumption-free TS port cannot perform symbolically.
+// symbolic-coefficient discriminant cases are deliberately deferred — they
+// need sign analysis that the assumption-free TS port cannot perform.
 // ---------------------------------------------------------------------------
 
 /**
@@ -1866,6 +3085,16 @@ function weierstrassParseAPlusBSincos(
       readonly beta: Numeric;
     }
   | undefined {
+  const bareTrig = weierstrassParseConstTimesTrigLinear(node, x);
+  if (bareTrig !== undefined) {
+    return {
+      a: { kind: "int", value: 0n },
+      b: bareTrig.c,
+      trigHead: bareTrig.head,
+      alpha: bareTrig.alpha,
+      beta: bareTrig.beta,
+    };
+  }
   if (node.kind !== "apply" || node.args.length !== 2) return undefined;
   if (equals(node.head, ADD)) {
     const [left, right] = node.args;
@@ -1957,14 +3186,16 @@ function tryWeierstrassOneOverLinearTrig(
   }
   const sqrtDiscIR = weierstrassSqrtFractionIR(disc);
   const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  let coefSign: Numeric = { kind: "int", value: 1n };
   let atanArg: IRNode;
   if (equals(trigHead, SIN)) {
     // (a·tan(arg/2) + b) / √(a²−b²)
     const top = app(ADD, [app(MUL, [fromNumeric(a), tanHalf]), fromNumeric(b)]);
     atanArg = app(DIV, [top, sqrtDiscIR]);
   } else {
-    // COS branch: requires a > 0 to avoid sign-flip; defers otherwise.
-    if (!isPositiveNumeric(a)) return undefined;
+    // COS branch: a < 0 uses the same atan argument, but the denominator
+    // quadratic has an overall negative factor.
+    if (!isPositiveNumeric(a)) coefSign = { kind: "int", value: -1n };
     // ratio = (a − b) / (a + b)
     const ratio = divNumeric(subNumeric(a, b), addNumeric(a, b));
     if (!isPositiveNumeric(ratio)) return undefined;
@@ -1972,7 +3203,7 @@ function tryWeierstrassOneOverLinearTrig(
     atanArg = app(MUL, [sqrtRatioIR, tanHalf]);
   }
   // Outer coefficient: 2c / √(a²−b²)
-  const coefFrac = mulNumeric(c, { kind: "int", value: 2n });
+  const coefFrac = mulNumeric(mulNumeric(c, { kind: "int", value: 2n }), coefSign);
   const coefIR = app(DIV, [fromNumeric(coefFrac), sqrtDiscIR]);
   return app(MUL, [coefIR, app(ATAN, [atanArg])]);
 }
@@ -2072,9 +3303,9 @@ function absNumeric(v: Numeric): Numeric {
  *   ∫ c/(a + b·sin x) dx  =  (c/D)·log|(a·tan(x/2)+b−D)/(a·tan(x/2)+b+D)| + C
  *   ∫ c/(a + b·cos x) dx  =  (c/D)·log|(D+(b−a)·tan(x/2))/(D−(b−a)·tan(x/2))| + C
  *
- * with ``D = √(b²−a²) > 0``.  Sin branch handles any nonzero ``a``;
- * cos branch requires ``b > |a|`` strictly (the symmetric ``b < −|a|``
- * case has a different sign pattern and is deferred).
+ * with ``D = √(b²−a²) > 0``.  The ``a = 0`` sin/csc subcase closes as
+ * ``(c/b)·log|tan(x/2)|``.  The cos branch handles both sign regimes via
+ * the Abs-wrapped Phase 37 form.
  */
 function tryWeierstrassLogForm(
   c: Numeric,
@@ -2092,7 +3323,13 @@ function tryWeierstrassLogForm(
   const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
   const absHead = sym("Abs");
   if (equals(trigHead, SIN)) {
-    if (isZeroNumeric(a)) return undefined; // 1/(b·sin x) deferred
+    if (isZeroNumeric(a)) {
+      // ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|.  Any linear argument
+      // scaling has already been absorbed into c by the dispatcher.
+      const coefIR = fromNumeric(divNumeric(c, b));
+      const logArg = app(absHead, [tanHalf]);
+      return app(MUL, [coefIR, app(LOG, [logArg])]);
+    }
     // log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
     const aTan = app(MUL, [fromNumeric(a), tanHalf]);
     const aTanPlusB = app(ADD, [aTan, fromNumeric(b)]);
@@ -2124,6 +3361,314 @@ function tryWeierstrassLogForm(
   return app(MUL, [coefIR, app(LOG, [logArg])]);
 }
 
+// ---------------------------------------------------------------------------
+// Track G2 — symbolic-coefficient Weierstrass lift (TypeScript port).
+//
+// The numeric helpers above parse ``a, b`` as ``Numeric`` and bail out
+// when either is not a literal Int/Rat.  Track G2 generalises them:
+// when the numeric path can't fire because ``a`` and/or ``b`` is a
+// free IR symbol or any non-numeric IR expression, we re-parse the
+// integrand keeping ``a, b`` as IR nodes (``α, β, c`` stay rational —
+// only the outer trig coefficient pair is allowed to be symbolic),
+// then query ``vm.assumptions`` for the sign of the discriminant
+// ``a² − b²`` to decide which closed form to emit:
+//
+//   disc > 0 → arctan form with Sqrt(a²−b²)
+//   disc < 0 → log form with Sqrt(b²−a²)
+//   disc = 0 → degenerate rational-in-tan(arg/2) form
+//   no fact  → return undefined (integrator leaves it unevaluated)
+//
+// Linear-argument lifting ``α·x + β`` composes unchanged — the inner
+// substitution ``u = tan((α·x+β)/2)`` does not depend on the values
+// of the outer coefficients ``a, b``, so we still fold ``1/α`` into
+// the numerator scaling exactly as the numeric path does.  Mirrors
+// the Python helper at ``symbolic_vm/integrate.py``.
+// ---------------------------------------------------------------------------
+
+/** Match ``c·sin(α·x+β)`` / ``c·cos(α·x+β)`` returning ``c`` as an IR
+ *  node (instead of a Numeric).  ``α, β`` stay rational because the
+ *  inner linear-form is what makes the Weierstrass substitution
+ *  composable; only the outer scalar ``c`` is allowed to be symbolic,
+ *  since that's what flows into ``a, b`` for the dispatcher below. */
+function weierstrassParseConstTimesTrigLinearSymbolic(
+  node: IRNode,
+  x: IRNode,
+):
+  | { readonly c: IRNode; readonly head: IRNode; readonly alpha: Numeric; readonly beta: Numeric }
+  | undefined {
+  if (
+    node.kind === "apply" &&
+    (equals(node.head, SIN) || equals(node.head, COS)) &&
+    node.args.length === 1
+  ) {
+    const lin = weierstrassParseLinearInX(node.args[0], x);
+    if (lin !== undefined) {
+      return { c: int(1), head: node.head, alpha: lin.alpha, beta: lin.beta };
+    }
+  }
+  if (node.kind === "apply" && equals(node.head, MUL) && node.args.length === 2) {
+    const [left, right] = node.args;
+    for (const [constSide, trigSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      if (dependsOn(constSide, x)) continue;
+      if (
+        trigSide.kind === "apply" &&
+        (equals(trigSide.head, SIN) || equals(trigSide.head, COS)) &&
+        trigSide.args.length === 1
+      ) {
+        const lin = weierstrassParseLinearInX(trigSide.args[0], x);
+        if (lin !== undefined) {
+          return { c: constSide, head: trigSide.head, alpha: lin.alpha, beta: lin.beta };
+        }
+      }
+    }
+  }
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
+    const inner = weierstrassParseConstTimesTrigLinearSymbolic(node.args[0], x);
+    if (inner !== undefined) {
+      return { c: app(NEG, [inner.c]), head: inner.head, alpha: inner.alpha, beta: inner.beta };
+    }
+  }
+  return undefined;
+}
+
+/** Symbolic-coefficient sibling of {@link weierstrassParseAPlusBSincos}.
+ *  Parses ``a + b·sin(α·x+β)`` / ``a + b·cos(α·x+β)`` (any operand
+ *  order, ADD or SUB) into ``(a, b, head, α, β)`` where ``a`` and
+ *  ``b`` are IR nodes free of ``x`` and ``α, β`` are rational with
+ *  ``α ≠ 0``.  Returns undefined when the shape doesn't fit. */
+function weierstrassParseAPlusBSincosSymbolic(
+  node: IRNode,
+  x: IRNode,
+):
+  | {
+      readonly a: IRNode;
+      readonly b: IRNode;
+      readonly trigHead: IRNode;
+      readonly alpha: Numeric;
+      readonly beta: Numeric;
+    }
+  | undefined {
+  const bareTrig = weierstrassParseConstTimesTrigLinearSymbolic(node, x);
+  if (bareTrig !== undefined) {
+    return { a: int(0), b: bareTrig.c, trigHead: bareTrig.head, alpha: bareTrig.alpha, beta: bareTrig.beta };
+  }
+  if (node.kind !== "apply" || node.args.length !== 2) return undefined;
+  if (equals(node.head, ADD)) {
+    const [left, right] = node.args;
+    for (const [constSide, trigSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      if (dependsOn(constSide, x)) continue;
+      const trigParse = weierstrassParseConstTimesTrigLinearSymbolic(trigSide, x);
+      if (trigParse === undefined) continue;
+      return {
+        a: constSide,
+        b: trigParse.c,
+        trigHead: trigParse.head,
+        alpha: trigParse.alpha,
+        beta: trigParse.beta,
+      };
+    }
+    return undefined;
+  }
+  if (equals(node.head, SUB)) {
+    const [left, right] = node.args;
+    // ``a − b·trig(...)`` → ``(a, −b, head, α, β)``.
+    if (!dependsOn(left, x)) {
+      const trigParse = weierstrassParseConstTimesTrigLinearSymbolic(right, x);
+      if (trigParse !== undefined) {
+        return {
+          a: left,
+          b: app(NEG, [trigParse.c]),
+          trigHead: trigParse.head,
+          alpha: trigParse.alpha,
+          beta: trigParse.beta,
+        };
+      }
+    }
+    // ``b·trig(...) − a`` → ``(−a, b, head, α, β)``.
+    if (!dependsOn(right, x)) {
+      const trigParse = weierstrassParseConstTimesTrigLinearSymbolic(left, x);
+      if (trigParse !== undefined) {
+        return {
+          a: app(NEG, [right]),
+          b: trigParse.c,
+          trigHead: trigParse.head,
+          alpha: trigParse.alpha,
+          beta: trigParse.beta,
+        };
+      }
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
+/** Construct the discriminant ``a² − b²`` as IR.  Used as both the
+ *  query operand for ``vm.assumptions`` and the radicand of the
+ *  closed-form ``Sqrt(...)`` term. */
+function weierstrassDiscExpr(a: IRNode, b: IRNode): IRNode {
+  return app(SUB, [app(POW, [a, int(2)]), app(POW, [b, int(2)])]);
+}
+
+/** ``b² − a²`` — radicand of the log-branch ``Sqrt(b²−a²)`` for the
+ *  ``disc < 0`` case. */
+function weierstrassNegDiscExpr(a: IRNode, b: IRNode): IRNode {
+  return app(SUB, [app(POW, [b, int(2)]), app(POW, [a, int(2)])]);
+}
+
+/** Symbolic-coefficient arctan branch: emitted when the assumption
+ *  store says ``a² > b²``.  ``c_scaled`` already absorbs ``1/α`` from
+ *  the linear-arg lift; we just need to emit the closed form with
+ *  symbolic ``Sqrt(a²−b²)``. */
+function tryWeierstrassArctanSymbolic(
+  cScaled: IRNode,
+  a: IRNode,
+  b: IRNode,
+  trigHead: IRNode,
+  argNode: IRNode,
+): IRNode {
+  const sqrtDisc = app(SQRT, [weierstrassDiscExpr(a, b)]);
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  let atanArgTop: IRNode;
+  if (equals(trigHead, SIN)) {
+    // (a·tan(arg/2) + b) / √(a²−b²)
+    atanArgTop = app(ADD, [app(MUL, [a, tanHalf]), b]);
+  } else {
+    // cos branch — same sign-clean form as the Python port:
+    // (a−b)·tan(arg/2) / √(a²−b²).  See the inline derivation in
+    // the Python helper for why this is correct on the whole disc>0
+    // region.
+    atanArgTop = app(MUL, [app(SUB, [a, b]), tanHalf]);
+  }
+  const atanArg = app(DIV, [atanArgTop, sqrtDisc]);
+  const coef = app(DIV, [app(MUL, [int(2), cScaled]), sqrtDisc]);
+  return app(MUL, [coef, app(ATAN, [atanArg])]);
+}
+
+/** Symbolic-coefficient log branch: emitted when the assumption store
+ *  says ``a² < b²``.  Mirrors the numeric :func:`tryWeierstrassLogForm`. */
+function tryWeierstrassLogSymbolic(
+  cScaled: IRNode,
+  a: IRNode,
+  b: IRNode,
+  trigHead: IRNode,
+  argNode: IRNode,
+): IRNode {
+  const sqrtNegDisc = app(SQRT, [weierstrassNegDiscExpr(a, b)]);
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  const absHead = sym("Abs");
+  let numer: IRNode;
+  let denom: IRNode;
+  if (equals(trigHead, SIN)) {
+    const aTan = app(MUL, [a, tanHalf]);
+    const aTanPlusB = app(ADD, [aTan, b]);
+    numer = app(SUB, [aTanPlusB, sqrtNegDisc]);
+    denom = app(ADD, [aTanPlusB, sqrtNegDisc]);
+  } else {
+    const bma = app(SUB, [b, a]);
+    const bmaTan = app(MUL, [bma, tanHalf]);
+    numer = app(ADD, [sqrtNegDisc, bmaTan]);
+    denom = app(SUB, [sqrtNegDisc, bmaTan]);
+  }
+  const logArg = app(absHead, [app(DIV, [numer, denom])]);
+  const coef = app(DIV, [cScaled, sqrtNegDisc]);
+  return app(MUL, [coef, app(LOG, [logArg])]);
+}
+
+/** Symbolic-coefficient degenerate branch: ``a² = b²``.  See the
+ *  Python helper for the derivation; both forms reduce to the numeric
+ *  Phase-35 results when ``a, b`` happen to be concrete. */
+function tryWeierstrassDegenerateSymbolic(
+  cScaled: IRNode,
+  a: IRNode,
+  b: IRNode,
+  trigHead: IRNode,
+  argNode: IRNode,
+): IRNode {
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  const aPlusB = app(ADD, [a, b]);
+  const aMinusB = app(SUB, [a, b]);
+  if (equals(trigHead, SIN)) {
+    // −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+    const numer = app(MUL, [int(-2), cScaled]);
+    const denom = app(ADD, [app(MUL, [aPlusB, tanHalf]), aMinusB]);
+    return app(DIV, [numer, denom]);
+  }
+  // cos: 2·c·tan(arg/2) / ( (a−b)·tan²(arg/2) + (a+b) )
+  const tanSq = app(POW, [tanHalf, int(2)]);
+  const numer = app(MUL, [app(MUL, [int(2), cScaled]), tanHalf]);
+  const denom = app(ADD, [app(MUL, [aMinusB, tanSq]), aPlusB]);
+  return app(DIV, [numer, denom]);
+}
+
+/** Track G2 entry point.  Mirrors the numeric
+ *  {@link tryWeierstrassOneOverLinearTrig} but accepts non-numeric
+ *  ``a, b`` (IR nodes free of ``x``).  Returns undefined when:
+ *   - the integrand doesn't match the shape,
+ *   - the numerator ``c`` depends on ``x``,
+ *   - ``α, β`` aren't rational,
+ *   - no assumption context is available (called outside the handler),
+ *   - or no assumption pins down the sign of ``a² − b²``.
+ *
+ *  The numeric path is left untouched: the dispatcher tries it first
+ *  and only falls through to here if it returned undefined. */
+function tryWeierstrassSymbolicCoefficients(
+  integrand: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (integrand.kind !== "apply" || !equals(integrand.head, DIV)) return undefined;
+  if (integrand.args.length !== 2) return undefined;
+  const [num, den] = integrand.args;
+  if (dependsOn(num, x)) return undefined;
+  const parsed = weierstrassParseAPlusBSincosSymbolic(den, x);
+  if (parsed === undefined) return undefined;
+  const { a, b, trigHead, alpha, beta } = parsed;
+  if (isZeroNumeric(alpha)) return undefined;
+  // Numeric path is tried first; if both ``a`` and ``b`` are
+  // numeric, that path would have closed the integral already.  Bail
+  // out gracefully to avoid emitting a second (potentially uglier)
+  // result.
+  if (toNumeric(a) !== undefined && toNumeric(b) !== undefined) return undefined;
+  const assumptions = currentAssumptions();
+  if (assumptions === undefined) return undefined;
+  // Apply ``u = α·x + β`` change of variable: scale numerator by 1/α.
+  const oneOverAlpha = divNumeric({ kind: "int", value: 1n }, alpha);
+  const cScaled = isOne(fromNumeric(oneOverAlpha))
+    ? num
+    : app(MUL, [fromNumeric(oneOverAlpha), num]);
+  const argNode = weierstrassBuildLinearArgIR(alpha, beta, x);
+  // Probe both surface forms of the discriminant sign — the natural
+  // ``a² > b²`` written by the user and the canonical-against-zero
+  // form ``a² − b² > 0`` someone might write programmatically.
+  const aSq = app(POW, [a, int(2)]);
+  const bSq = app(POW, [b, int(2)]);
+  const disc = app(SUB, [aSq, bSq]);
+  if (
+    assumptions.isTrueRelation(app(GREATER, [aSq, bSq])) === true ||
+    assumptions.isTrueRelation(app(GREATER, [disc, int(0)])) === true
+  ) {
+    return tryWeierstrassArctanSymbolic(cScaled, a, b, trigHead, argNode);
+  }
+  if (
+    assumptions.isTrueRelation(app(LESS, [aSq, bSq])) === true ||
+    assumptions.isTrueRelation(app(LESS, [disc, int(0)])) === true
+  ) {
+    return tryWeierstrassLogSymbolic(cScaled, a, b, trigHead, argNode);
+  }
+  if (
+    assumptions.isTrueRelation(app(EQUAL, [aSq, bSq])) === true ||
+    assumptions.isTrueRelation(app(EQUAL, [disc, int(0)])) === true
+  ) {
+    return tryWeierstrassDegenerateSymbolic(cScaled, a, b, trigHead, argNode);
+  }
+  return undefined;
+}
+
 function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   if (!dependsOn(f, x)) {
     return app(MUL, [f, x]);
@@ -2142,6 +3687,12 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   if (f.kind !== "apply") {
     return undefined;
   }
+
+  const erf = tryErfIntegral(f, x);
+  if (erf !== undefined) return erf;
+
+  const fresnel = tryFresnelIntegral(f, x);
+  if (fresnel !== undefined) return fresnel;
 
   if (equals(f.head, ADD)) {
     const pieces = f.args.map((arg) => integrateIndefinite(arg, x));
@@ -2178,6 +3729,13 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
       tryTrigLogProduct(a, b, x) ?? tryTrigLogProduct(b, a, x);
     if (tl27 !== undefined) return tl27;
     // Phase 28: ∫ P(x)·log(Q(x)) dx  and  ∫ P(x)·atan(Q(x)) dx  (non-linear Q)
+    // Phase 12: ∫ P(x)·asin/acos(ax+b) dx via IBP.
+    const invTrig12 = tryAsinAcosPolyProduct(a, b, x) ?? tryAsinAcosPolyProduct(b, a, x);
+    if (invTrig12 !== undefined) return invTrig12;
+    const hyp13 =
+      trySinhCoshPolyProduct(a, b, x) ?? trySinhCoshPolyProduct(b, a, x) ??
+      tryAsinhAcoshPolyProduct(a, b, x) ?? tryAsinhAcoshPolyProduct(b, a, x);
+    if (hyp13 !== undefined) return hyp13;
     const lp28 = tryLogPolyProduct(a, b, x) ?? tryLogPolyProduct(b, a, x);
     if (lp28 !== undefined) return lp28;
     const ap28 = tryAtanPolyProduct(a, b, x) ?? tryAtanPolyProduct(b, a, x);
@@ -2193,6 +3751,12 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     // c / (a + b·cos(x)) when a, b numeric and a² > b² (a > 0 for cos).
     const weier = tryWeierstrassOneOverLinearTrig(f, x);
     if (weier !== undefined) return weier;
+    // Track G2: symbolic-coefficient Weierstrass.  Fires only when the
+    // numeric path returns undefined and ``vm.assumptions`` records a
+    // sign for ``a² − b²``.  See
+    // {@link tryWeierstrassSymbolicCoefficients}.
+    const weierSym = tryWeierstrassSymbolicCoefficients(f, x);
+    if (weierSym !== undefined) return weierSym;
     return undefined;
   }
   if (equals(f.head, POW)) {
@@ -2220,6 +3784,8 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
         return polyLogPowerTerm(0, Number(n26.numer), x);
       }
     }
+    const recipHyp16 = tryRecipHypPower(base, exponent, x);
+    if (recipHyp16 !== undefined) return recipHyp16;
     return undefined;
   }
 
@@ -2256,8 +3822,221 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     const ap28 = tryAtanPolyProduct(f, int(1), x);
     if (ap28 !== undefined) return ap28;
   }
+  // Phase 12: bare ∫ asin/acos(ax+b) dx.
+  if (f.args.length === 1 && (equals(f.head, ASIN) || equals(f.head, ACOS))) {
+    const invTrig12 = tryAsinAcosPolyProduct(f, int(1), x);
+    if (invTrig12 !== undefined) return invTrig12;
+  }
+  if (f.args.length === 1 && (equals(f.head, SINH) || equals(f.head, COSH))) {
+    const hyp13 = trySinhCoshPolyProduct(f, int(1), x);
+    if (hyp13 !== undefined) return hyp13;
+  }
+  if (f.args.length === 1 && (equals(f.head, ASINH) || equals(f.head, ACOSH))) {
+    const invHyp13 = tryAsinhAcoshPolyProduct(f, int(1), x);
+    if (invHyp13 !== undefined) return invHyp13;
+  }
+  if (f.args.length === 1 && (equals(f.head, COTH) || equals(f.head, SECH) || equals(f.head, CSCH))) {
+    const recipHyp15 = tryRecipHypLinear(f, x);
+    if (recipHyp15 !== undefined) return recipHyp15;
+  }
+  if (f.args.length === 1 && (equals(f.head, TANH) || equals(f.head, ATANH))) {
+    const tanh13 = tryTanhAtanhLinear(f, x);
+    if (tanh13 !== undefined) return tanh13;
+  }
 
   return undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Track E2 — Generic tabular integration-by-parts fallback.
+//
+// Mirrors ``ibp_tabular.py`` from the Python reference port (Track E1).
+// When the pipeline's shape-specific handlers in ``integrateIndefinite``
+// have all returned ``undefined`` for a ``Mul``-shaped integrand, this
+// fallback makes a last-ditch attempt by **generic tabular IBP**:
+//
+//   For ``f = u(x) · w(x)`` where ``u`` is polynomial in ``x``:
+//     ∫ u·w dx = Σ_{k=0}^{N-1} (-1)^k · u^(k)(x) · I^(k+1)(w)
+//
+// where N = deg(u) + 1 (so u^(N) = 0 and the trailing remainder
+// vanishes).  The I-column entries ``∫w, ∫∫w, ..., ∫^N w`` come from
+// the recursive ``integrateIndefinite`` callback; if any step fails
+// to close, the partition is abandoned.
+//
+// Bounded by ``IBP_MAX_FACTORS = 5`` (number of flattened Mul factors)
+// and ``IBP_MAX_POLY_DEGREE = 8`` (degree of the polynomial column).
+// ---------------------------------------------------------------------------
+
+const IBP_MAX_FACTORS = 5;
+const IBP_MAX_POLY_DEGREE = 8;
+
+/** Flatten a (possibly nested-binary) ``Mul`` tree into a list of leaves.
+ *  ``Mul(a, Mul(b, Mul(c, d)))`` → ``[a, b, c, d]``.  Without flattening
+ *  the IBP search would miss splits like ``u = a·c, w = b·d`` purely
+ *  because the parse tree happened to group differently. */
+function ibpFlattenMul(node: IRNode): IRNode[] {
+  if (node.kind !== "apply" || !equals(node.head, MUL)) {
+    return [node];
+  }
+  const out: IRNode[] = [];
+  for (const arg of node.args) {
+    out.push(...ibpFlattenMul(arg));
+  }
+  return out;
+}
+
+/** Rebuild a left-associative ``Mul`` chain from a list of factors.
+ *  Empty list → ``1``; single factor returns itself. */
+function ibpMultiplyIr(factors: readonly IRNode[]): IRNode {
+  if (factors.length === 0) return int(1);
+  if (factors.length === 1) return factors[0];
+  let acc: IRNode = factors[0];
+  for (let i = 1; i < factors.length; i += 1) {
+    acc = app(MUL, [acc, factors[i]]);
+  }
+  return acc;
+}
+
+/** Return the polynomial degree of ``node`` in ``x``, or ``undefined``
+ *  if it is not in Q[x].  ``-1`` denotes the zero polynomial.  Mirrors
+ *  the Python ``_polynomial_degree`` helper. */
+function ibpPolynomialDegree(node: IRNode, x: IRSymbol): number | undefined {
+  const r = toRational(node, x);
+  if (r === undefined) return undefined;
+  if (polyQDegree(r.den) > 0) return undefined; // rational, not polynomial
+  const n = polyQNormalize(r.num);
+  if (n.length === 0) return -1; // zero polynomial
+  return n.length - 1;
+}
+
+/** True if ``node`` contains any unevaluated ``Integrate(...)`` sub-tree.
+ *  Used to reject I-column entries the recursive integrator could not
+ *  close to a true antiderivative. */
+function ibpContainsIntegrate(node: IRNode): boolean {
+  if (node.kind === "apply") {
+    if (equals(node.head, INTEGRATE)) return true;
+    return node.args.some((a) => ibpContainsIntegrate(a));
+  }
+  return false;
+}
+
+/** True iff ``node`` canonicalises to the integer literal ``0``.
+ *  Also recognises ``Neg(0)``. */
+function ibpIsZero(node: IRNode): boolean {
+  if (node.kind === "integer" && node.value === 0n) return true;
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
+    return ibpIsZero(node.args[0]);
+  }
+  return false;
+}
+
+/** Enumerate ``k``-element subsets of ``[0, n)`` as index arrays. */
+function ibpCombinations(n: number, k: number): number[][] {
+  const out: number[][] = [];
+  const pick: number[] = [];
+  const walk = (start: number): void => {
+    if (pick.length === k) {
+      out.push(pick.slice());
+      return;
+    }
+    for (let i = start; i < n; i += 1) {
+      pick.push(i);
+      walk(i + 1);
+      pick.pop();
+    }
+  };
+  walk(0);
+  return out;
+}
+
+/** Attempt generic tabular IBP on a ``Mul``-shaped integrand.
+ *  Returns the closed-form antiderivative as IR, or ``undefined`` when
+ *  no viable ``(u, w)`` split was found. */
+function tryIbpTabular(
+  f: IRNode,
+  x: IRSymbol,
+  integrateFn: (g: IRNode) => IRNode | undefined,
+  diffFn: (g: IRNode) => IRNode,
+  simplifyFn: (n: IRNode) => IRNode,
+): IRNode | undefined {
+  // Only fires on Mul — every other shape has dedicated handlers.
+  if (f.kind !== "apply" || !equals(f.head, MUL)) return undefined;
+  const factors = ibpFlattenMul(f);
+  if (factors.length < 2 || factors.length > IBP_MAX_FACTORS) return undefined;
+  const n = factors.length;
+  // Prefer smaller ``u`` first — tabular IBP is most efficient when ``u``
+  // is low-degree.  Enumerate subset partitions of size 1 .. n-1.
+  for (let uSize = 1; uSize < n; uSize += 1) {
+    for (const uIdx of ibpCombinations(n, uSize)) {
+      const uSet = new Set(uIdx);
+      const uFactors: IRNode[] = [];
+      const wFactors: IRNode[] = [];
+      for (let i = 0; i < n; i += 1) {
+        if (uSet.has(i)) uFactors.push(factors[i]);
+        else wFactors.push(factors[i]);
+      }
+      const result = ibpTrySplit(uFactors, wFactors, x, integrateFn, diffFn, simplifyFn);
+      if (result !== undefined) return result;
+    }
+  }
+  return undefined;
+}
+
+/** Try ``u = ∏ uFactors``, ``w = ∏ wFactors`` as the tabular split. */
+function ibpTrySplit(
+  uFactors: readonly IRNode[],
+  wFactors: readonly IRNode[],
+  x: IRSymbol,
+  integrateFn: (g: IRNode) => IRNode | undefined,
+  diffFn: (g: IRNode) => IRNode,
+  simplifyFn: (n: IRNode) => IRNode,
+): IRNode | undefined {
+  const uIr = simplifyFn(ibpMultiplyIr(uFactors));
+  const deg = ibpPolynomialDegree(uIr, x);
+  if (deg === undefined) return undefined;
+  if (deg < 0) {
+    // u is the zero polynomial — ∫ 0·w dx = 0.
+    return int(0);
+  }
+  if (deg > IBP_MAX_POLY_DEGREE) return undefined;
+
+  // D-column: u, u', u'', ..., 0.
+  const dCol: IRNode[] = [uIr];
+  let cur: IRNode = uIr;
+  for (let i = 0; i <= deg; i += 1) {
+    cur = simplifyFn(diffFn(cur));
+    dCol.push(cur);
+    if (ibpIsZero(cur)) break;
+  }
+  if (!ibpIsZero(dCol[dCol.length - 1])) return undefined;
+  const N = dCol.length - 1; // u^(N) = 0
+
+  // I-column: w, ∫w, ∫∫w, ..., ∫^N w.
+  const wIr = simplifyFn(ibpMultiplyIr(wFactors));
+  const iCol: IRNode[] = [wIr];
+  cur = wIr;
+  for (let k = 0; k < N; k += 1) {
+    const integrated = integrateFn(cur);
+    if (integrated === undefined) return undefined;
+    const simplified = simplifyFn(integrated);
+    if (ibpContainsIntegrate(simplified)) return undefined;
+    iCol.push(simplified);
+    cur = simplified;
+  }
+
+  // Assemble: Σ_{k=0}^{N-1} (-1)^k · D[k] · I[k+1].
+  const pieces: IRNode[] = [];
+  for (let k = 0; k < N; k += 1) {
+    let term: IRNode = app(MUL, [dCol[k], iCol[k + 1]]);
+    if (k % 2 === 1) term = app(NEG, [term]);
+    pieces.push(term);
+  }
+  if (pieces.length === 0) return int(0);
+  let result: IRNode = pieces[0];
+  for (let i = 1; i < pieces.length; i += 1) {
+    result = app(ADD, [result, pieces[i]]);
+  }
+  return result;
 }
 
 function completeEllipticFirstKind(f: IRNode, x: IRNode, lower: IRNode, upper: IRNode): IRNode | undefined {
@@ -2420,6 +4199,261 @@ function completeEllipticSecondKind(f: IRNode, x: IRNode, lower: IRNode, upper: 
 function incompleteEllipticSecondKind(f: IRNode, x: IRNode): IRNode | undefined {
   const modulus = ellipticSecondKindRadicand(f, x);
   return modulus === undefined ? undefined : app(sym("EllipticE"), [x, modulus]);
+}
+
+type PositiveRat = readonly [bigint, bigint];
+type SignedRat = readonly [bigint, bigint];
+
+function makeSignedRat(numer: bigint, denom: bigint): SignedRat | undefined {
+  if (denom === 0n) return undefined;
+  if (denom < 0n) {
+    numer = -numer;
+    denom = -denom;
+  }
+  if (numer === 0n) return undefined;
+  const gcd = rqGcd(numer < 0n ? -numer : numer, denom);
+  return [numer / gcd, denom / gcd];
+}
+
+function makePositiveRat(numer: bigint, denom: bigint): PositiveRat | undefined {
+  if (denom === 0n) return undefined;
+  if (denom < 0n) {
+    numer = -numer;
+    denom = -denom;
+  }
+  if (numer <= 0n) return undefined;
+  const gcd = rqGcd(numer, denom);
+  return [numer / gcd, denom / gcd];
+}
+
+function multiplyPositiveRat(a: PositiveRat, b: PositiveRat): PositiveRat {
+  return makePositiveRat(a[0] * b[0], a[1] * b[1])!;
+}
+
+function dividePositiveRat(a: PositiveRat, b: PositiveRat): PositiveRat {
+  return makePositiveRat(a[0] * b[1], a[1] * b[0])!;
+}
+
+function positiveRatNode(value: PositiveRat): IRNode {
+  return value[1] === 1n ? int(value[0]) : rational(value[0], value[1]);
+}
+
+function exactPositiveRat(node: IRNode): PositiveRat | undefined {
+  const r = exactRational(node);
+  return r === undefined ? undefined : makePositiveRat(r.numer, r.denom);
+}
+
+function exactSignedRat(node: IRNode): SignedRat | undefined {
+  const r = exactRational(node);
+  return r === undefined ? undefined : makeSignedRat(r.numer, r.denom);
+}
+
+function multiplySignedRat(a: SignedRat, b: SignedRat): SignedRat {
+  return makeSignedRat(a[0] * b[0], a[1] * b[1])!;
+}
+
+function divideSignedRat(a: SignedRat, b: SignedRat): SignedRat {
+  return makeSignedRat(a[0] * b[1], a[1] * b[0])!;
+}
+
+function absSignedRat(value: SignedRat): PositiveRat {
+  return makePositiveRat(value[0] < 0n ? -value[0] : value[0], value[1])!;
+}
+
+function isSquareOfIntegrationVar(node: IRNode, x: IRNode): boolean {
+  if (node.kind !== "apply" || !equals(node.head, POW) || node.args.length !== 2) {
+    return false;
+  }
+  const [base, exponent] = binaryArgs(node);
+  return equals(base, x) && equals(exponent, int(2));
+}
+
+type FresnelFactors = {
+  readonly coeff: PositiveRat;
+  readonly hasPi: boolean;
+  readonly hasXSquared: boolean;
+};
+
+function combineFresnelFactors(a: FresnelFactors, b: FresnelFactors): FresnelFactors | undefined {
+  if ((a.hasPi && b.hasPi) || (a.hasXSquared && b.hasXSquared)) {
+    return undefined;
+  }
+  return {
+    coeff: multiplyPositiveRat(a.coeff, b.coeff),
+    hasPi: a.hasPi || b.hasPi,
+    hasXSquared: a.hasXSquared || b.hasXSquared,
+  };
+}
+
+function scanFresnelFactors(node: IRNode, x: IRNode): FresnelFactors | undefined {
+  const one: PositiveRat = [1n, 1n];
+  if (isSquareOfIntegrationVar(node, x)) {
+    return { coeff: one, hasPi: false, hasXSquared: true };
+  }
+  if (node.kind === "symbol" && node.name === "%pi") {
+    return { coeff: one, hasPi: true, hasXSquared: false };
+  }
+  const numeric = exactPositiveRat(node);
+  if (numeric !== undefined) {
+    return { coeff: numeric, hasPi: false, hasXSquared: false };
+  }
+  if (node.kind !== "apply") {
+    return undefined;
+  }
+  if (equals(node.head, MUL)) {
+    let acc: FresnelFactors = { coeff: one, hasPi: false, hasXSquared: false };
+    for (const arg of node.args) {
+      const scanned = scanFresnelFactors(arg, x);
+      if (scanned === undefined) return undefined;
+      const combined = combineFresnelFactors(acc, scanned);
+      if (combined === undefined) return undefined;
+      acc = combined;
+    }
+    return acc;
+  }
+  if (equals(node.head, DIV) && node.args.length === 2) {
+    const [numerator, denominator] = binaryArgs(node);
+    const scanned = scanFresnelFactors(numerator, x);
+    const denom = exactPositiveRat(denominator);
+    return scanned === undefined || denom === undefined
+      ? undefined
+      : { ...scanned, coeff: dividePositiveRat(scanned.coeff, denom) };
+  }
+  return undefined;
+}
+
+function fresnelPiQuadraticCoeff(arg: IRNode, x: IRNode): PositiveRat | undefined {
+  const factors = scanFresnelFactors(arg, x);
+  return factors !== undefined && factors.hasPi && factors.hasXSquared ? factors.coeff : undefined;
+}
+
+function fresnelPureQuadraticCoeff(arg: IRNode, x: IRNode): PositiveRat | undefined {
+  const factors = scanFresnelFactors(arg, x);
+  return factors !== undefined && !factors.hasPi && factors.hasXSquared ? factors.coeff : undefined;
+}
+
+function ratTimesInt(value: PositiveRat, factor: bigint): PositiveRat {
+  return makePositiveRat(value[0] * factor, value[1])!;
+}
+
+type SignedQuadraticFactors = {
+  readonly coeff: SignedRat;
+  readonly hasXSquared: boolean;
+};
+
+function combineSignedQuadraticFactors(
+  a: SignedQuadraticFactors,
+  b: SignedQuadraticFactors,
+): SignedQuadraticFactors | undefined {
+  if (a.hasXSquared && b.hasXSquared) return undefined;
+  return {
+    coeff: multiplySignedRat(a.coeff, b.coeff),
+    hasXSquared: a.hasXSquared || b.hasXSquared,
+  };
+}
+
+function scanSignedQuadraticFactors(node: IRNode, x: IRNode): SignedQuadraticFactors | undefined {
+  const one: SignedRat = [1n, 1n];
+  if (isSquareOfIntegrationVar(node, x)) {
+    return { coeff: one, hasXSquared: true };
+  }
+  const numeric = exactSignedRat(node);
+  if (numeric !== undefined) {
+    return { coeff: numeric, hasXSquared: false };
+  }
+  if (node.kind !== "apply") return undefined;
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    const scanned = scanSignedQuadraticFactors(node.args[0], x);
+    return scanned === undefined
+      ? undefined
+      : { coeff: makeSignedRat(-scanned.coeff[0], scanned.coeff[1])!, hasXSquared: scanned.hasXSquared };
+  }
+  if (equals(node.head, MUL)) {
+    let acc: SignedQuadraticFactors = { coeff: one, hasXSquared: false };
+    for (const arg of node.args) {
+      const scanned = scanSignedQuadraticFactors(arg, x);
+      if (scanned === undefined) return undefined;
+      const combined = combineSignedQuadraticFactors(acc, scanned);
+      if (combined === undefined) return undefined;
+      acc = combined;
+    }
+    return acc;
+  }
+  if (equals(node.head, DIV) && node.args.length === 2) {
+    const [numerator, denominator] = binaryArgs(node);
+    const scanned = scanSignedQuadraticFactors(numerator, x);
+    const denom = exactSignedRat(denominator);
+    return scanned === undefined || denom === undefined
+      ? undefined
+      : { ...scanned, coeff: divideSignedRat(scanned.coeff, denom) };
+  }
+  return undefined;
+}
+
+function signedQuadraticCoeff(arg: IRNode, x: IRNode): SignedRat | undefined {
+  const factors = scanSignedQuadraticFactors(arg, x);
+  return factors !== undefined && factors.hasXSquared ? factors.coeff : undefined;
+}
+
+function sqrtPositiveRatNode(value: PositiveRat): IRNode {
+  const rootNumer = bigIntIsqrt(value[0]);
+  const rootDenom = bigIntIsqrt(value[1]);
+  if (rootNumer !== undefined && rootDenom !== undefined) {
+    return positiveRatNode([rootNumer, rootDenom]);
+  }
+  return app(SQRT, [positiveRatNode(value)]);
+}
+
+function isOneRat(value: PositiveRat): boolean {
+  return value[0] === value[1];
+}
+
+function tryErfIntegral(f: IRNode, x: IRNode): IRNode | undefined {
+  if (f.kind !== "apply" || !equals(f.head, EXP) || f.args.length !== 1) {
+    return undefined;
+  }
+  const c = signedQuadraticCoeff(f.args[0], x);
+  if (c === undefined) return undefined;
+
+  const absC = absSignedRat(c);
+  const alpha = sqrtPositiveRatNode(absC);
+  const arg = isOneRat(absC) ? x : app(MUL, [alpha, x]);
+  const specialHead = c[0] < 0n ? sym("Erf") : sym("Erfi");
+  const sqrtPi = app(SQRT, [_INV_TRIG_PI]);
+  const coeff = isOneRat(absC)
+    ? app(DIV, [sqrtPi, int(2)])
+    : app(DIV, [sqrtPi, app(MUL, [int(2), alpha])]);
+  return app(MUL, [coeff, app(specialHead, [arg])]);
+}
+
+function tryFresnelIntegral(f: IRNode, x: IRNode): IRNode | undefined {
+  if (f.kind !== "apply" || f.args.length !== 1 || (!equals(f.head, SIN) && !equals(f.head, COS))) {
+    return undefined;
+  }
+  const [arg] = unaryArgs(f);
+  const fresnelHead = equals(f.head, SIN) ? sym("FresnelS") : sym("FresnelC");
+
+  const q = fresnelPiQuadraticCoeff(arg, x);
+  if (q !== undefined) {
+    const twoQ = ratTimesInt(q, 2n);
+    if (twoQ[0] === twoQ[1]) {
+      return app(fresnelHead, [x]);
+    }
+    const sqrtTwoQ = app(SQRT, [positiveRatNode(twoQ)]);
+    const scaleArg = app(MUL, [sqrtTwoQ, x]);
+    return app(MUL, [app(DIV, [int(1), sqrtTwoQ]), app(fresnelHead, [scaleArg])]);
+  }
+
+  const a = fresnelPureQuadraticCoeff(arg, x);
+  if (a !== undefined) {
+    const twoA = ratTimesInt(a, 2n);
+    const twoANode = positiveRatNode(twoA);
+    const sqrtPiOverTwoA = app(SQRT, [app(DIV, [_INV_TRIG_PI, twoANode])]);
+    const sqrtTwoAOverPi = app(SQRT, [app(DIV, [twoANode, _INV_TRIG_PI])]);
+    return app(MUL, [sqrtPiOverTwoA, app(fresnelHead, [app(MUL, [x, sqrtTwoAOverPi])])]);
+  }
+
+  return undefined;
 }
 
 /** Return n when bracket = Add(1, Mul(n, Pow(Sin(x), 2))), else undefined. */
@@ -2837,6 +4871,14 @@ function diff(f: IRNode, x: IRNode): IRNode {
     if (equals(f.head, SQRT)) {
       return app(DIV, [innerDiff, app(MUL, [int(2), app(SQRT, [inner])])]);
     }
+    if (equals(f.head, ASIN)) {
+      return app(DIV, [innerDiff, app(SQRT, [app(SUB, [int(1), app(POW, [inner, int(2)])])])]);
+    }
+    if (equals(f.head, ACOS)) {
+      return app(NEG, [
+        app(DIV, [innerDiff, app(SQRT, [app(SUB, [int(1), app(POW, [inner, int(2)])])])]),
+      ]);
+    }
     if (equals(f.head, SINH)) {
       return app(MUL, [app(COSH, [inner]), innerDiff]);
     }
@@ -3222,6 +5264,11 @@ function rpAdd(a: RatPoly, b: RatPoly): RatPoly {
   return Array.from({ length: len }, (_, i) => rcAdd(rpCoeff(a, i), rpCoeff(b, i)));
 }
 
+function rpScale(p: RatPoly, c: RatCoeff): RatPoly {
+  if (rcIsZero(c)) return [];
+  return p.map((coef) => rcMul(coef, c));
+}
+
 function rpMul(a: RatPoly, b: RatPoly): RatPoly {
   const da = rpDeg(a);
   const db = rpDeg(b);
@@ -3234,6 +5281,22 @@ function rpMul(a: RatPoly, b: RatPoly): RatPoly {
     }
   }
   return result;
+}
+
+/** Horner composition p(a*x+b). */
+function rpComposeLinear(p: RatPoly, a: RatCoeff, b: RatCoeff): RatPoly {
+  if (rpIsZero(p)) return [];
+  const sub: RatPoly = [b, a];
+  let result: RatPoly = [rpCoeff(p, rpDeg(p))];
+  for (let i = rpDeg(p) - 1; i >= 0; i--) {
+    result = rpAdd(rpMul(result, sub), [rpCoeff(p, i)]);
+  }
+  return result;
+}
+
+/** Compose Q((t-b)/a), represented as a t-polynomial. */
+function rpComposeToT(Q: RatPoly, a: RatCoeff, b: RatCoeff): RatPoly {
+  return rpComposeLinear(Q, rcDiv(RC_ONE, a), rcDiv(rc(0n - b.numer, b.denom), a));
 }
 
 /** Formal derivative: d/dx P(x). */
@@ -3454,8 +5517,9 @@ function isLinearIn(expr: IRNode, x: IRNode): boolean {
  *   1. The polynomial quotient Q is integrated term-by-term.
  *   2. For the remainder R (deg R < deg D), two patterns are tried:
  *      Case A: R = c · D′  →  c · log(D)
- *      Case B: R is a constant and D = a₂x² + a₀ with rational √(a₀/a₂)
- *              →  R/(a₂·√(a₀/a₂)) · atan(x / √(a₀/a₂))
+ *      Case B: R is linear and D = a₂x² + a₁x + a₀ with rational
+ *              √(4a₂a₀-a₁²). Split off the D′ log term, then close the
+ *              remaining constant-over-quadratic term with atan.
  *
  * Returns ``undefined`` when no pattern matches (caller falls through).
  */
@@ -3517,28 +5581,44 @@ function closeRemainderOverD(
     }
   }
 
-  // Case B: R is a non-zero constant and D is a quadratic a₂x² + a₀ (no linear
-  // term) with a₂, a₀ > 0 and √(a₀/a₂) rational.
+  // Case B: linear remainder over a positive shifted quadratic.
+  //
+  // Let R = r1*x + r0 and D = a2*x^2 + a1*x + a0.  Split
+  // R = c*D' + k, where c = r1/(2*a2) and k = r0 - c*a1. Then:
+  //   ∫ R/D dx = c*log(D) + (2k/sqrt(4*a2*a0-a1^2))
+  //              * atan((2*a2*x+a1)/sqrt(4*a2*a0-a1^2)).
   const dR = rpDeg(R);
   const dD = rpDeg(D);
-  if (dR === 0 && dD === 2) {
+  if ((dR === 0 || dR === 1) && dD === 2) {
+    const r1 = rpCoeff(R, 1);
     const r0 = rpCoeff(R, 0);
     const a2 = rpCoeff(D, 2);
     const a1 = rpCoeff(D, 1);
     const a0 = rpCoeff(D, 0);
-    if (
-      !rcIsZero(r0) &&
-      !rcIsZero(a2) && a2.numer > 0n &&
-      !rcIsZero(a0) && a0.numer > 0n &&
-      rcIsZero(a1)
-    ) {
-      // ∫ r₀/(a₂x² + a₀) dx = r₀/(a₂·√(a₀/a₂)) · atan(x / √(a₀/a₂))
-      const ba = rcDiv(a0, a2);
-      const sqBa = rcSqrt(ba);
-      if (sqBa !== undefined && !rcIsZero(sqBa)) {
-        const coeff = rcDiv(r0, rcMul(a2, sqBa));
-        const arg: IRNode = rcIsOne(sqBa) ? x : app(DIV, [x, rcToIR(sqBa)]);
-        return app(MUL, [rcToIR(coeff), app(ATAN, [arg])]);
+    const two = rcFromBigInt(2n);
+    const four = rcFromBigInt(4n);
+    if (!rcIsZero(a2) && a2.numer > 0n) {
+      const c = rcDiv(r1, rcMul(two, a2));
+      const k = rcSub(r0, rcMul(c, a1));
+      const delta = rcSub(rcMul(four, rcMul(a2, a0)), rcMul(a1, a1));
+      const sqrtDelta = delta.numer > 0n ? rcSqrt(delta) : undefined;
+      if (sqrtDelta !== undefined && !rcIsZero(sqrtDelta)) {
+        const terms: IRNode[] = [];
+        if (!rcIsZero(c)) {
+          terms.push(app(MUL, [rcToIR(c), app(LOG, [D_ir])]));
+        }
+        if (!rcIsZero(k)) {
+          const atanCoeff = rcDiv(rcMul(two, k), sqrtDelta);
+          const atanNumer = app(ADD, [
+            app(MUL, [rcToIR(rcMul(two, a2)), x]),
+            rcToIR(a1),
+          ]);
+          const atanArg = rcIsOne(sqrtDelta) ? atanNumer : app(DIV, [atanNumer, rcToIR(sqrtDelta)]);
+          const atanTerm = app(MUL, [rcToIR(atanCoeff), app(ATAN, [atanArg])]);
+          terms.push(atanTerm);
+        }
+        if (terms.length === 0) return null;
+        return terms.reduce((acc, term) => app(ADD, [acc, term]));
       }
     }
   }
@@ -3612,7 +5692,8 @@ function tryLogPolyProduct(
  * IBP formula (u = atan(Q), dv = P dx):
  *   ∫ P·atan(Q) dx  =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
  *
- * Linear Q is skipped so that Phase 11 handles it instead.
+ * Handles both linear and non-linear polynomial Q.  Linear Q covers MACSYMA
+ * Phase 11; non-linear Q covers Phase 28.
  */
 function tryAtanPolyProduct(
   transcendental: IRNode,
@@ -3625,7 +5706,6 @@ function tryAtanPolyProduct(
   const Q_ir = transcendental.args[0]!;
 
   if (!dependsOn(Q_ir, x)) return undefined;
-  if (isLinearIn(Q_ir, x)) return undefined; // Phase 11 handles atan(ax+b)
 
   const Qmap = toPolynomialCoeffs(Q_ir, x);
   if (Qmap === undefined) return undefined;
@@ -3661,6 +5741,415 @@ function tryAtanPolyProduct(
 
   // ∫ P·atan(Q) dx = R·atan(Q) − ∫ R·Q′/(1+Q²) dx.
   return app(SUB, [app(MUL, [R_ir, transcendental]), residual]);
+}
+
+/**
+ * Phase 12: integrate P(x) · asin(ax+b) and P(x) · acos(ax+b).
+ *
+ * Uses the Python reference formula:
+ *   asin: [Q(x)-B(ax+b)]·asin(ax+b) - A(ax+b)·sqrt(1-(ax+b)^2)
+ *   acos: Q(x)·acos(ax+b) + A(ax+b)·sqrt(1-(ax+b)^2) + B(ax+b)·asin(ax+b)
+ * where Q = ∫P dx and ∫Q((t-b)/a)/sqrt(1-t^2) dt = A(t)·sqrt(1-t^2)+B(t)·asin(t).
+ */
+function tryAsinAcosPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, ASIN) && !equals(transcendental.head, ACOS)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+
+  const argMap = toPolynomialCoeffs(arg, x);
+  if (argMap === undefined) return undefined;
+  const argPoly = rpFromCoeffsMap(argMap);
+  if (argPoly === undefined || rpDeg(argPoly) !== 1) return undefined;
+  const b = rpCoeff(argPoly, 0);
+  const a = rpCoeff(argPoly, 1);
+  if (rcIsZero(a)) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  const P = rpFromCoeffsMap(Pmap);
+  if (P === undefined || rpIsZero(P)) return undefined;
+
+  const Q = rpIntegrate(P);
+  const Q_tilde = rpComposeToT(Q, a, b);
+  const [A_t, B_t] = sqrtOneMinusTSquaredDecompose(Q_tilde);
+  const A_x = rpComposeLinear(A_t, a, b);
+  const B_x = rpComposeLinear(B_t, a, b);
+
+  const Q_ir = rpToIR(Q, x);
+  const argSquared = app(POW, [arg, int(2)]);
+  const sqrtIr = app(SQRT, [app(SUB, [int(1), argSquared])]);
+
+  if (equals(transcendental.head, ASIN)) {
+    const asinCoef = rpIsZero(B_x) ? Q_ir : app(SUB, [Q_ir, rpToIR(B_x, x)]);
+    let result: IRNode = app(MUL, [asinCoef, transcendental]);
+    if (!rpIsZero(A_x)) {
+      result = app(SUB, [result, app(MUL, [rpToIR(A_x, x), sqrtIr])]);
+    }
+    return result;
+  }
+
+  let result: IRNode = app(MUL, [Q_ir, transcendental]);
+  if (!rpIsZero(A_x)) {
+    result = app(ADD, [result, app(MUL, [rpToIR(A_x, x), sqrtIr])]);
+  }
+  if (!rpIsZero(B_x)) {
+    result = app(ADD, [result, app(MUL, [rpToIR(B_x, x), app(ASIN, [arg])])]);
+  }
+  return result;
+}
+
+function linearArgCoeffs(arg: IRNode, x: IRNode): { readonly a: RatCoeff; readonly b: RatCoeff } | undefined {
+  const argMap = toPolynomialCoeffs(arg, x);
+  if (argMap === undefined) return undefined;
+  const argPoly = rpFromCoeffsMap(argMap);
+  if (argPoly === undefined || rpDeg(argPoly) !== 1) return undefined;
+  const a = rpCoeff(argPoly, 1);
+  if (rcIsZero(a)) return undefined;
+  return { a, b: rpCoeff(argPoly, 0) };
+}
+
+function hypProductTerm(poly: RatPoly, head: IRNode, arg: IRNode, x: IRNode): IRNode | undefined {
+  if (rpIsZero(poly)) return undefined;
+  const polyIr = rpToIR(poly, x);
+  const hypIr = app(head, [arg]);
+  return rpDeg(poly) === 0 && rcIsOne(rpCoeff(poly, 0)) ? hypIr : app(MUL, [polyIr, hypIr]);
+}
+
+function addDefinedTerms(terms: readonly (IRNode | undefined)[]): IRNode | undefined {
+  const present = terms.filter((term): term is IRNode => term !== undefined);
+  if (present.length === 0) return undefined;
+  return present.reduce((acc, term) => app(ADD, [acc, term]));
+}
+
+/**
+ * Phase 13: integrate P(x) * sinh(ax+b) and P(x) * cosh(ax+b).
+ *
+ * Tabular IBP terminates for polynomial P:
+ *   integral P*sinh(u) = P/a*cosh(u) - P'/a^2*sinh(u) + ...
+ *   integral P*cosh(u) = P/a*sinh(u) - P'/a^2*cosh(u) + ...
+ */
+function trySinhCoshPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, SINH) && !equals(transcendental.head, COSH)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  let derivative = rpFromCoeffsMap(Pmap);
+  if (derivative === undefined || rpIsZero(derivative)) return undefined;
+
+  let coshPoly: RatPoly = [];
+  let sinhPoly: RatPoly = [];
+  let aPower = linear.a;
+  let sign = RC_ONE;
+  let degree = 0;
+  while (!rpIsZero(derivative)) {
+    const scale = rcDiv(sign, aPower);
+    if (equals(transcendental.head, SINH)) {
+      if (degree % 2 === 0) coshPoly = rpAdd(coshPoly, rpScale(derivative, scale));
+      else sinhPoly = rpAdd(sinhPoly, rpScale(derivative, scale));
+    } else {
+      if (degree % 2 === 0) sinhPoly = rpAdd(sinhPoly, rpScale(derivative, scale));
+      else coshPoly = rpAdd(coshPoly, rpScale(derivative, scale));
+    }
+    derivative = rpDeriv(derivative);
+    aPower = rcMul(aPower, linear.a);
+    sign = rc(0n - sign.numer, sign.denom);
+    degree += 1;
+  }
+
+  return addDefinedTerms([
+    hypProductTerm(coshPoly, COSH, arg, x),
+    hypProductTerm(sinhPoly, SINH, arg, x),
+  ]);
+}
+
+/**
+ * Phase 13: integrate P(x) * asinh(ax+b) and P(x) * acosh(ax+b).
+ *
+ * Mirrors Phase 12's IBP shape, replacing the inverse-trig residual with
+ * decompositions over sqrt(t^2 + 1) or sqrt(t^2 - 1).
+ */
+function tryAsinhAcoshPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, ASINH) && !equals(transcendental.head, ACOSH)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  const P = rpFromCoeffsMap(Pmap);
+  if (P === undefined || rpIsZero(P)) return undefined;
+
+  const Q = rpIntegrate(P);
+  const Q_tilde = rpComposeToT(Q, linear.a, linear.b);
+  const [A_t, B_t] = equals(transcendental.head, ASINH)
+    ? sqrtTPlusOneDecompose(Q_tilde)
+    : sqrtTMinusOneDecompose(Q_tilde);
+  const A_x = rpComposeLinear(A_t, linear.a, linear.b);
+  const B_x = rpComposeLinear(B_t, linear.a, linear.b);
+
+  const Q_ir = rpToIR(Q, x);
+  const mainCoef = rpIsZero(B_x) ? Q_ir : app(SUB, [Q_ir, rpToIR(B_x, x)]);
+  let result: IRNode = app(MUL, [mainCoef, transcendental]);
+
+  if (!rpIsZero(A_x)) {
+    const argSquared = app(POW, [arg, int(2)]);
+    const sqrtInner = equals(transcendental.head, ASINH)
+      ? app(ADD, [argSquared, int(1)])
+      : app(SUB, [argSquared, int(1)]);
+    result = app(SUB, [result, app(MUL, [rpToIR(A_x, x), app(SQRT, [sqrtInner])])]);
+  }
+  return result;
+}
+
+function tryTanhAtanhLinear(transcendental: IRNode, x: IRNode): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, TANH) && !equals(transcendental.head, ATANH)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const invA = rcDiv(RC_ONE, linear.a);
+  if (equals(transcendental.head, TANH)) {
+    return app(MUL, [rcToIR(invA), app(LOG, [app(COSH, [arg])])]);
+  }
+
+  const argOverA = app(MUL, [rcToIR(invA), arg]);
+  const logCoef = rcDiv(RC_ONE, rcMul(rcFromBigInt(2n), linear.a));
+  const logArg = app(SUB, [int(1), app(POW, [arg, int(2)])]);
+  return app(ADD, [
+    app(MUL, [argOverA, transcendental]),
+    app(MUL, [rcToIR(logCoef), app(LOG, [logArg])]),
+  ]);
+}
+
+function tryRecipHypLinear(transcendental: IRNode, x: IRNode): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, COTH) && !equals(transcendental.head, SECH) && !equals(transcendental.head, CSCH)) {
+    return undefined;
+  }
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const invA = rcToIR(rcDiv(RC_ONE, linear.a));
+  if (equals(transcendental.head, COTH)) {
+    return app(MUL, [invA, app(LOG, [app(SINH, [arg])])]);
+  }
+  if (equals(transcendental.head, SECH)) {
+    return app(MUL, [invA, app(ATAN, [app(SINH, [arg])])]);
+  }
+
+  const halfArg = app(MUL, [rational(1, 2), arg]);
+  return app(MUL, [invA, app(LOG, [app(TANH, [halfArg])])]);
+}
+
+function tryRecipHypPower(base: IRNode, exponent: IRNode, x: IRNode): IRNode | undefined {
+  if (base.kind !== "apply" || base.args.length !== 1) return undefined;
+  if (!equals(base.head, SECH) && !equals(base.head, CSCH) && !equals(base.head, COTH) && !equals(base.head, TANH)) {
+    return undefined;
+  }
+  const nRat = exactRational(exponent);
+  if (nRat === undefined || nRat.denom !== 1n || nRat.numer < 0n || nRat.numer > BigInt(Number.MAX_SAFE_INTEGER)) {
+    return undefined;
+  }
+  const arg = base.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const n = Number(nRat.numer);
+  if (equals(base.head, SECH)) return sechPowerIntegral(n, arg, linear.a, x);
+  if (equals(base.head, CSCH)) return cschPowerIntegral(n, arg, linear.a, x);
+  if (equals(base.head, TANH)) return tanhPowerIntegral(n, arg, linear.a, x);
+  return cothPowerIntegral(n, arg, linear.a, x);
+}
+
+function powIfNeeded(base: IRNode, exponent: number): IRNode {
+  return exponent === 1 ? base : app(POW, [base, int(BigInt(exponent))]);
+}
+
+function recipHypCoeff(numer: bigint, denom: bigint, a: RatCoeff): IRNode {
+  return rcToIR(rcDiv(rc(numer, denom), a));
+}
+
+function sechPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(ATAN, [app(SINH, [arg])])]);
+  if (n === 2) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(TANH, [arg])]);
+
+  const sechPow = powIfNeeded(app(SECH, [arg]), n - 2);
+  const mainTerm = app(MUL, [
+    recipHypCoeff(1n, BigInt(n - 1), a),
+    app(MUL, [sechPow, app(TANH, [arg])]),
+  ]);
+  const tail = sechPowerIntegral(n - 2, arg, a, x);
+  return app(ADD, [
+    mainTerm,
+    app(MUL, [rational(BigInt(n - 2), BigInt(n - 1)), tail]),
+  ]);
+}
+
+function cschPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) {
+    const halfArg = app(MUL, [rational(1, 2), arg]);
+    return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(LOG, [app(TANH, [halfArg])])]);
+  }
+  if (n === 2) {
+    const negInvA = rcToIR(rcDiv(rc(-1n, 1n), a));
+    return app(MUL, [negInvA, app(COTH, [arg])]);
+  }
+
+  const cschPow = powIfNeeded(app(CSCH, [arg]), n - 2);
+  const mainTerm = app(MUL, [
+    recipHypCoeff(-1n, BigInt(n - 1), a),
+    app(MUL, [cschPow, app(COTH, [arg])]),
+  ]);
+  const tail = cschPowerIntegral(n - 2, arg, a, x);
+  return app(SUB, [
+    mainTerm,
+    app(MUL, [rational(BigInt(n - 2), BigInt(n - 1)), tail]),
+  ]);
+}
+
+function cothPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(LOG, [app(SINH, [arg])])]);
+
+  const cothPow = powIfNeeded(app(COTH, [arg]), n - 1);
+  const powerTerm = app(MUL, [recipHypCoeff(1n, BigInt(n - 1), a), cothPow]);
+  return app(SUB, [cothPowerIntegral(n - 2, arg, a, x), powerTerm]);
+}
+
+function tanhPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(LOG, [app(COSH, [arg])])]);
+
+  const tanhPow = powIfNeeded(app(TANH, [arg]), n - 1);
+  const powerTerm = app(MUL, [recipHypCoeff(1n, BigInt(n - 1), a), tanhPow]);
+  return app(SUB, [tanhPowerIntegral(n - 2, arg, a, x), powerTerm]);
+}
+
+function sqrtTPlusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
+  const memo = new Map<number, [RatPoly, RatPoly]>();
+  const monomial = (n: number): [RatPoly, RatPoly] => {
+    const cached = memo.get(n);
+    if (cached !== undefined) return cached;
+    let result: [RatPoly, RatPoly];
+    if (n === 0) {
+      result = [[], [RC_ONE]];
+    } else if (n === 1) {
+      result = [[RC_ONE], []];
+    } else {
+      const aNew: RatCoeff[] = Array.from({ length: n }, () => RC_ZERO);
+      aNew[n - 1] = rc(1n, BigInt(n));
+      const [aRec, bRec] = monomial(n - 2);
+      const coef = rc(0n - BigInt(n - 1), BigInt(n));
+      result = [rpAdd(aNew, rpScale(aRec, coef)), rpScale(bRec, coef)];
+    }
+    memo.set(n, result);
+    return result;
+  };
+  return decomposeByMonomial(Q_tilde, monomial);
+}
+
+function sqrtTMinusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
+  const memo = new Map<number, [RatPoly, RatPoly]>();
+  const monomial = (n: number): [RatPoly, RatPoly] => {
+    const cached = memo.get(n);
+    if (cached !== undefined) return cached;
+    let result: [RatPoly, RatPoly];
+    if (n === 0) {
+      result = [[], [RC_ONE]];
+    } else if (n === 1) {
+      result = [[RC_ONE], []];
+    } else {
+      const aNew: RatCoeff[] = Array.from({ length: n }, () => RC_ZERO);
+      aNew[n - 1] = rc(1n, BigInt(n));
+      const [aRec, bRec] = monomial(n - 2);
+      const coef = rc(BigInt(n - 1), BigInt(n));
+      result = [rpAdd(aNew, rpScale(aRec, coef)), rpScale(bRec, coef)];
+    }
+    memo.set(n, result);
+    return result;
+  };
+  return decomposeByMonomial(Q_tilde, monomial);
+}
+
+function decomposeByMonomial(
+  Q_tilde: RatPoly,
+  monomial: (degree: number) => [RatPoly, RatPoly],
+): [RatPoly, RatPoly] {
+  let A: RatPoly = [];
+  let B: RatPoly = [];
+  for (let degree = 0; degree < Q_tilde.length; degree += 1) {
+    const coef = rpCoeff(Q_tilde, degree);
+    if (rcIsZero(coef)) continue;
+    const [aN, bN] = monomial(degree);
+    A = rpAdd(A, rpScale(aN, coef));
+    B = rpAdd(B, rpScale(bN, coef));
+  }
+  return [A, B];
+}
+
+function sqrtOneMinusTSquaredDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
+  const memo = new Map<number, [RatPoly, RatPoly]>();
+  const monomial = (n: number): [RatPoly, RatPoly] => {
+    const cached = memo.get(n);
+    if (cached !== undefined) return cached;
+    let result: [RatPoly, RatPoly];
+    if (n === 0) {
+      result = [[], [RC_ONE]];
+    } else if (n === 1) {
+      result = [[rcFromBigInt(-1n)], []];
+    } else {
+      const aNew: RatCoeff[] = Array.from({ length: n }, () => RC_ZERO);
+      aNew[n - 1] = rc(-1n, BigInt(n));
+      const [aRec, bRec] = monomial(n - 2);
+      const coef = rc(BigInt(n - 1), BigInt(n));
+      result = [rpAdd(aNew, rpScale(aRec, coef)), rpScale(bRec, coef)];
+    }
+    memo.set(n, result);
+    return result;
+  };
+
+  let A: RatPoly = [];
+  let B: RatPoly = [];
+  for (let degree = 0; degree < Q_tilde.length; degree += 1) {
+    const coef = rpCoeff(Q_tilde, degree);
+    if (rcIsZero(coef)) continue;
+    const [aN, bN] = monomial(degree);
+    A = rpAdd(A, rpScale(aN, coef));
+    B = rpAdd(B, rpScale(bN, coef));
+  }
+  return [A, B];
 }
 
 function gcd(a: bigint, b: bigint): bigint {

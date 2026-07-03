@@ -1,0 +1,8 @@
+{
+ "check_id": 187,
+ "idx": 74,
+ "slot": "is_arriving_traveler",
+ "claimed_value": true,
+ "scenario": "Maria returns from an overseas trip carrying souvenirs and gifts with a total value of $650. At customs she presents the items for inspection. Her boarding passes and itinerary are in her bag.",
+ "cited_span": "Maria returns from an overseas trip"
+}

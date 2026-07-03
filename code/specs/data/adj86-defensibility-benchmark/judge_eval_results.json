@@ -1,0 +1,244 @@
+{
+  "detail": [
+    {
+      "id": "MED1-specialist",
+      "model": "haiku",
+      "stratum": "clean-determinate",
+      "bare_score": 0.9,
+      "fw_score": 0.9,
+      "more_defensible": "framework",
+      "fw_verdict": "DETERMINATE(precedence:specificity)"
+    },
+    {
+      "id": "MED1-specialist",
+      "model": "opus",
+      "stratum": "clean-determinate",
+      "bare_score": 0.75,
+      "fw_score": 1,
+      "more_defensible": "framework",
+      "fw_verdict": "DETERMINATE(assumes:provider_is_specialist)"
+    },
+    {
+      "id": "MED2-mri-priorauth",
+      "model": "haiku",
+      "stratum": "underdetermined-baited",
+      "bare_score": 1,
+      "fw_score": 1,
+      "more_defensible": "tie",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "MED2-mri-priorauth",
+      "model": "opus",
+      "stratum": "underdetermined-baited",
+      "bare_score": 1,
+      "fw_score": 1,
+      "more_defensible": "bare",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "MED3-specialty-tier",
+      "model": "haiku",
+      "stratum": "override-precedence",
+      "bare_score": 1,
+      "fw_score": 1,
+      "more_defensible": "framework",
+      "fw_verdict": "DETERMINATE"
+    },
+    {
+      "id": "MED3-specialty-tier",
+      "model": "opus",
+      "stratum": "override-precedence",
+      "bare_score": 1,
+      "fw_score": 0.9,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:override-marker)"
+    },
+    {
+      "id": "MED4-preventive-age",
+      "model": "haiku",
+      "stratum": "exception-encoding",
+      "bare_score": 0.1,
+      "fw_score": 0.85,
+      "more_defensible": "framework",
+      "fw_verdict": "DETERMINATE(assumes:screening_status)"
+    },
+    {
+      "id": "MED4-preventive-age",
+      "model": "opus",
+      "stratum": "exception-encoding",
+      "bare_score": 1,
+      "fw_score": 0.7,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:override-marker)"
+    },
+    {
+      "id": "MED5-er-copay",
+      "model": "haiku",
+      "stratum": "clean-determinate",
+      "bare_score": 1,
+      "fw_score": 0.7,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:specificity)(assumes:obligation_fulfilled)"
+    },
+    {
+      "id": "MED5-er-copay",
+      "model": "opus",
+      "stratum": "clean-determinate",
+      "bare_score": 1,
+      "fw_score": 1,
+      "more_defensible": "framework",
+      "fw_verdict": "DETERMINATE"
+    },
+    {
+      "id": "MED6-oon-rider",
+      "model": "haiku",
+      "stratum": "underdetermined-baited",
+      "bare_score": 1,
+      "fw_score": 0.9,
+      "more_defensible": "bare",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "MED6-oon-rider",
+      "model": "opus",
+      "stratum": "underdetermined-baited",
+      "bare_score": 1,
+      "fw_score": 1,
+      "more_defensible": "tie",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "LAW1-loadingzone",
+      "model": "haiku",
+      "stratum": "clean-determinate",
+      "bare_score": 0.85,
+      "fw_score": 0.9,
+      "more_defensible": "framework",
+      "fw_verdict": "DETERMINATE(precedence:specificity)"
+    },
+    {
+      "id": "LAW1-loadingzone",
+      "model": "opus",
+      "stratum": "clean-determinate",
+      "bare_score": 1,
+      "fw_score": 0,
+      "more_defensible": "bare",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "LAW2-eviction-notice",
+      "model": "haiku",
+      "stratum": "underdetermined-baited",
+      "bare_score": 0.25,
+      "fw_score": 0.95,
+      "more_defensible": "framework",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "LAW2-eviction-notice",
+      "model": "opus",
+      "stratum": "underdetermined-baited",
+      "bare_score": 1,
+      "fw_score": 1,
+      "more_defensible": "tie",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "LAW3-minor-necessities",
+      "model": "haiku",
+      "stratum": "override-precedence",
+      "bare_score": 1,
+      "fw_score": 0.8,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:override-marker)"
+    },
+    {
+      "id": "LAW3-minor-necessities",
+      "model": "opus",
+      "stratum": "override-precedence",
+      "bare_score": 1,
+      "fw_score": 0.5,
+      "more_defensible": "bare",
+      "fw_verdict": "INDETERMINATE"
+    },
+    {
+      "id": "LAW4-capgains-shortterm",
+      "model": "haiku",
+      "stratum": "exception-encoding",
+      "bare_score": 1,
+      "fw_score": 0.2,
+      "more_defensible": "bare",
+      "fw_verdict": "CONFLICT"
+    },
+    {
+      "id": "LAW4-capgains-shortterm",
+      "model": "opus",
+      "stratum": "exception-encoding",
+      "bare_score": 1,
+      "fw_score": 0.85,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:override-marker)(assumes:holding_period_is_short)"
+    },
+    {
+      "id": "LAW5-vendor-license",
+      "model": "haiku",
+      "stratum": "clean-determinate",
+      "bare_score": 1,
+      "fw_score": 0.75,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:specificity)"
+    },
+    {
+      "id": "LAW5-vendor-license",
+      "model": "opus",
+      "stratum": "clean-determinate",
+      "bare_score": 1,
+      "fw_score": 0.9,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE"
+    },
+    {
+      "id": "LAW6-books-duty",
+      "model": "haiku",
+      "stratum": "exception-encoding",
+      "bare_score": 1,
+      "fw_score": 0.5,
+      "more_defensible": "bare",
+      "fw_verdict": "DETERMINATE(precedence:override-marker)"
+    },
+    {
+      "id": "LAW6-books-duty",
+      "model": "opus",
+      "stratum": "exception-encoding",
+      "bare_score": 0.9,
+      "fw_score": 0.9,
+      "more_defensible": "tie",
+      "fw_verdict": "DETERMINATE(precedence:override-marker)"
+    }
+  ],
+  "cells": {
+    "haiku": {
+      "n": 12,
+      "bare_sum": 10.1,
+      "fw_sum": 9.450000000000001,
+      "fw_wins": 5,
+      "ties": 1,
+      "ud_n": 3,
+      "ud_fw_wins": 1,
+      "ud_bare_sum": 2.25,
+      "ud_fw_sum": 2.8499999999999996
+    },
+    "opus": {
+      "n": 12,
+      "bare_sum": 11.65,
+      "fw_sum": 9.75,
+      "fw_wins": 2,
+      "ties": 3,
+      "ud_n": 3,
+      "ud_fw_wins": 0,
+      "ud_bare_sum": 3.0,
+      "ud_fw_sum": 3.0
+    }
+  }
+}

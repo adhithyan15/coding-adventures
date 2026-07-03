@@ -1,0 +1,30 @@
+// ReviewCard.mil - spaced-repetition study-session review surface.
+//
+// This component keeps interaction semantic and target-neutral. The Rust
+// app core decides which card is due and how each answer affects scheduling;
+// Mosaic owns the prompt/answer surface and emits native events for the shell
+// to dispatch back into that core.
+
+component ReviewCard {
+  slot deck-name : text ;
+  slot prompt-label : text ;
+  slot prompt : text ;
+  slot answer-label : text ;
+  slot answer : text ;
+  slot answer-visible : bool ;
+  slot type-answer-active : bool ;
+  slot type-answer-label : text ;
+  slot type-answer-value : text ;
+  slot type-answer-placeholder : text ;
+  slot type-answer-comparison-label : text ;
+  slot type-answer-comparison-value : text ;
+  slot type-answer-correct : bool ;
+  slot progress-label : text ;
+
+  emit onReveal ;
+  emit onTypeAnswerChange ( value : text ) ;
+  emit onAgain ;
+  emit onHard ;
+  emit onGood ;
+  emit onEasy ;
+}

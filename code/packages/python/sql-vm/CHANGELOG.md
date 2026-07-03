@@ -1,5 +1,230 @@
 # Changelog
 
+## 1.61.1 — 2026-06-25
+
+### Fixed
+
+- Added `test_update_or_conflict.py`: 16 new tests covering `UPDATE OR REPLACE`,
+  `UPDATE OR IGNORE`, upsert `WHERE` predicate, `CREATE/DROP INDEX`,
+  `CREATE/DROP TRIGGER`, and `ALTER TABLE ADD COLUMN`.  These paths were
+  introduced in v1.61.0 but not exercised by the existing suite, dropping
+  coverage to 79%.  Total coverage is now 81.17% (above the 80% threshold).
+
+## 1.61.0 — 2026-06-19
+
+### Added
+
+- **`_do_create_trigger` honours `if_not_exists`** — when the backend raises
+  `TriggerAlreadyExists` and the IR instruction carries
+  `if_not_exists=True`, the VM now swallows the error silently (matching
+  SQLite's semantics for `CREATE TRIGGER IF NOT EXISTS`).  Without the
+  flag the error is still translated and re-raised as before.
+
+- `_do_update()` now dispatches on `UpdateRows.on_conflict`:
+
+  - **`IGNORE`** — `ConstraintViolation` raised by `_check_constraints` or
+    `backend.update()` is caught and swallowed; the current row is silently
+    skipped.  `rows_affected` is incremented only for rows that were actually
+    changed (skipped rows do not count, and the field is initialised to `0`
+    rather than `None` when all rows are skipped, so `cursor.rowcount`
+    returns `0` instead of `-1`).
+
+  - **`REPLACE`** — Other rows that conflict with the post-update merged row
+    on any `UNIQUE` or `PRIMARY KEY` column are deleted before the current
+    row is updated in place.  A separate scan cursor (`tmp_cur`) is opened
+    to locate conflicts; the current row is identified by content comparison
+    (`row == current`) and skipped so it is not deleted.  For each conflict
+    row deleted at index `J < cursor._idx`, `cursor._idx` is decremented by
+    one to keep the outer scan cursor pointing at the correct row after the
+    underlying list shifts left.
+
+  - **`ABORT`**, **`FAIL`**, **`ROLLBACK`** — re-raise the constraint error
+    (same as the default `None` path; full per-statement rollback is deferred).
+
+## 1.60.0 — 2026-06-16
+
+### Fixed
+
+- **RANGE mode peer-group expansion** — cumulative window functions
+  (``SUM``, ``COUNT``, ``AVG``, etc.) with ``ORDER BY`` now correctly
+  expand ``CURRENT ROW`` to the full *peer group* when the frame mode
+  is ``RANGE`` (the SQL standard default).
+
+  Previously ``_frame_slice`` applied ``ROWS`` physical-position
+  semantics even for the default ``RANGE BETWEEN UNBOUNDED PRECEDING
+  AND CURRENT ROW`` frame, so tied ``ORDER BY`` values produced wrong
+  cumulative totals::
+
+      -- data: (1,2,2,3)
+      SELECT a, COUNT(*) OVER (ORDER BY a) …
+      -- was: (1,1),(2,2),(2,3),(3,4)   ← wrong for a=2 first row
+      -- now: (1,1),(2,3),(2,3),(3,4)   ← correct (both a=2 rows in frame)
+
+  Fix: ``_frame_slice`` now computes ``_peer_group_start`` /
+  ``_peer_group_end`` helpers that scan backward/forward from position
+  ``i`` to find all rows sharing the same ``ORDER BY`` key.  The
+  helpers are used:
+
+  * In the default-frame path (``frame is None``, ``order_cols``
+    present): ``partition[:_peer_group_end()]`` replaces the old
+    ``partition[:i+1]``.
+  * In explicit ``RANGE`` frames (``frame.unit == "RANGE"``): the
+    ``CURRENT_ROW`` bound in ``_start`` and ``_end`` delegates to the
+    peer-group helpers instead of using the physical index ``i``.
+
+  ``ROWS`` frames are completely unaffected — the ``is_range`` flag
+  guards all peer-group expansions.
+
+## 1.59.0 — 2026-05-24
+
+### Fixed
+
+- ``CAST(<blob> AS TEXT)`` now UTF-8-decodes the BLOB bytes instead
+  of hex-encoding them, matching SQLite::
+
+      CAST(x'48656c6c6f' AS TEXT)  ⟶  'Hello'   (was '48656c6c6f')
+      CAST(x'31' AS TEXT)          ⟶  '1'       (was '31')
+      CAST(x'3432' AS TEXT)        ⟶  '42'      (was '3432')
+
+  Together with the 1.58.0 fix to ``CAST(<numeric> AS BLOB)``, this
+  restores SQLite's documented round-trip identity::
+
+      CAST(CAST(n AS BLOB) AS TEXT) == CAST(n AS TEXT)
+
+  Fix in ``_cast_fn``'s TEXT-affinity branch: the ``bytes`` arm now
+  calls ``x.decode("utf-8", errors="replace")`` instead of
+  ``x.hex()``.  Invalid UTF-8 bytes are mapped to U+FFFD rather
+  than raising — matches SQLite's "decode lazily, never error
+  mid-query" stance and keeps the cast total.
+
+## 1.58.0 — 2026-05-24
+
+### Fixed
+
+- ``CAST(<numeric> AS BLOB)`` now yields the UTF-8 encoding of the
+  numeric's textual representation, matching SQLite::
+
+      CAST(1 AS BLOB)     ⟶  b'1'
+      CAST(42 AS BLOB)    ⟶  b'42'
+      CAST(-7 AS BLOB)    ⟶  b'-7'
+      CAST(1.5 AS BLOB)   ⟶  b'1.5'
+      CAST(TRUE AS BLOB)  ⟶  b'1'
+
+  Previously these used ``struct.pack(">q", x)`` for integers (and
+  ``">d"`` for floats), producing 8-byte big-endian binary blobs
+  that don't match SQLite's wire format and broke round-trip
+  ``CAST(n AS BLOB)`` patterns that callers use for type-erased
+  serialization.
+
+  Fix in ``_cast_fn``'s BLOB-affinity branch: special-case ``bool``,
+  ``int``, and ``float`` to encode via ``str(value).encode("utf-8")``.
+  ``bool`` is checked before ``int`` because Python's ``bool`` is a
+  subclass of ``int`` — without the explicit check, ``True`` would
+  be encoded as ``b'True'`` (wrong) instead of ``b'1'`` (right).
+  ``struct`` import removed (no longer used).
+
+## 1.57.0 — 2026-05-24
+
+### Fixed
+
+- ``CAST(<bool> AS TEXT)`` now yields ``'1'`` / ``'0'`` instead of
+  Python's ``'True'`` / ``'False'``.  SQLite has no native boolean
+  type — TRUE and FALSE are aliases for the integers 1 and 0 — so
+  the textual rendering of a cast boolean must match the integer
+  string.  The previous implementation called ``str(x)`` directly,
+  which leaked Python's ``bool`` repr into SQL output.
+
+  Fix in ``_cast_fn``: the TEXT-affinity branch now special-cases
+  ``isinstance(x, bool)`` before the generic ``str`` path
+  (mirroring the existing INTEGER-affinity bool handling) and
+  returns ``str(int(x))``.
+
+## 1.56.0 — 2026-05-24
+
+### Changed
+
+- CHECK constraint violations now render as
+  ``CHECK constraint failed: <expr_text>`` (matching SQLite) instead
+  of ``CHECK constraint failed: <table>.<col>``.  The
+  ``check_registry`` value shape grew from ``(col_name, instrs)`` to
+  ``(col_name, expr_text, instrs)`` so the VM can quote the original
+  predicate source.  The handler still accepts the legacy 2-tuple
+  shape for backward compatibility with externally built fixtures
+  (a fallback path emits the older ``<table>.<col>`` form when
+  ``expr_text`` is empty).
+
+## 1.55.0 — 2026-05-23
+
+### Added
+
+- ``execute()`` accepts a new ``fk_enabled: bool = True`` keyword
+  forwarded to ``_VmState.fk_enabled``.  ``_check_fk_child`` and
+  ``_check_fk_parent`` short-circuit to a no-op when False, mirroring
+  SQLite's ``PRAGMA foreign_keys = OFF`` behaviour.  The default
+  preserves existing call sites: omitting the kwarg keeps FK
+  enforcement on.
+
+## 1.54.0 — 2026-05-23
+
+### Added
+
+- ``_do_create_table`` now forwards the IR's ``autoincrement`` flag
+  to ``BackendColumnDef.autoincrement``.  End-to-end this means
+  ``CREATE TABLE t (id INTEGER PRIMARY KEY AUTOINCREMENT)`` flows
+  through grammar → adapter → planner → codegen → VM → backend with
+  the flag preserved, and ``sqlite_master.sql`` round-trips with
+  ``AUTOINCREMENT`` in the reconstructed CREATE statement.
+
+## 1.53.0 — 2026-05-23
+
+### Added
+
+- ``_do_create_table`` now forwards the IR's ``strict`` flag as a
+  keyword arg to ``Backend.create_table(strict=...)``.  End-to-end this
+  means ``CREATE TABLE t (x INTEGER) STRICT`` now triggers
+  SQLite-compatible type enforcement on subsequent INSERT/UPDATE.
+
+## 1.52.0 — 2026-05-23
+
+### Added
+
+- ``_do_alter_table`` now dispatches on the new IR ``AlterTable``
+  optional fields: ``rename_to`` calls ``backend.rename_table``,
+  ``rename_column`` calls ``backend.rename_column``, ``drop_column``
+  calls ``backend.drop_column``.  The existing ``column`` (ADD COLUMN)
+  branch is unchanged in shape but now also forwards the column's
+  DEFAULT value to the backend (fixes a pre-existing bug where
+  ``ALTER TABLE … ADD COLUMN x TEXT DEFAULT 'foo'`` backfilled NULL
+  instead of ``'foo'``).
+- 5 new tests in ``test_dml_ddl.py`` cover the new branches plus the
+  error paths (RENAME on missing table, DROP unknown column).
+
+## 1.51.0 — 2026-05-23
+
+### Changed
+
+- ``_do_create_table`` and ``_do_alter_table`` now forward the
+  ``collation`` field from the IR ``ColumnDef`` to the backend's
+  ``ColumnDef``.  This is the last hop on the journey from
+  ``CREATE TABLE t(name TEXT COLLATE NOCASE)`` SQL through to the
+  backend column metadata — the planner then reads it back via
+  ``SchemaProvider.column_collation`` when resolving an ORDER BY
+  clause.
+
+## 1.50.0 — 2026-05-22
+
+### Added
+
+- ``_do_sort`` honours the new ``SortKey.collation`` field by
+  transforming the value before the comparator sees it:
+  - ``BINARY`` (or ``None``): pass-through
+  - ``NOCASE``: ``str.lower()`` (ASCII case-insensitive)
+  - ``RTRIM``:  ``str.rstrip(' ')``
+  - Unknown name: pass-through (matches SQLite's lazy validation)
+  Non-string values (ints, floats, blobs, NULL) pass through
+  unchanged because SQLite's collations only affect TEXT
+  comparison.
+
 ## 1.49.0 — 2026-05-21
 
 ### Added

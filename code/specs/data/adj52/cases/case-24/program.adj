@@ -1,0 +1,43 @@
+% ADJ52 case-24 program (this patient's observations + queries only; no rules).
+% 54-year-old man, progressive pancytopenia over months + bilateral foot
+% paresthesias (a myeloneuropathy). Sleeve bariatric surgery years earlier, past
+% heavy alcohol use, prior low zinc, and UNINTERRUPTED daily OTC zinc tablets.
+% Serum B12 markedly elevated (>2000) on supplementation. Marrow: first biopsy
+% hypercellular with dyserythropoiesis and NO clonal cytogenetic abnormality ->
+% presumptive MDS, referred for transplant. Months later counts worse; repeat
+% marrow now hypocellular with erythroid hyperplasia, persistent dyserythropoiesis,
+% PROMINENT cytoplasmic vacuolization of erythroid AND myeloid precursors, and ring
+% sideroblasts. No disease-directed therapy yet. Trace-metal labs never sent.
+
+% --- the copper-deficiency marrow / blood gestalt (one correlated syndrome) ---
+observe marrow_vacuolization(prominent)
+observe marrow_ring_sideroblasts(present)
+observe neutrophils(severely_reduced)
+observe platelets(relatively_preserved)
+observe anemia(macrocytic)
+
+% --- copper-lowering exposures and malabsorptive anatomy ---
+observe exposure(daily_zinc_supplementation)
+observe history(bariatric_surgery)
+
+% --- the B12-like neurologic manifestation ---
+observe symptom(peripheral_neuropathy)
+
+% --- marrow genetics / course ---
+observe cytogenetics(normal_no_clonal_abnormality)
+observe marrow_course(hypocellular_no_blast_excess)
+
+% --- the prior-misattribution data (B12 already repleted; level now high) ---
+observe serum_b12(markedly_elevated)
+observe prior_treatment(b12_repletion_given)
+
+% NOT observed (open, decision-relevant): serum_copper(...),
+% copper_repletion_response(...) -- the conspicuously missing trace-metal labs.
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(copper_deficiency_myeloneuropathy)
+? diagnosis(myelodysplastic_syndrome)
+? diagnosis(vitamin_b12_deficiency)
+? diagnosis(alcohol_related_marrow_suppression)
+? next_step(serum_copper_ceruloplasmin_zinc_panel)
+? next_step(marrow_molecular_sf3b1_cytogenetics)

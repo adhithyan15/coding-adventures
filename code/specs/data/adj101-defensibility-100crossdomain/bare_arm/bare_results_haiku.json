@@ -1,0 +1,122 @@
+[
+ {
+  "id": "PHYS1",
+  "kind": "compute",
+  "answer": "5.1 meters",
+  "reasoning": "For a projectile launched from ground level with initial velocity v₀ and launch angle θ, I need to find the maximum height.\n\nThe key insight is that maximum height occurs when the vertical component of velocity becomes zero.\n\n**Step 1: Find the vertical component of initial velocity**\n- v₀ᵧ = v₀ × sin(θ)\n- v₀ᵧ = 20 × sin(30°)\n- v₀ᵧ = 20 × 0.5 = 10 m/s\n\n**Step 2: Use the kinematic equation for maximum height**\nAt maximum height, the vertical velocity is zero. Using v² = v₀² + 2aΔy, where:\n- v = 0 (velocity at max height)\n- v₀ = 10 m/s (initial vertical velocity)\n- a = -g = -9.8 m/s² (acceleration due to gravity, downward)\n- Δy = h (height we're solving for)\n\n0 = (10)² - 2(9.8)h\n0 = 100 - 19.6h\n19.6h = 100\nh = 100/19.6\nh ≈ 5.1 meters\n\n**Note:** The width of the launch pad (2 meters) is not relevant to calculating maximum height—it would only matter if we were checking whether the projectile clears something or lands within a specific area."
+ },
+ {
+  "id": "MATH1",
+  "kind": "compute",
+  "answer": "2.095",
+  "reasoning": "The real root of x³ - 2x - 5 = 0 was found using Newton-Raphson numerical method with initial guess x₀ = 2.0. The iteration xₙ₊₁ = xₙ - (xₙ³ - 2xₙ - 5)/(3xₙ² - 2) converged to approximately 2.0945514815423265. Verification: f(2.0945514815423265) ≈ 0, and the function changes sign between x=2.0 (where f=-1) and x=2.1 (where f≈0.061), confirming this is the unique real root. Rounded to 3 decimal places: 2.095"
+ },
+ {
+  "id": "UNIT1",
+  "kind": "compute",
+  "answer": "27.78 m/s (or 250/9 m/s exactly, which equals approximately 27.777... m/s)",
+  "reasoning": "To find average speed in meters per second, I converted the given values: 150 km to 150,000 meters and 1.5 hours to 5,400 seconds. Then I applied the formula: average speed = distance ÷ time = 150,000 m ÷ 5,400 s = 27.78 m/s. This can also be calculated by first finding the speed in km/h (100 km/h) and then converting to m/s using the conversion factor (÷ 3.6), yielding the same result."
+ },
+ {
+  "id": "CHEM1",
+  "kind": "compute",
+  "answer": "180.15 g/mol",
+  "reasoning": "The SMILES string CC(=O)Oc1ccccc1C(=O)O represents aspirin (acetylsalicylic acid) with molecular formula C9H8O4. The molecular weight is calculated by summing the atomic weights: 9 carbons (9 × 12.01 = 108.09) + 8 hydrogens (8 × 1.008 = 8.064) + 4 oxygens (4 × 16.00 = 64.00) = 180.154 g/mol, which rounds to 180.15 g/mol."
+ },
+ {
+  "id": "CHEM2",
+  "kind": "compute",
+  "answer": "Caffeine has 0 hydrogen-bond donors.",
+  "reasoning": "Caffeine (a methylxanthine) contains no functional groups capable of donating hydrogen bonds. Hydrogen-bond donors require a hydrogen atom bonded to an electronegative atom (N, O, or F). In caffeine's structure: (1) the two carbonyl groups (C=O) are part of the fused ring system and not attached to hydrogens, making them hydrogen-bond acceptors rather than donors; (2) all nitrogen atoms in the rings are either part of double bonds (C=N) or are methylated (N-CH3), so they have no N-H groups; and (3) all other hydrogens are part of methyl groups or aromatic C-H bonds, which do not act as hydrogen-bond donors. Therefore, caffeine has zero hydrogen-bond donors."
+ },
+ {
+  "id": "FIN1",
+  "kind": "compute",
+  "answer": "$5,624.32",
+  "reasoning": "Using the compound interest formula A = P(1 + r/n)^(nt) with P=$5,000, r=0.04, n=1 (annual compounding), and t=3 years: A = 5000(1.04)^3 = 5000 × 1.124864 = $5,624.32"
+ },
+ {
+  "id": "CHEM3",
+  "kind": "compute",
+  "answer": "68.59 grams of carbon dioxide (CO2) are produced",
+  "reasoning": "This is a stoichiometry problem solved through these steps:\n\n1. **Balanced chemical equation**: CH4 + 2O2 → CO2 + 2H2O\n\n2. **Molar masses**:\n   - CH4 = 12.01 + 4(1.008) = 16.042 g/mol\n   - CO2 = 12.01 + 2(16.00) = 44.01 g/mol\n\n3. **Convert grams of CH4 to moles**:\n   - 25.0 g ÷ 16.042 g/mol = 1.5584 mol CH4\n\n4. **Use stoichiometry**: The balanced equation shows a 1:1 molar ratio between CH4 and CO2\n   - 1.5584 mol CH4 produces 1.5584 mol CO2\n\n5. **Convert moles of CO2 to grams**:\n   - 1.5584 mol × 44.01 g/mol = 68.59 g CO2\n\nNote: The temperature reading (21°C) is extraneous information and does not affect the mass calculation. This is a straightforward stoichiometric conversion problem based on the molar ratio in the balanced equation."
+ },
+ {
+  "id": "GEO1",
+  "kind": "compute",
+  "answer": "26.833 square centimeters",
+  "reasoning": "Using Heron's formula with sides a=7, b=8, c=9: the semi-perimeter s = 12, and Area = √[12(12-7)(12-8)(12-9)] = √[12×5×4×3] = √720 ≈ 26.833 cm²"
+ },
+ {
+  "id": "PHYS2",
+  "kind": "compute",
+  "answer": "2.838 seconds",
+  "reasoning": "Using the simple pendulum period formula T = 2π√(L/g) with L = 2 m and g = 9.8 m/s², we get T = 2π√(2/9.8) = 2π√(0.2041) ≈ 2π(0.4518) ≈ 2.8385 seconds, which rounds to 2.838 seconds to 3 decimal places."
+ },
+ {
+  "id": "CHEM4",
+  "kind": "compute",
+  "reasoning": "\nWater (H₂O) has the following atomic composition:\n- 2 hydrogen atoms (H): each with atomic mass ≈ 1.008 amu\n- 1 oxygen atom (O): with atomic mass ≈ 15.999 amu\n\nMolecular weight of H₂O:\n- H: 2 × 1.008 = 2.016 amu\n- O: 1 × 15.999 = 15.999 amu\n- Total: 2.016 + 15.999 = 18.015 amu\n\nMass percent of oxygen:\n= (mass of oxygen / total molecular mass) × 100%\n= (15.999 / 18.015) × 100%\n= 0.88809... × 100%\n= 88.809...%\n= 88.81% (to 2 decimal places)\n",
+  "answer": "\n88.81%\n"
+ },
+ {
+  "id": "MED2",
+  "kind": "adjud",
+  "answer": "Cannot be determined from the information provided. The reimbursement rate depends on whether the member's annual deductible has been met. If the deductible has been met: 70%. If the deductible has not been met: 0%.",
+  "reasoning": "The HealthFirst policy establishes two reimbursement rates for in-network specialist visits: 70% after the deductible is met, and 0% before it is met. The scenario confirms the visit was with an in-network specialist (rheumatologist), but does not specify the member's deductible status. Without knowing whether the annual deductible has been satisfied, the reimbursement rate cannot be definitively determined. To answer this question, you would need to know the member's year-to-date deductible accumulation."
+ },
+ {
+  "id": "EMP2",
+  "kind": "adjud",
+  "answer": "Cannot be determined from the facts given. The policy requires at least 12 months of employment as the condition for entitlement, but the scenario does not state how long the employee has been employed. If the employee has been employed for 12 months or more, they are entitled; if less than 12 months, they are not. Without the tenure fact, no determination can be reached.",
+  "reasoning": "The policy sets a single necessary condition for entitlement to protected family leave: employment by the company for at least 12 months. The scenario establishes that an employee requested protected family leave to care for a newborn — caring for a newborn is a qualifying purpose, but the policy as stated does not gate on purpose; it gates solely on tenure. The decisive fact under the policy is length of employment, and the scenario is silent on it. Because the eligibility predicate (>= 12 months employed) is neither affirmed nor negated by the given facts, the conclusion is undetermined rather than yes or no. Asserting \"yes\" would assume the tenure is met; asserting \"no\" would assume it is not — both go beyond the record. The correct adjudication is that the entitlement cannot be established on the facts provided and turns on the missing tenure fact."
+ },
+ {
+  "id": "INS2",
+  "kind": "adjud",
+  "answer": "Cannot be determined without additional information. The damage's coverage status depends entirely on whether it was caused by a sudden, accidental event (e.g., burst pipe) versus gradual seepage or maintenance neglect. The scenario provides only the discovery timing (\"last week\"), not the actual cause or time-course of the damage. Request documentation of the leak's origin and mechanism (plumber's report, evidence of sudden rupture vs. prolonged seepage) before adjudicating.",
+  "reasoning": "The policy gates coverage on causation: sudden/accidental = covered; gradual seepage/neglect = excluded. The scenario states when damage was discovered but not how or when it occurred. These are distinct facts—gradual seepage can be discovered suddenly once it becomes visible. Without the dispositive fact (actual cause), neither policy branch can be satisfied. The disciplined adjudication refuses to assume either branch and instead identifies the missing controlling fact."
+ },
+ {
+  "id": "CON2",
+  "kind": "adjud",
+  "answer": "No, the customer is not owed a service credit for this downtime.",
+  "reasoning": "Under the stated policy, planned-maintenance downtime that is announced at least 48 hours in advance is explicitly excluded from creditable downtime. The scenario describes downtime that occurred \"during a maintenance window,\" which indicates it was planned maintenance. Since the policy states planned maintenance announced 48+ hours in advance is \"not creditable,\" and the scenario involves a maintenance window (implying it was known and planned in advance), the 2-hour downtime does not qualify for a service credit. The customer would only be owed a credit if the downtime was unplanned (unannounced outages), which this maintenance window clearly was not."
+ },
+ {
+  "id": "LAW1",
+  "kind": "adjud",
+  "answer": "The owner is not liable for the parking fine.",
+  "reasoning": "The policy states that a vehicle owner is liable for parking fines incurred by the vehicle, with an exception: \"if the vehicle was reported stolen before the time of the violation, the owner is not liable.\" In this scenario, the owner filed a police stolen-vehicle report at 9:00 AM, and the parking fine was incurred at 3:00 PM the same day. Since the stolen-vehicle report was filed at 9:00 AM, which is before the 3:00 PM violation time, the exception to liability applies. Therefore, the owner is not liable for the fine."
+ },
+ {
+  "id": "BEN1",
+  "kind": "adjud",
+  "answer": "Yes, the household qualifies for the subsidy.",
+  "reasoning": "The policy establishes two pathways to qualification:\n\n1. Primary criterion: Monthly income at or below $2,000\n2. Override criterion: Households with a member on continuous home oxygen qualify \"regardless of income\"\n\nThe household's monthly income of $2,600 exceeds the $2,000 threshold, so they would NOT qualify under the primary criterion alone.\n\nHowever, the policy explicitly includes an override that exempts households from the income requirement if they have a member on continuous home oxygen. The scenario states the household has \"one member who uses continuous home oxygen.\"\n\nSince the override applies \"regardless of income,\" the household's income level becomes irrelevant to their eligibility determination. The presence of a member on continuous home oxygen is sufficient to qualify them for the subsidy.\n\nTherefore, the household qualifies."
+ },
+ {
+  "id": "IMM1",
+  "kind": "adjud",
+  "answer": "Yes, the applicant meets the continuous-residence requirement.",
+  "reasoning": "The applicant has 3 years and 2 months of continuous residence and has been married to and living with a U.S.-citizen spouse for the entire duration of that residence. The policy establishes two pathways: (1) 5 years of continuous residence (standard), or (2) 3 years of continuous residence for applicants married to and living with a citizen spouse (override). The applicant satisfies the override condition: the required 3-year threshold is met (with 2 months to spare), the marriage to a U.S.-citizen spouse exists, and the cohabitation spans the full residence period. The applicant therefore qualifies under the override provision."
+ },
+ {
+  "id": "LAW2",
+  "kind": "adjud",
+  "answer": "No, the landlord has not violated the 21-day return deadline under this policy.",
+  "reasoning": "The policy states: \"A landlord must return a tenant's security deposit within 21 days of move-out, EXCEPT where the lease was terminated by the tenant for cause, in which case no deadline applies.\"\n\nThe critical exception uses \"where the lease was terminated by the tenant for cause.\" This language specifies who terminated the lease: the tenant.\n\nIn the scenario, the lease was terminated by the LANDLORD (for non-payment), not by the tenant. The tenant simply moved out after the landlord's termination action. This means the exception does not apply, so the 21-day deadline IS in effect.\n\nHowever, there is ambiguity in the policy that cuts in favor of the landlord: the exception clause states \"where the lease was terminated by the tenant for cause\" — it specifies the terminating party (tenant) but does not specify what constitutes \"cause\" for the landlord's termination or whether the landlord's termination for non-payment (a valid cause) might also trigger the exception. \n\nThe plain language reading is that the exception applies only when the TENANT exercises a termination right for cause (e.g., constructive eviction, uninhabitable conditions). A landlord's termination for non-payment, while lawful, is not a termination \"by the tenant.\" Therefore, the 21-day rule applies, and 30 days have passed without return — technically a violation.\n\nUpon reconsideration: the policy as written only suspends the deadline when terminated \"by the tenant.\" Since the landlord terminated the lease, the exception does not apply, the deadline does apply, and 30 days exceeds 21 days. The landlord has violated the deadline under a strict reading."
+ },
+ {
+  "id": "BEN2",
+  "kind": "adjud",
+  "answer": "No, the applicant is not eligible for tuition assistance.",
+  "reasoning": "The policy contains two conditions: (1) enrollment at least half-time makes applicants eligible, BUT (2) applicants in default on a prior education loan are ineligible \"regardless of enrollment.\" The second condition is an absolute exclusion that overrides the first.\n\nIn this scenario:\n- The applicant meets the enrollment requirement (enrolled full-time, which exceeds the half-time threshold)\n- However, the applicant is in default on a federal student loan from a prior program\n\nBecause the policy explicitly states that applicants in default are ineligible \"regardless of enrollment,\" the applicant's full-time enrollment status does not protect their eligibility. The default status is a categorical disqualifier that supersedes all enrollment-based considerations."
+ },
+ {
+  "id": "IMM2",
+  "kind": "adjud",
+  "answer": "No, the applicant does not satisfy the physical-presence requirement.",
+  "reasoning": "Under the policy, the physical-presence requirement has two conditions:\n\n1. An applicant must accumulate 30 months of presence in the U.S. during the statutory period.\n2. However, any single absence of 12 months or more breaks continuity and disqualifies the period regardless of total months.\n\nIn this scenario:\n- The applicant accumulated 33 months of physical presence (satisfying condition 1).\n- However, the applicant took one continuous trip abroad lasting 13 months during the period (triggering the disqualifying exception in condition 2).\n\nSince 13 months exceeds the 12-month threshold, this single absence breaks continuity. The policy explicitly states this disqualifies the period \"regardless of total months\"—meaning that even though the applicant has 33 months total (which exceeds the 30-month threshold), the 13-month absence is a hard bar that cannot be overcome by accumulating extra presence months.\n\nTherefore, the applicant does not satisfy the requirement."
+ }
+]

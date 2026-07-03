@@ -1,0 +1,624 @@
+{
+  "tally": {
+    "direction_only": 17,
+    "fabricated": 2
+  },
+  "per_claim": [
+    {
+      "claim_id": "c1",
+      "cited_sources": [
+        "StatPearls NBK557558 Genitourinary Tuberculosis",
+        "F1000Research 9:1345"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "StatPearls book id NBK557558 \u2014 https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "found": true,
+          "supporting_quote": "Genitourinary tuberculosis is the second most common (40%) extrapulmonary manifestation of the disease ... Accounting for approximately 20% of all extrapulmonary tuberculosis cases ... A bladder biopsy performed during a cystoscopy is 18.5% to 52% sensitive for tuberculosis.",
+          "gives_magnitude": true,
+          "magnitude_found": "GUTB = ~20% of all EPTB cases; 40% as 'second most common' EPTB manifestation; bladder biopsy sensitivity 18.5%-52%; geographic genital-TB incidence <1% (US) to 21% (S.Africa) to 28% (India)",
+          "supports_direction": false,
+          "next_citation": "",
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/"
+        },
+        {
+          "hop": 2,
+          "source_queried": "F1000Research 9:1345 (vol 9, article 1345, 2020) \u2014 attempted https://f1000research.com/articles/9-1345 and web searches for '9:1345'/'9-1345' GUTB",
+          "found": false,
+          "supporting_quote": "",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": false,
+          "next_citation": "",
+          "resolved_url": "https://f1000research.com/articles/9-1345 (HTTP 403 / no such article; only F1000Research 11:1345 exists \u2014 a 2022 cardiovascular-cost scoping review in India, unrelated to GUTB)"
+        }
+      ],
+      "terminal": "unsupported",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No source supplies a pretest probability for the diagnosis of GUTB. The closest grounded epidemiology in StatPearls is structural fraction-of-EPTB (~20% of extrapulmonary TB) and context-specific genital-TB incidence in infertility clinics (<1% US, 6-21% S.Africa, 3-28% India) \u2014 none of which is a base rate for 'suspected GUTB' as a pretest prior. A defensible prior is therefore population/context dependent and cannot be reduced to a single 0.18; the only literal 18 in the cited text is bladder-biopsy SENSITIVITY (18.5%), not prevalence.",
+      "verdict_note": "StatPearls NBK557558 is real and on-topic but publishes no pretest/base-rate of 0.18 for GUTB; its many percentages describe fractions of EPTB, organ involvement, and TEST sensitivities. The lone '18.5%' is bladder-biopsy sensitivity, not a prior \u2014 a likely source of an illusory match. The second citation, F1000Research 9:1345, does not exist (no 2020 vol-9 article 1345 on GUTB resolves; only the unrelated 11:1345 (2022) does), so it cannot ground anything. The specific magnitude 0.18 is not in any locatable source; the sources support only the general direction that GUTB is an uncommon diagnosis. Verdict direction_only \u2014 the precise number appears chosen to look authoritative, and one of the two citations is non-locatable."
+    },
+    {
+      "claim_id": "c2",
+      "cited_sources": [
+        "PMC9411696 \u2014 A Review of the Etiology and Epidemiology of Bladder Cancer: All You Need To Know (Cureus, 2022)",
+        "Cleveland Clinic \u2014 Bladder Cancer (my.clevelandclinic.org/health/diseases/14326-bladder-cancer)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMC9411696 (https://pmc.ncbi.nlm.nih.gov/articles/PMC9411696/)",
+          "found": true,
+          "supporting_quote": "Bladder cancer is nearly four times more prevalent in males than females, with incidence rates of 9.5 per 100,000 males and 2.4 per 100,000 females globally. ... Tumors arising from the urothelial cells compromise most bladder cancer, with a rough estimation of 90%. ... an additional 573,000 cases of bladder cancer were identified in 2020. This accounts for around 3% of new cancer diagnoses.",
+          "gives_magnitude": true,
+          "magnitude_found": "incidence 9.5/100,000 males, 2.4/100,000 females; ~90% of bladder cancers are urothelial; ~3% of new cancer diagnoses",
+          "supports_direction": true,
+          "next_citation": "",
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9411696/"
+        },
+        {
+          "hop": 2,
+          "source_queried": "Cleveland Clinic \u2014 Bladder Cancer (https://my.clevelandclinic.org/health/diseases/14326-bladder-cancer)",
+          "found": true,
+          "supporting_quote": "About 90% of all bladder cancers are transitional (also called urothelial bladder cancer). ... Bladder cancer typically affects people age 55 and older. On average, people are 73 when they're diagnosed. ... Men are four times more likely to develop bladder cancer than women.",
+          "gives_magnitude": true,
+          "magnitude_found": "~90% urothelial; mean age at diagnosis 73; 4x male predominance \u2014 NO base-rate/prior of 0.15",
+          "supports_direction": true,
+          "next_citation": "",
+          "resolved_url": "https://my.clevelandclinic.org/health/diseases/14326-bladder-cancer"
+        },
+        {
+          "hop": 3,
+          "source_queried": "Cross-check of the 15% figure against external hematuria-workup literature (PMC4004026; cancer.gov bladder screening PDQ) \u2014 NOT cited by the rulebook",
+          "found": true,
+          "supporting_quote": "13-34.5% of patients with gross hematuria and 0.5-10.5% of patients with microscopic hematuria will be diagnosed with bladder cancer ... one multi-institutional study found 31.5% in gross hematuria, 15.7% in microscopic hematuria.",
+          "gives_magnitude": true,
+          "magnitude_found": "pre-test probability of bladder cancer in hematuria patients ~13-34.5% (gross), ~0.5-15.7% (microscopic)",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "Neither cited source supports a prior of 0.15. From the cited sources, the only defensible base rates are: annual population incidence ~0.0095% (males) / ~0.0024% (females), or lifetime risk ~3-4%. A 15% prior is only defensible as a pre-test probability GIVEN a presenting symptom (hematuria) \u2014 and that figure (~13-34.5% gross, ~0.5-15.7% microscopic) comes from hematuria-workup studies (e.g. PMC4004026, NCI PDQ) that the rulebook does NOT cite. So as an unconditioned base rate for diagnosis(bladder_urothelial_carcinoma), 0.15 is unsupported by the cited sources; it is plausible only as an uncited symptom-conditioned prior.",
+      "verdict_note": "Both cited sources are real, located, and on-topic, but neither states the magnitude 0.15/15% as a base rate or prior for bladder (urothelial) cancer. PMC9411696 gives incidence rates (9.5 & 2.4 per 100,000) and the ~90% urothelial fraction; Cleveland Clinic gives the ~90% urothelial fraction and demographic ratios. Both support only the DIRECTION (bladder cancer exists, is fairly common, mostly urothelial). The specific value 0.15 is absent from both. A 15% figure does exist in the literature \u2014 but as a symptom-conditioned (hematuria) pre-test probability from DIFFERENT, uncited studies, not as an unconditioned diagnostic prior in the cited sources. The number was chosen to look precise; it is not grounded by the citations attached to it."
+    },
+    {
+      "claim_id": "c3",
+      "cited_sources": [
+        "StatPearls NBK557558 - Genitourinary Tuberculosis (NCBI Bookshelf)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "https://www.ncbi.nlm.nih.gov/books/NBK557558/ (StatPearls, Genitourinary Tuberculosis)",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "supporting_quote": "In one study, results showed the interferon-gamma release blood assay (IGRA) in the peripheral blood of both individuals with urogenital tuberculosis was found to have a sensitivity of 52.6%. Another study had results that found the sensitivity and specificity of IGRA in peripheral blood from women with confirmed genital tuberculosis were 86% to 94% and 70% to 75%, respectively, compared to a composite reference standard. ... negative results do not reliably rule out active tuberculosis, while positive results do not necessarily indicate active disease.",
+          "gives_magnitude": true,
+          "magnitude_found": "sensitivity 52.6% (study 1); sensitivity 86-94%, specificity 70-75% (study 2). NO likelihood ratio stated. No stratification of IGRA result into 'low positive' vs 'high positive'.",
+          "supports_direction": true,
+          "next_citation": "",
+          "resolved_url_note": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR is published for a 'low_positive' IGRA in GU-TB. Computing LR+ from the source's own sens/spec for an OVERALL positive IGRA: study 2 gives LR+ = sens/(1-spec) = 0.86/0.30 = 2.9 (low end) to 0.94/0.25 = 3.8 (high end), midpoint ~3.2. The closest published anatomically-distinct IGRA LR+ is 4.25 (tuberculous lymphadenitis meta-analysis). Critically, a 'low positive' (near-cutoff) result should carry a LR strictly BELOW the overall-positive LR, so even a charitable data-derived value for low_positive would be <2.9, not 3.",
+      "verdict_note": "StatPearls NBK557558 is a real, on-topic source and supports the DIRECTION (a positive IGRA raises suspicion of GU-TB) but states NO likelihood ratio. It is a clinical narrative source reporting only sensitivity (52.6%; 86-94%) and specificity (70-75%), and it never stratifies IGRA results into 'low positive.' The specific magnitude LR=3 is not in the text. It happens to fall near the LR+ one could BACK-CALCULATE from the overall-positive sens/spec (~2.9-3.8), but (a) the source does not perform or publish that calculation, and (b) the claim is for low_positive, which should be lower than the overall-positive LR. The number 3 was chosen to look precise; it is not grounded by the cited source."
+    },
+    {
+      "claim_id": "c4",
+      "cited_sources": [
+        "StatPearls NBK557558 (Genitourinary Tuberculosis)",
+        "PMC4549703 (Goonewardene & Persad, \"Sterile pyuria: a forgotten entity\", Ther Adv Urol 2015)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "StatPearls NBK557558 \u2014 https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "supporting_quote": "Chronic epididymitis or chronic prostatitis that does not resolve with standard antibiotics should also raise the suspicion of genital tuberculosis.",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "PMC4549703 \u2014 https://pmc.ncbi.nlm.nih.gov/articles/PMC4549703/",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4549703/",
+          "supporting_quote": "Sterile pyuria can be present in up to 46% of males with GU-TB ... acid-fast bacilli (AFB) urine culture, which has a 37-79% sensitivity rate ... PCR ... variable sensitivity (25-93%), with high specificity (95-100%).",
+          "gives_magnitude": true,
+          "magnitude_found": "Prevalence: sterile pyuria in up to 46% of males with GU-TB; AFB culture sensitivity 37-79%; PCR sens 25-93%, spec 95-100%. None of these is an LR, and none pertains to a fluoroquinolone-refractory course.",
+          "supports_direction": false,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No published LR exists for this finding. The only adjacent quantitative data (PMC4549703) gives prevalence (sterile pyuria in up to 46% of GU-TB males) and test-performance (AFB culture sens 37-79%; PCR sens 25-93%, spec 95-100%) \u2014 none of which addresses a fluoroquinolone-refractory clinical course, so no LR of 4 (or any value) can be derived from the cited sources.",
+      "verdict_note": "StatPearls NBK557558 supports only the DIRECTION (\"does not resolve with standard antibiotics should also raise the suspicion of genital tuberculosis\") \u2014 a narrative clinical-suspicion statement with no magnitude; StatPearls does not publish likelihood ratios. PMC4549703 contains prevalence and sensitivity/specificity figures but says nothing about treatment-refractory or fluoroquinolone-refractory courses and gives no LR. Neither source contains the number 4, nor any LR, nor anything quantifying this specific finding. Additional caveat: the evidence variable is 'refractory despite FLUOROQUINOLONE,' but fluoroquinolones have intrinsic anti-tuberculous activity, so failure of a fluoroquinolone is a weaker (not standard) GU-TB signal \u2014 neither source even discusses fluoroquinolones. The magnitude LR=4 was chosen to look precise; the cited sources support the direction only."
+    },
+    {
+      "claim_id": "c5",
+      "cited_sources": [
+        "StatPearls NBK557558 (Genitourinary Tuberculosis / persistent sterile pyuria)",
+        "NEJM Sterile Pyuria review (NEJMra1410052)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "StatPearls Genitourinary Tuberculosis, NBK557558 (https://www.ncbi.nlm.nih.gov/books/NBK557558/)",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "supporting_quote": "Persistent sterile pyuria, pyuria in acidic urine without bacterial culture growth, and a symptomatic urinary tract infection unresponsive to conventional antibiotic therapy ... should prompt suspicion of urogenital tuberculosis. ... Urinalyses are abnormal in over 90% of patients with urogenital tuberculosis. The majority have pyuria with or without hematuria",
+          "gives_magnitude": false,
+          "magnitude_found": "Frequency only: urinalysis abnormal in >90% of CONFIRMED urogenital TB cases (a P(pyuria|disease) descriptor, not a diagnostic LR). No likelihood ratio, sensitivity, specificity, or OR for pyuria predicting GU TB.",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "NEJM Sterile Pyuria review, NEJMra1410052; nejm.org returned HTTP 403, so used the PMC sterile pyuria review (PMC4549703) and search-indexed NEJM content as the accessible witness",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4549703/",
+          "supporting_quote": "Sterile pyuria may also be associated with UTIs such as genitourinary tuberculosis (GU-TB) ... Sterile pyuria can be present in up to 46% of males with GU-TB ... The gold standard for diagnosis of GU-TB is acid-fast bacilli (AFB) urine culture, which has a 37-79% sensitivity rate. ... PCR techniques have variable sensitivity (25-93%), with high specificity (95-100%)",
+          "gives_magnitude": false,
+          "magnitude_found": "Prevalence/test figures only: pyuria in up to 46% of GU-TB males; AFB culture sens 37-79%; PCR sens 25-93%, spec 95-100%. These are confirmatory-test accuracies and finding-frequencies, NOT a likelihood ratio for urine leukocytes -> GU TB. NEJM review (search-indexed) likewise states only that sterile pyuria 'has historically been considered suggestive' of GU TB \u2014 directional, no LR.",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No published LR exists to ground the value 2. The sources support direction only. The closest quantifiable data are P(pyuria | GU-TB): >90% (StatPearls) or up to 46% of males (PMC review) \u2014 but these lack the corresponding P(pyuria | no GU-TB) needed to compute an actual LR, and 'mildly elevated leukocytes' is not the stated finding (the literature describes pyuria/sterile pyuria). A real LR cannot be derived from these sources.",
+      "verdict_note": "Both cited sources are real, locatable, and on-topic, and both support the DIRECTION (sterile pyuria raises suspicion of / is associated with genitourinary TB). Neither source \u2014 nor the NEJM review \u2014 states any likelihood ratio for pyuria/urine leukocytes predicting GU TB; clinical-narrative sources of this type do not publish LRs. The numbers they do contain (>90% urinalysis abnormality, 46% pyuria prevalence, 37-79% culture sensitivity, 25-93% PCR sensitivity, 95-100% PCR specificity) all pertain to finding frequency in confirmed cases or to confirmatory test accuracy, never to an LR for the finding. The specific magnitude 2 is not present in any source and was chosen to look precise."
+    },
+    {
+      "claim_id": "c6",
+      "cited_sources": [
+        "ScienceDirect 'Kidney Tuberculosis - an overview' topic page (calcification 40-70%)",
+        "RadioGraphics 2021 - Imaging Manifestations of Genitourinary Tuberculosis (Naeem et al., RadioGraphics 41(4):1123-1143, rg.2021200154)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "https://www.sciencedirect.com/topics/medicine-and-dentistry/kidney-tuberculosis (ScienceDirect Kidney Tuberculosis overview)",
+          "found": true,
+          "resolved_url": "https://www.sciencedirect.com/topics/medicine-and-dentistry/kidney-tuberculosis",
+          "supporting_quote": "Calcifications are a hallmark of disease shown by CT in 50% of cases of renal tuberculosis. Calcifications are typically within the renal parenchyma and may be coarse, globular, curvilinear, or granular. ... the urinary tract is affected in 15% to 20% of patients with tuberculosis overall.",
+          "gives_magnitude": true,
+          "magnitude_found": "Prevalence of calcification ~50% (cited claim says 40-70%) among confirmed renal TB cases; GU involvement in 15-20% of TB patients. NO likelihood ratio, odds ratio, sensitivity, or specificity stated.",
+          "supports_direction": true,
+          "next_citation": "",
+          "resolved": true
+        },
+        {
+          "hop": 2,
+          "source_queried": "RadioGraphics 2021 GU-TB imaging (rg.2021200154); primary URL paywalled/403, content corroborated via accessible review PMC3737618 'Tuberculosis of the genitourinary system: Renal tuberculosis Part I'",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3737618/ (corroborating accessible renal-TB imaging review; RadioGraphics full text returned HTTP 403)",
+          "supporting_quote": "It is noted on conventional radiography in 24-44%. ... Although calcification is unusual in the early stages of the disease, nearly every end-stage tuberculous kidney contains calcification. ... A lobar pattern of calcification, with calcific rims outlining the periphery of distorted renal lobes, is pathognomonic of TB.",
+          "gives_magnitude": true,
+          "magnitude_found": "Calcification frequency 24-44% on conventional radiography among renal TB cases (a PREVALENCE, not a test-performance metric). No likelihood ratio, odds ratio, sensitivity, or specificity for calcification as a diagnostic test is stated anywhere.",
+          "supports_direction": true,
+          "next_citation": "",
+          "resolved": true
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR can be grounded from these sources. They report only the PREVALENCE of calcification among confirmed GU-TB cases (40-70% / 24-44% / ~50% on CT) \u2014 i.e. P(calcification | GU-TB), the sensitivity-side proportion. Computing a likelihood ratio requires P(calcification | not GU-TB) (calcification rate among non-TB differentials such as urolithiasis, RCC, xanthogranulomatous pyelonephritis), which NO cited source provides. The 'lobar/rim/putty pathognomonic' qualifier implies high specificity for that SPECIFIC pattern, which would yield an LR far greater than 2.5 \u2014 not generic 'calcified_foci.' Thus the data neither supports nor pins the value 2.5; the magnitude is underivable from the citations.",
+      "verdict_note": "Both cited sources are real, on-topic, and genuinely confirm the DIRECTION: renal calcification is a recognized, common feature of GU-TB (40-70%/24-44% of confirmed cases) and certain patterns are even pathognomonic, so calcified foci raise suspicion of GU-TB. However, neither source states ANY likelihood ratio, odds ratio, sensitivity, or specificity. The cited percentages are disease prevalence of the finding within confirmed cases, not a diagnostic LR, and cannot yield an LR of 2.5 without a comparator non-TB rate that is absent from every source. The specific value 2.5 appears in no source and was chosen to look precise. Verdict: direction_only."
+    },
+    {
+      "claim_id": "c7",
+      "cited_sources": [
+        "StatPearls NBK557558 (Genitourinary Tuberculosis)",
+        "Pathology Outlines - Granulomatous cystitis"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "StatPearls NBK557558 (https://www.ncbi.nlm.nih.gov/books/NBK557558/)",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "supporting_quote": "Diagnostic cystoscopy will typically show only non-specific findings of localized erythema, urothelial erosions, ulcers, small granulomas, and distortion of the ureteral orifices. ... A bladder biopsy performed during a cystoscopy is 18.5% to 52% sensitive for tuberculosis.",
+          "supports_direction": true,
+          "gives_magnitude": false,
+          "magnitude_found": "Only biopsy sensitivity 18.5%-52%; findings explicitly called 'non-specific'. No likelihood ratio, no 4.5.",
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "Pathology Outlines - Granulomatous cystitis (HTTP 503; content via search index)",
+          "found": true,
+          "resolved_url": "https://www.pathologyoutlines.com/topic/bladdergranulomatouscystitis.html",
+          "supporting_quote": "Tuberculosis infection presents as caseating granulomas with Langhans giant cells predominantly in the lamina propria, with mucosal ulceration potentially also present. Bladder lesions occur near the trigone, with smaller lesions merging over time into large ulcers.",
+          "supports_direction": true,
+          "gives_magnitude": false,
+          "magnitude_found": "None. Histology/morphology description only. No sensitivity, specificity, OR, or LR; no 4.5.",
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR derivable from either cited source. The only quantitative datum is StatPearls' bladder-biopsy sensitivity 18.5-52% \u2014 a biopsy yield, not a cystoscopic-appearance LR, and not convertible to an LR without paired specificity the sources lack. The nearest literature analog (caseation-for-TB meta-analysis) gives positive LR ~10.79, neither 4.5 nor from the cited sources.",
+      "verdict_note": "Both cited sources are genuine and on-topic and confirm the DIRECTION: cystoscopic ulceration/congestion/edema/granulation and granulomatous histology are suggestive of genitourinary tuberculosis. But neither states any likelihood ratio, and StatPearls explicitly calls these cystoscopy findings 'non-specific.' The magnitude 4.5 appears in neither source and cannot be traced to primary data through them. StatPearls and Pathology Outlines are narrative sources that do not publish LRs, so 4.5 was assigned, not measured. The claim also bundles four descriptors of one TB lesion ('described 4 ways'), which risks multiplicative double-counting beyond what either source supports."
+    },
+    {
+      "claim_id": "c8",
+      "cited_sources": [
+        "NYU Urology CIS case (suspicious cytology) \u2014 single anecdotal case report",
+        "PMID 3856982 \u2014 Urinary cytology of tuberculosis of the bladder, Acta Cytol 1985;29(2):125-31"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMID 3856982 (https://pubmed.ncbi.nlm.nih.gov/3856982/) \u2014 Urinary cytology of tuberculosis of the bladder, Acta Cytol 1985;29(2):125-31",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3856982/",
+          "supporting_quote": "TB was cytologically recognized in 11 patients because of the presence of epithelioid and/or Langhans' giant cells. Type I atypical urothelial cells found in ten patients were correlated to urothelial hyperplasia found at histology... documenting the benign reversible nature of this hyperplasia as a reactive response to inflammatory processes. The presence of type II atypical urothelial cells reflected moderate and severe atypia of the urothelium at biopsy.",
+          "gives_magnitude": false,
+          "magnitude_found": "None \u2014 13-patient qualitative case series; no sensitivity, specificity, OR, RR, LR, or prevalence reported",
+          "supports_direction": false,
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "NYU Urology carcinoma-in-situ (CIS) case with suspicious cytology \u2014 searched for the named NYU case source",
+          "found": false,
+          "resolved_url": "n/a \u2014 no specific NYU 'CIS case' publication with a likelihood ratio could be located; results returned general CIS narrative/case reports (e.g. BCAN, PMC1141508, Frontiers case report) and NYU Langone blue-light cystoscopy material, none stating an LR",
+          "supporting_quote": "",
+          "gives_magnitude": false,
+          "magnitude_found": "None \u2014 anecdotal case material; case reports do not yield likelihood ratios",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 3,
+          "source_queried": "Cross-check against the actual quantitative literature for atypical urothelial cytology (Paris System meta-analysis, PMID 35207658; P\u00f6yry 2023 PMID 37246298)",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/35207658/ and https://pubmed.ncbi.nlm.nih.gov/37246298/",
+          "supporting_quote": "The pooled risk of high-grade malignancy (ROHM) for the AUC category is 38.65%... for suspicious for HGUC (SHGUC) is 76.89%... while negative for HGUC (NHGUC) is 13.04%.",
+          "gives_magnitude": true,
+          "magnitude_found": "Posterior risk-of-malignancy percentages by Paris category (AUC 38.65%, SHGUC 76.89%, NHGUC 13.04%); these are post-test probabilities, NOT likelihood ratios, and come from sources NOT cited by the claim",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR=3 exists in either cited source. If one derives an LR from the genuine (uncited) literature: for a worrisome/atypical cytology category, a representative malignancy LR is roughly the post-test odds ratio. Using SHGUC ROHM ~76.9% (odds ~3.3) against a ~10-15% background prevalence (odds ~0.12-0.18), the implied positive LR is on the order of ~18-28 for 'suspicious'; for plain AUC (ROHM ~38.65%, odds ~0.63) against the same baseline the implied LR is ~3.5-5. So depending on how 'atypical_clusters_worrisome_for_malignancy' is mapped, a defensible LR ranges from ~3-5 (mild atypia) up to ~15-25 (frankly suspicious) \u2014 but this is computed entirely from sources the claim does NOT cite. Neither cited source supplies any number.",
+      "verdict_note": "Neither cited source states a likelihood ratio of 3 (or any LR). PMID 3856982 is a 13-patient qualitative case series on TB cytology with zero diagnostic-accuracy metrics; worse, it documents that atypical urothelial cells in TB are predominantly benign/reactive hyperplasia \u2014 i.e., it describes atypia as a malignancy MIMIC/confounder, not evidence that supports a carcinoma diagnosis, so it arguably undercuts the claimed direction. The 'NYU Urology CIS case' is anecdotal case material; case reports do not yield LRs and no specific quantified NYU source could be located. The direction (worrisome/atypical cytology raises suspicion of urothelial carcinoma) is broadly supportable from the real Paris System literature, but that literature is uncited and reports posterior risk-of-malignancy percentages, not an LR. The specific magnitude 3 appears chosen to look precise; it is not present in any cited source. Coincidentally a derivable AUC-level LR could land near 3-5, but that is not what the citations support and would be retrofitting. Verdict: direction_only."
+    },
+    {
+      "claim_id": "c9",
+      "cited_sources": [
+        "PMC8000909 \u2014 Imaging of Bladder Cancer: Standard Applications and Future Trends (Medicina 2021)",
+        "Pathology Outlines \u2014 Bladder: Carcinoma in situ (CIS)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMC8000909 (https://pmc.ncbi.nlm.nih.gov/articles/PMC8000909/)",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8000909/",
+          "supporting_quote": "Although bladder cancer diagnosis is histopathologically based via cystoscopy and biopsy, cystoscopy cannot reliably determine the depth of bladder muscle infiltration. ... conventional cystoscopy remains the ideal technique used for detection, accurate assessment and follow up of bladder cancer.",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": true,
+          "next_citation": "",
+          "resolved_url ": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "Pathology Outlines \u2014 Carcinoma in situ (https://www.pathologyoutlines.com/topic/bladdercis.html)",
+          "found": true,
+          "resolved_url": "https://www.pathologyoutlines.com/topic/bladdercis.html",
+          "supporting_quote": "Carcinoma in situ is a high grade, flat, noninvasive urothelial neoplasm ... and no papillary formation; typically appears as a small, flat, erythematous lesion (flat velvety erythematous mucosal patches) and may be missed on standard white light cystoscopy.",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No data exists in either cited source to ground a numeric LR. Both are narrative sources publishing no sensitivity/specificity/LR. The direction is defensible (a flat lesion such as CIS produces no discrete papillary mass, so 'no discrete tumor' on cystoscopy does NOT rule out carcinoma \u2014 i.e., it should only mildly lower probability, LR<1), but no value (0.4 or otherwise) can be computed from these sources.",
+      "verdict_note": "The two citations are real, on-topic, and correctly support the DIRECTION of the claim: PMC8000909 characterizes papillary tumors as discrete masses and notes cystoscopy's limitations, and Pathology Outlines establishes that CIS is flat/non-discrete and frequently missed on white-light cystoscopy \u2014 so absence of a discrete tumor is a weak negative finding (LR<1) rather than an exclusion. However, neither source states any likelihood ratio, sensitivity, specificity, or N. Clinical narrative sources like Pathology Outlines do not publish LRs. The specific magnitude 0.4 appears in neither text and cannot be derived from anything they provide; it was chosen to look precise. Grounded on direction only, not on the number."
+    },
+    {
+      "claim_id": "c10",
+      "cited_sources": [
+        "PMC8000909 (Imaging of Bladder Cancer: Standard Applications and Future Trends, Medicina (Kaunas) 2021)",
+        "MDPI Cancers 2021;13(6):1396 (Imaging and Management of Bladder Cancer)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMC8000909 \u2014 https://pmc.ncbi.nlm.nih.gov/articles/PMC8000909/",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8000909/",
+          "supporting_quote": "Bladder cancer appears as an intraluminal polypoidal or nodular mass or localized wall thickening ... CT urography ... with a diagnostic accuracy estimated of 91% in detection and 35-55% in staging ... [CT] shows low sensitivity for nodal staging",
+          "gives_magnitude": true,
+          "magnitude_found": "detection accuracy ~91%; staging accuracy 35-55%; T3b+ accuracy ~83-93%. These are overall detection/staging accuracies, NOT a likelihood ratio for the no-finding scenario.",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "PMC8000909 full-text targeted search for 'likelihood ratio', 'LR', '0.4', 'negative predictive value', 'sensitivity', 'specificity'",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8000909/",
+          "supporting_quote": "The article does not contain any of these specific statistical terms ... it does not provide ... any quantification of how the absence of imaging findings (mass, wall thickening, lymph nodes) affects probability of bladder cancer",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 3,
+          "source_queried": "MDPI Cancers 2021;13(6):1396 \u2014 https://www.mdpi.com/2072-6694/13/6/1396 (HTTP 403, content inaccessible); corroborating literature search for any CT negative-finding LR/NPV in bladder cancer",
+          "found": true,
+          "resolved_url": "https://www.mdpi.com/2072-6694/13/6/1396",
+          "supporting_quote": "A virtual cystoscopy algorithm achieved 98% negative predictive value for bladder tumor detection ... only 6.6% of incidentally detected bladder wall thickening on CT represents malignancy (figures from separate AJR/Springer imaging papers, NOT from the cited review; the cited MDPI review publishes no LR)",
+          "gives_magnitude": true,
+          "magnitude_found": "98% NPV (other paper); 6.6% malignancy of incidental thickening (other paper) \u2014 neither is a published LR; both imply absence of findings strongly lowers probability (negative LR well below 0.4)",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No published LR exists in the cited source. The direction is correct (absent mass/thickening/nodes lowers probability of bladder cancer, so LR<1). Proxy data from the broader literature (98% NPV of a negative CT; only ~6.6% of incidental wall thickening malignant; focal mass ~50-67% malignant vs ~0% for no-mass) implies the true negative LR is far lower than 0.4 \u2014 likely on the order of 0.1-0.2 \u2014 but none of this is in the cited review and no source states 0.4.",
+      "verdict_note": "The cited PMC8000909 / MDPI 13:1396 reviews are genuine, on-topic narrative imaging reviews. They support the DIRECTION (bladder cancer presents as mass/wall-thickening/nodal disease; absence makes cancer less likely) but contain no likelihood ratios, no sensitivity/specificity, and no quantification of how negative CT findings change disease probability \u2014 confirmed by full-text term search (no 'likelihood ratio', 'LR', '0.4', 'NPV', 'sensitivity', or 'specificity' present). The specific value 0.4 appears in no source and was chosen to look precise. This is a clinical narrative review, the class of source that essentially never publishes LRs. Direction-only, not grounded."
+    },
+    {
+      "claim_id": "c11",
+      "cited_sources": [
+        "Cleveland Clinic - Smoking and Bladder Cancer: The Surprising Link",
+        "PMC9411696 - A Review of the Etiology and Epidemiology of Bladder Cancer"
+      ],
+      "verdict": "direction_only",
+      "verdict_note": "Both cited sources were located and read; each clearly supports the DIRECTION (lifelong non-smoking lowers bladder-cancer suspicion): Cleveland Clinic states current smokers are ~4x more likely and smoking accounts for 50-65% of cases; PMC9411696 states smokers have 2-3x risk and ~two-thirds of cases are smoking-attributable. Neither source contains the phrase 'likelihood ratio' nor any number specific to never-smokers (no never-smoker case fraction, no OR/LR for non-smokers). The value 0.6 appears in neither source and cannot be computed from the quantities they report. This is a real, on-topic citation that supports the direction but not the magnitude; 0.6 was chosen to look precise. These are narrative/epidemiology-review sources that do not publish diagnostic likelihood ratios, so an LR<1 is biologically reasonable but unsupported as a specific value.",
+      "terminal": "direction_only",
+      "data_derived_magnitude": "No source states an LR. Sources give the inverse exposure: current smokers RR ~2-4x and tobacco accounts for ~50-66% of cases, so a lifelong non-smoker is below-baseline and an LR<1 is directionally plausible. The magnitude cannot be computed from these sources because neither reports the never-smoker fraction among cases vs. the general/control population. Crude reasoning: if ~50-65% of cases are smoking-attributable, never-smokers are modestly under-represented among cases, roughly consistent with an LR in a 0.4-0.7 band, but 0.6 specifically is not derivable from any stated quantity.",
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "https://health.clevelandclinic.org/surprising-link-smoking-and-bladder-cancer-2",
+          "found": true,
+          "resolved_url": "https://health.clevelandclinic.org/surprising-link-smoking-and-bladder-cancer-2",
+          "supporting_quote": "Research shows that smoking accounts for approximately 50% to 65% of new bladder cancer cases. Current smokers are four times more likely to develop bladder cancer than someone who has never lit up a cigarette. Former smokers are twice as likely to develop bladder cancer.",
+          "gives_magnitude": true,
+          "magnitude_found": "Current smokers RR ~4x vs never-smokers; former ~2x; smoking 50-65% of cases",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "PMC9411696 - A Review of the Etiology and Epidemiology of Bladder Cancer",
+          "found": true,
+          "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9411696/",
+          "supporting_quote": "smokers have two-to-three greater chances of developing bladder cancer ... Tobacco is the primary recognized cause of bladder cancer, accounting for 30-40% of all cases of urothelial carcinoma and up to two-thirds of all bladder cancer. ... current smokers develop bladder cancer six years earlier than current non-smokers.",
+          "gives_magnitude": true,
+          "magnitude_found": "Smokers 2-3x risk; tobacco ~two-thirds of cases; quit 1-3yr RR 2.6, quit >15yr RR 1.1",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ]
+    },
+    {
+      "claim_id": "c12",
+      "cited_sources": [
+        "PMID 3856982 \u2014 Piscioli F, Pusiol T, Polla E, Failoni G, Luciani L. Urinary cytology of tuberculosis of the bladder. Acta Cytol. 1985;29(2):125-131"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMID 3856982 (https://pubmed.ncbi.nlm.nih.gov/3856982/)",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3856982/",
+          "supporting_quote": "TB was recognized cytologically in 11 patients (84.6%) through the presence of epithelioid and/or Langhans' giant cells. Type I atypical cells in ten patients correlated with urothelial hyperplasia, documented as benign and reversible. Type II atypical cells reflected moderate to severe atypia at biopsy.",
+          "gives_magnitude": false,
+          "magnitude_found": "Only raw counts/percentages: n=13 TB bladder patients; cytologic recognition 11/13 (84.6%); type I atypical cells in 10 patients. No LR, sensitivity, specificity, or odds ratio reported.",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No likelihood ratio is derivable from this source. The paper is a 13-patient case series reporting only counts (11/13 cytologic recognition; type I atypical cells in 10/13 correlating to benign reversible reactive hyperplasia). It has no control/comparison arm and no diagnostic-accuracy denominators, so no LR (and certainly not the specific value 2.2) can be computed from it.",
+      "verdict_note": "Cited source is real, located, and genuinely on-topic: Piscioli et al. (Acta Cytol 1985) do support the DIRECTION of the claim \u2014 in bladder TB, type I atypical urothelial cells correlate to benign, reversible, reactive hyperplasia, consistent with 'atypical hyperplasia read as REACTIVE favoring TB.' But it is a small descriptive cytology case series (n=13) that publishes only patient counts; it contains no likelihood ratio, sensitivity, specificity, or odds ratio. The specific magnitude LR=2.2 appears nowhere in the source and cannot be derived from its data. The number was chosen to look precise, so the claim is direction_only, not grounded."
+    },
+    {
+      "claim_id": "c13",
+      "cited_sources": [
+        "PMID 3856982 (Urinary cytology of tuberculosis of the bladder)",
+        "PMID 11186722 (Urinary bladder cancer in patients with tuberculous and post-tuberculous cystitis)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMID 3856982",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3856982/",
+          "supporting_quote": "The type I atypical urothelial cells found in ten patients were correlated to the urothelial hyperplasia found at histology; the follow-up data documented the benign reversible nature of the urothelial hyperplasia as the focal expression of the reactive potential of urothelium to various forms of inflammatory processes. The presence of type II atypical urothelial cells reflected moderate and severe atypia of the urothelium at biopsy. In order to assess the reactive, reversible or precancerous nature of these forms of atypia associated with TB, an accurate follow-up is necessary.",
+          "gives_magnitude": false,
+          "magnitude_found": "N=13 patients (TB bladder); 11 recognized cytologically; 10 with type I atypia. No LR, sensitivity, specificity, OR, or RR reported.",
+          "supports_direction": false,
+          "next_citation": ""
+        },
+        {
+          "hop": 1,
+          "source_queried": "PMID 11186722",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/11186722/",
+          "supporting_quote": "125 patients with tuberculous and posttuberculous cystitis were examined using cytological test of the aspirate from the bladder for atypical cells and histological investigation of the biopsy. Cancer of the bladder has developed in long-term chronic tuberculous or posttuberculous cystitis in 4% of the cases. The best objective method of the diagnosis was histological examination of the biopsy obtained from cancer-suspected sites of the bladder mucosa.",
+          "gives_magnitude": true,
+          "magnitude_found": "Bladder cancer developed in 4% of cases; N=125. A cancer-occurrence prevalence, NOT a likelihood ratio, pointing TOWARD cancer in this population, not against.",
+          "supports_direction": false,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "primary_data",
+      "verdict": "fabricated",
+      "data_derived_magnitude": "No LR exists in either source. The only magnitude available (PMID 11186722) is that bladder cancer DEVELOPED in 4% of TB/post-TB cystitis patients \u2014 a prevalence pointing toward malignancy in this population, the opposite direction from the claim's AGAINST-carcinoma LR of 0.5. PMID 3856982 gives only descriptive correlation (type I atypia <-> benign reversible hyperplasia on follow-up) with N=13 and no diagnostic-accuracy metric. An evidence-based LR for 'atypical cytology + moderate-to-severe atypical hyperplasia' cannot be derived as <1 from these sources; the documented data argue the findings raise, not lower, cancer probability.",
+      "verdict_note": "Both cited sources were located and read in full; both are primary clinical studies (no deeper hop needed). Neither states any likelihood ratio, sensitivity, specificity, OR, or RR \u2014 the number 0.5 is in neither text. Worse, the claim's DIRECTION (converting cancer-defining findings into anti-cancer evidence) is contradicted by the cited evidence: PMID 11186722 explicitly documents that bladder cancer developed in 4% of exactly these TB-cystitis patients and recommends biopsy of cancer-suspected sites, and PMID 3856982 expressly states the reactive-vs-precancerous nature of TB-associated atypia cannot be assessed without accurate follow-up (and that type II atypia = moderate/severe atypia), framing TB atypia as a differential-diagnosis pitfall for carcinoma rather than reassurance against it. The decisive clause both invents a precise magnitude (0.5) absent from any source and inverts the polarity the sources support. Verdict: fabricated."
+    },
+    {
+      "claim_id": "c14",
+      "cited_sources": [
+        "StatPearls NBK557558 (Genitourinary Tuberculosis), NCBI Bookshelf"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "StatPearls NBK557558: Genitourinary Tuberculosis (NCBI Bookshelf)",
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "found": true,
+          "supporting_quote": "Compared with cultures, PCR testing was 95.6% sensitive and 98.1% specific.",
+          "gives_magnitude": true,
+          "magnitude_found": "Urine PCR vs culture: sens 95.6% / spec 98.1% [ref 99]; PCR vs bacteriologic/histologic/clinicoradiologic reference 94.3% / 85.7%; urine-sample sensitivity 63%; culture sens 65% / spec 100%; AFB smear sens 42-52% / spec 97%. No likelihood ratio stated anywhere.",
+          "supports_direction": true,
+          "next_citation": "StatPearls ref [99] (PCR-vs-culture primary study); not exposed in fetched reference list and not pursued because no LR is published at narrative level regardless"
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR is published in the source. Derived LR+ from its own sens/spec: PCR-vs-culture (95.6/98.1) -> ~50; PCR-vs-clinical-reference (94.3/85.7) -> ~6.6; AFB smear (~47/97) -> ~16; culture (65/100) -> effectively infinite. A defensible LR+ for a positive urine NAAT/culture spans ~7 to >50 depending on reference standard; 9 is inside a plausible band but is not stated by, nor 'the' value derivable from, the source.",
+      "verdict_note": "StatPearls NBK557558 is real and on-topic; the cited 95.6% sens / 98.1% spec figures appear verbatim, so the DIRECTION (positive urine AFB/culture/NAAT strongly raises GU-TB probability) is well supported. But the source contains no likelihood ratio at all (the phrase 'likelihood ratio'/'LR' never appears), and the number 9 is not what its sens/spec imply (PCR-vs-culture implies LR+ ~50). The magnitude 9 was chosen to look precise. Direction supported, specific value not grounded."
+    },
+    {
+      "claim_id": "c15",
+      "cited_sources": [
+        "StatPearls NBK557558 \u2014 Genitourinary Tuberculosis (Roddy K, Tobin EH, Leslie SW, Rathish B; NCBI Bookshelf)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "https://www.ncbi.nlm.nih.gov/books/NBK557558/ (StatPearls, Genitourinary Tuberculosis)",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557558/",
+          "supporting_quote": "A negative nucleic acid amplification test cannot rule out genitourinary tuberculosis... PCR testing is an excellent diagnostic aid when positive, but a negative reading does not necessarily rule out urogenital tuberculosis... if adequate numbers of bacteria are present (at least 5000/mL), it has a reported specificity of 97% with a sensitivity of 42% to 52%... The culture of at least 3 (or up to 5) separate consecutive morning urine specimens for mycobacteria establishes the diagnosis of urinary tuberculosis in 80% to 93% of cases... PCR testing was 95.6% sensitive and 98.1% specific... a study of men and women with urogenital tuberculosis found PCR testing of urine samples to have a sensitivity of 63%",
+          "gives_magnitude": true,
+          "magnitude_found": "AFB urine smear sens 42-52%, spec 97%; mycobacterial culture establishes dx in 80-93%; urine PCR/NAAT sens 63% (GU-TB cohort) to 95.6%, spec 98.1%. NO likelihood ratio stated anywhere.",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR is published by the source. Deriving LR- = (1-sens)/spec from the article's own numbers: AFB smear LR- \u2248 (1-0.47)/0.97 \u2248 0.55; urine PCR/NAAT LR- ranges from (1-0.63)/0.981 \u2248 0.38 (GU-TB cohort) to (1-0.956)/0.981 \u2248 0.045 (vs-culture figure); culture (sens ~0.85, assume high spec) LR- \u2248 0.15. A combined all-three-negative LR- (assuming conditional independence) would multiply to well below 0.2. So 0.2 is a plausible order of magnitude for a single moderately-sensitive negative test, but the article supports values anywhere from ~0.05 to ~0.55 for individual tests and states no combined figure \u2014 0.2 is one defensible point among a wide range, not a value the source provides.",
+      "verdict_note": "StatPearls NBK557558 is a real, located, on-topic narrative source that strongly supports the DIRECTION of the claim: repeatedly/uniformly negative urine TB testing lowers the probability of GU-TB but cannot exclude it, and sensitivities are imperfect. It even supplies primary test-performance numbers (AFB sens 42-52%/spec 97%; culture 80-93%; PCR sens 63-95.6%/spec 98.1%). However, the article contains NO likelihood ratio of any kind \u2014 confirmed by full-text search. The specific magnitude 0.2 is not in the source. An LR derived from the article's own sens/spec spans roughly 0.05-0.55 per test (and lower combined), so 0.2 is order-of-magnitude defensible but was chosen, not cited. Per the skeptical rule, a clinical narrative source that supports the direction but never states the number yields direction_only, not grounded."
+    },
+    {
+      "claim_id": "c16",
+      "cited_sources": [
+        "PMID 40176973"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMID 40176973 (https://pubmed.ncbi.nlm.nih.gov/40176973/)",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/40176973/",
+          "supporting_quote": "A rare case of tuberculous cystitis and pulmonary tuberculosis in a 60-year-old smoker: A case report ... Biopsy confirmed granulomatous inflammation with caseating necrosis, while PCR testing for Mycobacterium tuberculosis was positive despite negative sputum smears. The authors emphasize that tuberculous cystitis mimics malignancy and highlight the diagnostic value of biopsy and PCR.",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No LR is derivable from the cited source. It is a single case report (n=1) with no denominator, no control group, and no diagnostic-accuracy data. Caseating granuloma plus AFB/PCR-positive on tissue is in fact near-confirmatory for TB (a large LR, plausibly >>8), but the cited source supplies no number to ground any specific value.",
+      "verdict_note": "PMID 40176973 is a real, on-topic case report (\"A rare case of tuberculous cystitis...\", Radiol Case Rep) that supports the DIRECTION \u2014 tissue caseating granuloma + AFB/PCR positivity confirms TB cystitis. But it is a narrative single-patient case report and contains NO sensitivity, specificity, odds ratio, or likelihood ratio. The specific magnitude LR=8 appears nowhere in the source; a case report of n=1 cannot yield an LR. The number was chosen to look precise. Direction supported, magnitude not grounded."
+    },
+    {
+      "claim_id": "c17",
+      "cited_sources": [
+        "PMID 11186722"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMID 11186722 (https://pubmed.ncbi.nlm.nih.gov/11186722/)",
+          "found": true,
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/11186722/",
+          "supporting_quote": "125 patients with tuberculous and posttuberculous cystitis were examined using cytological test of the aspirate from the bladder for atypical cells and histological investigation of the biopsy. Cancer of the bladder has developed in long-term chronic tuberculous or posttuberculous cystitis in 4% of the cases. The best objective method of the diagnosis was histological examination of the biopsy obtained from cancer-suspected sites of the bladder mucosa.",
+          "gives_magnitude": true,
+          "magnitude_found": "4% bladder cancer incidence among 125 patients with tuberculous/post-tuberculous cystitis (prevalence, not an LR)",
+          "supports_direction": false,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "fabricated",
+      "data_derived_magnitude": "No LR derivable. The only magnitude in the source is a 4% co-occurrence prevalence (5/125) of bladder cancer arising within chronic tuberculous cystitis. This does not yield a likelihood ratio against TB; if anything, carcinoma and TB co-occur here, so the source gives no quantitative basis for LR=0.15 (or any LR) in the claimed direction.",
+      "verdict_note": "PMID 11186722 (\"Urinary bladder cancer in patients with tuberculous and post-tuberculous cystitis\", Urologiia 2000) is a real, on-topic paper but it is an epidemiological co-occurrence study, not a diagnostic-accuracy study. It contains NO likelihood ratio, sensitivity, specificity, or odds ratio \u2014 only a 4% cancer incidence among TB-cystitis patients. The specific value 0.15 appears nowhere. Moreover the paper does not support the claim's DIRECTION: it reports carcinoma developing within / coexisting with tuberculous cystitis (cancer as a complication of chronic GU TB), which is the opposite of \"confirmed carcinoma reclassifies the lesion away from pure TB.\" The number 0.15 was invented to look precise; the source neither states the magnitude nor cleanly supports the direction, so this is fabricated."
+    },
+    {
+      "claim_id": "c18",
+      "cited_sources": [
+        "Pathology Outlines \u2014 Bladder: Carcinoma in situ (https://www.pathologyoutlines.com/topic/bladdercis.html)"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "https://www.pathologyoutlines.com/topic/bladdercis.html (the cited Pathology Outlines bladder CIS topic page)",
+          "found": true,
+          "resolved_url": "https://www.pathologyoutlines.com/topic/bladdercis.html",
+          "supporting_quote": "Urothelial CIS is defined by the replacement of part or all of the normal epithelium by cells that have microscopic and molecular features of carcinoma, yet are confined to the epithelium. ... CIS has a 50% to 75% risk of becoming invasive, if left untreated.",
+          "gives_magnitude": false,
+          "magnitude_found": "Only a prognostic progression range (50-75% risk of becoming invasive if untreated); NO likelihood ratio, odds ratio, sensitivity, specificity, or diagnostic N for tissue confirmation. The page never uses the phrase 'likelihood ratio'.",
+          "supports_direction": true,
+          "next_citation": ""
+        },
+        {
+          "hop": 2,
+          "source_queried": "Adjacent literature search for any published likelihood ratio for tissue confirmation of bladder urothelial carcinoma (to check whether '9' could be borrowed from a primary study the page implies)",
+          "found": true,
+          "resolved_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7874628/ ; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5471048/",
+          "supporting_quote": "studies on Xpert Bladder Cancer testing reported positive and negative likelihood ratios of 3.74 and 0.34, respectively, and urine UCA1 testing had pooled positive and negative likelihood ratios of 5.85 and 0.22, respectively.",
+          "gives_magnitude": true,
+          "magnitude_found": "Published bladder-cancer LRs found: Xpert urine assay LR+ 3.74; UCA1 urine assay LR+ 5.85. These are URINE BIOMARKER tests, not tissue/histologic confirmation, and none equals 9.",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "No published LR of 9 exists for this finding. Tissue confirmation of carcinoma (positive biopsy histology) is the diagnostic gold standard for urothelial carcinoma, so its true likelihood ratio is effectively confirmatory \u2014 far greater than 9 (approaching infinity, near-100% specificity by definition). The published LRs that do exist in this literature are for urine biomarker assays (LR+ ~3.7\u20135.9), not tissue confirmation. The number 9 is grounded in no source.",
+      "verdict_note": "The cited Pathology Outlines CIS page is genuinely on-topic and supports the DIRECTION (tissue features of carcinoma diagnose carcinoma), but it is a narrative pathology source that publishes no likelihood ratios \u2014 the phrase 'likelihood ratio' does not appear, and the only numbers given are a prognostic progression range (50\u201375%). The specific magnitude LR=9 is not in the cited source nor in any related primary literature; the only real LRs in this domain are urine-assay values (3.74, 5.85), none of which is 9 or pertains to tissue confirmation. The 9 was chosen to look precise. (Page returned HTTP 503 to automated fetch with Retry-After 86400; content assessed from indexed search excerpts of the page itself, which clearly lack any LR.)"
+    },
+    {
+      "claim_id": "c19",
+      "cited_sources": [
+        "PMID 3856982 \u2014 Urinary cytology of tuberculosis of the bladder, Acta Cytol 1985;29(2):125-31"
+      ],
+      "chain": [
+        {
+          "hop": 1,
+          "source_queried": "PMID 3856982 (https://pubmed.ncbi.nlm.nih.gov/3856982/)",
+          "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3856982/",
+          "found": true,
+          "supporting_quote": "The cytologic findings in the urinary sediment of 13 patients with tuberculosis (TB) of the bladder were compared with the histologic findings. ... the type I atypical urothelial cells found in ten patients were correlated to the urothelial hyperplasia found at histology; the follow-up data documented the benign reversible nature of the urothelial hyperplasia as the focal expression of the reactive potential of urothelium to various forms of inflammatory processes. ... an accurate follow-up is necessary in order to assess the reactive, reversible or precancerous nature of these forms of atypia associated with TB.",
+          "gives_magnitude": false,
+          "magnitude_found": "",
+          "supports_direction": true,
+          "next_citation": ""
+        }
+      ],
+      "terminal": "direction_only",
+      "verdict": "direction_only",
+      "data_derived_magnitude": "",
+      "verdict_note": "The cited 1985 Acta Cytol case series (n=13) supports the DIRECTION of the claim: granulomatous TB of the bladder produces reactive, benign/reversible urothelial atypia that must be distinguished from precancer/carcinoma \u2014 i.e., a granulomatous TB finding argues against (lowers the likelihood of) urothelial carcinoma, consistent with LR<1. However it is a small descriptive cytology study that reports NO likelihood ratio, sensitivity, specificity, odds ratio, or any quantitative measure relating TB granuloma to carcinoma. The specific magnitude 0.2 is not present in the source and cannot be derived from it; it was chosen to look precise. Clinical/cytology narrative of this type does not publish LRs, so the source does not ground the number. No borrowed citation to follow toward primary data for this magnitude."
+    }
+  ]
+}

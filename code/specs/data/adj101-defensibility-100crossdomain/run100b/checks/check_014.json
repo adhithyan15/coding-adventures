@@ -1,0 +1,8 @@
+{
+ "check_id": 14,
+ "idx": 7,
+ "slot": "prior_authorization_on_file",
+ "claimed_value": false,
+ "scenario": "Carlos required an emergency appendectomy after arriving at the hospital with acute appendicitis. The procedure normally requires prior authorization, and no prior authorization was on file. The surgery was performed during the documented emergency and is otherwise a covered service.",
+ "cited_span": "no prior authorization was on file"
+}

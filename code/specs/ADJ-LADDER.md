@@ -1,0 +1,262 @@
+# ADJ-LADDER — A Graduated, Two-Arm Proof that Reasoning Lives in the Framework
+
+**Status:** PR-0 shipped the instrument + rung 0; the ladder now climbs in small,
+audited rungs from the existing engine surface before heavier symbolic work.
+**Author:** evaluation-systems architecture pass, 2026-06-26.
+**North star:** A Haiku- or Gemma-class (small, non-frontier) model + the ADJ engine
+and its content-addressed *standard library* passes a Medical Licensing Exam where the
+same model **alone** cannot — with an audit trail an independent checker re-verifies,
+and **zero math performed by the LLM**.
+
+This spec composes with two siblings committed alongside it:
+- **[ADJ-REASON-MATH](ADJ-REASON-MATH.md)** — the engine/language evolution (the
+  deduction↔evidence bridge, CAS wiring, exact/dimensional compute, a unified proof
+  object, an `adj-verify` re-checker). The *capabilities* each rung needs.
+- **[MLE-PASS](MLE-PASS.md)** — the medical-exam harness: option-mapping,
+  contamination protocol, the two-factor failure diagnostic. The *clinical rung*.
+
+ADJ-LADDER is the **curriculum** that drives both: each rung pulls in the next
+ADJ-REASON-MATH engine PR in dependency order, and the clinical rung *is* MLE-PASS.
+
+---
+
+## 1. Why a ladder, and why two arms
+
+We want one falsifiable, externally-legible result. Rather than jump straight to
+USMLE (where contamination and knowledge-breadth confound everything), we climb a
+**complexity ladder** and, at every rung, run the SAME question set through two arms:
+
+| Arm | What runs | Who does the math |
+|-----|-----------|-------------------|
+| **A** | the small model **alone** | the model, in-context (it is bad at this) |
+| **B** | the small model **+ the ADJ engine** | the **engine**, on the CPU, exactly |
+
+In Arm B the model's only job is to **decompose** the question into an ADJ program;
+the engine evaluates it and selects an answer, emitting a machine-checkable proof.
+
+**Base target: Gemma.** The canonical model is **Gemma** — a small, non-frontier model
+that runs **fully locally** (no API, offline, on commodity Apple-silicon via MLX). The
+default is `gemma-3-4b-it`; `gemma-3-1b-it` is available for an even-smaller probe where
+the gap should appear earlier. This is a deliberate choice: the standing claim is
+"a Haiku- or **Gemma**-class model + ADJ passes an exam the model alone cannot", and a
+local model makes the whole pipeline reproducible end-to-end with zero network.
+
+**The headline number is the divergence, B − A.** At the bottom of the ladder the gap
+is small (a small model can do `7 * 8 + 3`). As computation deepens, Arm A degrades
+while Arm B stays pinned near 100% — because the engine never makes an arithmetic
+slip. *The widening gap with complexity is the money curve* — it localizes the
+"intelligence" in the framework, not the weights. (Ties to the project theses: dumber
+models in constrained envs; total-coverage forces reasoning; CPU-bound reasoning.)
+
+---
+
+## 2. The instrument (shipped in PR-0)
+
+Everything lives under `code/specs/data/adj-ladder/`:
+
+- **`rung0_arithmetic/items.json`** — a rung's question bank. Schema per item:
+  `{id, qtype, stem, formula, options:{A..E}, gold_letter}`. `formula` is the **gold
+  decomposition** — an arithmetic expression whose literals *all appear in the stem*.
+- **`ladder_eval.py`** — the two-arm scorer (see §3).
+- **`contamination_check.py`** — the bank-integrity / anti-circularity gate (see §4).
+- **`ladder-scorecard.json`** — emitted artifact: per-arm metrics + divergence +
+  per-item failure buckets.
+
+### How Arm B selects an option WITHOUT ever computing the answer itself
+
+For options `{A:59, B:60, C:61, D:58, E:62}` and gold formula `7 * 8 + 3`, the harness
+emits this ADJ program and reads back the engine's decision:
+
+```adj
+prior 0.0001 for opt_a            % five equal-prior hypotheses, one per option
+prior 0.0001 for opt_b
+prior 0.0001 for opt_c
+prior 0.0001 for opt_d
+prior 0.0001 for opt_e
+let answer = 7 * 8 + 3            % the ENGINE computes this — Python never does
+contributes 1000000 from answer == 59 to opt_a   % option VALUES come from the
+contributes 1000000 from answer == 60 to opt_b   % question, never from us solving it
+contributes 1000000 from answer == 61 to opt_c
+contributes 1000000 from answer == 58 to opt_d
+contributes 1000000 from answer == 62 to opt_e
+? opt_a … ? opt_e
+```
+
+The engine evaluates `answer` (= 59), the predicate `answer == 59` fires, opt_a's
+log-odds jump decisively, and the decision returns `determinate` with `leader = opt_a`
+→ letter **A**. Fractional options use the same path with an expression RHS, for
+example `contributes 1000000 from answer == 3 / 10 to opt_a`. If the computed answer
+matches **no** option (or, via a duplicate-value accident, two) the hypotheses stay tied
+→ `kickback` → the harness **ABSTAINS** rather than guess. The harness supplies only
+the formula and the printed option values; the arithmetic, the comparison, and the
+selection are all the engine's.
+
+---
+
+## 3. Scoring (reuses board_eval.py's three-outcome, never-fabricate model)
+
+Each item, per arm, resolves to exactly one outcome:
+
+- **correct** — chose the gold letter.
+- **abstained** — declined to commit (kickback, or no parseable model letter) — the
+  *honest* miss, the discriminator against a hallucinating model.
+- **wrong** — committed to the wrong letter — the only real failure.
+
+Per-arm metrics: `raw_accuracy = correct/total`,
+`defensibility = (correct+abstained)/total`,
+`accuracy_on_attempted = correct/(correct+wrong)`. Cross-arm: **divergence**
+(B−A on raw accuracy and on correct count).
+
+**Arm B is GATED in cached mode**: a single `wrong` engine selection exits non-zero —
+the engine's arithmetic must be exact by construction.
+
+**Failure buckets** (the two-factor diagnostic, separating decompose-fidelity from
+engine-correctness; full taxonomy in MLE-PASS §2.5):
+
+| bucket | meaning |
+|--------|---------|
+| a | missing-library (no lib expresses the needed fact/op) — higher rungs |
+| b | decompose-error (model's formula failed the faithfulness gate) |
+| c | engine-gap (faithful decomposition, engine still missed) |
+| d | genuinely-hard (correct decomposition + engine, item still wrong) — higher rungs |
+
+### Modes
+
+- **`--mode cached`** (default; what CI runs): Arm B only, using each item's gold
+  `formula`. Isolates the ENGINE → expect ~100% correct, proving the mechanism with no
+  model in the loop.
+- **`--model <spec>`**: run BOTH arms with a real local model (`mlx:<repo>` or
+  `cmd:<shell>`). The model answers directly (Arm A) and decomposes (Arm B). A
+  model-produced formula must pass the **no-result-literals** gate (every number in the
+  formula appears in the stem) or that item abstains in Arm B as a `b` bucket — the
+  model may write the recipe, never the answer.
+
+---
+
+## 4. Anti-circularity (contamination_check.py)
+
+A two-arm proof is only worth something if the bank is honest. The gate asserts,
+offline and off the answer-path: unique ids; five **distinct** option values (so a
+correct compute can't tie-and-abstain as an artifact); `gold_letter ∈ options`; the
+gold key is internally correct (a *restricted, safe* arithmetic eval of `formula`
+equals the gold value — the only place the bank's answer is computed in Python, and
+only to validate the key); the no-result-literals property on the gold formula; and,
+at rung 0, no external source/import (self-contained → contamination structurally
+impossible). Higher rungs add a source-disjointness check vs any external bank, and
+**freeze the standard library by content hash** before running (so a rung can't be
+"taught to the test").
+
+The deeper anti-circularity discipline for self-authored banks (per MLE-PASS): the
+question author is **blind to the libraries**; answer keys are **independently
+grounded**; libraries are **frozen then run**; vignettes match real exam format. At
+rung 0 these are trivial (fresh numbers); they bind hardest at the clinical rung.
+
+---
+
+## 5. The rungs (each = its own items.json + mini-stdlib, reusing ladder_eval.py)
+
+Climbing **drives the ADJ-REASON-MATH PR order** — each rung surfaces exactly the
+engine gap that blocks it, and every rung ships a two-arm divergence number.
+
+| Rung | Content | Engine capability it pulls |
+|------|---------|----------------------------|
+| **0** | grade-school arithmetic + 1-step word problems | **none** (value-math exists) — shipped |
+| **1** | fractions / percent | native predicate RHS expressions plus exact rational sidecars for fractional equality; harder banks climb from here |
+| **2** | pre-algebra / algebra word problems | native ADJ solve programs now mix with rule-derived setup premises; broader CAS solve trail (PR-6) |
+| **3** | algebra / calculus + probabilistic decisions | native ADJ solve now covers two-variable linear systems, linear optimization values and witnesses, direct and rule-derived `decision.leader` probability banks, plus `solved_roots` banks for quadratic, cubic, quartic, and factored-polynomial equations; broader CAS wiring (PR-6) + rewrite trail (PR-4) |
+| **4** | physics / chem with units | **two PRs shipped.** (a) `rung4_physics_chem` — 20 applied-science word problems on the exact-compute formula path; engine selects 20/20 cached. (b) `rung4_dimensional` — 20 problems whose answer is a **unit-bearing quantity**: the gold program `observe`s `quantity(240, km)` and binds `let answer = distance / time`; the engine carries the dimension through (`Dimension::combine`) and reports `80 km/h` in the CLI's new `derived` section. Options are `{value, unit}` and the `compute_dimensioned` extractor matches BOTH, so a wrong-*unit* answer (80 m/s vs 80 km/h) is rejected, not just a wrong number; `km + h` is refused as a category error. Engine 20/20 cached, zero unit mismatches. (c) `rung4_products` — 20 problems whose answer is a **composite-unit product** (work=force×distance→`N·m`, energy=power×time→`W·s`, impulse `N·s`, charge `A·s`, pressure×volume `Pa·L`, V×A); `let answer = a * b`, engine forms `a·b` via `Dimension::combine`; distractors include the reversed-order composite (`m·n`) operand-order trap. Engine 20/20 cached. **Next:** unit conversions with stated factors + exact compute trail (PR-3) |
+| **5** | multi-step formula chains | **shipped.** `rung5_multistep` — 20 problems whose gold program needs **two or more chained `let`-bindings**: an intermediate quantity is computed, then *consumed* by the next step (`let total_distance = first + second`; `let total_time = t1 + t2`; `let answer = total_distance / total_time`). The reasoning step beyond rung-4's *single* operation: the model must **decompose** into ordered sub-results while the engine threads each dimensioned intermediate forward (intermediates are never written as literals → no-result-literals gate holds for the chain). Five families: average speed over two legs (`km/h`), net displacement rate (`km/h`, subtract then divide), combined density (`g/ml`), average power (`j/s`), average flow rate (`l/min`). Signature distractor = the average-of-the-two-ratios answer, distinct from the weighted `total/total` because every item uses **unequal** denominators; plus skip-a-step (numerator sum) and wrong-unit traps. Reuses the `compute_dimensioned` harness **unchanged** — no engine/harness change. Engine 20/20 cached, zero unit mismatches. |
+| **6** | clinical / MLE → **apex: pediatrics** | **first slice shipped.** `rung6_clinical_differential` — 20 board-style differentials: 3 competing diagnoses (equal priors), 3 findings, a likelihood ratio per (finding, dx) pair; the gold program `contributes <LR> from <finding> to <dx>` and the **engine** does the Bayesian combination (prior × ∏ LR), reported via the existing `decision_leader` extractor (no harness/engine change). The reasoning step past rung-3's single-finding decisions is *combining* evidence: gold = winner on the **product of all** LRs, distractor = winner on one **flashy** finding alone (anchoring trap). **Batch 2** (`r6-21`..`r6-40`; 40 items total) adds **four-way** differentials (options A–D all scored) and **likelihood ratios below 1** that *argue against* a diagnosis — a finding with `LR < 1` drags that dx's product down, demoting a flashy single-finding dx below a quieter rival (the engine does this automatically). Engine 40/40 cached. **Batch 3** (`r6-41`..`r6-60`; 60 items total) steps up to **five genuine competing diagnoses** (options A–E all real dx, no abstain slot) across broader specialties (peds, OB, psych, EM, endocrine, heme, nephro, derm, rheum, neuro, ID, cards, pulm, GI, tox); two observed findings are the classic confirmatory pair (LR 8/7 on the winner, 0.5 argues-against on rivals), a third unobserved finding is the flashy-rival trap; gold letter rotated A–E. Engine 60/60 cached. **Next:** the full **MLE-PASS** harness (shares the option-map); multi-hop→PR-1, calculation→PR-3/6 |
+| **6b** | clinical management (therapy) | **shipped.** `rung6b_management` — 20 items: where rung 6 picks the *diagnosis*, rung 6b picks the *therapy*, framed as a scalar **feasibility** decision. Each gives a drug's dose constraints — a therapeutic minimum plus ceilings (efficacy/toxicity max **and an organ-adjusted cap from the chart**: renal/hepatic/age/weight/BP/K⁺). Gold program = `symbol dose : scalar` + one `constrain` per bound + `check`; the **engine** intersects them (QF_LRA) → feasible/infeasible, via the existing `check_outcome` extractor (no harness/engine change, same machinery as `rung3_constraint_feasibility`). Reasoning + trap: when an organ cap falls **below** the therapeutic minimum the regimen is **infeasible** (switch therapy); checking only the minimum, ignoring the cap, wrongly says feasible. 10 feasible / 10 infeasible. Engine 20/20 cached. |
+| **6c** | clinical management (cost) | **shipped.** `rung6c_formulary_cost` — 20 items: the **economics** half of the therapy decision, the step past rung 6b's dose-*feasibility* (CAN it be dosed) to **what is the cheapest** way to deliver an already-feasible therapy. Each renders a formulary choice as a **2-variable linear program**: a required daily amount must be met by splitting it between a **cheap** formulation that is **capped** (limited supply / coverage) and an **expensive** formulation that is **uncapped**. Gold program = two `symbol … : scalar` + one `constrain` per bound + `minimize <p_cheap> * cheap + <p_brand> * brand`; the **engine** solves the LP (simplex) → optimal value, via the existing `optimize_value` extractor (no harness/engine change, same machinery as `rung3_linear_optimization`). Reasoning + traps: max the cheap form to its cap then top up with the brand is optimal (`p_cheap*C + p_brand*(R−C)`); ignoring the cap **under-budgets** at `p_cheap*R`, reaching only for the brand **over-spends** at `p_brand*R` — both are planted distractors. **Batch 2** (`r6c-21`..`r6c-40`; 40 items total) adds a **three-tier** split (cheap-capped + mid-capped + uncapped brand, p1<p2<p3) so the fill must **order across three tiers** (gold = `p1*C1 + p2*C2 + p3*(R−C1−C2)`; distractors = skip-mid / skip-cheap / ignore-caps / brand-only); gold letter rotated A–E. Engine 40/40 cached. |
+| **7** | biostatistics / evidence-based medicine | **shipped.** `rung7_risk_measures` — 21 items, a **new reasoning kind** (biostats): from two stated event rates — control event rate (CER) and experimental/treated event rate (EER) — compute an EBM **effect measure**: **ARR** = CER − EER, **RR** = EER / CER, or **RRR** = (CER − EER)/CER. Gold program = `observe control(<CER>)` + `observe treated(<EER>)` + `let answer = <formula>`; the **engine** carries the (dimensionless) arithmetic and the harness reads the scalar via the existing `compute_dimensioned` extractor (no harness/engine change, same machinery as rung-4 dimensional). Contamination-safe by construction: the only literals are the two stated rates — ARR/RR/RRR need no structural constants. The five options are the five natural quantities {ARR, RR, RRR, CER, EER}, so each distractor is exactly a measure students confuse (reporting RR when asked ARR, or the bare control rate); gold letter rotated A–E. Engine 21/21 cached. |
+| **7b** | biostatistics / diagnostic tests | **shipped.** `rung7b_diagnostic_tests` — 25 items, the second biostat batch: the **2×2 diagnostic table**. From four stated cell counts — true positives (TP), false negatives (FN), false positives (FP), true negatives (TN) — compute **sensitivity** TP/(TP+FN), **specificity** TN/(TN+FP), **PPV** TP/(TP+FP), **NPV** TN/(TN+FN), or **accuracy** (TP+TN)/(TP+TN+FP+FN). Gold program = `observe` the four counts + `let answer = <formula>`; the **engine** carries the arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change, same machinery as rung-7). Contamination-safe: every formula uses only the four stated counts via addition and division — no structural constants. The five options are the five natural characteristics, so each distractor is exactly a confusion students make (sensitivity vs PPV, specificity vs NPV); gold letter rotated A–E. Engine 25/25 cached. |
+| **7c** | biostatistics / likelihood ratios | **shipped.** `rung7c_likelihood_ratios` — 21 items, the third biostat batch; **completes the 2×2 diagnostic-table family** begun in 7b. From the same four stated cell counts (TP/FN/FP/TN) compute the bedside numbers that move pre- to post-test probability: **LR+** = sensitivity/(1−specificity), **LR−** = (1−sensitivity)/specificity, **DOR** = LR+/LR−. The textbook forms contain the constant `1`, which would leak a non-stem literal — so each ratio is written in its **raw-count, division-only** form, algebraically identical but built from ONLY the four counts: LR+ = (TP/(TP+FN))/(FP/(FP+TN)), LR− = (FN/(TP+FN))/(TN/(FP+TN)), DOR = (TP/FP)/(FN/TN). Gold program = `observe` the four counts + `let answer = <formula>`; the **engine** carries the nested-division arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change). Contamination-safe: no structural constants — not even the `1` of the textbook forms. The five options are a family of LR-type ratios over the same table {LR+, LR−, DOR, inverted-LR+, inverse-DOR}, so the distractors are exactly the inversions students confuse (false-positive rate on top; flipped odds ratio); gold letter rotated A–E. Engine 21/21 cached. |
+| **8** | clinical pharmacokinetics | **shipped.** `rung8_pharmacokinetics` — 21 items, a **new quantitative clinical domain** (one-compartment PK), same contamination-safe shape as the biostat family. From three stated quantities of a single IV bolus — dose D (mg), initial plasma concentration C₀ (mg/L), and total area under the concentration-time curve AUC (mg·h/L) — compute a bedside PK parameter: **Vd** (volume of distribution) = D/C₀, **CL** (clearance) = D/AUC, or **kₑ** (elimination rate constant) = C₀/AUC. (These follow from the single one-compartment fact AUC = C₀/kₑ, so all three are exact **pure ratios** of the observed quantities; **half-life is deliberately excluded** because t½ = 0.693·Vd/CL would leak the constant 0.693.) Gold program = `observe` the three quantities + `let answer = <formula>`; the **engine** carries the division arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change). Contamination-safe: no structural constants — every parameter is a ratio of the three stated quantities. The five options are a family of ratios over the same quantities {Vd, CL, kₑ, inverted-CL = AUC/D, inverted-Vd = C₀/D}, so the distractors are exactly the inversions students confuse (reading AUC/dose for clearance; concentration/dose for volume); gold letter rotated A–E. Engine 21/21 cached. |
+| **9** | nephrology / renal indices | **shipped.** `rung9_fractional_excretion` — 21 items, the renal-indices work-up of acute kidney injury, same contamination-safe shape. From four stated quantities of a paired urine/plasma chemistry — urine Na (mEq/L), plasma Na (mEq/L), urine Cr (mg/dL), plasma Cr (mg/dL) — compute a bedside index: **FENa** (fractional excretion of sodium) = (UNa·PCr)/(PNa·UCr), **RFI** (renal failure index) = (UNa·PCr)/UCr, or the **urine-to-plasma creatinine ratio** = UCr/PCr. These are **pure ratios of products** of the four observed quantities — exact, no constant (the textbook FENa carries a `×100` only to render the fraction as a percent; we ask for the **fraction itself**, so not even the 100 leaks). Gold program = `observe` the four quantities + `let answer = <formula>`; the **engine** carries the multiply/divide arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change). Contamination-safe: no structural constants — every index is a ratio of products of the four stated quantities. The five options are a family of ratios over the same quantities {FENa, RFI, U/P-Cr, inverted-FENa, U/P-Na}, so the distractors are exactly the slips students make (inverting the fractional-excretion ratio; reading the sodium U/P ratio for the creatinine one); gold letter rotated A–E. Engine 21/21 cached. |
+| **10** | acid–base / anion gap | **shipped.** `rung10_anion_gap` — 24 items, the bedside acid–base work-up, same contamination-safe shape and the **pure addition/subtraction** case of the band (rungs 8/9 were multiply/divide). From four stated serum electrolytes — Na, K, Cl, bicarbonate (all mEq/L) — compute the **serum anion gap** (AG = Na − Cl − bicarb) or the **anion gap including potassium** (Na + K − Cl − bicarb). These are **pure signed sums** of the four observed quantities — exact, no constant (the "normal" gap ~12 is a comparison, not part of the computation). Gold program = `observe` the four quantities + `let answer = <formula>`; the **engine** carries the signed arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change). Contamination-safe: no structural constants, and the variable names are **digit-free** (`bicarb`, not `hco3`, which would leak the literal `3` from the identifier — the rung-8 lesson). The five options are a family of signed sums over the same quantities {AG, AG+K, bicarb-sign-flipped, Cl-sign-flipped, bicarb-omitted}, so the distractors are exactly the sign-errors students make; gold letter rotated A–E. Engine 24/24 cached. |
+| **11** | syndromic decision (decide + multi-hop) | **shipped.** `rung11_syndromic_decision` — 24 items, the first rung that is BOTH a decision AND genuinely multi-hop. Each item gives five equally-likely diagnoses; the engine must first **derive** which clinical syndrome the patient satisfies (a `rule { head: syndrome when: f_a, f_b }` that fires only when BOTH findings are observed — the rung-3 mechanism) and then **rank** the diagnoses and return the leader (the rung-6 `decision_leader` extractor). The fully-satisfied syndrome (likelihood `L_syn`) beats a rival backed by a single **flashy** finding (`L_flash` < `L_syn`) — the anchoring trap: the diagnosis is the one supported by the COMPLETE pattern, not the loudest lone clue. No engine/harness change (reuses `rule` + `decision_leader`); synthetic priors/LRs (the ladder is a capability benchmark, not the grounded CAS). Contamination-safe: every prior and LR is printed in the stem and the answer is a disease name, so no result literal leaks (identifiers are digit-free — `diabetes_mellitus`/`cobalamin_deficiency`, not `type2`/`b12`); gold rotated A–E; every item's unique leader asserted at build. **Batch 2 (24→36)** adds the *completeness-over-strength* family: a complete 3-finding triad (Charcot/Beck/HUS/Cushing-reflex/reactive-arthritis/Wernicke) beats a rival whose 2-finding syndrome is only partially present and is *nominally stronger* (`L_rival`>`L_gold`) — the rival rule never fires, so completeness, not nominal strength, decides. **Batch 3 (36→48)** adds the *combined-likelihood tie-break*: two competing syndromes BOTH fully fire, but the gold disease carries a 2-finding syndrome (`l_gold`) PLUS an independent corroborating finding (`l_extra`) whose product `l_gold·l_extra` beats the rival's single nominally-stronger syndrome (`l_rival`, with `l_rival>l_gold` and `>l_extra`). The engine multiplies every fired likelihood, so combined independent evidence outweighs one louder clue (verified: two `contributes` to one hypothesis multiply). **Batch 4 (48→60)** raises the tie-break to **3-way**: the same gold product (`l_gold·l_extra`) must outweigh TWO rivals that BOTH fully fire, each backed by a single syndrome nominally stronger than either of the gold's two pieces (`l_ra,l_rb > l_gold` and `> l_extra`, but `l_gold·l_extra > l_ra` and `> l_rb`). Three syndrome rules fire; only the greater total weight of the gold's two independent pieces wins (two louder single clues to anchor on now). Engine 60/60 cached. |
+| **12** | threshold decision (wait-vs-treat) | **shipped.** `rung12_threshold_decision` — 24 items, a NEW decision SHAPE: the bedside *wait-vs-treat threshold* call. A single patient measurement is pinned (`constrain marker == value`) and tested against a published treatment threshold (`constrain marker >= threshold`, or `<=` for a low-is-dangerous marker) with `check`. The engine's QF_LRA feasibility verdict **is** the decision — the pinned value and the threshold are jointly satisfiable exactly when the value has crossed the threshold, so **sat → "Start treatment now"** and **unsat → "Continue observation"** (the harness maps the verdict to an option label via the rung-6b `check_outcome` extractor; Python never compares the numbers). The reasoning tested is the inequality **direction**: six markers are dangerous when HIGH (potassium, INR, calcium, lactate, bilirubin, ammonia) and six when LOW (platelets, glucose, haemoglobin, sodium, neutrophils, arterial pH), so a "bigger number means treat" heuristic fails exactly half the items. Two items per marker (one crosses → treat, one does not → observe); gold split 12/12 across the two actions, rotated A–E. No engine/harness change (reuses `check_outcome`); distinct from rung-6b (dose *window* feasibility) and from the ranking decisions of rung-6/11. Contamination-safe: the only literals are the observed value and the threshold, both printed in the stem, and the answer is an action label (never a number); identifiers digit-free. Engine 24/24 cached. **Batch 2 (24→48)** adds the *therapeutic-range band* decision: a pinned drug level tested against a TWO-SIDED window (`constrain level >= low` AND `constrain level <= high`) → sat = "Continue the current dose" (in range), unsat = "Adjust the dose" (out of range). Both bounds must hold at once — a value can clear the lower bound yet exceed the upper, so a one-sided heuristic fails (12 drug ranges — digoxin/lithium/vancomycin/…; half the out-of-range values below the window, half above). Distinct from batch-1 (single threshold) and rung-6b (which searches a *free* dose; here the value is *pinned*). Engine 48/48 cached. |
+| **13** | nephrology / transtubular potassium gradient | **shipped.** `rung13_transtubular_gradient` — 21 items, the potassium-disorder work-up, reusing verbatim the rung-9 renal-indices shape. From four stated quantities of a paired urine/plasma chemistry — urine K (mEq/L), plasma K (mEq/L), urine osmolality (mOsm/kg), plasma osmolality (mOsm/kg) — compute a bedside ratio: the **transtubular potassium gradient (TTKG)** = (UK·Posm)/(PK·Uosm), the **urine-to-plasma potassium ratio** = UK/PK, or the **urine-to-plasma osmolality ratio** = Uosm/Posm. TTKG is exactly the U/P potassium ratio *divided by* the U/P osmolality ratio (the osmolality ratio undoes the concentrating effect of water reabsorption), so all three are **pure ratios of products** of the four observed quantities — exact, no constant at all (TTKG carries no rendering multiplier, so not even a `×100` leaks). Gold program = `observe` the four quantities + `let answer = <formula>`; the **engine** carries the multiply/divide arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change). Contamination-safe: no structural constants, and every identifier (`uk`/`pk`/`uosm`/`posm`/`answer`) is digit-free. The five options are a family of ratios over the same quantities {TTKG, U/P-K, U/P-osm, inverted-TTKG, wrong-direction-osmolar-correction}, so the distractors are exactly the slips students make: inverting the whole gradient, or *multiplying* by the osmolality ratio instead of dividing by it (correcting for water reabsorption in the wrong direction); gold letter rotated A–E. Engine 21/21 cached. |
+| **14** | indeterminate decision (the abstention rung) | **shipped.** `rung14_indeterminate_decision` — 24 items, a NEW decision SHAPE: **knowing when NOT to decide**. Every earlier decision rung (6/11/12) asks the engine to commit; this rung tests the complementary skill — an honest **abstention** when the evidence does not distinguish the top candidates (the solve-or-abstain thesis in miniature, with the abstention a first-class, positively-scored answer). Each item offers four candidate diagnoses plus a fifth **"insufficient information to distinguish"** choice, in two interleaved families (12 each): **DETERMINATE** — one finding outweighs the other (L_hi=8 > L_lo=3), the posterior has a unique leader, the engine returns a `determinate` decision, gold = that diagnosis; **TIE** — both findings carry the *same* likelihood ratio (L=5), the top two posteriors are exactly equal, the engine returns a `kickback` ("top two hypotheses tied on posterior log-odds"), gold = the abstention option. A guesser fails every tie; a hedger fails every determinate. The engine owns BOTH verdicts natively (`decision.type` = determinate vs kickback); the one small generic harness change maps a `kickback` to `answer_from.tie_label` when a rung supplies one (backward-compatible — without a tie_label a kickback stays an abstention/None, so every existing decision rung is unaffected; full ladder suite 155 passed). Python never compares a number — the abstention is the engine's own refusal-to-commit surfaced as a positive choice. Contamination-safe: the only literals are the printed priors (0.2) and LRs (8/3/5), the answer is a categorical option, identifiers digit-free; gold rotates A–E; determinate/tie split 12/12. Engine 24/24 cached. **Batch 2 (24→48)** widens the tie to **three-way**: three diagnoses of a genuine three-way differential are exactly co-equal (each finding LR=5) → still a kickback → gold = abstain; the paired determinate control is a crowded field (one finding LR=12 beats two LR=8 rivals) → unique leader. Verified the engine commits on ANY positive margin (even 100 vs 99 → determinate), so only an exact tie abstains — batch 2 widens the tie, it does not narrow the margin. Reuses the kickback→tie_label hook (no harness change). Engine 48/48 cached. |
+| **15** | nephrology / fractional excretion of urea | **shipped.** `rung15_fractional_excretion_urea` — 21 items, the direct sibling of rung 9 (FENa), reusing its contamination-safe shape for the AKI work-up index used when the patient is on **diuretics** (FENa unreliable; urea handling intact). From four stated quantities of a paired urine/plasma chemistry — urine urea, plasma urea/BUN, urine Cr, plasma Cr — compute the **fractional excretion of urea** (FEUrea = (UUrea·PCr)/(PUrea·UCr), as a fraction), the **urea failure index** (UFI = (UUrea·PCr)/UCr), or the **urine-to-plasma creatinine ratio** (UCr/PCr). These are **pure ratios of products** of the four observed quantities — exact, no constant (not even FEUrea's `×100`, since we ask for the fraction). Gold program = `observe` the four quantities + `let answer = <formula>`; the **engine** carries the multiply/divide arithmetic via the existing `compute_dimensioned` extractor (no harness/engine change). Contamination-safe: no structural constants, identifiers digit-free (`uurea`/`purea`/`ucr`/`pcr`). The five options are a family of ratios over the same quantities {FEUrea, UFI, U/P-Cr, inverted-FEUrea, U/P-urea}, so the distractors are exactly the slips students make (inverting the ratio; reading the urea U/P ratio for the creatinine one); gold letter rotated A–E. Engine 21/21 cached. |
+| — | defensibility hardening | `adj-verify` (PR-9): every correct item's proof re-checks |
+
+**Why pediatrics as apex:** it is computation-dense (weight-based dosing, growth
+percentiles, fluid calc) — exactly where in-context LLM arithmetic fails and an exact
+engine wins. (The "no LLM has passed peds MLE" claim is *unverified*; peds is a sound
+hard target regardless and must not be asserted as established fact.)
+
+---
+
+## 6. PR-0 scope & verification (this PR)
+
+**Scope:** the instrument (`ladder_eval.py`, `contamination_check.py`), rung 0
+(`rung0_arithmetic/items.json`, 20 fresh items), the test suite, and the three specs
+of record (this file + ADJ-REASON-MATH + MLE-PASS). **No engine/grammar change.**
+
+**Verification (reproduce):**
+1. `cargo build -p adj-lang-cli`
+2. `python3 contamination_check.py rung0_arithmetic` → clean.
+3. `python3 ladder_eval.py rung0_arithmetic` → Arm B raw **100%**, wrong **0**
+   (engine-correctness sanity; no model).
+4. `python3 -m pytest test_ladder_eval.py -q` → green.
+5. (where a local model exists) `python3 ladder_eval.py rung0_arithmetic --model
+   mlx:<repo>` → the first real two-arm number + divergence.
+
+**Result — engine sanity (cached, no model):** rung-0 Arm B = **20/20 correct, 0
+wrong, 0 abstain** — the engine computed every answer exactly and selected the gold
+option, with the computed value visible in each item's proof.
+
+**Result — first real two-arm run (Gemma-3-4b, greedy, fully local):**
+
+| Arm | raw accuracy | wrong (fabrications) | defensibility |
+|-----|--------------|----------------------|---------------|
+| **A** — Gemma alone | **60%** (12/20) | **8** | 0.60 |
+| **B** — Gemma + ADJ | **95%** (19/20) | **0** | **1.00** |
+
+**Divergence B − A = +35% (+7 items).** The money curve is visible at the very bottom
+of the ladder: even on grade-school arithmetic a small local model fabricates 8 wrong
+answers, while the engine arm makes **zero** — its single miss is a *decompose* error
+(bucket `b`) the engine caught and **abstained** on, not a fabrication. The defensibility
+gap (0.60 → 1.00) is the headline the ladder will widen rung by rung. (Artifact:
+`code/specs/data/adj-ladder/ladder-scorecard.gemma.json`.)
+
+The mechanism is proven; the ladder can climb.
+
+---
+
+## 7. Next
+
+PR-1 is the ADJ-REASON-MATH **deduction→evidence bridge**: `logic-engine`
+`observed_evidence` falls back to SLD provability, attenuates an LR contribution by
+the proof confidence, and threads the rule/fact proof into the aggregate evidence
+step. This unlocks the first true multi-step Arm B programs: the model can emit
+observations plus a rule, and ADJ can derive the intermediate premise before weighing
+it probabilistically.
+
+After this bridge, rung 2 starts with native ADJ solve programs: a small model can
+emit `symbol` / `constrain` / `solve for` from a messy pre-algebra stem, the ADJ
+constraint solver computes the unknown, and the ladder maps that engine value to the
+printed options. The next rung now mixes that solve path with rule-derived premises:
+the program derives a setup atom, uses it as evidence for a queried readiness
+decision, and then solves the numeric unknown in the same native ADJ run. Rung 3 now
+also exercises native constraint feasibility: ADJ returns `check.outcome` for
+linear `symbol` / `constrain` / `check` programs, and the ladder maps that verdict
+to printed feasible/infeasible options without host-side solving. It exercises
+native probability decisions directly: ADJ ranks candidate hypotheses from
+`prior` / `contributes` / `observe` / `?` programs, and the ladder maps
+`decision.leader` to printed categorical options without host-side probability math.
+It then combines deduction and probability: ADJ proves a rule-derived evidence atom,
+uses that proof to license an LR contribution, and the ladder requires the proof
+before mapping the winning leader.
+It exercises
+native constraint optimization too: ADJ returns `optimize.value` for linear
+`maximize`/`minimize` programs and `optimize.assignments` for requested witness
+variables; the ladder maps those engine outputs to printed options without
+host-side solving. It then climbs through native polynomial root solving: ADJ
+returns `solved_roots` for quadratic, cubic, quartic, and factored-polynomial
+programs, and the ladder maps those root sets to printed options without host-side
+solving. From here, rungs 3→5 gate the broader
+CAS/dimensional/clinical slices in order, culminating in the MLE-PASS clinical rung
+and the pediatrics apex.

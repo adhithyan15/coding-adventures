@@ -1,0 +1,8 @@
+{
+ "check_id": 187,
+ "idx": 76,
+ "slot": "actual_sentence_days",
+ "claimed_value": 90,
+ "scenario": "Lin has exactly one conviction for a crime involving moral turpitude. The offense carried a maximum possible penalty of 364 days, and Lin was actually sentenced to 90 days.",
+ "cited_span": "Lin was actually sentenced to 90 days"
+}

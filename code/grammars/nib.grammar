@@ -25,8 +25,8 @@
 #
 # KEY DESIGN DECISIONS (documented inline throughout the grammar):
 #   - For-loop range uses RANGE token (not .. operator) — see for_stmt note
-#   - Expression precedence: logical < equality < relational < additive < bitwise < unary
-#   - STAR and SLASH are in the token set (reserved) but not in arithmetic rules (v2)
+#   - Expression precedence: logical < equality < relational < additive < multiplicative < bitwise < unary
+#   - STAR and SLASH are multiplicative operators (mul_expr), tighter than additive (LANG-FULL N1)
 #   - Wrap/sat operations are at the same precedence as PLUS/MINUS — they are add variants
 #   - call_expr appears before NAME in primary to avoid NAME consuming the function name
 
@@ -227,10 +227,11 @@ type          = "u4" | "u8" | "bcd" | "bool" ;
 #   Level 2 — Logical AND  (&&)        and_expr
 #   Level 3 — Equality     (==, !=)    eq_expr
 #   Level 4 — Comparison   (<,>,<=,>=) cmp_expr
-#   Level 5 — Additive     (+,-,+%,+?) add_expr
-#   Level 6 — Bitwise      (&, |, ^)   bitwise_expr
-#   Level 7 — Unary        (!, ~)      unary_expr
-#   Level 8 — Primary                  primary
+#   Level 5 — Additive       (+,-,+%,+?) add_expr
+#   Level 6 — Multiplicative (*, /)      mul_expr
+#   Level 7 — Bitwise        (&, |, ^)   bitwise_expr
+#   Level 8 — Unary          (!, ~)      unary_expr
+#   Level 9 — Primary                    primary
 #
 # WHY THIS ORDERING?
 # Following C-family conventions for levels 1–4 and 7–8 matches programmer
@@ -289,7 +290,17 @@ cmp_expr      = add_expr { ( LT | GT | LEQ | GEQ ) add_expr } ;
 #   PLUS/MINUS: use raw ADD/SUB, carry = overflow bit
 #   WRAP_ADD: mask result to type width (AND 0xF for u4)
 #   SAT_ADD: add, then conditional clamp if carry is set
-add_expr      = bitwise_expr { ( PLUS | MINUS | WRAP_ADD | SAT_ADD ) bitwise_expr } ;
+add_expr      = mul_expr { ( PLUS | MINUS | WRAP_ADD | SAT_ADD ) mul_expr } ;
+
+# Multiplicative operators: *, /.
+# Bind tighter than additive (so `2 + 3 * 4` is `2 + (3 * 4)`) and looser than
+# bitwise — slotted just above add_expr in the cascade. Left-associative:
+# `a / b / c` = `(a / b) / c`.
+# The 4004 has no multiply/divide instruction, so STAR/SLASH were reserved in v1.
+# They now lower to the shared IIR `mul`/`div` ops, which every general backend
+# (VM / JIT / native / LLVM / WASM / JVM / CLR) implements directly; a 4004
+# backend would synthesise them from repeated ADD / shift-subtract.
+mul_expr      = bitwise_expr { ( STAR | SLASH ) bitwise_expr } ;
 
 # Bitwise operators: &, |, ^.
 # Maps directly to 4004 ANL, ORL, XRL instructions.

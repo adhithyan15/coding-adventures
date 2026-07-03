@@ -60,6 +60,7 @@
 //! ```
 
 pub mod codegen;
+pub mod il_text;
 pub mod lower;
 pub mod validate;
 
@@ -67,6 +68,7 @@ pub mod validate;
 pub use validate::validate_iir_for_clr;
 pub use lower::{IIRClrConfig, IIRClrError, lower_iir_to_cil};
 pub use codegen::IIRClrCodeGenerator;
+pub use il_text::emit_il;
 
 // Re-export the artifact types so callers don't need to depend on
 // `ir-to-cil-bytecode` directly.

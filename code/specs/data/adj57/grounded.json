@@ -1,0 +1,176 @@
+{
+  "leading_answer": "A forty-year-old Indian man who traveled through Uganda, Tanzania, and Kenya in East Africa developed a painful ankle swelling after an insect bite, followed by high-grade fever with chills and rigors. He has hepatosplenomegaly, raised CSF protein with an acellular CSF, MRI meningeal enhancement and pontine T2/FLAIR lesions, and a bone granuloma \u2014 while malaria smear, blood/urine cultures, Widal, and viral markers are all negative. This constellation points to a vector-borne (insect-bite\u2013transmitted) systemic febrile illness acquired in East Africa with central nervous system involvement, layered on a pre-existing chronic essential tremor. The case is most consistent with an insect-transmitted infection causing meningoencephalitic involvement of the pons; however, the case text does not name a specific organism, so no specific etiologic diagnosis can be asserted beyond what the cited findings support.",
+  "input_coverage": {
+    "covered": true,
+    "clean": true,
+    "facts": 25,
+    "discards": 1,
+    "bytes": 1812
+  },
+  "output_grounding": {
+    "n_claims": 20,
+    "n_grounded": 20,
+    "n_ungrounded": 0,
+    "fully_grounded": true
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "leading_answer": "A forty-year-old Indian man who traveled through Uganda, Tanzania, and Kenya in East Africa developed a painful ankle swelling after an insect bite, followed by high-grade fever with chills and rigors. He has hepatosplenomegaly, raised CSF protein with an acellular CSF, MRI meningeal enhancement and pontine T2/FLAIR lesions, and a bone granuloma \u2014 while malaria smear, blood/urine cultures, Widal, and viral markers are all negative. This constellation points to a vector-borne (insect-bite\u2013transmitted) systemic febrile illness acquired in East Africa with central nervous system involvement, layered on a pre-existing chronic essential tremor. The case is most consistent with an insect-transmitted infection causing meningoencephalitic involvement of the pons; however, the case text does not name a specific organism, so no specific etiologic diagnosis can be asserted beyond what the cited findings support.",
+      "n_claims": 20,
+      "n_ungrounded": 0
+    }
+  ],
+  "bidirectional_complete": true,
+  "grounded_claims": [
+    {
+      "claim": "The patient traveled through East Africa (Uganda, Tanzania, Kenya).",
+      "retrievable_spans": [
+        "had gone on a business trip to Africa traveling through Uganda, Tanzania and Kenya",
+        "travel_to_east_africa"
+      ]
+    },
+    {
+      "claim": "The illness began with a swelling over the left ankle after an insect bite.",
+      "retrievable_spans": [
+        "he developed a swelling over the left ankle joint after an insect bite",
+        "ankle_swelling_after_insect_bite"
+      ]
+    },
+    {
+      "claim": "The ankle swelling was painful and was followed by high-grade fever with chills and rigors.",
+      "retrievable_spans": [
+        "This swelling was painful and followed by high grade fever with chills and rigors after 3-4 days",
+        "high_grade_fever_with_chills_rigors"
+      ]
+    },
+    {
+      "claim": "There was no joint pain.",
+      "retrievable_spans": [
+        "There was no history of any joint pain",
+        "no_joint_pain"
+      ]
+    },
+    {
+      "claim": "There was no high-risk behavior.",
+      "retrievable_spans": [
+        "There was no history of high risk behavior",
+        "no_high_risk_behavior"
+      ]
+    },
+    {
+      "claim": "The patient has a chronic history of essential tremors for the last 6 years without functional disability.",
+      "retrievable_spans": [
+        "Patient had past history of essential tremors for last 6 years, without any functional disability",
+        "chronic_essential_tremor"
+      ]
+    },
+    {
+      "claim": "Empirical antibiotics taken in Africa gave only minor relief.",
+      "retrievable_spans": [
+        "He took empirical antibiotics in Africa which resulted minor relief in his symptoms",
+        "partial_response_to_empirical_antibiotics"
+      ]
+    },
+    {
+      "claim": "On examination he was febrile at 102 F with tachycardia (pulse 116/min) and normal blood pressure (124/80).",
+      "retrievable_spans": [
+        "he was febrile with oral temperature of 102 F",
+        "He had tachycardia with pulse rate of 116/min, blood pressure was 124/80 mm of Hg",
+        "febrile_102F",
+        "tachycardia_normotensive"
+      ]
+    },
+    {
+      "claim": "There was an erythematous swelling over the left ankle with peri-lesional erythematous rashes and no rash elsewhere.",
+      "retrievable_spans": [
+        "There was an erythematous swelling over the left ankle, with peri-lesional erythematous rashes",
+        "There was no other skin rash elsewhere",
+        "ankle_erythematous_swelling",
+        "no_generalized_rash"
+      ]
+    },
+    {
+      "claim": "There was no pallor, icterus, or peripheral lymph node enlargement.",
+      "retrievable_spans": [
+        "There was no pallor, icterus, or peripheral lymphnode enlargement",
+        "no_pallor_icterus_lymphadenopathy"
+      ]
+    },
+    {
+      "claim": "Abdominal examination revealed hepatomegaly and splenomegaly, each 3 cm below the costal margin.",
+      "retrievable_spans": [
+        "Abdomen examination revealed hepatomegaly of 3 cm and splenomegaly of 3 cm below costal margin",
+        "hepatosplenomegaly"
+      ]
+    },
+    {
+      "claim": "CNS examination revealed coarse tremors in bilateral hands.",
+      "retrievable_spans": [
+        "Central nervous system examination revealed coarse tremors in bilateral hands",
+        "bilateral_hand_coarse_tremors"
+      ]
+    },
+    {
+      "claim": "Blood smear for malaria parasite was negative.",
+      "retrievable_spans": [
+        "Blood smear for malaria parasite was negative",
+        "malaria_smear_negative"
+      ]
+    },
+    {
+      "claim": "Blood and urine cultures were sterile and the Widal test showed normal titers.",
+      "retrievable_spans": [
+        "Cultures from blood and urine were sterile",
+        "Widal test showed normal titers",
+        "blood_urine_cultures_sterile",
+        "widal_negative"
+      ]
+    },
+    {
+      "claim": "Testing for viral markers was negative.",
+      "retrievable_spans": [
+        "Testing for viral markers were negative",
+        "viral_markers_negative"
+      ]
+    },
+    {
+      "claim": "CSF was acellular with normal glucose but raised proteins.",
+      "retrievable_spans": [
+        "Cerebrospinal fluid examination was acellular with normal glucose. The proteins were raised",
+        "csf_acellular_normal_glucose",
+        "csf_raised_protein"
+      ]
+    },
+    {
+      "claim": "Bone biopsy showed a single ill-defined granuloma.",
+      "retrievable_spans": [
+        "Bone biopsy showed single ill defined granuloma",
+        "bone_granuloma"
+      ]
+    },
+    {
+      "claim": "Brain MRI showed mild meningeal enhancement and small pontine lesions hyperintense on T2-weighted and FLAIR images.",
+      "retrievable_spans": [
+        "Magnetic resonance imaging of brain showed mild meningeal enhancement",
+        "Few small lesions noticed in pons, which were hyperintense on T2-weighted and FLAIR images",
+        "mri_meningeal_enhancement",
+        "pontine_t2_flair_lesions"
+      ]
+    },
+    {
+      "claim": "The patient had no chronic comorbidities such as hypertension, diabetes, stroke, or tuberculosis.",
+      "retrievable_spans": [
+        "There was no history of hypertension, diabetes, stroke, or tuberculosis in the past",
+        "no_chronic_comorbidities"
+      ]
+    },
+    {
+      "claim": "Respiratory and cardiovascular system examination was normal.",
+      "retrievable_spans": [
+        "Examination of respiratory and cardiovascular system was normal",
+        "normal_resp_cvs_exam"
+      ]
+    }
+  ]
+}

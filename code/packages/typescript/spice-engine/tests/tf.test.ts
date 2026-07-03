@@ -4,6 +4,8 @@ import {
   capacitor,
   cccs,
   ccvs,
+  formatCornerTfTable,
+  formatTfTable,
   currentSource,
   inductor,
   resistor,
@@ -40,6 +42,20 @@ describe("tf", () => {
     expectClose(result.transferRatio, 0.5);
     expectClose(result.inputImpedanceOhms, 2_000.0);
     expectClose(result.outputImpedanceOhms, 500.0);
+  });
+
+  it("formats stable text output tables for transfer-function results", () => {
+    const result = {
+      transferRatio: 0.5,
+      inputImpedanceOhms: 2_000.0,
+      outputImpedanceOhms: 500.0,
+      gain: () => 0.5,
+    };
+
+    expect(formatTfTable(result)).toBe(
+      "TransferRatio\tInputImpedance\tOutputImpedance\n" +
+        "5.000000e-01\t2.000000e+03\t5.000000e+02\n",
+    );
   });
 
   it("matches Thevenin values for an unequal divider", () => {
@@ -86,6 +102,12 @@ describe("tf", () => {
     expectClose(result.points[0].result.inputImpedanceOhms, 2_000.0);
     expectClose(result.points[1].result.inputImpedanceOhms, 1_500.0);
     expectClose(result.points[2].result.inputImpedanceOhms, 3_000.0);
+    expect(formatCornerTfTable(result)).toBe(
+      "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\n" +
+      "nominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\n" +
+      "rbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\n" +
+      "rbot-slow\t6.666667e-01\t3.000000e+03\t6.666667e+02\n",
+    );
   });
 
   it("reports current-source transimpedance", () => {

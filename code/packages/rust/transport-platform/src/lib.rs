@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{self, IoSlice};
 use std::net::{Shutdown, SocketAddr, TcpListener, TcpStream};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -240,6 +241,57 @@ pub enum WriteOutcome {
     Closed,
 }
 
+/// A thread-safe trigger for one platform's wakeup, callable from *any* thread.
+///
+/// `create_wakeup` registers a wakeup with the platform and `wake(&mut self)`
+/// fires it — but that lives on the platform, which is owned by the single
+/// reactor thread.  A `WakeHandle` decouples the *firing* from the `&mut self`
+/// platform: it owns a thread-safe clone of the underlying OS primitive (a
+/// duplicated kqueue fd, a duplicated `eventfd`, …), so an off-reactor producer
+/// (e.g. a mailbox on another thread) can interrupt the reactor's `poll` the
+/// instant it enqueues work, instead of waiting for the poll timeout.
+///
+/// Obtain one from [`TransportPlatform::wake_handle`].  It is cheap to clone
+/// (the trigger is reference-counted).
+#[derive(Clone)]
+pub struct WakeHandle {
+    trigger: Arc<dyn Fn() -> Result<(), PlatformError> + Send + Sync>,
+}
+
+impl WakeHandle {
+    /// Build a handle from a backend-specific trigger closure.  Crate-internal:
+    /// only the platform backends construct these.
+    pub(crate) fn from_trigger(
+        trigger: impl Fn() -> Result<(), PlatformError> + Send + Sync + 'static,
+    ) -> Self {
+        Self {
+            trigger: Arc::new(trigger),
+        }
+    }
+
+    /// Fire the wakeup.  Safe to call from any thread.  A failure here is
+    /// non-fatal to the caller: the reactor will still drain on its next poll
+    /// timeout, so producers typically ignore the result.
+    pub fn wake(&self) -> Result<(), PlatformError> {
+        (self.trigger)()
+    }
+}
+
+impl fmt::Debug for WakeHandle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("WakeHandle").finish_non_exhaustive()
+    }
+}
+
+/// An owned OS socket handle that can be adopted into a platform as a stream via
+/// [`TransportPlatform::adopt_stream`].  Unix: a file descriptor (`OwnedFd`);
+/// Windows: a socket handle (`OwnedSocket`).  The alias keeps the trait
+/// cross-platform while the meaningful implementations are the Unix backends.
+#[cfg(unix)]
+pub type AdoptableFd = std::os::fd::OwnedFd;
+#[cfg(windows)]
+pub type AdoptableFd = std::os::windows::io::OwnedSocket;
+
 pub trait TransportPlatform {
     fn native_event_provider(&self) -> NativeEventProvider {
         NativeEventProvider::ReadinessProbe
@@ -262,6 +314,31 @@ pub trait TransportPlatform {
     ) -> Result<(), PlatformError>;
 
     fn accept(&mut self, listener: ListenerId) -> Result<Option<AcceptedStream>, PlatformError>;
+
+    /// Adopt an already-connected socket as a managed stream, returning its
+    /// `StreamId`.  This is the receiving half of an **accept fan-out**: a single
+    /// acceptor accepts connections on one listener (e.g. where `SO_REUSEPORT`
+    /// doesn't load-balance, as on macOS/BSD) and hands the raw socket to a worker
+    /// platform on another thread, which adopts it here and then drives it like
+    /// any other stream — `configure_stream` + `set_stream_interest` exactly as it
+    /// would after `accept`.
+    ///
+    /// The default returns [`PlatformError::Unsupported`]; the kqueue and epoll
+    /// backends override it.  Taking the handle by value transfers ownership, so
+    /// the sender must relinquish it (e.g. `into`/`IntoRawFd`) and never close it.
+    ///
+    /// Like [`accept`](Self::accept), this is a low-level primitive that performs
+    /// **no admission control** — it registers the socket unconditionally.  The
+    /// connection cap is enforced one layer up (the reactor's accept/adopt path),
+    /// so callers are responsible for not adopting more streams than they intend.
+    fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+        // Drop the handle (closing it) so an unsupported platform doesn't leak the
+        // socket, then report that adoption isn't available here.
+        drop(fd);
+        Err(PlatformError::Unsupported(
+            "adopt_stream not supported by this platform",
+        ))
+    }
 
     fn configure_stream(
         &mut self,
@@ -302,6 +379,20 @@ pub trait TransportPlatform {
     fn create_wakeup(&mut self) -> Result<WakeupId, PlatformError>;
 
     fn wake(&mut self, wakeup: WakeupId) -> Result<(), PlatformError>;
+
+    /// Return a thread-safe [`WakeHandle`] that fires `wakeup` from any thread.
+    ///
+    /// The default returns [`PlatformError::Unsupported`]; backends that can
+    /// safely share their wakeup primitive across threads (kqueue, epoll)
+    /// override it.  A caller that gets `Unsupported` simply forgoes the
+    /// low-latency wake and relies on the reactor's poll timeout instead — so
+    /// this never breaks a platform, it only makes cross-thread sends flush a
+    /// little later there.
+    fn wake_handle(&self, _wakeup: WakeupId) -> Result<WakeHandle, PlatformError> {
+        Err(PlatformError::Unsupported(
+            "cross-thread wake handle not supported by this platform",
+        ))
+    }
 
     fn poll(
         &mut self,
@@ -622,6 +713,28 @@ pub mod bsd {
             }
         }
 
+        fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+            // The fan-out acceptor handed us a freshly-`accept`ed socket from
+            // another thread.  Register it exactly like the tail of `accept`: wrap
+            // the owned fd as a `TcpStream`, make it non-blocking (an `accept`ed
+            // socket does not inherit O_NONBLOCK), allocate a local `StreamId`, and
+            // record it.  Interest starts at `none()`; the caller then
+            // `configure_stream` + `set_stream_interest`, exactly as `accept_ready`
+            // does after a normal accept.
+            let stream = TcpStream::from(fd);
+            stream.set_nonblocking(true)?;
+            let id = StreamId(self.alloc_token());
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                StreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                },
+            );
+            Ok(id)
+        }
+
         fn configure_stream(
             &mut self,
             stream: StreamId,
@@ -838,6 +951,28 @@ pub mod bsd {
                     .with_fflags(kqueue::note_trigger()),
             )?;
             Ok(())
+        }
+
+        fn wake_handle(&self, wakeup: WakeupId) -> Result<WakeHandle, PlatformError> {
+            // The user event must already be registered (via `create_wakeup`);
+            // capture its ident/token and a *duplicate* of the kqueue fd so the
+            // returned handle can re-issue the NOTE_TRIGGER from another thread.
+            let state = self
+                .wakeups
+                .get(&wakeup)
+                .ok_or(PlatformError::InvalidResource)?;
+            let ident = state.ident;
+            let token = wakeup.0;
+            let queue = self.queue.try_clone().map_err(PlatformError::from)?;
+            Ok(WakeHandle::from_trigger(move || {
+                queue
+                    .apply(
+                        kqueue::KqueueChange::user(ident, token)
+                            .with_flags(kqueue::EventFlags::ENABLE | kqueue::EventFlags::CLEAR)
+                            .with_fflags(kqueue::note_trigger()),
+                    )
+                    .map_err(PlatformError::from)
+            }))
         }
 
         fn poll(
@@ -1287,6 +1422,28 @@ pub mod linux {
             }
         }
 
+        fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+            // The fan-out acceptor handed us a freshly-`accept`ed socket from
+            // another thread.  Register it exactly like the tail of `accept`: wrap
+            // the owned fd as a `TcpStream`, make it non-blocking (an `accept`ed
+            // socket does not inherit O_NONBLOCK), allocate a local `StreamId`, and
+            // record it.  Interest starts at `none()`; the caller then
+            // `configure_stream` + `set_stream_interest`, exactly as `accept_ready`
+            // does after a normal accept.
+            let stream = TcpStream::from(fd);
+            stream.set_nonblocking(true)?;
+            let id = StreamId(self.alloc_token());
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                StreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                },
+            );
+            Ok(id)
+        }
+
         fn configure_stream(
             &mut self,
             stream: StreamId,
@@ -1480,6 +1637,40 @@ pub mod linux {
                 .get(&wakeup)
                 .ok_or(PlatformError::InvalidResource)?;
             Self::write_counter_fd(&state.fd, 1)
+        }
+
+        fn wake_handle(&self, wakeup: WakeupId) -> Result<WakeHandle, PlatformError> {
+            // Duplicate the eventfd so the handle can post a wake from another
+            // thread.  A wake is a single `write` of the counter value `1`; the
+            // eventfd is registered with the epoll instance, so the write makes a
+            // blocked `epoll_wait` return.  The fd is `EFD_NONBLOCK`, so a full
+            // counter (after 2^64-1 unread wakes — effectively never) returns
+            // `EAGAIN`, which we treat as "a wake is already pending" = success.
+            let state = self
+                .wakeups
+                .get(&wakeup)
+                .ok_or(PlatformError::InvalidResource)?;
+            let fd = state.fd.try_clone().map_err(PlatformError::from)?;
+            Ok(WakeHandle::from_trigger(move || {
+                let value: u64 = 1;
+                let written = unsafe {
+                    libc::write(
+                        fd.as_raw_fd(),
+                        (&value as *const u64).cast(),
+                        std::mem::size_of::<u64>(),
+                    )
+                };
+                if written == -1 {
+                    let error = io::Error::last_os_error();
+                    if error.kind() == io::ErrorKind::WouldBlock {
+                        Ok(())
+                    } else {
+                        Err(PlatformError::from(error))
+                    }
+                } else {
+                    Ok(())
+                }
+            }))
         }
 
         fn poll(
@@ -2869,6 +3060,63 @@ mod tests {
         assert_eq!(&reply[..5], b"+OK\r\n");
     }
 
+    /// An externally-accepted connection, handed in via `adopt_stream`, reads and
+    /// writes exactly like one the platform `accept`ed itself.  This is the
+    /// foundation of the macOS/BSD accept fan-out: the acceptor thread does the
+    /// `accept`, the worker platform `adopt`s the socket.
+    #[cfg(unix)]
+    fn assert_adopts_external_stream<P: TransportPlatform>(platform: &mut P) {
+        use std::os::fd::OwnedFd;
+
+        // A separate std listener stands in for the fan-out acceptor: it accepts a
+        // real loopback connection, and we hand the accepted socket to `platform`.
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").expect("bind std listener");
+        let addr = listener.local_addr().expect("listener addr");
+        let mut client = TcpStream::connect(addr).expect("connect client");
+        client
+            .set_read_timeout(Some(Duration::from_millis(200)))
+            .expect("read timeout");
+        let (server, _peer) = listener.accept().expect("accept on std listener");
+
+        // Transfer ownership of the accepted socket into the platform.
+        let owned: OwnedFd = server.into();
+        let stream = platform.adopt_stream(owned).expect("adopt external stream");
+        platform
+            .configure_stream(stream, StreamOptions::default())
+            .expect("configure adopted stream");
+        platform
+            .set_stream_interest(stream, StreamInterest::readable())
+            .expect("interest on adopted stream");
+
+        client.write_all(b"PING").expect("client write");
+        let events = poll_until(platform, Duration::from_secs(1), |events| {
+            events.iter().any(
+                |event| matches!(event, PlatformEvent::StreamReadable { stream: id } if *id == stream),
+            )
+        });
+        assert!(
+            events.iter().any(
+                |event| matches!(event, PlatformEvent::StreamReadable { stream: id } if *id == stream),
+            ),
+            "adopted stream never became readable",
+        );
+
+        let mut buffer = [0u8; 16];
+        assert_eq!(
+            platform.read(stream, &mut buffer).expect("read adopted stream"),
+            ReadOutcome::Read(4)
+        );
+        assert_eq!(&buffer[..4], b"PING");
+
+        assert_eq!(
+            write_until_progress(platform, stream, b"+OK\r\n"),
+            WriteOutcome::Wrote(5)
+        );
+        let mut reply = [0u8; 5];
+        client.read_exact(&mut reply).expect("client read reply");
+        assert_eq!(&reply, b"+OK\r\n");
+    }
+
     fn write_until_progress<P: TransportPlatform>(
         platform: &mut P,
         stream: StreamId,
@@ -3022,6 +3270,12 @@ mod tests {
         }
 
         #[test]
+        fn adopts_externally_accepted_stream() {
+            let mut platform = KqueueTransportPlatform::new().expect("create platform");
+            assert_adopts_external_stream(&mut platform);
+        }
+
+        #[test]
         fn close_event_is_reported_after_peer_shutdown() {
             let mut platform = KqueueTransportPlatform::new().expect("create platform");
             let listener = platform
@@ -3077,6 +3331,12 @@ mod tests {
         fn timer_and_wakeup_generate_events() {
             let mut platform = EpollTransportPlatform::new().expect("create platform");
             assert_timer_and_wakeup_generate_events(&mut platform);
+        }
+
+        #[test]
+        fn adopts_externally_accepted_stream() {
+            let mut platform = EpollTransportPlatform::new().expect("create platform");
+            assert_adopts_external_stream(&mut platform);
         }
 
         #[test]

@@ -1,0 +1,177 @@
+{
+  "summary": "Scale the convergence-controlled inference-support gate to the FULL set of Opus failures from the ADJ88 10-item HLE run (5 items: Al(OH)3 reasoning, PIE linguistics, Spin bordism, BAR game-recall, ferrite chart-lookup). Per item, SAMPLES runs of plain-Opus vs convergence-gated-Opus (closed-book; the gate is a reasoning-discipline mechanism, orthogonal to retrieval). Tests the boundary: the support gate should help where the failure is a reasoning-shortcut over given data (Al(OH)3-class) and be neutral where the failure is a recall/capability gap (no givens to support-check into correctness). All-Opus; no hints; answer never shown to the solver.",
+  "agentCount": 79,
+  "logs": [],
+  "result": {
+    "samples": 2,
+    "scorecard": [
+      {
+        "id": "66e93b7099",
+        "gold": "hereth",
+        "plain_correct": 0,
+        "gated_correct": 0,
+        "n": 2
+      },
+      {
+        "id": "66e884515a",
+        "gold": "Shuriken",
+        "plain_correct": 2,
+        "gated_correct": 2,
+        "n": 2
+      },
+      {
+        "id": "66eaa5ddc7",
+        "gold": "10",
+        "plain_correct": 0,
+        "gated_correct": 1,
+        "n": 2
+      },
+      {
+        "id": "669402b41d",
+        "gold": "Z+Z+Z+Z+Z",
+        "plain_correct": 0,
+        "gated_correct": 2,
+        "n": 2
+      },
+      {
+        "id": "66ea814c55",
+        "gold": "1.776 * 10^-3 ",
+        "plain_correct": 0,
+        "gated_correct": 1,
+        "n": 2
+      }
+    ],
+    "detail": [
+      {
+        "id": "66e93b7099",
+        "s": 1,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "**heseth** (also spellable *heseþ* / *heseð*), pronounced roughly /ˈheːzəθ/.",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "Middle English 3sg present: *wheseth (Verner-unvoiced / -s- stem) ~ *whereth (Verner-voiced, rhotacized / -r- stem). Both are valid reflexes; the s~r choice is an unresolved fork conditioned by PIE accent placement. Form shape: wh- + ē + (s | r) + -eth.",
+          "grade": "partial"
+        }
+      },
+      {
+        "id": "66e93b7099",
+        "s": 2,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "**queeth** (also spellable *wheeth*; phonetically /kweːθ/ ~ /ʍeːθ/), meaning roughly \"he shows/heeds.\"",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "**heweth** (more precisely *hēweth* / *hēreth*; the standard literary spelling is **heweth**, meaning \"he shows\")\n\nMost defensible single answer: **hēweth** (ME spelling *heweth*).",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66e884515a",
+        "s": 1,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "The **Shuriken** is the flying unit from a Tier 1 building in Beyond All Reason (BAR) that can shoot and stun enemy targets.\n\nDetails:\n- **Faction/Source:** Cortex, built from the **T1 Aircraft Plant** (a tier 1 building).\n- **Type:** T1 Aircraft (EMP drone).\n- **Ability:** Armed with EMP beams that **paralyze/stun** enemy units. It does not deal direct damage — its purpose is to stun targets so other units can finish them off. It will auto-retarget to stun nearby enemies that aren't already stunned.\n- **Weakness:** Very lightly armored; dies in one hit to even basic anti-air.\n\nSources:\n- [Shuriken | T1 Aircraft — Beyond All Reason](https://www.beyondallreason.info/unit/corbw)\n- [Cortex Aircraft — Beyond All Reason](https://www.beyondallreason.info/units/cortex-aircraft)\n- [Basics of Air Warfare — Beyond All Reason](https://www.beyondallreason.info/guide/basics-of-air-warfare)</answer>\n<parameter name=\"work\">This is a question about the video game Beyond All Reason (BAR), not the codebase, so I researched it via web search. The search results identified the Shuriken (unit code \"corbw\") as a T1 Cortex aircraft armed with EMP beams that stun/paralyze enemy units without dealing damage. It is built from the Tier 1 Aircraft Plant, matching \"flying unit from 1 tier building.\" It auto-retargets unstunned enemies and is fragile against anti-air.",
+          "grade": "correct"
+        },
+        "gated": {
+          "answer": "The Shuriken (Cortex T1 aircraft).",
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66e884515a",
+        "s": 2,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "The **Shuriken** (Cortex faction).\n\nIt is a Tier 1 (T1) flying unit built from the **Aircraft Plant** (the T1 air factory). The Shuriken is a \"Light Paralyzer Drone\" armed with a Beam Laser that deals paralyze (EMP/stun) damage — roughly 500 paralyze damage per second. It shoots a beam that stuns/disables enemy units rather than damaging their health, making it a support unit that locks down targets for your other forces to destroy.\n\nNote: it is technically the Cortex T1 aircraft. Armada's T1 aircraft plant does not have a paralyzer equivalent, so among T1-building flying units the Shuriken is the shoot-and-stun unit.",
+          "grade": "correct"
+        },
+        "gated": {
+          "answer": "The Shuriken (Cortex T1 Aircraft \"Light Paralyzer Drone\").\n\nIt is the flying unit built from a Tier 1 factory (the Cortex T1 Aircraft Plant) whose weapon is an EMP/paralyzer beam (~500 paralyze/second) — it can shoot and stun enemy units rather than dealing normal damage.",
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66eaa5ddc7",
+        "s": 1,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "100",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "10",
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66eaa5ddc7",
+        "s": 2,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "20",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "100",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "669402b41d",
+        "s": 1,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "$\\widetilde{\\Omega}^{\\mathrm{Spin}}_{12}(BG_2) \\;\\cong\\; \\mathbb{Z}^{2}$ (a free abelian group of rank 2).",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "$$\\widetilde{\\Omega}^{Spin}_{12}(BG_2)\\;\\cong\\;\\mathbb{Z}^5.$$\n\nIt is a free abelian group of rank 5, with no torsion. The five $\\mathbb{Z}$-summands come from the surviving AHSS filtration cells on the $p+q=12$ diagonal:\n\n- $(p,q)=(12,0)$: $\\widetilde H_{12}(BG_2;\\mathbb{Z})\\otimes\\Omega^{Spin}_0=\\mathbb{Z}^2$ (the two free degree-12 cohomology generators $x_4^3$ and $x_{12}$),\n- $(8,4)$: $\\widetilde H_8\\otimes\\Omega^{Spin}_4=\\mathbb{Z}$,\n- $(4,8)$: $\\widetilde H_4\\otimes\\Omega^{Spin}_8=\\mathbb{Z}^2$ (since $\\Omega^{Spin}_8=\\mathbb{Z}^2$).\n\nAll candidate $\\mathbb{Z}/2$ torsion cells on the 12-line, $(11,1)$ from $a_4a_7$ and $(10,2)$ from $a_4a_6$, are killed by the dual-$Sq^2$ ($d_2$) and $Sq^1$-Bockstein ($d_3$) differentials (using $Sq^2a_4=a_6$, $Sq^1a_6=a_7$, so $a_4a_7=Sq^1(a_4a_6)$). The large torsion groups $\\Omega^{Spin}_9=(\\mathbb{Z}/2)^2$ and $\\Omega^{Spin}_{10}=(\\mathbb{Z}/2)^3$ would only appear in cells with $p\\le 3$, which vanish in reduced homology, so they contribute nothing. Free-to-free extensions split, giving $\\mathbb{Z}^5$.",
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "669402b41d",
+        "s": 2,
+        "gated_stop": "iter-cap",
+        "plain": {
+          "answer": "The reduced 12-th Spin bordism group of BG2 is\n\n  \\widetilde{\\Omega}^{Spin}_{12}(BG2) ≅ ℤ.\n\nIt is infinite cyclic, generated by a class detected by the index of the Dirac operator twisted by the principal G2-bundle (equivalently, by the characteristic number built from the second Chern class of the 7-dimensional real (or its complexified) representation of G2). There is no torsion.",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "$\\widetilde{\\Omega}^{Spin}_{12}(BG_2) \\cong \\mathbb{Z}^5$ (free of rank 5, with no torsion).",
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66ea814c55",
+        "s": 1,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "The solubility of Al(OH)3 in pure water is approximately 5.8 x 10^-3 mol L^-1.\n\nThis is the sum of two dissolved aluminum species:\n- Free Al3+: [Al3+] = Ksp/[OH-]^3 = 5.3e-27/(1.0e-7)^3 = 5.3 x 10^-6 M\n- Complex Al(OH)4-: using the combined reaction Al(OH)3(s) + OH- ⇌ Al(OH)4- with K = Ksp*Kf = 5.83 x 10^4, [Al(OH)4-] = K*[OH-] = 5.83e4 * 1.0e-7 = 5.83 x 10^-3 M\n\nTotal: S = 5.3e-6 + 5.83e-3 ≈ 5.8 x 10^-3 mol L^-1.\n\nThe dissolved aluminum is almost entirely in the form of the Al(OH)4- complex (it dominates the free Al3+ by roughly a factor of 1000).",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "S ≈ 1.8 × 10⁻³ mol L⁻¹ (more precisely 1.78 × 10⁻³ mol L⁻¹)",
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66ea814c55",
+        "s": 2,
+        "gated_stop": "supported",
+        "plain": {
+          "answer": "S ≈ 1.1 × 10⁻⁵ mol L⁻¹",
+          "grade": "incorrect"
+        },
+        "gated": {
+          "answer": "S ≈ 5.8 × 10⁻³ mol L⁻¹\n\n(More precisely 5.84 × 10⁻³ mol/L: [Al(OH)₄⁻] = 5.83 × 10⁻³ mol/L from the complex, plus a negligible [Al³⁺] = 5.3 × 10⁻⁶ mol/L from free ion, using [OH⁻] = 1.0 × 10⁻⁷ in pure water.)",
+          "grade": "incorrect"
+        }
+      }
+    ]
+  }
+}

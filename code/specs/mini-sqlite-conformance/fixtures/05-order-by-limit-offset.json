@@ -1,0 +1,71 @@
+{
+  "id": "05-order-by-limit-offset",
+  "description": "ORDER BY, LIMIT, and OFFSET in SELECT",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE items (id, label, rank)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO items VALUES (1, 'alpha', 3)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO items VALUES (2, 'beta', 1)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO items VALUES (3, 'gamma', 4)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO items VALUES (4, 'delta', 2)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO items VALUES (5, 'epsilon', 5)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT label FROM items ORDER BY rank",
+      "expected_columns": ["label"],
+      "expected_rows": [
+        ["beta"],
+        ["delta"],
+        ["alpha"],
+        ["gamma"],
+        ["epsilon"]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT label FROM items ORDER BY rank LIMIT 3",
+      "expected_columns": ["label"],
+      "expected_rows": [
+        ["beta"],
+        ["delta"],
+        ["alpha"]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT label FROM items ORDER BY rank LIMIT 2 OFFSET 2",
+      "expected_columns": ["label"],
+      "expected_rows": [
+        ["alpha"],
+        ["gamma"]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT label FROM items ORDER BY rank DESC LIMIT 2",
+      "expected_columns": ["label"],
+      "expected_rows": [
+        ["epsilon"],
+        ["gamma"]
+      ]
+    }
+  ]
+}

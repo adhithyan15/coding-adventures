@@ -323,15 +323,35 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case EmptyResult(columns=cols):
             return [SetResultSchema(columns=cols)], cols
 
-        case PlanCreateTable(table=t, columns=cols, if_not_exists=ine):
-            ir_cols = tuple(_to_ir_col(c) for c in cols)
-            return [CreateTable(table=t, columns=ir_cols, if_not_exists=ine)], ()
+        case PlanCreateTable() as ct:
+            ir_cols = tuple(_to_ir_col(c) for c in ct.columns)
+            return (
+                [CreateTable(
+                    table=ct.table,
+                    columns=ir_cols,
+                    if_not_exists=ct.if_not_exists,
+                    strict=ct.strict,
+                )],
+                (),
+            )
 
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()
 
-        case PlanAlterTable(table=t, column=col):
-            return [AlterTable(table=t, column=_to_ir_col(col))], ()
+        case PlanAlterTable() as alt:
+            # One of column / rename_to / rename_column / drop_column
+            # is set; pass them all through.  IR AlterTable mirrors the
+            # plan node's optional-field shape.
+            ir_col = _to_ir_col(alt.column) if alt.column is not None else None
+            return [
+                AlterTable(
+                    table=alt.table,
+                    column=ir_col,
+                    rename_to=alt.rename_to,
+                    rename_column=alt.rename_column,
+                    drop_column=alt.drop_column,
+                ),
+            ], ()
 
         case PlanCreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine):
             return [
@@ -342,11 +362,13 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
             return [DropIndex(name=name, if_exists=ie)], ()
 
         case PlanCreateTrigger(
-            name=name, timing=timing, event=event, table=table, body_sql=body
+            name=name, timing=timing, event=event, table=table, body_sql=body,
+            if_not_exists=ine
         ):
             return [
                 CreateTriggerDef(
-                    name=name, timing=timing, event=event, table=table, body_sql=body
+                    name=name, timing=timing, event=event, table=table, body_sql=body,
+                    if_not_exists=ine,
                 ),
             ], ()
 
@@ -457,6 +479,22 @@ def _column_display_name(expr: Expr) -> str | None:
         # display name.  This makes ``ORDER BY rowid`` find the column
         # emitted by ``SELECT rowid, ...`` via its alias.
         return "rowid"
+    if isinstance(expr, Literal):
+        # SQLite names unnamed literal columns by their surface representation:
+        #   SELECT 1      → column "1"
+        #   SELECT 'hi'   → column "'hi'"
+        #   SELECT NULL   → column "NULL"
+        # Without this, every Literal falls back to "?" and duplicate-column
+        # dicts in _do_run_subquery lose all but the last value — causing
+        # SELECT * FROM (SELECT 1, 2) to return (2,) instead of (1, 2).
+        v = expr.value
+        if v is None:
+            return "NULL"
+        if isinstance(v, str):
+            return f"'{v}'"
+        if isinstance(v, bytes):
+            return "X'" + v.hex().upper() + "'"
+        return str(v)  # int, float, bool
     return None
 
 
@@ -522,8 +560,12 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # This only applies when the inner plan is a Project.  For Aggregate and
     # set-operation plans the sort key is always an output column (the planner
     # enforces this), so no injection is needed.
-    hidden_col_names: list[str] = []
+    hidden_pairs: list[tuple[str, object]] = []  # (col_name, planner_expr)
     extended_schema: tuple[str, ...] | None = None
+    # Maps positions in ir_sort_keys that need rewriting to point at a
+    # synthetic hidden-column name (used for arbitrary-expression sort keys
+    # like ``ORDER BY a+b`` whose natural display name is "?").
+    expr_key_renames: dict[int, str] = {}
 
     if ir_sort_keys is not None and isinstance(cur, Project) and not any(
         isinstance(it.expr, Wildcard) for it in cur.items  # type: ignore[union-attr]
@@ -539,46 +581,122 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
         output_names: set[str] = {_projection_name(it) for it in cur.items}
         seen: set[str] = set()
 
-        for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
-            col = ir_sk.column
+        for i, (ir_sk, plan_sk) in enumerate(
+            zip(ir_sort_keys, planner_sort_keys or (), strict=False),
+        ):
             # Skip positional sort keys (ORDER BY N): they use column_idx for
             # direct index lookup and always refer to visible output columns —
             # no hidden-column injection needed or possible.
-            # Skip "?" (un-named expression sort keys) — can't inject by name.
-            # Skip columns already in the SELECT output — no injection needed.
-            # Skip duplicates (same hidden column in multiple ORDER BY terms).
-            if ir_sk.column_idx is not None or col == "?" or col in output_names or col in seen:
+            if ir_sk.column_idx is not None:
                 continue
-            if isinstance(plan_sk, PlanSortKey):
-                hidden_col_names.append(col)
+            if not isinstance(plan_sk, PlanSortKey):
+                continue
+            col = ir_sk.column
+            if col == "?":
+                # Expression sort key (``ORDER BY a+b``, ``UPPER(x)``,
+                # ``CASE …``, …): the planner expr has no natural display
+                # name, so we cannot look it up by name in the result
+                # schema.  Inject it as a hidden trailing column under a
+                # synthetic name unique to this sort position, then rewrite
+                # the corresponding SortKey IR to reference that name.
+                #
+                # A position-local synthetic name (``__sortkey_<N>``) is
+                # required because two ``ORDER BY`` terms with the same
+                # display name (``"?"``) would otherwise collide on the
+                # same hidden slot — sharing one column would silently
+                # change the sort to use only the first expression.
+                synth = f"__sortkey_{len(hidden_pairs)}"
+                expr_key_renames[i] = synth
+                hidden_pairs.append((synth, plan_sk.expr))
+            elif col not in output_names and col not in seen:
+                # Named column not in SELECT output: inject under its
+                # natural name.  De-dup by column name so multiple ORDER BY
+                # terms referencing the same hidden column share one slot.
+                hidden_pairs.append((col, plan_sk.expr))
                 seen.add(col)
 
-        if hidden_col_names:
+        if hidden_pairs:
             # Compute the original schema before extending the Project.
             orig_schema = tuple(_projection_name(it) for it in cur.items)
+            hidden_col_names = [n for n, _ in hidden_pairs]
             extended_schema = orig_schema + tuple(hidden_col_names)
 
             # Build new ProjectionItems using the original planner expressions
             # so _compile_expr generates the right LoadColumn instructions (with
             # the correct table alias / cursor id), not a generic cursor-0 load.
-            extra_items: list[object] = []
-            for col in hidden_col_names:
-                # Find the matching planner SortKey to get its expression.
-                for ir_sk, plan_sk in zip(ir_sort_keys, planner_sort_keys or (), strict=False):
-                    if ir_sk.column == col and isinstance(plan_sk, PlanSortKey):
-                        extra_items.append(ProjectionItem(expr=plan_sk.expr, alias=col))
-                        break
+            extra_items: list[object] = [
+                ProjectionItem(expr=expr, alias=name)  # type: ignore[arg-type]
+                for name, expr in hidden_pairs
+            ]
 
             cur = Project(
                 input=cur.input,
                 items=cur.items + tuple(extra_items),  # type: ignore[arg-type]
             )
 
+            # Rewrite expression-key SortKey IRs to point at their synthetic
+            # hidden-column names, and replace the SortResult instruction in
+            # ``post`` with the rebuilt keys tuple.
+            if expr_key_renames:
+                from dataclasses import replace as _replace
+                ir_sort_keys = tuple(
+                    _replace(sk, column=expr_key_renames[idx])
+                    if idx in expr_key_renames
+                    else sk
+                    for idx, sk in enumerate(ir_sort_keys)
+                )
+                for j, ins in enumerate(post):
+                    if isinstance(ins, SortResult):
+                        post[j] = SortResult(keys=ir_sort_keys)
+                        break
+
             # Insert StripTrailingColumns immediately after SortResult in post.
             sort_idx = next(
                 i for i, ins in enumerate(post) if isinstance(ins, SortResult)
             )
-            post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_col_names)))
+            post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_pairs)))
+
+    elif ir_sort_keys is not None and isinstance(cur, PlanWindowAgg):
+        # PlanWindowAgg analogue of the hidden-column injection above.
+        #
+        # When ORDER BY references columns absent from output_cols — e.g.
+        #
+        #   SELECT grp, SUM(val) OVER (PARTITION BY grp)
+        #   FROM   t
+        #   ORDER BY grp, val
+        #
+        # the plan is Sort(PlanWindowAgg(output_cols=('grp','window_1'))).
+        # After ComputeWindowFunctions projects to output_cols, 'val' is
+        # gone, so SortResult raises ValueError looking for it in columns.
+        #
+        # Fix: extend output_cols to include the missing sort key columns as
+        # trailing hidden entries.  ComputeWindowFunctions will pass them
+        # through (the inner plan already includes them for the window
+        # computation).  StripTrailingColumns removes them after the sort.
+        output_names_win: set[str] = set(cur.output_cols)
+        seen_win: set[str] = set()
+        hidden_win: list[str] = []
+        for ir_sk in ir_sort_keys:
+            # Positional keys use column_idx — they always reference an
+            # output column by index, so no injection needed.
+            if ir_sk.column_idx is not None:
+                continue
+            col = ir_sk.column
+            if col == "?" or col in output_names_win or col in seen_win:
+                continue
+            hidden_win.append(col)
+            seen_win.add(col)
+
+        if hidden_win:
+            cur = PlanWindowAgg(
+                input=cur.input,
+                specs=cur.specs,
+                output_cols=cur.output_cols + tuple(hidden_win),
+            )
+            win_sort_idx = next(
+                i for i, ins in enumerate(post) if isinstance(ins, SortResult)
+            )
+            post.insert(win_sort_idx + 1, StripTrailingColumns(count=len(hidden_win)))
 
     core = _compile_core(cur, ctx)
 
@@ -1719,6 +1837,7 @@ def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
             table=upd.table,
             assignments=tuple(a.column for a in upd.assignments),
             cursor_id=cid,
+            on_conflict=upd.on_conflict,
         )
     )
     # RETURNING: emit columns AFTER UpdateRows — ``st.current_row[cid]`` is
@@ -1837,12 +1956,26 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
-        nullable=not c.effective_not_null(),
+        # Preserve the raw NOT NULL declaration (not the PK-implied one).
+        # The backend's ``effective_not_null()`` reapplies the PK check
+        # at constraint-validation time, so dropping the implicit bit
+        # here doesn't loosen enforcement.  Keeps PRAGMA table_info's
+        # ``notnull`` column matching real sqlite3, which distinguishes
+        # explicit-vs-implicit NOT NULL.
+        nullable=not c.not_null,
         primary_key=c.primary_key,
+        autoincrement=c.autoincrement,
         unique=c.unique,
         default=ir_default,
         check_instrs=check_instrs,
+        # ``check_expr_text`` is the original CHECK predicate source so
+        # the VM's ConstraintViolation message can quote it verbatim
+        # (matches SQLite: ``CHECK constraint failed: a > 0``).  Falls
+        # back to "" — the VM treats that as "use the older table.col
+        # form" — when the adapter couldn't reconstruct text.
+        check_expr_text=getattr(c, "check_expr_text", ""),
         foreign_key=fk,
+        collation=c.collation,
     )
 
 
@@ -1906,7 +2039,13 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
 
     # Positional sort key (ORDER BY N): use column_idx for direct index lookup.
     if k.positional_index is not None:
-        return SortKey(column="", column_idx=k.positional_index, direction=direction, nulls=nulls)
+        return SortKey(
+            column="",
+            column_idx=k.positional_index,
+            direction=direction,
+            nulls=nulls,
+            collation=k.collation,
+        )
 
     col: str
     if isinstance(k.expr, PlanAggExpr) and agg_alias_map is not None:
@@ -1916,7 +2055,7 @@ def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> So
         col = agg_alias_map.get(agg_key) or k.expr.func.value.lower()
     else:
         col = _column_display_name(k.expr) or "?"
-    return SortKey(column=col, direction=direction, nulls=nulls)
+    return SortKey(column=col, direction=direction, nulls=nulls, collation=k.collation)
 
 
 # Map lower-case window function names to the IR WinFunc enum values.

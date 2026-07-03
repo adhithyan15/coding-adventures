@@ -49,6 +49,7 @@
 pub mod arithmetic;
 mod backend;
 pub mod determinant;
+pub mod eigenvalues;
 pub mod lu;
 pub mod matrix;
 pub mod norms;
@@ -60,6 +61,7 @@ pub use arithmetic::{
     zero_matrix,
 };
 pub use determinant::{determinant, inverse};
+pub use eigenvalues::{char_poly_coeffs, charpoly, eigenvalues, eigenvectors};
 pub use lu::lu_decompose;
 pub use matrix::{
     dimensions, get_entry, is_matrix, matrix, num_cols, num_rows, rows_of, MatrixError,

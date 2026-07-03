@@ -20,8 +20,8 @@
   "devDependencies": {
     "@coding-adventures/brainfuck": "file:../brainfuck",
     "@coding-adventures/brainfuck-ir-compiler": "file:../brainfuck-ir-compiler",
-    "@vitest/coverage-v8": "^3.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.0"
   }
 }

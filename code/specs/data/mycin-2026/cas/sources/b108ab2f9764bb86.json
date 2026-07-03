@@ -1,0 +1,26 @@
+{
+  "hash": "b108ab2f9764bb86",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5986172/",
+  "title": "Listeria monocytogenes meningitis (Clinical Case Reports, 2018; 6(6): 1195)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5986172/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "On CSF culture, Listeria monocytogenes appeared as gram-positive bacilli (rods) with tumbling motility.",
+      "byte_quote": "CSF cultures revealed blue–gray colonies that comprised gram‐positive bacilli with tumbling motility (Video S1 ), which was turned out to be Listeria monocytogenes"
+    },
+    {
+      "id": "c2",
+      "text": "Listeria is an aerobic, beta-hemolytic, gram-positive bacillus that exhibits tumbling motility on light microscopy.",
+      "byte_quote": "Listeria is an aerobic, beta‐hemolytic, gram‐positive bacillus, which exhibits tumbling motility on light microscopy 1"
+    },
+    {
+      "id": "c3",
+      "text": "Listeria monocytogenes is described as a food-borne pathogen.",
+      "byte_quote": "Listeria monocytogenes , a food‐borne pathogen"
+    }
+  ],
+  "cites": [
+    "Farber, J. M., and Peterkin P. I. 1991. Listeria monocytogenes, a food-borne pathogen. Microbiol. Rev. 55:476-511."
+  ]
+}

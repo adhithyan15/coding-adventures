@@ -79,6 +79,15 @@ mosaic-compile --backend react ProfileCard.mosaic
 # Writes: ProfileCard.jsx
 ```
 
+When `--emit-project` is enabled, the generated Vite shell mounts the component
+through `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`. If no
+host is installed, it falls back to deterministic sample values for every slot.
+Hosts that install asynchronously can dispatch a `mosaic-host-ready` browser
+event after setting `window.mosaicHost`; the shell will refresh props from the
+new host.
+The shell includes `tsconfig.json`, so `npm run build` type-checks the emitted
+component and host mount before Vite bundles it.
+
 ### Programmatically
 
 ```rust

@@ -1,0 +1,62 @@
+{
+  "hash": "38fddb4e21c26afd",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12902366/",
+  "title": "Clinical and Microbiological Characteristics of Bacteroides fragilis and Non-B. fragilis Bacteremia",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12902366/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Bacteroides species are anaerobic gram-negative bacteria and part of the intestinal flora.",
+      "byte_quote": "_Bacteroides_ species are anaerobic gram-negative bacteria that constitute a significant portion of the intestinal flora."
+    },
+    {
+      "id": "c2",
+      "text": "Mortality of Bacteroides bacteremia ranges from about 16% to 50%.",
+      "byte_quote": "Specifically, the mortality rate of _Bacteroides_-caused bacteremia ranges from ∼16% to 50% [[1](#ofag047-B1), [2](#ofag047-B2)]."
+    },
+    {
+      "id": "c3",
+      "text": "Of 528 anaerobic-bacteremia patients (Jan 2012-Mar 2022), 174 had Bacteroides spp. bacteremia: 102 B. fragilis and 72 non-B. fragilis.",
+      "byte_quote": "Among the 528 patients diagnosed with anaerobic bacteremia between 1 January 2012 and 31 March 2022, 174 had _Bacteroides_ spp. bacteremia, with 102 and 72 cases caused by _B. fragilis_ and non_\\-B. fragilis_ species, respectively"
+    },
+    {
+      "id": "c4",
+      "text": "30-day mortality (excluding underlying-disease exacerbation) was significantly higher in the non-B. fragilis group (16.7%) than the B. fragilis group (5.9%), P=.025.",
+      "byte_quote": "However, 30-day mortality—excluding exacerbation of the underlying disease—was significantly higher in the non_\\-B. fragilis_ group (16.7%) than in the _B. fragilis_ group (5.9%, _P_ = .025"
+    },
+    {
+      "id": "c5",
+      "text": "Carbapenem resistance was associated with 30-day mortality in non-B. fragilis (adjusted OR=7.05, 95% CI 1.54-41.9, P=.017).",
+      "byte_quote": "carbapenem resistance (adjusted OR = 7.05, 95% CI 1.54–41.9, _P_ = .017)"
+    },
+    {
+      "id": "c6",
+      "text": "Bacteremia originating from the gastrointestinal tract was 29.4% in B. fragilis vs 54.1% in non-B. fragilis (P=.002) — GI/digestive portal predicts non-B. fragilis.",
+      "byte_quote": "The percentage of bacteremia originating from the gastrointestinal tract was 29.4% and 54.1% in _B. fragilis_ and non_\\-B. fragilis_ groups (_P_ = .002)"
+    },
+    {
+      "id": "c7",
+      "text": "Clindamycin-resistant B. fragilis ranges from ~20-40% in North America/Europe to ~50% in some Asian countries.",
+      "byte_quote": "the percentage of clindamycin (CLDM)-resistant _B. fragilis_ ranges from ∼20% to 40% in North America and Europe to ∼50% in some Asian countries"
+    },
+    {
+      "id": "c8",
+      "text": "Antimicrobial susceptibility was analyzed for meropenem (MEPM), clindamycin (CLDM), and TAZ/PIPC against Bacteroides spp.",
+      "byte_quote": "we limited the antimicrobial susceptibility analysis to meropenem (MEPM), CLDM, and TAZ/PIPC against _Bacteroides_ spp."
+    },
+    {
+      "id": "c9",
+      "text": "Demographic/clinical risk factors (age, sex, malignancy, diabetes, systemic steroids/immunosuppressants, febrile neutropenia, mCCS) were similar between the two groups.",
+      "byte_quote": "Demographic and clinical factors, such as age, sex, presence of malignancy, diabetes mellitus, administration of systemic steroids or immunosuppressive agents, febrile neutropenia, and mCCS, were similar"
+    },
+    {
+      "id": "c10",
+      "text": "A landmark matched-pair study reported an overall 30-day case fatality rate of 28% for B. fragilis group bacteremia.",
+      "byte_quote": "A landmark matched-pair study reported an overall 30-day case fatality rate of 28% for _B. fragilis_ group bacteremia"
+    }
+  ],
+  "cites": [
+    "Redondo et al. 1995 (matched-pair study, B. fragilis group bacteremia 30-day case fatality ~28%)",
+    "Cheng et al. 2009 (B. fragilis bacteremia 30-day mortality 30.7%)"
+  ]
+}

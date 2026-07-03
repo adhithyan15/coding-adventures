@@ -1,0 +1,8 @@
+{
+ "check_id": 168,
+ "idx": 67,
+ "slot": "role_remote_first",
+ "claimed_value": true,
+ "scenario": "Nadia has been employed for 2 months. Her job requisition designates her role as 'remote-first.' She has requested to work remotely.",
+ "cited_span": "Her job requisition designates her role as 'remote-first.'"
+}

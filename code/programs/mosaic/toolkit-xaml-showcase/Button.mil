@@ -1,0 +1,27 @@
+// Button.mil — interface for the toolkit's Button component.
+//
+// Wraps the kernel `HostButton` with a Bootstrap-shaped variant system
+// (primary / secondary / success / danger / warning / info / light /
+// dark) and size system (sm / md / lg). The actual variant colors live
+// in Button.{theme}.msl part definitions; this .mil just declares the
+// surface.
+
+component Button {
+  // Visible label text. Required.
+  slot label : text ;
+
+  // Variant keyword. One of: primary, secondary, success, danger,
+  // warning, info, light, dark. Default: primary.
+  // Hosts that pass an unknown variant get the primary styling.
+  slot variant : text ;
+
+  // Size keyword. One of: sm, md, lg. Default: md.
+  slot size : text ;
+
+  // Disabled state. When true, the button paints disabled and stops
+  // firing onClick.
+  slot disabled : bool ;
+
+  // Click event. Forwarded from the underlying HostButton.
+  emit onClick ;
+}

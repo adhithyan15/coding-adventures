@@ -1,0 +1,55 @@
+{
+  "id": "04-where-filtering",
+  "description": "WHERE clause filtering with literals and qmark params",
+  "level": 0,
+  "steps": [
+    {
+      "op": "execute",
+      "sql": "CREATE TABLE scores (player, game, score)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES ('Alice', 'chess', 1400)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES ('Alice', 'go', 1200)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES ('Bob', 'chess', 1600)"
+    },
+    {
+      "op": "execute",
+      "sql": "INSERT INTO scores VALUES ('Bob', 'go', 900)"
+    },
+    {
+      "op": "query",
+      "sql": "SELECT player, score FROM scores WHERE game = 'chess' ORDER BY score",
+      "expected_columns": ["player", "score"],
+      "expected_rows": [
+        ["Alice", 1400],
+        ["Bob", 1600]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT player, game FROM scores WHERE score >= ? ORDER BY player, game",
+      "params": [1400],
+      "expected_columns": ["player", "game"],
+      "expected_rows": [
+        ["Alice", "chess"],
+        ["Bob", "chess"]
+      ]
+    },
+    {
+      "op": "query",
+      "sql": "SELECT player, score FROM scores WHERE game = ? AND score > ?",
+      "params": ["go", 1000],
+      "expected_columns": ["player", "score"],
+      "expected_rows": [
+        ["Alice", 1200]
+      ]
+    }
+  ]
+}

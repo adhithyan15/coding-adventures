@@ -1,0 +1,137 @@
+% ADJ49 — Delaware-law M&A deal completion rulebook.
+%
+% Question: estimate P(deal_completes_by_drop_dead) — the probability
+% that an announced acquisition closes within the contractually
+% specified outside date.
+%
+% This is the question an investment banker's junior analyst is
+% asked when evaluating a live deal: how likely is it to clear all
+% conditions and close before the parties walk?
+%
+% Sources cited inline. Trust tiers:
+%   consensus     — multi-source agreement (Delaware Chancery + ABA + Wachtell)
+%   authoritative — single authoritative source (FTC HSR data, ABA model)
+%   empirical     — cohort study or operational data (M&A failure-rate
+%                   analyses, e.g. SRS Acquiom, Mergermarket reports)
+%
+% This rulebook is hand-written for reviewability. A production
+% deployment would compile it via the ADJ44 recursive-rulebook
+% pipeline from the cited PDFs.
+
+% ------------------------------------------------------------------
+% Prior — population baseline.
+% ------------------------------------------------------------------
+
+prior 0.78 for deal_completes_by_drop_dead
+  source "SRS Acquiom 2023 M&A Deal Terms Study — 78% of announced public-target deals close within stated outside date"
+  trust authoritative
+
+% ------------------------------------------------------------------
+% Antitrust regulatory contributors.
+% ------------------------------------------------------------------
+
+contributes 0.65 from regulatory(hsr_second_request_likely) to deal_completes_by_drop_dead
+  source "FTC/DOJ HSR Annual Reports — Second Requests extend median timeline by 10-12 months; ~25% of Second Request deals abandoned or restructured"
+  trust authoritative
+
+contributes 0.45 from regulatory(industry_concentration_high) to deal_completes_by_drop_dead
+  source "Kwoka 2015, Mergers, Merger Control, and Remedies — HHI delta >200 doubles probability of antitrust challenge"
+  trust empirical
+
+contributes 0.70 from regulatory(cfius_jurisdiction) to deal_completes_by_drop_dead
+  source "CFIUS Annual Report to Congress — foreign-buyer deals with critical-tech targets averaged 90-day mitigation delay in CY2022"
+  trust authoritative
+
+contributes 0.50 from regulatory(regulated_industry_target) to deal_completes_by_drop_dead
+  source "[empirical] healthcare, defense, banking acquisitions face industry-specific approval (HHS, DOD, OCC) extending timelines"
+  trust empirical
+
+contributes 1.4 from regulatory(no_antitrust_concern) to deal_completes_by_drop_dead
+  source "FTC/DOJ HSR Annual Reports — early-termination grants for low-concentration deals"
+  trust authoritative
+
+% ------------------------------------------------------------------
+% Deal-structure contributors.
+% ------------------------------------------------------------------
+
+contributes 1.5 from deal_structure(all_cash) to deal_completes_by_drop_dead
+  source "SRS Acquiom 2023 — all-cash deals close at 84% vs 71% for stock-element deals"
+  trust authoritative
+
+contributes 0.75 from deal_structure(stock_component_above_50pct) to deal_completes_by_drop_dead
+  source "SRS Acquiom 2023 — stock deals more sensitive to acquirer-share-price decline triggering closing conditions"
+  trust authoritative
+
+contributes 1.6 from financing(committed_debt_no_market_out) to deal_completes_by_drop_dead
+  source "ABA 2023 Strategic Buyer/Public Target Deal Points Study — debt commitment letters with no market MAC outs"
+  trust consensus
+
+contributes 0.55 from financing(financing_condition_in_merger_agreement) to deal_completes_by_drop_dead
+  source "Wachtell Lipton M&A Practical Guide — explicit financing condition in the merger agreement is a major risk amplifier"
+  trust consensus
+
+% ------------------------------------------------------------------
+% MAC clause contributors.
+% ------------------------------------------------------------------
+
+contributes 1.3 from mac_clause(broad_industry_carveouts) to deal_completes_by_drop_dead
+  source "Akorn v. Fresenius (Del. Ch. 2018) — narrow MAC carveouts allowed buyer to walk; broad carveouts protect deal"
+  trust consensus
+
+contributes 0.8 from mac_clause(narrow_carveouts_no_industry) to deal_completes_by_drop_dead
+  source "Akorn v. Fresenius (Del. Ch. 2018) — narrow MAC was determinative in walk decision"
+  trust consensus
+
+contributes 0.5 from mac_clause(target_disproportionate_carveout_only) to deal_completes_by_drop_dead
+  source "[empirical] Disproportionate-impact qualifier tightens buyer's burden; signals deal was negotiated under stress"
+  trust empirical
+
+% ------------------------------------------------------------------
+% Termination fee / reverse termination fee structure.
+% ------------------------------------------------------------------
+
+contributes 1.4 from rtf_present_above_3pct to deal_completes_by_drop_dead
+  source "ABA 2023 Deal Points — reverse termination fees >3% of deal value strongly disincentivize buyer abandonment"
+  trust consensus
+
+contributes 0.65 from rtf_below_2pct to deal_completes_by_drop_dead
+  source "ABA 2023 Deal Points — low RTF asymmetry signals buyer-leaning deal terms"
+  trust consensus
+
+% ------------------------------------------------------------------
+% Shareholder / activism contributors.
+% ------------------------------------------------------------------
+
+contributes 0.55 from shareholders(known_activist_position) to deal_completes_by_drop_dead
+  source "Lazard 2023 Shareholder Activism Review — 18% of activist-targeted deals were either repriced or abandoned"
+  trust authoritative
+
+contributes 0.65 from shareholders(announced_voting_opposition) to deal_completes_by_drop_dead
+  source "SharkRepellent — announced voting opposition before record date correlates with deal failure"
+  trust empirical
+
+contributes 1.3 from shareholders(major_holders_locked_up) to deal_completes_by_drop_dead
+  source "[empirical] voting/support agreements covering >30% of shares meaningfully de-risk shareholder vote"
+  trust empirical
+
+% ------------------------------------------------------------------
+% Joint interaction terms.
+% ------------------------------------------------------------------
+
+interacts 0.6 when regulatory(hsr_second_request_likely)
+              and financing(financing_condition_in_merger_agreement)
+              for deal_completes_by_drop_dead
+  source "[empirical] regulatory delay + financing condition is the deadliest combination; Second Request gives time for financing markets to deteriorate before close"
+  trust empirical
+
+interacts 1.4 when deal_structure(all_cash)
+              and financing(committed_debt_no_market_out)
+              for deal_completes_by_drop_dead
+  source "[empirical] all-cash deal with no-market-out financing eliminates the two most common buyer-walk paths"
+  trust empirical
+
+interacts 0.55 when regulatory(industry_concentration_high)
+                and mac_clause(narrow_carveouts_no_industry)
+                for deal_completes_by_drop_dead
+  source "[empirical] narrow MAC + high concentration = buyer has both regulatory risk and the contractual right to walk on industry headwinds — Akorn-style outcome plausible"
+  trust empirical

@@ -2,6 +2,594 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.15.0 — Reject keyword arguments on indirect/closure calls (KW hardening)
+
+Closes a **soundness gap** left by KW1. The validator's shared keyword check
+(`check_kwargs_common`) enforced ordering and duplicate rules on **every** call
+kind, but for an `IndirectCall` (callee not statically known — a closure/
+function value, validated with `callee == None`) it stopped there and did
+**not** reject the mere *presence* of a keyword argument.
+
+Per the design spec (`code/specs/sir-keyword-params.md`, "Out of scope"),
+**indirect/closure keyword calls are out of scope for v0** — no backend can
+emit them. Every backend's `emit_args` for an `IndirectCall` routes each
+argument through `emit_expr`, whose `KeywordArg` arm is a hard `panic!`
+(resolving a keyword needs the callee's parameter names/order, which an
+indirect call does not have statically). So a validator-accepted module such
+as `main(g) { g(x: 1) }` would **panic the backend at lowering time** — a
+denial-of-service on validator-accepted input.
+
+The validator now rejects any `KeywordArg` in the argument list of an
+`IndirectCall` with:
+
+> keyword argument `NAME` is not allowed on an indirect/closure call (only
+> direct calls support keyword arguments in v0)
+
+This change is **purely subtractive**: it forbids more (previously
+ill-formed-but-accepted) programs, adds **no** new enum variant or field, and
+does **not** alter any accepted `DirectCall` behavior (the direct path passes
+`Some(callee)` and never reaches this branch). Downstream crates that only
+*construct* IR are therefore unaffected; only ill-formed IR is now caught
+earlier, at validation, instead of at backend emission.
+
+### Tests
+
+Added: an `IndirectCall` carrying a `KeywordArg` is rejected with the new
+message; the same keyword argument to a matching-signature `DirectCall` still
+validates; an `IndirectCall` with only positional args still validates. The
+former `indirect_call_skips_keyword_name_resolution` test (which asserted the
+now-unsound acceptance) is replaced accordingly.
+
+## 0.14.0 — Keyword parameters & arguments (KW1; core IR)
+
+Adds **named keyword parameters** (`def f(x:)` / `def f(x: 1)`) and
+**keyword arguments** (`f(x: 1)`, Python `f(x=1)`) to the core IR. This is
+**milestone KW1 of the keyword-params cascade**: it lands the
+representation, validation, walker, and printer support only. No frontend
+lowers to keyword params yet and no backend accepts the new
+`Feature::KeywordParams`, so a keyword-using module is correctly rejected by
+the capability check until each backend gains support — **all existing
+behavior is unchanged**.
+
+### Model — required vs. optional rides on `Param.default`
+
+A keyword parameter is a `Param` with `kind == ParamKind::Keyword`. Whether
+it is *required* or *optional* is carried by the **existing** `default`
+field, exactly as a positional optional already works — there is no separate
+"is-required" flag:
+
+| `kind`    | `default` | meaning                          | source        |
+|-----------|-----------|----------------------------------|---------------|
+| `Keyword` | `None`    | **required** keyword parameter   | `def f(x:)`   |
+| `Keyword` | `Some(e)` | **optional** keyword parameter   | `def f(x: 1)` |
+
+`ParamKind` remains `Copy` with `#[default] = Required`, so no existing
+`Param { .. }` construction changes.
+
+A keyword argument at a call site is the new `Expr::KeywordArg { name,
+value, span }`. It lives **inside the existing `args` vec** of a call, after
+all positional args (`f(1, a: 2)` → `args: [IntLit(1), KeywordArg{…}]`),
+rather than a parallel `kwargs` field on every call node — keeping the
+walker/printer/backend surface area unchanged for positional callers.
+
+### Added
+
+- `ParamKind::Keyword` — a named keyword parameter variant.
+- `Expr::KeywordArg { name, value, span }` — a call-site keyword argument;
+  covered by `Expr::span()` and `Expr::kind_name()` (`"keyword-arg"`).
+- `Feature::KeywordParams` (name string `"keyword-params"`) — observed when
+  a `Keyword` param or a `KeywordArg` appears; wired into `Feature::ALL`,
+  `name`/`from_name`, and `Display`.
+- `Function::keyword_params(&self) -> Vec<&Param>` — the params with
+  `kind == Keyword`.
+- `Function::missing_keywords(&self, supplied: &[&str]) -> Vec<&Param>` —
+  the keyword params a caller omitted. For a validator-accepted call every
+  returned param carries a `default` (required keywords can never be
+  omitted), so a backend may emit each default unconditionally.
+- Validator rules:
+  - **Def-side ordering** — the canonical param list is
+    `Required* Rest? Keyword* KwRest?`. A `Keyword` before a positional/rest,
+    or after the `KwRest`, is rejected (and a positional/rest after a
+    `Keyword` symmetrically).
+  - **Call-side ordering** — every `KeywordArg` must follow all positional
+    args; a positional after a keyword is rejected.
+  - **No duplicate keyword names** within one call's args.
+  - **Known-callee name resolution** (DirectCall only) — each keyword must
+    match a `Keyword` param OR the callee declares a `**kwrest`; every
+    **required** keyword param must be supplied. IndirectCall/closure calls
+    skip resolution (signature not statically known) but still enforce
+    ordering + duplicates.
+  - **KeywordArg only in call position** — a `KeywordArg` anywhere other
+    than directly inside a call's `args` vec is rejected.
+  - **Feature gating** — using a `Keyword` param or a `KeywordArg` requires
+    the manifest to declare `Feature::KeywordParams` (same contract as
+    `DefaultParams`). A keyword param's default triggers `KeywordParams`,
+    not `DefaultParams` (that feature is specifically *positional* trailing
+    defaults).
+- Walker: `walk_expr_default` and the backend intrinsic walker recurse into
+  `KeywordArg.value` (depth-bounded like every other child).
+- Printer: a `Keyword` param renders `(x: any)` (required) /
+  `(x: any (default (int 1)))` (optional); a `KeywordArg` renders
+  `(keyword-arg name <value>)` inline in a call's arg list.
+- Unit tests (28): ParamKind::Keyword required/optional distinction;
+  `Expr::KeywordArg` span/kind-name; the two `Function` helpers; feature
+  name/round-trip; def-side ordering (valid + each rejection); call-side
+  ordering + duplicate rejection; known-callee name resolution (unknown
+  keyword with/without kwrest, missing/optional/supplied required keyword);
+  indirect-call skips resolution but keeps ordering; KeywordArg-out-of-call
+  rejection (block value, builtin arg, nested in a keyword value); keyword
+  value expression is validated; printer output; walker traversal.
+
+### Deferred / scoped
+
+- **Backends** do not yet accept `Feature::KeywordParams`; a keyword-using
+  module is rejected at the capability check until per-backend emission
+  lands (later milestones).
+- **Frontends** do not yet lower to keyword params/args (later milestones).
+- **IndirectCall / closure** keyword-name resolution stays deferred (the
+  target signature is not known statically).
+
+## 0.13.0 — Default-param call-arity semantics (P2a; behavior-neutral)
+
+Defines the **call-arity rule for default parameters** so a `DirectCall`
+to a known function may omit trailing arguments whose params carry
+defaults. This is **PR 2a of the default-params sequence**: P1 added the
+`Param.default` representation; this PR adds the *semantics layer* (query
+API + validation) that the per-backend default-filling emission (follow-up
+PRs) builds on. No frontend emits a defaulted call yet and no backend fills
+a default yet, so **all existing behavior is unchanged** — every existing
+valid module uses exact arity, which the new rule always accepts.
+
+### Evaluation model (documented in SIR10)
+
+Call-time, parameter-scope (Ruby/JS semantics): a default expression is
+conceptually evaluated when the call runs, in the callee's parameter scope,
+and may reference *earlier* params (validated as before). It is **not** a
+caller-side or definition-time constant.
+
+### Added
+
+- `Function::required_param_count(&self) -> usize` — the call-arity floor:
+  the length of the leading run of plain positional params that have no
+  default. The first defaulted param (or a `*rest`/`**opts`/synthetic block
+  param) ends the run.
+- `Function::missing_defaults(&self, n_args: usize) -> &[Param]` — the
+  trailing params at positions `n_args..len` that a caller omitted. For a
+  call the validator accepted, every returned param carries a default, so a
+  backend can emit each one's default unconditionally. Clamps on
+  over-supply (never panics).
+- Validator: `DirectCall` to a **known** function is now arity-checked. With
+  R = `required_param_count()` and M = total param count, the call is valid
+  iff `R <= args.len() <= M`. Omitting a trailing defaulted arg is OK;
+  omitting a required arg (`args.len() < R`) or over-supplying
+  (`args.len() > M`) is an error.
+- Validator: **defaults must be trailing** — a no-default `Required` param
+  may not follow a defaulted `Required` param (a "hole" like
+  `def f(a = 1, b)`). This makes the `missing_defaults` guarantee true by
+  construction: every param it returns carries a default, so a backend that
+  unwraps `param.default` cannot panic. The synthetic `__sir_block__` param
+  is exempt. Error message: "required parameter `b` may not follow a
+  defaulted parameter (defaults must be trailing)".
+- Unit tests (13): exact arity valid; omitting a trailing default valid;
+  omitting all defaults valid; omitting a required arg errors; too many args
+  errors; default-less callee keeps exact arity; variadic callee skips the
+  check; block-passing call (trailing `MakeClosure`) skips the check; splat
+  call skips the check; the `required_param_count` / `missing_defaults`
+  helpers return the right params; a hole fails validation with the
+  trailing-defaults message; trailing-defaults functions validate; a block
+  param after a defaulted param is exempt.
+
+### Deferred / scoped
+
+- **IndirectCall** (calling a closure value) keeps its prior behavior — the
+  target's params are not known statically, so default-arity resolution is
+  deferred. Documented in SIR10.
+- **Ruby's required-after-optional** form (`def f(a = 1, b)`, a "hole") is a
+  deferred v0 limitation — rejected by the trailing-defaults rule above.
+  Documented in SIR10.
+- The strict arity check is **skipped** when the callee is variadic
+  (`*rest`/`**opts`) or carries the synthetic trailing block param, or when
+  any argument is not statically one positional value — a splat
+  (`splat`/`double_splat`), argument forwarding (`forward_args`), block-pass
+  (`block_pass`), or an implicit Ruby block handle (`MakeClosure`) appended
+  to the arg list. These call-position lowerings (produced by the Ruby
+  frontend) have no statically meaningful `args.len()`; checking them is
+  deferred. This is what keeps the change behavior-neutral for the existing
+  frontends.
+
+### Changed
+
+- `Cargo.toml`: minor version bump `0.2.0` → `0.3.0`.
+
+## 0.12.0 — Param default values (core IR representation; behavior-neutral)
+
+Adds the IR representation for **default parameter values** — the `1` in
+Ruby `def f(a = 1)` and the Python / JavaScript equivalents. Previously a
+parameter had no place to carry its default, so frontends silently dropped
+it. This is **PR 1 of a sequence**: the IR can now *represent* a default,
+the whole workspace still compiles, and **all existing behavior is
+unchanged** (no frontend produces a default yet, and no backend emits one
+yet). Backend emission and frontend lowering land in follow-up PRs.
+
+### Added
+
+- `Param.default: Option<Box<Expr>>` — `None` for an ordinary parameter;
+  `Some(expr)` for `name = expr`. Boxed to keep `Param` a fixed size despite
+  the recursive `Param → Expr → Function → Param` cycle (a default
+  expression may contain a closure whose own params have defaults).
+- `Feature::DefaultParams` (text name `default-params`) — observed by the
+  validator whenever any param carries a default. **Not yet accepted by any
+  backend**, so a default-using module is correctly rejected by the
+  capability check until each backend gains support (intended).
+- Validator: when a param has a default it observes `Feature::DefaultParams`
+  and recursively validates the default `Expr` against the parameters
+  declared *so far* (a default may reference an earlier param but not a
+  later one).
+- Walker: `walk_function_default` now visits each param's default
+  expression before the body, so passes that walk the IR see them.
+- Text printer: a param with a default renders an extra `(default <expr>)`
+  clause — `(a any (default (int 1)))` — while defaultless params keep the
+  original `(name type)` shape, so existing modules print unchanged.
+- Unit tests: default validates + observes the feature, default-expr
+  features are observed, a default may reference an earlier param (and may
+  not reference a later one), the walker visits the default expr, and the
+  printer renders the default clause.
+
+### Changed
+
+- `Param` now derives only `PartialEq` (not `Eq`): it holds an `Expr`, which
+  contains an `f64` (`FloatLit`) and so cannot be `Eq` — consistent with
+  `Expr` / `Block`.
+- Every literal `Param { … }` construction across the SIR backends
+  (typescript/rust/python/go/javascript) and the twig/ruby frontends now
+  sets `default: None`. This is a mechanical addition; backends read params
+  by field access, so the new field does not affect their behavior.
+
+## 0.11.0 — SIR19: variadic parameter kinds (`Param.kind` / `ParamKind`) (M3)
+
+Closes the def-side variadic limitation: previously a splat parameter
+(`def f(*rest)` / `def g(**opts)`) lost its splat-ness at the SIR level and
+lowered to an ordinary positional `Param`, so the emitted Python/TypeScript
+declared a fixed positional parameter and a variadic call (`f(1, 2, 3)`) broke.
+
+### Added
+
+- `ParamKind` enum — `Required` (default), `Rest` (`*rest`), `KwRest`
+  (`**opts`) — re-exported from the crate root.
+- `Param.kind: ParamKind` — a new field on `Param`. Every in-tree construction
+  sets it explicitly.
+- Validator rules (`validate`): at most one `Rest` and at most one `KwRest`
+  per parameter list, and ordering — required positionals precede the lone
+  `Rest`, which precedes the lone `KwRest`. The reserved trailing block
+  parameter `__sir_block__` (Q9e) is exempt (always `Required`, always last).
+- Text printer renders `*name` / `**name` for the two variadic kinds so a
+  round-tripped module preserves splat-ness.
+
+### Changed
+
+- Every literal `Param { … }` construction (smoke tests, printer tests) now
+  sets `kind`. Backends read params by field access, so the added field does
+  not affect their reads — only constructions.
+
+## 0.10.0 — SIR18: string interpolation (`Expr::StrConcat`)
+
+Introduced by the Ruby frontend's Phase 20b (`"a#{x}b"` interpolation).
+
+### Added
+
+- `Expr::StrConcat { parts, span }` — a first-class string-concatenation
+  node that replaces the v0 `BuiltinCall("string_concat", parts)` marker
+  (the same marker→node move `Stmt::TryCatch` made for
+  `__rescue_marker__`).  A dedicated node lets backends emit native
+  string building (`format!` / template literals / f-strings) instead of
+  routing through a runtime helper.  Invariant: `parts.len() >= 2`.
+- `Feature::StringInterpolation` — observed whenever a module contains a
+  `StrConcat` node.  Distinct from `Feature::Strings` (a plain `StrLit`):
+  a backend may support string literals without yet knowing how to build
+  a concatenation, so the two capabilities are tracked separately.
+
+### Validator
+
+- `StrConcat` observes `Feature::StringInterpolation` and recursively
+  checks every part.  A concat with fewer than two parts is a hard error
+  (a frontend should emit the bare part instead).
+
+### Text format
+
+- `print_expr` renders `StrConcat` as `(str-concat <part…>)` (kind name
+  `str-concat`).  Span and visitor (`walker`) coverage extended to the
+  new node.
+
+## 0.9.0 — SIR17: structured exception handling (`Stmt::TryCatch`)
+
+Introduced by the Ruby frontend's Phase 16a (`begin/rescue/ensure/end`).
+
+### Added
+
+- `Stmt::TryCatch { body, rescues, ensure_body, span }` — a first-class
+  exception-handling statement that replaces the earlier
+  `__rescue_marker__` / `__ensure_marker__` inline `BuiltinCall`
+  placeholders.  `body` and `ensure_body` are bare statement lists (like
+  `ClassDef.body`); `ensure_body` is `Option`al.
+- `RescueClause { exception_types, binding, body, span }` — one `rescue`
+  clause.  `exception_types` is a list of advisory class names (empty =
+  bare catch-all, not resolved by the validator); `binding` is the
+  optional `=> e` exception variable, in scope as a `Scope::Local`
+  within that clause's `body` only.
+- `Feature::Exceptions` (kebab `exceptions`) — declared by any module
+  containing a `TryCatch`.  Backends that don't accept it reject the
+  module at the capability check before emit.
+
+### Changed
+
+- `Stmt::span()`, the walker, the validator (`check_stmt_seq`), the text
+  printer (`(try-catch … (rescue (types …) (bind …) …) (ensure …))`),
+  `backend::walk_intrinsics_in_stmt`, and all four reference backends'
+  statement-emit match gain a `Stmt::TryCatch` arm.  The validator walks
+  the body, each rescue body (with the binding introduced as a local),
+  and the ensure body in fresh local-env scopes; the backend arms are
+  unreachable `panic!`s (rejected pre-emit by the capability check).
+
+New tests (4): `print_try_catch_with_rescue_and_ensure`,
+`try_catch_validates_and_binding_is_in_scope`,
+`try_catch_without_manifest_feature_is_error`,
+`try_catch_binding_does_not_leak_past_rescue`.  Test count: 102 → 106.
+
+This is a **breaking enum change** for any exhaustive `match` on `Stmt`
+without a `_` rest arm.
+
+## 0.8.0 — SIR17: constant scope (`Scope::Const`)
+
+Introduced by the Ruby frontend's Phase 15c (`FOO` / `MyClass`).
+
+### Added
+
+- `Scope::Const` — a constant (Ruby `FOO`, `MyClass` — any
+  uppercase-initial name).  Like `Scope::Instance` / `Scope::ClassVar`,
+  it needs **no prior declaration**: `check_varref` performs no
+  scope-existence check (a constant resolves against the constant scope,
+  not a `let` binding).  `Scope::name()` / `from_name()` gain the
+  `"const"` tag.
+- `Feature::Constants` (kebab `constants`) — declared by any module that
+  references a `Scope::Const`.  The validator observes it from each
+  Const-scoped `VarRef`; backends that don't list it in their accepted
+  set reject such modules at the capability check, before emit.
+
+### Changed
+
+- `check_varref` gains a `Scope::Const` arm (observe-only, no
+  resolution).  The text printer renders `(var-ref FOO const)` via the
+  existing `scope.name()` path.  The four reference backends'
+  `emit_var_ref` gain an unreachable `panic!` arm for `Scope::Const`
+  (rejected pre-emit by the capability check).
+
+New tests (3): `print_var_ref_const_scope`,
+`const_ref_needs_no_declaration`,
+`const_ref_without_manifest_feature_is_error`.  Test count: 99 → 102.
+
+This is a **breaking enum change** for any exhaustive `match` on
+`Scope` without a `_` rest arm.
+
+## 0.7.0 — SIR17: class-variable scope (`Scope::ClassVar`)
+
+Introduced by the Ruby frontend's Phase 15b (`@@x`).
+
+### Added
+
+- `Scope::ClassVar` — a class variable (Ruby `@@x`).  Like
+  `Scope::Instance`, a class var needs **no prior declaration**:
+  `check_varref` performs no scope-existence check for it (reading an
+  unset `@@x` yields nil in Ruby).  `Scope::name()` / `from_name()` gain
+  the `"class-var"` tag.
+- `Feature::ClassVars` (kebab `class-vars`) — declared by any module
+  that references a `Scope::ClassVar` var.  The validator observes it
+  from each ClassVar-scoped `VarRef`; backends that don't list it in
+  their accepted set reject such modules at the capability check,
+  before emit.
+
+### Changed
+
+- `check_varref` gains a `Scope::ClassVar` arm (no resolution; observes
+  `Feature::ClassVars`).  The text printer renders
+  `(var-ref @@x class-var)` via the existing `scope.name()` path.  The
+  four reference backends' `emit_var_ref` gain an unreachable `panic!`
+  arm for `Scope::ClassVar` (rejected pre-emit by the capability check).
+
+New tests (3): `print_var_ref_class_var_scope`,
+`class_var_ref_needs_no_declaration`,
+`class_var_ref_without_manifest_feature_is_error`.  Test count:
+96 → 99.
+
+This is a **breaking enum change** for any exhaustive `match` on
+`Scope` without a `_` rest arm.
+
+## 0.6.0 — SIR17: instance-variable scope (`Scope::Instance`)
+
+Introduced by the Ruby frontend's Phase 15a (`@x`).
+
+### Added
+
+- `Scope::Instance` — an object instance variable (Ruby `@x`).  Unlike
+  `Scope::Local`, an instance var needs **no prior declaration**:
+  `check_varref` performs no scope-existence check for it (reading an
+  unset `@x` yields nil in Ruby).  `Scope::name()` / `from_name()` gain
+  the `"instance"` tag.
+- `Feature::InstanceVars` (kebab `instance-vars`) — declared by any
+  module that references a `Scope::Instance` var.  The validator
+  observes it from each Instance-scoped `VarRef`; backends that don't
+  list it in their accepted set reject such modules at the capability
+  check, before emit.
+
+### Changed
+
+- `check_varref` gains a `Scope::Instance` arm (no resolution; observes
+  `Feature::InstanceVars`).  The text printer renders
+  `(var-ref @x instance)` via the existing `scope.name()` path.  The
+  four reference backends' `emit_var_ref` gain an unreachable `panic!`
+  arm for `Scope::Instance` (rejected pre-emit by the capability check).
+
+New tests (3): `print_var_ref_instance_scope`,
+`instance_var_ref_needs_no_declaration`,
+`instance_var_ref_without_manifest_feature_is_error`.  Test count:
+93 → 96.
+
+This is a **breaking enum change** for any exhaustive `match` on
+`Scope` without a `_` rest arm.
+
+## 0.5.0 — SIR17: singleton-class declarations (`Stmt::SingletonClassDef`)
+
+Introduced by the Ruby frontend's Phase 14e (`class << self … end`).
+
+### Added
+
+- `Stmt::SingletonClassDef { target: String, body: Vec<Stmt>, span: Span }`
+  — a singleton-class (metaclass) declaration.  `target` is the
+  receiver whose singleton class is opened (`"self"` for the dominant
+  `class << self` idiom, or a bare object name).  Like
+  `ClassDef`/`ModuleDef`, method `def`s in the body are hoisted to
+  top-level `Function`s by the Ruby lowerer; `body` carries the
+  non-`def` statements.  Reuses `Feature::Classes` (a singleton class
+  is a class-opening construct, not a new feature) — no manifest
+  change.
+
+### Changed
+
+- `Stmt::span()`, the walker, the validator (marks `Feature::Classes`,
+  walks the body via `check_stmt_seq` in a scoped env mark/rewind with
+  the `MAX_IR_DEPTH` guard — same shape as `ClassDef`), the text
+  printer (`(singleton-class-def << Target …)`), and the
+  intrinsic-walk backend helper gain a `SingletonClassDef` arm.  The
+  four reference backends gain an unreachable `panic!` arm
+  (`Feature::Classes` absent from their accepted sets → rejected at the
+  capability check before emit).
+
+New tests (3): `print_singleton_class_def`,
+`singleton_class_def_body_with_let_binding_validates`,
+`singleton_class_def_body_undefined_varref_is_error`.  Test count:
+90 → 93.
+
+This is a **breaking enum change** for any exhaustive `match` on `Stmt`
+without a `_` / `..` rest arm.
+
+## 0.4.0 — SIR17: module declarations (`Stmt::ModuleDef`)
+
+Introduced by the Ruby frontend's Phase 14d (`module M … end`).
+
+### Added
+
+- `Stmt::ModuleDef { name: String, body: Vec<Stmt>, span: Span }` — a
+  module (namespace / mixin) declaration.  Structurally a `ClassDef`
+  without inheritance: a named declaration whose `body` is a list of
+  statements.  Like `ClassDef`, method `def`s inside the body are
+  hoisted to top-level `Function`s by the Ruby lowerer; the `body`
+  carries the module's non-`def` statements.
+- `Feature::Modules` (kebab name `modules`) — declared by any module
+  that contains a `Stmt::ModuleDef`.  Distinct from `Classes`: a Ruby
+  `module` is a namespace/mixin, not an instantiable class.  Backends
+  that do not list it in their accepted-feature set reject such modules
+  at the capability check, before emit.
+
+### Changed
+
+- `Stmt::span()`, the walker, the validator (marks `Feature::Modules`,
+  walks the body via `check_stmt_seq` in a scoped env mark/rewind with
+  the `MAX_IR_DEPTH` guard — same shape as the `ClassDef` arm), the
+  text printer (`(module-def Name …)` s-expression), and the
+  intrinsic-walk backend helper all gain a `ModuleDef` arm.  The four
+  reference backends (TypeScript, Rust, Python, Go) gain an unreachable
+  `panic!` arm; `Feature::Modules` is absent from their accepted sets,
+  so module-using modules are rejected at the capability check before
+  emit.
+
+New tests (5): `print_empty_module_def`, `print_module_def_with_body_stmt`,
+`module_def_body_with_let_binding_validates`,
+`module_def_body_undefined_varref_is_error`,
+`module_def_without_manifest_feature_is_error`.  Test count: 85 → 90.
+
+This is a **breaking enum change** for any exhaustive `match` on `Stmt`
+that does not use a `_` / `..` rest arm.
+
+## 0.3.0 — SIR17: class inheritance (`ClassDef.superclass`)
+
+Introduced by the Ruby frontend's Phase 14c (`class Foo < Bar`).
+
+### Added
+
+- `Stmt::ClassDef` gains a `superclass: Option<String>` field — the
+  parent class name (`Some("Bar")` for `class Foo < Bar`, `None` for a
+  base class `class Foo`).  It is an advisory name only: SIR v0 has no
+  class symbol table, so the validator does not resolve it (mirroring
+  how the class's own `name` is not bound as a local).
+
+### Changed
+
+- The text printer emits a `(< Super)` clause right after the class
+  name when `superclass` is set: `(class-def Foo (< Bar))`.  Base
+  classes are unchanged (`(class-def Foo)`).
+- The walker, validator, intrinsic-walk backend helper, and the four
+  reference backends' `ClassDef` arms are unaffected by the new field
+  (it carries no sub-expressions to traverse and no capability impact);
+  class-using modules are still rejected at the capability check before
+  emit.
+
+New test: `print_class_def_with_superclass`.  This is a **breaking
+struct change** for any code constructing `Stmt::ClassDef` literally —
+all in-tree constructors updated to pass `superclass`.
+
+## 0.2.1 — SIR17 validator: walk populated `ClassDef` bodies
+
+No node-shape change.  The Ruby frontend's Phase 14b begins emitting
+`Stmt::ClassDef` nodes with a *populated* `body` (Phase 14a always
+emitted an empty body), so the validator now actually walks it.
+
+### Changed
+
+- Factored the statement-sequence walk out of `check_block` into a
+  new private `check_stmt_seq(&[Stmt], env, depth)` helper.
+  `check_block` now calls it for `block.stmts` (then checks the
+  trailing `block.value`), preserving the exact prior behaviour —
+  parallel-`let` grouping, sequential `let*`, mutable `Assign`,
+  loop/scope handling.
+- `Stmt::ClassDef`'s validator arm now calls `check_stmt_seq` on the
+  body inside a fresh `env.mark()`/`env.rewind()` scope (Phase 14a
+  left this loop a documented no-op).  Class-body locals therefore
+  do **not** leak into the surrounding statement stream, and a
+  bad reference inside a class body is now reported instead of
+  silently accepted.  An explicit `MAX_IR_DEPTH` guard bounds
+  recursion for pathologically nested `class … class …` bodies.
+
+New tests (3): `class_def_body_with_let_binding_validates`,
+`class_def_body_undefined_varref_is_error` (proves the body is
+walked, not no-op'd), `class_def_body_local_does_not_leak_to_sibling`.
+Test count: 81 → 84 (+3).
+
+## 0.2.0 — SIR17: class declarations
+
+Adds the first object-oriented IR node, introduced by the Ruby
+frontend's Phase 14a (empty `class Foo; end`).
+
+### Added
+
+- `Stmt::ClassDef { name: String, body: Vec<Stmt>, span: Span }` — a
+  class declaration whose body is a list of statements.  The Ruby
+  frontend's Phase 14a lands the *empty-body* case (`body: vec![]`);
+  the variant is shaped to carry a populated body in later phases.
+  `body` is a `Vec<Stmt>` rather than a `Block` because a class body
+  is a declaration, not a value-producing expression.
+- `Feature::Classes` (kebab name `classes`) — declared by any module
+  that contains a `Stmt::ClassDef`.  Backends that do not list it in
+  their accepted-feature set reject such modules at the capability
+  check, before emit.
+
+### Changed
+
+- `Stmt::span()`, the validator, the text printer (`(class-def
+  Name ...)` s-expression), the walker, and the intrinsic-walk
+  backend helper all gained a `ClassDef` arm.  The four reference
+  backends (TypeScript, Rust, Python, Go) reject class-using modules
+  via their unchanged capability declarations, so their emit paths
+  treat the new arm as unreachable.
+
 ## 0.1.0 — initial release (SIR10 v0)
 
 First cut of the narrow-waist Semantic IR.  Implements the v0

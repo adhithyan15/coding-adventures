@@ -158,8 +158,11 @@ Compatibility requires several constraints that are enforced automatically:
   not as `{a, atom_table_index_for_'[]'}`.
 - **`max_opcode`**: the Code chunk header declares `max_opcode = 177`; OTP 28
   requires ≥ 169.
-- The `ir-to-beam` encoder produces the OTP 25+ `AtU8` format (negative-count
-  atom table) and mandatory `Attr`, `CInf`, and `Meta` chunks.
+- The `ir-to-beam` encoder produces the classic positive-count `AtU8` atom
+  table (a single raw length byte per atom) plus the mandatory `Attr`, `CInf`,
+  and `Meta` chunks. The classic atom format loads on every OTP release from 20
+  through 28; the nibble-packed "OTP 25+" form is rejected by the OTP 27 loader
+  (`corrupt atom table`), so we no longer emit it.
 
 ## Module structure
 

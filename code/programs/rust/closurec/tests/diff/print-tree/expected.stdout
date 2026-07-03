@@ -1,0 +1,6 @@
+=== tests/diff/print-tree/input/a.js ===
+KEYWORD	var
+NAME	x
+EQUALS	=
+NUMBER	1
+SEMICOLON	;

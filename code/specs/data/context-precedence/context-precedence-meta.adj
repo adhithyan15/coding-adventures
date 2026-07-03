@@ -1,0 +1,102 @@
+% =====================================================================
+% context-precedence-meta.adj — the RECURSIVE conflict-resolution canons
+% (ADJ73 PR-B-4, decision §2.3 / §7: "everything in this work is recursive;
+%  each [canon] has its own byte provenance").
+%
+% PR-B-3 grounded the LEX-SUPERIOR edges (federal>state, ninth_circuit>
+% district_court) by ASSERTING them as `relate outranks_context(...)` facts.
+% But most precedence is not a standing hierarchy — it is DERIVED from a more
+% primitive fact about the two authorities: which came later, which reversed
+% which, which is more specific. Hard-asserting an `outranks_context` edge for
+% every such pair would (a) duplicate a derivable fact and (b) hide the WHY.
+%
+% So the other classical canons are themselves GROUNDED META-RULES: a
+% `rule { head: outranks_context($H, $L) when: <primitive>($H, $L) }` whose
+% `source` cites the canon's authority. The engine (logic-engine >= 0.21) reads
+% DERIVED `outranks_context` answers as context-order edges exactly like
+% asserted ones (KnowledgeBase::context_adjacency enumerates them), so a
+% meta-rule edge drives `lex superior` end-to-end. The recursion bottoms out at
+% the primitive grounded facts a case supplies (`reverses(...)`, `supersedes(...)`),
+% which carry their own byte-provenance — turtles all the way down, every layer
+% cited and CAS-correctable.
+%
+% USE: a case file `import`s this rulebook, asserts the primitive facts for its
+% authorities (`relate reverses(scotus_2023, ninth_circuit_2019) source "<the
+% appellate record>" ...`), and the canons derive the precedence. See
+% worked-appeal-example.adj and worked-supersession-example.adj.
+% =====================================================================
+
+% ---------------------------------------------------------------------
+% CANON 1 — APPEAL STATUS (lex posterior's cousin in case law). A holding that
+% a higher court has reversed/overruled is no longer binding; the reversing
+% court's holding controls. So `reverses(H, L)` ⇒ context H outranks context L.
+%
+% Verbatim charter (the doctrine of overruling):
+%   "overruled, if the same or higher courts on appeal or determination of
+%    subsequent cases found the principles underpinning the previous decision
+%    erroneous in law or overtaken by new legislation or developments"
+% ---------------------------------------------------------------------
+rule {
+  head: outranks_context_by($Higher, $Lower, appeal_status)
+  when: reverses($Higher, $Lower)
+  source "Overruling/reversal strips precedential force — Precedent (Wikipedia), on a holding being \"overruled, if the same or higher courts on appeal or determination of subsequent cases found the principles underpinning the previous decision erroneous in law or overtaken by new legislation or developments.\" The reversing court's holding controls; the reversed one is no longer binding."
+  locator "Wikipedia, \"Precedent\" — Overruling"
+  trust authoritative
+}
+
+% ---------------------------------------------------------------------
+% CANON 2 — LEX POSTERIOR (recency / implied repeal). A later enactment or
+% edition prevails over an earlier conflicting one. So `supersedes(New, Old)`
+% ⇒ context New outranks context Old. This is the canon behind a newer clinical
+% guideline edition outranking the prior one (idsa_2024 > idsa_2004): the case
+% supplies `relate supersedes(idsa_2024, idsa_2004) source "<the 2024 guideline's
+% statement that it replaces the 2004 edition>"`, and this rule derives the edge.
+%
+% Verbatim charter (doctrine of implied repeal / lex posterior derogat priori):
+%   "The doctrine of implied repeal is a concept in constitutional theory which
+%    states that where an act of Parliament or an act of Congress (or of some
+%    other legislature) conflicts with an earlier one, the later Act takes
+%    precedence and the conflicting parts of the earlier Act become legally
+%    inoperable."
+% ---------------------------------------------------------------------
+rule {
+  head: outranks_context_by($New, $Old, lex_posterior)
+  when: supersedes($New, $Old)
+  source "Lex posterior derogat priori (implied repeal) — Implied repeal (Wikipedia): \"The doctrine of implied repeal is a concept in constitutional theory which states that where an act of Parliament or an act of Congress (or of some other legislature) conflicts with an earlier one, the later Act takes precedence and the conflicting parts of the earlier Act become legally inoperable.\" A later edition/enactment outranks the earlier conflicting one."
+  locator "Wikipedia, \"Implied repeal\" — leges posteriores priores contrarias abrogant"
+  trust authoritative
+}
+
+% ---------------------------------------------------------------------
+% CANON 3 — LEX SPECIALIS (the specific governs the general). When two rules
+% both apply to the same situation, the one governing the more specific subject
+% matter controls the one governing only general matters. So
+% `more_specific(S, G)` ⇒ context S outranks context G. The case supplies the
+% primitive `relate more_specific(specific_statute, general_statute) source
+% "<why S is the more specific provision>"`, and this rule derives the edge.
+%
+% Verbatim charter (lex specialis derogat legi generali):
+%   "The lex specialis doctrine, also referred to as generalia specialibus non
+%    derogant (\"the general does not [derogate] from the specific\"), states
+%    that if two laws govern the same factual situation, a law governing a
+%    specific subject matter (lex specialis) overrides a law governing only
+%    general matters (lex generalis)."
+%
+% NOTE (§4.3): lex specialis and lex superior can point OPPOSITE ways (a general
+% rule from a higher authority vs a specific rule from a lower one). This rule
+% only contributes the lex-specialis edge; when the two orders conflict, the
+% engine's cycle/ambiguity handling surfaces it (no silent pick) until a further
+% grounded tiebreaker meta-rule is added. That tiebreaker is the next slice.
+% ---------------------------------------------------------------------
+rule {
+  head: outranks_context_by($Specific, $General, lex_specialis)
+  when: more_specific($Specific, $General)
+  source "Lex specialis derogat legi generali — Lex specialis (Wikipedia): \"The lex specialis doctrine, also referred to as generalia specialibus non derogant (\\\"the general does not [derogate] from the specific\\\"), states that if two laws govern the same factual situation, a law governing a specific subject matter (lex specialis) overrides a law governing only general matters (lex generalis).\""
+  locator "Wikipedia, \"Lex specialis\" — generalia specialibus non derogant"
+  trust authoritative
+}
+
+% Turn the canon-tagged edges above into the engine's effective `outranks_context/2`
+% order, applying any grounded `canon_outranks` tiebreak (else abstaining on a collision).
+% Imported idempotently — safe to also import context-precedence.adj alongside this file.
+import "context-precedence-resolve.adj"

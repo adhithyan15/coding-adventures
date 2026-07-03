@@ -1,0 +1,23 @@
+% Vignette 5 — same demographics and history as Jane Doe but with
+% troponin rising on serial measurement. Demonstrates the
+% counterfactual machinery: "the precipitator is still uncertain,
+% but knowing troponin rose has already resolved the diagnosis."
+%
+% 62yo M, same case as vignette 1, but troponin rose from 0.02 to
+% 0.18 ng/mL over 3 hours — dynamic change consistent with NSTEMI.
+
+observe demographic(age_over_55)
+observe pmh(hypertension)
+observe pmh(smoker)
+observe symptom_quality(pressure_like)
+observe associated_symptom(diaphoresis)
+observe vital_signs(within_normal_limits)
+observe denied(ecg_acute_st_changes)
+observe biomarker(troponin_dynamic_rise)
+
+uncertain { precipitator(exertional),
+            precipitator(rest),
+            precipitator(positional) } for acs
+  source "patient did not specify precipitator (residual uncertainty)"
+
+? acs

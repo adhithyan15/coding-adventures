@@ -1,0 +1,21 @@
+{
+  "hash": "8b0e6439162f4f69213b5ce76613349103c9a698f73feb20e98a5f9d417b4e02",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1481509/",
+  "title": "Kikuchi-Fujimoto disease (review, Bosch & Guilabert) - PMC",
+  "interned_at": "",
+  "content": "Leukopenia can be found in up to 50% of the cases. Lymph node size has been found to range from 0.5 to 4 cm, but it may reach 5 to 6 cm and rarely larger than 6 cm.",
+  "citations": [
+    {
+      "start": 0,
+      "end": 50,
+      "quote": "Leukopenia can be found in up to 50% of the cases.",
+      "used_for": "wbc(1.35, leukopenia) LR+ for Kikuchi-Fujimoto disease->kikuchi_fujimoto_disease"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "Review borrows the leukopenia frequency; root primary measured number is Kucukardali et al, analysis of 244 cases (next hop).",
+      "interned_hash": ""
+    }
+  ]
+}

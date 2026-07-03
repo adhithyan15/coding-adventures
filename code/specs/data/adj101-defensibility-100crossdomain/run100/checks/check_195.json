@@ -1,0 +1,8 @@
+{
+ "check_id": 195,
+ "idx": 79,
+ "slot": "marriage_terminated_by_divorce",
+ "claimed_value": true,
+ "scenario": "Omar received conditional permanent residence through marriage. Before the petition to remove conditions was due, his marriage was legally terminated by divorce. He now seeks to remove conditions.",
+ "cited_span": "his marriage was legally terminated by divorce"
+}

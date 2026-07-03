@@ -33,6 +33,7 @@ import * as url from "node:url";
 import { routeToOutputPath } from "@coding-adventures/forme-aot-page-bundle-emitter";
 
 import { build, type MarkdownFile } from "./build.js";
+import { bundleSearchClient } from "./search-bundle.js";
 
 // ─────────────────────────────────────────────────────────────────────
 // CLI entry
@@ -52,10 +53,19 @@ async function cli(): Promise<void> {
   const files = await readCorpus(corpusDir);
   console.log(`[forme-doc-demo] read   = ${files.length} markdown files`);
 
+  // Bundle the browser-side search client + UI glue.  esbuild
+  // pulls in SearchClient + tokenizer (both pure TS, browser-
+  // safe), wraps with the in-page bootstrap, minifies, hands
+  // back a string we plug into `emitSite` as `search.clientJs`.
+  console.log(`[forme-doc-demo] bundling search client …`);
+  const searchClientJs = await bundleSearchClient();
+  console.log(`[forme-doc-demo] bundle = ${(searchClientJs.length / 1024).toFixed(1)}KB minified`);
+
   const bundle = build(files, {
     siteTitle: "Acme Docs",
     githubUrl: "https://github.com/example/acme",
     copyright: `© ${new Date().getFullYear()} Acme`,
+    searchClientJs,
   });
 
   await writeBundle(bundle, outDir);

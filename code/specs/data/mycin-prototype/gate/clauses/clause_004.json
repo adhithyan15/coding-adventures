@@ -1,0 +1,7 @@
+{
+ "idx": 4,
+ "key": "bacterial_meningitis::csf_protein(elevated)",
+ "lr": 9.33,
+ "computed": "LR+ = sens/(1-spec) = 0.84/(1-0.91) = 9.33",
+ "byte_quote": "Viallon et al. ... Using '>=1.88 g/L', they found 84.0 sensitivity and 91.0 specificity for distinguishing bacterial from viral meningitis."
+}

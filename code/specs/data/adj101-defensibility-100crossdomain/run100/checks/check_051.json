@@ -1,0 +1,8 @@
+{
+ "check_id": 51,
+ "idx": 19,
+ "slot": "neighbor_legally_obligated_to_maintain_fence",
+ "claimed_value": true,
+ "scenario": "A farmer's cattle wandered onto a neighbor's field and destroyed a vegetable crop. The cattle entered through a gap in the boundary fence that the neighbor was legally obligated to maintain but had left in disrepair.",
+ "cited_span": "the boundary fence that the neighbor was legally obligated to maintain"
+}
