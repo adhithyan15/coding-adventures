@@ -617,46 +617,59 @@ impl CompoundFile {
         Ok(out)
     }
 
-    /// Depth-first walk of one storage's child tree.
+    /// Flatten one storage's child tree into `out`.
+    ///
+    /// This uses an **explicit work-list** rather than native recursion. A
+    /// hostile file could craft a degenerate directory tree (e.g. every node's
+    /// left-sibling points to the next, forming a chain as deep as the number
+    /// of entries — tens of thousands for a large file). Native recursion on
+    /// such a chain would overflow the stack. An explicit `Vec` work-list moves
+    /// that growth to the heap, which the OS bounds far more generously.
+    ///
+    /// Termination is doubly guaranteed: the `visited` set means each directory
+    /// ID is pushed at most once (a cycle → `CycleDetected`), so the loop runs
+    /// at most `dir.len()` times.
     fn walk_tree(
         &self,
-        id: u32,
+        start: u32,
         visited: &mut HashSet<u32>,
         out: &mut Vec<Entry>,
     ) -> Result<(), CfbError> {
-        if id == NOSTREAM {
-            return Ok(());
-        }
-        if !visited.insert(id) {
-            // A sibling pointer looped back — hostile file, stop safely.
-            return Err(CfbError::CycleDetected);
-        }
-        let entry = self.dir.get(id as usize).ok_or(CfbError::BadDirectory)?;
-        let kind = match entry.object_type {
-            1 => EntryKind::Storage,
-            2 => EntryKind::Stream,
-            5 => EntryKind::RootStorage,
-            // Skip unused/invalid nodes but keep walking siblings.
-            _ => {
-                let (left, right) = (entry.left, entry.right);
-                self.walk_tree(left, visited, out)?;
-                self.walk_tree(right, visited, out)?;
-                return Ok(());
+        let mut stack: Vec<u32> = Vec::new();
+        stack.push(start);
+
+        while let Some(id) = stack.pop() {
+            if id == NOSTREAM {
+                continue;
             }
-        };
-        // Emit this node.
-        out.push(Entry {
-            name: entry.name.clone(),
-            size: entry.size,
-            kind,
-            id,
-        });
-        let (left, right, child) = (entry.left, entry.right, entry.child);
-        // Left / right siblings, then recurse into a storage's own children.
-        self.walk_tree(left, visited, out)?;
-        self.walk_tree(right, visited, out)?;
-        if kind == EntryKind::Storage {
-            self.walk_tree(child, visited, out)?;
+            if !visited.insert(id) {
+                // A sibling/child pointer looped back — hostile file, stop safely.
+                return Err(CfbError::CycleDetected);
+            }
+            let entry = self.dir.get(id as usize).ok_or(CfbError::BadDirectory)?;
+            let (left, right, child) = (entry.left, entry.right, entry.child);
+            let kind = match entry.object_type {
+                1 => Some(EntryKind::Storage),
+                2 => Some(EntryKind::Stream),
+                5 => Some(EntryKind::RootStorage),
+                // Unused/invalid node: don't emit it, but still follow siblings.
+                _ => None,
+            };
+            if let Some(kind) = kind {
+                out.push(Entry {
+                    name: entry.name.clone(),
+                    size: entry.size,
+                    kind,
+                    id,
+                });
+                // A storage owns a child sub-tree.
+                if kind == EntryKind::Storage {
+                    stack.push(child);
+                }
+            }
+            // Always follow left/right siblings.
+            stack.push(left);
+            stack.push(right);
         }
         Ok(())
     }
@@ -1068,5 +1081,68 @@ mod tests {
     fn utf16_name_zero_length_is_empty() {
         let field = [0u8; 64];
         assert_eq!(decode_utf16_name(&field, 0), "");
+    }
+
+    /// Build a synthetic `CompoundFile` whose directory is a very deep degenerate
+    /// left-sibling chain (entry i's left = i+1). Native recursion would blow the
+    /// stack; the iterative work-list must flatten it without panicking.
+    fn cf_with_deep_dir_chain(n: u32, make_cycle: bool) -> CompoundFile {
+        let mut dir = Vec::with_capacity(n as usize + 1);
+        // Root (index 0), child -> entry 1.
+        dir.push(DirEntry {
+            name: "Root Entry".into(),
+            object_type: 5,
+            left: NOSTREAM,
+            right: NOSTREAM,
+            child: if n > 0 { 1 } else { NOSTREAM },
+            start_sector: ENDOFCHAIN,
+            size: 0,
+        });
+        for i in 1..=n {
+            // Each entry chains to the next via left; last one terminates
+            // (or, if make_cycle, points back to entry 1 to force a cycle).
+            let left = if i < n {
+                i + 1
+            } else if make_cycle {
+                1
+            } else {
+                NOSTREAM
+            };
+            dir.push(DirEntry {
+                name: format!("s{i}"),
+                object_type: 2, // stream
+                left,
+                right: NOSTREAM,
+                child: NOSTREAM,
+                start_sector: ENDOFCHAIN,
+                size: 0,
+            });
+        }
+        CompoundFile {
+            data: vec![0u8; HEADER_LEN],
+            sector_size: 512,
+            mini_sector_size: 64,
+            mini_cutoff: 4096,
+            fat: vec![],
+            mini_fat: vec![],
+            dir,
+            mini_stream: vec![],
+            entries: vec![],
+        }
+    }
+
+    #[test]
+    fn deep_directory_chain_does_not_overflow_stack() {
+        // 200k-deep chain: native recursion would overflow; iterative must not.
+        let cf = cf_with_deep_dir_chain(200_000, false);
+        let entries = cf.enumerate_entries().expect("deep chain should flatten");
+        // Root + all n stream entries.
+        assert_eq!(entries.len(), 200_001);
+    }
+
+    #[test]
+    fn deep_directory_cycle_is_detected_not_hung() {
+        let cf = cf_with_deep_dir_chain(50_000, true);
+        assert_eq!(cf.enumerate_entries().err(), Some(CfbError::CycleDetected));
     }
 }
