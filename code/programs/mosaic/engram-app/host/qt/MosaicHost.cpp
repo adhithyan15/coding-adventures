@@ -241,8 +241,9 @@ QVariantMap MosaicHost::importAnkiPackage(
 
   QFile file(path);
   if (!file.open(QIODevice::ReadOnly)) {
-    qWarning() << "Engram MosaicHost could not read Anki package:" << file.errorString();
-    return hostResultResponse(response, hostIntent, QStringLiteral("read-error"), path);
+    const QString error = file.errorString();
+    qWarning() << "Engram MosaicHost could not read Anki package:" << error;
+    return hostResultResponse(response, hostIntent, QStringLiteral("read-error"), path, error);
   }
 
   const QByteArray data = file.readAll();
@@ -252,9 +253,9 @@ QVariantMap MosaicHost::importAnkiPackage(
       static_cast<std::size_t>(data.size())));
   const QVariantMap imported = hostResponseFromJson(json);
   if (imported.contains(QStringLiteral("error"))) {
-    qWarning() << "Engram MosaicHost could not import Anki package:"
-               << imported.value(QStringLiteral("error")).toString();
-    return hostResultResponse(response, hostIntent, QStringLiteral("import-error"), path);
+    const QString error = imported.value(QStringLiteral("error")).toString();
+    qWarning() << "Engram MosaicHost could not import Anki package:" << error;
+    return hostResultResponse(response, hostIntent, QStringLiteral("import-error"), path, error);
   }
 
   persistSnapshot();
@@ -292,29 +293,31 @@ QVariantMap MosaicHost::exportAnkiPackage(
   QJsonParseError parseError;
   const QJsonDocument document = QJsonDocument::fromJson(json.toUtf8(), &parseError);
   if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-    qWarning() << "Engram MosaicHost could not parse exported Anki package JSON:"
-               << parseError.errorString();
-    return hostResultResponse(response, hostIntent, QStringLiteral("export-error"), path);
+    const QString error = parseError.errorString();
+    qWarning() << "Engram MosaicHost could not parse exported Anki package JSON:" << error;
+    return hostResultResponse(response, hostIntent, QStringLiteral("export-error"), path, error);
   }
 
   const QJsonObject root = document.object();
   if (root.value(QStringLiteral("ok")).toBool(true) == false) {
-    qWarning() << "Engram MosaicHost could not export Anki package:"
-               << root.value(QStringLiteral("error")).toString();
-    return hostResultResponse(response, hostIntent, QStringLiteral("export-error"), path);
+    const QString error = root.value(QStringLiteral("error")).toString(QStringLiteral("unknown error"));
+    qWarning() << "Engram MosaicHost could not export Anki package:" << error;
+    return hostResultResponse(response, hostIntent, QStringLiteral("export-error"), path, error);
   }
 
   const QByteArray data = jsonByteArray(root, QStringLiteral("apkg"));
   QFile file(path);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    qWarning() << "Engram MosaicHost could not save Anki package:" << file.errorString();
-    return hostResultResponse(response, hostIntent, QStringLiteral("write-error"), path);
+    const QString error = file.errorString();
+    qWarning() << "Engram MosaicHost could not save Anki package:" << error;
+    return hostResultResponse(response, hostIntent, QStringLiteral("write-error"), path, error);
   }
   file.write(data);
   file.close();
   if (file.error() != QFile::NoError) {
-    qWarning() << "Engram MosaicHost could not finish saving Anki package:" << file.errorString();
-    return hostResultResponse(response, hostIntent, QStringLiteral("write-error"), path);
+    const QString error = file.errorString();
+    qWarning() << "Engram MosaicHost could not finish saving Anki package:" << error;
+    return hostResultResponse(response, hostIntent, QStringLiteral("write-error"), path, error);
   }
 
   return hostResultResponse(response, hostIntent, QStringLiteral("exported"), path);
@@ -324,13 +327,17 @@ QVariantMap MosaicHost::hostResultResponse(
     const QVariantMap &response,
     const QVariantMap &hostIntent,
     const QString &status,
-    const QString &path) const {
+    const QString &path,
+    const QString &error) const {
   QVariantMap out = response;
   out.insert(QStringLiteral("hostIntent"), hostIntent);
   QVariantMap hostResult;
   hostResult.insert(QStringLiteral("status"), status);
   if (!path.isEmpty()) {
     hostResult.insert(QStringLiteral("path"), path);
+  }
+  if (!error.isEmpty()) {
+    hostResult.insert(QStringLiteral("error"), error);
   }
   out.insert(QStringLiteral("hostResult"), hostResult);
   return withHostStatusProps(out, hostResult);
@@ -386,6 +393,7 @@ QString MosaicHost::hostStatusMessage(
     const QVariantMap &hostResult,
     const QString &status) const {
   const QString file = hostResultFile(hostResult);
+  const QString error = hostResult.value(QStringLiteral("error")).toString();
   if (status == QStringLiteral("imported")) {
     return file.isEmpty() ? QStringLiteral("Anki package imported.")
                           : QStringLiteral("Imported %1.").arg(file);
@@ -398,19 +406,26 @@ QString MosaicHost::hostStatusMessage(
     return QStringLiteral("No Anki package was selected.");
   }
   if (status == QStringLiteral("read-error")) {
-    return file.isEmpty() ? QStringLiteral("Could not read the selected file.")
-                          : QStringLiteral("Could not read %1.").arg(file);
+    const QString subject = file.isEmpty() ? QStringLiteral("the selected file") : file;
+    return error.isEmpty() ? QStringLiteral("Could not read %1.").arg(subject)
+                           : QStringLiteral("Could not read %1: %2").arg(subject, error);
   }
   if (status == QStringLiteral("import-error")) {
-    return file.isEmpty() ? QStringLiteral("Could not import the selected package.")
-                          : QStringLiteral("Could not import %1.").arg(file);
+    const QString subject = file.isEmpty() ? QStringLiteral("the selected package") : file;
+    return error.isEmpty() ? QStringLiteral("Could not import %1.").arg(subject)
+                           : QStringLiteral("Could not import %1: %2").arg(subject, error);
   }
   if (status == QStringLiteral("export-error")) {
-    return QStringLiteral("Could not export Anki package.");
+    return error.isEmpty() ? QStringLiteral("Could not export Anki package.")
+                           : QStringLiteral("Could not export Anki package: %1").arg(error);
   }
   if (status == QStringLiteral("write-error")) {
-    return file.isEmpty() ? QStringLiteral("Could not save the Anki package.")
-                          : QStringLiteral("Could not save %1.").arg(file);
+    const QString subject = file.isEmpty() ? QStringLiteral("the Anki package") : file;
+    return error.isEmpty() ? QStringLiteral("Could not save %1.").arg(subject)
+                           : QStringLiteral("Could not save %1: %2").arg(subject, error);
+  }
+  if (!error.isEmpty()) {
+    return error;
   }
   return file.isEmpty() ? status : file;
 }

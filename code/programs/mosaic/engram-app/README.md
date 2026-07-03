@@ -45,6 +45,8 @@ editing, and save/delete/cancel controls.
 - The web, Electron, Qt, SwiftUI, Compose, Flutter, and XAML host adapters
   merge their Anki import/export `hostResult` status back into those shared
   status slots.
+- The Electron, web, and native host adapters preserve host-side error details
+  in those status messages when a package read/import/export/write step fails.
 - The generated React and Electron renderer shells mount `EngramApp` through
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.
