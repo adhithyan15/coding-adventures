@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.46.0] - 2026-07-03 — a SECOND math frontend: `asciimath "…"` (pluggable frontends, PFE01)
+
+### Added
+
+- **`asciimath "<math>"`** is now accepted anywhere an ADJ arithmetic expression is (as an `expr`
+  factor), alongside the existing `latex "…"`. AsciiMath is a math dialect many math-tuned models
+  emit — e.g. `(a+b)/c`, `1/2`, `x*x` — and the repo already ships an `asciimath` `MathFrontend`
+  that parses it to the **same neutral `MathExpr`** tree the LaTeX frontend produces.
+- This is the **pluggable-frontends thesis (PFE01)** made concrete: the adapter's only
+  frontend-specific step is the parse call (`parse_asciimath_math`, the counterpart to
+  `parse_latex_math`). The resulting `MathExpr` flows through the **identical**
+  `latex_math_to_expr_ast` lowering, so the entire arithmetic + named-function surface
+  (fractions, products, sums, powers, the trig/hyperbolic families, …) is available to the
+  AsciiMath surface **for free** — no new lowering, and **no new engine op**.
+- New grammar production `asciimath_expr = "asciimath" STRING ;` (regenerated `_lexer_grammar.rs`
+  / `_parser_grammar.rs`); new `AdapterError::AsciiMathParse` for parse failures (unsupported
+  *nodes* still surface via the shared `UnsupportedLatexMath`, since the neutral-tree lowering
+  names its errors after the first frontend).
+- Three end-to-end tests through `compile_and_decide` prove it computes: `asciimath "(3+4)*2"` = 14,
+  `asciimath "(3+4)/2"` = 3.5 (reusing the very `MathExpr::Frac` lowering LaTeX `\frac` uses), and an
+  observed slot binding inside AsciiMath (`observe x(2)` + `asciimath "x*x"` = 4).
+- **Security/DoS:** the adapter adds **no new recursive tree-walker** — it reuses the existing
+  `latex_math_to_expr_ast` lowering. The AsciiMath parser owns its own recursion/DoS discipline in
+  its crate, so no new stack-overflow surface is introduced here (no new deep-input regression test
+  is warranted on the adapter side).
+
 ## [0.45.0] - 2026-07-03 — inverse hyperbolic functions (`arsinh`/`arcosh`/`artanh`) in `latex "…"`
 
 ### Added

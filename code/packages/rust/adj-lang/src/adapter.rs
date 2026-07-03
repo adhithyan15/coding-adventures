@@ -75,6 +75,14 @@ pub enum AdapterError {
     /// A `latex "<math>"` expression or `constrain latex "<equation>"`
     /// could not be parsed by the repo's LaTeX MathFrontend.
     LatexParse { source: String, detail: String },
+    /// An `asciimath "<math>"` expression could not be parsed by the repo's
+    /// AsciiMath MathFrontend. AsciiMath is a SECOND math frontend that lowers
+    /// through the same neutral `MathExpr` pipeline as `latex`; only the parse
+    /// step is frontend-specific, so this is its counterpart to
+    /// [`AdapterError::LatexParse`]. Once parsed, an unsupported node still
+    /// surfaces as [`AdapterError::UnsupportedLatexMath`] — the shared
+    /// neutral-tree lowering names its errors after that first frontend.
+    AsciiMathParse { source: String, detail: String },
     /// LaTeX parsed successfully, but used math outside the ADJ arithmetic /
     /// constraint subset this surface can lower faithfully.
     UnsupportedLatexMath { source: String, detail: String },
@@ -838,6 +846,15 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
         let math = parse_latex_math(&source)?;
         return latex_math_to_expr_ast(&math, &source);
     }
+    // A SECOND math frontend on the same factor position: `asciimath "..."`.
+    // Only the parse step differs — the resulting neutral `MathExpr` flows
+    // through the identical `latex_math_to_expr_ast` lowering, so the whole
+    // arithmetic + named-function surface is available for free (PFE01).
+    if let Some(am) = first_named_child(node, "asciimath_expr") {
+        let source = latex_string_from_node(am, "asciimath_expr")?;
+        let math = parse_asciimath_math(&source)?;
+        return latex_math_to_expr_ast(&math, &source);
+    }
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
     }
@@ -881,6 +898,29 @@ fn parse_latex_math(source: &str) -> Result<MathExpr, AdapterError> {
     registry
         .parse("latex", math)
         .map_err(|e| AdapterError::LatexParse {
+            source: source.to_string(),
+            detail: e.message,
+        })
+}
+
+/// Parse an `asciimath "..."` string with the repo's AsciiMath `MathFrontend`.
+///
+/// This is the AsciiMath counterpart to [`parse_latex_math`] — the ONLY
+/// frontend-specific step in the pipeline. Its output is the same neutral
+/// [`MathExpr`] the LaTeX frontend produces, which the caller lowers with the
+/// shared [`latex_math_to_expr_ast`]. (We strip `$…$`-style math delimiters
+/// first, harmlessly: AsciiMath does not use them, but a model may wrap either
+/// dialect in them, and stripping keeps the two surfaces symmetric.)
+///
+/// The AsciiMath parser lives in its own crate and owns its own recursion/DoS
+/// discipline; this adapter adds no new tree-walker, so it introduces no new
+/// stack-overflow surface here.
+fn parse_asciimath_math(source: &str) -> Result<MathExpr, AdapterError> {
+    use math_frontend::MathFrontend;
+    let math = strip_math_delimiters(source);
+    asciimath::AsciiMath
+        .parse(math)
+        .map_err(|e| AdapterError::AsciiMathParse {
             source: source.to_string(),
             detail: e.message,
         })
