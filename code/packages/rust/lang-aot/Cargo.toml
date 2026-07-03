@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.170.0"
+version = "0.171.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.170.0 (AL-pow): ALGOL 60 exponentiation `10 + 2 ^ 5` = 42 (integer unroll) runs on all 7 backends.  v0.169.0 (AL-multidim-bounds): ALGOL 60 2D array with arbitrary/negative lower bounds.  v0.168.0 (BA-DIM-2D): Dartmouth BASIC 2D DIM array cell.  v0.167.0 (AL-multidim-3D): ALGOL 60 3D integer array cell."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.171.0 (E4-dyn foothold): first RUNTIME (non-foldable) string matrix cell — a BASIC branch-selected string (`INPUT N` picks `HI`/`LO`) proven on the 4 already-dynamic backends (Vm/Jit/Jvm/Clr); static backends extend it in E4d-2..4.  v0.170.0 (AL-pow): ALGOL 60 exponentiation.  v0.169.0 (AL-multidim-bounds): ALGOL 60 2D array with arbitrary/negative lower bounds."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

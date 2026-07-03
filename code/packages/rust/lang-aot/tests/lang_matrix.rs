@@ -2280,6 +2280,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — a *runtime (non-foldable) string* chosen by control flow
+    // (LANG-FULL E4-dyn foothold). `INPUT N` reads an integer at run time, so
+    // which string literal `A$` holds at line 60 — `"HI"` (N>0) or `"LO"` — is
+    // **not known at compile time**: `A$` is a genuinely dynamic string value,
+    // unlike every prior E4 cell where the compiler could fold the string to a
+    // constant. This is the first matrix proof of a runtime string, and it runs
+    // today on the four **already-dynamic** columns — VM/JIT (tagged value),
+    // JVM (`java.lang.String` local), CLR (`System.String` local) — which carry
+    // a reassigned-across-branches string slot natively. The four static
+    // backends (NativeAot/Llvm/Wasm) fold strings to compile-time constants and
+    // cannot yet represent this value; they are added column-by-column by the
+    // E4-dyn backend PRs (E4d-2 LLVM → E4d-3 WASM → E4d-4 native), each of which
+    // extends THIS cell's `backends` list once its runtime heap-string lowering
+    // (on the E4d-1 `__twig_str_*` helpers) lands. Stdin `1` → N=1>0 → `A$="HI"`
+    // → prints `HI`.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
+        expect: Expect::Stdout("HI"),
+        backends: &[Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -2351,6 +2373,8 @@ fn program_stdin(p: &Prog) -> &'static [u8] {
         (Language::DartmouthBasic, "10 INPUT X\n20 PRINT X\n30 END\n") => b"42\n",
         // BA-INPUT: two INPUTs — reads "10\n32\n", PRINT A + B ⇒ "42"
         (Language::DartmouthBasic, "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n") => b"10\n32\n",
+        // E4-dyn foothold: `INPUT N` = 1 (>0) selects the `"HI"` branch for `A$`.
+        (Language::DartmouthBasic, "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n") => b"1\n",
         _ => b"",
     }
 }
