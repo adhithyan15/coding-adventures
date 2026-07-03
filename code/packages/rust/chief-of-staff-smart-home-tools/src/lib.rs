@@ -327,6 +327,7 @@ pub const SMART_HOME_GET_SHIFT_HANDOFF_BRIEF_TOOL_ID: &str = "smart_home.get_shi
 pub const SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID: &str = "smart_home.get_closeout_brief";
 pub const SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID: &str = "smart_home.get_closeout_receipt";
 pub const SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID: &str = "smart_home.get_closeout_audit_trail";
+pub const SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID: &str = "smart_home.get_closeout_archive";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2487,6 +2488,10 @@ impl SmartHomeToolBridge {
                         principal_id,
                         now_ms,
                     )
+                }
+                SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_closeout_archive_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6614,6 +6619,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_closeout_brief_definition(),
         get_closeout_receipt_definition(),
         get_closeout_audit_trail_definition(),
+        get_closeout_archive_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -8269,6 +8275,62 @@ fn get_closeout_audit_trail_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "audit_events",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_closeout_archive_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID,
+        "Get smart-home closeout archive",
+        "Turn the existing D23 smart-home closeout audit trail into a final archive packet without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("archive_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("archive_record_count", JsonSchema::Integer),
+                SchemaProperty::new("blocker_record_count", JsonSchema::Integer),
+                SchemaProperty::new("review_record_count", JsonSchema::Integer),
+                SchemaProperty::new("action_record_count", JsonSchema::Integer),
+                SchemaProperty::new("archived_record_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "archive_records",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "archive_ready",
+                "requires_human_review",
+                "has_blockers",
+                "archive_record_count",
+                "blocker_record_count",
+                "review_record_count",
+                "action_record_count",
+                "archived_record_count",
+                "summary",
+                "decision",
+                "archive_records",
                 "source_tools",
             ],
             false,
@@ -45962,6 +46024,53 @@ fn get_closeout_audit_trail_output_handler_output(
     ))
 }
 
+fn get_closeout_archive_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let audit_trail =
+        get_closeout_audit_trail_output_handler_output(runtime, principal_id, now_ms)?.output;
+    let output = closeout_archive_output_json(now_ms, &audit_trail);
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let archive_ready = morning_brief_bool_at(&output, &["archive_ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let archive_record_count =
+        morning_brief_integer_at(&output, &["archive_record_count"]).unwrap_or(0);
+    let blocker_record_count =
+        morning_brief_integer_at(&output, &["blocker_record_count"]).unwrap_or(0);
+    let review_record_count =
+        morning_brief_integer_at(&output, &["review_record_count"]).unwrap_or(0);
+    let action_record_count =
+        morning_brief_integer_at(&output, &["action_record_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_closeout_archive")),
+            ("status", string(&status)),
+            ("archive_ready", JsonValue::Bool(archive_ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("archive_record_count", integer(archive_record_count)),
+            ("blocker_record_count", integer(blocker_record_count)),
+            ("review_record_count", integer(review_record_count)),
+            ("action_record_count", integer(action_record_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -52718,6 +52827,428 @@ fn closeout_audit_trail_next_action(next_event: Option<&CloseoutAuditEvent>) -> 
 fn closeout_audit_trail_next_owner_lane(next_event: Option<&CloseoutAuditEvent>) -> &str {
     next_event
         .map(|event| event.owner_lane.as_str())
+        .unwrap_or("chief")
+}
+
+struct CloseoutArchiveRecord {
+    record_id: String,
+    audit_event_id: String,
+    receipt_item_id: String,
+    closeout_item_id: String,
+    handoff_item_id: String,
+    lane_id: String,
+    section_id: String,
+    label: String,
+    status: String,
+    severity: String,
+    audit_state: String,
+    archive_state: &'static str,
+    archive_action: &'static str,
+    audit_action: String,
+    receipt_action: String,
+    closeout_action: String,
+    handoff_action: String,
+    readiness_action: String,
+    continuity_action: String,
+    handoff_required: bool,
+    priority: i64,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    evidence: JsonValue,
+}
+
+fn closeout_archive_output_json(now_ms: u64, audit_trail: &JsonValue) -> JsonValue {
+    let records = closeout_archive_records_from_audit_trail(audit_trail);
+    let generated_at_ms =
+        morning_brief_integer_at(audit_trail, &["generated_at_ms"]).unwrap_or(now_ms as i64);
+    let blocker_record_count = records
+        .iter()
+        .filter(|record| record.archive_state == "blocked")
+        .count();
+    let review_record_count = records
+        .iter()
+        .filter(|record| record.archive_state == "review_required")
+        .count();
+    let action_record_count = records
+        .iter()
+        .filter(|record| record.archive_state == "action_required")
+        .count();
+    let archived_record_count = records
+        .iter()
+        .filter(|record| record.archive_state == "archived")
+        .count();
+    let has_blockers = blocker_record_count > 0
+        || morning_brief_bool_at(audit_trail, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review = review_record_count > 0
+        || morning_brief_bool_at(audit_trail, &["requires_human_review"]).unwrap_or(false);
+    let archive_ready = !has_blockers && !requires_human_review && action_record_count == 0;
+    let status = closeout_archive_status(
+        archive_ready,
+        has_blockers,
+        requires_human_review,
+        action_record_count,
+        archived_record_count,
+    );
+    let next_record = records.first();
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(archive_ready)),
+        ("archive_ready", JsonValue::Bool(archive_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("archive_record_count", integer(records.len() as i64)),
+        ("blocker_record_count", integer(blocker_record_count as i64)),
+        ("review_record_count", integer(review_record_count as i64)),
+        ("action_record_count", integer(action_record_count as i64)),
+        ("archived_record_count", integer(archived_record_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "audit_trail_status",
+                    string(
+                        morning_brief_string_at(audit_trail, &["status"]).unwrap_or("unknown"),
+                    ),
+                ),
+                (
+                    "audit_trail_ready",
+                    JsonValue::Bool(
+                        morning_brief_bool_at(audit_trail, &["audit_trail_ready"])
+                            .unwrap_or(false),
+                    ),
+                ),
+                ("archive_ready", JsonValue::Bool(archive_ready)),
+                ("archive_record_count", integer(records.len() as i64)),
+                ("blocker_record_count", integer(blocker_record_count as i64)),
+                ("review_record_count", integer(review_record_count as i64)),
+                ("action_record_count", integer(action_record_count as i64)),
+                ("archived_record_count", integer(archived_record_count as i64)),
+                (
+                    "next_tool",
+                    string(closeout_archive_next_tool(next_record)),
+                ),
+                (
+                    "next_action",
+                    string(closeout_archive_next_action(next_record)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(closeout_archive_next_owner_lane(next_record)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            closeout_archive_decision_json(
+                status,
+                archive_ready,
+                has_blockers,
+                requires_human_review,
+                action_record_count,
+                archived_record_count,
+                next_record,
+            ),
+        ),
+        (
+            "archive_records",
+            JsonValue::Array(records.iter().map(closeout_archive_record_json).collect()),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SHIFT_HANDOFF_BRIEF_TOOL_ID,
+                SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn closeout_archive_records_from_audit_trail(
+    audit_trail: &JsonValue,
+) -> Vec<CloseoutArchiveRecord> {
+    let mut records = match optional_field(audit_trail, "audit_events") {
+        Some(JsonValue::Array(events)) => events
+            .iter()
+            .map(closeout_archive_record_from_audit_event)
+            .collect::<Vec<_>>(),
+        _ => Vec::new(),
+    };
+    records.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.section_id.cmp(&right.section_id))
+    });
+    records
+}
+
+fn closeout_archive_record_from_audit_event(event: &JsonValue) -> CloseoutArchiveRecord {
+    let audit_event_id = morning_brief_string_at(event, &["event_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let section_id = morning_brief_string_at(event, &["section_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let audit_state = morning_brief_string_at(event, &["audit_state"])
+        .unwrap_or("monitor")
+        .to_string();
+    let archive_state = closeout_archive_state(&audit_state);
+    let priority = morning_brief_integer_at(event, &["priority"])
+        .unwrap_or_else(|| closeout_archive_priority(archive_state));
+
+    CloseoutArchiveRecord {
+        record_id: format!("closeout-archive:{}:{}", archive_state, section_id),
+        audit_event_id,
+        receipt_item_id: morning_brief_string_at(event, &["receipt_item_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        closeout_item_id: morning_brief_string_at(event, &["closeout_item_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        handoff_item_id: morning_brief_string_at(event, &["handoff_item_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        lane_id: morning_brief_string_at(event, &["lane_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        section_id,
+        label: morning_brief_string_at(event, &["label"])
+            .unwrap_or("Unknown")
+            .to_string(),
+        status: morning_brief_string_at(event, &["status"])
+            .unwrap_or("unknown")
+            .to_string(),
+        severity: morning_brief_string_at(event, &["severity"])
+            .unwrap_or("monitor")
+            .to_string(),
+        audit_state,
+        archive_state,
+        archive_action: closeout_archive_action(archive_state),
+        audit_action: morning_brief_string_at(event, &["audit_action"])
+            .unwrap_or("monitor_audit_trail")
+            .to_string(),
+        receipt_action: morning_brief_string_at(event, &["receipt_action"])
+            .unwrap_or("monitor_closeout_receipt")
+            .to_string(),
+        closeout_action: morning_brief_string_at(event, &["closeout_action"])
+            .unwrap_or("monitor_closeout_item")
+            .to_string(),
+        handoff_action: morning_brief_string_at(event, &["handoff_action"])
+            .unwrap_or("monitor_shift_lane")
+            .to_string(),
+        readiness_action: morning_brief_string_at(event, &["readiness_action"])
+            .unwrap_or("monitor_operator_readiness")
+            .to_string(),
+        continuity_action: morning_brief_string_at(event, &["continuity_action"])
+            .unwrap_or("monitor_owner_lane")
+            .to_string(),
+        handoff_required: morning_brief_bool_at(event, &["handoff_required"]).unwrap_or(false),
+        priority,
+        recommended_tool: morning_brief_string_at(event, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(event, &["recommended_action"])
+            .unwrap_or("inspect_closeout_audit_trail")
+            .to_string(),
+        owner_lane: morning_brief_string_at(event, &["owner_lane"])
+            .unwrap_or("chief")
+            .to_string(),
+        evidence: morning_brief_field_clone(event, "evidence"),
+    }
+}
+
+fn closeout_archive_record_json(record: &CloseoutArchiveRecord) -> JsonValue {
+    object([
+        ("record_id", string(&record.record_id)),
+        ("audit_event_id", string(&record.audit_event_id)),
+        ("receipt_item_id", string(&record.receipt_item_id)),
+        ("closeout_item_id", string(&record.closeout_item_id)),
+        ("handoff_item_id", string(&record.handoff_item_id)),
+        ("lane_id", string(&record.lane_id)),
+        ("section_id", string(&record.section_id)),
+        ("label", string(&record.label)),
+        ("status", string(&record.status)),
+        ("severity", string(&record.severity)),
+        ("audit_state", string(&record.audit_state)),
+        ("archive_state", string(record.archive_state)),
+        ("archive_action", string(record.archive_action)),
+        ("audit_action", string(&record.audit_action)),
+        ("receipt_action", string(&record.receipt_action)),
+        ("closeout_action", string(&record.closeout_action)),
+        ("handoff_action", string(&record.handoff_action)),
+        ("readiness_action", string(&record.readiness_action)),
+        ("continuity_action", string(&record.continuity_action)),
+        ("handoff_required", JsonValue::Bool(record.handoff_required)),
+        ("priority", integer(record.priority)),
+        ("recommended_tool", string(&record.recommended_tool)),
+        ("recommended_action", string(&record.recommended_action)),
+        ("owner_lane", string(&record.owner_lane)),
+        ("evidence", record.evidence.clone()),
+    ])
+}
+
+fn closeout_archive_status(
+    archive_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_record_count: usize,
+    archived_record_count: usize,
+) -> &'static str {
+    if has_blockers {
+        "hold"
+    } else if requires_human_review {
+        "review_required"
+    } else if action_record_count > 0 {
+        "action_required"
+    } else if archive_ready {
+        "ready"
+    } else if archived_record_count > 0 {
+        "archived"
+    } else {
+        "monitor"
+    }
+}
+
+fn closeout_archive_state(audit_state: &str) -> &'static str {
+    match audit_state {
+        "unresolved_blocker" => "blocked",
+        "review_pending" => "review_required",
+        "action_pending" => "action_required",
+        "recorded" => "archived",
+        _ => "monitor",
+    }
+}
+
+fn closeout_archive_action(archive_state: &str) -> &'static str {
+    match archive_state {
+        "blocked" => "hold_closeout_archive",
+        "review_required" => "confirm_archive_owner",
+        "action_required" => "complete_archive_action",
+        "archived" => "archive_acknowledgement",
+        _ => "monitor_closeout_archive",
+    }
+}
+
+fn closeout_archive_priority(archive_state: &str) -> i64 {
+    match archive_state {
+        "blocked" => 0,
+        "review_required" => 1,
+        "action_required" => 2,
+        "archived" => 3,
+        _ => 4,
+    }
+}
+
+fn closeout_archive_decision_json(
+    status: &str,
+    archive_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_record_count: usize,
+    archived_record_count: usize,
+    next_record: Option<&CloseoutArchiveRecord>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(closeout_archive_decision_label(
+                status,
+                archive_ready,
+                has_blockers,
+                requires_human_review,
+                action_record_count,
+                archived_record_count,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(closeout_archive_next_tool(next_record)),
+        ),
+        (
+            "recommended_action",
+            string(closeout_archive_next_action(next_record)),
+        ),
+        (
+            "owner_lane",
+            string(closeout_archive_next_owner_lane(next_record)),
+        ),
+        (
+            "reason",
+            string(
+                next_record
+                    .map(|record| record.section_id.as_str())
+                    .unwrap_or("no_open_closeout_archive_records"),
+            ),
+        ),
+    ])
+}
+
+fn closeout_archive_decision_label(
+    status: &str,
+    archive_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_record_count: usize,
+    archived_record_count: usize,
+) -> &'static str {
+    if has_blockers || status == "hold" {
+        "hold_closeout_archive"
+    } else if requires_human_review {
+        "prepare_archive_review"
+    } else if action_record_count > 0 {
+        "complete_archive_actions"
+    } else if archive_ready {
+        "archive_ready"
+    } else if archived_record_count > 0 {
+        "archive_acknowledgements"
+    } else {
+        "monitor"
+    }
+}
+
+fn closeout_archive_next_tool(next_record: Option<&CloseoutArchiveRecord>) -> &str {
+    next_record
+        .map(|record| record.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID)
+}
+
+fn closeout_archive_next_action(next_record: Option<&CloseoutArchiveRecord>) -> &str {
+    next_record
+        .map(|record| record.archive_action)
+        .unwrap_or("monitor_closeout_archive")
+}
+
+fn closeout_archive_next_owner_lane(next_record: Option<&CloseoutArchiveRecord>) -> &str {
+    next_record
+        .map(|record| record.owner_lane.as_str())
         .unwrap_or("chief")
 }
 
@@ -87393,7 +87924,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 305);
+        assert_eq!(definitions.len(), 306);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -87468,6 +87999,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -88273,7 +88807,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            297
+            298
         );
         assert_eq!(
             export
@@ -90892,6 +91426,151 @@ mod tests {
     }
 
     #[test]
+    fn closeout_archive_turns_audit_events_into_archive_records() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-closeout-archive-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-closeout-archive",
+            SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "archive_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "archive_record_count").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "blocker_record_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(field(summary, "audit_trail_status"), Some(&string("hold")));
+        assert_eq!(
+            field(summary, "audit_trail_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("hold_closeout_archive"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(
+            field(decision, "recommendation"),
+            Some(&string("hold_closeout_archive"))
+        );
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("hold_closeout_archive"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("incident")));
+
+        let records = field(output, "archive_records").unwrap();
+        assert!(array_len(records).unwrap() >= 4);
+        let first = array_item(records, 0).unwrap();
+        assert_eq!(field(first, "severity"), Some(&string("blocker")));
+        assert_eq!(
+            field(first, "audit_state"),
+            Some(&string("unresolved_blocker"))
+        );
+        assert_eq!(field(first, "archive_state"), Some(&string("blocked")));
+        assert_eq!(
+            field(first, "archive_action"),
+            Some(&string("hold_closeout_archive"))
+        );
+        assert_eq!(
+            field(first, "audit_action"),
+            Some(&string("hold_audit_trail"))
+        );
+        assert_eq!(
+            field(first, "receipt_action"),
+            Some(&string("hold_closeout_receipt"))
+        );
+        assert_eq!(
+            field(first, "closeout_action"),
+            Some(&string("hold_closeout"))
+        );
+        assert_eq!(
+            field(first, "handoff_required"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(first, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(first, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(first, "evidence").and_then(|summary| field(summary, "next_tool")),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(19));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -91393,11 +92072,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(305))
+            Some(&integer(306))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(297))
+            Some(&integer(298))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
