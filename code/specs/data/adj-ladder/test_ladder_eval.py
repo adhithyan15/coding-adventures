@@ -94,6 +94,7 @@ SELF_CONTAINED_RUNGS = (
     "rung54_neutrophil_ratio",
     "rung55_fresh_gas_volume",
     "rung56_stroke_work",
+    "rung57_renal_count_rate",
 )
 
 
