@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-spreadsheetml"
+version = "0.1.0"
+edition = "2021"
+description = "SpreadsheetML (.xlsx) reader — opens a workbook as a typed sheets → cells grid, resolving shared strings and r:id → part links (OOXML milestone M3)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-opc = { path = "../opc" }
+coding-adventures-xml-parser = { path = "../xml-parser" }

@@ -346,6 +346,7 @@ members = [
     "xml-lexer",
     "xml-parser",
     "opc",
+    "spreadsheetml",
     "arm1-gatelevel",
     "arm1-simulator",
     "immutable-list",
