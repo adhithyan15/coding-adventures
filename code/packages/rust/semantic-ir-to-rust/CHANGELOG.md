@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.13.1
+
+### Fixed — `case_eq` builtin (Ruby case-equality `===`) was unimplemented
+
+Ruby's `case`/`when` (and `case`/`in`) lowers, in the frontend, to a chain of
+`if`s whose conditions are `BuiltinCall("case_eq", [pattern, scrutinee])`. This
+backend's runtime never implemented `case_eq`, so **every** `case` program hit
+`call_builtin_by_name`'s `unknown builtin` floor and **panicked at runtime** —
+`case` was unusable on the Rust backend (no compile-time gate catches a missing
+builtin; only execution does).
+
+- Added `pub fn case_eq(pattern, value) -> Value` to the inlined `__sir` runtime
+  and wired it into both the emitter's helper table and `call_builtin_by_name`.
+  Ruby keys `===` to the *pattern*'s type (Range → membership, Regexp → match,
+  else `==`); `when SomeClass` is lowered to `value.is_a?` at the frontend and
+  never reaches here. This backend's `Value` has no `Range`/`Regexp` variant yet,
+  so `case_eq` is exactly structural equality (`value_eq`), matching the Python
+  reference in `sir-runtime-oop`; extend with membership/match arms later.
+- New `compile_and_run_case_eq` exec proof: a `when`-style `if case_eq(…)` chain
+  emits Rust, compiles with `rustc`, runs, and matches the expected output.
+
+
 ## 0.13.0 — mixins: include / extend module method resolution (MX6)
 
 Implements the Rust milestone (**MX6**) of the **sir-mixins** cascade — the

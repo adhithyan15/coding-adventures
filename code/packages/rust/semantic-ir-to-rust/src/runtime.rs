@@ -443,6 +443,19 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn eq(a: Value, b: Value) -> Value {
         Value::Bool(value_eq(&a, &b))
     }
+    /// Ruby case-equality (`pattern === value`) — the test a `when` (or `in`)
+    /// arm runs.  Unlike `==`, Ruby keys `===` to the PATTERN's type: a `Range`
+    /// checks membership, a `Regexp` checks a match, and everything else falls
+    /// back to `==`.  A `when SomeClass` is lowered to `value.is_a?(SomeClass)`
+    /// at the frontend, so a class pattern never reaches here.  This backend's
+    /// `Value` has no `Range`/`Regexp` variant yet, so the only patterns that
+    /// reach `case_eq` are ordinary values and the operation is exactly
+    /// structural equality — matching the Python reference in `sir-runtime-oop`.
+    /// When `Range`/`Regexp` values are added, extend with the membership/match
+    /// arms (dispatching on `pattern`).
+    pub fn case_eq(pattern: Value, value: Value) -> Value {
+        Value::Bool(value_eq(&pattern, &value))
+    }
     pub fn lt(a: Value, b: Value) -> Value {
         Value::Bool(num_lt(&a, &b))
     }
@@ -1067,6 +1080,10 @@ pub const RUNTIME: &str = r##"mod __sir {
             "=" => {
                 let mut it = args.into_iter();
                 eq(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "case_eq" => {
+                let mut it = args.into_iter();
+                case_eq(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "<" => {
                 let mut it = args.into_iter();

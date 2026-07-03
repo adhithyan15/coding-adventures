@@ -145,6 +145,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "*": (...a) => times(...a),
     "/": (...a) => a.length === 1 ? 1 / a[0] : numFold(a.slice(1), a[0], (x, y) => x / y),
     "=": (x, y) => x === y,
+    // Ruby case-equality (`pattern === value`) — the test a `when`/`in` arm
+    // runs.  Ruby keys `===` to the pattern's type (Range → membership, Regexp
+    // → match); this backend has no Range/Regexp value, so the only patterns
+    // that reach here are plain values and the op is ordinary equality (the
+    // same `===` the `=` builtin uses).  `when SomeClass` is lowered to
+    // `.is_a?` at the frontend and never becomes a case_eq call.
+    "case_eq": (pattern, value) => pattern === value,
     "<": (x, y) => x < y,
     ">": (x, y) => x > y,
     "<=": (x, y) => x <= y,

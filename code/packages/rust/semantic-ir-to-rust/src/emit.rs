@@ -1359,6 +1359,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "*" => ("__sir::times", true),
         "/" => ("__sir::divide", true),
         "=" => ("__sir::eq", false),
+        "case_eq" => ("__sir::case_eq", false),
         "<" => ("__sir::lt", false),
         ">" => ("__sir::gt", false),
         "cons" => ("__sir::cons", false),
