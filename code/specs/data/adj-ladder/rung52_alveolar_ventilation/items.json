@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 52 \u2014 alveolar ventilation from three stated quantities (a NEW panel: respiratory / ventilation-mechanics). From a tidal volume, a dead space and a respiratory rate compute the alveolar ventilation ((tidal_volume-dead_space)*respiratory_rate), the fresh gas per breath (tidal_volume-dead_space), or the total minute ventilation (tidal_volume*respiratory_rate). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DISTRIBUTIVE DIFFERENCE-TIMES-ONE (a-b)*c, the first on the ladder to scale a parenthesised difference by a single factor (distinct from rung-49 a*(b+c) and rung-50 a*(b-c), which put the lone factor FIRST) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed quantities via *, - and + \u2014 no constant leaks, and neither the fresh gas per breath, the minute ventilation, nor any alveolar-ventilation figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same three quantities, so the distractors are exactly the slips students make: ADDING the dead space to the tidal volume instead of subtracting it, and breaking the distributive law by subtracting the raw dead space instead of the dead-space ventilation it removes (a*c-b, not (a-b)*c). The core confusion tested is distributing the rate over the fresh-gas difference.",
+  "items": [
+    {
+      "id": "r52alv-01",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 500 mL, of which 150 mL is dead space, at a respiratory rate of 12 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(500)\nobserve dead_space(150)\nobserve respiratory_rate(12)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5850,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r52alv-02",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 500 mL, of which 150 mL is dead space, at a respiratory rate of 12 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(500)\nobserve dead_space(150)\nobserve respiratory_rate(12)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5850,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r52alv-03",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 500 mL, of which 150 mL is dead space, at a respiratory rate of 12 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(500)\nobserve dead_space(150)\nobserve respiratory_rate(12)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5850,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r52alv-04",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 600 mL, of which 200 mL is dead space, at a respiratory rate of 10 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(600)\nobserve dead_space(200)\nobserve respiratory_rate(10)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5800,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r52alv-05",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 600 mL, of which 200 mL is dead space, at a respiratory rate of 10 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(600)\nobserve dead_space(200)\nobserve respiratory_rate(10)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5800,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 400,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r52alv-06",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 600 mL, of which 200 mL is dead space, at a respiratory rate of 10 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(600)\nobserve dead_space(200)\nobserve respiratory_rate(10)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5800,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r52alv-07",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 450 mL, of which 100 mL is dead space, at a respiratory rate of 15 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(450)\nobserve dead_space(100)\nobserve respiratory_rate(15)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5250,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6750,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8250,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6650,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r52alv-08",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 450 mL, of which 100 mL is dead space, at a respiratory rate of 15 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(450)\nobserve dead_space(100)\nobserve respiratory_rate(15)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5250,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6750,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8250,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6650,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r52alv-09",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 450 mL, of which 100 mL is dead space, at a respiratory rate of 15 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(450)\nobserve dead_space(100)\nobserve respiratory_rate(15)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5250,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8250,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6750,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6650,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r52alv-10",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 400 mL, of which 120 mL is dead space, at a respiratory rate of 14 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(400)\nobserve dead_space(120)\nobserve respiratory_rate(14)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7280,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5480,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3920,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r52alv-11",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 400 mL, of which 120 mL is dead space, at a respiratory rate of 14 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(400)\nobserve dead_space(120)\nobserve respiratory_rate(14)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3920,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7280,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5480,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r52alv-12",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 400 mL, of which 120 mL is dead space, at a respiratory rate of 14 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(400)\nobserve dead_space(120)\nobserve respiratory_rate(14)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3920,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 280,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7280,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5480,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r52alv-13",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 550 mL, of which 180 mL is dead space, at a respiratory rate of 11 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(550)\nobserve dead_space(180)\nobserve respiratory_rate(11)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 370,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6050,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4070,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8030,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5870,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r52alv-14",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 550 mL, of which 180 mL is dead space, at a respiratory rate of 11 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(550)\nobserve dead_space(180)\nobserve respiratory_rate(11)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4070,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6050,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8030,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 370,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5870,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r52alv-15",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 550 mL, of which 180 mL is dead space, at a respiratory rate of 11 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(550)\nobserve dead_space(180)\nobserve respiratory_rate(11)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4070,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 370,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8030,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5870,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6050,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r52alv-16",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 700 mL, of which 250 mL is dead space, at a respiratory rate of 8 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(700)\nobserve dead_space(250)\nobserve respiratory_rate(8)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7600,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r52alv-17",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 700 mL, of which 250 mL is dead space, at a respiratory rate of 8 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(700)\nobserve dead_space(250)\nobserve respiratory_rate(8)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7600,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r52alv-18",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 700 mL, of which 250 mL is dead space, at a respiratory rate of 8 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(700)\nobserve dead_space(250)\nobserve respiratory_rate(8)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5600,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7600,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r52alv-19",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 480 mL, of which 130 mL is dead space, at a respiratory rate of 13 breaths per minute. What is the alveolar ventilation (the fresh volume per breath times the rate)?",
+      "program": "observe tidal_volume(480)\nobserve dead_space(130)\nobserve respiratory_rate(13)\nlet answer = (tidal_volume - dead_space) * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6240,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7930,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4550,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r52alv-20",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 480 mL, of which 130 mL is dead space, at a respiratory rate of 13 breaths per minute. What is the the fresh gas per breath (tidal volume minus the dead space)?",
+      "program": "observe tidal_volume(480)\nobserve dead_space(130)\nobserve respiratory_rate(13)\nlet answer = tidal_volume - dead_space\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4550,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6240,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7930,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6110,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 350,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r52alv-21",
+      "qtype": "alveolar_ventilation",
+      "stem": "A patient breathes a tidal volume of 480 mL, of which 130 mL is dead space, at a respiratory rate of 13 breaths per minute. What is the the total minute ventilation (tidal volume times the rate, before removing dead space)?",
+      "program": "observe tidal_volume(480)\nobserve dead_space(130)\nobserve respiratory_rate(13)\nlet answer = tidal_volume * respiratory_rate\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6240,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4550,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 350,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7930,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
