@@ -175,6 +175,22 @@ Encoding distance D: find code C where `base[C] ≤ D < base[C+1]`, then append
 Example: distance 5 → code 4 (base=5, extra_bits=1, extra_value=5−5=0 → bit "0").
 Example: distance 4096 → code 23 (base=3073, extra_bits=10, extra_value=4096−3073=1023 → bits "1111111111").
 
+#### Encoder subset vs. full-standard decoder
+
+The table above (24 distance codes, 0–23) is the subset our **encoder** emits: it
+uses a 4096-byte window, so it never needs a distance beyond 4096. RFC 1951 itself,
+however, defines a **32768-byte window** with distance codes **0–29** (code 29 reaches
+32768) and one extra length code — **LL symbol 285** for the maximum match length of
+258 with no extra bits. Every mainstream producer (zlib, gzip, and Microsoft Office
+when it writes OOXML) uses the full range.
+
+Because a decoder must read *anyone's* output — not just ours — `inflate` implements
+the **complete** RFC 1951 alphabet: distance codes 0–29 and LL length symbol 285.
+This is the asymmetry at the heart of interoperability: **encode conservatively (a
+small window keeps the implementation simple), decode liberally (the full standard so
+real files open).** Omitting 285 / codes 24–29 makes a decoder that can only read its
+own output — which is exactly why reading a real `.xlsx` used to fail.
+
 ### Two Huffman Trees
 
 DEFLATE uses **two canonical Huffman trees** per compressed stream:
