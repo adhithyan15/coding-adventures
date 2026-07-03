@@ -651,6 +651,14 @@ record actions, deterministic record steps, nested
 handoff-receipt-acknowledgement-record capability metadata so WebAssembly-backed
 product shells can replay compact activation receipt journal summary handoff
 receipt acknowledgements without re-walking acknowledgement payloads.
+Embed runtime activation receipt journal summary handoff receipt
+acknowledgement record receipts add stable receipt IDs, acknowledge/defer
+dispositions, receipt actions, deterministic receipt steps, nested
+`embedRuntimeActivationReceiptJournalSummaryHandoffReceiptAcknowledgementRecord`,
+and handoff-receipt-acknowledgement-record-receipt capability metadata so
+WebAssembly-backed product shells can close out compact activation receipt
+journal summary handoff receipt acknowledgement records without re-walking
+record payloads.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
