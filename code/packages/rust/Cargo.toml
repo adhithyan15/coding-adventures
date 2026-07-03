@@ -28,6 +28,7 @@ members = [
     "bitset",
     "cfb",
     "ppt",
+    "doc",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",

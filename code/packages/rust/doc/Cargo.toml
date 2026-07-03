@@ -1,0 +1,9 @@
+[package]
+name = "doc"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-third-party-dependency reader for legacy Word 97-2003 .doc binaries ([MS-DOC]) — extracts main-document text via the FIB and CLX piece table, layered on the `cfb` compound-file reader."
+license = "MIT"
+
+[dependencies]
+cfb = { path = "../cfb" }
