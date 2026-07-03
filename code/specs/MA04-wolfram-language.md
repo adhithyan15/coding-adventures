@@ -91,8 +91,14 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   `Head[args]` forms reusing the W-9 `list_elements` accessor and the
   `MAX_LIST_LENGTH` cap; `ConstantArray`/`Partition` outputs are size-capped
   (with `checked_mul`) before allocation (§19.5). No grammar change.
-- **Future — the `cas-*` function surface under Wolfram names** (`Expand`,
-  `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*` crates.
+- **W-22 — the `cas-*` function surface under Wolfram names.** *(in
+  progress — see §24.)* Wires the existing `cas-*` crates in one head at a
+  time, starting with `Simplify` (a thin call into `cas-simplify`'s
+  `simplify()`, the same function Macsyma's own `simplify()` calls, so the
+  two languages agree on every simplification this crate can perform).
+  Remaining: `Expand`, `Factor`, `Solve`, `D`, `Integrate`, each its own
+  item — no grammar change for any of them (all ordinary `Head[args]` forms
+  the existing grammar already parses).
 
 ## §3 The supported surface (the grammar)
 
@@ -2090,6 +2096,52 @@ it). `ReplaceRepeated` retains its §22.4 hard iteration cap
 (`REPLACE_REPEATED_MAX_ITERATIONS`) and §22.5 growth cap
 (`REPLACE_GROWTH_NODE_CAP`) — the `//.` operator lowers to the very same head, so
 the DoS bounds apply identically whether written as operator or `Head[args]`.
+
+## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify` (in progress)
+
+W-22 starts closing §2's previously unnumbered "Future" item: wiring the
+existing `cas-*` algorithm crates under Wolfram's own head names. Unlike
+every prior W-item, this one lands **one head at a time** rather than as a
+single PR, since each head is an independent algorithm with its own `cas-*`
+crate dependency — bundling them would violate the one-PR-per-item
+discipline for no benefit (they share no code with each other, only with
+their respective `cas-*` crate).
+
+### §24.1 `Simplify` (delivered)
+
+`Simplify[expr]` is a thin call into `cas-simplify::simplify(expr,
+max_iterations)` — **the exact function** Macsyma's own `simplify()` surface
+function calls (`macsyma-runtime`'s `simplify_handler`), with the same
+iteration cap (50). No algorithm is reimplemented; a test pins both
+languages' call sites to agree on the same input, so this is not merely "the
+same crate" but "the same result, verified."
+
+Like every W-5+ built-in, `Simplify` is an ordinary eager `Head[args]` form
+— its argument is evaluated before the handler runs — and requires exactly
+one argument; any other arity leaves the form unevaluated (the fail-soft
+contract every built-in here follows).
+
+```
+Simplify[x + 0]     (* x *)
+Simplify[2 + 3]     (* 5 *)
+```
+
+### §24.2 Remaining (not yet delivered)
+
+`Expand`, `Factor`, `Solve`, `D`, `Integrate`, and the rest of §2's original
+list — each is a separate future item, no grammar change required for any of
+them (all are ordinary `Head[args]` forms the existing grammar already
+parses). **Note on `Expand`:** unlike `Simplify`, Macsyma's own `expand()`
+surface function has no dedicated handler backing its `Expand` head in
+`symbolic-vm`'s `build_handler_table` today (verified: no `"Expand"` handler
+registration exists) — Macsyma's `expand(...)` and `ev(expr, expand)` both
+route through `apply(sym("Expand"), …)`, which currently has no handler to
+land on. Wiring Wolfram's `Expand` is therefore **not** a "call the same
+function Macsyma calls" item the way `Simplify` was; it needs a real
+`Expand` handler (full polynomial distribution over `Add`/`Mul`/`Pow`) built
+first, most naturally in `symbolic-vm` or `cas-simplify` so Macsyma's
+long-standing `expand()` gap closes at the same time. Track as its own item,
+not scope creep into this one.
 
 ### §6 References
 

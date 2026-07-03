@@ -615,6 +615,21 @@ form is left unevaluated — the fail-soft contract every head since W-5 follows
 A `;` at the end of a line suppresses that result's display (the notebook
 convention) but the statement still runs and still advances the `Out[n]` counter.
 
+**W-22** starts closing MA04 §2's previously unnumbered "Future" item — the
+`cas-*` algorithm surface under Wolfram names. Each head is a thin call into
+the existing shared `cas-*` crate, not a reimplementation:
+
+| Head | Example | Result |
+|------|---------|--------|
+| `Simplify` | `Simplify[x + 0]` | `x` |
+| `Simplify` | `Simplify[2 + 3]` | `5` |
+
+`Simplify` calls `cas-simplify`'s existing `simplify()` — the exact function
+Macsyma's own `simplify()` surface function calls — so Wolfram and Macsyma
+agree on every simplification this crate can perform. Further heads
+(`Expand`, `Factor`, `Solve`, `D`, `Integrate`, …) land one at a time, each
+its own item.
+
 ## Robustness
 
 `feed` is the trust boundary for the whole reused stack, so — mirroring

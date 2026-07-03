@@ -585,6 +585,22 @@ Next ODE work should focus only on the Frobenius power-series case (irregular
 singular points and series solutions around regular singular points) unless a
 parity audit finds a smaller gap.
 
+#### `Expand` has no handler (found 2026-07-03, while wiring Wolfram's `Simplify`)
+
+Macsyma's `expand(...)` surface function and `ev(expr, expand)` both route
+through `apply(sym("Expand"), …)` (`macsyma-runtime/src/lib.rs`), but
+`symbolic-vm`'s `build_handler_table` registers no handler under the string
+`"Expand"` — verified by grep, and there is no test anywhere in
+`macsyma-runtime`'s test suite that exercises `expand(...)` end-to-end. So
+today `expand((x+1)^2)` most likely just returns the unevaluated `Expand[...]`
+form (an unresolved head), not the distributed polynomial a user would
+expect — this is a real, previously-undocumented gap, not merely an untested
+path. Needs a real `Expand` handler (full polynomial distribution over
+`Add`/`Mul`/`Pow`), most naturally added to `symbolic-vm` or `cas-simplify`
+so both Macsyma and Wolfram (which hit the identical gap wiring its own
+`Expand`, MA04 §24.2) close at the same time. Not yet scheduled as its own
+track/PR.
+
 #### Factoring gaps
 
 The `Factor` handler now covers several structural multivariate patterns via

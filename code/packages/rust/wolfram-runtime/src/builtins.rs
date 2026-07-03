@@ -61,6 +61,18 @@ use cas_pattern_matching::nodes::is_rule;
 use cas_pattern_matching::rewriter::substitute as substitute_bindings;
 use cas_pattern_matching::Bindings;
 
+// W-22: the shared `cas-*` algorithm surface, under Wolfram names. `simplify`
+// is the same canonical-form + constant-folding + identity-rule pass Macsyma's
+// `simplify_handler` calls (`macsyma-runtime/src/lib.rs`) — reused verbatim,
+// not reimplemented, per MA04 §2's "Future" item.
+use cas_simplify::simplify;
+
+/// Iteration cap passed to [`cas_simplify::simplify`]. Matches the constant
+/// Macsyma's own `simplify_handler` uses (`macsyma-runtime/src/lib.rs`) — the
+/// simplifier already fixed-points internally; this is a shared, tested
+/// non-termination guard, not a Wolfram-specific tuning choice.
+const SIMPLIFY_MAX_ITERATIONS: usize = 50;
+
 use crate::lower::build_canonical_application;
 use crate::printer::print_wolfram;
 
@@ -231,6 +243,13 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     m.insert("GCD".to_string(), handler_fn(gcd_handler));
     m.insert("LCM".to_string(), handler_fn(lcm_handler));
     m.insert("Sqrt".to_string(), handler_fn(sqrt_handler));
+
+    // W-22 cas-* algorithm surface under Wolfram names (MA04 §2 "Future" item,
+    // now in progress). `Simplify` is the first entry — an ordinary eager
+    // `Head[args]` form reusing `cas-simplify` verbatim. Further heads
+    // (`Expand`, `Factor`, `Solve`, `D`, `Integrate`, ...) are added one at a
+    // time, each its own PR, per HML00's one-item-per-PR discipline.
+    m.insert("Simplify".to_string(), handler_fn(simplify_handler));
 
     // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
     // each handler evaluates ONLY its subject and matches against the *literal*
@@ -3201,6 +3220,34 @@ fn sqrt_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 }
 
 // ---------------------------------------------------------------------------
+// W-22 cas-* algorithm surface under Wolfram names
+// ---------------------------------------------------------------------------
+//
+// MA04 §2 left "the `cas-*` function surface under Wolfram names (`Expand`,
+// `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing `cas-*`
+// crates" as an unnumbered "Future" item. W-22 starts closing it, one head at
+// a time, each its own PR. Every handler here is a thin call into the shared
+// `cas-*` crate — no algorithm is reimplemented for Wolfram.
+
+/// `Simplify[expr]` → the algebraically simplest equivalent form: canonical
+/// ordering, constant folding, and identity rules (`x + 0 → x`, `x * 1 → x`,
+/// trig/log/exp cancellation, …), fixed-pointed up to
+/// [`SIMPLIFY_MAX_ITERATIONS`] passes.
+///
+/// A thin call into [`cas_simplify::simplify`] — the exact function Macsyma's
+/// `simplify_handler` calls (`macsyma-runtime/src/lib.rs`), reused verbatim so
+/// Wolfram and Macsyma agree on every simplification this crate can perform.
+/// Requires exactly one argument (the eagerly-evaluated expression); any other
+/// arity leaves the form unevaluated, matching every other W-22/W-15 built-in's
+/// fail-soft contract.
+fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return unevaluated(expr);
+    }
+    simplify(expr.args[0].clone(), SIMPLIFY_MAX_ITERATIONS)
+}
+
+// ---------------------------------------------------------------------------
 // W-12 string builtins
 // ---------------------------------------------------------------------------
 //
@@ -5865,6 +5912,62 @@ mod tests {
         assert_eq!(eval_full(apply(sym("Sqrt"), vec![int(2)])), apply(sym("Sqrt"), vec![int(2)]));
         assert_eq!(eval_full(apply(sym("GCD"), vec![int(12), int(18)])), int(6));
         assert_eq!(eval_full(apply(sym("Round"), vec![flt(2.5)])), int(2));
+    }
+
+    // -----------------------------------------------------------------------
+    // W-22 cas-* algorithm surface — Simplify
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn simplify_folds_additive_and_multiplicative_identities() {
+        // x + 0 -> x
+        assert_eq!(
+            run("Simplify", vec![apply(sym(ADD), vec![sym("x"), int(0)])]),
+            sym("x")
+        );
+        // x * 1 -> x
+        assert_eq!(
+            run("Simplify", vec![apply(sym(MUL), vec![sym("x"), int(1)])]),
+            sym("x")
+        );
+        // Pure constant folding: 2 + 3 -> 5
+        assert_eq!(
+            run("Simplify", vec![apply(sym(ADD), vec![int(2), int(3)])]),
+            int(5)
+        );
+    }
+
+    #[test]
+    fn simplify_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's Simplify and Macsyma's simplify() call the exact same
+        // cas_simplify::simplify — this pins that the Wolfram wiring doesn't
+        // diverge (e.g. a different iteration cap) from the reference call.
+        let expr = apply(sym(ADD), vec![sym("x"), int(0)]);
+        assert_eq!(
+            run("Simplify", vec![expr.clone()]),
+            cas_simplify::simplify(expr, SIMPLIFY_MAX_ITERATIONS)
+        );
+    }
+
+    #[test]
+    fn simplify_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Simplify", vec![]), apply(sym("Simplify"), vec![]));
+        assert_eq!(
+            run("Simplify", vec![int(1), int(2)]),
+            apply(sym("Simplify"), vec![int(1), int(2)])
+        );
+    }
+
+    #[test]
+    fn simplify_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x + 0 simplifies to x through the full parser -> lower -> backend path.
+        assert_eq!(
+            eval_full(apply(
+                sym("Simplify"),
+                vec![apply(sym(ADD), vec![sym("x"), int(0)])]
+            )),
+            sym("x")
+        );
     }
 
     // -----------------------------------------------------------------------

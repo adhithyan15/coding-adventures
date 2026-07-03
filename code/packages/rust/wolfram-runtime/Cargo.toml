@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-wolfram-runtime"
-version = "0.17.0"
+version = "0.18.0"
 edition = "2021"
 description = "Wolfram Language runtime — lowers M-expressions to symbolic-ir and evaluates via symbolic-vm"
 license = "MIT"
@@ -21,6 +21,11 @@ coding-adventures-wolfram-lexer = { path = "../wolfram-lexer" }
 symbolic-ir = { path = "../symbolic-ir" }
 symbolic-vm = { path = "../symbolic-vm" }
 cas-pattern-matching = { path = "../cas-pattern-matching" }
+# W-22: the cas-* algorithm surface under Wolfram names. Starts with
+# `Simplify` (cas-simplify's existing, tested `simplify()`); further cas-*
+# crates (cas-solve, cas-limit-series, ...) are added per-item as their
+# Wolfram name lands.
+cas-simplify = { path = "../cas-simplify" }
 # The generic parser AST types (GrammarASTNode / ASTNodeOrToken) and the lexer
 # Token type the lowering walks.
 parser = { path = "../parser" }

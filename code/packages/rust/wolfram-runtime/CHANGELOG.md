@@ -4,6 +4,29 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.18.0] — 2026-07-03
+
+The **W-22** deliverable (MA04 §2): the first head of the previously
+unnumbered "Future" item — "the `cas-*` function surface under Wolfram names
+(`Expand`, `Factor`, `Solve`, `D`, `Integrate`, …) wired to the existing
+`cas-*` crates." W-22 lands one head at a time; this release ships the first.
+
+### Added (W-22 — `Simplify`)
+
+- `Simplify[expr]` — a thin call into `cas-simplify`'s existing `simplify()`
+  (canonical ordering, constant folding, identity rules, fixed-pointed up to
+  50 iterations), the exact function Macsyma's own `simplify()` surface
+  function calls. No new algorithm — Wolfram and Macsyma now agree on every
+  simplification this crate can perform, by construction (a shared test pins
+  the two call sites to the same result on the same input).
+- New dependency: `cas-simplify` (0.3.0).
+
+### Tests
+
+- 5 new tests: additive/multiplicative identity folding, constant folding,
+  Wolfram/Macsyma call-site parity, wrong-arity fail-soft (unevaluated), and
+  one end-to-end test through the full parser → lower → `WolframBackend` path.
+
 ## [0.17.0] — 2026-06-25
 
 The **W-21** deliverable (MA04 §23): **lowering** for the W-20 pattern
