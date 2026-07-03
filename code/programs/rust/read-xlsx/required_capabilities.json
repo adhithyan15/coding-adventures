@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "programs/rust/read-xlsx",
+  "capabilities": ["fs_read"],
+  "justification": "Reads a user-supplied .xlsx file from the filesystem when a path argument is given; the built-in --demo mode uses embedded fixtures and needs no capabilities."
+}

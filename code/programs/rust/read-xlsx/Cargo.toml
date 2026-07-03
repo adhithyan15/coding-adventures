@@ -1,0 +1,24 @@
+[package]
+name = "read-xlsx"
+version = "0.1.0"
+edition = "2021"
+description = "Open a real .xlsx spreadsheet and print its evaluated cell grid — the runnable end-goal of the zero-dependency OOXML stack (ZIP → DEFLATE → XML → OPC → SpreadsheetML → formula eval)."
+license = "MIT"
+
+# Programs in code/programs/rust/ each declare their own [workspace] so they
+# stay independent from the packages workspace at code/packages/rust/Cargo.toml.
+[workspace]
+
+[[bin]]
+name = "read-xlsx"
+path = "src/main.rs"
+
+[lib]
+name = "read_xlsx"
+path = "src/lib.rs"
+
+[dependencies]
+# The .xlsx reader (M3) + number formats (M4).
+coding-adventures-spreadsheetml = { path = "../../../packages/rust/spreadsheetml" }
+# The formula evaluator (M5): recomputes <f> cells via spreadsheet-core.
+coding-adventures-xlsx-eval     = { path = "../../../packages/rust/xlsx-eval" }
