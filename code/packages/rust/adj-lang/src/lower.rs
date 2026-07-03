@@ -2506,6 +2506,65 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_inverse_hyperbolic_functions_lower() {
+        // `\operatorname{arsinh}`/`\operatorname{arcosh}`/`\operatorname{artanh}` — the inverse
+        // (area) hyperbolics. None is a frontend `Func`, so each arrives as the operator-name
+        // juxtaposition `Bin(Mul, Text("arsinh"), (x))` (or `Bin(Mul, Symbol("arsinh"), (x))` for the
+        // bare macro). The adapter composes each from its logarithm identity using only `ln` + `^`,
+        // so the results are the standard real branch. Exact anchor: arsinh(0) = ln(0 + √1) = 0.
+        let arsinh0 = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\operatorname{arsinh}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(arsinh0.ranked[0].posterior > 0.99, "{arsinh0:?}");
+        // arsinh(1) = ln(1 + √2) ≈ 0.8813735870195429 (matched within the engine's 1e-9 == tolerance).
+        let arsinh1 = crate::compile_and_decide(
+            "observe x(1)\n\
+             let answer = latex \"$\\operatorname{arsinh}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0.8813735870195429 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(arsinh1.ranked[0].posterior > 0.99, "{arsinh1:?}");
+        // arcosh(2) = ln(2 + √3) ≈ 1.3169578969248166.
+        let arcosh2 = crate::compile_and_decide(
+            "observe x(2)\n\
+             let answer = latex \"$\\operatorname{arcosh}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1.3169578969248166 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(arcosh2.ranked[0].posterior > 0.99, "{arcosh2:?}");
+        // artanh(0.5) = 0.5·ln(1.5/0.5) = 0.5·ln 3 ≈ 0.5493061443340549. The bare `\artanh` macro
+        // reaches the SAME composition through a `Symbol` (not `Text`) name.
+        let artanh = crate::compile_and_decide(
+            "observe x(0.5)\n\
+             let answer = latex \"$\\artanh(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0.5493061443340549 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(artanh.ranked[0].posterior > 0.99, "{artanh:?}");
+        // The terse `asinh` spelling reaches the SAME `arsinh` composition: asinh(1) ≈ 0.8813735870195429.
+        let asinh1 = crate::compile_and_decide(
+            "observe x(1)\n\
+             let answer = latex \"$\\operatorname{asinh}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0.8813735870195429 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(asinh1.ranked[0].posterior > 0.99, "{asinh1:?}");
+    }
+
+    #[test]
     fn native_latex_accent_wrapped_operands_are_transparent() {
         // `\hat{x}` / `\bar{x}` / … — an accent is a notational decoration, not an operation. A
         // model that writes a statistics formula (`\hat{p}(1-\hat{p})`, `\bar{x} - \bar{y}`) means
