@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - destructure only the props the component body references
+
+The generated component previously destructured *every* slot in its parameter
+list, even slots the layout never reads (e.g. Grid's forward-compat
+`totalHeight`). Under a strict host `tsconfig` (`noUnusedLocals` /
+`noUnusedParameters`) that tripped `TS6133: 'x' is declared but its value is
+never read`, breaking `tsc -b` — as it did for the visicalc React demo's
+`npm run build`. `emit_function` now builds the body first and destructures only
+the slots whose camelCased identifier actually appears in it (via
+`body_references_identifier`, a whole-identifier match, not a substring). Unread
+slots stay in the `{Component}Props` interface — so callers may still pass them —
+they're just no longer bound as unused locals. `dispatch` remains destructured
+last unconditionally (UI24 §3.3, the required event-sink contract). Verified: the
+visicalc React demo's `npm run build` (tsc + vite) now passes.
+
 ### Changed - `--emit-project` Vite shell uses a host adapter
 
 `src/main.tsx` now mounts the generated component through
