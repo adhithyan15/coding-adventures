@@ -60,9 +60,29 @@ across backends, a separate formatting concern). Current programs:
 | `tail_case` | implicit return of a trailing `case` (the `case_eq` oracle) | `A\nB\nC` |
 | `string_concat` | polymorphic `+` | `abcd` |
 | `oop_method` | `class` / `.new` / instance method | `woof` |
+| `while_loop` | `while` + mutable accumulator | `10` |
+| `array_length` | array literal + `.length` | `3` |
+| `string_length` | `String#length` | `5` |
+| `counter_state` | `@ivar` state across method calls | `2` |
+| `mixin_include` | `module` mixed into a class via `include` | `hi` |
 
 Adding a program is one `Program { name, ruby, expected }` entry in
 `tests/conformance.rs`.
+
+### Gaps the corpus has surfaced (not yet in the suite)
+
+Every added feature is a chance to catch a `case_eq`-style "works on some
+backends" bug. Programs that hit an **unfixed** gap are kept *out* of the corpus
+(with a pointer to `lessons.md`) so the suite stays green while the gap stays
+visible. Currently tracked:
+
+- **Array/hash index** (`a[i]`, `h[k]`) — frontend parse + lowering bugs
+  (`puts a[1]` mis-parses, `puts(a[1])` won't parse, `x = a[1]` fails
+  validation).
+- **`String#upcase`/`#downcase` on JavaScript** — the JS backend's emit-time
+  Ruby→native method rename is missing the case pair.
+- **`or`/`and` builtin on JavaScript** — a multi-value `when 1, 2, 3` lowers to
+  a `BuiltinCall("or", …)` the JS runtime doesn't implement.
 
 ## Usage
 

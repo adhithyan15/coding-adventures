@@ -52,6 +52,53 @@ const CORPUS: &[Program] = &[
         ruby: "class Dog\n  def speak\n    \"woof\"\n  end\nend\n\nputs Dog.new.speak\n",
         expected: "woof",
     },
+    // A `while` loop with a mutable accumulator: 0+1+2+3+4.
+    Program {
+        name: "while_loop",
+        ruby: "i = 0\nsum = 0\nwhile i < 5\n  sum = sum + i\n  i = i + 1\nend\n\nputs sum\n",
+        expected: "10",
+    },
+    // Array literal + `.length` (a method call, which lowers cleanly).
+    //
+    // NOTE: index *reads* (`a[1]`, `h["k"]`) are deliberately NOT in the corpus
+    // yet — they hit two separate, currently-open Ruby-frontend gaps (see
+    // `lessons.md`): the paren-less `puts a[1]` mis-parses as `(puts a)[1]` and
+    // `puts(a[1])` fails to parse, while `x = a[1]` parses but fails SIR
+    // validation (`var-ref ... unknown name 'a'` — the index base is
+    // mis-scoped). Those are frontend bugs, tracked for a separate fix; adding a
+    // program that can't pass would only mask them. `.length` covers array
+    // construction end-to-end without tripping the index path.
+    Program {
+        name: "array_length",
+        ruby: "a = [10, 20, 30]\nputs a.length\n",
+        expected: "3",
+    },
+    // String `.length` (a method on a String receiver). NOTE: `.upcase` /
+    // `.downcase` are deliberately excluded for now — they expose a real
+    // JavaScript-backend gap: that backend translates Ruby method names to
+    // native JS names *at emit time* (e.g. `upcase` → `toUpperCase`), and the
+    // rename table is missing the case-conversion pair, so `"x".upcase` raises
+    // `NoMethodError` on JS while Python/Go/Rust (which dispatch Ruby names in a
+    // runtime catalog) handle it. Tracked for a separate focused fix; see
+    // `lessons.md`. `.length` is spelled identically across all four, so it
+    // exercises string-method dispatch end-to-end without tripping the gap.
+    Program {
+        name: "string_length",
+        ruby: "puts \"hello\".length\n",
+        expected: "5",
+    },
+    // Instance state via `@ivar` mutated across method calls.
+    Program {
+        name: "counter_state",
+        ruby: "class Counter\n  def initialize\n    @n = 0\n  end\n  def inc\n    @n = @n + 1\n  end\n  def value\n    @n\n  end\nend\n\nc = Counter.new\nc.inc\nc.inc\nputs c.value\n",
+        expected: "2",
+    },
+    // A module mixed into a class with `include`.
+    Program {
+        name: "mixin_include",
+        ruby: "module Greet\n  def hi\n    \"hi\"\n  end\nend\n\nclass P\n  include Greet\nend\n\nputs P.new.hi\n",
+        expected: "hi",
+    },
 ];
 
 /// Every program must produce its reference output on every available backend.
