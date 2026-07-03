@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Host-intent callback results with statuses such as `imported`, `exported`,
+  `cancelled`, and `import-error` now merge visible Engram host-status props
+  into Mosaic host responses.
 - Added APKG byte-buffer exports to the WASM ABI and JS loader. Browser WASM
   builds return an explicit native-host delegation error, while Electron uses a
   native sidecar for real package import/export.

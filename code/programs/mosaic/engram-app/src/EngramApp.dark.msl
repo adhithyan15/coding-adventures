@@ -32,6 +32,27 @@ style EngramApp {
     gap       : 8 ;
   }
 
+  part host-status {
+    align-items   : center ;
+    background    : "#083344" ;
+    border-color  : "#0891b2" ;
+    border-radius : 8 ;
+    border-width  : 1 ;
+    flex-wrap     : wrap ;
+    gap           : 8 ;
+    max-width     : "980px" ;
+    padding       : 10 ;
+  }
+
+  part host-status-label {
+    color       : "#cffafe" ;
+    font-weight : 800 ;
+  }
+
+  part host-status-message {
+    color : "#f8fafc" ;
+  }
+
   part nav-decks-button {
     background    : "#1f2937" ;
     border-color  : "#475569" ;

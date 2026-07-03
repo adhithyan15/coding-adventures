@@ -39,6 +39,9 @@ editing, and save/delete/cancel controls.
 - `EngramApp.dark.msl` owns app-shell styling only.
 - Package artifact builds inline component-package styles through the full
   dependency chain.
+- The app shell includes host-status slots so import/export completion,
+  cancellation, and host-side file errors can appear in every generated Mosaic
+  UI instead of only in host adapter return objects.
 - The generated React and Electron renderer shells mount `EngramApp` through
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.
