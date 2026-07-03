@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-wordprocessingml"
+version = "0.1.0"
+edition = "2021"
+description = "WordprocessingML (.docx) reader — opens a document as a text-extractable model of paragraphs, runs and tables (paragraph → run → text), built on the OPC + xml-parser layers (OOXML milestone W3)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-opc = { path = "../opc" }
+coding-adventures-xml-parser = { path = "../xml-parser" }
