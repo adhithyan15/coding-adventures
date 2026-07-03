@@ -1,0 +1,10 @@
+[package]
+name = "database-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust database functions — Excel/Lotus DSUM/DAVERAGE/DCOUNT/DMAX/DMIN/DPRODUCT/DSTDEV/DVAR family with predicate-based aggregation over data frames"
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }
+data-frame = { path = "../data-frame" }
