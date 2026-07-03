@@ -92,6 +92,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_PLAN_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -10574,6 +10576,258 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub runtime_activation_receipt_id: String,
+    pub runtime_activation_receipt_kind: String,
+    pub runtime_activation_receipt_status: String,
+    pub runtime_activation_receipt_outcome: String,
+    pub runtime_activation_receipt_message: String,
+    pub runtime_activation_plan_id: String,
+    pub runtime_activation_plan_kind: String,
+    pub runtime_activation_request_id: String,
+    pub runtime_activation_request_kind: String,
+    pub runtime_activation_phase: String,
+    pub runtime_activation_strategy: String,
+    pub activation_target_id: String,
+    pub activation_target_kind: String,
+    pub activation_gate_id: String,
+    pub activation_gate_kind: String,
+    pub activation_channel_id: String,
+    pub activation_channel_kind: String,
+    pub activation_entrypoint: String,
+    pub runtime_session_plan_id: String,
+    pub runtime_session_plan_kind: String,
+    pub runtime_session_id: String,
+    pub runtime_session_kind: String,
+    pub runtime_session_phase: String,
+    pub runtime_session_strategy: String,
+    pub runtime_session_state_id: String,
+    pub runtime_session_state_kind: String,
+    pub runtime_owner_id: String,
+    pub runtime_owner_kind: String,
+    pub runtime_publish_channel_id: String,
+    pub runtime_publish_channel_kind: String,
+    pub session_entrypoint: String,
+    pub runtime_plan_id: String,
+    pub runtime_plan_kind: String,
+    pub runtime_host_id: String,
+    pub runtime_host_kind: String,
+    pub runtime_phase: String,
+    pub runtime_strategy: String,
+    pub runtime_entrypoint: String,
+    pub readiness_gate_id: String,
+    pub readiness_gate_kind: String,
+    pub hydration_scheduler_id: String,
+    pub hydration_scheduler_kind: String,
+    pub loader_plan_id: String,
+    pub loader_plan_kind: String,
+    pub delivery_package_id: String,
+    pub delivery_route: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub activation_receipt_steps: Vec<String>,
+    pub activation_steps: Vec<String>,
+    pub session_steps: Vec<String>,
+    pub runtime_steps: Vec<String>,
+    pub load_order: Vec<String>,
+    pub should_record_receipt: bool,
+    pub should_request_activation: bool,
+    pub should_open_session: bool,
+    pub should_start_runtime: bool,
+    pub should_publish_ready: bool,
+    pub should_defer_receipt: bool,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub embed_runtime_activation_plan:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlan,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_runtime_activation_plan(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlan::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_runtime_activation_plan(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlan::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_embed_runtime_activation_plan(
+        plan: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlan,
+    ) -> Self {
+        let should_record_receipt = true;
+        let should_defer_receipt = !plan.should_publish_ready;
+        let runtime_activation_receipt_status = if plan.should_publish_ready {
+            "accepted"
+        } else {
+            "deferred"
+        };
+        let runtime_activation_receipt_outcome = if plan.should_publish_ready {
+            "ready"
+        } else {
+            "blocked"
+        };
+        let runtime_activation_receipt_message = if plan.should_publish_ready {
+            "Runtime activation is ready to publish."
+        } else {
+            "Runtime activation is blocked; receipt records deferred handoff."
+        };
+        let mut activation_receipt_steps = vec![
+            "record-runtime-activation-receipt".to_string(),
+            "read-runtime-activation-plan".to_string(),
+        ];
+        activation_receipt_steps.extend(plan.activation_steps.iter().cloned());
+        if plan.should_publish_ready {
+            activation_receipt_steps.push("publish-runtime-activation-receipt-ready".to_string());
+        } else {
+            activation_receipt_steps.push("publish-runtime-activation-receipt-blocked".to_string());
+        }
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_SCHEMA_VERSION,
+            package_name: plan.package_name.clone(),
+            source_fingerprint: plan.source_fingerprint.clone(),
+            title: plan.title.clone(),
+            startup_route: plan.startup_route.clone(),
+            ready: plan.ready,
+            severity: plan.severity.clone(),
+            attention_required: plan.attention_required,
+            runtime_activation_receipt_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-receipt"
+                    .to_string(),
+            runtime_activation_receipt_kind:
+                "berkeley-product-handoff-webassembly-embed-runtime-activation-receipt"
+                    .to_string(),
+            runtime_activation_receipt_status: runtime_activation_receipt_status.to_string(),
+            runtime_activation_receipt_outcome: runtime_activation_receipt_outcome.to_string(),
+            runtime_activation_receipt_message: runtime_activation_receipt_message.to_string(),
+            runtime_activation_plan_id: plan.runtime_activation_plan_id.clone(),
+            runtime_activation_plan_kind: plan.runtime_activation_plan_kind.clone(),
+            runtime_activation_request_id: plan.runtime_activation_request_id.clone(),
+            runtime_activation_request_kind: plan.runtime_activation_request_kind.clone(),
+            runtime_activation_phase: plan.runtime_activation_phase.clone(),
+            runtime_activation_strategy: plan.runtime_activation_strategy.clone(),
+            activation_target_id: plan.activation_target_id.clone(),
+            activation_target_kind: plan.activation_target_kind.clone(),
+            activation_gate_id: plan.activation_gate_id.clone(),
+            activation_gate_kind: plan.activation_gate_kind.clone(),
+            activation_channel_id: plan.activation_channel_id.clone(),
+            activation_channel_kind: plan.activation_channel_kind.clone(),
+            activation_entrypoint: plan.activation_entrypoint.clone(),
+            runtime_session_plan_id: plan.runtime_session_plan_id.clone(),
+            runtime_session_plan_kind: plan.runtime_session_plan_kind.clone(),
+            runtime_session_id: plan.runtime_session_id.clone(),
+            runtime_session_kind: plan.runtime_session_kind.clone(),
+            runtime_session_phase: plan.runtime_session_phase.clone(),
+            runtime_session_strategy: plan.runtime_session_strategy.clone(),
+            runtime_session_state_id: plan.runtime_session_state_id.clone(),
+            runtime_session_state_kind: plan.runtime_session_state_kind.clone(),
+            runtime_owner_id: plan.runtime_owner_id.clone(),
+            runtime_owner_kind: plan.runtime_owner_kind.clone(),
+            runtime_publish_channel_id: plan.runtime_publish_channel_id.clone(),
+            runtime_publish_channel_kind: plan.runtime_publish_channel_kind.clone(),
+            session_entrypoint: plan.session_entrypoint.clone(),
+            runtime_plan_id: plan.runtime_plan_id.clone(),
+            runtime_plan_kind: plan.runtime_plan_kind.clone(),
+            runtime_host_id: plan.runtime_host_id.clone(),
+            runtime_host_kind: plan.runtime_host_kind.clone(),
+            runtime_phase: plan.runtime_phase.clone(),
+            runtime_strategy: plan.runtime_strategy.clone(),
+            runtime_entrypoint: plan.runtime_entrypoint.clone(),
+            readiness_gate_id: plan.readiness_gate_id.clone(),
+            readiness_gate_kind: plan.readiness_gate_kind.clone(),
+            hydration_scheduler_id: plan.hydration_scheduler_id.clone(),
+            hydration_scheduler_kind: plan.hydration_scheduler_kind.clone(),
+            loader_plan_id: plan.loader_plan_id.clone(),
+            loader_plan_kind: plan.loader_plan_kind.clone(),
+            delivery_package_id: plan.delivery_package_id.clone(),
+            delivery_route: plan.delivery_route.clone(),
+            product_surface: plan.product_surface.clone(),
+            render_region: plan.render_region.clone(),
+            product_shell_action: plan.product_shell_action.clone(),
+            activation_receipt_steps,
+            activation_steps: plan.activation_steps.clone(),
+            session_steps: plan.session_steps.clone(),
+            runtime_steps: plan.runtime_steps.clone(),
+            load_order: plan.load_order.clone(),
+            should_record_receipt,
+            should_request_activation: plan.should_request_activation,
+            should_open_session: plan.should_open_session,
+            should_start_runtime: plan.should_start_runtime,
+            should_publish_ready: plan.should_publish_ready,
+            should_defer_receipt,
+            should_render_stack: plan.should_render_stack,
+            should_announce_latest: plan.should_announce_latest,
+            requires_attention: plan.requires_attention,
+            notification_count: plan.notification_count,
+            visible_notification_count: plan.visible_notification_count,
+            announce_notification_count: plan.announce_notification_count,
+            attention_notification_count: plan.attention_notification_count,
+            success_notification_count: plan.success_notification_count,
+            error_notification_count: plan.error_notification_count,
+            info_notification_count: plan.info_notification_count,
+            embed_runtime_activation_plan: plan.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_capability_id:
+                plan
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-receipt-json"
+                    .to_string(),
+            artifact_capability_count: plan.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -13446,6 +13700,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -19343,6 +19658,166 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
             .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_capability_id
     );
     insert_json!("artifactCapabilityCount", plan.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_json_value(
+    receipt: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceipt,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", receipt.schema_version);
+    insert_json!("packageName", &receipt.package_name);
+    insert_json!("sourceFingerprint", &receipt.source_fingerprint);
+    insert_json!("title", &receipt.title);
+    insert_json!("startupRoute", &receipt.startup_route);
+    insert_json!("ready", receipt.ready);
+    insert_json!("severity", &receipt.severity);
+    insert_json!("attentionRequired", receipt.attention_required);
+    insert_json!(
+        "runtimeActivationReceiptId",
+        &receipt.runtime_activation_receipt_id
+    );
+    insert_json!(
+        "runtimeActivationReceiptKind",
+        &receipt.runtime_activation_receipt_kind
+    );
+    insert_json!(
+        "runtimeActivationReceiptStatus",
+        &receipt.runtime_activation_receipt_status
+    );
+    insert_json!(
+        "runtimeActivationReceiptOutcome",
+        &receipt.runtime_activation_receipt_outcome
+    );
+    insert_json!(
+        "runtimeActivationReceiptMessage",
+        &receipt.runtime_activation_receipt_message
+    );
+    insert_json!(
+        "runtimeActivationPlanId",
+        &receipt.runtime_activation_plan_id
+    );
+    insert_json!(
+        "runtimeActivationPlanKind",
+        &receipt.runtime_activation_plan_kind
+    );
+    insert_json!(
+        "runtimeActivationRequestId",
+        &receipt.runtime_activation_request_id
+    );
+    insert_json!(
+        "runtimeActivationRequestKind",
+        &receipt.runtime_activation_request_kind
+    );
+    insert_json!("runtimeActivationPhase", &receipt.runtime_activation_phase);
+    insert_json!(
+        "runtimeActivationStrategy",
+        &receipt.runtime_activation_strategy
+    );
+    insert_json!("activationTargetId", &receipt.activation_target_id);
+    insert_json!("activationTargetKind", &receipt.activation_target_kind);
+    insert_json!("activationGateId", &receipt.activation_gate_id);
+    insert_json!("activationGateKind", &receipt.activation_gate_kind);
+    insert_json!("activationChannelId", &receipt.activation_channel_id);
+    insert_json!("activationChannelKind", &receipt.activation_channel_kind);
+    insert_json!("activationEntrypoint", &receipt.activation_entrypoint);
+    insert_json!("runtimeSessionPlanId", &receipt.runtime_session_plan_id);
+    insert_json!("runtimeSessionPlanKind", &receipt.runtime_session_plan_kind);
+    insert_json!("runtimeSessionId", &receipt.runtime_session_id);
+    insert_json!("runtimeSessionKind", &receipt.runtime_session_kind);
+    insert_json!("runtimeSessionPhase", &receipt.runtime_session_phase);
+    insert_json!("runtimeSessionStrategy", &receipt.runtime_session_strategy);
+    insert_json!("runtimeSessionStateId", &receipt.runtime_session_state_id);
+    insert_json!(
+        "runtimeSessionStateKind",
+        &receipt.runtime_session_state_kind
+    );
+    insert_json!("runtimeOwnerId", &receipt.runtime_owner_id);
+    insert_json!("runtimeOwnerKind", &receipt.runtime_owner_kind);
+    insert_json!(
+        "runtimePublishChannelId",
+        &receipt.runtime_publish_channel_id
+    );
+    insert_json!(
+        "runtimePublishChannelKind",
+        &receipt.runtime_publish_channel_kind
+    );
+    insert_json!("sessionEntrypoint", &receipt.session_entrypoint);
+    insert_json!("runtimePlanId", &receipt.runtime_plan_id);
+    insert_json!("runtimePlanKind", &receipt.runtime_plan_kind);
+    insert_json!("runtimeHostId", &receipt.runtime_host_id);
+    insert_json!("runtimeHostKind", &receipt.runtime_host_kind);
+    insert_json!("runtimePhase", &receipt.runtime_phase);
+    insert_json!("runtimeStrategy", &receipt.runtime_strategy);
+    insert_json!("runtimeEntrypoint", &receipt.runtime_entrypoint);
+    insert_json!("readinessGateId", &receipt.readiness_gate_id);
+    insert_json!("readinessGateKind", &receipt.readiness_gate_kind);
+    insert_json!("hydrationSchedulerId", &receipt.hydration_scheduler_id);
+    insert_json!("hydrationSchedulerKind", &receipt.hydration_scheduler_kind);
+    insert_json!("loaderPlanId", &receipt.loader_plan_id);
+    insert_json!("loaderPlanKind", &receipt.loader_plan_kind);
+    insert_json!("deliveryPackageId", &receipt.delivery_package_id);
+    insert_json!("deliveryRoute", &receipt.delivery_route);
+    insert_json!("productSurface", &receipt.product_surface);
+    insert_json!("renderRegion", &receipt.render_region);
+    insert_json!("productShellAction", &receipt.product_shell_action);
+    insert_json!("activationReceiptSteps", &receipt.activation_receipt_steps);
+    insert_json!("activationSteps", &receipt.activation_steps);
+    insert_json!("sessionSteps", &receipt.session_steps);
+    insert_json!("runtimeSteps", &receipt.runtime_steps);
+    insert_json!("loadOrder", &receipt.load_order);
+    insert_json!("shouldRecordReceipt", receipt.should_record_receipt);
+    insert_json!("shouldRequestActivation", receipt.should_request_activation);
+    insert_json!("shouldOpenSession", receipt.should_open_session);
+    insert_json!("shouldStartRuntime", receipt.should_start_runtime);
+    insert_json!("shouldPublishReady", receipt.should_publish_ready);
+    insert_json!("shouldDeferReceipt", receipt.should_defer_receipt);
+    insert_json!("shouldRenderStack", receipt.should_render_stack);
+    insert_json!("shouldAnnounceLatest", receipt.should_announce_latest);
+    insert_json!("requiresAttention", receipt.requires_attention);
+    insert_json!("notificationCount", receipt.notification_count);
+    insert_json!(
+        "visibleNotificationCount",
+        receipt.visible_notification_count
+    );
+    insert_json!(
+        "announceNotificationCount",
+        receipt.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        receipt.attention_notification_count
+    );
+    insert_json!(
+        "successNotificationCount",
+        receipt.success_notification_count
+    );
+    insert_json!("errorNotificationCount", receipt.error_notification_count);
+    insert_json!("infoNotificationCount", receipt.info_notification_count);
+    value.insert(
+        "embedRuntimeActivationPlan".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_json_value(
+            &receipt.embed_runtime_activation_plan,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlanCapabilityId",
+        &receipt
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptCapabilityId",
+        &receipt
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_capability_id
+    );
+    insert_json!("artifactCapabilityCount", receipt.artifact_capability_count);
 
     serde_json::Value::Object(value)
 }
