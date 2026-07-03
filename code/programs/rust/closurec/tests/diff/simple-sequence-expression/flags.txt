@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-sequence-expression/input/a.js
+--compilation_level
+SIMPLE

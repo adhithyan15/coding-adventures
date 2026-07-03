@@ -1804,13 +1804,24 @@ No behaviour change for existing inputs — the bridge still declines the comma
 operator (gap-161), so closurec falls back to WHITESPACE_ONLY on `a, b, c` for
 now. PR2 (bridge-enable) and PR3 (conformance port) follow.
 
-### gap-161 — bridge declines the comma operator (`SequenceExpression`)
+### gap-161 — bridge declines the comma operator (`SequenceExpression`) — **RESOLVED (javascript-parser 0.25.0, CLOC12.160 PR2)**
 
-The `javascript-parser` bridge's `convert_expression_rule` handles only the
-single-expression form of the grammar's `expression = assignment_expression {
-COMMA assignment_expression }`; a multi-expression comma list returns
-`UnsupportedSyntax { rule: "SequenceExpression" }`, so any file with a top-level
-comma operator drops to WHITESPACE_ONLY. With the `Expression::SequenceExpression`
-node now in place (CLOC12.160 PR1), PR2 will build it from the comma-separated
-`assignment_expression` children and add a closurec e2e diff fixture, closing
-this gap.
+The `javascript-parser` bridge's `convert_expression_rule` handled only the
+single-expression form of `expression = assignment_expression { COMMA
+assignment_expression }`; a multi-operand comma list declined to
+`UnsupportedSyntax`, dropping the whole file to WHITESPACE_ONLY.
+
+**Fix (CLOC12.160 PR2):** with the `Expression::SequenceExpression` node in
+place (PR1), `convert_expression_rule` now builds it from the operand list.
+`node_children` already drops the `COMMA` tokens, so the `assignment_expression`
+children convert directly into `expressions`, in source order; the
+single-operand path is unchanged (it passes the operand through, never wrapping
+a one-element sequence). Wherever the grammar's `expression` rule appears —
+statement position (`a, b, c;`), a parenthesised group (`x = (a, b)`), a
+computed-member key (`obj[a, b]`) — the comma operator now flows through the
+full SIMPLE/ADVANCED pipeline end-to-end. 4 bridge tests + a closurec e2e diff
+fixture (`tests/diff/simple-sequence-expression/`) proving `log((a, 1 + 2))`
+round-trips the sequence parenthesised while `1 + 2` folds to `3`.
+
+The **PR3 emit conformance port** — the remaining follow-up — ports upstream
+CodePrinter's comma-operator cases into `closure-emitter/tests/upstream/`.

@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.25.0] - 2026-07-02
+
+### Added — CLOC12.160 PR2: bridge the comma operator → `SequenceExpression` (closes gap-161)
+
+`convert_expression_rule` now converts a multi-operand `expression` (the comma
+operator `a, b, c`) into an `Expression::SequenceExpression` instead of
+declining it to `UnsupportedSyntax` (which dragged the whole file to
+WHITESPACE_ONLY). The grammar rule is `expression = assignment_expression {
+COMMA assignment_expression }`; `node_children` already drops the `COMMA`
+tokens, so the operand list converts directly into the sequence's
+`expressions`, in source order. The single-operand path is unchanged (it still
+passes the operand through, never wrapping it in a one-element sequence). A
+failed operand propagates its error, dropping the file to WHITESPACE_ONLY.
+
+Wherever the grammar's `expression` rule appears — statement position
+(`a, b, c;`), a parenthesised group (`x = (a, b)`), a computed-member key
+(`obj[a, b]`) — the comma operator now flows through the full SIMPLE/ADVANCED
+pipeline end-to-end. 4 new bridge tests + a closurec e2e diff fixture
+(`tests/diff/simple-sequence-expression/`) proving `log((a, 1 + 2))` round-trips
+the sequence parenthesised while the operand `1 + 2` folds to `3`.
+
 ## [0.24.0] - 2026-07-02
 
 ### Added — CLOC12.159 PR2: bridge `new X(args)` → `NewExpression` (closes gap-160)
