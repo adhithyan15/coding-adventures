@@ -139,11 +139,16 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
 
 > Convention: each ☐ is one `feat(lang-full): …` PR, security-reviewed, matrix-proven, babysat to merge.
 
-1. **E4d-1 — runtime helpers + VM/JIT proof.** Add `__twig_str_concat`/
-   `__twig_str_slice`/`__twig_str_index`/`__twig_str_len`/`__twig_str_cmp` to
-   `twig_runtime.c` (+ unit tests). Prove a **runtime** concat on VM/JIT (already
-   dynamic) end-to-end via a frontend that concatenates two *variables* — a
-   backend-free foothold that locks the semantics. *(blocks 2–5)*
+1. **E4d-1 — runtime helpers.** ✅ **Landed** (`twig-aot` 0.26.0). Added
+   `__twig_str_concat`/`__twig_str_slice`/`__twig_str_index`/`__twig_str_len`/
+   `__twig_str_cmp` to `twig_runtime.c`, all on the E5 length-prefixed heap block
+   via `__twig_alloc_bytes`; `slice`/`index` `abort()`-trap out-of-range per the
+   E4 bounds contract; every producer allocates a fresh block (immutability).
+   Unit-tested by a `cc`-compiled C driver (`tests/e4d_str_helpers.rs`,
+   Unix-gated) covering valid paths + the three trap cases. No backend/IIR change.
+   (The VM/JIT already execute runtime `str_concat` over registers — e.g. BASIC
+   variable concat — so those semantics were already proven; this PR is the
+   static-backend substrate.) *(blocks 2–5)*
 2. **E4d-2 — LLVM runtime strings.** Relax the `iir-to-llvm` validator; lower
    non-literal `str_concat`/`str_slice`/`str_index`/`str_len`/`str_cmp`/`print_str`
    to the heap-block helpers + guarded loads. Matrix cell adds `Llvm`. *(needs 1)*

@@ -1,8 +1,8 @@
 [package]
 name = "twig-aot"
-version = "0.25.0"
+version = "0.26.0"
 edition = "2021"
-description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source."
+description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source. v0.26.0 (E4-dyn E4d-1): runtime string helpers __twig_str_concat/_slice/_index/_len/_cmp in twig_runtime.c on the E5 length-prefixed heap block; bounds-trap on slice/index; C-driver unit tests."
 
 [dependencies]
 twig-ir-compiler     = { path = "../twig-ir-compiler" }
