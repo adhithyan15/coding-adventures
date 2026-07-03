@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_shift_handoff_brief`, a read-only Chief adapter tool
+  that turns existing D23 operator readiness lanes into one shift handoff
+  packet without owning smart-home state.
 - Added `smart_home.get_operator_readiness_brief`, a read-only Chief adapter
   tool that turns existing D23 continuity lanes into one operator proceed,
   handoff, action, or hold decision without owning smart-home state.
