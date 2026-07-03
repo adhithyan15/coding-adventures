@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 62 \u2014 average urine flow from three stated quantities (a NEW panel: urology / urodynamics). From a voided volume, the fill minutes, and the void minutes (the study time is fill plus void), compute the average flow (voided_volume/(fill_minutes+void_minutes)), the study minutes (fill_minutes+void_minutes), or the fill-only rate (voided_volume/fill_minutes). Each item is a compute_dimensioned program (observe the three quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, ONE OVER A SUM a/(b+c), the mirror of rung-61 one-over-a-difference a/(b-c) with the two denominator terms ADDED \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the three observed quantities via / and + \u2014 no constant leaks, and neither the study time, the fill rate, nor any average-flow figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same three quantities, so the distractors are exactly the slips students make: DISTRIBUTING the division over the sum (a/b + a/c, since division does NOT distribute) and dividing by the VOID minutes only (a/c). The core confusion tested is that a/(b+c) is not a/b + a/c and not a/(b-c).",
+  "items": [
+    {
+      "id": "r62flow-01",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 300 mL over 40 min of filling and 20 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(300)\nobserve fill_minutes(40)\nobserve void_minutes(20)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r62flow-02",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 300 mL over 40 min of filling and 20 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(300)\nobserve fill_minutes(40)\nobserve void_minutes(20)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r62flow-03",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 300 mL over 40 min of filling and 20 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(300)\nobserve fill_minutes(40)\nobserve void_minutes(20)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r62flow-04",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 450 mL over 60 min of filling and 30 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(450)\nobserve fill_minutes(60)\nobserve void_minutes(30)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r62flow-05",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 450 mL over 60 min of filling and 30 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(450)\nobserve fill_minutes(60)\nobserve void_minutes(30)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 90,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r62flow-06",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 450 mL over 60 min of filling and 30 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(450)\nobserve fill_minutes(60)\nobserve void_minutes(30)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r62flow-07",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 240 mL over 30 min of filling and 50 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(240)\nobserve fill_minutes(30)\nobserve void_minutes(50)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r62flow-08",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 240 mL over 30 min of filling and 50 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(240)\nobserve fill_minutes(30)\nobserve void_minutes(50)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 12.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r62flow-09",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 240 mL over 30 min of filling and 50 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(240)\nobserve fill_minutes(30)\nobserve void_minutes(50)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r62flow-10",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 600 mL over 80 min of filling and 40 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(600)\nobserve fill_minutes(80)\nobserve void_minutes(40)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 15.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r62flow-11",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 600 mL over 80 min of filling and 40 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(600)\nobserve fill_minutes(80)\nobserve void_minutes(40)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r62flow-12",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 600 mL over 80 min of filling and 40 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(600)\nobserve fill_minutes(80)\nobserve void_minutes(40)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 22.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 15.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r62flow-13",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 180 mL over 20 min of filling and 40 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(180)\nobserve fill_minutes(20)\nobserve void_minutes(40)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r62flow-14",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 180 mL over 20 min of filling and 40 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(180)\nobserve fill_minutes(20)\nobserve void_minutes(40)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r62flow-15",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 180 mL over 20 min of filling and 40 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(180)\nobserve fill_minutes(20)\nobserve void_minutes(40)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r62flow-16",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 360 mL over 90 min of filling and 30 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(360)\nobserve fill_minutes(90)\nobserve void_minutes(30)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r62flow-17",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 360 mL over 90 min of filling and 30 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(360)\nobserve fill_minutes(90)\nobserve void_minutes(30)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r62flow-18",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 360 mL over 90 min of filling and 30 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(360)\nobserve fill_minutes(90)\nobserve void_minutes(30)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r62flow-19",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 500 mL over 50 min of filling and 75 min of voiding. What is the average flow over the whole study (voided volume over the total fill-plus-void time)?",
+      "program": "observe voided_volume(500)\nobserve fill_minutes(50)\nobserve void_minutes(75)\nlet answer = voided_volume / (fill_minutes + void_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r62flow-20",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 500 mL over 50 min of filling and 75 min of voiding. What is the the total study time (fill minutes plus void minutes)?",
+      "program": "observe voided_volume(500)\nobserve fill_minutes(50)\nobserve void_minutes(75)\nlet answer = fill_minutes + void_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 125,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r62flow-21",
+      "qtype": "urodynamics_average_flow",
+      "stem": "A urodynamic study voids 500 mL over 50 min of filling and 75 min of voiding. What is the the flow over the FILL phase only (voided volume per fill minute)?",
+      "program": "observe voided_volume(500)\nobserve fill_minutes(50)\nobserve void_minutes(75)\nlet answer = voided_volume / fill_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 16.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.666666666666667,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
